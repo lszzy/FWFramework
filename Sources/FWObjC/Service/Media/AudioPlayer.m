@@ -1,22 +1,22 @@
 //
-//  FWAudioPlayer.m
+//  AudioPlayer.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWAudioPlayer.h"
+#import "AudioPlayer.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioSession.h>
 
-typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
-    FWAudioPauseReasonNone,
-    FWAudioPauseReasonForced,
-    FWAudioPauseReasonBuffering,
+typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
+    __FWAudioPauseReasonNone,
+    __FWAudioPauseReasonForced,
+    __FWAudioPauseReasonBuffering,
 };
 
-@interface FWAudioPlayer ()
+@interface __FWAudioPlayer ()
 {
     BOOL routeChangedWhilePlaying;
     BOOL interruptedWhilePlaying;
@@ -29,19 +29,19 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 
 @property (nonatomic, strong, readwrite) NSArray<AVPlayerItem *> *playerItems;
 @property (nonatomic) NSInteger lastItemIndex;
-@property (nonatomic) FWAudioPauseReason pauseReason;
+@property (nonatomic) __FWAudioPauseReason pauseReason;
 @property (nonatomic, strong) NSMutableSet *playedItems;
 @property (nonatomic, strong) id periodicTimeToken;
 
 @end
 
-@implementation FWAudioPlayer
+@implementation __FWAudioPlayer
 
 #pragma mark - Lifecycle
 
-+ (FWAudioPlayer *)sharedInstance
++ (__FWAudioPlayer *)sharedInstance
 {
-    static FWAudioPlayer *instance = nil;
+    static __FWAudioPlayer *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
@@ -55,8 +55,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     if (self) {
         audioQueue = dispatch_queue_create("com.audio.queue", NULL);
         _playerItems = [NSArray array];
-        _repeatMode = FWAudioPlayerRepeatModeOff;
-        _shuffleMode = FWAudioPlayerShuffleModeOff;
+        _repeatMode = __FWAudioPlayerRepeatModeOff;
+        _shuffleMode = __FWAudioPlayerShuffleModeOff;
     }
     return self;
 }
@@ -216,7 +216,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 
 - (void)prepareNextPlayerItem
 {
-    if (_shuffleMode == FWAudioPlayerShuffleModeOn || _repeatMode == FWAudioPlayerRepeatModeOnce) return;
+    if (_shuffleMode == __FWAudioPlayerShuffleModeOn || _repeatMode == __FWAudioPlayerRepeatModeOnce) return;
     
     NSInteger nowIndex = self.lastItemIndex;
     BOOL findInPlayerItems = NO;
@@ -352,24 +352,24 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 
 - (void)play
 {
-    _pauseReason = FWAudioPauseReasonNone;
+    _pauseReason = __FWAudioPauseReasonNone;
     [self.audioPlayer play];
 }
 
 - (void)pause
 {
-    _pauseReason = FWAudioPauseReasonForced;
+    _pauseReason = __FWAudioPauseReasonForced;
     [self.audioPlayer pause];
 }
 
 - (void)playNext
 {
-    if (_shuffleMode == FWAudioPlayerShuffleModeOn) {
+    if (_shuffleMode == __FWAudioPlayerShuffleModeOn) {
         NSInteger nextIndex = [self randomIndex];
         if (nextIndex != NSNotFound) {
             [self playItemFromIndex:nextIndex];
         } else {
-            _pauseReason = FWAudioPauseReasonForced;
+            _pauseReason = __FWAudioPauseReasonForced;
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
                 [self.delegate audioPlayerDidReachEnd];
             }
@@ -385,8 +385,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                 [self playItemFromIndex:(nowIndex + 1)];
             }
         } else {
-            if (_repeatMode == FWAudioPlayerRepeatModeOff) {
-                _pauseReason = FWAudioPauseReasonForced;
+            if (_repeatMode == __FWAudioPlayerRepeatModeOff) {
+                _pauseReason = __FWAudioPauseReasonForced;
                 if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
                     [self.delegate audioPlayerDidReachEnd];
                 }
@@ -401,7 +401,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
 {
     NSInteger nowIndex = [[self getAudioIndex:self.audioPlayer.currentItem] integerValue];
     if (nowIndex == 0) {
-        if (_repeatMode == FWAudioPlayerRepeatModeOn) {
+        if (_repeatMode == __FWAudioPlayerRepeatModeOn) {
             [self playItemFromIndex:[self audioPlayerItemsCount] - 1];
         } else {
             [self pause];
@@ -433,16 +433,16 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     }
 }
 
-- (void)setShuffleMode:(FWAudioPlayerShuffleMode)mode
+- (void)setShuffleMode:(__FWAudioPlayerShuffleMode)mode
 {
     switch (mode) {
-        case FWAudioPlayerShuffleModeOff:
-            _shuffleMode = FWAudioPlayerShuffleModeOff;
+        case __FWAudioPlayerShuffleModeOff:
+            _shuffleMode = __FWAudioPlayerShuffleModeOff;
             [_playedItems removeAllObjects];
             _playedItems = nil;
             break;
-        case FWAudioPlayerShuffleModeOn:
-            _shuffleMode = FWAudioPlayerShuffleModeOn;
+        case __FWAudioPlayerShuffleModeOn:
+            _shuffleMode = __FWAudioPlayerShuffleModeOn;
             _playedItems = [NSMutableSet set];
             if (self.audioPlayer.currentItem) {
                 [self.playedItems addObject:[self getAudioIndex:self.audioPlayer.currentItem]];
@@ -465,18 +465,18 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     return self.audioPlayer.currentItem;
 }
 
-- (FWAudioPlayerStatus)playerStatus
+- (__FWAudioPlayerStatus)playerStatus
 {
     if ([self isPlaying]) {
-        return FWAudioPlayerStatusPlaying;
+        return __FWAudioPlayerStatusPlaying;
     } else {
         switch (_pauseReason) {
-            case FWAudioPauseReasonForced:
-                return FWAudioPlayerStatusForcePause;
-            case FWAudioPauseReasonBuffering:
-                return FWAudioPlayerStatusBuffering;
+            case __FWAudioPauseReasonForced:
+                return __FWAudioPlayerStatusForcePause;
+            case __FWAudioPauseReasonBuffering:
+                return __FWAudioPlayerStatusBuffering;
             default:
-                return FWAudioPlayerStatusUnknown;
+                return __FWAudioPlayerStatusUnknown;
         }
     }
 }
@@ -581,7 +581,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     NSDictionary *interuptionDict = notification.userInfo;
     NSInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
     
-    if (interuptionType == AVAudioSessionInterruptionTypeBegan && _pauseReason != FWAudioPauseReasonForced) {
+    if (interuptionType == AVAudioSessionInterruptionTypeBegan && _pauseReason != __FWAudioPauseReasonForced) {
         interruptedWhilePlaying = YES;
         [self pause];
     } else if (interuptionType == AVAudioSessionInterruptionTypeEnded && interruptedWhilePlaying) {
@@ -589,7 +589,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        NSLog(@"FWAudioPlayer: FWAudioPlayer interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
+        NSLog(@"FWAudioPlayer: __FWAudioPlayer interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
     }
 }
 
@@ -598,7 +598,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     NSDictionary *routeChangeDict = notification.userInfo;
     NSInteger routeChangeType = [[routeChangeDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
     
-    if (routeChangeType == AVAudioSessionRouteChangeReasonOldDeviceUnavailable && _pauseReason != FWAudioPauseReasonForced) {
+    if (routeChangeType == AVAudioSessionRouteChangeReasonOldDeviceUnavailable && _pauseReason != __FWAudioPauseReasonForced) {
         routeChangedWhilePlaying = YES;
         [self pause];
     } else if (routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable && routeChangedWhilePlaying) {
@@ -606,7 +606,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        NSLog(@"FWAudioPlayer: FWAudioPlayer routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
+        NSLog(@"FWAudioPlayer: __FWAudioPlayer routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
     }
 }
 
@@ -683,7 +683,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
             if ([self.delegate respondsToSelector:@selector(audioPlayerReadyToPlay:)]) {
                 [self.delegate audioPlayerReadyToPlay:self.audioPlayer.currentItem];
             }
-            if (![self isPlaying] && _pauseReason != FWAudioPauseReasonForced) {
+            if (![self isPlaying] && _pauseReason != __FWAudioPauseReasonForced) {
                 [self.audioPlayer play];
             }
         }
@@ -707,8 +707,8 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                 [self.delegate audioPlayerCurrentItemPreloaded:CMTimeAdd(timerange.start, timerange.duration)];
             }
             
-            if (self.audioPlayer.rate == 0 && _pauseReason != FWAudioPauseReasonForced) {
-                _pauseReason = FWAudioPauseReasonBuffering;
+            if (self.audioPlayer.rate == 0 && _pauseReason != __FWAudioPauseReasonForced) {
+                _pauseReason = __FWAudioPauseReasonBuffering;
                 
                 CMTime bufferdTime = CMTimeAdd(timerange.start, timerange.duration);
                 CMTime milestone = CMTimeAdd(self.audioPlayer.currentTime, CMTimeMakeWithSeconds(5.0f, timerange.duration.timescale));
@@ -735,10 +735,10 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     
     NSNumber *currentItemIndex = [self getAudioIndex:self.audioPlayer.currentItem];
     if (currentItemIndex) {
-        if (_repeatMode == FWAudioPlayerRepeatModeOnce) {
+        if (_repeatMode == __FWAudioPlayerRepeatModeOnce) {
             NSInteger currentIndex = [currentItemIndex integerValue];
             [self playItemFromIndex:currentIndex];
-        } else if (_shuffleMode == FWAudioPlayerShuffleModeOn) {
+        } else if (_shuffleMode == __FWAudioPlayerShuffleModeOn) {
             NSInteger nextIndex = [self randomIndex];
             if (nextIndex != NSNotFound) {
                 [self playItemFromIndex:[self randomIndex]];
@@ -754,7 +754,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
                 if (nowIndex + 1 < [self audioPlayerItemsCount]) {
                     [self playNext];
                 } else {
-                    if (_repeatMode == FWAudioPlayerRepeatModeOff) {
+                    if (_repeatMode == __FWAudioPlayerRepeatModeOff) {
                         [self pause];
                         if ([self.delegate respondsToSelector:@selector(audioPlayerDidReachEnd)]) {
                             [self.delegate audioPlayerDidReachEnd];
@@ -795,7 +795,7 @@ typedef NS_ENUM(NSInteger, FWAudioPauseReason) {
     NSInteger itemsCount = [self audioPlayerItemsCount];
     if ([self.playedItems count] == itemsCount) {
         self.playedItems = [NSMutableSet set];
-        if (_repeatMode == FWAudioPlayerRepeatModeOff) {
+        if (_repeatMode == __FWAudioPlayerRepeatModeOff) {
             return NSNotFound;
         }
     }

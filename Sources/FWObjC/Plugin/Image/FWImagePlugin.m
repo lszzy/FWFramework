@@ -23,7 +23,7 @@
 
 #endif
 
-FWImageCoderOptions const FWImageCoderOptionScaleFactor = @"imageScaleFactor";
+__FWImageCoderOptions const __FWImageCoderOptionScaleFactor = @"imageScaleFactor";
 
 #pragma mark - UIImage+FWImagePlugin
 
@@ -79,7 +79,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     return [self fw_imageNamed:name bundle:bundle options:nil];
 }
 
-+ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)aBundle options:(NSDictionary<FWImageCoderOptions,id> *)options
++ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)aBundle options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
     if (name.length < 1) return nil;
     if ([name hasSuffix:@"/"]) return nil;
@@ -131,7 +131,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     return [self fw_imageWithData:data scale:scale options:nil];
 }
 
-+ (UIImage *)fw_imageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
++ (UIImage *)fw_imageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
     if (data.length < 1) return nil;
     
@@ -140,7 +140,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
         return [imagePlugin imageDecode:data scale:scale options:options];
     }
     
-    NSNumber *scaleFactor = options[FWImageCoderOptionScaleFactor];
+    NSNumber *scaleFactor = options[__FWImageCoderOptionScaleFactor];
     if (scaleFactor != nil) scale = [scaleFactor doubleValue];
     return [UIImage imageWithData:data scale:MAX(scale, 1)];
 }
@@ -150,7 +150,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     return [self fw_dataWithImage:image options:nil];
 }
 
-+ (NSData *)fw_dataWithImage:(UIImage *)image options:(NSDictionary<FWImageCoderOptions,id> *)options
++ (NSData *)fw_dataWithImage:(UIImage *)image options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
     if (!image) return nil;
     
@@ -175,7 +175,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 
 + (id)fw_downloadImage:(id)url
               options:(FWWebImageOptions)options
-              context:(NSDictionary<FWImageCoderOptions,id> *)context
+              context:(NSDictionary<__FWImageCoderOptions,id> *)context
            completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
@@ -254,7 +254,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 - (void)fw_setImageWithURL:(id)url
          placeholderImage:(UIImage *)placeholderImage
                   options:(FWWebImageOptions)options
-                  context:(NSDictionary<FWImageCoderOptions,id> *)context
+                  context:(NSDictionary<__FWImageCoderOptions,id> *)context
                completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
                  progress:(void (^)(double))progress
 {
