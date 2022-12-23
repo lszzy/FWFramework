@@ -22,8 +22,8 @@
 //  THE SOFTWARE.
 
 #import "ChainRequest.h"
-#import "RequestAgent.h"
-#import "NetworkPrivate.h"
+#import "RequestManager.h"
+#import "NetworkConfig.h"
 #import "BaseRequest.h"
 
 @interface FWChainRequest()<FWRequestDelegate>
@@ -58,7 +58,7 @@
 
     _succeedRequest = nil;
     _failedRequest = nil;
-    [[FWRequestAgent sharedAgent] addChainRequest:self];
+    [[FWRequestManager sharedManager] addChainRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     if (![self startNextRequest:nil]) {
         FWRequestLog(@"Error! Chain request array is empty.");
@@ -70,7 +70,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestAgent sharedAgent] removeChainRequest:self];
+    [[FWRequestManager sharedManager] removeChainRequest:self];
 }
 
 - (void)startWithCompletionBlockWithSuccess:(void (^)(FWChainRequest *chainRequest))success
@@ -81,6 +81,44 @@
 
 - (void)startWithCompletion:(void (^)(FWChainRequest *))completion {
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
+}
+
+- (void)startWithWillStart:(nullable void (^)(FWChainRequest *chainRequest))willStart
+                  willStop:(nullable void (^)(FWChainRequest *chainRequest))willStop
+                   success:(nullable void (^)(FWChainRequest *chainRequest))success
+                   failure:(nullable void (^)(FWChainRequest *chainRequest))failure
+                   didStop:(nullable void (^)(FWChainRequest *chainRequest))didStop {
+    FWRequestAccessory *accessory = [FWRequestAccessory new];
+    accessory.willStartBlock = willStart;
+    accessory.willStopBlock = willStop;
+    accessory.didStopBlock = didStop;
+    [self addAccessory:accessory];
+    [self startWithCompletionBlockWithSuccess:success
+                                      failure:failure];
+}
+
+- (void)toggleAccessoriesWillStartCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStart:)]) {
+            [accessory requestWillStart:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesWillStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStop:)]) {
+            [accessory requestWillStop:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesDidStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestDidStop:)]) {
+            [accessory requestDidStop:self];
+        }
+    }
 }
 
 - (void)setCompletionBlockWithSuccess:(void (^)(FWChainRequest *chainRequest))success
@@ -185,7 +223,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestAgent sharedAgent] removeChainRequest:self];
+    [[FWRequestManager sharedManager] removeChainRequest:self];
 }
 
 - (void)clearRequest {

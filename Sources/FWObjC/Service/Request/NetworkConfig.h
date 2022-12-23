@@ -25,6 +25,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXPORT void FWRequestLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2) NS_REFINED_FOR_SWIFT;
+
 @class FWBaseRequest;
 @class __FWSecurityPolicy;
 
@@ -73,7 +75,7 @@ NS_SWIFT_NAME(CacheDirPathFilterProtocol)
 - (NSString *)filterCacheDirPath:(NSString *)originPath withRequest:(FWBaseRequest *)request;
 @end
 
-///  FWNetworkConfig stored global network-related configurations, which will be used in `FWNetworkAgent`
+///  FWNetworkConfig stored global network-related configurations, which will be used in `FWNetworkManager`
 ///  to form and filter requests, as well as caching response.
 NS_SWIFT_NAME(NetworkConfig)
 @interface FWNetworkConfig : NSObject
@@ -117,6 +119,25 @@ NS_SWIFT_NAME(NetworkConfig)
 - (void)addCacheDirPathFilter:(id<FWCacheDirPathFilterProtocol>)filter;
 ///  Clear all cache path filters.
 - (void)clearCacheDirPathFilter;
+
+@end
+
+NS_SWIFT_NAME(NetworkUtils)
+@interface FWNetworkUtils : NSObject
+
++ (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator;
+
++ (void)addDoNotBackupAttribute:(NSString *)path;
+
++ (NSString *)md5StringFromString:(NSString *)string;
+
++ (NSString *)appVersionString;
+
++ (NSStringEncoding)stringEncodingWithRequest:(FWBaseRequest *)request;
+
++ (BOOL)validateResumeData:(NSData *)data;
+
++ (BOOL)isRequestError:(nullable NSError *)error;
 
 @end
 

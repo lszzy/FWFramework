@@ -122,6 +122,15 @@ NS_SWIFT_NAME(RequestAccessory)
 
 @end
 
+NS_SWIFT_NAME(RequestAccessory)
+@interface FWRequestAccessory : NSObject <FWRequestAccessory>
+
+@property (nonatomic, copy, nullable) void (^willStartBlock)(id);
+@property (nonatomic, copy, nullable) void (^willStopBlock)(id);
+@property (nonatomic, copy, nullable) void (^didStopBlock)(id);
+
+@end
+
 ///  FWBaseRequest is the abstract class of network request. It provides many options
 ///  for constructing request. It's the base class of `FWRequest`.
 NS_SWIFT_NAME(BaseRequest)
@@ -135,10 +144,10 @@ NS_SWIFT_NAME(BaseRequest)
 ///  The underlying NSURLSessionTask.
 ///
 ///  @warning This value is actually nil and should not be accessed before the request starts.
-@property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;
+@property (nonatomic, strong, readwrite) NSURLSessionTask *requestTask;
 
 ///  The request identifier, always equals the first requestTask.taskIdentifier.
-@property (nonatomic, assign, readonly) NSUInteger requestIdentifier;
+@property (nonatomic, assign, readwrite) NSUInteger requestIdentifier;
 
 ///  Shortcut for `requestTask.currentRequest`.
 @property (nonatomic, strong, readonly) NSURLRequest *currentRequest;
@@ -156,25 +165,25 @@ NS_SWIFT_NAME(BaseRequest)
 @property (nonatomic, strong, readonly, nullable) NSDictionary *responseHeaders;
 
 ///  The raw data representation of response. Note this value can be nil if request failed.
-@property (nonatomic, strong, readonly, nullable) NSData *responseData;
+@property (nonatomic, strong, readwrite, nullable) NSData *responseData;
 
 ///  The string representation of response. Note this value can be nil if request failed.
-@property (nonatomic, strong, readonly, nullable) NSString *responseString;
+@property (nonatomic, strong, readwrite, nullable) NSString *responseString;
 
 ///  This serialized response object. The actual type of this object is determined by
 ///  `FWResponseSerializerType`. Note this value can be nil if request failed.
 ///
 ///  @note If `resumableDownloadPath` and DownloadTask is using, this value will
 ///              be the path to which file is successfully saved (NSURL), or nil if request failed.
-@property (nonatomic, strong, readonly, nullable) id responseObject;
+@property (nonatomic, strong, readwrite, nullable) id responseObject;
 
 ///  If you use `FWResponseSerializerTypeJSON`, this is a convenience (and sematic) getter
 ///  for the response object. Otherwise this value is nil.
-@property (nonatomic, strong, readonly, nullable) id responseJSONObject;
+@property (nonatomic, strong, readwrite, nullable) id responseJSONObject;
 
 ///  This error can be either serialization error or network error. If nothing wrong happens
 ///  this value will be nil.
-@property (nonatomic, strong, readonly, nullable) NSError *error;
+@property (nonatomic, strong, readwrite, nullable) NSError *error;
 
 ///  Return finished state of request task.
 @property (nonatomic, readonly, getter=isFinished) BOOL finished;
@@ -189,10 +198,10 @@ NS_SWIFT_NAME(BaseRequest)
 @property (nonatomic, readonly, getter=isExecuting) BOOL executing;
 
 ///  Total request count for request.
-@property (nonatomic, readonly) NSInteger requestTotalCount;
+@property (nonatomic, readwrite) NSInteger requestTotalCount;
 
 ///  Total request time for request.
-@property (nonatomic, readonly) NSTimeInterval requestTotalTime;
+@property (nonatomic, readwrite) NSTimeInterval requestTotalTime;
 
 ///  The request method string for request.
 @property (nonatomic, copy, readonly) NSString *requestMethodString;
@@ -276,6 +285,15 @@ NS_SWIFT_NAME(BaseRequest)
 ///  Convenience method to start the request with completion block.
 - (void)startWithCompletion:(nullable FWRequestCompletionBlock)completion;
 
+- (void)startWithWillStart:(nullable FWRequestCompletionBlock)willStart
+                  willStop:(nullable FWRequestCompletionBlock)willStop
+                   success:(nullable FWRequestCompletionBlock)success
+                   failure:(nullable FWRequestCompletionBlock)failure
+                   didStop:(nullable FWRequestCompletionBlock)didStop;
+
+- (void)toggleAccessoriesWillStartCallBack;
+- (void)toggleAccessoriesWillStopCallBack;
+- (void)toggleAccessoriesDidStopCallBack;
 
 #pragma mark - Subclass Override
 ///=============================================================================

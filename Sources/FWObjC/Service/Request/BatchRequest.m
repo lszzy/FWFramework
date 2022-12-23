@@ -22,8 +22,8 @@
 //  THE SOFTWARE.
 
 #import "BatchRequest.h"
-#import "NetworkPrivate.h"
-#import "RequestAgent.h"
+#import "RequestManager.h"
+#import "NetworkConfig.h"
 #import "Request.h"
 
 @interface FWBatchRequest() <FWRequestDelegate>
@@ -58,7 +58,7 @@
         return;
     }
     [_failedRequestArray removeAllObjects];
-    [[FWRequestAgent sharedAgent] addBatchRequest:self];
+    [[FWRequestManager sharedManager] addBatchRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     for (FWRequest * req in _requestArray) {
         req.delegate = self;
@@ -72,7 +72,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestAgent sharedAgent] removeBatchRequest:self];
+    [[FWRequestManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)startWithCompletionBlockWithSuccess:(void (^)(FWBatchRequest *batchRequest))success
@@ -83,6 +83,44 @@
 
 - (void)startWithCompletion:(void (^)(FWBatchRequest *))completion {
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
+}
+
+- (void)startWithWillStart:(nullable void (^)(FWBatchRequest *batchRequest))willStart
+                  willStop:(nullable void (^)(FWBatchRequest *batchRequest))willStop
+                   success:(nullable void (^)(FWBatchRequest *batchRequest))success
+                   failure:(nullable void (^)(FWBatchRequest *batchRequest))failure
+                   didStop:(nullable void (^)(FWBatchRequest *batchRequest))didStop {
+    FWRequestAccessory *accessory = [FWRequestAccessory new];
+    accessory.willStartBlock = willStart;
+    accessory.willStopBlock = willStop;
+    accessory.didStopBlock = didStop;
+    [self addAccessory:accessory];
+    [self startWithCompletionBlockWithSuccess:success
+                                      failure:failure];
+}
+
+- (void)toggleAccessoriesWillStartCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStart:)]) {
+            [accessory requestWillStart:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesWillStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestWillStop:)]) {
+            [accessory requestWillStop:self];
+        }
+    }
+}
+
+- (void)toggleAccessoriesDidStopCallBack {
+    for (id<FWRequestAccessory> accessory in self.requestAccessories) {
+        if ([accessory respondsToSelector:@selector(requestDidStop:)]) {
+            [accessory requestDidStop:self];
+        }
+    }
 }
 
 - (void)setCompletionBlockWithSuccess:(void (^)(FWBatchRequest *batchRequest))success
@@ -161,7 +199,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[FWRequestAgent sharedAgent] removeBatchRequest:self];
+    [[FWRequestManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)clearRequest {

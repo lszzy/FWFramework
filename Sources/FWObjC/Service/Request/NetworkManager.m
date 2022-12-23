@@ -1,5 +1,5 @@
 //
-//  NetworkAgent.m
+//  NetworkManager.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,9 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NetworkAgent.h"
-#import "NetworkConfig.h"
-#import "NetworkPrivate.h"
+#import "NetworkManager.h"
 #import <pthread/pthread.h>
 #import "HTTPSessionManager.h"
 
@@ -32,7 +30,7 @@
 
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
-@implementation FWNetworkAgent {
+@implementation FWNetworkManager {
     __FWHTTPSessionManager *_manager;
     FWNetworkConfig *_config;
     __FWJSONResponseSerializer *_jsonResponseSerializer;
@@ -44,7 +42,7 @@
     NSIndexSet *_allStatusCodes;
 }
 
-+ (FWNetworkAgent *)sharedAgent {
++ (FWNetworkManager *)sharedManager {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

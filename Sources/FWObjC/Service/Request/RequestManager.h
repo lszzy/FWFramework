@@ -1,5 +1,5 @@
 //
-//  RequestAgent.h
+//  RequestManager.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -28,16 +28,16 @@ NS_ASSUME_NONNULL_BEGIN
 @class FWBatchRequest;
 @class FWChainRequest;
 
-///  FWRequestAgent handles batch request management. It keeps track of all
+///  FWRequestManager handles batch request management. It keeps track of all
 ///  the batch requests.
-NS_SWIFT_NAME(RequestAgent)
-@interface FWRequestAgent : NSObject
+NS_SWIFT_NAME(RequestManager)
+@interface FWRequestManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-///  Get the shared batch request agent.
-+ (FWRequestAgent *)sharedAgent;
+///  Get the shared batch request manager.
++ (FWRequestManager *)sharedManager;
 
 ///  Add a batch request.
 - (void)addBatchRequest:(FWBatchRequest *)request;
