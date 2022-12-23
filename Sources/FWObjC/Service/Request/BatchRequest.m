@@ -22,29 +22,29 @@
 //  THE SOFTWARE.
 
 #import "BatchRequest.h"
+#import "BaseRequest.h"
 #import "RequestManager.h"
 #import "NetworkConfig.h"
-#import "Request.h"
 
 @interface FWBatchRequest() <FWRequestDelegate>
 
 @property (nonatomic) NSInteger finishedCount;
-@property (nonatomic, strong) NSMutableArray<FWRequest *> *failedRequestArray;
+@property (nonatomic, strong) NSMutableArray<FWBaseRequest *> *failedRequestArray;
 
 @end
 
 @implementation FWBatchRequest
 
-- (instancetype)initWithRequestArray:(NSArray<FWRequest *> *)requestArray {
+- (instancetype)initWithRequestArray:(NSArray<FWBaseRequest *> *)requestArray {
     self = [super init];
     if (self) {
         _requestArray = [requestArray copy];
         _failedRequestArray = [NSMutableArray array];
         _finishedCount = 0;
         _stoppedOnFailure = YES;
-        for (FWRequest * req in _requestArray) {
-            if (![req isKindOfClass:[FWRequest class]]) {
-                FWRequestLog(@"Error, request item must be FWRequest instance.");
+        for (FWBaseRequest * req in _requestArray) {
+            if (![req isKindOfClass:[FWBaseRequest class]]) {
+                FWRequestLog(@"Error, request item must be FWBaseRequest instance.");
                 return nil;
             }
         }
@@ -60,7 +60,7 @@
     [_failedRequestArray removeAllObjects];
     [[FWRequestManager sharedManager] addBatchRequest:self];
     [self toggleAccessoriesWillStartCallBack];
-    for (FWRequest * req in _requestArray) {
+    for (FWBaseRequest * req in _requestArray) {
         req.delegate = self;
         [req clearCompletionBlock];
         [req start];
@@ -135,13 +135,13 @@
     self.failureCompletionBlock = nil;
 }
 
-- (FWRequest *)failedRequest {
+- (FWBaseRequest *)failedRequest {
     return self.failedRequestArray.firstObject;
 }
 
 - (BOOL)isDataFromCache {
     BOOL result = YES;
-    for (FWRequest *request in _requestArray) {
+    for (FWBaseRequest *request in _requestArray) {
         if (!request.isDataFromCache) {
             result = NO;
         }
@@ -155,17 +155,17 @@
 
 #pragma mark - Network Request Delegate
 
-- (void)requestFinished:(FWRequest *)request {
+- (void)requestFinished:(FWBaseRequest *)request {
     _finishedCount++;
     if (_finishedCount == _requestArray.count) {
         [self requestCompleted];
     }
 }
 
-- (void)requestFailed:(FWRequest *)request {
+- (void)requestFailed:(FWBaseRequest *)request {
     [_failedRequestArray addObject:request];
     if (self.stoppedOnFailure) {
-        for (FWRequest *req in _requestArray) {
+        for (FWBaseRequest *req in _requestArray) {
             [req stop];
         }
         [self requestCompleted];
@@ -203,7 +203,7 @@
 }
 
 - (void)clearRequest {
-    for (FWRequest * req in _requestArray) {
+    for (FWBaseRequest * req in _requestArray) {
         [req stop];
     }
     [self clearCompletionBlock];

@@ -25,7 +25,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWRequest;
+@class FWBaseRequest;
 @class FWBatchRequest;
 @protocol FWRequestAccessory;
 
@@ -50,12 +50,12 @@ NS_SWIFT_NAME(BatchRequestDelegate)
 @end
 
 ///  FWBatchRequest can be used to batch several FWRequest. Note that when used inside FWBatchRequest, a single
-///  FWRequest will have its own callback and delegate cleared, in favor of the batch request callback.
+///  FWBaseRequest will have its own callback and delegate cleared, in favor of the batch request callback.
 NS_SWIFT_NAME(BatchRequest)
 @interface FWBatchRequest : NSObject
 
 ///  All the requests are stored in this array.
-@property (nonatomic, strong, readonly) NSArray<FWRequest *> *requestArray;
+@property (nonatomic, strong, readonly) NSArray<FWBaseRequest *> *requestArray;
 
 ///  The delegate object of the batch request. Default is nil.
 @property (nonatomic, weak, nullable) id<FWBatchRequestDelegate> delegate;
@@ -76,10 +76,10 @@ NS_SWIFT_NAME(BatchRequest)
 @property (nonatomic, strong, nullable) NSMutableArray<id<FWRequestAccessory>> *requestAccessories;
 
 ///  The first request that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly, nullable) FWRequest *failedRequest;
+@property (nonatomic, strong, readonly, nullable) FWBaseRequest *failedRequest;
 
 ///  The requests that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly) NSArray<FWRequest *> *failedRequestArray;
+@property (nonatomic, strong, readonly) NSArray<FWBaseRequest *> *failedRequestArray;
 
 ///  When true, the batch request is stopped if one of the requests fails. Defaults to YES.
 @property (nonatomic, assign) BOOL stoppedOnFailure;
@@ -88,7 +88,7 @@ NS_SWIFT_NAME(BatchRequest)
 ///
 ///  @param requestArray requests useds to create batch request.
 ///
-- (instancetype)initWithRequestArray:(NSArray<FWRequest *> *)requestArray;
+- (instancetype)initWithRequestArray:(NSArray<FWBaseRequest *> *)requestArray;
 
 ///  Set completion callbacks
 - (void)setCompletionBlockWithSuccess:(nullable void (^)(FWBatchRequest *batchRequest))success
