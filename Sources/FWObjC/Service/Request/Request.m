@@ -1,5 +1,5 @@
 //
-//  FWRequest.m
+//  Request.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,9 +21,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWNetworkConfig.h"
-#import "FWRequest.h"
-#import "FWNetworkPrivate.h"
+#import "NetworkConfig.h"
+#import "Request.h"
+#import "NetworkPrivate.h"
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11

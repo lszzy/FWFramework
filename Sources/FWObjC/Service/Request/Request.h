@@ -1,5 +1,5 @@
 //
-//  FWRequest.h
+//  Request.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,7 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWBaseRequest.h"
+#import "BaseRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -1,13 +1,13 @@
 //
-//  FWRequestAccessory.h
+//  RequestAccessory.h
 //  FWNetwork
 //
 //  Created by Chuanren Shang on 2020/8/17.
 //
 
-#import "FWBaseRequest.h"
-#import "FWBatchRequest.h"
-#import "FWChainRequest.h"
+#import "BaseRequest.h"
+#import "BatchRequest.h"
+#import "ChainRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

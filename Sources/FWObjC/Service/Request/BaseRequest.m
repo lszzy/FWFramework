@@ -1,5 +1,5 @@
 //
-//  FWBaseRequest.m
+//  BaseRequest.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,9 +21,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWBaseRequest.h"
-#import "FWNetworkAgent.h"
-#import "FWNetworkPrivate.h"
+#import "BaseRequest.h"
+#import "NetworkAgent.h"
+#import "NetworkPrivate.h"
 #import <objc/runtime.h>
 
 NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.validation";

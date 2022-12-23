@@ -1,5 +1,5 @@
 //
-//  FWNetworkAgent.m
+//  NetworkAgent.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,9 +21,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "FWNetworkAgent.h"
-#import "FWNetworkConfig.h"
-#import "FWNetworkPrivate.h"
+#import "NetworkAgent.h"
+#import "NetworkConfig.h"
+#import "NetworkPrivate.h"
 #import <pthread/pthread.h>
 #import "HTTPSessionManager.h"
 
