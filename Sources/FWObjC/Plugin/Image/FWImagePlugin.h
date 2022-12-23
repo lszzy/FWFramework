@@ -72,9 +72,6 @@ NS_SWIFT_NAME(ImagePlugin)
 
 #pragma mark - UIImage+FWImagePlugin
 
-/// 根据名称加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
-FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAVAILABLE("");
-
 @interface UIImage (FWImagePlugin)
 
 /// 根据名称加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
