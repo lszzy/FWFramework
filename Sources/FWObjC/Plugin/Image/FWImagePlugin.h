@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWImagePlugin
 
 /// 本地图片解码编码选项，默认兼容SDWebImage
-typedef NSString * FWImageCoderOptions NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(ImageCoderOptions);
+typedef NSString * __FWImageCoderOptions NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(ImageCoderOptions);
 /// 图片解码scale选项，默认未指定时为1
-FOUNDATION_EXPORT FWImageCoderOptions const FWImageCoderOptionScaleFactor;
+FOUNDATION_EXPORT __FWImageCoderOptions const __FWImageCoderOptionScaleFactor;
 
 /// 网络图片加载选项，默认兼容SDWebImage
 typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(ImagePlugin)
         setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
             options:(FWWebImageOptions)options
-            context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
+            context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
 
@@ -52,7 +52,7 @@ NS_SWIFT_NAME(ImagePlugin)
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)downloadImage:(nullable NSURL *)imageURL
                        options:(FWWebImageOptions)options
-                       context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
+                       context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                     completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
 
@@ -63,10 +63,10 @@ NS_SWIFT_NAME(ImagePlugin)
 - (UIImageView *)animatedImageView;
 
 /// image本地解码插件方法，默认使用系统方法
-- (nullable UIImage *)imageDecode:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
+- (nullable UIImage *)imageDecode:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options;
 
 /// image本地编码插件方法，默认使用系统方法
-- (nullable NSData *)imageEncode:(UIImage *)image options:(nullable NSDictionary<FWImageCoderOptions, id> *)options;
+- (nullable NSData *)imageEncode:(UIImage *)image options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options;
 
 @end
 
@@ -84,7 +84,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 + (nullable UIImage *)fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle NS_REFINED_FOR_SWIFT;
 
 /// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)。支持设置图片解码选项
-+ (nullable UIImage *)fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
++ (nullable UIImage *)fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
 
 /// 从图片文件路径解码创建UIImage，自动识别scale，支持动图
 + (nullable UIImage *)fw_imageWithContentsOfFile:(NSString *)path NS_REFINED_FOR_SWIFT;
@@ -96,13 +96,13 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 + (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale NS_REFINED_FOR_SWIFT;
 
 /// 从图片数据解码创建UIImage，指定scale，支持动图。支持设置图片解码选项
-+ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
++ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
 
 /// 从UIImage编码创建图片数据，支持动图
 + (nullable NSData *)fw_dataWithImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
 
 /// 从UIImage编码创建图片数据，支持动图。支持设置图片编码选项
-+ (nullable NSData *)fw_dataWithImage:(nullable UIImage *)image options:(nullable NSDictionary<FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
++ (nullable NSData *)fw_dataWithImage:(nullable UIImage *)image options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
 
 /// 下载网络图片并返回下载凭据
 + (nullable id)fw_downloadImage:(nullable id)url
@@ -112,7 +112,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 /// 下载网络图片并返回下载凭据，指定option
 + (nullable id)fw_downloadImage:(nullable id)url
                        options:(FWWebImageOptions)options
-                       context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
+                       context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                     completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
 
@@ -147,7 +147,7 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 - (void)fw_setImageWithURL:(nullable id)url
          placeholderImage:(nullable UIImage *)placeholderImage
                   options:(FWWebImageOptions)options
-                  context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
+                  context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
                  progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
 

@@ -1,11 +1,11 @@
 //
-//  FWAnimatedImage.m
+//  AnimatedImage.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWAnimatedImage.h"
+#import "AnimatedImage.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 #import <dlfcn.h>
@@ -25,9 +25,9 @@
 
 #endif
 
-#pragma mark - FWImageFrame
+#pragma mark - __FWImageFrame
 
-@implementation FWImageFrame
+@implementation __FWImageFrame
 
 - (instancetype)initWithImage:(UIImage *)image duration:(NSTimeInterval)duration
 {
@@ -62,7 +62,7 @@
     return result;
 }
 
-+ (UIImage *)animatedImageWithFrames:(NSArray<FWImageFrame *> *)frames
++ (UIImage *)animatedImageWithFrames:(NSArray<__FWImageFrame *> *)frames
 {
     NSUInteger frameCount = frames.count;
     if (frameCount == 0) {
@@ -76,7 +76,7 @@
     NSUInteger const gcd = [self gcdArray:frameCount values:durations];
     __block NSUInteger totalDuration = 0;
     NSMutableArray<UIImage *> *animatedImages = [NSMutableArray arrayWithCapacity:frameCount];
-    [frames enumerateObjectsUsingBlock:^(FWImageFrame * _Nonnull frame, NSUInteger idx, BOOL * _Nonnull stop) {
+    [frames enumerateObjectsUsingBlock:^(__FWImageFrame * _Nonnull frame, NSUInteger idx, BOOL * _Nonnull stop) {
         UIImage *image = frame.image;
         NSUInteger duration = frame.duration * 1000;
         totalDuration += duration;
@@ -94,13 +94,13 @@
     return [UIImage animatedImageWithImages:animatedImages duration:totalDuration / 1000.f];
 }
 
-+ (NSArray<FWImageFrame *> *)framesFromAnimatedImage:(UIImage *)animatedImage
++ (NSArray<__FWImageFrame *> *)framesFromAnimatedImage:(UIImage *)animatedImage
 {
     if (!animatedImage) {
         return nil;
     }
     
-    NSMutableArray<FWImageFrame *> *frames = [NSMutableArray array];
+    NSMutableArray<__FWImageFrame *> *frames = [NSMutableArray array];
     NSUInteger frameCount = 0;
     
     NSArray<UIImage *> *animatedImages = animatedImage.images;
@@ -125,7 +125,7 @@
         if ([image isEqual:previousImage]) {
             repeatCount++;
         } else {
-            FWImageFrame *frame = [[FWImageFrame alloc] initWithImage:previousImage duration:avgDuration * repeatCount];
+            __FWImageFrame *frame = [[__FWImageFrame alloc] initWithImage:previousImage duration:avgDuration * repeatCount];
             [frames addObject:frame];
             repeatCount = 1;
             index++;
@@ -133,7 +133,7 @@
         previousImage = image;
         // last one
         if (idx == frameCount - 1) {
-            FWImageFrame *frame = [[FWImageFrame alloc] initWithImage:previousImage duration:avgDuration * repeatCount];
+            __FWImageFrame *frame = [[__FWImageFrame alloc] initWithImage:previousImage duration:avgDuration * repeatCount];
             [frames addObject:frame];
         }
     }];
@@ -142,25 +142,25 @@
 
 @end
 
-#pragma mark - FWImageCoder
+#pragma mark - __FWImageCoder
 
 #define kSVGTagEnd @"</svg>"
 
 typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
-static void (*FWCGSVGDocumentRelease)(CGSVGDocumentRef);
-static CGSVGDocumentRef (*FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
-static void (*FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
-static SEL FWImageWithCGSVGDocumentSEL = NULL;
-static SEL FWCGSVGDocumentSEL = NULL;
+static void (*__FWCGSVGDocumentRelease)(CGSVGDocumentRef);
+static CGSVGDocumentRef (*__FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
+static void (*__FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
+static SEL __FWImageWithCGSVGDocumentSEL = NULL;
+static SEL __FWCGSVGDocumentSEL = NULL;
 
-@implementation FWImageCoder
+@implementation __FWImageCoder
 
-+ (FWImageCoder *)sharedInstance
++ (__FWImageCoder *)sharedInstance
 {
-    static FWImageCoder *instance = nil;
+    static __FWImageCoder *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWImageCoder alloc] init];
+        instance = [[__FWImageCoder alloc] init];
     });
     return instance;
 }
@@ -168,11 +168,11 @@ static SEL FWCGSVGDocumentSEL = NULL;
 + (void)initialize
 {
     if (@available(iOS 13.0, *)) {
-        FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
-        FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
-        FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
-        FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64DecodedString:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
-        FWCGSVGDocumentSEL = NSSelectorFromString([self base64DecodedString:@"X0NHU1ZHRG9jdW1lbnQ="]);
+        __FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
+        __FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
+        __FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64DecodedString:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
+        __FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64DecodedString:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
+        __FWCGSVGDocumentSEL = NSSelectorFromString([self base64DecodedString:@"X0NHU1ZHRG9jdW1lbnQ="]);
     }
 }
 
@@ -183,24 +183,24 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
+- (UIImage *)decodedImageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
     if (data.length < 1) return nil;
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     if (!source) return nil;
-    NSNumber *scaleFactor = options[FWImageCoderOptionScaleFactor];
+    NSNumber *scaleFactor = options[__FWImageCoderOptionScaleFactor];
     if (scaleFactor != nil) scale = MAX([scaleFactor doubleValue], 1);
     
     UIImage *animatedImage;
     size_t count = CGImageSourceGetCount(source);
-    FWImageFormat format = [FWImageCoder imageFormatForImageData:data];
-    if (format == FWImageFormatSVG) {
+    __FWImageFormat format = [__FWImageCoder imageFormatForImageData:data];
+    if (format == __FWImageFormatSVG) {
         if (@available(iOS 13.0, *)) {
-            if ([UIImage respondsToSelector:FWImageWithCGSVGDocumentSEL]) {
-                CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
+            if ([UIImage respondsToSelector:__FWImageWithCGSVGDocumentSEL]) {
+                CGSVGDocumentRef document = __FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
                 if (document) {
-                    animatedImage = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:FWImageWithCGSVGDocumentSEL])(UIImage.class, FWImageWithCGSVGDocumentSEL, document);
-                    FWCGSVGDocumentRelease(document);
+                    animatedImage = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:__FWImageWithCGSVGDocumentSEL])(UIImage.class, __FWImageWithCGSVGDocumentSEL, document);
+                    __FWCGSVGDocumentRelease(document);
                 }
             }
         }
@@ -213,12 +213,12 @@ static SEL FWCGSVGDocumentSEL = NULL;
             if (!image) continue;
             
             NSTimeInterval duration = [self frameDurationAtIndex:i source:source format:format];
-            FWImageFrame *frame = [[FWImageFrame alloc] initWithImage:image duration:duration];
+            __FWImageFrame *frame = [[__FWImageFrame alloc] initWithImage:image duration:duration];
             [frames addObject:frame];
         }
         
         NSUInteger loopCount = [self imageLoopCountWithSource:source format:format];
-        animatedImage = [FWImageFrame animatedImageWithFrames:frames];
+        animatedImage = [__FWImageFrame animatedImageWithFrames:frames];
         animatedImage.fw_imageLoopCount = loopCount;
     }
     
@@ -227,19 +227,19 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return animatedImage;
 }
 
-- (NSData *)encodedDataWithImage:(UIImage *)image format:(FWImageFormat)format options:(NSDictionary<FWImageCoderOptions,id> *)options
+- (NSData *)encodedDataWithImage:(UIImage *)image format:(__FWImageFormat)format options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
     if (!image) return nil;
-    if (format == FWImageFormatUndefined) {
-        format = image.fw_hasAlpha ? FWImageFormatPNG : FWImageFormatJPEG;
+    if (format == __FWImageFormatUndefined) {
+        format = image.fw_hasAlpha ? __FWImageFormatPNG : __FWImageFormatJPEG;
     }
-    if (format == FWImageFormatSVG) {
+    if (format == __FWImageFormatSVG) {
         if (@available(iOS 13.0, *)) {
-            if ([UIImage respondsToSelector:FWImageWithCGSVGDocumentSEL]) {
+            if ([UIImage respondsToSelector:__FWImageWithCGSVGDocumentSEL]) {
                 NSMutableData *data = [NSMutableData data];
-                CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:FWCGSVGDocumentSEL])(image, FWCGSVGDocumentSEL);
+                CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:__FWCGSVGDocumentSEL])(image, __FWCGSVGDocumentSEL);
                 if (document) {
-                    FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
+                    __FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
                     return [data copy];
                 }
             }
@@ -251,9 +251,9 @@ static SEL FWCGSVGDocumentSEL = NULL;
     if (!imageRef) return nil;
     
     NSMutableData *imageData = [NSMutableData data];
-    CFStringRef imageUTType = [FWImageCoder utTypeFromImageFormat:format];
+    CFStringRef imageUTType = [__FWImageCoder utTypeFromImageFormat:format];
     BOOL isAnimated = [self isAnimated:format forDecode:NO];
-    NSArray<FWImageFrame *> *frames = isAnimated ? [FWImageFrame framesFromAnimatedImage:image] : nil;
+    NSArray<__FWImageFrame *> *frames = isAnimated ? [__FWImageFrame framesFromAnimatedImage:image] : nil;
     size_t count = frames.count > 0 ? frames.count : 1;
     CGImageDestinationRef imageDestination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)imageData, imageUTType, count, NULL);
     if (!imageDestination) return nil;
@@ -273,7 +273,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
         CGImageDestinationSetProperties(imageDestination, (__bridge CFDictionaryRef)containerProperties);
         
         for (size_t i = 0; i < count; i++) {
-            FWImageFrame *frame = frames[i];
+            __FWImageFrame *frame = frames[i];
             CGImageRef frameImageRef = frame.image.CGImage;
             properties[[self dictionaryProperty:format]] = @{[self delayTimeProperty:format] : @(frame.duration)};
             CGImageDestinationAddImage(imageDestination, frameImageRef, (__bridge CFDictionaryRef)properties);
@@ -285,21 +285,21 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return [imageData copy];
 }
 
-- (BOOL)isAnimated:(FWImageFormat)format forDecode:(BOOL)forDecode
+- (BOOL)isAnimated:(__FWImageFormat)format forDecode:(BOOL)forDecode
 {
     BOOL isAnimated = NO;
     switch (format) {
-        case FWImageFormatPNG:
-        case FWImageFormatGIF:
+        case __FWImageFormatPNG:
+        case __FWImageFormatGIF:
             isAnimated = YES;
             break;
-        case FWImageFormatHEIC:
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIC:
+        case __FWImageFormatHEIF:
             if (@available(iOS 13.0, *)) {
                 isAnimated = self.heicsEnabled;
             }
             break;
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             if (@available(iOS 14.0, *)) {
                 isAnimated = YES;
             }
@@ -320,7 +320,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
         NSArray *encodeUTTypes = (__bridge_transfer NSArray *)CGImageDestinationCopyTypeIdentifiers();
         encodeUTTypeSet = [NSSet setWithArray:encodeUTTypes];
     });
-    CFStringRef imageUTType = [FWImageCoder utTypeFromImageFormat:format];
+    CFStringRef imageUTType = [__FWImageCoder utTypeFromImageFormat:format];
     NSSet *imageUTTypeSet = forDecode ? decodeUTTypeSet : encodeUTTypeSet;
     if ([imageUTTypeSet containsObject:(__bridge NSString *)(imageUTType)]) {
         return YES;
@@ -362,21 +362,21 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return exifOrientation;
 }
 
-- (NSString *)dictionaryProperty:(FWImageFormat)format
+- (NSString *)dictionaryProperty:(__FWImageFormat)format
 {
     switch (format) {
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             return (__bridge NSString *)kCGImagePropertyGIFDictionary;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             return (__bridge NSString *)kCGImagePropertyPNGDictionary;
-        case FWImageFormatHEIC:
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIC:
+        case __FWImageFormatHEIF:
             if (@available(iOS 13.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyHEICSDictionary;
             } else {
                 return @"{HEICS}";
             }
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDictionary;
             }
@@ -386,21 +386,21 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-- (NSString *)unclampedDelayTimeProperty:(FWImageFormat)format
+- (NSString *)unclampedDelayTimeProperty:(__FWImageFormat)format
 {
     switch (format) {
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             return (__bridge NSString *)kCGImagePropertyGIFUnclampedDelayTime;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             return (__bridge NSString *)kCGImagePropertyAPNGUnclampedDelayTime;
-        case FWImageFormatHEIC:
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIC:
+        case __FWImageFormatHEIF:
             if (@available(iOS 13.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyHEICSUnclampedDelayTime;
             } else {
                 return @"UnclampedDelayTime";
             }
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPUnclampedDelayTime;
             }
@@ -410,21 +410,21 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-- (NSString *)delayTimeProperty:(FWImageFormat)format
+- (NSString *)delayTimeProperty:(__FWImageFormat)format
 {
     switch (format) {
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             return (__bridge NSString *)kCGImagePropertyGIFDelayTime;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             return (__bridge NSString *)kCGImagePropertyAPNGDelayTime;
-        case FWImageFormatHEIC:
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIC:
+        case __FWImageFormatHEIF:
             if (@available(iOS 13.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyHEICSDelayTime;
             } else {
                 return @"DelayTime";
             }
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPDelayTime;
             }
@@ -434,21 +434,21 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-- (NSString *)loopCountProperty:(FWImageFormat)format
+- (NSString *)loopCountProperty:(__FWImageFormat)format
 {
     switch (format) {
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             return (__bridge NSString *)kCGImagePropertyGIFLoopCount;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             return (__bridge NSString *)kCGImagePropertyAPNGLoopCount;
-        case FWImageFormatHEIC:
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIC:
+        case __FWImageFormatHEIF:
             if (@available(iOS 13.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyHEICSLoopCount;
             } else {
                 return @"LoopCount";
             }
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             if (@available(iOS 14.0, *)) {
                 return (__bridge NSString *)kCGImagePropertyWebPLoopCount;
             }
@@ -458,17 +458,17 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-- (NSUInteger)defaultLoopCount:(FWImageFormat)format
+- (NSUInteger)defaultLoopCount:(__FWImageFormat)format
 {
     switch (format) {
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             return 1;
         default:
             return 0;
     }
 }
 
-- (NSUInteger)imageLoopCountWithSource:(CGImageSourceRef)source format:(FWImageFormat)format
+- (NSUInteger)imageLoopCountWithSource:(CGImageSourceRef)source format:(__FWImageFormat)format
 {
     NSUInteger loopCount = [self defaultLoopCount:format];
     NSDictionary *imageProperties = (__bridge_transfer NSDictionary *)CGImageSourceCopyProperties(source, NULL);
@@ -482,7 +482,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return loopCount;
 }
 
-- (NSTimeInterval)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source format:(FWImageFormat)format
+- (NSTimeInterval)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source format:(__FWImageFormat)format
 {
     NSDictionary *options = @{
         (__bridge NSString *)kCGImageSourceShouldCacheImmediately : @(YES),
@@ -516,7 +516,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
 - (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale
 {
     CFStringRef uttype = CGImageSourceGetType(source);
-    BOOL isVector = ([FWImageCoder imageFormatFromUTType:uttype] == FWImageFormatPDF);
+    BOOL isVector = ([__FWImageCoder imageFormatFromUTType:uttype] == __FWImageFormatPDF);
 
     NSMutableDictionary *decodingOptions = [NSMutableDictionary dictionary];
     if (isVector) {
@@ -532,10 +532,10 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return image;
 }
 
-+ (FWImageFormat)imageFormatForImageData:(NSData *)data
++ (__FWImageFormat)imageFormatForImageData:(NSData *)data
 {
     if (data.length < 1) {
-        return FWImageFormatUndefined;
+        return __FWImageFormatUndefined;
     }
     
     // File signatures table: http://www.garykessler.net/library/file_sigs.html
@@ -543,20 +543,20 @@ static SEL FWCGSVGDocumentSEL = NULL;
     [data getBytes:&c length:1];
     switch (c) {
         case 0xFF:
-            return FWImageFormatJPEG;
+            return __FWImageFormatJPEG;
         case 0x89:
-            return FWImageFormatPNG;
+            return __FWImageFormatPNG;
         case 0x47:
-            return FWImageFormatGIF;
+            return __FWImageFormatGIF;
         case 0x49:
         case 0x4D:
-            return FWImageFormatTIFF;
+            return __FWImageFormatTIFF;
         case 0x52: {
             if (data.length >= 12) {
                 //RIFF....WEBP
                 NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, 12)] encoding:NSASCIIStringEncoding];
                 if ([testString hasPrefix:@"RIFF"] && [testString hasSuffix:@"WEBP"]) {
-                    return FWImageFormatWebP;
+                    return __FWImageFormatWebP;
                 }
             }
             break;
@@ -569,11 +569,11 @@ static SEL FWCGSVGDocumentSEL = NULL;
                     || [testString isEqualToString:@"ftypheix"]
                     || [testString isEqualToString:@"ftyphevc"]
                     || [testString isEqualToString:@"ftyphevx"]) {
-                    return FWImageFormatHEIC;
+                    return __FWImageFormatHEIC;
                 }
                 //....ftypmif1 ....ftypmsf1
                 if ([testString isEqualToString:@"ftypmif1"] || [testString isEqualToString:@"ftypmsf1"]) {
-                    return FWImageFormatHEIF;
+                    return __FWImageFormatHEIF;
                 }
             }
             break;
@@ -583,49 +583,49 @@ static SEL FWCGSVGDocumentSEL = NULL;
                 //%PDF
                 NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(1, 3)] encoding:NSASCIIStringEncoding];
                 if ([testString isEqualToString:@"PDF"]) {
-                    return FWImageFormatPDF;
+                    return __FWImageFormatPDF;
                 }
             }
         }
         case 0x3C: {
             // Check end with SVG tag
             if ([data rangeOfData:[kSVGTagEnd dataUsingEncoding:NSUTF8StringEncoding] options:NSDataSearchBackwards range: NSMakeRange(data.length - MIN(100, data.length), MIN(100, data.length))].location != NSNotFound) {
-                return FWImageFormatSVG;
+                return __FWImageFormatSVG;
             }
         }
     }
-    return FWImageFormatUndefined;
+    return __FWImageFormatUndefined;
 }
 
-+ (nonnull CFStringRef)utTypeFromImageFormat:(FWImageFormat)format
++ (nonnull CFStringRef)utTypeFromImageFormat:(__FWImageFormat)format
 {
     CFStringRef UTType;
     switch (format) {
-        case FWImageFormatJPEG:
+        case __FWImageFormatJPEG:
             UTType = kUTTypeJPEG;
             break;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             UTType = kUTTypePNG;
             break;
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             UTType = kUTTypeGIF;
             break;
-        case FWImageFormatTIFF:
+        case __FWImageFormatTIFF:
             UTType = kUTTypeTIFF;
             break;
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             UTType = kFWUTTypeWebP;
             break;
-        case FWImageFormatHEIC:
+        case __FWImageFormatHEIC:
             UTType = kFWUTTypeHEIC;
             break;
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIF:
             UTType = kFWUTTypeHEIF;
             break;
-        case FWImageFormatPDF:
+        case __FWImageFormatPDF:
             UTType = kUTTypePDF;
             break;
-        case FWImageFormatSVG:
+        case __FWImageFormatSVG:
             UTType = kUTTypeScalableVectorGraphics;
             break;
         default:
@@ -636,65 +636,65 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return UTType;
 }
 
-+ (FWImageFormat)imageFormatFromUTType:(CFStringRef)uttype
++ (__FWImageFormat)imageFormatFromUTType:(CFStringRef)uttype
 {
     if (!uttype) {
-        return FWImageFormatUndefined;
+        return __FWImageFormatUndefined;
     }
-    FWImageFormat imageFormat;
+    __FWImageFormat imageFormat;
     if (CFStringCompare(uttype, kUTTypeJPEG, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatJPEG;
+        imageFormat = __FWImageFormatJPEG;
     } else if (CFStringCompare(uttype, kUTTypePNG, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatPNG;
+        imageFormat = __FWImageFormatPNG;
     } else if (CFStringCompare(uttype, kUTTypeGIF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatGIF;
+        imageFormat = __FWImageFormatGIF;
     } else if (CFStringCompare(uttype, kUTTypeTIFF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatTIFF;
+        imageFormat = __FWImageFormatTIFF;
     } else if (CFStringCompare(uttype, kFWUTTypeWebP, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatWebP;
+        imageFormat = __FWImageFormatWebP;
     } else if (CFStringCompare(uttype, kFWUTTypeHEIC, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatHEIC;
+        imageFormat = __FWImageFormatHEIC;
     } else if (CFStringCompare(uttype, kFWUTTypeHEIF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatHEIF;
+        imageFormat = __FWImageFormatHEIF;
     } else if (CFStringCompare(uttype, kUTTypePDF, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatPDF;
+        imageFormat = __FWImageFormatPDF;
     } else if (CFStringCompare(uttype, kUTTypeScalableVectorGraphics, 0) == kCFCompareEqualTo) {
-        imageFormat = FWImageFormatSVG;
+        imageFormat = __FWImageFormatSVG;
     } else {
-        imageFormat = FWImageFormatUndefined;
+        imageFormat = __FWImageFormatUndefined;
     }
     return imageFormat;
 }
 
-+ (NSString *)mimeTypeFromImageFormat:(FWImageFormat)format
++ (NSString *)mimeTypeFromImageFormat:(__FWImageFormat)format
 {
     NSString *mimeType;
     switch (format) {
-        case FWImageFormatJPEG:
+        case __FWImageFormatJPEG:
             mimeType = @"image/jpeg";
             break;
-        case FWImageFormatPNG:
+        case __FWImageFormatPNG:
             mimeType = @"image/png";
             break;
-        case FWImageFormatGIF:
+        case __FWImageFormatGIF:
             mimeType = @"image/gif";
             break;
-        case FWImageFormatTIFF:
+        case __FWImageFormatTIFF:
             mimeType = @"image/tiff";
             break;
-        case FWImageFormatWebP:
+        case __FWImageFormatWebP:
             mimeType = @"image/webp";
             break;
-        case FWImageFormatHEIC:
+        case __FWImageFormatHEIC:
             mimeType = @"image/heic";
             break;
-        case FWImageFormatHEIF:
+        case __FWImageFormatHEIF:
             mimeType = @"image/heif";
             break;
-        case FWImageFormatPDF:
+        case __FWImageFormatPDF:
             mimeType = @"application/pdf";
             break;
-        case FWImageFormatSVG:
+        case __FWImageFormatSVG:
             mimeType = @"image/svg+xml";
             break;
         default:
@@ -716,7 +716,7 @@ static SEL FWCGSVGDocumentSEL = NULL;
 {
     if (data.length < 1) return nil;
     NSString *base64String = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-    NSString *mimeType = [FWImageCoder mimeTypeFromImageFormat:[FWImageCoder imageFormatForImageData:data]];
+    NSString *mimeType = [__FWImageCoder mimeTypeFromImageFormat:[__FWImageCoder imageFormatForImageData:data]];
     NSString *base64Prefix = [NSString stringWithFormat:@"data:%@;base64,", mimeType];
     return [base64Prefix stringByAppendingString:base64String];
 }

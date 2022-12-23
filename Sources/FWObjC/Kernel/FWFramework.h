@@ -25,7 +25,7 @@
 #import "FWHTTPSessionManager.h"
 #import "FWNetworkPrivate.h"
 #import "Database.h"
-#import "FWWebImage.h"
+#import "WebImage.h"
 
 #import "Appearance.h"
 #import "Icon.h"

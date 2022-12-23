@@ -1,11 +1,11 @@
 //
-//  FWWebImage.m
+//  WebImage.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWWebImage.h"
+#import "WebImage.h"
 #import "FWHTTPSessionManager.h"
 #import "Plugin.h"
 #import <objc/runtime.h>
@@ -20,9 +20,9 @@
 
 #endif
 
-#pragma mark - FWAutoPurgingImageCache
+#pragma mark - __FWAutoPurgingImageCache
 
-@interface FWCachedImage : NSObject
+@interface __FWCachedImage : NSObject
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, copy) NSString *identifier;
@@ -32,7 +32,7 @@
 
 @end
 
-@implementation FWCachedImage
+@implementation __FWCachedImage
 
 - (instancetype)initWithImage:(UIImage *)image identifier:(NSString *)identifier {
     if (self = [self init]) {
@@ -61,13 +61,13 @@
 
 @end
 
-@interface FWAutoPurgingImageCache ()
-@property (nonatomic, strong) NSMutableDictionary <NSString* , FWCachedImage*> *cachedImages;
+@interface __FWAutoPurgingImageCache ()
+@property (nonatomic, strong) NSMutableDictionary <NSString* , __FWCachedImage*> *cachedImages;
 @property (nonatomic, assign) UInt64 currentMemoryUsage;
 @property (nonatomic, strong) dispatch_queue_t synchronizationQueue;
 @end
 
-@implementation FWAutoPurgingImageCache
+@implementation __FWAutoPurgingImageCache
 
 - (instancetype)init {
     return [self initWithMemoryCapacity:100 * 1024 * 1024 preferredMemoryCapacity:60 * 1024 * 1024];
@@ -106,9 +106,9 @@
 
 - (void)addImage:(UIImage *)image withIdentifier:(NSString *)identifier {
     dispatch_barrier_async(self.synchronizationQueue, ^{
-        FWCachedImage *cacheImage = [[FWCachedImage alloc] initWithImage:image identifier:identifier];
+        __FWCachedImage *cacheImage = [[__FWCachedImage alloc] initWithImage:image identifier:identifier];
 
-        FWCachedImage *previousCachedImage = self.cachedImages[identifier];
+        __FWCachedImage *previousCachedImage = self.cachedImages[identifier];
         if (previousCachedImage != nil) {
             self.currentMemoryUsage -= previousCachedImage.totalBytes;
         }
@@ -120,14 +120,14 @@
     dispatch_barrier_async(self.synchronizationQueue, ^{
         if (self.currentMemoryUsage > self.memoryCapacity) {
             UInt64 bytesToPurge = self.currentMemoryUsage - self.preferredMemoryUsageAfterPurge;
-            NSMutableArray <FWCachedImage*> *sortedImages = [NSMutableArray arrayWithArray:self.cachedImages.allValues];
+            NSMutableArray <__FWCachedImage*> *sortedImages = [NSMutableArray arrayWithArray:self.cachedImages.allValues];
             NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastAccessDate"
                                                                            ascending:YES];
             [sortedImages sortUsingDescriptors:@[sortDescriptor]];
 
             UInt64 bytesPurged = 0;
 
-            for (FWCachedImage *cachedImage in sortedImages) {
+            for (__FWCachedImage *cachedImage in sortedImages) {
                 [self.cachedImages removeObjectForKey:cachedImage.identifier];
                 bytesPurged += cachedImage.totalBytes;
                 if (bytesPurged >= bytesToPurge) {
@@ -142,7 +142,7 @@
 - (BOOL)removeImageWithIdentifier:(NSString *)identifier {
     __block BOOL removed = NO;
     dispatch_barrier_sync(self.synchronizationQueue, ^{
-        FWCachedImage *cachedImage = self.cachedImages[identifier];
+        __FWCachedImage *cachedImage = self.cachedImages[identifier];
         if (cachedImage != nil) {
             [self.cachedImages removeObjectForKey:identifier];
             self.currentMemoryUsage -= cachedImage.totalBytes;
@@ -167,7 +167,7 @@
 - (nullable UIImage *)imageWithIdentifier:(NSString *)identifier {
     __block UIImage *image = nil;
     dispatch_sync(self.synchronizationQueue, ^{
-        FWCachedImage *cachedImage = self.cachedImages[identifier];
+        __FWCachedImage *cachedImage = self.cachedImages[identifier];
         image = [cachedImage accessImage];
     });
     return image;
@@ -199,16 +199,16 @@
 
 @end
 
-#pragma mark - FWImageDownloader
+#pragma mark - __FWImageDownloader
 
-@interface FWImageDownloaderResponseHandler : NSObject
+@interface __FWImageDownloaderResponseHandler : NSObject
 @property (nonatomic, strong) NSUUID *uuid;
 @property (nonatomic, copy) void (^successBlock)(NSURLRequest *, NSHTTPURLResponse *, UIImage *);
 @property (nonatomic, copy) void (^failureBlock)(NSURLRequest *, NSHTTPURLResponse *, NSError *);
 @property (nonatomic, copy) void (^progressBlock)(NSProgress *);
 @end
 
-@implementation FWImageDownloaderResponseHandler
+@implementation __FWImageDownloaderResponseHandler
 
 - (instancetype)initWithUUID:(NSUUID *)uuid
                      success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *responseObject))success
@@ -224,20 +224,20 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat: @"<FWImageDownloaderResponseHandler>UUID: %@", [self.uuid UUIDString]];
+    return [NSString stringWithFormat: @"<__FWImageDownloaderResponseHandler>UUID: %@", [self.uuid UUIDString]];
 }
 
 @end
 
-@interface FWImageDownloaderMergedTask : NSObject
+@interface __FWImageDownloaderMergedTask : NSObject
 @property (nonatomic, strong) NSString *URLIdentifier;
 @property (nonatomic, strong) NSUUID *identifier;
 @property (nonatomic, strong) NSURLSessionDataTask *task;
-@property (nonatomic, strong) NSMutableArray <FWImageDownloaderResponseHandler*> *responseHandlers;
+@property (nonatomic, strong) NSMutableArray <__FWImageDownloaderResponseHandler*> *responseHandlers;
 
 @end
 
-@implementation FWImageDownloaderMergedTask
+@implementation __FWImageDownloaderMergedTask
 
 - (instancetype)initWithURLIdentifier:(NSString *)URLIdentifier identifier:(NSUUID *)identifier task:(NSURLSessionDataTask *)task {
     if (self = [self init]) {
@@ -249,17 +249,17 @@
     return self;
 }
 
-- (void)addResponseHandler:(FWImageDownloaderResponseHandler *)handler {
+- (void)addResponseHandler:(__FWImageDownloaderResponseHandler *)handler {
     [self.responseHandlers addObject:handler];
 }
 
-- (void)removeResponseHandler:(FWImageDownloaderResponseHandler *)handler {
+- (void)removeResponseHandler:(__FWImageDownloaderResponseHandler *)handler {
     [self.responseHandlers removeObject:handler];
 }
 
 @end
 
-@implementation FWImageDownloadReceipt
+@implementation __FWImageDownloadReceipt
 
 - (instancetype)initWithReceiptID:(NSUUID *)receiptID task:(NSURLSessionDataTask *)task {
     if (self = [self init]) {
@@ -271,7 +271,7 @@
 
 @end
 
-@interface FWImageDownloader ()
+@interface __FWImageDownloader ()
 
 @property (nonatomic, strong) dispatch_queue_t synchronizationQueue;
 @property (nonatomic, strong) dispatch_queue_t responseQueue;
@@ -284,14 +284,14 @@
 
 @end
 
-@implementation FWImageDownloader
+@implementation __FWImageDownloader
 
 + (NSURLCache *)defaultURLCache {
     NSUInteger memoryCapacity = 20 * 1024 * 1024; // 20MB
     NSUInteger diskCapacity = 150 * 1024 * 1024; // 150MB
     return [[NSURLCache alloc] initWithMemoryCapacity:memoryCapacity
                                          diskCapacity:diskCapacity
-                                             diskPath:@"FWImageCache"];
+                                             diskPath:@"__FWImageCache"];
 }
 
 + (NSURLSessionConfiguration *)defaultURLSessionConfiguration {
@@ -305,7 +305,7 @@
     configuration.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
     configuration.allowsCellularAccess = YES;
     configuration.timeoutIntervalForRequest = 60.0;
-    configuration.URLCache = [FWImageDownloader defaultURLCache];
+    configuration.URLCache = [__FWImageDownloader defaultURLCache];
 
     return configuration;
 }
@@ -323,15 +323,15 @@
     sessionManager.responseSerializer = responseSerializer;
 
     return [self initWithSessionManager:sessionManager
-                 downloadPrioritization:FWImageDownloadPrioritizationFIFO
+                 downloadPrioritization:__FWImageDownloadPrioritizationFIFO
                  maximumActiveDownloads:4
-                             imageCache:[[FWAutoPurgingImageCache alloc] init]];
+                             imageCache:[[__FWAutoPurgingImageCache alloc] init]];
 }
 
 - (instancetype)initWithSessionManager:(FWHTTPSessionManager *)sessionManager
-                downloadPrioritization:(FWImageDownloadPrioritization)downloadPrioritization
+                downloadPrioritization:(__FWImageDownloadPrioritization)downloadPrioritization
                 maximumActiveDownloads:(NSInteger)maximumActiveDownloads
-                            imageCache:(id <FWImageRequestCache>)imageCache {
+                            imageCache:(id <__FWImageRequestCache>)imageCache {
     if (self = [super init]) {
         self.sessionManager = sessionManager;
 
@@ -353,18 +353,18 @@
     return self;
 }
 
-+ (FWImageDownloader *)sharedDownloader
++ (__FWImageDownloader *)sharedDownloader
 {
-    return objc_getAssociatedObject([FWImageDownloader class], @selector(sharedDownloader)) ?: [FWImageDownloader defaultInstance];
+    return objc_getAssociatedObject([__FWImageDownloader class], @selector(sharedDownloader)) ?: [__FWImageDownloader defaultInstance];
 }
 
-+ (void)setSharedDownloader:(FWImageDownloader *)sharedDownloader
++ (void)setSharedDownloader:(__FWImageDownloader *)sharedDownloader
 {
-    objc_setAssociatedObject([FWImageDownloader class], @selector(sharedDownloader), sharedDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject([__FWImageDownloader class], @selector(sharedDownloader), sharedDownloader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (instancetype)defaultInstance {
-    static FWImageDownloader *sharedInstance = nil;
+    static __FWImageDownloader *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
@@ -372,19 +372,19 @@
     return sharedInstance;
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+- (nullable __FWImageDownloadReceipt *)downloadImageForURL:(id)url
                                                  options:(FWWebImageOptions)options
-                                                 context:(NSDictionary<FWImageCoderOptions,id> *)context
+                                                 context:(NSDictionary<__FWImageCoderOptions,id> *)context
                                                  success:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
                                                  failure:(void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
     return [self downloadImageForURL:url withReceiptID:[NSUUID UUID] options:options context:context success:success failure:failure progress:progress];
 }
 
-- (nullable FWImageDownloadReceipt *)downloadImageForURL:(id)url
+- (nullable __FWImageDownloadReceipt *)downloadImageForURL:(id)url
                                            withReceiptID:(nonnull NSUUID *)receiptID
                                                  options:(FWWebImageOptions)options
-                                                 context:(nullable NSDictionary<FWImageCoderOptions, id> *)context
+                                                 context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
                                                 progress:(nullable void (^)(NSProgress * _Nonnull))progress {
@@ -403,9 +403,9 @@
         }
 
         // 1) Append the success and failure blocks to a pre-existing request if it already exists
-        FWImageDownloaderMergedTask *existingMergedTask = self.mergedTasks[URLIdentifier];
+        __FWImageDownloaderMergedTask *existingMergedTask = self.mergedTasks[URLIdentifier];
         if (existingMergedTask != nil) {
-            FWImageDownloaderResponseHandler *handler = [[FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID success:success failure:failure progress:progress];
+            __FWImageDownloaderResponseHandler *handler = [[__FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID success:success failure:failure progress:progress];
             [existingMergedTask addResponseHandler:handler];
             task = existingMergedTask.task;
             return;
@@ -445,10 +445,10 @@
                        downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
                            dispatch_async(self.responseQueue, ^{
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                               FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
+                               __FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
                                    NSArray *responseHandlers = [strongSelf safelyGetResponseHandlers:URLIdentifier];
-                                   for (FWImageDownloaderResponseHandler *handler in responseHandlers) {
+                                   for (__FWImageDownloaderResponseHandler *handler in responseHandlers) {
                                        if (handler.progressBlock) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                handler.progressBlock(downloadProgress);
@@ -461,11 +461,11 @@
                        completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
                            dispatch_async(self.responseQueue, ^{
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                               FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
+                               __FWImageDownloaderMergedTask *mergedTask = [strongSelf safelyGetMergedTask:URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
                                    mergedTask = [strongSelf safelyRemoveMergedTaskWithURLIdentifier:URLIdentifier];
                                    if (error) {
-                                       for (FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
+                                       for (__FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
                                            if (handler.failureBlock) {
                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                    handler.failureBlock(request, (NSHTTPURLResponse *)response, error);
@@ -477,7 +477,7 @@
                                            [strongSelf.imageCache addImage:responseObject forRequest:request withAdditionalIdentifier:nil];
                                        }
 
-                                       for (FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
+                                       for (__FWImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
                                            if (handler.successBlock) {
                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                    handler.successBlock(request, (NSHTTPURLResponse *)response, responseObject);
@@ -496,11 +496,11 @@
         if (context) [self.sessionManager setUserInfo:context forTask:createdTask];
 
         // 4) Store the response handler for use when the request completes
-        FWImageDownloaderResponseHandler *handler = [[FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID
+        __FWImageDownloaderResponseHandler *handler = [[__FWImageDownloaderResponseHandler alloc] initWithUUID:receiptID
                                                                                                    success:success
                                                                                                    failure:failure
                                                                                                   progress:progress];
-        FWImageDownloaderMergedTask *mergedTask = [[FWImageDownloaderMergedTask alloc]
+        __FWImageDownloaderMergedTask *mergedTask = [[__FWImageDownloaderMergedTask alloc]
                                                    initWithURLIdentifier:URLIdentifier
                                                    identifier:mergedTaskIdentifier
                                                    task:createdTask];
@@ -517,22 +517,22 @@
         task = mergedTask.task;
     });
     if (task) {
-        return [[FWImageDownloadReceipt alloc] initWithReceiptID:receiptID task:task];
+        return [[__FWImageDownloadReceipt alloc] initWithReceiptID:receiptID task:task];
     } else {
         return nil;
     }
 }
 
-- (void)cancelTaskForImageDownloadReceipt:(FWImageDownloadReceipt *)imageDownloadReceipt {
+- (void)cancelTaskForImageDownloadReceipt:(__FWImageDownloadReceipt *)imageDownloadReceipt {
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = imageDownloadReceipt.task.originalRequest.URL.absoluteString;
-        FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
-        NSUInteger index = [mergedTask.responseHandlers indexOfObjectPassingTest:^BOOL(FWImageDownloaderResponseHandler * _Nonnull handler, __unused NSUInteger idx, __unused BOOL * _Nonnull stop) {
+        __FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
+        NSUInteger index = [mergedTask.responseHandlers indexOfObjectPassingTest:^BOOL(__FWImageDownloaderResponseHandler * _Nonnull handler, __unused NSUInteger idx, __unused BOOL * _Nonnull stop) {
             return handler.uuid == imageDownloadReceipt.receiptID;
         }];
 
         if (index != NSNotFound) {
-            FWImageDownloaderResponseHandler *handler = mergedTask.responseHandlers[index];
+            __FWImageDownloaderResponseHandler *handler = mergedTask.responseHandlers[index];
             [mergedTask removeResponseHandler:handler];
             NSString *failureReason = [NSString stringWithFormat:@"ImageDownloader cancelled URL request: %@",imageDownloadReceipt.task.originalRequest.URL.absoluteString];
             NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey:failureReason};
@@ -582,8 +582,8 @@
     return urlRequest;
 }
 
-- (FWImageDownloaderMergedTask *)safelyRemoveMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
-    __block FWImageDownloaderMergedTask *mergedTask = nil;
+- (__FWImageDownloaderMergedTask *)safelyRemoveMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
+    __block __FWImageDownloaderMergedTask *mergedTask = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         mergedTask = [self removeMergedTaskWithURLIdentifier:URLIdentifier];
     });
@@ -591,8 +591,8 @@
 }
 
 //This method should only be called from safely within the synchronizationQueue
-- (FWImageDownloaderMergedTask *)removeMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
-    FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
+- (__FWImageDownloaderMergedTask *)removeMergedTaskWithURLIdentifier:(NSString *)URLIdentifier {
+    __FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
     [self.mergedTasks removeObjectForKey:URLIdentifier];
     return mergedTask;
 }
@@ -609,7 +609,7 @@
     dispatch_sync(self.synchronizationQueue, ^{
         if ([self isActiveRequestCountBelowMaximumLimit]) {
             while (self.queuedMergedTasks.count > 0) {
-                FWImageDownloaderMergedTask *mergedTask = [self dequeueMergedTask];
+                __FWImageDownloaderMergedTask *mergedTask = [self dequeueMergedTask];
                 if (mergedTask.task.state == NSURLSessionTaskStateSuspended) {
                     [self startMergedTask:mergedTask];
                     break;
@@ -619,24 +619,24 @@
     });
 }
 
-- (void)startMergedTask:(FWImageDownloaderMergedTask *)mergedTask {
+- (void)startMergedTask:(__FWImageDownloaderMergedTask *)mergedTask {
     [mergedTask.task resume];
     ++self.activeRequestCount;
 }
 
-- (void)enqueueMergedTask:(FWImageDownloaderMergedTask *)mergedTask {
+- (void)enqueueMergedTask:(__FWImageDownloaderMergedTask *)mergedTask {
     switch (self.downloadPrioritization) {
-        case FWImageDownloadPrioritizationFIFO:
+        case __FWImageDownloadPrioritizationFIFO:
             [self.queuedMergedTasks addObject:mergedTask];
             break;
-        case FWImageDownloadPrioritizationLIFO:
+        case __FWImageDownloadPrioritizationLIFO:
             [self.queuedMergedTasks insertObject:mergedTask atIndex:0];
             break;
     }
 }
 
-- (FWImageDownloaderMergedTask *)dequeueMergedTask {
-    FWImageDownloaderMergedTask *mergedTask = nil;
+- (__FWImageDownloaderMergedTask *)dequeueMergedTask {
+    __FWImageDownloaderMergedTask *mergedTask = nil;
     mergedTask = [self.queuedMergedTasks firstObject];
     [self.queuedMergedTasks removeObject:mergedTask];
     return mergedTask;
@@ -646,8 +646,8 @@
     return self.activeRequestCount < self.maximumActiveDownloads;
 }
 
-- (FWImageDownloaderMergedTask *)safelyGetMergedTask:(NSString *)URLIdentifier {
-    __block FWImageDownloaderMergedTask *mergedTask;
+- (__FWImageDownloaderMergedTask *)safelyGetMergedTask:(NSString *)URLIdentifier {
+    __block __FWImageDownloaderMergedTask *mergedTask;
     dispatch_sync(self.synchronizationQueue, ^(){
         mergedTask = self.mergedTasks[URLIdentifier];
     });
@@ -657,19 +657,19 @@
 - (NSArray *)safelyGetResponseHandlers:(NSString *)URLIdentifier {
     __block NSArray *responseHandlers;
     dispatch_sync(self.synchronizationQueue, ^(){
-        FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
+        __FWImageDownloaderMergedTask *mergedTask = self.mergedTasks[URLIdentifier];
         responseHandlers = [mergedTask.responseHandlers copy];
     });
     return responseHandlers;
 }
 
-- (FWImageDownloadReceipt *)activeImageDownloadReceipt:(id)object
+- (__FWImageDownloadReceipt *)activeImageDownloadReceipt:(id)object
 {
     if (!object) return nil;
-    return (FWImageDownloadReceipt *)objc_getAssociatedObject(object, @selector(activeImageDownloadReceipt:));
+    return (__FWImageDownloadReceipt *)objc_getAssociatedObject(object, @selector(activeImageDownloadReceipt:));
 }
 
-- (void)setActiveImageDownloadReceipt:(FWImageDownloadReceipt *)receipt forObject:(id)object
+- (void)setActiveImageDownloadReceipt:(__FWImageDownloadReceipt *)receipt forObject:(id)object
 {
     if (!object) return;
     objc_setAssociatedObject(object, @selector(activeImageDownloadReceipt:), receipt, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -702,7 +702,7 @@
 - (void)downloadImageForObject:(id)object
                       imageURL:(id)url
                        options:(FWWebImageOptions)options
-                       context:(NSDictionary<FWImageCoderOptions, id> *)context
+                       context:(NSDictionary<__FWImageCoderOptions, id> *)context
                    placeholder:(void (^)(void))placeholder
                     completion:(void (^)(UIImage * _Nullable, BOOL, NSError * _Nullable))completion
                       progress:(void (^)(double))progress
@@ -710,7 +710,7 @@
     if (!object) return;
     NSURLRequest *urlRequest = [self urlRequestWithURL:url options:options];
     [self setImageOperationKey:NSStringFromClass([object class]) forObject:object];
-    FWImageDownloadReceipt *activeReceipt = [self activeImageDownloadReceipt:object];
+    __FWImageDownloadReceipt *activeReceipt = [self activeImageDownloadReceipt:object];
     if (activeReceipt != nil) {
         [self cancelTaskForImageDownloadReceipt:activeReceipt];
         [self setActiveImageDownloadReceipt:nil forObject:object];
@@ -731,7 +731,7 @@
     UIImage *cachedImage = nil;
     if (!(options & FWWebImageOptionRefreshCached) &&
         !(options & FWWebImageOptionIgnoreCache)) {
-        id<FWImageRequestCache> imageCache = self.imageCache;
+        id<__FWImageRequestCache> imageCache = self.imageCache;
         cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
     }
     if (cachedImage) {
@@ -745,7 +745,7 @@
         }
         __weak __typeof(self)weakSelf = self;
         NSUUID *downloadID = [NSUUID UUID];
-        FWImageDownloadReceipt *receipt;
+        __FWImageDownloadReceipt *receipt;
         receipt = [self
                    downloadImageForURL:urlRequest
                    withReceiptID:downloadID
@@ -784,7 +784,7 @@
 - (void)cancelImageDownloadTask:(id)object
 {
     if (!object) return;
-    FWImageDownloadReceipt *receipt = [self activeImageDownloadReceipt:object];
+    __FWImageDownloadReceipt *receipt = [self activeImageDownloadReceipt:object];
     if (receipt != nil) {
         [self cancelTaskForImageDownloadReceipt:receipt];
         [self setActiveImageDownloadReceipt:nil forObject:object];
@@ -794,24 +794,24 @@
 
 @end
 
-#pragma mark - FWImagePluginImpl
+#pragma mark - __FWImagePluginImpl
 
-@implementation FWImagePluginImpl
+@implementation __FWImagePluginImpl
 
 + (void)load
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [__FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[FWImagePluginImpl class]];
+        [__FWPluginManager presetPlugin:@protocol(FWImagePlugin) withObject:[__FWImagePluginImpl class]];
     });
 }
 
-+ (FWImagePluginImpl *)sharedInstance
++ (__FWImagePluginImpl *)sharedInstance
 {
-    static FWImagePluginImpl *instance = nil;
+    static __FWImagePluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWImagePluginImpl alloc] init];
+        instance = [[__FWImagePluginImpl alloc] init];
     });
     return instance;
 }
@@ -821,29 +821,29 @@
     return [[UIImageView alloc] init];
 }
 
-- (UIImage *)imageDecode:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<FWImageCoderOptions,id> *)options
+- (UIImage *)imageDecode:(NSData *)data scale:(CGFloat)scale options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
-    return [[FWImageCoder sharedInstance] decodedImageWithData:data scale:scale options:options];
+    return [[__FWImageCoder sharedInstance] decodedImageWithData:data scale:scale options:options];
 }
 
-- (NSData *)imageEncode:(UIImage *)image options:(NSDictionary<FWImageCoderOptions,id> *)options
+- (NSData *)imageEncode:(UIImage *)image options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
-    FWImageFormat imageFormat = image.fw_imageFormat;
-    NSData *imageData = [FWImageCoder.sharedInstance encodedDataWithImage:image format:imageFormat options:options];
-    if (imageData || imageFormat == FWImageFormatUndefined) return imageData;
-    return [FWImageCoder.sharedInstance encodedDataWithImage:image format:FWImageFormatUndefined options:options];
+    __FWImageFormat imageFormat = image.fw_imageFormat;
+    NSData *imageData = [__FWImageCoder.sharedInstance encodedDataWithImage:image format:imageFormat options:options];
+    if (imageData || imageFormat == __FWImageFormatUndefined) return imageData;
+    return [__FWImageCoder.sharedInstance encodedDataWithImage:image format:__FWImageFormatUndefined options:options];
 }
 
 - (NSURL *)imageURL:(UIImageView *)imageView
 {
-    return [[FWImageDownloader sharedDownloader] imageURLForObject:imageView];
+    return [[__FWImageDownloader sharedDownloader] imageURLForObject:imageView];
 }
 
 - (void)imageView:(UIImageView *)imageView
         setImageURL:(NSURL *)imageURL
         placeholder:(UIImage *)placeholder
             options:(FWWebImageOptions)options
-            context:(NSDictionary<FWImageCoderOptions, id> *)context
+            context:(NSDictionary<__FWImageCoderOptions, id> *)context
          completion:(void (^)(UIImage * _Nullable, NSError * _Nullable))completion
            progress:(void (^)(double))progress
 {
@@ -851,18 +851,18 @@
         self.customBlock(imageView);
     }
     
-    [[FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options context:context placeholder:^{
+    [[__FWImageDownloader sharedDownloader] downloadImageForObject:imageView imageURL:imageURL options:options context:context placeholder:^{
         imageView.image = placeholder;
     } completion:^(UIImage *image, BOOL isCache, NSError *error) {
         BOOL autoSetImage = image && (!(options & FWWebImageOptionAvoidSetImage) || !completion);
-        if (autoSetImage && FWImagePluginImpl.sharedInstance.fadeAnimated && !isCache) {
-            NSString *originalOperationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+        if (autoSetImage && __FWImagePluginImpl.sharedInstance.fadeAnimated && !isCache) {
+            NSString *originalOperationKey = [[__FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
             [UIView transitionWithView:imageView duration:0 options:0 animations:^{
-                NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                NSString *operationKey = [[__FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
                 if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
             } completion:^(BOOL finished) {
                 [UIView transitionWithView:imageView duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction animations:^{
-                    NSString *operationKey = [[FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
+                    NSString *operationKey = [[__FWImageDownloader sharedDownloader] imageOperationKeyForObject:imageView];
                     if (!operationKey || ![originalOperationKey isEqualToString:operationKey]) return;
                     
                     imageView.image = image;
@@ -880,16 +880,16 @@
 
 - (void)cancelImageRequest:(UIImageView *)imageView
 {
-    [[FWImageDownloader sharedDownloader] cancelImageDownloadTask:imageView];
+    [[__FWImageDownloader sharedDownloader] cancelImageDownloadTask:imageView];
 }
 
 - (id)downloadImage:(NSURL *)imageURL
               options:(FWWebImageOptions)options
-              context:(NSDictionary<FWImageCoderOptions, id> *)context
+              context:(NSDictionary<__FWImageCoderOptions, id> *)context
            completion:(void (^)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable))completion
              progress:(void (^)(double))progress
 {
-    return [[FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
+    return [[__FWImageDownloader sharedDownloader] downloadImageForURL:imageURL options:options context:context success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull responseObject) {
         NSData *imageData = [FWImageResponseSerializer cachedResponseDataForImage:responseObject];
         [FWImageResponseSerializer clearCachedResponseDataForImage:responseObject];
         if (completion) {
@@ -906,8 +906,8 @@
 
 - (void)cancelImageDownload:(id)receipt
 {
-    if (receipt && [receipt isKindOfClass:[FWImageDownloadReceipt class]]) {
-        [[FWImageDownloader sharedDownloader] cancelTaskForImageDownloadReceipt:receipt];
+    if (receipt && [receipt isKindOfClass:[__FWImageDownloadReceipt class]]) {
+        [[__FWImageDownloader sharedDownloader] cancelTaskForImageDownloadReceipt:receipt];
     }
 }
 

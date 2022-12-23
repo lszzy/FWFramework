@@ -35,7 +35,7 @@ import FWObjC
         return ImageCoder.isVectorImage(self)
     }
     
-    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回FWImageFormatUndefined
+    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
     public var fw_imageFormat: ImageFormat {
         get {
             if let value = fw_property(forName: "fw_imageFormat") as? NSNumber {
@@ -52,7 +52,7 @@ import FWObjC
 
 @_spi(FW) extension Data {
     
-    /// 获取图片数据的格式，未知格式返回FWImageFormatUndefined
+    /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
     public static func fw_imageFormat(for imageData: Data?) -> ImageFormat {
         return ImageCoder.imageFormat(forImageData: imageData)
     }
@@ -62,7 +62,7 @@ import FWObjC
         return ImageCoder.utType(fromImageFormat: imageFormat)
     }
 
-    /// UTType转化为图片格式，未知格式返回FWImageFormatUndefined
+    /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
     public static func fw_imageFormat(from utType: CFString) -> ImageFormat {
         return ImageCoder.imageFormat(fromUTType: utType)
     }

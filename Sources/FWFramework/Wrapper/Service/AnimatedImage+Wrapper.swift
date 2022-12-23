@@ -28,7 +28,7 @@ extension Wrapper where Base: UIImage {
         return base.fw_isVector
     }
     
-    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回FWImageFormatUndefined
+    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
     public var imageFormat: ImageFormat {
         get { return base.fw_imageFormat }
         set { base.fw_imageFormat = newValue }
@@ -38,7 +38,7 @@ extension Wrapper where Base: UIImage {
 
 extension Wrapper where Base == Data {
     
-    /// 获取图片数据的格式，未知格式返回FWImageFormatUndefined
+    /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(for imageData: Data?) -> ImageFormat {
         return Base.fw_imageFormat(for: imageData)
     }
@@ -48,7 +48,7 @@ extension Wrapper where Base == Data {
         return Base.fw_utType(from: imageFormat)
     }
 
-    /// UTType转化为图片格式，未知格式返回FWImageFormatUndefined
+    /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(from utType: CFString) -> ImageFormat {
         return Base.fw_imageFormat(from: utType)
     }

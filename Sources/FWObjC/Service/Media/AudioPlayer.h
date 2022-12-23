@@ -1,5 +1,5 @@
 //
-//  FWAudioPlayer.h
+//  AudioPlayer.h
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// FWAudioPlayerDelegate, all delegate method is optional
+/// __FWAudioPlayerDelegate, all delegate method is optional
 NS_SWIFT_NAME(AudioPlayerDelegate)
-@protocol FWAudioPlayerDelegate <NSObject>
+@protocol __FWAudioPlayerDelegate <NSObject>
 
 @optional
 - (void)audioPlayerWillChangedAtIndex:(NSInteger)index;
@@ -30,11 +30,11 @@ NS_SWIFT_NAME(AudioPlayerDelegate)
 @end
 
 NS_SWIFT_NAME(AudioPlayerDataSource)
-@protocol FWAudioPlayerDataSource <NSObject>
+@protocol __FWAudioPlayerDataSource <NSObject>
 
 @optional
 
-/// Asks the data source to return the number of items that FWAudioPlayer would play
+/// Asks the data source to return the number of items that __FWAudioPlayer would play
 - (NSInteger)audioPlayerNumberOfItems;
 
 /// Source URL provider, support NSURL|AVURLAsset|AVPlayerItem
@@ -45,50 +45,50 @@ NS_SWIFT_NAME(AudioPlayerDataSource)
 
 @end
 
-typedef NS_ENUM(NSInteger, FWAudioPlayerStatus) {
-    FWAudioPlayerStatusPlaying = 0,
-    FWAudioPlayerStatusForcePause,
-    FWAudioPlayerStatusBuffering,
-    FWAudioPlayerStatusUnknown,
+typedef NS_ENUM(NSInteger, __FWAudioPlayerStatus) {
+    __FWAudioPlayerStatusPlaying = 0,
+    __FWAudioPlayerStatusForcePause,
+    __FWAudioPlayerStatusBuffering,
+    __FWAudioPlayerStatusUnknown,
 } NS_SWIFT_NAME(AudioPlayerStatus);
 
-typedef NS_ENUM(NSInteger, FWAudioPlayerRepeatMode) {
-    FWAudioPlayerRepeatModeOn = 0,
-    FWAudioPlayerRepeatModeOnce,
-    FWAudioPlayerRepeatModeOff,
+typedef NS_ENUM(NSInteger, __FWAudioPlayerRepeatMode) {
+    __FWAudioPlayerRepeatModeOn = 0,
+    __FWAudioPlayerRepeatModeOnce,
+    __FWAudioPlayerRepeatModeOff,
 } NS_SWIFT_NAME(AudioPlayerRepeatMode);
 
-typedef NS_ENUM(NSInteger, FWAudioPlayerShuffleMode) {
-    FWAudioPlayerShuffleModeOn = 0,
-    FWAudioPlayerShuffleModeOff,
+typedef NS_ENUM(NSInteger, __FWAudioPlayerShuffleMode) {
+    __FWAudioPlayerShuffleModeOn = 0,
+    __FWAudioPlayerShuffleModeOff,
 } NS_SWIFT_NAME(AudioPlayerShuffleMode);
 
 /**
- * FWAudioPlayer
+ * __FWAudioPlayer
  *
  * @see https://github.com/StreetVoice/HysteriaPlayer
  */
 NS_SWIFT_NAME(AudioPlayer)
-@interface FWAudioPlayer : NSObject
+@interface __FWAudioPlayer : NSObject
 
-@property (class, nonatomic, readonly) FWAudioPlayer *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWAudioPlayer *sharedInstance NS_SWIFT_NAME(shared);
 
 @property (nonatomic, strong, nullable) AVQueuePlayer *audioPlayer;
-@property (nonatomic, weak, nullable) id<FWAudioPlayerDelegate> delegate;
-@property (nonatomic, weak, nullable) id<FWAudioPlayerDataSource> dataSource;
+@property (nonatomic, weak, nullable) id<__FWAudioPlayerDelegate> delegate;
+@property (nonatomic, weak, nullable) id<__FWAudioPlayerDataSource> dataSource;
 @property (nonatomic, assign) NSInteger itemsCount;
 @property (nonatomic, copy, nullable) NSArray *itemURLs;
 @property (nonatomic, assign) BOOL disableLogs;
 @property (nonatomic, strong, readonly, nullable) NSArray<AVPlayerItem *> *playerItems;
 
-@property (nonatomic, assign) FWAudioPlayerRepeatMode repeatMode;
-@property (nonatomic, assign) FWAudioPlayerShuffleMode shuffleMode;
+@property (nonatomic, assign) __FWAudioPlayerRepeatMode repeatMode;
+@property (nonatomic, assign) __FWAudioPlayerShuffleMode shuffleMode;
 @property (nonatomic, assign) BOOL isMemoryCached;
 
 @property (nonatomic, assign, readonly) BOOL isPlaying;
 @property (nonatomic, assign, readonly) NSInteger lastItemIndex;
 @property (nonatomic, strong, readonly, nullable) AVPlayerItem *currentItem;
-@property (nonatomic, assign, readonly) FWAudioPlayerStatus playerStatus;
+@property (nonatomic, assign, readonly) __FWAudioPlayerStatus playerStatus;
 
 @property (nonatomic, assign, readonly) float playingItemCurrentTime;
 @property (nonatomic, assign, readonly) float playingItemDurationTime;
