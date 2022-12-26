@@ -9,59 +9,59 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWBarrageDescriptor;
-@class FWBarrageCell;
+@class __FWBarrageDescriptor;
+@class __FWBarrageCell;
 
-FOUNDATION_EXPORT NSString *const FWBarrageAnimation NS_SWIFT_NAME(BarrageAnimation);
+FOUNDATION_EXPORT NSString *const __FWBarrageAnimation NS_SWIFT_NAME(BarrageAnimation);
 
-typedef void(^FWBarrageTouchAction)(__weak FWBarrageDescriptor *descriptor) NS_SWIFT_NAME(BarrageTouchAction);
-typedef void(^FWBarrageCellTouchedAction)(__weak FWBarrageDescriptor *descriptor, __weak FWBarrageCell *cell) NS_SWIFT_NAME(BarrageCellTouchedAction);
+typedef void(^__FWBarrageTouchAction)(__weak __FWBarrageDescriptor *descriptor) NS_SWIFT_NAME(BarrageTouchAction);
+typedef void(^__FWBarrageCellTouchedAction)(__weak __FWBarrageDescriptor *descriptor, __weak __FWBarrageCell *cell) NS_SWIFT_NAME(BarrageCellTouchedAction);
 
-typedef NS_ENUM(NSInteger, FWBarragePositionPriority) {
-    FWBarragePositionLow = 0,
-    FWBarragePositionMiddle,
-    FWBarragePositionHigh,
-    FWBarragePositionVeryHigh
+typedef NS_ENUM(NSInteger, __FWBarragePositionPriority) {
+    __FWBarragePositionLow = 0,
+    __FWBarragePositionMiddle,
+    __FWBarragePositionHigh,
+    __FWBarragePositionVeryHigh
 } NS_SWIFT_NAME(BarragePositionPriority);
 
-typedef NS_ENUM(NSInteger, FWBarrageRenderPositionStyle) {//新加的cell的y坐标的类型
-    FWBarrageRenderPositionRandomTracks = 0, //将FWBarrageRenderView分成几条轨道, 随机选一条展示
-    FWBarrageRenderPositionRandom, // y坐标随机
-    FWBarrageRenderPositionIncrease, //y坐标递增, 循环
+typedef NS_ENUM(NSInteger, __FWBarrageRenderPositionStyle) {//新加的cell的y坐标的类型
+    __FWBarrageRenderPositionRandomTracks = 0, //将__FWBarrageRenderView分成几条轨道, 随机选一条展示
+    __FWBarrageRenderPositionRandom, // y坐标随机
+    __FWBarrageRenderPositionIncrease, //y坐标递增, 循环
 } NS_SWIFT_NAME(BarrageRenderPositionStyle);
 
-#pragma mark - FWBarrageRenderView
+#pragma mark - __FWBarrageRenderView
 
-typedef NS_ENUM(NSInteger, FWBarrageRenderStatus) {
-    FWBarrageRenderStoped = 0,
-    FWBarrageRenderStarted,
-    FWBarrageRenderPaused
+typedef NS_ENUM(NSInteger, __FWBarrageRenderStatus) {
+    __FWBarrageRenderStoped = 0,
+    __FWBarrageRenderStarted,
+    __FWBarrageRenderPaused
 } NS_SWIFT_NAME(BarrageRenderStatus);
 
 NS_SWIFT_NAME(BarrageRenderView)
-@interface FWBarrageRenderView : UIView <CAAnimationDelegate> {
-    NSMutableArray<FWBarrageCell *> *_animatingCells;
-    NSMutableArray<FWBarrageCell *> *_idleCells;
+@interface __FWBarrageRenderView : UIView <CAAnimationDelegate> {
+    NSMutableArray<__FWBarrageCell *> *_animatingCells;
+    NSMutableArray<__FWBarrageCell *> *_idleCells;
     dispatch_semaphore_t _animatingCellsLock;
     dispatch_semaphore_t _idleCellsLock;
     dispatch_semaphore_t _trackInfoLock;
-    FWBarrageCell *_lastestCell;
+    __FWBarrageCell *_lastestCell;
     UIView *_lowPositionView;
     UIView *_middlePositionView;
     UIView *_highPositionView;
     UIView *_veryHighPositionView;
     BOOL _autoClear;
-    FWBarrageRenderStatus _renderStatus;
+    __FWBarrageRenderStatus _renderStatus;
     NSMutableDictionary *_trackNextAvailableTime;
 }
 
-@property (nonatomic, strong, readonly) NSMutableArray<FWBarrageCell *> *animatingCells;
-@property (nonatomic, strong, readonly) NSMutableArray<FWBarrageCell *> *idleCells;
-@property (nonatomic, assign) FWBarrageRenderPositionStyle renderPositionStyle;
-@property (nonatomic, assign, readonly) FWBarrageRenderStatus renderStatus;
+@property (nonatomic, strong, readonly) NSMutableArray<__FWBarrageCell *> *animatingCells;
+@property (nonatomic, strong, readonly) NSMutableArray<__FWBarrageCell *> *idleCells;
+@property (nonatomic, assign) __FWBarrageRenderPositionStyle renderPositionStyle;
+@property (nonatomic, assign, readonly) __FWBarrageRenderStatus renderStatus;
 
-- (nullable FWBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass;
-- (void)fireBarrageCell:(FWBarrageCell *)barrageCell;
+- (nullable __FWBarrageCell *)dequeueReusableCellWithClass:(Class)barrageCellClass;
+- (void)fireBarrageCell:(__FWBarrageCell *)barrageCell;
 - (BOOL)trigerActionWithPoint:(CGPoint)touchPoint;
 
 - (void)start;
@@ -71,7 +71,7 @@ NS_SWIFT_NAME(BarrageRenderView)
 
 @end
 
-#pragma mark - FWBarrageManager
+#pragma mark - __FWBarrageManager
 
 /**
  弹幕管理器
@@ -79,33 +79,33 @@ NS_SWIFT_NAME(BarrageRenderView)
  @see https://github.com/w1531724247/OCBarrage
  */
 NS_SWIFT_NAME(BarrageManager)
-@interface FWBarrageManager : NSObject {
-    FWBarrageRenderView *_renderView;
+@interface __FWBarrageManager : NSObject {
+    __FWBarrageRenderView *_renderView;
 }
 
-@property (nonatomic, strong, readonly) FWBarrageRenderView *renderView;
-@property (nonatomic, assign, readonly) FWBarrageRenderStatus renderStatus;
+@property (nonatomic, strong, readonly) __FWBarrageRenderView *renderView;
+@property (nonatomic, assign, readonly) __FWBarrageRenderStatus renderStatus;
 
 - (void)start;
 - (void)pause;
 - (void)resume;
 - (void)stop;
 
-- (void)renderBarrageDescriptor:(FWBarrageDescriptor *)barrageDescriptor;
+- (void)renderBarrageDescriptor:(__FWBarrageDescriptor *)barrageDescriptor;
 
 @end
 
-#pragma mark - FWBarrageDescriptor
+#pragma mark - __FWBarrageDescriptor
 
 NS_SWIFT_NAME(BarrageDescriptor)
-@interface FWBarrageDescriptor : NSObject
+@interface __FWBarrageDescriptor : NSObject
 
 @property (nonatomic, assign, nullable) Class barrageCellClass;
-@property (nonatomic, assign) FWBarragePositionPriority positionPriority;//显示位置normal型的渲染在low型的上面, height型的渲染在normal上面
+@property (nonatomic, assign) __FWBarragePositionPriority positionPriority;//显示位置normal型的渲染在low型的上面, height型的渲染在normal上面
 @property (nonatomic, assign) CGFloat animationDuration;//动画时间, 时间越长速度越慢, 时间越短速度越快
 @property (nonatomic, assign) CGFloat fixedSpeed;//固定速度, 可以防止弹幕在有空闲轨道的情况下重叠, 取值0.0~100.0, animationDuration与fixedSpeed只能选择一个, fixedSpeed设置之后可以不用设置animationDuration
 
-@property (nonatomic, copy, nullable) FWBarrageCellTouchedAction cellTouchedAction;//新属性里回传了被点击的cell, 可以在代码块里更改被点击的cell的属性, 比如之前有用户需要在弹幕被点击的时候修改被点击的弹幕的文字颜色等等. 用来替代旧版本的touchAction
+@property (nonatomic, copy, nullable) __FWBarrageCellTouchedAction cellTouchedAction;//新属性里回传了被点击的cell, 可以在代码块里更改被点击的cell的属性, 比如之前有用户需要在弹幕被点击的时候修改被点击的弹幕的文字颜色等等. 用来替代旧版本的touchAction
 @property (nonatomic, strong, nullable) UIColor *borderColor; // Default is no border
 @property (nonatomic, assign) CGFloat borderWidth; // Default is 0
 @property (nonatomic, assign) CGFloat cornerRadius; // Default is 8
@@ -114,15 +114,15 @@ NS_SWIFT_NAME(BarrageDescriptor)
 
 @end
 
-#pragma mark - FWBarrageCell
+#pragma mark - __FWBarrageCell
 
-@protocol FWBarrageCellDelegate;
+@protocol __FWBarrageCellDelegate;
 
 NS_SWIFT_NAME(BarrageCell)
-@interface FWBarrageCell : UIView
+@interface __FWBarrageCell : UIView
 @property (nonatomic, assign, getter=isIdle) BOOL idle;//是否是空闲状态
 @property (nonatomic, assign) NSTimeInterval idleTime;//开始闲置的时间, 闲置超过5秒的, 自动回收内存
-@property (nonatomic, strong, nullable) FWBarrageDescriptor *barrageDescriptor;
+@property (nonatomic, strong, nullable) __FWBarrageDescriptor *barrageDescriptor;
 @property (nonatomic, strong, readonly, nullable) CAAnimation *barrageAnimation;
 @property (nonatomic, assign) int trackIndex;
 
@@ -140,14 +140,14 @@ NS_SWIFT_NAME(BarrageCell)
 @end
 
 NS_SWIFT_NAME(BarrageCellDelegate)
-@protocol FWBarrageCellDelegate <NSObject, CAAnimationDelegate>
+@protocol __FWBarrageCellDelegate <NSObject, CAAnimationDelegate>
 
 @end
 
-#pragma mark - FWBarrageTextDescriptor
+#pragma mark - __FWBarrageTextDescriptor
 
 NS_SWIFT_NAME(BarrageTextDescriptor)
-@interface FWBarrageTextDescriptor : FWBarrageDescriptor {
+@interface __FWBarrageTextDescriptor : __FWBarrageDescriptor {
     NSMutableDictionary *_textAttribute;
 }
 
@@ -171,20 +171,20 @@ NS_SWIFT_NAME(BarrageTextDescriptor)
 
 @end
 
-#pragma mark - FWBarrageTextCell
+#pragma mark - __FWBarrageTextCell
 
 NS_SWIFT_NAME(BarrageTextCell)
-@interface FWBarrageTextCell : FWBarrageCell
+@interface __FWBarrageTextCell : __FWBarrageCell
 
 @property (nonatomic, strong) UILabel *textLabel;
-@property (nonatomic, strong, nullable) FWBarrageTextDescriptor *textDescriptor;
+@property (nonatomic, strong, nullable) __FWBarrageTextDescriptor *textDescriptor;
 
 @end
 
-#pragma mark - FWBarrageTrackInfo
+#pragma mark - __FWBarrageTrackInfo
 
 NS_SWIFT_NAME(BarrageTrackInfo)
-@interface FWBarrageTrackInfo : NSObject
+@interface __FWBarrageTrackInfo : NSObject
 
 @property (nonatomic, assign) int trackIndex;
 @property (nonatomic, copy, nullable) NSString *trackIdentifier;

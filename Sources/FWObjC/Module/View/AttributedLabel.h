@@ -11,31 +11,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSUInteger, FWAttributedAlignment) {
-    FWAttributedAlignmentTop,
-    FWAttributedAlignmentCenter,
-    FWAttributedAlignmentBottom
+typedef NS_OPTIONS(NSUInteger, __FWAttributedAlignment) {
+    __FWAttributedAlignmentTop,
+    __FWAttributedAlignmentCenter,
+    __FWAttributedAlignmentBottom
 } NS_SWIFT_NAME(AttributedAlignment);
 
-@class FWAttributedLabel;
-@class FWAttributedLabelAttachment;
+@class __FWAttributedLabel;
+@class __FWAttributedLabelAttachment;
 
 NS_SWIFT_NAME(AttributedLabelDelegate)
-@protocol FWAttributedLabelDelegate <NSObject>
-- (void)attributedLabel:(FWAttributedLabel *)label clickedOnLink:(id)linkData;
+@protocol __FWAttributedLabelDelegate <NSObject>
+- (void)attributedLabel:(__FWAttributedLabel *)label clickedOnLink:(id)linkData;
 @end
 
-#pragma mark - FWAttributedLabel
+#pragma mark - __FWAttributedLabel
 
 /**
- FWAttributedLabel
+ __FWAttributedLabel
  
  @see https://github.com/xiangwangfeng/M80AttributedLabel
  */
 NS_SWIFT_NAME(AttributedLabel)
-@interface FWAttributedLabel : UIView
+@interface __FWAttributedLabel : UIView
 
-@property (nonatomic,weak,nullable)         id<FWAttributedLabelDelegate> delegate;
+@property (nonatomic,weak,nullable)         id<__FWAttributedLabelDelegate> delegate;
 @property (nonatomic,strong,nullable)       UIFont *font;                          //字体
 @property (nonatomic,strong,nullable)       UIColor *textColor;                    //文字颜色
 @property (nonatomic,strong,nullable)       UIColor *highlightColor;               //链接点击时背景高亮色
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(AttributedLabel)
 @property (nonatomic,copy,nullable)         NSAttributedString *attributedText;     //属性文本，设置nil可重置
 //最后一行截断之后留白的宽度，默认0不生效，仅lineBreakMode为TruncatingTail且发生截断时生效
 @property (nonatomic,assign)                CGFloat lineTruncatingSpacing;
-@property (nonatomic,strong,nullable)       FWAttributedLabelAttachment *lineTruncatingAttachment;
+@property (nonatomic,strong,nullable)       __FWAttributedLabelAttachment *lineTruncatingAttachment;
 
 //添加文本
 - (void)appendText:(NSString *)text;
@@ -70,7 +70,7 @@ NS_SWIFT_NAME(AttributedLabel)
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize
              margin:(UIEdgeInsets)margin
-          alignment:(FWAttributedAlignment)alignment;
+          alignment:(__FWAttributedAlignment)alignment;
 
 //UI控件
 - (void)appendView:(UIView *)view;
@@ -78,7 +78,7 @@ NS_SWIFT_NAME(AttributedLabel)
             margin:(UIEdgeInsets)margin;
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin
-         alignment:(FWAttributedAlignment)alignment;
+         alignment:(__FWAttributedAlignment)alignment;
 
 //添加自定义链接
 - (void)addCustomLink:(id)linkData
@@ -93,69 +93,69 @@ NS_SWIFT_NAME(AttributedLabel)
 
 @end
 
-#pragma mark - FWAttributedLabelURL
+#pragma mark - __FWAttributedLabelURL
 
 NS_SWIFT_NAME(AttributedLabelURL)
-@interface FWAttributedLabelURL : NSObject
+@interface __FWAttributedLabelURL : NSObject
 
 @property (nonatomic,strong)          id      linkData;
 @property (nonatomic,assign)          NSRange range;
 @property (nonatomic,strong,nullable) UIColor *color;
 
-+ (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
++ (__FWAttributedLabelURL *)urlWithLinkData:(id)linkData
                                     range:(NSRange)range
                                     color:(nullable UIColor *)color;
 
 @end
 
-#pragma mark - FWAttributedLabelURLDetector
+#pragma mark - __FWAttributedLabelURLDetector
 
-typedef void(^FWAttributedLinkDetectCompletion)(NSArray<FWAttributedLabelURL *> * _Nullable links) NS_SWIFT_NAME(AttributedLinkDetectCompletion);
+typedef void(^__FWAttributedLinkDetectCompletion)(NSArray<__FWAttributedLabelURL *> * _Nullable links) NS_SWIFT_NAME(AttributedLinkDetectCompletion);
 
 NS_SWIFT_NAME(AttributedLabelCustomURLDetector)
-@protocol FWAttributedLabelCustomURLDetector <NSObject>
-- (void)detectLinks:(nullable NSString *)plainText completion:(FWAttributedLinkDetectCompletion)completion;
+@protocol __FWAttributedLabelCustomURLDetector <NSObject>
+- (void)detectLinks:(nullable NSString *)plainText completion:(__FWAttributedLinkDetectCompletion)completion;
 @end
 
 NS_SWIFT_NAME(AttributedLabelURLDetector)
-@interface FWAttributedLabelURLDetector : NSObject
-@property (nonatomic,strong) id<FWAttributedLabelCustomURLDetector> detector;
+@interface __FWAttributedLabelURLDetector : NSObject
+@property (nonatomic,strong) id<__FWAttributedLabelCustomURLDetector> detector;
 
 + (instancetype)shared;
 
-- (void)detectLinks:(nullable NSString *)plainText completion:(FWAttributedLinkDetectCompletion)completion;
+- (void)detectLinks:(nullable NSString *)plainText completion:(__FWAttributedLinkDetectCompletion)completion;
 @end
 
-#pragma mark - FWAttributedLabelAttachment
+#pragma mark - __FWAttributedLabelAttachment
 
-void fw_attributedDeallocCallback(void* ref) NS_REFINED_FOR_SWIFT;
-CGFloat fw_attributedAscentCallback(void *ref) NS_REFINED_FOR_SWIFT;
-CGFloat fw_attributedDescentCallback(void *ref) NS_REFINED_FOR_SWIFT;
-CGFloat fw_attributedWidthCallback(void* ref) NS_REFINED_FOR_SWIFT;
+void __fw_attributedDeallocCallback(void* ref);
+CGFloat __fw_attributedAscentCallback(void *ref);
+CGFloat __fw_attributedDescentCallback(void *ref);
+CGFloat __fw_attributedWidthCallback(void* ref);
 
 NS_SWIFT_NAME(AttributedLabelAttachment)
-@interface FWAttributedLabelAttachment : NSObject
+@interface __FWAttributedLabelAttachment : NSObject
 
 @property (nonatomic,strong) id                    content;
 @property (nonatomic,assign) UIEdgeInsets          margin;
-@property (nonatomic,assign) FWAttributedAlignment alignment;
+@property (nonatomic,assign) __FWAttributedAlignment alignment;
 @property (nonatomic,assign) CGFloat               fontAscent;
 @property (nonatomic,assign) CGFloat               fontDescent;
 @property (nonatomic,assign) CGSize                maxSize;
 
 
-+ (FWAttributedLabelAttachment *)attachmentWith:(id)content
++ (__FWAttributedLabelAttachment *)attachmentWith:(id)content
                                          margin:(UIEdgeInsets)margin
-                                      alignment:(FWAttributedAlignment)alignment
+                                      alignment:(__FWAttributedAlignment)alignment
                                         maxSize:(CGSize)maxSize;
 
 - (CGSize)boxSize;
 
 @end
 
-#pragma mark - NSMutableAttributedString+FWAttributedLabel
+#pragma mark - NSMutableAttributedString+__FWAttributedLabel
 
-@interface NSMutableAttributedString (FWAttributedLabel)
+@interface NSMutableAttributedString (__FWAttributedLabel)
 
 @property (nonatomic, strong, nullable) UIColor *fw_textColor NS_REFINED_FOR_SWIFT;
 - (void)fw_setTextColor:(UIColor*)color range:(NSRange)range NS_REFINED_FOR_SWIFT;

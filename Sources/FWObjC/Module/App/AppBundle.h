@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  FWFramework所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
  */
 NS_SWIFT_NAME(AppBundle)
-@interface FWAppBundle : __FWModuleBundle
+@interface __FWAppBundle : __FWModuleBundle
 
 #pragma mark - Image
 

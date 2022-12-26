@@ -9,53 +9,53 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, FWBannerViewPageControlAlignment) {
-    FWBannerViewPageControlAlignmentRight,
-    FWBannerViewPageControlAlignmentCenter,
+typedef NS_ENUM(NSInteger, __FWBannerViewPageControlAlignment) {
+    __FWBannerViewPageControlAlignmentRight,
+    __FWBannerViewPageControlAlignmentCenter,
 } NS_SWIFT_NAME(BannerViewPageControlAlignment);
 
-typedef NS_ENUM(NSInteger, FWBannerViewPageControlStyle) {
+typedef NS_ENUM(NSInteger, __FWBannerViewPageControlStyle) {
     // 系统样式
-    FWBannerViewPageControlStyleSystem,
+    __FWBannerViewPageControlStyleSystem,
     // 自定义样式，可设置图片等
-    FWBannerViewPageControlStyleCustom,
+    __FWBannerViewPageControlStyleCustom,
     // 不显示
-    FWBannerViewPageControlStyleNone,
+    __FWBannerViewPageControlStyleNone,
 } NS_SWIFT_NAME(BannerViewPageControlStyle);
 
-@class FWBannerView;
+@class __FWBannerView;
 
 NS_SWIFT_NAME(BannerViewDelegate)
-@protocol FWBannerViewDelegate <NSObject>
+@protocol __FWBannerViewDelegate <NSObject>
 
 @optional
 
-- (void)bannerView:(FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index;
+- (void)bannerView:(__FWBannerView *)bannerView didSelectItemAtIndex:(NSInteger)index;
 
 /** 监听bannerView滚动，快速滚动时也会回调 */
-- (void)bannerView:(FWBannerView *)bannerView didScrollToIndex:(NSInteger)index;
+- (void)bannerView:(__FWBannerView *)bannerView didScrollToIndex:(NSInteger)index;
 
-/** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法，默认的FWBannerViewCell也会调用。 */
-- (void)bannerView:(FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index;
+/** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法，默认的__FWBannerViewCell也会调用。 */
+- (void)bannerView:(__FWBannerView *)bannerView customCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index;
 
 /** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的class。 */
-- (nullable Class)customCellClassForBannerView:(FWBannerView *)view;
+- (nullable Class)customCellClassForBannerView:(__FWBannerView *)view;
 
 /** 如果你需要自定义UICollectionViewCell样式，请实现此代理方法返回你的自定义UICollectionViewCell的Nib。 */
-- (nullable UINib *)customCellNibForBannerView:(FWBannerView *)view;
+- (nullable UINib *)customCellNibForBannerView:(__FWBannerView *)view;
 
 @end
 
 /**
- FWBannerView
+ __FWBannerView
  
  @see https://github.com/gsdios/SDCycleScrollView
  */
 NS_SWIFT_NAME(BannerView)
-@interface FWBannerView : UIView
+@interface __FWBannerView : UIView
 
 /** 初始轮播图（推荐使用） */
-+ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(nullable id<FWBannerViewDelegate>)delegate placeholderImage:(nullable UIImage *)placeholderImage;
++ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(nullable id<__FWBannerViewDelegate>)delegate placeholderImage:(nullable UIImage *)placeholderImage;
 
 + (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(nullable NSArray *)imageURLStringsGroup;
 
@@ -99,7 +99,7 @@ NS_SWIFT_NAME(BannerView)
 @property (nonatomic, assign) BOOL itemPagingCenter;
 
 /** 设置事件代理 */
-@property (nonatomic, weak, nullable) id<FWBannerViewDelegate> delegate;
+@property (nonatomic, weak, nullable) id<__FWBannerViewDelegate> delegate;
 
 /** block方式监听点击 */
 @property (nonatomic, copy, nullable) void (^clickItemOperationBlock)(NSInteger currentIndex);
@@ -135,10 +135,10 @@ NS_SWIFT_NAME(BannerView)
 @property (nonatomic, assign) BOOL onlyDisplayText;
 
 /** pageControl 样式，默认为系统样式 */
-@property (nonatomic, assign) FWBannerViewPageControlStyle pageControlStyle;
+@property (nonatomic, assign) __FWBannerViewPageControlStyle pageControlStyle;
 
 /** 分页控件位置 */
-@property (nonatomic, assign) FWBannerViewPageControlAlignment pageControlAlignment;
+@property (nonatomic, assign) __FWBannerViewPageControlAlignment pageControlAlignment;
 
 /** 分页控件距离轮播图的底部间距（在默认间距基础上）的偏移量 */
 @property (nonatomic, assign) CGFloat pageControlBottomOffset;
@@ -194,7 +194,7 @@ NS_SWIFT_NAME(BannerView)
 @end
 
 NS_SWIFT_NAME(BannerViewCell)
-@interface FWBannerViewCell : UICollectionViewCell
+@interface __FWBannerViewCell : UICollectionViewCell
 
 @property (nonatomic, weak, nullable) UIImageView *imageView;
 @property (nonatomic, copy, nullable) NSString *title;

@@ -7,13 +7,13 @@
 
 #import "GridView.h"
 
-@interface FWGridView ()
+@interface __FWGridView ()
 
 @property(nonatomic, strong) CAShapeLayer *separatorLayer;
 
 @end
 
-@implementation FWGridView
+@implementation __FWGridView
 
 - (instancetype)initWithFrame:(CGRect)frame column:(NSInteger)column rowHeight:(CGFloat)rowHeight {
     if (self = [super initWithFrame:frame]) {

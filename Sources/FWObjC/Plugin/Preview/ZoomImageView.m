@@ -82,8 +82,8 @@
 + (void)setDefaultAppearance {
     __FWZoomImageView *appearance = [__FWZoomImageView appearance];
     appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
-    appearance.videoPlayButtonImage = [FWAppBundle videoPlayImage];
-    appearance.videoCloseButtonImage = [FWAppBundle navCloseImage];
+    appearance.videoPlayButtonImage = [__FWAppBundle videoPlayImage];
+    appearance.videoCloseButtonImage = [__FWAppBundle navCloseImage];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -1006,8 +1006,8 @@
 
 + (void)setDefaultAppearance {
     __FWZoomImageVideoToolbar *appearance = [__FWZoomImageVideoToolbar appearance];
-    appearance.playButtonImage = [FWAppBundle videoStartImage];
-    appearance.pauseButtonImage = [FWAppBundle videoPauseImage];
+    appearance.playButtonImage = [__FWAppBundle videoStartImage];
+    appearance.pauseButtonImage = [__FWAppBundle videoPauseImage];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {

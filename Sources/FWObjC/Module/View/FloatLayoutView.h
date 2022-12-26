@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 用于属性 maximumItemSize，是它的默认值。表示 item 的最大宽高会自动根据当前 floatLayoutView 的内容大小来调整，从而避免 item 内容过多时可能溢出 floatLayoutView。
-extern const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize NS_SWIFT_NAME(FloatLayoutViewAutomaticalMaximumItemSize);
+extern const CGSize __FWFloatLayoutViewAutomaticalMaximumItemSize NS_SWIFT_NAME(FloatLayoutViewAutomaticalMaximumItemSize);
 
 /**
  浮动布局视图
@@ -20,7 +20,7 @@ extern const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize NS_SWIFT_NAME(Fl
  @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(FloatLayoutView)
-@interface FWFloatLayoutView : UIView
+@interface __FWFloatLayoutView : UIView
 
 /**
  *  QMUIFloatLayoutView 内部的间距，默认为 UIEdgeInsetsZero

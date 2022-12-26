@@ -10,11 +10,11 @@
 
 #define FWSafeArgument(obj) obj ? obj : [NSNull null]
 
-@interface FWAppDelegate ()
+@interface __FWAppDelegate ()
 
 @end
 
-@implementation FWAppDelegate
+@implementation __FWAppDelegate
 
 #pragma mark - UIApplicationDelegate
 

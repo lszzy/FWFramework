@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(GridView)
-@interface FWGridView : UIView
+@interface __FWGridView : UIView
 
 /// 指定要显示的列数，默认为 0
 @property(nonatomic, assign) IBInspectable NSInteger columnCount;

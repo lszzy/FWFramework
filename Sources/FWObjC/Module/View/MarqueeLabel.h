@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- FWMarqueeLabel
+ __FWMarqueeLabel
  @note 简易的跑马灯 label 控件，在文字超过 label 可视区域时会自动开启跑马灯效果展示文字，文字滚动时是首尾连接的效果（参考播放音乐时系统锁屏界面顶部的音乐标题）。
  @warning lineBreakMode 默认为 NSLineBreakByClipping（UILabel 默认值为 NSLineBreakByTruncatingTail）。
  @warning textAlignment 暂不支持 NSTextAlignmentJustified 和 NSTextAlignmentNatural。
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(MarqueeLabel)
-@interface FWMarqueeLabel : UILabel
+@interface __FWMarqueeLabel : UILabel
 
 /// 控制滚动的速度，1 表示一帧滚动 1pt，10 表示一帧滚动 10pt，默认为 .5，与系统一致。
 @property(nonatomic, assign) IBInspectable CGFloat speed;

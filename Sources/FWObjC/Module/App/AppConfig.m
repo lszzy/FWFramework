@@ -7,7 +7,7 @@
 
 #import "AppConfig.h"
 
-@implementation FWAppConfigDefaultTemplate
+@implementation __FWAppConfigDefaultTemplate
 
 - (void)applyConfiguration {
     // 启用全局导航栏返回拦截

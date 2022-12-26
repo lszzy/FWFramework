@@ -21,7 +21,7 @@
 
 #endif
 
-@implementation FWAppBundle
+@implementation __FWAppBundle
 
 + (NSBundle *)bundle
 {

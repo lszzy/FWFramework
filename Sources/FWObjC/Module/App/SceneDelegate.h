@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 API_AVAILABLE(ios(13.0))
 NS_SWIFT_NAME(SceneResponder)
-@interface FWSceneDelegate : UIResponder <UIWindowSceneDelegate>
+@interface __FWSceneDelegate : UIResponder <UIWindowSceneDelegate>
 
 /// 场景主window
 @property (nullable, nonatomic, strong) UIWindow * window;
