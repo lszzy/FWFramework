@@ -7,64 +7,64 @@
 
 #import <UIKit/UIKit.h>
 
-@class FWSegmentedControl;
+@class __FWSegmentedControl;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FWIndexChangeBlock)(NSUInteger index) NS_SWIFT_NAME(IndexChangeBlock);
-typedef NSAttributedString *_Nonnull(^FWTitleFormatterBlock)(FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) NS_SWIFT_NAME(TitleFormatterBlock);
+typedef void (^__FWIndexChangeBlock)(NSUInteger index) NS_SWIFT_NAME(IndexChangeBlock);
+typedef NSAttributedString *_Nonnull(^__FWTitleFormatterBlock)(__FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) NS_SWIFT_NAME(TitleFormatterBlock);
 
-typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionStyle) {
-    FWSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
-    FWSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
-    FWSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
-    FWSegmentedControlSelectionStyleArrow, // An arrow in the middle of the segment pointing up or down depending on `FWSegmentedControlSelectionIndicatorLocation`
-    FWSegmentedControlSelectionStyleCircle // An circle in the middle of the segment pointing up or down depending on `FWSegmentedControlSelectionIndicatorLocation`
+typedef NS_ENUM(NSInteger, __FWSegmentedControlSelectionStyle) {
+    __FWSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
+    __FWSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
+    __FWSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
+    __FWSegmentedControlSelectionStyleArrow, // An arrow in the middle of the segment pointing up or down depending on `__FWSegmentedControlSelectionIndicatorLocation`
+    __FWSegmentedControlSelectionStyleCircle // An circle in the middle of the segment pointing up or down depending on `__FWSegmentedControlSelectionIndicatorLocation`
 } NS_SWIFT_NAME(SegmentedControlSelectionStyle);
 
-typedef NS_ENUM(NSInteger, FWSegmentedControlSelectionIndicatorLocation) {
-    FWSegmentedControlSelectionIndicatorLocationTop,
-    FWSegmentedControlSelectionIndicatorLocationBottom,
-    FWSegmentedControlSelectionIndicatorLocationNone // No selection indicator
+typedef NS_ENUM(NSInteger, __FWSegmentedControlSelectionIndicatorLocation) {
+    __FWSegmentedControlSelectionIndicatorLocationTop,
+    __FWSegmentedControlSelectionIndicatorLocationBottom,
+    __FWSegmentedControlSelectionIndicatorLocationNone // No selection indicator
 } NS_SWIFT_NAME(SegmentedControlSelectionIndicatorLocation);
 
-typedef NS_ENUM(NSInteger, FWSegmentedControlSegmentWidthStyle) {
-    FWSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
-    FWSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
+typedef NS_ENUM(NSInteger, __FWSegmentedControlSegmentWidthStyle) {
+    __FWSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
+    __FWSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
 } NS_SWIFT_NAME(SegmentedControlSegmentWidthStyle);
 
-typedef NS_OPTIONS(NSInteger, FWSegmentedControlBorderType) {
-    FWSegmentedControlBorderTypeNone = 0,
-    FWSegmentedControlBorderTypeTop = (1 << 0),
-    FWSegmentedControlBorderTypeLeft = (1 << 1),
-    FWSegmentedControlBorderTypeBottom = (1 << 2),
-    FWSegmentedControlBorderTypeRight = (1 << 3)
+typedef NS_OPTIONS(NSInteger, __FWSegmentedControlBorderType) {
+    __FWSegmentedControlBorderTypeNone = 0,
+    __FWSegmentedControlBorderTypeTop = (1 << 0),
+    __FWSegmentedControlBorderTypeLeft = (1 << 1),
+    __FWSegmentedControlBorderTypeBottom = (1 << 2),
+    __FWSegmentedControlBorderTypeRight = (1 << 3)
 } NS_SWIFT_NAME(SegmentedControlBorderType);
 
 /// Segment index for no selected segment
-FOUNDATION_EXPORT NSUInteger FWSegmentedControlNoSegment NS_SWIFT_NAME(SegmentedControlNoSegment);
+FOUNDATION_EXPORT NSUInteger __FWSegmentedControlNoSegment NS_SWIFT_NAME(SegmentedControlNoSegment);
 
-typedef NS_ENUM(NSInteger, FWSegmentedControlType) {
-    FWSegmentedControlTypeText,
-    FWSegmentedControlTypeImages,
-    FWSegmentedControlTypeTextImages
+typedef NS_ENUM(NSInteger, __FWSegmentedControlType) {
+    __FWSegmentedControlTypeText,
+    __FWSegmentedControlTypeImages,
+    __FWSegmentedControlTypeTextImages
 } NS_SWIFT_NAME(SegmentedControlType);
 
-typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
-    FWSegmentedControlImagePositionBehindText,
-    FWSegmentedControlImagePositionLeftOfText,
-    FWSegmentedControlImagePositionRightOfText,
-    FWSegmentedControlImagePositionAboveText,
-    FWSegmentedControlImagePositionBelowText
+typedef NS_ENUM(NSInteger, __FWSegmentedControlImagePosition) {
+    __FWSegmentedControlImagePositionBehindText,
+    __FWSegmentedControlImagePositionLeftOfText,
+    __FWSegmentedControlImagePositionRightOfText,
+    __FWSegmentedControlImagePositionAboveText,
+    __FWSegmentedControlImagePositionBelowText
 } NS_SWIFT_NAME(SegmentedControlImagePosition);
 
 /**
- FWSegmentedControl
+ __FWSegmentedControl
  
  [HMSegmentedControl 1.5.6](https://github.com/HeshamMegid/HMSegmentedControl)
  */
 NS_SWIFT_NAME(SegmentedControl)
-@interface FWSegmentedControl : UIControl
+@interface __FWSegmentedControl : UIControl
 
 @property (nonatomic, strong, nullable) NSArray<NSString *> *sectionTitles;
 @property (nonatomic, strong, nullable) NSArray<UIImage *> *sectionImages;
@@ -75,14 +75,14 @@ NS_SWIFT_NAME(SegmentedControl)
  
  Alternativly, you could use `addTarget:action:forControlEvents:`
  */
-@property (nonatomic, copy, nullable) FWIndexChangeBlock indexChangeBlock;
+@property (nonatomic, copy, nullable) __FWIndexChangeBlock indexChangeBlock;
 
 /**
  Used to apply custom text styling to titles when set.
  
  When this block is set, no additional styling is applied to the `NSAttributedString` object returned from this block.
  */
-@property (nonatomic, copy, nullable) FWTitleFormatterBlock titleFormatter;
+@property (nonatomic, copy, nullable) __FWTitleFormatterBlock titleFormatter;
 
 /**
  Text attributes to apply to item title text.
@@ -141,47 +141,47 @@ NS_SWIFT_NAME(SegmentedControl)
 /**
  Specifies the style of the control
  
- Default is `FWSegmentedControlTypeText`
+ Default is `__FWSegmentedControlTypeText`
  */
-@property (nonatomic, assign) FWSegmentedControlType type;
+@property (nonatomic, assign) __FWSegmentedControlType type;
 
 /**
  Specifies the style of the selection indicator.
  
- Default is `FWSegmentedControlSelectionStyleTextWidthStripe`
+ Default is `__FWSegmentedControlSelectionStyleTextWidthStripe`
  */
-@property (nonatomic, assign) FWSegmentedControlSelectionStyle selectionStyle;
+@property (nonatomic, assign) __FWSegmentedControlSelectionStyle selectionStyle;
 
 /**
  Specifies the style of the segment's width.
  
- Default is `FWSegmentedControlSegmentWidthStyleFixed`
+ Default is `__FWSegmentedControlSegmentWidthStyleFixed`
  */
-@property (nonatomic, assign) FWSegmentedControlSegmentWidthStyle segmentWidthStyle;
+@property (nonatomic, assign) __FWSegmentedControlSegmentWidthStyle segmentWidthStyle;
 
 /**
  Specifies the location of the selection indicator.
  
- Default is `FWSegmentedControlSelectionIndicatorLocationUp`
+ Default is `__FWSegmentedControlSelectionIndicatorLocationUp`
  */
-@property (nonatomic, assign) FWSegmentedControlSelectionIndicatorLocation selectionIndicatorLocation;
+@property (nonatomic, assign) __FWSegmentedControlSelectionIndicatorLocation selectionIndicatorLocation;
 
 /*
  Specifies the border type.
  
- Default is `FWSegmentedControlBorderTypeNone`
+ Default is `__FWSegmentedControlBorderTypeNone`
  */
-@property (nonatomic, assign) FWSegmentedControlBorderType borderType;
+@property (nonatomic, assign) __FWSegmentedControlBorderType borderType;
 
 /**
- Specifies the image position relative to the text. Only applicable for FWSegmentedControlTypeTextImages
+ Specifies the image position relative to the text. Only applicable for __FWSegmentedControlTypeTextImages
  
- Default is `FWSegmentedControlImagePositionBehindText`
+ Default is `__FWSegmentedControlImagePositionBehindText`
  */
-@property (nonatomic) FWSegmentedControlImagePosition imagePosition;
+@property (nonatomic) __FWSegmentedControlImagePosition imagePosition;
 
 /**
- Specifies the distance between the text and the image. Only applicable for FWSegmentedControlTypeTextImages
+ Specifies the distance between the text and the image. Only applicable for __FWSegmentedControlTypeTextImages
  
  Default is `0,0`
  */
@@ -224,7 +224,7 @@ NS_SWIFT_NAME(SegmentedControl)
 @property (nonatomic, assign) NSUInteger selectedSegmentIndex;
 
 /**
- Height of the selection indicator. Only effective when `FWSegmentedControlSelectionStyle` is either `FWSegmentedControlSelectionStyleTextWidthStripe` or `FWSegmentedControlSelectionStyleFullWidthStripe`.
+ Height of the selection indicator. Only effective when `__FWSegmentedControlSelectionStyle` is either `__FWSegmentedControlSelectionStyleTextWidthStripe` or `__FWSegmentedControlSelectionStyleFullWidthStripe`.
  
  Default is 5.0
  */
@@ -232,11 +232,11 @@ NS_SWIFT_NAME(SegmentedControl)
 
 /**
  Edge insets for the selection indicator.
- NOTE: This does not affect the bounding box of FWSegmentedControlSelectionStyleBox
+ NOTE: This does not affect the bounding box of __FWSegmentedControlSelectionStyleBox
  
- When FWSegmentedControlSelectionIndicatorLocationUp is selected, bottom edge insets are not used
+ When __FWSegmentedControlSelectionIndicatorLocationUp is selected, bottom edge insets are not used
  
- When FWSegmentedControlSelectionIndicatorLocationDown is selected, top edge insets are not used
+ When __FWSegmentedControlSelectionIndicatorLocationDown is selected, top edge insets are not used
  
  Defaults are top: 0.0f
              left: 0.0f
@@ -247,7 +247,7 @@ NS_SWIFT_NAME(SegmentedControl)
 
 /**
  Edge insets for the selection indicator box.
- NOTE: This only affect the bounding box of FWSegmentedControlSelectionStyleBox
+ NOTE: This only affect the bounding box of __FWSegmentedControlSelectionStyleBox
  
  Defaults are top: 0.0f
              left: 0.0f
@@ -296,8 +296,8 @@ NS_SWIFT_NAME(SegmentedControl)
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated;
-- (void)setIndexChangeBlock:(FWIndexChangeBlock)indexChangeBlock;
-- (void)setTitleFormatter:(FWTitleFormatterBlock)titleFormatter;
+- (void)setIndexChangeBlock:(__FWIndexChangeBlock)indexChangeBlock;
+- (void)setTitleFormatter:(__FWTitleFormatterBlock)titleFormatter;
 
 @end
 

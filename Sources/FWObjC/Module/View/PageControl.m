@@ -7,9 +7,9 @@
 
 #import "PageControl.h"
 
-#pragma mark - FWPageControl
+#pragma mark - __FWPageControl
 
-@interface FWPageControl()
+@interface __FWPageControl()
 
 /**
  *  Array of dot views for reusability and touch events.
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation FWPageControl
+@implementation __FWPageControl
 
 #pragma mark - Lifecycle
 
@@ -54,7 +54,7 @@
  */
 - (void)initialization
 {
-    self.dotViewClass           = [FWDotView class];
+    self.dotViewClass           = [__FWDotView class];
     self.spacingBetweenDots     = 8;
     self.numberOfPages          = 0;
     self.currentPage            = 0;
@@ -163,12 +163,12 @@
     
     if (self.dotViewClass) {
         dotView = [[self.dotViewClass alloc] initWithFrame:CGRectMake(0, 0, self.dotSize.width, self.dotSize.height)];
-        if ([dotView isKindOfClass:[FWDotView class]]) {
+        if ([dotView isKindOfClass:[__FWDotView class]]) {
             if (self.dotColor) {
-                ((FWDotView *)dotView).dotColor = self.dotColor;
+                ((__FWDotView *)dotView).dotColor = self.dotColor;
             }
             if (self.currentDotColor) {
-                ((FWDotView *)dotView).currentDotColor = self.currentDotColor;
+                ((__FWDotView *)dotView).currentDotColor = self.currentDotColor;
             }
         }
     } else {
@@ -197,11 +197,11 @@
 - (void)changeActivity:(BOOL)active atIndex:(NSInteger)index
 {
     if (self.dotViewClass) {
-        id<FWDotViewProtocol> dotView = (id<FWDotViewProtocol>)[self.dots objectAtIndex:index];
+        id<__FWDotViewProtocol> dotView = (id<__FWDotViewProtocol>)[self.dots objectAtIndex:index];
         if ([dotView respondsToSelector:@selector(changeActivityState:)]) {
             [dotView changeActivityState:active];
         } else {
-            NSLog(@"Custom view : %@ must implement an 'changeActivityState' method for protocol %@", self.dotViewClass, NSStringFromProtocol(@protocol(FWDotViewProtocol)));
+            NSLog(@"Custom view : %@ must implement an 'changeActivityState' method for protocol %@", self.dotViewClass, NSStringFromProtocol(@protocol(__FWDotViewProtocol)));
         }
     } else if (self.dotImage && self.currentDotImage) {
         UIImageView *dotView = (UIImageView *)[self.dots objectAtIndex:index];
@@ -310,9 +310,9 @@
 
 @end
 
-#pragma mark - FWDotView
+#pragma mark - __FWDotView
 
-@implementation FWDotView
+@implementation __FWDotView
 
 - (instancetype)init
 {
@@ -352,7 +352,7 @@
     self.backgroundColor = self.dotColor;
 }
 
-#pragma mark - FWDotViewProtocol
+#pragma mark - __FWDotViewProtocol
 
 - (void)changeActivityState:(BOOL)active
 {
@@ -379,7 +379,7 @@
 
 @end
 
-@implementation FWBorderDotView
+@implementation __FWBorderDotView
 
 #pragma mark - Setter
 

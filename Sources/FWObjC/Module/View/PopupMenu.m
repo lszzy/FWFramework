@@ -29,9 +29,9 @@
 
 #endif
 
-#pragma mark - FWPopupMenuPath
+#pragma mark - __FWPopupMenuPath
 
-@implementation FWPopupMenuPath
+@implementation __FWPopupMenuPath
 
 + (CAShapeLayer *)maskLayerWithRect:(CGRect)rect
                          rectCorner:(UIRectCorner)rectCorner
@@ -39,7 +39,7 @@
                          arrowWidth:(CGFloat)arrowWidth
                         arrowHeight:(CGFloat)arrowHeight
                       arrowPosition:(CGFloat)arrowPosition
-                     arrowDirection:(FWPopupMenuArrowDirection)arrowDirection
+                     arrowDirection:(__FWPopupMenuArrowDirection)arrowDirection
 {
     CAShapeLayer *shapeLayer = [CAShapeLayer layer];
     shapeLayer.path = [self bezierPathWithRect:rect rectCorner:rectCorner cornerRadius:cornerRadius borderWidth:0 borderColor:nil backgroundColor:nil arrowWidth:arrowWidth arrowHeight:arrowHeight arrowPosition:arrowPosition arrowDirection:arrowDirection].CGPath;
@@ -55,7 +55,7 @@
                           arrowWidth:(CGFloat)arrowWidth
                          arrowHeight:(CGFloat)arrowHeight
                        arrowPosition:(CGFloat)arrowPosition
-                      arrowDirection:(FWPopupMenuArrowDirection)arrowDirection
+                      arrowDirection:(__FWPopupMenuArrowDirection)arrowDirection
 {
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     if (borderColor) {
@@ -82,7 +82,7 @@
         bottomRightRadius = cornerRadius;
     }
     
-    if (arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (arrowDirection == __FWPopupMenuArrowDirectionTop) {
         topLeftArcCenter = CGPointMake(topLeftRadius + rect.origin.x, arrowHeight + topLeftRadius + rect.origin.x);
         topRightArcCenter = CGPointMake(rect.size.width - topRightRadius + rect.origin.x, arrowHeight + topRightRadius + rect.origin.x);
         bottomLeftArcCenter = CGPointMake(bottomLeftRadius + rect.origin.x, rect.size.height - bottomLeftRadius + rect.origin.x);
@@ -104,7 +104,7 @@
         [bezierPath addLineToPoint:CGPointMake(rect.origin.x, arrowHeight + topLeftRadius + rect.origin.x)];
         [bezierPath addArcWithCenter:topLeftArcCenter radius:topLeftRadius startAngle:M_PI endAngle:M_PI * 3 / 2 clockwise:YES];
         
-    }else if (arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         topLeftArcCenter = CGPointMake(topLeftRadius + rect.origin.x,topLeftRadius + rect.origin.x);
         topRightArcCenter = CGPointMake(rect.size.width - topRightRadius + rect.origin.x, topRightRadius + rect.origin.x);
         bottomLeftArcCenter = CGPointMake(bottomLeftRadius + rect.origin.x, rect.size.height - bottomLeftRadius + rect.origin.x - arrowHeight);
@@ -126,7 +126,7 @@
         [bezierPath addLineToPoint:CGPointMake(rect.size.width + rect.origin.x, rect.size.height - bottomRightRadius - rect.origin.x - arrowHeight)];
         [bezierPath addArcWithCenter:bottomRightArcCenter radius:bottomRightRadius startAngle:0 endAngle:M_PI_2 clockwise:YES];
         
-    }else if (arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         topLeftArcCenter = CGPointMake(topLeftRadius + rect.origin.x + arrowHeight,topLeftRadius + rect.origin.x);
         topRightArcCenter = CGPointMake(rect.size.width - topRightRadius + rect.origin.x, topRightRadius + rect.origin.x);
         bottomLeftArcCenter = CGPointMake(bottomLeftRadius + rect.origin.x + arrowHeight, rect.size.height - bottomLeftRadius + rect.origin.x);
@@ -148,7 +148,7 @@
         [bezierPath addLineToPoint:CGPointMake(arrowHeight + bottomLeftRadius + rect.origin.x, rect.size.height + rect.origin.x)];
         [bezierPath addArcWithCenter:bottomLeftArcCenter radius:bottomLeftRadius startAngle:M_PI_2 endAngle:M_PI clockwise:YES];
         
-    }else if (arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (arrowDirection == __FWPopupMenuArrowDirectionRight) {
         topLeftArcCenter = CGPointMake(topLeftRadius + rect.origin.x,topLeftRadius + rect.origin.x);
         topRightArcCenter = CGPointMake(rect.size.width - topRightRadius + rect.origin.x - arrowHeight, topRightRadius + rect.origin.x);
         bottomLeftArcCenter = CGPointMake(bottomLeftRadius + rect.origin.x, rect.size.height - bottomLeftRadius + rect.origin.x);
@@ -170,7 +170,7 @@
         [bezierPath addLineToPoint:CGPointMake(rect.size.width - topRightRadius + rect.origin.x - arrowHeight, rect.origin.x)];
         [bezierPath addArcWithCenter:topRightArcCenter radius:topRightRadius startAngle:M_PI * 3 / 2 endAngle:2 * M_PI clockwise:YES];
         
-    }else if (arrowDirection == FWPopupMenuArrowDirectionNone) {
+    }else if (arrowDirection == __FWPopupMenuArrowDirectionNone) {
         topLeftArcCenter = CGPointMake(topLeftRadius + rect.origin.x,  topLeftRadius + rect.origin.x);
         topRightArcCenter = CGPointMake(rect.size.width - topRightRadius + rect.origin.x,  topRightRadius + rect.origin.x);
         bottomLeftArcCenter = CGPointMake(bottomLeftRadius + rect.origin.x, rect.size.height - bottomLeftRadius + rect.origin.x);
@@ -192,15 +192,15 @@
 
 @end
 
-#pragma mark - FWPopupMenuDeviceOrientationManager
+#pragma mark - __FWPopupMenuDeviceOrientationManager
 
-@implementation FWPopupMenuDeviceOrientationManager
+@implementation __FWPopupMenuDeviceOrientationManager
 @synthesize autoRotateWhenDeviceOrientationChanged = _autoRotateWhenDeviceOrientationChanged;
 @synthesize deviceOrientDidChangeHandle = _deviceOrientDidChangeHandle;
 
-+ (id<FWPopupMenuDeviceOrientationManager>)manager
++ (id<__FWPopupMenuDeviceOrientationManager>)manager
 {
-    FWPopupMenuDeviceOrientationManager * manager = [[FWPopupMenuDeviceOrientationManager alloc] init];
+    __FWPopupMenuDeviceOrientationManager * manager = [[__FWPopupMenuDeviceOrientationManager alloc] init];
     manager.autoRotateWhenDeviceOrientationChanged = YES;
     return manager;
 }
@@ -229,11 +229,11 @@
 
 @end
 
-#pragma mark - FWPopupMenuAnimationManager
+#pragma mark - __FWPopupMenuAnimationManager
 
 static NSString * const FWPopupShowAnimationKey = @"showAnimation";
 static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
-@interface FWPopupMenuAnimationManager () <CAAnimationDelegate>
+@interface __FWPopupMenuAnimationManager () <CAAnimationDelegate>
 
 @property (nonatomic, copy) void (^showAnimationHandle) (void);
 
@@ -241,17 +241,17 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 
 @end
 
-@implementation FWPopupMenuAnimationManager
+@implementation __FWPopupMenuAnimationManager
 @synthesize style = _style;
 @synthesize showAnimation = _showAnimation;
 @synthesize dismissAnimation = _dismissAnimation;
 @synthesize duration = _duration;
 @synthesize animationView = _animationView;
 
-+ (id<FWPopupMenuAnimationManager>)manager
++ (id<__FWPopupMenuAnimationManager>)manager
 {
-    FWPopupMenuAnimationManager * manager = [[FWPopupMenuAnimationManager alloc] init];
-    manager.style = FWPopupMenuAnimationStyleScale;
+    __FWPopupMenuAnimationManager * manager = [[__FWPopupMenuAnimationManager alloc] init];
+    manager.style = __FWPopupMenuAnimationStyleScale;
     manager.duration = 0.25;
     return manager;
 }
@@ -261,7 +261,7 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
     CABasicAnimation * showAnimation;
     CABasicAnimation * dismissAnimation;
     switch (_style) {
-        case FWPopupMenuAnimationStyleFade:
+        case __FWPopupMenuAnimationStyleFade:
         {
             _showAnimation = _dismissAnimation = nil;
             //show
@@ -278,9 +278,9 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
             _dismissAnimation = dismissAnimation;
         }
             break;
-        case FWPopupMenuAnimationStyleCustom:
+        case __FWPopupMenuAnimationStyleCustom:
             break;
-        case FWPopupMenuAnimationStyleNone:
+        case __FWPopupMenuAnimationStyleNone:
         {
             _showAnimation = _dismissAnimation = nil;
         }
@@ -305,7 +305,7 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
     }
 }
 
-- (void)setStyle:(FWPopupMenuAnimationStyle)style
+- (void)setStyle:(__FWPopupMenuAnimationStyle)style
 {
     _style = style;
     [self configAnimation];
@@ -385,14 +385,14 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 
 @end
 
-#pragma mark - FWPopupMenu
+#pragma mark - __FWPopupMenu
 
-@interface FWPopupMenuCell : UITableViewCell
+@interface __FWPopupMenuCell : UITableViewCell
 @property (nonatomic, assign) BOOL isShowSeparator;
 @property (nonatomic, strong) UIColor * separatorColor;
 @end
 
-@implementation FWPopupMenuCell
+@implementation __FWPopupMenuCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -435,7 +435,7 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 
 @end
 
-@interface FWPopupMenu ()
+@interface __FWPopupMenu ()
 <
 UITableViewDelegate,
 UITableViewDataSource
@@ -451,7 +451,7 @@ UITableViewDataSource
 @property (nonatomic, strong) UIView      * relyView;
 @end
 
-@implementation FWPopupMenu
+@implementation __FWPopupMenu
 
 - (instancetype)init
 {
@@ -463,9 +463,9 @@ UITableViewDataSource
 }
 
 #pragma mark - publics
-+ (FWPopupMenu *)showAtPoint:(CGPoint)point titles:(NSArray *)titles icons:(NSArray *)icons menuWidth:(CGFloat)itemWidth otherSettings:(void (^) (FWPopupMenu * popupMenu))otherSetting
++ (__FWPopupMenu *)showAtPoint:(CGPoint)point titles:(NSArray *)titles icons:(NSArray *)icons menuWidth:(CGFloat)itemWidth otherSettings:(void (^) (__FWPopupMenu * popupMenu))otherSetting
 {
-    FWPopupMenu *popupMenu = [[FWPopupMenu alloc] init];
+    __FWPopupMenu *popupMenu = [[__FWPopupMenu alloc] init];
     popupMenu.point = point;
     popupMenu.titles = titles;
     popupMenu.images = icons;
@@ -475,9 +475,9 @@ UITableViewDataSource
     return popupMenu;
 }
 
-+ (FWPopupMenu *)showRelyOnView:(UIView *)view titles:(NSArray *)titles icons:(NSArray *)icons menuWidth:(CGFloat)itemWidth otherSettings:(void (^) (FWPopupMenu * popupMenu))otherSetting
++ (__FWPopupMenu *)showRelyOnView:(UIView *)view titles:(NSArray *)titles icons:(NSArray *)icons menuWidth:(CGFloat)itemWidth otherSettings:(void (^) (__FWPopupMenu * popupMenu))otherSetting
 {
-    FWPopupMenu *popupMenu = [[FWPopupMenu alloc] init];
+    __FWPopupMenu *popupMenu = [[__FWPopupMenu alloc] init];
     popupMenu.relyView = view;
     popupMenu.titles = titles;
     popupMenu.images = icons;
@@ -522,10 +522,10 @@ UITableViewDataSource
         return tableViewCell;
     }
     
-    static NSString * identifier = @"FWPopupMenu";
-    FWPopupMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static NSString * identifier = @"__FWPopupMenu";
+    __FWPopupMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[FWPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[__FWPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.textLabel.numberOfLines = 0;
     }
     cell.backgroundColor = [UIColor clearColor];
@@ -575,21 +575,21 @@ UITableViewDataSource
 #pragma mark - scrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    if ([[self getLastVisibleCell] isKindOfClass:[FWPopupMenuCell class]]) {
-        FWPopupMenuCell *cell = [self getLastVisibleCell];
+    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
+        __FWPopupMenuCell *cell = [self getLastVisibleCell];
         cell.isShowSeparator = YES;
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    if ([[self getLastVisibleCell] isKindOfClass:[FWPopupMenuCell class]]) {
-        FWPopupMenuCell *cell = [self getLastVisibleCell];
+    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
+        __FWPopupMenuCell *cell = [self getLastVisibleCell];
         cell.isShowSeparator = NO;
     }
 }
 
-- (FWPopupMenuCell *)getLastVisibleCell
+- (__FWPopupMenuCell *)getLastVisibleCell
 {
     NSArray <NSIndexPath *>*indexPaths = [self.tableView indexPathsForVisibleRows];
     indexPaths = [indexPaths sortedArrayUsingComparator:^NSComparisonResult(NSIndexPath *  _Nonnull obj1, NSIndexPath *  _Nonnull obj2) {
@@ -609,8 +609,8 @@ UITableViewDataSource
     if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuBeganShow:)]) {
         [self.delegate popupMenuBeganShow:self];
     }
-    if ([[self getLastVisibleCell] isKindOfClass:[FWPopupMenuCell class]]) {
-        FWPopupMenuCell *cell = [self getLastVisibleCell];
+    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
+        __FWPopupMenuCell *cell = [self getLastVisibleCell];
         cell.isShowSeparator = NO;
     }
     __weak typeof(self) weakSelf = self;
@@ -640,16 +640,16 @@ UITableViewDataSource
     _arrowWidth = 15.0;
     _arrowHeight = 10.0;
     _backColor = [UIColor whiteColor];
-    _type = FWPopupMenuTypeDefault;
-    _arrowDirection = FWPopupMenuArrowDirectionTop;
-    _priorityDirection = FWPopupMenuPriorityDirectionTop;
+    _type = __FWPopupMenuTypeDefault;
+    _arrowDirection = __FWPopupMenuArrowDirectionTop;
+    _priorityDirection = __FWPopupMenuPriorityDirectionTop;
     _minSpace = 10.0;
     _maxVisibleCount = 5;
     _itemHeight = 44;
     _isCornerChanged = NO;
     _showMaskView = YES;
-    _orientationManager = [FWPopupMenuDeviceOrientationManager manager];
-    _animationManager = [FWPopupMenuAnimationManager manager];
+    _orientationManager = [__FWPopupMenuDeviceOrientationManager manager];
+    _animationManager = [__FWPopupMenuAnimationManager manager];
     _animationManager.animationView = self;
     _menuBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)];
     _menuBackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1];
@@ -733,11 +733,11 @@ UITableViewDataSource
     _menuBackView.backgroundColor = showMaskView ? [[UIColor blackColor] colorWithAlphaComponent:0.1] : [UIColor clearColor];
 }
 
-- (void)setType:(FWPopupMenuType)type
+- (void)setType:(__FWPopupMenuType)type
 {
     _type = type;
     switch (type) {
-        case FWPopupMenuTypeDark:
+        case __FWPopupMenuTypeDark:
         {
             _textColor = [UIColor lightGrayColor];
             _backColor = [UIColor colorWithRed:0.25 green:0.27 blue:0.29 alpha:1];
@@ -777,42 +777,42 @@ UITableViewDataSource
         self.tableView.bounces = NO;
     }
      _isChangeDirection = NO;
-    if (_priorityDirection == FWPopupMenuPriorityDirectionTop) {
+    if (_priorityDirection == __FWPopupMenuPriorityDirectionTop) {
         if (_point.y + height + _arrowHeight > UIScreen.fw_screenHeight - _minSpace) {
-            _arrowDirection = FWPopupMenuArrowDirectionBottom;
+            _arrowDirection = __FWPopupMenuArrowDirectionBottom;
             _isChangeDirection = YES;
         }else {
-            _arrowDirection = FWPopupMenuArrowDirectionTop;
+            _arrowDirection = __FWPopupMenuArrowDirectionTop;
             _isChangeDirection = NO;
         }
-    }else if (_priorityDirection == FWPopupMenuPriorityDirectionBottom) {
+    }else if (_priorityDirection == __FWPopupMenuPriorityDirectionBottom) {
         if (_point.y - height - _arrowHeight < _minSpace) {
-            _arrowDirection = FWPopupMenuArrowDirectionTop;
+            _arrowDirection = __FWPopupMenuArrowDirectionTop;
             _isChangeDirection = YES;
         }else {
-            _arrowDirection = FWPopupMenuArrowDirectionBottom;
+            _arrowDirection = __FWPopupMenuArrowDirectionBottom;
             _isChangeDirection = NO;
         }
-    }else if (_priorityDirection == FWPopupMenuPriorityDirectionLeft) {
+    }else if (_priorityDirection == __FWPopupMenuPriorityDirectionLeft) {
         if (_point.x + _itemWidth + _arrowHeight > UIScreen.fw_screenWidth - _minSpace) {
-            _arrowDirection = FWPopupMenuArrowDirectionRight;
+            _arrowDirection = __FWPopupMenuArrowDirectionRight;
             _isChangeDirection = YES;
         }else {
-            _arrowDirection = FWPopupMenuArrowDirectionLeft;
+            _arrowDirection = __FWPopupMenuArrowDirectionLeft;
             _isChangeDirection = NO;
         }
-    }else if (_priorityDirection == FWPopupMenuPriorityDirectionRight) {
+    }else if (_priorityDirection == __FWPopupMenuPriorityDirectionRight) {
         if (_point.x - _itemWidth - _arrowHeight < _minSpace) {
-            _arrowDirection = FWPopupMenuArrowDirectionLeft;
+            _arrowDirection = __FWPopupMenuArrowDirectionLeft;
             _isChangeDirection = YES;
         }else {
-            _arrowDirection = FWPopupMenuArrowDirectionRight;
+            _arrowDirection = __FWPopupMenuArrowDirectionRight;
             _isChangeDirection = NO;
         }
     }
     [self setArrowPosition];
     [self setRelyRect];
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         CGFloat y = _isChangeDirection ? _point.y  : _point.y;
         if (_arrowPosition > _itemWidth / 2) {
             self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
@@ -821,7 +821,7 @@ UITableViewDataSource
         }else {
             self.frame = CGRectMake(_point.x - _itemWidth / 2, y, _itemWidth, height + _arrowHeight);
         }
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         CGFloat y = _isChangeDirection ? _point.y - _arrowHeight - height : _point.y - _arrowHeight - height;
         if (_arrowPosition > _itemWidth / 2) {
             self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
@@ -830,7 +830,7 @@ UITableViewDataSource
         }else {
             self.frame = CGRectMake(_point.x - _itemWidth / 2, y, _itemWidth, height + _arrowHeight);
         }
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         CGFloat x = _isChangeDirection ? _point.x : _point.x;
         if (_arrowPosition < _itemHeight / 2) {
             self.frame = CGRectMake(x, _point.y - _arrowPosition, _itemWidth + _arrowHeight, height);
@@ -839,7 +839,7 @@ UITableViewDataSource
         }else {
             self.frame = CGRectMake(x, _point.y - _arrowPosition, _itemWidth + _arrowHeight, height);
         }
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionRight) {
         CGFloat x = _isChangeDirection ? _point.x - _itemWidth - _arrowHeight : _point.x - _itemWidth - _arrowHeight;
         if (_arrowPosition < _itemHeight / 2) {
             self.frame = CGRectMake(x, _point.y - _arrowPosition, _itemWidth + _arrowHeight, height);
@@ -848,7 +848,7 @@ UITableViewDataSource
         }else {
             self.frame = CGRectMake(x, _point.y - _arrowPosition, _itemWidth + _arrowHeight, height);
         }
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionNone) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionNone) {
         
     }
     
@@ -866,11 +866,11 @@ UITableViewDataSource
     if (CGRectEqualToRect(_relyRect, CGRectZero)) {
         return;
     }
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         _point.y = _relyRect.size.height + _relyRect.origin.y;
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         _point.y = _relyRect.origin.y;
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         _point = CGPointMake(_relyRect.origin.x + _relyRect.size.width, _relyRect.origin.y + _relyRect.size.height / 2);
     }else {
         _point = CGPointMake(_relyRect.origin.x, _relyRect.origin.y + _relyRect.size.height / 2);
@@ -881,13 +881,13 @@ UITableViewDataSource
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         self.tableView.frame = CGRectMake(_borderWidth, _borderWidth + _arrowHeight, frame.size.width - _borderWidth * 2, frame.size.height - _arrowHeight);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         self.tableView.frame = CGRectMake(_borderWidth, _borderWidth, frame.size.width - _borderWidth * 2, frame.size.height - _arrowHeight);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         self.tableView.frame = CGRectMake(_borderWidth + _arrowHeight, _borderWidth , frame.size.width - _borderWidth * 2 - _arrowHeight, frame.size.height);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionRight) {
         self.tableView.frame = CGRectMake(_borderWidth , _borderWidth , frame.size.width - _borderWidth * 2 - _arrowHeight, frame.size.height);
     }
 }
@@ -911,7 +911,7 @@ UITableViewDataSource
         haveBottomRightCorner = YES;
     }
     
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop || _arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop || _arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         
         if (haveTopLeftCorner) {
             _rectCorner = _rectCorner | UIRectCornerBottomLeft;
@@ -934,7 +934,7 @@ UITableViewDataSource
             _rectCorner = _rectCorner & (~UIRectCornerTopRight);
         }
         
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft || _arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft || _arrowDirection == __FWPopupMenuArrowDirectionRight) {
         if (haveTopLeftCorner) {
             _rectCorner = _rectCorner | UIRectCornerTopRight;
         }else {
@@ -966,13 +966,13 @@ UITableViewDataSource
     
     CGRect originRect = self.frame;
     
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         originRect.origin.y += _offset;
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         originRect.origin.y -= _offset;
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         originRect.origin.x += _offset;
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionRight) {
         originRect.origin.x -= _offset;
     }
     self.frame = originRect;
@@ -985,13 +985,13 @@ UITableViewDataSource
     CGFloat menuHeight = [self getMenuTotalHeight];
     
     CGPoint point = CGPointMake(0.5, 0.5);
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         point = CGPointMake(_arrowPosition / _itemWidth, 0);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         point = CGPointMake(_arrowPosition / _itemWidth, 1);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft) {
         point = CGPointMake(0, _arrowPosition / menuHeight);
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionRight) {
         point = CGPointMake(1, _arrowPosition / menuHeight);
     }
     CGRect originRect = self.frame;
@@ -1001,11 +1001,11 @@ UITableViewDataSource
 
 - (void)setArrowPosition
 {
-    if (_priorityDirection == FWPopupMenuPriorityDirectionNone) {
+    if (_priorityDirection == __FWPopupMenuPriorityDirectionNone) {
         return;
     }
     
-    if (_arrowDirection == FWPopupMenuArrowDirectionTop || _arrowDirection == FWPopupMenuArrowDirectionBottom) {
+    if (_arrowDirection == __FWPopupMenuArrowDirectionTop || _arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         if (_point.x + _itemWidth / 2 > UIScreen.fw_screenWidth - _minSpace) {
             _arrowPosition = _itemWidth - (UIScreen.fw_screenWidth - _minSpace - _point.x);
         }else if (_point.x < _itemWidth / 2 + _minSpace) {
@@ -1014,7 +1014,7 @@ UITableViewDataSource
             _arrowPosition = _itemWidth / 2;
         }
         
-    }else if (_arrowDirection == FWPopupMenuArrowDirectionLeft || _arrowDirection == FWPopupMenuArrowDirectionRight) {
+    }else if (_arrowDirection == __FWPopupMenuArrowDirectionLeft || _arrowDirection == __FWPopupMenuArrowDirectionRight) {
     }
 }
 
@@ -1031,7 +1031,7 @@ UITableViewDataSource
 
 - (void)drawRect:(CGRect)rect
 {
-    UIBezierPath *bezierPath = [FWPopupMenuPath bezierPathWithRect:rect rectCorner:_rectCorner cornerRadius:_cornerRadius borderWidth:_borderWidth borderColor:_borderColor backgroundColor:_backColor arrowWidth:_arrowWidth arrowHeight:_arrowHeight arrowPosition:_arrowPosition arrowDirection:_arrowDirection];
+    UIBezierPath *bezierPath = [__FWPopupMenuPath bezierPathWithRect:rect rectCorner:_rectCorner cornerRadius:_cornerRadius borderWidth:_borderWidth borderColor:_borderColor backgroundColor:_backColor arrowWidth:_arrowWidth arrowHeight:_arrowHeight arrowPosition:_arrowPosition arrowDirection:_arrowDirection];
     [bezierPath fill];
     [bezierPath stroke];
 }

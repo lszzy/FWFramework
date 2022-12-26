@@ -294,7 +294,7 @@ NS_SWIFT_NAME(ImagePickerPreviewCollectionCell)
 
 @class FWImagePickerCollectionCell;
 @class FWImagePickerController;
-@class FWToolbarTitleView;
+@class __FWToolbarTitleView;
 
 NS_SWIFT_NAME(ImagePickerControllerDelegate)
 @protocol FWImagePickerControllerDelegate <NSObject>
@@ -405,7 +405,7 @@ NS_SWIFT_NAME(ImagePickerController)
 @property(nullable, nonatomic, strong) UIColor *toolBarTintColor;
 
 /// 当前titleView，默认不可点击，contentType方式会自动切换点击状态
-@property(nonatomic, strong, readonly) FWToolbarTitleView *titleView;
+@property(nonatomic, strong, readonly) __FWToolbarTitleView *titleView;
 /// 标题视图accessoryImage，默认nil，contentType方式会自动设置
 @property(nullable, nonatomic, strong) UIImage *titleAccessoryImage;
 

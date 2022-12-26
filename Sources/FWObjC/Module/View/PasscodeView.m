@@ -26,7 +26,7 @@
 
 #endif
 
-@implementation FWPasscodeFlowLayout
+@implementation __FWPasscodeFlowLayout
 
 - (instancetype)init
 {
@@ -75,13 +75,13 @@
 
 @end
 
-@interface FWPasscodeLineView()
+@interface __FWPasscodeLineView()
 {
     
 }
 @end
 
-@implementation FWPasscodeLineView
+@implementation __FWPasscodeLineView
 
 - (instancetype)init
 {
@@ -123,13 +123,13 @@
 
 @end
 
-@interface FWPasscodeSecrectImageView()
+@interface __FWPasscodeSecrectImageView()
 {
     UIImageView *_lockImgView;
 }
 @end
 
-@implementation FWPasscodeSecrectImageView
+@implementation __FWPasscodeSecrectImageView
 
 - (instancetype)init
 {
@@ -168,14 +168,14 @@
 
 @end
 
-@interface FWPasscodeCellProperty ()
+@interface __FWPasscodeCellProperty ()
 
 @property (copy, nonatomic, readwrite) NSString *originValue;
 
 @end
 
 
-@implementation FWPasscodeCellProperty
+@implementation __FWPasscodeCellProperty
 
 - (instancetype)init
 {
@@ -209,7 +209,7 @@
         self.showSecurity = NO;
         self.securitySymbol = @"✱";
         self.originValue = @"";
-        self.securityType = FWPasscodeSecurityTypeSymbol;
+        self.securityType = __FWPasscodeSecurityTypeSymbol;
         
         // Placeholder
         self.cellPlaceholderText = nil;
@@ -220,8 +220,8 @@
         self.customSecurityViewBlock = ^UIView * _Nonnull{
             return [weakSelf defaultCustomSecurityView];
         };
-        self.customLineViewBlock = ^FWPasscodeLineView * _Nonnull{
-            return [FWPasscodeLineView new];
+        self.customLineViewBlock = ^__FWPasscodeLineView * _Nonnull{
+            return [__FWPasscodeLineView new];
         };
         self.configCellShadowBlock = nil;
         
@@ -235,7 +235,7 @@
 #pragma mark - Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-    FWPasscodeCellProperty *copy = [[self class] allocWithZone:zone];
+    __FWPasscodeCellProperty *copy = [[self class] allocWithZone:zone];
     
     // UI
     copy.borderWidth = _borderWidth;
@@ -311,7 +311,7 @@
 
 @end
 
-@interface FWPasscodeCell ()
+@interface __FWPasscodeCell ()
 {
     
 }
@@ -320,11 +320,11 @@
 @property (strong, nonatomic) CABasicAnimation *opacityAnimation;
 @property (strong, nonatomic) UIView *customSecurityView;
 
-@property (strong, nonatomic) FWPasscodeLineView *lineView;
+@property (strong, nonatomic) __FWPasscodeLineView *lineView;
 
 @end
 
-@implementation FWPasscodeCell
+@implementation __FWPasscodeCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -361,7 +361,7 @@
 
 - (void)initCellProperty
 {
-    FWPasscodeCellProperty *cellProperty = [FWPasscodeCellProperty new];
+    __FWPasscodeCellProperty *cellProperty = [__FWPasscodeCellProperty new];
     self.cellProperty = cellProperty;
 }
 
@@ -396,9 +396,9 @@
     BOOL hasOriginValue = self.cellProperty.originValue && self.cellProperty.originValue.length > 0;
     if (hasOriginValue) {
         if (self.cellProperty.showSecurity) {
-            if (self.cellProperty.securityType == FWPasscodeSecurityTypeSymbol) {
+            if (self.cellProperty.securityType == __FWPasscodeSecurityTypeSymbol) {
                 _valueLabel.text = self.cellProperty.securitySymbol;
-            }else if (self.cellProperty.securityType == FWPasscodeSecurityTypeView) {
+            }else if (self.cellProperty.securityType == __FWPasscodeSecurityTypeView) {
                 _valueLabel.hidden = YES;
                 [self showCustomSecurityView];
             }
@@ -510,17 +510,17 @@
     if (_showCursor) {
         if (selected) {
             _cursorView.hidden= NO;
-            [_cursorView.layer addAnimation:self.opacityAnimation forKey:@"FWPasscodeCursorAnimationKey"];
+            [_cursorView.layer addAnimation:self.opacityAnimation forKey:@"__FWPasscodeCursorAnimationKey"];
         }else{
             _cursorView.hidden= YES;
-            [_cursorView.layer removeAnimationForKey:@"FWPasscodeCursorAnimationKey"];
+            [_cursorView.layer removeAnimationForKey:@"__FWPasscodeCursorAnimationKey"];
         }
     }else{
         _cursorView.hidden= YES;
     }
 }
 
-- (void)setCellProperty:(FWPasscodeCellProperty *)cellProperty
+- (void)setCellProperty:(__FWPasscodeCellProperty *)cellProperty
 {
     _cellProperty = cellProperty;
     
@@ -564,13 +564,13 @@
 
 @end
 
-typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
-    FWPasscodeTextChangeTypeNoChange,
-    FWPasscodeTextChangeTypeInsert,
-    FWPasscodeTextChangeTypeDelete,
+typedef NS_ENUM(NSInteger, __FWPasscodeTextChangeType) {
+    __FWPasscodeTextChangeTypeNoChange,
+    __FWPasscodeTextChangeTypeInsert,
+    __FWPasscodeTextChangeTypeDelete,
 };
 
-@interface FWPasscodeView () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate>
+@interface __FWPasscodeView () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate>
 {
     NSInteger _oldLength;
     BOOL _needBeginEdit;
@@ -581,11 +581,11 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
 @property (nonatomic, strong) UITextField *textField;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray <NSString *> *valueArr;
-@property (nonatomic, strong) NSMutableArray <FWPasscodeCellProperty *> *cellPropertyArr;
+@property (nonatomic, strong) NSMutableArray <__FWPasscodeCellProperty *> *cellPropertyArr;
 
 @end
 
-@implementation FWPasscodeView
+@implementation __FWPasscodeView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -667,7 +667,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     self.codeLength = 4;
     self.showCursor = YES;
     self.keyboardType = UIKeyboardTypeNumberPad;
-    self.inputType = FWPasscodeInputTypeNumber;
+    self.inputType = __FWPasscodeInputTypeNumber;
     self.customInputRegex = @"";
     self.backgroundColor = [UIColor clearColor];
     _valueArr = [NSMutableArray new];
@@ -759,7 +759,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     }
     
     if (self.editStatusChangeBlock) {
-        self.editStatusChangeBlock(FWPasscodeEditStatusBeginEdit);
+        self.editStatusChangeBlock(__FWPasscodeEditStatusBeginEdit);
     }
     
     [self reloadAllCell];
@@ -770,7 +770,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     _needBeginEdit = NO;
     
     if (self.editStatusChangeBlock) {
-        self.editStatusChangeBlock(FWPasscodeEditStatusEndEdit);
+        self.editStatusChangeBlock(__FWPasscodeEditStatusEndEdit);
     }
     
     [self reloadAllCell];
@@ -819,16 +819,16 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
 - (NSString *)filterInputContent:(NSString *)inputStr {
     
     NSMutableString *mutableStr = [[NSMutableString alloc] initWithString:inputStr];
-    if (self.inputType == FWPasscodeInputTypeNumber) {
+    if (self.inputType == __FWPasscodeInputTypeNumber) {
         
         /// 纯数字
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9]" options:0 error:nil];
         [regex replaceMatchesInString:mutableStr options:0 range:NSMakeRange(0, [mutableStr length]) withTemplate:@""];
-    } else if (self.inputType == FWPasscodeInputTypeNormal) {
+    } else if (self.inputType == __FWPasscodeInputTypeNormal) {
         
         /// 不处理
         nil;
-    } else if (self.inputType == FWPasscodeInputTypeRegex) {
+    } else if (self.inputType == __FWPasscodeInputTypeRegex) {
         
         /// 自定义正则
         if (self.customInputRegex.length > 0) {
@@ -862,19 +862,19 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     textField.text = verStr;
     
     // 判断删除/增加
-    FWPasscodeTextChangeType textChangeType = FWPasscodeTextChangeTypeNoChange;
+    __FWPasscodeTextChangeType textChangeType = __FWPasscodeTextChangeTypeNoChange;
     if (verStr.length > _oldLength) {
-        textChangeType = FWPasscodeTextChangeTypeInsert;
+        textChangeType = __FWPasscodeTextChangeTypeInsert;
     }else if (verStr.length < _oldLength){
-        textChangeType = FWPasscodeTextChangeTypeDelete;
+        textChangeType = __FWPasscodeTextChangeTypeDelete;
     }
     
     // _valueArr
-    if (textChangeType == FWPasscodeTextChangeTypeDelete) {
+    if (textChangeType == __FWPasscodeTextChangeTypeDelete) {
         [self setSecurityShow:NO index:_valueArr.count-1];
         [_valueArr removeLastObject];
         
-    }else if (textChangeType == FWPasscodeTextChangeTypeInsert){
+    }else if (textChangeType == __FWPasscodeTextChangeTypeInsert){
         if (verStr.length > 0) {
             if (_valueArr.count > 0) {
                 [self replaceValueArrToAsteriskWithIndex:_valueArr.count - 1 needEqualToCount:NO];
@@ -901,7 +901,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     
     _oldLength = verStr.length;
     
-    if (textChangeType != FWPasscodeTextChangeTypeNoChange) {
+    if (textChangeType != __FWPasscodeTextChangeTypeNoChange) {
         [self triggerBlock];
     }
 }
@@ -914,13 +914,13 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
         return;
     }
     
-    FWPasscodeCellProperty *cellProperty = self.cellPropertyArr[index];
+    __FWPasscodeCellProperty *cellProperty = self.cellPropertyArr[index];
     cellProperty.showSecurity = isShow;
 }
 
 - (void)allSecurityClose
 {
-    [self.cellPropertyArr enumerateObjectsUsingBlock:^(FWPasscodeCellProperty * _Nonnull cellProperty, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.cellPropertyArr enumerateObjectsUsingBlock:^(__FWPasscodeCellProperty * _Nonnull cellProperty, NSUInteger idx, BOOL * _Nonnull stop) {
         if (cellProperty.showSecurity == YES) {
             cellProperty.showSecurity = NO;
         }
@@ -929,7 +929,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
 
 - (void)allSecurityOpen
 {
-    [self.cellPropertyArr enumerateObjectsUsingBlock:^(FWPasscodeCellProperty * _Nonnull cellProperty, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.cellPropertyArr enumerateObjectsUsingBlock:^(__FWPasscodeCellProperty * _Nonnull cellProperty, NSUInteger idx, BOOL * _Nonnull stop) {
         if (cellProperty.showSecurity == NO) {
             cellProperty.showSecurity = YES;
         }
@@ -1012,13 +1012,13 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
 {
     id tempCell = [self collectionView:collectionView customCellForItemAtIndexPath:indexPath];
     
-    if ([tempCell isKindOfClass:[FWPasscodeCell class]]) {
+    if ([tempCell isKindOfClass:[__FWPasscodeCell class]]) {
         
-        FWPasscodeCell *cell = (FWPasscodeCell *)tempCell;
+        __FWPasscodeCell *cell = (__FWPasscodeCell *)tempCell;
         cell.showCursor = self.showCursor;
         
         // CellProperty
-        FWPasscodeCellProperty *cellProperty = self.cellPropertyArr[indexPath.row];
+        __FWPasscodeCellProperty *cellProperty = self.cellPropertyArr[indexPath.row];
         cellProperty.index = indexPath.row;
         
         NSString *currentPlaceholderStr = nil;
@@ -1073,7 +1073,7 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
 #pragma mark - You can rewrite
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView customCellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    FWPasscodeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"FWPasscodeCellID" forIndexPath:indexPath];
+    __FWPasscodeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"__FWPasscodeCellID" forIndexPath:indexPath];
     return cell;
 }
 
@@ -1097,16 +1097,16 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
         _collectionView.dataSource = self;
         _collectionView.layer.masksToBounds = YES;
         _collectionView.clipsToBounds = YES;
-        [_collectionView registerClass:[FWPasscodeCell class] forCellWithReuseIdentifier:@"FWPasscodeCellID"];
+        [_collectionView registerClass:[__FWPasscodeCell class] forCellWithReuseIdentifier:@"__FWPasscodeCellID"];
     }
     
     return _collectionView;
 }
 
-- (FWPasscodeFlowLayout *)flowLayout
+- (__FWPasscodeFlowLayout *)flowLayout
 {
     if (!_flowLayout) {
-        _flowLayout = [FWPasscodeFlowLayout new];
+        _flowLayout = [__FWPasscodeFlowLayout new];
         _flowLayout.itemSize = CGSizeMake(42, 47);
     }
     
@@ -1143,16 +1143,16 @@ typedef NS_ENUM(NSInteger, FWPasscodeTextChangeType) {
     _textField.textContentType = textContentType;
 }
 
-- (FWPasscodeCellProperty *)cellProperty
+- (__FWPasscodeCellProperty *)cellProperty
 {
     if (!_cellProperty) {
-        _cellProperty = [FWPasscodeCellProperty new];
+        _cellProperty = [__FWPasscodeCellProperty new];
     }
     
     return _cellProperty;
 }
 
-- (NSMutableArray <FWPasscodeCellProperty *> *)cellPropertyArr
+- (NSMutableArray <__FWPasscodeCellProperty *> *)cellPropertyArr
 {
     if (!_cellPropertyArr) {
         _cellPropertyArr = [NSMutableArray new];

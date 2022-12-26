@@ -233,7 +233,7 @@
 
 NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 
-@interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, FWStatisticalDelegate>
+@interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, __FWStatisticalDelegate>
 
 @property (nonatomic, weak) UICollectionView *mainView;
 @property (nonatomic, weak) __FWBannerViewFlowLayout *flowLayout;
@@ -242,8 +242,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
 @property (nonatomic, assign) NSInteger pageControlIndex;
-@property (nonatomic, copy) FWStatisticalClickCallback clickCallback;
-@property (nonatomic, copy) FWStatisticalExposureCallback exposureCallback;
+@property (nonatomic, copy) __FWStatisticalClickCallback clickCallback;
+@property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 
 @end
 
@@ -367,8 +367,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 {
     _pageControlDotSize = pageControlDotSize;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageContol = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageContol = (__FWPageControl *)_pageControl;
         pageContol.dotSize = pageControlDotSize;
     }
 }
@@ -377,8 +377,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 {
     _pageControlDotSpacing = pageControlDotSpacing;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageContol = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageContol = (__FWPageControl *)_pageControl;
         pageContol.spacingBetweenDots = pageControlDotSpacing;
     }
 }
@@ -394,8 +394,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 {
     _currentPageDotColor = currentPageDotColor;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         pageControl.currentDotColor = currentPageDotColor;
     } else {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
@@ -407,8 +407,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 {
     _pageDotColor = pageDotColor;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         pageControl.dotColor = pageDotColor;
     } else {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
@@ -442,8 +442,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 {
     if (!image || !self.pageControl) return;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         if (isCurrentPageDot) {
             pageControl.currentDotImage = image;
         } else {
@@ -460,8 +460,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
         self.pageControlStyle = __FWBannerViewPageControlStyleCustom;
     }
     
-    if (self.pageControl && [self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if (self.pageControl && [self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         pageControl.dotViewClass = pageDotViewClass;
     }
 }
@@ -640,7 +640,7 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 
     switch (self.pageControlStyle) {
         case __FWBannerViewPageControlStyleCustom: {
-            FWPageControl *pageControl = [[FWPageControl alloc] init];
+            __FWPageControl *pageControl = [[__FWPageControl alloc] init];
             pageControl.numberOfPages = self.imagePathsGroup.count;
             pageControl.dotColor = self.pageDotColor;
             pageControl.currentDotColor = self.currentPageDotColor;
@@ -762,8 +762,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     }
     
     CGSize size = CGSizeZero;
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(CGSizeMake(10, 10), self.pageControlDotSize))) {
             pageControl.dotSize = self.pageControlDotSize;
         }
@@ -784,8 +784,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     }
     CGFloat y = self.mainView.frame.size.height - size.height - 10;
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         [pageControl sizeToFit];
     }
     
@@ -905,8 +905,8 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     NSInteger itemIndex = [_flowLayout currentPage];
     NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:itemIndex];
     
-    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
-        FWPageControl *pageControl = (FWPageControl *)_pageControl;
+    if ([self.pageControl isKindOfClass:[__FWPageControl class]]) {
+        __FWPageControl *pageControl = (__FWPageControl *)_pageControl;
         pageControl.currentPage = indexOnPageControl;
     } else {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
@@ -977,14 +977,14 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     }
 }
 
-#pragma mark - FWStatisticalDelegate
+#pragma mark - __FWStatisticalDelegate
 
-- (void)statisticalClickWithCallback:(FWStatisticalClickCallback)callback
+- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback
 {
     self.clickCallback = callback;
 }
 
-- (void)statisticalExposureWithCallback:(FWStatisticalExposureCallback)callback
+- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback
 {
     self.exposureCallback = callback;
     
@@ -1004,7 +1004,7 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 
 #pragma mark - __FWBannerViewCell
 
-@interface __FWBannerViewCell () <FWStatisticalDelegate>
+@interface __FWBannerViewCell () <__FWStatisticalDelegate>
 
 @end
 
@@ -1102,7 +1102,7 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     }
 }
 
-#pragma mark - FWStatisticalDelegate
+#pragma mark - __FWStatisticalDelegate
 
 - (UIView *)statisticalCellProxyView
 {

@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(PasscodeFlowLayout)
-@interface FWPasscodeFlowLayout : UICollectionViewFlowLayout
+@interface __FWPasscodeFlowLayout : UICollectionViewFlowLayout
 
 @property (assign, nonatomic) BOOL equalGap;
 
@@ -23,7 +23,7 @@ NS_SWIFT_NAME(PasscodeFlowLayout)
 @end
 
 NS_SWIFT_NAME(PasscodeLineView)
-@interface FWPasscodeLineView : UIView
+@interface __FWPasscodeLineView : UIView
 
 @property (strong, nonatomic) UIView    *lineView;
 @property (assign, nonatomic) BOOL      selected;
@@ -46,14 +46,14 @@ NS_SWIFT_NAME(PasscodeLineView)
 /**
  选择状态改变时回调
  */
-@property (nullable, copy, nonatomic) void(^selectChangeBlock)(FWPasscodeLineView *lineView, BOOL selected);
+@property (nullable, copy, nonatomic) void(^selectChangeBlock)(__FWPasscodeLineView *lineView, BOOL selected);
 
 - (instancetype)initWithFrame:(CGRect)frame UNAVAILABLE_ATTRIBUTE;
 
 @end
 
 NS_SWIFT_NAME(PasscodeSecrectImageView)
-@interface FWPasscodeSecrectImageView : UIView
+@interface __FWPasscodeSecrectImageView : UIView
 
 @property (strong, nonatomic) UIImage   *image;
 @property (assign, nonatomic) CGFloat   imageWidth;
@@ -61,13 +61,13 @@ NS_SWIFT_NAME(PasscodeSecrectImageView)
 
 @end
 
-typedef NS_ENUM(NSInteger, FWPasscodeSecurityType) {
-    FWPasscodeSecurityTypeSymbol,
-    FWPasscodeSecurityTypeView,
+typedef NS_ENUM(NSInteger, __FWPasscodeSecurityType) {
+    __FWPasscodeSecurityTypeSymbol,
+    __FWPasscodeSecurityTypeView,
 } NS_SWIFT_NAME(PasscodeSecurityType);
 
 NS_SWIFT_NAME(PasscodeCellProperty)
-@interface FWPasscodeCellProperty : NSObject <NSCopying>
+@interface __FWPasscodeCellProperty : NSObject <NSCopying>
 
 #pragma mark - UI
 /**
@@ -168,12 +168,12 @@ NS_SWIFT_NAME(PasscodeCellProperty)
 - (void)customOriginValue:(NSString *)originValue;
 
 /**
- 密文类型，默认：FWPasscodeSecurityTypeSymbol
+ 密文类型，默认：__FWPasscodeSecurityTypeSymbol
  类型说明：
- FWPasscodeSecurityTypeSymbol 符号类型，根据securitySymbol，originValue的内容来显示
- FWPasscodeSecurityTypeView 自定义View类型，可以自定义密文状态下的图片，View
+ __FWPasscodeSecurityTypeSymbol 符号类型，根据securitySymbol，originValue的内容来显示
+ __FWPasscodeSecurityTypeView 自定义View类型，可以自定义密文状态下的图片，View
  */
-@property (assign, nonatomic) FWPasscodeSecurityType securityType;
+@property (assign, nonatomic) __FWPasscodeSecurityType securityType;
 
 
 
@@ -204,7 +204,7 @@ NS_SWIFT_NAME(PasscodeCellProperty)
 /**
  自定义下划线回调
  */
-@property (copy, nonatomic) FWPasscodeLineView *_Nonnull(^customLineViewBlock)(void);
+@property (copy, nonatomic) __FWPasscodeLineView *_Nonnull(^customLineViewBlock)(void);
 /**
  自定义阴影回调
  */
@@ -215,7 +215,7 @@ NS_SWIFT_NAME(PasscodeCellProperty)
 @end
 
 NS_SWIFT_NAME(PasscodeCell)
-@interface FWPasscodeCell : UICollectionViewCell
+@interface __FWPasscodeCell : UICollectionViewCell
 
 /**
  cursor, You should not use these properties, unless you know what you are doing.
@@ -226,32 +226,32 @@ NS_SWIFT_NAME(PasscodeCell)
 /**
  cellProperty, You should not use these properties, unless you know what you are doing.
  */
-@property (strong, nonatomic) FWPasscodeCellProperty *cellProperty;
+@property (strong, nonatomic) __FWPasscodeCellProperty *cellProperty;
 
 @end
 
-typedef NS_ENUM(NSInteger, FWPasscodeEditStatus) {
-    FWPasscodeEditStatusIdle,
-    FWPasscodeEditStatusBeginEdit,
-    FWPasscodeEditStatusEndEdit,
+typedef NS_ENUM(NSInteger, __FWPasscodeEditStatus) {
+    __FWPasscodeEditStatusIdle,
+    __FWPasscodeEditStatusBeginEdit,
+    __FWPasscodeEditStatusEndEdit,
 } NS_SWIFT_NAME(PasscodeEditStatus);
 
-typedef NS_ENUM(NSInteger, FWPasscodeInputType) {
+typedef NS_ENUM(NSInteger, __FWPasscodeInputType) {
     /// 数字
-    FWPasscodeInputTypeNumber,
+    __FWPasscodeInputTypeNumber,
     /// 普通（不作任何处理）
-    FWPasscodeInputTypeNormal,
+    __FWPasscodeInputTypeNormal,
     /// 自定义正则（此时需要设置customInputRegex）
-    FWPasscodeInputTypeRegex,
+    __FWPasscodeInputTypeRegex,
 } NS_SWIFT_NAME(PasscodeInputType);
 
 /**
- FWPasscodeView
+ __FWPasscodeView
  
  @see https://github.com/CRAnimation/CRBoxInputView
  */
 NS_SWIFT_NAME(PasscodeView)
-@interface FWPasscodeView : UIView
+@interface __FWPasscodeView : UIView
 
 /**
  是否需要光标，默认: YES
@@ -279,12 +279,12 @@ NS_SWIFT_NAME(PasscodeView)
 @property (assign, nonatomic) UIKeyboardType keyboardType;
 
 /**
- 输入样式，默认: FWPasscodeInputTypeNumber
+ 输入样式，默认: __FWPasscodeInputTypeNumber
  */
-@property (assign, nonatomic) FWPasscodeInputType inputType;
+@property (assign, nonatomic) __FWPasscodeInputType inputType;
 
 /**
-自定义正则匹配输入内容，默认: @""，当inputType == FWPasscodeInputTypeRegex时才会生效
+自定义正则匹配输入内容，默认: @""，当inputType == __FWPasscodeInputTypeRegex时才会生效
 */
 @property (copy, nonatomic) NSString * _Nullable customInputRegex;
 
@@ -309,9 +309,9 @@ NS_SWIFT_NAME(PasscodeView)
 @property (assign, nonatomic) BOOL endEditWhenEditingFinished;
 
 @property (copy, nonatomic, nullable) void(^textDidChangeBlock)(NSString * _Nullable text, BOOL isFinished);
-@property (copy, nonatomic, nullable) void(^editStatusChangeBlock)(FWPasscodeEditStatus editStatus);
-@property (strong, nonatomic) FWPasscodeFlowLayout * _Nullable flowLayout;
-@property (strong, nonatomic) FWPasscodeCellProperty * _Nullable cellProperty;
+@property (copy, nonatomic, nullable) void(^editStatusChangeBlock)(__FWPasscodeEditStatus editStatus);
+@property (strong, nonatomic) __FWPasscodeFlowLayout * _Nullable flowLayout;
+@property (strong, nonatomic) __FWPasscodeCellProperty * _Nullable cellProperty;
 @property (strong, nonatomic, readonly) NSString  * _Nullable textValue;
 @property (strong, nonatomic) UIView * _Nullable inputAccessoryView;
 

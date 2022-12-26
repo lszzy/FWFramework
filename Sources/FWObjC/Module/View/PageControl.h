@@ -9,29 +9,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWPageControl
+#pragma mark - __FWPageControl
 
-@class FWPageControl;
+@class __FWPageControl;
 
 NS_SWIFT_NAME(PageControlDelegate)
-@protocol FWPageControlDelegate <NSObject>
+@protocol __FWPageControlDelegate <NSObject>
 
 @optional
 
-- (void)pageControl:(FWPageControl *)pageControl didSelectPageAtIndex:(NSInteger)index;
+- (void)pageControl:(__FWPageControl *)pageControl didSelectPageAtIndex:(NSInteger)index;
 
 @end
 
 /**
- FWPageControl
+ __FWPageControl
  
  @see https://github.com/TanguyAladenise/TAPageControl
  */
 NS_SWIFT_NAME(PageControl)
-@interface FWPageControl : UIControl
+@interface __FWPageControl : UIControl
 
 /**
- *  The Class of your custom UIView, make sure to implement FWDotViewProtocol, default FWDotView.
+ *  The Class of your custom UIView, make sure to implement __FWDotViewProtocol, default __FWDotView.
  */
 @property (nonatomic, nullable) Class dotViewClass;
 
@@ -71,9 +71,9 @@ NS_SWIFT_NAME(PageControl)
 @property (nonatomic) NSInteger spacingBetweenDots;
 
 /**
- * Delegate for FWPageControl
+ * Delegate for __FWPageControl
  */
-@property(nonatomic,assign,nullable) id<FWPageControlDelegate> delegate;
+@property(nonatomic,assign,nullable) id<__FWPageControlDelegate> delegate;
 
 /**
  *  Number of pages for control. Default is 0.
@@ -106,10 +106,10 @@ NS_SWIFT_NAME(PageControl)
 
 @end
 
-#pragma mark - FWDotView
+#pragma mark - __FWDotView
 
 NS_SWIFT_NAME(DotViewProtocol)
-@protocol FWDotViewProtocol <NSObject>
+@protocol __FWDotViewProtocol <NSObject>
 
 @required
 
@@ -123,7 +123,7 @@ NS_SWIFT_NAME(DotViewProtocol)
 @end
 
 NS_SWIFT_NAME(DotView)
-@interface FWDotView : UIView <FWDotViewProtocol>
+@interface __FWDotView : UIView <__FWDotViewProtocol>
 
 @property (nonatomic, strong) UIColor *dotColor;
 
@@ -134,7 +134,7 @@ NS_SWIFT_NAME(DotView)
 @end
 
 NS_SWIFT_NAME(BorderDotView)
-@interface FWBorderDotView : FWDotView
+@interface __FWBorderDotView : __FWDotView
 
 @end
 

@@ -9,18 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWPopupMenuPath
+#pragma mark - __FWPopupMenuPath
 
-typedef NS_ENUM(NSInteger, FWPopupMenuArrowDirection) {
-    FWPopupMenuArrowDirectionTop = 0,  //箭头朝上
-    FWPopupMenuArrowDirectionBottom,   //箭头朝下
-    FWPopupMenuArrowDirectionLeft,     //箭头朝左
-    FWPopupMenuArrowDirectionRight,    //箭头朝右
-    FWPopupMenuArrowDirectionNone      //没有箭头
+typedef NS_ENUM(NSInteger, __FWPopupMenuArrowDirection) {
+    __FWPopupMenuArrowDirectionTop = 0,  //箭头朝上
+    __FWPopupMenuArrowDirectionBottom,   //箭头朝下
+    __FWPopupMenuArrowDirectionLeft,     //箭头朝左
+    __FWPopupMenuArrowDirectionRight,    //箭头朝右
+    __FWPopupMenuArrowDirectionNone      //没有箭头
 } NS_SWIFT_NAME(PopupMenuArrowDirection);
 
 NS_SWIFT_NAME(PopupMenuPath)
-@interface FWPopupMenuPath : NSObject
+@interface __FWPopupMenuPath : NSObject
 
 + (CAShapeLayer *)maskLayerWithRect:(CGRect)rect
                          rectCorner:(UIRectCorner)rectCorner
@@ -28,7 +28,7 @@ NS_SWIFT_NAME(PopupMenuPath)
                          arrowWidth:(CGFloat)arrowWidth
                         arrowHeight:(CGFloat)arrowHeight
                       arrowPosition:(CGFloat)arrowPosition
-                     arrowDirection:(FWPopupMenuArrowDirection)arrowDirection;
+                     arrowDirection:(__FWPopupMenuArrowDirection)arrowDirection;
 
 + (UIBezierPath *)bezierPathWithRect:(CGRect)rect
                           rectCorner:(UIRectCorner)rectCorner
@@ -39,13 +39,13 @@ NS_SWIFT_NAME(PopupMenuPath)
                           arrowWidth:(CGFloat)arrowWidth
                          arrowHeight:(CGFloat)arrowHeight
                        arrowPosition:(CGFloat)arrowPosition
-                      arrowDirection:(FWPopupMenuArrowDirection)arrowDirection;
+                      arrowDirection:(__FWPopupMenuArrowDirection)arrowDirection;
 @end
 
-#pragma mark - FWPopupMenuDeviceOrientationManager
+#pragma mark - __FWPopupMenuDeviceOrientationManager
 
 NS_SWIFT_NAME(PopupMenuDeviceOrientationManager)
-@protocol FWPopupMenuDeviceOrientationManager <NSObject>
+@protocol __FWPopupMenuDeviceOrientationManager <NSObject>
 
 /**
  根据屏幕旋转方向自动旋转 Default is YES
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(PopupMenuDeviceOrientationManager)
 
 @property (nonatomic, copy, nullable) void (^deviceOrientDidChangeHandle) (UIInterfaceOrientation orientation);
 
-+ (id <FWPopupMenuDeviceOrientationManager>)manager;
++ (id <__FWPopupMenuDeviceOrientationManager>)manager;
 
 /**
  开始监听
@@ -69,26 +69,26 @@ NS_SWIFT_NAME(PopupMenuDeviceOrientationManager)
 @end
 
 NS_SWIFT_NAME(PopupMenuDeviceOrientationManager)
-@interface FWPopupMenuDeviceOrientationManager : NSObject <FWPopupMenuDeviceOrientationManager>
+@interface __FWPopupMenuDeviceOrientationManager : NSObject <__FWPopupMenuDeviceOrientationManager>
 
 @end
 
-#pragma mark - FWPopupMenuAnimationManager
+#pragma mark - __FWPopupMenuAnimationManager
 
-typedef NS_ENUM(NSInteger,FWPopupMenuAnimationStyle) {
-    FWPopupMenuAnimationStyleScale = 0,       //scale动画 Default
-    FWPopupMenuAnimationStyleFade,            //alpha 0~1
-    FWPopupMenuAnimationStyleNone,            //没有动画
-    FWPopupMenuAnimationStyleCustom           //自定义
+typedef NS_ENUM(NSInteger,__FWPopupMenuAnimationStyle) {
+    __FWPopupMenuAnimationStyleScale = 0,       //scale动画 Default
+    __FWPopupMenuAnimationStyleFade,            //alpha 0~1
+    __FWPopupMenuAnimationStyleNone,            //没有动画
+    __FWPopupMenuAnimationStyleCustom           //自定义
 } NS_SWIFT_NAME(PopupMenuAnimationStyle);
 
 NS_SWIFT_NAME(PopupMenuAnimationManager)
-@protocol FWPopupMenuAnimationManager <NSObject>
+@protocol __FWPopupMenuAnimationManager <NSObject>
 
 /**
- 动画类型，默认FWPopupMenuAnimationStyleScale
+ 动画类型，默认__FWPopupMenuAnimationStyleScale
  */
-@property (nonatomic, assign) FWPopupMenuAnimationStyle style;
+@property (nonatomic, assign) __FWPopupMenuAnimationStyle style;
 
 /**
  显示动画，自定义可用
@@ -107,7 +107,7 @@ NS_SWIFT_NAME(PopupMenuAnimationManager)
 
 @property (nonatomic, weak, nullable) UIView * animationView;
 
-+ (id <FWPopupMenuAnimationManager>)manager;
++ (id <__FWPopupMenuAnimationManager>)manager;
 
 - (void)displayShowAnimationCompletion:(nullable void (^) (void))completion;
 
@@ -116,15 +116,15 @@ NS_SWIFT_NAME(PopupMenuAnimationManager)
 @end
 
 NS_SWIFT_NAME(PopupMenuAnimationManager)
-@interface FWPopupMenuAnimationManager : NSObject<FWPopupMenuAnimationManager>
+@interface __FWPopupMenuAnimationManager : NSObject<__FWPopupMenuAnimationManager>
 
 @end
 
-#pragma mark - FWPopupMenu
+#pragma mark - __FWPopupMenu
 
-typedef NS_ENUM(NSInteger , FWPopupMenuType) {
-    FWPopupMenuTypeDefault = 0,
-    FWPopupMenuTypeDark
+typedef NS_ENUM(NSInteger , __FWPopupMenuType) {
+    __FWPopupMenuTypeDefault = 0,
+    __FWPopupMenuTypeDark
 } NS_SWIFT_NAME(PopupMenuType);
 
 /**
@@ -132,29 +132,29 @@ typedef NS_ENUM(NSInteger , FWPopupMenuType) {
 
  当控件超出屏幕时会自动调整成反方向
  */
-typedef NS_ENUM(NSInteger , FWPopupMenuPriorityDirection) {
-    FWPopupMenuPriorityDirectionTop = 0,  //Default
-    FWPopupMenuPriorityDirectionBottom,
-    FWPopupMenuPriorityDirectionLeft,
-    FWPopupMenuPriorityDirectionRight,
-    FWPopupMenuPriorityDirectionNone      //不自动调整
+typedef NS_ENUM(NSInteger , __FWPopupMenuPriorityDirection) {
+    __FWPopupMenuPriorityDirectionTop = 0,  //Default
+    __FWPopupMenuPriorityDirectionBottom,
+    __FWPopupMenuPriorityDirectionLeft,
+    __FWPopupMenuPriorityDirectionRight,
+    __FWPopupMenuPriorityDirectionNone      //不自动调整
 } NS_SWIFT_NAME(PopupMenuPriorityDirection);
 
-@class FWPopupMenu;
+@class __FWPopupMenu;
 NS_SWIFT_NAME(PopupMenuDelegate)
-@protocol FWPopupMenuDelegate <NSObject>
+@protocol __FWPopupMenuDelegate <NSObject>
 
 @optional
 
-- (void)popupMenuBeganDismiss:(FWPopupMenu *)popupMenu;
-- (void)popupMenuDidDismiss:(FWPopupMenu *)popupMenu;
-- (void)popupMenuBeganShow:(FWPopupMenu *)popupMenu;
-- (void)popupMenuDidShow:(FWPopupMenu *)popupMenu;
+- (void)popupMenuBeganDismiss:(__FWPopupMenu *)popupMenu;
+- (void)popupMenuDidDismiss:(__FWPopupMenu *)popupMenu;
+- (void)popupMenuBeganShow:(__FWPopupMenu *)popupMenu;
+- (void)popupMenuDidShow:(__FWPopupMenu *)popupMenu;
 
 /**
  点击事件回调
  */
-- (void)popupMenu:(FWPopupMenu *)popupMenu didSelectedAtIndex:(NSInteger)index;
+- (void)popupMenu:(__FWPopupMenu *)popupMenu didSelectedAtIndex:(NSInteger)index;
 
 /**
  自定义cell
@@ -163,17 +163,17 @@ NS_SWIFT_NAME(PopupMenuDelegate)
  cell 的高度是根据 itemHeight 的，直接设置无效
  建议cell 背景色设置为透明色，不然切的圆角显示不出来
  */
-- (nullable UITableViewCell *)popupMenu:(FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index;
+- (nullable UITableViewCell *)popupMenu:(__FWPopupMenu *)popupMenu cellForRowAtIndex:(NSInteger)index;
 
 @end
 
 /**
-FWPopupMenu
+__FWPopupMenu
 
 @see https://github.com/lyb5834/YBPopupMenu
 */
 NS_SWIFT_NAME(PopupMenu)
-@interface FWPopupMenu : UIView
+@interface __FWPopupMenu : UIView
 
 /**
  标题数组 只读属性
@@ -269,21 +269,21 @@ NS_SWIFT_NAME(PopupMenu)
 /**
  箭头位置 Default is center
  
- 只有箭头优先级是FWPopupMenuPriorityDirectionLeft/FWPopupMenuPriorityDirectionRight/FWPopupMenuPriorityDirectionNone时需要设置
+ 只有箭头优先级是__FWPopupMenuPriorityDirectionLeft/__FWPopupMenuPriorityDirectionRight/__FWPopupMenuPriorityDirectionNone时需要设置
  */
 @property (nonatomic, assign) CGFloat arrowPosition;
 
 /**
- 箭头方向 Default is FWPopupMenuArrowDirectionTop
+ 箭头方向 Default is __FWPopupMenuArrowDirectionTop
  */
-@property (nonatomic, assign) FWPopupMenuArrowDirection arrowDirection;
+@property (nonatomic, assign) __FWPopupMenuArrowDirection arrowDirection;
 
 /**
- 箭头优先方向 Default is FWPopupMenuPriorityDirectionTop
+ 箭头优先方向 Default is __FWPopupMenuPriorityDirectionTop
  
  当控件超出屏幕时会自动调整箭头位置
  */
-@property (nonatomic, assign) FWPopupMenuPriorityDirection priorityDirection;
+@property (nonatomic, assign) __FWPopupMenuPriorityDirection priorityDirection;
 
 /**
  可见的最大行数 Default is 5;
@@ -306,24 +306,24 @@ NS_SWIFT_NAME(PopupMenu)
 @property (nonatomic, assign) CGFloat minSpace;
 
 /**
- 设置显示模式 自定义cell时忽略 Default is FWPopupMenuTypeDefault
+ 设置显示模式 自定义cell时忽略 Default is __FWPopupMenuTypeDefault
  */
-@property (nonatomic, assign) FWPopupMenuType type;
+@property (nonatomic, assign) __FWPopupMenuType type;
 
 /**
  屏幕旋转管理
  */
-@property (nonatomic, strong) id <FWPopupMenuDeviceOrientationManager> orientationManager;
+@property (nonatomic, strong) id <__FWPopupMenuDeviceOrientationManager> orientationManager;
 
 /**
  动画管理
  */
-@property (nonatomic, strong) id <FWPopupMenuAnimationManager> animationManager;
+@property (nonatomic, strong) id <__FWPopupMenuAnimationManager> animationManager;
 
 /**
  代理
  */
-@property (nonatomic, weak, nullable) id <FWPopupMenuDelegate> delegate;
+@property (nonatomic, weak, nullable) id <__FWPopupMenuDelegate> delegate;
 
 /**
  在指定位置弹出
@@ -334,11 +334,11 @@ NS_SWIFT_NAME(PopupMenu)
  @param itemWidth      菜单宽度
  @param otherSetting   其他设置
  */
-+ (FWPopupMenu *)showAtPoint:(CGPoint)point
++ (__FWPopupMenu *)showAtPoint:(CGPoint)point
                       titles:(nullable NSArray *)titles
                        icons:(nullable NSArray *)icons
                    menuWidth:(CGFloat)itemWidth
-               otherSettings:(nullable void (^) (FWPopupMenu * popupMenu))otherSetting;
+               otherSettings:(nullable void (^) (__FWPopupMenu * popupMenu))otherSetting;
 
 /**
  依赖指定view弹出
@@ -349,11 +349,11 @@ NS_SWIFT_NAME(PopupMenu)
  @param itemWidth      菜单宽度
  @param otherSetting   其他设置
  */
-+ (FWPopupMenu *)showRelyOnView:(UIView *)view
++ (__FWPopupMenu *)showRelyOnView:(UIView *)view
                          titles:(nullable NSArray *)titles
                           icons:(nullable NSArray *)icons
                       menuWidth:(CGFloat)itemWidth
-                  otherSettings:(nullable void (^) (FWPopupMenu * popupMenu))otherSetting;
+                  otherSettings:(nullable void (^) (__FWPopupMenu * popupMenu))otherSetting;
 
 /**
  消失
