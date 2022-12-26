@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIActivityIndicatorView+FWViewPlugin
+#pragma mark - UIActivityIndicatorView+__FWViewPlugin
 
 /// 系统指示器默认实现指示器视图协议
-@interface UIActivityIndicatorView (FWViewPlugin) <FWIndicatorViewPlugin, FWProgressViewPlugin>
+@interface UIActivityIndicatorView (__FWViewPlugin) <__FWIndicatorViewPlugin, __FWProgressViewPlugin>
 
 /// 设置或获取指示器大小，默认中{20,20}，大{37,37}
 @property (nonatomic, assign) CGSize size;
@@ -27,20 +27,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - FWViewPluginImpl
+#pragma mark - __FWViewPluginImpl
 
 /// 默认视图插件
 NS_SWIFT_NAME(ViewPluginImpl)
-@interface FWViewPluginImpl : NSObject <FWViewPlugin>
+@interface __FWViewPluginImpl : NSObject <__FWViewPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWViewPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWViewPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
-/// 自定义进度视图生产句柄，默认FWProgressView
-@property (nullable, nonatomic, copy) UIView<FWProgressViewPlugin> * (^customProgressView)(FWProgressViewStyle style);
+/// 自定义进度视图生产句柄，默认__FWProgressView
+@property (nullable, nonatomic, copy) UIView<__FWProgressViewPlugin> * (^customProgressView)(__FWProgressViewStyle style);
 
 /// 自定义指示器视图生产句柄，默认UIActivityIndicatorView
-@property (nullable, nonatomic, copy) UIView<FWIndicatorViewPlugin> * (^customIndicatorView)(FWIndicatorViewStyle style);
+@property (nullable, nonatomic, copy) UIView<__FWIndicatorViewPlugin> * (^customIndicatorView)(__FWIndicatorViewStyle style);
 
 @end
 

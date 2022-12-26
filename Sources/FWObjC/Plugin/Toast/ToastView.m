@@ -28,9 +28,9 @@
 
 #endif
 
-#pragma mark - FWToastView
+#pragma mark - __FWToastView
 
-@interface FWToastView ()
+@interface __FWToastView ()
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIView *firstView;
@@ -42,7 +42,7 @@
 
 @end
 
-@implementation FWToastView
+@implementation __FWToastView
 
 #pragma mark - Lifecycle
 
@@ -50,13 +50,13 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _type = FWToastViewTypeCustom;
+        _type = __FWToastViewTypeCustom;
         [self setupSubviews];
     }
     return self;
 }
 
-- (instancetype)initWithType:(FWToastViewType)type
+- (instancetype)initWithType:(__FWToastViewType)type
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
@@ -75,7 +75,7 @@
     _contentCornerRadius = 5.f;
     _verticalOffset = -30;
     _indicatorColor = [UIColor whiteColor];
-    if (self.type == FWToastViewTypeProgress) {
+    if (self.type == __FWToastViewTypeProgress) {
         _indicatorSize = CGSizeMake(37.f, 37.f);
     } else {
         _indicatorSize = CGSizeZero;
@@ -96,27 +96,27 @@
     [_contentView addSubview:_titleLabel];
     
     switch (self.type) {
-        case FWToastViewTypeImage: {
+        case __FWToastViewTypeImage: {
             _imageView = [[UIImageView alloc] init];
             _imageView.userInteractionEnabled = NO;
             _imageView.backgroundColor = [UIColor clearColor];
             [_contentView addSubview:_imageView];
             break;
         }
-        case FWToastViewTypeIndicator: {
-            _indicatorView = [UIView fw_indicatorViewWithStyle:FWIndicatorViewStyleDefault];
+        case __FWToastViewTypeIndicator: {
+            _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleDefault];
             _indicatorView.userInteractionEnabled = NO;
             [_contentView addSubview:_indicatorView];
             break;
         }
-        case FWToastViewTypeProgress: {
-            _progressView = [UIView fw_progressViewWithStyle:FWProgressViewStyleDefault];
+        case __FWToastViewTypeProgress: {
+            _progressView = [UIView fw_progressViewWithStyle:__FWProgressViewStyleDefault];
             _progressView.userInteractionEnabled = NO;
             [_contentView addSubview:_progressView];
             break;
         }
-        case FWToastViewTypeText:
-        case FWToastViewTypeCustom:
+        case __FWToastViewTypeText:
+        case __FWToastViewTypeCustom:
         default: {
             break;
         }
@@ -132,29 +132,29 @@
     self.titleLabel.attributedText = self.attributedTitle;
     
     switch (self.type) {
-        case FWToastViewTypeCustom: {
+        case __FWToastViewTypeCustom: {
             self.firstView = self.customView;
             if (self.customView && !self.customView.superview) {
                 [self.contentView addSubview:self.customView];
             }
             break;
         }
-        case FWToastViewTypeImage: {
+        case __FWToastViewTypeImage: {
             self.firstView = self.imageView;
             self.imageView.image = self.indicatorImage;
             break;
         }
-        case FWToastViewTypeIndicator: {
+        case __FWToastViewTypeIndicator: {
             self.firstView = self.indicatorView;
             self.indicatorView.color = self.indicatorColor;
             break;
         }
-        case FWToastViewTypeProgress: {
+        case __FWToastViewTypeProgress: {
             self.firstView = self.progressView;
             self.progressView.color = self.indicatorColor;
             break;
         }
-        case FWToastViewTypeText:
+        case __FWToastViewTypeText:
         default: {
             break;
         }
@@ -164,7 +164,7 @@
     [self layoutIfNeeded];
     
     if (self.firstView && [self.firstView respondsToSelector:@selector(startAnimating)]) {
-        [(UIView<FWIndicatorViewPlugin> *)self.firstView startAnimating];
+        [(UIView<__FWIndicatorViewPlugin> *)self.firstView startAnimating];
     }
 }
 
@@ -261,14 +261,14 @@
     _progress = progress;
     UIView *progressView = self.progressView ?: self.customView;
     if (progressView && [progressView respondsToSelector:@selector(setProgress:)]) {
-        [(UIView<FWProgressViewPlugin> *)progressView setProgress:progress];
+        [(UIView<__FWProgressViewPlugin> *)progressView setProgress:progress];
     }
     [self setNeedsLayout];
 }
 
-- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView
+- (void)setIndicatorView:(UIView<__FWIndicatorViewPlugin> *)indicatorView
 {
-    if (self.type != FWToastViewTypeIndicator || !indicatorView) return;
+    if (self.type != __FWToastViewTypeIndicator || !indicatorView) return;
     [_indicatorView removeFromSuperview];
     _indicatorView = indicatorView;
     _indicatorView.userInteractionEnabled = NO;
@@ -276,9 +276,9 @@
     [self setNeedsLayout];
 }
 
-- (void)setProgressView:(UIView<FWProgressViewPlugin> *)progressView
+- (void)setProgressView:(UIView<__FWProgressViewPlugin> *)progressView
 {
-    if (self.type != FWToastViewTypeProgress || !progressView) return;
+    if (self.type != __FWToastViewTypeProgress || !progressView) return;
     [_progressView removeFromSuperview];
     _progressView = progressView;
     _progressView.userInteractionEnabled = NO;
@@ -328,7 +328,7 @@
 {
     if (self.superview != nil) {
         if (self.firstView && [self.firstView respondsToSelector:@selector(stopAnimating)]) {
-            [(UIView<FWIndicatorViewPlugin> *)self.firstView stopAnimating];
+            [(UIView<__FWIndicatorViewPlugin> *)self.firstView stopAnimating];
         }
         [self removeFromSuperview];
         [self invalidateTimer];

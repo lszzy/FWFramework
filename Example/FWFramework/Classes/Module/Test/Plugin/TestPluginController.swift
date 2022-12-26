@@ -196,7 +196,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         ViewPluginImpl.shared.customIndicatorView = { style in
             return IndicatorView(type: type)
         }
-        // FWIndicatorView也支持进度显示
+        // IndicatorView也支持进度显示
         ViewPluginImpl.shared.customProgressView = { style in
             let indicatorView = IndicatorView(type: type)
             indicatorView.hidesWhenStopped = false

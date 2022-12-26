@@ -7,13 +7,13 @@
 
 #import "IndicatorView.h"
 
-#pragma mark - FWIndicatorViewAnimation
+#pragma mark - __FWIndicatorViewAnimation
 
-@interface FWIndicatorViewAnimationLineSpin : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationLineSpin : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationLineSpin
+@implementation __FWIndicatorViewAnimationLineSpin
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat lineSpacing = 2;
@@ -61,11 +61,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationLinePulse : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationLinePulse : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationLinePulse
+@implementation __FWIndicatorViewAnimationLinePulse
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat duration = 1.0f;
@@ -97,11 +97,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationBallSpin : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationBallSpin : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationBallSpin
+@implementation __FWIndicatorViewAnimationBallSpin
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat circleSpacing = -2;
@@ -159,11 +159,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationCircleSpin : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationCircleSpin : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationCircleSpin
+@implementation __FWIndicatorViewAnimationCircleSpin
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat lineWidth = 3;
@@ -208,11 +208,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationBallPulse : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationBallPulse : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationBallPulse
+@implementation __FWIndicatorViewAnimationBallPulse
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat circlePadding = 5.0f;
@@ -246,11 +246,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationBallTriangle : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationBallTriangle : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationBallTriangle
+@implementation __FWIndicatorViewAnimationBallTriangle
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CGFloat duration = 2.0f;
@@ -327,11 +327,11 @@
 
 @end
 
-@interface FWIndicatorViewAnimationTriplePulse : NSObject <FWIndicatorViewAnimationProtocol>
+@interface __FWIndicatorViewAnimationTriplePulse : NSObject <__FWIndicatorViewAnimationProtocol>
 
 @end
 
-@implementation FWIndicatorViewAnimationTriplePulse
+@implementation __FWIndicatorViewAnimationTriplePulse
 
 - (void)setupAnimation:(CALayer *)layer size:(CGSize)size color:(UIColor *)color {
     CFTimeInterval duration = 1;
@@ -372,15 +372,15 @@
 
 @end
 
-#pragma mark - FWIndicatorView
+#pragma mark - __FWIndicatorView
 
-@interface FWIndicatorView ()
+@interface __FWIndicatorView ()
 
 @property (nonatomic, strong) CALayer *animationLayer;
 
 @end
 
-@implementation FWIndicatorView
+@implementation __FWIndicatorView
 
 - (instancetype)init {
     return [self initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
@@ -389,7 +389,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _type = FWIndicatorViewAnimationTypeLineSpin;
+        _type = __FWIndicatorViewAnimationTypeLineSpin;
         [self setupLayer];
     }
     return self;
@@ -398,13 +398,13 @@
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
-        _type = FWIndicatorViewAnimationTypeLineSpin;
+        _type = __FWIndicatorViewAnimationTypeLineSpin;
         [self setupLayer];
     }
     return self;
 }
 
-- (instancetype)initWithType:(FWIndicatorViewAnimationType)type {
+- (instancetype)initWithType:(__FWIndicatorViewAnimationType)type {
     self = [super initWithFrame:CGRectMake(0, 0, 37.f, 37.f)];
     if (self) {
         _type = type;
@@ -428,14 +428,14 @@
 - (void)setupAnimation {
     _animationLayer.sublayers = nil;
     
-    id<FWIndicatorViewAnimationProtocol> animation = [self animation];
+    id<__FWIndicatorViewAnimationProtocol> animation = [self animation];
     if ([animation respondsToSelector:@selector(setupAnimation:size:color:)]) {
         [animation setupAnimation:_animationLayer size:self.bounds.size color:_color];
         _animationLayer.speed = 0.0f;
     }
 }
 
-- (void)setType:(FWIndicatorViewAnimationType)type {
+- (void)setType:(__FWIndicatorViewAnimationType)type {
     if (_type != type) {
         _type = type;
         [self setupAnimation];
@@ -494,23 +494,23 @@
     if (self.hidesWhenStopped) self.hidden = YES;
 }
 
-- (id<FWIndicatorViewAnimationProtocol>)animation {
+- (id<__FWIndicatorViewAnimationProtocol>)animation {
     switch (_type) {
-        case FWIndicatorViewAnimationTypeLinePulse:
-            return [[FWIndicatorViewAnimationLinePulse alloc] init];
-        case FWIndicatorViewAnimationTypeBallSpin:
-            return [[FWIndicatorViewAnimationBallSpin alloc] init];
-        case FWIndicatorViewAnimationTypeCircleSpin:
-            return [[FWIndicatorViewAnimationCircleSpin alloc] init];
-        case FWIndicatorViewAnimationTypeBallPulse:
-            return [[FWIndicatorViewAnimationBallPulse alloc] init];
-        case FWIndicatorViewAnimationTypeBallTriangle:
-            return [[FWIndicatorViewAnimationBallTriangle alloc] init];
-        case FWIndicatorViewAnimationTypeTriplePulse:
-            return [[FWIndicatorViewAnimationTriplePulse alloc] init];
-        case FWIndicatorViewAnimationTypeLineSpin:
+        case __FWIndicatorViewAnimationTypeLinePulse:
+            return [[__FWIndicatorViewAnimationLinePulse alloc] init];
+        case __FWIndicatorViewAnimationTypeBallSpin:
+            return [[__FWIndicatorViewAnimationBallSpin alloc] init];
+        case __FWIndicatorViewAnimationTypeCircleSpin:
+            return [[__FWIndicatorViewAnimationCircleSpin alloc] init];
+        case __FWIndicatorViewAnimationTypeBallPulse:
+            return [[__FWIndicatorViewAnimationBallPulse alloc] init];
+        case __FWIndicatorViewAnimationTypeBallTriangle:
+            return [[__FWIndicatorViewAnimationBallTriangle alloc] init];
+        case __FWIndicatorViewAnimationTypeTriplePulse:
+            return [[__FWIndicatorViewAnimationTriplePulse alloc] init];
+        case __FWIndicatorViewAnimationTypeLineSpin:
         default:
-            return [[FWIndicatorViewAnimationLineSpin alloc] init];
+            return [[__FWIndicatorViewAnimationLineSpin alloc] init];
     }
 }
 

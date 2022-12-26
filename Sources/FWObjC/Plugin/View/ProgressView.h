@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWProgressView
+#pragma mark - __FWProgressView
 
 /// 框架默认进度条视图
 NS_SWIFT_NAME(ProgressView)
-@interface FWProgressView : UIView <FWProgressViewPlugin>
+@interface __FWProgressView : UIView <__FWProgressViewPlugin>
 
 /// 是否是环形，默认YES，NO为扇形
 @property (nonatomic, assign) BOOL annular;

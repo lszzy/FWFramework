@@ -48,14 +48,14 @@
     // [__FWPluginManager registerPlugin:@protocol(FWRefreshPlugin) withObject:[FWRefreshPluginImpl class]];
     
     // 配置吐司插件
-    // FWToastPluginImpl.sharedInstance.delayTime = 2.0;
-    // FWToastPluginImpl.sharedInstance.defaultLoadingText = nil;
-    // FWToastPluginImpl.sharedInstance.defaultProgressText = nil;
-    // FWToastPluginImpl.sharedInstance.defaultMessageText = nil;
+    // __FWToastPluginImpl.sharedInstance.delayTime = 2.0;
+    // __FWToastPluginImpl.sharedInstance.defaultLoadingText = nil;
+    // __FWToastPluginImpl.sharedInstance.defaultProgressText = nil;
+    // __FWToastPluginImpl.sharedInstance.defaultMessageText = nil;
     
     // 配置进度视图和指示器视图插件
-    // FWViewPluginImpl.sharedInstance.customIndicatorView = nil;
-    // FWViewPluginImpl.sharedInstance.customProgressView = nil;
+    // __FWViewPluginImpl.sharedInstance.customIndicatorView = nil;
+    // __FWViewPluginImpl.sharedInstance.customProgressView = nil;
 }
 
 @end

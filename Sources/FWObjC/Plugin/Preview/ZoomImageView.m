@@ -791,9 +791,9 @@
 
 #pragma mark - Progress
 
-- (UIView<FWProgressViewPlugin> *)progressView {
+- (UIView<__FWProgressViewPlugin> *)progressView {
     if (!_progressView) {
-        _progressView = [UIView fw_progressViewWithStyle:FWProgressViewStyleDefault];
+        _progressView = [UIView fw_progressViewWithStyle:__FWProgressViewStyleDefault];
         _progressView.hidden = YES;
         [self addSubview:_progressView];
         [_progressView fw_alignCenterToSuperview:CGPointZero];
@@ -801,7 +801,7 @@
     return _progressView;
 }
 
-- (void)setProgressView:(UIView<FWProgressViewPlugin> *)progressView {
+- (void)setProgressView:(UIView<__FWProgressViewPlugin> *)progressView {
     [_progressView removeFromSuperview];
     _progressView = progressView;
     _progressView.hidden = YES;

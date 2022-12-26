@@ -91,7 +91,7 @@
     _contentView = [[UIView alloc] init];
     [self.scrollView addSubview:self.contentView];
     
-    _loadingView = [UIView fw_indicatorViewWithStyle:FWIndicatorViewStyleDefault];
+    _loadingView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleDefault];
     [self.contentView addSubview:self.loadingView];
     
     _imageView = [[UIImageView alloc] init];
@@ -240,7 +240,7 @@
     [self setNeedsLayout];
 }
 
-- (void)setLoadingView:(UIView<FWIndicatorViewPlugin> *)loadingView {
+- (void)setLoadingView:(UIView<__FWIndicatorViewPlugin> *)loadingView {
     if (self.loadingView != loadingView) {
         [self.loadingView removeFromSuperview];
         _loadingView = loadingView;

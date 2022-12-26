@@ -9,20 +9,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWToastPlugin
+#pragma mark - __FWToastPlugin
 
 /// 消息吐司样式枚举，可扩展
-typedef NSInteger FWToastStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ToastStyle);
+typedef NSInteger __FWToastStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ToastStyle);
 /// 默认消息样式
-static const FWToastStyle FWToastStyleDefault = 0;
+static const __FWToastStyle __FWToastStyleDefault = 0;
 /// 成功消息样式
-static const FWToastStyle FWToastStyleSuccess = 1;
+static const __FWToastStyle __FWToastStyleSuccess = 1;
 /// 失败消息样式
-static const FWToastStyle FWToastStyleFailure = 2;
+static const __FWToastStyle __FWToastStyleFailure = 2;
 
 /// 吐司插件协议，应用可自定义吐司插件实现
 NS_SWIFT_NAME(ToastPlugin)
-@protocol FWToastPlugin <NSObject>
+@protocol __FWToastPlugin <NSObject>
 
 @optional
 
@@ -45,7 +45,7 @@ NS_SWIFT_NAME(ToastPlugin)
 - (BOOL)isShowingProgress:(UIView *)view;
 
 /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
-- (void)showMessageWithAttributedText:(nullable NSAttributedString *)attributedText style:(FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(nullable void (^)(void))completion inView:(UIView *)view;
+- (void)showMessageWithAttributedText:(nullable NSAttributedString *)attributedText style:(__FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(nullable void (^)(void))completion inView:(UIView *)view;
 
 /// 隐藏消息吐司
 - (void)hideMessage:(UIView *)view;

@@ -9,16 +9,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWProgressViewPlugin
+#pragma mark - __FWProgressViewPlugin
 
 /// 进度条视图样式枚举，可扩展
-typedef NSInteger FWProgressViewStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ProgressViewStyle);
+typedef NSInteger __FWProgressViewStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ProgressViewStyle);
 /// 默认进度条样式，用于框架Toast等
-static const FWProgressViewStyle FWProgressViewStyleDefault = 0;
+static const __FWProgressViewStyle __FWProgressViewStyleDefault = 0;
 
 /// 自定义进度条视图插件
 NS_SWIFT_NAME(ProgressViewPlugin)
-@protocol FWProgressViewPlugin <NSObject>
+@protocol __FWProgressViewPlugin <NSObject>
 @required
 
 /// 设置或获取进度条当前颜色
@@ -32,18 +32,18 @@ NS_SWIFT_NAME(ProgressViewPlugin)
 
 @end
 
-#pragma mark - FWIndicatorViewPlugin
+#pragma mark - __FWIndicatorViewPlugin
 
 /// 指示器视图样式枚举，可扩展
-typedef NSInteger FWIndicatorViewStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(IndicatorViewStyle);
+typedef NSInteger __FWIndicatorViewStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(IndicatorViewStyle);
 /// 默认指示器样式，用于框架Empty|Toast等
-static const FWIndicatorViewStyle FWIndicatorViewStyleDefault = 0;
+static const __FWIndicatorViewStyle __FWIndicatorViewStyleDefault = 0;
 /// 刷新指示器样式，用于框架Refresh等
-static const FWIndicatorViewStyle FWIndicatorViewStyleRefresh = 1;
+static const __FWIndicatorViewStyle __FWIndicatorViewStyleRefresh = 1;
 
 /// 自定义指示器视图协议
 NS_SWIFT_NAME(IndicatorViewPlugin)
-@protocol FWIndicatorViewPlugin <NSObject>
+@protocol __FWIndicatorViewPlugin <NSObject>
 @required
 
 /// 设置或获取指示器当前颜色
@@ -59,18 +59,18 @@ NS_SWIFT_NAME(IndicatorViewPlugin)
 
 @end
 
-#pragma mark - FWViewPlugin
+#pragma mark - __FWViewPlugin
 
 /// 视图插件协议
 NS_SWIFT_NAME(ViewPlugin)
-@protocol FWViewPlugin <NSObject>
+@protocol __FWViewPlugin <NSObject>
 @optional
 
 /// 进度视图工厂方法
-- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style;
+- (UIView<__FWProgressViewPlugin> *)progressViewWithStyle:(__FWProgressViewStyle)style;
 
 /// 指示器视图工厂方法
-- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style;
+- (UIView<__FWIndicatorViewPlugin> *)indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
 
 @end
 

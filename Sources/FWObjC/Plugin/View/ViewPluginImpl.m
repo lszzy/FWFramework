@@ -18,9 +18,9 @@
 
 #endif
 
-#pragma mark - UIActivityIndicatorView+FWViewPlugin
+#pragma mark - UIActivityIndicatorView+__FWViewPlugin
 
-@implementation UIActivityIndicatorView (FWViewPlugin)
+@implementation UIActivityIndicatorView (__FWViewPlugin)
 
 - (CGSize)size {
     return self.bounds.size;
@@ -55,29 +55,29 @@
 
 @end
 
-#pragma mark - FWViewPluginImpl
+#pragma mark - __FWViewPluginImpl
 
-@implementation FWViewPluginImpl
+@implementation __FWViewPluginImpl
 
-+ (FWViewPluginImpl *)sharedInstance {
-    static FWViewPluginImpl *instance = nil;
++ (__FWViewPluginImpl *)sharedInstance {
+    static __FWViewPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWViewPluginImpl alloc] init];
+        instance = [[__FWViewPluginImpl alloc] init];
     });
     return instance;
 }
 
-- (UIView<FWProgressViewPlugin> *)progressViewWithStyle:(FWProgressViewStyle)style {
+- (UIView<__FWProgressViewPlugin> *)progressViewWithStyle:(__FWProgressViewStyle)style {
     if (self.customProgressView) {
         return self.customProgressView(style);
     }
     
-    FWProgressView *progressView = [[FWProgressView alloc] init];
+    __FWProgressView *progressView = [[__FWProgressView alloc] init];
     return progressView;
 }
 
-- (UIView<FWIndicatorViewPlugin> *)indicatorViewWithStyle:(FWIndicatorViewStyle)style {
+- (UIView<__FWIndicatorViewPlugin> *)indicatorViewWithStyle:(__FWIndicatorViewStyle)style {
     if (self.customIndicatorView) {
         return self.customIndicatorView(style);
     }

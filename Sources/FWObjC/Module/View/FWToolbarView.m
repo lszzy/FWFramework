@@ -779,7 +779,7 @@
     }
 }
 
-- (void)setLoadingView:(UIView<FWIndicatorViewPlugin> *)loadingView {
+- (void)setLoadingView:(UIView<__FWIndicatorViewPlugin> *)loadingView {
     if (_loadingView != loadingView) {
         [_loadingView stopAnimating];
         [_loadingView removeFromSuperview];

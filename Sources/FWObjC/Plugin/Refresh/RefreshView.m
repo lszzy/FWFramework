@@ -393,9 +393,9 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     return _arrowView;
 }
 
-- (UIView<FWIndicatorViewPlugin> *)indicatorView {
+- (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fw_indicatorViewWithStyle:FWIndicatorViewStyleRefresh];
+        _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
@@ -484,7 +484,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     [self layoutIfNeeded];
 }
 
-- (void)setAnimationView:(UIView<FWProgressViewPlugin,FWIndicatorViewPlugin> *)animationView {
+- (void)setAnimationView:(UIView<__FWProgressViewPlugin,__FWIndicatorViewPlugin> *)animationView {
     [self setCustomView:animationView forState:FWPullRefreshStateAll];
     [self setAnimationProgressBlock:^(FWPullRefreshView *view, CGFloat progress) {
         if (view.state == FWPullRefreshStateLoading) return;
@@ -519,7 +519,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
     self.subtitleLabel.textColor = newTextColor;
 }
 
-- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView {
+- (void)setIndicatorView:(UIView<__FWIndicatorViewPlugin> *)indicatorView {
     UIColor *indicatorColor = self.indicatorView.color;
     [_indicatorView removeFromSuperview];
     _indicatorView = indicatorView;
@@ -866,9 +866,9 @@ static char UIScrollViewFWPullRefreshView;
 
 #pragma mark - Getters
 
-- (UIView<FWIndicatorViewPlugin> *)indicatorView {
+- (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fw_indicatorViewWithStyle:FWIndicatorViewStyleRefresh];
+        _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
@@ -916,7 +916,7 @@ static char UIScrollViewFWPullRefreshView;
     self.state = self.state;
 }
 
-- (void)setAnimationView:(UIView<FWProgressViewPlugin,FWIndicatorViewPlugin> *)animationView {
+- (void)setAnimationView:(UIView<__FWProgressViewPlugin,__FWIndicatorViewPlugin> *)animationView {
     [self setCustomView:animationView forState:FWInfiniteScrollStateAll];
     [self setAnimationProgressBlock:^(FWInfiniteScrollView *view, CGFloat progress) {
         if (view.state == FWInfiniteScrollStateLoading) return;
@@ -931,7 +931,7 @@ static char UIScrollViewFWPullRefreshView;
     }];
 }
 
-- (void)setIndicatorView:(UIView<FWIndicatorViewPlugin> *)indicatorView {
+- (void)setIndicatorView:(UIView<__FWIndicatorViewPlugin> *)indicatorView {
     UIColor *indicatorColor = self.indicatorView.color;
     [_indicatorView removeFromSuperview];
     _indicatorView = indicatorView;
