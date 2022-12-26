@@ -33,13 +33,13 @@
 
 #endif
 
-#pragma mark - FWZoomImageVideoPlayerView
+#pragma mark - __FWZoomImageVideoPlayerView
 
-@interface FWZoomImageVideoPlayerView : UIView
+@interface __FWZoomImageVideoPlayerView : UIView
 
 @end
 
-@implementation FWZoomImageVideoPlayerView
+@implementation __FWZoomImageVideoPlayerView
 
 + (Class)layerClass {
     return [AVPlayerLayer class];
@@ -47,12 +47,12 @@
 
 @end
 
-#pragma mark - FWZoomImageView
+#pragma mark - __FWZoomImageView
 
-@interface FWZoomImageView () <UIGestureRecognizerDelegate>
+@interface __FWZoomImageView () <UIGestureRecognizerDelegate>
 
 // video play
-@property(nonatomic, strong) FWZoomImageVideoPlayerView *videoPlayerView;
+@property(nonatomic, strong) __FWZoomImageVideoPlayerView *videoPlayerView;
 @property(nonatomic, strong) AVPlayer *videoPlayer;
 @property(nonatomic, strong) id videoTimeObserver;
 @property(nonatomic, assign) BOOL isSeekingVideo;
@@ -60,7 +60,7 @@
 
 @end
 
-@implementation FWZoomImageView
+@implementation __FWZoomImageView
 
 @synthesize imageView = _imageView;
 @synthesize livePhotoView = _livePhotoView;
@@ -80,7 +80,7 @@
 }
 
 + (void)setDefaultAppearance {
-    FWZoomImageView *appearance = [FWZoomImageView appearance];
+    __FWZoomImageView *appearance = [__FWZoomImageView appearance];
     appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
     appearance.videoPlayButtonImage = [FWAppBundle videoPlayImage];
     appearance.videoCloseButtonImage = [FWAppBundle navCloseImage];
@@ -609,7 +609,7 @@
     if (self.videoTimeObserver) return;
     
     double interval = .1f;
-    __weak FWZoomImageView *weakSelf = self;
+    __weak __FWZoomImageView *weakSelf = self;
     self.videoTimeObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC) queue:NULL usingBlock:^(CMTime time) {
         [weakSelf syncVideoProgressSlider];
     }];
@@ -663,7 +663,7 @@
     return _videoPlayerLayer;
 }
 
-- (FWZoomImageVideoToolbar *)videoToolbar {
+- (__FWZoomImageVideoToolbar *)videoToolbar {
     [self initVideoToolbarIfNeeded];
     return _videoToolbar;
 }
@@ -680,7 +680,7 @@
 
 - (void)initVideoPlayerLayerIfNeeded {
     if (self.videoPlayerView) return;
-    self.videoPlayerView = [[FWZoomImageVideoPlayerView alloc] init];
+    self.videoPlayerView = [[__FWZoomImageVideoPlayerView alloc] init];
     _videoPlayerLayer = (AVPlayerLayer *)self.videoPlayerView.layer;
     self.videoPlayerView.hidden = YES;
     [self.scrollView addSubview:self.videoPlayerView];
@@ -689,7 +689,7 @@
 - (void)initVideoToolbarIfNeeded {
     if (_videoToolbar) return;
     _videoToolbar = ({
-        FWZoomImageVideoToolbar *videoToolbar = [[FWZoomImageVideoToolbar alloc] init];
+        __FWZoomImageVideoToolbar *videoToolbar = [[__FWZoomImageVideoToolbar alloc] init];
         videoToolbar.paddings = UIEdgeInsetsMake(10, 10, 10, 10);
         [videoToolbar.playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
         [videoToolbar.pauseButton addTarget:self action:@selector(handlePauseButton) forControlEvents:UIControlEventTouchUpInside];
@@ -993,9 +993,9 @@
 
 @end
 
-#pragma mark - FWZoomImageVideoToolbar
+#pragma mark - __FWZoomImageVideoToolbar
 
-@implementation FWZoomImageVideoToolbar
+@implementation __FWZoomImageVideoToolbar
 
 + (void)initialize {
     static dispatch_once_t onceToken;
@@ -1005,7 +1005,7 @@
 }
 
 + (void)setDefaultAppearance {
-    FWZoomImageVideoToolbar *appearance = [FWZoomImageVideoToolbar appearance];
+    __FWZoomImageVideoToolbar *appearance = [__FWZoomImageVideoToolbar appearance];
     appearance.playButtonImage = [FWAppBundle videoStartImage];
     appearance.pauseButtonImage = [FWAppBundle videoPauseImage];
 }

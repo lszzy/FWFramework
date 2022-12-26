@@ -7,16 +7,16 @@
 
 #import "ImagePreviewPluginImpl.h"
 
-#pragma mark - FWImagePreviewPluginImpl
+#pragma mark - ____FWImagePreviewPluginImpl
 
-@implementation FWImagePreviewPluginImpl
+@implementation ____FWImagePreviewPluginImpl
 
-+ (FWImagePreviewPluginImpl *)sharedInstance
++ (____FWImagePreviewPluginImpl *)sharedInstance
 {
-    static FWImagePreviewPluginImpl *instance = nil;
+    static ____FWImagePreviewPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWImagePreviewPluginImpl alloc] init];
+        instance = [[____FWImagePreviewPluginImpl alloc] init];
     });
     return instance;
 }
@@ -30,15 +30,15 @@
              renderBlock:(void (^)(__kindof UIView * _Nonnull, NSInteger))renderBlock
              customBlock:(void (^)(id _Nonnull))customBlock
 {
-    FWImagePreviewController *previewController;
+    __FWImagePreviewController *previewController;
     if (self.previewControllerBlock) {
         previewController = self.previewControllerBlock();
     } else {
-        previewController = [[FWImagePreviewController alloc] init];
+        previewController = [[__FWImagePreviewController alloc] init];
         previewController.showsPageLabel = YES;
         previewController.dismissingWhenTappedImage = YES;
         previewController.dismissingWhenTappedVideo = YES;
-        previewController.presentingStyle = FWImagePreviewTransitioningStyleZoom;
+        previewController.presentingStyle = __FWImagePreviewTransitioningStyleZoom;
     }
     
     previewController.imagePreviewView.placeholderImage = placeholderImage;

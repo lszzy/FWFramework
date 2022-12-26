@@ -10,33 +10,33 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWZoomImageView;
+@class __FWZoomImageView;
 
-/// FWZoomImageView事件代理
+/// __FWZoomImageView事件代理
 NS_SWIFT_NAME(ZoomImageViewDelegate)
-@protocol FWZoomImageViewDelegate <NSObject>
+@protocol __FWZoomImageViewDelegate <NSObject>
 
 @optional
 
 /// 单击事件代理方法
-- (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location;
+- (void)singleTouchInZoomingImageView:(__FWZoomImageView *)zoomImageView location:(CGPoint)location;
 /// 双击事件代理方法
-- (void)doubleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location;
+- (void)doubleTouchInZoomingImageView:(__FWZoomImageView *)zoomImageView location:(CGPoint)location;
 /// 长按事件代理方法
-- (void)longPressInZoomingImageView:(FWZoomImageView *)zoomImageView;
+- (void)longPressInZoomingImageView:(__FWZoomImageView *)zoomImageView;
 
 /// 在视频预览界面里，由于用户点击了空白区域或播放视频等导致了底部的视频工具栏被显示或隐藏
-- (void)zoomImageView:(FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide;
+- (void)zoomImageView:(__FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide;
 
 /// 自定义内容视图代理方法，contentView根据显示内容不同而不同
-- (void)zoomImageView:(FWZoomImageView *)imageView customContentView:(__kindof UIView *)contentView;
+- (void)zoomImageView:(__FWZoomImageView *)imageView customContentView:(__kindof UIView *)contentView;
 
 /// 是否支持缩放，默认为 YES
-- (BOOL)enabledZoomViewInZoomImageView:(FWZoomImageView *)zoomImageView;
+- (BOOL)enabledZoomViewInZoomImageView:(__FWZoomImageView *)zoomImageView;
 
 @end
 
-@class FWZoomImageVideoToolbar;
+@class __FWZoomImageVideoToolbar;
 @protocol __FWProgressViewPlugin;
 
 /**
@@ -44,14 +44,14 @@ NS_SWIFT_NAME(ZoomImageViewDelegate)
  *  默认显示完整图片或视频，可双击查看放大后的大小，再次双击恢复到初始大小。
  *
  *  支持通过修改 contentMode 来控制静态图片和 live photo 默认的显示模式，目前仅支持 UIViewContentModeCenter、UIViewContentModeScaleAspectFill、UIViewContentModeScaleAspectFit、UIViewContentModeScaleToFill(仅宽度拉伸)，默认为 UIViewContentModeScaleAspectFit。注意这里的显示模式是基于 viewportRect 而言的而非整个 zoomImageView
- *  FWZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通过继承来实现。
+ *  __FWZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通过继承来实现。
  *
  *  @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(ZoomImageView)
-@interface FWZoomImageView : UIView <UIScrollViewDelegate>
+@interface __FWZoomImageView : UIView <UIScrollViewDelegate>
 
-@property(nonatomic, weak, nullable) id<FWZoomImageViewDelegate> delegate;
+@property(nonatomic, weak, nullable) id<__FWZoomImageViewDelegate> delegate;
 
 @property(nonatomic, strong, readonly) UIScrollView *scrollView;
 
@@ -105,7 +105,7 @@ NS_SWIFT_NAME(ZoomImageView)
 @property(nonatomic, assign) BOOL showsVideoToolbar;
 
 // 播放 video 时底部的工具栏，你可通过此属性来拿到并修改上面的播放/暂停按钮、进度条、Label 等的样式，默认paddings为{10, 10, 10, 10}
-@property(nonatomic, strong, readonly) FWZoomImageVideoToolbar *videoToolbar;
+@property(nonatomic, strong, readonly) __FWZoomImageVideoToolbar *videoToolbar;
 
 // 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 16, 16, 8}
 @property(nonatomic, assign) UIEdgeInsets videoToolbarMargins UI_APPEARANCE_SELECTOR;
@@ -146,7 +146,7 @@ NS_SWIFT_NAME(ZoomImageView)
 /// 停止视频播放，将播放状态重置到初始状态
 - (void)endPlayingVideo;
 
-/// 获取当前正在显示的图片/视频在整个 FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）
+/// 获取当前正在显示的图片/视频在整个 __FWZoomImageView 坐标系里的 rect（会按照当前的缩放状态来计算）
 - (CGRect)contentViewRect;
 
 /// 重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。注意子类重写需要调一下super
@@ -160,10 +160,10 @@ NS_SWIFT_NAME(ZoomImageView)
 
 @end
 
-#pragma mark - FWZoomImageVideoToolbar
+#pragma mark - __FWZoomImageVideoToolbar
 
 NS_SWIFT_NAME(ZoomImageVideoToolbar)
-@interface FWZoomImageVideoToolbar : UIView
+@interface __FWZoomImageVideoToolbar : UIView
 
 @property(nonatomic, strong, readonly) UIButton *playButton;
 @property(nonatomic, strong, readonly) UIButton *pauseButton;

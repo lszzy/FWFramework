@@ -989,28 +989,28 @@
     }
 }
 
-#pragma mark - <FWImagePreviewViewDelegate>
+#pragma mark - <__FWImagePreviewViewDelegate>
 
-- (NSInteger)numberOfImagesInImagePreviewView:(FWImagePreviewView *)imagePreviewView {
+- (NSInteger)numberOfImagesInImagePreviewView:(__FWImagePreviewView *)imagePreviewView {
     return [self.imagesAssetArray count];
 }
 
-- (FWImagePreviewMediaType)imagePreviewView:(FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index {
+- (__FWImagePreviewMediaType)imagePreviewView:(__FWImagePreviewView *)imagePreviewView assetTypeAtIndex:(NSInteger)index {
     FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:index];
     if (imageAsset.assetType == FWAssetTypeImage) {
         if (imageAsset.assetSubType == FWAssetSubTypeLivePhoto) {
             BOOL checkLivePhoto = (self.imagePickerController.filterType & FWImagePickerFilterTypeLivePhoto) || self.imagePickerController.filterType < 1;
-            if (checkLivePhoto) return FWImagePreviewMediaTypeLivePhoto;
+            if (checkLivePhoto) return __FWImagePreviewMediaTypeLivePhoto;
         }
-        return FWImagePreviewMediaTypeImage;
+        return __FWImagePreviewMediaTypeImage;
     } else if (imageAsset.assetType == FWAssetTypeVideo) {
-        return FWImagePreviewMediaTypeVideo;
+        return __FWImagePreviewMediaTypeVideo;
     } else {
-        return FWImagePreviewMediaTypeOthers;
+        return __FWImagePreviewMediaTypeOthers;
     }
 }
 
-- (BOOL)imagePreviewView:(FWImagePreviewView *)imagePreviewView shouldResetZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
+- (BOOL)imagePreviewView:(__FWImagePreviewView *)imagePreviewView shouldResetZoomImageView:(__FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     if (self.shouldResetPreviewView) {
         // 刷新数据源时需重置zoomImageView，清空当前显示内容
         self.shouldResetPreviewView = NO;
@@ -1022,15 +1022,15 @@
     }
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView renderZoomImageView:(FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
+- (void)imagePreviewView:(__FWImagePreviewView *)imagePreviewView renderZoomImageView:(__FWZoomImageView *)zoomImageView atIndex:(NSInteger)index {
     [self requestImageForZoomImageView:zoomImageView withIndex:index];
     
     UIEdgeInsets insets = zoomImageView.videoToolbarMargins;
-    insets.bottom = [FWZoomImageView appearance].videoToolbarMargins.bottom + CGRectGetHeight(self.bottomToolBarView.frame) - imagePreviewView.safeAreaInsets.bottom;
-    zoomImageView.videoToolbarMargins = insets;// videToolbarMargins 是利用 UIAppearance 赋值的，也即意味着要在 addSubview 之后才会被赋值，而在 renderZoomImageView 里，zoomImageView 可能尚未被添加到 view 层级里，所以无法通过 zoomImageView.videoToolbarMargins 获取到原来的值，因此只能通过 [FWZoomImageView appearance] 的方式获取
+    insets.bottom = [__FWZoomImageView appearance].videoToolbarMargins.bottom + CGRectGetHeight(self.bottomToolBarView.frame) - imagePreviewView.safeAreaInsets.bottom;
+    zoomImageView.videoToolbarMargins = insets;// videToolbarMargins 是利用 UIAppearance 赋值的，也即意味着要在 addSubview 之后才会被赋值，而在 renderZoomImageView 里，zoomImageView 可能尚未被添加到 view 层级里，所以无法通过 zoomImageView.videoToolbarMargins 获取到原来的值，因此只能通过 [__FWZoomImageView appearance] 的方式获取
 }
 
-- (void)imagePreviewView:(FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {
+- (void)imagePreviewView:(__FWImagePreviewView *)imagePreviewView willScrollHalfToIndex:(NSInteger)index {
     FWAsset *imageAsset = self.imagesAssetArray[index];
     if (!_singleCheckMode) {
         self.checkboxButton.selected = [self.selectedImageAssetArray containsObject:imageAsset];
@@ -1040,7 +1040,7 @@
     [self updateCollectionViewCheckedIndex:[self.editImageAssetArray indexOfObject:imageAsset]];
 }
 
-- (void)requestImageForZoomImageView:(FWZoomImageView *)imageView withIndex:(NSInteger)index {
+- (void)requestImageForZoomImageView:(__FWZoomImageView *)imageView withIndex:(NSInteger)index {
     // 如果是走 PhotoKit 的逻辑，那么这个 block 会被多次调用，并且第一次调用时返回的图片是一张小图，
     // 拉取图片的过程中可能会多次返回结果，且图片尺寸越来越大，因此这里 contentMode为ScaleAspectFit 以防止图片大小跳动
     FWAsset *imageAsset = [self.imagesAssetArray objectAtIndex:index];
@@ -1178,9 +1178,9 @@
     }
 }
 
-#pragma mark - <FWZoomImageViewDelegate>
+#pragma mark - <__FWZoomImageViewDelegate>
 
-- (void)singleTouchInZoomingImageView:(FWZoomImageView *)zoomImageView location:(CGPoint)location {
+- (void)singleTouchInZoomingImageView:(__FWZoomImageView *)zoomImageView location:(CGPoint)location {
     self.topToolBarView.hidden = !self.topToolBarView.hidden;
     self.bottomToolBarView.hidden = !self.bottomToolBarView.hidden;
     if (!_singleCheckMode && self.showsEditCollectionView) {
@@ -1188,7 +1188,7 @@
     }
 }
 
-- (void)zoomImageView:(FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide {
+- (void)zoomImageView:(__FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide {
     self.topToolBarView.hidden = didHide;
     self.bottomToolBarView.hidden = didHide;
     if (!_singleCheckMode && self.showsEditCollectionView) {
@@ -1293,7 +1293,7 @@
         return;
     }
     
-    FWZoomImageView *imageView = [self.imagePreviewView currentZoomImageView];
+    __FWZoomImageView *imageView = [self.imagePreviewView currentZoomImageView];
     FWAsset *imageAsset = self.imagesAssetArray[self.imagePreviewView.currentImageIndex];
     [imageAsset requestOriginImageWithCompletion:^(UIImage * _Nullable result, NSDictionary<NSString *,id> * _Nullable info, BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
