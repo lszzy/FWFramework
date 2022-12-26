@@ -208,3 +208,187 @@ import FWObjC
     }
     
 }
+
+@_spi(FW) @objc extension UIScrollView {
+    
+    public func fw_addPullRefresh(block: @escaping () -> Void) {
+        fw_addPullRefresh(block: block, target: nil, action: nil)
+    }
+    
+    public func fw_addPullRefresh(target: Any, action: Selector) {
+        fw_addPullRefresh(block: nil, target: target, action: action)
+    }
+    
+    private func fw_addPullRefresh(block: (() -> Void)?, target: Any?, action: Selector?) {
+        self.fw_pullRefreshView?.removeFromSuperview()
+        
+        let view = PullRefreshView(frame: CGRect(x: 0, y: -self.fw_pullRefreshHeight, width: self.bounds.size.width, height: self.fw_pullRefreshHeight))
+        view.pullRefreshBlock = block
+        view.target = target as? AnyObject
+        view.action = action
+        view.scrollView = self
+        self.addSubview(view)
+        
+        view.originalInset = self.contentInset
+        self.fw_pullRefreshView = view
+        self.fw_showPullRefresh = true
+    }
+    
+    public func fw_triggerPullRefresh() {
+        if self.fw_pullRefreshView?.isAnimating() ?? false { return }
+        
+        self.fw_pullRefreshView?.state = .triggered
+        self.fw_pullRefreshView?.userTriggered = false
+        self.fw_pullRefreshView?.startAnimating()
+    }
+
+    public var fw_pullRefreshView: PullRefreshView? {
+        get {
+            return fw_property(forName: "fw_pullRefreshView") as? PullRefreshView
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_pullRefreshView")
+        }
+    }
+    
+    public var fw_pullRefreshHeight: CGFloat {
+        get {
+            let height = fw_propertyDouble(forName: "fw_pullRefreshHeight")
+            return height > 0 ? height : PullRefreshView.height
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_pullRefreshHeight")
+        }
+    }
+    
+    public var fw_showPullRefresh: Bool {
+        get {
+            if let pullRefreshView = self.fw_pullRefreshView {
+                return !pullRefreshView.isHidden
+            }
+            return false
+        }
+        set {
+            guard let pullRefreshView = self.fw_pullRefreshView else { return }
+            
+            pullRefreshView.isHidden = !newValue
+            if !newValue {
+                if pullRefreshView.isObserving {
+                    self.removeObserver(pullRefreshView, forKeyPath: "contentOffset")
+                    self.removeObserver(pullRefreshView, forKeyPath: "contentSize")
+                    self.removeObserver(pullRefreshView, forKeyPath: "frame")
+                    self.panGestureRecognizer.fw_unobserveProperty("state", target: pullRefreshView, action: #selector(PullRefreshView.gestureRecognizer(_:stateChanged:)))
+                    pullRefreshView.resetScrollContentInset()
+                    pullRefreshView.isObserving = false
+                }
+            } else {
+                if !pullRefreshView.isObserving {
+                    self.addObserver(pullRefreshView, forKeyPath: "contentOffset", options: .new, context: nil)
+                    self.addObserver(pullRefreshView, forKeyPath: "contentSize", options: .new, context: nil)
+                    self.addObserver(pullRefreshView, forKeyPath: "frame", options: .new, context: nil)
+                    self.panGestureRecognizer.fw_observeProperty("state", target: pullRefreshView, action: #selector(pullRefreshView.gestureRecognizer(_:stateChanged:)))
+                    pullRefreshView.isObserving = true
+                    
+                    pullRefreshView.setNeedsLayout()
+                    pullRefreshView.layoutIfNeeded()
+                    pullRefreshView.frame = CGRect(x: 0, y: -self.fw_pullRefreshHeight, width: self.bounds.size.width, height: self.fw_pullRefreshHeight)
+                }
+            }
+        }
+    }
+    
+    public func fw_addInfiniteScroll(block: @escaping () -> Void) {
+        fw_addInfiniteScroll(block: block, target: nil, action: nil)
+    }
+    
+    public func fw_addInfiniteScroll(target: Any, action: Selector) {
+        fw_addInfiniteScroll(block: nil, target: target, action: action)
+    }
+    
+    private func fw_addInfiniteScroll(block: (() -> Void)?, target: Any?, action: Selector?) {
+        self.fw_infiniteScrollView?.removeFromSuperview()
+        
+        let view = InfiniteScrollView(frame: CGRect(x: 0, y: self.contentSize.height, width: self.bounds.size.width, height: self.fw_infiniteScrollHeight))
+        view.infiniteScrollBlock = block
+        view.target = target as? AnyObject
+        view.action = action
+        view.scrollView = self
+        self.addSubview(view)
+        
+        view.originalInset = self.contentInset
+        self.fw_infiniteScrollView = view
+        self.fw_showInfiniteScroll = true
+    }
+    
+    public func fw_triggerInfiniteScroll() {
+        if self.fw_infiniteScrollView?.isAnimating() ?? false { return }
+        
+        self.fw_infiniteScrollView?.state = .triggered
+        self.fw_infiniteScrollView?.userTriggered = false
+        self.fw_infiniteScrollView?.startAnimating()
+    }
+
+    public var fw_infiniteScrollView: InfiniteScrollView? {
+        get {
+            return fw_property(forName: "fw_infiniteScrollView") as? InfiniteScrollView
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_infiniteScrollView")
+        }
+    }
+    
+    public var fw_infiniteScrollHeight: CGFloat {
+        get {
+            let height = fw_propertyDouble(forName: "fw_infiniteScrollHeight")
+            return height > 0 ? height : InfiniteScrollView.height
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_infiniteScrollHeight")
+        }
+    }
+    
+    public var fw_showInfiniteScroll: Bool {
+        get {
+            if let infiniteScrollView = self.fw_infiniteScrollView {
+                return !infiniteScrollView.isHidden
+            }
+            return false
+        }
+        set {
+            guard let infiniteScrollView = self.fw_infiniteScrollView else { return }
+            
+            infiniteScrollView.isHidden = !newValue
+            if !newValue {
+                if infiniteScrollView.isObserving {
+                    self.removeObserver(infiniteScrollView, forKeyPath: "contentOffset")
+                    self.removeObserver(infiniteScrollView, forKeyPath: "contentSize")
+                    self.panGestureRecognizer.fw_unobserveProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
+                    infiniteScrollView.resetScrollViewContentInset()
+                    infiniteScrollView.isObserving = false
+                }
+            } else {
+                if !infiniteScrollView.isObserving {
+                    self.addObserver(infiniteScrollView, forKeyPath: "contentOffset", options: .new, context: nil)
+                    self.addObserver(infiniteScrollView, forKeyPath: "contentSize", options: .new, context: nil)
+                    self.panGestureRecognizer.fw_observeProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
+                    infiniteScrollView.setScrollViewContentInsetForInfiniteScrolling()
+                    infiniteScrollView.isObserving = true
+                    
+                    infiniteScrollView.setNeedsLayout()
+                    infiniteScrollView.layoutIfNeeded()
+                    infiniteScrollView.frame = CGRect(x: 0, y: self.contentSize.height, width: infiniteScrollView.bounds.size.width, height: self.fw_infiniteScrollHeight)
+                }
+            }
+        }
+    }
+    
+    public var fw_infiniteScrollFinished: Bool {
+        get {
+            return self.fw_infiniteScrollView?.finished ?? false
+        }
+        set {
+            self.fw_infiniteScrollView?.finished = newValue
+        }
+    }
+    
+}
