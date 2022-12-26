@@ -1348,6 +1348,39 @@ import FWObjC
     public func fw_image(blurRadius: CGFloat, saturationDelta: CGFloat, tintColor: UIColor?, maskImage: UIImage?) -> UIImage? {
         return self.__fw_image(withBlurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
     }
+    
+    /// 图片裁剪，可指定frame、角度、圆形等
+    public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(frame.size, !self.fw_hasAlpha && !circular, self.scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        if circular {
+            context.addEllipse(in: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+            context.clip()
+        }
+        
+        if angle != 0 {
+            let imageView = UIImageView(image: self)
+            imageView.layer.minificationFilter = .nearest
+            imageView.layer.magnificationFilter = .nearest
+            imageView.transform = CGAffineTransformRotate(.identity, CGFloat(angle) * (CGFloat.pi / 180.0))
+            let rotatedRect = CGRectApplyAffineTransform(imageView.bounds, imageView.transform)
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: rotatedRect.size.width, height: rotatedRect.size.height))
+            containerView.addSubview(imageView)
+            imageView.center = containerView.center
+            context.translateBy(x: -frame.origin.x, y: -frame.origin.y)
+            containerView.layer.render(in: context)
+        } else {
+            context.translateBy(x: -frame.origin.x, y: -frame.origin.y)
+            self.draw(at: .zero)
+        }
+        
+        let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        guard let cgImage = croppedImage?.cgImage else { return nil }
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: .up)
+    }
 
     /// 如果没有透明通道，增加透明通道
     public var fw_alphaImage: UIImage {

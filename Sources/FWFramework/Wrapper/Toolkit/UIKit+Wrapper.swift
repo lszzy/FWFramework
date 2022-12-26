@@ -260,6 +260,12 @@ extension Wrapper where Base: UIView {
         return base.fw_snapshotPdf
     }
     
+    /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
+    public var frameApplyTransform: CGRect {
+        get { return base.fw_frameApplyTransform }
+        set { base.fw_frameApplyTransform = newValue }
+    }
+    
     /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
     public var sortIndex: Int {
         get { return base.fw_sortIndex }

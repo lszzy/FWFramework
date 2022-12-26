@@ -705,6 +705,41 @@ import AdSupport
         return data as Data
     }
     
+    /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
+    public var fw_frameApplyTransform: CGRect {
+        get { return self.frame }
+        set { self.frame = UIView.fw_rectApplyTransform(newValue, transform: self.transform, anchorPoint: self.layer.anchorPoint) }
+    }
+    
+    /// 计算目标点 targetPoint 围绕坐标点 coordinatePoint 通过 transform 之后此点的坐标。@see https://github.com/Tencent/QMUI_iOS
+    private static func fw_pointApplyTransform(_ coordinatePoint: CGPoint, targetPoint: CGPoint, transform: CGAffineTransform) -> CGPoint {
+        var p = CGPoint()
+        p.x = (targetPoint.x - coordinatePoint.x) * transform.a + (targetPoint.y - coordinatePoint.y) * transform.c + coordinatePoint.x
+        p.y = (targetPoint.x - coordinatePoint.x) * transform.b + (targetPoint.y - coordinatePoint.y) * transform.d + coordinatePoint.y
+        p.x += transform.tx
+        p.y += transform.ty
+        return p
+    }
+    
+    /// 系统的 CGRectApplyAffineTransform 只会按照 anchorPoint 为 (0, 0) 的方式去计算，但通常情况下我们面对的是 UIView/CALayer，它们默认的 anchorPoint 为 (.5, .5)，所以增加这个函数，在计算 transform 时可以考虑上 anchorPoint 的影响。@see https://github.com/Tencent/QMUI_iOS
+    private static func fw_rectApplyTransform(_ rect: CGRect, transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
+        let width = CGRectGetWidth(rect)
+        let height = CGRectGetHeight(rect)
+        let oPoint = CGPoint(x: rect.origin.x + width * anchorPoint.x, y: rect.origin.y + height * anchorPoint.y)
+        let top_left = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y), transform: transform)
+        let bottom_left = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y + height), transform: transform)
+        let top_right = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y), transform: transform)
+        let bottom_right = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y + height), transform: transform)
+        let minX = min(min(min(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
+        let maxX = max(max(max(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
+        let minY = min(min(min(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
+        let maxY = max(max(max(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
+        let newWidth = maxX - minX
+        let newHeight = maxY - minY
+        let result = CGRect(x: minX, y: minY, width: newWidth, height: newHeight)
+        return result
+    }
+    
     /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
     public var fw_sortIndex: Int {
         get { fw_propertyInt(forName: "fw_sortIndex") }

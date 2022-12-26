@@ -106,14 +106,6 @@ extension Wrapper where Base: PHPhotoLibrary {
     
 }
 
-extension Wrapper where Base: UIImage {
-    
-    public func croppedImage(frame: CGRect, angle: Int, circularClip: Bool) -> UIImage? {
-        return base.__fw_croppedImage(withFrame: frame, angle: angle, circularClip: circularClip)
-    }
-    
-}
-
 extension Wrapper where Base: UIViewController {
     
     /// 自定义图片选取插件，未设置时自动从插件池加载
