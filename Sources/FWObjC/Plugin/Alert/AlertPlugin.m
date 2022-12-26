@@ -9,7 +9,7 @@
 #import "AlertPluginImpl.h"
 #import "Plugin.h"
 #import "Navigator.h"
-#import "FWAppBundle.h"
+#import "AppBundle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

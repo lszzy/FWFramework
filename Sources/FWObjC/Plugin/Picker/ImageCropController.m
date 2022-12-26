@@ -7,7 +7,7 @@
 
 #import "ImageCropController.h"
 #import "AlertPlugin.h"
-#import "FWAppBundle.h"
+#import "AppBundle.h"
 
 #if FWMacroSPM
 

@@ -8,13 +8,13 @@
 #import "ImagePickerController.h"
 #import "ImagePickerPluginImpl.h"
 #import "ImageCropController.h"
-#import "FWToolbarView.h"
+#import "ToolbarView.h"
 #import "EmptyPlugin.h"
 #import "ToastPlugin.h"
 #import "AlertPlugin.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
-#import "FWAppBundle.h"
+#import "AppBundle.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
 
