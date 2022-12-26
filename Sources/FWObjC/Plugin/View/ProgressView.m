@@ -7,9 +7,9 @@
 
 #import "ProgressView.h"
 
-#pragma mark - FWProgressLayer
+#pragma mark - __FWProgressLayer
 
-@interface FWProgressLayer : CALayer
+@interface __FWProgressLayer : CALayer
 
 @property (nonatomic, assign) BOOL annular;
 @property (nonatomic, strong) UIColor *color;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation FWProgressLayer
+@implementation __FWProgressLayer
 
 @dynamic annular;
 @dynamic color;
@@ -115,12 +115,12 @@
 
 @end
 
-#pragma mark - FWProgressView
+#pragma mark - __FWProgressView
 
-@implementation FWProgressView
+@implementation __FWProgressView
 
 + (Class)layerClass {
-    return [FWProgressLayer class];
+    return [__FWProgressLayer class];
 }
 
 - (instancetype)init {
@@ -157,8 +157,8 @@
     [self.layer setNeedsDisplay];
 }
 
-- (FWProgressLayer *)progressLayer {
-    return (FWProgressLayer *)self.layer;
+- (__FWProgressLayer *)progressLayer {
+    return (__FWProgressLayer *)self.layer;
 }
 
 - (void)setAnnular:(BOOL)annular {

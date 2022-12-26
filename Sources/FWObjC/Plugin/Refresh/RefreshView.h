@@ -18,8 +18,8 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
     FWPullRefreshStateAll = 10
 } NS_SWIFT_NAME(PullRefreshState);
 
-@protocol FWIndicatorViewPlugin;
-@protocol FWProgressViewPlugin;
+@protocol __FWIndicatorViewPlugin;
+@protocol __FWProgressViewPlugin;
 
 /**
  下拉刷新视图，默认高度60
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(PullRefreshView)
 @property (nullable, nonatomic, strong) UIColor *textColor;
 @property (nonatomic, strong, readonly) UILabel *titleLabel;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
-@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
+@property (nonatomic, strong) UIView<__FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 @property (nonatomic, assign) CGFloat indicatorPadding;
 @property (nonatomic, assign) BOOL showsTitleLabel;
@@ -49,7 +49,7 @@ NS_SWIFT_NAME(PullRefreshView)
 - (void)setTitle:(nullable NSString *)title forState:(FWPullRefreshState)state;
 - (void)setSubtitle:(nullable NSString *)subtitle forState:(FWPullRefreshState)state;
 - (void)setCustomView:(nullable UIView *)view forState:(FWPullRefreshState)state;
-- (void)setAnimationView:(nullable UIView<FWProgressViewPlugin, FWIndicatorViewPlugin> *)animationView;
+- (void)setAnimationView:(nullable UIView<__FWProgressViewPlugin, __FWIndicatorViewPlugin> *)animationView;
 
 - (void)startAnimating;
 - (void)stopAnimating;
@@ -93,7 +93,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nonatomic, readwrite) BOOL enabled;
 @property (nonatomic, readwrite) UIEdgeInsets originalInset;
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
-@property (nonatomic, strong) UIView<FWIndicatorViewPlugin> *indicatorView;
+@property (nonatomic, strong) UIView<__FWIndicatorViewPlugin> *indicatorView;
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 @property (nonatomic, assign) CGFloat indicatorPadding;
 @property (nonatomic, assign) BOOL finished;
@@ -107,7 +107,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
 
 - (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
-- (void)setAnimationView:(nullable UIView<FWProgressViewPlugin, FWIndicatorViewPlugin> *)animationView;
+- (void)setAnimationView:(nullable UIView<__FWProgressViewPlugin, __FWIndicatorViewPlugin> *)animationView;
 
 - (void)startAnimating;
 - (void)stopAnimating;

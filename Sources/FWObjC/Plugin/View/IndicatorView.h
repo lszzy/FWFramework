@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWIndicatorView
+#pragma mark - __FWIndicatorView
 
 /// 自定义指示器视图动画协议
 NS_SWIFT_NAME(IndicatorViewAnimationProtocol)
-@protocol FWIndicatorViewAnimationProtocol <NSObject>
+@protocol __FWIndicatorViewAnimationProtocol <NSObject>
 @required
 
 /// 初始化layer动画效果
@@ -22,21 +22,21 @@ NS_SWIFT_NAME(IndicatorViewAnimationProtocol)
 @end
 
 /// 自定义指示器视图动画类型枚举，可扩展
-typedef NSInteger FWIndicatorViewAnimationType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(IndicatorViewAnimationType);
+typedef NSInteger __FWIndicatorViewAnimationType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(IndicatorViewAnimationType);
 /// 八线条渐变旋转，类似系统，默认
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLineSpin = 0;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeLineSpin = 0;
 /// 五线条跳动，类似音符
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeLinePulse = 1;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeLinePulse = 1;
 /// 八圆球渐变旋转
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallSpin = 2;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeBallSpin = 2;
 /// 三圆球水平跳动
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallPulse = 3;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeBallPulse = 3;
 /// 三圆圈三角形旋转
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeBallTriangle = 4;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeBallTriangle = 4;
 /// 单圆圈渐变旋转
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeCircleSpin = 5;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeCircleSpin = 5;
 /// 圆形向外扩散，类似水波纹
-static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePulse = 6;
+static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeTriplePulse = 6;
 
 /**
  * 自定义指示器视图
@@ -44,13 +44,13 @@ static const FWIndicatorViewAnimationType FWIndicatorViewAnimationTypeTriplePuls
  * @see https://github.com/gontovnik/DGActivityIndicatorView
  */
 NS_SWIFT_NAME(IndicatorView)
-@interface FWIndicatorView : UIView <FWIndicatorViewPlugin, FWProgressViewPlugin>
+@interface __FWIndicatorView : UIView <__FWIndicatorViewPlugin, __FWProgressViewPlugin>
 
 /// 指定动画类型初始化
-- (instancetype)initWithType:(FWIndicatorViewAnimationType)type;
+- (instancetype)initWithType:(__FWIndicatorViewAnimationType)type;
 
 /// 当前动画类型
-@property (nonatomic, assign) FWIndicatorViewAnimationType type;
+@property (nonatomic, assign) __FWIndicatorViewAnimationType type;
 
 /// 指示器颜色，默认白色
 @property (nonatomic, strong) UIColor *color;
@@ -71,7 +71,7 @@ NS_SWIFT_NAME(IndicatorView)
 - (void)stopAnimating;
 
 /// 创建动画对象，子类可重写
-- (id<FWIndicatorViewAnimationProtocol>)animation;
+- (id<__FWIndicatorViewAnimationProtocol>)animation;
 
 /// 指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:animated:
 @property (nonatomic, assign) CGFloat progress;

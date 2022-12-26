@@ -37,7 +37,7 @@ NS_SWIFT_NAME(ZoomImageViewDelegate)
 @end
 
 @class FWZoomImageVideoToolbar;
-@protocol FWProgressViewPlugin;
+@protocol __FWProgressViewPlugin;
 
 /**
  *  支持缩放查看静态图片、live photo、视频的控件
@@ -129,7 +129,7 @@ NS_SWIFT_NAME(ZoomImageView)
 @property(nonatomic, copy, nullable) CGPoint (^videoCloseButtonCenter)(void);
 
 // 进度视图，居中显示
-@property(nonatomic, strong) UIView<FWProgressViewPlugin> *progressView;
+@property(nonatomic, strong) UIView<__FWProgressViewPlugin> *progressView;
 
 // 设置当前进度，自动显示或隐藏进度视图
 @property(nonatomic, assign) CGFloat progress;

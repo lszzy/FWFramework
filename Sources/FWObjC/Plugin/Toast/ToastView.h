@@ -9,31 +9,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWToastView
+#pragma mark - __FWToastView
 
 /// 吐司视图类型
-typedef NS_ENUM(NSInteger, FWToastViewType) {
+typedef NS_ENUM(NSInteger, __FWToastViewType) {
     /// 自定义吐司
-    FWToastViewTypeCustom = 0,
+    __FWToastViewTypeCustom = 0,
     /// 文本吐司
-    FWToastViewTypeText,
+    __FWToastViewTypeText,
     /// 图片吐司
-    FWToastViewTypeImage,
+    __FWToastViewTypeImage,
     /// 指示器吐司
-    FWToastViewTypeIndicator,
+    __FWToastViewTypeIndicator,
     /// 进度条吐司
-    FWToastViewTypeProgress,
+    __FWToastViewTypeProgress,
 } NS_SWIFT_NAME(ToastViewType);
 
-@protocol FWProgressViewPlugin;
-@protocol FWIndicatorViewPlugin;
+@protocol __FWProgressViewPlugin;
+@protocol __FWIndicatorViewPlugin;
 
 /// 吐司视图，默认背景色透明
 NS_SWIFT_NAME(ToastView)
-@interface FWToastView : UIControl
+@interface __FWToastView : UIControl
 
 /// 当前吐司类型，只读
-@property (nonatomic, readonly) FWToastViewType type;
+@property (nonatomic, readonly) __FWToastViewType type;
 
 /// 内容视图，可设置背景色(默认#404040)、圆角(默认5)，只读
 @property (nonatomic, readonly) UIView *contentView;
@@ -42,9 +42,9 @@ NS_SWIFT_NAME(ToastView)
 /// 图片视图，仅Image存在
 @property (nonatomic, readonly, nullable) UIImageView *imageView;
 /// 指示器视图，可自定义，仅Indicator存在
-@property (nonatomic, strong, nullable) UIView<FWIndicatorViewPlugin> *indicatorView;
+@property (nonatomic, strong, nullable) UIView<__FWIndicatorViewPlugin> *indicatorView;
 /// 进度条视图，可自定义，仅Progress存在
-@property (nonatomic, strong, nullable) UIView<FWProgressViewPlugin> *progressView;
+@property (nonatomic, strong, nullable) UIView<__FWProgressViewPlugin> *progressView;
 /// 标题标签，都存在，有内容时才显示
 @property (nonatomic, readonly) UILabel *titleLabel;
 
@@ -83,7 +83,7 @@ NS_SWIFT_NAME(ToastView)
 @property (nonatomic, copy, nullable) void (^cancelBlock)(void);
 
 /// 初始化指定类型指示器
-- (instancetype)initWithType:(FWToastViewType)type;
+- (instancetype)initWithType:(__FWToastViewType)type;
 
 /// 显示吐司，不执行动画
 - (void)show;

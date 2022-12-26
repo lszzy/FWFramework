@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - FWEmptyView
 
-@protocol FWIndicatorViewPlugin;
+@protocol __FWIndicatorViewPlugin;
 
 /**
  * 通用的空界面控件，布局顺序从上到下依次为：imageView, loadingView, textLabel, detailTextLabel, actionButton
@@ -22,7 +22,7 @@ NS_SWIFT_NAME(PlaceholderView)
 @interface FWEmptyView : UIView
 
 /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
-@property(nonatomic, strong) UIView<FWIndicatorViewPlugin> *loadingView;
+@property(nonatomic, strong) UIView<__FWIndicatorViewPlugin> *loadingView;
 /// 图片控件
 @property(nonatomic, strong, readonly) UIImageView *imageView;
 /// 文本控件

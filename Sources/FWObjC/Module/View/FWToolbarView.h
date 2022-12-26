@@ -159,7 +159,7 @@ typedef NS_ENUM(NSInteger, FWToolbarTitleViewStyle) {
     FWToolbarTitleViewStyleVertical,
 } NS_SWIFT_NAME(ToolbarTitleViewStyle);
 
-@protocol FWIndicatorViewPlugin;
+@protocol __FWIndicatorViewPlugin;
 
 /**
  *  可作为导航栏标题控件，通过 navigationItem.titleView 来设置。也可当成单独的标题组件，脱离 UIViewController 使用
@@ -220,7 +220,7 @@ NS_SWIFT_NAME(ToolbarTitleView)
 @property(nonatomic, assign) UIEdgeInsets subtitleEdgeInsets UI_APPEARANCE_SELECTOR;
 
 /// 标题栏左侧loading视图，可自定义，开启loading后才存在
-@property(nonatomic, strong, nullable) UIView<FWIndicatorViewPlugin> *loadingView;
+@property(nonatomic, strong, nullable) UIView<__FWIndicatorViewPlugin> *loadingView;
 
 /// 是否显示loading视图，开启后才会显示，默认NO
 @property(nonatomic, assign) BOOL showsLoadingView;

@@ -21,16 +21,16 @@
 
 #endif
 
-#pragma mark - FWToastPluginImpl
+#pragma mark - __FWToastPluginImpl
 
-@implementation FWToastPluginImpl
+@implementation __FWToastPluginImpl
 
-+ (FWToastPluginImpl *)sharedInstance
++ (__FWToastPluginImpl *)sharedInstance
 {
-    static FWToastPluginImpl *instance = nil;
+    static __FWToastPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWToastPluginImpl alloc] init];
+        instance = [[__FWToastPluginImpl alloc] init];
     });
     return instance;
 }
@@ -52,7 +52,7 @@
         loadingText = self.defaultLoadingText();
     }
     
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
     if (toastView) {
         [toastView invalidateTimer];
         [view bringSubviewToFront:toastView];
@@ -65,7 +65,7 @@
         return;
     }
     
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeIndicator];
+    toastView = [[__FWToastView alloc] initWithType:__FWToastViewTypeIndicator];
     toastView.tag = 2011;
     toastView.attributedTitle = loadingText;
     toastView.cancelBlock = cancelBlock;
@@ -80,13 +80,13 @@
 
 - (void)hideLoading:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingLoading:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
     return toastView ? YES : NO;
 }
 
@@ -97,7 +97,7 @@
         progressText = self.defaultProgressText();
     }
     
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
     if (toastView) {
         [toastView invalidateTimer];
         [view bringSubviewToFront:toastView];
@@ -111,7 +111,7 @@
         return;
     }
     
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeProgress];
+    toastView = [[__FWToastView alloc] initWithType:__FWToastViewTypeProgress];
     toastView.tag = 2012;
     toastView.attributedTitle = progressText;
     toastView.progress = progress;
@@ -127,17 +127,17 @@
 
 - (void)hideProgress:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingProgress:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
     return toastView ? YES : NO;
 }
 
-- (void)showMessageWithAttributedText:(NSAttributedString *)attributedText style:(FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(void (^)(void))completion inView:(UIView *)view
+- (void)showMessageWithAttributedText:(NSAttributedString *)attributedText style:(__FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(void (^)(void))completion inView:(UIView *)view
 {
     NSAttributedString *messageText = attributedText;
     if (!messageText && self.defaultMessageText) {
@@ -145,11 +145,11 @@
     }
     if (messageText.length < 1) return;
     
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
     BOOL fadeAnimated = self.fadeAnimated && !toastView;
     if (toastView) [toastView hide];
     
-    toastView = [[FWToastView alloc] initWithType:FWToastViewTypeText];
+    toastView = [[__FWToastView alloc] initWithType:__FWToastViewTypeText];
     toastView.tag = 2013;
     toastView.userInteractionEnabled = !interactive;
     toastView.attributedTitle = messageText;
@@ -168,13 +168,13 @@
 
 - (void)hideMessage:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingMessage:(UIView *)view
 {
-    FWToastView *toastView = (FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
     return toastView ? YES : NO;
 }
 
