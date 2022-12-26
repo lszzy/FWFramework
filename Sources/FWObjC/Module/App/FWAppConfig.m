@@ -45,7 +45,7 @@
     // 配置图片选择、浏览和下拉刷新插件
     // [__FWPluginManager registerPlugin:@protocol(FWImagePickerPlugin) withObject:[FWImagePickerControllerImpl class]];
     // [__FWPluginManager registerPlugin:@protocol(FWImagePreviewPlugin) withObject:[FWImagePreviewPluginImpl class]];
-    // [__FWPluginManager registerPlugin:@protocol(FWRefreshPlugin) withObject:[FWRefreshPluginImpl class]];
+    // [__FWPluginManager registerPlugin:@protocol(__FWRefreshPlugin) withObject:[__FWRefreshPluginImpl class]];
     
     // 配置吐司插件
     // __FWToastPluginImpl.sharedInstance.delayTime = 2.0;

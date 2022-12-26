@@ -9,13 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIScrollView+FWPullRefresh
+#pragma mark - UIScrollView+__FWPullRefresh
 
-typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
-    FWPullRefreshStateIdle = 0,
-    FWPullRefreshStateTriggered,
-    FWPullRefreshStateLoading,
-    FWPullRefreshStateAll = 10
+typedef NS_ENUM(NSUInteger, __FWPullRefreshState) {
+    __FWPullRefreshStateIdle = 0,
+    __FWPullRefreshStateTriggered,
+    __FWPullRefreshStateLoading,
+    __FWPullRefreshStateAll = 10
 } NS_SWIFT_NAME(PullRefreshState);
 
 @protocol __FWIndicatorViewPlugin;
@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, FWPullRefreshState) {
  @note 如果indicatorView为自定义指示器时会自动隐藏标题和箭头，仅显示指示器视图
 */
 NS_SWIFT_NAME(PullRefreshView)
-@interface FWPullRefreshView : UIView
+@interface __FWPullRefreshView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) UIEdgeInsets originalInset;
@@ -41,14 +41,14 @@ NS_SWIFT_NAME(PullRefreshView)
 @property (nonatomic, assign) BOOL showsArrowView;
 @property (nonatomic, assign) BOOL shouldChangeAlpha;
 
-@property (nonatomic, readonly) FWPullRefreshState state;
+@property (nonatomic, readonly) __FWPullRefreshState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
-@property (nullable, nonatomic, copy) void (^stateBlock)(FWPullRefreshView *view, FWPullRefreshState state);
-@property (nullable, nonatomic, copy) void (^progressBlock)(FWPullRefreshView *view, CGFloat progress);
+@property (nullable, nonatomic, copy) void (^stateBlock)(__FWPullRefreshView *view, __FWPullRefreshState state);
+@property (nullable, nonatomic, copy) void (^progressBlock)(__FWPullRefreshView *view, CGFloat progress);
 
-- (void)setTitle:(nullable NSString *)title forState:(FWPullRefreshState)state;
-- (void)setSubtitle:(nullable NSString *)subtitle forState:(FWPullRefreshState)state;
-- (void)setCustomView:(nullable UIView *)view forState:(FWPullRefreshState)state;
+- (void)setTitle:(nullable NSString *)title forState:(__FWPullRefreshState)state;
+- (void)setSubtitle:(nullable NSString *)subtitle forState:(__FWPullRefreshState)state;
+- (void)setCustomView:(nullable UIView *)view forState:(__FWPullRefreshState)state;
 - (void)setAnimationView:(nullable UIView<__FWProgressViewPlugin, __FWIndicatorViewPlugin> *)animationView;
 
 - (void)startAnimating;
@@ -58,36 +58,36 @@ NS_SWIFT_NAME(PullRefreshView)
 @end
 
 /**
- UIScrollView+FWPullRefresh
+ UIScrollView+__FWPullRefresh
  
  @see https://github.com/samvermette/SVPullToRefresh
  */
-@interface UIScrollView (FWPullRefresh)
+@interface UIScrollView (__FWPullRefresh)
 
 - (void)fw_addPullRefreshWithBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
 - (void)fw_addPullRefreshWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 - (void)fw_triggerPullRefresh NS_REFINED_FOR_SWIFT;
 
-@property (nullable, nonatomic, strong, readonly) FWPullRefreshView *fw_pullRefreshView NS_REFINED_FOR_SWIFT;
+@property (nullable, nonatomic, strong, readonly) __FWPullRefreshView *fw_pullRefreshView NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) CGFloat fw_pullRefreshHeight NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_showPullRefresh NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - UIScrollView+FWInfiniteScroll
+#pragma mark - UIScrollView+__FWInfiniteScroll
 
-typedef NS_ENUM(NSUInteger, FWInfiniteScrollState) {
-    FWInfiniteScrollStateIdle = 0,
-    FWInfiniteScrollStateTriggered,
-    FWInfiniteScrollStateLoading,
-    FWInfiniteScrollStateAll = 10
+typedef NS_ENUM(NSUInteger, __FWInfiniteScrollState) {
+    __FWInfiniteScrollStateIdle = 0,
+    __FWInfiniteScrollStateTriggered,
+    __FWInfiniteScrollStateLoading,
+    __FWInfiniteScrollStateAll = 10
 } NS_SWIFT_NAME(InfiniteScrollState);
 
 /**
  上拉追加视图，默认高度60
  */
 NS_SWIFT_NAME(InfiniteScrollView)
-@interface FWInfiniteScrollView : UIView
+@interface __FWInfiniteScrollView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) BOOL enabled;
@@ -101,12 +101,12 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nonatomic, strong) UIView *finishedView;
 @property (nonatomic, assign) CGFloat finishedPadding;
 
-@property (nonatomic, readonly) FWInfiniteScrollState state;
+@property (nonatomic, readonly) __FWInfiniteScrollState state;
 @property (nonatomic, assign, readonly) BOOL userTriggered;
-@property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
-@property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
+@property (nullable, nonatomic, copy) void (^stateBlock)(__FWInfiniteScrollView *view, __FWInfiniteScrollState state);
+@property (nullable, nonatomic, copy) void (^progressBlock)(__FWInfiniteScrollView *view, CGFloat progress);
 
-- (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
+- (void)setCustomView:(nullable UIView *)view forState:(__FWInfiniteScrollState)state;
 - (void)setAnimationView:(nullable UIView<__FWProgressViewPlugin, __FWIndicatorViewPlugin> *)animationView;
 
 - (void)startAnimating;
@@ -116,17 +116,17 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @end
 
 /**
- UIScrollView+FWInfiniteScroll
+ UIScrollView+__FWInfiniteScroll
  
  @see https://github.com/samvermette/SVPullToRefresh
  */
-@interface UIScrollView (FWInfiniteScroll)
+@interface UIScrollView (__FWInfiniteScroll)
 
 - (void)fw_addInfiniteScrollWithBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
 - (void)fw_addInfiniteScrollWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 - (void)fw_triggerInfiniteScroll NS_REFINED_FOR_SWIFT;
 
-@property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fw_infiniteScrollView NS_REFINED_FOR_SWIFT;
+@property (nullable, nonatomic, strong, readonly) __FWInfiniteScrollView *fw_infiniteScrollView NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) CGFloat fw_infiniteScrollHeight NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_showInfiniteScroll NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_infiniteScrollFinished NS_REFINED_FOR_SWIFT;

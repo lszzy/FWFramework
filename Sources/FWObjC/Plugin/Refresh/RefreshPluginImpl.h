@@ -10,20 +10,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRefreshPluginImpl
+#pragma mark - __FWRefreshPluginImpl
 
 /// 默认刷新插件
 NS_SWIFT_NAME(RefreshPluginImpl)
-@interface FWRefreshPluginImpl : NSObject <FWRefreshPlugin>
+@interface __FWRefreshPluginImpl : NSObject <__FWRefreshPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWRefreshPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWRefreshPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 下拉刷新自定义句柄，开启时自动调用
-@property (nonatomic, copy, nullable) void (^pullRefreshBlock)(FWPullRefreshView *pullRefreshView);
+@property (nonatomic, copy, nullable) void (^pullRefreshBlock)(__FWPullRefreshView *pullRefreshView);
 
 /// 上拉追加自定义句柄，开启时自动调用
-@property (nonatomic, copy, nullable) void (^infiniteScrollBlock)(FWInfiniteScrollView *infiniteScrollView);
+@property (nonatomic, copy, nullable) void (^infiniteScrollBlock)(__FWInfiniteScrollView *infiniteScrollView);
 
 @end
 

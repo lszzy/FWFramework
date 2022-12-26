@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWRefreshPlugin
+#pragma mark - __FWRefreshPlugin
 
 /// 刷新插件协议，应用可自定义刷新插件实现
 NS_SWIFT_NAME(RefreshPlugin)
-@protocol FWRefreshPlugin <NSObject>
+@protocol __FWRefreshPlugin <NSObject>
 
 @optional
 
@@ -68,59 +68,6 @@ NS_SWIFT_NAME(RefreshPlugin)
 
 /// 结束上拉追加
 - (void)endLoading:(UIScrollView *)scrollView;
-
-@end
-
-#pragma mark - UIScrollView+FWRefreshPlugin
-
-/// UIScrollView刷新插件分类
-@interface UIScrollView (FWRefreshPlugin)
-
-/// 自定义刷新插件，未设置时自动从插件池加载
-@property (nonatomic, strong, null_resettable) id<FWRefreshPlugin> fw_refreshPlugin NS_REFINED_FOR_SWIFT;
-
-#pragma mark - Refreshing
-
-/// 是否正在刷新中
-@property (nonatomic, readonly) BOOL fw_isRefreshing NS_REFINED_FOR_SWIFT;
-
-/// 是否显示刷新组件
-@property (nonatomic, assign) BOOL fw_shouldRefreshing NS_REFINED_FOR_SWIFT;
-
-/// 配置下拉刷新句柄
-- (void)fw_setRefreshingBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
-
-/// 配置下拉刷新事件
-- (void)fw_setRefreshingTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
-
-/// 开始下拉刷新
-- (void)fw_beginRefreshing NS_REFINED_FOR_SWIFT;
-
-/// 结束下拉刷新
-- (void)fw_endRefreshing NS_REFINED_FOR_SWIFT;
-
-#pragma mark - Loading
-
-/// 是否正在追加中
-@property (nonatomic, readonly) BOOL fw_isLoading NS_REFINED_FOR_SWIFT;
-
-/// 是否显示追加组件
-@property (nonatomic, assign) BOOL fw_shouldLoading NS_REFINED_FOR_SWIFT;
-
-/// 是否已加载完成，不能继续追加
-@property (nonatomic, assign) BOOL fw_loadingFinished NS_REFINED_FOR_SWIFT;
-
-/// 配置上拉追加句柄
-- (void)fw_setLoadingBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
-
-/// 配置上拉追加事件
-- (void)fw_setLoadingTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
-
-/// 开始上拉追加
-- (void)fw_beginLoading NS_REFINED_FOR_SWIFT;
-
-/// 结束上拉追加
-- (void)fw_endLoading NS_REFINED_FOR_SWIFT;
 
 @end
 
