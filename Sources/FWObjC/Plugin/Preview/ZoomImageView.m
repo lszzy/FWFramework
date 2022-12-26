@@ -6,7 +6,7 @@
 //
 
 #import "ZoomImageView.h"
-#import "FWAppBundle.h"
+#import "AppBundle.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
 
