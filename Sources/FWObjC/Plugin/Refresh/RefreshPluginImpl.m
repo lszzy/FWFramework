@@ -7,15 +7,15 @@
 
 #import "RefreshPluginImpl.h"
 
-#pragma mark - FWRefreshPluginImpl
+#pragma mark - __FWRefreshPluginImpl
 
-@implementation FWRefreshPluginImpl
+@implementation __FWRefreshPluginImpl
 
-+ (FWRefreshPluginImpl *)sharedInstance {
-    static FWRefreshPluginImpl *instance = nil;
++ (__FWRefreshPluginImpl *)sharedInstance {
+    static __FWRefreshPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWRefreshPluginImpl alloc] init];
+        instance = [[__FWRefreshPluginImpl alloc] init];
     });
     return instance;
 }
@@ -23,7 +23,7 @@
 #pragma mark - Refreshing
 
 - (BOOL)isRefreshing:(UIScrollView *)scrollView {
-    return scrollView.fw_pullRefreshView.state == FWPullRefreshStateLoading;
+    return scrollView.fw_pullRefreshView.state == __FWPullRefreshStateLoading;
 }
 
 - (BOOL)shouldRefreshing:(UIScrollView *)scrollView {
@@ -55,7 +55,7 @@
 #pragma mark - Loading
 
 - (BOOL)isLoading:(UIScrollView *)scrollView {
-    return scrollView.fw_infiniteScrollView.state == FWInfiniteScrollStateLoading;
+    return scrollView.fw_infiniteScrollView.state == __FWInfiniteScrollStateLoading;
 }
 
 - (BOOL)shouldLoading:(UIScrollView *)scrollView {
