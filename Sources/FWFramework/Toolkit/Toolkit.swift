@@ -1663,7 +1663,7 @@ import FWObjC
 
 // MARK: - UIViewController+Toolkit
 /// 视图控制器生命周期状态枚举
-@objc(FWViewControllerVisibleState)
+@objc(__FWViewControllerVisibleState)
 public enum ViewControllerVisibleState: Int {
     case ready = 0
     case didLoad = 1

@@ -17,8 +17,8 @@
 
 @end
 
-#define FWViewControllerVisibleStateDidAppear 3
-#define FWViewControllerVisibleStateDidDisappear 5
+#define __FWViewControllerVisibleStateDidAppear 3
+#define __FWViewControllerVisibleStateDidDisappear 5
 
 @interface UIViewController ()
 
@@ -32,23 +32,23 @@
 
 #endif
 
-#pragma mark - FWImagePreviewView
+#pragma mark - __FWImagePreviewView
 
-@interface FWImagePreviewCell : UICollectionViewCell
+@interface __FWImagePreviewCell : UICollectionViewCell
 
-@property(nonatomic, strong) FWZoomImageView *zoomImageView;
+@property(nonatomic, strong) __FWZoomImageView *zoomImageView;
 @property(nonatomic, assign) CGRect contentViewBounds;
 
 @end
 
-@implementation FWImagePreviewCell
+@implementation __FWImagePreviewCell
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = UIColor.clearColor;
 
-        self.zoomImageView = [[FWZoomImageView alloc] init];
+        self.zoomImageView = [[__FWZoomImageView alloc] init];
         [self.contentView addSubview:self.zoomImageView];
         self.contentViewBounds = self.contentView.bounds;
         self.zoomImageView.fw_frameApplyTransform = self.contentView.bounds;
@@ -70,16 +70,16 @@ static NSString * const kLivePhotoCellIdentifier = @"livephoto";
 static NSString * const kVideoCellIdentifier = @"video";
 static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
-@interface FWImagePreviewView ()
+@interface __FWImagePreviewView ()
 
 @property(nonatomic, assign) BOOL isChangingCollectionViewBounds;
 @property(nonatomic, assign) BOOL isChangingIndexWhenScrolling;
 @property(nonatomic, assign) CGFloat previousIndexWhenScrolling;
-@property(nonatomic, weak) FWImagePreviewController *previewController;
+@property(nonatomic, weak) __FWImagePreviewController *previewController;
 
 @end
 
-@implementation FWImagePreviewView
+@implementation __FWImagePreviewView
 
 @synthesize currentImageIndex = _currentImageIndex;
 
@@ -99,7 +99,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 }
 
 - (void)didInitializedWithFrame:(CGRect)frame {
-    _collectionViewLayout = [[FWCollectionViewPagingLayout alloc] initWithStyle:FWCollectionViewPagingLayoutStyleDefault];
+    _collectionViewLayout = [[__FWCollectionViewPagingLayout alloc] initWithStyle:__FWCollectionViewPagingLayoutStyleDefault];
     self.collectionViewLayout.allowsMultipleItemScroll = NO;
     
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height) collectionViewLayout:self.collectionViewLayout];
@@ -112,9 +112,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     self.collectionView.delaysContentTouches = NO;
     self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
     self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kImageOrUnknownCellIdentifier];
-    [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
-    [self.collectionView registerClass:[FWImagePreviewCell class] forCellWithReuseIdentifier:kLivePhotoCellIdentifier];
+    [self.collectionView registerClass:[__FWImagePreviewCell class] forCellWithReuseIdentifier:kImageOrUnknownCellIdentifier];
+    [self.collectionView registerClass:[__FWImagePreviewCell class] forCellWithReuseIdentifier:kVideoCellIdentifier];
+    [self.collectionView registerClass:[__FWImagePreviewCell class] forCellWithReuseIdentifier:kLivePhotoCellIdentifier];
     [self addSubview:self.collectionView];
 }
 
@@ -169,10 +169,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     NSString *identifier = kImageOrUnknownCellIdentifier;
     id imageURL = nil;
     if ([self.delegate respondsToSelector:@selector(imagePreviewView:assetTypeAtIndex:)]) {
-        FWImagePreviewMediaType type = [self.delegate imagePreviewView:self assetTypeAtIndex:indexPath.item];
-        if (type == FWImagePreviewMediaTypeLivePhoto) {
+        __FWImagePreviewMediaType type = [self.delegate imagePreviewView:self assetTypeAtIndex:indexPath.item];
+        if (type == __FWImagePreviewMediaTypeLivePhoto) {
             identifier = kLivePhotoCellIdentifier;
-        } else if (type == FWImagePreviewMediaTypeVideo) {
+        } else if (type == __FWImagePreviewMediaTypeVideo) {
             identifier = kVideoCellIdentifier;
         }
     } else if (self.imageURLs.count > indexPath.item) {
@@ -183,8 +183,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             identifier = kVideoCellIdentifier;
         }
     }
-    FWImagePreviewCell *cell = (FWImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    FWZoomImageView *zoomView = cell.zoomImageView;
+    __FWImagePreviewCell *cell = (__FWImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    __FWZoomImageView *zoomView = cell.zoomImageView;
     zoomView.delegate = self;
     
     // 因为 cell 复用的问题，很可能此时会显示一张错误的图片，因此这里要清空所有图片的显示
@@ -221,12 +221,12 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    FWImagePreviewCell *previewCell = (FWImagePreviewCell *)cell;
+    __FWImagePreviewCell *previewCell = (__FWImagePreviewCell *)cell;
     [previewCell.zoomImageView revertZooming];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    FWImagePreviewCell *previewCell = (FWImagePreviewCell *)cell;
+    __FWImagePreviewCell *previewCell = (__FWImagePreviewCell *)cell;
     [previewCell.zoomImageView endPlayingVideo];
 }
 
@@ -248,7 +248,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     
     // 自动播放视频
     if (self.autoplayVideo && self.isChangingIndexWhenScrolling) {
-        FWZoomImageView *zoomImageView = [self zoomImageViewAtIndex:self.currentImageIndex];
+        __FWZoomImageView *zoomImageView = [self zoomImageViewAtIndex:self.currentImageIndex];
         if (zoomImageView && zoomImageView.videoPlayerItem) {
             [zoomImageView playVideo];
         }
@@ -297,50 +297,50 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     self.previousIndexWhenScrolling = index;
 }
 
-- (NSInteger)indexForZoomImageView:(FWZoomImageView *)zoomImageView {
-    if ([zoomImageView.superview.superview isKindOfClass:[FWImagePreviewCell class]]) {
-        return [self.collectionView indexPathForCell:(FWImagePreviewCell *)zoomImageView.superview.superview].item;
+- (NSInteger)indexForZoomImageView:(__FWZoomImageView *)zoomImageView {
+    if ([zoomImageView.superview.superview isKindOfClass:[__FWImagePreviewCell class]]) {
+        return [self.collectionView indexPathForCell:(__FWImagePreviewCell *)zoomImageView.superview.superview].item;
     }
     return NSNotFound;
 }
 
-- (FWZoomImageView *)zoomImageViewAtIndex:(NSInteger)index {
-    FWImagePreviewCell *cell = (FWImagePreviewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+- (__FWZoomImageView *)zoomImageViewAtIndex:(NSInteger)index {
+    __FWImagePreviewCell *cell = (__FWImagePreviewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
     return cell.zoomImageView;
 }
 
-- (FWZoomImageView *)currentZoomImageView {
+- (__FWZoomImageView *)currentZoomImageView {
     return [self zoomImageViewAtIndex:self.currentImageIndex];
 }
 
-#pragma mark - <FWZoomImageViewDelegate>
+#pragma mark - <__FWZoomImageViewDelegate>
 
-- (void)singleTouchInZoomingImageView:(FWZoomImageView *)imageView location:(CGPoint)location {
+- (void)singleTouchInZoomingImageView:(__FWZoomImageView *)imageView location:(CGPoint)location {
     [self.previewController dismissingWhenTapped:imageView];
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate singleTouchInZoomingImageView:imageView location:location];
     }
 }
 
-- (void)doubleTouchInZoomingImageView:(FWZoomImageView *)imageView location:(CGPoint)location {
+- (void)doubleTouchInZoomingImageView:(__FWZoomImageView *)imageView location:(CGPoint)location {
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate doubleTouchInZoomingImageView:imageView location:location];
     }
 }
 
-- (void)longPressInZoomingImageView:(FWZoomImageView *)imageView {
+- (void)longPressInZoomingImageView:(__FWZoomImageView *)imageView {
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate longPressInZoomingImageView:imageView];
     }
 }
 
-- (void)zoomImageView:(FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide {
+- (void)zoomImageView:(__FWZoomImageView *)imageView didHideVideoToolbar:(BOOL)didHide {
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate zoomImageView:imageView didHideVideoToolbar:didHide];
     }
 }
 
-- (void)zoomImageView:(FWZoomImageView *)imageView customContentView:(__kindof UIView *)contentView {
+- (void)zoomImageView:(__FWZoomImageView *)imageView customContentView:(__kindof UIView *)contentView {
     if ([self.delegate respondsToSelector:_cmd]) {
         [self.delegate zoomImageView:imageView customContentView:contentView];
     } else if (self.customZoomContentView) {
@@ -348,7 +348,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
 }
 
-- (BOOL)enabledZoomViewInZoomImageView:(FWZoomImageView *)imageView {
+- (BOOL)enabledZoomViewInZoomImageView:(__FWZoomImageView *)imageView {
     if ([self.delegate respondsToSelector:_cmd]) {
         return [self.delegate enabledZoomViewInZoomImageView:imageView];
     }
@@ -357,21 +357,21 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 @end
 
-#pragma mark - FWImagePreviewController
+#pragma mark - __FWImagePreviewController
 
-const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
+const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
-@interface FWImagePreviewController ()
+@interface __FWImagePreviewController ()
 
 @property(nonatomic, strong) UIPanGestureRecognizer *dismissingGesture;
 @property(nonatomic, assign) CGPoint gestureBeganLocation;
-@property(nonatomic, weak) FWZoomImageView *gestureZoomImageView;
+@property(nonatomic, weak) __FWZoomImageView *gestureZoomImageView;
 @property(nonatomic, assign) BOOL originalStatusBarHidden;
 @property(nonatomic, assign) BOOL statusBarHidden;
 
 @end
 
-@implementation FWImagePreviewController
+@implementation __FWImagePreviewController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
@@ -388,12 +388,12 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)didInitialize {
-    self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
+    self.sourceImageCornerRadius = __FWImagePreviewCornerRadiusAutomaticDimension;
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;
     
     // present style
-    self.transitioningAnimator = [[FWImagePreviewTransitionAnimator alloc] init];
+    self.transitioningAnimator = [[__FWImagePreviewTransitionAnimator alloc] init];
     self.modalPresentationStyle = UIModalPresentationCustom;
     self.modalPresentationCapturesStatusBarAppearance = YES;
     self.transitioningDelegate = self;
@@ -407,9 +407,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 @synthesize imagePreviewView = _imagePreviewView;
-- (FWImagePreviewView *)imagePreviewView {
+- (__FWImagePreviewView *)imagePreviewView {
     if (!_imagePreviewView) {
-        _imagePreviewView = [[FWImagePreviewView alloc] initWithFrame:self.isViewLoaded ? self.view.bounds : CGRectZero];
+        _imagePreviewView = [[__FWImagePreviewView alloc] initWithFrame:self.isViewLoaded ? self.view.bounds : CGRectZero];
         _imagePreviewView.previewController = self;
     }
     return _imagePreviewView;
@@ -474,18 +474,18 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     [self resetDismissingGesture];
 }
 
-- (void)setPresentingStyle:(FWImagePreviewTransitioningStyle)presentingStyle {
+- (void)setPresentingStyle:(__FWImagePreviewTransitioningStyle)presentingStyle {
     _presentingStyle = presentingStyle;
     self.dismissingStyle = presentingStyle;
 }
 
-- (void)setTransitioningAnimator:(__kindof FWImagePreviewTransitionAnimator *)transitioningAnimator {
+- (void)setTransitioningAnimator:(__kindof __FWImagePreviewTransitionAnimator *)transitioningAnimator {
     _transitioningAnimator = transitioningAnimator;
     transitioningAnimator.imagePreviewViewController = self;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    if (self.fw_visibleState < FWViewControllerVisibleStateDidAppear || self.fw_visibleState >= FWViewControllerVisibleStateDidDisappear) {
+    if (self.fw_visibleState < __FWViewControllerVisibleStateDidAppear || self.fw_visibleState >= __FWViewControllerVisibleStateDidDisappear) {
         // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
         if (self.presentingViewController) {
             BOOL statusBarHidden = NO;
@@ -625,7 +625,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     self.view.backgroundColor = self.backgroundColor;
 }
 
-- (void)dismissingWhenTapped:(FWZoomImageView *)zoomImageView {
+- (void)dismissingWhenTapped:(__FWZoomImageView *)zoomImageView {
     if (!self.fw_isPresented) return;
     
     BOOL shouldDismiss = NO;
@@ -640,7 +640,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)dismissingGestureChanged:(BOOL)isHidden {
-    FWZoomImageView *zoomImageView = self.imagePreviewView.currentZoomImageView;
+    __FWZoomImageView *zoomImageView = self.imagePreviewView.currentZoomImageView;
     if (zoomImageView.videoPlayerItem) {
         if (zoomImageView.showsVideoToolbar) zoomImageView.videoToolbar.alpha = isHidden ? 0 : 1;
         if (zoomImageView.showsVideoCloseButton) zoomImageView.videoCloseButton.alpha = isHidden ? 0 : 1;
@@ -670,9 +670,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 @end
 
-#pragma mark - FWImagePreviewTransitionAnimator
+#pragma mark - __FWImagePreviewTransitionAnimator
 
-@implementation FWImagePreviewTransitionAnimator
+@implementation __FWImagePreviewTransitionAnimator
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -681,15 +681,15 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
         _cornerRadiusMaskLayer = [CALayer layer];
         self.cornerRadiusMaskLayer.backgroundColor = [UIColor whiteColor].CGColor;
         
-        self.animationEnteringBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+        self.animationEnteringBlock = ^(__kindof __FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, __FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, __FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
             
             UIView *previewView = animator.imagePreviewViewController.view;
             
-            if (style == FWImagePreviewTransitioningStyleFade) {
+            if (style == __FWImagePreviewTransitioningStyleFade) {
                 
                 previewView.alpha = isPresenting ? 0 : 1;
                 
-            } else if (style == FWImagePreviewTransitioningStyleZoom) {
+            } else if (style == __FWImagePreviewTransitioningStyleZoom) {
                 
                 CGRect contentViewFrame = [previewView convertRect:zoomImageView.contentViewRect fromView:nil];
                 CGPoint contentViewCenterInZoomImageView = CGPointMake(CGRectGetMidX(zoomImageView.contentViewRect), CGRectGetMidY(zoomImageView.contentViewRect));
@@ -734,7 +734,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
                 
                 NSInteger sourceImageIndex = animator.imagePreviewViewController.imagePreviewView.currentImageIndex;
                 CGFloat cornerRadius = MAX(animator.imagePreviewViewController.sourceImageCornerRadius, 0);
-                if (animator.imagePreviewViewController.sourceImageCornerRadius == FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView) {
+                if (animator.imagePreviewViewController.sourceImageCornerRadius == __FWImagePreviewCornerRadiusAutomaticDimension && animator.imagePreviewViewController.sourceImageView) {
                     UIView *sourceImageView = animator.imagePreviewViewController.sourceImageView(sourceImageIndex);
                     if ([sourceImageView isKindOfClass:[UIView class]]) {
                         cornerRadius = sourceImageView.layer.cornerRadius;
@@ -780,15 +780,15 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             };
         };
         
-        self.animationBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
-            if (style == FWImagePreviewTransitioningStyleFade) {
+        self.animationBlock = ^(__kindof __FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, __FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, __FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+            if (style == __FWImagePreviewTransitioningStyleFade) {
                 animator.imagePreviewViewController.view.alpha = isPresenting ? 1 : 0;
-            } else if (style == FWImagePreviewTransitioningStyleZoom) {
+            } else if (style == __FWImagePreviewTransitioningStyleZoom) {
                 animator.imagePreviewViewController.view.backgroundColor = isPresenting ? animator.imagePreviewViewController.backgroundColor : UIColor.clearColor;
             }
         };
         
-        self.animationCompletionBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
+        self.animationCompletionBlock = ^(__kindof __FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, __FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, __FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
             
             // 由于支持 zoom presenting 和 fade dismissing 搭配使用，所以这里不管是哪种 style 都要做相同的清理工作
             
@@ -819,10 +819,10 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     UIViewController *presentingViewController = isPresenting ? fromViewController : toViewController;
     BOOL shouldAppearanceTransitionManually = self.imagePreviewViewController.modalPresentationStyle != UIModalPresentationFullScreen;// 触发背后界面的生命周期，从而配合屏幕旋转那边做一些强制旋转的操作
     
-    FWImagePreviewTransitioningStyle style = isPresenting ? self.imagePreviewViewController.presentingStyle : self.imagePreviewViewController.dismissingStyle;
+    __FWImagePreviewTransitioningStyle style = isPresenting ? self.imagePreviewViewController.presentingStyle : self.imagePreviewViewController.dismissingStyle;
     CGRect sourceImageRect = CGRectZero;
     NSInteger currentImageIndex = self.imagePreviewViewController.imagePreviewView.currentImageIndex;
-    if (style == FWImagePreviewTransitioningStyleZoom) {
+    if (style == __FWImagePreviewTransitioningStyleZoom) {
         if (self.imagePreviewViewController.sourceImageRect) {
             sourceImageRect = [self.imagePreviewViewController.view convertRect:self.imagePreviewViewController.sourceImageRect(currentImageIndex) fromView:nil];
         } else if (self.imagePreviewViewController.sourceImageView) {
@@ -839,7 +839,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             sourceImageRect = CGRectZero;
         }*/
     }
-    style = style == FWImagePreviewTransitioningStyleZoom && CGRectEqualToRect(sourceImageRect, CGRectZero) ? FWImagePreviewTransitioningStyleFade : style;// zoom 类型一定需要有个非 zero 的 sourceImageRect，否则不知道动画的起点/终点，所以当不存在 sourceImageRect 时强制改为用 fade 动画
+    style = style == __FWImagePreviewTransitioningStyleZoom && CGRectEqualToRect(sourceImageRect, CGRectZero) ? __FWImagePreviewTransitioningStyleFade : style;// zoom 类型一定需要有个非 zero 的 sourceImageRect，否则不知道动画的起点/终点，所以当不存在 sourceImageRect 时强制改为用 fade 动画
     
     UIView *containerView = transitionContext.containerView;
     UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
@@ -848,7 +848,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
     [toView setNeedsLayout];
     [toView layoutIfNeeded];// present 时 toViewController 还没走到 viewDidLayoutSubviews，此时做动画可能得到不正确的布局，所以强制布局一次
-    FWZoomImageView *zoomImageView = [self.imagePreviewViewController.imagePreviewView zoomImageViewAtIndex:currentImageIndex];
+    __FWZoomImageView *zoomImageView = [self.imagePreviewViewController.imagePreviewView zoomImageViewAtIndex:currentImageIndex];
     
     toView.frame = containerView.bounds;
     if (isPresenting) {
@@ -884,9 +884,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 @end
 
-#pragma mark - FWCollectionViewPagingLayout
+#pragma mark - __FWCollectionViewPagingLayout
 
-@interface FWCollectionViewPagingLayout () {
+@interface __FWCollectionViewPagingLayout () {
     CGFloat _maximumScale;
     CGFloat _minimumScale;
     CGSize _finalItemSize;
@@ -895,9 +895,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 @end
 
-@implementation FWCollectionViewPagingLayout
+@implementation __FWCollectionViewPagingLayout
 
-- (instancetype)initWithStyle:(FWCollectionViewPagingLayoutStyle)style {
+- (instancetype)initWithStyle:(__FWCollectionViewPagingLayoutStyle)style {
     if (self = [super init]) {
         _style = style;
         self.velocityForEnsurePageDown = 0.4;
@@ -914,7 +914,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (instancetype)init {
-    return [self initWithStyle:FWCollectionViewPagingLayoutStyleDefault];
+    return [self initWithStyle:__FWCollectionViewPagingLayoutStyleDefault];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -932,14 +932,14 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
-    if (self.style == FWCollectionViewPagingLayoutStyleScale) {
+    if (self.style == __FWCollectionViewPagingLayoutStyleScale) {
         return YES;
     }
     return !CGSizeEqualToSize(self.collectionView.bounds.size, newBounds.size);
 }
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect {
-    if (self.style == FWCollectionViewPagingLayoutStyleDefault) {
+    if (self.style == __FWCollectionViewPagingLayoutStyleDefault) {
         return [super layoutAttributesForElementsInRect:rect];
     }
     
@@ -947,7 +947,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     CGFloat offset = CGRectGetMidX(self.collectionView.bounds);// 当前滚动位置的可视区域的中心点
     CGSize itemSize = _finalItemSize;
     
-    if (self.style == FWCollectionViewPagingLayoutStyleScale) {
+    if (self.style == __FWCollectionViewPagingLayoutStyleScale) {
         
         CGFloat distanceForMinimumScale = itemSize.width + self.minimumLineSpacing;
         CGFloat distanceForMaximumScale = 0.0;

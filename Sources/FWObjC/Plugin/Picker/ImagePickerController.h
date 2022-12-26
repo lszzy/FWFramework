@@ -136,7 +136,7 @@ NS_SWIFT_NAME(ImageAlbumController)
 
 @class FWImageCropController;
 @class FWImagePickerController;
-@class FWImagePreviewController;
+@class __FWImagePreviewController;
 @class FWImagePickerPreviewController;
 @class FWImagePickerPreviewCollectionCell;
 
@@ -175,7 +175,7 @@ NS_SWIFT_NAME(ImagePickerPreviewControllerDelegate)
 @end
 
 NS_SWIFT_NAME(ImagePickerPreviewController)
-@interface FWImagePickerPreviewController : FWImagePreviewController <UICollectionViewDataSource, UICollectionViewDelegate, FWImagePreviewViewDelegate>
+@interface FWImagePickerPreviewController : __FWImagePreviewController <UICollectionViewDataSource, UICollectionViewDelegate, __FWImagePreviewViewDelegate>
 
 @property(nullable, nonatomic, weak) id<FWImagePickerPreviewControllerDelegate> delegate;
 /// 自定义裁剪控制器句柄，优先级低于delegate
