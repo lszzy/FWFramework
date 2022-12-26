@@ -95,60 +95,60 @@ extension Wrapper where Base: UIScrollView {
 extension Wrapper where Base: UIScrollView {
     
     public func addPullRefresh(block: @escaping () -> Void) {
-        base.__fw_addPullRefresh(block)
+        base.fw_addPullRefresh(block: block)
     }
     
     public func addPullRefresh(target: Any, action: Selector) {
-        base.__fw_addPullRefresh(withTarget: target, action: action)
+        base.fw_addPullRefresh(target: target, action: action)
     }
     
     public func triggerPullRefresh() {
-        base.__fw_triggerPullRefresh()
+        base.fw_triggerPullRefresh()
     }
 
     public var pullRefreshView: PullRefreshView? {
-        return base.__fw_pullRefreshView
+        return base.fw_pullRefreshView
     }
     
     public var pullRefreshHeight: CGFloat {
-        get { return base.__fw_pullRefreshHeight }
-        set { base.__fw_pullRefreshHeight = newValue }
+        get { return base.fw_pullRefreshHeight }
+        set { base.fw_pullRefreshHeight = newValue }
     }
     
     public var showPullRefresh: Bool {
-        get { return base.__fw_showPullRefresh }
-        set { base.__fw_showPullRefresh = newValue }
+        get { return base.fw_showPullRefresh }
+        set { base.fw_showPullRefresh = newValue }
     }
     
     public func addInfiniteScroll(block: @escaping () -> Void) {
-        base.__fw_addInfiniteScroll(block)
+        base.fw_addInfiniteScroll(block: block)
     }
     
     public func addInfiniteScroll(target: Any, action: Selector) {
-        base.__fw_addInfiniteScroll(withTarget: target, action: action)
+        base.fw_addInfiniteScroll(target: target, action: action)
     }
     
     public func triggerInfiniteScroll() {
-        base.__fw_triggerInfiniteScroll()
+        base.fw_triggerInfiniteScroll()
     }
 
     public var infiniteScrollView: InfiniteScrollView? {
-        return base.__fw_infiniteScrollView
+        return base.fw_infiniteScrollView
     }
     
     public var infiniteScrollHeight: CGFloat {
-        get { return base.__fw_infiniteScrollHeight }
-        set { base.__fw_infiniteScrollHeight = newValue }
+        get { return base.fw_infiniteScrollHeight }
+        set { base.fw_infiniteScrollHeight = newValue }
     }
     
     public var showInfiniteScroll: Bool {
-        get { return base.__fw_showInfiniteScroll }
-        set { base.__fw_showInfiniteScroll = newValue }
+        get { return base.fw_showInfiniteScroll }
+        set { base.fw_showInfiniteScroll = newValue }
     }
     
     public var infiniteScrollFinished: Bool {
-        get { return base.__fw_infiniteScrollFinished }
-        set { base.__fw_infiniteScrollFinished = newValue }
+        get { return base.fw_infiniteScrollFinished }
+        set { base.fw_infiniteScrollFinished = newValue }
     }
     
 }

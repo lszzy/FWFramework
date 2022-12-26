@@ -7,6 +7,16 @@
 
 #import "RefreshPluginImpl.h"
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - __FWRefreshPluginImpl
 
 @implementation __FWRefreshPluginImpl
