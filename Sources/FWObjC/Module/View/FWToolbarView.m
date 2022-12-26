@@ -6,7 +6,7 @@
 //
 
 #import "FWToolbarView.h"
-#import "FWViewPluginImpl.h"
+#import "ViewPluginImpl.h"
 #import "Swizzle.h"
 #import <objc/runtime.h>
 
