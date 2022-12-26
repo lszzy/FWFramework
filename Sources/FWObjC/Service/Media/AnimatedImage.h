@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-#import "FWImagePlugin.h"
+#import "ImagePlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

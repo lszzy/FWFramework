@@ -7,7 +7,7 @@
 
 #import "FWBannerView.h"
 #import "FWPageControl.h"
-#import "FWImagePlugin.h"
+#import "ImagePlugin.h"
 #import "FWStatisticalManager.h"
 
 #if FWMacroSPM

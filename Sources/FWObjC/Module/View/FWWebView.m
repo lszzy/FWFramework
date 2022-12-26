@@ -7,7 +7,7 @@
 
 #import "FWWebView.h"
 #import "Bridge.h"
-#import "FWAlertPlugin.h"
+#import "AlertPlugin.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
