@@ -1850,7 +1850,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 #pragma mark - FWImagePickerController
 
-@interface FWImagePickerController () <FWToolbarTitleViewDelegate>
+@interface FWImagePickerController () <__FWToolbarTitleViewDelegate>
 
 @property(nonatomic, strong) FWImagePickerPreviewController *imagePickerPreviewController;
 @property(nonatomic, weak) FWImageAlbumController *albumController;
@@ -1887,7 +1887,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     _toolBarPaddingHorizontal = 16;
     _showsDefaultLoading = YES;
     
-    FWToolbarTitleView *titleView = [[FWToolbarTitleView alloc] init];
+    __FWToolbarTitleView *titleView = [[__FWToolbarTitleView alloc] init];
     _titleView = titleView;
     titleView.delegate = self;
     self.extendedLayoutIncludesOpaqueBars = YES;
@@ -2381,9 +2381,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
 }
 
-#pragma mark - FWToolbarTitleViewDelegate
+#pragma mark - __FWToolbarTitleViewDelegate
 
-- (void)didTouchTitleView:(FWToolbarTitleView *)titleView isActive:(BOOL)isActive {
+- (void)didTouchTitleView:(__FWToolbarTitleView *)titleView isActive:(BOOL)isActive {
     if (isActive) {
         [self showAlbumControllerAnimated:YES];
     } else {

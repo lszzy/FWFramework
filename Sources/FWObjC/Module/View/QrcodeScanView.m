@@ -7,13 +7,13 @@
 
 #import "QrcodeScanView.h"
 
-@interface FWQrcodeScanManager () <AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
+@interface __FWQrcodeScanManager () <AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 
 @end
 
-@implementation FWQrcodeScanManager
+@implementation __FWQrcodeScanManager
 
 #pragma mark - Scan
 
@@ -278,7 +278,7 @@
 
 @end
 
-@interface FWQrcodeScanView ()
+@interface __FWQrcodeScanView ()
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) NSTimer *timer;
@@ -286,7 +286,7 @@
 
 @end
 
-@implementation FWQrcodeScanView
+@implementation __FWQrcodeScanView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -306,11 +306,11 @@
 
 - (void)initialization
 {
-    _scanAnimationStyle = FWQrcodeScanAnimationStyleDefault;
+    _scanAnimationStyle = __FWQrcodeScanAnimationStyleDefault;
     _borderColor = [UIColor whiteColor];
     _borderFrame = CGRectMake(0.15 * self.frame.size.width, 0.5 * (self.frame.size.height - 0.7 * self.frame.size.width), 0.7 * self.frame.size.width, 0.7 * self.frame.size.width);
     _borderWidth = 0.2;
-    _cornerLocation = FWQrcodeCornerLocationDefault;
+    _cornerLocation = __FWQrcodeCornerLocationDefault;
     _cornerColor = [UIColor colorWithRed:85/255.0f green:183/255.0 blue:55/255.0 alpha:1.0];
     _cornerWidth = 2.0;
     _cornerLength = 20;
@@ -369,11 +369,11 @@
     
     CGFloat insideExcess = fabs(0.5 * (self.cornerWidth - borderLineW));
     CGFloat outsideExcess = 0.5 * (borderLineW + self.cornerWidth);
-    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
+    if (self.cornerLocation == __FWQrcodeCornerLocationInside) {
         [leftTopPath moveToPoint:CGPointMake(borderX + insideExcess, borderY + cornerLength + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
+    } else if (self.cornerLocation == __FWQrcodeCornerLocationOutside) {
         [leftTopPath moveToPoint:CGPointMake(borderX - outsideExcess, borderY + cornerLength - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY - outsideExcess)];
@@ -390,11 +390,11 @@
     leftBottomPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
+    if (self.cornerLocation == __FWQrcodeCornerLocationInside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - cornerLength - insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
+    } else if (self.cornerLocation == __FWQrcodeCornerLocationOutside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
@@ -411,11 +411,11 @@
     rightTopPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
+    if (self.cornerLocation == __FWQrcodeCornerLocationInside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + cornerLength + insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
+    } else if (self.cornerLocation == __FWQrcodeCornerLocationOutside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + cornerLength - outsideExcess)];
@@ -432,11 +432,11 @@
     rightBottomPath.lineWidth = self.cornerWidth;
     [self.cornerColor set];
     
-    if (self.cornerLocation == FWQrcodeCornerLocationInside) {
+    if (self.cornerLocation == __FWQrcodeCornerLocationInside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - cornerLength - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + borderH - insideExcess)];
-    } else if (self.cornerLocation == FWQrcodeCornerLocationOutside) {
+    } else if (self.cornerLocation == __FWQrcodeCornerLocationOutside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY + borderH + outsideExcess)];
@@ -459,7 +459,7 @@
     CGFloat scanninglineY = 0;
     CGFloat scanninglineW = 0;
     CGFloat scanninglineH = 0;
-    if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
+    if (self.scanAnimationStyle == __FWQrcodeScanAnimationStyleGrid) {
         [self addSubview:self.contentView];
         [_contentView addSubview:self.scanningline];
         scanninglineW = self.borderFrame.size.width;
@@ -493,7 +493,7 @@
     static BOOL flag = YES;
     
     __weak typeof(self) weakSelf = self;
-    if (self.scanAnimationStyle == FWQrcodeScanAnimationStyleGrid) {
+    if (self.scanAnimationStyle == __FWQrcodeScanAnimationStyleGrid) {
         if (flag) {
             frame.origin.y = - self.borderFrame.size.height;
             flag = NO;

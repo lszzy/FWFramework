@@ -60,15 +60,15 @@
 
 #endif
 
-#pragma mark - FWToolbarView
+#pragma mark - __FWToolbarView
 
-@interface FWToolbarView ()
+@interface __FWToolbarView ()
 
 @property (nonatomic, assign) BOOL isLandscape;
 
 @end
 
-@implementation FWToolbarView
+@implementation __FWToolbarView
 
 @synthesize topView = _topView;
 @synthesize bottomView = _bottomView;
@@ -78,12 +78,12 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self didInitializeWithType:FWToolbarViewTypeDefault];
+        [self didInitializeWithType:__FWToolbarViewTypeDefault];
     }
     return self;
 }
 
-- (instancetype)initWithType:(FWToolbarViewType)type {
+- (instancetype)initWithType:(__FWToolbarViewType)type {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         [self didInitializeWithType:type];
@@ -91,13 +91,13 @@
     return self;
 }
 
-- (void)didInitializeWithType:(FWToolbarViewType)type {
+- (void)didInitializeWithType:(__FWToolbarViewType)type {
     _type = type;
     _backgroundView = [[UIImageView alloc] init];
     _backgroundView.clipsToBounds = YES;
-    _menuView = [[FWToolbarMenuView alloc] init];
-    _menuView.equalWidth = (type == FWToolbarViewTypeTabBar);
-    _menuView.titleView = (type == FWToolbarViewTypeNavBar) ? [FWToolbarTitleView new] : nil;
+    _menuView = [[__FWToolbarMenuView alloc] init];
+    _menuView.equalWidth = (type == __FWToolbarViewTypeTabBar);
+    _menuView.titleView = (type == __FWToolbarViewTypeNavBar) ? [__FWToolbarTitleView new] : nil;
     [self updateHeight:YES];
 
     [self addSubview:self.backgroundView];
@@ -111,21 +111,21 @@
 
 - (void)updateHeight:(BOOL)isFirst {
     switch (self.type) {
-        case FWToolbarViewTypeNavBar: {
+        case __FWToolbarViewTypeNavBar: {
             _topHeight = UIScreen.fw_statusBarHeight;
             _menuHeight = UIScreen.fw_navigationBarHeight;
             break;
         }
-        case FWToolbarViewTypeTabBar: {
+        case __FWToolbarViewTypeTabBar: {
             _menuHeight = UIScreen.fw_tabBarHeight - UIScreen.fw_safeAreaInsets.bottom;
             _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
             break;
         }
-        case FWToolbarViewTypeCustom: {
+        case __FWToolbarViewTypeCustom: {
             if (isFirst) _menuHeight = 44;
             break;
         }
-        case FWToolbarViewTypeDefault:
+        case __FWToolbarViewTypeDefault:
         default: {
             _menuHeight = UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
             _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
@@ -275,15 +275,15 @@
 
 @end
 
-#pragma mark - FWToolbarMenuView
+#pragma mark - __FWToolbarMenuView
 
-@interface FWToolbarMenuView ()
+@interface __FWToolbarMenuView ()
 
 @property (nonatomic, strong) NSMutableArray *subviewContraints;
 
 @end
 
-@implementation FWToolbarMenuView
+@implementation __FWToolbarMenuView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -346,31 +346,31 @@
     [self setNeedsUpdateConstraints];
 }
 
-- (FWToolbarTitleView *)titleView
+- (__FWToolbarTitleView *)titleView
 {
-    if ([self.centerButton isKindOfClass:[FWToolbarTitleView class]]) {
-        return (FWToolbarTitleView *)self.centerButton;
+    if ([self.centerButton isKindOfClass:[__FWToolbarTitleView class]]) {
+        return (__FWToolbarTitleView *)self.centerButton;
     }
     return nil;
 }
 
-- (void)setTitleView:(FWToolbarTitleView *)titleView
+- (void)setTitleView:(__FWToolbarTitleView *)titleView
 {
     self.centerButton = titleView;
 }
 
 - (NSString *)title
 {
-    if ([self.centerButton conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
-        return ((id<FWTitleViewProtocol>)self.centerButton).title;
+    if ([self.centerButton conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+        return ((id<__FWTitleViewProtocol>)self.centerButton).title;
     }
     return nil;
 }
 
 - (void)setTitle:(NSString *)title
 {
-    if ([self.centerButton conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
-        ((id<FWTitleViewProtocol>)self.centerButton).title = title;
+    if ([self.centerButton conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+        ((id<__FWTitleViewProtocol>)self.centerButton).title = title;
     }
 }
 
@@ -471,9 +471,9 @@
 
 @end
 
-#pragma mark - FWToolbarTitleView
+#pragma mark - __FWToolbarTitleView
 
-@interface FWToolbarTitleView () <FWTitleViewProtocol>
+@interface __FWToolbarTitleView () <__FWTitleViewProtocol>
 
 @property(nonatomic, strong, readonly) UIView *contentView;
 @property(nonatomic, assign) CGSize titleLabelSize;
@@ -482,7 +482,7 @@
 
 @end
 
-@implementation FWToolbarTitleView
+@implementation __FWToolbarTitleView
 
 #pragma mark - Static
 
@@ -491,7 +491,7 @@
     dispatch_once(&onceToken, ^{
         __FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             UIView *titleView = selfObject.topItem.titleView;
-            if (![titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+            if (![titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
                 __FWSwizzleOriginal();
                 return;
             }
@@ -517,23 +517,23 @@
         __FWSwizzleClass(UIViewController, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
             __FWSwizzleOriginal(title);
             
-            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
-                ((id<FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
+            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                ((id<__FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
             }
         }));
         
         __FWSwizzleClass(UINavigationItem, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
             __FWSwizzleOriginal(title);
             
-            if ([selfObject.titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
-                ((id<FWTitleViewProtocol>)selfObject.titleView).title = title;
+            if ([selfObject.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                ((id<__FWTitleViewProtocol>)selfObject.titleView).title = title;
             }
         }));
         
-        __FWSwizzleClass(UINavigationItem, @selector(setTitleView:), __FWSwizzleReturn(void), __FWSwizzleArgs(UIView<FWTitleViewProtocol> *titleView), __FWSwizzleCode({
+        __FWSwizzleClass(UINavigationItem, @selector(setTitleView:), __FWSwizzleReturn(void), __FWSwizzleArgs(UIView<__FWTitleViewProtocol> *titleView), __FWSwizzleCode({
             __FWSwizzleOriginal(titleView);
             
-            if ([titleView conformsToProtocol:@protocol(FWTitleViewProtocol)]) {
+            if ([titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
                 if (titleView.title.length <= 0) {
                     titleView.title = selfObject.title;
                 }
@@ -550,7 +550,7 @@
 }
 
 + (void)setDefaultAppearance {
-    FWToolbarTitleView *appearance = [FWToolbarTitleView appearance];
+    __FWToolbarTitleView *appearance = [__FWToolbarTitleView appearance];
     appearance.adjustsTintColor = YES;
     appearance.maximumWidth = CGFLOAT_MAX;
     appearance.loadingViewSize = CGSizeMake(18, 18);
@@ -568,14 +568,14 @@
 #pragma mark - Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self initWithStyle:FWToolbarTitleViewStyleHorizontal frame:frame];
+    return [self initWithStyle:__FWToolbarTitleViewStyleHorizontal frame:frame];
 }
 
-- (instancetype)initWithStyle:(FWToolbarTitleViewStyle)style {
+- (instancetype)initWithStyle:(__FWToolbarTitleViewStyle)style {
     return [self initWithStyle:style frame:CGRectZero];
 }
 
-- (instancetype)initWithStyle:(FWToolbarTitleViewStyle)style frame:(CGRect)frame {
+- (instancetype)initWithStyle:(__FWToolbarTitleViewStyle)style frame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addTarget:self action:@selector(titleViewTouched) forControlEvents:UIControlEventTouchUpInside];
         
@@ -615,9 +615,9 @@
 
 #pragma mark - Accessor
 
-- (void)setStyle:(FWToolbarTitleViewStyle)style {
+- (void)setStyle:(__FWToolbarTitleViewStyle)style {
     _style = style;
-    if (style == FWToolbarTitleViewStyleVertical) {
+    if (style == __FWToolbarTitleViewStyleVertical) {
         self.titleLabel.font = self.verticalTitleFont;
         self.subtitleLabel.font = self.verticalSubtitleFont;
     } else {
@@ -669,7 +669,7 @@
 
 - (void)setHorizontalTitleFont:(UIFont *)horizontalTitleFont {
     _horizontalTitleFont = horizontalTitleFont;
-    if (self.style == FWToolbarTitleViewStyleHorizontal) {
+    if (self.style == __FWToolbarTitleViewStyleHorizontal) {
         self.titleLabel.font = horizontalTitleFont;
         [self refreshLayout];
     }
@@ -677,7 +677,7 @@
 
 - (void)setHorizontalSubtitleFont:(UIFont *)horizontalSubtitleFont {
     _horizontalSubtitleFont = horizontalSubtitleFont;
-    if (self.style == FWToolbarTitleViewStyleHorizontal) {
+    if (self.style == __FWToolbarTitleViewStyleHorizontal) {
         self.subtitleLabel.font = horizontalSubtitleFont;
         [self refreshLayout];
     }
@@ -685,7 +685,7 @@
 
 - (void)setVerticalTitleFont:(UIFont *)verticalTitleFont {
     _verticalTitleFont = verticalTitleFont;
-    if (self.style == FWToolbarTitleViewStyleVertical) {
+    if (self.style == __FWToolbarTitleViewStyleVertical) {
         self.titleLabel.font = verticalTitleFont;
         [self refreshLayout];
     }
@@ -693,7 +693,7 @@
 
 - (void)setVerticalSubtitleFont:(UIFont *)verticalSubtitleFont {
     _verticalSubtitleFont = verticalSubtitleFont;
-    if (self.style == FWToolbarTitleViewStyleVertical) {
+    if (self.style == __FWToolbarTitleViewStyleVertical) {
         self.subtitleLabel.font = verticalSubtitleFont;
         [self refreshLayout];
     }
@@ -772,7 +772,7 @@
 }
 
 - (void)updateSubAccessoryViewHidden {
-    if (self.subAccessoryView && self.subtitleLabel.text.length && self.style == FWToolbarTitleViewStyleVertical) {
+    if (self.subAccessoryView && self.subtitleLabel.text.length && self.style == __FWToolbarTitleViewStyleVertical) {
         self.subAccessoryView.hidden = NO;
     } else {
         self.subAccessoryView.hidden = YES;
@@ -944,7 +944,7 @@
 }
 
 - (CGSize)contentSize {
-    if (self.style == FWToolbarTitleViewStyleVertical) {
+    if (self.style == __FWToolbarTitleViewStyleVertical) {
         CGSize size = CGSizeZero;
         CGFloat firstLineWidth = [self firstLineWidthInVerticalStyle];
         CGFloat secondLineWidth = [self secondLineWidthInVerticalStyle];
@@ -995,7 +995,7 @@
     UIEdgeInsets titleEdgeInsets = self.titleEdgeInsetsIfShowingTitleLabel;
     UIEdgeInsets subtitleEdgeInsets = self.subtitleEdgeInsetsIfShowingSubtitleLabel;
     
-    if (self.style == FWToolbarTitleViewStyleVertical) {
+    if (self.style == __FWToolbarTitleViewStyleVertical) {
         CGFloat firstLineWidth = [self firstLineWidthInVerticalStyle];
         CGFloat firstLineMinX = 0;
         CGFloat firstLineMaxX = 0;
@@ -1131,9 +1131,9 @@
 
 @end
 
-#pragma mark - FWToolbarButton
+#pragma mark - __FWToolbarButton
 
-@interface FWToolbarButton()
+@interface __FWToolbarButton()
 
 @property (nonatomic, strong) UIImage *highlightedImage;
 @property (nonatomic, strong) UIImage *disabledImage;
@@ -1141,14 +1141,14 @@
 
 @end
 
-@implementation FWToolbarButton
+@implementation __FWToolbarButton
 
 + (instancetype)buttonWithObject:(id)object target:(id)target action:(SEL)action {
-    FWToolbarButton *button;
+    __FWToolbarButton *button;
     if ([object isKindOfClass:[UIImage class]]) {
-        button = [[FWToolbarButton alloc] initWithImage:(UIImage *)object];
+        button = [[__FWToolbarButton alloc] initWithImage:(UIImage *)object];
     } else {
-        button = [[FWToolbarButton alloc] initWithTitle:object];
+        button = [[__FWToolbarButton alloc] initWithTitle:object];
     }
     if (target && action) {
         [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
@@ -1157,11 +1157,11 @@
 }
 
 + (instancetype)buttonWithObject:(id)object block:(void (^)(id))block {
-    FWToolbarButton *button;
+    __FWToolbarButton *button;
     if ([object isKindOfClass:[UIImage class]]) {
-        button = [[FWToolbarButton alloc] initWithImage:(UIImage *)object];
+        button = [[__FWToolbarButton alloc] initWithImage:(UIImage *)object];
     } else {
-        button = [[FWToolbarButton alloc] initWithTitle:object];
+        button = [[__FWToolbarButton alloc] initWithTitle:object];
     }
     if (block) [button fw_addTouchWithBlock:block];
     return button;

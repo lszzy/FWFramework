@@ -8,17 +8,17 @@
 #import "TagCollectionView.h"
 #import "StatisticalManager.h"
 
-@interface FWTagCollectionView () <FWStatisticalDelegate>
+@interface __FWTagCollectionView () <__FWStatisticalDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign) BOOL needsLayoutTagViews;
 @property (nonatomic, assign) NSUInteger actualNumberOfLines;
-@property (nonatomic, copy) FWStatisticalClickCallback clickCallback;
-@property (nonatomic, copy) FWStatisticalExposureCallback exposureCallback;
+@property (nonatomic, copy) __FWStatisticalClickCallback clickCallback;
+@property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 @property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 @end
 
-@implementation FWTagCollectionView
+@implementation __FWTagCollectionView
 
 #pragma mark - Init
 
@@ -90,7 +90,7 @@
 }
 
 - (NSInteger)indexOfTagAt:(CGPoint)point {
-    // We expect the point to be a point wrt to the FWTagCollectionView.
+    // We expect the point to be a point wrt to the __FWTagCollectionView.
     // so convert this point first to a point wrt to the container view.
     CGPoint convertedPoint = [self convertPoint:point toView:_containerView];
     for (NSUInteger i = 0; i < [self.dataSource numberOfTagsInTagCollectionView:self]; i++) {
@@ -181,7 +181,7 @@
         return;
     }
     
-    if (_scrollDirection == FWTagCollectionScrollDirectionVertical) {
+    if (_scrollDirection == __FWTagCollectionScrollDirectionVertical) {
         [self layoutTagViewsForVerticalDirection];
     } else {
         [self layoutTagViewsForHorizontalDirection];
@@ -341,31 +341,31 @@
         __block CGFloat currentLineX = 0;
         
         switch (_alignment) {
-            case FWTagCollectionAlignmentLeft:
+            case __FWTagCollectionAlignmentLeft:
                 currentLineXOffset = _contentInset.left;
                 break;
-            case FWTagCollectionAlignmentCenter:
+            case __FWTagCollectionAlignmentCenter:
                 currentLineXOffset = (maxLineWidth - currentLineWidth) / 2 + _contentInset.left;
                 break;
-            case FWTagCollectionAlignmentRight:
+            case __FWTagCollectionAlignmentRight:
                 currentLineXOffset = maxLineWidth - currentLineWidth + _contentInset.left;
                 break;
-            case FWTagCollectionAlignmentFillByExpandingSpace:
+            case __FWTagCollectionAlignmentFillByExpandingSpace:
                 currentLineXOffset = _contentInset.left;
                 acturalHorizontalSpacing = _horizontalSpacing +
                 (maxLineWidth - currentLineWidth) / (CGFloat)(currentLineTagsCount - 1);
                 currentLineWidth = maxLineWidth;
                 break;
-            case FWTagCollectionAlignmentFillByExpandingWidth:
-            case FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine:
+            case __FWTagCollectionAlignmentFillByExpandingWidth:
+            case __FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine:
                 currentLineXOffset = _contentInset.left;
                 currentLineAdditionWidth = (maxLineWidth - currentLineWidth) / (CGFloat)currentLineTagsCount;
                 currentLineWidth = maxLineWidth;
                 
-                if (_alignment == FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine &&
+                if (_alignment == __FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine &&
                     currentLine == numberOfLines - 1 &&
                     numberOfLines != 1) {
-                    // Reset last line width for FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine
+                    // Reset last line width for __FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine
                     currentLineAdditionWidth = 0;
                 }
                 
@@ -384,7 +384,7 @@
             origin.y = currentYBase + (currentLineMaxHeight - tagSize.height) / 2;
             
             tagSize.width += currentLineAdditionWidth;
-            if (self.scrollDirection == FWTagCollectionScrollDirectionVertical && tagSize.width > maxLineWidth) {
+            if (self.scrollDirection == __FWTagCollectionScrollDirectionVertical && tagSize.width > maxLineWidth) {
                 tagSize.width = maxLineWidth;
             }
             
@@ -431,12 +431,12 @@
     return _scrollView;
 }
 
-- (void)setScrollDirection:(FWTagCollectionScrollDirection)scrollDirection {
+- (void)setScrollDirection:(__FWTagCollectionScrollDirection)scrollDirection {
     _scrollDirection = scrollDirection;
     [self setNeedsLayoutTagViews];
 }
 
-- (void)setAlignment:(FWTagCollectionAlignment)alignment {
+- (void)setAlignment:(__FWTagCollectionAlignment)alignment {
     _alignment = alignment;
     [self setNeedsLayoutTagViews];
 }
@@ -447,7 +447,7 @@
 }
 
 - (NSUInteger)actualNumberOfLines {
-    if (_scrollDirection == FWTagCollectionScrollDirectionHorizontal) {
+    if (_scrollDirection == __FWTagCollectionScrollDirectionHorizontal) {
         return _numberOfLines;
     } else {
         return _actualNumberOfLines;
@@ -500,13 +500,13 @@
     return _scrollView.showsVerticalScrollIndicator;
 }
 
-#pragma mark - FWStatisticalDelegate
+#pragma mark - __FWStatisticalDelegate
 
-- (void)statisticalClickWithCallback:(FWStatisticalClickCallback)callback {
+- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback {
     self.clickCallback = callback;
 }
 
-- (void)statisticalExposureWithCallback:(FWStatisticalExposureCallback)callback {
+- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
     self.exposureCallback = callback;
     
     [self statisticalExposureDidChange];
@@ -529,9 +529,9 @@
 
 @end
 
-#pragma mark - FWTextTagConfig
+#pragma mark - __FWTextTagConfig
 
-@implementation FWTextTagConfig
+@implementation __FWTextTagConfig
 
 - (instancetype)init {
     self = [super init];
@@ -583,7 +583,7 @@
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    FWTextTagConfig *newConfig = [FWTextTagConfig new];
+    __FWTextTagConfig *newConfig = [__FWTextTagConfig new];
     newConfig.textFont = [_textFont copyWithZone:zone];
     newConfig.selectedTextFont = _selectedTextFont ? [_selectedTextFont copyWithZone:zone] : nil;
     
@@ -638,28 +638,28 @@
 
 @end
 
-#pragma mark - FWTagGradientLabel
+#pragma mark - __FWTagGradientLabel
 
-@interface FWTagGradientLabel: UILabel
+@interface __FWTagGradientLabel: UILabel
 @end
 
-@implementation FWTagGradientLabel
+@implementation __FWTagGradientLabel
 + (Class)layerClass {
     return [CAGradientLayer class];
 }
 @end
 
-#pragma mark - FWTextTagLabel
+#pragma mark - __FWTextTagLabel
 
 // UILabel wrapper for round corner and shadow at the same time.
-@interface FWTextTagLabel : UIView
-@property (nonatomic, strong) FWTextTagConfig *config;
-@property (nonatomic, strong) FWTagGradientLabel *label;
+@interface __FWTextTagLabel : UIView
+@property (nonatomic, strong) __FWTextTagConfig *config;
+@property (nonatomic, strong) __FWTagGradientLabel *label;
 @property (nonatomic, strong) CAShapeLayer *borderLayer;
 @property (assign, nonatomic) BOOL selected;
 @end
 
-@implementation FWTextTagLabel
+@implementation __FWTextTagLabel
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -670,7 +670,7 @@
 }
 
 - (void)commonInit {
-    _label = [[FWTagGradientLabel alloc] initWithFrame:self.bounds];
+    _label = [[__FWTagGradientLabel alloc] initWithFrame:self.bounds];
     _label.textAlignment = NSTextAlignmentCenter;
     _label.userInteractionEnabled = YES;
     [self addSubview:_label];
@@ -830,14 +830,14 @@
 
 @end
 
-#pragma mark - FWTextTagCollectionView
+#pragma mark - __FWTextTagCollectionView
 
-@interface FWTextTagCollectionView () <FWTagCollectionViewDataSource, FWTagCollectionViewDelegate, FWStatisticalDelegate>
-@property (strong, nonatomic) NSMutableArray <FWTextTagLabel *> *tagLabels;
-@property (strong, nonatomic) FWTagCollectionView *tagCollectionView;
+@interface __FWTextTagCollectionView () <__FWTagCollectionViewDataSource, __FWTagCollectionViewDelegate, __FWStatisticalDelegate>
+@property (strong, nonatomic) NSMutableArray <__FWTextTagLabel *> *tagLabels;
+@property (strong, nonatomic) __FWTagCollectionView *tagCollectionView;
 @end
 
-@implementation FWTextTagCollectionView
+@implementation __FWTextTagCollectionView
 
 #pragma mark - Init
 
@@ -869,9 +869,9 @@
     _enableTagSelection = YES;
     _tagLabels = [NSMutableArray new];
     
-    _defaultConfig = [FWTextTagConfig new];
+    _defaultConfig = [__FWTextTagConfig new];
     
-    _tagCollectionView = [[FWTagCollectionView alloc] initWithFrame:self.bounds];
+    _tagCollectionView = [[__FWTagCollectionView alloc] initWithFrame:self.bounds];
     _tagCollectionView.delegate = self;
     _tagCollectionView.dataSource = self;
     _tagCollectionView.horizontalSpacing = 8;
@@ -912,7 +912,7 @@
     [self insertTag:tag atIndex:_tagLabels.count];
 }
 
-- (void)addTag:(NSString *)tag withConfig:(FWTextTagConfig *)config {
+- (void)addTag:(NSString *)tag withConfig:(__FWTextTagConfig *)config {
     [self insertTag:tag atIndex:_tagLabels.count withConfig:config];
 }
 
@@ -920,7 +920,7 @@
     [self insertTags:tags atIndex:_tagLabels.count withConfig:_defaultConfig copyConfig:NO];
 }
 
-- (void)addTags:(NSArray<NSString *> *)tags withConfig:(FWTextTagConfig *)config {
+- (void)addTags:(NSArray<NSString *> *)tags withConfig:(__FWTextTagConfig *)config {
     [self insertTags:tags atIndex:_tagLabels.count withConfig:config copyConfig:YES];
 }
 
@@ -930,7 +930,7 @@
     }
 }
 
-- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config {
+- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config {
     if ([tag isKindOfClass:[NSString class]]) {
         [self insertTags:@[tag] atIndex:index withConfig:config copyConfig:YES];
     }
@@ -940,12 +940,12 @@
     [self insertTags:tags atIndex:index withConfig:_defaultConfig copyConfig:NO];
 }
 
-- (void)insertTags:(NSArray<NSString *> *)tags atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config {
+- (void)insertTags:(NSArray<NSString *> *)tags atIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config {
     [self insertTags:tags atIndex:index withConfig:config copyConfig:YES];
 }
 
-- (void)insertTags:(NSArray<NSString *> *)tags atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config copyConfig:(BOOL)copyConfig {
-    if (![tags isKindOfClass:[NSArray class]] || index > _tagLabels.count || ![config isKindOfClass:[FWTextTagConfig class]]) {
+- (void)insertTags:(NSArray<NSString *> *)tags atIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config copyConfig:(BOOL)copyConfig {
+    if (![tags isKindOfClass:[NSArray class]] || index > _tagLabels.count || ![config isKindOfClass:[__FWTextTagConfig class]]) {
         return;
     }
     
@@ -955,7 +955,7 @@
     
     NSMutableArray *newTagLabels = [NSMutableArray new];
     for (NSString *tagText in tags) {
-        FWTextTagLabel *label = [self newLabelForTagText:[tagText description] withConfig:config];
+        __FWTextTagLabel *label = [self newLabelForTagText:[tagText description] withConfig:config];
         [newTagLabels addObject:label];
     }
     [_tagLabels insertObjects:newTagLabels atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(index, newTagLabels.count)]];
@@ -968,7 +968,7 @@
     }
     
     NSMutableArray *labelsToRemoved = [NSMutableArray new];
-    for (FWTextTagLabel *label in _tagLabels) {
+    for (__FWTextTagLabel *label in _tagLabels) {
         if ([label.label.text isEqualToString:tag]) {
             [labelsToRemoved addObject:label];
         }
@@ -1000,8 +1000,8 @@
     [self reload];
 }
 
-- (void)setTagAtIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config {
-    if (index >= _tagLabels.count || ![config isKindOfClass:[FWTextTagConfig class]]) {
+- (void)setTagAtIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config {
+    if (index >= _tagLabels.count || ![config isKindOfClass:[__FWTextTagConfig class]]) {
         return;
     }
     
@@ -1009,14 +1009,14 @@
     [self reload];
 }
 
-- (void)setTagsInRange:(NSRange)range withConfig:(FWTextTagConfig *)config {
-    if (NSMaxRange(range) > _tagLabels.count || ![config isKindOfClass:[FWTextTagConfig class]]) {
+- (void)setTagsInRange:(NSRange)range withConfig:(__FWTextTagConfig *)config {
+    if (NSMaxRange(range) > _tagLabels.count || ![config isKindOfClass:[__FWTextTagConfig class]]) {
         return;
     }
     
     NSArray *tagLabels = [_tagLabels subarrayWithRange:range];
     config = [config copy];
-    for (FWTextTagLabel *label in tagLabels) {
+    for (__FWTextTagLabel *label in tagLabels) {
         label.config = config;
     }
     [self reload];
@@ -1033,14 +1033,14 @@
 - (NSArray<NSString *> *)getTagsInRange:(NSRange)range {
     NSMutableArray *tags = [NSMutableArray new];
     if (NSMaxRange(range) <= _tagLabels.count) {
-        for (FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
+        for (__FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
             [tags addObject:[label.label.text copy]];
         }
     }
     return [tags copy];
 }
 
-- (FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index {
+- (__FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index {
     if (index < _tagLabels.count) {
         return [_tagLabels[index].config copy];
     } else {
@@ -1048,10 +1048,10 @@
     }
 }
 
-- (NSArray<FWTextTagConfig *> *)getConfigsInRange:(NSRange)range {
+- (NSArray<__FWTextTagConfig *> *)getConfigsInRange:(NSRange)range {
     NSMutableArray *configs = [NSMutableArray new];
     if (NSMaxRange(range) <= _tagLabels.count) {
-        for (FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
+        for (__FWTextTagLabel *label in [_tagLabels subarrayWithRange:range]) {
             [configs addObject:[label.config copy]];
         }
     }
@@ -1061,7 +1061,7 @@
 - (NSArray <NSString *> *)allTags {
     NSMutableArray *allTags = [NSMutableArray new];
     
-    for (FWTextTagLabel *label in _tagLabels) {
+    for (__FWTextTagLabel *label in _tagLabels) {
         [allTags addObject:[label.label.text copy]];
     }
     
@@ -1071,7 +1071,7 @@
 - (NSArray <NSString *> *)allSelectedTags {
     NSMutableArray *allTags = [NSMutableArray new];
     
-    for (FWTextTagLabel *label in _tagLabels) {
+    for (__FWTextTagLabel *label in _tagLabels) {
         if (label.selected) {
             [allTags addObject:[label.label.text copy]];
         }
@@ -1083,7 +1083,7 @@
 - (NSArray <NSString *> *)allNotSelectedTags {
     NSMutableArray *allTags = [NSMutableArray new];
     
-    for (FWTextTagLabel *label in _tagLabels) {
+    for (__FWTextTagLabel *label in _tagLabels) {
         if (!label.selected) {
             [allTags addObject:[label.label.text copy]];
         }
@@ -1093,27 +1093,27 @@
 }
 
 - (NSInteger)indexOfTagAt:(CGPoint)point {
-    // We expect the point to be a point wrt to the FWTextTagCollectionView.
-    // so convert this point first to a point wrt to the FWTagCollectionView.
+    // We expect the point to be a point wrt to the __FWTextTagCollectionView.
+    // so convert this point first to a point wrt to the __FWTagCollectionView.
     CGPoint convertedPoint = [self convertPoint:point toView:_tagCollectionView];
     return [_tagCollectionView indexOfTagAt:convertedPoint];
 }
 
-#pragma mark - FWTagCollectionViewDataSource
+#pragma mark - __FWTagCollectionViewDataSource
 
-- (NSUInteger)numberOfTagsInTagCollectionView:(FWTagCollectionView *)tagCollectionView {
+- (NSUInteger)numberOfTagsInTagCollectionView:(__FWTagCollectionView *)tagCollectionView {
     return _tagLabels.count;
 }
 
-- (UIView *)tagCollectionView:(FWTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index {
+- (UIView *)tagCollectionView:(__FWTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index {
     return _tagLabels[index];
 }
 
-#pragma mark - FWTagCollectionViewDelegate
+#pragma mark - __FWTagCollectionViewDelegate
 
-- (BOOL)tagCollectionView:(FWTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index {
+- (BOOL)tagCollectionView:(__FWTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index {
     if (_enableTagSelection) {
-        FWTextTagLabel *label = _tagLabels[index];
+        __FWTextTagLabel *label = _tagLabels[index];
         
         if ([self.delegate respondsToSelector:@selector(textTagCollectionView:canTapTag:atIndex:currentSelected:tagConfig:)]) {
             return [self.delegate textTagCollectionView:self canTapTag:(label.label.text ?: @"") atIndex:index currentSelected:label.selected tagConfig:label.config];
@@ -1125,9 +1125,9 @@
     }
 }
 
-- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index {
+- (void)tagCollectionView:(__FWTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index {
     if (_enableTagSelection) {
-        FWTextTagLabel *label = _tagLabels[index];
+        __FWTextTagLabel *label = _tagLabels[index];
         
         if (!label.selected && _selectionLimit > 0 && [self allSelectedTags].count + 1 > _selectionLimit) {
             return;
@@ -1135,8 +1135,8 @@
         
         label.selected = !label.selected;
         
-        if (self.alignment == FWTagCollectionAlignmentFillByExpandingWidth ||
-            self.alignment == FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine) {
+        if (self.alignment == __FWTagCollectionAlignmentFillByExpandingWidth ||
+            self.alignment == __FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine) {
             [self reload];
         } else {
             [self updateStyleAndFrameForLabel:label];
@@ -1148,11 +1148,11 @@
     }
 }
 
-- (CGSize)tagCollectionView:(FWTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index {
+- (CGSize)tagCollectionView:(__FWTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index {
     return _tagLabels[index].frame.size;
 }
 
-- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize {
+- (void)tagCollectionView:(__FWTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize {
     if ([_delegate respondsToSelector:@selector(textTagCollectionView:updateContentSize:)]) {
         [_delegate textTagCollectionView:self updateContentSize:contentSize];
     }
@@ -1184,19 +1184,19 @@
     return _tagCollectionView.contentSize;
 }
 
-- (FWTagCollectionScrollDirection)scrollDirection {
+- (__FWTagCollectionScrollDirection)scrollDirection {
     return _tagCollectionView.scrollDirection;
 }
 
-- (void)setScrollDirection:(FWTagCollectionScrollDirection)scrollDirection {
+- (void)setScrollDirection:(__FWTagCollectionScrollDirection)scrollDirection {
     _tagCollectionView.scrollDirection = scrollDirection;
 }
 
-- (FWTagCollectionAlignment)alignment {
+- (__FWTagCollectionAlignment)alignment {
     return _tagCollectionView.alignment;
 }
 
-- (void)setAlignment:(FWTagCollectionAlignment)alignment {
+- (void)setAlignment:(__FWTagCollectionAlignment)alignment {
     _tagCollectionView.alignment = alignment;
 }
 
@@ -1271,17 +1271,17 @@
 #pragma mark - Private methods
 
 - (void)updateAllLabelStyleAndFrame {
-    for (FWTextTagLabel *label in _tagLabels) {
+    for (__FWTextTagLabel *label in _tagLabels) {
         [self updateStyleAndFrameForLabel:label];
     }
 }
 
-- (void)updateStyleAndFrameForLabel:(FWTextTagLabel *)label {
+- (void)updateStyleAndFrameForLabel:(__FWTextTagLabel *)label {
     // Update content style
     [label updateContentStyle];
     // Width limit for vertical scroll direction
     CGSize maxSize = CGSizeZero;
-    if (self.scrollDirection == FWTagCollectionScrollDirectionVertical &&
+    if (self.scrollDirection == __FWTagCollectionScrollDirectionVertical &&
         CGRectGetWidth(self.bounds) > 0) {
         maxSize.width = (CGRectGetWidth(self.bounds) - self.contentInset.left - self.contentInset.right);
     }
@@ -1289,20 +1289,20 @@
     [label updateFrameWithMaxSize:maxSize];
 }
 
-- (FWTextTagLabel *)newLabelForTagText:(NSString *)tagText withConfig:(FWTextTagConfig *)config {
-    FWTextTagLabel *label = [FWTextTagLabel new];
+- (__FWTextTagLabel *)newLabelForTagText:(NSString *)tagText withConfig:(__FWTextTagConfig *)config {
+    __FWTextTagLabel *label = [__FWTextTagLabel new];
     label.label.text = tagText;
     label.config = config;
     return label;
 }
 
-#pragma mark - FWStatisticalDelegate
+#pragma mark - __FWStatisticalDelegate
 
-- (void)statisticalClickWithCallback:(FWStatisticalClickCallback)callback {
+- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback {
     [self.tagCollectionView statisticalClickWithCallback:callback];
 }
 
-- (void)statisticalExposureWithCallback:(FWStatisticalExposureCallback)callback {
+- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
     [self.tagCollectionView statisticalExposureWithCallback:callback];
 }
 

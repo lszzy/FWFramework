@@ -164,7 +164,7 @@ NS_SWIFT_NAME(BannerView)
 /** 其他分页控件小圆标图片 */
 @property (nonatomic, strong, nullable) UIImage *pageDotImage;
 
-/** 其他分页控件自定义视图类，默认FWDotView */
+/** 其他分页控件自定义视图类，默认__FWDotView */
 @property (nonatomic, nullable) Class pageDotViewClass;
 
 /** 轮播文字label字体颜色 */

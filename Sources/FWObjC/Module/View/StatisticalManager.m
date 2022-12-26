@@ -36,30 +36,30 @@
 
 #endif
 
-#pragma mark - FWStatistical
+#pragma mark - __FWStatistical
 
-NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTriggeredNotification";
+NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatisticalEventTriggeredNotification";
 
-@interface UIView (FWStatisticalInternal)
+@interface UIView (__FWStatisticalInternal)
 
 + (void)fw_enableStatistical;
 
 @end
 
-@interface FWStatisticalManager ()
+@interface __FWStatisticalManager ()
 
 @property (nonatomic, strong) NSMutableDictionary *eventHandlers;
 
 @end
 
-@implementation FWStatisticalManager
+@implementation __FWStatisticalManager
 
 + (instancetype)sharedInstance
 {
-    static FWStatisticalManager *instance = nil;
+    static __FWStatisticalManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWStatisticalManager alloc] init];
+        instance = [[__FWStatisticalManager alloc] init];
     });
     return instance;
 }
@@ -80,14 +80,14 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
     if (enabled) [UIView fw_enableStatistical];
 }
 
-- (void)registerEvent:(NSString *)name withHandler:(FWStatisticalBlock)handler
+- (void)registerEvent:(NSString *)name withHandler:(__FWStatisticalBlock)handler
 {
     [self.eventHandlers setObject:handler forKey:name];
 }
 
-- (void)handleEvent:(FWStatisticalObject *)object
+- (void)handleEvent:(__FWStatisticalObject *)object
 {
-    FWStatisticalBlock eventHandler = [self.eventHandlers objectForKey:object.name];
+    __FWStatisticalBlock eventHandler = [self.eventHandlers objectForKey:object.name];
     if (eventHandler) {
         eventHandler(object);
     }
@@ -95,13 +95,13 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
         self.globalHandler(object);
     }
     if (self.notificationEnabled) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:__FWStatisticalEventTriggeredNotification object:object userInfo:object.userInfo];
     }
 }
 
 @end
 
-@interface FWStatisticalObject ()
+@interface __FWStatisticalObject ()
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) id object;
@@ -116,7 +116,7 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 
 @end
 
-@implementation FWStatisticalObject
+@implementation __FWStatisticalObject
 
 - (instancetype)initWithName:(NSString *)name
 {
@@ -141,7 +141,7 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    FWStatisticalObject *object = [[[self class] allocWithZone:zone] init];
+    __FWStatisticalObject *object = [[[self class] allocWithZone:zone] init];
     object.name = [self.name copy];
     object.object = self.object;
     object.userInfo = [self.userInfo copy];
@@ -154,27 +154,27 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 
 @end
 
-#pragma mark - UIView+FWStatistical
+#pragma mark - UIView+__FWStatistical
 
-@implementation UIView (FWStatistical)
+@implementation UIView (__FWStatistical)
 
-- (FWStatisticalObject *)fw_statisticalClick
+- (__FWStatisticalObject *)fw_statisticalClick
 {
     return objc_getAssociatedObject(self, @selector(fw_statisticalClick));
 }
 
-- (void)setFw_statisticalClick:(FWStatisticalObject *)statisticalClick
+- (void)setFw_statisticalClick:(__FWStatisticalObject *)statisticalClick
 {
     objc_setAssociatedObject(self, @selector(fw_statisticalClick), statisticalClick, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self fw_statisticalClickRegister];
 }
 
-- (FWStatisticalBlock)fw_statisticalClickBlock
+- (__FWStatisticalBlock)fw_statisticalClickBlock
 {
     return objc_getAssociatedObject(self, @selector(fw_statisticalClickBlock));
 }
 
-- (void)setFw_statisticalClickBlock:(FWStatisticalBlock)statisticalClickBlock
+- (void)setFw_statisticalClickBlock:(__FWStatisticalBlock)statisticalClickBlock
 {
     objc_setAssociatedObject(self, @selector(fw_statisticalClickBlock), statisticalClickBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [self fw_statisticalClickRegister];
@@ -196,20 +196,20 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
         return;
     }
     
-    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
         [self respondsToSelector:@selector(statisticalClickWithCallback:)]) {
         __weak UIView *weakBase = self;
-        [(id<FWStatisticalDelegate>)self statisticalClickWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
+        [(id<__FWStatisticalDelegate>)self statisticalClickWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
             [weakBase fw_statisticalTriggerClick:cell indexPath:indexPath];
         }];
         return;
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
-        __FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"FWStatisticalManager", __FWSwizzleType(NSObject<UITableViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), __FWSwizzleCode({
+        __FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"__FWStatisticalManager", __FWSwizzleType(NSObject<UITableViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), __FWSwizzleCode({
             __FWSwizzleOriginal(tableView, indexPath);
             
-            if (![selfObject fw_isSwizzleInstanceMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![selfObject fw_isSwizzleInstanceMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"__FWStatisticalManager"]) return;
             if (![tableView fw_statisticalClickIsRegistered]) return;
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [tableView fw_statisticalTriggerClick:cell indexPath:indexPath];
@@ -218,10 +218,10 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
     }
     
     if ([self isKindOfClass:[UICollectionView class]]) {
-        __FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"FWStatisticalManager", __FWSwizzleType(NSObject<UICollectionViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), __FWSwizzleCode({
+        __FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"__FWStatisticalManager", __FWSwizzleType(NSObject<UICollectionViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), __FWSwizzleCode({
             __FWSwizzleOriginal(collectionView, indexPath);
             
-            if (![selfObject fw_isSwizzleInstanceMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"FWStatisticalManager"]) return;
+            if (![selfObject fw_isSwizzleInstanceMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"__FWStatisticalManager"]) return;
             if (![collectionView fw_statisticalClickIsRegistered]) return;
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
             [collectionView fw_statisticalTriggerClick:cell indexPath:indexPath];
@@ -259,9 +259,9 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 {
     if (!self.superview) return;
     UIView *proxyView = nil;
-    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
         [self respondsToSelector:@selector(statisticalCellProxyView)]) {
-        proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        proxyView = [(id<__FWStatisticalDelegate>)self statisticalCellProxyView];
     } else {
         proxyView = [self isKindOfClass:[UITableViewCell class]] ? [((UITableViewCell *)self) fw_tableView] : [((UICollectionViewCell *)self) fw_collectionView];
     }
@@ -283,8 +283,8 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 
 - (void)fw_statisticalTriggerClick:(UIView *)cell indexPath:(NSIndexPath *)indexPath
 {
-    FWStatisticalObject *object = cell.fw_statisticalClick ?: self.fw_statisticalClick;
-    if (!object) object = [FWStatisticalObject new];
+    __FWStatisticalObject *object = cell.fw_statisticalClick ?: self.fw_statisticalClick;
+    if (!object) object = [__FWStatisticalObject new];
     if (object.triggerIgnored) return;
     NSInteger triggerCount = [self fw_statisticalClickCount:indexPath];
     if (triggerCount > 1 && object.triggerOnce) return;
@@ -301,7 +301,7 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
         self.fw_statisticalClickBlock(object);
     }
     if (cell.fw_statisticalClick || self.fw_statisticalClick) {
-        [[FWStatisticalManager sharedInstance] handleEvent:object];
+        [[__FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
 
@@ -319,10 +319,10 @@ NSNotificationName const FWStatisticalEventTriggeredNotification = @"FWStatistic
 
 @end
 
-typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
-    FWStatisticalExposureStateNone,
-    FWStatisticalExposureStatePartly,
-    FWStatisticalExposureStateFully,
+typedef NS_ENUM(NSInteger, __FWStatisticalExposureState) {
+    __FWStatisticalExposureStateNone,
+    __FWStatisticalExposureStatePartly,
+    __FWStatisticalExposureStateFully,
 };
 
 @implementation UIView (FWExposure)
@@ -387,23 +387,23 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
 #pragma mark - Exposure
 
-- (FWStatisticalObject *)fw_statisticalExposure
+- (__FWStatisticalObject *)fw_statisticalExposure
 {
     return objc_getAssociatedObject(self, @selector(fw_statisticalExposure));
 }
 
-- (void)setFw_statisticalExposure:(FWStatisticalObject *)statisticalExposure
+- (void)setFw_statisticalExposure:(__FWStatisticalObject *)statisticalExposure
 {
     objc_setAssociatedObject(self, @selector(fw_statisticalExposure), statisticalExposure, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self fw_statisticalExposureRegister];
 }
 
-- (FWStatisticalBlock)fw_statisticalExposureBlock
+- (__FWStatisticalBlock)fw_statisticalExposureBlock
 {
     return objc_getAssociatedObject(self, @selector(fw_statisticalExposureBlock));
 }
 
-- (void)setFw_statisticalExposureBlock:(FWStatisticalBlock)statisticalExposureBlock
+- (void)setFw_statisticalExposureBlock:(__FWStatisticalBlock)statisticalExposureBlock
 {
     objc_setAssociatedObject(self, @selector(fw_statisticalExposureBlock), statisticalExposureBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
     [self fw_statisticalExposureRegister];
@@ -449,10 +449,10 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
 - (BOOL)fw_statisticalExposureCustom
 {
-    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
         [self respondsToSelector:@selector(statisticalExposureWithCallback:)]) {
         __weak UIView *weakBase = self;
-        [(id<FWStatisticalDelegate>)self statisticalExposureWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath, NSTimeInterval duration) {
+        [(id<__FWStatisticalDelegate>)self statisticalExposureWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath, NSTimeInterval duration) {
             if ([weakBase fw_statisticalExposureFullyState:[weakBase fw_statisticalExposureState]]) {
                 [weakBase fw_statisticalTriggerExposure:cell indexPath:indexPath duration:duration];
             }
@@ -462,15 +462,15 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     return NO;
 }
 
-- (FWStatisticalExposureState)fw_statisticalExposureState
+- (__FWStatisticalExposureState)fw_statisticalExposureState
 {
     if (!self.fw_isViewVisible) {
-        return FWStatisticalExposureStateNone;
+        return __FWStatisticalExposureStateNone;
     }
     
     UIViewController *viewController = self.fw_viewController;
     if (viewController && (!viewController.view.window || viewController.presentedViewController)) {
-        return FWStatisticalExposureStateNone;
+        return __FWStatisticalExposureStateNone;
     }
     
     UIView *targetView = viewController.view ?: self.window;
@@ -484,21 +484,21 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         superview = superview.superview;
     }
     if (superviewHidden) {
-        return FWStatisticalExposureStateNone;
+        return __FWStatisticalExposureStateNone;
     }
     
     CGRect viewRect = [self convertRect:self.bounds toView:targetView];
     viewRect = CGRectMake(floor(viewRect.origin.x), floor(viewRect.origin.y), floor(viewRect.size.width), floor(viewRect.size.height));
     CGRect targetRect = targetView.bounds;
-    FWStatisticalExposureState state = FWStatisticalExposureStateNone;
+    __FWStatisticalExposureState state = __FWStatisticalExposureStateNone;
     if (!CGRectIsEmpty(viewRect)) {
         if (CGRectContainsRect(targetRect, viewRect)) {
-            state = FWStatisticalExposureStateFully;
+            state = __FWStatisticalExposureStateFully;
         } else if (CGRectIntersectsRect(targetRect, viewRect)) {
-            state = FWStatisticalExposureStatePartly;
+            state = __FWStatisticalExposureStatePartly;
         }
     }
-    if (state == FWStatisticalExposureStateNone) {
+    if (state == __FWStatisticalExposureStateNone) {
         return state;
     }
     
@@ -514,9 +514,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     CGRect shieldRect = [shieldView convertRect:shieldView.bounds toView:targetView];
     if (!CGRectIsEmpty(shieldRect)) {
         if (CGRectContainsRect(shieldRect, viewRect)) {
-            return FWStatisticalExposureStateNone;
+            return __FWStatisticalExposureStateNone;
         } else if (CGRectIntersectsRect(shieldRect, viewRect)) {
-            return FWStatisticalExposureStatePartly;
+            return __FWStatisticalExposureStatePartly;
         }
     }
     return state;
@@ -532,8 +532,8 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         if (oldIdentifier.length < 1) [self fw_statisticalExposureCustom];
     }
     
-    FWStatisticalExposureState oldState = [objc_getAssociatedObject(self, @selector(fw_statisticalExposureState)) integerValue];
-    FWStatisticalExposureState state = [self fw_statisticalExposureState];
+    __FWStatisticalExposureState oldState = [objc_getAssociatedObject(self, @selector(fw_statisticalExposureState)) integerValue];
+    __FWStatisticalExposureState state = [self fw_statisticalExposureState];
     if (state == oldState && !identifierChanged) return;
     objc_setAssociatedObject(self, @selector(fw_statisticalExposureState), @(state), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
@@ -548,16 +548,16 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         } else {
             [self fw_statisticalTriggerExposure:nil indexPath:nil duration:0];
         }
-    } else if (state == FWStatisticalExposureStateNone || identifierChanged) {
+    } else if (state == __FWStatisticalExposureStateNone || identifierChanged) {
         [self setFw_statisticalExposureIsFully:NO];
     }
 }
 
-- (BOOL)fw_statisticalExposureFullyState:(FWStatisticalExposureState)state
+- (BOOL)fw_statisticalExposureFullyState:(__FWStatisticalExposureState)state
 {
-    BOOL isFullyState = (state == FWStatisticalExposureStateFully);
-    if (!isFullyState && FWStatisticalManager.sharedInstance.exposurePartly) {
-        isFullyState = (state == FWStatisticalExposureStatePartly);
+    BOOL isFullyState = (state == __FWStatisticalExposureStateFully);
+    if (!isFullyState && __FWStatisticalManager.sharedInstance.exposurePartly) {
+        isFullyState = (state == __FWStatisticalExposureStatePartly);
     }
     return isFullyState;
 }
@@ -579,7 +579,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
     
     if (self.fw_statisticalExposure || self.fw_statisticalExposureBlock || [self fw_statisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self.fw_innerStatisticalTarget selector:@selector(statisticalExposureCalculate) object:nil];
-        [self.fw_innerStatisticalTarget performSelector:@selector(statisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
+        [self.fw_innerStatisticalTarget performSelector:@selector(statisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[__FWStatisticalManager.sharedInstance.runLoopMode]];
     }
 }
 
@@ -587,9 +587,9 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 {
     if (!self.superview) return;
     UIView *proxyView = nil;
-    if ([self conformsToProtocol:@protocol(FWStatisticalDelegate)] &&
+    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
         [self respondsToSelector:@selector(statisticalCellProxyView)]) {
-        proxyView = [(id<FWStatisticalDelegate>)self statisticalCellProxyView];
+        proxyView = [(id<__FWStatisticalDelegate>)self statisticalCellProxyView];
     } else {
         proxyView = [self isKindOfClass:[UITableViewCell class]] ? [((UITableViewCell *)self) fw_tableView] : [((UICollectionViewCell *)self) fw_collectionView];
     }
@@ -613,7 +613,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
     if (self.fw_statisticalExposure || self.fw_statisticalExposureBlock || [self fw_statisticalExposureIsProxy]) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self.fw_innerStatisticalTarget selector:@selector(statisticalExposureCalculate) object:nil];
-        [self.fw_innerStatisticalTarget performSelector:@selector(statisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[FWStatisticalManager.sharedInstance.runLoopMode]];
+        [self.fw_innerStatisticalTarget performSelector:@selector(statisticalExposureCalculate) withObject:nil afterDelay:0 inModes:@[__FWStatisticalManager.sharedInstance.runLoopMode]];
     }
     
     [self.subviews enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
@@ -659,8 +659,8 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
 
 - (void)fw_statisticalTriggerExposure:(UIView *)cell indexPath:(NSIndexPath *)indexPath duration:(NSTimeInterval)duration
 {
-    FWStatisticalObject *object = cell.fw_statisticalExposure ?: self.fw_statisticalExposure;
-    if (!object) object = [FWStatisticalObject new];
+    __FWStatisticalObject *object = cell.fw_statisticalExposure ?: self.fw_statisticalExposure;
+    if (!object) object = [__FWStatisticalObject new];
     if (object.triggerIgnored) return;
     NSInteger triggerCount = [self fw_statisticalExposureCount:indexPath];
     if (triggerCount > 1 && object.triggerOnce) return;
@@ -679,7 +679,7 @@ typedef NS_ENUM(NSInteger, FWStatisticalExposureState) {
         self.fw_statisticalExposureBlock(object);
     }
     if (cell.fw_statisticalExposure || self.fw_statisticalExposure) {
-        [[FWStatisticalManager sharedInstance] handleEvent:object];
+        [[__FWStatisticalManager sharedInstance] handleEvent:object];
     }
 }
 

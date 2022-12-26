@@ -9,73 +9,73 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FWTagCollectionView;
+@class __FWTagCollectionView;
 
 /**
  * Tags scroll direction
  */
-typedef NS_ENUM(NSInteger, FWTagCollectionScrollDirection) {
-    FWTagCollectionScrollDirectionVertical = 0, // Default
-    FWTagCollectionScrollDirectionHorizontal = 1
+typedef NS_ENUM(NSInteger, __FWTagCollectionScrollDirection) {
+    __FWTagCollectionScrollDirectionVertical = 0, // Default
+    __FWTagCollectionScrollDirectionHorizontal = 1
 } NS_SWIFT_NAME(TagCollectionScrollDirection);
 
 /**
  * Tags alignment
  */
-typedef NS_ENUM(NSInteger, FWTagCollectionAlignment) {
-    FWTagCollectionAlignmentLeft = 0,                           // Default
-    FWTagCollectionAlignmentCenter,                             // Center
-    FWTagCollectionAlignmentRight,                              // Right
-    FWTagCollectionAlignmentFillByExpandingSpace,               // Expand horizontal spacing and fill
-    FWTagCollectionAlignmentFillByExpandingWidth,               // Expand width and fill
-    FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine  // Expand width and fill, except last line
+typedef NS_ENUM(NSInteger, __FWTagCollectionAlignment) {
+    __FWTagCollectionAlignmentLeft = 0,                           // Default
+    __FWTagCollectionAlignmentCenter,                             // Center
+    __FWTagCollectionAlignmentRight,                              // Right
+    __FWTagCollectionAlignmentFillByExpandingSpace,               // Expand horizontal spacing and fill
+    __FWTagCollectionAlignmentFillByExpandingWidth,               // Expand width and fill
+    __FWTagCollectionAlignmentFillByExpandingWidthExceptLastLine  // Expand width and fill, except last line
 } NS_SWIFT_NAME(TagCollectionAlignment);
 
 /**
  * Tags delegate
  */
 NS_SWIFT_NAME(TagCollectionViewDelegate)
-@protocol FWTagCollectionViewDelegate <NSObject>
+@protocol __FWTagCollectionViewDelegate <NSObject>
 @required
-- (CGSize)tagCollectionView:(FWTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index;
+- (CGSize)tagCollectionView:(__FWTagCollectionView *)tagCollectionView sizeForTagAtIndex:(NSUInteger)index;
 
 @optional
-- (BOOL)tagCollectionView:(FWTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
+- (BOOL)tagCollectionView:(__FWTagCollectionView *)tagCollectionView shouldSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
 
-- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
+- (void)tagCollectionView:(__FWTagCollectionView *)tagCollectionView didSelectTag:(UIView *)tagView atIndex:(NSUInteger)index;
 
-- (void)tagCollectionView:(FWTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize;
+- (void)tagCollectionView:(__FWTagCollectionView *)tagCollectionView updateContentSize:(CGSize)contentSize;
 @end
 
 /**
  * Tags dataSource
  */
 NS_SWIFT_NAME(TagCollectionViewDataSource)
-@protocol FWTagCollectionViewDataSource <NSObject>
+@protocol __FWTagCollectionViewDataSource <NSObject>
 @required
-- (NSUInteger)numberOfTagsInTagCollectionView:(FWTagCollectionView *)tagCollectionView;
+- (NSUInteger)numberOfTagsInTagCollectionView:(__FWTagCollectionView *)tagCollectionView;
 
-- (UIView *)tagCollectionView:(FWTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index;
+- (UIView *)tagCollectionView:(__FWTagCollectionView *)tagCollectionView tagViewForIndex:(NSUInteger)index;
 @end
 
 /**
- FWTagCollectionView
+ __FWTagCollectionView
  
  @see https://github.com/zekunyan/TTGTagCollectionView
  */
 NS_SWIFT_NAME(TagCollectionView)
-@interface FWTagCollectionView : UIView
-@property (nonatomic, weak, nullable) id <FWTagCollectionViewDataSource> dataSource;
-@property (nonatomic, weak, nullable) id <FWTagCollectionViewDelegate> delegate;
+@interface __FWTagCollectionView : UIView
+@property (nonatomic, weak, nullable) id <__FWTagCollectionViewDataSource> dataSource;
+@property (nonatomic, weak, nullable) id <__FWTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 
 // Tags scroll direction, default is vertical.
-@property (nonatomic, assign) FWTagCollectionScrollDirection scrollDirection;
+@property (nonatomic, assign) __FWTagCollectionScrollDirection scrollDirection;
 
 // Tags layout alignment, default is left.
-@property (nonatomic, assign) FWTagCollectionAlignment alignment;
+@property (nonatomic, assign) __FWTagCollectionAlignment alignment;
 
 // Number of lines. 0 means no limit, default is 0 for vertical and 1 for horizontal.
 @property (nonatomic, assign) NSUInteger numberOfLines;
@@ -120,9 +120,9 @@ NS_SWIFT_NAME(TagCollectionView)
 
 @end
 
-/// FWTextTagConfig
+/// __FWTextTagConfig
 NS_SWIFT_NAME(TextTagConfig)
-@interface FWTextTagConfig : NSObject;
+@interface __FWTextTagConfig : NSObject;
 // Text font
 @property (strong, nonatomic) UIFont *textFont;
 @property (strong, nonatomic, nullable) UIFont *selectedTextFont;
@@ -182,34 +182,34 @@ NS_SWIFT_NAME(TextTagConfig)
 
 @end
 
-/// FWTextTagCollectionView
+/// __FWTextTagCollectionView
 
-@class FWTextTagCollectionView;
+@class __FWTextTagCollectionView;
 
 NS_SWIFT_NAME(TextTagCollectionViewDelegate)
-@protocol FWTextTagCollectionViewDelegate <NSObject>
+@protocol __FWTextTagCollectionViewDelegate <NSObject>
 @optional
 
-- (BOOL)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
+- (BOOL)textTagCollectionView:(__FWTextTagCollectionView *)textTagCollectionView
                     canTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
               currentSelected:(BOOL)currentSelected
-                    tagConfig:(FWTextTagConfig *)config;
+                    tagConfig:(__FWTextTagConfig *)config;
 
-- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
+- (void)textTagCollectionView:(__FWTextTagCollectionView *)textTagCollectionView
                     didTapTag:(NSString *)tagText
                       atIndex:(NSUInteger)index
                      selected:(BOOL)selected
-                    tagConfig:(FWTextTagConfig *)config;
+                    tagConfig:(__FWTextTagConfig *)config;
 
-- (void)textTagCollectionView:(FWTextTagCollectionView *)textTagCollectionView
+- (void)textTagCollectionView:(__FWTextTagCollectionView *)textTagCollectionView
             updateContentSize:(CGSize)contentSize;
 @end
 
 NS_SWIFT_NAME(TextTagCollectionView)
-@interface FWTextTagCollectionView : UIView
+@interface __FWTextTagCollectionView : UIView
 // Delegate
-@property (weak, nonatomic, nullable) id <FWTextTagCollectionViewDelegate> delegate;
+@property (weak, nonatomic, nullable) id <__FWTextTagCollectionViewDelegate> delegate;
 
 // Inside scrollView
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
@@ -218,13 +218,13 @@ NS_SWIFT_NAME(TextTagCollectionView)
 @property (assign, nonatomic) BOOL enableTagSelection;
 
 // Default tag config
-@property (nonatomic, strong) FWTextTagConfig *defaultConfig;
+@property (nonatomic, strong) __FWTextTagConfig *defaultConfig;
 
 // Tags scroll direction, default is vertical.
-@property (nonatomic, assign) FWTagCollectionScrollDirection scrollDirection;
+@property (nonatomic, assign) __FWTagCollectionScrollDirection scrollDirection;
 
 // Tags layout alignment, default is left.
-@property (nonatomic, assign) FWTagCollectionAlignment alignment;
+@property (nonatomic, assign) __FWTagCollectionAlignment alignment;
 
 // Number of lines. 0 means no limit, default is 0 for vertical and 1 for horizontal.
 @property (nonatomic, assign) NSUInteger numberOfLines;
@@ -268,9 +268,9 @@ NS_SWIFT_NAME(TextTagCollectionView)
 - (void)addTags:(NSArray <NSString *> *)tags;
 
 // Add tag with custom config
-- (void)addTag:(NSString *)tag withConfig:(FWTextTagConfig *)config;
+- (void)addTag:(NSString *)tag withConfig:(__FWTextTagConfig *)config;
 
-- (void)addTags:(NSArray <NSString *> *)tags withConfig:(FWTextTagConfig *)config;
+- (void)addTags:(NSArray <NSString *> *)tags withConfig:(__FWTextTagConfig *)config;
 
 // Insert tag with default config
 - (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index;
@@ -278,9 +278,9 @@ NS_SWIFT_NAME(TextTagCollectionView)
 - (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index;
 
 // Insert tag with custom config
-- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
+- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config;
 
-- (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
+- (void)insertTags:(NSArray <NSString *> *)tags atIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config;
 
 // Remove tag
 - (void)removeTag:(NSString *)tag;
@@ -293,9 +293,9 @@ NS_SWIFT_NAME(TextTagCollectionView)
 - (void)setTagAtIndex:(NSUInteger)index selected:(BOOL)selected;
 
 // Update tag config
-- (void)setTagAtIndex:(NSUInteger)index withConfig:(FWTextTagConfig *)config;
+- (void)setTagAtIndex:(NSUInteger)index withConfig:(__FWTextTagConfig *)config;
 
-- (void)setTagsInRange:(NSRange)range withConfig:(FWTextTagConfig *)config;
+- (void)setTagsInRange:(NSRange)range withConfig:(__FWTextTagConfig *)config;
 
 // Get tag
 - (nullable NSString *)getTagAtIndex:(NSUInteger)index;
@@ -303,9 +303,9 @@ NS_SWIFT_NAME(TextTagCollectionView)
 - (NSArray <NSString *> *)getTagsInRange:(NSRange)range;
 
 // Get tag config
-- (nullable FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
+- (nullable __FWTextTagConfig *)getConfigAtIndex:(NSUInteger)index;
 
-- (NSArray <FWTextTagConfig *> *)getConfigsInRange:(NSRange)range;
+- (NSArray <__FWTextTagConfig *> *)getConfigsInRange:(NSRange)range;
 
 // Get all
 - (NSArray <NSString *> *)allTags;

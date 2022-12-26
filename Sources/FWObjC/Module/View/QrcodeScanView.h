@@ -11,12 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- FWQrcodeScanManager
+ __FWQrcodeScanManager
  
  @see https://github.com/kingsic/SGQRCode
  */
 NS_SWIFT_NAME(QrcodeScanManager)
-@interface FWQrcodeScanManager : NSObject
+@interface __FWQrcodeScanManager : NSObject
 
 #pragma mark - Scan
 
@@ -114,30 +114,30 @@ NS_SWIFT_NAME(QrcodeScanManager)
 
 @end
 
-typedef NS_ENUM(NSUInteger, FWQrcodeCornerLocation) {
+typedef NS_ENUM(NSUInteger, __FWQrcodeCornerLocation) {
     /// 默认与边框线同中心点
-    FWQrcodeCornerLocationDefault,
+    __FWQrcodeCornerLocationDefault,
     /// 在边框线内部
-    FWQrcodeCornerLocationInside,
+    __FWQrcodeCornerLocationInside,
     /// 在边框线外部
-    FWQrcodeCornerLocationOutside
+    __FWQrcodeCornerLocationOutside
 } NS_SWIFT_NAME(QrcodeCornerLocation);
 
-typedef NS_ENUM(NSUInteger, FWQrcodeScanAnimationStyle) {
+typedef NS_ENUM(NSUInteger, __FWQrcodeScanAnimationStyle) {
     /// 单线扫描样式
-    FWQrcodeScanAnimationStyleDefault,
+    __FWQrcodeScanAnimationStyleDefault,
     /// 网格扫描样式
-    FWQrcodeScanAnimationStyleGrid
+    __FWQrcodeScanAnimationStyleGrid
 } NS_SWIFT_NAME(QrcodeScanAnimationStyle);
 
 /**
- FWQrcodeScanView
+ __FWQrcodeScanView
  */
 NS_SWIFT_NAME(QrcodeScanView)
-@interface FWQrcodeScanView : UIView
+@interface __FWQrcodeScanView : UIView
 
 /** 扫描样式，默认 ScanAnimationStyleDefault */
-@property (nonatomic, assign) FWQrcodeScanAnimationStyle scanAnimationStyle;
+@property (nonatomic, assign) __FWQrcodeScanAnimationStyle scanAnimationStyle;
 /** 扫描线名，支持NSString和UIImage，默认无 */
 @property (nonatomic, strong, nullable) id scanImageName;
 /** 边框颜色，默认白色 */
@@ -147,7 +147,7 @@ NS_SWIFT_NAME(QrcodeScanView)
 /** 边框宽度，默认0.2f */
 @property (nonatomic, assign) CGFloat borderWidth;
 /** 边角位置，默认 CornerLocationDefault */
-@property (nonatomic, assign) FWQrcodeCornerLocation cornerLocation;
+@property (nonatomic, assign) __FWQrcodeCornerLocation cornerLocation;
 /** 边角颜色，默认微信颜色 */
 @property (nonatomic, strong) UIColor *cornerColor;
 /** 边角宽度，默认 2.f */

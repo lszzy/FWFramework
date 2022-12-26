@@ -9,21 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWToolbarView
+#pragma mark - __FWToolbarView
 
 /// 自定义工具栏视图类型枚举
-typedef NS_ENUM(NSInteger, FWToolbarViewType) {
+typedef NS_ENUM(NSInteger, __FWToolbarViewType) {
     /// 默认工具栏，含菜单和底部，无titleView，自动兼容横屏
-    FWToolbarViewTypeDefault = 0,
+    __FWToolbarViewTypeDefault = 0,
     /// 导航栏类型，含顶部和菜单，自带titleView，自动兼容横屏
-    FWToolbarViewTypeNavBar,
+    __FWToolbarViewTypeNavBar,
     /// 标签栏类型，含菜单和底部，水平等分，自动兼容横屏
-    FWToolbarViewTypeTabBar,
+    __FWToolbarViewTypeTabBar,
     /// 自定义类型，无顶部和底部，初始高度44，需手工兼容横屏
-    FWToolbarViewTypeCustom,
+    __FWToolbarViewTypeCustom,
 } NS_SWIFT_NAME(ToolbarViewType);
 
-@class FWToolbarMenuView;
+@class __FWToolbarMenuView;
 
 /**
  * 自定义工具栏视图，高度自动布局(总高度toolbarHeight)，可设置toolbarHidden隐藏(总高度0)
@@ -34,19 +34,19 @@ typedef NS_ENUM(NSInteger, FWToolbarViewType) {
  * 底部：bottomView，高度为bottomHeight，可设置bottomHidden隐藏
  */
 NS_SWIFT_NAME(ToolbarView)
-@interface FWToolbarView : UIView
+@interface __FWToolbarView : UIView
 
 /// 指定类型初始化，会设置默认高度和视图
-- (instancetype)initWithType:(FWToolbarViewType)type;
+- (instancetype)initWithType:(__FWToolbarViewType)type;
 
 /// 当前工具栏类型，只读，默认default
-@property (nonatomic, assign, readonly) FWToolbarViewType type;
+@property (nonatomic, assign, readonly) __FWToolbarViewType type;
 /// 背景图片视图，用于设置背景图片
 @property (nonatomic, strong, readonly) UIImageView *backgroundView;
 /// 顶部视图，延迟加载
 @property (nonatomic, strong, readonly) UIView *topView;
 /// 菜单视图，初始加载
-@property (nonatomic, strong, readonly) FWToolbarMenuView *menuView;
+@property (nonatomic, strong, readonly) __FWToolbarMenuView *menuView;
 /// 底部视图，延迟加载
 @property (nonatomic, strong, readonly) UIView *bottomView;
 
@@ -79,9 +79,9 @@ NS_SWIFT_NAME(ToolbarView)
 
 @end
 
-#pragma mark - FWToolbarMenuView
+#pragma mark - __FWToolbarMenuView
 
-@class FWToolbarTitleView;
+@class __FWToolbarTitleView;
 
 /**
  * 自定义工具栏菜单视图，支持完全自定义，默认最多只支持左右各两个按钮，如需更多按钮，请自行添加。
@@ -89,39 +89,39 @@ NS_SWIFT_NAME(ToolbarView)
  * 水平分割时，按钮水平等分；非水平分割时，左右侧间距为8，同系统一致
  */
 NS_SWIFT_NAME(ToolbarMenuView)
-@interface FWToolbarMenuView : UIView
+@interface __FWToolbarMenuView : UIView
 
-/// 自定义左侧按钮，设置后才显示，非等分时左侧间距为8。建议使用FWToolbarButton
+/// 自定义左侧按钮，设置后才显示，非等分时左侧间距为8。建议使用__FWToolbarButton
 @property (nonatomic, strong, nullable) __kindof UIView *leftButton;
 
-/// 自定义左侧更多按钮，设置后才显示，非等分时左侧间距为8。建议使用FWToolbarButton
+/// 自定义左侧更多按钮，设置后才显示，非等分时左侧间距为8。建议使用__FWToolbarButton
 @property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
 
-/// 自定义居中按钮，设置后才显示，非等分时左右最大间距为0。建议使用FWToolbarTitleView或FWToolbarButton
+/// 自定义居中按钮，设置后才显示，非等分时左右最大间距为0。建议使用__FWToolbarTitleView或__FWToolbarButton
 @property (nonatomic, strong, nullable) __kindof UIView *centerButton;
 
-/// 自定义右侧更多按钮，设置后才显示，非等分时右侧间距为8。建议使用FWToolbarButton
+/// 自定义右侧更多按钮，设置后才显示，非等分时右侧间距为8。建议使用__FWToolbarButton
 @property (nonatomic, strong, nullable) __kindof UIView *rightMoreButton;
 
-/// 自定义右侧按钮，设置后才显示，非等分时右侧间距为8。建议使用FWToolbarButton
+/// 自定义右侧按钮，设置后才显示，非等分时右侧间距为8。建议使用__FWToolbarButton
 @property (nonatomic, strong, nullable) __kindof UIView *rightButton;
 
 /// 是否等宽布局(类似UITabBar)，不含安全区域；默认NO，左右布局(类似UIToolbar|UINavigationBar)
 @property (nonatomic, assign) BOOL equalWidth;
 
-/// 快捷访问FWToolbarTitleView标题视图，同centerButton
-@property (nonatomic, strong, nullable) FWToolbarTitleView *titleView;
+/// 快捷访问__FWToolbarTitleView标题视图，同centerButton
+@property (nonatomic, strong, nullable) __FWToolbarTitleView *titleView;
 
-/// 快捷访问标题，titleView类型为FWToolbarTitleViewProtocol时才生效
+/// 快捷访问标题，titleView类型为__FWToolbarTitleViewProtocol时才生效
 @property (nonatomic, copy, nullable) NSString *title;
 
 @end
 
-#pragma mark - FWToolbarTitleView
+#pragma mark - __FWToolbarTitleView
 
 /// 自定义titleView协议
 NS_SWIFT_NAME(TitleViewProtocol)
-@protocol FWTitleViewProtocol <NSObject>
+@protocol __FWTitleViewProtocol <NSObject>
 
 @required
 /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
@@ -131,7 +131,7 @@ NS_SWIFT_NAME(TitleViewProtocol)
 
 /// 自定义titleView事件代理
 NS_SWIFT_NAME(ToolbarTitleViewDelegate)
-@protocol FWToolbarTitleViewDelegate <NSObject>
+@protocol __FWToolbarTitleViewDelegate <NSObject>
 
 @optional
 
@@ -141,7 +141,7 @@ NS_SWIFT_NAME(ToolbarTitleViewDelegate)
  @param titleView 被点击的 titleView
  @param isActive titleView 是否处于活跃状态
  */
-- (void)didTouchTitleView:(FWToolbarTitleView *)titleView isActive:(BOOL)isActive;
+- (void)didTouchTitleView:(__FWToolbarTitleView *)titleView isActive:(BOOL)isActive;
 
 /**
  titleView 的活跃状态发生变化时会被调用，也即 [titleView setActive:] 被调用时。
@@ -149,14 +149,14 @@ NS_SWIFT_NAME(ToolbarTitleViewDelegate)
  @param active 是否处于活跃状态
  @param titleView 变换状态的 titleView
  */
-- (void)didChangedActive:(BOOL)active forTitleView:(FWToolbarTitleView *)titleView;
+- (void)didChangedActive:(BOOL)active forTitleView:(__FWToolbarTitleView *)titleView;
 
 @end
 
 /// 自定义titleView布局方式，默认水平布局
-typedef NS_ENUM(NSInteger, FWToolbarTitleViewStyle) {
-    FWToolbarTitleViewStyleHorizontal = 0,
-    FWToolbarTitleViewStyleVertical,
+typedef NS_ENUM(NSInteger, __FWToolbarTitleViewStyle) {
+    __FWToolbarTitleViewStyleHorizontal = 0,
+    __FWToolbarTitleViewStyleVertical,
 } NS_SWIFT_NAME(ToolbarTitleViewStyle);
 
 @protocol __FWIndicatorViewPlugin;
@@ -169,13 +169,13 @@ typedef NS_ENUM(NSInteger, FWToolbarTitleViewStyle) {
  *  @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(ToolbarTitleView)
-@interface FWToolbarTitleView : UIControl
+@interface __FWToolbarTitleView : UIControl
 
 /// 事件代理
-@property(nonatomic, weak, nullable) id<FWToolbarTitleViewDelegate> delegate;
+@property(nonatomic, weak, nullable) id<__FWToolbarTitleViewDelegate> delegate;
 
 /// 标题栏样式
-@property(nonatomic, assign) FWToolbarTitleViewStyle style;
+@property(nonatomic, assign) __FWToolbarTitleViewStyle style;
 
 /// 标题栏是否是激活状态，主要针对accessoryImage生效
 @property(nonatomic, assign, getter=isActive) BOOL active;
@@ -259,21 +259,21 @@ NS_SWIFT_NAME(ToolbarTitleView)
 @property(nonatomic, assign) BOOL showsSubAccessoryPlaceholder;
 
 /// 指定样式初始化
-- (instancetype)initWithStyle:(FWToolbarTitleViewStyle)style;
+- (instancetype)initWithStyle:(__FWToolbarTitleViewStyle)style;
 
 @end
 
-#pragma mark - FWToolbarButton
+#pragma mark - __FWToolbarButton
 
 /**
  * 自定义工具栏按钮，兼容系统customView方式和自定义方式
  *
  * UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8；
- * FWToolbarButton作为customView使用时，会自动调整按钮内间距，和系统表现一致；
- * FWToolbarButton自动适配横竖屏切换，竖屏时默认内间距{8, 8, 8, 8}，横屏时默认内间距{0,8,0,8}
+ * __FWToolbarButton作为customView使用时，会自动调整按钮内间距，和系统表现一致；
+ * __FWToolbarButton自动适配横竖屏切换，竖屏时默认内间距{8, 8, 8, 8}，横屏时默认内间距{0,8,0,8}
  */
 NS_SWIFT_NAME(ToolbarButton)
-@interface FWToolbarButton : UIButton
+@interface __FWToolbarButton : UIButton
 
 /// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
 @property (nonatomic, assign) BOOL adjustsTintColor;
