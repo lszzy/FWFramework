@@ -20,9 +20,9 @@
 
 #endif
 
-#pragma mark - FWBannerViewFlowLayout
+#pragma mark - __FWBannerViewFlowLayout
 
-@interface FWBannerViewFlowLayout : UICollectionViewFlowLayout
+@interface __FWBannerViewFlowLayout : UICollectionViewFlowLayout
 
 @property (nonatomic, assign) BOOL pagingEnabled;
 @property (nonatomic, assign) BOOL pagingCenter;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation FWBannerViewFlowLayout
+@implementation __FWBannerViewFlowLayout
 
 #pragma mark - Lifecycle
 
@@ -229,14 +229,14 @@
 
 @end
 
-#pragma mark - FWBannerView
+#pragma mark - __FWBannerView
 
-NSString * const FWBannerViewCellID = @"FWBannerViewCell";
+NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 
-@interface FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, FWStatisticalDelegate>
+@interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, FWStatisticalDelegate>
 
 @property (nonatomic, weak) UICollectionView *mainView;
-@property (nonatomic, weak) FWBannerViewFlowLayout *flowLayout;
+@property (nonatomic, weak) __FWBannerViewFlowLayout *flowLayout;
 @property (nonatomic, strong) NSArray *imagePathsGroup;
 @property (nonatomic, weak) NSTimer *timer;
 @property (nonatomic, assign) NSInteger totalItemsCount;
@@ -247,7 +247,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @end
 
-@implementation FWBannerView
+@implementation __FWBannerView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -267,7 +267,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)initialization
 {
-    _pageControlAlignment = FWBannerViewPageControlAlignmentCenter;
+    _pageControlAlignment = __FWBannerViewPageControlAlignmentCenter;
     _autoScrollTimeInterval = 2.0;
     _titleLabelTextColor = [UIColor whiteColor];
     _titleLabelTextFont= [UIFont systemFontOfSize:14];
@@ -283,7 +283,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _pageControlDotSpacing = -1;
     _pageControlBottomOffset = 0;
     _pageControlRightOffset = 0;
-    _pageControlStyle = FWBannerViewPageControlStyleSystem;
+    _pageControlStyle = __FWBannerViewPageControlStyleSystem;
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
@@ -295,14 +295,14 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 + (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
 {
-    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
     bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
     return bannerView;
 }
 
 + (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup
 {
-    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
     bannerView.infiniteLoop = infiniteLoop;
     bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
     return bannerView;
@@ -310,14 +310,14 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 + (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup
 {
-    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
     bannerView.imageURLStringsGroup = [NSMutableArray arrayWithArray:imageURLStringsGroup];
     return bannerView;
 }
 
-+ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(id<FWBannerViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage
++ (instancetype)bannerViewWithFrame:(CGRect)frame delegate:(id<__FWBannerViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage
 {
-    FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
+    __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
     bannerView.delegate = delegate;
     bannerView.placeholderImage = placeholderImage;
     return bannerView;
@@ -325,7 +325,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)setupMainView
 {
-    FWBannerViewFlowLayout *flowLayout = [[FWBannerViewFlowLayout alloc] init];
+    __FWBannerViewFlowLayout *flowLayout = [[__FWBannerViewFlowLayout alloc] init];
     _flowLayout = flowLayout;
     flowLayout.minimumLineSpacing = 0;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -337,7 +337,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     mainView.showsHorizontalScrollIndicator = NO;
     mainView.showsVerticalScrollIndicator = NO;
     mainView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    [mainView registerClass:[FWBannerViewCell class] forCellWithReuseIdentifier:FWBannerViewCellID];
+    [mainView registerClass:[__FWBannerViewCell class] forCellWithReuseIdentifier:__FWBannerViewCellID];
     
     mainView.dataSource = self;
     mainView.delegate = self;
@@ -352,14 +352,14 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 #pragma mark - properties
 
-- (void)setDelegate:(id<FWBannerViewDelegate>)delegate
+- (void)setDelegate:(id<__FWBannerViewDelegate>)delegate
 {
     _delegate = delegate;
     
     if ([self.delegate respondsToSelector:@selector(customCellClassForBannerView:)] && [self.delegate customCellClassForBannerView:self]) {
-        [self.mainView registerClass:[self.delegate customCellClassForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+        [self.mainView registerClass:[self.delegate customCellClassForBannerView:self] forCellWithReuseIdentifier:__FWBannerViewCellID];
     }else if ([self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
-        [self.mainView registerNib:[self.delegate customCellNibForBannerView:self] forCellWithReuseIdentifier:FWBannerViewCellID];
+        [self.mainView registerNib:[self.delegate customCellNibForBannerView:self] forCellWithReuseIdentifier:__FWBannerViewCellID];
     }
 }
 
@@ -420,8 +420,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _currentPageDotImage = currentPageDotImage;
     
-    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
-        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    if (self.pageControlStyle != __FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = __FWBannerViewPageControlStyleCustom;
     }
     
     [self setCustomPageControlDotImage:currentPageDotImage isCurrentPageDot:YES];
@@ -431,8 +431,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _pageDotImage = pageDotImage;
     
-    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
-        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    if (self.pageControlStyle != __FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = __FWBannerViewPageControlStyleCustom;
     }
     
     [self setCustomPageControlDotImage:pageDotImage isCurrentPageDot:NO];
@@ -456,8 +456,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     _pageDotViewClass = pageDotViewClass;
     
-    if (self.pageControlStyle != FWBannerViewPageControlStyleCustom) {
-        self.pageControlStyle = FWBannerViewPageControlStyleCustom;
+    if (self.pageControlStyle != __FWBannerViewPageControlStyleCustom) {
+        self.pageControlStyle = __FWBannerViewPageControlStyleCustom;
     }
     
     if (self.pageControl && [self.pageControl isKindOfClass:[FWPageControl class]]) {
@@ -639,7 +639,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     NSInteger indexOnPageControl = [self pageControlIndexWithCurrentCellIndex:[_flowLayout currentPage]];
 
     switch (self.pageControlStyle) {
-        case FWBannerViewPageControlStyleCustom: {
+        case __FWBannerViewPageControlStyleCustom: {
             FWPageControl *pageControl = [[FWPageControl alloc] init];
             pageControl.numberOfPages = self.imagePathsGroup.count;
             pageControl.dotColor = self.pageDotColor;
@@ -661,7 +661,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }
             break;
             
-        case FWBannerViewPageControlStyleSystem: {
+        case __FWBannerViewPageControlStyleSystem: {
             UIPageControl *pageControl = [[UIPageControl alloc] init];
             pageControl.numberOfPages = self.imagePathsGroup.count;
             pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
@@ -779,7 +779,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         }
     }
     CGFloat x = (self.frame.size.width - size.width) * 0.5;
-    if (self.pageControlAlignment == FWBannerViewPageControlAlignmentRight) {
+    if (self.pageControlAlignment == __FWBannerViewPageControlAlignmentRight) {
         x = self.mainView.frame.size.width - size.width - 10;
     }
     CGFloat y = self.mainView.frame.size.height - size.height - 10;
@@ -829,7 +829,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    FWBannerViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FWBannerViewCellID forIndexPath:indexPath];
+    __FWBannerViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:__FWBannerViewCellID forIndexPath:indexPath];
     
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
@@ -1002,13 +1002,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 
 @end
 
-#pragma mark - FWBannerViewCell
+#pragma mark - __FWBannerViewCell
 
-@interface FWBannerViewCell () <FWStatisticalDelegate>
+@interface __FWBannerViewCell () <FWStatisticalDelegate>
 
 @end
 
-@implementation FWBannerViewCell
+@implementation __FWBannerViewCell
 {
     __weak UIView *_insetView;
     __weak UILabel *_titleLabel;
@@ -1108,8 +1108,8 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 {
     UIView *superview = self.superview;
     while (superview) {
-        if ([superview isKindOfClass:[FWBannerView class]]) {
-            return (FWBannerView *)superview;
+        if ([superview isKindOfClass:[__FWBannerView class]]) {
+            return (__FWBannerView *)superview;
         }
         superview = superview.superview;
     }

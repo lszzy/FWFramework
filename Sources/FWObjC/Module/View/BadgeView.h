@@ -9,31 +9,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWBadgeView
+#pragma mark - __FWBadgeView
 
 /// 自带提醒灯样式
-typedef NS_ENUM(NSInteger, FWBadgeStyle) {
+typedef NS_ENUM(NSInteger, __FWBadgeStyle) {
     /// 小红点，(10)*(10)
-    FWBadgeStyleDot = 1,
+    __FWBadgeStyleDot = 1,
     /// 小提醒灯，同系统标签，(18+)*(18)，12号字体
-    FWBadgeStyleSmall,
+    __FWBadgeStyleSmall,
     /// 大提醒灯，同系统桌面，(24+)*(24)，14号字体
-    FWBadgeStyleBig,
+    __FWBadgeStyleBig,
 } NS_SWIFT_NAME(BadgeStyle);
 
 /// 提醒灯视图，默认禁用userInteractionEnabled
 NS_SWIFT_NAME(BadgeView)
-@interface FWBadgeView : UIView
+@interface __FWBadgeView : UIView
 
 /// 提醒灯样式，默认0自定义
-@property (nonatomic, readonly) FWBadgeStyle badgeStyle;
+@property (nonatomic, readonly) __FWBadgeStyle badgeStyle;
 /// 提醒灯文本标签。可自定义样式
 @property (nullable, nonatomic, readonly) UILabel *badgeLabel;
 /// 提醒灯右上偏移值
 @property (nonatomic, readonly) CGPoint badgeOffset;
 
 /// 初始化自带样式提醒灯。宽高自动布局，其它手工布局
-- (instancetype)initWithBadgeStyle:(FWBadgeStyle)badgeStyle;
+- (instancetype)initWithBadgeStyle:(__FWBadgeStyle)badgeStyle;
 
 /// 初始化自定义提醒灯。宽高自动布局，其它手工布局
 - (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight
@@ -43,21 +43,21 @@ NS_SWIFT_NAME(BadgeView)
 
 @end
 
-#pragma mark - UIView+FWBadge
+#pragma mark - UIView+__FWBadge
 
-@interface UIView (FWBadge)
+@interface UIView (__FWBadge)
 
 /// 显示右上角提醒灯，上右偏移指定距离
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
 
 /// 隐藏提醒灯
 - (void)fw_hideBadgeView NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - UIBarItem+FWBadge
+#pragma mark - UIBarItem+__FWBadge
 
-@interface UIBarItem (FWBadge)
+@interface UIBarItem (__FWBadge)
 
 /// 获取UIBarItem(UIBarButtonItem、UITabBarItem)内部的view，通常对于navigationItem和tabBarItem而言，需要在设置为item后并且在bar可见时(例如 viewDidAppear:及之后)获取fwView才有值
 @property (nullable, nonatomic, weak, readonly) UIView *fw_view NS_REFINED_FOR_SWIFT;
@@ -67,27 +67,27 @@ NS_SWIFT_NAME(BadgeView)
 
 @end
 
-#pragma mark - UIBarButtonItem+FWBadge
+#pragma mark - UIBarButtonItem+__FWBadge
 
-@interface UIBarButtonItem (FWBadge)
+@interface UIBarButtonItem (__FWBadge)
 
 /// 显示右上角提醒灯，上右偏移指定距离
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
 
 /// 隐藏提醒灯
 - (void)fw_hideBadgeView NS_REFINED_FOR_SWIFT;
 
 @end
 
-#pragma mark - UITabBarItem+FWBadge
+#pragma mark - UITabBarItem+__FWBadge
 
-@interface UITabBarItem (FWBadge)
+@interface UITabBarItem (__FWBadge)
 
 /// 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
 @property (nullable, nonatomic, weak, readonly) UIImageView *fw_imageView NS_REFINED_FOR_SWIFT;
 
 /// 显示右上角提醒灯，上右偏移指定距离
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(nullable NSString *)badgeValue NS_REFINED_FOR_SWIFT;
 
 /// 隐藏提醒灯
 - (void)fw_hideBadgeView NS_REFINED_FOR_SWIFT;

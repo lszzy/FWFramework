@@ -7,7 +7,7 @@
 
 #import "MarqueeLabel.h"
 
-@interface FWMarqueeLabel ()
+@interface __FWMarqueeLabel ()
 
 @property(nonatomic, strong) CADisplayLink *displayLink;
 @property(nonatomic, assign) CGFloat offsetX;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation FWMarqueeLabel
+@implementation __FWMarqueeLabel
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

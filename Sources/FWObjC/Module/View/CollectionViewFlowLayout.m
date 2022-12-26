@@ -9,34 +9,34 @@
 #import "tgmath.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWCollectionViewSectionConfig
+#pragma mark - __FWCollectionViewSectionConfig
 
-static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKind";
+static NSString *const __FWCollectionViewElementKind = @"FWCollectionViewElementKind";
 
-@implementation FWCollectionViewSectionConfig
-
-@end
-
-@interface FWCollectionViewLayoutAttributes : UICollectionViewLayoutAttributes
-
-@property (nonatomic, strong) FWCollectionViewSectionConfig *sectionConfig;
+@implementation __FWCollectionViewSectionConfig
 
 @end
 
-@implementation FWCollectionViewLayoutAttributes
+@interface __FWCollectionViewLayoutAttributes : UICollectionViewLayoutAttributes
+
+@property (nonatomic, strong) __FWCollectionViewSectionConfig *sectionConfig;
 
 @end
 
-@interface FWCollectionViewReusableView : UICollectionReusableView
+@implementation __FWCollectionViewLayoutAttributes
 
 @end
 
-@implementation FWCollectionViewReusableView
+@interface __FWCollectionViewReusableView : UICollectionReusableView
+
+@end
+
+@implementation __FWCollectionViewReusableView
 
 - (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     [super applyLayoutAttributes:layoutAttributes];
-    if (![layoutAttributes isKindOfClass:[FWCollectionViewLayoutAttributes class]]) return;
-    FWCollectionViewSectionConfig *sectionConfig = ((FWCollectionViewLayoutAttributes *)layoutAttributes).sectionConfig;
+    if (![layoutAttributes isKindOfClass:[__FWCollectionViewLayoutAttributes class]]) return;
+    __FWCollectionViewSectionConfig *sectionConfig = ((__FWCollectionViewLayoutAttributes *)layoutAttributes).sectionConfig;
     if (!sectionConfig) return;
     
     self.backgroundColor = sectionConfig.backgroundColor;
@@ -47,7 +47,7 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
 
 @end
 
-@implementation UICollectionViewFlowLayout (FWCollectionViewSectionConfig)
+@implementation UICollectionViewFlowLayout (__FWCollectionViewSectionConfig)
 
 - (NSMutableArray *)fw_sectionConfigAttributes {
     NSMutableArray *attributes = objc_getAssociatedObject(self, _cmd);
@@ -60,9 +60,9 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
 
 - (void)fw_sectionConfigPrepareLayout {
     if (![self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:configForSectionAtIndex:)]) return;
-    [self registerClass:[FWCollectionViewReusableView class] forDecorationViewOfKind:FWCollectionViewElementKind];
+    [self registerClass:[__FWCollectionViewReusableView class] forDecorationViewOfKind:__FWCollectionViewElementKind];
     [self.fw_sectionConfigAttributes removeAllObjects];
-    id<FWCollectionViewDelegateFlowLayout> delegate = (id<FWCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
+    id<__FWCollectionViewDelegateFlowLayout> delegate = (id<__FWCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
     NSUInteger sectionCount = [self.collectionView numberOfSections];
     for (NSUInteger section = 0; section < sectionCount; section++) {
         NSUInteger itemCount = [self.collectionView numberOfItemsInSection:section];
@@ -91,7 +91,7 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
             sectionFrame.size.height += sectionInset.top + sectionInset.bottom;
         }
         
-        FWCollectionViewLayoutAttributes *attributes = [FWCollectionViewLayoutAttributes layoutAttributesForDecorationViewOfKind:FWCollectionViewElementKind withIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
+        __FWCollectionViewLayoutAttributes *attributes = [__FWCollectionViewLayoutAttributes layoutAttributesForDecorationViewOfKind:__FWCollectionViewElementKind withIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
         attributes.frame = sectionFrame;
         attributes.zIndex = -1;
         attributes.sectionConfig = [delegate collectionView:self.collectionView layout:self configForSectionAtIndex:section];
@@ -111,15 +111,15 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
 
 @end
 
-#pragma mark - FWCollectionViewFlowLayout
+#pragma mark - __FWCollectionViewFlowLayout
 
-@interface FWCollectionViewFlowLayout ()
+@interface __FWCollectionViewFlowLayout ()
 
 @property (nonatomic, strong) NSMutableArray *allAttributes;
 
 @end
 
-@implementation FWCollectionViewFlowLayout
+@implementation __FWCollectionViewFlowLayout
 
 #pragma mark - Methods to Override
 
@@ -206,11 +206,11 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
 
 @end
 
-#pragma mark - FWCollectionViewWaterfallLayout
+#pragma mark - __FWCollectionViewWaterfallLayout
 
-@interface FWCollectionViewWaterfallLayout ()
+@interface __FWCollectionViewWaterfallLayout ()
 /// The delegate will point to collection view's delegate automatically.
-@property (nonatomic, weak) id <FWCollectionViewDelegateWaterfallLayout> delegate;
+@property (nonatomic, weak) id <__FWCollectionViewDelegateWaterfallLayout> delegate;
 /// Array to store height for each column
 @property (nonatomic, strong) NSMutableArray *columnHeights;
 /// Array of arrays. Each array stores item attributes for each section
@@ -225,7 +225,7 @@ static NSString *const FWCollectionViewElementKind = @"FWCollectionViewElementKi
 @property (nonatomic, strong) NSMutableArray *unionRects;
 @end
 
-@implementation FWCollectionViewWaterfallLayout
+@implementation __FWCollectionViewWaterfallLayout
 
 /// How many items to be union into a single rectangle
 static const NSInteger unionSize = 20;
@@ -292,7 +292,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   }
 }
 
-- (void)setItemRenderDirection:(FWCollectionViewWaterfallLayoutItemRenderDirection)itemRenderDirection {
+- (void)setItemRenderDirection:(__FWCollectionViewWaterfallLayoutItemRenderDirection)itemRenderDirection {
   if (_itemRenderDirection != itemRenderDirection) {
     _itemRenderDirection = itemRenderDirection;
     [self invalidateLayout];
@@ -375,8 +375,8 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   return _sectionItemAttributes;
 }
 
-- (id <FWCollectionViewDelegateWaterfallLayout> )delegate {
-  return (id <FWCollectionViewDelegateWaterfallLayout> )self.collectionView.delegate;
+- (id <__FWCollectionViewDelegateWaterfallLayout> )delegate {
+  return (id <__FWCollectionViewDelegateWaterfallLayout> )self.collectionView.delegate;
 }
 
 #pragma mark - Init
@@ -389,7 +389,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   _sectionInset = UIEdgeInsetsZero;
   _headerInset  = UIEdgeInsetsZero;
   _footerInset  = UIEdgeInsetsZero;
-  _itemRenderDirection = FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst;
+  _itemRenderDirection = __FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst;
 }
 
 - (id)init {
@@ -422,8 +422,8 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     return;
   }
 
-  NSAssert([self.delegate conformsToProtocol:@protocol(FWCollectionViewDelegateWaterfallLayout)], @"UICollectionView's delegate should conform to FWCollectionViewDelegateWaterfallLayout protocol");
-  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"FWCollectionViewWaterfallLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
+  NSAssert([self.delegate conformsToProtocol:@protocol(__FWCollectionViewDelegateWaterfallLayout)], @"UICollectionView's delegate should conform to __FWCollectionViewDelegateWaterfallLayout protocol");
+  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"__FWCollectionViewWaterfallLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
 
   // Initialize variables
   NSInteger idx = 0;
@@ -770,15 +770,15 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   NSUInteger index = 0;
   NSInteger columnCount = [self columnCountForSection:section];
   switch (self.itemRenderDirection) {
-    case FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst:
+    case __FWCollectionViewWaterfallLayoutItemRenderDirectionShortestFirst:
       index = [self shortestColumnIndexInSection:section];
       break;
 
-    case FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight:
+    case __FWCollectionViewWaterfallLayoutItemRenderDirectionLeftToRight:
       index = (item % columnCount);
       break;
 
-    case FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft:
+    case __FWCollectionViewWaterfallLayoutItemRenderDirectionRightToLeft:
       index = (columnCount - 1) - (item % columnCount);
       break;
 
@@ -791,19 +791,19 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 
 @end
 
-#pragma mark - FWCollectionViewAlignLayout
+#pragma mark - __FWCollectionViewAlignLayout
 
-@interface FWCollectionViewAlignLayout ()
+@interface __FWCollectionViewAlignLayout ()
 
 @property (nonatomic, strong) NSMutableDictionary *cachedFrame;
 
 @end
 
-@implementation FWCollectionViewAlignLayout
+@implementation __FWCollectionViewAlignLayout
 
 - (CGFloat)innerMinimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (self.collectionView.delegate && [self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
-        id<FWCollectionViewDelegateAlignLayout> delegate = (id<FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
+        id<__FWCollectionViewDelegateAlignLayout> delegate = (id<__FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
         return [delegate collectionView:self.collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
     } else {
         return self.minimumInteritemSpacing;
@@ -812,34 +812,34 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 
 - (UIEdgeInsets)innerInsetForSectionAtIndex:(NSInteger)section {
     if (self.collectionView.delegate && [self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
-        id<FWCollectionViewDelegateAlignLayout> delegate = (id<FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
+        id<__FWCollectionViewDelegateAlignLayout> delegate = (id<__FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
         return [delegate collectionView:self.collectionView layout:self insetForSectionAtIndex:section];
     } else {
         return self.sectionInset;
     }
 }
 
-- (FWCollectionViewItemsHorizontalAlignment)innerItemsHorizontalAlignmentForSectionAtIndex:(NSInteger)section {
+- (__FWCollectionViewItemsHorizontalAlignment)innerItemsHorizontalAlignmentForSectionAtIndex:(NSInteger)section {
     if (self.collectionView.delegate && [self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:itemsHorizontalAlignmentInSection:)]) {
-        id<FWCollectionViewDelegateAlignLayout> delegate = (id<FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
+        id<__FWCollectionViewDelegateAlignLayout> delegate = (id<__FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
         return [delegate collectionView:self.collectionView layout:self itemsHorizontalAlignmentInSection:section];
     } else {
         return self.itemsHorizontalAlignment;
     }
 }
 
-- (FWCollectionViewItemsVerticalAlignment)innerItemsVerticalAlignmentForSectionAtIndex:(NSInteger)section {
+- (__FWCollectionViewItemsVerticalAlignment)innerItemsVerticalAlignmentForSectionAtIndex:(NSInteger)section {
     if (self.collectionView.delegate && [self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:itemsVerticalAlignmentInSection:)]) {
-        id<FWCollectionViewDelegateAlignLayout> delegate = (id<FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
+        id<__FWCollectionViewDelegateAlignLayout> delegate = (id<__FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
         return [delegate collectionView:self.collectionView layout:self itemsVerticalAlignmentInSection:section];
     } else {
         return self.itemsVerticalAlignment;
     }
 }
 
-- (FWCollectionViewItemsDirection)innerItemsDirectionForSectionAtIndex:(NSInteger)section {
+- (__FWCollectionViewItemsDirection)innerItemsDirectionForSectionAtIndex:(NSInteger)section {
     if (self.collectionView.delegate && [self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:itemsDirectionInSection:)]) {
-        id<FWCollectionViewDelegateAlignLayout> delegate = (id<FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
+        id<__FWCollectionViewDelegateAlignLayout> delegate = (id<__FWCollectionViewDelegateAlignLayout>) self.collectionView.delegate;
         return [delegate collectionView:self.collectionView layout:self itemsDirectionInSection:section];
     } else {
         return self.itemsDirection;
@@ -899,10 +899,10 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     NSInteger section = [array firstObject].indexPath.section;
 
     //******************** 相关布局属性 ********************//
-    FWCollectionViewItemsHorizontalAlignment horizontalAlignment = [self innerItemsHorizontalAlignmentForSectionAtIndex:section];
-    FWCollectionViewItemsVerticalAlignment verticalAlignment = [self innerItemsVerticalAlignmentForSectionAtIndex:section];
-    FWCollectionViewItemsDirection direction = [self innerItemsDirectionForSectionAtIndex:section];
-    BOOL isR2L = direction == FWCollectionViewItemsDirectionRTL;
+    __FWCollectionViewItemsHorizontalAlignment horizontalAlignment = [self innerItemsHorizontalAlignmentForSectionAtIndex:section];
+    __FWCollectionViewItemsVerticalAlignment verticalAlignment = [self innerItemsVerticalAlignmentForSectionAtIndex:section];
+    __FWCollectionViewItemsDirection direction = [self innerItemsDirectionForSectionAtIndex:section];
+    BOOL isR2L = direction == __FWCollectionViewItemsDirectionRTL;
     UIEdgeInsets sectionInsets = [self innerInsetForSectionAtIndex:section];
     CGFloat minimumInteritemSpacing = [self innerMinimumInteritemSpacingForSectionAtIndex:section];
     UIEdgeInsets contentInsets = self.collectionView.contentInset;
@@ -918,12 +918,12 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     //******************** 竖直方向位置(origin.y)，用于竖直方向对齐方式计算 ********************//
     CGFloat tempOriginY = 0.f;
     NSArray *frameValues = [array valueForKeyPath:@"frame"];
-    if (verticalAlignment == FWCollectionViewItemsVerticalAlignmentTop) {
+    if (verticalAlignment == __FWCollectionViewItemsVerticalAlignmentTop) {
         tempOriginY = CGFLOAT_MAX;
         for (NSValue *frameValue in frameValues) {
             tempOriginY = MIN(tempOriginY, CGRectGetMinY([frameValue CGRectValue]));
         }
-    } else if (verticalAlignment == FWCollectionViewItemsVerticalAlignmentBottom) {
+    } else if (verticalAlignment == __FWCollectionViewItemsVerticalAlignmentBottom) {
         tempOriginY = CGFLOAT_MIN;
         for (NSValue *frameValue in frameValues) {
             tempOriginY = MAX(tempOriginY, CGRectGetMaxY([frameValue CGRectValue]));
@@ -933,29 +933,29 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     //******************** 计算起点及间距 ********************//
     CGFloat start = 0.f, space = 0.f;
     switch (horizontalAlignment) {
-        case FWCollectionViewItemsHorizontalAlignmentLeft: {
+        case __FWCollectionViewItemsHorizontalAlignmentLeft: {
             start = isR2L ? (collectionViewWidth - totalWidth - contentInsets.left - contentInsets.right - sectionInsets.left - minimumInteritemSpacing * (totalCount - 1)) : sectionInsets.left;
             space = minimumInteritemSpacing;
         } break;
 
-        case FWCollectionViewItemsHorizontalAlignmentCenter: {
+        case __FWCollectionViewItemsHorizontalAlignmentCenter: {
             CGFloat rest = extra / 2.f;
             start = isR2L ? sectionInsets.right + rest : sectionInsets.left + rest;
             space = minimumInteritemSpacing;
         } break;
 
-        case FWCollectionViewItemsHorizontalAlignmentRight: {
+        case __FWCollectionViewItemsHorizontalAlignmentRight: {
             start = isR2L ? sectionInsets.right : (collectionViewWidth - totalWidth - contentInsets.left - contentInsets.right - sectionInsets.right - minimumInteritemSpacing * (totalCount - 1));
             space = minimumInteritemSpacing;
         } break;
 
-        case FWCollectionViewItemsHorizontalAlignmentFlow: {
+        case __FWCollectionViewItemsHorizontalAlignmentFlow: {
             BOOL isEnd = array.lastObject.indexPath.item == [self.collectionView numberOfItemsInSection:section] - 1;
             start = isR2L ? sectionInsets.right : sectionInsets.left;
             space = isEnd ? minimumInteritemSpacing : (collectionViewWidth - totalWidth - contentInsets.left - contentInsets.right - sectionInsets.left - sectionInsets.right) / (totalCount - 1);
         } break;
 
-        case FWCollectionViewItemsHorizontalAlignmentFlowFilled: {
+        case __FWCollectionViewItemsHorizontalAlignmentFlowFilled: {
             start = isR2L ? sectionInsets.right : sectionInsets.left;
             space = minimumInteritemSpacing;
         } break;
@@ -969,7 +969,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
     for (int i = 0; i < widthArray.count; i++) {
         CGRect frame = array[i].frame;
         CGFloat width = [widthArray[i] floatValue];
-        if (horizontalAlignment == FWCollectionViewItemsHorizontalAlignmentFlowFilled) {
+        if (horizontalAlignment == __FWCollectionViewItemsHorizontalAlignmentFlowFilled) {
             width += extra / (totalWidth / width);
         }
         CGFloat originX = 0.f;
@@ -981,9 +981,9 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
             lastMaxX = originX + width;
         }
         CGFloat originY;
-        if (verticalAlignment == FWCollectionViewItemsVerticalAlignmentBottom) {
+        if (verticalAlignment == __FWCollectionViewItemsVerticalAlignmentBottom) {
             originY = tempOriginY - CGRectGetHeight(frame);
-        } else if (verticalAlignment == FWCollectionViewItemsVerticalAlignmentCenter) {
+        } else if (verticalAlignment == __FWCollectionViewItemsVerticalAlignmentCenter) {
             originY = frame.origin.y;
         } else {
             originY = tempOriginY;
@@ -1018,7 +1018,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
-    // This is likely occurring because the flow layout subclass FWCollectionViewAlignLayout is modifying attributes returned by UICollectionViewFlowLayout without copying them
+    // This is likely occurring because the flow layout subclass __FWCollectionViewAlignLayout is modifying attributes returned by UICollectionViewFlowLayout without copying them
     UICollectionViewLayoutAttributes *currentAttributes = [[super layoutAttributesForItemAtIndexPath:indexPath] copy];
 
     // 获取缓存的当前 indexPath 的 item frame value

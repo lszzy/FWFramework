@@ -36,26 +36,26 @@
 
 #endif
 
-#pragma mark - FWBadgeView
+#pragma mark - __FWBadgeView
 
-@implementation FWBadgeView
+@implementation __FWBadgeView
 
-- (instancetype)initWithBadgeStyle:(FWBadgeStyle)badgeStyle
+- (instancetype)initWithBadgeStyle:(__FWBadgeStyle)badgeStyle
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         // 根据样式处理
         _badgeStyle = badgeStyle;
         switch (badgeStyle) {
-            case FWBadgeStyleSmall: {
+            case __FWBadgeStyleSmall: {
                 [self setupWithBadgeHeight:18.f badgeOffset:CGPointMake(7.f, 7.f) textInset:5.f fontSize:12.f];
                 break;
             }
-            case FWBadgeStyleBig: {
+            case __FWBadgeStyleBig: {
                 [self setupWithBadgeHeight:24.f badgeOffset:CGPointMake(9.f, 9.f) textInset:6.f fontSize:14.f];
                 break;
             }
-            case FWBadgeStyleDot:
+            case __FWBadgeStyleDot:
             default: {
                 CGFloat badgeHeight = 10.f;
                 _badgeOffset = CGPointMake(3.f, 3.f);
@@ -102,11 +102,11 @@
 
 @end
 
-#pragma mark - UIView+FWBadge
+#pragma mark - UIView+__FWBadge
 
-@implementation UIView (FWBadge)
+@implementation UIView (__FWBadge)
 
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
     [self fw_hideBadgeView];
     
@@ -130,9 +130,9 @@
 
 @end
 
-#pragma mark - UIBarItem+FWBadge
+#pragma mark - UIBarItem+__FWBadge
 
-@implementation UIBarItem (FWBadge)
+@implementation UIBarItem (__FWBadge)
 
 - (UIView *)fw_view
 {
@@ -175,11 +175,11 @@
 
 @end
 
-#pragma mark - UIBarButtonItem+FWBadge
+#pragma mark - UIBarButtonItem+__FWBadge
 
-@implementation UIBarButtonItem (FWBadge)
+@implementation UIBarButtonItem (__FWBadge)
 
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
     [self fw_hideBadgeView];
     
@@ -211,7 +211,7 @@
 
 #pragma mark - UITabBarItem+FWBadege
 
-@implementation UITabBarItem (FWBadge)
+@implementation UITabBarItem (__FWBadge)
 
 + (void)load
 {
@@ -222,8 +222,8 @@
             
             // 解决因为层级关系变化导致的badgeView被遮挡问题
             for (UIView *subview in selfObject.subviews) {
-                if ([subview isKindOfClass:[FWBadgeView class]]) {
-                    FWBadgeView *badgeView = (FWBadgeView *)subview;
+                if ([subview isKindOfClass:[__FWBadgeView class]]) {
+                    __FWBadgeView *badgeView = (__FWBadgeView *)subview;
                     [selfObject bringSubviewToFront:badgeView];
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
@@ -265,7 +265,7 @@
     return [UITabBarItem fw_imageView:tabBarButton];
 }
 
-- (void)fw_showBadgeView:(FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
+- (void)fw_showBadgeView:(__FWBadgeView *)badgeView badgeValue:(NSString *)badgeValue
 {
     [self fw_hideBadgeView];
     

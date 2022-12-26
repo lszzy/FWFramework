@@ -127,9 +127,9 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         self.state = __FWPullRefreshStateIdle;
         self.pullingPercent = 0;
         
-        self.titles = [NSMutableArray arrayWithObjects:FWAppBundle.refreshIdleTitle,
-                       FWAppBundle.refreshTriggeredTitle,
-                       FWAppBundle.refreshLoadingTitle,
+        self.titles = [NSMutableArray arrayWithObjects:__FWAppBundle.refreshIdleTitle,
+                       __FWAppBundle.refreshTriggeredTitle,
+                       __FWAppBundle.refreshLoadingTitle,
                        nil];
         self.subtitles = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
         self.viewForState = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
@@ -768,7 +768,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         _finishedLabel.font = [UIFont systemFontOfSize:14];
         _finishedLabel.textAlignment = NSTextAlignmentCenter;
         _finishedLabel.textColor = [UIColor grayColor];
-        _finishedLabel.text = FWAppBundle.refreshFinishedTitle;
+        _finishedLabel.text = __FWAppBundle.refreshFinishedTitle;
         [_finishedLabel sizeToFit];
     }
     return _finishedLabel;

@@ -9,9 +9,9 @@
 
 #define FWValueSwitchAlignLeftOrRight(valueLeft, valueRight) ([self shouldAlignRight] ? valueRight : valueLeft)
 
-const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
+const CGSize __FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
 
-@implementation FWFloatLayoutView
+@implementation __FWFloatLayoutView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -31,7 +31,7 @@ const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
 - (void)didInitialize {
     self.contentMode = UIViewContentModeLeft;
     self.minimumItemSize = CGSizeZero;
-    self.maximumItemSize = FWFloatLayoutViewAutomaticalMaximumItemSize;
+    self.maximumItemSize = __FWFloatLayoutViewAutomaticalMaximumItemSize;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -57,7 +57,7 @@ const CGSize FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
     // 如果是左对齐，则代表 item 左上角的坐标，如果是右对齐，则代表 item 右上角的坐标
     CGPoint itemViewOrigin = CGPointMake(FWValueSwitchAlignLeftOrRight(self.padding.left, size.width - self.padding.right), self.padding.top);
     CGFloat currentRowMaxY = itemViewOrigin.y;
-    CGSize maximumItemSize = CGSizeEqualToSize(self.maximumItemSize, FWFloatLayoutViewAutomaticalMaximumItemSize) ? CGSizeMake(size.width - (self.padding.left + self.padding.right), size.height - (self.padding.top + self.padding.bottom)) : self.maximumItemSize;
+    CGSize maximumItemSize = CGSizeEqualToSize(self.maximumItemSize, __FWFloatLayoutViewAutomaticalMaximumItemSize) ? CGSizeMake(size.width - (self.padding.left + self.padding.right), size.height - (self.padding.top + self.padding.bottom)) : self.maximumItemSize;
     NSInteger line = -1;
     for (NSInteger i = 0, l = visibleItemViews.count; i < l; i++) {
         UIView *itemView = visibleItemViews[i];

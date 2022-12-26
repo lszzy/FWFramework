@@ -8,16 +8,16 @@
 #import "AttributedLabel.h"
 #import <objc/runtime.h>
 
-#pragma mark - FWAttributedLabel
+#pragma mark - __FWAttributedLabel
 
 static NSString* const FWEllipsesCharacter = @"\u2026";
 
-@interface FWAttributedLabel ()
+@interface __FWAttributedLabel ()
 
 @property (nonatomic,strong)    NSMutableAttributedString   *attributedString;
 @property (nonatomic,strong)    NSMutableArray              *attachments;
 @property (nonatomic,strong)    NSMutableArray              *linkLocations;
-@property (nonatomic,strong)    FWAttributedLabelURL        *touchedLink;
+@property (nonatomic,strong)    __FWAttributedLabelURL        *touchedLink;
 @property (nonatomic,assign)    CTFrameRef textFrame;
 @property (nonatomic,assign)    CGFloat fontAscent;
 @property (nonatomic,assign)    CGFloat fontDescent;
@@ -28,7 +28,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @end
 
-@implementation FWAttributedLabel
+@implementation __FWAttributedLabel
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -143,7 +143,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         
         _attributedString.fw_font = _font;
         [self resetFont];
-        for (FWAttributedLabelAttachment *attachment in _attachments)
+        for (__FWAttributedLabelAttachment *attachment in _attachments)
         {
             attachment.fontAscent = _fontAscent;
             attachment.fontDescent = _fontDescent;
@@ -279,7 +279,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     }
 }
 
-- (void)setLineTruncatingAttachment:(FWAttributedLabelAttachment *)lineTruncatingAttachment
+- (void)setLineTruncatingAttachment:(__FWAttributedLabelAttachment *)lineTruncatingAttachment
 {
     if (_lineTruncatingAttachment != lineTruncatingAttachment)
     {
@@ -366,7 +366,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
         
         
-        for (FWAttributedLabelURL *url in _linkLocations)
+        for (__FWAttributedLabelURL *url in _linkLocations)
         {
             if (url.range.location + url.range.length >[_attributedString length])
             {
@@ -386,7 +386,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     }
 }
 
-- (FWAttributedLabelURL *)urlForPoint:(CGPoint)point
+- (__FWAttributedLabelURL *)urlForPoint:(CGPoint)point
 {
     static const CGFloat kVMargin = 5;
     if (!CGRectContainsPoint(CGRectInset(self.bounds, 0, -kVMargin), point)
@@ -422,7 +422,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             CGPoint relativePoint = CGPointMake(point.x-CGRectGetMinX(rect),
                                                 point.y-CGRectGetMinY(rect));
             CFIndex idx = CTLineGetStringIndexForPosition(line, relativePoint);
-            FWAttributedLabelURL *url = [self linkAtIndex:idx];
+            __FWAttributedLabelURL *url = [self linkAtIndex:idx];
             if (url)
             {
                 return url;
@@ -434,7 +434,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 - (id)linkDataForPoint:(CGPoint)point
 {
-    FWAttributedLabelURL *url = [self urlForPoint:point];
+    __FWAttributedLabelURL *url = [self urlForPoint:point];
     return url ? url.linkData : nil;
 }
 
@@ -454,9 +454,9 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     return CGRectMake(point.x, point.y - descent, width, height);
 }
 
-- (FWAttributedLabelURL *)linkAtIndex:(CFIndex)index
+- (__FWAttributedLabelURL *)linkAtIndex:(CFIndex)index
 {
-    for (FWAttributedLabelURL *url in _linkLocations)
+    for (__FWAttributedLabelURL *url in _linkLocations)
     {
         if (NSLocationInRange(index, url.range))
         {
@@ -513,7 +513,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     return rectForRange;
 }
 
-- (void)appendAttachment:(FWAttributedLabelAttachment *)attachment
+- (void)appendAttachment:(__FWAttributedLabelAttachment *)attachment
 {
     attachment.fontAscent                   = _fontAscent;
     attachment.fontDescent                  = _fontDescent;
@@ -523,10 +523,10 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     
     CTRunDelegateCallbacks callbacks;
     callbacks.version       = kCTRunDelegateVersion1;
-    callbacks.getAscent     = fw_attributedAscentCallback;
-    callbacks.getDescent    = fw_attributedDescentCallback;
-    callbacks.getWidth      = fw_attributedWidthCallback;
-    callbacks.dealloc       = fw_attributedDeallocCallback;
+    callbacks.getAscent     = __fw_attributedAscentCallback;
+    callbacks.getDescent    = __fw_attributedDescentCallback;
+    callbacks.getWidth      = __fw_attributedWidthCallback;
+    callbacks.dealloc       = __fw_attributedDeallocCallback;
     
     CTRunDelegateRef delegate = CTRunDelegateCreate(&callbacks, (void *)attachment);
     NSDictionary *attr = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)delegate,kCTRunDelegateAttributeName, nil];
@@ -595,15 +595,15 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     [self appendImage:image
               maxSize:maxSize
                margin:margin
-            alignment:FWAttributedAlignmentCenter];
+            alignment:__FWAttributedAlignmentCenter];
 }
 
 - (void)appendImage:(UIImage *)image
             maxSize:(CGSize)maxSize
              margin:(UIEdgeInsets)margin
-          alignment:(FWAttributedAlignment)alignment
+          alignment:(__FWAttributedAlignment)alignment
 {
-    FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:image
+    __FWAttributedLabelAttachment *attachment = [__FWAttributedLabelAttachment attachmentWith:image
                                                                                    margin:margin
                                                                                 alignment:alignment
                                                                                   maxSize:maxSize];
@@ -622,15 +622,15 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 {
     [self appendView:view
               margin:margin
-           alignment:FWAttributedAlignmentCenter];
+           alignment:__FWAttributedAlignmentCenter];
 }
 
 
 - (void)appendView:(UIView *)view
             margin:(UIEdgeInsets)margin
-         alignment:(FWAttributedAlignment)alignment
+         alignment:(__FWAttributedAlignment)alignment
 {
-    FWAttributedLabelAttachment *attachment = [FWAttributedLabelAttachment attachmentWith:view
+    __FWAttributedLabelAttachment *attachment = [__FWAttributedLabelAttachment attachmentWith:view
                                                                                    margin:margin
                                                                                 alignment:alignment
                                                                                   maxSize:CGSizeZero];
@@ -650,7 +650,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
              forRange:(NSRange)range
             linkColor:(UIColor *)color
 {
-    FWAttributedLabelURL *url = [FWAttributedLabelURL urlWithLinkData:linkData
+    __FWAttributedLabelURL *url = [__FWAttributedLabelURL urlWithLinkData:linkData
                                                                   range:range
                                                                   color:color];
     [_linkLocations addObject:url];
@@ -861,7 +861,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                         if (self.lineTruncatingSpacing > 0) {
                             truncationWidth -= self.lineTruncatingSpacing;
                             
-                            FWAttributedLabelAttachment *attributedImage = self.lineTruncatingAttachment;
+                            __FWAttributedLabelAttachment *attributedImage = self.lineTruncatingAttachment;
                             if (attributedImage) {
                                 CGFloat lineAscent;
                                 CGFloat lineDescent;
@@ -876,13 +876,13 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                 CGFloat imageBoxOriginY = 0.0f;
                                 switch (attributedImage.alignment)
                                 {
-                                    case FWAttributedAlignmentTop:
+                                    case __FWAttributedAlignmentTop:
                                         imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight);
                                         break;
-                                    case FWAttributedAlignmentCenter:
+                                    case __FWAttributedAlignmentCenter:
                                         imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0;
                                         break;
-                                    case FWAttributedAlignmentBottom:
+                                    case __FWAttributedAlignmentBottom:
                                         imageBoxOriginY = lineBottomY;
                                         break;
                                 }
@@ -990,7 +990,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             {
                 continue;
             }
-            FWAttributedLabelAttachment* attributedImage = (FWAttributedLabelAttachment *)CTRunDelegateGetRefCon(delegate);
+            __FWAttributedLabelAttachment* attributedImage = (__FWAttributedLabelAttachment *)CTRunDelegateGetRefCon(delegate);
             
             CGFloat ascent = 0.0f;
             CGFloat descent = 0.0f;
@@ -1006,13 +1006,13 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             CGFloat imageBoxOriginY = 0.0f;
             switch (attributedImage.alignment)
             {
-                case FWAttributedAlignmentTop:
+                case __FWAttributedAlignmentTop:
                     imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight);
                     break;
-                case FWAttributedAlignmentCenter:
+                case __FWAttributedAlignmentCenter:
                     imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0;
                     break;
-                case FWAttributedAlignmentBottom:
+                case __FWAttributedAlignmentBottom:
                     imageBoxOriginY = lineBottomY;
                     break;
             }
@@ -1124,8 +1124,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     __weak typeof(self) weakSelf = self;
     self.ignoreRedraw = YES;
     
-    [FWAttributedLabelURLDetector.shared detectLinks:text
-                                           completion:^(NSArray<FWAttributedLabelURL *> * _Nullable links) {
+    [__FWAttributedLabelURLDetector.shared detectLinks:text
+                                           completion:^(NSArray<__FWAttributedLabelURL *> * _Nullable links) {
                                                __strong typeof(weakSelf) strongSelf = weakSelf;
                                                NSString *plainText = [[strongSelf attributedString] string];
                                                if ([text isEqualToString:plainText])
@@ -1133,7 +1133,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                                    strongSelf.linkDetected = YES;
                                                    if ([links count])
                                                    {
-                                                       for (FWAttributedLabelURL *link in links)
+                                                       for (__FWAttributedLabelURL *link in links)
                                                        {
                                                            [strongSelf addAutoDetectedLink:link];
                                                        }
@@ -1144,10 +1144,10 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                             }];
 }
 
-- (void)addAutoDetectedLink:(FWAttributedLabelURL *)link
+- (void)addAutoDetectedLink:(__FWAttributedLabelURL *)link
 {
     NSRange range = link.range;
-    for (FWAttributedLabelURL *url in _linkLocations)
+    for (__FWAttributedLabelURL *url in _linkLocations)
     {
         if (NSIntersectionRange(range, url.range).length != 0)
         {
@@ -1184,7 +1184,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
     
-    FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
+    __FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
     if (self.touchedLink != touchedLink)
     {
         self.touchedLink = touchedLink;
@@ -1219,7 +1219,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
+    __FWAttributedLabelURL *touchedLink = [self urlForPoint:point];
     if (touchedLink == nil)
     {
         NSArray *subViews = [self subviews];
@@ -1245,15 +1245,15 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @end
 
-#pragma mark - FWAttributedLabelURL
+#pragma mark - __FWAttributedLabelURL
 
-@implementation FWAttributedLabelURL
+@implementation __FWAttributedLabelURL
 
-+ (FWAttributedLabelURL *)urlWithLinkData:(id)linkData
++ (__FWAttributedLabelURL *)urlWithLinkData:(id)linkData
                                      range:(NSRange)range
                                      color:(UIColor *)color
 {
-    FWAttributedLabelURL *url  = [[FWAttributedLabelURL alloc]init];
+    __FWAttributedLabelURL *url  = [[__FWAttributedLabelURL alloc]init];
     url.linkData                = linkData;
     url.range                   = range;
     url.color                   = color;
@@ -1263,21 +1263,21 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @end
 
-#pragma mark - FWAttributedLabelURLDetector
+#pragma mark - __FWAttributedLabelURLDetector
 
-@implementation FWAttributedLabelURLDetector
+@implementation __FWAttributedLabelURLDetector
 + (instancetype)shared
 {
-    static FWAttributedLabelURLDetector *instance = nil;
+    static __FWAttributedLabelURLDetector *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [FWAttributedLabelURLDetector new];
+        instance = [__FWAttributedLabelURLDetector new];
     });
     return instance;
 }
 
 - (void)detectLinks:(nullable NSString *)plainText
-         completion:(FWAttributedLinkDetectCompletion)completion
+         completion:(__FWAttributedLinkDetectCompletion)completion
 {
     if (completion == nil)
     {
@@ -1302,7 +1302,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                     usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
                                         NSRange range = result.range;
                                         NSString *text = [plainText substringWithRange:range];
-                                        FWAttributedLabelURL *link = [FWAttributedLabelURL urlWithLinkData:text
+                                        __FWAttributedLabelURL *link = [__FWAttributedLabelURL urlWithLinkData:text
                                                                                                        range:range
                                                                                                        color:nil];
                                         [links addObject:link];
@@ -1332,24 +1332,24 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @end
 
-#pragma mark - FWAttributedLabelAttachment
+#pragma mark - __FWAttributedLabelAttachment
 
-void fw_attributedDeallocCallback(void* ref)
+void __fw_attributedDeallocCallback(void* ref)
 {
     
 }
 
-CGFloat fw_attributedAscentCallback(void *ref)
+CGFloat __fw_attributedAscentCallback(void *ref)
 {
-    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
+    __FWAttributedLabelAttachment *image = (__bridge __FWAttributedLabelAttachment *)ref;
     CGFloat ascent = 0;
     CGFloat height = [image boxSize].height;
     switch (image.alignment)
     {
-        case FWAttributedAlignmentTop:
+        case __FWAttributedAlignmentTop:
             ascent = image.fontAscent;
             break;
-        case FWAttributedAlignmentCenter:
+        case __FWAttributedAlignmentCenter:
         {
             CGFloat fontAscent  = image.fontAscent;
             CGFloat fontDescent = image.fontDescent;
@@ -1357,7 +1357,7 @@ CGFloat fw_attributedAscentCallback(void *ref)
             ascent = height / 2 + baseLine;
         }
             break;
-        case FWAttributedAlignmentBottom:
+        case __FWAttributedAlignmentBottom:
             ascent = height - image.fontDescent;
             break;
         default:
@@ -1366,19 +1366,19 @@ CGFloat fw_attributedAscentCallback(void *ref)
     return ascent;
 }
 
-CGFloat fw_attributedDescentCallback(void *ref)
+CGFloat __fw_attributedDescentCallback(void *ref)
 {
-    FWAttributedLabelAttachment *image = (__bridge FWAttributedLabelAttachment *)ref;
+    __FWAttributedLabelAttachment *image = (__bridge __FWAttributedLabelAttachment *)ref;
     CGFloat descent = 0;
     CGFloat height = [image boxSize].height;
     switch (image.alignment)
     {
-        case FWAttributedAlignmentTop:
+        case __FWAttributedAlignmentTop:
         {
             descent = height - image.fontAscent;
             break;
         }
-        case FWAttributedAlignmentCenter:
+        case __FWAttributedAlignmentCenter:
         {
             CGFloat fontAscent  = image.fontAscent;
             CGFloat fontDescent = image.fontDescent;
@@ -1386,7 +1386,7 @@ CGFloat fw_attributedDescentCallback(void *ref)
             descent = height / 2 - baseLine;
         }
             break;
-        case FWAttributedAlignmentBottom:
+        case __FWAttributedAlignmentBottom:
         {
             descent = image.fontDescent;
             break;
@@ -1398,25 +1398,25 @@ CGFloat fw_attributedDescentCallback(void *ref)
     return descent;
 }
 
-CGFloat fw_attributedWidthCallback(void* ref)
+CGFloat __fw_attributedWidthCallback(void* ref)
 {
-    FWAttributedLabelAttachment *image  = (__bridge FWAttributedLabelAttachment *)ref;
+    __FWAttributedLabelAttachment *image  = (__bridge __FWAttributedLabelAttachment *)ref;
     return [image boxSize].width;
 }
 
-@interface FWAttributedLabelAttachment ()
+@interface __FWAttributedLabelAttachment ()
 - (CGSize)calculateContentSize;
 - (CGSize)attachmentSize;
 @end
 
-@implementation FWAttributedLabelAttachment
+@implementation __FWAttributedLabelAttachment
 
-+ (FWAttributedLabelAttachment *)attachmentWith:(id)content
++ (__FWAttributedLabelAttachment *)attachmentWith:(id)content
                                           margin:(UIEdgeInsets)margin
-                                       alignment:(FWAttributedAlignment)alignment
+                                       alignment:(__FWAttributedAlignment)alignment
                                          maxSize:(CGSize)maxSize
 {
-    FWAttributedLabelAttachment *attachment    = [[FWAttributedLabelAttachment alloc]init];
+    __FWAttributedLabelAttachment *attachment    = [[__FWAttributedLabelAttachment alloc]init];
     attachment.content                          = content;
     attachment.margin                           = margin;
     attachment.alignment                        = alignment;
@@ -1477,9 +1477,9 @@ CGFloat fw_attributedWidthCallback(void* ref)
 }
 @end
 
-#pragma mark - NSMutableAttributedString+FWAttributedLabel
+#pragma mark - NSMutableAttributedString+__FWAttributedLabel
 
-@implementation NSMutableAttributedString (FWAttributedLabel)
+@implementation NSMutableAttributedString (__FWAttributedLabel)
 
 - (UIColor *)fw_textColor
 {

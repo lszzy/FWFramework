@@ -18,9 +18,9 @@
 
 #endif
 
-#pragma mark - FWDrawerView
+#pragma mark - __FWDrawerView
 
-@interface FWDrawerView () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
+@interface __FWDrawerView () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation FWDrawerView
+@implementation __FWDrawerView
 
 #pragma mark - Lifecycle
 
@@ -329,26 +329,26 @@
 
 @end
 
-#pragma mark - UIView+FWDrawerView
+#pragma mark - UIView+__FWDrawerView
 
-@implementation UIView (FWDrawerView)
+@implementation UIView (__FWDrawerView)
 
-- (FWDrawerView *)fw_drawerView
+- (__FWDrawerView *)fw_drawerView
 {
     return objc_getAssociatedObject(self, @selector(fw_drawerView));
 }
 
-- (void)setFw_drawerView:(FWDrawerView *)drawerView
+- (void)setFw_drawerView:(__FWDrawerView *)drawerView
 {
     objc_setAssociatedObject(self, @selector(fw_drawerView), drawerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWDrawerView *)fw_drawerView:(UISwipeGestureRecognizerDirection)direction
+- (__FWDrawerView *)fw_drawerView:(UISwipeGestureRecognizerDirection)direction
                      positions:(NSArray<NSNumber *> *)positions
                 kickbackHeight:(CGFloat)kickbackHeight
                       callback:(void (^)(CGFloat, BOOL))callback
 {
-    FWDrawerView *drawerView = [[FWDrawerView alloc] initWithView:self];
+    __FWDrawerView *drawerView = [[__FWDrawerView alloc] initWithView:self];
     if (direction > 0) drawerView.direction = direction;
     drawerView.positions = positions;
     drawerView.kickbackHeight = kickbackHeight;
@@ -358,9 +358,9 @@
 
 @end
 
-#pragma mark - UIScrollView+FWDrawerView
+#pragma mark - UIScrollView+__FWDrawerView
 
-@implementation UIScrollView (FWDrawerView)
+@implementation UIScrollView (__FWDrawerView)
 
 - (BOOL)fw_drawerSuperviewFixed
 {

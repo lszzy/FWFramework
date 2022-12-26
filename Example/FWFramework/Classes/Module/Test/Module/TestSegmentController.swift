@@ -176,7 +176,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             tagCollectionView.addTag(tagName, with: textTagConfig)
         }
         
-        let marqueeLabel = MarqueeLabel.fw.label(font: UIFont.fw.font(ofSize: 16), textColor: AppTheme.textColor, text: "FWMarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
+        let marqueeLabel = MarqueeLabel.fw.label(font: UIFont.fw.font(ofSize: 16), textColor: AppTheme.textColor, text: "MarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
         view.addSubview(marqueeLabel)
         marqueeLabel.fw.layoutChain
             .horizontal(10)

@@ -541,8 +541,8 @@
     BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
     //Prepare the localized options
-    NSString *cancelButtonTitle = _cancelButtonTitle ?: FWAppBundle.cancelButton;
-    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : FWAppBundle.originalButton;
+    NSString *cancelButtonTitle = _cancelButtonTitle ?: __FWAppBundle.cancelButton;
+    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : __FWAppBundle.originalButton;
     
     //Prepare the list that will be fed to the alert view/controller
     
@@ -1294,7 +1294,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     
     _doneTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_doneTextButton setTitle: _doneTextButtonTitle ?
-        _doneTextButtonTitle : FWAppBundle.doneButton
+        _doneTextButtonTitle : __FWAppBundle.doneButton
                      forState:UIControlStateNormal];
     [_doneTextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_doneTextButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
@@ -1311,7 +1311,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     _cancelTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     
     [_cancelTextButton setTitle: _cancelTextButtonTitle ?
-        _cancelTextButtonTitle : FWAppBundle.cancelButton
+        _cancelTextButtonTitle : __FWAppBundle.cancelButton
                        forState:UIControlStateNormal];
     [_cancelTextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_cancelTextButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];

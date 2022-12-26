@@ -7,11 +7,11 @@
 
 #import "SceneDelegate.h"
 
-@interface FWSceneDelegate ()
+@interface __FWSceneDelegate ()
 
 @end
 
-@implementation FWSceneDelegate
+@implementation __FWSceneDelegate
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     if ([scene isKindOfClass:[UIWindowScene class]]) {
