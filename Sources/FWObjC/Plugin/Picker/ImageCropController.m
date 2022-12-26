@@ -715,7 +715,7 @@
 
     //If cropping circular and the circular generation delegate/block is implemented, call it
     if (self.croppingStyle == FWImageCropCroppingStyleCircular && (isCircularImageDelegateAvailable || isCircularImageCallbackAvailable)) {
-        UIImage *image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circularClip:YES];
+        UIImage *image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circular:YES];
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.03f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -736,7 +736,7 @@
             image = self.image;
         }
         else {
-            image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circularClip:NO];
+            image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circular:NO];
         }
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
@@ -1014,51 +1014,6 @@
 - (CGFloat)minimumAspectRatio
 {
     return self.cropView.minimumAspectRatio;
-}
-
-@end
-
-@implementation UIImage (FWCropRotate)
-
-- (UIImage *)fw_croppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular
-{
-    UIImage *croppedImage = nil;
-    CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(self.CGImage);
-    BOOL hasAlpha = (alphaInfo == kCGImageAlphaFirst || alphaInfo == kCGImageAlphaLast ||
-                     alphaInfo == kCGImageAlphaPremultipliedFirst || alphaInfo == kCGImageAlphaPremultipliedLast);
-    UIGraphicsBeginImageContextWithOptions(frame.size, !hasAlpha && !circular, self.scale);
-    {
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        if (circular) {
-            CGContextAddEllipseInRect(context, (CGRect){CGPointZero, frame.size});
-            CGContextClip(context);
-        }
-        
-        //To conserve memory in not needing to completely re-render the image re-rotated,
-        //map the image to a view and then use Core Animation to manipulate its rotation
-        if (angle != 0) {
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:self];
-            imageView.layer.minificationFilter = kCAFilterNearest;
-            imageView.layer.magnificationFilter = kCAFilterNearest;
-            imageView.transform = CGAffineTransformRotate(CGAffineTransformIdentity, angle * (M_PI/180.0f));
-            CGRect rotatedRect = CGRectApplyAffineTransform(imageView.bounds, imageView.transform);
-            UIView *containerView = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, rotatedRect.size}];
-            [containerView addSubview:imageView];
-            imageView.center = containerView.center;
-            CGContextTranslateCTM(context, -frame.origin.x, -frame.origin.y);
-            [containerView.layer renderInContext:context];
-        }
-        else {
-            CGContextTranslateCTM(context, -frame.origin.x, -frame.origin.y);
-            [self drawAtPoint:CGPointZero];
-        }
-        
-        croppedImage = UIGraphicsGetImageFromCurrentImageContext();
-    }
-    UIGraphicsEndImageContext();
-    
-    return [UIImage imageWithCGImage:croppedImage.CGImage scale: self.scale orientation:UIImageOrientationUp];
 }
 
 @end

@@ -45,12 +45,6 @@ extension Wrapper where Base: UIViewController {
 
 extension Wrapper where Base: UIView {
     
-    /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-    public var frameApplyTransform: CGRect {
-        get { return base.__fw_frameApplyTransform }
-        set { base.__fw_frameApplyTransform = newValue }
-    }
-    
     /// 显示图片预览(简单版)
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型

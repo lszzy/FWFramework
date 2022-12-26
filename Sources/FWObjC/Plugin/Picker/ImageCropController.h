@@ -359,12 +359,6 @@ NS_SWIFT_NAME(ImageCropController)
 
 @end
 
-@interface UIImage (FWCropRotate)
-
-- (nonnull UIImage *)fw_croppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circularClip:(BOOL)circular NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_SWIFT_NAME(ImageCropOverlayView)
 @interface FWImageCropOverlayView : UIView
 

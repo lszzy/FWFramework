@@ -576,6 +576,11 @@ extension Wrapper where Base: UIImage {
     public func image(blurRadius: CGFloat, saturationDelta: CGFloat, tintColor: UIColor?, maskImage: UIImage?) -> UIImage? {
         return base.fw_image(blurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
     }
+    
+    /// 图片裁剪，可指定frame、角度、圆形等
+    public func croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+        return base.fw_croppedImage(frame: frame, angle: angle, circular: circular)
+    }
 
     /// 如果没有透明通道，增加透明通道
     public var alphaImage: UIImage {
