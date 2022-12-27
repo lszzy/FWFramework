@@ -599,7 +599,7 @@ import FWObjC
     
 }
 
-/// 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
+/// 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用AlertController
 @_spi(FW) @objc extension UIAlertAction {
     
     /// 自定义样式，默认为样式单例
@@ -668,7 +668,7 @@ import FWObjC
     
 }
 
-/// 系统弹出框title和message仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
+/// 系统弹出框title和message仅支持NSString，如果需要支持NSAttributedString等，请使用AlertController
 @_spi(FW) @objc extension UIAlertController {
     
     /// 自定义样式，默认为样式单例

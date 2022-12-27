@@ -10,35 +10,35 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, FWAlertControllerStyle) {
-    FWAlertControllerStyleActionSheet = 0, // 从单侧弹出(顶/左/底/右)
-    FWAlertControllerStyleAlert,           // 从中间弹出
+typedef NS_ENUM(NSInteger, __FWAlertControllerStyle) {
+    __FWAlertControllerStyleActionSheet = 0, // 从单侧弹出(顶/左/底/右)
+    __FWAlertControllerStyleAlert,           // 从中间弹出
 } NS_SWIFT_NAME(AlertControllerStyle);
 
-typedef NS_ENUM(NSInteger, FWAlertAnimationType) {
-    FWAlertAnimationTypeDefault = 0, // 默认动画，如果是FWAlertControllerStyleActionSheet样式,默认动画等效于FWAlertAnimationTypeFromBottom，如果是FWAlertControllerStyleAlert样式,默认动画等效于FWAlertAnimationTypeShrink
-    FWAlertAnimationTypeFromBottom,  // 从底部弹出
-    FWAlertAnimationTypeFromTop,     // 从顶部弹出
-    FWAlertAnimationTypeFromRight,   // 从右边弹出
-    FWAlertAnimationTypeFromLeft,    // 从左边弹出
+typedef NS_ENUM(NSInteger, __FWAlertAnimationType) {
+    __FWAlertAnimationTypeDefault = 0, // 默认动画，如果是__FWAlertControllerStyleActionSheet样式,默认动画等效于__FWAlertAnimationTypeFromBottom，如果是__FWAlertControllerStyleAlert样式,默认动画等效于__FWAlertAnimationTypeShrink
+    __FWAlertAnimationTypeFromBottom,  // 从底部弹出
+    __FWAlertAnimationTypeFromTop,     // 从顶部弹出
+    __FWAlertAnimationTypeFromRight,   // 从右边弹出
+    __FWAlertAnimationTypeFromLeft,    // 从左边弹出
     
-    FWAlertAnimationTypeShrink,      // 收缩动画
-    FWAlertAnimationTypeExpand,      // 发散动画
-    FWAlertAnimationTypeFade,        // 渐变动画
+    __FWAlertAnimationTypeShrink,      // 收缩动画
+    __FWAlertAnimationTypeExpand,      // 发散动画
+    __FWAlertAnimationTypeFade,        // 渐变动画
 
-    FWAlertAnimationTypeNone,        // 无动画
+    __FWAlertAnimationTypeNone,        // 无动画
 } NS_SWIFT_NAME(AlertAnimationType);
 
-typedef NS_ENUM(NSInteger, FWAlertActionStyle) {
-    FWAlertActionStyleDefault = 0,  // 默认样式
-    FWAlertActionStyleCancel,       // 取消样式,字体加粗
-    FWAlertActionStyleDestructive   // 红色字体样式
+typedef NS_ENUM(NSInteger, __FWAlertActionStyle) {
+    __FWAlertActionStyleDefault = 0,  // 默认样式
+    __FWAlertActionStyleCancel,       // 取消样式,字体加粗
+    __FWAlertActionStyleDestructive   // 红色字体样式
 } NS_SWIFT_NAME(AlertActionStyle);
 
-/** FWAlertController样式，继承自FWAlertAppearance */
+/** __FWAlertController样式，继承自__FWAlertAppearance */
 NS_SWIFT_NAME(AlertControllerAppearance)
-@interface FWAlertControllerAppearance : FWAlertAppearance
-@property (class, nonatomic, readonly) FWAlertControllerAppearance *appearance;
+@interface __FWAlertControllerAppearance : __FWAlertAppearance
+@property (class, nonatomic, readonly) __FWAlertControllerAppearance *appearance;
 
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat cancelLineWidth;
@@ -75,12 +75,12 @@ NS_SWIFT_NAME(AlertControllerAppearance)
 
 @end
 
-// ===================================================== FWAlertAction =====================================================
+// ===================================================== __FWAlertAction =====================================================
 NS_SWIFT_NAME(AlertAction)
-@interface FWAlertAction : NSObject <NSCopying>
+@interface __FWAlertAction : NSObject <NSCopying>
 
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(FWAlertActionStyle)style handler:(void (^ __nullable)(FWAlertAction *action))handler;
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(FWAlertActionStyle)style appearance:(nullable FWAlertControllerAppearance *)appearance handler:(void (^ __nullable)(FWAlertAction *action))handler;
++ (instancetype)actionWithTitle:(nullable NSString *)title style:(__FWAlertActionStyle)style handler:(void (^ __nullable)(__FWAlertAction *action))handler;
++ (instancetype)actionWithTitle:(nullable NSString *)title style:(__FWAlertActionStyle)style appearance:(nullable __FWAlertControllerAppearance *)appearance handler:(void (^ __nullable)(__FWAlertAction *action))handler;
 
 /** action的标题 */
 @property(nullable, nonatomic, copy) NSString *title;
@@ -102,32 +102,32 @@ NS_SWIFT_NAME(AlertAction)
 @property(nonatomic, assign) UIEdgeInsets titleEdgeInsets;
 
 /** 样式 */
-@property(nonatomic, readonly) FWAlertActionStyle style;
+@property(nonatomic, readonly) __FWAlertActionStyle style;
 /** 自定义样式，默认为样式单例 */
-@property (nonatomic, strong, readonly) FWAlertControllerAppearance *alertAppearance;
+@property (nonatomic, strong, readonly) __FWAlertControllerAppearance *alertAppearance;
 
 @end
 
-// ===================================================== FWAlertController =====================================================
+// ===================================================== __FWAlertController =====================================================
 
-@protocol FWAlertControllerDelegate;
+@protocol __FWAlertControllerDelegate;
 
 /**
- FWAlertController
+ __FWAlertController
 
  @see https://github.com/SPStore/SPAlertController
  */
 NS_SWIFT_NAME(AlertController)
-@interface FWAlertController : UIViewController
+@interface __FWAlertController : UIViewController
 
-+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle;
-+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType;
-+ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType appearance:(nullable FWAlertControllerAppearance *)appearance;
++ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle;
++ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType;
++ (instancetype)alertControllerWithTitle:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType appearance:(nullable __FWAlertControllerAppearance *)appearance;
 
-- (void)addAction:(FWAlertAction *)action;
-@property (nonatomic, readonly) NSArray<FWAlertAction *> *actions;
+- (void)addAction:(__FWAlertAction *)action;
+@property (nonatomic, readonly) NSArray<__FWAlertAction *> *actions;
 
-@property (nullable, nonatomic, strong) FWAlertAction *preferredAction;
+@property (nullable, nonatomic, strong) __FWAlertAction *preferredAction;
 
 /* 添加文本输入框
  * 一旦添加后就会回调一次(仅回调一次,因此可以在这个block块里面自由定制textFiled,如设置textField的属性,设置代理,添加addTarget,监听通知等);
@@ -140,7 +140,7 @@ NS_SWIFT_NAME(AlertController)
 /** 副标题 */
 @property(nullable, nonatomic, copy) NSString *message;
 /** 弹窗样式，默认Default */
-@property(nonatomic, assign) FWAlertStyle alertStyle;
+@property(nonatomic, assign) __FWAlertStyle alertStyle;
 /** 主标题(富文本) */
 @property(nullable, nonatomic, copy) NSAttributedString *attributedTitle;
 /** 副标题(富文本) */
@@ -176,10 +176,10 @@ NS_SWIFT_NAME(AlertController)
  */
 @property(nonatomic, assign) CGFloat minDistanceToEdges;
 
-/** FWAlertControllerStyleAlert样式下默认6.0f，FWAlertControllerStyleActionSheet样式下默认13.0f，去除半径设置为0即可 */
+/** __FWAlertControllerStyleAlert样式下默认6.0f，__FWAlertControllerStyleActionSheet样式下默认13.0f，去除半径设置为0即可 */
 @property(nonatomic, assign) CGFloat cornerRadius;
 
-/** 对话框的偏移量，y值为正向下偏移，为负向上偏移；x值为正向右偏移，为负向左偏移，该属性只对FWAlertControllerStyleAlert样式有效,键盘的frame改变会自动偏移，如果手动设置偏移只会取手动设置的 */
+/** 对话框的偏移量，y值为正向下偏移，为负向上偏移；x值为正向右偏移，为负向左偏移，该属性只对__FWAlertControllerStyleAlert样式有效,键盘的frame改变会自动偏移，如果手动设置偏移只会取手动设置的 */
 @property(nonatomic, assign) CGPoint offsetForAlert;
 /** 设置alert样式下的偏移量,动画为NO则跟属性offsetForAlert等效 */
 - (void)setOffsetForAlert:(CGPoint)offsetForAlert animated:(BOOL)animated;
@@ -198,16 +198,16 @@ NS_SWIFT_NAME(AlertController)
 /** 单击背景dismiss完成回调，默认nil */
 @property (nullable, nonatomic, copy) void(^dismissCompletion)(void);
 
-@property(nonatomic, weak) id<FWAlertControllerDelegate> delegate;
+@property(nonatomic, weak) id<__FWAlertControllerDelegate> delegate;
 
-@property(nonatomic, readonly) FWAlertControllerStyle preferredStyle;
-@property(nonatomic, assign) FWAlertAnimationType animationType;
+@property(nonatomic, readonly) __FWAlertControllerStyle preferredStyle;
+@property(nonatomic, assign) __FWAlertAnimationType animationType;
 /** 自定义样式，默认为样式单例 */
-@property (nonatomic, strong, readonly) FWAlertControllerAppearance *alertAppearance;
+@property (nonatomic, strong, readonly) __FWAlertControllerAppearance *alertAppearance;
 
 /** 设置action与下一个action之间的间距, action仅限于非取消样式，必须在'-addAction:'之后设置，nil时设置header与action间距 */
-- (void)setCustomSpacing:(CGFloat)spacing afterAction:(nullable FWAlertAction *)action;
-- (CGFloat)customSpacingAfterAction:(nullable FWAlertAction *)action;
+- (void)setCustomSpacing:(CGFloat)spacing afterAction:(nullable __FWAlertAction *)action;
+- (CGFloat)customSpacingAfterAction:(nullable __FWAlertAction *)action;
 
 /** 设置蒙层的外观样式,可通过alpha调整透明度 */
 - (void)setBackgroundViewAppearanceStyle:(UIBlurEffectStyle)style alpha:(CGFloat)alpha;
@@ -225,7 +225,7 @@ NS_SWIFT_NAME(AlertController)
  @param animationType 动画类型
  @return 控制器对象
  */
-+ (instancetype)alertControllerWithCustomAlertView:(nonnull UIView *)customAlertView preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType;
++ (instancetype)alertControllerWithCustomAlertView:(nonnull UIView *)customAlertView preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType;
 /**
  创建控制器(自定义对话框的头部)
  
@@ -234,7 +234,7 @@ NS_SWIFT_NAME(AlertController)
  @param animationType 动画类型
  @return 控制器对象
  */
-+ (instancetype)alertControllerWithCustomHeaderView:(nonnull UIView *)customHeaderView preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType;
++ (instancetype)alertControllerWithCustomHeaderView:(nonnull UIView *)customHeaderView preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType;
 
 /**
  创建控制器(自定义对话框的头部)
@@ -245,7 +245,7 @@ NS_SWIFT_NAME(AlertController)
  @param appearance 自定义样式
  @return 控制器对象
  */
-+ (instancetype)alertControllerWithCustomHeaderView:(nonnull UIView *)customHeaderView preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType appearance:(nullable FWAlertControllerAppearance *)appearance;
++ (instancetype)alertControllerWithCustomHeaderView:(nonnull UIView *)customHeaderView preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType appearance:(nullable __FWAlertControllerAppearance *)appearance;
 
 /**
  创建控制器(自定义对话框的action部分)
@@ -257,7 +257,7 @@ NS_SWIFT_NAME(AlertController)
  @param animationType 动画类型
  @return 控制器对象
  */
-+ (instancetype)alertControllerWithCustomActionSequenceView:(nonnull UIView *)customActionSequenceView title:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(FWAlertControllerStyle)preferredStyle animationType:(FWAlertAnimationType)animationType;
++ (instancetype)alertControllerWithCustomActionSequenceView:(nonnull UIView *)customActionSequenceView title:(nullable NSString *)title message:(nullable NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType;
 
 /** 更新自定义view的size，比如屏幕旋转，自定义view的大小发生了改变，可通过该方法更新size */
 - (void)updateCustomViewSize:(CGSize)size;
@@ -265,20 +265,20 @@ NS_SWIFT_NAME(AlertController)
 @end
 
 NS_SWIFT_NAME(AlertControllerDelegate)
-@protocol FWAlertControllerDelegate <NSObject>
+@protocol __FWAlertControllerDelegate <NSObject>
 @optional;
-- (void)willPresentAlertController:(FWAlertController *)alertController; // 将要present
-- (void)didPresentAlertController:(FWAlertController *)alertController;  // 已经present
-- (void)willDismissAlertController:(FWAlertController *)alertController; // 将要dismiss
-- (void)didDismissAlertController:(FWAlertController *)alertController;  // 已经dismiss
+- (void)willPresentAlertController:(__FWAlertController *)alertController; // 将要present
+- (void)didPresentAlertController:(__FWAlertController *)alertController;  // 已经present
+- (void)willDismissAlertController:(__FWAlertController *)alertController; // 将要dismiss
+- (void)didDismissAlertController:(__FWAlertController *)alertController;  // 已经dismiss
 @end
 
 NS_SWIFT_NAME(AlertPresentationController)
-@interface FWAlertPresentationController : UIPresentationController
+@interface __FWAlertPresentationController : UIPresentationController
 @end
 
 NS_SWIFT_NAME(AlertAnimation)
-@interface FWAlertAnimation : NSObject <UIViewControllerAnimatedTransitioning>
+@interface __FWAlertAnimation : NSObject <UIViewControllerAnimatedTransitioning>
 + (instancetype)animationIsPresenting:(BOOL)presenting;
 @end
 

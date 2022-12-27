@@ -9,17 +9,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWAlertAppearance
+#pragma mark - __FWAlertAppearance
 
 /**
- 系统弹出框样式配置类，由于系统兼容性，建议优先使用FWAlertController
+ 系统弹出框样式配置类，由于系统兼容性，建议优先使用__FWAlertController
  @note 如果未自定义样式，显示效果和系统一致，不会产生任何影响；框架会先渲染actions动作再渲染cancel动作
 */
 NS_SWIFT_NAME(AlertAppearance)
-@interface FWAlertAppearance : NSObject
+@interface __FWAlertAppearance : NSObject
 
 // 单例模式，统一设置样式
-@property (class, nonatomic, readonly) FWAlertAppearance *appearance;
+@property (class, nonatomic, readonly) __FWAlertAppearance *appearance;
 
 // 自定义首选动作句柄，默认nil，跟随系统
 @property (nonatomic, copy, nullable) id _Nullable (^preferredActionBlock)(id alertController);
@@ -50,22 +50,22 @@ NS_SWIFT_NAME(AlertAppearance)
 
 @end
 
-#pragma mark - FWAlertPluginImpl
+#pragma mark - __FWAlertPluginImpl
 
 /// 默认弹窗插件
 NS_SWIFT_NAME(AlertPluginImpl)
-@interface FWAlertPluginImpl : NSObject <FWAlertPlugin>
+@interface __FWAlertPluginImpl : NSObject <__FWAlertPlugin>
 
 /// 单例模式对象
-@property (class, nonatomic, readonly) FWAlertPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWAlertPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 自定义Alert弹窗样式，nil时使用单例
-@property (nonatomic, strong, nullable) FWAlertAppearance *customAlertAppearance;
+@property (nonatomic, strong, nullable) __FWAlertAppearance *customAlertAppearance;
 
 /// 自定义ActionSheet弹窗样式，nil时使用单例
-@property (nonatomic, strong, nullable) FWAlertAppearance *customSheetAppearance;
+@property (nonatomic, strong, nullable) __FWAlertAppearance *customSheetAppearance;
 
-/// 自定义弹窗类数组，默认nil时查找UIAlertController|FWAlertController
+/// 自定义弹窗类数组，默认nil时查找UIAlertController|__FWAlertController
 @property (nonatomic, copy, nullable) NSArray<Class> *customAlertClasses;
 
 /// 弹窗自定义句柄，show方法自动调用
