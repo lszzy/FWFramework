@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWEmptyView
+#pragma mark - __FWEmptyView
 
 @protocol __FWIndicatorViewPlugin;
 
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(PlaceholderView)
-@interface FWEmptyView : UIView
+@interface __FWEmptyView : UIView
 
 /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
 @property(nonatomic, strong) UIView<__FWIndicatorViewPlugin> *loadingView;
@@ -118,29 +118,14 @@ NS_SWIFT_NAME(PlaceholderView)
 
 @end
 
-#pragma mark - UIScrollView+FWScrollOverlayView
+#pragma mark - __FWScrollOverlayView
 
+/// 滚动视图自定义浮层视图
 NS_SWIFT_NAME(ScrollOverlayView)
-@interface FWScrollOverlayView : UIView
+@interface __FWScrollOverlayView : UIView
 
-@end
-
-@interface UIScrollView (FWScrollOverlayView)
-
-/// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
-@property (nonatomic, strong, readonly) UIView *fw_overlayView NS_REFINED_FOR_SWIFT;
-
-/// 是否显示自定义浮层
-@property (nonatomic, assign, readonly) BOOL fw_hasOverlayView NS_REFINED_FOR_SWIFT;
-
-/// 显示自定义浮层，自动添加到滚动视图顶部、表格视图底部
-- (void)fw_showOverlayView NS_REFINED_FOR_SWIFT;
-
-/// 显示自定义浮层，执行渐变动画，自动添加到滚动视图顶部、表格视图底部
-- (void)fw_showOverlayViewAnimated:(BOOL)animated NS_REFINED_FOR_SWIFT;
-
-/// 隐藏自定义浮层，自动从滚动视图移除
-- (void)fw_hideOverlayView NS_REFINED_FOR_SWIFT;
+/// 添加到父视图时是否执行动画，默认NO
+@property (nonatomic, assign) BOOL fadeAnimated;
 
 @end
 

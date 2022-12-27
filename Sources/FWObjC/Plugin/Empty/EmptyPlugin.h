@@ -9,11 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWEmptyPlugin
+#pragma mark - __FWEmptyPlugin
 
 /// 空界面插件协议，应用可自定义空界面插件实现
 NS_SWIFT_NAME(EmptyPlugin)
-@protocol FWEmptyPlugin <NSObject>
+@protocol __FWEmptyPlugin <NSObject>
 
 @optional
 
@@ -28,94 +28,11 @@ NS_SWIFT_NAME(EmptyPlugin)
 
 @end
 
-#pragma mark - UIView+FWEmptyPlugin
-
-/// UIView使用空界面插件，兼容UITableView|UICollectionView
-@interface UIView (FWEmptyPlugin)
-
-/// 自定义空界面插件，未设置时自动从插件池加载
-@property (nonatomic, strong, null_resettable) id<FWEmptyPlugin> fw_emptyPlugin NS_REFINED_FOR_SWIFT;
-
-/// 设置空界面外间距，默认zero
-@property (nonatomic, assign) UIEdgeInsets fw_emptyInsets NS_REFINED_FOR_SWIFT;
-
-/// 是否显示空界面
-@property (nonatomic, assign, readonly) BOOL fw_hasEmptyView NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面
-- (void)fw_showEmptyView NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面加载视图
-- (void)fw_showEmptyViewLoading NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本和详细文本
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本和图片
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片和动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading action:(nullable NSString *)action block:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading actions:(nullable NSArray<NSString *> *)actions block:(nullable void (^)(NSInteger index, id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 隐藏空界面
-- (void)fw_hideEmptyView NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIViewController+FWEmptyPlugin
-
-/// UIViewController使用空界面插件，内部使用UIViewController.view
-@interface UIViewController (FWEmptyPlugin)
-
-/// 设置空界面外间距，默认zero
-@property (nonatomic, assign) UIEdgeInsets fw_emptyInsets NS_REFINED_FOR_SWIFT;
-
-/// 是否显示空界面
-@property (nonatomic, assign, readonly) BOOL fw_hasEmptyView NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面
-- (void)fw_showEmptyView NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面加载视图
-- (void)fw_showEmptyViewLoading NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本和详细文本
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本和图片
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片和动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading action:(nullable NSString *)action block:(nullable void (^)(id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-- (void)fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading actions:(nullable NSArray<NSString *> *)actions block:(nullable void (^)(NSInteger index, id sender))block NS_REFINED_FOR_SWIFT;
-
-/// 隐藏空界面
-- (void)fw_hideEmptyView NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIScrollView+FWEmptyPlugin
+#pragma mark - __FWEmptyViewDelegate
 
 /// 空界面代理协议
 NS_SWIFT_NAME(EmptyViewDelegate)
-@protocol FWEmptyViewDelegate <NSObject>
+@protocol __FWEmptyViewDelegate <NSObject>
 @optional
 
 /// 显示空界面，默认调用UIScrollView.fwShowEmptyView
@@ -132,21 +49,6 @@ NS_SWIFT_NAME(EmptyViewDelegate)
 
 /// 有数据时是否强制显示空界面，默认NO
 - (BOOL)emptyViewForceDisplay:(UIScrollView *)scrollView;
-
-@end
-
-/**
- 滚动视图空界面分类
- 
- @see https://github.com/dzenbot/DZNEmptyDataSet
- */
-@interface UIScrollView (FWEmptyPlugin)
-
-/// 空界面代理，默认nil
-@property (nonatomic, weak, nullable) id<FWEmptyViewDelegate> fw_emptyViewDelegate NS_REFINED_FOR_SWIFT;
-
-/// 刷新空界面
-- (void)fw_reloadEmptyView NS_REFINED_FOR_SWIFT;
 
 @end
 

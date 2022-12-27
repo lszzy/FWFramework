@@ -27,16 +27,16 @@
 
 #endif
 
-#pragma mark - FWEmptyPluginImpl
+#pragma mark - __FWEmptyPluginImpl
 
-@implementation FWEmptyPluginImpl
+@implementation __FWEmptyPluginImpl
 
-+ (FWEmptyPluginImpl *)sharedInstance
++ (__FWEmptyPluginImpl *)sharedInstance
 {
-    static FWEmptyPluginImpl *instance = nil;
+    static __FWEmptyPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWEmptyPluginImpl alloc] init];
+        instance = [[__FWEmptyPluginImpl alloc] init];
     });
     return instance;
 }
@@ -70,11 +70,11 @@
     }
     NSString *emptyMoreAction = actions.count > 1 ? [actions objectAtIndex:1] : nil;
     
-    FWEmptyView *emptyView = (FWEmptyView *)[view fw_subviewWithTag:2021];
+    __FWEmptyView *emptyView = (__FWEmptyView *)[view fw_subviewWithTag:2021];
     BOOL fadeAnimated = self.fadeAnimated && !emptyView;
     if (emptyView) { [emptyView removeFromSuperview]; }
     
-    emptyView = [[FWEmptyView alloc] initWithFrame:view.bounds];
+    emptyView = [[__FWEmptyView alloc] initWithFrame:view.bounds];
     emptyView.tag = 2021;
     [view addSubview:emptyView];
     [emptyView fw_pinEdgesToSuperview:view.fw_emptyInsets];
@@ -104,7 +104,7 @@
     UIView *emptyView = [view fw_subviewWithTag:2021];
     if (!emptyView) return;
     
-    if ([emptyView.superview isKindOfClass:[FWScrollOverlayView class]]) {
+    if ([emptyView.superview isKindOfClass:[__FWScrollOverlayView class]]) {
         UIView *overlayView = emptyView.superview;
         [emptyView removeFromSuperview];
         [overlayView removeFromSuperview];

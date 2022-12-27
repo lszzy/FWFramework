@@ -359,7 +359,7 @@
         if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillShowEmpty:)]) {
             [self.albumControllerDelegate albumControllerWillShowEmpty:self];
         } else {
-            [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle];
+            [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
         }
     }
     
@@ -381,7 +381,7 @@
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
         NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
-        [self fw_showEmptyViewWithText:tipText];
+        [self fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
     }
     
     if (self.albumArrayLoaded) {
@@ -2050,13 +2050,13 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                 NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
                 NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
                 NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
-                [self fw_showEmptyViewWithText:tipText];
+                [self fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
             }
         } else {
             if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillShowEmpty:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowEmpty:self];
             } else {
-                [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle];
+                [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
             }
         }
     }
