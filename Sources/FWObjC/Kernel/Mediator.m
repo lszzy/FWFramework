@@ -272,7 +272,7 @@
 
 @interface UIImage ()
 
-+ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)bundle;
++ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)bundle options:(NSDictionary *)options;
 
 @end
 
@@ -286,8 +286,8 @@
 + (UIImage *)imageNamed:(NSString *)name
 {
     UIImage *image;
-    if ([UIImage respondsToSelector:@selector(fw_imageNamed:bundle:)]) {
-        image = [UIImage fw_imageNamed:name bundle:[self bundle]];
+    if ([UIImage respondsToSelector:@selector(fw_imageNamed:bundle:options:)]) {
+        image = [UIImage fw_imageNamed:name bundle:[self bundle] options:nil];
     } else {
         image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }
