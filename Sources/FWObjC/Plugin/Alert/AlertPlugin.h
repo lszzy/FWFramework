@@ -9,20 +9,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWAlertPlugin
+#pragma mark - __FWAlertPlugin
 
 /// 弹框样式枚举，可扩展
-typedef NSInteger FWAlertStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AlertStyle);
+typedef NSInteger __FWAlertStyle NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AlertStyle);
 /// 默认弹框样式
-static const FWAlertStyle FWAlertStyleDefault = 0;
+static const __FWAlertStyle __FWAlertStyleDefault = 0;
 /// 成功弹框样式
-static const FWAlertStyle FWAlertStyleSuccess = 1;
+static const __FWAlertStyle __FWAlertStyleSuccess = 1;
 /// 失败弹框样式
-static const FWAlertStyle FWAlertStyleFailure = 2;
+static const __FWAlertStyle __FWAlertStyleFailure = 2;
 
 // 弹窗插件协议，应用可自定义弹窗实现
 NS_SWIFT_NAME(AlertPlugin)
-@protocol FWAlertPlugin <NSObject>
+@protocol __FWAlertPlugin <NSObject>
 
 @optional
 
@@ -30,7 +30,7 @@ NS_SWIFT_NAME(AlertPlugin)
 - (void)viewController:(UIViewController *)viewController
       showAlertWithTitle:(nullable id)title
                  message:(nullable id)message
-                   style:(FWAlertStyle)style
+                   style:(__FWAlertStyle)style
                   cancel:(nullable id)cancel
                  actions:(nullable NSArray *)actions
              promptCount:(NSInteger)promptCount
@@ -50,12 +50,12 @@ NS_SWIFT_NAME(AlertPlugin)
              cancelBlock:(nullable void (^)(void))cancelBlock
              customBlock:(nullable void (^)(id alertController))customBlock;
 
-/// 手工隐藏弹出框插件方法，默认查找UIAlertController|FWAlertController
+/// 手工隐藏弹出框插件方法，默认查找UIAlertController|__FWAlertController
 - (void)viewController:(UIViewController *)viewController
              hideAlert:(BOOL)animated
             completion:(nullable void (^)(void))completion;
 
-/// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|FWAlertController
+/// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|__FWAlertController
 - (BOOL)isShowingAlert:(UIViewController *)viewController;
 
 @end

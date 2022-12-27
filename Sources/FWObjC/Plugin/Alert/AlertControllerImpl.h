@@ -9,25 +9,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWAlertControllerImpl
+#pragma mark - __FWAlertControllerImpl
 
 NS_SWIFT_NAME(AlertControllerImpl)
-@interface FWAlertControllerImpl : NSObject <FWAlertPlugin>
+@interface __FWAlertControllerImpl : NSObject <__FWAlertPlugin>
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWAlertControllerImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWAlertControllerImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 自定义Alert弹窗样式，nil时使用单例
-@property (nonatomic, strong, nullable) FWAlertControllerAppearance *customAlertAppearance;
+@property (nonatomic, strong, nullable) __FWAlertControllerAppearance *customAlertAppearance;
 
 /// 自定义ActionSheet弹窗样式，nil时使用单例
-@property (nonatomic, strong, nullable) FWAlertControllerAppearance *customSheetAppearance;
+@property (nonatomic, strong, nullable) __FWAlertControllerAppearance *customSheetAppearance;
 
 /// 点击暗色背景关闭时是否触发cancelBlock，默认NO
 @property (nonatomic, assign) BOOL dimmingTriggerCancel;
 
 /// 弹窗自定义句柄，show方法自动调用
-@property (nonatomic, copy, nullable) void (^customBlock)(FWAlertController *alertController);
+@property (nonatomic, copy, nullable) void (^customBlock)(__FWAlertController *alertController);
 
 /// 显示自定义视图弹窗，无默认按钮
 - (void)viewController:(UIViewController *)viewController

@@ -31,10 +31,10 @@
     // }
     
     // 配置弹窗插件及默认文案
-    // [__FWPluginManager registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
-    // FWAlertPluginImpl.sharedInstance.defaultCloseButton = nil;
-    // FWAlertPluginImpl.sharedInstance.defaultCancelButton = nil;
-    // FWAlertPluginImpl.sharedInstance.defaultConfirmButton = nil;
+    // [__FWPluginManager registerPlugin:@protocol(__FWAlertPlugin) withObject:[__FWAlertControllerPlugin class]];
+    // __FWAlertPluginImpl.sharedInstance.defaultCloseButton = nil;
+    // __FWAlertPluginImpl.sharedInstance.defaultCancelButton = nil;
+    // __FWAlertPluginImpl.sharedInstance.defaultConfirmButton = nil;
     
     // 配置空界面插件默认文案
     // __FWEmptyPluginImpl.sharedInstance.defaultText = nil;

@@ -23,16 +23,16 @@
 
 #endif
 
-#pragma mark - FWAlertAppearance
+#pragma mark - __FWAlertAppearance
 
-@implementation FWAlertAppearance
+@implementation __FWAlertAppearance
 
-+ (FWAlertAppearance *)appearance
++ (__FWAlertAppearance *)appearance
 {
-    static FWAlertAppearance *appearance = nil;
+    static __FWAlertAppearance *appearance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        appearance = [[FWAlertAppearance alloc] init];
+        appearance = [[__FWAlertAppearance alloc] init];
     });
     return appearance;
 }
@@ -49,16 +49,16 @@
 
 @end
 
-#pragma mark - FWAlertPluginImpl
+#pragma mark - __FWAlertPluginImpl
 
-@implementation FWAlertPluginImpl
+@implementation __FWAlertPluginImpl
 
-+ (FWAlertPluginImpl *)sharedInstance
++ (__FWAlertPluginImpl *)sharedInstance
 {
-    static FWAlertPluginImpl *instance = nil;
+    static __FWAlertPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWAlertPluginImpl alloc] init];
+        instance = [[__FWAlertPluginImpl alloc] init];
     });
     return instance;
 }
@@ -66,7 +66,7 @@
 - (void)viewController:(UIViewController *)viewController
       showAlertWithTitle:(id)title
                  message:(id)message
-                   style:(FWAlertStyle)style
+                   style:(__FWAlertStyle)style
                   cancel:(id)cancel
                  actions:(NSArray *)actions
              promptCount:(NSInteger)promptCount
@@ -76,7 +76,7 @@
              customBlock:(void (^)(id))customBlock
 {
     // 初始化Alert
-    FWAlertAppearance *customAppearance = self.customAlertAppearance;
+    __FWAlertAppearance *customAppearance = self.customAlertAppearance;
     UIAlertController *alertController = [UIAlertController fw_alertControllerWithTitle:title
                                                                                message:message
                                                                         preferredStyle:UIAlertControllerStyleAlert
@@ -140,7 +140,7 @@
              customBlock:(void (^)(id))customBlock
 {
     // 初始化Alert
-    FWAlertAppearance *customAppearance = self.customSheetAppearance;
+    __FWAlertAppearance *customAppearance = self.customSheetAppearance;
     UIAlertController *alertController = [UIAlertController fw_alertControllerWithTitle:title
                                                                                message:message
                                                                         preferredStyle:UIAlertControllerStyleActionSheet
@@ -212,7 +212,7 @@
 - (UIViewController *)showingAlertController:(UIViewController *)viewController
 {
     UIViewController *alertController = nil;
-    NSArray<Class> *alertClasses = self.customAlertClasses.count > 0 ? self.customAlertClasses : @[UIAlertController.class, FWAlertController.class];
+    NSArray<Class> *alertClasses = self.customAlertClasses.count > 0 ? self.customAlertClasses : @[UIAlertController.class, __FWAlertController.class];
     
     UIViewController *presentedController = viewController.presentedViewController;
     while (presentedController != nil) {
