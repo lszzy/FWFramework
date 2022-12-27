@@ -50,56 +50,6 @@ NS_SWIFT_NAME(AlertAppearance)
 
 @end
 
-#pragma mark - UIAlertAction+FWAlert
-
-/**
- 系统弹出框动作分类，自定义属性
- @note 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
-*/
-@interface UIAlertAction (FWAlert)
-
-// 自定义样式，默认为样式单例
-@property (nonatomic, strong) FWAlertAppearance *fw_alertAppearance NS_REFINED_FOR_SWIFT;
-
-// 指定标题颜色
-@property (nonatomic, strong, nullable) UIColor *fw_titleColor NS_REFINED_FOR_SWIFT;
-
-// 快速创建弹出动作，title仅支持NSString
-+ (UIAlertAction *)fw_actionWithObject:(nullable id)object style:(UIAlertActionStyle)style handler:(void (^ __nullable)(UIAlertAction *action))handler NS_REFINED_FOR_SWIFT;
-
-// 快速创建弹出动作，title仅支持NSString，支持appearance
-+ (UIAlertAction *)fw_actionWithObject:(nullable id)object style:(UIAlertActionStyle)style appearance:(nullable FWAlertAppearance *)appearance handler:(void (^ __nullable)(UIAlertAction *action))handler NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIAlertController+FWAlert
-
-/**
- 系统弹出框控制器分类，自定义样式
- @note 系统弹出框title和message仅支持NSString，如果需要支持NSAttributedString等，请使用FWAlertController
-*/
-@interface UIAlertController (FWAlert)
-
-// 自定义样式，默认为样式单例
-@property (nonatomic, strong) FWAlertAppearance *fw_alertAppearance NS_REFINED_FOR_SWIFT;
-
-// 当前弹窗样式，默认为Default样式
-@property (nonatomic, assign) FWAlertStyle fw_alertStyle NS_REFINED_FOR_SWIFT;
-
-// 设置属性标题
-@property (nonatomic, copy, nullable) NSAttributedString *fw_attributedTitle NS_REFINED_FOR_SWIFT;
-
-// 设置属性消息
-@property (nonatomic, copy, nullable) NSAttributedString *fw_attributedMessage NS_REFINED_FOR_SWIFT;
-
-// 快速创建弹出控制器，title和message仅支持NSString
-+ (UIAlertController *)fw_alertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle NS_REFINED_FOR_SWIFT;
-
-// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-+ (UIAlertController *)fw_alertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle appearance:(nullable FWAlertAppearance *)appearance NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - FWAlertPluginImpl
 
 /// 默认弹窗插件
