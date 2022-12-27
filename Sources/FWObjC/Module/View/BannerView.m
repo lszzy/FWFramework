@@ -849,9 +849,9 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath.lowercaseString hasPrefix:@"http"] || [imagePath.lowercaseString hasPrefix:@"data:"]) {
-            [cell.imageView fw_setImageWithURL:imagePath placeholderImage:self.placeholderImage];
+            [cell.imageView fw_setImageWithUrl:imagePath placeholderImage:self.placeholderImage completion:nil];
         } else {
-            UIImage *image = [UIImage fw_imageNamed:imagePath];
+            UIImage *image = [UIImage fw_imageNamed:imagePath bundle:nil options:nil];
             cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {

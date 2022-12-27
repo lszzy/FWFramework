@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWImagePlugin
+#pragma mark - __FWImagePlugin
 
 /// 本地图片解码编码选项，默认兼容SDWebImage
 typedef NSString * __FWImageCoderOptions NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(ImageCoderOptions);
@@ -17,20 +17,20 @@ typedef NSString * __FWImageCoderOptions NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME
 FOUNDATION_EXPORT __FWImageCoderOptions const __FWImageCoderOptionScaleFactor;
 
 /// 网络图片加载选项，默认兼容SDWebImage
-typedef NS_OPTIONS(NSUInteger, FWWebImageOptions) {
+typedef NS_OPTIONS(NSUInteger, __FWWebImageOptions) {
     /// 空选项，默认值
-    FWWebImageOptionNone = 0,
+    __FWWebImageOptionNone = 0,
     /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
-    FWWebImageOptionRefreshCached = 1 << 3,
+    __FWWebImageOptionRefreshCached = 1 << 3,
     /// 禁止调用imageView.setImage:显示图片
-    FWWebImageOptionAvoidSetImage = 1 << 10,
+    __FWWebImageOptionAvoidSetImage = 1 << 10,
     /// 忽略图片缓存，始终重新请求
-    FWWebImageOptionIgnoreCache = 1 << 16,
+    __FWWebImageOptionIgnoreCache = 1 << 16,
 } NS_SWIFT_NAME(WebImageOptions);
 
 /// 图片插件协议，应用可自定义图片插件
 NS_SWIFT_NAME(ImagePlugin)
-@protocol FWImagePlugin <NSObject>
+@protocol __FWImagePlugin <NSObject>
 
 @optional
 
@@ -41,7 +41,7 @@ NS_SWIFT_NAME(ImagePlugin)
 - (void)imageView:(UIImageView *)imageView
         setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
-            options:(FWWebImageOptions)options
+            options:(__FWWebImageOptions)options
             context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
@@ -51,7 +51,7 @@ NS_SWIFT_NAME(ImagePlugin)
 
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)downloadImage:(nullable NSURL *)imageURL
-                       options:(FWWebImageOptions)options
+                       options:(__FWWebImageOptions)options
                        context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                     completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
                       progress:(nullable void (^)(double progress))progress;
@@ -67,92 +67,6 @@ NS_SWIFT_NAME(ImagePlugin)
 
 /// image本地编码插件方法，默认使用系统方法
 - (nullable NSData *)imageEncode:(UIImage *)image options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options;
-
-@end
-
-#pragma mark - UIImage+FWImagePlugin
-
-@interface UIImage (FWImagePlugin)
-
-/// 根据名称加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
-+ (nullable UIImage *)fw_imageNamed:(NSString *)name NS_REFINED_FOR_SWIFT;
-
-/// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
-+ (nullable UIImage *)fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle NS_REFINED_FOR_SWIFT;
-
-/// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)。支持设置图片解码选项
-+ (nullable UIImage *)fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
-
-/// 从图片文件路径解码创建UIImage，自动识别scale，支持动图
-+ (nullable UIImage *)fw_imageWithContentsOfFile:(NSString *)path NS_REFINED_FOR_SWIFT;
-
-/// 从图片数据解码创建UIImage，scale为1，支持动图
-+ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data NS_REFINED_FOR_SWIFT;
-
-/// 从图片数据解码创建UIImage，指定scale，支持动图
-+ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale NS_REFINED_FOR_SWIFT;
-
-/// 从图片数据解码创建UIImage，指定scale，支持动图。支持设置图片解码选项
-+ (nullable UIImage *)fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
-
-/// 从UIImage编码创建图片数据，支持动图
-+ (nullable NSData *)fw_dataWithImage:(nullable UIImage *)image NS_REFINED_FOR_SWIFT;
-
-/// 从UIImage编码创建图片数据，支持动图。支持设置图片编码选项
-+ (nullable NSData *)fw_dataWithImage:(nullable UIImage *)image options:(nullable NSDictionary<__FWImageCoderOptions, id> *)options NS_REFINED_FOR_SWIFT;
-
-/// 下载网络图片并返回下载凭据
-+ (nullable id)fw_downloadImage:(nullable id)url
-                    completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
-                      progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
-
-/// 下载网络图片并返回下载凭据，指定option
-+ (nullable id)fw_downloadImage:(nullable id)url
-                       options:(FWWebImageOptions)options
-                       context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
-                    completion:(void (^)(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error))completion
-                      progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
-
-/// 指定下载凭据取消网络图片下载
-+ (void)fw_cancelImageDownload:(nullable id)receipt NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIImageView+FWImagePlugin
-
-@interface UIImageView (FWImagePlugin)
-
-/// 自定义图片插件，未设置时自动从插件池加载
-@property (nonatomic, strong, null_resettable) id<FWImagePlugin> fw_imagePlugin NS_REFINED_FOR_SWIFT;
-
-/// 当前正在加载的网络图片URL
-@property (nonatomic, copy, readonly, nullable) NSURL *fw_imageURL NS_REFINED_FOR_SWIFT;
-
-/// 加载网络图片，优先加载插件，默认使用框架网络库
-- (void)fw_setImageWithURL:(nullable id)url NS_REFINED_FOR_SWIFT;
-
-/// 加载网络图片，支持占位，优先加载插件，默认使用框架网络库
-- (void)fw_setImageWithURL:(nullable id)url
-         placeholderImage:(nullable UIImage *)placeholderImage NS_REFINED_FOR_SWIFT;
-
-/// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-- (void)fw_setImageWithURL:(nullable id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion NS_REFINED_FOR_SWIFT;
-
-/// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-- (void)fw_setImageWithURL:(nullable id)url
-         placeholderImage:(nullable UIImage *)placeholderImage
-                  options:(FWWebImageOptions)options
-                  context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
-               completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
-                 progress:(nullable void (^)(double progress))progress NS_REFINED_FOR_SWIFT;
-
-/// 取消加载网络图片请求
-- (void)fw_cancelImageRequest NS_REFINED_FOR_SWIFT;
-
-/// 创建动画ImageView视图，优先加载插件，默认UIImageView
-+ (UIImageView *)fw_animatedImageView NS_SWIFT_NAME(__fw_animatedImageView()) NS_REFINED_FOR_SWIFT;
 
 @end
 

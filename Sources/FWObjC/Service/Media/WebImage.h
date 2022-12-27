@@ -104,7 +104,7 @@ NS_SWIFT_NAME(ImageDownloader)
                             imageCache:(nullable id <__FWImageRequestCache>)imageCache;
 
 - (nullable __FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
-                                                 options:(FWWebImageOptions)options
+                                                 options:(__FWWebImageOptions)options
                                                  context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
@@ -112,7 +112,7 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (nullable __FWImageDownloadReceipt *)downloadImageForURL:(nullable id)url
                                            withReceiptID:(NSUUID *)receiptID
-                                                 options:(FWWebImageOptions)options
+                                                 options:(__FWWebImageOptions)options
                                                  context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                                                  success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                  failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
@@ -124,7 +124,7 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (void)downloadImageForObject:(id)object
                       imageURL:(nullable id)imageURL
-                       options:(FWWebImageOptions)options
+                       options:(__FWWebImageOptions)options
                        context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
                    placeholder:(nullable void (^)(void))placeholder
                     completion:(nullable void (^)(UIImage * _Nullable image, BOOL isCache, NSError * _Nullable error))completion
@@ -134,14 +134,14 @@ NS_SWIFT_NAME(ImageDownloader)
 
 @end
 
-#pragma mark - __FWImagePluginImpl
+#pragma mark - ____FWImagePluginImpl
 
 /// 默认图片插件
 NS_SWIFT_NAME(ImagePluginImpl)
-@interface __FWImagePluginImpl : NSObject <FWImagePlugin>
+@interface ____FWImagePluginImpl : NSObject <__FWImagePlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) __FWImagePluginImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) ____FWImagePluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 图片加载完成是否显示渐变动画，默认NO
 @property (nonatomic, assign) BOOL fadeAnimated;
