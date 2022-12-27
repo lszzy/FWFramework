@@ -23,15 +23,15 @@
 
 #endif
 
-#pragma mark - FWEmptyView
+#pragma mark - __FWEmptyView
 
-@interface FWEmptyView ()
+@interface __FWEmptyView ()
 
 @property(nonatomic, strong) UIScrollView *scrollView;
 
 @end
 
-@implementation FWEmptyView
+@implementation __FWEmptyView
 
 + (void)initialize {
     static dispatch_once_t onceToken;
@@ -41,7 +41,7 @@
 }
 
 + (void)setDefaultAppearance {
-    FWEmptyView *appearance = [FWEmptyView appearance];
+    __FWEmptyView *appearance = [__FWEmptyView appearance];
     appearance.imageViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.loadingViewInsets = UIEdgeInsetsMake(0, 0, 36, 0);
     appearance.textLabelInsets = UIEdgeInsetsMake(0, 0, 10, 0);
@@ -383,15 +383,9 @@
 
 @end
 
-#pragma mark - UIScrollView+FWScrollOverlayView
+#pragma mark - __FWScrollOverlayView
 
-@interface FWScrollOverlayView ()
-
-@property (nonatomic, assign) BOOL fadeAnimated;
-
-@end
-
-@implementation FWScrollOverlayView
+@implementation __FWScrollOverlayView
 
 - (void)didMoveToSuperview
 {
@@ -406,57 +400,6 @@
         } completion:NULL];
     } else {
         self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height);
-    }
-}
-
-@end
-
-@implementation UIScrollView (FWScrollOverlayView)
-
-- (UIView *)fw_overlayView
-{
-    UIView *overlayView = objc_getAssociatedObject(self, @selector(fw_overlayView));
-    if (!overlayView) {
-        overlayView = [[FWScrollOverlayView alloc] init];
-        overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        overlayView.userInteractionEnabled = YES;
-        overlayView.backgroundColor = UIColor.clearColor;
-        overlayView.clipsToBounds = YES;
-        
-        objc_setAssociatedObject(self, @selector(fw_overlayView), overlayView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return overlayView;
-}
-
-- (BOOL)fw_hasOverlayView
-{
-    UIView *overlayView = objc_getAssociatedObject(self, @selector(fw_overlayView));
-    return overlayView && overlayView.superview;
-}
-
-- (void)fw_showOverlayView
-{
-    [self fw_showOverlayViewAnimated:NO];
-}
-
-- (void)fw_showOverlayViewAnimated:(BOOL)animated
-{
-    FWScrollOverlayView *overlayView = (FWScrollOverlayView *)self.fw_overlayView;
-    if (!overlayView.superview) {
-        overlayView.fadeAnimated = animated;
-        if (([self isKindOfClass:[UITableView class]] || [self isKindOfClass:[UICollectionView class]]) && self.subviews.count > 1) {
-            [self insertSubview:overlayView atIndex:0];
-        } else {
-            [self addSubview:overlayView];
-        }
-    }
-}
-
-- (void)fw_hideOverlayView
-{
-    UIView *overlayView = objc_getAssociatedObject(self, @selector(fw_overlayView));
-    if (overlayView && overlayView.superview) {
-        [overlayView removeFromSuperview];
     }
 }
 

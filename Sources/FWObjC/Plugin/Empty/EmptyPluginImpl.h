@@ -10,19 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWEmptyPluginImpl
+#pragma mark - __FWEmptyPluginImpl
 
 /// 默认空界面插件
 NS_SWIFT_NAME(EmptyPluginImpl)
-@interface FWEmptyPluginImpl : NSObject <FWEmptyPlugin>
+@interface __FWEmptyPluginImpl : NSObject <__FWEmptyPlugin>
 
 /// 单例模式
-@property (class, nonatomic, readonly) FWEmptyPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWEmptyPluginImpl *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 显示空界面时是否执行淡入动画，默认YES
 @property (nonatomic, assign) BOOL fadeAnimated;
 /// 空界面自定义句柄，show方法自动调用
-@property (nonatomic, copy, nullable) void (^customBlock)(FWEmptyView *emptyView);
+@property (nonatomic, copy, nullable) void (^customBlock)(__FWEmptyView *emptyView);
 
 /// 默认空界面文本句柄，非loading时才触发
 @property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);

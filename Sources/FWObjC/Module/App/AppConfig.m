@@ -37,10 +37,10 @@
     // FWAlertPluginImpl.sharedInstance.defaultConfirmButton = nil;
     
     // 配置空界面插件默认文案
-    // FWEmptyPluginImpl.sharedInstance.defaultText = nil;
-    // FWEmptyPluginImpl.sharedInstance.defaultDetail = nil;
-    // FWEmptyPluginImpl.sharedInstance.defaultImage = nil;
-    // FWEmptyPluginImpl.sharedInstance.defaultAction = nil;
+    // __FWEmptyPluginImpl.sharedInstance.defaultText = nil;
+    // __FWEmptyPluginImpl.sharedInstance.defaultDetail = nil;
+    // __FWEmptyPluginImpl.sharedInstance.defaultImage = nil;
+    // __FWEmptyPluginImpl.sharedInstance.defaultAction = nil;
     
     // 配置图片选择、浏览和下拉刷新插件
     // [__FWPluginManager registerPlugin:@protocol(FWImagePickerPlugin) withObject:[FWImagePickerControllerImpl class]];
