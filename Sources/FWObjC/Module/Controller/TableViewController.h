@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  表格视图控制器协议，可覆写
  */
 NS_SWIFT_NAME(TableViewControllerProtocol)
-@protocol FWTableViewController <FWViewController, UITableViewDataSource, UITableViewDelegate>
+@protocol __FWTableViewController <__FWViewController, UITableViewDataSource, UITableViewDelegate>
 
 @optional
 
@@ -37,7 +37,7 @@ NS_SWIFT_NAME(TableViewControllerProtocol)
 /**
  管理器表格视图控制器分类
  */
-@interface FWViewControllerManager (FWTableViewController)
+@interface __FWViewControllerManager (__FWTableViewController)
 
 @end
 

@@ -44,9 +44,9 @@
 
 #endif
 
-#pragma mark - FWNavigationBarAppearance
+#pragma mark - __FWNavigationBarAppearance
 
-@implementation FWNavigationBarAppearance
+@implementation __FWNavigationBarAppearance
 
 + (NSMutableDictionary *)styleAppearances
 {
@@ -58,12 +58,12 @@
     return appearances;
 }
 
-+ (FWNavigationBarAppearance *)appearanceForStyle:(FWNavigationBarStyle)style
++ (__FWNavigationBarAppearance *)appearanceForStyle:(__FWNavigationBarStyle)style
 {
     return [[self styleAppearances] objectForKey:@(style)];
 }
 
-+ (void)setAppearance:(FWNavigationBarAppearance *)appearance forStyle:(FWNavigationBarStyle)style
++ (void)setAppearance:(__FWNavigationBarAppearance *)appearance forStyle:(__FWNavigationBarStyle)style
 {
     if (appearance) {
         [[self styleAppearances] setObject:appearance forKey:@(style)];
@@ -78,7 +78,7 @@
 
 @implementation UINavigationBar (FWStyle)
 
-- (void)fw_applyBarAppearance:(FWNavigationBarAppearance *)appearance
+- (void)fw_applyBarAppearance:(__FWNavigationBarAppearance *)appearance
 {
     if (appearance.isTranslucent != self.fw_isTranslucent) {
         self.fw_isTranslucent = appearance.isTranslucent;
@@ -104,9 +104,9 @@
     if (appearance.appearanceBlock) appearance.appearanceBlock(self);
 }
 
-- (void)fw_applyBarStyle:(FWNavigationBarStyle)style
+- (void)fw_applyBarStyle:(__FWNavigationBarStyle)style
 {
-    FWNavigationBarAppearance *appearance = [FWNavigationBarAppearance appearanceForStyle:style];
+    __FWNavigationBarAppearance *appearance = [__FWNavigationBarAppearance appearanceForStyle:style];
     if (appearance) [self fw_applyBarAppearance:appearance];
 }
 
@@ -167,12 +167,12 @@
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (FWNavigationBarAppearance *)fw_navigationBarAppearance
+- (__FWNavigationBarAppearance *)fw_navigationBarAppearance
 {
     return objc_getAssociatedObject(self, @selector(fw_navigationBarAppearance));
 }
 
-- (void)setFw_navigationBarAppearance:(FWNavigationBarAppearance *)navigationBarAppearance
+- (void)setFw_navigationBarAppearance:(__FWNavigationBarAppearance *)navigationBarAppearance
 {
     objc_setAssociatedObject(self, @selector(fw_navigationBarAppearance), navigationBarAppearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
@@ -181,12 +181,12 @@
     }
 }
 
-- (FWNavigationBarStyle)fw_navigationBarStyle
+- (__FWNavigationBarStyle)fw_navigationBarStyle
 {
     return [objc_getAssociatedObject(self, @selector(fw_navigationBarStyle)) integerValue];
 }
 
-- (void)setFw_navigationBarStyle:(FWNavigationBarStyle)navigationBarStyle
+- (void)setFw_navigationBarStyle:(__FWNavigationBarStyle)navigationBarStyle
 {
     objc_setAssociatedObject(self, @selector(fw_navigationBarStyle), @(navigationBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
@@ -226,15 +226,15 @@
     objc_setAssociatedObject(self, @selector(fw_allowsChildNavigation), @(allowsChildNavigation), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (FWNavigationBarAppearance *)fw_currentNavigationBarAppearance
+- (__FWNavigationBarAppearance *)fw_currentNavigationBarAppearance
 {
     // 1. 检查VC是否自定义appearance
-    FWNavigationBarAppearance *appearance = self.fw_navigationBarAppearance;
+    __FWNavigationBarAppearance *appearance = self.fw_navigationBarAppearance;
     if (appearance) return appearance;
     // 2. 检查VC是否自定义style
     NSNumber *style = objc_getAssociatedObject(self, @selector(fw_navigationBarStyle));
     if (style) {
-        appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
+        appearance = [__FWNavigationBarAppearance appearanceForStyle:style.integerValue];
         return appearance;
     }
     // 3. 检查NAV是否自定义appearance
@@ -243,7 +243,7 @@
     // 4. 检查NAV是否自定义style
     style = objc_getAssociatedObject(self.navigationController, @selector(fw_navigationBarStyle));
     if (style) {
-        appearance = [FWNavigationBarAppearance appearanceForStyle:style.integerValue];
+        appearance = [__FWNavigationBarAppearance appearanceForStyle:style.integerValue];
     }
     return appearance;
 }
@@ -261,7 +261,7 @@
     }
     
     // 获取当前用于显示的appearance，未设置时不处理
-    FWNavigationBarAppearance *appearance = [self fw_currentNavigationBarAppearance];
+    __FWNavigationBarAppearance *appearance = [self fw_currentNavigationBarAppearance];
     if (!appearance) return;
     
     // 配合导航栏appearance初始化返回按钮或左侧按钮

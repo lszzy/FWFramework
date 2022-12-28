@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  滚动视图控制器协议，可覆写
  */
 NS_SWIFT_NAME(ScrollViewControllerProtocol)
-@protocol FWScrollViewController <FWViewController>
+@protocol __FWScrollViewController <__FWViewController>
 
 @optional
 
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(ScrollViewControllerProtocol)
 /**
  管理器滚动视图控制器分类
  */
-@interface FWViewControllerManager (FWScrollViewController)
+@interface __FWViewControllerManager (__FWScrollViewController)
 
 @end
 

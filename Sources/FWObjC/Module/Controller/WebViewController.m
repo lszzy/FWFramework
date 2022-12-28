@@ -41,13 +41,13 @@
 
 #endif
 
-#pragma mark - FWViewControllerManager+FWWebViewController
+#pragma mark - __FWViewControllerManager+__FWWebViewController
 
-@implementation FWViewControllerManager (FWWebViewController)
+@implementation __FWViewControllerManager (__FWWebViewController)
 
 + (void)load
 {
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
         @"webView" : @"fw_innerWebView",
@@ -57,10 +57,10 @@
         @"setWebRequest:" : @"fw_innerSetWebRequest:",
         @"setupWebLayout" : @"fw_innerSetupWebLayout",
     };
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWWebViewController) withIntercepter:intercepter];
+    [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWWebViewController) withIntercepter:intercepter];
 }
 
-- (void)webViewControllerViewDidLoad:(UIViewController<FWWebViewController> *)viewController
+- (void)webViewControllerViewDidLoad:(UIViewController<__FWWebViewController> *)viewController
 {
     FWWebView *webView = [viewController webView];
     webView.delegate = viewController;
@@ -166,20 +166,20 @@
 
 @end
 
-#pragma mark - UIViewController+FWWebViewController
+#pragma mark - UIViewController+__FWWebViewController
 
-@interface UIViewController (FWWebViewController)
+@interface UIViewController (__FWWebViewController)
 
 @end
 
-@implementation UIViewController (FWWebViewController)
+@implementation UIViewController (__FWWebViewController)
 
 - (FWWebView *)fw_innerWebView
 {
     FWWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
         if ([self respondsToSelector:@selector(setupWebConfiguration)]) {
-            webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[(id<FWWebViewController>)self setupWebConfiguration]];
+            webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[(id<__FWWebViewController>)self setupWebConfiguration]];
         } else {
             webView = [[FWWebView alloc] initWithFrame:CGRectZero];
         }
@@ -208,14 +208,14 @@
     objc_setAssociatedObject(self, @selector(fw_innerWebRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
-        FWWebView *webView = [(id<FWWebViewController>)self webView];
+        FWWebView *webView = [(id<__FWWebViewController>)self webView];
         webView.webRequest = webRequest;
     }
 }
 
 - (void)fw_innerSetupWebLayout
 {
-    FWWebView *webView = [(id<FWWebViewController>)self webView];
+    FWWebView *webView = [(id<__FWWebViewController>)self webView];
     [webView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 

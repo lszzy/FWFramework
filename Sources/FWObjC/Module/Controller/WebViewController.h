@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  网页视图控制器协议，可覆写
  */
 NS_SWIFT_NAME(WebViewControllerProtocol)
-@protocol FWWebViewController <FWViewController, FWWebViewDelegate>
+@protocol __FWWebViewController <__FWViewController, FWWebViewDelegate>
 
 @optional
 
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(WebViewControllerProtocol)
 /**
  管理器网页视图控制器分类
  */
-@interface FWViewControllerManager (FWWebViewController)
+@interface __FWViewControllerManager (__FWWebViewController)
 
 @end
 

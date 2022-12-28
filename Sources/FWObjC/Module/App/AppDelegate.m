@@ -8,7 +8,7 @@
 #import "AppDelegate.h"
 #import "Mediator.h"
 
-#define FWSafeArgument(obj) obj ? obj : [NSNull null]
+#define __FWSafeArgument(obj) obj ? obj : [NSNull null]
 
 @interface __FWAppDelegate ()
 
@@ -21,13 +21,13 @@
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
 {
     [__FWMediator setupAllModules];
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(launchOptions)]];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
     [self setupController];
     return YES;
@@ -35,34 +35,34 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application)]];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application)]];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application)]];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application)]];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application)]];
 }
 
 #pragma mark - Notification
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(deviceToken)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(deviceToken)]];
     /*
     [UIDevice fwSetDeviceTokenData:tokenData];
      */
@@ -70,7 +70,7 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(error)]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(error)]];
     /*
     [UIDevice fwSetDeviceTokenData:nil];
      */
@@ -78,7 +78,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userInfo), completionHandler]];
+    [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(userInfo), completionHandler]];
     /*
     [[FWNotificationManager sharedInstance] handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
@@ -89,7 +89,7 @@
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    return [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(app), FWSafeArgument(url), FWSafeArgument(options)]];
+    return [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(app), __FWSafeArgument(url), __FWSafeArgument(options)]];
     /*
     [FWRouter openURL:url.absoluteString];
     return YES;
@@ -98,7 +98,7 @@
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-    return [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(userActivity), restorationHandler]];
+    return [__FWMediator checkAllModulesWithSelector:_cmd arguments:@[__FWSafeArgument(application), __FWSafeArgument(userActivity), restorationHandler]];
     /*
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] &&
         userActivity.webpageURL != nil) {

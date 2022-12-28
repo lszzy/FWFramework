@@ -22,13 +22,13 @@
 
 #endif
 
-#pragma mark - FWViewControllerManager+FWCollectionViewController
+#pragma mark - __FWViewControllerManager+__FWCollectionViewController
 
-@implementation FWViewControllerManager (FWCollectionViewController)
+@implementation __FWViewControllerManager (__FWCollectionViewController)
 
 + (void)load
 {
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(collectionViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
         @"collectionView" : @"fw_innerCollectionView",
@@ -36,10 +36,10 @@
         @"setupCollectionViewLayout" : @"fw_innerSetupCollectionViewLayout",
         @"setupCollectionLayout" : @"fw_innerSetupCollectionLayout",
     };
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWCollectionViewController) withIntercepter:intercepter];
+    [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWCollectionViewController) withIntercepter:intercepter];
 }
 
-- (void)collectionViewControllerViewDidLoad:(UIViewController<FWCollectionViewController> *)viewController
+- (void)collectionViewControllerViewDidLoad:(UIViewController<__FWCollectionViewController> *)viewController
 {
     UICollectionView *collectionView = [viewController collectionView];
     collectionView.dataSource = viewController;
@@ -61,19 +61,19 @@
 
 @end
 
-#pragma mark - UIViewController+FWCollectionViewController
+#pragma mark - UIViewController+__FWCollectionViewController
 
-@interface UIViewController (FWCollectionViewController)
+@interface UIViewController (__FWCollectionViewController)
 
 @end
 
-@implementation UIViewController (FWCollectionViewController)
+@implementation UIViewController (__FWCollectionViewController)
 
 - (UICollectionView *)fw_innerCollectionView
 {
     UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
     if (!collectionView) {
-        UICollectionViewLayout *viewLayout = [(id<FWCollectionViewController>)self setupCollectionViewLayout];
+        UICollectionViewLayout *viewLayout = [(id<__FWCollectionViewController>)self setupCollectionViewLayout];
         collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:viewLayout];
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.showsHorizontalScrollIndicator = NO;
@@ -102,7 +102,7 @@
 
 - (void)fw_innerSetupCollectionLayout
 {
-    UICollectionView *collectionView = [(id<FWCollectionViewController>)self collectionView];
+    UICollectionView *collectionView = [(id<__FWCollectionViewController>)self collectionView];
     [collectionView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
