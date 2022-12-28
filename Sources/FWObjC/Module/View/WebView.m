@@ -44,15 +44,15 @@
 
 #endif
 
-#pragma mark - FWWebView
+#pragma mark - __FWWebView
 
-@interface FWWebViewDelegateProxy : __FWDelegateProxy <FWWebViewDelegate>
+@interface __FWWebViewDelegateProxy : __FWDelegateProxy <__FWWebViewDelegate>
 
 @property (nonatomic, weak, nullable) id delegate;
 
 @end
 
-@implementation FWWebViewDelegateProxy
+@implementation __FWWebViewDelegateProxy
 
 - (id)delegate
 {
@@ -68,10 +68,10 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    if ([webView isKindOfClass:[FWWebView class]] &&
-        ((FWWebView *)webView).cookieEnabled &&
+    if ([webView isKindOfClass:[__FWWebView class]] &&
+        ((__FWWebView *)webView).cookieEnabled &&
         [navigationAction.request isKindOfClass:NSMutableURLRequest.class]) {
-        [FWWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
+        [__FWWebViewCookieManager syncRequestCookie:(NSMutableURLRequest *)navigationAction.request];
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
@@ -91,15 +91,15 @@
         return;
     }
     
-    if (((FWWebView *)webView).allowsSchemeURL &&
+    if (((__FWWebView *)webView).allowsSchemeURL &&
         [UIApplication fw_isSchemeURL:navigationAction.request.URL]) {
         [UIApplication fw_openURL:navigationAction.request.URL completionHandler:nil];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
-    if ([webView isKindOfClass:[FWWebView class]] &&
-        ((FWWebView *)webView).allowsUniversalLinks &&
+    if ([webView isKindOfClass:[__FWWebView class]] &&
+        ((__FWWebView *)webView).allowsUniversalLinks &&
         [navigationAction.request.URL.scheme isEqualToString:@"https"]) {
         [UIApplication fw_openUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
             decisionHandler(success ? WKNavigationActionPolicyCancel : WKNavigationActionPolicyAllow);
@@ -112,9 +112,9 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-    if ([webView isKindOfClass:[FWWebView class]] &&
-        ((FWWebView *)webView).cookieEnabled) {
-        [FWWebViewCookieManager copyWebViewCookie:webView completion:nil];
+    if ([webView isKindOfClass:[__FWWebView class]] &&
+        ((__FWWebView *)webView).cookieEnabled) {
+        [__FWWebViewCookieManager copyWebViewCookie:webView completion:nil];
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
@@ -214,8 +214,8 @@
     }
     
     if (!navigationAction.targetFrame.isMainFrame) {
-        if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).cookieEnabled) {
-            [webView loadRequest:[FWWebViewCookieManager fixRequest:navigationAction.request]];
+        if ([webView isKindOfClass:[__FWWebView class]] && ((__FWWebView *)webView).cookieEnabled) {
+            [webView loadRequest:[__FWWebViewCookieManager fixRequest:navigationAction.request]];
         } else {
             [webView loadRequest:navigationAction.request];
         }
@@ -227,15 +227,15 @@
 
 static WKProcessPool *fwStaticProcessPool = nil;
 
-@interface FWWebView ()
+@interface __FWWebView ()
 
-@property (nonatomic, strong) FWWebViewDelegateProxy *delegateProxy;
+@property (nonatomic, strong) __FWWebViewDelegateProxy *delegateProxy;
 
 @property (nonatomic, strong) UIProgressView *progressView;
 
 @end
 
-@implementation FWWebView
+@implementation __FWWebView
 
 + (WKProcessPool *)processPool
 {
@@ -255,7 +255,7 @@ static WKProcessPool *fwStaticProcessPool = nil;
 {
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.applicationNameForUserAgent = [WKWebView fw_extensionUserAgent];
-    configuration.processPool = [FWWebView processPool];
+    configuration.processPool = [__FWWebView processPool];
     return [self initWithFrame:frame configuration:configuration];
 }
 
@@ -279,7 +279,7 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 - (void)didInitialize
 {
-    self.delegateProxy = [[FWWebViewDelegateProxy alloc] init];
+    self.delegateProxy = [[__FWWebViewDelegateProxy alloc] init];
     self.navigationDelegate = self.delegateProxy;
     self.UIDelegate = self.delegateProxy;
     self.allowsBackForwardNavigationGestures = YES;
@@ -290,24 +290,24 @@ static WKProcessPool *fwStaticProcessPool = nil;
     [self addSubview:self.progressView];
     [self.progressView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [self.progressView fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
-    [self fw_observeProperty:@"estimatedProgress" block:^(FWWebView *webView, NSDictionary *change) {
+    [self fw_observeProperty:@"estimatedProgress" block:^(__FWWebView *webView, NSDictionary *change) {
         if (webView.estimatedProgress < 1.0) {
             webView.progressView.fw_webProgress = webView.estimatedProgress;
         }
     }];
-    [self fw_observeProperty:@"loading" block:^(FWWebView *webView, NSDictionary *change) {
+    [self fw_observeProperty:@"loading" block:^(__FWWebView *webView, NSDictionary *change) {
         if (!webView.isLoading) {
             webView.progressView.fw_webProgress = 1.0;
         }
     }];
 }
 
-- (id<FWWebViewDelegate>)delegate
+- (id<__FWWebViewDelegate>)delegate
 {
     return self.delegateProxy.delegate;
 }
 
-- (void)setDelegate:(id<FWWebViewDelegate>)delegate
+- (void)setDelegate:(id<__FWWebViewDelegate>)delegate
 {
     self.delegateProxy.delegate = delegate;
 }
@@ -344,11 +344,11 @@ static WKProcessPool *fwStaticProcessPool = nil;
 - (WKNavigation *)loadRequest:(NSURLRequest *)request
 {
     if (self.cookieEnabled && request.URL.scheme.length > 0) {
-        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[FWWebViewCookieManager ajaxCookieScripts] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+        WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:[__FWWebViewCookieManager ajaxCookieScripts] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
         [self.configuration.userContentController addUserScript:cookieScript];
         
         NSMutableURLRequest *cookieRequest = request.mutableCopy;
-        [FWWebViewCookieManager syncRequestCookie:cookieRequest];
+        [__FWWebViewCookieManager syncRequestCookie:cookieRequest];
         return [super loadRequest:cookieRequest];
     }
     
@@ -357,9 +357,9 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 @end
 
-#pragma mark - FWWebViewCookieManager
+#pragma mark - __FWWebViewCookieManager
 
-@implementation FWWebViewCookieManager
+@implementation __FWWebViewCookieManager
 
 + (void)syncRequestCookie:(NSMutableURLRequest *)request
 {
@@ -495,9 +495,9 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 @end
 
-#pragma mark - FWWebViewBridge
+#pragma mark - __FWWebViewJsBridge
 
-@implementation FWWebViewJsBridgeBase {
+@implementation __FWWebViewJsBridgeBase {
     __weak id _webViewDelegate;
     long _uniqueId;
 }
@@ -532,7 +532,7 @@ static int logMaxLength = 500;
     _uniqueId = 0;
 }
 
-- (void)sendData:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+- (void)sendData:(id)data responseCallback:(__FWJsBridgeResponseCallback)responseCallback handlerName:(NSString*)handlerName {
     NSMutableDictionary* message = [NSMutableDictionary dictionary];
     
     if (data) {
@@ -558,8 +558,8 @@ static int logMaxLength = 500;
     }
 
     id messages = [self _deserializeMessageJSON:messageQueueString];
-    for (FWJsBridgeMessage* message in messages) {
-        if (![message isKindOfClass:[FWJsBridgeMessage class]]) {
+    for (__FWJsBridgeMessage* message in messages) {
+        if (![message isKindOfClass:[__FWJsBridgeMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
@@ -567,11 +567,11 @@ static int logMaxLength = 500;
         
         NSString* responseId = message[@"responseId"];
         if (responseId) {
-            FWJsBridgeResponseCallback responseCallback = _responseCallbacks[responseId];
+            __FWJsBridgeResponseCallback responseCallback = _responseCallbacks[responseId];
             responseCallback(message[@"responseData"]);
             [self.responseCallbacks removeObjectForKey:responseId];
         } else {
-            FWJsBridgeResponseCallback responseCallback = NULL;
+            __FWJsBridgeResponseCallback responseCallback = NULL;
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
@@ -579,7 +579,7 @@ static int logMaxLength = 500;
                         responseData = [NSNull null];
                     }
                     
-                    FWJsBridgeMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
+                    __FWJsBridgeMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:msg];
                 };
             } else {
@@ -593,7 +593,7 @@ static int logMaxLength = 500;
                 if (!filterResult) continue;
             }
             
-            FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
+            __FWJsBridgeHandler handler = self.messageHandlers[message[@"handlerName"]];
             if (handler) {
                 handler(message[@"data"] ?: @{}, responseCallback);
                 continue;
@@ -608,7 +608,7 @@ static int logMaxLength = 500;
 }
 
 - (void)injectJavascriptFile {
-    NSString *js = FWWebViewJsBridge_js();
+    NSString *js = __FWWebViewJsBridge_js();
     [self _evaluateJavascript:js];
     if (self.startupMessageQueue) {
         NSArray* queue = self.startupMessageQueue;
@@ -664,7 +664,7 @@ static int logMaxLength = 500;
     [self.delegate _evaluateJavascript:javascriptCommand];
 }
 
-- (void)_queueMessage:(FWJsBridgeMessage*)message {
+- (void)_queueMessage:(__FWJsBridgeMessage*)message {
     if (self.startupMessageQueue) {
         [self.startupMessageQueue addObject:message];
     } else {
@@ -672,7 +672,7 @@ static int logMaxLength = 500;
     }
 }
 
-- (void)_dispatchMessage:(FWJsBridgeMessage*)message {
+- (void)_dispatchMessage:(__FWJsBridgeMessage*)message {
     NSString *messageJSON = [self _serializeMessage:message pretty:NO];
     [self _log:@"SEND" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
@@ -717,20 +717,20 @@ static int logMaxLength = 500;
 
 @end
 
-@implementation FWWebViewJsBridge {
+@implementation __FWWebViewJsBridge {
     __weak WKWebView* _webView;
     __weak id<WKNavigationDelegate> _webViewDelegate;
     long _uniqueId;
-    FWWebViewJsBridgeBase *_base;
+    __FWWebViewJsBridgeBase *_base;
 }
 
 /* API
  *****/
 
-+ (void)enableLogging { [FWWebViewJsBridgeBase enableLogging]; }
++ (void)enableLogging { [__FWWebViewJsBridgeBase enableLogging]; }
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView {
-    FWWebViewJsBridge* bridge = [[self alloc] init];
+    __FWWebViewJsBridge* bridge = [[self alloc] init];
     [bridge _setupInstance:webView];
     [bridge reset];
     return bridge;
@@ -740,7 +740,7 @@ static int logMaxLength = 500;
     [self send:data responseCallback:nil];
 }
 
-- (void)send:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback {
+- (void)send:(id)data responseCallback:(__FWJsBridgeResponseCallback)responseCallback {
     [_base sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
@@ -752,7 +752,7 @@ static int logMaxLength = 500;
     [self callHandler:handlerName data:data responseCallback:nil];
 }
 
-- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(FWJsBridgeResponseCallback)responseCallback {
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(__FWJsBridgeResponseCallback)responseCallback {
     [_base sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
@@ -764,7 +764,7 @@ static int logMaxLength = 500;
     NSDictionary<NSString *,NSString *> *bridges = [self bridgeClass:clazz withMapper:mapper];
     [bridges enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSString *name = package.length > 0 ? [package stringByAppendingString:key] : key;
-        [self registerHandler:name handler:^(id  _Nonnull data, FWJsBridgeResponseCallback  _Nonnull responseCallback) {
+        [self registerHandler:name handler:^(id  _Nonnull data, __FWJsBridgeResponseCallback  _Nonnull responseCallback) {
             if (context) [clazz fw_invokeMethod:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
         }];
     }];
@@ -809,7 +809,7 @@ static int logMaxLength = 500;
     return bridges;
 }
 
-- (void)registerHandler:(NSString *)handlerName handler:(FWJsBridgeHandler)handler {
+- (void)registerHandler:(NSString *)handlerName handler:(__FWJsBridgeHandler)handler {
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
@@ -821,11 +821,11 @@ static int logMaxLength = 500;
     return _base.messageHandlers.allKeys ?: @[];
 }
 
-- (void)setErrorHandler:(FWJsBridgeErrorHandler)handler {
+- (void)setErrorHandler:(__FWJsBridgeErrorHandler)handler {
     _base.errorHandler = handler;
 }
 
-- (void)setFilterHandler:(FWJsBridgeFilterHandler)handler {
+- (void)setFilterHandler:(__FWJsBridgeFilterHandler)handler {
     _base.filterHandler = handler;
 }
 
@@ -858,7 +858,7 @@ static int logMaxLength = 500;
 - (void) _setupInstance:(WKWebView*)webView {
     _webView = webView;
     _webView.navigationDelegate = self;
-    _base = [[FWWebViewJsBridgeBase alloc] init];
+    _base = [[__FWWebViewJsBridgeBase alloc] init];
     _base.delegate = self;
 }
 
@@ -964,7 +964,7 @@ static int logMaxLength = 500;
 
 @end
 
-NSString * FWWebViewJsBridge_js() {
+NSString * __FWWebViewJsBridge_js() {
     #define __wvjb_js_func__(x) #x
     
     // BEGIN preprocessorJSCode

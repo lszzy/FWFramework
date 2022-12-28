@@ -7,7 +7,7 @@
 
 #import "FloatLayoutView.h"
 
-#define FWValueSwitchAlignLeftOrRight(valueLeft, valueRight) ([self shouldAlignRight] ? valueRight : valueLeft)
+#define __FWValueSwitchAlignLeftOrRight(valueLeft, valueRight) ([self shouldAlignRight] ? valueRight : valueLeft)
 
 const CGSize __FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
 
@@ -55,7 +55,7 @@ const CGSize __FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
     }
     
     // 如果是左对齐，则代表 item 左上角的坐标，如果是右对齐，则代表 item 右上角的坐标
-    CGPoint itemViewOrigin = CGPointMake(FWValueSwitchAlignLeftOrRight(self.padding.left, size.width - self.padding.right), self.padding.top);
+    CGPoint itemViewOrigin = CGPointMake(__FWValueSwitchAlignLeftOrRight(self.padding.left, size.width - self.padding.right), self.padding.top);
     CGFloat currentRowMaxY = itemViewOrigin.y;
     CGSize maximumItemSize = CGSizeEqualToSize(self.maximumItemSize, __FWFloatLayoutViewAutomaticalMaximumItemSize) ? CGSizeMake(size.width - (self.padding.left + self.padding.right), size.height - (self.padding.top + self.padding.bottom)) : self.maximumItemSize;
     NSInteger line = -1;
@@ -67,19 +67,19 @@ const CGSize __FWFloatLayoutViewAutomaticalMaximumItemSize = {-1, -1};
         itemViewSize.width = MIN(maximumItemSize.width, MAX(self.minimumItemSize.width, itemViewSize.width));
         itemViewSize.height = MIN(maximumItemSize.height, MAX(self.minimumItemSize.height, itemViewSize.height));
         
-        BOOL shouldBreakline = i == 0 ? YES : FWValueSwitchAlignLeftOrRight(itemViewOrigin.x + self.itemMargins.left + itemViewSize.width + self.padding.right > size.width,
+        BOOL shouldBreakline = i == 0 ? YES : __FWValueSwitchAlignLeftOrRight(itemViewOrigin.x + self.itemMargins.left + itemViewSize.width + self.padding.right > size.width,
                                                            itemViewOrigin.x - self.itemMargins.right - itemViewSize.width - self.padding.left < 0);
         if (shouldBreakline) {
             line++;
             currentRowMaxY += line > 0 ? self.itemMargins.top : 0;
             // 换行，每一行第一个 item 是不考虑 itemMargins 的
-            itemViewFrame = CGRectMake(FWValueSwitchAlignLeftOrRight(self.padding.left, size.width - self.padding.right - itemViewSize.width), currentRowMaxY, itemViewSize.width, itemViewSize.height);
+            itemViewFrame = CGRectMake(__FWValueSwitchAlignLeftOrRight(self.padding.left, size.width - self.padding.right - itemViewSize.width), currentRowMaxY, itemViewSize.width, itemViewSize.height);
             itemViewOrigin.y = CGRectGetMinY(itemViewFrame);
         } else {
             // 当前行放得下
-            itemViewFrame = CGRectMake(FWValueSwitchAlignLeftOrRight(itemViewOrigin.x + self.itemMargins.left, itemViewOrigin.x - self.itemMargins.right - itemViewSize.width), itemViewOrigin.y, itemViewSize.width, itemViewSize.height);
+            itemViewFrame = CGRectMake(__FWValueSwitchAlignLeftOrRight(itemViewOrigin.x + self.itemMargins.left, itemViewOrigin.x - self.itemMargins.right - itemViewSize.width), itemViewOrigin.y, itemViewSize.width, itemViewSize.height);
         }
-        itemViewOrigin.x = FWValueSwitchAlignLeftOrRight(CGRectGetMaxX(itemViewFrame) + self.itemMargins.right, CGRectGetMinX(itemViewFrame) - self.itemMargins.left);
+        itemViewOrigin.x = __FWValueSwitchAlignLeftOrRight(CGRectGetMaxX(itemViewFrame) + self.itemMargins.right, CGRectGetMinX(itemViewFrame) - self.itemMargins.left);
         currentRowMaxY = MAX(currentRowMaxY, CGRectGetMaxY(itemViewFrame) + self.itemMargins.bottom);
         
         if (shouldLayout) {

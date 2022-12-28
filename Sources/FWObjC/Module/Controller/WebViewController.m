@@ -62,7 +62,7 @@
 
 - (void)webViewControllerViewDidLoad:(UIViewController<__FWWebViewController> *)viewController
 {
-    FWWebView *webView = [viewController webView];
+    __FWWebView *webView = [viewController webView];
     webView.delegate = viewController;
     [viewController.view addSubview:webView];
     
@@ -88,7 +88,7 @@
     
     if ([viewController respondsToSelector:@selector(setupWebBridge:)]) {
         id<WKNavigationDelegate> delegate = webView.navigationDelegate;
-        FWWebViewJsBridge *bridge = [FWWebViewJsBridge bridgeForWebView:webView];
+        __FWWebViewJsBridge *bridge = [__FWWebViewJsBridge bridgeForWebView:webView];
         [bridge setWebViewDelegate:delegate];
         webView.fw_jsBridge = bridge;
         
@@ -174,14 +174,14 @@
 
 @implementation UIViewController (__FWWebViewController)
 
-- (FWWebView *)fw_innerWebView
+- (__FWWebView *)fw_innerWebView
 {
-    FWWebView *webView = objc_getAssociatedObject(self, _cmd);
+    __FWWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
         if ([self respondsToSelector:@selector(setupWebConfiguration)]) {
-            webView = [[FWWebView alloc] initWithFrame:CGRectZero configuration:[(id<__FWWebViewController>)self setupWebConfiguration]];
+            webView = [[__FWWebView alloc] initWithFrame:CGRectZero configuration:[(id<__FWWebViewController>)self setupWebConfiguration]];
         } else {
-            webView = [[FWWebView alloc] initWithFrame:CGRectZero];
+            webView = [[__FWWebView alloc] initWithFrame:CGRectZero];
         }
         objc_setAssociatedObject(self, _cmd, webView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
@@ -208,14 +208,14 @@
     objc_setAssociatedObject(self, @selector(fw_innerWebRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
-        FWWebView *webView = [(id<__FWWebViewController>)self webView];
+        __FWWebView *webView = [(id<__FWWebViewController>)self webView];
         webView.webRequest = webRequest;
     }
 }
 
 - (void)fw_innerSetupWebLayout
 {
-    FWWebView *webView = [(id<__FWWebViewController>)self webView];
+    __FWWebView *webView = [(id<__FWWebViewController>)self webView];
     [webView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 

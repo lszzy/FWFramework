@@ -307,9 +307,9 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
 
 @end
 
-#pragma mark - UIView+FWExposure
+#pragma mark - UIView+__FWExposure
 
-@interface FWInnerStatisticalTarget : NSObject
+@interface __FWStatisticalTarget : NSObject
 
 @property (nonatomic, weak, readonly) UIView *view;
 
@@ -325,7 +325,7 @@ typedef NS_ENUM(NSInteger, __FWStatisticalExposureState) {
     __FWStatisticalExposureStateFully,
 };
 
-@implementation UIView (FWExposure)
+@implementation UIView (__FWExposure)
 
 #pragma mark - Hook
 
@@ -621,11 +621,11 @@ typedef NS_ENUM(NSInteger, __FWStatisticalExposureState) {
     }];
 }
 
-- (FWInnerStatisticalTarget *)fw_innerStatisticalTarget
+- (__FWStatisticalTarget *)fw_innerStatisticalTarget
 {
-    FWInnerStatisticalTarget *target = objc_getAssociatedObject(self, _cmd);
+    __FWStatisticalTarget *target = objc_getAssociatedObject(self, _cmd);
     if (!target) {
-        target = [[FWInnerStatisticalTarget alloc] initWithView:self];
+        target = [[__FWStatisticalTarget alloc] initWithView:self];
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
@@ -685,7 +685,7 @@ typedef NS_ENUM(NSInteger, __FWStatisticalExposureState) {
 
 @end
 
-@implementation FWInnerStatisticalTarget
+@implementation __FWStatisticalTarget
 
 - (instancetype)initWithView:(UIView *)view
 {
