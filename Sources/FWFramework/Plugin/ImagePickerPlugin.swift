@@ -19,7 +19,7 @@ import FWObjC
     /// 保存图片或视频到指定的相册
     ///
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
-    /// * 原因请参考 FWAssetManager 对象的保存图片和视频方法的注释。
+    /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
     public func fw_addImage(toAlbum imageRef: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         let targetImage = UIImage(cgImage: imageRef, scale: UIScreen.main.scale, orientation: orientation)
@@ -108,7 +108,7 @@ import FWObjC
     /**
      *  根据 contentType 的值产生一个合适的 PHFetchOptions，并把内容以资源创建日期排序，创建日期较新的资源排在前面
      *
-     *  @param contentType 相册的内容类型
+     *  @param albumContentType 相册的内容类型
      *
      *  @return 返回一个合适的 PHFetchOptions
      */
@@ -131,7 +131,7 @@ import FWObjC
     /**
      *  获取所有相册
      *
-     *  @param contentType    相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
+     *  @param albumContentType 相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
      *  @param showEmptyAlbum 是否显示空相册（经过 contentType 过滤后仍为空的相册）
      *  @param showSmartAlbum 是否显示“智能相册”
      *
@@ -139,7 +139,7 @@ import FWObjC
      */
     public static func fw_fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
         var albumsArray: [PHAssetCollection] = []
-        // 创建一个 PHFetchOptions，用于创建 FWAssetGroup 对资源的排序和类型进行控制
+        // 创建一个 PHFetchOptions，用于创建 AssetGroup 对资源的排序和类型进行控制
         let fetchOptions = fw_createFetchOptions(albumContentType: albumContentType)
         
         var fetchResult: PHFetchResult<PHAssetCollection>
@@ -532,7 +532,7 @@ import FWObjC
      快速创建单选照片选择器，使用自定义裁剪控制器编辑
      
      @param sourceType 选择器类型
-     @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+     @param cropControllerBlock 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
      @param completion 完成回调。参数1为图片，2为信息字典，3为是否取消
      @return 照片选择器，不支持的返回nil
      */
@@ -643,7 +643,7 @@ import FWObjC
                 result.itemProvider.loadFileRepresentation(forTypeIdentifier: kUTTypeMovie as String) { url, error in
                     var fileURL: URL?
                     if let url = url {
-                        var filePath = PHPhotoLibrary.fw_pickerControllerVideoCachePath
+                        let filePath = PHPhotoLibrary.fw_pickerControllerVideoCachePath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                         if let fullPath = ((filePath as NSString).appendingPathComponent(url.absoluteString.fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                             let tempFileURL = NSURL.fileURL(withPath: fullPath)
@@ -725,7 +725,7 @@ import FWObjC
     /**
      快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
      
-     @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+     @param cropControllerBlock 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
      @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
      @return 照片选择器
      */

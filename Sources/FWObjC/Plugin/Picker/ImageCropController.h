@@ -10,41 +10,41 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 图片裁剪样式
-typedef NS_ENUM(NSInteger, FWImageCropCroppingStyle) {
+typedef NS_ENUM(NSInteger, __FWImageCropCroppingStyle) {
     /// 默认样式，矩形
-    FWImageCropCroppingStyleDefault,
+    __FWImageCropCroppingStyleDefault,
     /// 圆形样式
-    FWImageCropCroppingStyleCircular
+    __FWImageCropCroppingStyleCircular
 } NS_SWIFT_NAME(ImageCropCroppingStyle);
 
 /// 常用裁剪比率枚举
-typedef NS_ENUM(NSInteger, FWImageCropAspectRatioPreset) {
-    FWImageCropAspectRatioPresetOriginal,
-    FWImageCropAspectRatioPresetSquare,
-    FWImageCropAspectRatioPreset3x2,
-    FWImageCropAspectRatioPreset5x3,
-    FWImageCropAspectRatioPreset4x3,
-    FWImageCropAspectRatioPreset5x4,
-    FWImageCropAspectRatioPreset7x5,
-    FWImageCropAspectRatioPreset16x9,
-    FWImageCropAspectRatioPresetCustom
+typedef NS_ENUM(NSInteger, __FWImageCropAspectRatioPreset) {
+    __FWImageCropAspectRatioPresetOriginal,
+    __FWImageCropAspectRatioPresetSquare,
+    __FWImageCropAspectRatioPreset3x2,
+    __FWImageCropAspectRatioPreset5x3,
+    __FWImageCropAspectRatioPreset4x3,
+    __FWImageCropAspectRatioPreset5x4,
+    __FWImageCropAspectRatioPreset7x5,
+    __FWImageCropAspectRatioPreset16x9,
+    __FWImageCropAspectRatioPresetCustom
 } NS_SWIFT_NAME(ImageCropAspectRatioPreset);
 
 /// 工具栏位置枚举
-typedef NS_ENUM(NSInteger, FWImageCropToolbarPosition) {
+typedef NS_ENUM(NSInteger, __FWImageCropToolbarPosition) {
     /// 底部工具栏，默认
-    FWImageCropToolbarPositionBottom,
+    __FWImageCropToolbarPositionBottom,
     /// 顶部工具栏
-    FWImageCropToolbarPositionTop
+    __FWImageCropToolbarPositionTop
 } NS_SWIFT_NAME(ImageCropToolbarPosition);
 
-@class FWImageCropController;
-@class FWImageCropView;
-@class FWImageCropToolbar;
+@class __FWImageCropController;
+@class __FWImageCropView;
+@class __FWImageCropToolbar;
 
 /// 裁剪控制器事件代理协议
 NS_SWIFT_NAME(ImageCropControllerDelegate)
-@protocol FWImageCropControllerDelegate <NSObject>
+@protocol __FWImageCropControllerDelegate <NSObject>
 @optional
 
 /**
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(ImageCropControllerDelegate)
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropController:(nonnull FWImageCropController *)cropController
+- (void)cropController:(nonnull __FWImageCropController *)cropController
         didCropImageToRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -66,7 +66,7 @@ NS_SWIFT_NAME(ImageCropControllerDelegate)
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropController:(nonnull FWImageCropController *)cropController
+- (void)cropController:(nonnull __FWImageCropController *)cropController
             didCropToImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -78,7 +78,7 @@ NS_SWIFT_NAME(ImageCropControllerDelegate)
  @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
  @param angle The angle of the image when it was cropped
  */
-- (void)cropController:(nonnull FWImageCropController *)cropController
+- (void)cropController:(nonnull __FWImageCropController *)cropController
     didCropToCircularImage:(nonnull UIImage *)image withRect:(CGRect)cropRect
                      angle:(NSInteger)angle;
 
@@ -90,18 +90,18 @@ NS_SWIFT_NAME(ImageCropControllerDelegate)
  @param cancelled Whether a cropping action was actually performed, or if the user explicitly hit 'Cancel'
  
  */
-- (void)cropController:(nonnull FWImageCropController *)cropController
+- (void)cropController:(nonnull __FWImageCropController *)cropController
         didFinishCancelled:(BOOL)cancelled;
 
 @end
 
 /**
- FWImageCropController
+ __FWImageCropController
 
  @see https://github.com/TimOliver/TOCropViewController
  */
 NS_SWIFT_NAME(ImageCropController)
-@interface FWImageCropController : UIViewController
+@interface __FWImageCropController : UIViewController
 
 /**
  The original, uncropped image that was passed to this controller.
@@ -117,12 +117,12 @@ NS_SWIFT_NAME(ImageCropController)
  The view controller's delegate that will receive the resulting
  cropped image, as well as crop information.
  */
-@property (nullable, nonatomic, weak) id<FWImageCropControllerDelegate> delegate;
+@property (nullable, nonatomic, weak) id<__FWImageCropControllerDelegate> delegate;
 
 /**
  The crop view managed by this view controller.
  */
-@property (nonnull, nonatomic, strong, readonly) FWImageCropView *cropView;
+@property (nonnull, nonatomic, strong, readonly) __FWImageCropView *cropView;
 
 /**
  In the coordinate space of the image itself, the region that is currently
@@ -145,7 +145,7 @@ NS_SWIFT_NAME(ImageCropController)
 /**
  The toolbar view managed by this view controller.
  */
-@property (nonnull, nonatomic, strong, readonly) FWImageCropToolbar *toolbar;
+@property (nonnull, nonatomic, strong, readonly) __FWImageCropToolbar *toolbar;
 
 /// 自定义工具栏高度，默认同系统
 @property (nonatomic, assign) CGFloat toolbarHeight;
@@ -153,12 +153,12 @@ NS_SWIFT_NAME(ImageCropController)
 /**
  The cropping style of this particular crop view controller
  */
-@property (nonatomic, readonly) FWImageCropCroppingStyle croppingStyle;
+@property (nonatomic, readonly) __FWImageCropCroppingStyle croppingStyle;
 
 /**
  A choice from one of the pre-defined aspect ratio presets
  */
-@property (nonatomic, assign) FWImageCropAspectRatioPreset aspectRatioPreset;
+@property (nonatomic, assign) __FWImageCropAspectRatioPreset aspectRatioPreset;
 
 /**
  A CGSize value representing a custom aspect ratio, not listed in the presets.
@@ -229,9 +229,9 @@ NS_SWIFT_NAME(ImageCropController)
 @property (nonatomic, assign) BOOL resetAspectRatioEnabled;
 
 /**
- The position of the Toolbar the default value is `FWImageCropToolbarPositionBottom`.
+ The position of the Toolbar the default value is `__FWImageCropToolbarPositionBottom`.
  */
-@property (nonatomic, assign) FWImageCropToolbarPosition toolbarPosition;
+@property (nonatomic, assign) __FWImageCropToolbarPosition toolbarPosition;
 
 /**
  When disabled, an additional rotation button that rotates the canvas in
@@ -282,7 +282,7 @@ NS_SWIFT_NAME(ImageCropController)
 @property (nonatomic, assign) BOOL cancelButtonHidden;
 
 /**
- An array of `FWImageCropAspectRatioPreset` enum values denoting which
+ An array of `__FWImageCropAspectRatioPreset` enum values denoting which
  aspect ratios the crop view controller may display (Default is nil. All are shown)
  */
 @property (nullable, nonatomic, strong) NSArray<NSNumber *> *allowedAspectRatios;
@@ -341,10 +341,10 @@ NS_SWIFT_NAME(ImageCropController)
  @param style The cropping style that will be used with this view controller (eg, rectangular, or circular)
  @param image The image that will be cropped
  */
-- (nonnull instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
+- (nonnull instancetype)initWithCroppingStyle:(__FWImageCropCroppingStyle)style image:(nonnull UIImage *)image NS_SWIFT_NAME(init(croppingStyle:image:));
 
 /**
- Resets object of FWImageCropController class as if user pressed reset button in the bottom bar themself
+ Resets object of __FWImageCropController class as if user pressed reset button in the bottom bar themself
  */
 - (void)resetCropViewLayout;
 
@@ -355,12 +355,12 @@ NS_SWIFT_NAME(ImageCropController)
  @param aspectRatioPreset The aspect ratio preset
  @param animated Whether the transition to the aspect ratio is animated
  */
-- (void)setAspectRatioPreset:(FWImageCropAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
+- (void)setAspectRatioPreset:(__FWImageCropAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated NS_SWIFT_NAME(setAspectRatioPresent(_:animated:));
 
 @end
 
 NS_SWIFT_NAME(ImageCropOverlayView)
-@interface FWImageCropOverlayView : UIView
+@interface __FWImageCropOverlayView : UIView
 
 /** Hides the interior grid lines, sans animation. */
 @property (nonatomic, assign) BOOL gridHidden;
@@ -381,7 +381,7 @@ NS_SWIFT_NAME(ImageCropOverlayView)
  touch events that weren't otherwise accessible via UIGestureRecognizer objects.
  */
 NS_SWIFT_NAME(ImageCropScrollView)
-@interface FWImageCropScrollView : UIScrollView
+@interface __FWImageCropScrollView : UIScrollView
 
 @property (nullable, nonatomic, copy) void (^touchesBegan)(void);
 @property (nullable, nonatomic, copy) void (^touchesCancelled)(void);
@@ -390,7 +390,7 @@ NS_SWIFT_NAME(ImageCropScrollView)
 @end
 
 NS_SWIFT_NAME(ImageCropToolbar)
-@interface FWImageCropToolbar : UIView
+@interface __FWImageCropToolbar : UIView
 
 /* In horizontal mode, offsets all of the buttons vertically by height of status bar. */
 @property (nonatomic, assign) CGFloat statusBarHeightInset;
@@ -451,18 +451,18 @@ NS_SWIFT_NAME(ImageCropToolbar)
 
 @end
 
-@class FWImageCropView;
+@class __FWImageCropView;
 
 NS_SWIFT_NAME(ImageCropViewDelegate)
-@protocol FWImageCropViewDelegate<NSObject>
+@protocol __FWImageCropViewDelegate<NSObject>
 
-- (void)cropViewDidBecomeResettable:(nonnull FWImageCropView *)cropView;
-- (void)cropViewDidBecomeNonResettable:(nonnull FWImageCropView *)cropView;
+- (void)cropViewDidBecomeResettable:(nonnull __FWImageCropView *)cropView;
+- (void)cropViewDidBecomeNonResettable:(nonnull __FWImageCropView *)cropView;
 
 @end
 
 NS_SWIFT_NAME(ImageCropView)
-@interface FWImageCropView : UIView
+@interface __FWImageCropView : UIView
 
 /**
  The image that the crop view is displaying. This cannot be changed once the crop view is instantiated.
@@ -472,12 +472,12 @@ NS_SWIFT_NAME(ImageCropView)
 /**
  The cropping style of the crop view (eg, rectangular or circular)
  */
-@property (nonatomic, assign, readonly) FWImageCropCroppingStyle croppingStyle;
+@property (nonatomic, assign, readonly) __FWImageCropCroppingStyle croppingStyle;
 
 /**
  A grid view overlaid on top of the foreground image view's container.
  */
-@property (nonnull, nonatomic, strong, readonly) FWImageCropOverlayView *gridOverlayView;
+@property (nonnull, nonatomic, strong, readonly) __FWImageCropOverlayView *gridOverlayView;
 
 /**
  A container view that clips the a copy of the image so it appears over the dimming view
@@ -487,7 +487,7 @@ NS_SWIFT_NAME(ImageCropView)
 /**
  A delegate object that receives notifications from the crop view
  */
-@property (nullable, nonatomic, weak) id<FWImageCropViewDelegate> delegate;
+@property (nullable, nonatomic, weak) id<__FWImageCropViewDelegate> delegate;
 
 /**
  If false, the user cannot resize the crop box frame using a pan gesture from a corner.
@@ -619,7 +619,7 @@ The minimum croping aspect ratio. If set, user is prevented from setting croppin
 /**
  Create a new instance of the crop view with the specified image and cropping
  */
-- (nonnull instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(nonnull UIImage *)image;
+- (nonnull instancetype)initWithCroppingStyle:(__FWImageCropCroppingStyle)style image:(nonnull UIImage *)image;
 
 /**
  Performs the initial set up, including laying out the image and applying any restore properties.

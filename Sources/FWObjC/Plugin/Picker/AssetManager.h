@@ -10,52 +10,52 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWAsset
+#pragma mark - __FWAsset
 
-typedef NS_ENUM(NSUInteger, FWAssetType) {
-    FWAssetTypeUnknow,
-    FWAssetTypeImage,
-    FWAssetTypeVideo,
-    FWAssetTypeAudio
+typedef NS_ENUM(NSUInteger, __FWAssetType) {
+    __FWAssetTypeUnknow,
+    __FWAssetTypeImage,
+    __FWAssetTypeVideo,
+    __FWAssetTypeAudio
 } NS_SWIFT_NAME(AssetType);
 
-typedef NS_ENUM(NSUInteger, FWAssetSubType) {
-    FWAssetSubTypeUnknow,
-    FWAssetSubTypeImage,
-    FWAssetSubTypeLivePhoto,
-    FWAssetSubTypeGIF
+typedef NS_ENUM(NSUInteger, __FWAssetSubType) {
+    __FWAssetSubTypeUnknow,
+    __FWAssetSubTypeImage,
+    __FWAssetSubTypeLivePhoto,
+    __FWAssetSubTypeGIF
 } NS_SWIFT_NAME(AssetSubType);
 
 /// Status when download asset from iCloud
-typedef NS_ENUM(NSUInteger, FWAssetDownloadStatus) {
-    FWAssetDownloadStatusSucceed,
-    FWAssetDownloadStatusDownloading,
-    FWAssetDownloadStatusCanceled,
-    FWAssetDownloadStatusFailed
+typedef NS_ENUM(NSUInteger, __FWAssetDownloadStatus) {
+    __FWAssetDownloadStatusSucceed,
+    __FWAssetDownloadStatusDownloading,
+    __FWAssetDownloadStatusCanceled,
+    __FWAssetDownloadStatusFailed
 } NS_SWIFT_NAME(AssetDownloadStatus);
 
 @class PHAsset;
 
 /**
  *  相册里某一个资源的包装对象，该资源可能是图片、视频等。
- *  @note FWAsset 重写了 isEqual: 方法，只要两个 FWAsset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 FWAsset 进行遍历查找等操作。
+ *  @note __FWAsset 重写了 isEqual: 方法，只要两个 __FWAsset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 __FWAsset 进行遍历查找等操作。
  */
 NS_SWIFT_NAME(Asset)
-@interface FWAsset : NSObject
+@interface __FWAsset : NSObject
 
-@property(nonatomic, assign, readonly) FWAssetType assetType;
-@property(nonatomic, assign, readonly) FWAssetSubType assetSubType;
+@property(nonatomic, assign, readonly) __FWAssetType assetType;
+@property(nonatomic, assign, readonly) __FWAssetSubType assetSubType;
 
 - (instancetype)initWithPHAsset:(PHAsset *)phAsset;
 
 @property(nonatomic, strong, readonly) PHAsset *phAsset;
 // 从 iCloud 下载资源大图的状态
-@property(nonatomic, assign, readonly) FWAssetDownloadStatus downloadStatus;
+@property(nonatomic, assign, readonly) __FWAssetDownloadStatus downloadStatus;
 // 从 iCloud 下载资源大图的进度
 @property(nonatomic, assign) double downloadProgress;
 // 从 iCloud 请求获得资源的大图的请求 ID
 @property(nonatomic, assign) NSInteger requestID;
-// Asset 的标识，每个 FWAsset 的 identifier 都不同。只要两个 FWAsset 的 identifier 相同则认为它们是同一个 asset
+// Asset 的标识，每个 __FWAsset 的 identifier 都不同。只要两个 __FWAsset 的 identifier 相同则认为它们是同一个 asset
 @property(nonatomic, copy, readonly) NSString *identifier;
 // 自定义编辑后的图片，用于实现图片裁剪等功能，默认nil
 @property(nullable, nonatomic, strong) UIImage *editedImage;
@@ -120,7 +120,7 @@ NS_SWIFT_NAME(Asset)
 /**
  *  异步请求 Live Photo，可能会有网络请求
  *
- *  @param completion        完成请求后调用的 block，参数中包含了请求的 Live Photo 以及相关信息，若 assetType 不是 FWAssetTypeLivePhoto 则为 nil
+ *  @param completion        完成请求后调用的 block，参数中包含了请求的 Live Photo 以及相关信息，若 assetType 不是 __FWAssetTypeLivePhoto 则为 nil
  *  @param phProgressHandler 处理请求进度的 handler，不在主线程上执行，在 block 中修改 UI 时注意需要手工放到主线程处理。
  *
  *  @warning iOS 9.1 以下中并没有 Live Photo，因此无法获取有效结果。
@@ -132,7 +132,7 @@ NS_SWIFT_NAME(Asset)
 /**
  *  异步请求 AVPlayerItem，可能会有网络请求
  *
- *  @param completion        完成请求后调用的 block，参数中包含了请求的 AVPlayerItem 以及相关信息，若 assetType 不是 FWAssetTypeVideo 则为 nil
+ *  @param completion        完成请求后调用的 block，参数中包含了请求的 AVPlayerItem 以及相关信息，若 assetType 不是 __FWAssetTypeVideo 则为 nil
  *  @param phProgressHandler 处理请求进度的 handler，不在主线程上执行，在 block 中修改 UI 时注意需要手工放到主线程处理。
  *
  *  @return 返回请求 AVPlayerItem 的请求 id
@@ -144,7 +144,7 @@ NS_SWIFT_NAME(Asset)
  *
  *  @param outputURL 视频输出文件URL路径，如果路径已存在会导出失败
  *  @param exportPreset 导出视频选项配置
- *  @param completion 完成请求后调用的 block，参数中包含了请求的 文件URL 以及相关信息，若 assetType 不是 FWAssetTypeVideo 则为 nil
+ *  @param completion 完成请求后调用的 block，参数中包含了请求的 文件URL 以及相关信息，若 assetType 不是 __FWAssetTypeVideo 则为 nil
  *  @param phProgressHandler 处理请求进度的 handler，不在主线程上执行，在 block 中修改 UI 时注意需要手工放到主线程处理。
  *
  *  @return 返回请求 视频文件URL 的请求 id
@@ -154,12 +154,12 @@ NS_SWIFT_NAME(Asset)
 /**
  *  异步请求图片的 Data
  *
- *  @param completion 完成请求后调用的 block，参数中包含了请求的图片 Data（若 assetType 不是 FWAssetTypeImage 或 FWAssetTypeLivePhoto 则为 nil），该图片是否为 GIF 的判断值，以及该图片的文件格式是否为 HEIC
+ *  @param completion 完成请求后调用的 block，参数中包含了请求的图片 Data（若 assetType 不是 __FWAssetTypeImage 或 __FWAssetTypeLivePhoto 则为 nil），该图片是否为 GIF 的判断值，以及该图片的文件格式是否为 HEIC
  */
 - (void)requestImageDataWithCompletion:(nullable void (^)(NSData * _Nullable imageData, NSDictionary<NSString *, id> * _Nullable info, BOOL isGIF, BOOL isHEIC))completion;
 
 /**
- * 获取图片的 UIImageOrientation 值，仅 assetType 为 FWAssetTypeImage 或 FWAssetTypeLivePhoto 时有效
+ * 获取图片的 UIImageOrientation 值，仅 assetType 为 __FWAssetTypeImage 或 __FWAssetTypeLivePhoto 时有效
  */
 - (UIImageOrientation)imageOrientation;
 
@@ -178,24 +178,24 @@ NS_SWIFT_NAME(Asset)
 
 @end
 
-#pragma mark - FWAssetGroup
+#pragma mark - __FWAssetGroup
 
 /// 相册展示内容的类型
-typedef NS_ENUM(NSUInteger, FWAlbumContentType) {
-    FWAlbumContentTypeAll,                                  // 展示所有资源
-    FWAlbumContentTypeOnlyPhoto,                            // 只展示照片
-    FWAlbumContentTypeOnlyVideo,                            // 只展示视频
-    FWAlbumContentTypeOnlyAudio                             // 只展示音频
+typedef NS_ENUM(NSUInteger, __FWAlbumContentType) {
+    __FWAlbumContentTypeAll,                                  // 展示所有资源
+    __FWAlbumContentTypeOnlyPhoto,                            // 只展示照片
+    __FWAlbumContentTypeOnlyVideo,                            // 只展示视频
+    __FWAlbumContentTypeOnlyAudio                             // 只展示音频
 } NS_SWIFT_NAME(AlbumContentType);
 
 /// 相册展示内容按日期排序的方式
-typedef NS_ENUM(NSUInteger, FWAlbumSortType) {
-    FWAlbumSortTypePositive,  // 日期最新的内容排在后面
-    FWAlbumSortTypeReverse  // 日期最新的内容排在前面
+typedef NS_ENUM(NSUInteger, __FWAlbumSortType) {
+    __FWAlbumSortTypePositive,  // 日期最新的内容排在后面
+    __FWAlbumSortTypeReverse  // 日期最新的内容排在前面
 } NS_SWIFT_NAME(AlbumSortType);
 
 NS_SWIFT_NAME(AssetGroup)
-@interface FWAssetGroup : NSObject
+@interface __FWAssetGroup : NSObject
 
 - (instancetype)initWithPHCollection:(PHAssetCollection *)phAssetCollection;
 
@@ -228,7 +228,7 @@ NS_SWIFT_NAME(AssetGroup)
  *                          枚举所有资源结束后，enumerationBlock 会被再调用一次，这时 result 的值为 nil。
  *                          可以以此作为判断枚举结束的标记
  */
-- (void)enumerateAssetsWithOptions:(FWAlbumSortType)albumSortType usingBlock:(nullable void (^)(FWAsset * _Nullable resultAsset))enumerationBlock;
+- (void)enumerateAssetsWithOptions:(__FWAlbumSortType)albumSortType usingBlock:(nullable void (^)(__FWAsset * _Nullable resultAsset))enumerationBlock;
 
 /**
  *  枚举相册内所有的资源，相册内资源按日期最新的排在最后面
@@ -237,53 +237,53 @@ NS_SWIFT_NAME(AssetGroup)
  *                          枚举所有资源结束后，enumerationBlock 会被再调用一次，这时 result 的值为 nil。
  *                          可以以此作为判断枚举结束的标记
  */
-- (void)enumerateAssetsUsingBlock:(nullable void (^)(FWAsset * _Nullable result))enumerationBlock;
+- (void)enumerateAssetsUsingBlock:(nullable void (^)(__FWAsset * _Nullable result))enumerationBlock;
 
 @end
 
-#pragma mark - FWAssetManager
+#pragma mark - __FWAssetManager
 
 /// Asset 授权的状态
-typedef NS_ENUM(NSUInteger, FWAssetAuthorizationStatus) {
-    FWAssetAuthorizationStatusNotDetermined,      // 还不确定有没有授权
-    FWAssetAuthorizationStatusAuthorized,         // 已经授权
-    FWAssetAuthorizationStatusNotAuthorized       // 手动禁止了授权
+typedef NS_ENUM(NSUInteger, __FWAssetAuthorizationStatus) {
+    __FWAssetAuthorizationStatusNotDetermined,      // 还不确定有没有授权
+    __FWAssetAuthorizationStatusAuthorized,         // 已经授权
+    __FWAssetAuthorizationStatusNotAuthorized       // 手动禁止了授权
 } NS_SWIFT_NAME(AssetAuthorizationStatus);
 
-typedef void (^FWWriteAssetCompletionBlock)(FWAsset * _Nullable asset, NSError * _Nullable error) NS_SWIFT_NAME(WriteAssetCompletionBlock);
+typedef void (^__FWWriteAssetCompletionBlock)(__FWAsset * _Nullable asset, NSError * _Nullable error) NS_SWIFT_NAME(WriteAssetCompletionBlock);
 
 /// 保存图片到指定相册（传入 UIImage）
-extern void FWImageWriteToSavedPhotosAlbumWithAlbumAssetsGroup(UIImage *image, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(ImageWriteToSavedPhotosAlbum(_:assetGroup:completion:));
+extern void __FWImageWriteToSavedPhotosAlbumWithAlbumAssetsGroup(UIImage *image, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(ImageWriteToSavedPhotosAlbum(_:assetGroup:completion:));
 
 /// 保存图片到指定相册（传入图片路径）
-extern void FWSaveImageAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *imagePath, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(SaveImageAtPathToSavedPhotosAlbum(_:assetGroup:completion:));
+extern void __FWSaveImageAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *imagePath, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(SaveImageAtPathToSavedPhotosAlbum(_:assetGroup:completion:));
 
 /// 保存视频到指定相册
-extern void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(SaveVideoAtPathToSavedPhotosAlbum(_:assetGroup:completion:));
+extern void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) NS_SWIFT_NAME(SaveVideoAtPathToSavedPhotosAlbum(_:assetGroup:completion:));
 
 /**
- *  构建 FWAssetManager 这个对象并提供单例的调用方式主要出于下面两点考虑：
+ *  构建 __FWAssetManager 这个对象并提供单例的调用方式主要出于下面两点考虑：
  *  1. 保存照片/视频的方法较为复杂，为了方便封装系统接口，同时灵活地扩展功能，需要有一个独立对象去管理这些方法。
  *  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，
- *     FWAssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取
+ *     __FWAssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取
  *     PHCachingImageManager 的实例。
  *
  * @see https://github.com/Tencent/QMUI_iOS
  */
 NS_SWIFT_NAME(AssetManager)
-@interface FWAssetManager : NSObject
+@interface __FWAssetManager : NSObject
 
-/// 获取 FWAssetManager 的单例
-@property (class, nonatomic, readonly) FWAssetManager *sharedInstance NS_SWIFT_NAME(shared);
+/// 获取 __FWAssetManager 的单例
+@property (class, nonatomic, readonly) __FWAssetManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 获取当前应用的“照片”访问授权状态
-+ (FWAssetAuthorizationStatus)authorizationStatus;
++ (__FWAssetAuthorizationStatus)authorizationStatus;
 
 /**
  *  调起系统询问是否授权访问“照片”的 UIAlertView
  *  @param handler 授权结束后调用的 block，默认不在主线程上执行，如果需要在 block 中修改 UI，记得 dispatch 到 mainqueue
  */
-+ (void)requestAuthorization:(nullable void(^)(FWAssetAuthorizationStatus status))handler;
++ (void)requestAuthorization:(nullable void(^)(__FWAssetAuthorizationStatus status))handler;
 
 /**
  *  获取所有的相册，包括个人收藏，最近添加，自拍这类“智能相册”
@@ -294,10 +294,10 @@ NS_SWIFT_NAME(AssetManager)
  *  @param enumerationBlock          参数 resultAssetsGroup 表示每次枚举时对应的相册。枚举所有相册结束后，enumerationBlock 会被再调用一次，
  *                                   这时 resultAssetsGroup 的值为 nil。可以以此作为判断枚举结束的标记。
  */
-- (void)enumerateAllAlbumsWithAlbumContentType:(FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(nullable void (^)(FWAssetGroup * _Nullable resultAssetsGroup))enumerationBlock;
+- (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(nullable void (^)(__FWAssetGroup * _Nullable resultAssetsGroup))enumerationBlock;
 
 /// 获取所有相册，默认显示系统的“智能相册”，不显示空相册（经过 contentType 过滤后为空的相册）
-- (void)enumerateAllAlbumsWithAlbumContentType:(FWAlbumContentType)contentType usingBlock:(nullable void (^)(FWAssetGroup * _Nullable resultAssetsGroup))enumerationBlock;
+- (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType usingBlock:(nullable void (^)(__FWAssetGroup * _Nullable resultAssetsGroup))enumerationBlock;
 
 /**
  *  保存图片或视频到指定的相册
@@ -309,11 +309,11 @@ NS_SWIFT_NAME(AssetManager)
  *           因此这应该是一个合符官方预期的表现。
  *  @warning 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
  */
-- (void)saveImageWithImageRef:(CGImageRef)imageRef albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup orientation:(UIImageOrientation)orientation completionBlock:(FWWriteAssetCompletionBlock)completionBlock;
+- (void)saveImageWithImageRef:(CGImageRef)imageRef albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup orientation:(UIImageOrientation)orientation completionBlock:(__FWWriteAssetCompletionBlock)completionBlock;
 
-- (void)saveImageWithImagePathURL:(NSURL *)imagePathURL albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup completionBlock:(FWWriteAssetCompletionBlock)completionBlock;
+- (void)saveImageWithImagePathURL:(NSURL *)imagePathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock;
 
-- (void)saveVideoWithVideoPathURL:(NSURL *)videoPathURL albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup completionBlock:(FWWriteAssetCompletionBlock)completionBlock;
+- (void)saveVideoWithVideoPathURL:(NSURL *)videoPathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock;
 
 /// 获取一个 PHCachingImageManager 的实例
 - (PHCachingImageManager *)phCachingImageManager;

@@ -22,7 +22,7 @@
 
 #endif
 
-#pragma mark - FWAsset
+#pragma mark - __FWAsset
 
 static NSString * const kAssetInfoImageData = @"imageData";
 static NSString * const kAssetInfoOriginInfo = @"originInfo";
@@ -30,12 +30,12 @@ static NSString * const kAssetInfoDataUTI = @"dataUTI";
 static NSString * const kAssetInfoOrientation = @"orientation";
 static NSString * const kAssetInfoSize = @"size";
 
-@interface FWAsset ()
+@interface __FWAsset ()
 
 @property(nonatomic, copy) NSDictionary *phAssetInfo;
 @end
 
-@implementation FWAsset {
+@implementation __FWAsset {
     PHAsset *_phAsset;
     float imageSize;
 }
@@ -45,25 +45,25 @@ static NSString * const kAssetInfoSize = @"size";
         _phAsset = phAsset;
         switch (phAsset.mediaType) {
             case PHAssetMediaTypeImage:
-                _assetType = FWAssetTypeImage;
+                _assetType = __FWAssetTypeImage;
                 if ([[phAsset fw_invokeGetter:@"uniformTypeIdentifier"] isEqualToString:(__bridge NSString *)kUTTypeGIF]) {
-                    _assetSubType = FWAssetSubTypeGIF;
+                    _assetSubType = __FWAssetSubTypeGIF;
                 } else {
                     if (phAsset.mediaSubtypes & PHAssetMediaSubtypePhotoLive) {
-                        _assetSubType = FWAssetSubTypeLivePhoto;
+                        _assetSubType = __FWAssetSubTypeLivePhoto;
                     } else {
-                        _assetSubType = FWAssetSubTypeImage;
+                        _assetSubType = __FWAssetSubTypeImage;
                     }
                 }
                 break;
             case PHAssetMediaTypeVideo:
-                _assetType = FWAssetTypeVideo;
+                _assetType = __FWAssetTypeVideo;
                 break;
             case PHAssetMediaTypeAudio:
-                _assetType = FWAssetTypeAudio;
+                _assetType = __FWAssetTypeAudio;
                 break;
             default:
-                _assetType = FWAssetTypeUnknow;
+                _assetType = __FWAssetTypeUnknow;
                 break;
         }
     }
@@ -80,7 +80,7 @@ static NSString * const kAssetInfoSize = @"size";
     phImageRequestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
     phImageRequestOptions.networkAccessAllowed = YES;
     phImageRequestOptions.synchronous = YES;
-    [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:phImageRequestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:phImageRequestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         resultImage = [UIImage imageWithData:imageData];
     }];
     return resultImage;
@@ -93,7 +93,7 @@ static NSString * const kAssetInfoSize = @"size";
     phImageRequestOptions.resizeMode = PHImageRequestOptionsResizeModeFast;
     phImageRequestOptions.synchronous = YES;
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-    [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset
+    [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset
                                                                           targetSize:CGSizeMake(size.width * UIScreen.mainScreen.scale, size.height * UIScreen.mainScreen.scale)
                                                                          contentMode:PHImageContentModeAspectFill options:phImageRequestOptions
                                                                        resultHandler:^(UIImage *result, NSDictionary *info) {
@@ -108,7 +108,7 @@ static NSString * const kAssetInfoSize = @"size";
     PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
     imageRequestOptions.networkAccessAllowed = YES;
     imageRequestOptions.synchronous = YES;
-    [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset
+    [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset
                                                                         targetSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width * 2, UIScreen.mainScreen.bounds.size.height * 2)
                                                                        contentMode:PHImageContentModeAspectFill
                                                                            options:imageRequestOptions
@@ -122,7 +122,7 @@ static NSString * const kAssetInfoSize = @"size";
     PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
     imageRequestOptions.networkAccessAllowed = YES; // 允许访问网络
     imageRequestOptions.progressHandler = phProgressHandler;
-    return [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:imageRequestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:imageRequestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         if (completion) {
             completion([UIImage imageWithData:imageData], info, YES);
         }
@@ -134,7 +134,7 @@ static NSString * const kAssetInfoSize = @"size";
     imageRequestOptions.resizeMode = PHImageRequestOptionsResizeModeFast;
     imageRequestOptions.networkAccessAllowed = YES;
     // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-    return [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset targetSize:CGSizeMake(size.width * UIScreen.mainScreen.scale, size.height * UIScreen.mainScreen.scale) contentMode:PHImageContentModeAspectFill options:imageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
+    return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset targetSize:CGSizeMake(size.width * UIScreen.mainScreen.scale, size.height * UIScreen.mainScreen.scale) contentMode:PHImageContentModeAspectFill options:imageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
         BOOL downloadSucceed = (result && !info) || (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
         BOOL downloadFailed = [info objectForKey:PHImageErrorKey] != nil;
         if (completion) {
@@ -147,7 +147,7 @@ static NSString * const kAssetInfoSize = @"size";
     PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
     imageRequestOptions.networkAccessAllowed = YES; // 允许访问网络
     imageRequestOptions.progressHandler = phProgressHandler;
-    return [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset targetSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width * 2, UIScreen.mainScreen.bounds.size.height * 2) contentMode:PHImageContentModeAspectFill options:imageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
+    return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:_phAsset targetSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width * 2, UIScreen.mainScreen.bounds.size.height * 2) contentMode:PHImageContentModeAspectFill options:imageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
         BOOL downloadSucceed = (result && !info) || (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
         BOOL downloadFailed = [info objectForKey:PHImageErrorKey] != nil;
         if (completion) {
@@ -161,7 +161,7 @@ static NSString * const kAssetInfoSize = @"size";
         PHLivePhotoRequestOptions *livePhotoRequestOptions = [[PHLivePhotoRequestOptions alloc] init];
         livePhotoRequestOptions.networkAccessAllowed = YES; // 允许访问网络
         livePhotoRequestOptions.progressHandler = phProgressHandler;
-        return [[[FWAssetManager sharedInstance] phCachingImageManager] requestLivePhotoForAsset:_phAsset targetSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width * 2, UIScreen.mainScreen.bounds.size.height * 2) contentMode:PHImageContentModeAspectFill options:livePhotoRequestOptions resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
+        return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestLivePhotoForAsset:_phAsset targetSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width * 2, UIScreen.mainScreen.bounds.size.height * 2) contentMode:PHImageContentModeAspectFill options:livePhotoRequestOptions resultHandler:^(PHLivePhoto * _Nullable livePhoto, NSDictionary * _Nullable info) {
             BOOL downloadSucceed = (livePhoto && !info) || (![[info objectForKey:PHLivePhotoInfoCancelledKey] boolValue] && ![info objectForKey:PHLivePhotoInfoErrorKey] && ![[info objectForKey:PHLivePhotoInfoIsDegradedKey] boolValue] && ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
             BOOL downloadFailed = [info objectForKey:PHLivePhotoInfoErrorKey] || [info objectForKey:PHImageErrorKey];
             if (completion) {
@@ -181,7 +181,7 @@ static NSString * const kAssetInfoSize = @"size";
         PHVideoRequestOptions *videoRequestOptions = [[PHVideoRequestOptions alloc] init];
         videoRequestOptions.networkAccessAllowed = YES; // 允许访问网络
         videoRequestOptions.progressHandler = phProgressHandler;
-        return [[[FWAssetManager sharedInstance] phCachingImageManager] requestPlayerItemForVideo:_phAsset options:videoRequestOptions resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+        return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestPlayerItemForVideo:_phAsset options:videoRequestOptions resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
             if (completion) {
                 completion(playerItem, info);
             }
@@ -199,7 +199,7 @@ static NSString * const kAssetInfoSize = @"size";
         PHVideoRequestOptions *videoRequestOptions = [[PHVideoRequestOptions alloc] init];
         videoRequestOptions.networkAccessAllowed = YES; // 允许访问网络
         videoRequestOptions.progressHandler = phProgressHandler;
-        return [[[FWAssetManager sharedInstance] phCachingImageManager] requestExportSessionForVideo:_phAsset options:videoRequestOptions exportPreset:exportPreset resultHandler:^(AVAssetExportSession * _Nullable exportSession, NSDictionary * _Nullable info) {
+        return [[[__FWAssetManager sharedInstance] phCachingImageManager] requestExportSessionForVideo:_phAsset options:videoRequestOptions exportPreset:exportPreset resultHandler:^(AVAssetExportSession * _Nullable exportSession, NSDictionary * _Nullable info) {
             if (!exportSession) {
                 if (completion) {
                     completion(nil, info);
@@ -230,7 +230,7 @@ static NSString * const kAssetInfoSize = @"size";
 }
 
 - (void)requestImageDataWithCompletion:(void (^)(NSData *imageData, NSDictionary<NSString *, id> *info, BOOL isGIF, BOOL isHEIC))completion {
-    if (self.assetType != FWAssetTypeImage) {
+    if (self.assetType != __FWAssetTypeImage) {
         if (completion) {
             completion(nil, nil, NO, NO);
         }
@@ -244,7 +244,7 @@ static NSString * const kAssetInfoSize = @"size";
             strongSelf.phAssetInfo = phAssetInfo;
             if (completion) {
                 NSString *dataUTI = phAssetInfo[kAssetInfoDataUTI];
-                BOOL isGIF = self.assetSubType == FWAssetSubTypeGIF;
+                BOOL isGIF = self.assetSubType == __FWAssetSubTypeGIF;
                 BOOL isHEIC = [dataUTI isEqualToString:@"public.heic"];
                 NSDictionary<NSString *, id> *originInfo = phAssetInfo[kAssetInfoOriginInfo];
                 completion(phAssetInfo[kAssetInfoImageData], originInfo, isGIF, isHEIC);
@@ -253,7 +253,7 @@ static NSString * const kAssetInfoSize = @"size";
     } else {
         if (completion) {
             NSString *dataUTI = self.phAssetInfo[kAssetInfoDataUTI];
-            BOOL isGIF = self.assetSubType == FWAssetSubTypeGIF;
+            BOOL isGIF = self.assetSubType == __FWAssetSubTypeGIF;
             BOOL isHEIC = [@"public.heic" isEqualToString:dataUTI];
             NSDictionary<NSString *, id> *originInfo = self.phAssetInfo[kAssetInfoOriginInfo];
             completion(self.phAssetInfo[kAssetInfoImageData], originInfo, isGIF, isHEIC);
@@ -263,7 +263,7 @@ static NSString * const kAssetInfoSize = @"size";
 
 - (UIImageOrientation)imageOrientation {
     UIImageOrientation orientation;
-    if (self.assetType == FWAssetTypeImage) {
+    if (self.assetType == __FWAssetTypeImage) {
         if (!self.phAssetInfo) {
             // PHAsset 的 UIImageOrientation 需要调用过 requestImageDataForAsset 才能获取
             __weak __typeof(self)weakSelf = self;
@@ -291,10 +291,10 @@ static NSString * const kAssetInfoSize = @"size";
         }
         return;
     }
-    if (self.assetType == FWAssetTypeVideo) {
+    if (self.assetType == __FWAssetTypeVideo) {
         PHVideoRequestOptions *videoRequestOptions = [[PHVideoRequestOptions alloc] init];
         videoRequestOptions.networkAccessAllowed = YES;
-        [[[FWAssetManager sharedInstance] phCachingImageManager] requestAVAssetForVideo:_phAsset options:videoRequestOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        [[[__FWAssetManager sharedInstance] phCachingImageManager] requestAVAssetForVideo:_phAsset options:videoRequestOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
             if ([asset isKindOfClass:[AVURLAsset class]]) {
                 NSMutableDictionary *tempInfo = [[NSMutableDictionary alloc] init];
                 if (info) {
@@ -322,7 +322,7 @@ static NSString * const kAssetInfoSize = @"size";
     PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
     imageRequestOptions.synchronous = synchronous;
     imageRequestOptions.networkAccessAllowed = YES;
-    [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:imageRequestOptions resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+    [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageDataForAsset:_phAsset options:imageRequestOptions resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
         if (info) {
             NSMutableDictionary *tempInfo = [[NSMutableDictionary alloc] init];
             if (imageData) {
@@ -343,11 +343,11 @@ static NSString * const kAssetInfoSize = @"size";
 
 - (void)setDownloadProgress:(double)downloadProgress {
     _downloadProgress = downloadProgress;
-    _downloadStatus = FWAssetDownloadStatusDownloading;
+    _downloadStatus = __FWAssetDownloadStatusDownloading;
 }
 
 - (void)updateDownloadStatusWithDownloadResult:(BOOL)succeed {
-    _downloadStatus = succeed ? FWAssetDownloadStatusSucceed : FWAssetDownloadStatusFailed;
+    _downloadStatus = succeed ? __FWAssetDownloadStatusSucceed : __FWAssetDownloadStatusFailed;
 }
 
 - (void)assetSize:(void (^)(long long size))completion {
@@ -375,7 +375,7 @@ static NSString * const kAssetInfoSize = @"size";
 }
 
 - (NSTimeInterval)duration {
-    if (self.assetType != FWAssetTypeVideo) {
+    if (self.assetType != __FWAssetTypeVideo) {
         return 0;
     }
     return _phAsset.duration;
@@ -385,21 +385,21 @@ static NSString * const kAssetInfoSize = @"size";
     if (!object) return NO;
     if (self == object) return YES;
     if (![object isKindOfClass:[self class]]) return NO;
-    return [self.identifier isEqualToString:((FWAsset *)object).identifier];
+    return [self.identifier isEqualToString:((__FWAsset *)object).identifier];
 }
 
 @end
 
-#pragma mark - FWAssetsGroup
+#pragma mark - __FWAssetsGroup
 
-@interface FWAssetGroup()
+@interface __FWAssetGroup()
 
 @property(nonatomic, strong, readwrite) PHAssetCollection *phAssetCollection;
 @property(nonatomic, strong, readwrite) PHFetchResult *phFetchResult;
 
 @end
 
-@implementation FWAssetGroup
+@implementation __FWAssetGroup
 
 - (instancetype)initWithPHCollection:(PHAssetCollection *)phAssetCollection fetchAssetsOptions:(PHFetchOptions *)pHFetchOptions {
     self = [super init];
@@ -437,19 +437,19 @@ static NSString * const kAssetInfoSize = @"size";
         pHImageRequestOptions.synchronous = YES; // 同步请求
         pHImageRequestOptions.resizeMode = PHImageRequestOptionsResizeModeExact;
         // targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-        [[[FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:asset targetSize:CGSizeMake(size.width * UIScreen.mainScreen.scale, size.height * UIScreen.mainScreen.scale) contentMode:PHImageContentModeAspectFill options:pHImageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
+        [[[__FWAssetManager sharedInstance] phCachingImageManager] requestImageForAsset:asset targetSize:CGSizeMake(size.width * UIScreen.mainScreen.scale, size.height * UIScreen.mainScreen.scale) contentMode:PHImageContentModeAspectFill options:pHImageRequestOptions resultHandler:^(UIImage *result, NSDictionary *info) {
             resultImage = result;
         }];
     }
     return resultImage;
 }
 
-- (void)enumerateAssetsWithOptions:(FWAlbumSortType)albumSortType usingBlock:(void (^)(FWAsset *resultAsset))enumerationBlock {
+- (void)enumerateAssetsWithOptions:(__FWAlbumSortType)albumSortType usingBlock:(void (^)(__FWAsset *resultAsset))enumerationBlock {
     NSInteger resultCount = self.phFetchResult.count;
-    if (albumSortType == FWAlbumSortTypeReverse) {
+    if (albumSortType == __FWAlbumSortTypeReverse) {
         for (NSInteger i = resultCount - 1; i >= 0; i--) {
             PHAsset *pHAsset = self.phFetchResult[i];
-            FWAsset *asset = [[FWAsset alloc] initWithPHAsset:pHAsset];
+            __FWAsset *asset = [[__FWAsset alloc] initWithPHAsset:pHAsset];
             if (enumerationBlock) {
                 enumerationBlock(asset);
             }
@@ -457,7 +457,7 @@ static NSString * const kAssetInfoSize = @"size";
     } else {
         for (NSInteger i = 0; i < resultCount; i++) {
             PHAsset *pHAsset = self.phFetchResult[i];
-            FWAsset *asset = [[FWAsset alloc] initWithPHAsset:pHAsset];
+            __FWAsset *asset = [[__FWAsset alloc] initWithPHAsset:pHAsset];
             if (enumerationBlock) {
                 enumerationBlock(asset);
             }
@@ -471,35 +471,35 @@ static NSString * const kAssetInfoSize = @"size";
     }
 }
 
-- (void)enumerateAssetsUsingBlock:(void (^)(FWAsset *resultAsset))enumerationBlock {
-    [self enumerateAssetsWithOptions:FWAlbumSortTypePositive usingBlock:enumerationBlock];
+- (void)enumerateAssetsUsingBlock:(void (^)(__FWAsset *resultAsset))enumerationBlock {
+    [self enumerateAssetsWithOptions:__FWAlbumSortTypePositive usingBlock:enumerationBlock];
 }
 
 @end
 
-#pragma mark - FWAssetsManager
+#pragma mark - __FWAssetsManager
 
-void FWImageWriteToSavedPhotosAlbumWithAlbumAssetsGroup(UIImage *image, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) {
-    [[FWAssetManager sharedInstance] saveImageWithImageRef:image.CGImage albumAssetsGroup:albumAssetsGroup orientation:image.imageOrientation completionBlock:completionBlock];
+void __FWImageWriteToSavedPhotosAlbumWithAlbumAssetsGroup(UIImage *image, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) {
+    [[__FWAssetManager sharedInstance] saveImageWithImageRef:image.CGImage albumAssetsGroup:albumAssetsGroup orientation:image.imageOrientation completionBlock:completionBlock];
 }
 
-void FWSaveImageAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *imagePath, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) {
-    [[FWAssetManager sharedInstance] saveImageWithImagePathURL:[NSURL fileURLWithPath:imagePath] albumAssetsGroup:albumAssetsGroup completionBlock:completionBlock];
+void __FWSaveImageAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *imagePath, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) {
+    [[__FWAssetManager sharedInstance] saveImageWithImagePathURL:[NSURL fileURLWithPath:imagePath] albumAssetsGroup:albumAssetsGroup completionBlock:completionBlock];
 }
 
-void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath, FWAssetGroup *albumAssetsGroup, FWWriteAssetCompletionBlock completionBlock) {
-    [[FWAssetManager sharedInstance] saveVideoWithVideoPathURL:[NSURL fileURLWithPath:videoPath] albumAssetsGroup:albumAssetsGroup completionBlock:completionBlock];
+void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath, __FWAssetGroup *albumAssetsGroup, __FWWriteAssetCompletionBlock completionBlock) {
+    [[__FWAssetManager sharedInstance] saveVideoWithVideoPathURL:[NSURL fileURLWithPath:videoPath] albumAssetsGroup:albumAssetsGroup completionBlock:completionBlock];
 }
 
 
 
-@implementation FWAssetManager {
+@implementation __FWAssetManager {
     PHCachingImageManager *_phCachingImageManager;
 }
 
-+ (FWAssetManager *)sharedInstance {
++ (__FWAssetManager *)sharedInstance {
     static dispatch_once_t onceToken;
-    static FWAssetManager *instance = nil;
+    static __FWAssetManager *instance = nil;
     dispatch_once(&onceToken,^{
         instance = [[super allocWithZone:NULL] init];
     });
@@ -520,29 +520,29 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
     return self;
 }
 
-+ (FWAssetAuthorizationStatus)authorizationStatus {
-    __block FWAssetAuthorizationStatus status;
++ (__FWAssetAuthorizationStatus)authorizationStatus {
+    __block __FWAssetAuthorizationStatus status;
     // 获取当前应用对照片的访问授权状态
     PHAuthorizationStatus authorizationStatus = [PHPhotoLibrary authorizationStatus];
     if (authorizationStatus == PHAuthorizationStatusRestricted || authorizationStatus == PHAuthorizationStatusDenied) {
-        status = FWAssetAuthorizationStatusNotAuthorized;
+        status = __FWAssetAuthorizationStatusNotAuthorized;
     } else if (authorizationStatus == PHAuthorizationStatusNotDetermined) {
-        status = FWAssetAuthorizationStatusNotDetermined;
+        status = __FWAssetAuthorizationStatusNotDetermined;
     } else {
-        status = FWAssetAuthorizationStatusAuthorized;
+        status = __FWAssetAuthorizationStatusAuthorized;
     }
     return status;
 }
 
-+ (void)requestAuthorization:(void(^)(FWAssetAuthorizationStatus status))handler {
++ (void)requestAuthorization:(void(^)(__FWAssetAuthorizationStatus status))handler {
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus phStatus) {
-        FWAssetAuthorizationStatus status;
+        __FWAssetAuthorizationStatus status;
         if (phStatus == PHAuthorizationStatusRestricted || phStatus == PHAuthorizationStatusDenied) {
-            status = FWAssetAuthorizationStatusNotAuthorized;
+            status = __FWAssetAuthorizationStatusNotAuthorized;
         } else if (phStatus == PHAuthorizationStatusNotDetermined) {
-            status = FWAssetAuthorizationStatusNotDetermined;
+            status = __FWAssetAuthorizationStatusNotDetermined;
         } else {
-            status = FWAssetAuthorizationStatusAuthorized;
+            status = __FWAssetAuthorizationStatusAuthorized;
         }
         if (handler) {
             handler(status);
@@ -550,17 +550,17 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
     }];
 }
 
-- (void)enumerateAllAlbumsWithAlbumContentType:(FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(void (^)(FWAssetGroup *resultAssetsGroup))enumerationBlock {
+- (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(void (^)(__FWAssetGroup *resultAssetsGroup))enumerationBlock {
     // 根据条件获取所有合适的相册，并保存到临时数组中
     NSArray<PHAssetCollection *> *tempAlbumsArray = [PHPhotoLibrary fw_fetchAllAlbumsWithAlbumContentType:contentType showEmptyAlbum:showEmptyAlbum showSmartAlbum:showSmartAlbumIfSupported];
     
-    // 创建一个 PHFetchOptions，用于 FWAssetGroup 对资源的排序以及对内容类型进行控制
+    // 创建一个 PHFetchOptions，用于 __FWAssetGroup 对资源的排序以及对内容类型进行控制
     PHFetchOptions *phFetchOptions = [PHPhotoLibrary fw_createFetchOptionsWithAlbumContentType:contentType];
     
-    // 遍历结果，生成对应的 FWAssetGroup，并调用 enumerationBlock
+    // 遍历结果，生成对应的 __FWAssetGroup，并调用 enumerationBlock
     for (NSUInteger i = 0; i < tempAlbumsArray.count; i++) {
         PHAssetCollection *phAssetCollection = tempAlbumsArray[i];
-        FWAssetGroup *assetsGroup = [[FWAssetGroup alloc] initWithPHCollection:phAssetCollection fetchAssetsOptions:phFetchOptions];
+        __FWAssetGroup *assetsGroup = [[__FWAssetGroup alloc] initWithPHCollection:phAssetCollection fetchAssetsOptions:phFetchOptions];
         if (enumerationBlock) {
             enumerationBlock(assetsGroup);
         }
@@ -574,11 +574,11 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
     }
 }
 
-- (void)enumerateAllAlbumsWithAlbumContentType:(FWAlbumContentType)contentType usingBlock:(void (^)(FWAssetGroup *resultAssetsGroup))enumerationBlock {
+- (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType usingBlock:(void (^)(__FWAssetGroup *resultAssetsGroup))enumerationBlock {
     [self enumerateAllAlbumsWithAlbumContentType:contentType showEmptyAlbum:NO showSmartAlbumIfSupported:YES usingBlock:enumerationBlock];
 }
 
-- (void)saveImageWithImageRef:(CGImageRef)imageRef albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup orientation:(UIImageOrientation)orientation completionBlock:(FWWriteAssetCompletionBlock)completionBlock {
+- (void)saveImageWithImageRef:(CGImageRef)imageRef albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup orientation:(UIImageOrientation)orientation completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把图片加入到指定的相册对应的 PHAssetCollection
     [[PHPhotoLibrary sharedPhotoLibrary] fw_addImageToAlbum:imageRef
@@ -590,7 +590,7 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
                                                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate = %@", creationDate];
                                                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:albumPhAssetCollection options:fetchOptions];
                                                PHAsset *phAsset = fetchResult.lastObject;
-                                               FWAsset *asset = [[FWAsset alloc] initWithPHAsset:phAsset];
+                                               __FWAsset *asset = [[__FWAsset alloc] initWithPHAsset:phAsset];
                                                completionBlock(asset, error);
                                            } else {
                                                completionBlock(nil, error);
@@ -598,7 +598,7 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
                                        }];
 }
 
-- (void)saveImageWithImagePathURL:(NSURL *)imagePathURL albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup completionBlock:(FWWriteAssetCompletionBlock)completionBlock {
+- (void)saveImageWithImagePathURL:(NSURL *)imagePathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把图片加入到指定的相册对应的 PHAssetCollection
     [[PHPhotoLibrary sharedPhotoLibrary] fw_addImageToAlbum:imagePathURL
@@ -609,7 +609,7 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
                                                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate = %@", creationDate];
                                                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:albumPhAssetCollection options:fetchOptions];
                                                PHAsset *phAsset = fetchResult.lastObject;
-                                               FWAsset *asset = [[FWAsset alloc] initWithPHAsset:phAsset];
+                                               __FWAsset *asset = [[__FWAsset alloc] initWithPHAsset:phAsset];
                                                completionBlock(asset, error);
                                            } else {
                                                completionBlock(nil, error);
@@ -617,7 +617,7 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
                                        }];
 }
 
-- (void)saveVideoWithVideoPathURL:(NSURL *)videoPathURL albumAssetsGroup:(FWAssetGroup *)albumAssetsGroup completionBlock:(FWWriteAssetCompletionBlock)completionBlock {
+- (void)saveVideoWithVideoPathURL:(NSURL *)videoPathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把视频加入到指定的相册对应的 PHAssetCollection
     [[PHPhotoLibrary sharedPhotoLibrary] fw_addVideoToAlbum:videoPathURL
@@ -628,7 +628,7 @@ void FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPath
                                                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate = %@", creationDate];
                                                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:albumPhAssetCollection options:fetchOptions];
                                                PHAsset *phAsset = fetchResult.lastObject;
-                                               FWAsset *asset = [[FWAsset alloc] initWithPHAsset:phAsset];
+                                               __FWAsset *asset = [[__FWAsset alloc] initWithPHAsset:phAsset];
                                                completionBlock(asset, error);
                                            } else {
                                                completionBlock(nil, error);

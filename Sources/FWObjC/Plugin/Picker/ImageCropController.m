@@ -24,17 +24,17 @@
 
 #endif
 
-@interface FWImageCropController () <FWImageCropViewDelegate>
+@interface __FWImageCropController () <__FWImageCropViewDelegate>
 
 /* The target image */
 @property (nonatomic, readwrite) UIImage *image;
 
 /* The cropping style of the crop view */
-@property (nonatomic, assign, readwrite) FWImageCropCroppingStyle croppingStyle;
+@property (nonatomic, assign, readwrite) __FWImageCropCroppingStyle croppingStyle;
 
 /* Views */
-@property (nonatomic, strong) FWImageCropToolbar *toolbar;
-@property (nonatomic, strong, readwrite) FWImageCropView *cropView;
+@property (nonatomic, strong) __FWImageCropToolbar *toolbar;
+@property (nonatomic, strong, readwrite) __FWImageCropView *cropView;
 @property (nonatomic, strong) UIView *toolbarSnapshotView;
 @property (nonatomic, strong, readwrite) UILabel *titleLabel;
 
@@ -59,9 +59,9 @@
 
 @end
 
-@implementation FWImageCropController
+@implementation __FWImageCropController
 
-- (instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(UIImage *)image
+- (instancetype)initWithCroppingStyle:(__FWImageCropCroppingStyle)style image:(UIImage *)image
 {
     NSParameterAssert(image);
 
@@ -78,8 +78,8 @@
 
         // Default initial behaviour
         _titleTopPadding = 14.0f;
-        _aspectRatioPreset = FWImageCropAspectRatioPresetOriginal;
-        _toolbarPosition = FWImageCropToolbarPositionBottom;
+        _aspectRatioPreset = __FWImageCropAspectRatioPresetOriginal;
+        _toolbarPosition = __FWImageCropToolbarPositionBottom;
     }
     
     return self;
@@ -87,7 +87,7 @@
 
 - (instancetype)initWithImage:(UIImage *)image
 {
-    return [self initWithCroppingStyle:FWImageCropCroppingStyleDefault image:image];
+    return [self initWithCroppingStyle:__FWImageCropCroppingStyleDefault image:image];
 }
 
 - (void)viewDidLoad
@@ -97,7 +97,7 @@
     // Set up view controller properties
     self.view.backgroundColor = self.cropView.backgroundColor;
     
-    BOOL circularMode = (self.croppingStyle == FWImageCropCroppingStyleCircular);
+    BOOL circularMode = (self.croppingStyle == __FWImageCropCroppingStyleCircular);
 
     // Layout the views initially
     self.cropView.frame = [self frameForCropViewWithVerticalLayout:self.verticalLayout];
@@ -150,7 +150,7 @@
 
     // If an initial aspect ratio was set before presentation, set it now once the rest of
     // the setup will have been done
-    if (self.aspectRatioPreset != FWImageCropAspectRatioPresetOriginal) {
+    if (self.aspectRatioPreset != __FWImageCropAspectRatioPresetOriginal) {
         [self setAspectRatioPreset:self.aspectRatioPreset animated:NO];
     }
 }
@@ -263,7 +263,7 @@
         frame.size.width = CGRectGetWidth(self.view.bounds);
         frame.size.height = toolbarHeight;
 
-        if (self.toolbarPosition == FWImageCropToolbarPositionBottom) {
+        if (self.toolbarPosition == __FWImageCropToolbarPositionBottom) {
             frame.origin.y = CGRectGetHeight(self.view.bounds) - (frame.size.height + insets.bottom);
         } else {
             frame.origin.y = insets.top;
@@ -303,9 +303,9 @@
         frame.size.width = CGRectGetWidth(bounds);
 
         // Set Y and adjust for height
-        if (self.toolbarPosition == FWImageCropToolbarPositionBottom) {
+        if (self.toolbarPosition == __FWImageCropToolbarPositionBottom) {
             frame.size.height -= (insets.bottom + toolbarHeight);
-        } else if (self.toolbarPosition == FWImageCropToolbarPositionTop) {
+        } else if (self.toolbarPosition == __FWImageCropToolbarPositionTop) {
             frame.origin.y = toolbarHeight + insets.top;
             frame.size.height -= frame.origin.y;
         }
@@ -345,7 +345,7 @@
     // If there is no title text, inset the top of the content as high as possible
     if (!self.titleLabel.text.length) {
         if (self.verticalLayout) {
-          if (self.toolbarPosition == FWImageCropToolbarPositionTop) {
+          if (self.toolbarPosition == __FWImageCropToolbarPositionTop) {
             self.cropView.cropRegionInsets = UIEdgeInsetsMake(0.0f, 0.0f, insets.bottom, 0.0f);
           }
           else { // Add padding to the top otherwise
@@ -381,7 +381,7 @@
     }
     else {
         // Add padding on top if in vertical and tool bar is at the top
-        if (self.toolbarPosition == FWImageCropToolbarPositionTop) {
+        if (self.toolbarPosition == __FWImageCropToolbarPositionTop) {
             insets.top = self.view.safeAreaInsets.top;
         }
         else { // Add padding to the bottom otherwise
@@ -546,7 +546,7 @@
     
     //Prepare the list that will be fed to the alert view/controller
     
-    // Ratio titles according to the order of enum FWImageCropAspectRatioPreset
+    // Ratio titles according to the order of enum __FWImageCropAspectRatioPreset
     NSArray<NSString *> *portraitRatioTitles = @[originalButtonTitle, @"1:1", @"2:3", @"3:5", @"3:4", @"4:5", @"5:7", @"9:16"];
     NSArray<NSString *> *landscapeRatioTitles = @[originalButtonTitle, @"1:1", @"3:2", @"5:3", @"4:3", @"5:4", @"7:5", @"16:9"];
 
@@ -554,7 +554,7 @@
     NSMutableArray *itemStrings = [NSMutableArray array];
 
     if (self.allowedAspectRatios == nil) {
-        for (NSInteger i = 0; i < FWImageCropAspectRatioPresetCustom; i++) {
+        for (NSInteger i = 0; i < __FWImageCropAspectRatioPresetCustom; i++) {
             NSString *itemTitle = verticalCropBox ? portraitRatioTitles[i] : landscapeRatioTitles[i];
             [itemStrings addObject:itemTitle];
             [ratioValues addObject:@(i)];
@@ -562,7 +562,7 @@
     }
     else {
         for (NSNumber *allowedRatio in self.allowedAspectRatios) {
-            FWImageCropAspectRatioPreset ratio = allowedRatio.integerValue;
+            __FWImageCropAspectRatioPreset ratio = allowedRatio.integerValue;
             NSString *itemTitle = verticalCropBox ? portraitRatioTitles[ratio] : landscapeRatioTitles[ratio];
             [itemStrings addObject:itemTitle];
             [ratioValues addObject:allowedRatio];
@@ -572,7 +572,7 @@
     // If a custom aspect ratio is provided, and a custom name has been given to it, add it as a visible choice
     if (self.customAspectRatioName.length > 0 && !CGSizeEqualToSize(CGSizeZero, self.customAspectRatio)) {
         [itemStrings addObject:self.customAspectRatioName];
-        [ratioValues addObject:@(FWImageCropAspectRatioPresetCustom)];
+        [ratioValues addObject:@(__FWImageCropAspectRatioPresetCustom)];
     }
 
     __weak __typeof__(self) self_weak_ = self;
@@ -583,38 +583,38 @@
     } cancelBlock:nil];
 }
 
-- (void)setAspectRatioPreset:(FWImageCropAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated
+- (void)setAspectRatioPreset:(__FWImageCropAspectRatioPreset)aspectRatioPreset animated:(BOOL)animated
 {
     CGSize aspectRatio = CGSizeZero;
     
     _aspectRatioPreset = aspectRatioPreset;
     
     switch (aspectRatioPreset) {
-        case FWImageCropAspectRatioPresetOriginal:
+        case __FWImageCropAspectRatioPresetOriginal:
             aspectRatio = CGSizeZero;
             break;
-        case FWImageCropAspectRatioPresetSquare:
+        case __FWImageCropAspectRatioPresetSquare:
             aspectRatio = CGSizeMake(1.0f, 1.0f);
             break;
-        case FWImageCropAspectRatioPreset3x2:
+        case __FWImageCropAspectRatioPreset3x2:
             aspectRatio = CGSizeMake(3.0f, 2.0f);
             break;
-        case FWImageCropAspectRatioPreset5x3:
+        case __FWImageCropAspectRatioPreset5x3:
             aspectRatio = CGSizeMake(5.0f, 3.0f);
             break;
-        case FWImageCropAspectRatioPreset4x3:
+        case __FWImageCropAspectRatioPreset4x3:
             aspectRatio = CGSizeMake(4.0f, 3.0f);
             break;
-        case FWImageCropAspectRatioPreset5x4:
+        case __FWImageCropAspectRatioPreset5x4:
             aspectRatio = CGSizeMake(5.0f, 4.0f);
             break;
-        case FWImageCropAspectRatioPreset7x5:
+        case __FWImageCropAspectRatioPreset7x5:
             aspectRatio = CGSizeMake(7.0f, 5.0f);
             break;
-        case FWImageCropAspectRatioPreset16x9:
+        case __FWImageCropAspectRatioPreset16x9:
             aspectRatio = CGSizeMake(16.0f, 9.0f);
             break;
-        case FWImageCropAspectRatioPresetCustom:
+        case __FWImageCropAspectRatioPresetCustom:
             aspectRatio = self.customAspectRatio;
             break;
     }
@@ -648,12 +648,12 @@
 }
 
 #pragma mark - Crop View Delegates -
-- (void)cropViewDidBecomeResettable:(FWImageCropView *)cropView
+- (void)cropViewDidBecomeResettable:(__FWImageCropView *)cropView
 {
     self.toolbar.resetButtonEnabled = YES;
 }
 
-- (void)cropViewDidBecomeNonResettable:(FWImageCropView *)cropView
+- (void)cropViewDidBecomeNonResettable:(__FWImageCropView *)cropView
 {
     self.toolbar.resetButtonEnabled = NO;
 }
@@ -714,7 +714,7 @@
     BOOL isDidCropToImageCallbackAvailable = self.onDidCropToRect != nil;
 
     //If cropping circular and the circular generation delegate/block is implemented, call it
-    if (self.croppingStyle == FWImageCropCroppingStyleCircular && (isCircularImageDelegateAvailable || isCircularImageCallbackAvailable)) {
+    if (self.croppingStyle == __FWImageCropCroppingStyleCircular && (isCircularImageDelegateAvailable || isCircularImageCallbackAvailable)) {
         UIImage *image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circular:YES];
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
@@ -784,11 +784,11 @@
     self.toolbar.cancelTextButtonTitle = title;
 }
 
-- (FWImageCropView *)cropView {
+- (__FWImageCropView *)cropView {
     // Lazily create the crop view in case we try and access it before presentation, but
     // don't add it until our parent view controller view has loaded at the right time
     if (!_cropView) {
-        _cropView = [[FWImageCropView alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
+        _cropView = [[__FWImageCropView alloc] initWithCroppingStyle:self.croppingStyle image:self.image];
         _cropView.delegate = self;
         _cropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.view addSubview:_cropView];
@@ -796,9 +796,9 @@
     return _cropView;
 }
 
-- (FWImageCropToolbar *)toolbar {
+- (__FWImageCropToolbar *)toolbar {
     if (!_toolbar) {
-        _toolbar = [[FWImageCropToolbar alloc] initWithFrame:CGRectZero];
+        _toolbar = [[__FWImageCropToolbar alloc] initWithFrame:CGRectZero];
         [self.view addSubview:_toolbar];
     }
     return _toolbar;
@@ -909,7 +909,7 @@
 - (void)setCustomAspectRatio:(CGSize)customAspectRatio
 {
     _customAspectRatio = customAspectRatio;
-    [self setAspectRatioPreset:FWImageCropAspectRatioPresetCustom animated:NO];
+    [self setAspectRatioPreset:__FWImageCropAspectRatioPresetCustom animated:NO];
 }
 
 - (BOOL)resetAspectRatioEnabled
@@ -1018,9 +1018,9 @@
 
 @end
 
-static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
+static const CGFloat k__FWImageCropOverLayerCornerWidth = 20.0f;
 
-@interface FWImageCropOverlayView ()
+@interface __FWImageCropOverlayView ()
 
 @property (nonatomic, strong) NSArray *horizontalGridLines;
 @property (nonatomic, strong) NSArray *verticalGridLines;
@@ -1034,7 +1034,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-@implementation FWImageCropOverlayView
+@implementation __FWImageCropOverlayView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -1106,20 +1106,20 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
         CGRect verticalFrame = CGRectZero, horizontalFrame = CGRectZero;
         switch (i) {
             case 0: //top left
-                verticalFrame = (CGRect){-3.0f,-3.0f,3.0f,kFWImageCropOverLayerCornerWidth+3.0f};
-                horizontalFrame = (CGRect){0,-3.0f,kFWImageCropOverLayerCornerWidth,3.0f};
+                verticalFrame = (CGRect){-3.0f,-3.0f,3.0f,k__FWImageCropOverLayerCornerWidth+3.0f};
+                horizontalFrame = (CGRect){0,-3.0f,k__FWImageCropOverLayerCornerWidth,3.0f};
                 break;
             case 1: //top right
-                verticalFrame = (CGRect){boundsSize.width,-3.0f,3.0f,kFWImageCropOverLayerCornerWidth+3.0f};
-                horizontalFrame = (CGRect){boundsSize.width-kFWImageCropOverLayerCornerWidth,-3.0f,kFWImageCropOverLayerCornerWidth,3.0f};
+                verticalFrame = (CGRect){boundsSize.width,-3.0f,3.0f,k__FWImageCropOverLayerCornerWidth+3.0f};
+                horizontalFrame = (CGRect){boundsSize.width-k__FWImageCropOverLayerCornerWidth,-3.0f,k__FWImageCropOverLayerCornerWidth,3.0f};
                 break;
             case 2: //bottom right
-                verticalFrame = (CGRect){boundsSize.width,boundsSize.height-kFWImageCropOverLayerCornerWidth,3.0f,kFWImageCropOverLayerCornerWidth+3.0f};
-                horizontalFrame = (CGRect){boundsSize.width-kFWImageCropOverLayerCornerWidth,boundsSize.height,kFWImageCropOverLayerCornerWidth,3.0f};
+                verticalFrame = (CGRect){boundsSize.width,boundsSize.height-k__FWImageCropOverLayerCornerWidth,3.0f,k__FWImageCropOverLayerCornerWidth+3.0f};
+                horizontalFrame = (CGRect){boundsSize.width-k__FWImageCropOverLayerCornerWidth,boundsSize.height,k__FWImageCropOverLayerCornerWidth,3.0f};
                 break;
             case 3: //bottom left
-                verticalFrame = (CGRect){-3.0f,boundsSize.height-kFWImageCropOverLayerCornerWidth,3.0f,kFWImageCropOverLayerCornerWidth};
-                horizontalFrame = (CGRect){-3.0f,boundsSize.height,kFWImageCropOverLayerCornerWidth+3.0f,3.0f};
+                verticalFrame = (CGRect){-3.0f,boundsSize.height-k__FWImageCropOverLayerCornerWidth,3.0f,k__FWImageCropOverLayerCornerWidth};
+                horizontalFrame = (CGRect){-3.0f,boundsSize.height,k__FWImageCropOverLayerCornerWidth+3.0f,3.0f};
                 break;
         }
         
@@ -1226,7 +1226,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-@implementation FWImageCropScrollView
+@implementation __FWImageCropScrollView
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -1254,7 +1254,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-@interface FWImageCropToolbar()
+@interface __FWImageCropToolbar()
 
 @property (nonatomic, strong) UIView *backgroundView;
 
@@ -1273,7 +1273,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-@implementation FWImageCropToolbar
+@implementation __FWImageCropToolbar
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -1303,7 +1303,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     [self addSubview:_doneTextButton];
     
     _doneIconButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_doneIconButton setImage:[FWImageCropToolbar doneImage] forState:UIControlStateNormal];
+    [_doneIconButton setImage:[__FWImageCropToolbar doneImage] forState:UIControlStateNormal];
     [_doneIconButton setTintColor:[UIColor colorWithRed:1.0f green:0.8f blue:0.0f alpha:1.0f]];
     [_doneIconButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_doneIconButton];
@@ -1320,28 +1320,28 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     [self addSubview:_cancelTextButton];
     
     _cancelIconButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_cancelIconButton setImage:[FWImageCropToolbar cancelImage] forState:UIControlStateNormal];
+    [_cancelIconButton setImage:[__FWImageCropToolbar cancelImage] forState:UIControlStateNormal];
     [_cancelIconButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_cancelIconButton];
     
     _clampButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _clampButton.contentMode = UIViewContentModeCenter;
     _clampButton.tintColor = [UIColor whiteColor];
-    [_clampButton setImage:[FWImageCropToolbar clampImage] forState:UIControlStateNormal];
+    [_clampButton setImage:[__FWImageCropToolbar clampImage] forState:UIControlStateNormal];
     [_clampButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_clampButton];
     
     _rotateCounterclockwiseButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _rotateCounterclockwiseButton.contentMode = UIViewContentModeCenter;
     _rotateCounterclockwiseButton.tintColor = [UIColor whiteColor];
-    [_rotateCounterclockwiseButton setImage:[FWImageCropToolbar rotateCCWImage] forState:UIControlStateNormal];
+    [_rotateCounterclockwiseButton setImage:[__FWImageCropToolbar rotateCCWImage] forState:UIControlStateNormal];
     [_rotateCounterclockwiseButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_rotateCounterclockwiseButton];
     
     _rotateClockwiseButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _rotateClockwiseButton.contentMode = UIViewContentModeCenter;
     _rotateClockwiseButton.tintColor = [UIColor whiteColor];
-    [_rotateClockwiseButton setImage:[FWImageCropToolbar rotateCWImage] forState:UIControlStateNormal];
+    [_rotateClockwiseButton setImage:[__FWImageCropToolbar rotateCWImage] forState:UIControlStateNormal];
     [_rotateClockwiseButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_rotateClockwiseButton];
     
@@ -1349,7 +1349,7 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
     _resetButton.contentMode = UIViewContentModeCenter;
     _resetButton.tintColor = [UIColor whiteColor];
     _resetButton.enabled = NO;
-    [_resetButton setImage:[FWImageCropToolbar resetImage] forState:UIControlStateNormal];
+    [_resetButton setImage:[__FWImageCropToolbar resetImage] forState:UIControlStateNormal];
     [_resetButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_resetButton];
 }
@@ -1847,41 +1847,41 @@ static const CGFloat kFWImageCropOverLayerCornerWidth = 20.0f;
 
 @end
 
-static const CGFloat kFWImageCropViewPadding = 14.0f;
-static const NSTimeInterval kFWImageCropTimerDuration = 0.8f;
-static const CGFloat kFWImageCropViewMinimumBoxSize = 42.0f;
-static const CGFloat kFWImageCropViewCircularPathRadius = 300.0f;
-static const CGFloat kFWImageCropMaximumZoomScale = 15.0f;
+static const CGFloat k__FWImageCropViewPadding = 14.0f;
+static const NSTimeInterval k__FWImageCropTimerDuration = 0.8f;
+static const CGFloat k__FWImageCropViewMinimumBoxSize = 42.0f;
+static const CGFloat k__FWImageCropViewCircularPathRadius = 300.0f;
+static const CGFloat k__FWImageCropMaximumZoomScale = 15.0f;
 
 /* When the user taps down to resize the box, this state is used
  to determine where they tapped and how to manipulate the box */
-typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
-    FWImageCropViewOverlayEdgeNone,
-    FWImageCropViewOverlayEdgeTopLeft,
-    FWImageCropViewOverlayEdgeTop,
-    FWImageCropViewOverlayEdgeTopRight,
-    FWImageCropViewOverlayEdgeRight,
-    FWImageCropViewOverlayEdgeBottomRight,
-    FWImageCropViewOverlayEdgeBottom,
-    FWImageCropViewOverlayEdgeBottomLeft,
-    FWImageCropViewOverlayEdgeLeft
+typedef NS_ENUM(NSInteger, __FWImageCropViewOverlayEdge) {
+    __FWImageCropViewOverlayEdgeNone,
+    __FWImageCropViewOverlayEdgeTopLeft,
+    __FWImageCropViewOverlayEdgeTop,
+    __FWImageCropViewOverlayEdgeTopRight,
+    __FWImageCropViewOverlayEdgeRight,
+    __FWImageCropViewOverlayEdgeBottomRight,
+    __FWImageCropViewOverlayEdgeBottom,
+    __FWImageCropViewOverlayEdgeBottomLeft,
+    __FWImageCropViewOverlayEdgeLeft
 };
 
-@interface FWImageCropView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@interface __FWImageCropView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong, readwrite) UIImage *image;
-@property (nonatomic, assign, readwrite) FWImageCropCroppingStyle croppingStyle;
+@property (nonatomic, assign, readwrite) __FWImageCropCroppingStyle croppingStyle;
 
 /* Views */
 @property (nonatomic, strong) UIImageView *backgroundImageView;     /* The main image view, placed within the scroll view */
 @property (nonatomic, strong) UIView *backgroundContainerView;      /* A view which contains the background image view, to separate its transforms from the scroll view. */
 @property (nonatomic, strong, readwrite) UIView *foregroundContainerView;
 @property (nonatomic, strong) UIImageView *foregroundImageView;     /* A copy of the background image view, placed over the dimming views */
-@property (nonatomic, strong) FWImageCropScrollView *scrollView;         /* The scroll view in charge of panning/zooming the image. */
+@property (nonatomic, strong) __FWImageCropScrollView *scrollView;         /* The scroll view in charge of panning/zooming the image. */
 @property (nonatomic, strong) UIView *overlayView;                  /* A semi-transparent grey view, overlaid on top of the background image */
 @property (nonatomic, strong) UIView *translucencyView;             /* A blur view that is made visible when the user isn't interacting with the crop view */
 @property (nonatomic, strong) id translucencyEffect;                /* The dark blur visual effect applied to the visual effect view. */
-@property (nonatomic, strong, readwrite) FWImageCropOverlayView *gridOverlayView;   /* A grid view overlaid on top of the foreground image view's container. */
+@property (nonatomic, strong, readwrite) __FWImageCropOverlayView *gridOverlayView;   /* A grid view overlaid on top of the foreground image view's container. */
 @property (nonatomic, strong) CAShapeLayer *circularMaskLayer;      /* Managing the clipping of the foreground container into a circle */
 
 /* Gesture Recognizers */
@@ -1889,7 +1889,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
 
 /* Crop box handling */
 @property (nonatomic, assign) BOOL applyInitialCroppedImageFrame; /* No by default, when setting initialCroppedImageFrame this will be set to YES, and set back to NO after first application - so it's only done once */
-@property (nonatomic, assign) FWImageCropViewOverlayEdge tappedEdge; /* The edge region that the user tapped on, to resize the cropping region */
+@property (nonatomic, assign) __FWImageCropViewOverlayEdge tappedEdge; /* The edge region that the user tapped on, to resize the cropping region */
 @property (nonatomic, assign) CGRect cropOriginFrame;     /* When resizing, this is the original frame of the crop box. */
 @property (nonatomic, assign) CGPoint panOriginPoint;     /* The initial touch point of the pan gesture recognizer */
 @property (nonatomic, assign, readwrite) CGRect cropBoxFrame;  /* The frame, in relation to to this view where the grid, and crop container view are aligned */
@@ -1930,14 +1930,14 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
 
 @end
 
-@implementation FWImageCropView
+@implementation __FWImageCropView
 
 - (instancetype)initWithImage:(UIImage *)image
 {
-    return [self initWithCroppingStyle:FWImageCropCroppingStyleDefault image:image];
+    return [self initWithCroppingStyle:__FWImageCropCroppingStyleDefault image:image];
 }
 
-- (instancetype)initWithCroppingStyle:(FWImageCropCroppingStyle)style image:(UIImage *)image
+- (instancetype)initWithCroppingStyle:(__FWImageCropCroppingStyle)style image:(UIImage *)image
 {
     if (self = [super init]) {
         _image = image;
@@ -1952,7 +1952,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
 {
     __weak typeof(self) weakSelf = self;
     
-    BOOL circularMode = (self.croppingStyle == FWImageCropCroppingStyleCircular);
+    BOOL circularMode = (self.croppingStyle == __FWImageCropCroppingStyleCircular);
     
     //View properties
     self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -1965,12 +1965,12 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     self.resetAspectRatioEnabled = !circularMode;
     self.restoreImageCropFrame = CGRectZero;
     self.restoreAngle = 0;
-    self.cropAdjustingDelay = kFWImageCropTimerDuration;
-    self.cropViewPadding = kFWImageCropViewPadding;
-    self.maximumZoomScale = kFWImageCropMaximumZoomScale;
+    self.cropAdjustingDelay = k__FWImageCropTimerDuration;
+    self.cropViewPadding = k__FWImageCropViewPadding;
+    self.maximumZoomScale = k__FWImageCropMaximumZoomScale;
     
     //Scroll View properties
-    self.scrollView = [[FWImageCropScrollView alloc] initWithFrame:self.bounds];
+    self.scrollView = [[__FWImageCropScrollView alloc] initWithFrame:self.bounds];
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical = YES;
@@ -2026,7 +2026,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     
     // The following setup isn't needed during circular cropping
     if (circularMode) {
-        UIBezierPath *circlePath = [UIBezierPath bezierPathWithOvalInRect:(CGRect){0,0,kFWImageCropViewCircularPathRadius, kFWImageCropViewCircularPathRadius}];
+        UIBezierPath *circlePath = [UIBezierPath bezierPathWithOvalInRect:(CGRect){0,0,k__FWImageCropViewCircularPathRadius, k__FWImageCropViewCircularPathRadius}];
         self.circularMaskLayer = [[CAShapeLayer alloc] init];
         self.circularMaskLayer.path = circlePath.CGPath;
         self.foregroundContainerView.layer.mask = self.circularMaskLayer;
@@ -2035,7 +2035,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     }
     
     // The white grid overlay view
-    self.gridOverlayView = [[FWImageCropOverlayView alloc] initWithFrame:self.foregroundContainerView.frame];
+    self.gridOverlayView = [[__FWImageCropOverlayView alloc] initWithFrame:self.foregroundContainerView.frame];
     self.gridOverlayView.userInteractionEnabled = NO;
     self.gridOverlayView.gridHidden = YES;
     [self addSubview:self.gridOverlayView];
@@ -2243,7 +2243,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     BOOL clampMinFromTop = NO, clampMinFromLeft = NO;
 
     switch (self.tappedEdge) {
-        case FWImageCropViewOverlayEdgeLeft:
+        case __FWImageCropViewOverlayEdgeLeft:
             if (self.aspectRatioLockEnabled) {
                 aspectHorizontal = YES;
                 xDelta = MAX(xDelta, 0);
@@ -2261,7 +2261,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             clampMinFromLeft = YES;
             
             break;
-        case FWImageCropViewOverlayEdgeRight:
+        case __FWImageCropViewOverlayEdgeRight:
             if (self.aspectRatioLockEnabled) {
                 aspectHorizontal = YES;
                 CGPoint scaleOrigin = (CGPoint){CGRectGetMinX(originFrame), CGRectGetMidY(originFrame)};
@@ -2279,7 +2279,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             }
             
             break;
-        case FWImageCropViewOverlayEdgeBottom:
+        case __FWImageCropViewOverlayEdgeBottom:
             if (self.aspectRatioLockEnabled) {
                 aspectVertical = YES;
                 CGPoint scaleOrigin = (CGPoint){CGRectGetMidX(originFrame), CGRectGetMinY(originFrame)};
@@ -2297,7 +2297,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
                 }
             }
             break;
-        case FWImageCropViewOverlayEdgeTop:
+        case __FWImageCropViewOverlayEdgeTop:
             if (self.aspectRatioLockEnabled) {
                 aspectVertical = YES;
                 yDelta = MAX(0,yDelta);
@@ -2320,7 +2320,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             clampMinFromTop = YES;
             
             break;
-        case FWImageCropViewOverlayEdgeTopLeft:
+        case __FWImageCropViewOverlayEdgeTopLeft:
             if (self.aspectRatioLockEnabled) {
                 xDelta = MAX(xDelta, 0);
                 yDelta = MAX(yDelta, 0);
@@ -2355,7 +2355,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             clampMinFromLeft = YES;
             
             break;
-        case FWImageCropViewOverlayEdgeTopRight:
+        case __FWImageCropViewOverlayEdgeTopRight:
             if (self.aspectRatioLockEnabled) {
                 xDelta = MIN(xDelta, 0);
                 yDelta = MAX(yDelta, 0);
@@ -2387,7 +2387,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             clampMinFromTop = YES;
             
             break;
-        case FWImageCropViewOverlayEdgeBottomLeft:
+        case __FWImageCropViewOverlayEdgeBottomLeft:
             if (self.aspectRatioLockEnabled) {
                 CGPoint distance;
                 distance.x = 1.0f - (xDelta / CGRectGetWidth(originFrame));
@@ -2416,7 +2416,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
             clampMinFromLeft = YES;
             
             break;
-        case FWImageCropViewOverlayEdgeBottomRight:
+        case __FWImageCropViewOverlayEdgeBottomRight:
             if (self.aspectRatioLockEnabled) {
                 
                 CGPoint distance;
@@ -2441,22 +2441,22 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
                 }
             }
             break;
-        case FWImageCropViewOverlayEdgeNone: break;
+        case __FWImageCropViewOverlayEdgeNone: break;
     }
     
     //The absolute max/min size the box may be in the bounds of the crop view
-    CGSize minSize = (CGSize){kFWImageCropViewMinimumBoxSize, kFWImageCropViewMinimumBoxSize};
+    CGSize minSize = (CGSize){k__FWImageCropViewMinimumBoxSize, k__FWImageCropViewMinimumBoxSize};
     CGSize maxSize = (CGSize){CGRectGetWidth(contentFrame), CGRectGetHeight(contentFrame)};
     
     //clamp the box to ensure it doesn't go beyond the bounds we've set
     if (self.aspectRatioLockEnabled && aspectHorizontal) {
         maxSize.height = contentFrame.size.width / aspectRatio;
-        minSize.width = kFWImageCropViewMinimumBoxSize * aspectRatio;
+        minSize.width = k__FWImageCropViewMinimumBoxSize * aspectRatio;
     }
         
     if (self.aspectRatioLockEnabled && aspectVertical) {
         maxSize.width = contentFrame.size.height * aspectRatio;
-        minSize.height = kFWImageCropViewMinimumBoxSize / aspectRatio;
+        minSize.height = k__FWImageCropViewMinimumBoxSize / aspectRatio;
     }
 
     // Clamp the width if it goes over
@@ -2667,7 +2667,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     self.resetTimer = nil;
 }
 
-- (FWImageCropViewOverlayEdge)cropEdgeForPoint:(CGPoint)point
+- (__FWImageCropViewOverlayEdge)cropEdgeForPoint:(CGPoint)point
 {
     CGRect frame = self.cropBoxFrame;
     
@@ -2677,43 +2677,43 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     //Make sure the corners take priority
     CGRect topLeftRect = (CGRect){frame.origin, {64,64}};
     if (CGRectContainsPoint(topLeftRect, point))
-        return FWImageCropViewOverlayEdgeTopLeft;
+        return __FWImageCropViewOverlayEdgeTopLeft;
     
     CGRect topRightRect = topLeftRect;
     topRightRect.origin.x = CGRectGetMaxX(frame) - 64.0f;
     if (CGRectContainsPoint(topRightRect, point))
-        return FWImageCropViewOverlayEdgeTopRight;
+        return __FWImageCropViewOverlayEdgeTopRight;
     
     CGRect bottomLeftRect = topLeftRect;
     bottomLeftRect.origin.y = CGRectGetMaxY(frame) - 64.0f;
     if (CGRectContainsPoint(bottomLeftRect, point))
-        return FWImageCropViewOverlayEdgeBottomLeft;
+        return __FWImageCropViewOverlayEdgeBottomLeft;
     
     CGRect bottomRightRect = topRightRect;
     bottomRightRect.origin.y = bottomLeftRect.origin.y;
     if (CGRectContainsPoint(bottomRightRect, point))
-        return FWImageCropViewOverlayEdgeBottomRight;
+        return __FWImageCropViewOverlayEdgeBottomRight;
     
     //Check for edges
     CGRect topRect = (CGRect){frame.origin, {CGRectGetWidth(frame), 64.0f}};
     if (CGRectContainsPoint(topRect, point))
-        return FWImageCropViewOverlayEdgeTop;
+        return __FWImageCropViewOverlayEdgeTop;
     
     CGRect bottomRect = topRect;
     bottomRect.origin.y = CGRectGetMaxY(frame) - 64.0f;
     if (CGRectContainsPoint(bottomRect, point))
-        return FWImageCropViewOverlayEdgeBottom;
+        return __FWImageCropViewOverlayEdgeBottom;
     
     CGRect leftRect = (CGRect){frame.origin, {64.0f, CGRectGetHeight(frame)}};
     if (CGRectContainsPoint(leftRect, point))
-        return FWImageCropViewOverlayEdgeLeft;
+        return __FWImageCropViewOverlayEdgeLeft;
     
     CGRect rightRect = leftRect;
     rightRect.origin.x = CGRectGetMaxX(frame) - 64.0f;
     if (CGRectContainsPoint(rightRect, point))
-        return FWImageCropViewOverlayEdgeRight;
+        return __FWImageCropViewOverlayEdgeRight;
     
-    return FWImageCropViewOverlayEdgeNone;
+    return __FWImageCropViewOverlayEdgeNone;
 }
 
 #pragma mark - Scroll View Delegate -
@@ -2800,8 +2800,8 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     cropBoxFrame.size.height = floorf(MIN(cropBoxFrame.size.height, maxHeight));
     
     //Make sure we can't make the crop box too small
-    cropBoxFrame.size.width  = MAX(cropBoxFrame.size.width, kFWImageCropViewMinimumBoxSize);
-    cropBoxFrame.size.height = MAX(cropBoxFrame.size.height, kFWImageCropViewMinimumBoxSize);
+    cropBoxFrame.size.width  = MAX(cropBoxFrame.size.width, k__FWImageCropViewMinimumBoxSize);
+    cropBoxFrame.size.height = MAX(cropBoxFrame.size.height, k__FWImageCropViewMinimumBoxSize);
     
     _cropBoxFrame = cropBoxFrame;
     
@@ -2810,7 +2810,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     
     // If the mask layer is present, adjust its transform to fit the new container view size
     if (self.circularMaskLayer) {
-        CGFloat scale = _cropBoxFrame.size.width / kFWImageCropViewCircularPathRadius;
+        CGFloat scale = _cropBoxFrame.size.width / k__FWImageCropViewCircularPathRadius;
         self.circularMaskLayer.transform = CATransform3DScale(CATransform3DIdentity, scale, scale, 1.0f);
     }
     
@@ -3057,7 +3057,7 @@ typedef NS_ENUM(NSInteger, FWImageCropViewOverlayEdge) {
     CGFloat duration = editing ? 0.05f : 0.35f;
     CGFloat delay = editing? 0.0f : 0.35f;
     
-    if (self.croppingStyle == FWImageCropCroppingStyleCircular) {
+    if (self.croppingStyle == __FWImageCropCroppingStyleCircular) {
         delay = 0.0f;
     }
     
