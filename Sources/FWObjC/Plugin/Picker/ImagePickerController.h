@@ -12,46 +12,46 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWImageAlbumController
+#pragma mark - __FWImageAlbumController
 
-@class FWImageAlbumTableCell;
-@class FWImagePickerController;
-@class FWImageAlbumController;
+@class __FWImageAlbumTableCell;
+@class __FWImagePickerController;
+@class __FWImageAlbumController;
 
 /// 相册列表事件代理
 NS_SWIFT_NAME(ImageAlbumControllerDelegate)
-@protocol FWImageAlbumControllerDelegate <NSObject>
+@protocol __FWImageAlbumControllerDelegate <NSObject>
 
 @optional
-/// 需提供FWImagePickerController 用于展示九宫格图片列表
-- (FWImagePickerController *)imagePickerControllerForAlbumController:(FWImageAlbumController *)albumController;
+/// 需提供__FWImagePickerController 用于展示九宫格图片列表
+- (__FWImagePickerController *)imagePickerControllerForAlbumController:(__FWImageAlbumController *)albumController;
 
 /// 点击相簿里某一行时被调用，未实现时默认打开imagePickerController
-- (void)albumController:(FWImageAlbumController *)albumController didSelectAssetsGroup:(FWAssetGroup *)assetsGroup;
+- (void)albumController:(__FWImageAlbumController *)albumController didSelectAssetsGroup:(__FWAssetGroup *)assetsGroup;
 
 /// 自定义相册列表cell展示，cellForRow自动调用
-- (void)albumController:(FWImageAlbumController *)albumController customCell:(FWImageAlbumTableCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)albumController:(__FWImageAlbumController *)albumController customCell:(__FWImageAlbumTableCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 /// 取消查看相册列表后被调用，未实现时自动转发给当前imagePickerController
-- (void)albumControllerDidCancel:(FWImageAlbumController *)albumController;
+- (void)albumControllerDidCancel:(__FWImageAlbumController *)albumController;
 
 /// 即将需要显示 Loading 时调用，可自定义Loading效果
-- (void)albumControllerWillStartLoading:(FWImageAlbumController *)albumController;
+- (void)albumControllerWillStartLoading:(__FWImageAlbumController *)albumController;
 
 /// 需要隐藏 Loading 时调用，可自定义Loading效果
-- (void)albumControllerDidFinishLoading:(FWImageAlbumController *)albumController;
+- (void)albumControllerDidFinishLoading:(__FWImageAlbumController *)albumController;
 
 /// 相册列表未授权时调用，可自定义空界面等
-- (void)albumControllerWillShowDenied:(FWImageAlbumController *)albumController;
+- (void)albumControllerWillShowDenied:(__FWImageAlbumController *)albumController;
 
 /// 相册列表为空时调用，可自定义空界面等
-- (void)albumControllerWillShowEmpty:(FWImageAlbumController *)albumController;
+- (void)albumControllerWillShowEmpty:(__FWImageAlbumController *)albumController;
 
 @end
 
 /// 相册列表默认Cell
 NS_SWIFT_NAME(ImageAlbumTableCell)
-@interface FWImageAlbumTableCell : UITableViewCell
+@interface __FWImageAlbumTableCell : UITableViewCell
 
 // 相册缩略图的大小
 @property(nonatomic, assign) CGFloat albumImageSize UI_APPEARANCE_SELECTOR;
@@ -81,10 +81,10 @@ NS_SWIFT_NAME(ImageAlbumTableCell)
  *  1. 使用 init 初始化。
  *  2. 指定一个 albumControllerDelegate，并实现 @required 方法。
  *
- *  注意，iOS 访问相册需要得到授权，建议先询问用户授权([FWAssetsManager requestAuthorization:])，通过了再进行 FWImageAlbumController 的初始化工作。
+ *  注意，iOS 访问相册需要得到授权，建议先询问用户授权([__FWAssetsManager requestAuthorization:])，通过了再进行 __FWImageAlbumController 的初始化工作。
  */
 NS_SWIFT_NAME(ImageAlbumController)
-@interface FWImageAlbumController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface __FWImageAlbumController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property(nullable, nonatomic, strong) UIColor *toolBarBackgroundColor;
 @property(nullable, nonatomic, strong) UIColor *toolBarTintColor;
@@ -104,25 +104,25 @@ NS_SWIFT_NAME(ImageAlbumController)
 @property(nonatomic, assign, readonly) CGFloat tableViewHeight;
 
 /// 当前相册列表，异步加载
-@property(nonatomic, strong, readonly) NSMutableArray<FWAssetGroup *> *albumsArray;
+@property(nonatomic, strong, readonly) NSMutableArray<__FWAssetGroup *> *albumsArray;
 
 /// 相册列表事件代理
-@property(nullable, nonatomic, weak) id<FWImageAlbumControllerDelegate> albumControllerDelegate;
+@property(nullable, nonatomic, weak) id<__FWImageAlbumControllerDelegate> albumControllerDelegate;
 
 /// 自定义pickerController句柄，优先级低于delegate
-@property(nullable, nonatomic, copy) FWImagePickerController * (^pickerControllerBlock)(void);
+@property(nullable, nonatomic, copy) __FWImagePickerController * (^pickerControllerBlock)(void);
 
 /// 自定义cell展示句柄，cellForRow自动调用，优先级低于delegate
-@property(nullable, nonatomic, copy) void (^customCellBlock)(FWImageAlbumTableCell *cell, NSIndexPath *indexPath);
+@property(nullable, nonatomic, copy) void (^customCellBlock)(__FWImageAlbumTableCell *cell, NSIndexPath *indexPath);
 
 /// 相册列表默认封面图，默认nil
 @property(nullable, nonatomic, strong) UIImage *defaultPosterImage;
 
 /// 相册展示内容的类型，可以控制只展示照片、视频或音频的其中一种，也可以同时展示所有类型的资源，默认展示所有类型的资源。
-@property(nonatomic, assign) FWAlbumContentType contentType;
+@property(nonatomic, assign) __FWAlbumContentType contentType;
 
 /// 当前选中相册，默认nil
-@property(nullable, nonatomic, strong, readonly) FWAssetGroup *assetsGroup;
+@property(nullable, nonatomic, strong, readonly) __FWAssetGroup *assetsGroup;
 
 /// 是否显示默认loading，优先级低于delegate，默认YES
 @property(nonatomic, assign) BOOL showsDefaultLoading;
@@ -132,56 +132,56 @@ NS_SWIFT_NAME(ImageAlbumController)
 
 @end
 
-#pragma mark - FWImagePickerPreviewController
+#pragma mark - __FWImagePickerPreviewController
 
-@class FWImageCropController;
-@class FWImagePickerController;
+@class __FWImageCropController;
+@class __FWImagePickerController;
 @class __FWImagePreviewController;
-@class FWImagePickerPreviewController;
-@class FWImagePickerPreviewCollectionCell;
+@class __FWImagePickerPreviewController;
+@class __FWImagePickerPreviewCollectionCell;
 
 NS_SWIFT_NAME(ImagePickerPreviewControllerDelegate)
-@protocol FWImagePickerPreviewControllerDelegate <NSObject>
+@protocol __FWImagePickerPreviewControllerDelegate <NSObject>
 
 @optional
 
 /// 完成选中图片回调，未实现时自动转发给当前imagePickerController
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didFinishPickingImageWithImagesAssetArray:(NSArray<FWAsset *> *)imagesAssetArray;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController didFinishPickingImageWithImagesAssetArray:(NSArray<__FWAsset *> *)imagesAssetArray;
 /// 即将选中图片
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController willCheckImageAtIndex:(NSInteger)index;
 /// 已经选中图片
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController didCheckImageAtIndex:(NSInteger)index;
 /// 即将取消选中图片
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController willUncheckImageAtIndex:(NSInteger)index;
 /// 已经取消选中图片
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController didUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController didUncheckImageAtIndex:(NSInteger)index;
 /// 选中数量变化时调用，仅多选有效
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willChangeCheckedCount:(NSInteger)checkedCount;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController willChangeCheckedCount:(NSInteger)checkedCount;
 /// 即将需要显示 Loading 时调用
-- (void)imagePickerPreviewControllerWillStartLoading:(FWImagePickerPreviewController *)imagePickerPreviewController;
+- (void)imagePickerPreviewControllerWillStartLoading:(__FWImagePickerPreviewController *)imagePickerPreviewController;
 /// 即将需要隐藏 Loading 时调用
-- (void)imagePickerPreviewControllerDidFinishLoading:(FWImagePickerPreviewController *)imagePickerPreviewController;
+- (void)imagePickerPreviewControllerDidFinishLoading:(__FWImagePickerPreviewController *)imagePickerPreviewController;
 /// 已经选中数量超过最大选择数量时被调用，默认弹窗提示
-- (void)imagePickerPreviewControllerWillShowExceed:(FWImagePickerPreviewController *)imagePickerPreviewController;
+- (void)imagePickerPreviewControllerWillShowExceed:(__FWImagePickerPreviewController *)imagePickerPreviewController;
 /// 图片预览界面关闭返回时被调用
-- (void)imagePickerPreviewControllerDidCancel:(FWImagePickerPreviewController *)imagePickerPreviewController;
+- (void)imagePickerPreviewControllerDidCancel:(__FWImagePickerPreviewController *)imagePickerPreviewController;
 /// 自定义编辑按钮点击事件，启用编辑时生效，未实现时使用图片裁剪控制器
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController willEditImageAtIndex:(NSInteger)index;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController willEditImageAtIndex:(NSInteger)index;
 /// 自定义图片裁剪控制器，启用编辑时生效，未实现时使用默认配置
-- (FWImageCropController *)imageCropControllerForPreviewController:(FWImagePickerPreviewController *)previewController image:(UIImage *)image;
+- (__FWImageCropController *)imageCropControllerForPreviewController:(__FWImagePickerPreviewController *)previewController image:(UIImage *)image;
 /// 自定义编辑cell展示，cellForRow自动调用
-- (void)imagePickerPreviewController:(FWImagePickerPreviewController *)imagePickerPreviewController customCell:(FWImagePickerPreviewCollectionCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)imagePickerPreviewController:(__FWImagePickerPreviewController *)imagePickerPreviewController customCell:(__FWImagePickerPreviewCollectionCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
 NS_SWIFT_NAME(ImagePickerPreviewController)
-@interface FWImagePickerPreviewController : __FWImagePreviewController <UICollectionViewDataSource, UICollectionViewDelegate, __FWImagePreviewViewDelegate>
+@interface __FWImagePickerPreviewController : __FWImagePreviewController <UICollectionViewDataSource, UICollectionViewDelegate, __FWImagePreviewViewDelegate>
 
-@property(nullable, nonatomic, weak) id<FWImagePickerPreviewControllerDelegate> delegate;
+@property(nullable, nonatomic, weak) id<__FWImagePickerPreviewControllerDelegate> delegate;
 /// 自定义裁剪控制器句柄，优先级低于delegate
-@property(nullable, nonatomic, copy) FWImageCropController * (^cropControllerBlock)(UIImage *image);
+@property(nullable, nonatomic, copy) __FWImageCropController * (^cropControllerBlock)(UIImage *image);
 /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
-@property(nullable, nonatomic, copy) void (^customCellBlock)(FWImagePickerPreviewCollectionCell *cell, NSIndexPath *indexPath);
+@property(nullable, nonatomic, copy) void (^customCellBlock)(__FWImagePickerPreviewCollectionCell *cell, NSIndexPath *indexPath);
 
 @property(nullable, nonatomic, strong) UIColor *toolBarBackgroundColor;
 @property(nullable, nonatomic, strong) UIColor *toolBarTintColor;
@@ -220,11 +220,11 @@ NS_SWIFT_NAME(ImagePickerPreviewController)
 /// 是否显示默认loading，优先级低于delegate，默认YES
 @property(nonatomic, assign) BOOL showsDefaultLoading;
 
-/// 由于组件需要通过本地图片的 FWAsset 对象读取图片的详细信息，因此这里的需要传入的是包含一个或多个 FWAsset 对象的数组
-@property(nullable, nonatomic, strong) NSMutableArray<FWAsset *> *imagesAssetArray;
-@property(nullable, nonatomic, strong) NSMutableArray<FWAsset *> *selectedImageAssetArray;
+/// 由于组件需要通过本地图片的 __FWAsset 对象读取图片的详细信息，因此这里的需要传入的是包含一个或多个 __FWAsset 对象的数组
+@property(nullable, nonatomic, strong) NSMutableArray<__FWAsset *> *imagesAssetArray;
+@property(nullable, nonatomic, strong) NSMutableArray<__FWAsset *> *selectedImageAssetArray;
 
-@property(nonatomic, assign) FWAssetDownloadStatus downloadStatus;
+@property(nonatomic, assign) __FWAssetDownloadStatus downloadStatus;
 
 /// 最多可以选择的图片数，默认为9
 @property(nonatomic, assign) NSUInteger maximumSelectImageCount;
@@ -240,8 +240,8 @@ NS_SWIFT_NAME(ImagePickerPreviewController)
  *  @param singleCheckMode         是否为单选模式，如果是单选模式，则不显示 checkbox
  *  @param previewMode         是否是预览模式，如果是预览模式，图片取消选中时editCollectionView会置灰而不是隐藏
  */
-- (void)updateImagePickerPreviewViewWithImagesAssetArray:(NSMutableArray<FWAsset *> * _Nullable)imageAssetArray
-                                 selectedImageAssetArray:(NSMutableArray<FWAsset *> * _Nullable)selectedImageAssetArray
+- (void)updateImagePickerPreviewViewWithImagesAssetArray:(NSMutableArray<__FWAsset *> * _Nullable)imageAssetArray
+                                 selectedImageAssetArray:(NSMutableArray<__FWAsset *> * _Nullable)selectedImageAssetArray
                                        currentImageIndex:(NSInteger)currentImageIndex
                                          singleCheckMode:(BOOL)singleCheckMode
                                              previewMode:(BOOL)previewMode;
@@ -249,7 +249,7 @@ NS_SWIFT_NAME(ImagePickerPreviewController)
 @end
 
 NS_SWIFT_NAME(ImagePickerPreviewCollectionCell)
-@interface FWImagePickerPreviewCollectionCell : UICollectionViewCell
+@interface __FWImagePickerPreviewCollectionCell : UICollectionViewCell
 
 /// 缩略图视图
 @property(nonatomic, strong, readonly) UIImageView *imageView;
@@ -284,120 +284,120 @@ NS_SWIFT_NAME(ImagePickerPreviewCollectionCell)
 @property(nullable, nonatomic, strong) UIImage *videoIconImage UI_APPEARANCE_SELECTOR;
 @property(nonatomic, assign) UIEdgeInsets iconImageViewMargins UI_APPEARANCE_SELECTOR;
 
-/// 当前这个 cell 正在展示的 FWAsset 的 identifier
+/// 当前这个 cell 正在展示的 __FWAsset 的 identifier
 @property(nonatomic, copy, nullable) NSString *assetIdentifier;
-- (void)renderWithAsset:(FWAsset *)asset referenceSize:(CGSize)referenceSize;
+- (void)renderWithAsset:(__FWAsset *)asset referenceSize:(CGSize)referenceSize;
 
 @end
 
-#pragma mark - FWImagePickerController
+#pragma mark - __FWImagePickerController
 
-@class FWImagePickerCollectionCell;
-@class FWImagePickerController;
+@class __FWImagePickerCollectionCell;
+@class __FWImagePickerController;
 @class __FWToolbarTitleView;
 
 NS_SWIFT_NAME(ImagePickerControllerDelegate)
-@protocol FWImagePickerControllerDelegate <NSObject>
+@protocol __FWImagePickerControllerDelegate <NSObject>
 
 @optional
 
 /**
  *  创建一个 ImagePickerPreviewViewController 用于预览图片
  */
-- (FWImagePickerPreviewController *)imagePickerPreviewControllerForImagePickerController:(FWImagePickerController *)imagePickerController;
+- (__FWImagePickerPreviewController *)imagePickerPreviewControllerForImagePickerController:(__FWImagePickerController *)imagePickerController;
 
 /**
- *  控制照片的排序，若不实现，默认为 FWAlbumSortTypePositive
- *  @note 注意返回值会决定第一次进来相片列表时列表默认的滚动位置，如果为 FWAlbumSortTypePositive，则列表默认滚动到底部，如果为 FWAlbumSortTypeReverse，则列表默认滚动到顶部。
+ *  控制照片的排序，若不实现，默认为 __FWAlbumSortTypePositive
+ *  @note 注意返回值会决定第一次进来相片列表时列表默认的滚动位置，如果为 __FWAlbumSortTypePositive，则列表默认滚动到底部，如果为 __FWAlbumSortTypeReverse，则列表默认滚动到顶部。
  */
-- (FWAlbumSortType)albumSortTypeForImagePickerController:(FWImagePickerController *)imagePickerController;
+- (__FWAlbumSortType)albumSortTypeForImagePickerController:(__FWImagePickerController *)imagePickerController;
 
 /**
  *  选择图片完毕后被调用（点击 sendButton 后被调用），如果previewController没有实现完成回调方法，也会走到这个方法
  *
- *  @param imagePickerController 对应的 FWImagePickerController
- *  @param imagesAssetArray          包含被选择的图片的 FWAsset 对象的数组。
+ *  @param imagePickerController 对应的 __FWImagePickerController
+ *  @param imagesAssetArray          包含被选择的图片的 __FWAsset 对象的数组。
  */
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController didFinishPickingImageWithImagesAssetArray:(NSArray<FWAsset *> *)imagesAssetArray;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController didFinishPickingImageWithImagesAssetArray:(NSArray<__FWAsset *> *)imagesAssetArray;
 
 /**
  *  取消选择图片后被调用，如果albumController没有实现取消回调方法，也会走到这个方法
  */
-- (void)imagePickerControllerDidCancel:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerDidCancel:(__FWImagePickerController *)imagePickerController;
 
 /**
  *  cell 被点击时调用（先调用这个接口，然后才去走预览大图的逻辑），注意这并非指选中 checkbox 事件
  *
- *  @param imagePickerController        对应的 FWImagePickerController
- *  @param imageAsset                       被选中的图片的 FWAsset 对象
+ *  @param imagePickerController        对应的 __FWImagePickerController
+ *  @param imageAsset                       被选中的图片的 __FWAsset 对象
  *  @param imagePickerPreviewController 选中图片后进行图片预览的 viewController
  */
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController didSelectImageWithImagesAsset:(FWAsset *)imageAsset afterImagePickerPreviewControllerUpdate:(FWImagePickerPreviewController *)imagePickerPreviewController;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController didSelectImageWithImagesAsset:(__FWAsset *)imageAsset afterImagePickerPreviewControllerUpdate:(__FWImagePickerPreviewController *)imagePickerPreviewController;
 
 /// 是否能够选中 checkbox
-- (BOOL)imagePickerController:(FWImagePickerController *)imagePickerController shouldCheckImageAtIndex:(NSInteger)index;
+- (BOOL)imagePickerController:(__FWImagePickerController *)imagePickerController shouldCheckImageAtIndex:(NSInteger)index;
 
 /// 即将选中 checkbox 时调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController willCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController willCheckImageAtIndex:(NSInteger)index;
 
 /// 选中了 checkbox 之后调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController didCheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController didCheckImageAtIndex:(NSInteger)index;
 
 /// 即将取消选中 checkbox 时调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController willUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController willUncheckImageAtIndex:(NSInteger)index;
 
 /// 取消了 checkbox 选中之后调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController didUncheckImageAtIndex:(NSInteger)index;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController didUncheckImageAtIndex:(NSInteger)index;
 
 /// 选中数量变化时调用，仅多选有效
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController willChangeCheckedCount:(NSInteger)checkedCount;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController willChangeCheckedCount:(NSInteger)checkedCount;
 
 /// 自定义图片九宫格cell展示，cellForRow自动调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController customCell:(FWImagePickerCollectionCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController customCell:(__FWImagePickerCollectionCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 /// 标题视图被点击时调用，返回弹出的相册列表控制器
-- (FWImageAlbumController *)albumControllerForImagePickerController:(FWImagePickerController *)imagePickerController;
+- (__FWImageAlbumController *)albumControllerForImagePickerController:(__FWImagePickerController *)imagePickerController;
 
 /// 即将显示弹出相册列表控制器时调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController willShowAlbumController:(FWImageAlbumController *)albumController;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController willShowAlbumController:(__FWImageAlbumController *)albumController;
 
 /// 即将隐藏弹出相册列表控制器时调用
-- (void)imagePickerController:(FWImagePickerController *)imagePickerController willHideAlbumController:(FWImageAlbumController *)albumController;
+- (void)imagePickerController:(__FWImagePickerController *)imagePickerController willHideAlbumController:(__FWImageAlbumController *)albumController;
 
 /**
  *  即将需要显示 Loading 时调用
  */
-- (void)imagePickerControllerWillStartLoading:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerWillStartLoading:(__FWImagePickerController *)imagePickerController;
 
 /**
  *  即将需要隐藏 Loading 时调用
  */
-- (void)imagePickerControllerDidFinishLoading:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerDidFinishLoading:(__FWImagePickerController *)imagePickerController;
 
 /// 图片未授权时调用，可自定义空界面等
-- (void)imagePickerControllerWillShowDenied:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerWillShowDenied:(__FWImagePickerController *)imagePickerController;
 
 /// 图片为空时调用，可自定义空界面等
-- (void)imagePickerControllerWillShowEmpty:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerWillShowEmpty:(__FWImagePickerController *)imagePickerController;
 
 /// 已经选中数量超过最大选择数量时被调用，默认弹窗提示
-- (void)imagePickerControllerWillShowExceed:(FWImagePickerController *)imagePickerController;
+- (void)imagePickerControllerWillShowExceed:(__FWImagePickerController *)imagePickerController;
 
 @end
 
 NS_SWIFT_NAME(ImagePickerController)
-@interface FWImagePickerController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, FWImagePickerPreviewControllerDelegate>
+@interface __FWImagePickerController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, __FWImagePickerPreviewControllerDelegate>
 
-@property(nullable, nonatomic, weak) id<FWImagePickerControllerDelegate> imagePickerControllerDelegate;
+@property(nullable, nonatomic, weak) id<__FWImagePickerControllerDelegate> imagePickerControllerDelegate;
 /// 自定义预览控制器句柄，优先级低于delegate
-@property(nullable, nonatomic, copy) FWImagePickerPreviewController * (^previewControllerBlock)(void);
+@property(nullable, nonatomic, copy) __FWImagePickerPreviewController * (^previewControllerBlock)(void);
 /// 自定义相册控制器句柄，优先级低于delegate
-@property(nullable, nonatomic, copy) FWImageAlbumController * (^albumControllerBlock)(void);
+@property(nullable, nonatomic, copy) __FWImageAlbumController * (^albumControllerBlock)(void);
 /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
-@property(nullable, nonatomic, copy) void (^customCellBlock)(FWImagePickerCollectionCell *cell, NSIndexPath *indexPath);
+@property(nullable, nonatomic, copy) void (^customCellBlock)(__FWImagePickerCollectionCell *cell, NSIndexPath *indexPath);
 
 /// 图片选取完成回调句柄，优先级低于delegate
-@property(nullable, nonatomic, copy) void (^didFinishPicking)(NSArray<FWAsset *> *imagesAssetArray);
+@property(nullable, nonatomic, copy) void (^didFinishPicking)(NSArray<__FWAsset *> *imagesAssetArray);
 /// 图片选取取消回调句柄，优先级低于delegate
 @property(nullable, nonatomic, copy) void (^didCancelPicking)(void);
 
@@ -427,19 +427,19 @@ NS_SWIFT_NAME(ImagePickerController)
 @property(nonatomic, strong, readonly) UIButton *previewButton;
 @property(nonatomic, strong, readonly) UIButton *sendButton;
 
-/// 也可以直接传入 FWAssetGroup，然后读取其中的 FWAsset 并储存到 imagesAssetArray 中，传入后会赋值到 FWAssetGroup，并自动刷新 UI 展示
-- (void)refreshWithAssetsGroup:(FWAssetGroup * _Nullable)assetsGroup;
+/// 也可以直接传入 __FWAssetGroup，然后读取其中的 __FWAsset 并储存到 imagesAssetArray 中，传入后会赋值到 __FWAssetGroup，并自动刷新 UI 展示
+- (void)refreshWithAssetsGroup:(__FWAssetGroup * _Nullable)assetsGroup;
 
 /// 根据filterType刷新，自动选取第一个符合条件的相册，自动初始化并使用albumController
-- (void)refreshWithFilterType:(FWImagePickerFilterType)filterType;
+- (void)refreshWithFilterType:(__FWImagePickerFilterType)filterType;
 
-@property(nullable, nonatomic, strong, readonly) NSMutableArray<FWAsset *> *imagesAssetArray;
-@property(nullable, nonatomic, strong, readonly) FWAssetGroup *assetsGroup;
+@property(nullable, nonatomic, strong, readonly) NSMutableArray<__FWAsset *> *imagesAssetArray;
+@property(nullable, nonatomic, strong, readonly) __FWAssetGroup *assetsGroup;
 /// 图片过滤类型，默认0不过滤，影响requestImage结果和previewController预览效果
-@property(nonatomic, assign) FWImagePickerFilterType filterType;
+@property(nonatomic, assign) __FWImagePickerFilterType filterType;
 
-/// 当前被选择的图片对应的 FWAsset 对象数组
-@property(nullable, nonatomic, strong, readonly) NSMutableArray<FWAsset *> *selectedImageAssetArray;
+/// 当前被选择的图片对应的 __FWAsset 对象数组
+@property(nullable, nonatomic, strong, readonly) NSMutableArray<__FWAsset *> *selectedImageAssetArray;
 
 /// 是否允许图片多选，默认为 YES。如果为 NO，则不显示 checkbox 和底部工具栏
 @property(nonatomic, assign) BOOL allowsMultipleSelection;
@@ -460,26 +460,26 @@ NS_SWIFT_NAME(ImagePickerController)
 @property(nonatomic, assign) BOOL shouldRequestImage;
 
 /// 图片过滤类型转换为相册内容类型
-+ (FWAlbumContentType)albumContentTypeWithFilterType:(FWImagePickerFilterType)filterType;
++ (__FWAlbumContentType)albumContentTypeWithFilterType:(__FWImagePickerFilterType)filterType;
 
 /**
  * 检查并下载一组资源，如果资源仍未从 iCloud 中成功下载，则会发出请求从 iCloud 加载资源，下载完成后，主线程回调。
- * 图片资源对象和结果信息保存在FWAsset.requestObject，自动根据过滤类型返回UIImage|PHLivePhoto|NSURL
+ * 图片资源对象和结果信息保存在__FWAsset.requestObject，自动根据过滤类型返回UIImage|PHLivePhoto|NSURL
  */
-+ (void)requestImagesAssetArray:(NSArray<FWAsset *> *)imagesAssetArray
-                     filterType:(FWImagePickerFilterType)filterType
++ (void)requestImagesAssetArray:(NSArray<__FWAsset *> *)imagesAssetArray
+                     filterType:(__FWImagePickerFilterType)filterType
                       useOrigin:(BOOL)useOrigin
                      completion:(nullable void (^)(void))completion;
 
 @end
 
-#pragma mark - FWImagePickerCollectionCell
+#pragma mark - __FWImagePickerCollectionCell
 
 /**
  *  图片选择空间里的九宫格 cell，支持显示 checkbox、饼状进度条及重试按钮（iCloud 图片需要）
  */
 NS_SWIFT_NAME(ImagePickerCollectionCell)
-@interface FWImagePickerCollectionCell : UICollectionViewCell
+@interface __FWImagePickerCollectionCell : UICollectionViewCell
 
 /// checkbox 未被选中时显示的图片
 @property(nonatomic, strong) UIImage *checkboxImage UI_APPEARANCE_SELECTOR;
@@ -532,10 +532,10 @@ NS_SWIFT_NAME(ImagePickerCollectionCell)
 @property(nonatomic, assign, getter=isChecked) BOOL checked;
 @property(nonatomic, assign) BOOL disabled;
 @property(nonatomic, assign) NSInteger checkedIndex;
-@property(nonatomic, assign) FWAssetDownloadStatus downloadStatus; // Cell 中对应资源的下载状态，这个值的变动会相应地调整 UI 表现
-@property(nonatomic, copy, nullable) NSString *assetIdentifier;// 当前这个 cell 正在展示的 FWAsset 的 identifier
+@property(nonatomic, assign) __FWAssetDownloadStatus downloadStatus; // Cell 中对应资源的下载状态，这个值的变动会相应地调整 UI 表现
+@property(nonatomic, copy, nullable) NSString *assetIdentifier;// 当前这个 cell 正在展示的 __FWAsset 的 identifier
 
-- (void)renderWithAsset:(FWAsset *)asset referenceSize:(CGSize)referenceSize;
+- (void)renderWithAsset:(__FWAsset *)asset referenceSize:(CGSize)referenceSize;
 
 @end
 

@@ -9,18 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - FWImagePickerPlugin
+#pragma mark - __FWImagePickerPlugin
 
 /// 图片选择插件过滤类型
-typedef NS_OPTIONS(NSUInteger, FWImagePickerFilterType) {
-    FWImagePickerFilterTypeImage      = 1 << 0,
-    FWImagePickerFilterTypeLivePhoto  = 1 << 1,
-    FWImagePickerFilterTypeVideo      = 1 << 2,
+typedef NS_OPTIONS(NSUInteger, __FWImagePickerFilterType) {
+    __FWImagePickerFilterTypeImage      = 1 << 0,
+    __FWImagePickerFilterTypeLivePhoto  = 1 << 1,
+    __FWImagePickerFilterTypeVideo      = 1 << 2,
 } NS_SWIFT_NAME(ImagePickerFilterType);
 
 /// 图片选取插件协议，应用可自定义图片选取插件实现
 NS_SWIFT_NAME(ImagePickerPlugin)
-@protocol FWImagePickerPlugin <NSObject>
+@protocol __FWImagePickerPlugin <NSObject>
 @optional
 
 /// 从Camera选取单张图片插件方法
@@ -30,7 +30,7 @@ NS_SWIFT_NAME(ImagePickerPlugin)
 /// @param customBlock 自定义配置句柄，默认nil
 /// @param completion 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
 - (void)viewController:(UIViewController *)viewController
-         showImageCamera:(FWImagePickerFilterType)filterType
+         showImageCamera:(__FWImagePickerFilterType)filterType
            allowsEditing:(BOOL)allowsEditing
              customBlock:(nullable void (^)(id imagePicker))customBlock
               completion:(void (^)(id _Nullable object, id _Nullable result, BOOL cancel))completion;
@@ -43,7 +43,7 @@ NS_SWIFT_NAME(ImagePickerPlugin)
 /// @param customBlock 自定义配置句柄，默认nil
 /// @param completion 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
 - (void)viewController:(UIViewController *)viewController
-         showImagePicker:(FWImagePickerFilterType)filterType
+         showImagePicker:(__FWImagePickerFilterType)filterType
           selectionLimit:(NSInteger)selectionLimit
            allowsEditing:(BOOL)allowsEditing
              customBlock:(nullable void (^)(id imagePicker))customBlock

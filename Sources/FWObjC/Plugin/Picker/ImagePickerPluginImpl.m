@@ -18,28 +18,28 @@
 
 #endif
 
-#pragma mark - FWImagePickerPluginImpl
+#pragma mark - __FWImagePickerPluginImpl
 
-@implementation FWImagePickerPluginImpl
+@implementation __FWImagePickerPluginImpl
 
-+ (FWImagePickerPluginImpl *)sharedInstance
++ (__FWImagePickerPluginImpl *)sharedInstance
 {
-    static FWImagePickerPluginImpl *instance = nil;
+    static __FWImagePickerPluginImpl *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWImagePickerPluginImpl alloc] init];
+        instance = [[__FWImagePickerPluginImpl alloc] init];
     });
     return instance;
 }
 
 - (void)viewController:(UIViewController *)viewController
-         showImageCamera:(FWImagePickerFilterType)filterType
+         showImageCamera:(__FWImagePickerFilterType)filterType
            allowsEditing:(BOOL)allowsEditing
              customBlock:(void (^)(id _Nonnull))customBlock
               completion:(void (^)(id _Nullable, id _Nullable, BOOL))completion
 {
     UIImagePickerController *pickerController = nil;
-    if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && allowsEditing) {
+    if (self.cropControllerEnabled && filterType == __FWImagePickerFilterTypeImage && allowsEditing) {
         pickerController = [UIImagePickerController fw_pickerControllerWithSourceType:UIImagePickerControllerSourceTypeCamera cropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
             if (completion) completion(image, info, cancel);
         }];
@@ -60,7 +60,7 @@
 }
 
 - (void)viewController:(UIViewController *)viewController
-         showImagePicker:(FWImagePickerFilterType)filterType
+         showImagePicker:(__FWImagePickerFilterType)filterType
           selectionLimit:(NSInteger)selectionLimit
            allowsEditing:(BOOL)allowsEditing
              customBlock:(void (^)(id _Nonnull))customBlock
@@ -72,7 +72,7 @@
         usePhotoPicker = !self.photoPickerDisabled;
     }
     if (usePhotoPicker) {
-        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
+        if (self.cropControllerEnabled && filterType == __FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
             pickerController = [PHPhotoLibrary fw_pickerControllerWithCropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, id  _Nullable result, BOOL cancel) {
                 if (completion) completion(image ? @[image] : @[], result ? @[result] : @[], cancel);
             }];
@@ -82,7 +82,7 @@
             }];
         }
     } else {
-        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && allowsEditing) {
+        if (self.cropControllerEnabled && filterType == __FWImagePickerFilterTypeImage && allowsEditing) {
             pickerController = [UIImagePickerController fw_pickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
                 if (completion) completion(image ? @[image] : @[], info ? @[info] : @[], cancel);
             }];

@@ -43,7 +43,7 @@
     // __FWEmptyPluginImpl.sharedInstance.defaultAction = nil;
     
     // 配置图片选择、浏览和下拉刷新插件
-    // [__FWPluginManager registerPlugin:@protocol(FWImagePickerPlugin) withObject:[FWImagePickerControllerImpl class]];
+    // [__FWPluginManager registerPlugin:@protocol(__FWImagePickerPlugin) withObject:[__FWImagePickerControllerImpl class]];
     // [__FWPluginManager registerPlugin:@protocol(____FWImagePreviewPlugin) withObject:[____FWImagePreviewPluginImpl class]];
     // [__FWPluginManager registerPlugin:@protocol(__FWRefreshPlugin) withObject:[__FWRefreshPluginImpl class]];
     
