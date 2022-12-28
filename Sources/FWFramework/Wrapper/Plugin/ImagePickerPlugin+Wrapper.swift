@@ -20,15 +20,15 @@ extension Wrapper where Base: PHPhotoLibrary {
     /// * 原因请参考 FWAssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
     public func addImage(toAlbum: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.__fw_addImage(toAlbum: toAlbum, albumAssetCollection: assetCollection, orientation: orientation, completionHandler: completionHandler)
+        base.fw_addImage(toAlbum: toAlbum, assetCollection: assetCollection, orientation: orientation, completionHandler: completionHandler)
     }
 
     public func addImage(toAlbum: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.__fw_addImage(toAlbum: toAlbum, albumAssetCollection: assetCollection, completionHandler: completionHandler)
+        base.fw_addImage(toAlbum: toAlbum, assetCollection: assetCollection, completionHandler: completionHandler)
     }
 
     public func addVideo(toAlbum: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.__fw_addVideo(toAlbum: toAlbum, albumAssetCollection: assetCollection, completionHandler: completionHandler)
+        base.fw_addVideo(toAlbum: toAlbum, assetCollection: assetCollection, completionHandler: completionHandler)
     }
     
     /**
@@ -39,7 +39,7 @@ extension Wrapper where Base: PHPhotoLibrary {
      *  @return 返回一个合适的 PHFetchOptions
      */
     public static func createFetchOptions(albumContentType: AlbumContentType) -> PHFetchOptions {
-        return Base.__fw_createFetchOptions(with: albumContentType)
+        return Base.fw_createFetchOptions(albumContentType: albumContentType)
     }
 
     /**
@@ -52,19 +52,19 @@ extension Wrapper where Base: PHPhotoLibrary {
      *  @return 返回包含所有合适相册的数组
      */
     public static func fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
-        return Base.__fw_fetchAllAlbums(with: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
+        return Base.fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
     }
 
     /// 获取一个 PHAssetCollection 中创建日期最新的资源
     public static func fetchLatestAsset(assetCollection: PHAssetCollection) -> PHAsset? {
-        return Base.__fw_fetchLatestAsset(with: assetCollection)
+        return Base.fw_fetchLatestAsset(assetCollection: assetCollection)
     }
     
     /**
      图片选择器选择视频时临时文件存放目录，使用完成后需自行删除
      */
     public static var pickerControllerVideoCachePath: String {
-        return Base.__fw_pickerControllerVideoCachePath
+        return Base.fw_pickerControllerVideoCachePath
     }
 
     /**
@@ -76,7 +76,7 @@ extension Wrapper where Base: PHPhotoLibrary {
      @return 照片选择器
      */
     public static func pickerController(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) -> UIViewController? {
-        return Base.__fw_pickerController(withSelectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
+        return Base.fw_pickerController(selectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
     }
 
     /**
@@ -90,7 +90,7 @@ extension Wrapper where Base: PHPhotoLibrary {
      @return 照片选择器
      */
     public static func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping (UIViewController?, [Any], [Any], Bool) -> Void) -> UIViewController? {
-        return Base.__fw_pickerController(with: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: shouldDismiss, completion: completion)
+        return Base.fw_pickerController(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: shouldDismiss, completion: completion)
     }
 
     /**
@@ -101,7 +101,7 @@ extension Wrapper where Base: PHPhotoLibrary {
      @return 照片选择器
      */
     public static func pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, Any?, Bool) -> Void) -> UIViewController? {
-        return Base.__fw_pickerController(cropController: cropController, completion: completion)
+        return Base.fw_pickerController(cropController: cropController, completion: completion)
     }
     
 }
@@ -110,8 +110,8 @@ extension Wrapper where Base: UIViewController {
     
     /// 自定义图片选取插件，未设置时自动从插件池加载
     public var imagePickerPlugin: ImagePickerPlugin! {
-        get { return base.__fw_imagePickerPlugin }
-        set { base.__fw_imagePickerPlugin = newValue }
+        get { return base.fw_imagePickerPlugin }
+        set { base.fw_imagePickerPlugin = newValue }
     }
     
     /// 从Camera选取单张图片(简单版)
@@ -119,7 +119,7 @@ extension Wrapper where Base: UIViewController {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func showImageCamera(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        base.__fw_showImageCamera(withAllowsEditing: allowsEditing, completion: completion)
+        base.fw_showImageCamera(allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从Camera选取单张图片(详细版)
@@ -129,7 +129,7 @@ extension Wrapper where Base: UIViewController {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
     public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
-        base.__fw_showImageCamera(with: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        base.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
 
     /// 从图片库选取单张图片(简单版)
@@ -137,7 +137,7 @@ extension Wrapper where Base: UIViewController {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func showImagePicker(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        base.__fw_showImagePicker(withAllowsEditing: allowsEditing, completion: completion)
+        base.fw_showImagePicker(allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从图片库选取多张图片(简单版)
@@ -146,7 +146,7 @@ extension Wrapper where Base: UIViewController {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
     public func showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) {
-        base.__fw_showImagePicker(withSelectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
+        base.fw_showImagePicker(selectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从图片库选取多张图片(详细版)
@@ -157,7 +157,7 @@ extension Wrapper where Base: UIViewController {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
     public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
-        base.__fw_showImagePicker(with: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        base.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
     
 }
@@ -169,7 +169,7 @@ extension Wrapper where Base: UIView {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func showImageCamera(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        base.__fw_showImageCamera(withAllowsEditing: allowsEditing, completion: completion)
+        base.fw_showImageCamera(allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从Camera选取单张图片(详细版)
@@ -179,7 +179,7 @@ extension Wrapper where Base: UIView {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
     public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
-        base.__fw_showImageCamera(with: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        base.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
 
     /// 从图片库选取单张图片(简单版)
@@ -187,7 +187,7 @@ extension Wrapper where Base: UIView {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func showImagePicker(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        base.__fw_showImagePicker(withAllowsEditing: allowsEditing, completion: completion)
+        base.fw_showImagePicker(allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从图片库选取多张图片(简单版)
@@ -196,7 +196,7 @@ extension Wrapper where Base: UIView {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
     public func showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) {
-        base.__fw_showImagePicker(withSelectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
+        base.fw_showImagePicker(selectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
     }
 
     /// 从图片库选取多张图片(详细版)
@@ -207,7 +207,7 @@ extension Wrapper where Base: UIView {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
     public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
-        base.__fw_showImagePicker(with: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        base.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
     
 }
@@ -223,7 +223,7 @@ extension Wrapper where Base: UIImagePickerController {
      @return 照片选择器，不支持的返回nil
      */
     public static func pickerController(sourceType: UIImagePickerController.SourceType, allowsEditing: Bool, completion: @escaping (UIImage?, [AnyHashable : Any]?, Bool) -> Void) -> UIImagePickerController? {
-        return Base.__fw_pickerController(with: sourceType, allowsEditing: allowsEditing, completion: completion)
+        return Base.fw_pickerController(sourceType: sourceType, allowsEditing: allowsEditing, completion: completion)
     }
 
     /**
@@ -237,7 +237,7 @@ extension Wrapper where Base: UIImagePickerController {
      @return 照片选择器，不支持的返回nil
      */
     public static func pickerController(sourceType: UIImagePickerController.SourceType, filterType: ImagePickerFilterType, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping (UIImagePickerController?, Any?, [AnyHashable : Any]?, Bool) -> Void) -> UIImagePickerController? {
-        return Base.__fw_pickerController(with: sourceType, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: shouldDismiss, completion: completion)
+        return Base.fw_pickerController(sourceType: sourceType, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: shouldDismiss, completion: completion)
     }
 
     /**
@@ -249,7 +249,7 @@ extension Wrapper where Base: UIImagePickerController {
      @return 照片选择器，不支持的返回nil
      */
     public static func pickerController(sourceType: UIImagePickerController.SourceType, cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, [AnyHashable : Any]?, Bool) -> Void) -> UIImagePickerController? {
-        return Base.__fw_pickerController(with: sourceType, cropController: cropController, completion: completion)
+        return Base.fw_pickerController(sourceType: sourceType, cropController: cropController, completion: completion)
     }
     
 }
@@ -264,8 +264,8 @@ extension Wrapper where Base: PHPickerViewController {
      @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(selectionLimit: Int, completion: @escaping ([UIImage], [__PHPickerResult], Bool) -> Void) -> PHPickerViewController {
-        return Base.__fw_pickerController(withSelectionLimit: selectionLimit, completion: completion)
+    public static func pickerController(selectionLimit: Int, completion: @escaping ([UIImage], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+        return Base.fw_pickerController(selectionLimit: selectionLimit, completion: completion)
     }
 
     /**
@@ -278,8 +278,8 @@ extension Wrapper where Base: PHPickerViewController {
      @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组(UIImage|PHLivePhoto|NSURL)，3为结果数组，4为是否取消
      @return 照片选择器
      */
-    public static func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, shouldDismiss: Bool, completion: @escaping (PHPickerViewController?, [Any], [__PHPickerResult], Bool) -> Void) -> PHPickerViewController {
-        return Base.__fw_pickerController(with: filterType, selectionLimit: selectionLimit, shouldDismiss: shouldDismiss, completion: completion)
+    public static func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, shouldDismiss: Bool, completion: @escaping (PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+        return Base.fw_pickerController(filterType: filterType, selectionLimit: selectionLimit, shouldDismiss: shouldDismiss, completion: completion)
     }
 
     /**
@@ -289,8 +289,8 @@ extension Wrapper where Base: PHPickerViewController {
      @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, __PHPickerResult?, Bool) -> Void) -> PHPickerViewController {
-        return Base.__fw_pickerController(cropController: cropController, completion: completion)
+    public static func pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, PHPickerResult?, Bool) -> Void) -> PHPickerViewController {
+        return Base.fw_pickerController(cropController: cropController, completion: completion)
     }
     
 }

@@ -320,45 +320,4 @@ NS_SWIFT_NAME(AssetManager)
 
 @end
 
-/// 通用相册：[PHPhotoLibrary sharedPhotoLibrary]
-@interface PHPhotoLibrary (FWAssetManager)
-
-/**
- *  保存图片或视频到指定的相册
- *
- *  @warning 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
- *           原因请参考 FWAssetManager 对象的保存图片和视频方法的注释。
- *  @warning 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
- */
-- (void)fw_addImageToAlbum:(CGImageRef)imageRef albumAssetCollection:(PHAssetCollection *)albumAssetCollection orientation:(UIImageOrientation)orientation completionHandler:(nullable void(^)(BOOL success, NSDate * _Nullable creationDate, NSError * _Nullable error))completionHandler NS_REFINED_FOR_SWIFT;
-
-- (void)fw_addImageToAlbum:(NSURL *)imagePathURL albumAssetCollection:(PHAssetCollection *)albumAssetCollection completionHandler:(nullable void(^)(BOOL success, NSDate * _Nullable creationDate, NSError * _Nullable error))completionHandler NS_REFINED_FOR_SWIFT;
-
-- (void)fw_addVideoToAlbum:(NSURL *)videoPathURL albumAssetCollection:(PHAssetCollection *)albumAssetCollection completionHandler:(nullable void(^)(BOOL success, NSDate * _Nullable creationDate, NSError * _Nullable error))completionHandler NS_REFINED_FOR_SWIFT;
-
-/**
- *  根据 contentType 的值产生一个合适的 PHFetchOptions，并把内容以资源创建日期排序，创建日期较新的资源排在前面
- *
- *  @param contentType 相册的内容类型
- *
- *  @return 返回一个合适的 PHFetchOptions
- */
-+ (PHFetchOptions *)fw_createFetchOptionsWithAlbumContentType:(FWAlbumContentType)contentType NS_REFINED_FOR_SWIFT;
-
-/**
- *  获取所有相册
- *
- *  @param contentType    相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
- *  @param showEmptyAlbum 是否显示空相册（经过 contentType 过滤后仍为空的相册）
- *  @param showSmartAlbum 是否显示“智能相册”
- *
- *  @return 返回包含所有合适相册的数组
- */
-+ (NSArray<PHAssetCollection *> *)fw_fetchAllAlbumsWithAlbumContentType:(FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbum:(BOOL)showSmartAlbum NS_REFINED_FOR_SWIFT;
-
-/// 获取一个 PHAssetCollection 中创建日期最新的资源
-+ (nullable PHAsset *)fw_fetchLatestAssetWithAssetCollection:(PHAssetCollection *)assetCollection NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END
