@@ -614,12 +614,8 @@ import FWObjC
                 let isVideo = checkVideo && result.itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMovie as String)
                 if !isVideo {
                     var objectClass: NSItemProviderReading.Type = UIImage.self
-                    if checkLivePhoto {
-                        __FWRuntime.tryCatch {
-                            if result.itemProvider.canLoadObject(ofClass: PHLivePhoto.self) {
-                                objectClass = PHLivePhoto.self
-                            }
-                        } exceptionHandler: { _ in }
+                    if checkLivePhoto, result.itemProvider.canLoadObject(ofClass: PHLivePhoto.self) {
+                        objectClass = PHLivePhoto.self
                     }
                     
                     result.itemProvider.loadObject(ofClass: objectClass) { object, error in
