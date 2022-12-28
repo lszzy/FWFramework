@@ -16,14 +16,14 @@
     // [UINavigationController.fw enableBarTransition];
     
     // 设置默认导航栏样式
-    // FWNavigationBarAppearance *defaultAppearance = [FWNavigationBarAppearance new];
+    // __FWNavigationBarAppearance *defaultAppearance = [__FWNavigationBarAppearance new];
     // defaultAppearance.foregroundColor = [UIColor fw_colorWithHex:0x111111];
     // 1. 指定导航栏背景色
     // defaultAppearance.backgroundColor = UIColor.whiteColor;
     // 2. 设置导航栏样式全透明
     // defaultAppearance.backgroundTransparent = YES;
     // defaultAppearance.shadowColor = nil;
-    // [FWNavigationBarAppearance setAppearance:defaultAppearance forStyle:FWNavigationBarStyleDefault];
+    // [__FWNavigationBarAppearance setAppearance:defaultAppearance forStyle:__FWNavigationBarStyleDefault];
     
     // 兼容iOS15 UITableView样式
     // if (@available(iOS 15.0, *)) {

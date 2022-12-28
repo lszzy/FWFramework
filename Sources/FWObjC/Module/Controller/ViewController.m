@@ -24,41 +24,41 @@
 
 #endif
 
-#pragma mark - UIViewController+FWViewController
+#pragma mark - UIViewController+__FWViewController
 
-@interface UIViewController (FWViewController)
+@interface UIViewController (__FWViewController)
 
 - (SEL)fw_innerIntercepterForwardSelector:(SEL)aSelector;
 
 @end
 
-#pragma mark - FWViewControllerIntercepter
+#pragma mark - __FWViewControllerIntercepter
 
-@implementation FWViewControllerIntercepter
+@implementation __FWViewControllerIntercepter
 
 @end
 
-#pragma mark - FWViewControllerManager
+#pragma mark - __FWViewControllerManager
 
-@interface FWViewControllerManager ()
+@interface __FWViewControllerManager ()
 
 @property (nonatomic, strong) NSMutableDictionary *intercepters;
 
 @end
 
-@implementation FWViewControllerManager
+@implementation __FWViewControllerManager
 
 + (void)load
 {
-    [FWViewControllerManager sharedInstance];
+    [__FWViewControllerManager sharedInstance];
 }
 
-+ (FWViewControllerManager *)sharedInstance
++ (__FWViewControllerManager *)sharedInstance
 {
-    static FWViewControllerManager *instance = nil;
+    static __FWViewControllerManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[FWViewControllerManager alloc] init];
+        instance = [[__FWViewControllerManager alloc] init];
     });
     return instance;
 }
@@ -74,7 +74,7 @@
 
 #pragma mark - Public
 
-- (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter
+- (void)registerProtocol:(Protocol *)protocol withIntercepter:(__FWViewControllerIntercepter *)intercepter
 {
     [self.intercepters setObject:intercepter forKey:NSStringFromProtocol(protocol)];
 }
@@ -139,7 +139,7 @@
         __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
         for (unsigned int i = 0; i < count; i++) {
             Protocol *protocol = list[i];
-            if (!protocol_conformsToProtocol(protocol, @protocol(FWViewController))) continue;
+            if (!protocol_conformsToProtocol(protocol, @protocol(__FWViewController))) continue;
             NSString *name = [NSString stringWithUTF8String:protocol_getName(protocol)];
             if (!name || [protocolNames containsObject:name]) continue;
             [protocolNames addObject:name];
@@ -161,7 +161,7 @@
     NSString *forwardName = nil;
     NSArray *protocolNames = [self protocolsWithClass:clazz];
     for (NSString *protocolName in protocolNames) {
-        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+        __FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
         forwardName = intercepter ? [intercepter.forwardSelectors objectForKey:selectorName] : nil;
         if (forwardName) {
             break;
@@ -192,7 +192,7 @@
     // 2. 拦截器init
     NSArray *protocolNames = [self protocolsWithClass:viewController.class];
     for (NSString *protocolName in protocolNames) {
-        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+        __FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
         if (intercepter.initIntercepter && [self respondsToSelector:intercepter.initIntercepter]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -203,7 +203,7 @@
     
     // 3. 控制器didInitialize
     if ([viewController respondsToSelector:@selector(didInitialize)]) {
-        [(id<FWViewController>)viewController didInitialize];
+        [(id<__FWViewController>)viewController didInitialize];
     }
 }
 
@@ -217,7 +217,7 @@
     // 2. 拦截器viewDidLoad
     NSArray *protocolNames = [self protocolsWithClass:viewController.class];
     for (NSString *protocolName in protocolNames) {
-        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+        __FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
         if (intercepter.viewDidLoadIntercepter && [self respondsToSelector:intercepter.viewDidLoadIntercepter]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -228,17 +228,17 @@
     
     // 3. 控制器setupNavbar
     if ([viewController respondsToSelector:@selector(setupNavbar)]) {
-        [(id<FWViewController>)viewController setupNavbar];
+        [(id<__FWViewController>)viewController setupNavbar];
     }
     
     // 4. 控制器setupSubviews
     if ([viewController respondsToSelector:@selector(setupSubviews)]) {
-        [(id<FWViewController>)viewController setupSubviews];
+        [(id<__FWViewController>)viewController setupSubviews];
     }
     
     // 5. 控制器setupLayout
     if ([viewController respondsToSelector:@selector(setupLayout)]) {
-        [(id<FWViewController>)viewController setupLayout];
+        [(id<__FWViewController>)viewController setupLayout];
     }
 }
 
@@ -252,7 +252,7 @@
     // 2. 拦截器viewDidLayoutSubviews
     NSArray *protocolNames = [self protocolsWithClass:viewController.class];
     for (NSString *protocolName in protocolNames) {
-        FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
+        __FWViewControllerIntercepter *intercepter = [self.intercepters objectForKey:protocolName];
         if (intercepter.viewDidLayoutSubviewsIntercepter && [self respondsToSelector:intercepter.viewDidLayoutSubviewsIntercepter]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -264,9 +264,9 @@
 
 @end
 
-#pragma mark - UIViewController+FWViewController
+#pragma mark - UIViewController+__FWViewController
 
-@implementation UIViewController (FWViewController)
+@implementation UIViewController (__FWViewController)
 
 + (void)load
 {
@@ -274,28 +274,28 @@
     dispatch_once(&onceToken, ^{
         __FWSwizzleClass(UIViewController, @selector(initWithNibName:bundle:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSString *nibNameOrNil, NSBundle *nibBundleOrNil), __FWSwizzleCode({
             UIViewController *viewController = __FWSwizzleOriginal(nibNameOrNil, nibBundleOrNil);
-            if ([viewController conformsToProtocol:@protocol(FWViewController)]) {
-                [[FWViewControllerManager sharedInstance] hookInit:viewController];
+            if ([viewController conformsToProtocol:@protocol(__FWViewController)]) {
+                [[__FWViewControllerManager sharedInstance] hookInit:viewController];
             }
             return viewController;
         }));
         __FWSwizzleClass(UIViewController, @selector(initWithCoder:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSCoder *coder), __FWSwizzleCode({
             UIViewController *viewController = __FWSwizzleOriginal(coder);
-            if (viewController && [viewController conformsToProtocol:@protocol(FWViewController)]) {
-                [[FWViewControllerManager sharedInstance] hookInit:viewController];
+            if (viewController && [viewController conformsToProtocol:@protocol(__FWViewController)]) {
+                [[__FWViewControllerManager sharedInstance] hookInit:viewController];
             }
             return viewController;
         }));
         __FWSwizzleClass(UIViewController, @selector(viewDidLoad), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             __FWSwizzleOriginal();
-            if ([selfObject conformsToProtocol:@protocol(FWViewController)]) {
-                [[FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
+            if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
+                [[__FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
             }
         }));
         __FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
             __FWSwizzleOriginal();
-            if ([selfObject conformsToProtocol:@protocol(FWViewController)]) {
-                [[FWViewControllerManager sharedInstance] hookViewDidLayoutSubviews:selfObject];
+            if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
+                [[__FWViewControllerManager sharedInstance] hookViewDidLayoutSubviews:selfObject];
             }
         }));
         
@@ -319,13 +319,13 @@
 
 - (SEL)fw_innerIntercepterForwardSelector:(SEL)aSelector
 {
-    if ([self conformsToProtocol:@protocol(FWViewController)]) {
+    if ([self conformsToProtocol:@protocol(__FWViewController)]) {
         // 查找forward方法缓存是否存在
         NSString *selectorName = NSStringFromSelector(aSelector);
         NSString *forwardName = [[self fw_innerIntercepterForwardSelectors] objectForKey:selectorName];
         if (!forwardName) {
             // 如果缓存不存在，查找一次并生成缓存
-            forwardName = [[FWViewControllerManager sharedInstance] forwardSelector:selectorName withClass:self.class];
+            forwardName = [[__FWViewControllerManager sharedInstance] forwardSelector:selectorName withClass:self.class];
             [[self fw_innerIntercepterForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
         }
         

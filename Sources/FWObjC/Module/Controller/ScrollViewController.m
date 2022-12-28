@@ -22,23 +22,23 @@
 
 #endif
 
-#pragma mark - FWViewControllerManager+FWScrollViewController
+#pragma mark - __FWViewControllerManager+__FWScrollViewController
 
-@implementation FWViewControllerManager (FWScrollViewController)
+@implementation __FWViewControllerManager (__FWScrollViewController)
 
 + (void)load
 {
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(scrollViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
         @"scrollView" : @"fw_innerScrollView",
         @"contentView" : @"fw_innerContentView",
         @"setupScrollLayout" : @"fw_innerSetupScrollLayout",
     };
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWScrollViewController) withIntercepter:intercepter];
+    [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWScrollViewController) withIntercepter:intercepter];
 }
 
-- (void)scrollViewControllerViewDidLoad:(UIViewController<FWScrollViewController> *)viewController
+- (void)scrollViewControllerViewDidLoad:(UIViewController<__FWScrollViewController> *)viewController
 {
     UIScrollView *scrollView = [viewController scrollView];
     [viewController.view addSubview:scrollView];
@@ -62,13 +62,13 @@
 
 @end
 
-#pragma mark - UIViewController+FWScrollViewController
+#pragma mark - UIViewController+__FWScrollViewController
 
-@interface UIViewController (FWScrollViewController)
+@interface UIViewController (__FWScrollViewController)
 
 @end
 
-@implementation UIViewController (FWScrollViewController)
+@implementation UIViewController (__FWScrollViewController)
 
 - (UIScrollView *)fw_innerScrollView
 {
@@ -94,7 +94,7 @@
 
 - (void)fw_innerSetupScrollLayout
 {
-    UIScrollView *scrollView = [(id<FWScrollViewController>)self scrollView];
+    UIScrollView *scrollView = [(id<__FWScrollViewController>)self scrollView];
     [scrollView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 

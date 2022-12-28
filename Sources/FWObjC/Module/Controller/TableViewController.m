@@ -22,13 +22,13 @@
 
 #endif
 
-#pragma mark - FWViewControllerManager+FWTableViewController
+#pragma mark - __FWViewControllerManager+__FWTableViewController
 
-@implementation FWViewControllerManager (FWTableViewController)
+@implementation __FWViewControllerManager (__FWTableViewController)
 
 + (void)load
 {
-    FWViewControllerIntercepter *intercepter = [[FWViewControllerIntercepter alloc] init];
+    __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(tableViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
         @"tableView" : @"fw_innerTableView",
@@ -36,10 +36,10 @@
         @"setupTableStyle" : @"fw_innerSetupTableStyle",
         @"setupTableLayout" : @"fw_innerSetupTableLayout",
     };
-    [[FWViewControllerManager sharedInstance] registerProtocol:@protocol(FWTableViewController) withIntercepter:intercepter];
+    [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWTableViewController) withIntercepter:intercepter];
 }
 
-- (void)tableViewControllerViewDidLoad:(UIViewController<FWTableViewController> *)viewController
+- (void)tableViewControllerViewDidLoad:(UIViewController<__FWTableViewController> *)viewController
 {
     UITableView *tableView = [viewController tableView];
     tableView.dataSource = viewController;
@@ -61,19 +61,19 @@
 
 @end
 
-#pragma mark - UIViewController+FWTableViewController
+#pragma mark - UIViewController+__FWTableViewController
 
-@interface UIViewController (FWTableViewController)
+@interface UIViewController (__FWTableViewController)
 
 @end
 
-@implementation UIViewController (FWTableViewController)
+@implementation UIViewController (__FWTableViewController)
 
 - (UITableView *)fw_innerTableView
 {
     UITableView *tableView = objc_getAssociatedObject(self, _cmd);
     if (!tableView) {
-        UITableViewStyle tableStyle = [(id<FWTableViewController>)self setupTableStyle];
+        UITableViewStyle tableStyle = [(id<__FWTableViewController>)self setupTableStyle];
         tableView = [[UITableView alloc] initWithFrame:CGRectZero style:tableStyle];
         tableView.showsVerticalScrollIndicator = NO;
         tableView.showsHorizontalScrollIndicator = NO;
@@ -103,7 +103,7 @@
 
 - (void)fw_innerSetupTableLayout
 {
-    UITableView *tableView = [(id<FWTableViewController>)self tableView];
+    UITableView *tableView = [(id<__FWTableViewController>)self tableView];
     [tableView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 

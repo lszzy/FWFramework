@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  视图控制器挂钩协议，可覆写
  */
 NS_SWIFT_NAME(ViewControllerProtocol)
-@protocol FWViewController <NSObject>
+@protocol __FWViewController <NSObject>
 
 @optional
 
@@ -35,7 +35,7 @@ NS_SWIFT_NAME(ViewControllerProtocol)
  视图控制器拦截器
  */
 NS_SWIFT_NAME(ViewControllerIntercepter)
-@interface FWViewControllerIntercepter : NSObject
+@interface __FWViewControllerIntercepter : NSObject
 
 @property (nonatomic, assign, nullable) SEL initIntercepter;
 @property (nonatomic, assign, nullable) SEL viewDidLoadIntercepter;
@@ -45,20 +45,20 @@ NS_SWIFT_NAME(ViewControllerIntercepter)
 
 @end
 
-@protocol FWScrollViewController;
-@protocol FWTableViewController;
-@protocol FWCollectionViewController;
-@protocol FWWebViewController;
+@protocol __FWScrollViewController;
+@protocol __FWTableViewController;
+@protocol __FWCollectionViewController;
+@protocol __FWWebViewController;
 
 /**
  视图控制器管理器
  @note 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，使用全局自定义block即可
  */
 NS_SWIFT_NAME(ViewControllerManager)
-@interface FWViewControllerManager : NSObject
+@interface __FWViewControllerManager : NSObject
 
 /** 单例模式 */
-@property (class, nonatomic, readonly) FWViewControllerManager *sharedInstance NS_SWIFT_NAME(shared);
+@property (class, nonatomic, readonly) __FWViewControllerManager *sharedInstance NS_SWIFT_NAME(shared);
 
 /// 默认全局控制器init钩子句柄，init优先自动调用
 @property (nonatomic, copy, nullable) void (^hookInit)(UIViewController *viewController);
@@ -68,16 +68,16 @@ NS_SWIFT_NAME(ViewControllerManager)
 @property (nonatomic, copy, nullable) void (^hookViewDidLayoutSubviews)(UIViewController *viewController);
 
 /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
-@property (nonatomic, copy, nullable) void (^hookScrollViewController)(UIViewController<FWScrollViewController> *viewController);
+@property (nonatomic, copy, nullable) void (^hookScrollViewController)(UIViewController<__FWScrollViewController> *viewController);
 /// 默认全局tableViewController钩子句柄，viewDidLoad自动调用，先于setupTableView
-@property (nonatomic, copy, nullable) void (^hookTableViewController)(UIViewController<FWTableViewController> *viewController);
+@property (nonatomic, copy, nullable) void (^hookTableViewController)(UIViewController<__FWTableViewController> *viewController);
 /// 默认全局collectionViewController钩子句柄，viewDidLoad自动调用，先于setupCollectionView
-@property (nonatomic, copy, nullable) void (^hookCollectionViewController)(UIViewController<FWCollectionViewController> *viewController);
+@property (nonatomic, copy, nullable) void (^hookCollectionViewController)(UIViewController<__FWCollectionViewController> *viewController);
 /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
-@property (nonatomic, copy, nullable) void (^hookWebViewController)(UIViewController<FWWebViewController> *viewController);
+@property (nonatomic, copy, nullable) void (^hookWebViewController)(UIViewController<__FWWebViewController> *viewController);
 
 /// 注册协议拦截器，提供拦截和跳转方法
-- (void)registerProtocol:(Protocol *)protocol withIntercepter:(FWViewControllerIntercepter *)intercepter;
+- (void)registerProtocol:(Protocol *)protocol withIntercepter:(__FWViewControllerIntercepter *)intercepter;
 
 /// 调用控制器拦截方法默认实现并返回(如tableView等)，由于实现机制无法通过super调用原始方法，提供此替代方案。如果未实现该协议或方法，返回nil
 - (nullable id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object;
