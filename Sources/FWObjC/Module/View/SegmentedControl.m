@@ -12,26 +12,26 @@
 
 NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
-@protocol FWAccessibilityDelegate <NSObject>
+@protocol __FWAccessibilityDelegate <NSObject>
 @required
 -(void)scrollToAccessibilityElement:(id)sender;
 @end
 
-@interface FWAccessibilityElement : UIAccessibilityElement
-@property (nonatomic, weak) id<FWAccessibilityDelegate> delegate;
+@interface __FWAccessibilityElement : UIAccessibilityElement
+@property (nonatomic, weak) id<__FWAccessibilityDelegate> delegate;
 @end
 
-@interface FWSegmentedScrollView : UIScrollView
+@interface __FWSegmentedScrollView : UIScrollView
 @end
 
-@interface __FWSegmentedControl () <UIScrollViewDelegate, FWAccessibilityDelegate, __FWStatisticalDelegate>
+@interface __FWSegmentedControl () <UIScrollViewDelegate, __FWAccessibilityDelegate, __FWStatisticalDelegate>
 
 @property (nonatomic, strong) CALayer *selectionIndicatorStripLayer;
 @property (nonatomic, strong) CALayer *selectionIndicatorBoxLayer;
 @property (nonatomic, strong) CALayer *selectionIndicatorShapeLayer;
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
-@property (nonatomic, strong) FWSegmentedScrollView *scrollView;
+@property (nonatomic, strong) __FWSegmentedScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *accessibilityElements;
 @property (nonatomic, strong) NSMutableArray *titleBackgroundLayers;
 
@@ -41,7 +41,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 @end
 
-@implementation FWAccessibilityElement
+@implementation __FWAccessibilityElement
 
 - (void)accessibilityElementDidBecomeFocused
 {
@@ -51,7 +51,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 @end
 
-@implementation FWSegmentedScrollView
+@implementation __FWSegmentedScrollView
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (!self.dragging) {
@@ -144,7 +144,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 }
 
 - (void)commonInit {
-    self.scrollView = [[FWSegmentedScrollView alloc] init];
+    self.scrollView = [[__FWSegmentedScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.scrollsToTop = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
@@ -392,7 +392,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             }
             
             if ([self.accessibilityElements count]<=idx) {
-                FWAccessibilityElement *element = [[FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
+                __FWAccessibilityElement *element = [[__FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
                 element.delegate = self;
                 element.accessibilityLabel = (self.sectionTitles!=nil&&[self.sectionTitles count]>idx)?[self.sectionTitles objectAtIndex:idx]:[NSString stringWithFormat:@"item %u", (unsigned)idx+1];
                 element.accessibilityFrame = [self convertRect:fullRect toView:nil];
@@ -404,10 +404,10 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             } else {
                 CGFloat offset = 0.f;
                 for (NSUInteger i = 0; i<idx; i++) {
-                    FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
+                    __FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
-                FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
+                __FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
                 CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
@@ -453,7 +453,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             }
             
             if ([self.accessibilityElements count]<=idx) {
-                FWAccessibilityElement *element = [[FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
+                __FWAccessibilityElement *element = [[__FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
                 element.delegate = self;
                 element.accessibilityLabel = (self.sectionTitles!=nil&&[self.sectionTitles count]>idx)?[self.sectionTitles objectAtIndex:idx]:[NSString stringWithFormat:@"item %u", (unsigned)idx+1];
                 element.accessibilityFrame = [self convertRect:rect toView:nil];
@@ -465,10 +465,10 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             } else {
                 CGFloat offset = 0.f;
                 for (NSUInteger i = 0; i<idx; i++) {
-                    FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
+                    __FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
-                FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
+                __FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
                 CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
@@ -584,7 +584,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             [self.scrollView.layer addSublayer:titleLayer];
             
             if ([self.accessibilityElements count]<=idx) {
-                FWAccessibilityElement *element = [[FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
+                __FWAccessibilityElement *element = [[__FWAccessibilityElement alloc] initWithAccessibilityContainer:self];
                 element.delegate = self;
                 element.accessibilityLabel = (self.sectionTitles!=nil&&[self.sectionTitles count]>idx)?[self.sectionTitles objectAtIndex:idx]:[NSString stringWithFormat:@"item %u", (unsigned)idx+1];
                 element.accessibilityFrame = [self convertRect:CGRectUnion(textRect, imageRect) toView:nil];
@@ -596,10 +596,10 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
             } else {
                 CGFloat offset = 0.f;
                 for (NSUInteger i = 0; i<idx; i++) {
-                    FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
+                    __FWAccessibilityElement *accessibilityItem = [self.accessibilityElements objectAtIndex:i];
                     offset += accessibilityItem.accessibilityFrame.size.width;
                 }
-                FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
+                __FWAccessibilityElement *element = [self.accessibilityElements objectAtIndex:idx];
                 CGRect newRect = CGRectMake(offset-self.scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
                 element.accessibilityFrame = [self convertRect:newRect toView:nil];
                 if (self.selectedSegmentIndex==idx)
@@ -1146,11 +1146,11 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    for (FWAccessibilityElement *element in self.accessibilityElements) {
+    for (__FWAccessibilityElement *element in self.accessibilityElements) {
         NSUInteger idx = [self.accessibilityElements indexOfObject:element];
         CGFloat offset = 0.f;
         for (NSUInteger i = 0; i<idx; i++) {
-            FWAccessibilityElement *elem = [self.accessibilityElements objectAtIndex:i];
+            __FWAccessibilityElement *elem = [self.accessibilityElements objectAtIndex:i];
             offset += elem.accessibilityFrame.size.width;
         }
         CGRect rect = CGRectMake(offset-scrollView.contentOffset.x + self.contentEdgeInset.left, 0, element.accessibilityFrame.size.width, element.accessibilityFrame.size.height);
@@ -1172,7 +1172,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     [self statisticalExposureDidChange];
 }
 
-#pragma mark - FWAccessibilityDelegate
+#pragma mark - __FWAccessibilityDelegate
 
 - (void)scrollToAccessibilityElement:(id)sender {
     NSUInteger index = [self.accessibilityElements indexOfObject:sender];

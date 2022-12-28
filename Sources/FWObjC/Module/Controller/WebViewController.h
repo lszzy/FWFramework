@@ -14,12 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
  网页视图控制器协议，可覆写
  */
 NS_SWIFT_NAME(WebViewControllerProtocol)
-@protocol __FWWebViewController <__FWViewController, FWWebViewDelegate>
+@protocol __FWWebViewController <__FWViewController, __FWWebViewDelegate>
 
 @optional
 
 /// 网页视图，默认显示滚动条，启用前进后退手势
-@property (nonatomic, readonly) FWWebView *webView NS_SWIFT_UNAVAILABLE("");
+@property (nonatomic, readonly) __FWWebView *webView NS_SWIFT_UNAVAILABLE("");
 
 /// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
 @property (nullable, nonatomic, copy) NSArray *webItems NS_SWIFT_UNAVAILABLE("");
@@ -37,7 +37,7 @@ NS_SWIFT_NAME(WebViewControllerProtocol)
 - (void)setupWebLayout;
 
 /// 渲染网页桥接，setupSubviews之前调用，默认未实现
-- (void)setupWebBridge:(FWWebViewJsBridge *)bridge;
+- (void)setupWebBridge:(__FWWebViewJsBridge *)bridge;
 
 @end
 

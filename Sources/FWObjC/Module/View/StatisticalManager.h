@@ -141,12 +141,12 @@ NS_SWIFT_NAME(StatisticalDelegate)
 
 @end
 
-#pragma mark - UIView+FWExposure
+#pragma mark - UIView+__FWExposure
 
 /**
  Exposure曝光统计
  */
-@interface UIView (FWExposure)
+@interface UIView (__FWExposure)
 
 /// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
 @property (nullable, nonatomic, strong) __FWStatisticalObject *fw_statisticalExposure NS_REFINED_FOR_SWIFT;
