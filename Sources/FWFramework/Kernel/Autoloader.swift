@@ -89,6 +89,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(ToolkitAutoloader.self)
         autoload(UIKitAutoloader.self)
         autoload(AlertPluginAutoloader.self)
+        autoload(NavigationStyleAutoloader.self)
     }
     
     private static func autoloadAutoloader() {
