@@ -8,6 +8,93 @@
 #import "AttributedLabel.h"
 #import <objc/runtime.h>
 
+#pragma mark - NSMutableAttributedString+__FWAttributedLabel
+
+@interface NSMutableAttributedString (__FWAttributedLabel)
+
+@property (nonatomic, strong, nullable) UIColor *__fw_textColor;
+- (void)__fw_setTextColor:(UIColor*)color range:(NSRange)range;
+
+@property (nonatomic, strong, nullable) UIFont *__fw_font;
+- (void)__fw_setFont:(UIFont*)font range:(NSRange)range;
+
+- (void)__fw_setUnderlineStyle:(CTUnderlineStyle)style
+                      modifier:(CTUnderlineStyleModifiers)modifier;
+- (void)__fw_setUnderlineStyle:(CTUnderlineStyle)style
+                      modifier:(CTUnderlineStyleModifiers)modifier
+                         range:(NSRange)range;
+
+@end
+
+@implementation NSMutableAttributedString (__FWAttributedLabel)
+
+- (UIColor *)__fw_textColor
+{
+    return objc_getAssociatedObject(self, @selector(__fw_textColor));
+}
+
+- (void)set__fw_textColor:(UIColor *)color
+{
+    objc_setAssociatedObject(self, @selector(__fw_textColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self __fw_setTextColor:color range:NSMakeRange(0, [self length])];
+}
+
+- (void)__fw_setTextColor:(UIColor*)color range:(NSRange)range
+{
+    [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
+    if (color.CGColor) {
+        [self addAttribute:(NSString *)kCTForegroundColorAttributeName
+                     value:(id)color.CGColor
+                     range:range];
+    }
+}
+
+- (UIFont *)__fw_font
+{
+    return objc_getAssociatedObject(self, @selector(__fw_font));
+}
+
+- (void)set__fw_font:(UIFont *)font
+{
+    objc_setAssociatedObject(self, @selector(__fw_font), font, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [self __fw_setFont:font range:NSMakeRange(0, [self length])];
+}
+
+- (void)__fw_setFont:(UIFont*)font range:(NSRange)range
+{
+    if (font) {
+        [self removeAttribute:(NSString*)kCTFontAttributeName range:range];
+        
+        CTFontRef fontRef = CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)font.fontDescriptor, font.pointSize, nil);
+        if (nil != fontRef) {
+            [self addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)fontRef range:range];
+            CFRelease(fontRef);
+        }
+    }
+}
+
+- (void)__fw_setUnderlineStyle:(CTUnderlineStyle)style
+                   modifier:(CTUnderlineStyleModifiers)modifier
+{
+    [self __fw_setUnderlineStyle:style
+                        modifier:modifier
+                           range:NSMakeRange(0, self.length)];
+}
+
+- (void)__fw_setUnderlineStyle:(CTUnderlineStyle)style
+                      modifier:(CTUnderlineStyleModifiers)modifier
+                         range:(NSRange)range
+{
+    [self removeAttribute:(NSString *)kCTUnderlineColorAttributeName range:range];
+    [self addAttribute:(NSString *)kCTUnderlineStyleAttributeName
+                 value:[NSNumber numberWithInt:(style|modifier)]
+                 range:range];
+}
+
+@end
+
 #pragma mark - __FWAttributedLabel
 
 static NSString* const FWEllipsesCharacter = @"\u2026";
@@ -141,7 +228,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     {
         _font = font;
         
-        _attributedString.fw_font = _font;
+        _attributedString.__fw_font = _font;
         [self resetFont];
         for (__FWAttributedLabelAttachment *attachment in _attachments)
         {
@@ -157,7 +244,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if (textColor && _textColor != textColor)
     {
         _textColor = textColor;
-        _attributedString.fw_textColor = textColor;
+        _attributedString.__fw_textColor = textColor;
         [self resetTextFrame];
     }
 }
@@ -317,8 +404,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if ([text length])
     {
         NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:text];
-        string.fw_font = self.font;
-        string.fw_textColor = self.textColor;
+        string.__fw_font = self.font;
+        string.__fw_textColor = self.textColor;
         return string;
     }
     else
@@ -373,8 +460,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                 continue;
             }
             UIColor *drawLinkColor = url.color ? : self.linkColor;
-            [drawString fw_setTextColor:drawLinkColor range:url.range];
-            [drawString fw_setUnderlineStyle:_underLineForLink ? kCTUnderlineStyleSingle : kCTUnderlineStyleNone
+            [drawString __fw_setTextColor:drawLinkColor range:url.range];
+            [drawString __fw_setUnderlineStyle:_underLineForLink ? kCTUnderlineStyleSingle : kCTUnderlineStyleNone
                                  modifier:kCTUnderlinePatternSolid
                                     range:url.range];
         }
@@ -1474,79 +1561,6 @@ CGFloat __fw_attributedWidthCallback(void* ref)
         size = [((UIView *)_content) bounds].size;
     }
     return size;
-}
-@end
-
-#pragma mark - NSMutableAttributedString+__FWAttributedLabel
-
-@implementation NSMutableAttributedString (__FWAttributedLabel)
-
-- (UIColor *)fw_textColor
-{
-    return objc_getAssociatedObject(self, @selector(fw_textColor));
-}
-
-- (void)setFw_textColor:(UIColor *)color
-{
-    objc_setAssociatedObject(self, @selector(fw_textColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self fw_setTextColor:color range:NSMakeRange(0, [self length])];
-}
-
-- (void)fw_setTextColor:(UIColor*)color range:(NSRange)range
-{
-    [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
-    if (color.CGColor)
-    {
-        [self addAttribute:(NSString *)kCTForegroundColorAttributeName
-                     value:(id)color.CGColor
-                     range:range];
-    }
-}
-
-- (UIFont *)fw_font
-{
-    return objc_getAssociatedObject(self, @selector(fw_font));
-}
-
-- (void)setFw_font:(UIFont *)font
-{
-    objc_setAssociatedObject(self, @selector(fw_font), font, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    [self fw_setFont:font range:NSMakeRange(0, [self length])];
-}
-
-- (void)fw_setFont:(UIFont*)font range:(NSRange)range
-{
-    if (font)
-    {
-        [self removeAttribute:(NSString*)kCTFontAttributeName range:range];
-        
-        CTFontRef fontRef = CTFontCreateWithFontDescriptor((__bridge CTFontDescriptorRef)font.fontDescriptor, font.pointSize, nil);
-        if (nil != fontRef)
-        {
-            [self addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)fontRef range:range];
-            CFRelease(fontRef);
-        }
-    }
-}
-
-- (void)fw_setUnderlineStyle:(CTUnderlineStyle)style
-                   modifier:(CTUnderlineStyleModifiers)modifier
-{
-    [self fw_setUnderlineStyle:style
-                     modifier:modifier
-                        range:NSMakeRange(0, self.length)];
-}
-
-- (void)fw_setUnderlineStyle:(CTUnderlineStyle)style
-                   modifier:(CTUnderlineStyleModifiers)modifier
-                      range:(NSRange)range
-{
-    [self removeAttribute:(NSString *)kCTUnderlineColorAttributeName range:range];
-    [self addAttribute:(NSString *)kCTUnderlineStyleAttributeName
-                 value:[NSNumber numberWithInt:(style|modifier)]
-                 range:range];
 }
 
 @end

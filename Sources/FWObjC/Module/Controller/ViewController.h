@@ -52,7 +52,7 @@ NS_SWIFT_NAME(ViewControllerIntercepter)
 
 /**
  视图控制器管理器
- @note 框架默认未注册FWViewController协议拦截器，如需全局配置控制器，使用全局自定义block即可
+ @note 框架默认未注册__FWViewController协议拦截器，如需全局配置控制器，使用全局自定义block即可
  */
 NS_SWIFT_NAME(ViewControllerManager)
 @interface __FWViewControllerManager : NSObject

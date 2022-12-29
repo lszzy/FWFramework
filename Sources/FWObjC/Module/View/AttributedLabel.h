@@ -153,22 +153,4 @@ NS_SWIFT_NAME(AttributedLabelAttachment)
 
 @end
 
-#pragma mark - NSMutableAttributedString+__FWAttributedLabel
-
-@interface NSMutableAttributedString (__FWAttributedLabel)
-
-@property (nonatomic, strong, nullable) UIColor *fw_textColor NS_REFINED_FOR_SWIFT;
-- (void)fw_setTextColor:(UIColor*)color range:(NSRange)range NS_REFINED_FOR_SWIFT;
-
-@property (nonatomic, strong, nullable) UIFont *fw_font NS_REFINED_FOR_SWIFT;
-- (void)fw_setFont:(UIFont*)font range:(NSRange)range NS_REFINED_FOR_SWIFT;
-
-- (void)fw_setUnderlineStyle:(CTUnderlineStyle)style
-                   modifier:(CTUnderlineStyleModifiers)modifier NS_REFINED_FOR_SWIFT;
-- (void)fw_setUnderlineStyle:(CTUnderlineStyle)style
-                   modifier:(CTUnderlineStyleModifiers)modifier
-                      range:(NSRange)range NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END

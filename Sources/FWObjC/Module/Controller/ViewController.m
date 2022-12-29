@@ -28,7 +28,7 @@
 
 @interface UIViewController (__FWViewController)
 
-- (SEL)fw_innerIntercepterForwardSelector:(SEL)aSelector;
+- (SEL)__fw_innerIntercepterForwardSelector:(SEL)aSelector;
 
 @end
 
@@ -81,7 +81,7 @@
 
 - (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object
 {
-    SEL forwardSelector = [object fw_innerIntercepterForwardSelector:intercepter];
+    SEL forwardSelector = [object __fw_innerIntercepterForwardSelector:intercepter];
     if (forwardSelector) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -100,7 +100,7 @@
 
 - (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(id)parameter
 {
-    SEL forwardSelector = [object fw_innerIntercepterForwardSelector:intercepter];
+    SEL forwardSelector = [object __fw_innerIntercepterForwardSelector:intercepter];
     if (forwardSelector) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -132,8 +132,8 @@
         return protocolList;
     }
     
-    // 解析协议列表，包含父协议。始终包含FWViewController，且位于第一位
-    NSMutableArray *protocolNames = [NSMutableArray arrayWithObject:@"FWViewController"];
+    // 解析协议列表，包含父协议。始终包含__FWViewController，且位于第一位
+    NSMutableArray *protocolNames = [NSMutableArray arrayWithObject:NSStringFromProtocol(@protocol(__FWViewController))];
     while (clazz != NULL) {
         unsigned int count = 0;
         __unsafe_unretained Protocol **list = class_copyProtocolList(clazz, &count);
@@ -175,7 +175,7 @@
 - (void)hookInit:(UIViewController *)viewController
 {
     /*
-    // FWViewController全局拦截器init方法示例：
+    // __FWViewController全局拦截器init方法示例：
     // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
     viewController.extendedLayoutIncludesOpaqueBars = YES;
     // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
@@ -299,15 +299,15 @@
             }
         }));
         
-        [UIViewController fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(fw_innerIntercepterRespondsToSelector:)];
-        [UIViewController fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(fw_innerIntercepterMethodSignatureForSelector:)];
-        [UIViewController fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(fw_innerIntercepterForwardInvocation:)];
+        [UIViewController fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_innerIntercepterRespondsToSelector:)];
+        [UIViewController fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_innerIntercepterMethodSignatureForSelector:)];
+        [UIViewController fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(__fw_innerIntercepterForwardInvocation:)];
     });
 }
 
 #pragma mark - Forward
 
-- (NSMutableDictionary *)fw_innerIntercepterForwardSelectors
+- (NSMutableDictionary *)__fw_innerIntercepterForwardSelectors
 {
     NSMutableDictionary *forwardSelectors = objc_getAssociatedObject(self, _cmd);
     if (!forwardSelectors) {
@@ -317,60 +317,60 @@
     return forwardSelectors;
 }
 
-- (SEL)fw_innerIntercepterForwardSelector:(SEL)aSelector
+- (SEL)__fw_innerIntercepterForwardSelector:(SEL)aSelector
 {
     if ([self conformsToProtocol:@protocol(__FWViewController)]) {
         // 查找forward方法缓存是否存在
         NSString *selectorName = NSStringFromSelector(aSelector);
-        NSString *forwardName = [[self fw_innerIntercepterForwardSelectors] objectForKey:selectorName];
+        NSString *forwardName = [[self __fw_innerIntercepterForwardSelectors] objectForKey:selectorName];
         if (!forwardName) {
             // 如果缓存不存在，查找一次并生成缓存
             forwardName = [[__FWViewControllerManager sharedInstance] forwardSelector:selectorName withClass:self.class];
-            [[self fw_innerIntercepterForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
+            [[self __fw_innerIntercepterForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
         }
         
         SEL forwardSelector = forwardName.length > 0 ? NSSelectorFromString(forwardName) : NULL;
-        if (forwardSelector && [self fw_innerIntercepterRespondsToSelector:forwardSelector]) {
+        if (forwardSelector && [self __fw_innerIntercepterRespondsToSelector:forwardSelector]) {
             return forwardSelector;
         }
     }
     return NULL;
 }
 
-- (BOOL)fw_innerIntercepterRespondsToSelector:(SEL)aSelector
+- (BOOL)__fw_innerIntercepterRespondsToSelector:(SEL)aSelector
 {
-    if ([self fw_innerIntercepterRespondsToSelector:aSelector]) {
+    if ([self __fw_innerIntercepterRespondsToSelector:aSelector]) {
         return YES;
     } else {
-        SEL forwardSelector = [self fw_innerIntercepterForwardSelector:aSelector];
+        SEL forwardSelector = [self __fw_innerIntercepterForwardSelector:aSelector];
         return forwardSelector ? YES : NO;
     }
 }
 
-- (NSMethodSignature *)fw_innerIntercepterMethodSignatureForSelector:(SEL)aSelector
+- (NSMethodSignature *)__fw_innerIntercepterMethodSignatureForSelector:(SEL)aSelector
 {
     SEL forwardSelector = NULL;
-    if (![self fw_innerIntercepterRespondsToSelector:aSelector]) {
-        forwardSelector = [self fw_innerIntercepterForwardSelector:aSelector];
+    if (![self __fw_innerIntercepterRespondsToSelector:aSelector]) {
+        forwardSelector = [self __fw_innerIntercepterForwardSelector:aSelector];
     }
     if (forwardSelector) {
         return [self.class instanceMethodSignatureForSelector:forwardSelector];
     } else {
-        return [self fw_innerIntercepterMethodSignatureForSelector:aSelector];
+        return [self __fw_innerIntercepterMethodSignatureForSelector:aSelector];
     }
 }
 
-- (void)fw_innerIntercepterForwardInvocation:(NSInvocation *)anInvocation
+- (void)__fw_innerIntercepterForwardInvocation:(NSInvocation *)anInvocation
 {
     SEL forwardSelector = NULL;
-    if (![self fw_innerIntercepterRespondsToSelector:anInvocation.selector]) {
-        forwardSelector = [self fw_innerIntercepterForwardSelector:anInvocation.selector];
+    if (![self __fw_innerIntercepterRespondsToSelector:anInvocation.selector]) {
+        forwardSelector = [self __fw_innerIntercepterForwardSelector:anInvocation.selector];
     }
     if (forwardSelector) {
         anInvocation.selector = forwardSelector;
         [anInvocation invoke];
     } else {
-        [self fw_innerIntercepterForwardInvocation:anInvocation];
+        [self __fw_innerIntercepterForwardInvocation:anInvocation];
     }
 }
 
