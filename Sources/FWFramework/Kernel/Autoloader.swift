@@ -90,6 +90,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(UIKitAutoloader.self)
         autoload(AlertPluginAutoloader.self)
         autoload(NavigationStyleAutoloader.self)
+        autoload(BadgeViewAutoloader.self)
     }
     
     private static func autoloadAutoloader() {
