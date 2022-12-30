@@ -14,8 +14,8 @@ extension Wrapper where Base: UIView {
     
     /// 抽屉拖拽视图，绑定抽屉拖拽效果后才存在
     public var drawerView: DrawerView? {
-        get { return base.__fw_drawerView }
-        set { base.__fw_drawerView = newValue }
+        get { return base.fw_drawerView }
+        set { base.fw_drawerView = newValue }
     }
     
     /**
@@ -29,7 +29,7 @@ extension Wrapper where Base: UIView {
      */
     @discardableResult
     public func drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [NSNumber], kickbackHeight: CGFloat, callback: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
-        return base.__fw_drawerView(direction, positions: positions, kickbackHeight: kickbackHeight, callback: callback)
+        return base.fw_drawerView(direction, positions: positions, kickbackHeight: kickbackHeight, callback: callback)
     }
     
 }
@@ -38,18 +38,18 @@ extension Wrapper where Base: UIScrollView {
     
     /// 外部滚动视图是否位于顶部固定位置，在顶部时不能滚动
     public var drawerSuperviewFixed: Bool {
-        get { return base.__fw_drawerSuperviewFixed }
-        set { base.__fw_drawerSuperviewFixed = newValue }
+        get { return base.fw_drawerSuperviewFixed }
+        set { base.fw_drawerSuperviewFixed = newValue }
     }
 
     /// 外部滚动视图scrollViewDidScroll调用，参数为固定的位置
     public func drawerSuperviewDidScroll(_ position: CGFloat) {
-        base.__fw_drawerSuperviewDidScroll(position)
+        base.fw_drawerSuperviewDidScroll(position)
     }
 
     /// 内嵌滚动视图scrollViewDidScroll调用，参数为外部滚动视图
     public func drawerSubviewDidScroll(_ superview: UIScrollView) {
-        base.__fw_drawerSubviewDidScroll(superview)
+        base.fw_drawerSubviewDidScroll(superview)
     }
     
 }

@@ -65,44 +65,4 @@ NS_SWIFT_NAME(DrawerView)
 
 @end
 
-/**
- 视图抽屉拖拽效果分类
- */
-@interface UIView (__FWDrawerView)
-
-// 抽屉拖拽视图，绑定抽屉拖拽效果后才存在
-@property (nullable, nonatomic, strong) __FWDrawerView *fw_drawerView NS_REFINED_FOR_SWIFT;
-
-/**
- 设置抽屉拖拽效果。如果view为滚动视图，自动处理与滚动视图pan手势冲突的问题
- 
- @param direction 拖拽方向，如向上拖动视图时为Up，默认向上
- @param positions 抽屉位置，至少两级，相对于view父视图的originY位置
- @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
- @param callback 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
- @return 抽屉拖拽视图
- */
-- (__FWDrawerView *)fw_drawerView:(UISwipeGestureRecognizerDirection)direction
-                     positions:(NSArray<NSNumber *> *)positions
-                kickbackHeight:(CGFloat)kickbackHeight
-                      callback:(nullable void (^)(CGFloat position, BOOL finished))callback NS_REFINED_FOR_SWIFT;
-
-@end
-
-/**
-滚动视图纵向手势冲突无缝滑动分类，需允许同时识别多个手势
-*/
-@interface UIScrollView (__FWDrawerView)
-
-// 外部滚动视图是否位于顶部固定位置，在顶部时不能滚动
-@property (nonatomic, assign) BOOL fw_drawerSuperviewFixed NS_REFINED_FOR_SWIFT;
-
-// 外部滚动视图scrollViewDidScroll调用，参数为固定的位置
-- (void)fw_drawerSuperviewDidScroll:(CGFloat)position NS_REFINED_FOR_SWIFT;
-
-// 内嵌滚动视图scrollViewDidScroll调用，参数为外部滚动视图
-- (void)fw_drawerSubviewDidScroll:(UIScrollView *)superview NS_REFINED_FOR_SWIFT;
-
-@end
-
 NS_ASSUME_NONNULL_END
