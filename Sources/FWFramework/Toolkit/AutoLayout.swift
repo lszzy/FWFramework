@@ -72,7 +72,7 @@ import FWObjC
         self.translatesAutoresizingMaskIntoConstraints = translateConstraint
     }
 
-    /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
+    /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。注意UILabel可使用preferredMaxLayoutWidth限制多行文本自动布局时的最大宽度
     public func fw_layoutHeight(width: CGFloat) -> CGFloat {
         var fittingHeight: CGFloat = 0
         
