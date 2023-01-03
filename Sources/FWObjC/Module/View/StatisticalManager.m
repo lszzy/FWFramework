@@ -11,24 +11,7 @@
 
 #if FWMacroSPM
 
-@interface NSObject ()
 
-+ (BOOL)fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
-- (BOOL)fw_isSwizzleInstanceMethod:(SEL)originalSelector identifier:(NSString *)identifier;
-
-@end
-
-@interface UIControl ()
-
-- (NSString *)fw_addBlock:(void (^)(id sender))block for:(UIControlEvents)controlEvents;
-
-@end
-
-@interface UIGestureRecognizer ()
-
-- (NSString *)fw_addBlock:(void (^)(id sender))block;
-
-@end
 
 #else
 
@@ -85,7 +68,7 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
     [self.eventHandlers setObject:handler forKey:name];
 }
 
-- (void)handleEvent:(__FWStatisticalObject *)object
+- (void)__handleEvent:(__FWStatisticalObject *)object
 {
     __FWStatisticalBlock eventHandler = [self.eventHandlers objectForKey:object.name];
     if (eventHandler) {
@@ -152,157 +135,24 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
     return object;
 }
 
-@end
-
-#pragma mark - UIView+__FWStatistical
-
-@implementation UIView (__FWStatistical)
-
-- (__FWStatisticalObject *)fw_statisticalClick
+- (void)__triggerClick:(UIView *)view indexPath:(NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount
 {
-    return objc_getAssociatedObject(self, @selector(fw_statisticalClick));
+    self.view = view;
+    self.indexPath = indexPath;
+    self.triggerCount = triggerCount;
+    self.isExposure = NO;
+    self.isFinished = YES;
 }
 
-- (void)setFw_statisticalClick:(__FWStatisticalObject *)statisticalClick
+- (void)__triggerExposure:(UIView *)view indexPath:(NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration
 {
-    objc_setAssociatedObject(self, @selector(fw_statisticalClick), statisticalClick, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self fw_statisticalClickRegister];
-}
-
-- (__FWStatisticalBlock)fw_statisticalClickBlock
-{
-    return objc_getAssociatedObject(self, @selector(fw_statisticalClickBlock));
-}
-
-- (void)setFw_statisticalClickBlock:(__FWStatisticalBlock)statisticalClickBlock
-{
-    objc_setAssociatedObject(self, @selector(fw_statisticalClickBlock), statisticalClickBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self fw_statisticalClickRegister];
-}
-
-- (BOOL)fw_statisticalClickIsRegistered
-{
-    return [objc_getAssociatedObject(self, @selector(fw_statisticalClickIsRegistered)) boolValue];
-}
-
-#pragma mark - Private
-
-- (void)fw_statisticalClickRegister
-{
-    if ([self fw_statisticalClickIsRegistered]) return;
-    objc_setAssociatedObject(self, @selector(fw_statisticalClickIsRegistered), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
-        [self fw_statisticalClickCellRegister];
-        return;
-    }
-    
-    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
-        [self respondsToSelector:@selector(statisticalClickWithCallback:)]) {
-        __weak UIView *weakBase = self;
-        [(id<__FWStatisticalDelegate>)self statisticalClickWithCallback:^(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath) {
-            [weakBase fw_statisticalTriggerClick:cell indexPath:indexPath];
-        }];
-        return;
-    }
-    
-    if ([self isKindOfClass:[UITableView class]]) {
-        __FWSwizzleMethod(((UITableView *)self).delegate, @selector(tableView:didSelectRowAtIndexPath:), @"__FWStatisticalManager", __FWSwizzleType(NSObject<UITableViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UITableView *tableView, NSIndexPath *indexPath), __FWSwizzleCode({
-            __FWSwizzleOriginal(tableView, indexPath);
-            
-            if (![selfObject fw_isSwizzleInstanceMethod:@selector(tableView:didSelectRowAtIndexPath:) identifier:@"__FWStatisticalManager"]) return;
-            if (![tableView fw_statisticalClickIsRegistered]) return;
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            [tableView fw_statisticalTriggerClick:cell indexPath:indexPath];
-        }));
-        return;
-    }
-    
-    if ([self isKindOfClass:[UICollectionView class]]) {
-        __FWSwizzleMethod(((UICollectionView *)self).delegate, @selector(collectionView:didSelectItemAtIndexPath:), @"__FWStatisticalManager", __FWSwizzleType(NSObject<UICollectionViewDelegate> *), __FWSwizzleReturn(void), __FWSwizzleArgs(UICollectionView *collectionView, NSIndexPath *indexPath), __FWSwizzleCode({
-            __FWSwizzleOriginal(collectionView, indexPath);
-            
-            if (![selfObject fw_isSwizzleInstanceMethod:@selector(collectionView:didSelectItemAtIndexPath:) identifier:@"__FWStatisticalManager"]) return;
-            if (![collectionView fw_statisticalClickIsRegistered]) return;
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-            [collectionView fw_statisticalTriggerClick:cell indexPath:indexPath];
-        }));
-        return;
-    }
-    
-    if ([self isKindOfClass:[UIControl class]]) {
-        UIControlEvents controlEvents = UIControlEventTouchUpInside;
-        if ([self isKindOfClass:[UIDatePicker class]] ||
-            [self isKindOfClass:[UIPageControl class]] ||
-            [self isKindOfClass:[UISegmentedControl class]] ||
-            [self isKindOfClass:[UISlider class]] ||
-            [self isKindOfClass:[UIStepper class]] ||
-            [self isKindOfClass:[UISwitch class]] ||
-            [self isKindOfClass:[UITextField class]]) {
-            controlEvents = UIControlEventValueChanged;
-        }
-        [((UIControl *)self) fw_addBlock:^(UIControl *sender) {
-            [sender fw_statisticalTriggerClick:nil indexPath:nil];
-        } for:controlEvents];
-        return;
-    }
-    
-    for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
-        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
-            [gesture fw_addBlock:^(UIGestureRecognizer *sender) {
-                [sender.view fw_statisticalTriggerClick:nil indexPath:nil];
-            }];
-        }
-    }
-}
-
-- (void)fw_statisticalClickCellRegister
-{
-    if (!self.superview) return;
-    UIView *proxyView = nil;
-    if ([self conformsToProtocol:@protocol(__FWStatisticalDelegate)] &&
-        [self respondsToSelector:@selector(statisticalCellProxyView)]) {
-        proxyView = [(id<__FWStatisticalDelegate>)self statisticalCellProxyView];
-    } else {
-        proxyView = [self isKindOfClass:[UITableViewCell class]] ? [((UITableViewCell *)self) fw_tableView] : [((UICollectionViewCell *)self) fw_collectionView];
-    }
-    [proxyView fw_statisticalClickRegister];
-}
-
-- (NSInteger)fw_statisticalClickCount:(NSIndexPath *)indexPath
-{
-    NSMutableDictionary *triggerDict = objc_getAssociatedObject(self, _cmd);
-    if (!triggerDict) {
-        triggerDict = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, _cmd, triggerDict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    NSString *triggerKey = [NSString stringWithFormat:@"%@.%@", @(indexPath.section), @(indexPath.row)];
-    NSInteger triggerCount = [[triggerDict objectForKey:triggerKey] integerValue] + 1;
-    [triggerDict setObject:@(triggerCount) forKey:triggerKey];
-    return triggerCount;
-}
-
-- (void)fw_statisticalTriggerClick:(UIView *)cell indexPath:(NSIndexPath *)indexPath
-{
-    __FWStatisticalObject *object = cell.fw_statisticalClick ?: self.fw_statisticalClick;
-    if (!object) object = [__FWStatisticalObject new];
-    if (object.triggerIgnored) return;
-    NSInteger triggerCount = [self fw_statisticalClickCount:indexPath];
-    if (triggerCount > 1 && object.triggerOnce) return;
-    
-    object.view = self;
-    object.indexPath = indexPath;
-    object.triggerCount = triggerCount;
-    object.isExposure = NO;
-    object.isFinished = YES;
-    
-    if (cell.fw_statisticalClickBlock) {
-        cell.fw_statisticalClickBlock(object);
-    } else if (self.fw_statisticalClickBlock) {
-        self.fw_statisticalClickBlock(object);
-    }
-    if (cell.fw_statisticalClick || self.fw_statisticalClick) {
-        [[__FWStatisticalManager sharedInstance] handleEvent:object];
-    }
+    self.view = view;
+    self.indexPath = indexPath;
+    self.triggerCount = triggerCount;
+    self.triggerDuration = duration;
+    self.totalDuration = totalDuration;
+    self.isExposure = YES;
+    self.isFinished = duration > 0;
 }
 
 @end
@@ -629,58 +479,6 @@ typedef NS_ENUM(NSInteger, __FWStatisticalExposureState) {
         objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return target;
-}
-
-- (NSInteger)fw_statisticalExposureCount:(NSIndexPath *)indexPath
-{
-    NSMutableDictionary *triggerDict = objc_getAssociatedObject(self, _cmd);
-    if (!triggerDict) {
-        triggerDict = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, _cmd, triggerDict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    NSString *triggerKey = [NSString stringWithFormat:@"%@.%@", @(indexPath.section), @(indexPath.row)];
-    NSInteger triggerCount = [[triggerDict objectForKey:triggerKey] integerValue] + 1;
-    [triggerDict setObject:@(triggerCount) forKey:triggerKey];
-    return triggerCount;
-}
-
-- (NSTimeInterval)fw_statisticalExposureDuration:(NSTimeInterval)duration indexPath:(NSIndexPath *)indexPath
-{
-    NSMutableDictionary *triggerDict = objc_getAssociatedObject(self, _cmd);
-    if (!triggerDict) {
-        triggerDict = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, _cmd, triggerDict, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    NSString *triggerKey = [NSString stringWithFormat:@"%@.%@", @(indexPath.section), @(indexPath.row)];
-    NSTimeInterval triggerDuration = [[triggerDict objectForKey:triggerKey] doubleValue] + duration;
-    [triggerDict setObject:@(triggerDuration) forKey:triggerKey];
-    return triggerDuration;
-}
-
-- (void)fw_statisticalTriggerExposure:(UIView *)cell indexPath:(NSIndexPath *)indexPath duration:(NSTimeInterval)duration
-{
-    __FWStatisticalObject *object = cell.fw_statisticalExposure ?: self.fw_statisticalExposure;
-    if (!object) object = [__FWStatisticalObject new];
-    if (object.triggerIgnored) return;
-    NSInteger triggerCount = [self fw_statisticalExposureCount:indexPath];
-    if (triggerCount > 1 && object.triggerOnce) return;
-    
-    object.view = self;
-    object.indexPath = indexPath;
-    object.triggerCount = triggerCount;
-    object.triggerDuration = duration;
-    object.totalDuration = [self fw_statisticalExposureDuration:duration indexPath:indexPath];
-    object.isExposure = YES;
-    object.isFinished = duration > 0;
-    
-    if (cell.fw_statisticalExposureBlock) {
-        cell.fw_statisticalExposureBlock(object);
-    } else if (self.fw_statisticalExposureBlock) {
-        self.fw_statisticalExposureBlock(object);
-    }
-    if (cell.fw_statisticalExposure || self.fw_statisticalExposure) {
-        [[__FWStatisticalManager sharedInstance] handleEvent:object];
-    }
 }
 
 @end
