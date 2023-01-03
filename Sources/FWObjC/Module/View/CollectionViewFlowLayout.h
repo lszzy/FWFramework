@@ -39,19 +39,6 @@ NS_SWIFT_NAME(CollectionViewDelegateFlowLayout)
 
 @end
 
-/**
- 通用布局section配置分类
- */
-@interface UICollectionViewFlowLayout (__FWCollectionViewSectionConfig)
-
-/// 初始化布局section配置，在prepareLayout调用即可
-- (void)fw_sectionConfigPrepareLayout NS_REFINED_FOR_SWIFT;
-
-/// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
-- (NSArray<UICollectionViewLayoutAttributes *> *)fw_sectionConfigLayoutAttributesForElementsInRect:(CGRect)rect NS_REFINED_FOR_SWIFT;
-
-@end
-
 #pragma mark - __FWCollectionViewFlowLayout
 
 /**
