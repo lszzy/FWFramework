@@ -9,105 +9,19 @@
 #import "tgmath.h"
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - __FWCollectionViewSectionConfig
 
-static NSString *const __FWCollectionViewElementKind = @"FWCollectionViewElementKind";
-
 @implementation __FWCollectionViewSectionConfig
-
-@end
-
-@interface __FWCollectionViewLayoutAttributes : UICollectionViewLayoutAttributes
-
-@property (nonatomic, strong) __FWCollectionViewSectionConfig *sectionConfig;
-
-@end
-
-@implementation __FWCollectionViewLayoutAttributes
-
-@end
-
-@interface __FWCollectionViewReusableView : UICollectionReusableView
-
-@end
-
-@implementation __FWCollectionViewReusableView
-
-- (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-    [super applyLayoutAttributes:layoutAttributes];
-    if (![layoutAttributes isKindOfClass:[__FWCollectionViewLayoutAttributes class]]) return;
-    __FWCollectionViewSectionConfig *sectionConfig = ((__FWCollectionViewLayoutAttributes *)layoutAttributes).sectionConfig;
-    if (!sectionConfig) return;
-    
-    self.backgroundColor = sectionConfig.backgroundColor;
-    if (sectionConfig.customBlock) {
-        sectionConfig.customBlock(self);
-    }
-}
-
-@end
-
-@implementation UICollectionViewFlowLayout (__FWCollectionViewSectionConfig)
-
-- (NSMutableArray *)fw_sectionConfigAttributes {
-    NSMutableArray *attributes = objc_getAssociatedObject(self, _cmd);
-    if (!attributes) {
-        attributes = [NSMutableArray array];
-        objc_setAssociatedObject(self, _cmd, attributes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return attributes;
-}
-
-- (void)fw_sectionConfigPrepareLayout {
-    if (![self.collectionView.delegate respondsToSelector:@selector(collectionView:layout:configForSectionAtIndex:)]) return;
-    [self registerClass:[__FWCollectionViewReusableView class] forDecorationViewOfKind:__FWCollectionViewElementKind];
-    [self.fw_sectionConfigAttributes removeAllObjects];
-    id<__FWCollectionViewDelegateFlowLayout> delegate = (id<__FWCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
-    NSUInteger sectionCount = [self.collectionView numberOfSections];
-    for (NSUInteger section = 0; section < sectionCount; section++) {
-        NSUInteger itemCount = [self.collectionView numberOfItemsInSection:section];
-        if (itemCount < 1) continue;
-
-        UICollectionViewLayoutAttributes *firstAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
-        UICollectionViewLayoutAttributes *lastAttr = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:itemCount - 1 inSection:section]];
-        if (!firstAttr || !lastAttr) continue;
-        
-        UIEdgeInsets sectionInset = self.sectionInset;
-        if ([delegate respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
-            UIEdgeInsets inset = [delegate collectionView:self.collectionView layout:self insetForSectionAtIndex:section];
-            if (!UIEdgeInsetsEqualToEdgeInsets(inset, sectionInset)) {
-                sectionInset = inset;
-            }
-        }
-        
-        CGRect sectionFrame = CGRectUnion(firstAttr.frame, lastAttr.frame);
-        sectionFrame.origin.x -= sectionInset.left;
-        sectionFrame.origin.y -= sectionInset.top;
-        if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-            sectionFrame.size.width += sectionInset.left + sectionInset.right;
-            sectionFrame.size.height = self.collectionView.frame.size.height;
-        } else {
-            sectionFrame.size.width = self.collectionView.frame.size.width;
-            sectionFrame.size.height += sectionInset.top + sectionInset.bottom;
-        }
-        
-        __FWCollectionViewLayoutAttributes *attributes = [__FWCollectionViewLayoutAttributes layoutAttributesForDecorationViewOfKind:__FWCollectionViewElementKind withIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
-        attributes.frame = sectionFrame;
-        attributes.zIndex = -1;
-        attributes.sectionConfig = [delegate collectionView:self.collectionView layout:self configForSectionAtIndex:section];
-        [self.fw_sectionConfigAttributes addObject:attributes];
-    }
-}
-
-- (NSArray<UICollectionViewLayoutAttributes *> *)fw_sectionConfigLayoutAttributesForElementsInRect:(CGRect)rect {
-    NSMutableArray *attrs = [NSMutableArray array];
-    for (UICollectionViewLayoutAttributes *attr in self.fw_sectionConfigAttributes) {
-        if (CGRectIntersectsRect(rect, attr.frame)) {
-            [attrs addObject:attr];
-        }
-    }
-    return [attrs copy];
-}
 
 @end
 
@@ -175,7 +89,7 @@ static NSString *const __FWCollectionViewElementKind = @"FWCollectionViewElement
         if (attributes) newAttributes = [attributes mutableCopy];
     }
     
-    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsInRect:rect];
+    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsIn:rect];
     [newAttributes addObjectsFromArray:sectionAttributes];
     return [newAttributes copy];
 }
@@ -1012,7 +926,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
             updatedAttributes[index] = [self layoutAttributesForItemAtIndexPath:attributes.indexPath];
         }
     }
-    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsInRect:rect];
+    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsIn:rect];
     [updatedAttributes addObjectsFromArray:sectionAttributes];
     return updatedAttributes;
 }

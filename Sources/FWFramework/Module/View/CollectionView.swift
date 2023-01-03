@@ -234,3 +234,91 @@ import FWObjC
         return collectionView
     }
 }
+
+@_spi(FW) @objc extension UICollectionViewFlowLayout {
+    
+    private class CollectionViewLayoutAttributes: UICollectionViewLayoutAttributes {
+        
+        var sectionConfig: CollectionViewSectionConfig?
+        
+    }
+    
+    private class CollectionViewReusableView: UICollectionReusableView {
+        
+        override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+            super.apply(layoutAttributes)
+            guard let layoutAttributes = layoutAttributes as? CollectionViewLayoutAttributes,
+                  let sectionConfig = layoutAttributes.sectionConfig else { return }
+            
+            self.backgroundColor = sectionConfig.backgroundColor
+            sectionConfig.customBlock?(self)
+        }
+        
+    }
+    
+    /// 初始化布局section配置，在prepareLayout调用即可
+    public func fw_sectionConfigPrepareLayout() {
+        guard let collectionView = self.collectionView,
+              let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
+              delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }
+        
+        self.register(CollectionViewReusableView.self, forDecorationViewOfKind: "FWCollectionViewElementKind")
+        self.fw_sectionConfigAttributes.removeAllObjects()
+        let sectionCount = collectionView.numberOfSections
+        for section in 0 ..< sectionCount {
+            let itemCount = collectionView.numberOfItems(inSection: section)
+            if itemCount < 1 { continue }
+            
+            guard let firstAttr = self.layoutAttributesForItem(at: IndexPath(item: 0, section: section)),
+                  let lastAttr = self.layoutAttributesForItem(at: IndexPath(item: itemCount - 1, section: section)) else { continue }
+            
+            var sectionInset = self.sectionInset
+            if delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:insetForSectionAt:))) {
+                let inset = delegate.collectionView!(collectionView, layout: self, insetForSectionAt: section)
+                if inset != sectionInset {
+                    sectionInset = inset
+                }
+            }
+            
+            var sectionFrame = firstAttr.frame.union(lastAttr.frame)
+            sectionFrame.origin.x -= sectionInset.left
+            sectionFrame.origin.y -= sectionInset.top
+            if self.scrollDirection == .horizontal {
+                sectionFrame.size.width += sectionInset.left + sectionInset.right
+                sectionFrame.size.height = collectionView.frame.size.height
+            } else {
+                sectionFrame.size.width = collectionView.frame.size.width
+                sectionFrame.size.height += sectionInset.top + sectionInset.bottom
+            }
+            
+            let attributes = CollectionViewLayoutAttributes(forDecorationViewOfKind: "FWCollectionViewElementKind", with: IndexPath(item: 0, section: section))
+            attributes.frame = sectionFrame
+            attributes.zIndex = -1
+            attributes.sectionConfig = delegate.collectionView?(collectionView, layout: self, configForSectionAt: section)
+            self.fw_sectionConfigAttributes.add(attributes)
+        }
+    }
+
+    /// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
+    public func fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
+        var attrs: [UICollectionViewLayoutAttributes] = []
+        for attr in self.fw_sectionConfigAttributes {
+            if let attr = attr as? UICollectionViewLayoutAttributes,
+               CGRectIntersectsRect(rect, attr.frame) {
+                attrs.append(attr)
+            }
+        }
+        return attrs
+    }
+    
+    private var fw_sectionConfigAttributes: NSMutableArray {
+        if let attributes = fw_property(forName: "fw_sectionConfigAttributes") as? NSMutableArray {
+            return attributes
+        } else {
+            let attributes = NSMutableArray()
+            fw_setProperty(attributes, forName: "fw_sectionConfigAttributes")
+            return attributes
+        }
+    }
+    
+}
