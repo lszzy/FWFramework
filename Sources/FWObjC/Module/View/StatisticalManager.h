@@ -56,6 +56,9 @@ NS_SWIFT_NAME(StatisticalManager)
 /// 注册单个事件处理器
 - (void)registerEvent:(NSString *)name withHandler:(__FWStatisticalBlock)handler;
 
+/// 内部方法，处理事件
+- (void)__handleEvent:(__FWStatisticalObject *)object;
+
 @end
 
 /**
@@ -102,6 +105,11 @@ NS_SWIFT_NAME(StatisticalObject)
 /// 创建事件绑定信息，指定名称、对象和信息
 - (instancetype)initWithName:(NSString *)name object:(nullable id)object userInfo:(nullable NSDictionary *)userInfo;
 
+/// 内部方法，触发点击事件更新属性
+- (void)__triggerClick:(nullable UIView *)view indexPath:(nullable NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount;
+/// 内部方法，触发曝光事件更新属性
+- (void)__triggerExposure:(nullable UIView *)view indexPath:(nullable NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration;
+
 @end
 
 /**
@@ -120,42 +128,6 @@ NS_SWIFT_NAME(StatisticalDelegate)
 
 /// 自定义cell事件代理视图，仅cell生效。默认为所在tableView|collectionView，如果不同，实现此方法即可
 - (nullable UIView *)statisticalCellProxyView;
-
-@end
-
-#pragma mark - UIView+__FWStatistical
-
-/**
- Click点击统计
- */
-@interface UIView (__FWStatistical)
-
-/// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
-@property (nullable, nonatomic, strong) __FWStatisticalObject *fw_statisticalClick NS_REFINED_FOR_SWIFT;
-
-/// 绑定统计点击事件，仅触发回调。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
-@property (nullable, nonatomic, copy) __FWStatisticalBlock fw_statisticalClickBlock NS_REFINED_FOR_SWIFT;
-
-/// 手工触发统计点击事件，更新点击次数，列表可指定cell和位置，可重复触发
-- (void)fw_statisticalTriggerClick:(nullable UIView *)cell indexPath:(nullable NSIndexPath *)indexPath NS_REFINED_FOR_SWIFT;
-
-@end
-
-#pragma mark - UIView+__FWExposure
-
-/**
- Exposure曝光统计
- */
-@interface UIView (__FWExposure)
-
-/// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
-@property (nullable, nonatomic, strong) __FWStatisticalObject *fw_statisticalExposure NS_REFINED_FOR_SWIFT;
-
-/// 绑定统计曝光事件，仅触发回调
-@property (nullable, nonatomic, copy) __FWStatisticalBlock fw_statisticalExposureBlock NS_REFINED_FOR_SWIFT;
-
-/// 手工触发统计曝光事件，更新曝光次数和时长，列表可指定cell和位置，duration为单次曝光时长(0表示开始)，可重复触发
-- (void)fw_statisticalTriggerExposure:(nullable UIView *)cell indexPath:(nullable NSIndexPath *)indexPath duration:(NSTimeInterval)duration NS_REFINED_FOR_SWIFT;
 
 @end
 
