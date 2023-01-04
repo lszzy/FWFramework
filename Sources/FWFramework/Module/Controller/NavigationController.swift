@@ -17,7 +17,7 @@ import FWObjC
  @see https://github.com/MoZhouqi/KMNavigationBarTransition
  @see https://github.com/Tencent/QMUI_iOS
  */
-@_spi(FW) @objc extension UINavigationController {
+@_spi(FW) extension UINavigationController {
     
     private class FullscreenPopGestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
         
@@ -479,7 +479,7 @@ import FWObjC
  导航栏全屏返回手势分类，兼容shouldPopController返回拦截方法
  @see https://github.com/forkingdog/FDFullscreenPopGesture
  */
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
     public var fw_barTransitionIdentifier: Any? {
@@ -546,7 +546,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UINavigationBar {
+@_spi(FW) extension UINavigationBar {
     
     /// 导航栏背景视图，显示背景色和背景图片等
     public var fw_backgroundView: UIView? {
@@ -608,7 +608,7 @@ import FWObjC
  present带导航栏webview，如果存在input[type=file]，会dismiss两次，无法选择照片。
  解决方法：1.使用push 2.重写dismiss方法仅当presentedViewController存在时才调用dismiss
  */
-@_spi(FW) @objc extension UIToolbar {
+@_spi(FW) extension UIToolbar {
     
     /// 工具栏背景视图，显示背景色和背景图片等。如果标签栏同时显示，背景视图高度也会包含标签栏高度
     public var fw_backgroundView: UIView? {

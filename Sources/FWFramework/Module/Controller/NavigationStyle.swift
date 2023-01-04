@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UINavigationBar {
+@_spi(FW) extension UINavigationBar {
     
     /// 应用指定导航栏配置
     public func fw_applyBarAppearance(_ appearance: NavigationBarAppearance) {
@@ -57,7 +57,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     fileprivate static func fw_swizzleNavigationStyle() {
         NSObject.fw_swizzleInstanceMethod(

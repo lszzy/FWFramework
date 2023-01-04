@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
     public var fw_statisticalClick: StatisticalObject? {
@@ -221,7 +221,7 @@ import FWObjC
     }
     
     /// 内部方法，启用统计功能
-    public static func fw_enableStatistical() {
+    @objc public static func fw_enableStatistical() {
         guard !fw_staticStatisticalEnabled else { return }
         fw_staticStatisticalEnabled = true
         
