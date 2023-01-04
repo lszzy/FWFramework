@@ -11,11 +11,7 @@
 
 #if FWMacroSPM
 
-@interface UIDevice ()
 
-@property (class, nonatomic, assign, readonly) BOOL fw_isIpad;
-
-@end
 
 #else
 
@@ -175,7 +171,7 @@
     }
     
     // 兼容iPad，默认居中显示ActionSheet。注意点击视图(如UIBarButtonItem)必须是sourceView及其子视图
-    if ([UIDevice fw_isIpad] && alertController.popoverPresentationController) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && alertController.popoverPresentationController) {
         UIView *ancestorView = [viewController fw_ancestorView];
         UIPopoverPresentationController *popoverController = alertController.popoverPresentationController;
         popoverController.sourceView = ancestorView;

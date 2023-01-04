@@ -260,7 +260,7 @@ extension FW {
 }
 
 // MARK: - NSNumber+Foundation
-@_spi(FW) @objc extension NSNumber {
+@_spi(FW) extension NSNumber {
 
     /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
     public func fw_roundString(_ digit: Int) -> String {
@@ -542,7 +542,7 @@ extension FW {
 }
 
 // MARK: - FileManager+Foundation
-@_spi(FW) @objc extension FileManager {
+@_spi(FW) extension FileManager {
     
     /// 搜索路径
     ///
@@ -612,7 +612,7 @@ extension FW {
 // MARK: - NSAttributedString+Foundation
 /// 如果需要实现行内图片可点击效果，可使用UITextView添加附件或Link并实现delegate.shouldInteractWith方法即可。
 /// 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
-@_spi(FW) @objc extension NSAttributedString {
+@_spi(FW) extension NSAttributedString {
     
     /// NSAttributedString对象转换为html字符串
     public func fw_htmlString() -> String? {
@@ -787,7 +787,7 @@ extension FW {
 }
 
 // MARK: - NSObject+Foundation
-@_spi(FW) @objc extension NSObject {
+@_spi(FW) extension NSObject {
     
     /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
     public func fw_lock() {
@@ -1200,7 +1200,7 @@ extension FW {
 }
 
 // MARK: - UserDefaults+Foundation
-@_spi(FW) @objc extension UserDefaults {
+@_spi(FW) extension UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象
     public static func fw_object(forKey: String) -> Any? {

@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 自定义图片预览插件，未设置时自动从插件池加载
     public var fw_imagePreviewPlugin: ImagePreviewPlugin! {
@@ -58,7 +58,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 显示图片预览(简单版)
     /// - Parameters:

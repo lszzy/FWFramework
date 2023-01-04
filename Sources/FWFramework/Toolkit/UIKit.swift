@@ -15,7 +15,7 @@ import AdSupport
 #endif
 
 // MARK: - UIBezierPath+UIKit
-@_spi(FW) @objc extension UIBezierPath {
+@_spi(FW) extension UIBezierPath {
     
     /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
     public func fw_shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
@@ -145,7 +145,7 @@ import AdSupport
 }
 
 // MARK: - UIDevice+UIKit
-@_spi(FW) @objc extension UIDevice {
+@_spi(FW) extension UIDevice {
     
     /// 设置设备token原始Data，格式化并保存
     public static func fw_setDeviceTokenData(_ tokenData: Data?) {
@@ -323,7 +323,7 @@ import AdSupport
 
 // MARK: - UIView+UIKit
 /// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     private class SaturationGrayView: UIView {
         
@@ -341,7 +341,7 @@ import AdSupport
     }
 
     /// 获取响应的视图控制器
-    public var fw_viewController: UIViewController? {
+    @objc public var fw_viewController: UIViewController? {
         var responder = self.next
         while responder != nil {
             if let viewController = responder as? UIViewController {
@@ -353,7 +353,7 @@ import AdSupport
     }
 
     /// 设置额外热区(点击区域)
-    public var fw_touchInsets: UIEdgeInsets {
+    @objc public var fw_touchInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_touchInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
@@ -395,7 +395,7 @@ import AdSupport
     }
     
     /// 根据tag查找subview，仅从subviews中查找
-    public func fw_subview(tag: Int) -> UIView? {
+    @objc public func fw_subview(tag: Int) -> UIView? {
         var subview: UIView?
         for obj in self.subviews {
             if obj.tag == tag {
@@ -497,7 +497,7 @@ import AdSupport
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
+    @objc public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
         let cornerLayer = CAShapeLayer()
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
         cornerLayer.frame = self.bounds
@@ -706,7 +706,7 @@ import AdSupport
     }
     
     /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-    public var fw_frameApplyTransform: CGRect {
+    @objc public var fw_frameApplyTransform: CGRect {
         get { return self.frame }
         set { self.frame = UIView.fw_rectApplyTransform(newValue, transform: self.transform, anchorPoint: self.layer.anchorPoint) }
     }
@@ -826,7 +826,7 @@ import AdSupport
 }
 
 // MARK: - UIImageView+UIKit
-@_spi(FW) @objc extension UIImageView {
+@_spi(FW) extension UIImageView {
     
     /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
     public func fw_setContentModeAspectFill() {
@@ -895,7 +895,7 @@ import AdSupport
 }
 
 // MARK: - UIWindow+UIKit
-@_spi(FW) @objc extension UIWindow {
+@_spi(FW) extension UIWindow {
     
     /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
@@ -993,7 +993,7 @@ import AdSupport
 }
 
 // MARK: - UILabel+UIKit
-@_spi(FW) @objc extension UILabel {
+@_spi(FW) extension UILabel {
     
     /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
     public var fw_textAttributes: [NSAttributedString.Key: Any]? {
@@ -1223,7 +1223,7 @@ import AdSupport
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
-    func fw_innerSetText(_ text: String?) {
+    @objc func fw_innerSetText(_ text: String?) {
         guard let text = text else {
             fw_innerSetText(text)
             return
@@ -1236,7 +1236,7 @@ import AdSupport
         self.fw_innerSetAttributedText(fw_adjustedAttributedString(attributedString))
     }
     
-    func fw_innerSetAttributedText(_ text: NSAttributedString?) {
+    @objc func fw_innerSetAttributedText(_ text: NSAttributedString?) {
         guard let text = text else {
             self.fw_innerSetAttributedText(text)
             return
@@ -1253,7 +1253,7 @@ import AdSupport
         self.fw_innerSetAttributedText(attributedString)
     }
     
-    func fw_innerSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
+    @objc func fw_innerSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
         self.fw_innerSetLineBreakMode(lineBreakMode)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1264,7 +1264,7 @@ import AdSupport
         }
     }
     
-    func fw_innerSetTextAlignment(_ textAlignment: NSTextAlignment) {
+    @objc func fw_innerSetTextAlignment(_ textAlignment: NSTextAlignment) {
         self.fw_innerSetTextAlignment(textAlignment)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1344,7 +1344,7 @@ import AdSupport
 
 // MARK: - UIControl+UIKit
 /// 防重复点击可以手工控制enabled或userInteractionEnabled或loading，如request开始时禁用，结束时启用等
-@_spi(FW) @objc extension UIControl {
+@_spi(FW) extension UIControl {
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
     public var fw_touchEventInterval: TimeInterval {
@@ -1378,10 +1378,10 @@ import AdSupport
 }
 
 // MARK: - UIButton+UIKit
-@_spi(FW) @objc extension UIButton {
+@_spi(FW) extension UIButton {
     
     /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-    public var fw_disabledAlpha: CGFloat {
+    @objc public var fw_disabledAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_disabledAlpha")
         }
@@ -1394,7 +1394,7 @@ import AdSupport
     }
 
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-    public var fw_highlightedAlpha: CGFloat {
+    @objc public var fw_highlightedAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_highlightedAlpha")
         }
@@ -1526,7 +1526,7 @@ import AdSupport
 }
 
 // MARK: - UIScrollView+UIKit
-@_spi(FW) @objc extension UIScrollView {
+@_spi(FW) extension UIScrollView {
     
     /// 判断当前scrollView内容是否足够滚动
     public var fw_canScroll: Bool {
@@ -1534,25 +1534,25 @@ import AdSupport
     }
 
     /// 判断当前的scrollView内容是否足够水平滚动
-    public var fw_canScrollHorizontal: Bool {
+    @objc public var fw_canScrollHorizontal: Bool {
         if self.bounds.size.width <= 0 { return false }
         return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)
     }
 
     /// 判断当前的scrollView内容是否足够纵向滚动
-    public var fw_canScrollVertical: Bool {
+    @objc public var fw_canScrollVertical: Bool {
         if self.bounds.size.height <= 0 { return false }
         return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds)
     }
 
     /// 当前scrollView滚动到指定边
-    public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
+    @objc public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
         let contentOffset = fw_contentOffset(of: edge)
         self.setContentOffset(contentOffset, animated: animated)
     }
 
     /// 是否已滚动到指定边
-    public func fw_isScroll(to edge: UIRectEdge) -> Bool {
+    @objc public func fw_isScroll(to edge: UIRectEdge) -> Bool {
         let contentOffset = fw_contentOffset(of: edge)
         switch edge {
         case .top:
@@ -1569,7 +1569,7 @@ import AdSupport
     }
 
     /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-    public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
+    @objc public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
         var contentOffset = self.contentOffset
         switch edge {
         case .top:
@@ -1732,7 +1732,7 @@ import AdSupport
         }
     }
     
-    private func fw_innerGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_innerGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
@@ -1740,7 +1740,7 @@ import AdSupport
         return fw_innerGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1748,7 +1748,7 @@ import AdSupport
         return fw_innerGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1756,7 +1756,7 @@ import AdSupport
         return fw_innerGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1783,7 +1783,7 @@ import AdSupport
 /// shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
 /// shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
 /// shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
-@_spi(FW) @objc extension UIGestureRecognizer {
+@_spi(FW) extension UIGestureRecognizer {
     
     /// 获取手势直接作用的view，不同于view，此处是view的subview
     public weak var fw_targetView: UIView? {
@@ -1805,7 +1805,7 @@ import AdSupport
 }
 
 // MARK: - UIPanGestureRecognizer+UIKit
-@_spi(FW) @objc extension UIPanGestureRecognizer {
+@_spi(FW) extension UIPanGestureRecognizer {
     
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
     public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
@@ -1864,7 +1864,7 @@ import AdSupport
 }
 
 // MARK: - UIPageControl+UIKit
-@_spi(FW) @objc extension UIPageControl {
+@_spi(FW) extension UIPageControl {
     
     /// 自定义圆点大小，默认{10, 10}
     public var fw_preferredSize: CGSize {
@@ -1886,10 +1886,10 @@ import AdSupport
 }
 
 // MARK: - UISlider+UIKit
-@_spi(FW) @objc extension UISlider {
+@_spi(FW) extension UISlider {
     
     /// 中间圆球的大小，默认zero
-    public var fw_thumbSize: CGSize {
+    @objc public var fw_thumbSize: CGSize {
         get {
             if let value = fw_property(forName: "fw_thumbSize") as? NSValue {
                 return value.cgSizeValue
@@ -1903,7 +1903,7 @@ import AdSupport
     }
 
     /// 中间圆球的颜色，默认nil
-    public var fw_thumbColor: UIColor? {
+    @objc public var fw_thumbColor: UIColor? {
         get {
             return fw_property(forName: "fw_thumbColor") as? UIColor
         }
@@ -1930,7 +1930,7 @@ import AdSupport
 }
 
 // MARK: - UISwitch+UIKit
-@_spi(FW) @objc extension UISwitch {
+@_spi(FW) extension UISwitch {
     
     /// 自定义尺寸大小，默认{51,31}
     public var fw_preferredSize: CGSize {
@@ -1952,7 +1952,7 @@ import AdSupport
 }
 
 // MARK: - UITextField+UIKit
-@_spi(FW) @objc extension UITextField {
+@_spi(FW) extension UITextField {
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
@@ -2010,7 +2010,7 @@ import AdSupport
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
-    public var fw_menuDisabled: Bool {
+    @objc public var fw_menuDisabled: Bool {
         get { fw_propertyBool(forName: "fw_menuDisabled") }
         set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
@@ -2101,7 +2101,7 @@ import AdSupport
 }
 
 // MARK: - UITextView+UIKit
-@_spi(FW) @objc extension UITextView {
+@_spi(FW) extension UITextView {
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
@@ -2277,7 +2277,7 @@ import AdSupport
 }
 
 // MARK: - UITableView+UIKit
-@_spi(FW) @objc extension UITableView {
+@_spi(FW) extension UITableView {
     
     /// 全局清空TableView默认多余边距
     public static func fw_resetTableStyle() {
@@ -2334,7 +2334,7 @@ import AdSupport
 }
 
 // MARK: - UITableViewCell+UIKit
-@_spi(FW) @objc extension UITableViewCell {
+@_spi(FW) extension UITableViewCell {
     
     /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
     public var fw_separatorInset: UIEdgeInsets {
@@ -2368,7 +2368,7 @@ import AdSupport
 }
 
 // MARK: - UICollectionView+UIKit
-@_spi(FW) @objc extension UICollectionView {
+@_spi(FW) extension UICollectionView {
     
     /// reloadData完成回调
     public func fw_reloadData(completion: (() -> Void)?) {
@@ -2390,7 +2390,7 @@ import AdSupport
 }
 
 // MARK: - UICollectionViewCell+UIKit
-@_spi(FW) @objc extension UICollectionViewCell {
+@_spi(FW) extension UICollectionViewCell {
     
     /// 获取当前所属collectionView
     public weak var fw_collectionView: UICollectionView? {
@@ -2412,7 +2412,7 @@ import AdSupport
 }
 
 // MARK: - UISearchBar+UIKit
-@_spi(FW) @objc extension UISearchBar {
+@_spi(FW) extension UISearchBar {
     
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
     public var fw_contentInset: UIEdgeInsets {
@@ -2630,7 +2630,7 @@ import AdSupport
 }
 
 // MARK: - UIViewController+UIKit
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
     public var fw_isRoot: Bool {
@@ -2649,7 +2649,7 @@ import AdSupport
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-    public var fw_isPresented: Bool {
+    @objc public var fw_isPresented: Bool {
         var viewController: UIViewController = self
         if let navigationController = self.navigationController {
             if navigationController.viewControllers.first != self { return false }
@@ -2675,7 +2675,7 @@ import AdSupport
     }
     
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-    public var fw_ancestorView: UIView {
+    @objc public var fw_ancestorView: UIView {
         if let navigationController = self.tabBarController?.navigationController {
             return navigationController.view
         } else if let tabBarController = self.tabBarController {

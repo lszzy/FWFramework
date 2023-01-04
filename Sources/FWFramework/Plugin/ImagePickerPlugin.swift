@@ -271,7 +271,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 自定义图片选取插件，未设置时自动从插件池加载
     public var fw_imagePickerPlugin: ImagePickerPlugin! {
@@ -354,7 +354,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 从Camera选取单张图片(简单版)
     /// - Parameters:

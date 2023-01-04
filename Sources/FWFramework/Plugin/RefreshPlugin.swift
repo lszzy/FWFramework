@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIScrollView {
+@_spi(FW) extension UIScrollView {
     
     /// 自定义刷新插件，未设置时自动从插件池加载
     public var fw_refreshPlugin: RefreshPlugin! {

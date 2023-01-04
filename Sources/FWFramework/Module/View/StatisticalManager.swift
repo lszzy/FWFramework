@@ -402,7 +402,7 @@ import FWObjC
         return false
     }
     
-    @nonobjc private var fw_statisticalExposureState: StatisticalExposureState {
+    private var fw_statisticalExposureState: StatisticalExposureState {
         get {
             let value = fw_propertyInt(forName: "fw_statisticalExposureState")
             return .init(rawValue: value) ?? .none
@@ -412,7 +412,7 @@ import FWObjC
         }
     }
     
-    @nonobjc private func fw_statisticalExposureViewState() -> StatisticalExposureState {
+    private func fw_statisticalExposureViewState() -> StatisticalExposureState {
         if !self.fw_isViewVisible {
             return .none
         }
@@ -573,7 +573,7 @@ import FWObjC
         }
     }
     
-    @nonobjc private func fw_statisticalExposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
+    private func fw_statisticalExposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
         var isFullState = (state == .fully) ? true : false
         if !isFullState && StatisticalManager.shared.exposurePartly {
             isFullState = (state == .partly) ? true : false

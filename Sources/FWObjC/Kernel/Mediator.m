@@ -12,6 +12,16 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 #pragma mark - __FWMediator
 
 @interface __FWMediator ()
@@ -269,12 +279,6 @@
 @end
 
 #pragma mark - __FWModuleBundle
-
-@interface UIImage ()
-
-+ (UIImage *)fw_imageNamed:(NSString *)name bundle:(NSBundle *)bundle options:(NSDictionary *)options;
-
-@end
 
 @implementation __FWModuleBundle
 

@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 自定义视图插件，未设置时自动从插件池加载
     public var fw_viewPlugin: ViewPlugin! {
@@ -50,7 +50,7 @@ import FWObjC
     }
     
     /// 统一进度视图工厂方法
-    public static func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
+    @objc public static func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
         var plugin: ViewPlugin
         if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) as? ViewPlugin,
            viewPlugin.responds(to: #selector(viewPlugin.progressView(withStyle:))) {
@@ -62,7 +62,7 @@ import FWObjC
     }
 
     /// 统一指示器视图工厂方法
-    public static func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
+    @objc public static func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         var plugin: ViewPlugin
         if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) as? ViewPlugin,
            viewPlugin.responds(to: #selector(viewPlugin.indicatorView(withStyle:))) {
@@ -75,10 +75,10 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIActivityIndicatorView {
+@_spi(FW) extension UIActivityIndicatorView {
     
     /// 快速创建指示器，可指定颜色，默认白色
-    public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
+    @objc public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         var indicatorStyle: UIActivityIndicatorView.Style
         if #available(iOS 13.0, *) {
             indicatorStyle = .medium

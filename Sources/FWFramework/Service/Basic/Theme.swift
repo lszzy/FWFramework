@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - UIColor+Theme
-@_spi(FW) @objc extension UIColor {
+@_spi(FW) extension UIColor {
     
     /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
     public var fw_color: UIColor {
@@ -121,7 +121,7 @@ import FWObjC
 // MARK: - UIImage+Theme
 /// 注意UIImage默认只有name方式且配置了any和dark才支持动态切换，否则只能重新赋值才会变化。
 /// 为避免内存泄漏，通过fwTheme方式创建的主题图片不能直接用于显示，显示时请调用fwImage方法
-@_spi(FW) @objc extension UIImage {
+@_spi(FW) extension UIImage {
     
     /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
     public var fw_image: UIImage? {
@@ -238,7 +238,7 @@ import FWObjC
 }
 
 // MARK: - UIImageAsset+Theme
-@_spi(FW) @objc extension UIImageAsset {
+@_spi(FW) extension UIImageAsset {
     
     /// 获取当前主题样式对应静态图片用于显示，iOS13+可跟随系统改变
     public var fw_image: UIImage? {
@@ -298,7 +298,7 @@ import FWObjC
 }
 
 // MARK: - NSObject+Theme
-@_spi(FW) @objc extension NSObject {
+@_spi(FW) extension NSObject {
     
     /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
     public weak var fw_themeContext: (NSObject & UITraitEnvironment)? {
@@ -448,7 +448,7 @@ internal class ThemeAutoloader: AutoloadProtocol {
 }
 
 // MARK: - UIImageView+Theme
-@_spi(FW) @objc extension UIImageView {
+@_spi(FW) extension UIImageView {
     
     /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
     public var fw_themeImage: UIImage? {

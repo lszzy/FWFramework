@@ -45,7 +45,6 @@
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_pixelOne;
 @property (class, nonatomic, assign, readonly) CGFloat fw_topBarHeight;
 @property (class, nonatomic, assign, readonly) CGFloat fw_toolBarHeight;
 @property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
@@ -101,7 +100,7 @@
     self.backgroundColor = [UIColor clearColor];
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
-    self.imageView.layer.borderWidth = [UIScreen fw_pixelOne];
+    self.imageView.layer.borderWidth = 1.0 / UIScreen.mainScreen.scale;
     self.imageView.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1].CGColor;
     
     _maskView = [[UIView alloc] init];
@@ -2203,7 +2202,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         albumController.backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     }
     if (albumController.maximumTableViewHeight <= 0) {
-        albumController.maximumTableViewHeight = albumController.albumTableViewCellHeight * ceil(UIScreen.fw_screenHeight / albumController.albumTableViewCellHeight / 2.0) + albumController.additionalTableViewHeight;
+        albumController.maximumTableViewHeight = albumController.albumTableViewCellHeight * ceil(UIScreen.mainScreen.bounds.size.height / albumController.albumTableViewCellHeight / 2.0) + albumController.additionalTableViewHeight;
     }
 }
 
@@ -2213,7 +2212,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 - (UICollectionViewFlowLayout *)collectionViewLayout {
     if (!_collectionViewLayout) {
         _collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
-        CGFloat inset = [UIScreen fw_pixelOne] * 2; // no why, just beautiful
+        CGFloat inset = 2.0 / UIScreen.mainScreen.scale; // no why, just beautiful
         _collectionViewLayout.sectionInset = UIEdgeInsetsMake(inset, inset, inset, inset);
         _collectionViewLayout.minimumLineSpacing = _collectionViewLayout.sectionInset.bottom;
         _collectionViewLayout.minimumInteritemSpacing = _collectionViewLayout.sectionInset.left;

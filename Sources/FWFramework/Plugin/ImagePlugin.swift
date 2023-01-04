@@ -19,10 +19,10 @@ extension FW {
     
 }
 
-@_spi(FW) @objc extension UIImage {
+@_spi(FW) extension UIImage {
 
     /// 根据名称从指定bundle加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)。支持设置图片解码选项
-    public static func fw_imageNamed(_ name: String, bundle: Bundle? = nil, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
+    @objc public static func fw_imageNamed(_ name: String, bundle: Bundle? = nil, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
         if name.isEmpty || name.hasSuffix("/") { return nil }
         if (name as NSString).isAbsolutePath {
             let data = NSData(contentsOfFile: name)
@@ -161,7 +161,7 @@ extension FW {
     
 }
 
-@_spi(FW) @objc extension UIImageView {
+@_spi(FW) extension UIImageView {
     
     /// 自定义图片插件，未设置时自动从插件池加载
     public var fw_imagePlugin: ImagePlugin? {
@@ -186,12 +186,12 @@ extension FW {
     }
 
     /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+    @objc public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
     }
 
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    @objc public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         if let imagePlugin = self.fw_imagePlugin,
            imagePlugin.responds(to: #selector(ImagePlugin.imageView(_:setImageURL:placeholder:options:context:completion:progress:))) {
             var imageURL: URL?
@@ -208,7 +208,7 @@ extension FW {
     }
 
     /// 取消加载网络图片请求
-    public func fw_cancelImageRequest() {
+    @objc public func fw_cancelImageRequest() {
         if let imagePlugin = self.fw_imagePlugin,
            imagePlugin.responds(to: #selector(ImagePlugin.cancelImageRequest(_:))) {
             imagePlugin.cancelImageRequest?(self)
@@ -216,7 +216,7 @@ extension FW {
     }
     
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
-    public static func fw_animatedImageView() -> UIImageView {
+    @objc public static func fw_animatedImageView() -> UIImageView {
         if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
            imagePlugin.responds(to: #selector(ImagePlugin.animatedImageView)) {
             return imagePlugin.animatedImageView!()

@@ -60,11 +60,11 @@ public class Navigator: NSObject {
 }
 
 // MARK: - UIWindow+Navigation
-@_spi(FW) @objc extension UIWindow {
+@_spi(FW) extension UIWindow {
     
     // MARK: - Static
     /// 获取当前主window，可自定义
-    public static var fw_mainWindow: UIWindow? {
+    @objc public static var fw_mainWindow: UIWindow? {
         get {
             var mainWindow = UIWindow.fw_staticWindow
             if mainWindow != nil { return mainWindow }
@@ -168,7 +168,7 @@ public class Navigator: NSObject {
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
+    @objc public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
         fw_topViewController?.fw_open(viewController, animated: animated, options: options, completion: completion)
     }
 
@@ -181,7 +181,7 @@ public class Navigator: NSObject {
 }
 
 // MARK: - UIViewController+Navigation
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     // MARK: - Navigation
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
@@ -292,7 +292,7 @@ public class Navigator: NSObject {
 }
 
 // MARK: - UINavigationController+Navigation
-@_spi(FW) @objc extension UINavigationController {
+@_spi(FW) extension UINavigationController {
     
     // MARK: - Navigation
     /// push新界面，完成时回调

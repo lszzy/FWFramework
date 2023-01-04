@@ -132,7 +132,7 @@ extension FW {
 }
 
 // MARK: - UIApplication+Adaptive
-@_spi(FW) @objc extension UIApplication {
+@_spi(FW) extension UIApplication {
     
     /// 是否是调试模式
     public static var fw_isDebug: Bool {
@@ -146,7 +146,7 @@ extension FW {
 }
 
 // MARK: - UIDevice+Adaptive
-@_spi(FW) @objc extension UIDevice {
+@_spi(FW) extension UIDevice {
     
     /// 是否是模拟器
     public static var fw_isSimulator: Bool {
@@ -268,7 +268,7 @@ public enum ScreenInch: Int {
     case inch67 = 67
 }
 
-@_spi(FW) @objc extension UIScreen {
+@_spi(FW) extension UIScreen {
     
     /// 屏幕尺寸
     public static var fw_screenSize: CGSize {
@@ -291,7 +291,7 @@ public enum ScreenInch: Int {
     }
     
     /// 判断屏幕英寸
-    @nonobjc public static func fw_isScreenInch(_ inch: ScreenInch) -> Bool {
+    public static func fw_isScreenInch(_ inch: ScreenInch) -> Bool {
         switch inch {
         case .inch35:
             return UIDevice.fw_deviceSize.equalTo(CGSize(width: 320, height: 480))
@@ -333,7 +333,7 @@ public enum ScreenInch: Int {
     }
     
     /// 屏幕安全区域距离
-    public static var fw_safeAreaInsets: UIEdgeInsets {
+    @objc public static var fw_safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw_mainWindow
         if mainWindow != nil {
             if UIScreen.fw_staticWindow != nil { UIScreen.fw_staticWindow = nil }
@@ -347,7 +347,7 @@ public enum ScreenInch: Int {
     private static var fw_staticWindow: UIWindow?
 
     /// 状态栏高度，与是否隐藏无关
-    public static var fw_statusBarHeight: CGFloat {
+    @objc public static var fw_statusBarHeight: CGFloat {
         if !UIApplication.shared.isStatusBarHidden {
             return UIApplication.shared.statusBarFrame.height
         }
@@ -366,7 +366,7 @@ public enum ScreenInch: Int {
     }
     
     /// 导航栏高度，与是否隐藏无关
-    public static var fw_navigationBarHeight: CGFloat {
+    @objc public static var fw_navigationBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 44
         }
@@ -379,12 +379,12 @@ public enum ScreenInch: Int {
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    public static var fw_topBarHeight: CGFloat {
+    @objc public static var fw_topBarHeight: CGFloat {
         return fw_statusBarHeight + fw_navigationBarHeight
     }
     
     /// 标签栏高度，与是否隐藏无关
-    public static var fw_tabBarHeight: CGFloat {
+    @objc public static var fw_tabBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 65 }
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 49
@@ -398,7 +398,7 @@ public enum ScreenInch: Int {
     }
     
     /// 工具栏高度，与是否隐藏无关
-    public static var fw_toolBarHeight: CGFloat {
+    @objc public static var fw_toolBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 70 }
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 44
@@ -475,7 +475,7 @@ public enum ScreenInch: Int {
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-    public static func fw_flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
+    @objc public static func fw_flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         let floatValue: CGFloat = (value == .leastNonzeroMagnitude || value == .leastNormalMagnitude) ? 0 : value
         let scaleValue: CGFloat = scale > 0 ? scale : UIScreen.main.scale
         return ceil(floatValue * scaleValue) / scaleValue
@@ -484,7 +484,7 @@ public enum ScreenInch: Int {
 }
 
 // MARK: - UIView+Adaptive
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 是否自动等比例缩放方式设置transform，默认NO
     public var fw_autoScaleTransform: Bool {
@@ -507,7 +507,7 @@ public enum ScreenInch: Int {
 }
 
 // MARK: - UIViewController+Adaptive
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
     public var fw_statusBarHeight: CGFloat {

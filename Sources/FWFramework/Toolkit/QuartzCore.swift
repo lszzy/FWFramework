@@ -12,7 +12,7 @@ import FWObjC
 
 // MARK: - CADisplayLink+QuartzCore
 /// 如果block参数不会被持有并后续执行，可声明为NS_NOESCAPE，不会触发循环引用
-@_spi(FW) @objc extension CADisplayLink {
+@_spi(FW) extension CADisplayLink {
     
     /// 创建CADisplayLink，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameters:
@@ -55,7 +55,7 @@ import FWObjC
 }
 
 // MARK: - CAAnimation+QuartzCore
-@_spi(FW) @objc extension CAAnimation {
+@_spi(FW) extension CAAnimation {
     
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
     public var fw_startBlock: ((CAAnimation) -> Void)? {
@@ -110,7 +110,7 @@ import FWObjC
 }
 
 // MARK: - CALayer+QuartzCore
-@_spi(FW) @objc extension CALayer {
+@_spi(FW) extension CALayer {
     
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeBackgroundColor: UIColor? {
@@ -196,7 +196,7 @@ import FWObjC
 }
 
 // MARK: - CAGradientLayer+QuartzCore
-@_spi(FW) @objc extension CAGradientLayer {
+@_spi(FW) extension CAGradientLayer {
     
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeColors: [UIColor]? {
@@ -246,7 +246,7 @@ import FWObjC
 }
 
 // MARK: - UIView+QuartzCore
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /**
      绘制形状路径，需要在drawRect中调用

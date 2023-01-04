@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 自定义弹窗插件，未设置时自动从插件池加载
     public var fw_alertPlugin: AlertPlugin! {
@@ -310,7 +310,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 显示警告框(简单版)
     /// - Parameters:
@@ -318,7 +318,7 @@ import FWObjC
     ///   - message:  警告框消息
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showAlert(
+    @objc public func fw_showAlert(
         title: Any?,
         message: Any?,
         cancel: Any? = nil,
@@ -383,7 +383,7 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showConfirm(
+    @objc public func fw_showConfirm(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -407,7 +407,7 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showPrompt(
+    @objc public func fw_showPrompt(
         title: Any?,
         message: Any?,
         cancel: Any?,
