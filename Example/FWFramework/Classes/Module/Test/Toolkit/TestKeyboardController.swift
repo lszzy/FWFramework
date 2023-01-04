@@ -63,7 +63,6 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private lazy var textView: UITextView = {
         let result = createTextView()
         result.tag = 3
-        result.delegate = self
         result.backgroundColor = AppTheme.backgroundColor
         result.fw.maxUnicodeLength = 10
         result.fw.placeholder = "问题，最多10个中文"
