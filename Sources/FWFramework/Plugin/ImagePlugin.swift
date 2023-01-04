@@ -95,7 +95,7 @@ extension FW {
     }
 
     /// 从图片数据解码创建UIImage，默认scale为1，支持动图。支持设置图片解码选项
-    public static func fw_image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
+    @objc public static func fw_image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
         guard let data = data, data.count > 0 else { return nil }
         
         if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
