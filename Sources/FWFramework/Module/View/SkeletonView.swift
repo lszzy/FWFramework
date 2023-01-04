@@ -10,14 +10,12 @@ import UIKit
 // MARK: - SkeletonAnimation
 
 /// 骨架屏动画协议
-@objc(FWSkeletonAnimationProtocol)
 public protocol SkeletonAnimationProtocol {
     func skeletonAnimationStart(_ gradientLayer: CAGradientLayer)
     func skeletonAnimationStop(_ gradientLayer: CAGradientLayer)
 }
 
 /// 骨架屏自带动画类型
-@objc(FWSkeletonAnimationType)
 public enum SkeletonAnimationType: Int {
     /// 闪光灯动画
     case shimmer
@@ -28,7 +26,6 @@ public enum SkeletonAnimationType: Int {
 }
 
 /// 骨架屏自带动画方向
-@objc(FWSkeletonAnimationDirection)
 public enum SkeletonAnimationDirection: Int {
     case right
     case left
@@ -37,10 +34,9 @@ public enum SkeletonAnimationDirection: Int {
 }
 
 /// 骨架屏自带动画
-@objc(FWSkeletonAnimation)
-@objcMembers open class SkeletonAnimation: NSObject,
-                                             NSCopying, NSMutableCopying,
-                                             SkeletonAnimationProtocol {
+open class SkeletonAnimation: NSObject,
+                              NSCopying, NSMutableCopying,
+                              SkeletonAnimationProtocol {
     public static let shimmer = SkeletonAnimation(type: .shimmer)
     public static let solid = SkeletonAnimation(type: .solid)
     public static let scale = SkeletonAnimation(type: .scale)
@@ -203,8 +199,7 @@ public enum SkeletonAnimationDirection: Int {
 // MARK: - SkeletonAppearance
 
 /// 骨架屏通用样式
-@objc(FWSkeletonAppearance)
-@objcMembers public class SkeletonAppearance: NSObject {
+public class SkeletonAppearance: NSObject {
     /// 单例对象
     public static let appearance = SkeletonAppearance()
     
@@ -229,22 +224,19 @@ public enum SkeletonAnimationDirection: Int {
 // MARK: - SkeletonView
 
 /// 骨架屏视图数据源协议
-@objc(FWSkeletonViewDataSource)
-public protocol SkeletonViewDataSource {
+@objc public protocol SkeletonViewDataSource {
     /// 骨架屏视图创建方法
     func skeletonViewProvider() -> SkeletonView?
 }
 
 /// 骨架屏视图代理协议
-@objc(FWSkeletonViewDelegate)
-public protocol SkeletonViewDelegate {
+@objc public protocol SkeletonViewDelegate {
     /// 骨架屏视图布局方法
     func skeletonViewLayout(_ layout: SkeletonLayout)
 }
 
 /// 骨架屏视图，支持设置占位图片
-@objc(FWSkeletonView)
-@objcMembers open class SkeletonView: UIView {
+open class SkeletonView: UIView {
     /// 自定义动画，默认通用样式
     open var animation: SkeletonAnimationProtocol? = SkeletonAppearance.appearance.animation
     
@@ -315,8 +307,7 @@ public protocol SkeletonViewDelegate {
 // MARK: - SkeletonLabel
 
 /// 骨架屏多行标签视图，可显示多行骨架
-@objc(FWSkeletonLabel)
-@objcMembers open class SkeletonLabel: SkeletonView {
+open class SkeletonLabel: SkeletonView {
     /// 行数，默认0
     open var numberOfLines: Int = 0
     /// 行高，默认15
@@ -374,8 +365,7 @@ public protocol SkeletonViewDelegate {
 // MARK: - SkeletonLayout
 
 /// 骨架屏布局视图，可从视图生成骨架屏，嵌套到UIScrollView即可实现滚动
-@objc(FWSkeletonLayout)
-@objcMembers open class SkeletonLayout: SkeletonView {
+open class SkeletonLayout: SkeletonView {
     /// 相对布局视图
     open weak var layoutView: UIView? {
         didSet {
@@ -533,8 +523,7 @@ public protocol SkeletonViewDelegate {
 // MARK: - SkeletonTableView
 
 /// 骨架屏表格视图，可生成表格骨架屏
-@objc(FWSkeletonTableView)
-@objcMembers open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableViewDelegate {
+open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图，默认不可滚动
     open lazy var tableView: UITableView = {
         let tableView = UITableView.fw_tableView(style)
@@ -698,8 +687,7 @@ public protocol SkeletonViewDelegate {
 // MARK: - SkeletonCollectionView
 
 /// 骨架屏集合视图，可生成集合骨架屏
-@objc(FWSkeletonCollectionView)
-@objcMembers open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合视图，默认不可滚动
     open lazy var collectionView: UICollectionView = {
         let collectionView: UICollectionView

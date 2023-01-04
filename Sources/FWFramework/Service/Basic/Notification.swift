@@ -10,8 +10,7 @@ import UserNotifications
 
 // MARK: - NotificationManager
 /// 通知管理器
-@objc(FWNotificationManager)
-@objcMembers public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     
     // MARK: - Accessor
     /// 单例模式

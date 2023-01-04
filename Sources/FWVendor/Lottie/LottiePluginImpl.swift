@@ -12,8 +12,7 @@ import FWObjC
 #endif
 
 /// Lottile插件视图，可用于加载、进度、下拉刷新等
-@objc(FWLottiePluginView)
-@objcMembers open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
+open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     
     // MARK: - Accessor
     /// 设置或获取进度条大小，默认{37,37}

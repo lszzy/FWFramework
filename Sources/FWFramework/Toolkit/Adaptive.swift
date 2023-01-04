@@ -256,7 +256,6 @@ extension FW {
 
 // MARK: - UIScreen+Adaptive
 /// 屏幕尺寸枚举
-@objc(FWScreenInch)
 public enum ScreenInch: Int {
     case inch35 = 35
     case inch40 = 40
@@ -292,7 +291,7 @@ public enum ScreenInch: Int {
     }
     
     /// 判断屏幕英寸
-    public static func fw_isScreenInch(_ inch: ScreenInch) -> Bool {
+    @nonobjc public static func fw_isScreenInch(_ inch: ScreenInch) -> Bool {
         switch inch {
         case .inch35:
             return UIDevice.fw_deviceSize.equalTo(CGSize(width: 320, height: 480))
