@@ -12,8 +12,7 @@ import FWObjC
 
 // MARK: - TableViewDelegate
 /// 便捷表格视图代理
-@objc(FWTableViewDelegate)
-@objcMembers open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
     /// 表格section数
     open var countForSection: (() -> Int)?
     /// 表格section数，优先级低

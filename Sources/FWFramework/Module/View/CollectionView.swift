@@ -12,8 +12,7 @@ import FWObjC
 
 // MARK: - CollectionViewDelegate
 /// 便捷集合视图代理
-@objc(FWCollectionViewDelegate)
-@objcMembers open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var countForSection: (() -> Int)?
     /// 集合section数，优先级低

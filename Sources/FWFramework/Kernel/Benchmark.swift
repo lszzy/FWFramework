@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - FW+Benchmark
-@objc extension FW {
+extension FW {
     
     /// 标记时间调试开始
     ///
@@ -30,8 +30,7 @@ import Foundation
 
 // MARK: - Benchmark
 /// 时间调试器
-@objc(FWBenchmark)
-@objcMembers public class Benchmark: NSObject {
+public class Benchmark {
     
     // MARK: - Accessor
     private static var beginTimes: [String : TimeInterval] = [:]

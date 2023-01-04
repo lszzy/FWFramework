@@ -18,7 +18,8 @@ import FWObjC
 #endif
 
 // MARK: - FW+Toolkit
-@objc extension FW {
+extension FW {
+    
     /// 从16进制创建UIColor
     ///
     /// - Parameters:
@@ -70,6 +71,7 @@ import FWObjC
     public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
         return Icon.iconImage(name, size: size)
     }
+    
 }
 
 // MARK: - UIApplication+Toolkit

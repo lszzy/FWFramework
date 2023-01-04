@@ -26,8 +26,7 @@ extension FW {
 
 // MARK: - Promise
 /// 框架约定类
-@objc(FWPromise)
-@objcMembers public class Promise: NSObject {
+public class Promise: NSObject {
     
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
@@ -135,7 +134,7 @@ extension FW {
 }
 
 // MARK: - Public
-@objc extension Promise {
+extension Promise {
     
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息；约定进度为所有约定总进度
     public static func all(_ promises: [Promise]) -> Promise {
