@@ -25,7 +25,7 @@ extension NavigationBarStyle {
     
 }
 
-@objcMembers class AppTheme: NSObject {
+class AppTheme: NSObject {
     
     public static var backgroundColor: UIColor {
         UIColor.fw.themeLight(.white, dark: .black)

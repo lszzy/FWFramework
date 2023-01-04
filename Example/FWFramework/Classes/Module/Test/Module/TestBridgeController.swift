@@ -8,10 +8,9 @@
 
 import FWFramework
 
-@objcMembers
 class TestJavascriptBridge: NSObject {
     
-    static func testObjcCallback(_ webView: WKWebView, data: Any, callback: @escaping JsBridgeResponseCallback) {
+    @objc static func testObjcCallback(_ webView: WKWebView, data: Any, callback: @escaping JsBridgeResponseCallback) {
         print("TestJavascriptBridge.testObjcCallback called: \(data)")
         callback("Response from TestJavascriptBridge.testObjcCallback")
     }
