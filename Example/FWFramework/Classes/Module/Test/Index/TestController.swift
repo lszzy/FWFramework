@@ -7,9 +7,8 @@
 //
 
 import FWFramework
-import Darwin
 
-@objcMembers class TestController: UIViewController {
+class TestController: UIViewController {
     
     var testData: [Any] = [
         ["Kernel", [
