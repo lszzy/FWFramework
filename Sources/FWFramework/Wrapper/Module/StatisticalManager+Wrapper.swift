@@ -42,7 +42,7 @@ extension Wrapper where Base: UIView {
     }
 
     /// 手工触发统计曝光事件，更新曝光次数和时长，列表可指定cell和位置，duration为单次曝光时长(0表示开始)，可重复触发
-    public func statisticalTriggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval) {
+    public func statisticalTriggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval = 0) {
         base.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
     }
     

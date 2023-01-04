@@ -9,8 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWStatistical
-
 @class __FWStatisticalObject;
 
 /// 统计事件触发通知，可统一处理。通知object为__FWStatisticalObject统计对象，userInfo为附加信息

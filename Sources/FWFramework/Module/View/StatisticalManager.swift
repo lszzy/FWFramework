@@ -197,7 +197,7 @@ import FWObjC
     }
 
     /// 手工触发统计曝光事件，更新曝光次数和时长，列表可指定cell和位置，duration为单次曝光时长(0表示开始)，可重复触发
-    public func fw_statisticalTriggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval) {
+    public func fw_statisticalTriggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval = 0) {
         var object: StatisticalObject
         if let exposureObject = cell?.fw_statisticalExposure ?? self.fw_statisticalExposure {
             object = exposureObject
@@ -220,8 +220,365 @@ import FWObjC
         }
     }
     
-    private func fw_statisticalExposureRegister() {
+    /// 内部方法，启用统计功能
+    public static func fw_enableStatistical() {
+        guard !fw_staticStatisticalEnabled else { return }
+        fw_staticStatisticalEnabled = true
         
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.frame),
+            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+        ) { store in { selfObject, frame in
+            store.original(selfObject, store.selector, frame)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.isHidden),
+            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+        ) { store in { selfObject, hidden in
+            store.original(selfObject, store.selector, hidden)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.alpha),
+            methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
+        ) { store in { selfObject, alpha in
+            store.original(selfObject, store.selector, alpha)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.bounds),
+            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+        ) { store in { selfObject, bounds in
+            store.original(selfObject, store.selector, bounds)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.didMoveToWindow),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableView.self,
+            selector: #selector(UITableView.reloadData),
+            methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UICollectionView.self,
+            selector: #selector(UICollectionView.reloadData),
+            methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableViewCell.self,
+            selector: #selector(UITableViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                selfObject.fw_statisticalClickCellRegister()
+            }
+            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                selfObject.fw_statisticalExposureCellRegister()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UICollectionViewCell.self,
+            selector: #selector(UICollectionViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                selfObject.fw_statisticalClickCellRegister()
+            }
+            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                selfObject.fw_statisticalExposureCellRegister()
+            }
+        }}
+    }
+    
+    private static var fw_staticStatisticalEnabled = false
+    
+    private class StatisticalTarget: NSObject {
+        private(set) weak var view: UIView?
+        
+        init(view: UIView?) {
+            super.init()
+            self.view = view
+        }
+        
+        @objc func statisticalExposureCalculate() {
+            if let view = self.view, (view is UITableView || view is UICollectionView) {
+                for subview in view.subviews {
+                    subview.fw_updateStatisticalExposureState()
+                }
+            } else {
+                self.view?.fw_updateStatisticalExposureState()
+            }
+        }
+    }
+    
+    private enum StatisticalExposureState: Int {
+        case none = 0
+        case partly
+        case fully
+    }
+    
+    private var fw_statisticalExposureIsRegistered: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureIsRegistered") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsRegistered") }
+    }
+    
+    private var fw_statisticalExposureIsProxy: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureIsProxy") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsProxy") }
+    }
+    
+    private var fw_statisticalExposureIsFully: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureIsFully") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsFully") }
+    }
+    
+    private var fw_statisticalExposureIdentifier: String {
+        get { return fw_property(forName: "fw_statisticalExposureIdentifier") as? String ?? "" }
+        set { fw_setProperty(newValue, forName: "fw_statisticalExposureIdentifier") }
+    }
+    
+    private func fw_statisticalExposureViewIdentifier() -> String {
+        var indexPath: IndexPath?
+        if let cell = self as? UITableViewCell {
+            indexPath = cell.fw_indexPath
+        } else if let cell = self as? UICollectionViewCell {
+            indexPath = cell.fw_indexPath
+        }
+        
+        let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(self.fw_statisticalExposure?.name ?? "")-\(FW.safeString(self.fw_statisticalExposure?.object))"
+        return identifier
+    }
+    
+    @discardableResult
+    private func fw_statisticalExposureCustom() -> Bool {
+        if self.conforms(to: StatisticalDelegate.self),
+           self.responds(to: #selector(StatisticalDelegate.statisticalExposure(callback:))) {
+            (self as? StatisticalDelegate)?.statisticalExposure?(callback: { [weak self] cell, indexPath, duration in
+                guard let this = self else { return }
+                if this.fw_statisticalExposureIsFullyState(this.fw_statisticalExposureViewState()) {
+                    this.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
+                }
+            })
+            return true
+        }
+        return false
+    }
+    
+    @nonobjc private var fw_statisticalExposureState: StatisticalExposureState {
+        get {
+            let value = fw_propertyInt(forName: "fw_statisticalExposureState")
+            return .init(rawValue: value) ?? .none
+        }
+        set {
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_statisticalExposureState")
+        }
+    }
+    
+    @nonobjc private func fw_statisticalExposureViewState() -> StatisticalExposureState {
+        if !self.fw_isViewVisible {
+            return .none
+        }
+        
+        let viewController = self.fw_viewController
+        if let viewController = viewController,
+           viewController.view.window == nil || viewController.presentedViewController != nil {
+            return .none
+        }
+        
+        let targetView = viewController?.view ?? self.window
+        var superview = self.superview
+        var superviewHidden = false
+        while superview != nil && superview != targetView {
+            if !(superview?.fw_isViewVisible ?? false) {
+                superviewHidden = true
+                break
+            }
+            superview = superview?.superview
+        }
+        if superviewHidden {
+            return .none
+        }
+        
+        var viewRect = self.convert(self.bounds, to: targetView)
+        viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
+        let targetRect = targetView?.bounds ?? .zero
+        var state: StatisticalExposureState = .none
+        if !CGRectIsEmpty(viewRect) {
+            if CGRectContainsRect(targetRect, viewRect) {
+                state = .fully
+            } else if CGRectIntersectsRect(targetRect, viewRect) {
+                state = .partly
+            }
+        }
+        if state == .none {
+            return state
+        }
+        
+        var shieldView: UIView?
+        if self.fw_statisticalExposure?.shieldView != nil {
+            shieldView = self.fw_statisticalExposure?.shieldView
+        } else if self.fw_statisticalExposure?.shieldViewBlock != nil {
+            shieldView = self.fw_statisticalExposure?.shieldViewBlock?()
+        }
+        guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
+            return state
+        }
+        let shieldRect = shieldView.convert(shieldView.bounds, to: targetView)
+        if !CGRectIsEmpty(shieldRect) {
+            if CGRectContainsRect(shieldRect, viewRect) {
+                return .none
+            } else if CGRectIntersectsRect(shieldRect, viewRect) {
+                return .partly
+            }
+        }
+        return state
+    }
+    
+    private func fw_updateStatisticalExposureState() {
+        let oldIdentifier = self.fw_statisticalExposureIdentifier
+        let identifier = self.fw_statisticalExposureViewIdentifier()
+        let identifierChanged = oldIdentifier.count > 0 && identifier != oldIdentifier
+        if oldIdentifier.count < 1 || identifierChanged {
+            self.fw_statisticalExposureIdentifier = identifier
+            if oldIdentifier.count < 1 { self.fw_statisticalExposureCustom() }
+        }
+        
+        let oldState = self.fw_statisticalExposureState
+        let state = self.fw_statisticalExposureViewState()
+        if state == oldState && !identifierChanged { return }
+        self.fw_statisticalExposureState = state
+        
+        if self.fw_statisticalExposureIsFullyState(state),
+           (!self.fw_statisticalExposureIsFully || identifierChanged) {
+            self.fw_statisticalExposureIsFully = true
+            if self.fw_statisticalExposureCustom() {
+            } else if let cell = self as? UITableViewCell {
+                cell.fw_tableView?.fw_statisticalTriggerExposure(self, indexPath: cell.fw_indexPath, duration: 0)
+            } else if let cell = self as? UICollectionViewCell {
+                cell.fw_collectionView?.fw_statisticalTriggerExposure(self, indexPath: cell.fw_indexPath, duration: 0)
+            } else {
+                self.fw_statisticalTriggerExposure(nil, indexPath: nil, duration: 0)
+            }
+        } else if state == .none || identifierChanged {
+            self.fw_statisticalExposureIsFully = false
+        }
+    }
+    
+    private func fw_statisticalExposureRegister() {
+        if self.fw_statisticalExposureIsRegistered { return }
+        self.fw_statisticalExposureIsRegistered = true
+        if self is UITableViewCell || self is UICollectionViewCell {
+            self.fw_statisticalExposureCellRegister()
+            return
+        }
+        
+        if self.superview != nil {
+            self.superview?.fw_statisticalExposureRegister()
+        }
+        
+        if self.fw_statisticalExposure != nil ||
+            self.fw_statisticalExposureBlock != nil ||
+            self.fw_statisticalExposureIsProxy {
+            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.statisticalExposureCalculate), object: nil)
+            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.statisticalExposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
+        }
+    }
+    
+    private func fw_statisticalExposureCellRegister() {
+        if self.superview == nil { return }
+        var proxyView: UIView?
+        if self.conforms(to: StatisticalDelegate.self),
+           self.responds(to: #selector(StatisticalDelegate.statisticalCellProxyView)) {
+            proxyView = (self as? StatisticalDelegate)?.statisticalCellProxyView?()
+        } else {
+            if let cell = self as? UITableViewCell {
+                proxyView = cell.fw_tableView
+            } else if let cell = self as? UICollectionViewCell {
+                proxyView = cell.fw_collectionView
+            }
+        }
+        proxyView?.fw_statisticalExposureIsProxy = true
+        proxyView?.fw_statisticalExposureRegister()
+    }
+    
+    private func fw_statisticalExposureUpdate() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        
+        if let viewController = self.fw_viewController,
+           viewController.view.window == nil || viewController.presentedViewController != nil { return }
+        
+        self.fw_statisticalExposureRecursive()
+    }
+    
+    private func fw_statisticalExposureRecursive() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        
+        if self.fw_statisticalExposure != nil ||
+            self.fw_statisticalExposureBlock != nil ||
+            self.fw_statisticalExposureIsProxy {
+            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.statisticalExposureCalculate), object: nil)
+            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.statisticalExposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
+        }
+        
+        for subview in self.subviews {
+            subview.fw_statisticalExposureRecursive()
+        }
+    }
+    
+    private var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
+        } else {
+            let target = StatisticalTarget(view: self)
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
+        }
+    }
+    
+    @nonobjc private func fw_statisticalExposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
+        var isFullState = (state == .fully) ? true : false
+        if !isFullState && StatisticalManager.shared.exposurePartly {
+            isFullState = (state == .partly) ? true : false
+        }
+        return isFullState
     }
     
     private func fw_statisticalExposureCount(_ indexPath: IndexPath?) -> Int {
