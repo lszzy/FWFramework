@@ -16,7 +16,8 @@ import FWObjC
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    @objc public var fw_keyboardManager: Bool {
+    @objc(__fw_keyboardManager)
+    public var fw_keyboardManager: Bool {
         get { return self.fw_innerKeyboardTarget.keyboardManager }
         set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
     }
@@ -243,7 +244,8 @@ import FWObjC
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    @objc public var fw_keyboardManager: Bool {
+    @objc(__fw_keyboardManager)
+    public var fw_keyboardManager: Bool {
         get { return self.fw_innerKeyboardTarget.keyboardManager }
         set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
     }
