@@ -1867,7 +1867,7 @@ import AdSupport
 @_spi(FW) extension UIPageControl {
     
     /// 自定义圆点大小，默认{10, 10}
-    public var fw_preferredSize: CGSize {
+    @objc public var fw_preferredSize: CGSize {
         get {
             var size = self.bounds.size
             if size.height <= 0 {

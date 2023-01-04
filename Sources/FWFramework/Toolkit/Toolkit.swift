@@ -1166,7 +1166,7 @@ extension FW {
     }
 
     /// 判断图片是否有透明通道
-    public var fw_hasAlpha: Bool {
+    @objc public var fw_hasAlpha: Bool {
         guard let cgImage = self.cgImage else { return false }
         let alpha = cgImage.alphaInfo
         return alpha == .first || alpha == .last ||
@@ -1353,7 +1353,7 @@ extension FW {
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等
-    public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+    @objc public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, !self.fw_hasAlpha && !circular, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         

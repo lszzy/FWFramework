@@ -70,7 +70,7 @@ import FWObjC
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    @objc public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
+    public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
         fw_showEmptyView(text: text, detail: detail, image: image, loading: false, action: action, block: block)
     }
 
@@ -134,7 +134,7 @@ import FWObjC
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
+    @objc public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
         self.view.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }
 

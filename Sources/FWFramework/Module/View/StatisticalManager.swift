@@ -79,13 +79,13 @@ import FWObjC
             return
         }
         
-        if let tableView = self as? UITableView {
+        if let tableView = self as? UITableView, let tableDelegate = tableView.delegate as? NSObject {
             NSObject.fw_swizzleMethod(
-                tableView.delegate,
+                tableDelegate,
                 selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
                 identifier: "FWStatisticalManager",
-                methodSignature: (@convention(c) (AnyObject, Selector, UITableView, IndexPath) -> Void).self,
-                swizzleSignature: (@convention(block) (AnyObject, UITableView, IndexPath) -> Void).self
+                methodSignature: (@convention(c) (NSObject, Selector, UITableView, IndexPath) -> Void).self,
+                swizzleSignature: (@convention(block) (NSObject, UITableView, IndexPath) -> Void).self
             ) { store in { selfObject, tableView, indexPath in
                 store.original(selfObject, store.selector, tableView, indexPath)
                 
@@ -97,13 +97,13 @@ import FWObjC
             return
         }
         
-        if let collectionView = self as? UICollectionView {
+        if let collectionView = self as? UICollectionView, let collectionDelegate = collectionView.delegate as? NSObject {
             NSObject.fw_swizzleMethod(
-                collectionView.delegate,
+                collectionDelegate,
                 selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
                 identifier: "FWStatisticalManager",
-                methodSignature: (@convention(c) (AnyObject, Selector, UICollectionView, IndexPath) -> Void).self,
-                swizzleSignature: (@convention(block) (AnyObject, UICollectionView, IndexPath) -> Void).self
+                methodSignature: (@convention(c) (NSObject, Selector, UICollectionView, IndexPath) -> Void).self,
+                swizzleSignature: (@convention(block) (NSObject, UICollectionView, IndexPath) -> Void).self
             ) { store in { selfObject, collectionView, indexPath in
                 store.original(selfObject, store.selector, collectionView, indexPath)
                 

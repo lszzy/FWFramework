@@ -13,7 +13,7 @@ import FWObjC
 @_spi(FW) extension UIImage {
     
     /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
-    public var fw_imageLoopCount: UInt {
+    @objc public var fw_imageLoopCount: UInt {
         get {
             if let value = fw_property(forName: "fw_imageLoopCount") as? NSNumber {
                 return value.uintValue

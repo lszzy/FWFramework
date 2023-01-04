@@ -33,7 +33,7 @@ import FWObjC
     ///   - message:  警告框消息
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showAlert(
+    @objc public func fw_showAlert(
         title: Any?,
         message: Any?,
         cancel: Any? = nil,
@@ -86,7 +86,7 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showConfirm(
+    @objc public func fw_showConfirm(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -108,7 +108,7 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showPrompt(
+    @objc public func fw_showPrompt(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -229,7 +229,7 @@ import FWObjC
     ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
-    public func fw_showSheet(
+    @objc public func fw_showSheet(
         title: Any?,
         message: Any?,
         cancel: Any?,
