@@ -12,7 +12,8 @@ import FWObjC
 
 // MARK: - UINavigationBar+BarAppearance
 /// 导航栏视图分类，全局设置用[UINavigationBar appearance]。默认iOS15+启用appearance，iOS14及以下使用旧版本api
-@_spi(FW) @objc extension UINavigationBar {
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
+@_spi(FW) extension UINavigationBar {
     
     /// 是否强制iOS13+启用新版样式，默认false，仅iOS15+才启用
     public static var fw_appearanceEnabled: Bool {
@@ -30,7 +31,7 @@ import FWObjC
     }
     
     /// 设置全局按钮样式属性，nil时系统默认
-    public static var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
+    @objc public static var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
             return UINavigationBar.fw_staticButtonAttributes
         }
@@ -78,7 +79,7 @@ import FWObjC
     }
 
     /// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var fw_isTranslucent: Bool {
+    @objc public var fw_isTranslucent: Bool {
         get {
             return fw_propertyBool(forName: "fw_isTranslucent")
         }
@@ -102,7 +103,7 @@ import FWObjC
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var fw_foregroundColor: UIColor? {
+    @objc public var fw_foregroundColor: UIColor? {
         get {
             return self.tintColor
         }
@@ -114,7 +115,7 @@ import FWObjC
     }
 
     /// 单独设置标题颜色，nil时显示前景颜色
-    public var fw_titleAttributes: [NSAttributedString.Key: Any]? {
+    @objc public var fw_titleAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw_property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -125,7 +126,7 @@ import FWObjC
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
-    public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
+    @objc public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -186,7 +187,7 @@ import FWObjC
     }
 
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var fw_backgroundColor: UIColor? {
+    @objc public var fw_backgroundColor: UIColor? {
         get {
             return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
@@ -223,7 +224,7 @@ import FWObjC
     }
 
     /// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
-    public var fw_backgroundImage: UIImage? {
+    @objc public var fw_backgroundImage: UIImage? {
         get {
             return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
@@ -243,7 +244,7 @@ import FWObjC
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var fw_backgroundTransparent: Bool {
+    @objc public var fw_backgroundTransparent: Bool {
         get {
             return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
@@ -264,7 +265,7 @@ import FWObjC
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var fw_shadowColor: UIColor? {
+    @objc public var fw_shadowColor: UIColor? {
         get {
             return fw_property(forName: "fw_shadowColor") as? UIColor
         }
@@ -286,7 +287,7 @@ import FWObjC
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var fw_shadowImage: UIImage? {
+    @objc public var fw_shadowImage: UIImage? {
         get {
             return fw_property(forName: "fw_shadowImage") as? UIImage
         }
@@ -304,7 +305,7 @@ import FWObjC
     }
 
     /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
-    public var fw_backImage: UIImage? {
+    @objc public var fw_backImage: UIImage? {
         get {
             if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
                 return fw_appearance.backIndicatorImage
@@ -386,6 +387,7 @@ import FWObjC
 
 // MARK: - UITabBar+BarAppearance
 /// 标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 @_spi(FW) extension UITabBar {
     
     /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
@@ -411,7 +413,7 @@ import FWObjC
     }
 
     /// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var fw_isTranslucent: Bool {
+    @objc public var fw_isTranslucent: Bool {
         get {
             return fw_propertyBool(forName: "fw_isTranslucent")
         }
@@ -435,13 +437,13 @@ import FWObjC
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var fw_foregroundColor: UIColor? {
+    @objc public var fw_foregroundColor: UIColor? {
         get { return self.tintColor }
         set { self.tintColor = newValue }
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
-    public var fw_backgroundColor: UIColor? {
+    @objc public var fw_backgroundColor: UIColor? {
         get {
             return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
@@ -478,7 +480,7 @@ import FWObjC
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
-    public var fw_backgroundImage: UIImage? {
+    @objc public var fw_backgroundImage: UIImage? {
         get {
             return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
@@ -497,7 +499,7 @@ import FWObjC
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var fw_backgroundTransparent: Bool {
+    @objc public var fw_backgroundTransparent: Bool {
         get {
             return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
@@ -518,7 +520,7 @@ import FWObjC
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var fw_shadowColor: UIColor? {
+    @objc public var fw_shadowColor: UIColor? {
         get {
             return fw_property(forName: "fw_shadowColor") as? UIColor
         }
@@ -540,7 +542,7 @@ import FWObjC
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var fw_shadowImage: UIImage? {
+    @objc public var fw_shadowImage: UIImage? {
         get {
             return fw_property(forName: "fw_shadowImage") as? UIImage
         }
@@ -618,6 +620,7 @@ import FWObjC
 // MARK: - UIToolbar+BarAppearance
 /// 工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
 /// 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 @_spi(FW) extension UIToolbar {
     
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
@@ -645,7 +648,7 @@ import FWObjC
     }
 
     /// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
-    public var fw_isTranslucent: Bool {
+    @objc public var fw_isTranslucent: Bool {
         get {
             return fw_propertyBool(forName: "fw_isTranslucent")
         }
@@ -669,7 +672,7 @@ import FWObjC
     }
 
     /// 设置前景颜色，包含文字和按钮等
-    public var fw_foregroundColor: UIColor? {
+    @objc public var fw_foregroundColor: UIColor? {
         get {
             return self.tintColor
         }
@@ -682,7 +685,7 @@ import FWObjC
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
-    public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
+    @objc public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -710,7 +713,7 @@ import FWObjC
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
-    public var fw_backgroundColor: UIColor? {
+    @objc public var fw_backgroundColor: UIColor? {
         get {
             return fw_property(forName: "fw_backgroundColor") as? UIColor
         }
@@ -747,7 +750,7 @@ import FWObjC
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
-    public var fw_backgroundImage: UIImage? {
+    @objc public var fw_backgroundImage: UIImage? {
         get {
             return fw_property(forName: "fw_backgroundImage") as? UIImage
         }
@@ -766,7 +769,7 @@ import FWObjC
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
-    public var fw_backgroundTransparent: Bool {
+    @objc public var fw_backgroundTransparent: Bool {
         get {
             return fw_propertyBool(forName: "fw_backgroundTransparent")
         }
@@ -787,7 +790,7 @@ import FWObjC
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
-    public var fw_shadowColor: UIColor? {
+    @objc public var fw_shadowColor: UIColor? {
         get {
             return fw_property(forName: "fw_shadowColor") as? UIColor
         }
@@ -809,7 +812,7 @@ import FWObjC
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
-    public var fw_shadowImage: UIImage? {
+    @objc public var fw_shadowImage: UIImage? {
         get {
             return fw_property(forName: "fw_shadowImage") as? UIImage
         }

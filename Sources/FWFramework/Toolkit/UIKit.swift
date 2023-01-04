@@ -1344,10 +1344,11 @@ import AdSupport
 
 // MARK: - UIControl+UIKit
 /// 防重复点击可以手工控制enabled或userInteractionEnabled或loading，如request开始时禁用，结束时启用等
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 @_spi(FW) extension UIControl {
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
-    public var fw_touchEventInterval: TimeInterval {
+    @objc public var fw_touchEventInterval: TimeInterval {
         get { fw_propertyDouble(forName: "fw_touchEventInterval") }
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
@@ -2277,6 +2278,7 @@ import AdSupport
 }
 
 // MARK: - UITableView+UIKit
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 @_spi(FW) extension UITableView {
     
     /// 全局清空TableView默认多余边距
@@ -2287,7 +2289,7 @@ import AdSupport
     }
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
-    public var fw_estimatedLayout: Bool {
+    @objc public var fw_estimatedLayout: Bool {
         get {
             return self.estimatedRowHeight == UITableView.automaticDimension
         }
