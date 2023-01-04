@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var fw_emptyPlugin: EmptyPlugin! {
@@ -28,7 +28,7 @@ import FWObjC
     }
     
     /// 设置空界面外间距，默认zero
-    public var fw_emptyInsets: UIEdgeInsets {
+    @objc public var fw_emptyInsets: UIEdgeInsets {
         get {
             var view = self
             if let scrollView = self as? UIScrollView {
@@ -70,7 +70,7 @@ import FWObjC
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
+    @objc public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
         fw_showEmptyView(text: text, detail: detail, image: image, loading: false, action: action, block: block)
     }
 
@@ -115,7 +115,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 设置空界面外间距，默认zero
     public var fw_emptyInsets: UIEdgeInsets {
@@ -155,7 +155,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIScrollView {
+@_spi(FW) extension UIScrollView {
     
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
     public weak var fw_emptyViewDelegate: EmptyViewDelegate? {

@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - UITableViewCell+DynamicLayout
-@_spi(FW) @objc extension UITableViewCell {
+@_spi(FW) extension UITableViewCell {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -484,7 +484,7 @@ public enum HeaderFooterViewType: Int {
 }
 
 // MARK: - UICollectionViewCell+DynamicLayout
-@_spi(FW) @objc extension UICollectionViewCell {
+@_spi(FW) extension UICollectionViewCell {
 
     /// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
     public static func fw_cell(
@@ -525,7 +525,7 @@ public enum HeaderFooterViewType: Int {
 }
 
 // MARK: - UICollectionReusableView+DynamicLayout
-@_spi(FW) @objc extension UICollectionReusableView {
+@_spi(FW) extension UICollectionReusableView {
     
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -603,7 +603,7 @@ public enum HeaderFooterViewType: Int {
 /// 集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 ///
 /// 如果使用系统自动尺寸，建议设置estimatedItemSize提高性能
-@_spi(FW) @objc extension UICollectionView {
+@_spi(FW) extension UICollectionView {
     
     // MARK: - DynamicLayoutSizeCache
     private class DynamicLayoutSizeCache: NSObject {

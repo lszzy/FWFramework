@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 自定义吐司插件，未设置时自动从插件池加载
     public var fw_toastPlugin: ToastPlugin! {
@@ -28,7 +28,7 @@ import FWObjC
     }
     
     /// 设置吐司外间距，默认zero
-    public var fw_toastInsets: UIEdgeInsets {
+    @objc public var fw_toastInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_toastInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
@@ -158,7 +158,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     /// 设置吐司是否显示在window上，默认NO，显示到view上
     public var fw_toastInWindow: Bool {
@@ -185,12 +185,12 @@ import FWObjC
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
+    @objc public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
         fw_toastContainerView?.fw_showLoading(text: text, cancel: cancel)
     }
 
     /// 隐藏加载吐司
-    public func fw_hideLoading() {
+    @objc public func fw_hideLoading() {
         fw_toastContainerView?.fw_hideLoading()
     }
     
@@ -236,7 +236,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIWindow {
+@_spi(FW) extension UIWindow {
     
     /// 设置吐司外间距，默认zero
     public static var fw_toastInsets: UIEdgeInsets {

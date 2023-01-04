@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - UITextField+Keyboard
-@_spi(FW) @objc extension UITextField {
+@_spi(FW) extension UITextField {
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
@@ -207,7 +207,7 @@ import FWObjC
 }
 
 // MARK: - UITextView+Keyboard
-@_spi(FW) @objc extension UITextView {
+@_spi(FW) extension UITextView {
     
     private class TextViewDelegateProxy: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
         
@@ -345,7 +345,7 @@ import FWObjC
         }
     }
     
-    @nonobjc private var fw_delegateProxy: TextViewDelegateProxy {
+    private var fw_delegateProxy: TextViewDelegateProxy {
         if let proxy = fw_property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
             return proxy
         } else {
@@ -470,7 +470,7 @@ import FWObjC
 }
 
 // MARK: - UITextView+Placeholder
-@_spi(FW) @objc extension UITextView {
+@_spi(FW) extension UITextView {
     
     private class PlaceholderTarget: NSObject {
         

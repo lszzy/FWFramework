@@ -651,7 +651,7 @@ UITableViewDataSource
     _orientationManager = [__FWPopupMenuDeviceOrientationManager manager];
     _animationManager = [__FWPopupMenuAnimationManager manager];
     _animationManager.animationView = self;
-    _menuBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.fw_screenWidth, UIScreen.fw_screenHeight)];
+    _menuBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)];
     _menuBackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.1];
     _menuBackView.alpha = 1;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(touchOutSide)];
@@ -767,7 +767,7 @@ UITableViewDataSource
 
 - (void)updateUI
 {
-    _menuBackView.frame = CGRectMake(0, 0, UIScreen.fw_screenWidth, UIScreen.fw_screenHeight);
+    _menuBackView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
     CGFloat height;
     if (_titles.count > _maxVisibleCount) {
         height = _itemHeight * _maxVisibleCount + _borderWidth * 2;
@@ -778,7 +778,7 @@ UITableViewDataSource
     }
      _isChangeDirection = NO;
     if (_priorityDirection == __FWPopupMenuPriorityDirectionTop) {
-        if (_point.y + height + _arrowHeight > UIScreen.fw_screenHeight - _minSpace) {
+        if (_point.y + height + _arrowHeight > UIScreen.mainScreen.bounds.size.height - _minSpace) {
             _arrowDirection = __FWPopupMenuArrowDirectionBottom;
             _isChangeDirection = YES;
         }else {
@@ -794,7 +794,7 @@ UITableViewDataSource
             _isChangeDirection = NO;
         }
     }else if (_priorityDirection == __FWPopupMenuPriorityDirectionLeft) {
-        if (_point.x + _itemWidth + _arrowHeight > UIScreen.fw_screenWidth - _minSpace) {
+        if (_point.x + _itemWidth + _arrowHeight > UIScreen.mainScreen.bounds.size.width - _minSpace) {
             _arrowDirection = __FWPopupMenuArrowDirectionRight;
             _isChangeDirection = YES;
         }else {
@@ -815,7 +815,7 @@ UITableViewDataSource
     if (_arrowDirection == __FWPopupMenuArrowDirectionTop) {
         CGFloat y = _isChangeDirection ? _point.y  : _point.y;
         if (_arrowPosition > _itemWidth / 2) {
-            self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
+            self.frame = CGRectMake(UIScreen.mainScreen.bounds.size.width - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
         }else if (_arrowPosition < _itemWidth / 2) {
             self.frame = CGRectMake(_minSpace, y, _itemWidth, height + _arrowHeight);
         }else {
@@ -824,7 +824,7 @@ UITableViewDataSource
     }else if (_arrowDirection == __FWPopupMenuArrowDirectionBottom) {
         CGFloat y = _isChangeDirection ? _point.y - _arrowHeight - height : _point.y - _arrowHeight - height;
         if (_arrowPosition > _itemWidth / 2) {
-            self.frame = CGRectMake(UIScreen.fw_screenWidth - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
+            self.frame = CGRectMake(UIScreen.mainScreen.bounds.size.width - _minSpace - _itemWidth, y, _itemWidth, height + _arrowHeight);
         }else if (_arrowPosition < _itemWidth / 2) {
             self.frame = CGRectMake(_minSpace, y, _itemWidth, height + _arrowHeight);
         }else {
@@ -1006,8 +1006,8 @@ UITableViewDataSource
     }
     
     if (_arrowDirection == __FWPopupMenuArrowDirectionTop || _arrowDirection == __FWPopupMenuArrowDirectionBottom) {
-        if (_point.x + _itemWidth / 2 > UIScreen.fw_screenWidth - _minSpace) {
-            _arrowPosition = _itemWidth - (UIScreen.fw_screenWidth - _minSpace - _point.x);
+        if (_point.x + _itemWidth / 2 > UIScreen.mainScreen.bounds.size.width - _minSpace) {
+            _arrowPosition = _itemWidth - (UIScreen.mainScreen.bounds.size.width - _minSpace - _point.x);
         }else if (_point.x < _itemWidth / 2 + _minSpace) {
             _arrowPosition = _point.x - _minSpace;
         }else {

@@ -386,7 +386,7 @@ import FWObjC
 
 // MARK: - UITabBar+BarAppearance
 /// 标签栏视图分类，全局设置用[UITabBar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
-@_spi(FW) @objc extension UITabBar {
+@_spi(FW) extension UITabBar {
     
     /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)
@@ -618,7 +618,7 @@ import FWObjC
 // MARK: - UIToolbar+BarAppearance
 /// 工具栏样式分类，全局设置用[UIToolbar appearance]。iOS15+启用appearance，iOS14及以下使用旧版本api
 /// 工具栏高度建议用sizeToFit自动获取(示例44)，contentView为内容视图(示例44)，backgroundView为背景视图(示例78)
-@_spi(FW) @objc extension UIToolbar {
+@_spi(FW) extension UIToolbar {
     
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
     @available(iOS 13.0, *)

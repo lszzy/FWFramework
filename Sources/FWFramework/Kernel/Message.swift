@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - Message
-@_spi(FW) @objc extension NSObject {
+@_spi(FW) extension NSObject {
     
     // MARK: - Observer
     /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -241,7 +241,7 @@ import FWObjC
 }
 
 // MARK: - Notification
-@_spi(FW) @objc extension NSObject {
+@_spi(FW) extension NSObject {
     
     // MARK: - Observer
     /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -443,7 +443,7 @@ import FWObjC
 }
 
 // MARK: - KVO
-@_spi(FW) @objc extension NSObject {
+@_spi(FW) extension NSObject {
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
@@ -451,7 +451,7 @@ import FWObjC
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听唯一标志
     @discardableResult
-    public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
+    @objc public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
         let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
@@ -498,7 +498,7 @@ import FWObjC
     ///   - property: 属性名称
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
+    @objc public func fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
         guard let dict = fw_kvoTargets(false) else { return }
         
         // target为nil始终移除

@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIImage {
+@_spi(FW) extension UIImage {
     
     /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
     public var fw_imageLoopCount: UInt {
@@ -36,7 +36,7 @@ import FWObjC
     }
     
     /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
-    public var fw_imageFormat: ImageFormat {
+    @objc public var fw_imageFormat: ImageFormat {
         get {
             if let value = fw_property(forName: "fw_imageFormat") as? NSNumber {
                 return .init(value.intValue)

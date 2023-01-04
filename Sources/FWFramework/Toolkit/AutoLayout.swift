@@ -773,7 +773,7 @@ import FWObjC
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
-@_spi(FW) @objc extension NSLayoutConstraint {
+@_spi(FW) extension NSLayoutConstraint {
     
     /// 标记是否是相反的约束，一般相对于父视图
     public var fw_isOpposite: Bool {
