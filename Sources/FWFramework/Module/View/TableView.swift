@@ -217,7 +217,7 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     }
 }
 
-@_spi(FW) @objc extension UITableView {
+@_spi(FW) extension UITableView {
     public var fw_delegate: TableViewDelegate {
         if let result = fw_property(forName: "fw_delegate") as? TableViewDelegate {
             return result

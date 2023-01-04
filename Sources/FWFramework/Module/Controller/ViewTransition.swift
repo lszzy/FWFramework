@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     
     private class PresentationTarget: NSObject, UIPopoverPresentationControllerDelegate {
         
@@ -50,7 +50,7 @@ import FWObjC
     }
 
     /// 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationTransition设置后生效
-    public var fw_viewTransition: AnimatedTransition? {
+    @objc public var fw_viewTransition: AnimatedTransition? {
         get {
             return fw_property(forName: "fw_viewTransition") as? AnimatedTransition
         }
@@ -137,7 +137,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
     @discardableResult
@@ -232,7 +232,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UINavigationController {
+@_spi(FW) extension UINavigationController {
     
     /// 导航控制器push|pop转场。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
     public var fw_navigationTransition: AnimatedTransition? {

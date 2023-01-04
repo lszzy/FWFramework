@@ -10,7 +10,7 @@ import UIKit
 import FWObjC
 #endif
 
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 显示右上角提醒灯，上右偏移指定距离
     public func fw_showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
@@ -35,7 +35,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIBarItem {
+@_spi(FW) extension UIBarItem {
     
     /// 获取UIBarItem(UIBarButtonItem、UITabBarItem)内部的view，通常对于navigationItem和tabBarItem而言，需要在设置为item后并且在bar可见时(例如 viewDidAppear:及之后)获取fwView才有值
     public weak var fw_view: UIView? {
@@ -76,7 +76,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIBarButtonItem {
+@_spi(FW) extension UIBarButtonItem {
     
     /// 显示右上角提醒灯，上右偏移指定距离
     public func fw_showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
@@ -105,7 +105,7 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UITabBarItem {
+@_spi(FW) extension UITabBarItem {
     
     fileprivate static func fw_swizzleBadgeView() {
         NSObject.fw_swizzleMethod(

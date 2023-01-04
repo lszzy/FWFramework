@@ -848,7 +848,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
 // MARK: - Wrapper+SkeletonLayout
 
 /// 视图显示骨架屏扩展
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     private func fw_showSkeleton(delegate: SkeletonViewDelegate? = nil, block: ((SkeletonLayout) -> Void)? = nil) {
         // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
         if self is UITableView || self is UICollectionView {
@@ -912,7 +912,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
 }
 
 /// 控制器显示骨架屏扩展
-@_spi(FW) @objc extension UIViewController {
+@_spi(FW) extension UIViewController {
     /// 显示view骨架屏，指定布局代理
     public func fw_showSkeleton(delegate: SkeletonViewDelegate?) {
         self.view.fw_showSkeleton(delegate: delegate)
