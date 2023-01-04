@@ -50,7 +50,8 @@ import FWObjC
     }
 
     /// 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationTransition设置后生效
-    @objc public var fw_viewTransition: AnimatedTransition? {
+    @objc(__fw_viewTransition)
+    public var fw_viewTransition: AnimatedTransition? {
         get {
             return fw_property(forName: "fw_viewTransition") as? AnimatedTransition
         }

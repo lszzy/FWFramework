@@ -59,7 +59,7 @@ NSNotificationName const __FWThemeChangedNotification = @"FWThemeChangedNotifica
             if (overrideWindow && self.mode != __FWThemeModeSystem) {
                 style = self.mode == __FWThemeModeDark ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
             }
-            UIWindow.fw_mainWindow.overrideUserInterfaceStyle = style;
+            UIWindow.__fw_mainWindow.overrideUserInterfaceStyle = style;
         }
     }
 }

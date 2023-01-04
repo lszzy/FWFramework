@@ -224,13 +224,15 @@ public class SkeletonAppearance: NSObject {
 // MARK: - SkeletonView
 
 /// 骨架屏视图数据源协议
-@objc public protocol SkeletonViewDataSource {
+@objc(__FWSkeletonViewDataSource)
+public protocol SkeletonViewDataSource {
     /// 骨架屏视图创建方法
     func skeletonViewProvider() -> SkeletonView?
 }
 
 /// 骨架屏视图代理协议
-@objc public protocol SkeletonViewDelegate {
+@objc(__FWSkeletonViewDelegate)
+public protocol SkeletonViewDelegate {
     /// 骨架屏视图布局方法
     func skeletonViewLayout(_ layout: SkeletonLayout)
 }
