@@ -30,7 +30,7 @@ extension FW {
 
 // MARK: - Benchmark
 /// 时间调试器
-public class Benchmark {
+public class Benchmark: NSObject {
     
     // MARK: - Accessor
     private static var beginTimes: [String : TimeInterval] = [:]

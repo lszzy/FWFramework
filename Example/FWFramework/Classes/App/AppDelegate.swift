@@ -19,6 +19,7 @@ class AppDelegate: AppResponder {
         Router.registerClass(AppRouter.self)
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
+        FW.debug("appId: %@", AppConfig.shared.appId)
         
         if let url = UIApplication.fw.appLaunchURL(options) {
             FW.debug("launchURL: %@", url.absoluteString)

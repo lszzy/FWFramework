@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import "AppBundle.h"
-#import "AppConfig.h"
 #import "SceneDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN

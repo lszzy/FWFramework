@@ -12,7 +12,7 @@ import FWObjC
 
 // MARK: - Navigator
 /// 导航管理器
-public class Navigator {
+public class Navigator: NSObject {
     
     /// 获取最顶部的视图控制器
     public static var topViewController: UIViewController? {

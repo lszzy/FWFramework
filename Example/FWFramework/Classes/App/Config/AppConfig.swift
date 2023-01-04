@@ -8,6 +8,16 @@
 
 import FWFramework
 
-class AppConfig {
+class AppConfig: Configuration {
+    
+    var appId = ""
+    
+}
+
+class AppConfigTemplate: ConfigurationTemplate {
+    
+    override func applyConfiguration() {
+        AppConfig.shared.appId = "1"
+    }
     
 }
