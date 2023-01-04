@@ -14,7 +14,7 @@ import Foundation
 /// public typealias APP = FW
 /// 使用示例：
 /// APP.safeString(object)
-@objcMembers public class FW: NSObject {}
+public class FW {}
 
 // MARK: - Wrapper
 /// 属性包装器(因struct只读，只能用class)

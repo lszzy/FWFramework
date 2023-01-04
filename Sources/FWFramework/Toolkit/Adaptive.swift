@@ -11,7 +11,8 @@ import FWObjC
 #endif
 
 // MARK: - FW+Adaptive
-@objc extension FW {
+extension FW {
+    
     // MARK: - UIApplication
     /// 是否是调试模式
     public static var isDebug: Bool { UIApplication.fw_isDebug }
@@ -127,6 +128,7 @@ import FWObjC
     public static func flat(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         return UIScreen.fw_flatValue(value, scale: scale)
     }
+    
 }
 
 // MARK: - UIApplication+Adaptive
