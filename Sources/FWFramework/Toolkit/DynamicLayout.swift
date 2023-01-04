@@ -76,13 +76,12 @@ import FWObjC
 }
 
 // MARK: - UITableViewHeaderFooterView+DynamicLayout
-@objc(FWHeaderFooterViewType)
 public enum HeaderFooterViewType: Int {
     case header = 0
     case footer = 1
 }
 
-@_spi(FW) @objc extension UITableViewHeaderFooterView {
+@_spi(FW) extension UITableViewHeaderFooterView {
     
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -154,7 +153,7 @@ public enum HeaderFooterViewType: Int {
 ///
 /// 如果使用系统自动高度，建议设置estimatedRowHeight提高性能
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
-@_spi(FW) @objc extension UITableView {
+@_spi(FW) extension UITableView {
     
     // MARK: - DynamicLayoutHeightCache
     private class DynamicLayoutHeightCache: NSObject {

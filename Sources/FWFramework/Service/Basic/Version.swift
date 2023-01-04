@@ -9,7 +9,6 @@ import UIKit
 
 // MARK: - VersionStatus
 /// 版本状态
-@objc(FWVersionStatus)
 public enum VersionStatus: Int {
     /// 已发布
     case published = 0
@@ -21,8 +20,7 @@ public enum VersionStatus: Int {
 
 // MARK: - VersionManager
 /// 版本管理器
-@objc(FWVersionManager)
-@objcMembers public class VersionManager: NSObject {
+public class VersionManager: NSObject {
     
     // MARK: - Accessor
     /// 单例模式

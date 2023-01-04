@@ -13,7 +13,6 @@ import UserNotifications
 
 // MARK: - AuthorizeType
 /// 权限类型枚举
-@objc(FWAuthorizeType)
 public enum AuthorizeType: Int {
     /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
     case locationWhenInUse = 1
@@ -41,8 +40,7 @@ public enum AuthorizeType: Int {
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-@objc(FWAuthorizeStatus)
-public enum AuthorizeStatus: Int {
+@objc public enum AuthorizeStatus: Int {
     /// 未确认
     case notDetermined = 0
     /// 受限制
@@ -55,8 +53,7 @@ public enum AuthorizeStatus: Int {
 
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
-@objc(FWAuthorizeProtocol)
-public protocol AuthorizeProtocol {
+@objc public protocol AuthorizeProtocol {
     /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
     
@@ -73,8 +70,7 @@ public protocol AuthorizeProtocol {
 /// 开启指定权限方法：
 /// Pod项目：添加pod时同时指定
 /// pod 'FWFramework', :subspecs => ['Contacts']
-@objc(FWAuthorizeManager)
-@objcMembers public class AuthorizeManager: NSObject {
+public class AuthorizeManager: NSObject {
     private static var managers: [AuthorizeType: AuthorizeProtocol] = [:]
     private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
     

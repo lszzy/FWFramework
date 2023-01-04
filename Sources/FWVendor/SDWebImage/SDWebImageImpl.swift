@@ -13,8 +13,7 @@ import FWFramework
 #endif
 
 /// SDWebImage图片插件，启用SDWebImage子模块后生效
-@objc(FWSDWebImageImpl)
-@objcMembers open class SDWebImageImpl: NSObject, ImagePlugin {
+open class SDWebImageImpl: NSObject, ImagePlugin {
     
     // MARK: - Accessor
     /// 单例模式

@@ -34,8 +34,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
 
 // MARK: - TapGestureRecognizer
 /// 支持高亮状态的点击手势
-@objc(FWTapGestureRecognizer)
-@objcMembers open class TapGestureRecognizer: UITapGestureRecognizer {
+open class TapGestureRecognizer: UITapGestureRecognizer {
     
     /// 是否是高亮状态，默认NO
     open var isHighlighted: Bool = false {

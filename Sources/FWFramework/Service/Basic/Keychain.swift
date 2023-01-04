@@ -10,8 +10,7 @@ import Security
 
 // MARK: - KeychainManager
 /// Keychain管理器
-@objc(FWKeychainManager)
-@objcMembers public class KeychainManager: NSObject {
+public class KeychainManager: NSObject {
     
     // MARK: - Accessor
     /// 单例模式
