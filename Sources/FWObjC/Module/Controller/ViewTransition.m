@@ -259,7 +259,7 @@
 {
     if (operation == UINavigationControllerOperationPush) {
         // push时检查toVC的转场代理
-        __FWAnimatedTransition *transition = toVC.fw_viewTransition ?: self;
+        __FWAnimatedTransition *transition = toVC.__fw_viewTransition ?: self;
         transition.transitionType = __FWAnimatedTransitionTypePush;
         // 自动设置和绑定pop交互转场，在pop前设置生效
         if (!transition.isSystem && transition.interactEnabled && !transition.interactBlock) {
@@ -271,7 +271,7 @@
         return !transition.isSystem ? transition : nil;
     } else if (operation == UINavigationControllerOperationPop) {
         // pop时检查fromVC的转场代理
-        __FWAnimatedTransition *transition = fromVC.fw_viewTransition ?: self;
+        __FWAnimatedTransition *transition = fromVC.__fw_viewTransition ?: self;
         transition.transitionType = __FWAnimatedTransitionTypePop;
         return !transition.isSystem ? transition : nil;
     }

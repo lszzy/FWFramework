@@ -64,7 +64,8 @@ public class Navigator: NSObject {
     
     // MARK: - Static
     /// 获取当前主window，可自定义
-    @objc public static var fw_mainWindow: UIWindow? {
+    @objc(__fw_mainWindow)
+    public static var fw_mainWindow: UIWindow? {
         get {
             var mainWindow = UIWindow.fw_staticWindow
             if mainWindow != nil { return mainWindow }
@@ -168,7 +169,8 @@ public class Navigator: NSObject {
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    @objc public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
+    @objc(__fw_open:animated:options:completion:)
+    public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
         fw_topViewController?.fw_open(viewController, animated: animated, options: options, completion: completion)
     }
 
