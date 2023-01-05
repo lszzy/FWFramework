@@ -16,6 +16,8 @@
 @interface UIImage ()
 
 @property (nonatomic, assign, readonly) BOOL __fw_hasAlpha;
+@property (nonatomic, assign) __FWImageFormat __fw_imageFormat;
+@property (nonatomic, assign) NSUInteger __fw_imageLoopCount;
 
 @end
 

@@ -11,7 +11,12 @@
 
 #if FWMacroSPM
 
+@interface UICollectionViewFlowLayout ()
 
+- (void)__fw_sectionConfigPrepareLayout;
+- (NSArray *)__fw_sectionConfigLayoutAttributesForElementsIn:(CGRect)rect;
+
+@end
 
 #else
 

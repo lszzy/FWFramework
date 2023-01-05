@@ -9,6 +9,14 @@
 
 #if FWMacroSPM
 
+@interface NSBundle ()
+
+@property (class, nonatomic, copy, readonly, nullable) NSString *__fw_currentLanguage;
++ (nullable NSBundle *)__fw_bundleWithName:(NSString *)name;
+- (NSBundle *)__fw_localizedBundle;
+
+@end
+
 @interface UIImage ()
 
 + (nullable UIImage *)__fw_imageWithSize:(CGSize)size block:(void (NS_NOESCAPE ^)(CGContextRef context))block;
