@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - String+Language
 extension Wrapper where Base == String {

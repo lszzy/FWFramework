@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UITextField+Keyboard
 extension Wrapper where Base: UITextField {

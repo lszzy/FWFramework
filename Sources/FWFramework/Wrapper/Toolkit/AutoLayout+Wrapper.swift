@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UIView+AutoLayout
 /// UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)

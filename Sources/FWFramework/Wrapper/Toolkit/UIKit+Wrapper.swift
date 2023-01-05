@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UIBezierPath+UIKit
 extension Wrapper where Base: UIBezierPath {
