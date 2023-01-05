@@ -358,7 +358,7 @@
         if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillShowEmpty:)]) {
             [self.albumControllerDelegate albumControllerWillShowEmpty:self];
         } else {
-            [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
+            [self __fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
         }
     }
     
@@ -380,7 +380,7 @@
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
         NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
-        [self fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
+        [self __fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
     }
     
     if (self.albumArrayLoaded) {
@@ -1266,7 +1266,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.delegate imagePickerPreviewControllerWillShowExceed:self];
             } else {
-                [self fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
             }
             return;
         }
@@ -2049,13 +2049,13 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                 NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
                 NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
                 NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
-                [self fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
+                [self __fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
             }
         } else {
             if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillShowEmpty:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowEmpty:self];
             } else {
-                [self fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
+                [self __fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
             }
         }
     }
@@ -2350,7 +2350,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
         } else {
-            [self fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+            [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
         }
         return;
     }
@@ -2487,7 +2487,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
             } else {
-                [self fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
             }
             return;
         }
