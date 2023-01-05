@@ -33,7 +33,8 @@ import FWObjC
     ///   - message:  警告框消息
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showAlert(
+    @objc(__fw_showAlertWithTitle:message:cancel:cancelBlock:)
+    public func fw_showAlert(
         title: Any?,
         message: Any?,
         cancel: Any? = nil,
@@ -86,7 +87,8 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showConfirm(
+    @objc(__fw_showConfirmWithTitle:message:cancel:confirm:confirmBlock:cancelBlock:)
+    public func fw_showConfirm(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -108,7 +110,8 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showPrompt(
+    @objc(__fw_showPromptWithTitle:message:cancel:confirm:promptBlock:confirmBlock:cancelBlock:)
+    public func fw_showPrompt(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -229,7 +232,8 @@ import FWObjC
     ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showSheet(
+    @objc(__fw_showSheetWithTitle:message:cancel:actions:currentIndex:actionBlock:cancelBlock:)
+    public func fw_showSheet(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -318,7 +322,8 @@ import FWObjC
     ///   - message:  警告框消息
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showAlert(
+    @objc(__fw_showAlertWithTitle:message:cancel:cancelBlock:)
+    public func fw_showAlert(
         title: Any?,
         message: Any?,
         cancel: Any? = nil,
@@ -383,7 +388,8 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showConfirm(
+    @objc(__fw_showConfirmWithTitle:message:cancel:confirm:confirmBlock:cancelBlock:)
+    public func fw_showConfirm(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -407,7 +413,8 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    @objc public func fw_showPrompt(
+    @objc(__fw_showPromptWithTitle:message:cancel:confirm:promptBlock:confirmBlock:cancelBlock:)
+    public func fw_showPrompt(
         title: Any?,
         message: Any?,
         cancel: Any?,
@@ -600,7 +607,7 @@ import FWObjC
 }
 
 /// 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用AlertController
-@_spi(FW) @objc extension UIAlertAction {
+@_spi(FW) extension UIAlertAction {
     
     /// 自定义样式，默认为样式单例
     public var fw_alertAppearance: AlertAppearance! {
@@ -657,6 +664,7 @@ import FWObjC
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
+    @objc(__fw_actionWithObject:style:appearance:handler:)
     public static func fw_action(object: Any?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         let attributedTitle = object as? NSAttributedString
         let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : (object as? String), style: style, handler: handler)
@@ -669,9 +677,10 @@ import FWObjC
 }
 
 /// 系统弹出框title和message仅支持NSString，如果需要支持NSAttributedString等，请使用AlertController
-@_spi(FW) @objc extension UIAlertController {
+@_spi(FW) extension UIAlertController {
     
     /// 自定义样式，默认为样式单例
+    @objc(__fw_alertAppearance)
     public var fw_alertAppearance: AlertAppearance! {
         get {
             let appearance = fw_property(forName: "fw_alertAppearance") as? AlertAppearance
@@ -683,6 +692,7 @@ import FWObjC
     }
     
     /// 弹出框样式，默认为Default
+    @objc(__fw_alertStyle)
     public var fw_alertStyle: AlertStyle {
         get {
             return .init(rawValue: fw_propertyInt(forName: "fw_alertStyle"))
@@ -720,6 +730,7 @@ import FWObjC
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
+    @objc(__fw_alertControllerWithTitle:message:preferredStyle:appearance:)
     public static func fw_alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
         let attributedTitle = title as? NSAttributedString
         let attributedMessage = message as? NSAttributedString

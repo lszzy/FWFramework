@@ -40,7 +40,8 @@ public enum AuthorizeType: Int {
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-@objc public enum AuthorizeStatus: Int {
+@objc(__FWAuthorizeStatus)
+public enum AuthorizeStatus: Int {
     /// 未确认
     case notDetermined = 0
     /// 受限制
@@ -53,7 +54,8 @@ public enum AuthorizeType: Int {
 
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
-@objc public protocol AuthorizeProtocol {
+@objc(__FWAuthorizeProtocol)
+public protocol AuthorizeProtocol {
     /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
     
