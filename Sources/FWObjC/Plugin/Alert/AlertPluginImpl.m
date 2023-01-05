@@ -172,7 +172,7 @@
     
     // 兼容iPad，默认居中显示ActionSheet。注意点击视图(如UIBarButtonItem)必须是sourceView及其子视图
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && alertController.popoverPresentationController) {
-        UIView *ancestorView = [viewController fw_ancestorView];
+        UIView *ancestorView = [viewController __fw_ancestorView];
         UIPopoverPresentationController *popoverController = alertController.popoverPresentationController;
         popoverController.sourceView = ancestorView;
         popoverController.sourceRect = CGRectMake(ancestorView.center.x, ancestorView.center.y, 0, 0);

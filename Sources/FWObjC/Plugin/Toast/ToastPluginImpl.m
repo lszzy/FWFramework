@@ -52,7 +52,7 @@
         loadingText = self.defaultLoadingText();
     }
     
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2011];
     if (toastView) {
         [toastView invalidateTimer];
         [view bringSubviewToFront:toastView];
@@ -80,13 +80,13 @@
 
 - (void)hideLoading:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2011];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingLoading:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2011];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2011];
     return toastView ? YES : NO;
 }
 
@@ -97,7 +97,7 @@
         progressText = self.defaultProgressText();
     }
     
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2012];
     if (toastView) {
         [toastView invalidateTimer];
         [view bringSubviewToFront:toastView];
@@ -127,13 +127,13 @@
 
 - (void)hideProgress:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2012];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingProgress:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2012];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2012];
     return toastView ? YES : NO;
 }
 
@@ -145,7 +145,7 @@
     }
     if (messageText.length < 1) return;
     
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2013];
     BOOL fadeAnimated = self.fadeAnimated && !toastView;
     if (toastView) [toastView hide];
     
@@ -168,13 +168,13 @@
 
 - (void)hideMessage:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2013];
     if (toastView) [toastView hide];
 }
 
 - (BOOL)isShowingMessage:(UIView *)view
 {
-    __FWToastView *toastView = (__FWToastView *)[view fw_subviewWithTag:2013];
+    __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2013];
     return toastView ? YES : NO;
 }
 

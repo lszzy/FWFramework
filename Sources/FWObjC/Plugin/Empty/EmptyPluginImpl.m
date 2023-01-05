@@ -70,7 +70,7 @@
     }
     NSString *emptyMoreAction = actions.count > 1 ? [actions objectAtIndex:1] : nil;
     
-    __FWEmptyView *emptyView = (__FWEmptyView *)[view fw_subviewWithTag:2021];
+    __FWEmptyView *emptyView = (__FWEmptyView *)[view __fw_subviewWithTag:2021];
     BOOL fadeAnimated = self.fadeAnimated && !emptyView;
     if (emptyView) { [emptyView removeFromSuperview]; }
     
@@ -84,8 +84,8 @@
     [emptyView setDetailTextLabelText:emptyDetail];
     [emptyView setActionButtonTitle:emptyAction];
     [emptyView setMoreActionButtonTitle:emptyMoreAction];
-    if (block) [emptyView.actionButton fw_addTouchWithBlock:^(id sender) { if (block) block(0, sender); }];
-    if (block && emptyMoreAction) [emptyView.moreActionButton fw_addTouchWithBlock:^(id sender) { if (block) block(1, sender); }];
+    if (block) [emptyView.actionButton __fw_addTouchWithBlock:^(id sender) { if (block) block(0, sender); }];
+    if (block && emptyMoreAction) [emptyView.moreActionButton __fw_addTouchWithBlock:^(id sender) { if (block) block(1, sender); }];
 
     if (self.customBlock) {
         self.customBlock(emptyView);
@@ -101,7 +101,7 @@
 
 - (void)hideEmptyView:(UIView *)view
 {
-    UIView *emptyView = [view fw_subviewWithTag:2021];
+    UIView *emptyView = [view __fw_subviewWithTag:2021];
     if (!emptyView) return;
     
     if ([emptyView.superview isKindOfClass:[__FWScrollOverlayView class]]) {
@@ -115,7 +115,7 @@
 
 - (BOOL)hasEmptyView:(UIView *)view
 {
-    UIView *emptyView = [view fw_subviewWithTag:2021];
+    UIView *emptyView = [view __fw_subviewWithTag:2021];
     return emptyView != nil ? YES : NO;
 }
 

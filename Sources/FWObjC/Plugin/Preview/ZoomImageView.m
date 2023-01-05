@@ -195,7 +195,7 @@
     self.imageView.image = image;
     
     // 更新 imageView 的大小时，imageView 可能已经被缩放过，所以要应用当前的缩放
-    self.imageView.fw_frameApplyTransform = CGRectMake(0, 0, image.size.width, image.size.height);
+    self.imageView.__fw_frameApplyTransform = CGRectMake(0, 0, image.size.width, image.size.height);
     
     [self hideViews];
     self.imageView.hidden = NO;
@@ -234,7 +234,7 @@
     _livePhotoView.hidden = NO;
     
     // 更新 livePhotoView 的大小时，livePhotoView 可能已经被缩放过，所以要应用当前的缩放
-    _livePhotoView.fw_frameApplyTransform = CGRectMake(0, 0, livePhoto.size.width, livePhoto.size.height);
+    _livePhotoView.__fw_frameApplyTransform = CGRectMake(0, 0, livePhoto.size.width, livePhoto.size.height);
     
     [self revertZooming];
     
@@ -494,7 +494,7 @@
     [self initVideoRelatedViewsIfNeeded];
     _videoPlayerLayer.player = self.videoPlayer;
     // 更新 videoPlayerView 的大小时，videoView 可能已经被缩放过，所以要应用当前的缩放
-    self.videoPlayerView.fw_frameApplyTransform = CGRectMake(0, 0, self.videoSize.width, self.videoSize.height);
+    self.videoPlayerView.__fw_frameApplyTransform = CGRectMake(0, 0, self.videoSize.width, self.videoSize.height);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleVideoPlayToEndEvent) name:AVPlayerItemDidPlayToEndTimeNotification object:videoPlayerItem];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -516,8 +516,8 @@
 }
 
 - (void)handleCloseButton:(UIButton *)button {
-    UIViewController *viewController = self.fw_viewController;
-    if (viewController && viewController.fw_isPresented) {
+    UIViewController *viewController = self.__fw_viewController;
+    if (viewController && viewController.__fw_isPresented) {
         [viewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -704,7 +704,7 @@
     
     _videoPlayButton = ({
         UIButton *playButton = [[UIButton alloc] init];
-        playButton.fw_touchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
+        playButton.__fw_touchInsets = UIEdgeInsetsMake(60, 60, 60, 60);
         playButton.tag = 1;
         [playButton setImage:self.videoPlayButtonImage forState:UIControlStateNormal];
         [playButton addTarget:self action:@selector(handlePlayButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -719,7 +719,7 @@
     
     _videoCloseButton = ({
         UIButton *closeButton = [[UIButton alloc] init];
-        closeButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        closeButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [closeButton setImage:self.videoCloseButtonImage forState:UIControlStateNormal];
         [closeButton addTarget:self action:@selector(handleCloseButton:) forControlEvents:UIControlEventTouchUpInside];
         closeButton.hidden = YES;
@@ -1014,21 +1014,21 @@
     if (self = [super initWithFrame:frame]) {
         
         _playButton = [[UIButton alloc] init];
-        self.playButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        self.playButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [self.playButton setImage:self.playButtonImage forState:UIControlStateNormal];
         [self addSubview:self.playButton];
         
         _pauseButton = [[UIButton alloc] init];
         self.pauseButton.hidden = YES;
-        self.pauseButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        self.pauseButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [self.pauseButton setImage:self.pauseButtonImage forState:UIControlStateNormal];
         [self addSubview:self.pauseButton];
         
         _slider = [[UISlider alloc] init];
         self.slider.minimumTrackTintColor = [UIColor colorWithRed:195/255.f green:195/255.f blue:195/255.f alpha:1];
         self.slider.maximumTrackTintColor = [UIColor colorWithRed:95/255.f green:95/255.f blue:95/255.f alpha:1];
-        self.slider.fw_thumbSize = CGSizeMake(12, 12);
-        self.slider.fw_thumbColor = UIColor.whiteColor;
+        self.slider.__fw_thumbSize = CGSizeMake(12, 12);
+        self.slider.__fw_thumbColor = UIColor.whiteColor;
         [self addSubview:self.slider];
         
         _sliderLeftLabel = [[UILabel alloc] init];

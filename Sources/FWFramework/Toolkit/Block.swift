@@ -139,7 +139,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    @objc public static func fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
+    @objc(__fw_commonTimerWithTimeInterval:block:repeats:)
+    public static func fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
         let timer = fw_timer(timeInterval: timeInterval, block: block, repeats: repeats)
         RunLoop.current.add(timer, forMode: .common)
         return timer
@@ -209,7 +210,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         self.fireDate = Date(timeIntervalSinceNow: delay)
     }
     
-    @objc private class func fw_timerAction(_ timer: Timer) {
+    @objc(__fw_timerAction:)
+    private class func fw_timerAction(_ timer: Timer) {
         let block = timer.userInfo as? (Timer) -> Void
         block?(timer)
     }
@@ -220,7 +222,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 @_spi(FW) extension UIGestureRecognizer {
     
     /// 从事件句柄初始化
-    @objc public static func fw_gestureRecognizer(block: @escaping (Any) -> Void) -> Self {
+    @objc(__fw_gestureRecognizerWithBlock:)
+    public static func fw_gestureRecognizer(block: @escaping (Any) -> Void) -> Self {
         let gestureRecognizer = Self()
         gestureRecognizer.fw_addBlock(block)
         return gestureRecognizer
@@ -281,7 +284,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     /// 添加点击手势事件，可自定义点击高亮句柄等
-    @objc public func fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
+    @objc(__fw_addTapGestureWithTarget:action:customize:)
+    public func fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer(target: target, action: action) : UITapGestureRecognizer(target: target, action: action)
         self.addGestureRecognizer(gesture)
         if customize != nil, let tapGesture = gesture as? TapGestureRecognizer {
@@ -291,7 +295,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    @objc public func fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+    @objc(__fw_addTapGestureWithBlock:customize:)
+    public func fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer() : UITapGestureRecognizer()
         let identifier = gesture.fw_addBlock(block)
         gesture.fw_setPropertyCopy(identifier, forName: "fw_tapGesture")
@@ -382,7 +387,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 
     /// 添加点击句柄
     @discardableResult
-    @objc public func fw_addTouch(block: @escaping (Any) -> Void) -> String {
+    @objc(__fw_addTouchWithBlock:)
+    public func fw_addTouch(block: @escaping (Any) -> Void) -> String {
         return fw_addBlock(block, for: .touchUpInside)
     }
 
@@ -413,7 +419,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 @_spi(FW) extension UIBarButtonItem {
     
     /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    @objc public static func fw_item(object: Any?, target: Any?, action: Selector?) -> Self {
+    @objc(__fw_itemWithObject:target:action:)
+    public static func fw_item(object: Any?, target: Any?, action: Selector?) -> Self {
         var barItem: Self
         if let title = object as? String {
             barItem = Self(title: title, style: .plain, target: target, action: action)
@@ -442,7 +449,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    @objc public static func fw_item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Self {
+    @objc(__fw_itemWithObject:block:)
+    public static func fw_item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Self {
         let barItem = fw_item(object: object, target: nil, action: nil)
         barItem.fw_setBlock(block)
         return barItem
@@ -495,7 +503,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         }
     }
     
-    @objc private func fw_invokeTargetAction(_ sender: Any) {
+    @objc(__fw_invokeTargetAction:)
+    private func fw_invokeTargetAction(_ sender: Any) {
         if let target = target, let action = action,
             target.responds(to: action) {
             // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象

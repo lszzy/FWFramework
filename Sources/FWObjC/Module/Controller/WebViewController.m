@@ -107,7 +107,7 @@
             [leftItems addObject:webItem];
         } else {
             if (i == 0) {
-                UIBarButtonItem *leftItem = [UIBarButtonItem fw_itemWithObject:webItem block:^(id sender) {
+                UIBarButtonItem *leftItem = [UIBarButtonItem __fw_itemWithObject:webItem block:^(id sender) {
                     if (weakController.webView.canGoBack) {
                         [weakController.webView goBack];
                     } else {
@@ -127,7 +127,7 @@
                 }];
                 [leftItems addObject:leftItem];
             } else {
-                UIBarButtonItem *leftItem = [UIBarButtonItem fw_itemWithObject:webItem block:^(id sender) {
+                UIBarButtonItem *leftItem = [UIBarButtonItem __fw_itemWithObject:webItem block:^(id sender) {
                     if (weakController.navigationController) {
                         if ([weakController.navigationController popViewControllerAnimated:YES]) return;
                     }

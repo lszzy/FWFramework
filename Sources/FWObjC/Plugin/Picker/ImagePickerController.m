@@ -225,12 +225,12 @@
 
 - (void)setToolBarBackgroundColor:(UIColor *)toolBarBackgroundColor {
     _toolBarBackgroundColor = toolBarBackgroundColor;
-    self.navigationController.navigationBar.fw_backgroundColor = toolBarBackgroundColor;
+    self.navigationController.navigationBar.__fw_backgroundColor = toolBarBackgroundColor;
 }
 
 - (void)setToolBarTintColor:(UIColor *)toolBarTintColor {
     _toolBarTintColor = toolBarTintColor;
-    self.navigationController.navigationBar.fw_foregroundColor = toolBarTintColor;
+    self.navigationController.navigationBar.__fw_foregroundColor = toolBarTintColor;
 }
 
 - (void)setAssetsGroup:(__FWAssetGroup *)assetsGroup {
@@ -254,7 +254,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.fw_backImage = __FWAppBundle.navBackImage;
+    self.navigationController.navigationBar.__fw_backImage = __FWAppBundle.navBackImage;
     if (!self.title) self.title = __FWAppBundle.pickerAlbumTitle;
     [self.view addSubview:self.backgroundView];
     [self.view addSubview:self.tableView];
@@ -283,10 +283,10 @@
     if (self.navigationController.navigationBarHidden != NO) {
         [self.navigationController setNavigationBarHidden:NO animated:animated];
     }
-    self.navigationController.navigationBar.fw_isTranslucent = NO;
-    self.navigationController.navigationBar.fw_shadowColor = nil;
-    self.navigationController.navigationBar.fw_backgroundColor = self.toolBarBackgroundColor;
-    self.navigationController.navigationBar.fw_foregroundColor = self.toolBarTintColor;
+    self.navigationController.navigationBar.__fw_isTranslucent = NO;
+    self.navigationController.navigationBar.__fw_shadowColor = nil;
+    self.navigationController.navigationBar.__fw_backgroundColor = self.toolBarBackgroundColor;
+    self.navigationController.navigationBar.__fw_foregroundColor = self.toolBarTintColor;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -843,9 +843,9 @@
         [_backButton setImage:__FWAppBundle.navBackImage forState:UIControlStateNormal];
         [_backButton sizeToFit];
         [_backButton addTarget:self action:@selector(handleCancelButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        _backButton.fw_touchInsets = UIEdgeInsetsMake(30, 20, 50, 80);
-        _backButton.fw_disabledAlpha = 0.3;
-        _backButton.fw_highlightedAlpha = 0.5;
+        _backButton.__fw_touchInsets = UIEdgeInsetsMake(30, 20, 50, 80);
+        _backButton.__fw_disabledAlpha = 0.3;
+        _backButton.__fw_highlightedAlpha = 0.5;
     }
     return _backButton;
 }
@@ -859,9 +859,9 @@
         [_checkboxButton setImage:self.checkboxCheckedImage forState:UIControlStateSelected|UIControlStateHighlighted];
         [_checkboxButton sizeToFit];
         [_checkboxButton addTarget:self action:@selector(handleCheckButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        _checkboxButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        _checkboxButton.fw_disabledAlpha = 0.3;
-        _checkboxButton.fw_highlightedAlpha = 0.5;
+        _checkboxButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        _checkboxButton.__fw_disabledAlpha = 0.3;
+        _checkboxButton.__fw_highlightedAlpha = 0.5;
     }
     return _checkboxButton;
 }
@@ -887,12 +887,12 @@
     if (!_editButton) {
         _editButton = [[UIButton alloc] init];
         _editButton.hidden = !self.showsEditButton;
-        _editButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        _editButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [_editButton setTitle:__FWAppBundle.editButton forState:UIControlStateNormal];
         _editButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_editButton sizeToFit];
-        _editButton.fw_disabledAlpha = 0.3;
-        _editButton.fw_highlightedAlpha = 0.5;
+        _editButton.__fw_disabledAlpha = 0.3;
+        _editButton.__fw_highlightedAlpha = 0.5;
         [_editButton addTarget:self action:@selector(handleEditButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _editButton;
@@ -902,12 +902,12 @@
 - (UIButton *)sendButton {
     if (!_sendButton) {
         _sendButton = [[UIButton alloc] init];
-        _sendButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        _sendButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         [_sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_sendButton sizeToFit];
-        _sendButton.fw_disabledAlpha = 0.3;
-        _sendButton.fw_highlightedAlpha = 0.5;
+        _sendButton.__fw_disabledAlpha = 0.3;
+        _sendButton.__fw_highlightedAlpha = 0.5;
         [_sendButton addTarget:self action:@selector(handleSendButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _sendButton;
@@ -926,9 +926,9 @@
         [_originImageCheckboxButton setImageEdgeInsets:UIEdgeInsetsMake(0, -5.0f, 0, 5.0f)];
         [_originImageCheckboxButton setContentEdgeInsets:UIEdgeInsetsMake(0, 5.0f, 0, 0)];
         [_originImageCheckboxButton sizeToFit];
-        _originImageCheckboxButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        _originImageCheckboxButton.fw_disabledAlpha = 0.3;
-        _originImageCheckboxButton.fw_highlightedAlpha = 0.5;
+        _originImageCheckboxButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+        _originImageCheckboxButton.__fw_disabledAlpha = 0.3;
+        _originImageCheckboxButton.__fw_highlightedAlpha = 0.5;
         [_originImageCheckboxButton addTarget:self action:@selector(handleOriginImageCheckboxButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _originImageCheckboxButton;
@@ -1568,7 +1568,7 @@
     [self.contentView addSubview:self.iconImageView];
     
     self.checkboxButton = [[UIButton alloc] init];
-    self.checkboxButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.checkboxButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     self.checkboxButton.hidden = YES;
     [self.contentView addSubview:self.checkboxButton];
 }
@@ -1896,12 +1896,12 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (void)setToolBarBackgroundColor:(UIColor *)toolBarBackgroundColor {
     _toolBarBackgroundColor = toolBarBackgroundColor;
-    self.navigationController.navigationBar.fw_backgroundColor = toolBarBackgroundColor;
+    self.navigationController.navigationBar.__fw_backgroundColor = toolBarBackgroundColor;
 }
 
 - (void)setToolBarTintColor:(UIColor *)toolBarTintColor {
     _toolBarTintColor = toolBarTintColor;
-    self.navigationController.navigationBar.fw_foregroundColor = toolBarTintColor;
+    self.navigationController.navigationBar.__fw_foregroundColor = toolBarTintColor;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -1927,10 +1927,10 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if (self.navigationController.navigationBarHidden != NO) {
         [self.navigationController setNavigationBarHidden:NO animated:animated];
     }
-    self.navigationController.navigationBar.fw_isTranslucent = NO;
-    self.navigationController.navigationBar.fw_shadowColor = nil;
-    self.navigationController.navigationBar.fw_backgroundColor = self.toolBarBackgroundColor;
-    self.navigationController.navigationBar.fw_foregroundColor = self.toolBarTintColor;
+    self.navigationController.navigationBar.__fw_isTranslucent = NO;
+    self.navigationController.navigationBar.__fw_shadowColor = nil;
+    self.navigationController.navigationBar.__fw_backgroundColor = self.toolBarBackgroundColor;
+    self.navigationController.navigationBar.__fw_foregroundColor = self.toolBarTintColor;
     
     // 由于被选中的图片 selectedImageAssetArray 可以由外部改变，因此检查一下图片被选中的情况，并刷新 collectionView
     if (self.allowsMultipleSelection) {
@@ -2262,9 +2262,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         _sendButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_sendButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
         [_sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
-        _sendButton.fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
-        _sendButton.fw_disabledAlpha = 0.3;
-        _sendButton.fw_highlightedAlpha = 0.5;
+        _sendButton.__fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
+        _sendButton.__fw_disabledAlpha = 0.3;
+        _sendButton.__fw_highlightedAlpha = 0.5;
         [_sendButton sizeToFit];
         [_sendButton addTarget:self action:@selector(handleSendButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -2279,9 +2279,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         _previewButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_previewButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
         [_previewButton setTitle:__FWAppBundle.previewButton forState:UIControlStateNormal];
-        _previewButton.fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
-        _previewButton.fw_disabledAlpha = 0.3;
-        _previewButton.fw_highlightedAlpha = 0.5;
+        _previewButton.__fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
+        _previewButton.__fw_disabledAlpha = 0.3;
+        _previewButton.__fw_highlightedAlpha = 0.5;
         [_previewButton sizeToFit];
         [_previewButton addTarget:self action:@selector(handlePreviewButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }

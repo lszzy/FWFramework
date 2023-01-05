@@ -51,7 +51,7 @@
         self.zoomImageView = [[__FWZoomImageView alloc] init];
         [self.contentView addSubview:self.zoomImageView];
         self.contentViewBounds = self.contentView.bounds;
-        self.zoomImageView.fw_frameApplyTransform = self.contentView.bounds;
+        self.zoomImageView.__fw_frameApplyTransform = self.contentView.bounds;
     }
     return self;
 }
@@ -60,7 +60,7 @@
     [super layoutSubviews];
     if (!CGRectEqualToRect(self.contentView.bounds, self.contentViewBounds)) {
         self.contentViewBounds = self.contentView.bounds;
-        self.zoomImageView.fw_frameApplyTransform = self.contentView.bounds;
+        self.zoomImageView.__fw_frameApplyTransform = self.contentView.bounds;
     }
 }
 
@@ -436,7 +436,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.imagePreviewView.fw_frameApplyTransform = self.view.bounds;
+    self.imagePreviewView.__fw_frameApplyTransform = self.view.bounds;
     
     if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
         [self updatePageLabel];
@@ -447,7 +447,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.fw_isPresented) {
+    if (self.__fw_isPresented) {
         [self initObjectsForZoomStyleIfNeeded];
     }
     [self.imagePreviewView.collectionView reloadData];
@@ -456,7 +456,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (self.fw_isPresented) {
+    if (self.__fw_isPresented) {
         self.statusBarHidden = YES;
     }
     [self setNeedsStatusBarAppearanceUpdate];
@@ -626,7 +626,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)dismissingWhenTapped:(__FWZoomImageView *)zoomImageView {
-    if (!self.fw_isPresented) return;
+    if (!self.__fw_isPresented) return;
     
     BOOL shouldDismiss = NO;
     if (zoomImageView.videoPlayerItem) {

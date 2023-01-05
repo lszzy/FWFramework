@@ -1163,7 +1163,7 @@
     } else {
         button = [[__FWToolbarButton alloc] initWithTitle:object];
     }
-    if (block) [button fw_addTouchWithBlock:block];
+    if (block) [button __fw_addTouchWithBlock:block];
     return button;
 }
 

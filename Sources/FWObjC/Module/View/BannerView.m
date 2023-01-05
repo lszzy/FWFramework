@@ -668,7 +668,7 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
             pageControl.pageIndicatorTintColor = self.pageDotColor;
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
-            pageControl.fw_preferredSize = self.pageControlDotSize;
+            pageControl.__fw_preferredSize = self.pageControlDotSize;
             [self addSubview:pageControl];
             _pageControl = pageControl;
             if (self.customPageControl) {
