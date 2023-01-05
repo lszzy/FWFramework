@@ -331,7 +331,7 @@ import FWObjC
     public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String? {
         if #available(iOS 13.0, *) {
             let identifier = UUID().uuidString
-            let listeners = fw_innerThemeListeners(true)
+            let listeners = fw_themeListeners(true)
             listeners?.setObject(listener, forKey: identifier as NSString)
             return identifier
         }
@@ -342,7 +342,7 @@ import FWObjC
     public func fw_removeThemeListener(_ identifier: String?) {
         guard let identifier = identifier else { return }
         if #available(iOS 13.0, *) {
-            let listeners = fw_innerThemeListeners(false)
+            let listeners = fw_themeListeners(false)
             listeners?.removeObject(forKey: identifier)
         }
     }
@@ -350,7 +350,7 @@ import FWObjC
     /// iOS13移除所有主题通知回调，一般用于cell重用
     public func fw_removeAllThemeListeners() {
         if #available(iOS 13.0, *) {
-            let listeners = fw_innerThemeListeners(false)
+            let listeners = fw_themeListeners(false)
             listeners?.removeAllObjects()
         }
     }
@@ -361,11 +361,11 @@ import FWObjC
     }
     
     @available(iOS 13.0, *)
-    private func fw_innerThemeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
-        var listeners = fw_property(forName: "fw_innerThemeListeners") as? NSMutableDictionary
+    private func fw_themeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
+        var listeners = fw_property(forName: "fw_themeListeners") as? NSMutableDictionary
         if listeners == nil && lazyload {
             listeners = NSMutableDictionary()
-            fw_setProperty(listeners, forName: "fw_innerThemeListeners")
+            fw_setProperty(listeners, forName: "fw_themeListeners")
         }
         return listeners
     }
@@ -376,7 +376,7 @@ import FWObjC
         self.themeChanged(style)
         
         // 2. 调用themeListeners句柄
-        if let listeners = fw_innerThemeListeners(false) {
+        if let listeners = fw_themeListeners(false) {
             listeners.enumerateKeysAndObjects { _, obj, _ in
                 let listener = obj as? (ThemeStyle) -> Void
                 listener?(style)

@@ -1957,30 +1957,30 @@ import AdSupport
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
-        get { return fw_innerInputTarget(false)?.maxLength ?? 0 }
-        set { fw_innerInputTarget(true)?.maxLength = newValue }
+        get { return fw_inputTarget(false)?.maxLength ?? 0 }
+        set { fw_inputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var fw_maxUnicodeLength: Int {
-        get { return fw_innerInputTarget(false)?.maxUnicodeLength ?? 0 }
-        set { fw_innerInputTarget(true)?.maxUnicodeLength = newValue }
+        get { return fw_inputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { fw_inputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return fw_innerInputTarget(false)?.textChangedBlock }
-        set { fw_innerInputTarget(true)?.textChangedBlock = newValue }
+        get { return fw_inputTarget(false)?.textChangedBlock }
+        set { fw_inputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func fw_textLengthChanged() {
-        fw_innerInputTarget(false)?.textLengthChanged()
+        fw_inputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func fw_filterText(_ text: String) -> String {
-        if let target = fw_innerInputTarget(false) {
+        if let target = fw_inputTarget(false) {
             return target.filterText(text)
         }
         return text
@@ -1988,23 +1988,23 @@ import AdSupport
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
-        get { return fw_innerInputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_innerInputTarget(true)?.autoCompleteInterval = newValue }
+        get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { fw_inputTarget(true)?.autoCompleteInterval = newValue }
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
     public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return fw_innerInputTarget(false)?.autoCompleteBlock }
-        set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
+        get { return fw_inputTarget(false)?.autoCompleteBlock }
+        set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_innerInputTarget(_ lazyload: Bool) -> __FWInputTarget? {
-        if let target = fw_property(forName: "fw_innerInputTarget") as? __FWInputTarget {
+    private func fw_inputTarget(_ lazyload: Bool) -> __FWInputTarget? {
+        if let target = fw_property(forName: "fw_inputTarget") as? __FWInputTarget {
             return target
         } else if lazyload {
             let target = __FWInputTarget(textInput: self)
             self.addTarget(target, action: #selector(__FWInputTarget.textChangedAction), for: .editingChanged)
-            fw_setProperty(target, forName: "fw_innerInputTarget")
+            fw_setProperty(target, forName: "fw_inputTarget")
             return target
         }
         return nil
@@ -2106,30 +2106,30 @@ import AdSupport
     
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
-        get { return fw_innerInputTarget(false)?.maxLength ?? 0 }
-        set { fw_innerInputTarget(true)?.maxLength = newValue }
+        get { return fw_inputTarget(false)?.maxLength ?? 0 }
+        set { fw_inputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var fw_maxUnicodeLength: Int {
-        get { return fw_innerInputTarget(false)?.maxUnicodeLength ?? 0 }
-        set { fw_innerInputTarget(true)?.maxUnicodeLength = newValue }
+        get { return fw_inputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { fw_inputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return fw_innerInputTarget(false)?.textChangedBlock }
-        set { fw_innerInputTarget(true)?.textChangedBlock = newValue }
+        get { return fw_inputTarget(false)?.textChangedBlock }
+        set { fw_inputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func fw_textLengthChanged() {
-        fw_innerInputTarget(false)?.textLengthChanged()
+        fw_inputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func fw_filterText(_ text: String) -> String {
-        if let target = fw_innerInputTarget(false) {
+        if let target = fw_inputTarget(false) {
             return target.filterText(text)
         }
         return text
@@ -2137,23 +2137,23 @@ import AdSupport
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
-        get { return fw_innerInputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_innerInputTarget(true)?.autoCompleteInterval = newValue }
+        get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { fw_inputTarget(true)?.autoCompleteInterval = newValue }
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
     public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return fw_innerInputTarget(false)?.autoCompleteBlock }
-        set { fw_innerInputTarget(true)?.autoCompleteBlock = newValue }
+        get { return fw_inputTarget(false)?.autoCompleteBlock }
+        set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_innerInputTarget(_ lazyload: Bool) -> __FWInputTarget? {
-        if let target = fw_property(forName: "fw_innerInputTarget") as? __FWInputTarget {
+    private func fw_inputTarget(_ lazyload: Bool) -> __FWInputTarget? {
+        if let target = fw_property(forName: "fw_inputTarget") as? __FWInputTarget {
             return target
         } else if lazyload {
             let target = __FWInputTarget(textInput: self)
             self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(__FWInputTarget.textChangedAction))
-            fw_setProperty(target, forName: "fw_innerInputTarget")
+            fw_setProperty(target, forName: "fw_inputTarget")
             return target
         }
         return nil
