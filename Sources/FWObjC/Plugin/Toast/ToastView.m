@@ -294,7 +294,7 @@
         
         __weak __typeof__(self) self_weak_ = self;
         self.contentView.userInteractionEnabled = YES;
-        [self.contentView fw_addTapGestureWithBlock:^(id sender) {
+        [self.contentView __fw_addTapGestureWithBlock:^(id sender) {
             __typeof__(self) self = self_weak_;
             void (^cancelBlock)(void) = self.cancelBlock;
             if (cancelBlock) {
@@ -343,7 +343,7 @@
     if (self.superview != nil) {
         [self invalidateTimer];
         __weak __typeof__(self) self_weak_ = self;
-        self.hideTimer = [NSTimer fw_commonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
+        self.hideTimer = [NSTimer __fw_commonTimerWithTimeInterval:delay block:^(NSTimer *timer) {
             __typeof__(self) self = self_weak_;
             BOOL hideSuccess = [self hide];
             if (hideSuccess && completion) {

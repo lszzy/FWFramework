@@ -121,7 +121,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (UIViewController *)viewController
 {
     if (!_viewController) {
-        _viewController = [self.textInput fw_viewController];
+        _viewController = [self.textInput __fw_viewController];
     }
     return _viewController;
 }
@@ -134,7 +134,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     if (!self.viewController) return;
     
     if (!fwStaticKeyboardGesture) {
-        fwStaticKeyboardGesture = [UITapGestureRecognizer fw_gestureRecognizerWithBlock:^(UITapGestureRecognizer *sender) {
+        fwStaticKeyboardGesture = [UITapGestureRecognizer __fw_gestureRecognizerWithBlock:^(UITapGestureRecognizer *sender) {
             if (sender.state == UIGestureRecognizerStateEnded) {
                 [sender.view endEditing:YES];
             }
@@ -399,17 +399,17 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)addToolbarWithTitle:(id)title
                   doneBlock:(void (^)(id sender))doneBlock
 {
-    UIBarButtonItem *titleItem = title ? [UIBarButtonItem fw_itemWithObject:title block:nil] : nil;
+    UIBarButtonItem *titleItem = title ? [UIBarButtonItem __fw_itemWithObject:title block:nil] : nil;
     titleItem.enabled = NO;
     BOOL previousEnabled = self.previousResponder != nil || self.previousResponderTag > 0;
     BOOL nextEnabled = self.nextResponder != nil || self.nextResponderTag > 0;
-    UIBarButtonItem *previousItem = ((previousEnabled || nextEnabled) && self.toolbarPreviousButton) ? [UIBarButtonItem fw_itemWithObject:self.toolbarPreviousButton target:self action:@selector(goPrevious)] : nil;
+    UIBarButtonItem *previousItem = ((previousEnabled || nextEnabled) && self.toolbarPreviousButton) ? [UIBarButtonItem __fw_itemWithObject:self.toolbarPreviousButton target:self action:@selector(goPrevious)] : nil;
     previousItem.enabled = previousEnabled;
     self.previousItem = previousItem;
-    UIBarButtonItem *nextItem = ((previousEnabled || nextEnabled) && self.toolbarNextButton) ? [UIBarButtonItem fw_itemWithObject:self.toolbarNextButton target:self action:@selector(goNext)] : nil;
+    UIBarButtonItem *nextItem = ((previousEnabled || nextEnabled) && self.toolbarNextButton) ? [UIBarButtonItem __fw_itemWithObject:self.toolbarNextButton target:self action:@selector(goNext)] : nil;
     nextItem.enabled = nextEnabled;
     self.nextItem = nextItem;
-    UIBarButtonItem *doneItem = self.toolbarDoneButton ? (doneBlock ? [UIBarButtonItem fw_itemWithObject:self.toolbarDoneButton block:doneBlock] : [UIBarButtonItem fw_itemWithObject:self.toolbarDoneButton target:self.textInput action:@selector(resignFirstResponder)]) : nil;
+    UIBarButtonItem *doneItem = self.toolbarDoneButton ? (doneBlock ? [UIBarButtonItem __fw_itemWithObject:self.toolbarDoneButton block:doneBlock] : [UIBarButtonItem __fw_itemWithObject:self.toolbarDoneButton target:self.textInput action:@selector(resignFirstResponder)]) : nil;
     doneItem.style = UIBarButtonItemStyleDone;
     
     [self addToolbarWithTitleItem:titleItem previousItem:previousItem nextItem:nextItem doneItem:doneItem];

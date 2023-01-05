@@ -1129,7 +1129,7 @@ typedef NS_ENUM(NSInteger, __FWPasscodeTextChangeType) {
 {
     if (!_textField) {
         _textField = [UITextField new];
-        _textField.fw_menuDisabled = YES;
+        _textField.__fw_menuDisabled = YES;
         _textField.delegate = self;
         [_textField addTarget:self action:@selector(textDidChange:) forControlEvents:UIControlEventEditingChanged];
     }

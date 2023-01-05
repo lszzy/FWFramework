@@ -341,7 +341,8 @@ import AdSupport
     }
 
     /// 获取响应的视图控制器
-    @objc public var fw_viewController: UIViewController? {
+    @objc(__fw_viewController)
+    public var fw_viewController: UIViewController? {
         var responder = self.next
         while responder != nil {
             if let viewController = responder as? UIViewController {
@@ -353,7 +354,8 @@ import AdSupport
     }
 
     /// 设置额外热区(点击区域)
-    @objc public var fw_touchInsets: UIEdgeInsets {
+    @objc(__fw_touchInsets)
+    public var fw_touchInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_touchInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
@@ -395,7 +397,8 @@ import AdSupport
     }
     
     /// 根据tag查找subview，仅从subviews中查找
-    @objc public func fw_subview(tag: Int) -> UIView? {
+    @objc(__fw_subviewWithTag:)
+    public func fw_subview(tag: Int) -> UIView? {
         var subview: UIView?
         for obj in self.subviews {
             if obj.tag == tag {
@@ -497,7 +500,8 @@ import AdSupport
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    @objc public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
+    @objc(__fw_setCornerLayer:radius:)
+    public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
         let cornerLayer = CAShapeLayer()
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
         cornerLayer.frame = self.bounds
@@ -706,7 +710,8 @@ import AdSupport
     }
     
     /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-    @objc public var fw_frameApplyTransform: CGRect {
+    @objc(__fw_frameApplyTransform)
+    public var fw_frameApplyTransform: CGRect {
         get { return self.frame }
         set { self.frame = UIView.fw_rectApplyTransform(newValue, transform: self.transform, anchorPoint: self.layer.anchorPoint) }
     }
@@ -1223,7 +1228,8 @@ import AdSupport
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
-    @objc func fw_swizzleSetText(_ text: String?) {
+    @objc(__fw_swizzleSetText:)
+    func fw_swizzleSetText(_ text: String?) {
         guard let text = text else {
             fw_swizzleSetText(text)
             return
@@ -1236,7 +1242,8 @@ import AdSupport
         self.fw_swizzleSetAttributedText(fw_adjustedAttributedString(attributedString))
     }
     
-    @objc func fw_swizzleSetAttributedText(_ text: NSAttributedString?) {
+    @objc(__fw_swizzleSetAttributedText:)
+    func fw_swizzleSetAttributedText(_ text: NSAttributedString?) {
         guard let text = text else {
             self.fw_swizzleSetAttributedText(text)
             return
@@ -1253,7 +1260,8 @@ import AdSupport
         self.fw_swizzleSetAttributedText(attributedString)
     }
     
-    @objc func fw_swizzleSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
+    @objc(__fw_swizzleSetLineBreakMode:)
+    func fw_swizzleSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
         self.fw_swizzleSetLineBreakMode(lineBreakMode)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1264,7 +1272,8 @@ import AdSupport
         }
     }
     
-    @objc func fw_swizzleSetTextAlignment(_ textAlignment: NSTextAlignment) {
+    @objc(__fw_swizzleSetTextAlignment:)
+    func fw_swizzleSetTextAlignment(_ textAlignment: NSTextAlignment) {
         self.fw_swizzleSetTextAlignment(textAlignment)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1348,7 +1357,8 @@ import AdSupport
 @_spi(FW) extension UIControl {
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
-    @objc public var fw_touchEventInterval: TimeInterval {
+    @objc(__fw_touchEventInterval)
+    public var fw_touchEventInterval: TimeInterval {
         get { fw_propertyDouble(forName: "fw_touchEventInterval") }
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
@@ -1382,7 +1392,8 @@ import AdSupport
 @_spi(FW) extension UIButton {
     
     /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
-    @objc public var fw_disabledAlpha: CGFloat {
+    @objc(__fw_disabledAlpha)
+    public var fw_disabledAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_disabledAlpha")
         }
@@ -1395,7 +1406,8 @@ import AdSupport
     }
 
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-    @objc public var fw_highlightedAlpha: CGFloat {
+    @objc(__fw_highlightedAlpha)
+    public var fw_highlightedAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_highlightedAlpha")
         }
@@ -1535,25 +1547,29 @@ import AdSupport
     }
 
     /// 判断当前的scrollView内容是否足够水平滚动
-    @objc public var fw_canScrollHorizontal: Bool {
+    @objc(__fw_canScrollHorizontal)
+    public var fw_canScrollHorizontal: Bool {
         if self.bounds.size.width <= 0 { return false }
         return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)
     }
 
     /// 判断当前的scrollView内容是否足够纵向滚动
-    @objc public var fw_canScrollVertical: Bool {
+    @objc(__fw_canScrollVertical)
+    public var fw_canScrollVertical: Bool {
         if self.bounds.size.height <= 0 { return false }
         return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds)
     }
 
     /// 当前scrollView滚动到指定边
-    @objc public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
+    @objc(__fw_scrollTo:animated:)
+    public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
         let contentOffset = fw_contentOffset(of: edge)
         self.setContentOffset(contentOffset, animated: animated)
     }
 
     /// 是否已滚动到指定边
-    @objc public func fw_isScroll(to edge: UIRectEdge) -> Bool {
+    @objc(__fw_isScrollTo:)
+    public func fw_isScroll(to edge: UIRectEdge) -> Bool {
         let contentOffset = fw_contentOffset(of: edge)
         switch edge {
         case .top:
@@ -1570,7 +1586,8 @@ import AdSupport
     }
 
     /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-    @objc public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
+    @objc(__fw_contentOffsetOf:)
+    public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
         var contentOffset = self.contentOffset
         switch edge {
         case .top:
@@ -1733,7 +1750,8 @@ import AdSupport
         }
     }
     
-    @objc private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc(__fw_swizzleGestureRecognizerShouldBegin:)
+    private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
@@ -1741,7 +1759,7 @@ import AdSupport
         return fw_swizzleGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc(__fw_swizzleGestureRecognizer:shouldRecognizeSimultaneouslyWith:) private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1749,7 +1767,8 @@ import AdSupport
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc(__fw_swizzleGestureRecognizer:shouldRequireFailureOf:)
+    private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1757,7 +1776,8 @@ import AdSupport
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc(__fw_swizzleGestureRecognizer:shouldBeRequiredToFailBy:)
+    private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1868,7 +1888,8 @@ import AdSupport
 @_spi(FW) extension UIPageControl {
     
     /// 自定义圆点大小，默认{10, 10}
-    @objc public var fw_preferredSize: CGSize {
+    @objc(__fw_preferredSize)
+    public var fw_preferredSize: CGSize {
         get {
             var size = self.bounds.size
             if size.height <= 0 {
@@ -1890,7 +1911,8 @@ import AdSupport
 @_spi(FW) extension UISlider {
     
     /// 中间圆球的大小，默认zero
-    @objc public var fw_thumbSize: CGSize {
+    @objc(__fw_thumbSize)
+    public var fw_thumbSize: CGSize {
         get {
             if let value = fw_property(forName: "fw_thumbSize") as? NSValue {
                 return value.cgSizeValue
@@ -1904,7 +1926,8 @@ import AdSupport
     }
 
     /// 中间圆球的颜色，默认nil
-    @objc public var fw_thumbColor: UIColor? {
+    @objc(__fw_thumbColor)
+    public var fw_thumbColor: UIColor? {
         get {
             return fw_property(forName: "fw_thumbColor") as? UIColor
         }
@@ -2011,7 +2034,8 @@ import AdSupport
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
-    @objc public var fw_menuDisabled: Bool {
+    @objc(__fw_menuDisabled)
+    public var fw_menuDisabled: Bool {
         get { fw_propertyBool(forName: "fw_menuDisabled") }
         set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
@@ -2289,7 +2313,8 @@ import AdSupport
     }
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
-    @objc public var fw_estimatedLayout: Bool {
+    @objc(__fw_estimatedLayout)
+    public var fw_estimatedLayout: Bool {
         get {
             return self.estimatedRowHeight == UITableView.automaticDimension
         }
@@ -2651,7 +2676,8 @@ import AdSupport
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-    @objc public var fw_isPresented: Bool {
+    @objc(__fw_isPresented)
+    public var fw_isPresented: Bool {
         var viewController: UIViewController = self
         if let navigationController = self.navigationController {
             if navigationController.viewControllers.first != self { return false }
@@ -2677,7 +2703,8 @@ import AdSupport
     }
     
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-    @objc public var fw_ancestorView: UIView {
+    @objc(__fw_ancestorView)
+    public var fw_ancestorView: UIView {
         if let navigationController = self.tabBarController?.navigationController {
             return navigationController.view
         } else if let tabBarController = self.tabBarController {
