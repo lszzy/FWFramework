@@ -18,6 +18,18 @@
 
 @end
 
+@interface UIImage ()
+
+- (nullable UIImage *)__fw_croppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circular:(BOOL)circular;
+
+@end
+
+@interface UIViewController ()
+
+- (void)__fw_showSheetWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel actions:(nullable NSArray *)actions currentIndex:(NSInteger)currentIndex actionBlock:(nullable void (^)(NSInteger))actionBlock cancelBlock:(nullable void (^)(void))cancelBlock;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

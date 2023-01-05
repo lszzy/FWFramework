@@ -25,6 +25,17 @@
 
 @end
 
+@interface UIScrollView ()
+
+@property (nonatomic, assign) BOOL __fw_showPullRefresh;
+@property (nonatomic, assign) CGFloat __fw_pullRefreshHeight;
+@property (nonatomic, strong, nullable) __FWPullRefreshView *__fw_pullRefreshView;
+@property (nonatomic, assign) BOOL __fw_showInfiniteScroll;
+@property (nonatomic, assign) CGFloat __fw_infiniteScrollHeight;
+@property (nonatomic, strong, nullable) __FWInfiniteScrollView *__fw_infiniteScrollView;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>
