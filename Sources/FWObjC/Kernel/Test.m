@@ -152,7 +152,7 @@
 + (NSArray *)testMethods:(Class)clazz
 {
     NSMutableArray *methodNames = [NSMutableArray array];
-    NSArray *selectorNames = [NSObject fw_classMethods:clazz superclass:YES];
+    NSArray *selectorNames = [NSObject __fw_classMethods:clazz superclass:YES];
     for (NSString *selectorName in selectorNames) {
         if ([selectorName hasPrefix:@"test"] && ![selectorName containsString:@":"]) {
             [methodNames addObject:selectorName];

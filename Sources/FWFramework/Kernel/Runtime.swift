@@ -19,7 +19,8 @@ import FWObjC
     ///   - clazz: 指定类
     ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 方法列表
-    @objc public static func fw_classMethods(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
+    @objc(__fw_classMethods:superclass:)
+    public static func fw_classMethods(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
         let cacheKey = fw_classCacheKey(clazz, superclass: superclass, type: "M")
         if let cacheNames = NSObject.fw_classCaches[cacheKey] {
             return cacheNames
@@ -161,7 +162,8 @@ import FWObjC
     ///   - objects: 传递的参数数组
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    @objc public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    @objc(__fw_invokeMethod:objects:)
+    public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
         return __FWRuntime.invokeMethod(self, selector: selector, objects: objects)
     }
     
@@ -170,7 +172,8 @@ import FWObjC
     /// 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
-    @objc public func fw_invokeGetter(_ name: String) -> Any? {
+    @objc(__fw_invokeGetter:)
+    public func fw_invokeGetter(_ name: String) -> Any? {
         return __FWRuntime.invokeGetter(self, name: name)
     }
     

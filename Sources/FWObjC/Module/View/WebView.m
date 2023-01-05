@@ -290,10 +290,10 @@ static WKProcessPool *fwStaticProcessPool = nil;
     [self addSubview:self.progressView];
     [self.progressView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [self.progressView fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
-    [self fw_observeProperty:@"estimatedProgress" block:^(__FWWebView *webView, NSDictionary *change) {
+    [self __fw_observeProperty:@"estimatedProgress" block:^(__FWWebView *webView, NSDictionary *change) {
         webView.progressView.fw_webProgress = webView.estimatedProgress;
     }];
-    [self fw_observeProperty:@"loading" block:^(__FWWebView *webView, NSDictionary *change) {
+    [self __fw_observeProperty:@"loading" block:^(__FWWebView *webView, NSDictionary *change) {
         if (!webView.isLoading && webView.progressView.fw_webProgress < 1.0) {
             webView.progressView.fw_webProgress = 1.0;
         }
@@ -763,7 +763,7 @@ static int logMaxLength = 500;
     [bridges enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSString *name = package.length > 0 ? [package stringByAppendingString:key] : key;
         [self registerHandler:name handler:^(id  _Nonnull data, __FWJsBridgeResponseCallback  _Nonnull responseCallback) {
-            if (context) [clazz fw_invokeMethod:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
+            if (context) [clazz __fw_invokeMethod:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
         }];
     }];
 #pragma clang diagnostic pop
@@ -791,7 +791,7 @@ static int logMaxLength = 500;
     }
     if (!metaClass) return @{};
     
-    NSArray<NSString *> *methods = [NSObject fw_classMethods:metaClass superclass:NO];
+    NSArray<NSString *> *methods = [NSObject __fw_classMethods:metaClass superclass:NO];
     if (mapper) {
         return mapper(methods);
     }

@@ -220,7 +220,7 @@ NSString *const __FWRouterRewriteComponentFragmentKey = @"fragment";
     }
     if (!metaClass) return @{};
     
-    NSArray<NSString *> *methods = [NSObject fw_classMethods:metaClass superclass:NO];
+    NSArray<NSString *> *methods = [NSObject __fw_classMethods:metaClass superclass:NO];
     if (mapper) {
         return mapper(methods);
     }
