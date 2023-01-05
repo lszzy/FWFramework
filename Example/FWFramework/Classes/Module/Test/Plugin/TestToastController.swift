@@ -90,7 +90,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
         TestController.mockProgress { [weak self] progress, finished in
             if Self.isCancelled { return }
             if !finished {
-                self?.fw.showProgress(progress, text: String(format: "上传中(%.0f%%)", progress * 100), cancel: {
+                self?.fw.showProgress(progress, text: String(format: "上传中(%.0f%%)", progress * 100), cancelBlock: {
                     Self.isCancelled = true
                     self?.fw.showMessage(text: "已取消")
                 })

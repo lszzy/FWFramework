@@ -25,8 +25,8 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
-        base.fw_showLoading(text: text, cancel: cancel)
+    public func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司
@@ -40,8 +40,8 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
-        base.fw_showProgress(progress, text: text, cancel: cancel)
+    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏进度条吐司
@@ -97,8 +97,8 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
-        base.fw_showLoading(text: text, cancel: cancel)
+    public func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司
@@ -111,8 +111,8 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
-        base.fw_showProgress(progress, text: text, cancel: cancel)
+    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏进度条吐司
@@ -156,8 +156,8 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
-        Base.fw_showLoading(text: text, cancel: cancel)
+    public static func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        Base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司
@@ -170,8 +170,8 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
-        Base.fw_showProgress(progress, text: text, cancel: cancel)
+    public static func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        Base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏进度条吐司
