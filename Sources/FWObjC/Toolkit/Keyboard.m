@@ -23,6 +23,12 @@
 
 @end
 
+@interface UIView ()
+
+@property (nonatomic, weak, readonly, nullable) UIViewController *__fw_viewController;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

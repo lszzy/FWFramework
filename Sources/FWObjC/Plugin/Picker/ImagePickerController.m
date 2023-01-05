@@ -46,7 +46,29 @@
 
 @interface UIImage ()
 
++ (nullable UIImage *)__fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
 - (nullable UIImage *)__fw_imageWithScaleSize:(CGSize)size;
+
+@end
+
+@interface UIViewController ()
+
+- (void)__fw_showLoadingWithText:(nullable id)text cancel:(nullable void (^)(void))cancel;
+- (void)__fw_hideLoading;
+- (void)__fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id))block;
+
+@end
+
+@interface UIView ()
+
+@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
+
+@end
+
+@interface UIButton ()
+
+@property (nonatomic, assign) CGFloat __fw_disabledAlpha;
+@property (nonatomic, assign) CGFloat __fw_highlightedAlpha;
 
 @end
 

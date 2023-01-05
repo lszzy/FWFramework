@@ -17,6 +17,13 @@
 
 @end
 
+@interface UIView ()
+
+@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
++ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

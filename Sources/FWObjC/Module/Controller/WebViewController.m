@@ -24,13 +24,19 @@
 
 @interface UIViewController ()
 
-@property (nonatomic, copy, nullable) BOOL (^fw_allowsPopGesture)(void);
+@property (nonatomic, copy, nullable) BOOL (^__fw_allowsPopGesture)(void);
 
 @end
 
 @interface UIBarButtonItem ()
 
 + (instancetype)__fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
+
+@end
+
+@interface WKWebView ()
+
+@property (nonatomic, strong, nullable) __FWWebViewJsBridge *__fw_jsBridge;
 
 @end
 

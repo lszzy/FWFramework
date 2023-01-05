@@ -19,6 +19,12 @@
 
 @end
 
+@interface UIView ()
+
++ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

@@ -10,7 +10,20 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
+@property (nonatomic, strong, nullable) __FWDrawerView *__fw_drawerView;
+
+@end
+
+@interface UIScrollView ()
+
+@property (nonatomic, assign, readonly) BOOL __fw_canScrollVertical;
+@property (nonatomic, assign, readonly) BOOL __fw_canScrollHorizontal;
+- (BOOL)__fw_isScrollTo:(UIRectEdge)edge;
+- (void)__fw_scrollTo:(UIRectEdge)edge animated:(BOOL)animated;
+
+@end
 
 #else
 
