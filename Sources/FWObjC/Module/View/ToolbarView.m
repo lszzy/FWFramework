@@ -112,13 +112,13 @@
 - (void)updateHeight:(BOOL)isFirst {
     switch (self.type) {
         case __FWToolbarViewTypeNavBar: {
-            _topHeight = UIScreen.fw_statusBarHeight;
-            _menuHeight = UIScreen.fw_navigationBarHeight;
+            _topHeight = UIScreen.__fw_statusBarHeight;
+            _menuHeight = UIScreen.__fw_navigationBarHeight;
             break;
         }
         case __FWToolbarViewTypeTabBar: {
-            _menuHeight = UIScreen.fw_tabBarHeight - UIScreen.fw_safeAreaInsets.bottom;
-            _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
+            _menuHeight = UIScreen.__fw_tabBarHeight - UIScreen.__fw_safeAreaInsets.bottom;
+            _bottomHeight = UIScreen.__fw_safeAreaInsets.bottom;
             break;
         }
         case __FWToolbarViewTypeCustom: {
@@ -127,8 +127,8 @@
         }
         case __FWToolbarViewTypeDefault:
         default: {
-            _menuHeight = UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
-            _bottomHeight = UIScreen.fw_safeAreaInsets.bottom;
+            _menuHeight = UIScreen.__fw_toolBarHeight - UIScreen.__fw_safeAreaInsets.bottom;
+            _bottomHeight = UIScreen.__fw_safeAreaInsets.bottom;
             break;
         }
     }
@@ -407,11 +407,11 @@
                 [subviewContraints addObject:[subviewButton fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:previousButton offset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
                 [subviewContraints addObject:[subviewButton fw_matchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:previousButton offset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             } else {
-                [subviewContraints addObject:[subviewButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.fw_safeAreaInsets.left relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+                [subviewContraints addObject:[subviewButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.__fw_safeAreaInsets.left relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             }
             previousButton = subviewButton;
         }
-        [subviewContraints addObject:[previousButton fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:UIScreen.fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+        [subviewContraints addObject:[previousButton fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:UIScreen.__fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
         self.subviewContraints = subviewContraints;
     } else {
         NSMutableArray *subviewContraints = [NSMutableArray array];
@@ -420,12 +420,12 @@
         UIView *leftButton = self.leftButton ?: self.leftMoreButton;
         UIView *leftMoreButton = self.leftButton && self.leftMoreButton ? self.leftMoreButton : nil;
         if (leftButton) {
-            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.fw_safeAreaInsets.left + 8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.__fw_safeAreaInsets.left + 8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
-            leftWidth += UIScreen.fw_safeAreaInsets.left + 8 + buttonWidth + 8;
+            leftWidth += UIScreen.__fw_safeAreaInsets.left + 8 + buttonWidth + 8;
         }
         if (leftMoreButton) {
             [subviewContraints addObject:[leftMoreButton fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton offset:8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
@@ -440,12 +440,12 @@
         UIView *rightButton = self.rightButton ?: self.rightMoreButton;
         UIView *rightMoreButton = self.rightButton && self.rightMoreButton ? self.rightMoreButton : nil;
         if (rightButton) {
-            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:8 + UIScreen.fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:8 + UIScreen.__fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightButton fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
-            rightWidth += 8 + buttonWidth + 8 + UIScreen.fw_safeAreaInsets.right;
+            rightWidth += 8 + buttonWidth + 8 + UIScreen.__fw_safeAreaInsets.right;
         }
         if (rightMoreButton) {
             [subviewContraints addObject:[rightMoreButton fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton offset:-8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
@@ -501,7 +501,7 @@
             titleViewSize.height = ceil(titleViewSize.height);
             
             if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
-                CGFloat titleViewMinY = [UIScreen fw_flatValue:CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0) scale:0];
+                CGFloat titleViewMinY = [UIScreen __fw_flatValue:CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0) scale:0];
                 titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
             }
             
@@ -604,7 +604,7 @@
         self.showsSubAccessoryPlaceholder = NO;
         self.showsLoadingPlaceholder = YES;
         
-        [self fw_applyAppearance];
+        [self __fw_applyAppearance];
     }
     return self;
 }
@@ -950,7 +950,7 @@
         CGFloat secondLineWidth = [self secondLineWidthInVerticalStyle];
         size.width = MAX(firstLineWidth, secondLineWidth);
         size.height = self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom) + self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom);
-        return CGSizeMake([UIScreen fw_flatValue:size.width scale:0], [UIScreen fw_flatValue:size.height scale:0]);
+        return CGSizeMake([UIScreen __fw_flatValue:size.width scale:0], [UIScreen __fw_flatValue:size.height scale:0]);
     } else {
         CGSize size = CGSizeZero;
         size.width = self.titleLabelSize.width + (self.titleEdgeInsetsIfShowingTitleLabel.left + self.titleEdgeInsetsIfShowingTitleLabel.right) + self.subtitleLabelSize.width + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.left + self.subtitleEdgeInsetsIfShowingSubtitleLabel.right);
@@ -958,7 +958,7 @@
         size.height = MAX(self.titleLabelSize.height + (self.titleEdgeInsetsIfShowingTitleLabel.top + self.titleEdgeInsetsIfShowingTitleLabel.bottom), self.subtitleLabelSize.height + (self.subtitleEdgeInsetsIfShowingSubtitleLabel.top + self.subtitleEdgeInsetsIfShowingSubtitleLabel.bottom));
         size.height = MAX(size.height, [self loadingViewSpacingSizeIfNeedsPlaceholder].height);
         size.height = MAX(size.height, [self accessorySpacingSizeIfNeedesPlaceholder].height);
-        return CGSizeMake([UIScreen fw_flatValue:size.width scale:0], [UIScreen fw_flatValue:size.height scale:0]);
+        return CGSizeMake([UIScreen __fw_flatValue:size.width scale:0], [UIScreen __fw_flatValue:size.height scale:0]);
     }
 }
 
@@ -1227,9 +1227,9 @@
     
     if (image && [self imageForState:state] != image) {
         if (state == UIControlStateNormal) {
-            self.highlightedImage = [[image fw_imageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
+            self.highlightedImage = [[image __fw_imageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
             [self setImage:self.highlightedImage forState:UIControlStateHighlighted];
-            self.disabledImage = [[image fw_imageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
+            self.disabledImage = [[image __fw_imageWithAlpha:0.2f] imageWithRenderingMode:image.renderingMode];
             [self setImage:self.disabledImage forState:UIControlStateDisabled];
         } else {
             if (image != self.highlightedImage && image != self.disabledImage) {

@@ -69,7 +69,7 @@
     [webView __fw_observeProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
         weakController.navigationItem.title = webView.title;
     }];
-    viewController.fw_allowsPopGesture = ^BOOL{
+    viewController.__fw_allowsPopGesture = ^BOOL{
         return !weakController.webView.canGoBack;
     };
     

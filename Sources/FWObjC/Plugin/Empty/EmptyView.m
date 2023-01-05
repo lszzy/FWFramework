@@ -78,7 +78,7 @@
 }
 
 - (void)didInitialize {
-    [self fw_applyAppearance];
+    [self __fw_applyAppearance];
     
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
