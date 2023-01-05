@@ -28,7 +28,7 @@
 
 @interface UIViewController (__FWViewController)
 
-- (SEL)__fw_IntercepterForwardSelector:(SEL)aSelector;
+- (SEL)__fw_intercepterForwardSelector:(SEL)aSelector;
 
 @end
 
@@ -81,7 +81,7 @@
 
 - (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object
 {
-    SEL forwardSelector = [object __fw_IntercepterForwardSelector:intercepter];
+    SEL forwardSelector = [object __fw_intercepterForwardSelector:intercepter];
     if (forwardSelector) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -100,7 +100,7 @@
 
 - (id)performIntercepter:(SEL)intercepter withObject:(UIViewController *)object parameter:(id)parameter
 {
-    SEL forwardSelector = [object __fw_IntercepterForwardSelector:intercepter];
+    SEL forwardSelector = [object __fw_intercepterForwardSelector:intercepter];
     if (forwardSelector) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -299,15 +299,15 @@
             }
         }));
         
-        [UIViewController __fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_IntercepterRespondsToSelector:)];
-        [UIViewController __fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_IntercepterMethodSignatureForSelector:)];
-        [UIViewController __fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(__fw_IntercepterForwardInvocation:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_intercepterRespondsToSelector:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_intercepterMethodSignatureForSelector:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(__fw_intercepterForwardInvocation:)];
     });
 }
 
 #pragma mark - Forward
 
-- (NSMutableDictionary *)__fw_IntercepterForwardSelectors
+- (NSMutableDictionary *)__fw_intercepterForwardSelectors
 {
     NSMutableDictionary *forwardSelectors = objc_getAssociatedObject(self, _cmd);
     if (!forwardSelectors) {
@@ -317,60 +317,60 @@
     return forwardSelectors;
 }
 
-- (SEL)__fw_IntercepterForwardSelector:(SEL)aSelector
+- (SEL)__fw_intercepterForwardSelector:(SEL)aSelector
 {
     if ([self conformsToProtocol:@protocol(__FWViewController)]) {
         // 查找forward方法缓存是否存在
         NSString *selectorName = NSStringFromSelector(aSelector);
-        NSString *forwardName = [[self __fw_IntercepterForwardSelectors] objectForKey:selectorName];
+        NSString *forwardName = [[self __fw_intercepterForwardSelectors] objectForKey:selectorName];
         if (!forwardName) {
             // 如果缓存不存在，查找一次并生成缓存
             forwardName = [[__FWViewControllerManager sharedInstance] forwardSelector:selectorName withClass:self.class];
-            [[self __fw_IntercepterForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
+            [[self __fw_intercepterForwardSelectors] setObject:(forwardName ?: @"") forKey:selectorName];
         }
         
         SEL forwardSelector = forwardName.length > 0 ? NSSelectorFromString(forwardName) : NULL;
-        if (forwardSelector && [self __fw_IntercepterRespondsToSelector:forwardSelector]) {
+        if (forwardSelector && [self __fw_intercepterRespondsToSelector:forwardSelector]) {
             return forwardSelector;
         }
     }
     return NULL;
 }
 
-- (BOOL)__fw_IntercepterRespondsToSelector:(SEL)aSelector
+- (BOOL)__fw_intercepterRespondsToSelector:(SEL)aSelector
 {
-    if ([self __fw_IntercepterRespondsToSelector:aSelector]) {
+    if ([self __fw_intercepterRespondsToSelector:aSelector]) {
         return YES;
     } else {
-        SEL forwardSelector = [self __fw_IntercepterForwardSelector:aSelector];
+        SEL forwardSelector = [self __fw_intercepterForwardSelector:aSelector];
         return forwardSelector ? YES : NO;
     }
 }
 
-- (NSMethodSignature *)__fw_IntercepterMethodSignatureForSelector:(SEL)aSelector
+- (NSMethodSignature *)__fw_intercepterMethodSignatureForSelector:(SEL)aSelector
 {
     SEL forwardSelector = NULL;
-    if (![self __fw_IntercepterRespondsToSelector:aSelector]) {
-        forwardSelector = [self __fw_IntercepterForwardSelector:aSelector];
+    if (![self __fw_intercepterRespondsToSelector:aSelector]) {
+        forwardSelector = [self __fw_intercepterForwardSelector:aSelector];
     }
     if (forwardSelector) {
         return [self.class instanceMethodSignatureForSelector:forwardSelector];
     } else {
-        return [self __fw_IntercepterMethodSignatureForSelector:aSelector];
+        return [self __fw_intercepterMethodSignatureForSelector:aSelector];
     }
 }
 
-- (void)__fw_IntercepterForwardInvocation:(NSInvocation *)anInvocation
+- (void)__fw_intercepterForwardInvocation:(NSInvocation *)anInvocation
 {
     SEL forwardSelector = NULL;
-    if (![self __fw_IntercepterRespondsToSelector:anInvocation.selector]) {
-        forwardSelector = [self __fw_IntercepterForwardSelector:anInvocation.selector];
+    if (![self __fw_intercepterRespondsToSelector:anInvocation.selector]) {
+        forwardSelector = [self __fw_intercepterForwardSelector:anInvocation.selector];
     }
     if (forwardSelector) {
         anInvocation.selector = forwardSelector;
         [anInvocation invoke];
     } else {
-        [self __fw_IntercepterForwardInvocation:anInvocation];
+        [self __fw_intercepterForwardInvocation:anInvocation];
     }
 }
 
