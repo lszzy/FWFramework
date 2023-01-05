@@ -42,7 +42,7 @@ import FWObjC
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
+    public func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
         var attributedText = text as? NSAttributedString
         if let string = text as? String {
             attributedText = NSAttributedString(string: string)
@@ -53,7 +53,7 @@ import FWObjC
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.showLoading?(withAttributedText: attributedText, cancel: cancel, in: self)
+        plugin.showLoading?(withAttributedText: attributedText, cancel: cancelBlock, in: self)
     }
 
     /// 隐藏加载吐司
@@ -79,7 +79,7 @@ import FWObjC
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
+    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
         var attributedText = text as? NSAttributedString
         if let string = text as? String {
             attributedText = NSAttributedString(string: string)
@@ -90,7 +90,7 @@ import FWObjC
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.showProgress?(withAttributedText: attributedText, progress: progress, cancel: cancel, in: self)
+        plugin.showProgress?(withAttributedText: attributedText, progress: progress, cancel: cancelBlock, in: self)
     }
 
     /// 隐藏进度条吐司
@@ -187,8 +187,8 @@ import FWObjC
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     @objc(__fw_showLoadingWithText:cancel:)
-    public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
-        fw_toastContainerView?.fw_showLoading(text: text, cancel: cancel)
+    public func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        fw_toastContainerView?.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司
@@ -203,8 +203,8 @@ import FWObjC
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
-        fw_toastContainerView?.fw_showProgress(progress, text: text, cancel: cancel)
+    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        fw_toastContainerView?.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏进度条吐司
@@ -248,8 +248,8 @@ import FWObjC
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
-        UIWindow.fw_mainWindow?.fw_showLoading(text: text, cancel: cancel)
+    public static func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        UIWindow.fw_mainWindow?.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司
@@ -263,8 +263,8 @@ import FWObjC
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancel: (() -> Void)? = nil) {
-        UIWindow.fw_mainWindow?.fw_showProgress(progress, text: text, cancel: cancel)
+    public static func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        UIWindow.fw_mainWindow?.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏进度条吐司

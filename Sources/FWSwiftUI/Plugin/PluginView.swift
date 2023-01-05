@@ -40,12 +40,12 @@ public struct LoadingPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw.showLoading(text: text, cancel: cancelBlock)
+        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw.showLoading(text: text, cancel: cancelBlock)
+        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
@@ -90,14 +90,14 @@ public struct ProgressPluginView: UIViewRepresentable {
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancel: cancelBlock)
+            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
         }
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancel: cancelBlock)
+            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
         } else {
             uiView.fw.hideProgress()
         }
