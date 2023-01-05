@@ -142,7 +142,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
     if (self.superview && newSuperview == nil) {
         //use self.superview, not self.scrollView. Why self.scrollView == nil here?
         UIScrollView *scrollView = (UIScrollView *)self.superview;
-        if (scrollView.fw_showPullRefresh) {
+        if (scrollView.__fw_showPullRefresh) {
             if (self.isObserving) {
                 //If enter this branch, it is the moment just before "SVPullToRefreshView's dealloc", so remove observer here
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
@@ -312,7 +312,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if([keyPath isEqualToString:@"contentOffset"]) {
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-        if (self.scrollView.fw_infiniteScrollView.isActive ||
+        if (self.scrollView.__fw_infiniteScrollView.isActive ||
             (contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) > 0) {
             if (self.pullingPercent > 0) self.pullingPercent = 0;
             if (self.state != __FWPullRefreshStateIdle) {
@@ -327,7 +327,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
-        self.frame = CGRectMake(0, -self.scrollView.fw_pullRefreshHeight, self.bounds.size.width, self.scrollView.fw_pullRefreshHeight);
+        self.frame = CGRectMake(0, -self.scrollView.__fw_pullRefreshHeight, self.bounds.size.width, self.scrollView.__fw_pullRefreshHeight);
     }else if([keyPath isEqualToString:@"frame"]) {
         [self layoutSubviews];
     }
@@ -337,13 +337,13 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
     UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
     if (state == UIGestureRecognizerStateBegan) {
         self.isActive = NO;
-        self.scrollView.fw_infiniteScrollView.isActive = NO;
+        self.scrollView.__fw_infiniteScrollView.isActive = NO;
     }
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     CGFloat adjustedContentOffsetY = contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top;
-    CGFloat progress = -adjustedContentOffsetY / self.scrollView.fw_pullRefreshHeight;
+    CGFloat progress = -adjustedContentOffsetY / self.scrollView.__fw_pullRefreshHeight;
     if(progress > 0) self.isActive = YES;
     if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
     if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
@@ -357,7 +357,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
     } else if(adjustedContentOffsetY >= scrollOffsetThreshold && self.state != __FWPullRefreshStateIdle)
         self.state = __FWPullRefreshStateIdle;
     else if(adjustedContentOffsetY >= scrollOffsetThreshold && self.state == __FWPullRefreshStateIdle)
-        self.pullingPercent = MAX(MIN(-adjustedContentOffsetY / self.scrollView.fw_pullRefreshHeight, 1.f), 0.f);
+        self.pullingPercent = MAX(MIN(-adjustedContentOffsetY / self.scrollView.__fw_pullRefreshHeight, 1.f), 0.f);
 }
 
 #pragma mark - Getters
@@ -373,7 +373,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 
 - (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
+        _indicatorView = [UIView __fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
@@ -636,7 +636,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     if (self.superview && newSuperview == nil) {
         UIScrollView *scrollView = (UIScrollView *)self.superview;
-        if (scrollView.fw_showInfiniteScroll) {
+        if (scrollView.__fw_showInfiniteScroll) {
             if (self.isObserving) {
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
@@ -677,7 +677,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight;
+    currentInsets.bottom = self.originalInset.bottom + self.scrollView.__fw_infiniteScrollHeight;
     [self setScrollViewContentInset:currentInsets];
 }
 
@@ -698,7 +698,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         if (self.finished) return;
         
         CGPoint contentOffset = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-        if (self.scrollView.fw_pullRefreshView.isActive ||
+        if (self.scrollView.__fw_pullRefreshView.isActive ||
             (contentOffset.y + ceil(self.scrollView.adjustedContentInset.top) - self.scrollView.contentInset.top) < 0) {
             if (self.state != __FWInfiniteScrollStateIdle) {
                 self.state = __FWInfiniteScrollStateIdle;
@@ -708,7 +708,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         }
     }else if([keyPath isEqualToString:@"contentSize"]) {
         [self layoutSubviews];
-        self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.bounds.size.width, self.scrollView.fw_infiniteScrollHeight);
+        self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.bounds.size.width, self.scrollView.__fw_infiniteScrollHeight);
     }
 }
 
@@ -718,7 +718,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
     UIGestureRecognizerState state = [[change valueForKey:NSKeyValueChangeNewKey] integerValue];
     if (state == UIGestureRecognizerStateBegan) {
         self.isActive = NO;
-        self.scrollView.fw_pullRefreshView.isActive = NO;
+        self.scrollView.__fw_pullRefreshView.isActive = NO;
     } else if (state == UIGestureRecognizerStateEnded && self.state == __FWInfiniteScrollStateTriggered) {
         if ((self.scrollView.contentOffset.y + self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) >= 0) {
             self.state = __FWInfiniteScrollStateLoading;
@@ -731,8 +731,8 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     CGFloat adjustedContentOffsetY = contentOffset.y + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top);
     if(self.animationProgressBlock || self.progressBlock) {
-        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) + self.scrollView.contentInset.bottom, self.scrollView.fw_infiniteScrollHeight);
-        CGFloat progress = (self.scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.fw_infiniteScrollHeight;
+        CGFloat scrollHeight = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height + (self.scrollView.adjustedContentInset.top - self.scrollView.contentInset.top) + self.scrollView.contentInset.bottom, self.scrollView.__fw_infiniteScrollHeight);
+        CGFloat progress = (self.scrollView.__fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / self.scrollView.__fw_infiniteScrollHeight;
         if(self.animationProgressBlock) self.animationProgressBlock(self, MAX(MIN(progress, 1.f), 0.f));
         if(self.progressBlock) self.progressBlock(self, MAX(MIN(progress, 1.f), 0.f));
     }
@@ -751,7 +751,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 
 - (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
-        _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
+        _indicatorView = [UIView __fw_indicatorViewWithStyle:__FWIndicatorViewStyleRefresh];
         _indicatorView.color = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }

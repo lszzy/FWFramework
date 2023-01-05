@@ -11,7 +11,8 @@ import CoreGraphics
 
 // MARK: - VideoPlayerDelegate
 /// Player delegate protocol
-@objc public protocol VideoPlayerDelegate {
+@objc(__FWVideoPlayerDelegate)
+public protocol VideoPlayerDelegate {
     @objc optional func playerReady(_ player: VideoPlayer)
     @objc optional func playerPlaybackStateDidChange(_ player: VideoPlayer)
     @objc optional func playerBufferingStateDidChange(_ player: VideoPlayer)
@@ -21,7 +22,8 @@ import CoreGraphics
 
 // MARK: - VideoPlayerPlaybackDelegate
 /// Player playback protocol
-@objc public protocol VideoPlayerPlaybackDelegate {
+@objc(__FWVideoPlayerPlaybackDelegate)
+public protocol VideoPlayerPlaybackDelegate {
     @objc optional func playerCurrentTimeDidChange(_ player: VideoPlayer)
     @objc optional func playerPlaybackWillStartFromBeginning(_ player: VideoPlayer)
     @objc optional func playerPlaybackDidEnd(_ player: VideoPlayer)

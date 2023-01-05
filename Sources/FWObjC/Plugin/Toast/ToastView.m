@@ -104,13 +104,13 @@
             break;
         }
         case __FWToastViewTypeIndicator: {
-            _indicatorView = [UIView fw_indicatorViewWithStyle:__FWIndicatorViewStyleDefault];
+            _indicatorView = [UIView __fw_indicatorViewWithStyle:__FWIndicatorViewStyleDefault];
             _indicatorView.userInteractionEnabled = NO;
             [_contentView addSubview:_indicatorView];
             break;
         }
         case __FWToastViewTypeProgress: {
-            _progressView = [UIView fw_progressViewWithStyle:__FWProgressViewStyleDefault];
+            _progressView = [UIView __fw_progressViewWithStyle:__FWProgressViewStyleDefault];
             _progressView.userInteractionEnabled = NO;
             [_contentView addSubview:_progressView];
             break;

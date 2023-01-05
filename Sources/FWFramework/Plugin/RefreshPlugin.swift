@@ -209,12 +209,14 @@ import FWObjC
     
 }
 
-@_spi(FW) @objc extension UIScrollView {
+@_spi(FW) extension UIScrollView {
     
+    @objc(__fw_addPullRefreshWithBlock:)
     public func fw_addPullRefresh(block: @escaping () -> Void) {
         fw_addPullRefresh(block: block, target: nil, action: nil)
     }
     
+    @objc(__fw_addPullRefreshWithTarget:action:)
     public func fw_addPullRefresh(target: Any, action: Selector) {
         fw_addPullRefresh(block: nil, target: target, action: action)
     }
@@ -234,6 +236,7 @@ import FWObjC
         self.fw_showPullRefresh = true
     }
     
+    @objc(__fw_triggerPullRefresh)
     public func fw_triggerPullRefresh() {
         if self.fw_pullRefreshView?.isAnimating() ?? false { return }
         
@@ -242,6 +245,7 @@ import FWObjC
         self.fw_pullRefreshView?.startAnimating()
     }
 
+    @objc(__fw_pullRefreshView)
     public var fw_pullRefreshView: PullRefreshView? {
         get {
             return fw_property(forName: "fw_pullRefreshView") as? PullRefreshView
@@ -251,6 +255,7 @@ import FWObjC
         }
     }
     
+    @objc(__fw_pullRefreshHeight)
     public var fw_pullRefreshHeight: CGFloat {
         get {
             let height = fw_propertyDouble(forName: "fw_pullRefreshHeight")
@@ -261,6 +266,7 @@ import FWObjC
         }
     }
     
+    @objc(__fw_showPullRefresh)
     public var fw_showPullRefresh: Bool {
         get {
             if let pullRefreshView = self.fw_pullRefreshView {
@@ -297,10 +303,12 @@ import FWObjC
         }
     }
     
+    @objc(__fw_addInfiniteScrollWithBlock:)
     public func fw_addInfiniteScroll(block: @escaping () -> Void) {
         fw_addInfiniteScroll(block: block, target: nil, action: nil)
     }
     
+    @objc(__fw_addInfiniteScrollWithTarget:action:)
     public func fw_addInfiniteScroll(target: Any, action: Selector) {
         fw_addInfiniteScroll(block: nil, target: target, action: action)
     }
@@ -320,6 +328,7 @@ import FWObjC
         self.fw_showInfiniteScroll = true
     }
     
+    @objc(__fw_triggerInfiniteScroll)
     public func fw_triggerInfiniteScroll() {
         if self.fw_infiniteScrollView?.isAnimating() ?? false { return }
         
@@ -328,6 +337,7 @@ import FWObjC
         self.fw_infiniteScrollView?.startAnimating()
     }
 
+    @objc(__fw_infiniteScrollView)
     public var fw_infiniteScrollView: InfiniteScrollView? {
         get {
             return fw_property(forName: "fw_infiniteScrollView") as? InfiniteScrollView
@@ -337,6 +347,7 @@ import FWObjC
         }
     }
     
+    @objc(__fw_infiniteScrollHeight)
     public var fw_infiniteScrollHeight: CGFloat {
         get {
             let height = fw_propertyDouble(forName: "fw_infiniteScrollHeight")
@@ -347,6 +358,7 @@ import FWObjC
         }
     }
     
+    @objc(__fw_showInfiniteScroll)
     public var fw_showInfiniteScroll: Bool {
         get {
             if let infiniteScrollView = self.fw_infiniteScrollView {
@@ -382,6 +394,7 @@ import FWObjC
         }
     }
     
+    @objc(__fw_infiniteScrollFinished)
     public var fw_infiniteScrollFinished: Bool {
         get {
             return self.fw_infiniteScrollView?.finished ?? false

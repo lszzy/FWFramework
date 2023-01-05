@@ -828,7 +828,7 @@
 
 - (NSData *)imageEncode:(UIImage *)image options:(NSDictionary<__FWImageCoderOptions,id> *)options
 {
-    __FWImageFormat imageFormat = image.fw_imageFormat;
+    __FWImageFormat imageFormat = image.__fw_imageFormat;
     NSData *imageData = [__FWImageCoder.sharedInstance encodedDataWithImage:image format:imageFormat options:options];
     if (imageData || imageFormat == __FWImageFormatUndefined) return imageData;
     return [__FWImageCoder.sharedInstance encodedDataWithImage:image format:__FWImageFormatUndefined options:options];

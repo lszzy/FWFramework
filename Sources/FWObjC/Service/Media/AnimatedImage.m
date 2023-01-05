@@ -219,10 +219,10 @@ static SEL __FWCGSVGDocumentSEL = NULL;
         
         NSUInteger loopCount = [self imageLoopCountWithSource:source format:format];
         animatedImage = [__FWImageFrame animatedImageWithFrames:frames];
-        animatedImage.fw_imageLoopCount = loopCount;
+        animatedImage.__fw_imageLoopCount = loopCount;
     }
     
-    animatedImage.fw_imageFormat = format;
+    animatedImage.__fw_imageFormat = format;
     CFRelease(source);
     return animatedImage;
 }
@@ -268,7 +268,7 @@ static SEL __FWCGSVGDocumentSEL = NULL;
         CGImageDestinationAddImage(imageDestination, imageRef, (__bridge CFDictionaryRef)properties);
     } else {
         NSDictionary *containerProperties = @{
-            [self dictionaryProperty:format]: @{[self loopCountProperty:format] : @(image.fw_imageLoopCount)}
+            [self dictionaryProperty:format]: @{[self loopCountProperty:format] : @(image.__fw_imageLoopCount)}
         };
         CGImageDestinationSetProperties(imageDestination, (__bridge CFDictionaryRef)containerProperties);
         
