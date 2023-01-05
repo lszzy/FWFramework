@@ -16,7 +16,6 @@ ln -s ../../FWObjC/Service/Media/*.h ./
 ln -s ../../FWObjC/Service/Database/*.h ./
 ln -s ../../FWObjC/Module/App/*.h ./
 ln -s ../../FWObjC/Module/Controller/*.h ./
-ln -s ../../FWObjC/Module/Model/*.h ./
 ln -s ../../FWObjC/Module/View/*.h ./
 ln -s ../../FWObjC/Plugin/View/*.h ./
 ln -s ../../FWObjC/Plugin/Toast/*.h ./

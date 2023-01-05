@@ -1,1 +1,0 @@
-../../FWObjC/Toolkit/FWIcon.h
