@@ -15,7 +15,7 @@
 @interface UIView ()
 
 @property (nonatomic, assign) CGPoint fw_origin;
-- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
 
 @end
 
@@ -796,7 +796,7 @@
         _progressView = [UIView __fw_progressViewWithStyle:__FWProgressViewStyleDefault];
         _progressView.hidden = YES;
         [self addSubview:_progressView];
-        [_progressView fw_alignCenterToSuperview:CGPointZero];
+        [_progressView __fw_alignCenterToSuperview:CGPointZero];
     }
     return _progressView;
 }
@@ -806,7 +806,7 @@
     _progressView = progressView;
     _progressView.hidden = YES;
     [self addSubview:_progressView];
-    [_progressView fw_alignCenterToSuperview:CGPointZero];
+    [_progressView __fw_alignCenterToSuperview:CGPointZero];
 }
 
 - (CGFloat)progress {

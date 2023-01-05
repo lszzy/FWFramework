@@ -11,7 +11,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -2020,7 +2020,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         }
         [self.alertControllerView addSubview:containerView];
         if (_preferredStyle == __FWAlertControllerStyleActionSheet && self.alertAppearance.sheetContainerTransparent) {
-            [containerView fw_pinEdgesToSuperview:self.alertAppearance.sheetContainerInsets];
+            [containerView __fw_pinEdgesToSuperview:self.alertAppearance.sheetContainerInsets];
         } else {
             containerView.frame = self.alertControllerView.bounds;
             containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

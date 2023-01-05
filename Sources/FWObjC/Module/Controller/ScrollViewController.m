@@ -12,7 +12,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -45,7 +45,7 @@
     
     UIView *contentView = [viewController contentView];
     [scrollView addSubview:contentView];
-    [contentView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    [contentView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     
     if (self.hookScrollViewController) {
         self.hookScrollViewController(viewController);
@@ -95,7 +95,7 @@
 - (void)__fw_setupScrollLayout
 {
     UIScrollView *scrollView = [(id<__FWScrollViewController>)self scrollView];
-    [scrollView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    [scrollView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

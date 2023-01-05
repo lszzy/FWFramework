@@ -11,7 +11,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -70,7 +70,7 @@
     toastView.attributedTitle = loadingText;
     toastView.cancelBlock = cancelBlock;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperview:view.__fw_toastInsets];
+    [toastView __fw_pinEdgesToSuperview:view.__fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);
@@ -117,7 +117,7 @@
     toastView.progress = progress;
     toastView.cancelBlock = cancelBlock;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperview:view.__fw_toastInsets];
+    [toastView __fw_pinEdgesToSuperview:view.__fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);
@@ -154,7 +154,7 @@
     toastView.userInteractionEnabled = !interactive;
     toastView.attributedTitle = messageText;
     [view addSubview:toastView];
-    [toastView fw_pinEdgesToSuperview:view.__fw_toastInsets];
+    [toastView __fw_pinEdgesToSuperview:view.__fw_toastInsets];
     
     if (self.customBlock) {
         self.customBlock(toastView);

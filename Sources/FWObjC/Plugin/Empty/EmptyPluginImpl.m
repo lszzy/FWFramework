@@ -11,7 +11,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -77,7 +77,7 @@
     emptyView = [[__FWEmptyView alloc] initWithFrame:view.bounds];
     emptyView.tag = 2021;
     [view addSubview:emptyView];
-    [emptyView fw_pinEdgesToSuperview:view.__fw_emptyInsets];
+    [emptyView __fw_pinEdgesToSuperview:view.__fw_emptyInsets];
     [emptyView setLoadingViewHidden:!loading];
     [emptyView setImage:emptyImage];
     [emptyView setTextLabelText:emptyText];

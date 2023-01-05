@@ -12,7 +12,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -215,7 +215,7 @@
 - (void)__fw_setupWebLayout
 {
     __FWWebView *webView = [(id<__FWWebViewController>)self webView];
-    [webView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    [webView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end
