@@ -31,10 +31,10 @@
     __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(collectionViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
-        @"collectionView" : @"fw_innerCollectionView",
-        @"collectionData" : @"fw_innerCollectionData",
-        @"setupCollectionViewLayout" : @"fw_innerSetupCollectionViewLayout",
-        @"setupCollectionLayout" : @"fw_innerSetupCollectionLayout",
+        @"collectionView" : @"__fw_collectionView",
+        @"collectionData" : @"__fw_collectionData",
+        @"setupCollectionViewLayout" : @"__fw_setupCollectionViewLayout",
+        @"setupCollectionLayout" : @"__fw_setupCollectionLayout",
     };
     [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWCollectionViewController) withIntercepter:intercepter];
 }
@@ -69,7 +69,7 @@
 
 @implementation UIViewController (__FWCollectionViewController)
 
-- (UICollectionView *)fw_innerCollectionView
+- (UICollectionView *)__fw_collectionView
 {
     UICollectionView *collectionView = objc_getAssociatedObject(self, _cmd);
     if (!collectionView) {
@@ -82,7 +82,7 @@
     return collectionView;
 }
 
-- (NSMutableArray *)fw_innerCollectionData
+- (NSMutableArray *)__fw_collectionData
 {
     NSMutableArray *collectionData = objc_getAssociatedObject(self, _cmd);
     if (!collectionData) {
@@ -92,7 +92,7 @@
     return collectionData;
 }
 
-- (UICollectionViewLayout *)fw_innerSetupCollectionViewLayout
+- (UICollectionViewLayout *)__fw_setupCollectionViewLayout
 {
     UICollectionViewFlowLayout *viewLayout = [[UICollectionViewFlowLayout alloc] init];
     viewLayout.minimumLineSpacing = 0;
@@ -100,7 +100,7 @@
     return viewLayout;
 }
 
-- (void)fw_innerSetupCollectionLayout
+- (void)__fw_setupCollectionLayout
 {
     UICollectionView *collectionView = [(id<__FWCollectionViewController>)self collectionView];
     [collectionView fw_pinEdgesToSuperview:UIEdgeInsetsZero];

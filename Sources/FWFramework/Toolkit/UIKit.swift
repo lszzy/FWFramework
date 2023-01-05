@@ -440,31 +440,31 @@ import AdSupport
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         if edge.contains(.top) {
-            let borderLayer = fw_innerBorderLayer("fw_borderLayerTop")
+            let borderLayer = fw_borderLayer("fw_borderLayerTop")
             borderLayer.frame = CGRect(x: leftInset, y: 0, width: self.bounds.size.width - leftInset - rightInset, height: width)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.left) {
-            let borderLayer = fw_innerBorderLayer("fw_borderLayerLeft")
+            let borderLayer = fw_borderLayer("fw_borderLayerLeft")
             borderLayer.frame = CGRect(x: 0, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.bottom) {
-            let borderLayer = fw_innerBorderLayer("fw_borderLayerBottom")
+            let borderLayer = fw_borderLayer("fw_borderLayerBottom")
             borderLayer.frame = CGRect(x: leftInset, y: self.bounds.size.height - width, width: self.bounds.size.width - leftInset - rightInset, height: width)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.right) {
-            let borderLayer = fw_innerBorderLayer("fw_borderLayerRight")
+            let borderLayer = fw_borderLayer("fw_borderLayerRight")
             borderLayer.frame = CGRect(x: self.bounds.size.width - width, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
             borderLayer.backgroundColor = color?.cgColor
         }
     }
     
-    private func fw_innerBorderLayer(_ edgeKey: String) -> CALayer {
+    private func fw_borderLayer(_ edgeKey: String) -> CALayer {
         if let borderLayer = fw_property(forName: edgeKey) as? CALayer {
             return borderLayer
         } else {
@@ -534,7 +534,7 @@ import AdSupport
     /// 绘制单边或多边边框。使用AutoLayout
     public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         if edge.contains(.top) {
-            let borderView = fw_innerBorderView("fw_borderViewTop", edge: .top)
+            let borderView = fw_borderView("fw_borderViewTop", edge: .top)
             borderView.fw_setDimension(.height, size: width)
             borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
             borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
@@ -542,7 +542,7 @@ import AdSupport
         }
         
         if edge.contains(.left) {
-            let borderView = fw_innerBorderView("fw_borderViewLeft", edge: .left)
+            let borderView = fw_borderView("fw_borderViewLeft", edge: .left)
             borderView.fw_setDimension(.width, size: width)
             borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
             borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
@@ -550,7 +550,7 @@ import AdSupport
         }
         
         if edge.contains(.bottom) {
-            let borderView = fw_innerBorderView("fw_borderViewBottom", edge: .bottom)
+            let borderView = fw_borderView("fw_borderViewBottom", edge: .bottom)
             borderView.fw_setDimension(.height, size: width)
             borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
             borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
@@ -558,7 +558,7 @@ import AdSupport
         }
         
         if edge.contains(.right) {
-            let borderView = fw_innerBorderView("fw_borderViewRight", edge: .right)
+            let borderView = fw_borderView("fw_borderViewRight", edge: .right)
             borderView.fw_setDimension(.width, size: width)
             borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
             borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
@@ -566,7 +566,7 @@ import AdSupport
         }
     }
     
-    private func fw_innerBorderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
+    private func fw_borderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
         if let borderView = fw_property(forName: edgeKey) as? UIView {
             return borderView
         } else {
@@ -1034,7 +1034,7 @@ import AdSupport
             if let textAttributes = newValue {
                 string?.addAttributes(textAttributes, range: fullRange)
             }
-            fw_innerSetAttributedText(fw_adjustedAttributedString(string))
+            fw_swizzleSetAttributedText(fw_adjustedAttributedString(string))
         }
     }
     
@@ -1223,26 +1223,26 @@ import AdSupport
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
-    @objc func fw_innerSetText(_ text: String?) {
+    @objc func fw_swizzleSetText(_ text: String?) {
         guard let text = text else {
-            fw_innerSetText(text)
+            fw_swizzleSetText(text)
             return
         }
         if (self.fw_textAttributes?.count ?? 0) < 1 && !self.fw_issetLineHeight {
-            fw_innerSetText(text)
+            fw_swizzleSetText(text)
             return
         }
         let attributedString = NSAttributedString(string: text, attributes: self.fw_textAttributes)
-        self.fw_innerSetAttributedText(fw_adjustedAttributedString(attributedString))
+        self.fw_swizzleSetAttributedText(fw_adjustedAttributedString(attributedString))
     }
     
-    @objc func fw_innerSetAttributedText(_ text: NSAttributedString?) {
+    @objc func fw_swizzleSetAttributedText(_ text: NSAttributedString?) {
         guard let text = text else {
-            self.fw_innerSetAttributedText(text)
+            self.fw_swizzleSetAttributedText(text)
             return
         }
         if (self.fw_textAttributes?.count ?? 0) < 1 && !self.fw_issetLineHeight {
-            self.fw_innerSetAttributedText(text)
+            self.fw_swizzleSetAttributedText(text)
             return
         }
         var attributedString: NSMutableAttributedString? = NSMutableAttributedString(string: text.string, attributes: self.fw_textAttributes)
@@ -1250,11 +1250,11 @@ import AdSupport
         text.enumerateAttributes(in: NSMakeRange(0, text.length)) { attrs, range, _ in
             attributedString?.addAttributes(attrs, range: range)
         }
-        self.fw_innerSetAttributedText(attributedString)
+        self.fw_swizzleSetAttributedText(attributedString)
     }
     
-    @objc func fw_innerSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
-        self.fw_innerSetLineBreakMode(lineBreakMode)
+    @objc func fw_swizzleSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
+        self.fw_swizzleSetLineBreakMode(lineBreakMode)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
            let mutableStyle = paragraphStyle.mutableCopy() as? NSMutableParagraphStyle {
@@ -1264,8 +1264,8 @@ import AdSupport
         }
     }
     
-    @objc func fw_innerSetTextAlignment(_ textAlignment: NSTextAlignment) {
-        self.fw_innerSetTextAlignment(textAlignment)
+    @objc func fw_swizzleSetTextAlignment(_ textAlignment: NSTextAlignment) {
+        self.fw_swizzleSetTextAlignment(textAlignment)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
            let mutableStyle = paragraphStyle.mutableCopy() as? NSMutableParagraphStyle {
@@ -1334,10 +1334,10 @@ import AdSupport
             return store.original(selfObject, store.selector, size)
         }}
         
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_innerSetText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_innerSetAttributedText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_innerSetLineBreakMode(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_innerSetTextAlignment(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
+        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
     }
     
 }
@@ -1733,36 +1733,36 @@ import AdSupport
         }
     }
     
-    @objc private func fw_innerGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
         
-        return fw_innerGestureRecognizerShouldBegin(gestureRecognizer)
+        return fw_swizzleGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_innerGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_innerGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
+        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    @objc private func fw_innerGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_innerGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
+        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
     }
     
     private static var fw_staticPanProxySwizzled = false
@@ -1771,10 +1771,10 @@ import AdSupport
         guard !fw_staticPanProxySwizzled else { return }
         fw_staticPanProxySwizzled = true
         
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_innerGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
 }

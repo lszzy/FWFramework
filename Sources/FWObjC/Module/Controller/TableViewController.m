@@ -31,10 +31,10 @@
     __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(tableViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
-        @"tableView" : @"fw_innerTableView",
-        @"tableData" : @"fw_innerTableData",
-        @"setupTableStyle" : @"fw_innerSetupTableStyle",
-        @"setupTableLayout" : @"fw_innerSetupTableLayout",
+        @"tableView" : @"__fw_tableView",
+        @"tableData" : @"__fw_tableData",
+        @"setupTableStyle" : @"__fw_setupTableStyle",
+        @"setupTableLayout" : @"__fw_setupTableLayout",
     };
     [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWTableViewController) withIntercepter:intercepter];
 }
@@ -69,7 +69,7 @@
 
 @implementation UIViewController (__FWTableViewController)
 
-- (UITableView *)fw_innerTableView
+- (UITableView *)__fw_tableView
 {
     UITableView *tableView = objc_getAssociatedObject(self, _cmd);
     if (!tableView) {
@@ -86,7 +86,7 @@
     return tableView;
 }
 
-- (NSMutableArray *)fw_innerTableData
+- (NSMutableArray *)__fw_tableData
 {
     NSMutableArray *tableData = objc_getAssociatedObject(self, _cmd);
     if (!tableData) {
@@ -96,12 +96,12 @@
     return tableData;
 }
 
-- (UITableViewStyle)fw_innerSetupTableStyle
+- (UITableViewStyle)__fw_setupTableStyle
 {
     return UITableViewStylePlain;
 }
 
-- (void)fw_innerSetupTableLayout
+- (void)__fw_setupTableLayout
 {
     UITableView *tableView = [(id<__FWTableViewController>)self tableView];
     [tableView fw_pinEdgesToSuperview:UIEdgeInsetsZero];

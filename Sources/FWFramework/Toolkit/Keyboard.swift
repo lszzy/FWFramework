@@ -60,7 +60,7 @@ import FWObjC
         }
         set {
             self.fw_keyboardTarget.returnResign = newValue
-            self.fw_innerReturnEvent()
+            self.fw_addReturnEvent()
         }
     }
 
@@ -71,7 +71,7 @@ import FWObjC
         }
         set {
             self.fw_keyboardTarget.returnNext = newValue
-            self.fw_innerReturnEvent()
+            self.fw_addReturnEvent()
         }
     }
 
@@ -82,15 +82,15 @@ import FWObjC
         }
         set {
             self.fw_keyboardTarget.returnBlock = newValue
-            self.fw_innerReturnEvent()
+            self.fw_addReturnEvent()
         }
     }
     
-    private func fw_innerReturnEvent() {
-        let value = fw_property(forName: "fw_innerReturnEvent") as? NSNumber
+    private func fw_addReturnEvent() {
+        let value = fw_property(forName: "fw_addReturnEvent") as? NSNumber
         if value == nil {
             self.addTarget(self.fw_keyboardTarget, action: #selector(__FWKeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
-            fw_setProperty(NSNumber(value: true), forName: "fw_innerReturnEvent")
+            fw_setProperty(NSNumber(value: true), forName: "fw_addReturnEvent")
         }
     }
     
