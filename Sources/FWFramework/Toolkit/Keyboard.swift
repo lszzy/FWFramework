@@ -18,48 +18,48 @@ import FWObjC
     /// 是否启用键盘管理(自动滚动)，默认NO
     @objc(__fw_keyboardManager)
     public var fw_keyboardManager: Bool {
-        get { return self.fw_innerKeyboardTarget.keyboardManager }
-        set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
+        get { return self.fw_keyboardTarget.keyboardManager }
+        set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     @objc public var fw_keyboardDistance: CGFloat {
-        get { return self.fw_innerKeyboardTarget.keyboardDistance }
-        set { self.fw_innerKeyboardTarget.keyboardDistance = newValue }
+        get { return self.fw_keyboardTarget.keyboardDistance }
+        set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     @objc public var fw_reboundDistance: CGFloat {
-        get { return self.fw_innerKeyboardTarget.reboundDistance }
-        set { self.fw_innerKeyboardTarget.reboundDistance = newValue }
+        get { return self.fw_keyboardTarget.reboundDistance }
+        set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     @objc public var fw_keyboardResign: Bool {
-        get { return self.fw_innerKeyboardTarget.keyboardResign }
-        set { self.fw_innerKeyboardTarget.keyboardResign = newValue }
+        get { return self.fw_keyboardTarget.keyboardResign }
+        set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     @objc public var fw_touchResign: Bool {
-        get { return self.fw_innerKeyboardTarget.touchResign }
-        set { self.fw_innerKeyboardTarget.touchResign = newValue }
+        get { return self.fw_keyboardTarget.touchResign }
+        set { self.fw_keyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
     public weak var fw_keyboardScrollView: UIScrollView? {
-        get { return self.fw_innerKeyboardTarget.scrollView }
-        set { self.fw_innerKeyboardTarget.scrollView = newValue }
+        get { return self.fw_keyboardTarget.scrollView }
+        set { self.fw_keyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
     @objc public var fw_returnResign: Bool {
         get {
-            return self.fw_innerKeyboardTarget.returnResign
+            return self.fw_keyboardTarget.returnResign
         }
         set {
-            self.fw_innerKeyboardTarget.returnResign = newValue
+            self.fw_keyboardTarget.returnResign = newValue
             self.fw_innerReturnEvent()
         }
     }
@@ -67,10 +67,10 @@ import FWObjC
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
     public var fw_returnNext: Bool {
         get {
-            return self.fw_innerKeyboardTarget.returnNext
+            return self.fw_keyboardTarget.returnNext
         }
         set {
-            self.fw_innerKeyboardTarget.returnNext = newValue
+            self.fw_keyboardTarget.returnNext = newValue
             self.fw_innerReturnEvent()
         }
     }
@@ -78,10 +78,10 @@ import FWObjC
     /// 设置点击键盘完成按钮的事件句柄
     public var fw_returnBlock: ((UITextField) -> Void)? {
         get {
-            return self.fw_innerKeyboardTarget.returnBlock
+            return self.fw_keyboardTarget.returnBlock
         }
         set {
-            self.fw_innerKeyboardTarget.returnBlock = newValue
+            self.fw_keyboardTarget.returnBlock = newValue
             self.fw_innerReturnEvent()
         }
     }
@@ -89,7 +89,7 @@ import FWObjC
     private func fw_innerReturnEvent() {
         let value = fw_property(forName: "fw_innerReturnEvent") as? NSNumber
         if value == nil {
-            self.addTarget(self.fw_innerKeyboardTarget, action: #selector(__FWKeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
+            self.addTarget(self.fw_keyboardTarget, action: #selector(__FWKeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
             fw_setProperty(NSNumber(value: true), forName: "fw_innerReturnEvent")
         }
     }
@@ -97,85 +97,85 @@ import FWObjC
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
     public var fw_keyboardToolbar: UIToolbar {
-        get { return self.fw_innerKeyboardTarget.keyboardToolbar }
-        set { self.fw_innerKeyboardTarget.keyboardToolbar = newValue }
+        get { return self.fw_keyboardTarget.keyboardToolbar }
+        set { self.fw_keyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
     public var fw_toolbarPreviousButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarPreviousButton
+            return self.fw_keyboardTarget.toolbarPreviousButton
         }
         set {
-            self.fw_innerKeyboardTarget.previousButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarPreviousButton = newValue
+            self.fw_keyboardTarget.previousButtonInitialized = true
+            self.fw_keyboardTarget.toolbarPreviousButton = newValue
         }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
     public var fw_toolbarNextButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarNextButton
+            return self.fw_keyboardTarget.toolbarNextButton
         }
         set {
-            self.fw_innerKeyboardTarget.nextButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarNextButton = newValue
+            self.fw_keyboardTarget.nextButtonInitialized = true
+            self.fw_keyboardTarget.toolbarNextButton = newValue
         }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
     public var fw_toolbarDoneButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarDoneButton
+            return self.fw_keyboardTarget.toolbarDoneButton
         }
         set {
-            self.fw_innerKeyboardTarget.doneButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarDoneButton = newValue
+            self.fw_keyboardTarget.doneButtonInitialized = true
+            self.fw_keyboardTarget.toolbarDoneButton = newValue
         }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
     public var fw_previousResponder: ((UITextField) -> UIResponder?)? {
-        get { return self.fw_innerKeyboardTarget.previousResponder }
-        set { self.fw_innerKeyboardTarget.previousResponder = newValue }
+        get { return self.fw_keyboardTarget.previousResponder }
+        set { self.fw_keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
     public var fw_nextResponder: ((UITextField) -> UIResponder?)? {
-        get { return self.fw_innerKeyboardTarget.nextResponder }
-        set { self.fw_innerKeyboardTarget.nextResponder = newValue }
+        get { return self.fw_keyboardTarget.nextResponder }
+        set { self.fw_keyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_previousResponderTag: Int {
-        get { return self.fw_innerKeyboardTarget.previousResponderTag }
-        set { self.fw_innerKeyboardTarget.previousResponderTag = newValue }
+        get { return self.fw_keyboardTarget.previousResponderTag }
+        set { self.fw_keyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_nextResponderTag: Int {
-        get { return self.fw_innerKeyboardTarget.nextResponderTag }
-        set { self.fw_innerKeyboardTarget.nextResponderTag = newValue }
+        get { return self.fw_keyboardTarget.nextResponderTag }
+        set { self.fw_keyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
     public func fw_goPrevious() {
-        self.fw_innerKeyboardTarget.goPrevious()
+        self.fw_keyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
     public func fw_goNext() {
-        self.fw_innerKeyboardTarget.goNext()
+        self.fw_keyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
     public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
-        return self.fw_innerKeyboardTarget.keyboardHeight(notification)
+        return self.fw_keyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
     public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        self.fw_innerKeyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
+        self.fw_keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
@@ -183,7 +183,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.fw_innerKeyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_keyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -193,15 +193,15 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_keyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_innerKeyboardTarget: __FWKeyboardTarget<UITextField> {
-        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __FWKeyboardTarget<UITextField> {
+    private var fw_keyboardTarget: __FWKeyboardTarget<UITextField> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? __FWKeyboardTarget<UITextField> {
             return target
         } else {
             let target = __FWKeyboardTarget<UITextField>(textInput: self)
-            fw_setProperty(target, forName: "fw_innerKeyboardTarget")
+            fw_setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
     }
@@ -246,48 +246,48 @@ import FWObjC
     /// 是否启用键盘管理(自动滚动)，默认NO
     @objc(__fw_keyboardManager)
     public var fw_keyboardManager: Bool {
-        get { return self.fw_innerKeyboardTarget.keyboardManager }
-        set { self.fw_innerKeyboardTarget.keyboardManager = newValue }
+        get { return self.fw_keyboardTarget.keyboardManager }
+        set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     @objc public var fw_keyboardDistance: CGFloat {
-        get { return self.fw_innerKeyboardTarget.keyboardDistance }
-        set { self.fw_innerKeyboardTarget.keyboardDistance = newValue }
+        get { return self.fw_keyboardTarget.keyboardDistance }
+        set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     @objc public var fw_reboundDistance: CGFloat {
-        get { return self.fw_innerKeyboardTarget.reboundDistance }
-        set { self.fw_innerKeyboardTarget.reboundDistance = newValue }
+        get { return self.fw_keyboardTarget.reboundDistance }
+        set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     @objc public var fw_keyboardResign: Bool {
-        get { return self.fw_innerKeyboardTarget.keyboardResign }
-        set { self.fw_innerKeyboardTarget.keyboardResign = newValue }
+        get { return self.fw_keyboardTarget.keyboardResign }
+        set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     @objc public var fw_touchResign: Bool {
-        get { return self.fw_innerKeyboardTarget.touchResign }
-        set { self.fw_innerKeyboardTarget.touchResign = newValue }
+        get { return self.fw_keyboardTarget.touchResign }
+        set { self.fw_keyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
     public weak var fw_keyboardScrollView: UIScrollView? {
-        get { return self.fw_innerKeyboardTarget.scrollView }
-        set { self.fw_innerKeyboardTarget.scrollView = newValue }
+        get { return self.fw_keyboardTarget.scrollView }
+        set { self.fw_keyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
     @objc public var fw_returnResign: Bool {
         get {
-            return self.fw_innerKeyboardTarget.returnResign
+            return self.fw_keyboardTarget.returnResign
         }
         set {
-            self.fw_innerKeyboardTarget.returnResign = newValue
+            self.fw_keyboardTarget.returnResign = newValue
             self.fw_delegateProxyEnabled = true
         }
     }
@@ -295,10 +295,10 @@ import FWObjC
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var fw_returnNext: Bool {
         get {
-            return self.fw_innerKeyboardTarget.returnNext
+            return self.fw_keyboardTarget.returnNext
         }
         set {
-            self.fw_innerKeyboardTarget.returnNext = newValue
+            self.fw_keyboardTarget.returnNext = newValue
             self.fw_delegateProxyEnabled = true
         }
     }
@@ -306,10 +306,10 @@ import FWObjC
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var fw_returnBlock: ((UITextView) -> Void)? {
         get {
-            return self.fw_innerKeyboardTarget.returnBlock
+            return self.fw_keyboardTarget.returnBlock
         }
         set {
-            self.fw_innerKeyboardTarget.returnBlock = newValue
+            self.fw_keyboardTarget.returnBlock = newValue
             self.fw_delegateProxyEnabled = true
         }
     }
@@ -362,85 +362,85 @@ import FWObjC
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
     public var fw_keyboardToolbar: UIToolbar {
-        get { return self.fw_innerKeyboardTarget.keyboardToolbar }
-        set { self.fw_innerKeyboardTarget.keyboardToolbar = newValue }
+        get { return self.fw_keyboardTarget.keyboardToolbar }
+        set { self.fw_keyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
     public var fw_toolbarPreviousButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarPreviousButton
+            return self.fw_keyboardTarget.toolbarPreviousButton
         }
         set {
-            self.fw_innerKeyboardTarget.previousButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarPreviousButton = newValue
+            self.fw_keyboardTarget.previousButtonInitialized = true
+            self.fw_keyboardTarget.toolbarPreviousButton = newValue
         }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
     public var fw_toolbarNextButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarNextButton
+            return self.fw_keyboardTarget.toolbarNextButton
         }
         set {
-            self.fw_innerKeyboardTarget.nextButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarNextButton = newValue
+            self.fw_keyboardTarget.nextButtonInitialized = true
+            self.fw_keyboardTarget.toolbarNextButton = newValue
         }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
     public var fw_toolbarDoneButton: Any? {
         get {
-            return self.fw_innerKeyboardTarget.toolbarDoneButton
+            return self.fw_keyboardTarget.toolbarDoneButton
         }
         set {
-            self.fw_innerKeyboardTarget.doneButtonInitialized = true
-            self.fw_innerKeyboardTarget.toolbarDoneButton = newValue
+            self.fw_keyboardTarget.doneButtonInitialized = true
+            self.fw_keyboardTarget.toolbarDoneButton = newValue
         }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
     public var fw_previousResponder: ((UITextView) -> UIResponder?)? {
-        get { return self.fw_innerKeyboardTarget.previousResponder }
-        set { self.fw_innerKeyboardTarget.previousResponder = newValue }
+        get { return self.fw_keyboardTarget.previousResponder }
+        set { self.fw_keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
     public var fw_nextResponder: ((UITextView) -> UIResponder?)? {
-        get { return self.fw_innerKeyboardTarget.nextResponder }
-        set { self.fw_innerKeyboardTarget.nextResponder = newValue }
+        get { return self.fw_keyboardTarget.nextResponder }
+        set { self.fw_keyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_previousResponderTag: Int {
-        get { return self.fw_innerKeyboardTarget.previousResponderTag }
-        set { self.fw_innerKeyboardTarget.previousResponderTag = newValue }
+        get { return self.fw_keyboardTarget.previousResponderTag }
+        set { self.fw_keyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
     public var fw_nextResponderTag: Int {
-        get { return self.fw_innerKeyboardTarget.nextResponderTag }
-        set { self.fw_innerKeyboardTarget.nextResponderTag = newValue }
+        get { return self.fw_keyboardTarget.nextResponderTag }
+        set { self.fw_keyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
     public func fw_goPrevious() {
-        self.fw_innerKeyboardTarget.goPrevious()
+        self.fw_keyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
     public func fw_goNext() {
-        self.fw_innerKeyboardTarget.goNext()
+        self.fw_keyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
     public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
-        return self.fw_innerKeyboardTarget.keyboardHeight(notification)
+        return self.fw_keyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
     public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        self.fw_innerKeyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
+        self.fw_keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
@@ -448,7 +448,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.fw_innerKeyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_keyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -458,15 +458,15 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.fw_innerKeyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_keyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_innerKeyboardTarget: __FWKeyboardTarget<UITextView> {
-        if let target = fw_property(forName: "fw_innerKeyboardTarget") as? __FWKeyboardTarget<UITextView> {
+    private var fw_keyboardTarget: __FWKeyboardTarget<UITextView> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? __FWKeyboardTarget<UITextView> {
             return target
         } else {
             let target = __FWKeyboardTarget<UITextView>(textInput: self)
-            fw_setProperty(target, forName: "fw_innerKeyboardTarget")
+            fw_setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
     }
@@ -584,7 +584,7 @@ import FWObjC
         }
         set {
             self.fw_placeholderLabel.text = newValue
-            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
 
@@ -601,7 +601,7 @@ import FWObjC
         }
         set {
             self.fw_placeholderLabel.attributedText = newValue
-            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
 
@@ -613,7 +613,7 @@ import FWObjC
         }
         set {
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_placeholderInset")
-            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
 
@@ -627,7 +627,7 @@ import FWObjC
         }
         set {
             fw_setProperty(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
-            self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
     
@@ -644,32 +644,32 @@ import FWObjC
         label.isUserInteractionEnabled = false
         label.font = self.font
         fw_setProperty(label, forName: "fw_placeholderLabel")
-        self.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+        self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         self.insertSubview(label, at: 0)
         
-        self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("attributedText", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("text", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("bounds", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("frame", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("textAlignment", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("textContainerInset", target: self.fw_innerPlaceholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("attributedText", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("text", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("bounds", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("frame", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textAlignment", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textContainerInset", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
         self.fw_observeProperty("font") { textView, change in
             guard let textView = textView as? UITextView else { return }
             if change[.newKey] != nil {
                 textView.fw_placeholderLabel.font = textView.font
-                textView.fw_innerPlaceholderTarget.setNeedsUpdatePlaceholder()
+                textView.fw_placeholderTarget.setNeedsUpdatePlaceholder()
             }
         }
         return label
     }
     
-    private var fw_innerPlaceholderTarget: PlaceholderTarget {
-        if let target = fw_property(forName: "fw_innerPlaceholderTarget") as? PlaceholderTarget {
+    private var fw_placeholderTarget: PlaceholderTarget {
+        if let target = fw_property(forName: "fw_placeholderTarget") as? PlaceholderTarget {
             return target
         } else {
             let target = PlaceholderTarget(textView: self)
-            fw_setProperty(target, forName: "fw_innerPlaceholderTarget")
+            fw_setProperty(target, forName: "fw_placeholderTarget")
             return target
         }
     }
@@ -681,7 +681,7 @@ import FWObjC
         }
         set {
             fw_setPropertyBool(newValue, forName: "fw_autoHeightEnabled")
-            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+            self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
 
@@ -695,7 +695,7 @@ import FWObjC
         }
         set {
             fw_setProperty(NSNumber(value: newValue), forName: "fw_maxHeight")
-            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+            self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
 
@@ -706,7 +706,7 @@ import FWObjC
         }
         set {
             fw_setPropertyDouble(newValue, forName: "fw_minHeight")
-            self.fw_innerPlaceholderTarget.setNeedsUpdateText()
+            self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
 

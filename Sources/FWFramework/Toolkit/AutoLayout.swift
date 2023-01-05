@@ -140,7 +140,7 @@ import FWObjC
             return fw_propertyBool(forName: "fw_collapsed")
         }
         set {
-            fw_innerCollapseConstraints.enumerateObjects { constraint, _, _ in
+            fw_collapseConstraints.enumerateObjects { constraint, _, _ in
                 guard let constraint = constraint as? NSLayoutConstraint else { return }
                 constraint.constant = newValue ? 0 : constraint.fw_originalConstant
             }
@@ -166,17 +166,17 @@ import FWObjC
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
     public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint) {
         constraint.fw_originalConstant = constraint.constant
-        if !fw_innerCollapseConstraints.contains(constraint) {
-            fw_innerCollapseConstraints.add(constraint)
+        if !fw_collapseConstraints.contains(constraint) {
+            fw_collapseConstraints.add(constraint)
         }
     }
     
-    fileprivate var fw_innerCollapseConstraints: NSMutableArray {
-        if let constraints = fw_property(forName: "fw_innerCollapseConstraints") as? NSMutableArray {
+    fileprivate var fw_collapseConstraints: NSMutableArray {
+        if let constraints = fw_property(forName: "fw_collapseConstraints") as? NSMutableArray {
             return constraints
         } else {
             let constraints = NSMutableArray()
-            fw_setProperty(constraints, forName: "fw_innerCollapseConstraints")
+            fw_setProperty(constraints, forName: "fw_collapseConstraints")
             return constraints
         }
     }
@@ -742,7 +742,7 @@ import FWObjC
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_autoCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
+            if selfObject.fw_autoCollapse && selfObject.fw_collapseConstraints.count > 0 {
                 // Absent意味着视图没有固有size，即{-1, -1}
                 let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
                 // 计算固有尺寸
@@ -764,7 +764,7 @@ import FWObjC
         ) { store in { selfObject, hidden in
             store.original(selfObject, store.selector, hidden)
             
-            if selfObject.fw_hiddenCollapse && selfObject.fw_innerCollapseConstraints.count > 0 {
+            if selfObject.fw_hiddenCollapse && selfObject.fw_collapseConstraints.count > 0 {
                 selfObject.fw_collapsed = hidden
             }
         }}
