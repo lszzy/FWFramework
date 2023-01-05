@@ -849,9 +849,9 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
     
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath.lowercaseString hasPrefix:@"http"] || [imagePath.lowercaseString hasPrefix:@"data:"]) {
-            [cell.imageView fw_setImageWithUrl:imagePath placeholderImage:self.placeholderImage completion:nil];
+            [cell.imageView __fw_setImageWithUrl:imagePath placeholderImage:self.placeholderImage completion:nil];
         } else {
-            UIImage *image = [UIImage fw_imageNamed:imagePath bundle:nil options:nil];
+            UIImage *image = [UIImage __fw_imageNamed:imagePath bundle:nil options:nil];
             cell.imageView.image = image ?: self.placeholderImage;
         }
     } else if (!self.onlyDisplayText && [imagePath isKindOfClass:[UIImage class]]) {
@@ -1052,7 +1052,7 @@ NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
 
 - (void)setupImageView
 {
-    UIImageView *imageView = [UIImageView fw_animatedImageView];
+    UIImageView *imageView = [UIImageView __fw_animatedImageView];
     _imageView = imageView;
     imageView.layer.masksToBounds = YES;
     [_insetView addSubview:imageView];

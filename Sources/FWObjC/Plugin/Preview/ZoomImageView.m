@@ -174,7 +174,7 @@
 
 - (void)initImageViewIfNeeded {
     if (_imageView) return;
-    _imageView = [UIImageView fw_animatedImageView];
+    _imageView = [UIImageView __fw_animatedImageView];
     [self.scrollView addSubview:_imageView];
 }
 
@@ -847,11 +847,11 @@
         if (isVideo) imageURL = [AVPlayerItem playerItemWithURL:imageURL];
     }
 
-    [self.imageView fw_cancelImageRequest];
+    [self.imageView __fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
         __weak __typeof__(self) self_weak_ = self;
-        [self.imageView fw_setImageWithUrl:imageURL placeholderImage:placeholderImage options:0 context:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+        [self.imageView __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage options:0 context:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             self.progress = 1;
             if (image) self.image = image;
