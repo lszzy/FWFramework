@@ -256,7 +256,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     }
     
     /// 初始化布局section配置，在prepareLayout调用即可
-    @objc public func fw_sectionConfigPrepareLayout() {
+    @objc(__fw_sectionConfigPrepareLayout)
+    public func fw_sectionConfigPrepareLayout() {
         guard let collectionView = self.collectionView,
               let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
               delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }
@@ -299,7 +300,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     }
 
     /// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
-    @objc public func fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
+    @objc(__fw_sectionConfigLayoutAttributesForElementsIn:)
+    public func fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
         var attrs: [UICollectionViewLayoutAttributes] = []
         for attr in self.fw_sectionConfigAttributes {
             if let attr = attr as? UICollectionViewLayoutAttributes,

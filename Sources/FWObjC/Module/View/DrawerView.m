@@ -50,7 +50,7 @@
         _gestureRecognizer = gestureRecognizer;
         gestureRecognizer.delegate = self;
         [view addGestureRecognizer:gestureRecognizer];
-        view.fw_drawerView = self;
+        view.__fw_drawerView = self;
     }
     return self;
 }

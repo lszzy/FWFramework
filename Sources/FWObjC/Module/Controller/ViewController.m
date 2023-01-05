@@ -299,9 +299,9 @@
             }
         }));
         
-        [UIViewController fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_IntercepterRespondsToSelector:)];
-        [UIViewController fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_IntercepterMethodSignatureForSelector:)];
-        [UIViewController fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(__fw_IntercepterForwardInvocation:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_IntercepterRespondsToSelector:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_IntercepterMethodSignatureForSelector:)];
+        [UIViewController __fw_exchangeInstanceMethod:@selector(forwardInvocation:) swizzleMethod:@selector(__fw_IntercepterForwardInvocation:)];
     });
 }
 

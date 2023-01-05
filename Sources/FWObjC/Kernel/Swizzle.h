@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define __FWSwizzleMethod( target, selector, identifier, __FWSwizzleType, __FWSwizzleReturn, __FWSwizzleArgs, __FWSwizzleCode ) \
     __FWSwizzleMethod_( target, selector, identifier, __FWSwizzleType, __FWSwizzleReturn, __FWSwizzleArgsWrap_(__FWSwizzleArgs), __FWSwizzleArgsWrap_(__FWSwizzleCode) )
 #define __FWSwizzleMethod_( target, sel, identity, __FWSwizzleType, __FWSwizzleReturn, __FWSwizzleArgs, __FWSwizzleCode ) \
-    [NSObject fw_swizzleMethod:target selector:sel identifier:identity block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
+    [NSObject __fw_swizzleMethod:target selector:sel identifier:identity block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) { \
         return ^__FWSwizzleReturn (__FWSwizzleArgsDel2_(__unsafe_unretained __FWSwizzleType selfObject, __FWSwizzleArgs)) \
         { \
             __FWSwizzleReturn (*originalMSG)(__FWSwizzleArgsDel3_(id, SEL, __FWSwizzleArgs)); \

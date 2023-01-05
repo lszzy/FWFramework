@@ -13,7 +13,8 @@ import FWObjC
 @_spi(FW) extension UIProgressView {
     
     /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-    @objc public var fw_webProgress: Float {
+    @objc(__fw_webProgress)
+    public var fw_webProgress: Float {
         get {
             return self.progress
         }
@@ -44,7 +45,8 @@ import FWObjC
 @_spi(FW) extension WKWebView {
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    @objc public var fw_jsBridge: WebViewJsBridge? {
+    @objc(__fw_jsBridge)
+    public var fw_jsBridge: WebViewJsBridge? {
         get { fw_property(forName: "fw_jsBridge") as? WebViewJsBridge }
         set { fw_setProperty(newValue, forName: "fw_jsBridge") }
     }
@@ -68,7 +70,8 @@ import FWObjC
     }
 
     /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-    @objc public static var fw_extensionUserAgent: String {
+    @objc(__fw_extensionUserAgent)
+    public static var fw_extensionUserAgent: String {
         let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw_appExecutable, UIApplication.fw_appVersion)
         return userAgent
     }

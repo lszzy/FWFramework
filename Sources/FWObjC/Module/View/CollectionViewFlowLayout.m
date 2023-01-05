@@ -39,7 +39,7 @@
 
 - (void)prepareLayout {
     [super prepareLayout];
-    [self fw_sectionConfigPrepareLayout];
+    [self __fw_sectionConfigPrepareLayout];
     
     if (self.itemRenderVertical && self.columnCount > 0 && self.rowCount > 0) {
         self.allAttributes = [NSMutableArray array];
@@ -89,7 +89,7 @@
         if (attributes) newAttributes = [attributes mutableCopy];
     }
     
-    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsIn:rect];
+    NSArray *sectionAttributes = [self __fw_sectionConfigLayoutAttributesForElementsIn:rect];
     [newAttributes addObjectsFromArray:sectionAttributes];
     return [newAttributes copy];
 }
@@ -913,7 +913,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
 
 - (void)prepareLayout {
     [super prepareLayout];
-    [self fw_sectionConfigPrepareLayout];
+    [self __fw_sectionConfigPrepareLayout];
     self.cachedFrame = @{}.mutableCopy;
 }
 
@@ -926,7 +926,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
             updatedAttributes[index] = [self layoutAttributesForItemAtIndexPath:attributes.indexPath];
         }
     }
-    NSArray *sectionAttributes = [self fw_sectionConfigLayoutAttributesForElementsIn:rect];
+    NSArray *sectionAttributes = [self __fw_sectionConfigLayoutAttributesForElementsIn:rect];
     [updatedAttributes addObjectsFromArray:sectionAttributes];
     return updatedAttributes;
 }
