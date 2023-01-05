@@ -329,7 +329,8 @@ public enum ScreenInch: Int {
     }
     
     /// 屏幕安全区域距离
-    @objc public static var fw_safeAreaInsets: UIEdgeInsets {
+    @objc(__fw_safeAreaInsets)
+    public static var fw_safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw_mainWindow
         if mainWindow != nil {
             if UIScreen.fw_staticWindow != nil { UIScreen.fw_staticWindow = nil }
@@ -343,7 +344,8 @@ public enum ScreenInch: Int {
     private static var fw_staticWindow: UIWindow?
 
     /// 状态栏高度，与是否隐藏无关
-    @objc public static var fw_statusBarHeight: CGFloat {
+    @objc(__fw_statusBarHeight)
+    public static var fw_statusBarHeight: CGFloat {
         if !UIApplication.shared.isStatusBarHidden {
             return UIApplication.shared.statusBarFrame.height
         }
@@ -362,7 +364,8 @@ public enum ScreenInch: Int {
     }
     
     /// 导航栏高度，与是否隐藏无关
-    @objc public static var fw_navigationBarHeight: CGFloat {
+    @objc(__fw_navigationBarHeight)
+    public static var fw_navigationBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 44
         }
@@ -375,12 +378,14 @@ public enum ScreenInch: Int {
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    @objc public static var fw_topBarHeight: CGFloat {
+    @objc(__fw_topBarHeight)
+    public static var fw_topBarHeight: CGFloat {
         return fw_statusBarHeight + fw_navigationBarHeight
     }
     
     /// 标签栏高度，与是否隐藏无关
-    @objc public static var fw_tabBarHeight: CGFloat {
+    @objc(__fw_tabBarHeight)
+    public static var fw_tabBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 65 }
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 49
@@ -394,7 +399,8 @@ public enum ScreenInch: Int {
     }
     
     /// 工具栏高度，与是否隐藏无关
-    @objc public static var fw_toolBarHeight: CGFloat {
+    @objc(__fw_toolBarHeight)
+    public static var fw_toolBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 70 }
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 44
@@ -471,7 +477,8 @@ public enum ScreenInch: Int {
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-    @objc public static func fw_flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
+    @objc(__fw_flatValue:scale:)
+    public static func fw_flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         let floatValue: CGFloat = (value == .leastNonzeroMagnitude || value == .leastNormalMagnitude) ? 0 : value
         let scaleValue: CGFloat = scale > 0 ? scale : UIScreen.main.scale
         return ceil(floatValue * scaleValue) / scaleValue

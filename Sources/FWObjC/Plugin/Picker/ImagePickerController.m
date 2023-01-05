@@ -90,7 +90,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self didInitializeWithStyle:style];
-        [self fw_applyAppearance];
+        [self __fw_applyAppearance];
     }
     return self;
 }
@@ -115,14 +115,14 @@
     CGFloat imageEdgeLeft = self.albumImageMarginLeft == -1 ? imageEdgeTop : self.albumImageMarginLeft;
     self.imageView.frame = CGRectMake(imageEdgeLeft, imageEdgeTop, self.albumImageSize, self.albumImageSize);
     
-    self.textLabel.fw_origin = CGPointMake(CGRectGetMaxX(self.imageView.frame) + self.albumNameInsets.left, (CGRectGetHeight(self.textLabel.superview.bounds) - CGRectGetHeight(self.textLabel.frame)) / 2.0);
+    self.textLabel.__fw_origin = CGPointMake(CGRectGetMaxX(self.imageView.frame) + self.albumNameInsets.left, (CGRectGetHeight(self.textLabel.superview.bounds) - CGRectGetHeight(self.textLabel.frame)) / 2.0);
     
     CGFloat textLabelMaxWidth = CGRectGetWidth(self.contentView.bounds) - CGRectGetMinX(self.textLabel.frame) - CGRectGetWidth(self.detailTextLabel.bounds) - self.albumNameInsets.right;
     if (CGRectGetWidth(self.textLabel.bounds) > textLabelMaxWidth) {
-        self.textLabel.fw_width = textLabelMaxWidth;
+        self.textLabel.__fw_width = textLabelMaxWidth;
     }
     
-    self.detailTextLabel.fw_origin = CGPointMake(CGRectGetMaxX(self.textLabel.frame) + self.albumNameInsets.right, (CGRectGetHeight(self.detailTextLabel.superview.bounds) - CGRectGetHeight(self.detailTextLabel.frame)) / 2.0);
+    self.detailTextLabel.__fw_origin = CGPointMake(CGRectGetMaxX(self.textLabel.frame) + self.albumNameInsets.right, (CGRectGetHeight(self.detailTextLabel.superview.bounds) - CGRectGetHeight(self.detailTextLabel.frame)) / 2.0);
 }
 
 - (void)setAlbumNameFont:(UIFont *)albumNameFont {
@@ -293,7 +293,7 @@
     [super viewDidLayoutSubviews];
     
     self.backgroundView.frame = self.view.bounds;
-    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.fw_topBarHeight, self.tableView.safeAreaInsets.left, self.tableView.safeAreaInsets.bottom, self.tableView.safeAreaInsets.right);
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.__fw_topBarHeight, self.tableView.safeAreaInsets.left, self.tableView.safeAreaInsets.bottom, self.tableView.safeAreaInsets.right);
     if (!UIEdgeInsetsEqualToEdgeInsets(self.tableView.contentInset, contentInset)) {
         self.tableView.contentInset = contentInset;
     }
@@ -345,7 +345,7 @@
     
     if (self.maximumTableViewHeight > 0) {
         CGRect tableFrame = self.tableView.frame;
-        tableFrame.size.height = self.tableViewHeight + UIScreen.fw_topBarHeight;
+        tableFrame.size.height = self.tableViewHeight + UIScreen.__fw_topBarHeight;
         self.tableView.frame = tableFrame;
     }
     
@@ -370,7 +370,7 @@
 - (void)showDeniedView {
     if (self.maximumTableViewHeight > 0) {
         CGRect tableFrame = self.tableView.frame;
-        tableFrame.size.height = self.tableViewHeight + UIScreen.fw_topBarHeight;
+        tableFrame.size.height = self.tableViewHeight + UIScreen.__fw_topBarHeight;
         self.tableView.frame = tableFrame;
     }
     
@@ -550,7 +550,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self didInitialize];
-        [self fw_applyAppearance];
+        [self __fw_applyAppearance];
     }
     return self;
 }
@@ -577,12 +577,12 @@
     
     if (self.videoDurationLabel && !self.videoDurationLabel.hidden) {
         [self.videoDurationLabel sizeToFit];
-        self.videoDurationLabel.fw_origin = CGPointMake(CGRectGetWidth(self.contentView.bounds) - self.videoDurationLabelMargins.right - CGRectGetWidth(self.videoDurationLabel.frame), CGRectGetHeight(self.contentView.bounds) - self.videoDurationLabelMargins.bottom - CGRectGetHeight(self.videoDurationLabel.frame));
+        self.videoDurationLabel.__fw_origin = CGPointMake(CGRectGetWidth(self.contentView.bounds) - self.videoDurationLabelMargins.right - CGRectGetWidth(self.videoDurationLabel.frame), CGRectGetHeight(self.contentView.bounds) - self.videoDurationLabelMargins.bottom - CGRectGetHeight(self.videoDurationLabel.frame));
     }
     
     if (!self.iconImageView.hidden) {
         [self.iconImageView sizeToFit];
-        self.iconImageView.fw_origin = CGPointMake(self.iconImageViewMargins.left, CGRectGetHeight(self.contentView.bounds) - self.iconImageViewMargins.bottom - CGRectGetHeight(self.iconImageView.frame));
+        self.iconImageView.__fw_origin = CGPointMake(self.iconImageViewMargins.left, CGRectGetHeight(self.contentView.bounds) - self.iconImageViewMargins.bottom - CGRectGetHeight(self.iconImageView.frame));
     }
 }
 
@@ -727,8 +727,8 @@
         
         _checkboxImage = __FWAppBundle.pickerCheckImage;
         _checkboxCheckedImage = __FWAppBundle.pickerCheckedImage;
-        _originImageCheckboxImage = [__FWAppBundle.pickerCheckImage fw_imageWithScaleSize:CGSizeMake(18, 18)];
-        _originImageCheckboxCheckedImage = [__FWAppBundle.pickerCheckedImage fw_imageWithScaleSize:CGSizeMake(18, 18)];
+        _originImageCheckboxImage = [__FWAppBundle.pickerCheckImage __fw_imageWithScaleSize:CGSizeMake(18, 18)];
+        _originImageCheckboxCheckedImage = [__FWAppBundle.pickerCheckedImage __fw_imageWithScaleSize:CGSizeMake(18, 18)];
     }
     return self;
 }
@@ -758,12 +758,12 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.topToolBarView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), UIScreen.fw_topBarHeight);
+    self.topToolBarView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), UIScreen.__fw_topBarHeight);
     CGFloat topToolbarPaddingTop = self.view.safeAreaInsets.top;
     CGFloat topToolbarContentHeight = CGRectGetHeight(self.topToolBarView.bounds) - topToolbarPaddingTop;
-    self.backButton.fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, topToolbarPaddingTop + (topToolbarContentHeight - CGRectGetHeight(self.backButton.frame)) / 2.0);
+    self.backButton.__fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, topToolbarPaddingTop + (topToolbarContentHeight - CGRectGetHeight(self.backButton.frame)) / 2.0);
     if (!self.checkboxButton.hidden) {
-        self.checkboxButton.fw_origin = CGPointMake(CGRectGetWidth(self.topToolBarView.frame) - self.toolBarPaddingHorizontal - self.view.safeAreaInsets.right - CGRectGetWidth(self.checkboxButton.frame), topToolbarPaddingTop + (topToolbarContentHeight - CGRectGetHeight(self.checkboxButton.frame)) / 2.0);
+        self.checkboxButton.__fw_origin = CGPointMake(CGRectGetWidth(self.topToolBarView.frame) - self.toolBarPaddingHorizontal - self.view.safeAreaInsets.right - CGRectGetWidth(self.checkboxButton.frame), topToolbarPaddingTop + (topToolbarContentHeight - CGRectGetHeight(self.checkboxButton.frame)) / 2.0);
     }
     
     CGFloat bottomToolBarHeight = self.bottomToolBarHeight;
@@ -771,11 +771,11 @@
     self.bottomToolBarView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - bottomToolBarHeight, CGRectGetWidth(self.view.bounds), bottomToolBarHeight);
     [self updateSendButtonLayout];
     
-    self.editButton.fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (bottomToolBarContentHeight - CGRectGetHeight(self.editButton.frame)) / 2.0);
+    self.editButton.__fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (bottomToolBarContentHeight - CGRectGetHeight(self.editButton.frame)) / 2.0);
     if (self.showsEditButton) {
-        self.originImageCheckboxButton.fw_origin = CGPointMake((CGRectGetWidth(self.bottomToolBarView.frame) - CGRectGetWidth(self.originImageCheckboxButton.frame)) / 2.0, (bottomToolBarContentHeight - CGRectGetHeight(self.originImageCheckboxButton.frame)) / 2.0);
+        self.originImageCheckboxButton.__fw_origin = CGPointMake((CGRectGetWidth(self.bottomToolBarView.frame) - CGRectGetWidth(self.originImageCheckboxButton.frame)) / 2.0, (bottomToolBarContentHeight - CGRectGetHeight(self.originImageCheckboxButton.frame)) / 2.0);
     } else {
-        self.originImageCheckboxButton.fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (bottomToolBarContentHeight - CGRectGetHeight(self.originImageCheckboxButton.frame)) / 2.0);
+        self.originImageCheckboxButton.__fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (bottomToolBarContentHeight - CGRectGetHeight(self.originImageCheckboxButton.frame)) / 2.0);
     }
     
     self.editCollectionView.frame = CGRectMake(0, CGRectGetMinY(self.bottomToolBarView.frame) - self.editCollectionViewHeight, CGRectGetWidth(self.view.bounds), self.editCollectionViewHeight);
@@ -879,7 +879,7 @@
 }
 
 - (CGFloat)bottomToolBarHeight {
-    return _bottomToolBarHeight > 0 ? _bottomToolBarHeight : UIScreen.fw_toolBarHeight;
+    return _bottomToolBarHeight > 0 ? _bottomToolBarHeight : UIScreen.__fw_toolBarHeight;
 }
 
 @synthesize editButton = _editButton;
@@ -1446,7 +1446,7 @@
 - (void)updateSendButtonLayout {
     CGFloat bottomToolBarContentHeight = self.bottomToolBarHeight - self.view.safeAreaInsets.bottom;
     [self.sendButton sizeToFit];
-    self.sendButton.fw_origin = CGPointMake(CGRectGetWidth(self.bottomToolBarView.frame) - self.toolBarPaddingHorizontal - CGRectGetWidth(self.sendButton.frame) - self.view.safeAreaInsets.right, (bottomToolBarContentHeight - CGRectGetHeight(self.sendButton.frame)) / 2.0);
+    self.sendButton.__fw_origin = CGPointMake(CGRectGetWidth(self.bottomToolBarView.frame) - self.toolBarPaddingHorizontal - CGRectGetWidth(self.sendButton.frame) - self.view.safeAreaInsets.right, (bottomToolBarContentHeight - CGRectGetHeight(self.sendButton.frame)) / 2.0);
 }
 
 - (void)updateImageCountAndCollectionView:(BOOL)animated {
@@ -1549,7 +1549,7 @@
     if (self) {
         _checkedIndex = NSNotFound;
         [self didInitialize];
-        [self fw_applyAppearance];
+        [self __fw_applyAppearance];
     }
     return self;
 }
@@ -1627,12 +1627,12 @@
     
     if (self.videoDurationLabel && !self.videoDurationLabel.hidden) {
         [self.videoDurationLabel sizeToFit];
-        self.videoDurationLabel.fw_origin = CGPointMake(CGRectGetWidth(self.contentView.bounds) - self.videoDurationLabelMargins.right - CGRectGetWidth(self.videoDurationLabel.frame), CGRectGetHeight(self.contentView.bounds) - self.videoDurationLabelMargins.bottom - CGRectGetHeight(self.videoDurationLabel.frame));
+        self.videoDurationLabel.__fw_origin = CGPointMake(CGRectGetWidth(self.contentView.bounds) - self.videoDurationLabelMargins.right - CGRectGetWidth(self.videoDurationLabel.frame), CGRectGetHeight(self.contentView.bounds) - self.videoDurationLabelMargins.bottom - CGRectGetHeight(self.videoDurationLabel.frame));
     }
     
     if (!self.iconImageView.hidden) {
         [self.iconImageView sizeToFit];
-        self.iconImageView.fw_origin = CGPointMake(self.iconImageViewMargins.left, CGRectGetHeight(self.contentView.bounds) - self.iconImageViewMargins.bottom - CGRectGetHeight(self.iconImageView.frame));
+        self.iconImageView.__fw_origin = CGPointMake(self.iconImageViewMargins.left, CGRectGetHeight(self.contentView.bounds) - self.iconImageViewMargins.bottom - CGRectGetHeight(self.iconImageView.frame));
     }
 }
 
@@ -1947,7 +1947,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if (self.allowsMultipleSelection) {
         operationToolBarViewHeight = self.operationToolBarHeight;
         self.operationToolBarView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - operationToolBarViewHeight, CGRectGetWidth(self.view.bounds), operationToolBarViewHeight);
-        self.previewButton.fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (CGRectGetHeight(self.operationToolBarView.bounds) - self.view.safeAreaInsets.bottom - CGRectGetHeight(self.previewButton.frame)) / 2.0);
+        self.previewButton.__fw_origin = CGPointMake(self.toolBarPaddingHorizontal + self.view.safeAreaInsets.left, (CGRectGetHeight(self.operationToolBarView.bounds) - self.view.safeAreaInsets.bottom - CGRectGetHeight(self.previewButton.frame)) / 2.0);
         [self updateSendButtonLayout];
         operationToolBarViewHeight = CGRectGetHeight(self.operationToolBarView.frame);
     }
@@ -1955,7 +1955,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if (!CGSizeEqualToSize(self.collectionView.frame.size, self.view.bounds.size)) {
         self.collectionView.frame = self.view.bounds;
     }
-    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.fw_topBarHeight, self.collectionView.safeAreaInsets.left, MAX(operationToolBarViewHeight, self.collectionView.safeAreaInsets.bottom), self.collectionView.safeAreaInsets.right);
+    UIEdgeInsets contentInset = UIEdgeInsetsMake(UIScreen.__fw_topBarHeight, self.collectionView.safeAreaInsets.left, MAX(operationToolBarViewHeight, self.collectionView.safeAreaInsets.bottom), self.collectionView.safeAreaInsets.right);
     if (!UIEdgeInsetsEqualToEdgeInsets(self.collectionView.contentInset, contentInset)) {
         self.collectionView.contentInset = contentInset;
         // 放在这里是因为有时候会先走完 refreshWithAssetsGroup 里的 completion 再走到这里，此时前者不会导致 scollToInitialPosition 的滚动，所以在这里再调用一次保证一定会滚
@@ -2128,7 +2128,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     self.albumController.view.frame = self.view.bounds;
     self.albumController.view.hidden = NO;
     self.albumController.view.alpha = 0;
-    CGRect toFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.albumController.tableViewHeight + UIScreen.fw_topBarHeight);
+    CGRect toFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.albumController.tableViewHeight + UIScreen.__fw_topBarHeight);
     CGRect fromFrame = toFrame;
     fromFrame.origin.y = -toFrame.size.height;
     self.albumController.tableView.frame = fromFrame;
@@ -2250,7 +2250,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
 
 - (CGFloat)operationToolBarHeight {
     if (!self.allowsMultipleSelection) return 0;
-    return _operationToolBarHeight > 0 ? _operationToolBarHeight : UIScreen.fw_toolBarHeight;
+    return _operationToolBarHeight > 0 ? _operationToolBarHeight : UIScreen.__fw_toolBarHeight;
 }
 
 @synthesize sendButton = _sendButton;

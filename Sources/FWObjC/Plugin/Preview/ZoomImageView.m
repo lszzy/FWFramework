@@ -139,7 +139,7 @@
     }
     if (_videoCloseButton) {
         [_videoCloseButton sizeToFit];
-        CGPoint videoCloseButtonCenter = self.videoCloseButtonCenter ? self.videoCloseButtonCenter() : CGPointMake(UIScreen.fw_safeAreaInsets.left + 24, UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2);
+        CGPoint videoCloseButtonCenter = self.videoCloseButtonCenter ? self.videoCloseButtonCenter() : CGPointMake(UIScreen.__fw_safeAreaInsets.left + 24, UIScreen.__fw_statusBarHeight + UIScreen.__fw_navigationBarHeight / 2);
         _videoCloseButton.center = videoCloseButtonCenter;
     }
     
@@ -362,7 +362,7 @@
     self.scrollView.pinchGestureRecognizer.enabled = enabledZoomImageView;
     self.scrollView.minimumZoomScale = minimumZoomScale;
     self.scrollView.maximumZoomScale = maximumZoomScale;
-    self.contentView.fw_origin = CGPointMake(0, 0);
+    self.contentView.__fw_origin = CGPointMake(0, 0);
     [self setZoomScale:zoomScale animated:NO];
     
     // 只有前后的 zoomScale 不相等，才会触发 UIScrollViewDelegate scrollViewDidZoom:，因此对于相等的情况要自己手动触发

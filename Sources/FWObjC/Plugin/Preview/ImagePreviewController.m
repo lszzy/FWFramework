@@ -441,7 +441,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.pageLabel.text.length < 1 && self.imagePreviewView.imageCount > 0) {
         [self updatePageLabel];
     }
-    CGPoint pageLabelCenter = self.pageLabelCenter ? self.pageLabelCenter() : CGPointMake(UIScreen.mainScreen.bounds.size.width / 2, UIScreen.mainScreen.bounds.size.height - (UIScreen.fw_safeAreaInsets.bottom + 18));
+    CGPoint pageLabelCenter = self.pageLabelCenter ? self.pageLabelCenter() : CGPointMake(UIScreen.mainScreen.bounds.size.width / 2, UIScreen.mainScreen.bounds.size.height - (UIScreen.__fw_safeAreaInsets.bottom + 18));
     self.pageLabel.center = pageLabelCenter;
 }
 
@@ -485,7 +485,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    if (self.fw_visibleState < __FWViewControllerVisibleStateDidAppear || self.fw_visibleState >= __FWViewControllerVisibleStateDidDisappear) {
+    if (self.__fw_visibleState < __FWViewControllerVisibleStateDidAppear || self.__fw_visibleState >= __FWViewControllerVisibleStateDidDisappear) {
         // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
         if (self.presentingViewController) {
             BOOL statusBarHidden = NO;

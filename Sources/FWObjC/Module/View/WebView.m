@@ -85,15 +85,15 @@
         return;
     }
     
-    if ([UIApplication fw_isSystemURL:navigationAction.request.URL]) {
-        [UIApplication fw_openURL:navigationAction.request.URL completionHandler:nil];
+    if ([UIApplication __fw_isSystemURL:navigationAction.request.URL]) {
+        [UIApplication __fw_openURL:navigationAction.request.URL completionHandler:nil];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     
     if (((__FWWebView *)webView).allowsSchemeURL &&
-        [UIApplication fw_isSchemeURL:navigationAction.request.URL]) {
-        [UIApplication fw_openURL:navigationAction.request.URL completionHandler:nil];
+        [UIApplication __fw_isSchemeURL:navigationAction.request.URL]) {
+        [UIApplication __fw_openURL:navigationAction.request.URL completionHandler:nil];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
@@ -101,7 +101,7 @@
     if ([webView isKindOfClass:[__FWWebView class]] &&
         ((__FWWebView *)webView).allowsUniversalLinks &&
         [navigationAction.request.URL.scheme isEqualToString:@"https"]) {
-        [UIApplication fw_openUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
+        [UIApplication __fw_openUniversalLinks:navigationAction.request.URL completionHandler:^(BOOL success) {
             decisionHandler(success ? WKNavigationActionPolicyCancel : WKNavigationActionPolicyAllow);
         }];
         return;

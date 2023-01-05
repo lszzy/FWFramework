@@ -715,7 +715,7 @@
 
     //If cropping circular and the circular generation delegate/block is implemented, call it
     if (self.croppingStyle == __FWImageCropCroppingStyleCircular && (isCircularImageDelegateAvailable || isCircularImageCallbackAvailable)) {
-        UIImage *image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circular:YES];
+        UIImage *image = [self.image __fw_croppedImageWithFrame:cropFrame angle:angle circular:YES];
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.03f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -736,7 +736,7 @@
             image = self.image;
         }
         else {
-            image = [self.image fw_croppedImageWithFrame:cropFrame angle:angle circular:NO];
+            image = [self.image __fw_croppedImageWithFrame:cropFrame angle:angle circular:NO];
         }
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
@@ -939,7 +939,7 @@
 
 - (CGFloat)toolbarHeight
 {
-    return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom;
+    return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.__fw_toolBarHeight - UIScreen.__fw_safeAreaInsets.bottom;
 }
 
 - (BOOL)verticalLayout

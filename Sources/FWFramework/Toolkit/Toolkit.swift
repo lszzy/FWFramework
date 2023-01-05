@@ -171,19 +171,22 @@ extension FW {
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    @objc public static func fw_openURL(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
+    @objc(__fw_openURL:completionHandler:)
+    public static func fw_openURL(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    @objc public static func fw_openUniversalLinks(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
+    @objc(__fw_openUniversalLinks:completionHandler:)
+    public static func fw_openUniversalLinks(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    @objc public static func fw_isSystemURL(_ url: Any) -> Bool {
+    @objc(__fw_isSystemURL:)
+    public static func fw_isSystemURL(_ url: Any) -> Bool {
         guard let url = fw_url(string: url) else { return false }
         if let scheme = url.scheme?.lowercased(),
            ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
@@ -208,7 +211,8 @@ extension FW {
     }
     
     /// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
-    @objc public static func fw_isSchemeURL(_ url: Any) -> Bool {
+    @objc(__fw_isSchemeURL:)
+    public static func fw_isSchemeURL(_ url: Any) -> Bool {
         guard let url = fw_url(string: url),
               let scheme = url.scheme, !scheme.isEmpty else { return false }
         if url.isFileURL || fw_isHttpURL(url) { return false }
@@ -847,7 +851,8 @@ extension FW {
 @_spi(FW) extension UIImage {
     
     /// 从当前图片创建指定透明度的图片
-    @objc public func fw_image(alpha: CGFloat) -> UIImage? {
+    @objc(__fw_imageWithAlpha:)
+    public func fw_image(alpha: CGFloat) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
         self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), blendMode: .normal, alpha: alpha)
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -868,7 +873,8 @@ extension FW {
     }
 
     /// 缩放图片到指定大小
-    @objc public func fw_image(scaleSize size: CGSize) -> UIImage? {
+    @objc(__fw_imageWithScaleSize:)
+    public func fw_image(scaleSize size: CGSize) -> UIImage? {
         guard size.width > 0, size.height > 0 else { return nil }
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         self.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
@@ -1166,7 +1172,8 @@ extension FW {
     }
 
     /// 判断图片是否有透明通道
-    @objc public var fw_hasAlpha: Bool {
+    @objc(__fw_hasAlpha)
+    public var fw_hasAlpha: Bool {
         guard let cgImage = self.cgImage else { return false }
         let alpha = cgImage.alphaInfo
         return alpha == .first || alpha == .last ||
@@ -1217,7 +1224,8 @@ extension FW {
     }
 
     /// 从block创建UIImage，指定尺寸
-    @objc public static func fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
+    @objc(__fw_imageWithSize:block:)
+    public static func fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         block(context)
@@ -1240,13 +1248,15 @@ extension FW {
         }
     }
     
-    @objc private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc(__fw_saveImage:didFinishSavingWithError:contextInfo:)
+    private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
         fw_setPropertyCopy(nil, forName: "fw_saveImage")
         block?(error)
     }
     
-    @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc(__fw_saveVideo:didFinishSavingWithError:contextInfo:)
+    private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = __FWRuntime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
         __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         block?(error)
@@ -1353,7 +1363,8 @@ extension FW {
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等
-    @objc public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+    @objc(__fw_croppedImageWithFrame:angle:circular:)
+    public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, !self.fw_hasAlpha && !circular, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
@@ -1571,7 +1582,8 @@ extension FW {
     }
 
     /// 宽度，frame.size.width
-    @objc public var fw_width: CGFloat {
+    @objc(__fw_width)
+    public var fw_width: CGFloat {
         get {
             return self.frame.size.width
         }
@@ -1639,7 +1651,8 @@ extension FW {
     }
 
     /// 起始坐标，frame.origin
-    @objc public var fw_origin: CGPoint {
+    @objc(__fw_origin)
+    public var fw_origin: CGPoint {
         get {
             return self.frame.origin
         }
@@ -1679,7 +1692,8 @@ public enum ViewControllerVisibleState: Int {
 @_spi(FW) extension UIViewController {
     
     /// 当前生命周期状态，默认Ready
-    @objc public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
+    @objc(__fw_visibleState)
+    public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
         get {
             let value = fw_propertyInt(forName: "fw_visibleState")
             return .init(rawValue: value) ?? .ready
@@ -1712,7 +1726,8 @@ public enum ViewControllerVisibleState: Int {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    @objc public var fw_allowsPopGesture: (() -> Bool)? {
+    @objc(__fw_allowsPopGesture)
+    public var fw_allowsPopGesture: (() -> Bool)? {
         get { fw_property(forName: "fw_allowsPopGesture") as? () -> Bool }
         set { fw_setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
     }
@@ -1817,7 +1832,8 @@ public enum ViewControllerVisibleState: Int {
 }
 
 // MARK: - UINavigationController+Toolkit
-@objc fileprivate protocol GestureRecognizerDelegateCompatible {
+@objc(__FWGestureRecognizerDelegateCompatible)
+fileprivate protocol GestureRecognizerDelegateCompatible {
     
     @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
     
