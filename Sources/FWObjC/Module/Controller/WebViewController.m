@@ -66,7 +66,7 @@
     [viewController.view addSubview:webView];
     
     __weak __typeof(viewController) weakController = viewController;
-    [webView fw_observeProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
+    [webView __fw_observeProperty:@"title" block:^(WKWebView *webView, NSDictionary *change) {
         weakController.navigationItem.title = webView.title;
     }];
     viewController.fw_allowsPopGesture = ^BOOL{
@@ -152,7 +152,7 @@
         showClose = NO;
     }
     viewController.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:showClose ? leftItems.firstObject : nil, nil];
-    [viewController.webView fw_observeProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
+    [viewController.webView __fw_observeProperty:@"canGoBack" block:^(WKWebView *webView, NSDictionary *change) {
         if (webView.canGoBack) {
             weakController.navigationItem.leftBarButtonItems = [leftItems copy];
         } else {

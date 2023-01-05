@@ -148,7 +148,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
                 [scrollView removeObserver:self forKeyPath:@"frame"];
-                [scrollView.panGestureRecognizer fw_unobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
+                [scrollView.panGestureRecognizer __fw_unobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
                 self.isObserving = NO;
             }
         }
@@ -640,7 +640,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
             if (self.isObserving) {
                 [scrollView removeObserver:self forKeyPath:@"contentOffset"];
                 [scrollView removeObserver:self forKeyPath:@"contentSize"];
-                [scrollView.panGestureRecognizer fw_unobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
+                [scrollView.panGestureRecognizer __fw_unobserveProperty:@"state" target:self action:@selector(gestureRecognizer:stateChanged:)];
                 self.isObserving = NO;
             }
         }
