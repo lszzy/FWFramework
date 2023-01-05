@@ -667,7 +667,7 @@ typedef struct __ProxyBlock {
 
 + (BOOL)isIdcard:(NSString *)string {
     // 简单版本
-    // return [string fw_isFormatRegex:@"^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|x|X)$"];
+    // return [string __fw_isFormatRegex:@"^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|x|X)$"];
     
     // 复杂版本
     NSString *sPaperId = string;

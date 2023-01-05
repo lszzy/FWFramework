@@ -12,7 +12,7 @@
 
 @interface NSObject ()
 
-- (nullable id)fw_invokeGetter:(NSString *)name;
+- (nullable id)__fw_invokeGetter:(NSString *)name;
 
 @end
 

@@ -22,19 +22,19 @@
 
 @interface NSObject ()
 
-- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
-+ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
-- (nullable id)fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
-- (nullable id)fw_invokeGetter:(NSString *)name;
+- (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
++ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
+- (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
+- (nullable id)__fw_invokeGetter:(NSString *)name;
 
 @end
 
 @interface UIApplication ()
 
-+ (BOOL)fw_isSystemURL:(id)url;
-+ (void)fw_openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
-+ (BOOL)fw_isSchemeURL:(id)url;
-+ (void)fw_openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
++ (BOOL)__fw_isSystemURL:(id)url;
++ (void)__fw_openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
++ (BOOL)__fw_isSchemeURL:(id)url;
++ (void)__fw_openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 
 @end
 

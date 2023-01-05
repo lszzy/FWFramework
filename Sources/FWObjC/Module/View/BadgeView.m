@@ -14,7 +14,7 @@
 @interface UIView ()
 
 - (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
-- (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
+- (NSArray<NSLayoutConstraint *> *)__fw_setDimensions:(CGSize)size;
 - (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 - (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 - (NSLayoutConstraint *)__fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;

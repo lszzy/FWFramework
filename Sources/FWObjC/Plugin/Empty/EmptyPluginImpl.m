@@ -17,7 +17,7 @@
 
 @interface UIControl ()
 
-- (NSString *)fw_addTouchWithBlock:(void (^)(id sender))block;
+- (NSString *)__fw_addTouchWithBlock:(void (^)(id sender))block;
 
 @end
 

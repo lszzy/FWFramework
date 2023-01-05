@@ -15,7 +15,7 @@
 
 @interface UIImage ()
 
-@property (nonatomic, assign, readonly) BOOL fw_hasAlpha;
+@property (nonatomic, assign, readonly) BOOL __fw_hasAlpha;
 
 @end
 

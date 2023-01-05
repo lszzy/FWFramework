@@ -25,6 +25,16 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 NSString * const __FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
 NSString * const __FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
 NSString * const __FWNetworkingOperationFailingURLResponseDataErrorKey = @"site.wuyong.serialization.response.error.data";
@@ -559,12 +569,6 @@ id __FWJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOption
 
 #pragma mark -
 
-@interface UIImage ()
-
-+ (UIImage *)fw_imageWithData:(NSData *)data scale:(CGFloat)scale options:(NSDictionary *)options;
-
-@end
-
 static UIImage * __FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDictionary *options) {
     if (!data || [data length] == 0) {
         return nil;
@@ -575,14 +579,14 @@ static UIImage * __FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDiction
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
-        imageHook = [UIImage respondsToSelector:@selector(fw_imageWithData:scale:options:)];
+        imageHook = [UIImage respondsToSelector:@selector(__fw_imageWithData:scale:options:)];
     });
     
     // Use hook method if exists
     if (imageHook) {
         UIImage *image = nil;
         [imageLock lock];
-        image = [UIImage fw_imageWithData:data scale:scale options:options];
+        image = [UIImage __fw_imageWithData:data scale:scale options:options];
         [imageLock unlock];
         
         return image;

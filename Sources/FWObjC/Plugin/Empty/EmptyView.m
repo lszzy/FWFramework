@@ -13,7 +13,7 @@
 
 @interface NSObject ()
 
-- (void)fw_applyAppearance;
+- (void)__fw_applyAppearance;
 
 @end
 

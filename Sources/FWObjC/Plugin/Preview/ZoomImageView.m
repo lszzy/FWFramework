@@ -14,16 +14,15 @@
 
 @interface UIView ()
 
-@property (nonatomic, assign) CGPoint fw_origin;
 - (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
 
 @end
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_statusBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat fw_navigationBarHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_statusBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_navigationBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
 
 @end
 
@@ -362,7 +361,7 @@
     self.scrollView.pinchGestureRecognizer.enabled = enabledZoomImageView;
     self.scrollView.minimumZoomScale = minimumZoomScale;
     self.scrollView.maximumZoomScale = maximumZoomScale;
-    self.contentView.__fw_origin = CGPointMake(0, 0);
+    self.contentView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
     [self setZoomScale:zoomScale animated:NO];
     
     // 只有前后的 zoomScale 不相等，才会触发 UIScrollViewDelegate scrollViewDidZoom:，因此对于相等的情况要自己手动触发
