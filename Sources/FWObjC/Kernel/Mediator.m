@@ -290,8 +290,8 @@
 + (UIImage *)imageNamed:(NSString *)name
 {
     UIImage *image;
-    if ([UIImage respondsToSelector:@selector(fw_imageNamed:bundle:options:)]) {
-        image = [UIImage fw_imageNamed:name bundle:[self bundle] options:nil];
+    if ([UIImage respondsToSelector:@selector(__fw_imageNamed:bundle:options:)]) {
+        image = [UIImage __fw_imageNamed:name bundle:[self bundle] options:nil];
     } else {
         image = [UIImage imageNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
     }

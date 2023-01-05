@@ -552,10 +552,10 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
 
 - (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(void (^)(__FWAssetGroup *resultAssetsGroup))enumerationBlock {
     // 根据条件获取所有合适的相册，并保存到临时数组中
-    NSArray<PHAssetCollection *> *tempAlbumsArray = [PHPhotoLibrary fw_fetchAllAlbumsWithAlbumContentType:contentType showEmptyAlbum:showEmptyAlbum showSmartAlbum:showSmartAlbumIfSupported];
+    NSArray<PHAssetCollection *> *tempAlbumsArray = [PHPhotoLibrary __fw_fetchAllAlbumsWithAlbumContentType:contentType showEmptyAlbum:showEmptyAlbum showSmartAlbum:showSmartAlbumIfSupported];
     
     // 创建一个 PHFetchOptions，用于 __FWAssetGroup 对资源的排序以及对内容类型进行控制
-    PHFetchOptions *phFetchOptions = [PHPhotoLibrary fw_createFetchOptionsWithAlbumContentType:contentType];
+    PHFetchOptions *phFetchOptions = [PHPhotoLibrary __fw_createFetchOptionsWithAlbumContentType:contentType];
     
     // 遍历结果，生成对应的 __FWAssetGroup，并调用 enumerationBlock
     for (NSUInteger i = 0; i < tempAlbumsArray.count; i++) {
@@ -581,7 +581,7 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
 - (void)saveImageWithImageRef:(CGImageRef)imageRef albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup orientation:(UIImageOrientation)orientation completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把图片加入到指定的相册对应的 PHAssetCollection
-    [[PHPhotoLibrary sharedPhotoLibrary] fw_addImageToAlbum:imageRef
+    [[PHPhotoLibrary sharedPhotoLibrary] __fw_addImageToAlbum:imageRef
                                             assetCollection:albumPhAssetCollection
                                              orientation:orientation
                                        completionHandler:^(BOOL success, NSDate *creationDate, NSError *error) {
@@ -601,7 +601,7 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
 - (void)saveImageWithImagePathURL:(NSURL *)imagePathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把图片加入到指定的相册对应的 PHAssetCollection
-    [[PHPhotoLibrary sharedPhotoLibrary] fw_addImageToAlbum:imagePathURL
+    [[PHPhotoLibrary sharedPhotoLibrary] __fw_addImageToAlbum:imagePathURL
                                             assetCollection:albumPhAssetCollection
                                        completionHandler:^(BOOL success, NSDate *creationDate, NSError *error) {
                                            if (success) {
@@ -620,7 +620,7 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
 - (void)saveVideoWithVideoPathURL:(NSURL *)videoPathURL albumAssetsGroup:(__FWAssetGroup *)albumAssetsGroup completionBlock:(__FWWriteAssetCompletionBlock)completionBlock {
     PHAssetCollection *albumPhAssetCollection = albumAssetsGroup.phAssetCollection;
     // 把视频加入到指定的相册对应的 PHAssetCollection
-    [[PHPhotoLibrary sharedPhotoLibrary] fw_addVideoToAlbum:videoPathURL
+    [[PHPhotoLibrary sharedPhotoLibrary] __fw_addVideoToAlbum:videoPathURL
                                             assetCollection:albumPhAssetCollection
                                        completionHandler:^(BOOL success, NSDate *creationDate, NSError *error) {
                                            if (success) {
