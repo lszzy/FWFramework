@@ -12,14 +12,14 @@
 
 @interface UIWindow ()
 
-@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+@property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
 
 @end
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenWidth;
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
 
 @end
 

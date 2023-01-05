@@ -17,8 +17,8 @@
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenWidth;
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
 
 @end
 

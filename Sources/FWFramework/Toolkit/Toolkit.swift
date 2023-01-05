@@ -1582,7 +1582,6 @@ extension FW {
     }
 
     /// 宽度，frame.size.width
-    @objc(__fw_width)
     public var fw_width: CGFloat {
         get {
             return self.frame.size.width
@@ -1651,7 +1650,6 @@ extension FW {
     }
 
     /// 起始坐标，frame.origin
-    @objc(__fw_origin)
     public var fw_origin: CGPoint {
         get {
             return self.frame.origin

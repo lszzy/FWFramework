@@ -18,7 +18,7 @@
 
 @interface NSObject ()
 
-- (NSString *)fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 
 @end
 
@@ -30,7 +30,7 @@
 
 @interface UIBarButtonItem ()
 
-+ (instancetype)fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
++ (instancetype)__fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
 
 @end
 

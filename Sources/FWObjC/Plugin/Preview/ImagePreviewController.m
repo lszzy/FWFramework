@@ -11,9 +11,9 @@
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenWidth;
-@property (class, nonatomic, assign, readonly) CGFloat fw_screenHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
 
 @end
 
@@ -22,7 +22,7 @@
 
 @interface UIViewController ()
 
-@property (nonatomic, assign, readonly) NSInteger fw_visibleState;
+@property (nonatomic, assign, readonly) NSInteger __fw_visibleState;
 
 @end
 

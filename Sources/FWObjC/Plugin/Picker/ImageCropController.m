@@ -13,8 +13,8 @@
 
 @interface UIScreen ()
 
-@property (class, nonatomic, assign, readonly) CGFloat fw_toolBarHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets fw_safeAreaInsets;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_toolBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
 
 @end
 

@@ -14,7 +14,7 @@
 
 @interface UIWindow ()
 
-@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
+@property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
 
 @end
 

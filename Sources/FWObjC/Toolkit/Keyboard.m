@@ -12,14 +12,14 @@
 
 @interface UIGestureRecognizer ()
 
-+ (instancetype)fw_gestureRecognizerWithBlock:(void (^)(id sender))block;
++ (instancetype)__fw_gestureRecognizerWithBlock:(void (^)(id sender))block;
 
 @end
 
 @interface UIBarButtonItem ()
 
-+ (instancetype)fw_itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
-+ (instancetype)fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
++ (instancetype)__fw_itemWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
++ (instancetype)__fw_itemWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
 
 @end
 

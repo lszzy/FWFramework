@@ -14,14 +14,14 @@
 
 @interface NSObject ()
 
-+ (NSArray<NSString *> *)fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
++ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
 
 @end
 
 @interface UIWindow ()
 
-@property (class, nonatomic, readwrite, nullable) UIWindow *fw_mainWindow;
-- (void)fw_open:(UIViewController *)viewController animated:(BOOL)animated options:(__FWNavigatorOptions)options completion:(nullable void (^)(void))completion;
+@property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
+- (void)__fw_open:(UIViewController *)viewController animated:(BOOL)animated options:(__FWNavigatorOptions)options completion:(nullable void (^)(void))completion;
 
 @end
 
