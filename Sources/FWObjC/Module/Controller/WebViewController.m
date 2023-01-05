@@ -49,12 +49,12 @@
     __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(webViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
-        @"webView" : @"fw_innerWebView",
-        @"webItems" : @"fw_innerWebItems",
-        @"setWebItems:" : @"fw_innerSetWebItems:",
-        @"webRequest" : @"fw_innerWebRequest",
-        @"setWebRequest:" : @"fw_innerSetWebRequest:",
-        @"setupWebLayout" : @"fw_innerSetupWebLayout",
+        @"webView" : @"__fw_webView",
+        @"webItems" : @"__fw_webItems",
+        @"setWebItems:" : @"__fw_setWebItems:",
+        @"webRequest" : @"__fw_webRequest",
+        @"setWebRequest:" : @"__fw_setWebRequest:",
+        @"setupWebLayout" : @"__fw_setupWebLayout",
     };
     [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWWebViewController) withIntercepter:intercepter];
 }
@@ -173,7 +173,7 @@
 
 @implementation UIViewController (__FWWebViewController)
 
-- (__FWWebView *)fw_innerWebView
+- (__FWWebView *)__fw_webView
 {
     __FWWebView *webView = objc_getAssociatedObject(self, _cmd);
     if (!webView) {
@@ -187,24 +187,24 @@
     return webView;
 }
 
-- (NSArray *)fw_innerWebItems
+- (NSArray *)__fw_webItems
 {
-    return objc_getAssociatedObject(self, @selector(fw_innerWebItems));
+    return objc_getAssociatedObject(self, @selector(__fw_webItems));
 }
 
-- (void)fw_innerSetWebItems:(NSArray *)webItems
+- (void)__fw_setWebItems:(NSArray *)webItems
 {
-    objc_setAssociatedObject(self, @selector(fw_innerWebItems), webItems, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(__fw_webItems), webItems, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (id)fw_innerWebRequest
+- (id)__fw_webRequest
 {
-    return objc_getAssociatedObject(self, @selector(fw_innerWebRequest));
+    return objc_getAssociatedObject(self, @selector(__fw_webRequest));
 }
 
-- (void)fw_innerSetWebRequest:(id)webRequest
+- (void)__fw_setWebRequest:(id)webRequest
 {
-    objc_setAssociatedObject(self, @selector(fw_innerWebRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(__fw_webRequest), webRequest, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded) {
         __FWWebView *webView = [(id<__FWWebViewController>)self webView];
@@ -212,7 +212,7 @@
     }
 }
 
-- (void)fw_innerSetupWebLayout
+- (void)__fw_setupWebLayout
 {
     __FWWebView *webView = [(id<__FWWebViewController>)self webView];
     [webView fw_pinEdgesToSuperview:UIEdgeInsetsZero];

@@ -1229,24 +1229,24 @@ extension FW {
     /// 保存图片到相册，保存成功时error为nil
     public func fw_saveImage(completion: ((Error?) -> Void)? = nil) {
         fw_setPropertyCopy(completion, forName: "fw_saveImage")
-        UIImageWriteToSavedPhotosAlbum(self, self, #selector(fw_innerImage(_:didFinishSavingWithError:contextInfo:)), nil)
+        UIImageWriteToSavedPhotosAlbum(self, self, #selector(fw_saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
         __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
-            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_innerVideo(_:didFinishSavingWithError:contextInfo:)), nil)
+            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_saveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
-    @objc private func fw_innerImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
         fw_setPropertyCopy(nil, forName: "fw_saveImage")
         block?(error)
     }
     
-    @objc private static func fw_innerVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = __FWRuntime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
         __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         block?(error)

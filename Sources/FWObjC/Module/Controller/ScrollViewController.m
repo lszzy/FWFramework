@@ -31,9 +31,9 @@
     __FWViewControllerIntercepter *intercepter = [[__FWViewControllerIntercepter alloc] init];
     intercepter.viewDidLoadIntercepter = @selector(scrollViewControllerViewDidLoad:);
     intercepter.forwardSelectors = @{
-        @"scrollView" : @"fw_innerScrollView",
-        @"contentView" : @"fw_innerContentView",
-        @"setupScrollLayout" : @"fw_innerSetupScrollLayout",
+        @"scrollView" : @"__fw_scrollView",
+        @"contentView" : @"__fw_contentView",
+        @"setupScrollLayout" : @"__fw_setupScrollLayout",
     };
     [[__FWViewControllerManager sharedInstance] registerProtocol:@protocol(__FWScrollViewController) withIntercepter:intercepter];
 }
@@ -70,7 +70,7 @@
 
 @implementation UIViewController (__FWScrollViewController)
 
-- (UIScrollView *)fw_innerScrollView
+- (UIScrollView *)__fw_scrollView
 {
     UIScrollView *scrollView = objc_getAssociatedObject(self, _cmd);
     if (!scrollView) {
@@ -82,7 +82,7 @@
     return scrollView;
 }
 
-- (UIView *)fw_innerContentView
+- (UIView *)__fw_contentView
 {
     UIView *contentView = objc_getAssociatedObject(self, _cmd);
     if (!contentView) {
@@ -92,7 +92,7 @@
     return contentView;
 }
 
-- (void)fw_innerSetupScrollLayout
+- (void)__fw_setupScrollLayout
 {
     UIScrollView *scrollView = [(id<__FWScrollViewController>)self scrollView];
     [scrollView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
