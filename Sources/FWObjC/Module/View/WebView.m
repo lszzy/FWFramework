@@ -254,7 +254,7 @@ static WKProcessPool *fwStaticProcessPool = nil;
 - (instancetype)initWithFrame:(CGRect)frame
 {
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-    configuration.applicationNameForUserAgent = [WKWebView fw_extensionUserAgent];
+    configuration.applicationNameForUserAgent = [WKWebView __fw_extensionUserAgent];
     configuration.processPool = [__FWWebView processPool];
     return [self initWithFrame:frame configuration:configuration];
 }
@@ -286,16 +286,16 @@ static WKProcessPool *fwStaticProcessPool = nil;
     
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
     self.progressView.trackTintColor = [UIColor clearColor];
-    self.progressView.fw_webProgress = 0;
+    self.progressView.__fw_webProgress = 0;
     [self addSubview:self.progressView];
     [self.progressView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
     [self.progressView fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     [self __fw_observeProperty:@"estimatedProgress" block:^(__FWWebView *webView, NSDictionary *change) {
-        webView.progressView.fw_webProgress = webView.estimatedProgress;
+        webView.progressView.__fw_webProgress = webView.estimatedProgress;
     }];
     [self __fw_observeProperty:@"loading" block:^(__FWWebView *webView, NSDictionary *change) {
-        if (!webView.isLoading && webView.progressView.fw_webProgress < 1.0) {
-            webView.progressView.fw_webProgress = 1.0;
+        if (!webView.isLoading && webView.progressView.__fw_webProgress < 1.0) {
+            webView.progressView.__fw_webProgress = 1.0;
         }
     }];
 }

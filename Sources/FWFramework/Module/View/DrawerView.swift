@@ -14,7 +14,8 @@ import FWObjC
 @_spi(FW) extension UIView {
     
     /// 抽屉拖拽视图，绑定抽屉拖拽效果后才存在
-    @objc public var fw_drawerView: DrawerView? {
+    @objc(__fw_drawerView)
+    public var fw_drawerView: DrawerView? {
         get {
             return fw_property(forName: "fw_drawerView") as? DrawerView
         }

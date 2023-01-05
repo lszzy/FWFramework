@@ -14,7 +14,7 @@ import FWObjC
 #if DEBUG
 
 // MARK: - TestCase
-/// 注意测试方法需标记@objc，让OC可以访问
+/// 注意测试方法需标记objc，让OC可以访问
 extension TestCase {
     
     /// 同步断言方法

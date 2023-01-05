@@ -17,7 +17,8 @@ public enum PagingListContainerType: Int {
     case collectionView
 }
 
-@objc public protocol PagingViewListViewDelegate {
+@objc(__FWPagingViewListViewDelegate)
+public protocol PagingViewListViewDelegate {
     /// 如果列表是VC，就返回VC.view
     /// 如果列表是View，就返回View自己
     ///
@@ -45,7 +46,8 @@ public enum PagingListContainerType: Int {
     @objc optional func listDidDisappear()
 }
 
-@objc public protocol PagingListContainerViewDataSource {
+@objc(__FWPagingListContainerViewDataSource)
+public protocol PagingListContainerViewDataSource {
     /// 返回list的数量
     ///
     /// - Parameter listContainerView: PagingListContainerView
@@ -74,7 +76,8 @@ public enum PagingListContainerType: Int {
     @objc optional func scrollViewClass(in listContainerView: PagingListContainerView) -> AnyClass
 }
 
-@objc protocol PagingListContainerViewDelegate {
+@objc(__FWPagingListContainerViewDelegate)
+protocol PagingListContainerViewDelegate {
     @objc optional func listContainerViewDidScroll(_ listContainerView: PagingListContainerView)
     @objc optional func listContainerViewWillBeginDragging(_ listContainerView: PagingListContainerView)
     @objc optional func listContainerViewDidEndScrolling(_ listContainerView: PagingListContainerView)
@@ -422,7 +425,6 @@ open class PagingListContainerView: UIView {
     }
 }
 
-@objc
 extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let dataSource = dataSource else { return 0 }
@@ -594,7 +596,8 @@ class PagingListContainerCollectionView: UICollectionView, UIGestureRecognizerDe
 
 // MARK: - PagingMainTableView
 
-@objc public protocol PagingMainTableViewGestureDelegate {
+@objc(__FWPagingMainTableViewGestureDelegate)
+public protocol PagingMainTableViewGestureDelegate {
     //如果headerView（或其他地方）有水平滚动的scrollView，当其正在左右滑动的时候，就不能让列表上下滑动，所以有此代理方法进行对应处理
     func mainTableViewGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
 }
@@ -613,7 +616,8 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
 
 // MARK: - PagingView
 
-@objc public protocol PagingViewDelegate {
+@objc(__FWPagingViewDelegate)
+public protocol PagingViewDelegate {
     /// tableHeaderView的高度，因为内部需要比对判断，只能是整型数
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int
     /// 返回tableHeaderView
@@ -859,7 +863,6 @@ open class PagingView: UIView {
 }
 
 //MARK: - UITableViewDataSource, UITableViewDelegate
-@objc
 extension PagingView: UITableViewDataSource, UITableViewDelegate {
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
@@ -953,7 +956,6 @@ extension PagingView: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-@objc
 extension PagingView: PagingListContainerViewDataSource {
     public func numberOfLists(in listContainerView: PagingListContainerView) -> Int {
         guard let delegate = delegate else { return 0 }
@@ -982,7 +984,6 @@ extension PagingView: PagingListContainerViewDataSource {
     }
 }
 
-@objc
 extension PagingView: PagingListContainerViewDelegate {
     public func listContainerViewWillBeginDragging(_ listContainerView: PagingListContainerView) {
         mainTableView.isScrollEnabled = false
@@ -1105,7 +1106,8 @@ open class PagingListRefreshView: PagingView {
 
 // MARK: - PagingSmoothView
 
-@objc public protocol PagingSmoothViewListViewDelegate {
+@objc(__FWPagingSmoothViewListViewDelegate)
+public protocol PagingSmoothViewListViewDelegate {
     /// 返回listView。如果是vc包裹的就是vc.view；如果是自定义view包裹的，就是自定义view自己。
     func listView() -> UIView
     /// 返回FWPagerSmoothViewListViewDelegate内部持有的UIScrollView或UITableView或UICollectionView
@@ -1114,7 +1116,8 @@ open class PagingListRefreshView: PagingView {
     @objc optional func listDidDisappear()
 }
 
-@objc public protocol PagingSmoothViewDataSource {
+@objc(__FWPagingSmoothViewDataSource)
+public protocol PagingSmoothViewDataSource {
     /// 返回页面header的高度
     func heightForPagingHeader(in pagingView: PagingSmoothView) -> CGFloat
     /// 返回页面header视图
@@ -1131,7 +1134,8 @@ open class PagingListRefreshView: PagingView {
     func pagingView(_ pagingView: PagingSmoothView, initListAtIndex index: Int) -> PagingSmoothViewListViewDelegate
 }
 
-@objc public protocol PagingSmoothViewDelegate {
+@objc(__FWPagingSmoothViewDelegate)
+public protocol PagingSmoothViewDelegate {
     @objc optional func pagingSmoothViewDidScroll(_ scrollView: UIScrollView)
 }
 
@@ -1356,7 +1360,6 @@ open class PagingSmoothView: UIView {
     }
 }
 
-@objc
 extension PagingSmoothView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return bounds.size

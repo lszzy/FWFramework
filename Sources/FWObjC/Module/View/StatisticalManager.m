@@ -51,7 +51,7 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
 - (void)setStatisticalEnabled:(BOOL)enabled
 {
     _statisticalEnabled = enabled;
-    if (enabled) [UIView fw_enableStatistical];
+    if (enabled) [UIView __fw_enableStatistical];
 }
 
 - (void)registerEvent:(NSString *)name withHandler:(__FWStatisticalBlock)handler

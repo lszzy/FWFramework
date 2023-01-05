@@ -221,7 +221,8 @@ import FWObjC
     }
     
     /// 内部方法，启用统计功能
-    @objc public static func fw_enableStatistical() {
+    @objc(__fw_enableStatistical)
+    public static func fw_enableStatistical() {
         guard !fw_staticStatisticalEnabled else { return }
         fw_staticStatisticalEnabled = true
         
