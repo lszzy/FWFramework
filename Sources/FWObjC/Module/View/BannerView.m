@@ -12,7 +12,24 @@
 
 #if FWMacroSPM
 
+@interface UIPageControl ()
 
+@property (nonatomic, assign) CGSize __fw_preferredSize;
+
+@end
+
+@interface UIImageView ()
+
++ (UIImageView *)__fw_animatedImageView;
+- (void)__fw_setImageWithUrl:(nullable id)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+
+@end
+
+@interface UIImage ()
+
++ (nullable UIImage *)__fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary *)options;
+
+@end
 
 #else
 

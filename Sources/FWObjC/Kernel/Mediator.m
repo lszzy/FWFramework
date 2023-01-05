@@ -14,7 +14,11 @@
 
 #if FWMacroSPM
 
+@interface UIImage ()
 
++ (nullable UIImage *)__fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary *)options;
+
+@end
 
 #else
 

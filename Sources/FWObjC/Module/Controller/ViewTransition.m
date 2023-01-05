@@ -10,7 +10,25 @@
 
 #if FWMacroSPM
 
+@interface UIViewController ()
 
+@property (nonatomic, strong, nullable) __FWAnimatedTransition *__fw_viewTransition;
+
+@end
+
+@interface UIView ()
+
+- (void)__fw_setCornerLayer:(UIRectCorner)corner radius:(CGFloat)radius;
+
+@end
+
+@interface UIScrollView ()
+
+@property (nonatomic, assign, readonly) BOOL __fw_canScrollVertical;
+@property (nonatomic, assign, readonly) BOOL __fw_canScrollHorizontal;
+- (CGPoint)__fw_contentOffsetOf:(UIRectEdge)edge;
+
+@end
 
 #else
 

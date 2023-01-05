@@ -12,6 +12,8 @@
 
 @interface UIView ()
 
++ (UIView<__FWProgressViewPlugin> *)__fw_progressViewWithStyle:(__FWProgressViewStyle)style;
++ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
 - (NSString *)__fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(__kindof UITapGestureRecognizer *gesture))customize;
 
 @end

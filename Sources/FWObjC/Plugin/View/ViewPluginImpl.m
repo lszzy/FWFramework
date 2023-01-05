@@ -10,7 +10,11 @@
 
 #if FWMacroSPM
 
+@interface UIActivityIndicatorView ()
 
++ (UIActivityIndicatorView *)__fw_indicatorViewWithColor:(nullable UIColor *)color;
+
+@end
 
 #else
 

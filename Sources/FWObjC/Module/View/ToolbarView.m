@@ -54,6 +54,12 @@
 
 @end
 
+@interface UIActivityIndicatorView ()
+
++ (UIActivityIndicatorView *)__fw_indicatorViewWithColor:(nullable UIColor *)color;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

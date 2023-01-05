@@ -27,7 +27,11 @@
 
 #if FWMacroSPM
 
+@interface UIImage ()
 
++ (nullable UIImage *)__fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
+
+@end
 
 #else
 
