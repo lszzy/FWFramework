@@ -9,6 +9,12 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
+
+@property (nonatomic, assign) CGRect __fw_frameApplyTransform;
+
+@end
+
 @interface UIScreen ()
 
 @property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
@@ -23,6 +29,7 @@
 @interface UIViewController ()
 
 @property (nonatomic, assign, readonly) NSInteger __fw_visibleState;
+@property (nonatomic, assign, readonly) BOOL __fw_isPresented;
 
 @end
 

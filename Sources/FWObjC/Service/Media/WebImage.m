@@ -12,7 +12,11 @@
 
 #if FWMacroSPM
 
+@interface UIImage ()
 
+@property (nonatomic, assign) __FWImageFormat __fw_imageFormat;
+
+@end
 
 #else
 

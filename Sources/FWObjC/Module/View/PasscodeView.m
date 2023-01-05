@@ -20,6 +20,12 @@
 
 @end
 
+@interface UITextField ()
+
+@property (nonatomic, assign) BOOL __fw_menuDisabled;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>
