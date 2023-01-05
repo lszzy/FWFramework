@@ -33,73 +33,73 @@
 #pragma mark - Refreshing
 
 - (BOOL)isRefreshing:(UIScrollView *)scrollView {
-    return scrollView.fw_pullRefreshView.state == __FWPullRefreshStateLoading;
+    return scrollView.__fw_pullRefreshView.state == __FWPullRefreshStateLoading;
 }
 
 - (BOOL)shouldRefreshing:(UIScrollView *)scrollView {
-    return scrollView.fw_showPullRefresh;
+    return scrollView.__fw_showPullRefresh;
 }
 
 - (void)setShouldRefreshing:(BOOL)shouldRefreshing scrollView:(UIScrollView *)scrollView {
-    scrollView.fw_showPullRefresh = shouldRefreshing;
+    scrollView.__fw_showPullRefresh = shouldRefreshing;
 }
 
 - (void)setRefreshingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
-    [scrollView fw_addPullRefreshWithBlock:block];
-    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fw_pullRefreshView);
+    [scrollView __fw_addPullRefreshWithBlock:block];
+    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.__fw_pullRefreshView);
 }
 
 - (void)setRefreshingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
-    [scrollView fw_addPullRefreshWithTarget:target action:action];
-    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fw_pullRefreshView);
+    [scrollView __fw_addPullRefreshWithTarget:target action:action];
+    if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.__fw_pullRefreshView);
 }
 
 - (void)beginRefreshing:(UIScrollView *)scrollView {
-    [scrollView fw_triggerPullRefresh];
+    [scrollView __fw_triggerPullRefresh];
 }
 
 - (void)endRefreshing:(UIScrollView *)scrollView {
-    [scrollView.fw_pullRefreshView stopAnimating];
+    [scrollView.__fw_pullRefreshView stopAnimating];
 }
 
 #pragma mark - Loading
 
 - (BOOL)isLoading:(UIScrollView *)scrollView {
-    return scrollView.fw_infiniteScrollView.state == __FWInfiniteScrollStateLoading;
+    return scrollView.__fw_infiniteScrollView.state == __FWInfiniteScrollStateLoading;
 }
 
 - (BOOL)shouldLoading:(UIScrollView *)scrollView {
-    return scrollView.fw_showInfiniteScroll;
+    return scrollView.__fw_showInfiniteScroll;
 }
 
 - (void)setShouldLoading:(BOOL)shouldLoading scrollView:(UIScrollView *)scrollView {
-    scrollView.fw_showInfiniteScroll = shouldLoading;
+    scrollView.__fw_showInfiniteScroll = shouldLoading;
 }
 
 - (BOOL)loadingFinished:(UIScrollView *)scrollView {
-    return scrollView.fw_infiniteScrollFinished;
+    return scrollView.__fw_infiniteScrollFinished;
 }
 
 - (void)setLoadingFinished:(BOOL)loadingFinished scrollView:(UIScrollView *)scrollView {
-    scrollView.fw_infiniteScrollFinished = loadingFinished;
+    scrollView.__fw_infiniteScrollFinished = loadingFinished;
 }
 
 - (void)setLoadingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
-    [scrollView fw_addInfiniteScrollWithBlock:block];
-    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fw_infiniteScrollView);
+    [scrollView __fw_addInfiniteScrollWithBlock:block];
+    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.__fw_infiniteScrollView);
 }
 
 - (void)setLoadingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
-    [scrollView fw_addInfiniteScrollWithTarget:target action:action];
-    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fw_infiniteScrollView);
+    [scrollView __fw_addInfiniteScrollWithTarget:target action:action];
+    if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.__fw_infiniteScrollView);
 }
 
 - (void)beginLoading:(UIScrollView *)scrollView {
-    [scrollView fw_triggerInfiniteScroll];
+    [scrollView __fw_triggerInfiniteScroll];
 }
 
 - (void)endLoading:(UIScrollView *)scrollView {
-    [scrollView.fw_infiniteScrollView stopAnimating];
+    [scrollView.__fw_infiniteScrollView stopAnimating];
 }
 
 @end

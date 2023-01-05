@@ -28,7 +28,8 @@ import FWObjC
     }
     
     /// 设置吐司外间距，默认zero
-    @objc public var fw_toastInsets: UIEdgeInsets {
+    @objc(__fw_toastInsets)
+    public var fw_toastInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_toastInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
@@ -185,12 +186,14 @@ import FWObjC
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    @objc public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
+    @objc(__fw_showLoadingWithText:cancel:)
+    public func fw_showLoading(text: Any? = nil, cancel: (() -> Void)? = nil) {
         fw_toastContainerView?.fw_showLoading(text: text, cancel: cancel)
     }
 
     /// 隐藏加载吐司
-    @objc public func fw_hideLoading() {
+    @objc(__fw_hideLoading)
+    public func fw_hideLoading() {
         fw_toastContainerView?.fw_hideLoading()
     }
     

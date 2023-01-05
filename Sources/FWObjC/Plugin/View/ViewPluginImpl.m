@@ -82,7 +82,7 @@
         return self.customIndicatorView(style);
     }
     
-    UIActivityIndicatorView *indicatorView = [UIActivityIndicatorView fw_indicatorViewWithColor:nil];
+    UIActivityIndicatorView *indicatorView = [UIActivityIndicatorView __fw_indicatorViewWithColor:nil];
     return indicatorView;
 }
 

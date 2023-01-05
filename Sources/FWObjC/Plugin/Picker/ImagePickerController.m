@@ -303,7 +303,7 @@
     if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillStartLoading:)]) {
         [self.albumControllerDelegate albumControllerWillStartLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_showLoadingWithText:nil cancel:nil];
+        [self __fw_showLoadingWithText:nil cancel:nil];
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -340,7 +340,7 @@
     if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerDidFinishLoading:)]) {
         [self.albumControllerDelegate albumControllerDidFinishLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_hideLoading];
+        [self __fw_hideLoading];
     }
     
     if (self.maximumTableViewHeight > 0) {
@@ -1344,13 +1344,13 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillStartLoading:)]) {
             [self.delegate imagePickerPreviewControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoadingWithText:nil cancel:nil];
+            [self __fw_showLoadingWithText:nil cancel:nil];
         }
         [__FWImagePickerController requestImagesAssetArray:self.selectedImageAssetArray filterType:self.imagePickerController.filterType useOrigin:self.shouldUseOriginImage completion:^{
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerDidFinishLoading:)]) {
                 [self.delegate imagePickerPreviewControllerDidFinishLoading:self];
             } else if (self.showsDefaultLoading) {
-                [self fw_hideLoading];
+                [self __fw_hideLoading];
             }
             
             [self dismissViewControllerAnimated:YES completion:^(void) {
@@ -1988,7 +1988,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoadingWithText:nil cancel:nil];
+            [self __fw_showLoadingWithText:nil cancel:nil];
         }
     }
     if (!assetsGroup) {
@@ -2016,7 +2016,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
         [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_showLoadingWithText:nil cancel:nil];
+        [self __fw_showLoadingWithText:nil cancel:nil];
     }
     self.isImagesAssetLoading = YES;
     [self initAlbumControllerIfNeeded];
@@ -2028,7 +2028,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidFinishLoading:)]) {
         [self.imagePickerControllerDelegate imagePickerControllerDidFinishLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self fw_hideLoading];
+        [self __fw_hideLoading];
     }
     self.isImagesAssetLoading = NO;
     if (self.imagesAssetArray.count > 0) {
@@ -2398,14 +2398,14 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillStartLoading:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillStartLoading:self];
         } else if (self.showsDefaultLoading) {
-            [self fw_showLoadingWithText:nil cancel:nil];
+            [self __fw_showLoadingWithText:nil cancel:nil];
         }
         [self initPreviewViewControllerIfNeeded];
         [__FWImagePickerController requestImagesAssetArray:self.selectedImageAssetArray filterType:self.filterType useOrigin:self.imagePickerPreviewController.shouldUseOriginImage completion:^{
             if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidFinishLoading:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerDidFinishLoading:self];
             } else if (self.showsDefaultLoading) {
-                [self fw_hideLoading];
+                [self __fw_hideLoading];
             }
             
             [self dismissViewControllerAnimated:YES completion:^{
