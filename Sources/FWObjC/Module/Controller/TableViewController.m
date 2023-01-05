@@ -12,7 +12,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -104,7 +104,7 @@
 - (void)__fw_setupTableLayout
 {
     UITableView *tableView = [(id<__FWTableViewController>)self tableView];
-    [tableView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    [tableView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

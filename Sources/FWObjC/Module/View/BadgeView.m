@@ -13,11 +13,11 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
 - (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 
 @end
 
@@ -54,7 +54,7 @@
                 self.userInteractionEnabled = NO;
                 self.backgroundColor = [UIColor redColor];
                 self.layer.cornerRadius = badgeHeight / 2.0;
-                [self fw_setDimensions:CGSizeMake(badgeHeight, badgeHeight)];
+                [self __fw_setDimensions:CGSizeMake(badgeHeight, badgeHeight)];
                 break;
             }
         }
@@ -78,17 +78,17 @@
     self.userInteractionEnabled = NO;
     self.backgroundColor = [UIColor redColor];
     self.layer.cornerRadius = badgeHeight / 2.0;
-    [self fw_setDimension:NSLayoutAttributeHeight size:badgeHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
-    [self fw_setDimension:NSLayoutAttributeWidth size:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [self __fw_setDimension:NSLayoutAttributeHeight size:badgeHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [self __fw_setDimension:NSLayoutAttributeWidth size:badgeHeight relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
     
     _badgeLabel = [[UILabel alloc] init];
     _badgeLabel.textColor = [UIColor whiteColor];
     _badgeLabel.font = [UIFont systemFontOfSize:fontSize];
     _badgeLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_badgeLabel];
-    [_badgeLabel fw_alignCenterToSuperview:CGPointZero];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
-    [_badgeLabel fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [_badgeLabel __fw_alignCenterToSuperview:CGPointZero];
+    [_badgeLabel __fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
+    [_badgeLabel __fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:textInset relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired];
 }
 
 @end

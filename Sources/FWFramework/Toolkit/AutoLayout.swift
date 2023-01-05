@@ -14,7 +14,7 @@ import FWObjC
 /// UIView自动布局分类，兼容UIView和UILayoutGuide(iOS9)
 /// 如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
-@_spi(FW) @objc extension UIView {
+@_spi(FW) extension UIView {
     
     /// 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
     ///
@@ -186,6 +186,7 @@ import FWObjC
     /// - Parameter offset: 偏移距离，默认zero
     /// - Returns: 约束数组
     @discardableResult
+    @objc(__fw_alignCenterToSuperview:)
     public func fw_alignCenter(toSuperview offset: CGPoint = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_alignAxis(toSuperview: .centerX, offset: offset.x))
@@ -200,6 +201,7 @@ import FWObjC
     ///   - offset: 偏移距离，默认0
     /// - Returns: 布局约束
     @discardableResult
+    @objc(__fw_alignAxisToSuperview:offset:)
     public func fw_alignAxis(toSuperview axis: NSLayoutConstraint.Attribute, offset: CGFloat = 0) -> NSLayoutConstraint {
         return fw_constrainAttribute(axis, toSuperview: self.superview, offset: offset, relation: .equal, priority: .required)
     }
@@ -231,6 +233,7 @@ import FWObjC
     /// - Parameter insets: 指定距离insets，默认zero
     /// - Returns: 约束数组
     @discardableResult
+    @objc(__fw_pinEdgesToSuperview:)
     public func fw_pinEdges(toSuperview insets: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSuperview: .top, inset: insets.top))
@@ -247,6 +250,7 @@ import FWObjC
     ///   - excludingEdge: 排除的边
     /// - Returns: 约束数组
     @discardableResult
+    @objc(__fw_pinEdgesToSuperview:excludingEdge:)
     public func fw_pinEdges(toSuperview insets: UIEdgeInsets = .zero, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         if excludingEdge != .top {
@@ -270,6 +274,7 @@ import FWObjC
     ///   - inset: 偏移距离
     /// - Returns: 约束数组
     @discardableResult
+    @objc(__fw_pinHorizontalToSuperview:)
     public func fw_pinHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSuperview: .left, inset: inset))
@@ -299,6 +304,7 @@ import FWObjC
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
+    @objc(__fw_pinEdgeToSuperview:inset:relation:priority:)
     public func fw_pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
         return fw_constrainAttribute(edge, toSuperview: self.superview, offset: inset, relation: relation, priority: priority)
     }
@@ -313,6 +319,7 @@ import FWObjC
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
+    @objc(__fw_pinEdge:toEdge:ofView:offset:relation:priority:)
     public func fw_pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
         return fw_constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority)
     }
@@ -421,6 +428,7 @@ import FWObjC
     /// - Parameter size: 尺寸大小
     /// - Returns: 约束数组
     @discardableResult
+    @objc(__fw_setDimensions:)
     public func fw_setDimensions(_ size: CGSize) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_setDimension(.width, size: size.width))
@@ -437,6 +445,7 @@ import FWObjC
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
+    @objc(__fw_setDimension:size:relation:priority:)
     public func fw_setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
         return fw_constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority)
     }
@@ -464,6 +473,7 @@ import FWObjC
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
+    @objc(__fw_matchDimension:toDimension:ofView:offset:relation:priority:)
     public func fw_matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
         return fw_constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority)
     }

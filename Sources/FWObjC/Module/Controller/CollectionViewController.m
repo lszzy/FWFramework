@@ -12,7 +12,7 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 
 @end
 
@@ -103,7 +103,7 @@
 - (void)__fw_setupCollectionLayout
 {
     UICollectionView *collectionView = [(id<__FWCollectionViewController>)self collectionView];
-    [collectionView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    [collectionView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
 }
 
 @end

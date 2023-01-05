@@ -11,12 +11,12 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
-- (NSArray<NSLayoutConstraint *> *)fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
 - (NSArray<NSLayoutConstraint *> *)fw_setDimensions:(CGSize)size;
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 @end
 
@@ -103,8 +103,8 @@
     [self addSubview:_lineView];
     _lineView.backgroundColor = _underlineColorNormal;
     _lineView.layer.cornerRadius = sepLineViewHeight / 2.0;
-    [_lineView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
-    [_lineView fw_setDimension:NSLayoutAttributeHeight size:sepLineViewHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [_lineView __fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeTop];
+    [_lineView __fw_setDimension:NSLayoutAttributeHeight size:sepLineViewHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     
     _lineView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.2].CGColor;
     _lineView.layer.shadowOpacity = 1;
@@ -144,7 +144,7 @@
 {
     _lockImgView = [UIImageView new];
     [self addSubview:_lockImgView];
-    [_lockImgView fw_alignCenterToSuperview:CGPointZero];
+    [_lockImgView __fw_alignCenterToSuperview:CGPointZero];
 }
 
 #pragma mark - Setter & Getter
@@ -157,13 +157,13 @@
 - (void)setImageWidth:(CGFloat)imageWidth
 {
     _imageWidth = imageWidth;
-    [_lockImgView fw_setDimension:NSLayoutAttributeWidth size:imageWidth relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [_lockImgView __fw_setDimension:NSLayoutAttributeWidth size:imageWidth relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 - (void)setImageHeight:(CGFloat)imageHeight
 {
     _imageHeight = imageHeight;
-    [_lockImgView fw_setDimension:NSLayoutAttributeHeight size:imageHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [_lockImgView __fw_setDimension:NSLayoutAttributeHeight size:imageHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
 }
 
 @end
@@ -299,8 +299,8 @@
     circleView.backgroundColor = [UIColor blackColor];
     circleView.layer.cornerRadius = 4;
     [customSecurityView addSubview:circleView];
-    [circleView fw_setDimensions:CGSizeMake(circleViewWidth, circleViewWidth)];
-    [circleView fw_alignCenterToSuperview:CGPointZero];
+    [circleView __fw_setDimensions:CGSizeMake(circleViewWidth, circleViewWidth)];
+    [circleView __fw_alignCenterToSuperview:CGPointZero];
     return customSecurityView;
 }
 
@@ -350,11 +350,11 @@
     _valueLabel = [UILabel new];
     _valueLabel.font = [UIFont systemFontOfSize:38];
     [self.contentView addSubview:_valueLabel];
-    [_valueLabel fw_alignCenterToSuperview:CGPointZero];
+    [_valueLabel __fw_alignCenterToSuperview:CGPointZero];
     
     _cursorView = [UIView new];
     [self.contentView addSubview:_cursorView];
-    [_cursorView fw_alignCenterToSuperview:CGPointZero];
+    [_cursorView __fw_alignCenterToSuperview:CGPointZero];
     
     [self initCellProperty];
 }
@@ -429,7 +429,7 @@
 {
     if (!self.customSecurityView.superview) {
         [self.contentView addSubview:self.customSecurityView];
-        [self.customSecurityView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+        [self.customSecurityView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     }
     
     self.customSecurityView.alpha = 1;
@@ -525,8 +525,8 @@
     _cellProperty = cellProperty;
     
     _cursorView.backgroundColor = cellProperty.cellCursorColor;
-    [_cursorView fw_setDimension:NSLayoutAttributeWidth size:cellProperty.cellCursorWidth relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
-    [_cursorView fw_setDimension:NSLayoutAttributeHeight size:cellProperty.cellCursorHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [_cursorView __fw_setDimension:NSLayoutAttributeWidth size:cellProperty.cellCursorWidth relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [_cursorView __fw_setDimension:NSLayoutAttributeHeight size:cellProperty.cellCursorHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     self.layer.cornerRadius = cellProperty.cornerRadius;
     self.layer.borderWidth = cellProperty.borderWidth;
     
@@ -552,7 +552,7 @@
         NSAssert(_cellProperty.customLineViewBlock, @"customLineViewBlock can not be null！");
         _lineView = _cellProperty.customLineViewBlock();
         [self.contentView addSubview:_lineView];
-        [_lineView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+        [_lineView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     }
     
     if (_cellProperty.configCellShadowBlock) {
@@ -693,15 +693,15 @@ typedef NS_ENUM(NSInteger, __FWPasscodeTextChangeType) {
     // collectionView
     if (!self.collectionView || ![self.subviews containsObject:self.collectionView]) {
         [self addSubview:self.collectionView];
-        [self.collectionView fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+        [self.collectionView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
     }
     
     // textField
     if (!self.textField || ![self.subviews containsObject:self.textField]) {
         [self addSubview:self.textField];
-        [self.textField fw_setDimensions:CGSizeZero];
-        [self.textField fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
-        [self.textField fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [self.textField __fw_setDimensions:CGSizeZero];
+        [self.textField __fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+        [self.textField __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     }
     
     // tap

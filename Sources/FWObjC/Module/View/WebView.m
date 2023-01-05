@@ -14,9 +14,9 @@
 
 @interface UIView ()
 
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
-- (NSLayoutConstraint *)fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
 
 @end
 
@@ -288,8 +288,8 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.progressView.trackTintColor = [UIColor clearColor];
     self.progressView.__fw_webProgress = 0;
     [self addSubview:self.progressView];
-    [self.progressView fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
-    [self.progressView fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
+    [self.progressView __fw_pinEdgesToSuperview:UIEdgeInsetsZero excludingEdge:NSLayoutAttributeBottom];
+    [self.progressView __fw_setDimension:NSLayoutAttributeHeight size:2.f relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     [self __fw_observeProperty:@"estimatedProgress" block:^(__FWWebView *webView, NSDictionary *change) {
         webView.progressView.__fw_webProgress = webView.estimatedProgress;
     }];
