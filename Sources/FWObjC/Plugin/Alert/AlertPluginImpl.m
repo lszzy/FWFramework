@@ -11,7 +11,25 @@
 
 #if FWMacroSPM
 
+@interface UIAlertAction ()
 
++ (UIAlertAction *)__fw_actionWithObject:(nullable id)object style:(UIAlertActionStyle)style appearance:(nullable __FWAlertAppearance *)appearance handler:(nullable void (^)(UIAlertAction *))handler;
+
+@end
+
+@interface UIAlertController ()
+
+@property (nonatomic, strong, null_resettable) __FWAlertAppearance *__fw_alertAppearance;
+@property (nonatomic, assign) __FWAlertStyle __fw_alertStyle;
++ (UIAlertController *)__fw_alertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle appearance:(nullable __FWAlertAppearance *)appearance;
+
+@end
+
+@interface UIViewController ()
+
+@property (nonatomic, strong, readonly) UIView *__fw_ancestorView;
+
+@end
 
 #else
 
