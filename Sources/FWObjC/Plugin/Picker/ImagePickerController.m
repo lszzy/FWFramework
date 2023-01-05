@@ -56,6 +56,7 @@
 - (void)__fw_showLoadingWithText:(nullable id)text cancel:(nullable void (^)(void))cancel;
 - (void)__fw_hideLoading;
 - (void)__fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id))block;
+- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
 
 @end
 
@@ -69,6 +70,12 @@
 
 @property (nonatomic, assign) CGFloat __fw_disabledAlpha;
 @property (nonatomic, assign) CGFloat __fw_highlightedAlpha;
+
+@end
+
+@interface PHPhotoLibrary ()
+
+@property (class, nonatomic, copy, readonly) NSString *__fw_pickerControllerVideoCachePath;
 
 @end
 

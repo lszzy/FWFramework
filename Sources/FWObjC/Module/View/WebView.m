@@ -17,6 +17,15 @@
 - (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 - (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
 - (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
+- (void)__fw_showConfirmWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel confirm:(nullable id)confirm confirmBlock:(nullable void (^)(void))confirmBlock cancelBlock:(nullable void (^)(void))cancelBlock;
+- (void)__fw_showPromptWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel confirm:(nullable id)confirm promptBlock:(nullable void (^)(UITextField *))promptBlock confirmBlock:(nullable void (^)(NSString *))confirmBlock cancelBlock:(nullable void (^)(void))cancelBlock;
+
+@end
+
+@interface UIProgressView ()
+
+@property (nonatomic, assign) float __fw_webProgress;
 
 @end
 
@@ -35,6 +44,12 @@
 + (void)__fw_openURL:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
 + (BOOL)__fw_isSchemeURL:(id)url;
 + (void)__fw_openUniversalLinks:(id)url completionHandler:(nullable void (^)(BOOL success))completion;
+
+@end
+
+@interface WKWebView ()
+
+@property (class, nonatomic, copy, readonly) NSString *__fw_extensionUserAgent;
 
 @end
 
