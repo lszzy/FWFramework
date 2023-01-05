@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Message
 extension Wrapper where Base: NSObject {

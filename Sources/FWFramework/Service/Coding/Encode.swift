@@ -7,9 +7,6 @@
 
 import Foundation
 import CommonCrypto
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - FW+SafeValue
 extension FW {

@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UIApplication+Adaptive
 extension Wrapper where Base: UIApplication {
