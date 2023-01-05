@@ -10,7 +10,11 @@
 
 #if FWMacroSPM
 
+@interface UIView ()
 
++ (void)__fw_enableStatistical;
+
+@end
 
 #else
 
