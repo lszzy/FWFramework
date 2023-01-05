@@ -23,7 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
-        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "3.2.0")
+        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0")
     ],
     targets: [
         .target(
