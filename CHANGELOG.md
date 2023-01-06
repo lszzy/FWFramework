@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.4.1] - 2023-01-06
+
+### Changed
+* Optimize the implementation of the pull-down refresh plugin indicatorPadding
+* Fix Swift Package Manager minimum compatible with lottie-ios 4.0
+
 ## [4.4.0] - 2022-12-07
 
 ### Changed
