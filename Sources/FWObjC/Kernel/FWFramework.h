@@ -28,7 +28,6 @@
 
 #import "Appearance.h"
 #import "Icon.h"
-#import "Keyboard.h"
 #import "Thread.h"
 
 #import "AppDelegate.h"
