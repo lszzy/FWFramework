@@ -20,7 +20,7 @@ find "Sources/FWVendor" -type f ! -regex '*.h' -name '*.h' \
 
 sourcekitten doc -- -project _Pods.xcodeproj -target $framework_name > "$lib_path/swift.json"
 sourcekitten doc --objc "$lib_path/$umbrella_name" -- -x objective-c -isysroot $sdk_path -I $lib_path -fobjc-arc -fmodules > "$lib_path/objc.json"
-jazzy --sourcekitten-sourcefile "$lib_path/swift.json","$lib_path/objc.json"
+jazzy --include-spi-declarations --sourcekitten-sourcefile "$lib_path/swift.json","$lib_path/objc.json"
 
 rm -rf $lib_path
 rm -rf Example/build/
