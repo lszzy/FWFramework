@@ -94,7 +94,7 @@ import FWObjC
     private func fw_addReturnEvent() {
         let value = fw_property(forName: "fw_addReturnEvent") as? NSNumber
         if value == nil {
-            self.addTarget(self.fw_keyboardTarget, action: #selector(__FWKeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
+            self.addTarget(self.fw_keyboardTarget, action: #selector(KeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
             fw_setProperty(NSNumber(value: true), forName: "fw_addReturnEvent")
         }
     }
@@ -188,7 +188,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.fw_keyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -198,14 +198,14 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.fw_keyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_keyboardTarget.addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_keyboardTarget: __FWKeyboardTarget<UITextField> {
-        if let target = fw_property(forName: "fw_keyboardTarget") as? __FWKeyboardTarget<UITextField> {
+    private var fw_keyboardTarget: KeyboardTarget<UITextField> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? KeyboardTarget<UITextField> {
             return target
         } else {
-            let target = __FWKeyboardTarget<UITextField>(textInput: self)
+            let target = KeyboardTarget<UITextField>(textInput: self)
             fw_setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
@@ -458,7 +458,7 @@ import FWObjC
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
     public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        self.fw_keyboardTarget.addToolbar(withTitle: title, doneBlock: doneBlock)
+        self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -468,14 +468,14 @@ import FWObjC
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
     public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        self.fw_keyboardTarget.addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        self.fw_keyboardTarget.addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
     }
     
-    private var fw_keyboardTarget: __FWKeyboardTarget<UITextView> {
-        if let target = fw_property(forName: "fw_keyboardTarget") as? __FWKeyboardTarget<UITextView> {
+    private var fw_keyboardTarget: KeyboardTarget<UITextView> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? KeyboardTarget<UITextView> {
             return target
         } else {
-            let target = __FWKeyboardTarget<UITextView>(textInput: self)
+            let target = KeyboardTarget<UITextView>(textInput: self)
             fw_setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
@@ -731,6 +731,434 @@ import FWObjC
         self.fw_maxHeight = maxHeight
         if didChange != nil { self.fw_heightDidChange = didChange }
         self.fw_autoHeightEnabled = true
+    }
+    
+}
+
+// MARK: KeyboardConfig
+fileprivate class KeyboardConfig: NSObject {
+    
+    static var keyboardShowing = false
+    static var keyboardOrigin: CGFloat = 0
+    static var keyboardOffset: CGFloat = 0
+    static var keyboardGesture: UITapGestureRecognizer?
+    
+    static var toolbarPreviousImage: UIImage? {
+        if let image = _toolbarPreviousImage { return image }
+        
+        let base64String = "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"
+        guard let data = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) else { return nil }
+        _toolbarPreviousImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
+        return _toolbarPreviousImage
+    }
+    static var _toolbarPreviousImage: UIImage?
+    
+    static var toolbarNextImage: UIImage? {
+        if let image = _toolbarNextImage { return image }
+        
+        let base64String = "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"
+        guard let data = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) else { return nil }
+        _toolbarNextImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
+        return _toolbarNextImage
+    }
+    static var _toolbarNextImage: UIImage?
+    
+}
+
+// MARK: - KeyboardTarget
+fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
+    
+    var keyboardManager = false {
+        didSet {
+            if oldValue == keyboardManager { return }
+            if keyboardManager {
+                NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIApplication.keyboardWillShowNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIApplication.keyboardWillHideNotification, object: nil)
+            } else {
+                NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillShowNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillHideNotification, object: nil)
+            }
+        }
+    }
+    
+    var keyboardDistance: CGFloat = 10
+    
+    var reboundDistance: CGFloat = 0
+    
+    var keyboardResign = false {
+        didSet {
+            if oldValue == keyboardResign { return }
+            if keyboardResign {
+                NotificationCenter.default.addObserver(self, selector: #selector(appResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+            } else {
+                NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+        }
+    }
+    
+    var touchResign = false {
+        didSet {
+            if oldValue == touchResign { return }
+            if touchResign {
+                if let textField = textInput as? UITextField {
+                    NotificationCenter.default.addObserver(self, selector: #selector(editingDidBegin), name: UITextField.textDidBeginEditingNotification, object: textField)
+                    NotificationCenter.default.addObserver(self, selector: #selector(editingDidEnd), name: UITextField.textDidEndEditingNotification, object: textField)
+                } else if let textView = textInput as? UITextView {
+                    NotificationCenter.default.addObserver(self, selector: #selector(editingDidBegin), name: UITextView.textDidBeginEditingNotification, object: textView)
+                    NotificationCenter.default.addObserver(self, selector: #selector(editingDidEnd), name: UITextView.textDidEndEditingNotification, object: textView)
+                }
+            } else {
+                if let textField = textInput as? UITextField {
+                    NotificationCenter.default.removeObserver(self, name: UITextField.textDidBeginEditingNotification, object: textField)
+                    NotificationCenter.default.removeObserver(self, name: UITextField.textDidEndEditingNotification, object: textField)
+                } else if let textView = textInput as? UITextView {
+                    NotificationCenter.default.removeObserver(self, name: UITextView.textDidBeginEditingNotification, object: textView)
+                    NotificationCenter.default.removeObserver(self, name: UITextView.textDidEndEditingNotification, object: textView)
+                }
+            }
+        }
+    }
+    
+    var returnResign = false
+    
+    var returnNext = false
+    
+    var returnBlock: ((T) -> Void)?
+    
+    lazy var keyboardToolbar: UIToolbar = {
+        return UIToolbar()
+    }()
+    
+    var toolbarPreviousButton: Any? {
+        get {
+            if _toolbarPreviousButton == nil && !previousButtonInitialized {
+                _toolbarPreviousButton = KeyboardConfig.toolbarPreviousImage
+            }
+            return _toolbarPreviousButton
+        }
+        set {
+            _toolbarPreviousButton = newValue
+        }
+    }
+    var _toolbarPreviousButton: Any?
+    
+    var toolbarNextButton: Any? {
+        get {
+            if _toolbarNextButton == nil && !nextButtonInitialized {
+                _toolbarNextButton = KeyboardConfig.toolbarNextImage
+            }
+            return _toolbarNextButton
+        }
+        set {
+            _toolbarNextButton = newValue
+        }
+    }
+    var _toolbarNextButton: Any?
+    
+    var toolbarDoneButton: Any? {
+        get {
+            if _toolbarDoneButton == nil && !doneButtonInitialized {
+                _toolbarDoneButton = NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
+            }
+            return _toolbarDoneButton
+        }
+        set {
+            _toolbarDoneButton = newValue
+        }
+    }
+    var _toolbarDoneButton: Any?
+    
+    var previousButtonInitialized = false
+    
+    var nextButtonInitialized = false
+    
+    var doneButtonInitialized = false
+    
+    var previousResponder: ((T) -> UIResponder?)? {
+        didSet {
+            previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
+        }
+    }
+    
+    var nextResponder: ((T) -> UIResponder?)? {
+        didSet {
+            nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
+        }
+    }
+    
+    var previousResponderTag: Int = 0 {
+        didSet {
+            previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
+        }
+    }
+    
+    var nextResponderTag: Int = 0 {
+        didSet {
+            nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
+        }
+    }
+    
+    weak var scrollView: UIScrollView?
+    
+    private var previousItem: UIBarButtonItem?
+    
+    private var nextItem: UIBarButtonItem?
+    
+    private var keyboardActive = false
+    
+    private weak var viewController: UIViewController? {
+        if _viewController == nil {
+            _viewController = textInput?.fw_viewController
+        }
+        return _viewController
+    }
+    private weak var _viewController: UIViewController?
+    
+    private weak var textInput: T?
+    
+    init(textInput: T?) {
+        super.init()
+        self.textInput = textInput
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func editingDidBegin() {
+        guard touchResign, let viewController = viewController else { return }
+        
+        if KeyboardConfig.keyboardGesture == nil {
+            KeyboardConfig.keyboardGesture = UITapGestureRecognizer.fw_gestureRecognizer(block: { sender in
+                guard let sender = sender as? UITapGestureRecognizer else { return }
+                if sender.state == .ended {
+                    sender.view?.endEditing(true)
+                }
+            })
+            KeyboardConfig.keyboardGesture?.cancelsTouchesInView = false
+        }
+        if let keyboardGesture = KeyboardConfig.keyboardGesture {
+            viewController.view.addGestureRecognizer(keyboardGesture)
+        }
+    }
+    
+    @objc private func editingDidEnd() {
+        guard touchResign, let viewController = viewController else { return }
+        
+        if let keyboardGesture = KeyboardConfig.keyboardGesture {
+            viewController.view.removeGestureRecognizer(keyboardGesture)
+        }
+    }
+    
+    @objc private func appResignActive() {
+        guard keyboardResign, textInput?.isFirstResponder ?? false else { return }
+        
+        keyboardActive = true
+        textInput?.resignFirstResponder()
+    }
+    
+    @objc private func appBecomeActive() {
+        guard keyboardResign, keyboardActive else { return }
+        
+        keyboardActive = false
+        textInput?.becomeFirstResponder()
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let textInput = textInput, textInput.isFirstResponder else { return }
+        guard keyboardManager, let viewController = viewController else { return }
+        
+        let keyboardRect = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+        var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+        animationCurve = animationCurve << 16
+        
+        if let scrollView = scrollView {
+            if !KeyboardConfig.keyboardShowing {
+                KeyboardConfig.keyboardShowing = true
+                KeyboardConfig.keyboardOffset = scrollView.contentOffset.y
+            }
+            
+            let convertView = textInput.window ?? viewController.view.window
+            let convertRect = textInput.convert(textInput.bounds, to: convertView)
+            var contentOffset = scrollView.contentOffset
+            var targetOffsetY = max(contentOffset.y + keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), KeyboardConfig.keyboardOffset)
+            if reboundDistance > 0 && targetOffsetY < contentOffset.y {
+                targetOffsetY = (targetOffsetY + reboundDistance >= contentOffset.y) ? contentOffset.y : targetOffsetY + reboundDistance
+            }
+            
+            contentOffset.y = targetOffsetY
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                scrollView.contentOffset = contentOffset
+            }, completion: nil)
+            return
+        }
+        
+        if !KeyboardConfig.keyboardShowing {
+            KeyboardConfig.keyboardShowing = true
+            KeyboardConfig.keyboardOrigin = viewController.view.frame.origin.y
+        }
+        
+        let convertView = textInput.window ?? viewController.view.window
+        let convertRect = textInput.convert(textInput.bounds, to: convertView)
+        var viewFrame = viewController.view.frame
+        var viewTargetY = min(viewFrame.origin.y - keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), KeyboardConfig.keyboardOrigin)
+        if reboundDistance > 0 && viewTargetY > viewFrame.origin.y {
+            viewTargetY = (viewTargetY - reboundDistance <= viewFrame.origin.y) ? viewFrame.origin.y : viewTargetY - reboundDistance
+        }
+        
+        viewFrame.origin.y = viewTargetY
+        UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+            // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+            if #available(iOS 14.0, *) {
+                viewController.view.layer.frame = viewFrame
+            } else {
+                viewController.view.frame = viewFrame
+            }
+        }, completion: nil)
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let textInput = textInput, textInput.isFirstResponder else { return }
+        guard keyboardManager, let viewController = viewController,
+              KeyboardConfig.keyboardShowing else { return }
+        
+        let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+        var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+        animationCurve = animationCurve << 16
+        
+        if let scrollView = scrollView {
+            let originOffsetY = KeyboardConfig.keyboardOffset
+            KeyboardConfig.keyboardShowing = false
+            KeyboardConfig.keyboardOffset = 0
+            
+            var contentOffset = scrollView.contentOffset
+            contentOffset.y = originOffsetY
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                scrollView.contentOffset = contentOffset
+            }, completion: nil)
+            return
+        }
+        
+        let viewOriginY = KeyboardConfig.keyboardOrigin
+        KeyboardConfig.keyboardShowing = false
+        KeyboardConfig.keyboardOrigin = 0
+        
+        var viewFrame = viewController.view.frame
+        viewFrame.origin.y = viewOriginY
+        UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+            // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+            if #available(iOS 14.0, *) {
+                viewController.view.layer.frame = viewFrame
+            } else {
+                viewController.view.frame = viewFrame
+            }
+        }, completion: nil)
+    }
+    
+    @objc func invokeReturnAction() {
+        // 切换到下一个输入框
+        if returnNext {
+            goNext()
+        // 关闭键盘
+        } else if returnResign {
+            textInput?.resignFirstResponder()
+        }
+        // 执行回调
+        if returnBlock != nil, let textInput = textInput {
+            returnBlock?(textInput)
+        }
+    }
+    
+    @objc func goPrevious() {
+        guard let textInput = textInput else { return }
+        if previousResponder != nil {
+            let previousInput = previousResponder?(textInput)
+            previousInput?.becomeFirstResponder()
+            return
+        }
+        
+        if previousResponderTag > 0 {
+            let targetView = viewController != nil ? viewController?.view : textInput.window
+            let previousView = targetView?.viewWithTag(previousResponderTag)
+            previousView?.becomeFirstResponder()
+        }
+    }
+    
+    @objc func goNext() {
+        guard let textInput = textInput else { return }
+        if nextResponder != nil {
+            let nextInput = nextResponder?(textInput)
+            nextInput?.becomeFirstResponder()
+            return
+        }
+        
+        if nextResponderTag > 0 {
+            let targetView = viewController != nil ? viewController?.view : textInput.window
+            let nextView = targetView?.viewWithTag(nextResponderTag)
+            nextView?.becomeFirstResponder()
+        }
+    }
+    
+    func keyboardHeight(_ notification: Notification) -> CGFloat {
+        let keyboardRect = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        return keyboardRect.size.height
+    }
+
+    func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+        let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+        var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+        animationCurve = animationCurve << 16
+        
+        UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: animations, completion: completion)
+    }
+    
+    func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+        let titleItem = title != nil ? UIBarButtonItem.fw_item(object: title, block: nil) : nil
+        titleItem?.isEnabled = false
+        
+        let previousEnabled = previousResponder != nil || previousResponderTag > 0
+        let nextEnabled = nextResponder != nil || nextResponderTag > 0
+        let previousItem = ((previousEnabled || nextEnabled) && toolbarPreviousButton != nil) ? UIBarButtonItem.fw_item(object: toolbarPreviousButton, target: self, action: #selector(goPrevious)) : nil
+        previousItem?.isEnabled = previousEnabled
+        self.previousItem = previousItem
+        
+        let nextItem = ((previousEnabled || nextEnabled) && toolbarNextButton != nil) ? UIBarButtonItem.fw_item(object: toolbarNextButton, target: self, action: #selector(goNext)) : nil
+        nextItem?.isEnabled = nextEnabled
+        self.nextItem = nextItem
+        
+        let doneItem = toolbarDoneButton != nil ? (doneBlock != nil ? UIBarButtonItem.fw_item(object: toolbarDoneButton, block: doneBlock) : UIBarButtonItem.fw_item(object: toolbarDoneButton, target: textInput, action: #selector(UIView.resignFirstResponder))) : nil
+        doneItem?.style = .done
+        
+        addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    }
+    
+    func addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
+        var items: [UIBarButtonItem] = []
+        if let previousItem = previousItem { items.append(previousItem) }
+        if previousItem != nil && nextItem != nil {
+            let fixedItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+            fixedItem.width = 6
+            items.append(fixedItem)
+        }
+        if let nextItem = nextItem { items.append(nextItem) }
+        items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        if let titleItem = titleItem {
+            items.append(titleItem)
+            items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        }
+        if let doneItem = doneItem { items.append(doneItem) }
+        
+        let toolbar = self.keyboardToolbar
+        toolbar.items = items
+        toolbar.sizeToFit()
+        if let textField = textInput as? UITextField {
+            textField.inputAccessoryView = toolbar
+        } else if let textView = textInput as? UITextView {
+            textView.inputAccessoryView = toolbar
+        }
     }
     
 }
