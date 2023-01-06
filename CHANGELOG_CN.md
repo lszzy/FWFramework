@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.4.1] - 2023-01-06
+
+### Changed
+* 优化下拉刷新插件indicatorPadding的实现方式
+* 修复Swift Package Manager最低兼容lottie-ios 4.0版本
+
 ## [4.4.0] - 2022-12-07
 
 ### Changed
