@@ -10,14 +10,20 @@ import FWFramework
 
 class AppConfig: Configuration {
     
+    class Network {
+        static var apiUrl = ""
+    }
+    
     var appId = ""
+    var network = Network.self
     
 }
 
 class AppConfigTemplate: ConfigurationTemplate {
     
     override func applyConfiguration() {
-        AppConfig.shared.appId = "1"
+        AppConfig.shared.appId = "appId"
+        AppConfig.shared.network.apiUrl = "apiUrl"
     }
     
 }
