@@ -10,12 +10,17 @@ import FWFramework
 
 class AppConfig: Configuration {
     
+    var appId = ""
+    
+}
+
+extension AppConfig {
+    
     class Network {
         static var apiUrl = ""
     }
     
-    var appId = ""
-    var network = Network.self
+    var network: Network.Type { Network.self }
     
 }
 
