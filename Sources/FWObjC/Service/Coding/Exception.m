@@ -7,7 +7,6 @@
 
 #import "Exception.h"
 #import "Swizzle.h"
-#import "Logger.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -28,6 +27,9 @@ NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCaptur
 
 #define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]
+
+#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
+    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 

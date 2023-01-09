@@ -6,7 +6,6 @@
 //
 
 #import "Test.h"
-#import "Logger.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -22,6 +21,9 @@
 #import <FWFramework/FWFramework-Swift.h>
 
 #endif
+
+#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
+    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
 
 #ifdef DEBUG
 
