@@ -13,6 +13,12 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
 @interface UIImage ()
 
 + (nullable UIImage *)__fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary *)options;
@@ -25,8 +31,8 @@
 
 #endif
 
-#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
-    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
+#define __FWLogGroup( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark - __FWMediator
 
@@ -169,8 +175,8 @@
     }
     
 #ifdef DEBUG
-    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", __FWMediator.debugDescription);
-    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", __FWPluginManager.debugDescription);
+    __FWLogGroup(@"%@", __FWMediator.debugDescription);
+    __FWLogGroup(@"%@", __FWPluginManager.debugDescription);
 #endif
 }
 

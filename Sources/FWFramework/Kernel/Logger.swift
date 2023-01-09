@@ -168,7 +168,6 @@ public enum LogLevel: UInt {
 }
 
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
-@objc(__FWLogger)
 public class Logger: NSObject {
     
     /// 全局日志级别，默认调试为All，正式为Off
@@ -183,7 +182,7 @@ public class Logger: NSObject {
     /// 检查是否需要记录指定类型日志
     /// - Parameter type: 日志类型
     /// - Returns: 是否需要记录
-    @objc public class func check(_ type: LogType) -> Bool {
+    fileprivate class func check(_ type: LogType) -> Bool {
         return (level.rawValue & type.rawValue) != 0
     }
     
@@ -193,7 +192,7 @@ public class Logger: NSObject {
     ///   - message: 日志消息
     ///   - group: 日志分组，默认nil
     ///   - userInfo: 用户信息，默认nil
-    @objc public class func log(_ type: LogType, message: String, group: String? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    public class func log(_ type: LogType, message: String, group: String? = nil, userInfo: [AnyHashable: Any]? = nil) {
         // 过滤不支持的级别
         if !check(type) { return }
         
