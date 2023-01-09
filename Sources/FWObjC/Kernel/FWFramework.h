@@ -7,7 +7,6 @@
 
 #import "Bridge.h"
 #import "Loader.h"
-#import "Logger.h"
 #import "Mediator.h"
 #import "Navigator.h"
 #import "Plugin.h"

@@ -134,7 +134,77 @@ extension FW {
 }
 
 // MARK: - Logger
-extension Logger {
+/// 日志类型枚举
+@objc(__FWLogType)
+public enum LogType: UInt {
+    /// 错误类型，0...00001
+    case error = 1
+    /// 警告类型，0...00010
+    case warn = 2
+    /// 信息类型，0...00100
+    case info = 4
+    /// 调试类型，0...01000
+    case debug = 8
+    /// 跟踪类型，0...10000
+    case trace = 16
+}
+
+/// 日志级别定义
+public enum LogLevel: UInt {
+    /// 关闭日志，0...00000
+    case off = 0
+    /// 错误以上级别，0...00001
+    case error = 1
+    /// 警告以上级别，0...00011
+    case warn = 3
+    /// 信息以上级别，0...00111
+    case info = 7
+    /// 调试以上级别，0...01111
+    case debug = 15
+    /// 跟踪以上级别，0...11111
+    case trace = 31
+    /// 所有级别，1...11111
+    case all = 63
+}
+
+/// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
+@objc(__FWLogger)
+public class Logger: NSObject {
+    
+    /// 全局日志级别，默认调试为All，正式为Off
+    public static var level: LogLevel = {
+        #if DEBUG
+        .all
+        #else
+        .off
+        #endif
+    }()
+    
+    /// 检查是否需要记录指定类型日志
+    /// - Parameter type: 日志类型
+    /// - Returns: 是否需要记录
+    @objc public class func check(_ type: LogType) -> Bool {
+        return (level.rawValue & type.rawValue) != 0
+    }
+    
+    /// 记录类型日志，支持分组和用户信息
+    /// - Parameters:
+    ///   - type: 日志类型
+    ///   - message: 日志消息
+    ///   - group: 日志分组，默认nil
+    ///   - userInfo: 用户信息，默认nil
+    @objc public class func log(_ type: LogType, message: String, group: String? = nil, userInfo: [AnyHashable: Any]? = nil) {
+        // 过滤不支持的级别
+        if !check(type) { return }
+        
+        var plugin: LoggerPlugin
+        if let loggerPlugin = PluginManager.loadPlugin(LoggerPlugin.self) as? LoggerPlugin {
+            plugin = loggerPlugin
+        } else {
+            plugin = LoggerPluginImpl.shared
+        }
+        plugin.log(type, message: message, group: group, userInfo: userInfo)
+    }
     
     /// 记录跟踪日志
     ///
@@ -252,6 +322,54 @@ extension Logger {
     ) {
         if !check(type) { return }
         log(type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
+    }
+    
+}
+
+// MARK: - LoggerPlugin
+/// 日志插件协议
+@objc(__FWLoggerPlugin)
+public protocol LoggerPlugin {
+    
+    /// 记录日志协议方法
+    /// - Parameters:
+    ///   - type: 日志类型
+    ///   - message: 日志消息
+    ///   - group: 日志分组
+    ///   - userInfo: 用户信息
+    func log(_ type: LogType, message: String, group: String?, userInfo: [AnyHashable: Any]?)
+    
+}
+
+// MARK: - LoggerPluginImpl
+/// 默认NSLog日志插件
+public class LoggerPluginImpl: NSObject, LoggerPlugin {
+    
+    /// 单例模式对象
+    @objc(sharedInstance)
+    public static let shared = LoggerPluginImpl()
+    
+    /// 记录日志协议方法
+    /// - Parameters:
+    ///   - type: 日志类型
+    ///   - message: 日志消息
+    ///   - group: 日志分组
+    ///   - userInfo: 用户信息
+    public func log(_ type: LogType, message: String, group: String?, userInfo: [AnyHashable : Any]?) {
+        let groupStr = group != nil ? " [\(group ?? "")]" : ""
+        let infoStr = userInfo != nil ? " \(FW.safeString(userInfo))" : ""
+        switch type {
+        case .error:
+            NSLog("%@ ERROR:%@ %@%@", "❌", groupStr, message, infoStr)
+        case .warn:
+            NSLog("%@ WARN:%@ %@%@", "⚠️", groupStr, message, infoStr)
+        case .info:
+            NSLog("%@ INFO:%@ %@%@", "ℹ️", groupStr, message, infoStr)
+        case .debug:
+            NSLog("%@ DEBUG:%@ %@%@", "⏱️", groupStr, message, infoStr)
+        default:
+            NSLog("%@ TRACE:%@ %@%@", "📝", groupStr, message, infoStr)
+        }
     }
     
 }
