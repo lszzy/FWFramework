@@ -164,7 +164,7 @@ public enum LogLevel: UInt {
     /// 跟踪以上级别，0...11111
     case trace = 31
     /// 所有级别，1...11111
-    case all = 63
+    case all = 255
 }
 
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件

@@ -6,7 +6,6 @@
 //
 
 #import "Theme.h"
-#import "Navigator.h"
 #import "Swizzle.h"
 #import <objc/runtime.h>
 
