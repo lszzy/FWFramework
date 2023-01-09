@@ -17,7 +17,11 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
 
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
 
 #else
 
@@ -25,8 +29,8 @@
 
 #endif
 
-#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
-    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
+#define __FWLogGroup( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static const NSString * __FWDatabaseSqliteString            = @"TEXT";
 static const NSString * __FWDatabaseSqliteInt               = @"INTERGER";
@@ -1764,7 +1768,7 @@ static sqlite3 * _fw_database;
 }
 
 + (void)log:(NSString *)msg {
-    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"FWDatabase: [%@]", msg);
+    __FWLogGroup(@"FWDatabase: [%@]", msg);
 }
 
 @end

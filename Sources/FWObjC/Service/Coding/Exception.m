@@ -14,6 +14,7 @@
 @interface NSObject ()
 
 + (BOOL)__fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
++ (void)__fw_logDebug:(NSString *)message;
 
 @end
 
@@ -28,8 +29,8 @@ NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCaptur
 #define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]
 
-#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
-    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
+#define __FWLogGroup( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 
@@ -91,7 +92,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     
 #ifdef DEBUG
     NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
-    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", errorMessage);
+    __FWLogGroup(@"%@", errorMessage);
 #endif
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

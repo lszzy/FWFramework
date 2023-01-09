@@ -13,6 +13,7 @@
 @interface NSObject ()
 
 + (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
++ (void)__fw_logDebug:(NSString *)message;
 
 @end
 
@@ -22,8 +23,8 @@
 
 #endif
 
-#define __FWLogGroup( aGroup, aType, aFormat, ... ) \
-    if ([__FWLogger check:aType]) [__FWLogger log:aType message:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__] group:aGroup userInfo:nil];
+#define __FWLogGroup( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #ifdef DEBUG
 
@@ -110,7 +111,7 @@
                 dispatch_queue_t queue = dispatch_queue_create("site.wuyong.queue.test.async", NULL);
                 dispatch_async(queue, ^{
                     [[__FWUnitTest sharedInstance] runTests];
-                    __FWLogGroup(@"FWFramework", __FWLogTypeDebug, @"%@", __FWUnitTest.debugDescription);
+                    __FWLogGroup(@"%@", __FWUnitTest.debugDescription);
                 });
             }
         });
