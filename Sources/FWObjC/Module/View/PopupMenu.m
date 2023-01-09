@@ -6,7 +6,6 @@
 //
 
 #import "PopupMenu.h"
-#import "Navigator.h"
 
 #if FWMacroSPM
 

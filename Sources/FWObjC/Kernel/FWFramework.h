@@ -8,7 +8,6 @@
 #import "Bridge.h"
 #import "Loader.h"
 #import "Mediator.h"
-#import "Navigator.h"
 #import "Plugin.h"
 #import "Router.h"
 #import "State.h"

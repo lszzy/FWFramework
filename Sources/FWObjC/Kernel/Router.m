@@ -7,7 +7,6 @@
 
 #import "Router.h"
 #import "Loader.h"
-#import "Navigator.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -21,7 +20,7 @@
 @interface UIWindow ()
 
 @property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
-- (void)__fw_open:(UIViewController *)viewController animated:(BOOL)animated options:(__FWNavigatorOptions)options completion:(nullable void (^)(void))completion;
+- (void)__fw_open:(UIViewController *)viewController context:(__FWRouterContext *)context;
 
 @end
 
@@ -341,12 +340,7 @@ NSString *const __FWRouterRewriteComponentFragmentKey = @"fragment";
         if (routerHandler != nil) {
             routerHandler(context, viewController);
         } else {
-            __FWNavigatorOptions options = 0;
-            NSNumber *routerOptions = context.userInfo[__FWRouterOptionsKey];
-            if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
-                options = [routerOptions unsignedIntegerValue];
-            }
-            [UIWindow.__fw_mainWindow __fw_open:viewController animated:YES options:options completion:nil];
+            [UIWindow.__fw_mainWindow __fw_open:viewController context:context];
         }
         return nil;
     };

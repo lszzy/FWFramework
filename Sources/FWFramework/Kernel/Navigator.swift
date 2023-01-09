@@ -10,6 +10,50 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - NavigatorOptions
+/// 控制器导航选项定义
+public struct NavigatorOptions: OptionSet {
+    
+    public let rawValue: Int
+    
+    /// 嵌入导航控制器并使用present转场方式
+    public static let embedInNavigation = NavigatorOptions(rawValue: 1 << 0)
+    
+    /// 指定push转场方式，仅open生效，默认自动判断转场方式
+    public static let transitionPush = NavigatorOptions(rawValue: 1 << 16)
+    /// 指定present转场方式，仅open生效
+    public static let transitionPresent = NavigatorOptions(rawValue: 2 << 16)
+    /// 指定pop转场方式，仅close生效
+    public static let transitionPop = NavigatorOptions(rawValue: 3 << 16)
+    /// 指定dismiss转场方式，仅close生效
+    public static let transitionDismiss = NavigatorOptions(rawValue: 4 << 16)
+    
+    /// 同时pop顶部控制器，仅push|pop生效，默认不pop控制器
+    public static let popTop = NavigatorOptions(rawValue: 1 << 20)
+    /// 同时pop顶部2个控制器，仅push|pop生效
+    public static let popTop2 = NavigatorOptions(rawValue: 2 << 20)
+    /// 同时pop顶部3个控制器，仅push|pop生效
+    public static let popTop3 = NavigatorOptions(rawValue: 3 << 20)
+    /// 同时pop顶部4个控制器，仅push|pop生效
+    public static let popTop4 = NavigatorOptions(rawValue: 4 << 20)
+    /// 同时pop顶部5个控制器，仅push|pop生效
+    public static let popTop5 = NavigatorOptions(rawValue: 5 << 20)
+    /// 同时pop顶部6个控制器，仅push|pop生效
+    public static let popTop6 = NavigatorOptions(rawValue: 6 << 20)
+    /// 同时pop到根控制器，仅push|pop生效
+    public static let popToRoot = NavigatorOptions(rawValue: 7 << 20)
+    
+    /// 指定present样式为ullScreen，仅present生效，默认自动使用系统present样式
+    public static let styleFullScreen = NavigatorOptions(rawValue: 1 << 24)
+    /// 指定present样式为pageSheet，仅present生效
+    public static let stylePageSheet = NavigatorOptions(rawValue: 2 << 24)
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+}
+
 // MARK: - Navigator
 /// 导航管理器
 public class Navigator: NSObject {
@@ -169,7 +213,6 @@ public class Navigator: NSObject {
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    @objc(__fw_open:animated:options:completion:)
     public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
         fw_topViewController?.fw_open(viewController, animated: animated, options: options, completion: completion)
     }
