@@ -6,7 +6,6 @@
 //
 
 #import "Exception.h"
-#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -110,72 +109,90 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSObject
 
 + (void)captureObjectException {
-    __FWSwizzleClass(NSObject, @selector(methodSignatureForSelector:), __FWSwizzleReturn(NSMethodSignature *), __FWSwizzleArgs(SEL selector), __FWSwizzleCode({
-        NSMethodSignature *methodSignature = __FWSwizzleOriginal(selector);
-        if (!methodSignature) {
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(methodSignatureForSelector:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^NSMethodSignature * (__unsafe_unretained NSObject *selfObject, SEL selector) {
+            NSMethodSignature * (*originalMSG)(id, SEL, SEL) = (NSMethodSignature * (*)(id, SEL, SEL))originalIMP();
+            NSMethodSignature *methodSignature = originalMSG(selfObject, originalCMD, selector);
+            if (!methodSignature) {
+                for (Class captureClass in [self captureClasses]) {
+                    if ([selfObject isKindOfClass:captureClass]) {
+                        methodSignature = [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+                        break;
+                    }
+                }
+            }
+            return methodSignature;
+        };
+    }];
+    
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(forwardInvocation:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSObject *selfObject, NSInvocation *invocation) {
+            void (*originalMSG)(id, SEL, NSInvocation *) = (void (*)(id, SEL, NSInvocation *))originalIMP();
+            BOOL isCaptured = NO;
             for (Class captureClass in [self captureClasses]) {
                 if ([selfObject isKindOfClass:captureClass]) {
-                    methodSignature = [NSMethodSignature signatureWithObjCTypes:"v@:@"];
+                    isCaptured = YES;
                     break;
                 }
             }
-        }
-        return methodSignature;
-    }));
-    
-    __FWSwizzleClass(NSObject, @selector(forwardInvocation:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSInvocation *invocation), __FWSwizzleCode({
-        BOOL isCaptured = NO;
-        for (Class captureClass in [self captureClasses]) {
-            if ([selfObject isKindOfClass:captureClass]) {
-                isCaptured = YES;
-                break;
+            
+            if (isCaptured) {
+                @try {
+                    originalMSG(selfObject, originalCMD, invocation);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark(selfObject.class, invocation.selector)];
+                }
+            } else {
+                originalMSG(selfObject, originalCMD, invocation);
             }
-        }
-        
-        if (isCaptured) {
-            @try {
-                __FWSwizzleOriginal(invocation);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, invocation.selector)];
-            } @finally { }
-        } else {
-            __FWSwizzleOriginal(invocation);
-        }
-    }));
+        };
+    }];
 }
 
 + (void)captureKvcException {
-    __FWSwizzleClass(NSObject, @selector(setValue:forKey:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *key), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(value, key);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(setValue:forKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSObject *selfObject, id value, NSString *key) {
+            void (*originalMSG)(id, SEL, id, NSString *) = (void (*)(id, SEL, id, NSString *))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, value, key);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKey:))];
+            }
+        };
+    }];
     
-    __FWSwizzleClass(NSObject, @selector(setValue:forKeyPath:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *keyPath), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(value, keyPath);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(setValue:forKeyPath:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSObject *selfObject, id value, NSString *keyPath) {
+            void (*originalMSG)(id, SEL, id, NSString *) = (void (*)(id, SEL, id, NSString *))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, value, keyPath);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forKeyPath:))];
+            }
+        };
+    }];
     
-    __FWSwizzleClass(NSObject, @selector(setValue:forUndefinedKey:), __FWSwizzleReturn(void), __FWSwizzleArgs(id value, NSString *key), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(value, key);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(setValue:forUndefinedKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSObject *selfObject, id value, NSString *key) {
+            void (*originalMSG)(id, SEL, id, NSString *) = (void (*)(id, SEL, id, NSString *))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, value, key);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValue:forUndefinedKey:))];
+            }
+        };
+    }];
     
-    __FWSwizzleClass(NSObject, @selector(setValuesForKeysWithDictionary:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSDictionary<NSString *, id> *keyValues), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(keyValues);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:[NSObject class] selector:@selector(setValuesForKeysWithDictionary:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSObject *selfObject, NSDictionary<NSString *, id> *keyValues) {
+            void (*originalMSG)(id, SEL, NSDictionary<NSString *, id> *) = (void (*)(id, SEL, NSDictionary<NSString *, id> *))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, keyValues);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(selfObject.class, @selector(setValuesForKeysWithDictionary:))];
+            }
+        };
+    }];
 }
 
 #pragma mark - NSString
@@ -183,219 +200,276 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 + (void)captureStringException {
     NSArray<NSString *> *stringClasses = @[@"__NSCFConstantString", @"NSTaggedPointerString", @"__NSCFString"];
     for (NSString *stringClass in stringClasses) {
-        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringFromIndex:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSUInteger from), __FWSwizzleCode({
-            NSString *result;
-            @try {
-                result = __FWSwizzleOriginal(from);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(stringClass) selector:@selector(substringFromIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^NSString * (__unsafe_unretained NSString *selfObject, NSUInteger from) {
+                NSString * (*originalMSG)(id, SEL, NSUInteger) = (NSString * (*)(id, SEL, NSUInteger))originalIMP();
+                NSString *result;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, from);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringFromIndex:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
         
-        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringToIndex:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSUInteger to), __FWSwizzleCode({
-            NSString *result;
-            @try {
-                result = __FWSwizzleOriginal(to);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(stringClass) selector:@selector(substringToIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^NSString * (__unsafe_unretained NSString *selfObject, NSUInteger to) {
+                NSString * (*originalMSG)(id, SEL, NSUInteger) = (NSString * (*)(id, SEL, NSUInteger))originalIMP();
+                NSString *result;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, to);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringToIndex:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
         
-        __FWSwizzleMethod(NSClassFromString(stringClass), @selector(substringWithRange:), nil, NSString *, __FWSwizzleReturn(NSString *), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
-            NSString *result;
-            @try {
-                result = __FWSwizzleOriginal(range);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(stringClass) selector:@selector(substringWithRange:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^NSString * (__unsafe_unretained NSString *selfObject, NSRange range) {
+                NSString * (*originalMSG)(id, SEL, NSRange) = (NSString * (*)(id, SEL, NSRange))originalIMP();
+                NSString *result;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, range);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark(NSString.class, @selector(substringWithRange:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
     }
 }
 
 #pragma mark - NSArray
 
 + (void)captureArrayException {
-    __FWSwizzleMethod(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:), nil, Class, __FWSwizzleReturn(NSArray *), __FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, NSUInteger cnt), __FWSwizzleCode({
-        NSArray *result;
-        @try {
-            result = __FWSwizzleOriginal(objects, cnt);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:))];
-            
-            NSInteger newCnt = 0;
-            id _Nonnull __unsafe_unretained newObjects[cnt];
-            for (int i = 0; i < cnt; i++) {
-                if (objects[i] != nil) {
-                    newObjects[newCnt] = objects[i];
-                    newCnt++;
+    [NSObject __fw_swizzleMethod:object_getClass((id)NSArray.class) selector:@selector(arrayWithObjects:count:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^NSArray * (__unsafe_unretained Class selfObject, const id _Nonnull __unsafe_unretained *objects, NSUInteger cnt) {
+            NSArray * (*originalMSG)(id, SEL, const id _Nonnull __unsafe_unretained *, NSUInteger) = (NSArray * (*)(id, SEL, const id _Nonnull __unsafe_unretained *, NSUInteger))originalIMP();
+            NSArray *result;
+            @try {
+                result = originalMSG(selfObject, originalCMD, objects, cnt);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:))];
+                
+                NSInteger newCnt = 0;
+                id _Nonnull __unsafe_unretained newObjects[cnt];
+                for (int i = 0; i < cnt; i++) {
+                    if (objects[i] != nil) {
+                        newObjects[newCnt] = objects[i];
+                        newCnt++;
+                    }
                 }
+                result = originalMSG(selfObject, originalCMD, newObjects, newCnt);
+            } @finally {
+                return result;
             }
-            result = __FWSwizzleOriginal(newObjects, newCnt);
-        } @finally {
-            return result;
-        }
-    }));
+        };
+    }];
     
     NSArray<NSString *> *arrayClasses = @[@"__NSArray0", @"__NSArrayI", @"__NSSingleObjectArrayI", @"__NSArrayM"];
     for (NSString *arrayClass in arrayClasses) {
-        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndex:), nil, NSArray *, __FWSwizzleReturn(id), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
-            id result = nil;
-            @try {
-                result = __FWSwizzleOriginal(index);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndex:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(arrayClass) selector:@selector(objectAtIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^id (__unsafe_unretained NSArray *selfObject, NSUInteger index) {
+                id (*originalMSG)(id, SEL, NSUInteger) = (id (*)(id, SEL, NSUInteger))originalIMP();
+                id result = nil;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, index);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndex:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
         
-        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(objectAtIndexedSubscript:), nil, NSArray *, __FWSwizzleReturn(id), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
-            id result = nil;
-            @try {
-                result = __FWSwizzleOriginal(index);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndexedSubscript:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(arrayClass) selector:@selector(objectAtIndexedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^id (__unsafe_unretained NSArray *selfObject, NSUInteger index) {
+                id (*originalMSG)(id, SEL, NSUInteger) = (id (*)(id, SEL, NSUInteger))originalIMP();
+                id result = nil;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, index);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(objectAtIndexedSubscript:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
         
-        __FWSwizzleMethod(NSClassFromString(arrayClass), @selector(subarrayWithRange:), nil, NSArray *, __FWSwizzleReturn(NSArray *), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
-            NSArray *result = nil;
-            @try {
-                result = __FWSwizzleOriginal(range);
-            } @catch (NSException *exception) {
-                [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(subarrayWithRange:))];
-            } @finally {
-                return result;
-            }
-        }));
+        [NSObject __fw_swizzleMethod:NSClassFromString(arrayClass) selector:@selector(subarrayWithRange:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^NSArray * (__unsafe_unretained NSArray *selfObject, NSRange range) {
+                NSArray * (*originalMSG)(id, SEL, NSRange) = (NSArray * (*)(id, SEL, NSRange))originalIMP();
+                NSArray *result = nil;
+                @try {
+                    result = originalMSG(selfObject, originalCMD, range);
+                } @catch (NSException *exception) {
+                    [self captureException:exception remark:__FWExceptionRemark([NSArray class], @selector(subarrayWithRange:))];
+                } @finally {
+                    return result;
+                }
+            };
+        }];
     }
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(addObject:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(addObject:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, id object) {
+            void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(addObject:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(insertObject:atIndex:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, NSUInteger index), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object, index);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(insertObject:atIndex:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(insertObject:atIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, id object, NSUInteger index) {
+            void (*originalMSG)(id, SEL, id, NSUInteger) = (void (*)(id, SEL, id, NSUInteger))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object, index);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(insertObject:atIndex:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectAtIndex:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSUInteger index), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(index);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectAtIndex:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(removeObjectAtIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, NSUInteger index) {
+            void (*originalMSG)(id, SEL, NSUInteger) = (void (*)(id, SEL, NSUInteger))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, index);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectAtIndex:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(replaceObjectAtIndex:withObject:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSUInteger index, id object), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(index, object);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(replaceObjectAtIndex:withObject:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(replaceObjectAtIndex:withObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, NSUInteger index, id object) {
+            void (*originalMSG)(id, SEL, NSUInteger, id) = (void (*)(id, SEL, NSUInteger, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, index, object);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(replaceObjectAtIndex:withObject:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(setObject:atIndexedSubscript:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, NSUInteger index), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object, index);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(setObject:atIndexedSubscript:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(setObject:atIndexedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, id object, NSUInteger index) {
+            void (*originalMSG)(id, SEL, id, NSUInteger) = (void (*)(id, SEL, id, NSUInteger))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object, index);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(setObject:atIndexedSubscript:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSArrayM"), @selector(removeObjectsInRange:), nil, NSMutableArray *, __FWSwizzleReturn(void), __FWSwizzleArgs(NSRange range), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(range);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectsInRange:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(removeObjectsInRange:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableArray *selfObject, NSRange range) {
+            void (*originalMSG)(id, SEL, NSRange) = (void (*)(id, SEL, NSRange))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, range);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableArray class], @selector(removeObjectsInRange:))];
+            }
+        };
+    }];
 }
 
 #pragma mark - NSSet
 
 + (void)captureSetException {
-    __FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(addObject:), nil, NSMutableSet *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(addObject:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSSetM") selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableSet *selfObject, id object) {
+            void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(addObject:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSSetM"), @selector(removeObject:), nil, NSMutableSet *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(removeObject:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSSetM") selector:@selector(removeObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableSet *selfObject, id object) {
+            void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableSet class], @selector(removeObject:))];
+            }
+        };
+    }];
 }
 
 #pragma mark - NSDictionary
 
 + (void)captureDictionaryException {
-    __FWSwizzleMethod(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:), nil, Class, __FWSwizzleReturn(NSDictionary *), __FWSwizzleArgs(const id _Nonnull __unsafe_unretained *objects, const id<NSCopying> _Nonnull __unsafe_unretained *keys, NSUInteger cnt), __FWSwizzleCode({
-        NSDictionary *result;
-        @try {
-            result = __FWSwizzleOriginal(objects, keys, cnt);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:))];
-            
-            NSInteger newCnt = 0;
-            id _Nonnull __unsafe_unretained newObjects[cnt];
-            id _Nonnull __unsafe_unretained newKeys[cnt];
-            for (int i = 0; i < cnt; i++) {
-                if (objects[i] && keys[i]) {
-                    newObjects[newCnt] = objects[i];
-                    newKeys[newCnt] = keys[i];
-                    newCnt++;
+    [NSObject __fw_swizzleMethod:object_getClass((id)NSDictionary.class) selector:@selector(dictionaryWithObjects:forKeys:count:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^NSDictionary * (__unsafe_unretained Class selfObject, const id _Nonnull __unsafe_unretained *objects, const id<NSCopying> _Nonnull __unsafe_unretained *keys, NSUInteger cnt) {
+            NSDictionary * (*originalMSG)(id, SEL, const id _Nonnull __unsafe_unretained *, const id<NSCopying> _Nonnull __unsafe_unretained *, NSUInteger) = (NSDictionary * (*)(id, SEL, const id _Nonnull __unsafe_unretained *, const id<NSCopying> _Nonnull __unsafe_unretained *, NSUInteger))originalIMP();
+            NSDictionary *result;
+            @try {
+                result = originalMSG(selfObject, originalCMD, objects, keys, cnt);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark(object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:))];
+                
+                NSInteger newCnt = 0;
+                id _Nonnull __unsafe_unretained newObjects[cnt];
+                id _Nonnull __unsafe_unretained newKeys[cnt];
+                for (int i = 0; i < cnt; i++) {
+                    if (objects[i] && keys[i]) {
+                        newObjects[newCnt] = objects[i];
+                        newKeys[newCnt] = keys[i];
+                        newCnt++;
+                    }
                 }
+                result = originalMSG(selfObject, originalCMD, newObjects, newKeys, newCnt);
+            } @finally {
+                return result;
             }
-            result = __FWSwizzleOriginal(newObjects, newKeys, newCnt);
-        } @finally {
-            return result;
-        }
-    }));
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKey:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, id key), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object, key);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKey:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(setObject:forKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id object, id key) {
+            void (*originalMSG)(id, SEL, id, id) = (void (*)(id, SEL, id, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object, key);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKey:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(removeObjectForKey:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id key), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(key);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(removeObjectForKey:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(removeObjectForKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id key) {
+            void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, key);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(removeObjectForKey:))];
+            }
+        };
+    }];
     
-    __FWSwizzleMethod(NSClassFromString(@"__NSDictionaryM"), @selector(setObject:forKeyedSubscript:), nil, NSMutableDictionary *, __FWSwizzleReturn(void), __FWSwizzleArgs(id object, id<NSCopying> key), __FWSwizzleCode({
-        @try {
-            __FWSwizzleOriginal(object, key);
-        } @catch (NSException *exception) {
-            [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKeyedSubscript:))];
-        } @finally { }
-    }));
+    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(setObject:forKeyedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+        return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id object, id<NSCopying> key) {
+            void (*originalMSG)(id, SEL, id, id<NSCopying>) = (void (*)(id, SEL, id, id<NSCopying>))originalIMP();
+            @try {
+                originalMSG(selfObject, originalCMD, object, key);
+            } @catch (NSException *exception) {
+                [self captureException:exception remark:__FWExceptionRemark([NSMutableDictionary class], @selector(setObject:forKeyedSubscript:))];
+            }
+        };
+    }];
 }
 
 @end
