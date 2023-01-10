@@ -485,6 +485,26 @@ typedef struct __ProxyBlock {
     return nil;
 }
 
++ (NSArray<Class> *)getClasses:(Class)superClass {
+    NSMutableArray<Class> *resultClasses = [[NSMutableArray<Class> alloc] init];
+    unsigned int classesCount = 0;
+    Class *classList = objc_copyClassList(&classesCount);
+    Class classType = Nil, parentType = Nil, rootClass = [NSObject class];
+    for (unsigned int i = 0; i < classesCount; ++i) {
+        classType = classList[i];
+        parentType = class_getSuperclass(classType);
+        while (parentType && parentType != rootClass) {
+            if (parentType == superClass) {
+                [resultClasses addObject:classType];
+                break;
+            }
+            parentType = class_getSuperclass(parentType);
+        }
+    }
+    free(classList);
+    return resultClasses;
+}
+
 + (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();

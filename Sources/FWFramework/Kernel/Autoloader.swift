@@ -91,6 +91,11 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(NavigationControllerAutoloader.self)
         autoload(NavigationStyleAutoloader.self)
         autoload(BadgeViewAutoloader.self)
+        
+        #if DEBUG
+        // 调试模式自动执行单元测试
+        autoload(UnitTest.self)
+        #endif
     }
     
     private static func autoloadAutoloader() {
