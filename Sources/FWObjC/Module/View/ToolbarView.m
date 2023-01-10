@@ -7,7 +7,6 @@
 
 #import "ToolbarView.h"
 #import "ViewPluginImpl.h"
-#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -495,56 +494,68 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
-            UIView *titleView = selfObject.topItem.titleView;
-            if (![titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
-                __FWSwizzleOriginal();
-                return;
-            }
-            
-            CGFloat titleMaximumWidth = CGRectGetWidth(titleView.bounds);
-            CGSize titleViewSize = [titleView sizeThatFits:CGSizeMake(titleMaximumWidth, CGFLOAT_MAX)];
-            titleViewSize.height = ceil(titleViewSize.height);
-            
-            if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
-                CGFloat titleViewMinY = [UIScreen __fw_flatValue:CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0) scale:0];
-                titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
-            }
-            
-            if (CGRectGetWidth(titleView.bounds) != titleViewSize.width) {
-                CGRect titleFrame = titleView.frame;
-                titleFrame.size.width = titleViewSize.width;
-                titleView.frame = titleFrame;
-            }
-            
-            __FWSwizzleOriginal();
-        }));
-        
-        __FWSwizzleClass(UIViewController, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
-            __FWSwizzleOriginal(title);
-            
-            if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
-                ((id<__FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
-            }
-        }));
-        
-        __FWSwizzleClass(UINavigationItem, @selector(setTitle:), __FWSwizzleReturn(void), __FWSwizzleArgs(NSString *title), __FWSwizzleCode({
-            __FWSwizzleOriginal(title);
-            
-            if ([selfObject.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
-                ((id<__FWTitleViewProtocol>)selfObject.titleView).title = title;
-            }
-        }));
-        
-        __FWSwizzleClass(UINavigationItem, @selector(setTitleView:), __FWSwizzleReturn(void), __FWSwizzleArgs(UIView<__FWTitleViewProtocol> *titleView), __FWSwizzleCode({
-            __FWSwizzleOriginal(titleView);
-            
-            if ([titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
-                if (titleView.title.length <= 0) {
-                    titleView.title = selfObject.title;
+        [NSObject __fw_swizzleMethod:[UINavigationBar class] selector:@selector(layoutSubviews) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UINavigationBar *selfObject) {
+                void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
+                UIView *titleView = selfObject.topItem.titleView;
+                if (![titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                    originalMSG(selfObject, originalCMD);
+                    return;
                 }
-            }
-        }));
+                
+                CGFloat titleMaximumWidth = CGRectGetWidth(titleView.bounds);
+                CGSize titleViewSize = [titleView sizeThatFits:CGSizeMake(titleMaximumWidth, CGFLOAT_MAX)];
+                titleViewSize.height = ceil(titleViewSize.height);
+                
+                if (CGRectGetHeight(titleView.bounds) != titleViewSize.height) {
+                    CGFloat titleViewMinY = [UIScreen __fw_flatValue:CGRectGetMinY(titleView.frame) - ((titleViewSize.height - CGRectGetHeight(titleView.bounds)) / 2.0) scale:0];
+                    titleView.frame = CGRectMake(CGRectGetMinX(titleView.frame), titleViewMinY, MIN(titleMaximumWidth, titleViewSize.width), titleViewSize.height);
+                }
+                
+                if (CGRectGetWidth(titleView.bounds) != titleViewSize.width) {
+                    CGRect titleFrame = titleView.frame;
+                    titleFrame.size.width = titleViewSize.width;
+                    titleView.frame = titleFrame;
+                }
+                
+                originalMSG(selfObject, originalCMD);
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UIViewController class] selector:@selector(setTitle:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UIViewController *selfObject, NSString *title) {
+                void (*originalMSG)(id, SEL, NSString *) = (void (*)(id, SEL, NSString *))originalIMP();
+                originalMSG(selfObject, originalCMD, title);
+                
+                if ([selfObject.navigationItem.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                    ((id<__FWTitleViewProtocol>)selfObject.navigationItem.titleView).title = title;
+                }
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UINavigationItem class] selector:@selector(setTitle:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UINavigationItem *selfObject, NSString *title) {
+                void (*originalMSG)(id, SEL, NSString *) = (void (*)(id, SEL, NSString *))originalIMP();
+                originalMSG(selfObject, originalCMD, title);
+                
+                if ([selfObject.titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                    ((id<__FWTitleViewProtocol>)selfObject.titleView).title = title;
+                }
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UINavigationItem class] selector:@selector(setTitleView:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UINavigationItem *selfObject, UIView<__FWTitleViewProtocol> *titleView) {
+                void (*originalMSG)(id, SEL, UIView *) = (void (*)(id, SEL, UIView *))originalIMP();
+                originalMSG(selfObject, originalCMD, titleView);
+                
+                if ([titleView conformsToProtocol:@protocol(__FWTitleViewProtocol)]) {
+                    if (titleView.title.length <= 0) {
+                        titleView.title = selfObject.title;
+                    }
+                }
+            };
+        }];
     });
 }
 

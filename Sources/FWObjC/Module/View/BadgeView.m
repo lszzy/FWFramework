@@ -6,7 +6,6 @@
 //
 
 #import "BadgeView.h"
-#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

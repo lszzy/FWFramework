@@ -6,7 +6,6 @@
 //
 
 #import "ViewController.h"
-#import "Swizzle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -272,32 +271,47 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __FWSwizzleClass(UIViewController, @selector(initWithNibName:bundle:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSString *nibNameOrNil, NSBundle *nibBundleOrNil), __FWSwizzleCode({
-            UIViewController *viewController = __FWSwizzleOriginal(nibNameOrNil, nibBundleOrNil);
-            if ([viewController conformsToProtocol:@protocol(__FWViewController)]) {
-                [[__FWViewControllerManager sharedInstance] hookInit:viewController];
-            }
-            return viewController;
-        }));
-        __FWSwizzleClass(UIViewController, @selector(initWithCoder:), __FWSwizzleReturn(UIViewController *), __FWSwizzleArgs(NSCoder *coder), __FWSwizzleCode({
-            UIViewController *viewController = __FWSwizzleOriginal(coder);
-            if (viewController && [viewController conformsToProtocol:@protocol(__FWViewController)]) {
-                [[__FWViewControllerManager sharedInstance] hookInit:viewController];
-            }
-            return viewController;
-        }));
-        __FWSwizzleClass(UIViewController, @selector(viewDidLoad), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
-            __FWSwizzleOriginal();
-            if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
-                [[__FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
-            }
-        }));
-        __FWSwizzleClass(UIViewController, @selector(viewDidLayoutSubviews), __FWSwizzleReturn(void), __FWSwizzleArgs(), __FWSwizzleCode({
-            __FWSwizzleOriginal();
-            if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
-                [[__FWViewControllerManager sharedInstance] hookViewDidLayoutSubviews:selfObject];
-            }
-        }));
+        [NSObject __fw_swizzleMethod:[UIViewController class] selector:@selector(initWithNibName:bundle:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^UIViewController * (__unsafe_unretained UIViewController *selfObject, NSString *nibNameOrNil, NSBundle *nibBundleOrNil) {
+                UIViewController * (*originalMSG)(id, SEL, NSString *, NSBundle *) = (UIViewController * (*)(id, SEL, NSString *, NSBundle *))originalIMP();
+                UIViewController *viewController = originalMSG(selfObject, originalCMD, nibNameOrNil, nibBundleOrNil);
+                if ([viewController conformsToProtocol:@protocol(__FWViewController)]) {
+                    [[__FWViewControllerManager sharedInstance] hookInit:viewController];
+                }
+                return viewController;
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UIViewController class] selector:@selector(initWithCoder:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^UIViewController * (__unsafe_unretained UIViewController *selfObject, NSCoder *coder) {
+                UIViewController * (*originalMSG)(id, SEL, NSCoder *) = (UIViewController * (*)(id, SEL, NSCoder *))originalIMP();
+                UIViewController *viewController = originalMSG(selfObject, originalCMD, coder);
+                if (viewController && [viewController conformsToProtocol:@protocol(__FWViewController)]) {
+                    [[__FWViewControllerManager sharedInstance] hookInit:viewController];
+                }
+                return viewController;
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UIViewController class] selector:@selector(viewDidLoad) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UIViewController *selfObject) {
+                void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
+                originalMSG(selfObject, originalCMD);
+                if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
+                    [[__FWViewControllerManager sharedInstance] hookViewDidLoad:selfObject];
+                }
+            };
+        }];
+        
+        [NSObject __fw_swizzleMethod:[UIViewController class] selector:@selector(viewDidLayoutSubviews) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+            return ^void (__unsafe_unretained UIViewController *selfObject) {
+                void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
+                originalMSG(selfObject, originalCMD);
+                if ([selfObject conformsToProtocol:@protocol(__FWViewController)]) {
+                    [[__FWViewControllerManager sharedInstance] hookViewDidLayoutSubviews:selfObject];
+                }
+            };
+        }];
         
         [UIViewController __fw_exchangeInstanceMethod:@selector(respondsToSelector:) swizzleMethod:@selector(__fw_intercepterRespondsToSelector:)];
         [UIViewController __fw_exchangeInstanceMethod:@selector(methodSignatureForSelector:) swizzleMethod:@selector(__fw_intercepterMethodSignatureForSelector:)];

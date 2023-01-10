@@ -11,7 +11,6 @@
 #import "Plugin.h"
 #import "Router.h"
 #import "State.h"
-#import "Swizzle.h"
 #import "Task.h"
 #import "Test.h"
 
