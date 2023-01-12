@@ -248,17 +248,31 @@ extension FW {
 }
 
 // MARK: - UIScreen+Adaptive
-/// 屏幕尺寸枚举
-public enum ScreenInch: Int {
-    case inch35 = 35
-    case inch40 = 40
-    case inch47 = 47
-    case inch54 = 54
-    case inch55 = 55
-    case inch58 = 58
-    case inch61 = 61
-    case inch65 = 65
-    case inch67 = 67
+/// 可扩展屏幕尺寸
+public struct ScreenInch: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public static let inch35: ScreenInch = .init(35)
+    public static let inch40: ScreenInch = .init(40)
+    public static let inch47: ScreenInch = .init(47)
+    public static let inch54: ScreenInch = .init(54)
+    public static let inch55: ScreenInch = .init(55)
+    public static let inch58: ScreenInch = .init(58)
+    public static let inch61: ScreenInch = .init(61)
+    public static let inch65: ScreenInch = .init(65)
+    public static let inch67: ScreenInch = .init(67)
+    
 }
 
 @_spi(FW) extension UIScreen {
