@@ -10,6 +10,68 @@ import UIKit
 import FWObjC
 #endif
 
+/// 导航栏可扩展全局样式
+public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    /// 默认样式，应用可配置并扩展
+    public static let `default`: NavigationBarStyle = .init(0)
+    
+}
+
+/// 导航栏样式配置
+open class NavigationBarAppearance: NSObject {
+    
+    /// 是否半透明(磨砂)，需edgesForExtendedLayout为Top|All，默认false
+    open var isTranslucent = false
+    /// 前景色，包含标题和按钮，默认nil
+    open var foregroundColor: UIColor?
+    /// 标题属性，默认nil使用前景色
+    open var titleAttributes: [NSAttributedString.Key: Any]?
+    /// 按钮属性，默认nil。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
+    open var buttonAttributes: [NSAttributedString.Key: Any]?
+    /// 背景色，后设置生效，默认nil
+    open var backgroundColor: UIColor?
+    /// 背景图片，后设置生效，默认nil
+    open var backgroundImage: UIImage?
+    /// 背景透明，需edgesForExtendedLayout为Top|All，后设置生效，默认false
+    open var backgroundTransparent = false
+    /// 阴影颜色，后设置生效，默认nil
+    open var shadowColor: UIColor?
+    /// 阴影图片，后设置生效，默认nil
+    open var shadowImage: UIImage?
+    /// 返回按钮图片，自动配合VC导航栏样式生效，默认nil
+    open var backImage: UIImage?
+    /// 左侧返回按钮图片，自动配合VC导航栏样式生效，默认nil
+    open var leftBackImage: UIImage?
+    /// 自定义句柄，最后调用，可自定义样式，默认nil
+    open var appearanceBlock: ((UINavigationBar) -> Void)?
+    
+    private static var styleAppearances = [NavigationBarStyle: NavigationBarAppearance]()
+    
+    /// 根据style获取全局appearance对象
+    public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
+        return styleAppearances[style]
+    }
+    
+    /// 设置style对应全局appearance对象
+    public static func setAppearance(_ appearance: NavigationBarAppearance?, for style: NavigationBarStyle) {
+        styleAppearances[style] = appearance
+    }
+    
+}
+
 @_spi(FW) extension UINavigationBar {
     
     /// 应用指定导航栏配置
@@ -50,7 +112,7 @@ import FWObjC
     
     /// 应用指定导航栏样式
     public func fw_applyBarStyle(_ style: NavigationBarStyle) {
-        if let appearance = NavigationBarAppearance(forStyle: style) {
+        if let appearance = NavigationBarAppearance.appearance(for: style) {
             self.fw_applyBarAppearance(appearance)
         }
     }
@@ -184,7 +246,7 @@ import FWObjC
         }
         // 2. 检查VC是否自定义style
         if let style = fw_property(forName: "fw_navigationBarStyle") as? NSNumber {
-            return NavigationBarAppearance(forStyle: .init(rawValue: style.intValue))
+            return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
         }
         // 3. 检查NAV是否自定义appearance
         if let appearance = self.navigationController?.fw_navigationBarAppearance {
@@ -192,7 +254,7 @@ import FWObjC
         }
         // 4. 检查NAV是否自定义style
         if let style = self.navigationController?.fw_property(forName: "fw_navigationBarStyle") as? NSNumber {
-            return NavigationBarAppearance(forStyle: .init(rawValue: style.intValue))
+            return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
         }
         return nil
     }

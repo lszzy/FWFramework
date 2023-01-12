@@ -99,9 +99,9 @@ extension AppTheme {
         transparentAppearance.foregroundColor = AppTheme.textColor
         transparentAppearance.backgroundTransparent = true
         transparentAppearance.leftBackImage = Icon.backImage
-        NavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
-        NavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .white)
-        NavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+        NavigationBarAppearance.setAppearance(defaultAppearance, for: .default)
+        NavigationBarAppearance.setAppearance(whiteAppearance, for: .white)
+        NavigationBarAppearance.setAppearance(transparentAppearance, for: .transparent)
         
         UITableView.fw.resetTableStyle()
         UINavigationController.fw.enablePopProxy()
