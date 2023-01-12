@@ -20,7 +20,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
                 PluginManager.unloadPlugin(AlertPlugin.self)
                 PluginManager.unregisterPlugin(AlertPlugin.self)
             } else {
-                PluginManager.registerPlugin(AlertPlugin.self, with: AlertControllerImpl.self)
+                PluginManager.registerPlugin(AlertPlugin.self, object: AlertControllerImpl.self)
             }
         }
     }

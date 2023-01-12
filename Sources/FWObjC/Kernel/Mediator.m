@@ -7,7 +7,6 @@
 
 #import "Mediator.h"
 #import "Loader.h"
-#import "Plugin.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 

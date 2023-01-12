@@ -90,7 +90,7 @@ public struct PluginAnnotation<T> {
     
     public init(_ pluginProtocol: Protocol, object: Any) {
         self.pluginProtocol = pluginProtocol
-        PluginManager.registerPlugin(pluginProtocol, with: object)
+        PluginManager.registerPlugin(pluginProtocol, object: object)
     }
     
     public var wrappedValue: T {

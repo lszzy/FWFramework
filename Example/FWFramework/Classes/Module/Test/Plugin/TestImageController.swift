@@ -22,7 +22,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             guard let self = self else { return }
             self.isSDWebImage = !self.isSDWebImage
             PluginManager.unloadPlugin(ImagePlugin.self)
-            PluginManager.registerPlugin(ImagePlugin.self, with: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
+            PluginManager.registerPlugin(ImagePlugin.self, object: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
             if self.isSDWebImage {
                 SDImageCache.shared.clear(with: .all)
             }

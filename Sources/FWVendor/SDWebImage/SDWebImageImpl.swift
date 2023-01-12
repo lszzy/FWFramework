@@ -171,7 +171,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
 @objc extension Autoloader {
     
     func loadSDWebImage() {
-        PluginManager.registerPlugin(ImagePlugin.self, with: SDWebImageImpl.self)
+        PluginManager.registerPlugin(ImagePlugin.self, object: SDWebImageImpl.self)
     }
     
 }
