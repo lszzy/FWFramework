@@ -42,7 +42,7 @@ NSNotificationName const __FWThemeChangedNotification = @"FWThemeChangedNotifica
 {
     self = [super init];
     if (self) {
-        _mode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"__FWThemeMode"] integerValue];
+        _mode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"FWThemeMode"] integerValue];
     }
     return self;
 }
@@ -65,7 +65,7 @@ NSNotificationName const __FWThemeChangedNotification = @"FWThemeChangedNotifica
 - (void)setMode:(__FWThemeMode)mode
 {
     if (mode != _mode) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(mode) forKey:@"__FWThemeMode"];
+        [[NSUserDefaults standardUserDefaults] setObject:@(mode) forKey:@"FWThemeMode"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         __FWThemeStyle oldStyle = self.style;
         _mode = mode;

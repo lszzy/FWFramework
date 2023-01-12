@@ -342,7 +342,7 @@ static CGFloat FWFloorCGFloat(CGFloat value) {
   }
 
   NSAssert([self.delegate conformsToProtocol:@protocol(__FWCollectionViewDelegateWaterfallLayout)], @"UICollectionView's delegate should conform to __FWCollectionViewDelegateWaterfallLayout protocol");
-  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"__FWCollectionViewWaterfallLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
+  NSAssert(self.columnCount > 0 || [self.delegate respondsToSelector:@selector(collectionView:layout:columnCountForSection:)], @"FWCollectionViewWaterfallLayout's columnCount should be greater than 0, or delegate must implement columnCountForSection:");
 
   // Initialize variables
   NSInteger idx = 0;

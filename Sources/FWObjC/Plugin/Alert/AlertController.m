@@ -743,7 +743,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 - (void)addCancelAction:(__FWAlertAction *)action {
     // 如果已经存在取消样式的按钮，则直接崩溃
-    NSAssert(!_cancelAction, @"__FWAlertController can only have one action with a style of __FWAlertActionStyleCancel");
+    NSAssert(!_cancelAction, @"FWAlertController can only have one action with a style of FWAlertActionStyleCancel");
     _cancelAction = action;
     [self.actions addObject:action];
     __FWAlertControllerActionView *cancelActionView = [[__FWAlertControllerActionView alloc] initWithAlertAppearance:self.alertAppearance];
@@ -1167,7 +1167,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 
 // 添加文本输入框
 - (void)addTextFieldWithConfigurationHandler:(void (^)(UITextField * _Nonnull))configurationHandler {
-    NSAssert(self.preferredStyle == __FWAlertControllerStyleAlert,@"__FWAlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of __FWAlertControllerStyleActionSheet");
+    NSAssert(self.preferredStyle == __FWAlertControllerStyleAlert,@"FWAlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of FWAlertControllerStyleActionSheet");
     UITextField *textField = [[UITextField alloc] init];
     textField.translatesAutoresizingMaskIntoConstraints = NO;
     textField.backgroundColor = [self.alertAppearance textFieldBackgroundColor];

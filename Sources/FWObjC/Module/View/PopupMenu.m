@@ -521,7 +521,7 @@ UITableViewDataSource
         return tableViewCell;
     }
     
-    static NSString * identifier = @"__FWPopupMenu";
+    static NSString * identifier = @"FWPopupMenu";
     __FWPopupMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[__FWPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];

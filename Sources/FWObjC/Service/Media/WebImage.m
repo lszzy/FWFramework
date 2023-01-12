@@ -295,7 +295,7 @@
     NSUInteger diskCapacity = 150 * 1024 * 1024; // 150MB
     return [[NSURLCache alloc] initWithMemoryCapacity:memoryCapacity
                                          diskCapacity:diskCapacity
-                                             diskPath:@"__FWImageCache"];
+                                             diskPath:@"FWImageCache"];
 }
 
 + (NSURLSessionConfiguration *)defaultURLSessionConfiguration {

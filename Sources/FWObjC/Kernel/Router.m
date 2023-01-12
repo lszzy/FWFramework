@@ -111,8 +111,8 @@ __FWRouterUserInfoKey const __FWRouterHandlerKey = @"routerHandler";
 static NSString * const __FWRouterWildcardCharacter = @"*";
 static NSString * __FWRouterSpecialCharacters = @"/?&.";
 
-static NSString * const __FWRouterCoreKey = @"__FWRouterCore";
-static NSString * const __FWRouterBlockKey = @"__FWRouterBlock";
+static NSString * const __FWRouterCoreKey = @"FWRouterCore";
+static NSString * const __FWRouterBlockKey = @"FWRouterBlock";
 
 NSString *const __FWRouterRewriteMatchRuleKey = @"matchRule";
 NSString *const __FWRouterRewriteTargetRuleKey = @"targetRule";
