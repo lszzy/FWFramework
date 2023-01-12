@@ -13,8 +13,8 @@ extension Wrapper {
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return FW.safeString(base) }
-    public var safeNumber: NSNumber { return FW.safeNumber(base) }
+    public var safeString: String { return String.fw_safeString(base) }
+    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(base) }
     public var safeArray: [Any] { return (base as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
 }
@@ -47,6 +47,11 @@ extension Wrapper where Base == Data {
 }
 
 extension Wrapper where Base == String {
+    /// 安全字符串，不为nil
+    public static func safeString(_ value: Any?) -> String {
+        return Base.fw_safeString(value)
+    }
+    
     /// Foundation对象编码为json字符串
     public static func jsonEncode(_ object: Any) -> String? {
         return Base.fw_jsonEncode(object)
@@ -224,7 +229,19 @@ extension Wrapper where Base == String {
     }
 }
 
+extension Wrapper where Base: NSNumber {
+    /// 安全数字，不为nil
+    public static func safeNumber(_ value: Any?) -> NSNumber {
+        return Base.fw_safeNumber(value)
+    }
+}
+
 extension Wrapper where Base == URL {
+    /// 安全URL，不为nil
+    public static func safeURL(_ value: Any?) -> URL {
+        return Base.fw_safeURL(value)
+    }
+    
     /// 生成URL，中文自动URL编码
     public static func url(string: String?) -> URL? {
         return Base.fw_url(string: string)

@@ -1189,10 +1189,10 @@ extension FW {
         var urlString = string + "?"
         let urlParams = params ?? [:]
         for (key, value) in urlParams {
-            let valueStr = FW.safeString(value)
+            let valueStr = String.fw_safeString(value)
                 .replacingOccurrences(of: " ", with: "+")
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            urlString += "\(FW.safeString(key))=\(valueStr ?? "")&"
+            urlString += "\(String.fw_safeString(key))=\(valueStr ?? "")&"
         }
         return URL(string: urlString.fw_substring(to: urlString.count - 1))
     }
