@@ -51,7 +51,7 @@ public class PluginManager: NSObject {
         var debugCount = 0
         for (protocolName, target) in pluginPool {
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), protocolName, FW.safeString(target.instance ?? target.object)))
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), protocolName, String.fw_safeString(target.instance ?? target.object)))
         }
         return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
     }

@@ -356,7 +356,7 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin {
     ///   - userInfo: 用户信息
     public func log(_ type: LogType, message: String, group: String?, userInfo: [AnyHashable : Any]?) {
         let groupStr = group != nil ? " [\(group ?? "")]" : ""
-        let infoStr = userInfo != nil ? " \(FW.safeString(userInfo))" : ""
+        let infoStr = userInfo != nil ? " \(String.fw_safeString(userInfo))" : ""
         switch type {
         case .error:
             NSLog("%@ ERROR:%@ %@%@", "❌", groupStr, message, infoStr)

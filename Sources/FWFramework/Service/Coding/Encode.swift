@@ -13,26 +13,17 @@ extension FW {
     
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
-        guard let value = value, !(value is NSNull) else { return "" }
-        if let string = value as? String { return string }
-        if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
-        if let object = value as? NSObjectProtocol { return object.description }
-        return String(describing: value)
+        return String.fw_safeString(value)
     }
 
     /// 安全数字，不为nil
     public static func safeNumber(_ value: Any?) -> NSNumber {
-        guard let value = value else { return NSNumber(value: 0) }
-        if let number = value as? NSNumber { return number }
-        return safeString(value).fw_number ?? NSNumber(value: 0)
+        return NSNumber.fw_safeNumber(value)
     }
 
     /// 安全URL，不为nil
     public static func safeURL(_ value: Any?) -> URL {
-        guard let value = value else { return NSURL() as URL }
-        if let url = value as? URL { return url }
-        if let url = URL.fw_url(string: safeString(value)) { return url }
-        return NSURL() as URL
+        return URL.fw_safeURL(value)
     }
     
 }
@@ -89,6 +80,15 @@ extension FW {
 }
 
 @_spi(FW) extension String {
+    /// 安全字符串，不为nil
+    public static func fw_safeString(_ value: Any?) -> String {
+        guard let value = value, !(value is NSNull) else { return "" }
+        if let string = value as? String { return string }
+        if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
+        if let object = value as? NSObjectProtocol { return object.description }
+        return String(describing: value)
+    }
+    
     /// Foundation对象编码为json字符串
     public static func fw_jsonEncode(_ object: Any) -> String? {
         guard let data = Data.fw_jsonEncode(object) else { return nil }
@@ -219,7 +219,7 @@ extension FW {
         var result = ""
         for (key, value) in dict {
             if result.count > 0 { result.append("&") }
-            let string = FW.safeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
+            let string = String.fw_safeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
             result.append("\(key)=\(string)")
         }
         return result
@@ -448,7 +448,24 @@ extension FW {
     }
 }
 
+@_spi(FW) extension NSNumber {
+    /// 安全数字，不为nil
+    public static func fw_safeNumber(_ value: Any?) -> NSNumber {
+        guard let value = value else { return NSNumber(value: 0) }
+        if let number = value as? NSNumber { return number }
+        return String.fw_safeString(value).fw_number ?? NSNumber(value: 0)
+    }
+}
+
 @_spi(FW) extension URL {
+    /// 安全URL，不为nil
+    public static func fw_safeURL(_ value: Any?) -> URL {
+        guard let value = value else { return NSURL() as URL }
+        if let url = value as? URL { return url }
+        if let url = URL.fw_url(string: String.fw_safeString(value)) { return url }
+        return NSURL() as URL
+    }
+    
     /// 生成URL，中文自动URL编码
     public static func fw_url(string: String?) -> URL? {
         guard let string = string else { return nil }
@@ -506,8 +523,8 @@ extension Optional {
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return FW.safeString(self) }
-    public var safeNumber: NSNumber { return FW.safeNumber(self) }
+    public var safeString: String { return String.fw_safeString(self) }
+    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
 }

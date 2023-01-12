@@ -384,7 +384,7 @@ import FWObjC
             indexPath = cell.fw_indexPath
         }
         
-        let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(self.fw_statisticalExposure?.name ?? "")-\(FW.safeString(self.fw_statisticalExposure?.object))"
+        let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(self.fw_statisticalExposure?.name ?? "")-\(String.fw_safeString(self.fw_statisticalExposure?.object))"
         return identifier
     }
     
