@@ -20,7 +20,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupPlugin() {
-        PluginManager.registerPlugin(ImagePickerPlugin.self, with: ImagePickerControllerImpl.self)
+        PluginManager.registerPlugin(ImagePickerPlugin.self, object: ImagePickerControllerImpl.self)
         ImagePickerControllerImpl.shared.pickerControllerBlock = {
             let pickerController = ImagePickerController()
             pickerController.titleAccessoryImage = FW.iconImage("zmdi-var-caret-down", 24)?.fw.image(tintColor: .white)
