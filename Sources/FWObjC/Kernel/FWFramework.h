@@ -13,7 +13,6 @@
 #import "State.h"
 #import "Task.h"
 
-#import "Theme.h"
 #import "Exception.h"
 #import "CacheManager.h"
 #import "HTTPSessionManager.h"

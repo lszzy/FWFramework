@@ -6,9 +6,173 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
+
+// MARK: - ThemeManager
+/// 可扩展主题样式
+public class ThemeStyle: NSObject, RawRepresentable {
+    
+    public typealias RawValue = Int
+    
+    public var rawValue: Int
+    
+    required public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    /// 浅色样式
+    public static let light: ThemeStyle = .init(1)
+    /// 深色样式
+    public static let dark: ThemeStyle = .init(2)
+    
+}
+
+/// 可扩展主题模式(扩展值与样式值相同即可)
+public struct ThemeMode: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
+    public static let system: ThemeMode = .init(0)
+    /// 固定浅色模式
+    public static let light: ThemeMode = .init(ThemeStyle.light.rawValue)
+    /// 固定深色模式
+    public static let dark: ThemeMode = .init(ThemeStyle.dark.rawValue)
+    
+}
+
+extension Notification.Name {
+    
+    /// iOS13主题改变通知，object为ThemeManager时表示手工切换，object为UIScreen时为系统切换
+    public static let ThemeChanged = NSNotification.Name("FWThemeChangedNotification")
+    
+}
+
+/// 主题管理器，iOS13+可跟随系统改变
+///
+/// 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发themeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fw.themeContext才能生效。
+/// 注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fw.color相关方法
+public class ThemeManager: NSObject {
+    
+    /// 单例模式
+    public static let shared = ThemeManager()
+    
+    /// 当前主题模式，默认跟随系统模式
+    public var mode: ThemeMode {
+        get {
+            return _mode
+        }
+        set {
+            guard newValue != _mode else { return }
+            let oldStyle = self.style
+            _mode = newValue
+            let style = self.style
+            
+            UserDefaults.standard.set(NSNumber(value: newValue.rawValue), forKey: "FWThemeMode")
+            UserDefaults.standard.synchronize()
+            
+            if #available(iOS 13.0, *) {
+                if style != oldStyle {
+                    NotificationCenter.default.post(name: .ThemeChanged, object: self, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
+                }
+                if self.overrideWindow {
+                    _overrideWindow = false
+                    self.overrideWindow = true
+                }
+            }
+        }
+    }
+    private var _mode: ThemeMode = .system
+    
+    /// iOS13切换主题模式时是否覆盖主window样式(立即生效)，默认false。如果固定主题模式时颜色不正常，可尝试开启本属性
+    public var overrideWindow: Bool {
+        get {
+            return _overrideWindow
+        }
+        set {
+            guard newValue != _overrideWindow else { return }
+            _overrideWindow = newValue
+            
+            if #available(iOS 13.0, *) {
+                var style: UIUserInterfaceStyle = .unspecified
+                if newValue && self.mode != .system {
+                    style = self.mode == .dark ? .dark : .light
+                }
+                UIWindow.fw_mainWindow?.overrideUserInterfaceStyle = style
+            }
+        }
+    }
+    private var _overrideWindow = false
+    
+    /// 初始化方法
+    public override init() {
+        super.init()
+        _mode = .init(UserDefaults.standard.integer(forKey: "FWThemeMode"))
+    }
+    
+    /// 当前全局主题样式
+    public var style: ThemeStyle {
+        return style(for: nil)
+    }
+    
+    /// 指定traitCollection的实际显示样式，传nil时为全局样式
+    public func style(for traitCollection: UITraitCollection?) -> ThemeStyle {
+        if self.mode == .system {
+            if #available(iOS 13.0, *) {
+                let traitCollection = traitCollection ?? .current
+                return traitCollection.userInterfaceStyle == .dark ? .dark : .light
+            } else {
+                return .light
+            }
+        } else {
+            return .init(self.mode.rawValue)
+        }
+    }
+    
+}
+
+/// 主题动态对象，可获取当前主题静态对象
+public class ThemeObject<T>: NSObject {
+    
+    private var provider: ((ThemeStyle) -> T?)?
+    
+    /// 创建主题动态对象，指定提供句柄
+    public init(provider: @escaping (ThemeStyle) -> T?) {
+        super.init()
+        self.provider = provider
+    }
+    
+    /// 创建主题动态对象，分别指定浅色和深色
+    public convenience init(light: T?, dark: T?) {
+        self.init { style in
+            return style == .dark ? dark : light
+        }
+    }
+    
+    /// 获取当前主题静态对象，iOS13+可跟随系统改变
+    public var object: T? {
+        return self.provider?(ThemeManager.shared.style)
+    }
+    
+    /// 指定主题样式获取对应静态对象，iOS13+可跟随系统改变
+    public func object(for style: ThemeStyle) -> T? {
+        return self.provider?(style)
+    }
+    
+}
 
 // MARK: - UIColor+Theme
 @_spi(FW) extension UIColor {
@@ -25,7 +189,7 @@ import FWObjC
     /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
     public func fw_color(forStyle style: ThemeStyle) -> UIColor {
         if let themeObject = fw_themeObject {
-            return themeObject.object(forStyle: style) ?? self
+            return themeObject.object(for: style) ?? self
         }
         
         if #available(iOS 13.0, *) {
@@ -135,7 +299,7 @@ import FWObjC
     /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
     public func fw_image(forStyle style: ThemeStyle) -> UIImage? {
         if let themeObject = fw_themeObject {
-            return themeObject.object(forStyle: style)
+            return themeObject.object(for: style)
         } else {
             return self
         }
@@ -255,7 +419,7 @@ import FWObjC
             }
         }
         
-        return fw_themeObject?.object(forStyle: style)
+        return fw_themeObject?.object(for: style)
     }
 
     /// 是否是主题图片资源，仅支持判断使用fwTheme创建的图片资源
@@ -384,9 +548,7 @@ import FWObjC
         }
         
         // 3. 调用renderTheme渲染钩子
-        if self.responds(to: #selector(ThemeObserver.renderTheme(_:))) {
-            self.renderTheme(style)
-        }
+        self.renderTheme(style)
     }
     
     fileprivate static func fw_swizzleThemeClasses() {
@@ -418,14 +580,7 @@ import FWObjC
             let notifyObject: NSObject = selfObject
             notifyObject.fw_notifyThemeChanged(style)
             if selfObject == UIScreen.main {
-                NotificationCenter.default.post(
-                    name: .ThemeChanged,
-                    object: selfObject,
-                    userInfo: [
-                        NSKeyValueChangeKey.oldKey.rawValue: oldStyle.rawValue,
-                        NSKeyValueChangeKey.newKey.rawValue: style.rawValue
-                    ]
-                )
+                NotificationCenter.default.post(name: .ThemeChanged, object: selfObject, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
             }
         }}
     }
@@ -436,6 +591,9 @@ import FWObjC
     
     /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
     open func themeChanged(_ style: ThemeStyle) {}
+    
+    /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
+    open func renderTheme(_ style: ThemeStyle) {}
     
 }
 
