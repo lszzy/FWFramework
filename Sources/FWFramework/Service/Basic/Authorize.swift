@@ -12,30 +12,44 @@ import AVFoundation
 import UserNotifications
 
 // MARK: - AuthorizeType
-/// 权限类型枚举
-public enum AuthorizeType: Int {
+/// 可扩展权限类型
+public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
     /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
-    case locationWhenInUse = 1
+    public static let locationWhenInUse: AuthorizeType = .init(1)
     /// 后台定位，Info.plist需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription
-    case locationAlways = 2
+    public static let locationAlways: AuthorizeType = .init(2)
     /// 麦克风，需启用Microphone子模块，Info.plist需配置NSMicrophoneUsageDescription
-    case microphone = 3
+    public static let microphone: AuthorizeType = .init(3)
     /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription
-    case photoLibrary = 4
+    public static let photoLibrary: AuthorizeType = .init(4)
     /// 照相机，Info.plist需配置NSCameraUsageDescription
-    case camera = 5
+    public static let camera: AuthorizeType = .init(5)
     /// 联系人，需启用Contacts子模块，Info.plist需配置NSContactsUsageDescription
-    case contacts = 6
+    public static let contacts: AuthorizeType = .init(6)
     /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription
-    case calendars = 7
+    public static let calendars: AuthorizeType = .init(7)
     /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription
-    case reminders = 8
+    public static let reminders: AuthorizeType = .init(8)
     /// 音乐，需启用AppleMusic子模块，Info.plist需配置NSAppleMusicUsageDescription
-    case appleMusic = 9
+    public static let appleMusic: AuthorizeType = .init(9)
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    case notifications = 10
+    public static let notifications: AuthorizeType = .init(10)
     /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
-    case tracking = 11
+    public static let tracking: AuthorizeType = .init(11)
+    
 }
 
 // MARK: - AuthorizeStatus
@@ -85,7 +99,7 @@ public class AuthorizeManager: NSObject {
     }
     
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
-    public static func registerAuthorize(_ type: AuthorizeType, withBlock block: @escaping () -> AuthorizeProtocol) {
+    public static func register(type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
         blocks[type] = block
     }
     
