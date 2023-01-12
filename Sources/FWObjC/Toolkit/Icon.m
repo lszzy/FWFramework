@@ -233,14 +233,14 @@
 
 + (NSDictionary<NSString *,NSString *> *)iconMapper
 {
-    @throw [NSException exceptionWithName:@"__FWIcon"
+    @throw [NSException exceptionWithName:@"FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }
 
 + (UIFont *)iconFontWithSize:(CGFloat)size
 {
-    @throw [NSException exceptionWithName:@"__FWIcon"
+    @throw [NSException exceptionWithName:@"FWIcon"
                                    reason:@"You need to implement this method in subclass."
                                  userInfo:nil];
 }

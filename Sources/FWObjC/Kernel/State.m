@@ -86,7 +86,7 @@
 
 #pragma mark - __FWStateMachine
 
-NSNotificationName const __FWStateChangedNotification = @"__FWStateChangedNotification";
+NSNotificationName const __FWStateChangedNotification = @"FWStateChangedNotification";
 
 @interface __FWStateMachine ()
 
@@ -118,7 +118,7 @@ NSNotificationName const __FWStateChangedNotification = @"__FWStateChangedNotifi
 - (void)checkActive
 {
     if (self.isActive) {
-        @throw [NSException exceptionWithName:@"__FWState" reason:@"__FWStateMachine is activated" userInfo:nil];
+        @throw [NSException exceptionWithName:@"FWState" reason:@"FWStateMachine is activated" userInfo:nil];
     }
 }
 

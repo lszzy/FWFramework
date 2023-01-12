@@ -98,9 +98,9 @@
     if (securityPolicy.SSLPinningMode != __FWSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
         NSString *pinningMode = @"Unknown Pinning Mode";
         switch (securityPolicy.SSLPinningMode) {
-            case __FWSSLPinningModeNone:        pinningMode = @"__FWSSLPinningModeNone"; break;
-            case __FWSSLPinningModeCertificate: pinningMode = @"__FWSSLPinningModeCertificate"; break;
-            case __FWSSLPinningModePublicKey:   pinningMode = @"__FWSSLPinningModePublicKey"; break;
+            case __FWSSLPinningModeNone:        pinningMode = @"FWSSLPinningModeNone"; break;
+            case __FWSSLPinningModeCertificate: pinningMode = @"FWSSLPinningModeCertificate"; break;
+            case __FWSSLPinningModePublicKey:   pinningMode = @"FWSSLPinningModePublicKey"; break;
         }
         NSString *reason = [NSString stringWithFormat:@"A security policy configured with `%@` can only be applied on a manager with a secure base URL (i.e. https)", pinningMode];
         @throw [NSException exceptionWithName:@"Invalid Security Policy" reason:reason userInfo:nil];

@@ -248,7 +248,7 @@
 
 #pragma mark - __FWBannerView
 
-NSString * const __FWBannerViewCellID = @"__FWBannerViewCell";
+NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
 @interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, __FWStatisticalDelegate>
 

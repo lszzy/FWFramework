@@ -516,10 +516,10 @@
     if (_showCursor) {
         if (selected) {
             _cursorView.hidden= NO;
-            [_cursorView.layer addAnimation:self.opacityAnimation forKey:@"__FWPasscodeCursorAnimationKey"];
+            [_cursorView.layer addAnimation:self.opacityAnimation forKey:@"FWPasscodeCursorAnimationKey"];
         }else{
             _cursorView.hidden= YES;
-            [_cursorView.layer removeAnimationForKey:@"__FWPasscodeCursorAnimationKey"];
+            [_cursorView.layer removeAnimationForKey:@"FWPasscodeCursorAnimationKey"];
         }
     }else{
         _cursorView.hidden= YES;
@@ -1079,7 +1079,7 @@ typedef NS_ENUM(NSInteger, __FWPasscodeTextChangeType) {
 #pragma mark - You can rewrite
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView customCellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    __FWPasscodeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"__FWPasscodeCellID" forIndexPath:indexPath];
+    __FWPasscodeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"FWPasscodeCellID" forIndexPath:indexPath];
     return cell;
 }
 
@@ -1103,7 +1103,7 @@ typedef NS_ENUM(NSInteger, __FWPasscodeTextChangeType) {
         _collectionView.dataSource = self;
         _collectionView.layer.masksToBounds = YES;
         _collectionView.clipsToBounds = YES;
-        [_collectionView registerClass:[__FWPasscodeCell class] forCellWithReuseIdentifier:@"__FWPasscodeCellID"];
+        [_collectionView registerClass:[__FWPasscodeCell class] forCellWithReuseIdentifier:@"FWPasscodeCellID"];
     }
     
     return _collectionView;

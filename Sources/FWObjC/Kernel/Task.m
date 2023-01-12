@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, __FWTaskState) {
 
 - (void)executeTask
 {
-    @throw [NSException exceptionWithName:@"__FWTask"
+    @throw [NSException exceptionWithName:@"FWTask"
                                    reason:[NSString stringWithFormat:@"task %@ must override executeTask", [self.class description]]
                                  userInfo:nil];
 }
@@ -261,7 +261,7 @@ typedef NS_ENUM(NSInteger, __FWTaskState) {
     self = [super init];
     if (self) {
         _taskQueue = [[NSOperationQueue alloc] init];
-        _taskQueue.name = @"__FWTaskManager.taskQueue";
+        _taskQueue.name = @"FWTaskManager.taskQueue";
     }
     return self;
 }
