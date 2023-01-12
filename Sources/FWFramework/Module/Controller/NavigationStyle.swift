@@ -33,6 +33,18 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
 /// 导航栏样式配置
 open class NavigationBarAppearance: NSObject {
     
+    private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+    
+    /// 根据style获取全局appearance对象
+    public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
+        return appearances[style]
+    }
+    
+    /// 设置style对应全局appearance对象
+    public static func setAppearance(_ appearance: NavigationBarAppearance?, for style: NavigationBarStyle) {
+        appearances[style] = appearance
+    }
+    
     /// 是否半透明(磨砂)，需edgesForExtendedLayout为Top|All，默认false
     open var isTranslucent = false
     /// 前景色，包含标题和按钮，默认nil
@@ -57,18 +69,6 @@ open class NavigationBarAppearance: NSObject {
     open var leftBackImage: UIImage?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
     open var appearanceBlock: ((UINavigationBar) -> Void)?
-    
-    private static var styleAppearances = [NavigationBarStyle: NavigationBarAppearance]()
-    
-    /// 根据style获取全局appearance对象
-    public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
-        return styleAppearances[style]
-    }
-    
-    /// 设置style对应全局appearance对象
-    public static func setAppearance(_ appearance: NavigationBarAppearance?, for style: NavigationBarStyle) {
-        styleAppearances[style] = appearance
-    }
     
 }
 
