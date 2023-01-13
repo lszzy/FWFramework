@@ -681,7 +681,7 @@ extension Router {
                 if let range = range, range.length != 0 {
                     var groupValues: [String] = []
                     let result = rx?.firstMatch(in: targetURL, options: [], range: searchRange)
-                    for idx in 0 ..< (rx?.numberOfCaptureGroups ?? 0 + 1) {
+                    for idx in 0 ..< (rx?.numberOfCaptureGroups ?? 0) + 1 {
                         if let groupRange = result?.range(at: idx), groupRange.length != 0 {
                             groupValues.append((targetURL as NSString).substring(with: groupRange))
                         }
