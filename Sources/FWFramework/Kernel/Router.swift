@@ -38,7 +38,7 @@ public struct RouterUserInfoKey: RawRepresentable, Equatable, Hashable {
 }
 
 /// URL路由上下文
-public class RouterContext {
+public class RouterContext: NSObject {
     
     /// 路由URL
     public private(set) var url: String
