@@ -171,7 +171,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenUnmatch2() {
-        Router.object(forURL: TestRouter.objectUnmatchUrl)
+        _ = Router.object(forURL: TestRouter.objectUnmatchUrl)
     }
     
     func onOpenUnmatch3() {
@@ -377,7 +377,7 @@ class TestRouter: NSObject, AutoloadProtocol {
             return nil
         }
         
-        Router.setRouteFilter { context in
+        Router.routeFilter = { context in
             let url = FW.safeURL(context.url)
             if UIApplication.fw.isSystemURL(url) {
                 UIApplication.fw.openURL(url)
@@ -394,7 +394,7 @@ class TestRouter: NSObject, AutoloadProtocol {
             return true
         }
         
-        Router.setRouteHandler { context, object in
+        Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
                     Navigator.open(vc, animated: true)
@@ -406,7 +406,7 @@ class TestRouter: NSObject, AutoloadProtocol {
             return object
         }
         
-        Router.setErrorHandler { context in
+        Router.errorHandler = { context in
             Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
         }
     }
@@ -423,7 +423,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     static func registerRewrites() {
-        Router.setRewriteFilter { url in
+        Router.rewriteFilter = { url in
             return url.replacingOccurrences(of: "https://www.baidu.com/filter/", with: "app://filter/")
         }
         

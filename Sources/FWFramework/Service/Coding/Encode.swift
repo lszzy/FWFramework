@@ -58,7 +58,7 @@ extension FW {
             
             let string = String(data: self, encoding: .utf8)
             guard let data = string?.fw_escapeJson.data(using: .utf8) else { return nil }
-            if data.count == self.self.count { return nil }
+            if data.count == self.count { return nil }
             return try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
         }
     }
@@ -381,7 +381,7 @@ extension FW {
     /// 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
     public var fw_escapeJson: String {
         guard let regex = try? NSRegularExpression(pattern: "(\\\\UD[8-F][0-F][0-F])(\\\\UD[8-F][0-F][0-F])?", options: .caseInsensitive) else { return self }
-        let matches = regex.matches(in: self, options: [], range: NSMakeRange(0, self.self.count))
+        let matches = regex.matches(in: self, options: [], range: NSMakeRange(0, self.count))
         if matches.count < 1 { return self }
         
         // 倒序循环，避免replace越界
@@ -397,7 +397,7 @@ extension FW {
     
     /// 转换为UTF8数据
     public var fw_utf8Data: Data? {
-        return self.self.data(using: .utf8)
+        return self.data(using: .utf8)
     }
     
     /// 转换为URL

@@ -118,12 +118,12 @@ public struct RouterAnnotation {
     
     public init(wrappedValue value: String, _ handler: @escaping RouterHandler) {
         self.pattern = value
-        Router.registerURL(value, withHandler: handler)
+        Router.registerURL(value, handler: handler)
     }
     
     public init(_ pattern: String, handler: @escaping RouterHandler) {
         self.pattern = pattern
-        Router.registerURL(pattern, withHandler: handler)
+        Router.registerURL(pattern, handler: handler)
     }
     
     public var wrappedValue: String {
