@@ -253,16 +253,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
     
-    public var rawValue: Int
-    
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    
-    public init(_ rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    
     public static let inch35: ScreenInch = .init(35)
     public static let inch40: ScreenInch = .init(40)
     public static let inch47: ScreenInch = .init(47)
@@ -272,6 +262,16 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public static let inch61: ScreenInch = .init(61)
     public static let inch65: ScreenInch = .init(65)
     public static let inch67: ScreenInch = .init(67)
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
     
 }
 

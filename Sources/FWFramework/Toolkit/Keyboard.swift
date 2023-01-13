@@ -79,50 +79,17 @@ import FWObjC
             return UIToolbar()
         }()
         
-        var toolbarPreviousButton: Any? {
-            get {
-                if _toolbarPreviousButton == nil && !previousButtonInitialized {
-                    _toolbarPreviousButton = KeyboardConfig.toolbarPreviousImage
-                }
-                return _toolbarPreviousButton
-            }
-            set {
-                _toolbarPreviousButton = newValue
-            }
-        }
-        var _toolbarPreviousButton: Any?
+        lazy var toolbarPreviousButton: Any? = {
+            return KeyboardConfig.toolbarPreviousImage
+        }()
         
-        var toolbarNextButton: Any? {
-            get {
-                if _toolbarNextButton == nil && !nextButtonInitialized {
-                    _toolbarNextButton = KeyboardConfig.toolbarNextImage
-                }
-                return _toolbarNextButton
-            }
-            set {
-                _toolbarNextButton = newValue
-            }
-        }
-        var _toolbarNextButton: Any?
+        lazy var toolbarNextButton: Any? = {
+            return KeyboardConfig.toolbarNextImage
+        }()
         
-        var toolbarDoneButton: Any? {
-            get {
-                if _toolbarDoneButton == nil && !doneButtonInitialized {
-                    _toolbarDoneButton = NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
-                }
-                return _toolbarDoneButton
-            }
-            set {
-                _toolbarDoneButton = newValue
-            }
-        }
-        var _toolbarDoneButton: Any?
-        
-        var previousButtonInitialized = false
-        
-        var nextButtonInitialized = false
-        
-        var doneButtonInitialized = false
+        lazy var toolbarDoneButton: Any? = {
+            return NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
+        }()
         
         var previousResponder: ((T) -> UIResponder?)? {
             didSet {
@@ -538,7 +505,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarPreviousButton
         }
         set {
-            self.fw_keyboardTarget.previousButtonInitialized = true
             self.fw_keyboardTarget.toolbarPreviousButton = newValue
         }
     }
@@ -549,7 +515,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarNextButton
         }
         set {
-            self.fw_keyboardTarget.nextButtonInitialized = true
             self.fw_keyboardTarget.toolbarNextButton = newValue
         }
     }
@@ -560,7 +525,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarDoneButton
         }
         set {
-            self.fw_keyboardTarget.doneButtonInitialized = true
             self.fw_keyboardTarget.toolbarDoneButton = newValue
         }
     }
@@ -808,7 +772,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarPreviousButton
         }
         set {
-            self.fw_keyboardTarget.previousButtonInitialized = true
             self.fw_keyboardTarget.toolbarPreviousButton = newValue
         }
     }
@@ -819,7 +782,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarNextButton
         }
         set {
-            self.fw_keyboardTarget.nextButtonInitialized = true
             self.fw_keyboardTarget.toolbarNextButton = newValue
         }
     }
@@ -830,7 +792,6 @@ import FWObjC
             return self.fw_keyboardTarget.toolbarDoneButton
         }
         set {
-            self.fw_keyboardTarget.doneButtonInitialized = true
             self.fw_keyboardTarget.toolbarDoneButton = newValue
         }
     }

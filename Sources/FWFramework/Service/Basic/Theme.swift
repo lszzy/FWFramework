@@ -13,6 +13,11 @@ public class ThemeStyle: NSObject, RawRepresentable {
     
     public typealias RawValue = Int
     
+    /// 浅色样式
+    public static let light: ThemeStyle = .init(1)
+    /// 深色样式
+    public static let dark: ThemeStyle = .init(2)
+    
     public var rawValue: Int
     
     required public init(rawValue: Int) {
@@ -23,17 +28,19 @@ public class ThemeStyle: NSObject, RawRepresentable {
         self.rawValue = rawValue
     }
     
-    /// 浅色样式
-    public static let light: ThemeStyle = .init(1)
-    /// 深色样式
-    public static let dark: ThemeStyle = .init(2)
-    
 }
 
 /// 可扩展主题模式(扩展值与样式值相同即可)
 public struct ThemeMode: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
+    
+    /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
+    public static let system: ThemeMode = .init(0)
+    /// 固定浅色模式
+    public static let light: ThemeMode = .init(ThemeStyle.light.rawValue)
+    /// 固定深色模式
+    public static let dark: ThemeMode = .init(ThemeStyle.dark.rawValue)
     
     public var rawValue: Int
     
@@ -44,13 +51,6 @@ public struct ThemeMode: RawRepresentable, Equatable, Hashable {
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
-    /// 跟随系统模式，iOS13以上动态切换，iOS13以下固定浅色，默认
-    public static let system: ThemeMode = .init(0)
-    /// 固定浅色模式
-    public static let light: ThemeMode = .init(ThemeStyle.light.rawValue)
-    /// 固定深色模式
-    public static let dark: ThemeMode = .init(ThemeStyle.dark.rawValue)
     
 }
 
