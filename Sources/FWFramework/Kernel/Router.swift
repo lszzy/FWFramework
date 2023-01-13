@@ -484,8 +484,8 @@ public class Router: NSObject {
         }
         
         let pathUrl = URL.fw_url(string: formatUrl)
-        var components = pathUrl?.pathComponents
-        if components == nil && urlRange.location != NSNotFound && !formatUrl.isEmpty, let fullUrl = fullUrl {
+        var components = pathUrl?.pathComponents ?? []
+        if components.count < 1 && urlRange.location != NSNotFound && !formatUrl.isEmpty, let fullUrl = fullUrl {
             let urlComponents = NSURLComponents(url: fullUrl, resolvingAgainstBaseURL: false)
             if let urlComponents = urlComponents, urlComponents.rangeOfPath.location != NSNotFound {
                 let pathDomain = (formatUrl as NSString).substring(to: urlComponents.rangeOfPath.location - (urlRange.location + urlRange.length))
@@ -495,12 +495,10 @@ public class Router: NSObject {
             }
             components = fullUrl.pathComponents
         }
-        if let components = components {
-            for pathComponent in components {
-                if pathComponent.isEmpty || pathComponent == "/" { continue }
-                if (pathComponent as NSString).substring(to: 1) == "?" { break }
-                pathComponents.append(pathComponent)
-            }
+        for pathComponent in components {
+            if pathComponent.isEmpty || pathComponent == "/" { continue }
+            if (pathComponent as NSString).substring(to: 1) == "?" { break }
+            pathComponents.append(pathComponent)
         }
         return pathComponents
     }
