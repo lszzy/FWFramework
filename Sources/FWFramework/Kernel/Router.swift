@@ -462,9 +462,9 @@ public class Router: NSObject {
         let fullUrl = URL.fw_url(string: url)
         if urlRange.location == NSNotFound {
             // 解析scheme:path格式
-            let urlScheme = fullUrl?.scheme?.appending(":") ?? ""
-            if urlScheme.count > 1 && url.hasPrefix(urlScheme) {
-                urlRange = NSMakeRange(urlScheme.count - 1, 1)
+            let urlScheme = (fullUrl?.scheme?.appending(":") ?? "") as NSString
+            if urlScheme.length > 1 && url.hasPrefix(urlScheme as String) {
+                urlRange = NSMakeRange(urlScheme.length - 1, 1)
             }
         }
         
@@ -472,24 +472,24 @@ public class Router: NSObject {
             // 如果 URL 包含协议，那么把协议作为第一个元素放进去
             let urlString = url as NSString
             let pathScheme = urlString.substring(to: urlRange.location)
-            if pathScheme.count > 0 {
+            if !pathScheme.isEmpty {
                 pathComponents.append(pathScheme)
             }
             
             // 如果只有协议，那么放一个占位符
             formatUrl = urlString.substring(from: urlRange.location + urlRange.length)
-            if formatUrl.count < 1 {
+            if formatUrl.isEmpty {
                 pathComponents.append(routeWildcardCharacter)
             }
         }
         
         let pathUrl = URL.fw_url(string: formatUrl)
         var components = pathUrl?.pathComponents
-        if components == nil && urlRange.location != NSNotFound && formatUrl.count > 0, let fullUrl = fullUrl {
+        if components == nil && urlRange.location != NSNotFound && !formatUrl.isEmpty, let fullUrl = fullUrl {
             let urlComponents = NSURLComponents(url: fullUrl, resolvingAgainstBaseURL: false)
             if let urlComponents = urlComponents, urlComponents.rangeOfPath.location != NSNotFound {
                 let pathDomain = (formatUrl as NSString).substring(to: urlComponents.rangeOfPath.location - (urlRange.location + urlRange.length))
-                if pathDomain.count > 0 {
+                if !pathDomain.isEmpty {
                     pathComponents.append(pathDomain)
                 }
             }
@@ -497,7 +497,7 @@ public class Router: NSObject {
         }
         if let components = components {
             for pathComponent in components {
-                if pathComponent.count < 1 || pathComponent == "/" { continue }
+                if pathComponent.isEmpty || pathComponent == "/" { continue }
                 if (pathComponent as NSString).substring(to: 1) == "?" { break }
                 pathComponents.append(pathComponent)
             }
@@ -677,7 +677,7 @@ extension Router {
                       let matchRule = ruleDict[rewriteMatchRuleKey] as? String,
                       !matchRule.isEmpty else { continue }
                 
-                let searchRange = NSMakeRange(0, targetURL.count)
+                let searchRange = NSMakeRange(0, (targetURL as NSString).length)
                 let rx = try? NSRegularExpression(pattern: matchRule, options: [])
                 let range = rx?.rangeOfFirstMatch(in: targetURL, options: [], range: searchRange)
                 if let range = range, range.length != 0 {
@@ -690,7 +690,7 @@ extension Router {
                     }
                     let targetRule = ruleDict[rewriteTargetRuleKey] as? String ?? ""
                     let newTargetURL = NSMutableString(string: targetRule)
-                    replaceRx?.enumerateMatches(in: targetRule, options: [], range: NSMakeRange(0, targetRule.count), using: { result, _, _ in
+                    replaceRx?.enumerateMatches(in: targetRule, options: [], range: NSMakeRange(0, (targetRule as NSString).length), using: { result, _, _ in
                         guard let result = result else { return }
                         let matchRange = result.range
                         let secondGroupRange = result.range(at: 2)
@@ -724,7 +724,7 @@ extension Router {
         
         let targetURL = NSMutableString(string: targetRule)
         let replaceRx = try? NSRegularExpression(pattern: "[$]([$|#]?)(\\w+)", options: [])
-        replaceRx?.enumerateMatches(in: targetRule, options: [], range: NSMakeRange(0, targetRule.count), using: { result, _, _ in
+        replaceRx?.enumerateMatches(in: targetRule, options: [], range: NSMakeRange(0, (targetRule as NSString).length), using: { result, _, _ in
             guard let result = result else { return }
             let matchRange = result.range
             let secondGroupRange = result.range(at: 2)
