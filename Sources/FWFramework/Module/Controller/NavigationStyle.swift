@@ -15,6 +15,9 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
     
+    /// 默认样式，应用可配置并扩展
+    public static let `default`: NavigationBarStyle = .init(0)
+    
     public var rawValue: Int
     
     public init(rawValue: Int) {
@@ -24,9 +27,6 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
-    /// 默认样式，应用可配置并扩展
-    public static let `default`: NavigationBarStyle = .init(0)
     
 }
 

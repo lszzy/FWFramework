@@ -84,6 +84,7 @@ extension FW {
     public static func fw_safeString(_ value: Any?) -> String {
         guard let value = value, !(value is NSNull) else { return "" }
         if let string = value as? String { return string }
+        if let url = value as? URL { return url.absoluteString }
         if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
         if let object = value as? NSObjectProtocol { return object.description }
         return String(describing: value)

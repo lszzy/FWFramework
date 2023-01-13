@@ -17,16 +17,6 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
     
-    public var rawValue: Int
-    
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    
-    public init(_ rawValue: Int) {
-        self.rawValue = rawValue
-    }
-    
     /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
     public static let locationWhenInUse: AuthorizeType = .init(1)
     /// 后台定位，Info.plist需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription
@@ -49,6 +39,16 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     public static let notifications: AuthorizeType = .init(10)
     /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
     public static let tracking: AuthorizeType = .init(11)
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
     
 }
 
