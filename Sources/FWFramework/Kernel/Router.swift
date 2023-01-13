@@ -580,18 +580,7 @@ public class Router: NSObject {
 
 extension Router {
     
-    private static let rewriteMatchRuleKey = "matchRule"
-    private static let rewriteTargetRuleKey = "targetRule"
-    
-    private static let rewriteComponentUrlKey = "url"
-    private static let rewriteComponentSchemeKey = "scheme"
-    private static let rewriteComponentHostKey = "host"
-    private static let rewriteComponentPortKey = "port"
-    private static let rewriteComponentPathKey = "path"
-    private static let rewriteComponentQueryKey = "query"
-    private static let rewriteComponentFragmentKey = "fragment"
-    
-    private static var rewriteRules = NSMutableArray()
+    private static var rewriteRules = [String: String]()
     
     /// 全局重写过滤器
     public static var rewriteFilter: ((String) -> String?)?
@@ -622,20 +611,8 @@ extension Router {
     ///   - matchRule: 匹配规则
     ///   - targetRule: 目标规则
     public class func addRewriteRule(_ matchRule: String, targetRule: String) {
-        let rules = rewriteRules
-        for idx in 0 ..< rules.count {
-            let ruleDict = rules[idx] as? [AnyHashable: Any] ?? [:]
-            if let ruleString = ruleDict[rewriteMatchRuleKey] as? String,
-               ruleString == matchRule {
-                rewriteRules.remove(ruleDict)
-            }
-        }
-        
-        let ruleDict = [
-            rewriteMatchRuleKey: matchRule,
-            rewriteTargetRuleKey: targetRule
-        ]
-        rewriteRules.add(ruleDict)
+        guard !matchRule.isEmpty else { return }
+        rewriteRules[matchRule] = targetRule
     }
     
     /// 批量添加重写规则
@@ -649,19 +626,12 @@ extension Router {
     /// 移除重写规则
     /// - Parameter matchRule: 匹配规则
     public class func removeRewriteRule(_ matchRule: String) {
-        let rules = rewriteRules
-        for idx in 0 ..< rules.count {
-            let ruleDict = rules[idx] as? [AnyHashable: Any] ?? [:]
-            if let ruleString = ruleDict[rewriteMatchRuleKey] as? String,
-               ruleString == matchRule {
-                rewriteRules.remove(ruleDict)
-            }
-        }
+        rewriteRules.removeValue(forKey: matchRule)
     }
     
     /// 移除所有的重写规则
     public class func removeAllRewriteRules() {
-        rewriteRules.removeAllObjects()
+        rewriteRules.removeAll()
     }
     
     private class func rewriteCaptureGroups(originalURL: String) -> String {
@@ -670,11 +640,7 @@ extension Router {
             let targetURL = originalURL
             let replaceRx = try? NSRegularExpression(pattern: "[$]([$|#]?)(\\d+)", options: [])
             
-            for rule in rules {
-                guard let ruleDict = rule as? NSDictionary,
-                      let matchRule = ruleDict[rewriteMatchRuleKey] as? String,
-                      !matchRule.isEmpty else { continue }
-                
+            for (matchRule, targetRule) in rules {
                 let searchRange = NSMakeRange(0, (targetURL as NSString).length)
                 let rx = try? NSRegularExpression(pattern: matchRule, options: [])
                 let range = rx?.rangeOfFirstMatch(in: targetURL, options: [], range: searchRange)
@@ -686,7 +652,7 @@ extension Router {
                             groupValues.append((targetURL as NSString).substring(with: groupRange))
                         }
                     }
-                    let targetRule = ruleDict[rewriteTargetRuleKey] as? String ?? ""
+                    
                     let newTargetURL = NSMutableString(string: targetRule)
                     replaceRx?.enumerateMatches(in: targetRule, options: [], range: NSMakeRange(0, (targetRule as NSString).length), using: { result, _, _ in
                         guard let result = result else { return }
@@ -710,15 +676,15 @@ extension Router {
         let encodeURL = originalURL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let urlComponents = URLComponents(string: encodeURL ?? "")
         var componentDict: [String: String] = [:]
-        componentDict[rewriteComponentUrlKey] = originalURL
-        componentDict[rewriteComponentSchemeKey] = urlComponents?.scheme
-        componentDict[rewriteComponentHostKey] = urlComponents?.host
+        componentDict["url"] = originalURL
+        componentDict["scheme"] = urlComponents?.scheme
+        componentDict["host"] = urlComponents?.host
         if let componentPort = urlComponents?.port {
-            componentDict[rewriteComponentPortKey] = "\(componentPort)"
+            componentDict["port"] = "\(componentPort)"
         }
-        componentDict[rewriteComponentPathKey] = urlComponents?.path
-        componentDict[rewriteComponentQueryKey] = urlComponents?.query
-        componentDict[rewriteComponentFragmentKey] = urlComponents?.fragment
+        componentDict["path"] = urlComponents?.path
+        componentDict["query"] = urlComponents?.query
+        componentDict["fragment"] = urlComponents?.fragment
         
         let targetURL = NSMutableString(string: targetRule)
         let replaceRx = try? NSRegularExpression(pattern: "[$]([$|#]?)(\\w+)", options: [])
