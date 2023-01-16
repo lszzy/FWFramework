@@ -22,6 +22,13 @@ class Tests: XCTestCase {
         XCTAssertEqual(loader.load("Hello "), "Hello Target")
     }
     
+    func testString() {
+        let string = "String中文Emoji表情😀"
+        let nsstring = string as NSString
+        XCTAssertEqual(string.count, 16)
+        XCTAssertEqual(nsstring.length, 17)
+    }
+    
     func testRuntime() {
         fw.setProperty("Value", forName: "testRuntime")
         XCTAssertEqual(fw.property(forName: "testRuntime") as? String, "Value")
