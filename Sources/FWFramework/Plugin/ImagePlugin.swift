@@ -79,9 +79,9 @@ extension FW {
         let name = (string as NSString).deletingPathExtension
         var scale: CGFloat = 1
         let pattern = try? NSRegularExpression(pattern: "@[0-9]+\\.?[0-9]*x$", options: .anchorsMatchLines)
-        pattern?.enumerateMatches(in: name, options: [], range: NSMakeRange(0, name.count), using: { result, _, _ in
+        pattern?.enumerateMatches(in: name, options: [], range: NSMakeRange(0, (name as NSString).length), using: { result, _, _ in
             if let result = result, result.range.location >= 3 {
-                let scaleString = string.fw_substring(with: NSMakeRange(result.range.location + 1, result.range.length - 1))
+                let scaleString = (string as NSString).substring(with: NSMakeRange(result.range.location + 1, result.range.length - 1))
                 scale = (scaleString as NSString).doubleValue
             }
         })

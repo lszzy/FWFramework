@@ -278,22 +278,12 @@ extension FW {
     
     /// 首字母大写
     public var fw_ucfirstString: String {
-        guard self.count > 0 else { return self }
-        var string = String(format: "%c", (self as NSString).character(at: 0)).uppercased()
-        if self.count > 1 {
-            string.append(contentsOf: fw_substring(from: 1))
-        }
-        return string
+        return String(prefix(1).uppercased() + dropFirst())
     }
     
     /// 首字母小写
     public var fw_lcfirstString: String {
-        guard self.count > 0 else { return self }
-        var string = String(format: "%c", (self as NSString).character(at: 0)).lowercased()
-        if self.count > 1 {
-            string.append(contentsOf: fw_substring(from: 1))
-        }
-        return string
+        return String(prefix(1).lowercased() + dropFirst())
     }
     
     /// 驼峰转下划线
