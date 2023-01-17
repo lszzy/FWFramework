@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -13,34 +14,38 @@ import FWObjC
 // MARK: - FW+Logger
 extension FW {
     
-    /// 记录跟踪日志
+    /// 记录详细日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
-    public static func trace(
+    public static func verbose(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
         function: String = #function,
         line: Int = #line
     ) {
-        if !Logger.check(.trace) { return }
-        Logger.log(.trace, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        if !Logger.check(.verbose) { return }
+        Logger.log(.verbose, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
 
     /// 记录调试日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public static func debug(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -48,18 +53,20 @@ extension FW {
         line: Int = #line
     ) {
         if !Logger.check(.debug) { return }
-        Logger.log(.debug, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.debug, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
 
     /// 记录信息日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public static func info(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -67,18 +74,20 @@ extension FW {
         line: Int = #line
     ) {
         if !Logger.check(.info) { return }
-        Logger.log(.info, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.info, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
 
     /// 记录警告日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public static func warn(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -86,18 +95,20 @@ extension FW {
         line: Int = #line
     ) {
         if !Logger.check(.warn) { return }
-        Logger.log(.warn, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.warn, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
 
     /// 记录错误日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public static func error(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -105,66 +116,87 @@ extension FW {
         line: Int = #line
     ) {
         if !Logger.check(.error) { return }
-        Logger.log(.error, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-
-    /// 记录分组日志
+    
+    /// 记录类型日志
     ///
     /// - Parameters:
-    ///   - group: 日志分组名称
     ///   - type: 日志类型
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
-    public static func group(
-        _ group: String,
+    public static func log(
         type: LogType,
-        format: String,
+        group: String = "",
+        _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
         function: String = #function,
         line: Int = #line
     ) {
         if !Logger.check(type) { return }
-        Logger.log(type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
+        Logger.log(type, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
 }
 
 // MARK: - Logger
 /// 日志类型枚举
-@objc(__FWLogType)
-public enum LogType: UInt {
-    /// 错误类型，0...00001
-    case error = 1
-    /// 警告类型，0...00010
-    case warn = 2
-    /// 信息类型，0...00100
-    case info = 4
-    /// 调试类型，0...01000
-    case debug = 8
-    /// 跟踪类型，0...10000
-    case trace = 16
+public struct LogType: OptionSet {
+    
+    public let rawValue: UInt
+    
+    /// 错误类型
+    public static let error: LogType = .init(rawValue: 1 << 0)
+    /// 警告类型
+    public static let warn: LogType = .init(rawValue: 1 << 1)
+    /// 信息类型
+    public static let info: LogType = .init(rawValue: 1 << 2)
+    /// 调试类型
+    public static let debug: LogType = .init(rawValue: 1 << 3)
+    /// 详细类型
+    public static let verbose: LogType = .init(rawValue: 1 << 4)
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
 }
 
 /// 日志级别定义
-public enum LogLevel: UInt {
-    /// 关闭日志，0...00000
-    case off = 0
-    /// 错误以上级别，0...00001
-    case error = 1
-    /// 警告以上级别，0...00011
-    case warn = 3
-    /// 信息以上级别，0...00111
-    case info = 7
-    /// 调试以上级别，0...01111
-    case debug = 15
-    /// 跟踪以上级别，0...11111
-    case trace = 31
-    /// 所有级别，1...11111
-    case all = 255
+public struct LogLevel: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = UInt
+    
+    /// 关闭日志
+    public static let off: LogLevel = .init(0)
+    /// 错误以上级别
+    public static let error: LogLevel = .init(LogType.error.rawValue)
+    /// 警告以上级别
+    public static let warn: LogLevel = .init(LogType.error.union(.warn).rawValue)
+    /// 信息以上级别
+    public static let info: LogLevel = .init(LogType.warn.union(.info).rawValue)
+    /// 调试以上级别
+    public static let debug: LogLevel = .init(LogType.info.union(.debug).rawValue)
+    /// 详细以上级别
+    public static let verbose: LogLevel = .init(LogType.debug.union(.verbose).rawValue)
+    /// 所有级别
+    public static let all: LogLevel = .init(.max)
+    
+    public var rawValue: UInt
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
 }
 
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
@@ -183,16 +215,15 @@ public class Logger: NSObject {
     /// - Parameter type: 日志类型
     /// - Returns: 是否需要记录
     fileprivate class func check(_ type: LogType) -> Bool {
-        return (level.rawValue & type.rawValue) != 0
+        return LogType(rawValue: level.rawValue).contains(type)
     }
     
     /// 记录类型日志，支持分组和用户信息
     /// - Parameters:
     ///   - type: 日志类型
+    ///   - group: 日志分组，默认空
     ///   - message: 日志消息
-    ///   - group: 日志分组，默认nil
-    ///   - userInfo: 用户信息，默认nil
-    public class func log(_ type: LogType, message: String, group: String? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    public class func log(_ type: LogType, group: String = "", message: String) {
         // 过滤不支持的级别
         if !check(type) { return }
         
@@ -202,37 +233,41 @@ public class Logger: NSObject {
         } else {
             plugin = LoggerPluginImpl.shared
         }
-        plugin.log(type, message: message, group: group, userInfo: userInfo)
+        plugin.log(type, group: group, message: message)
     }
     
-    /// 记录跟踪日志
+    /// 记录详细日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
-    public class func trace(
+    public class func verbose(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
         function: String = #function,
         line: Int = #line
     ) {
-        if !check(.trace) { return }
-        log(.trace, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        if !check(.verbose) { return }
+        log(.verbose, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
     /// 记录调试日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func debug(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -240,18 +275,20 @@ public class Logger: NSObject {
         line: Int = #line
     ) {
         if !check(.debug) { return }
-        log(.debug, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.debug, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
     /// 记录信息日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func info(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -259,18 +296,20 @@ public class Logger: NSObject {
         line: Int = #line
     ) {
         if !check(.info) { return }
-        log(.info, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.info, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
     /// 记录警告日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func warn(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -278,18 +317,20 @@ public class Logger: NSObject {
         line: Int = #line
     ) {
         if !check(.warn) { return }
-        log(.warn, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.warn, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
     /// 记录错误日志
     ///
     /// - Parameters:
+    ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
     ///   - file: 文件名，默认传参
     ///   - function: 方法名，默认传参
     ///   - line: 行数，默认传参
     public class func error(
+        group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
         file: String = #file,
@@ -297,46 +338,21 @@ public class Logger: NSObject {
         line: Int = #line
     ) {
         if !check(.error) { return }
-        log(.error, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
-    }
-    
-    /// 记录分组日志
-    ///
-    /// - Parameters:
-    ///   - group: 日志分组名称
-    ///   - type: 日志类型
-    ///   - format: 格式化字符串
-    ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
-    ///   - function: 方法名，默认传参
-    ///   - line: 行数，默认传参
-    public class func group(
-        _ group: String,
-        type: LogType,
-        format: String,
-        _ arguments: CVarArg...,
-        file: String = #file,
-        function: String = #function,
-        line: Int = #line
-    ) {
-        if !check(type) { return }
-        log(type, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)), group: group, userInfo: nil)
+        log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
     
 }
 
 // MARK: - LoggerPlugin
 /// 日志插件协议
-@objc(__FWLoggerPlugin)
 public protocol LoggerPlugin {
     
     /// 记录日志协议方法
     /// - Parameters:
     ///   - type: 日志类型
-    ///   - message: 日志消息
     ///   - group: 日志分组
-    ///   - userInfo: 用户信息
-    func log(_ type: LogType, message: String, group: String?, userInfo: [AnyHashable: Any]?)
+    ///   - message: 日志消息
+    func log(_ type: LogType, group: String, message: String)
     
 }
 
@@ -351,23 +367,20 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin {
     /// 记录日志协议方法
     /// - Parameters:
     ///   - type: 日志类型
-    ///   - message: 日志消息
     ///   - group: 日志分组
-    ///   - userInfo: 用户信息
-    public func log(_ type: LogType, message: String, group: String?, userInfo: [AnyHashable : Any]?) {
-        let groupStr = group != nil ? " [\(group ?? "")]" : ""
-        let infoStr = userInfo != nil ? " \(String.fw_safeString(userInfo))" : ""
+    ///   - message: 日志消息
+    public func log(_ type: LogType, group: String, message: String) {
         switch type {
         case .error:
-            NSLog("%@ ERROR:%@ %@%@", "❌", groupStr, message, infoStr)
+            NSLog("%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message)
         case .warn:
-            NSLog("%@ WARN:%@ %@%@", "⚠️", groupStr, message, infoStr)
+            NSLog("%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message)
         case .info:
-            NSLog("%@ INFO:%@ %@%@", "ℹ️", groupStr, message, infoStr)
+            NSLog("%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
         case .debug:
-            NSLog("%@ DEBUG:%@ %@%@", "⏱️", groupStr, message, infoStr)
+            NSLog("%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
         default:
-            NSLog("%@ TRACE:%@ %@%@", "📝", groupStr, message, infoStr)
+            NSLog("%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message)
         }
     }
     
