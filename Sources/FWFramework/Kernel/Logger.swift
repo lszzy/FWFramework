@@ -356,8 +356,35 @@ public protocol LoggerPlugin {
     
 }
 
+/// NSLog日志插件
+public class LoggerPluginNSLog: NSObject, LoggerPlugin {
+    
+    @objc(sharedInstance)
+    public static let shared = LoggerPluginNSLog()
+    
+    /// 记录日志协议方法
+    public func log(_ type: LogType, group: String, message: String) {
+        switch type {
+        case .error:
+            NSLog("%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message)
+        case .warn:
+            NSLog("%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message)
+        case .info:
+            NSLog("%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
+        case .debug:
+            NSLog("%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
+        default:
+            NSLog("%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message)
+        }
+    }
+    
+}
+
 /// OSLog日志插件
 public class LoggerPluginOSLog: NSObject, LoggerPlugin {
+    
+    @objc(sharedInstance)
+    public static let shared = LoggerPluginOSLog()
     
     private var log: OSLog
     
@@ -385,59 +412,58 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin {
     
 }
 
-/// NSLog日志插件
-public class LoggerPluginNSLog: NSObject, LoggerPlugin {
-    
-    /// 记录日志协议方法
-    public func log(_ type: LogType, group: String, message: String) {
-        switch type {
-        case .error:
-            NSLog("%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message)
-        case .warn:
-            NSLog("%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message)
-        case .info:
-            NSLog("%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
-        case .debug:
-            NSLog("%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
-        default:
-            NSLog("%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message)
-        }
-    }
-    
-}
-
 // MARK: - LoggerPluginImpl
-/// 日志插件管理器，默认使用OSLog
+/// 日志插件管理器，默认调试使用NSLog，正式为空需自行添加
 public class LoggerPluginImpl: NSObject, LoggerPlugin {
     
     /// 单例模式对象
     @objc(sharedInstance)
     public static let shared = LoggerPluginImpl()
     
-    /// 默认使用OSLog日志插件
-    private lazy var loggers: [LoggerPlugin] = {
-        return [LoggerPluginOSLog()]
-    }()
+    private class Target {
+        var logger: LoggerPlugin
+        var level: LogLevel
+        
+        init(logger: LoggerPlugin, level: LogLevel) {
+            self.logger = logger
+            self.level = level
+        }
+    }
     
-    /// 添加日志插件
-    public func add(_ logger: LoggerPlugin) {
-        loggers.append(logger)
+    private var allTargets: [Target] = []
+    
+    /// 初始化方法，默认调试使用NSLog
+    public override init() {
+        super.init()
+        #if DEBUG
+        addLogger(LoggerPluginNSLog.shared)
+        #endif
+    }
+    
+    /// 添加日志插件，并在指定等级生效(默认all)
+    public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all) {
+        allTargets.append(Target(logger: logger, level: level))
     }
     
     /// 移除指定日志插件
-    public func remove(where block: (LoggerPlugin) -> Bool) {
-        loggers.removeAll(where: block)
+    public func removeLogger<T: LoggerPlugin>(_ logger: T) where T : Equatable {
+        allTargets.removeAll { target in
+            guard let obj = target.logger as? T else { return false }
+            return logger == obj
+        }
     }
     
     /// 移除所有的日志插件
-    public func removeAll() {
-        loggers.removeAll()
+    public func removeAllLoggers() {
+        allTargets.removeAll()
     }
     
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
-        loggers.forEach { logger in
-            logger.log(type, group: group, message: message)
+        allTargets.forEach { target in
+            if LogType(rawValue: target.level.rawValue).contains(type) {
+                target.logger.log(type, group: group, message: message)
+            }
         }
     }
     
