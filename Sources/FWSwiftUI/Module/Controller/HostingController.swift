@@ -30,7 +30,7 @@ open class HostingController: UIHostingController<AnyView> {
     
     #if DEBUG
     deinit {
-        NSLog("%@ did dealloc", NSStringFromClass(self.classForCoder))
+        Logger.debug(group: "FWFramework", "%@ did dealloc", NSStringFromClass(self.classForCoder))
     }
     #endif
     

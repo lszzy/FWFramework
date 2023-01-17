@@ -806,7 +806,7 @@ import FWObjC
             __FWRuntime.tryCatch {
                 self.priority = newValue
             } exceptionHandler: { exception in
-                NSLog("%@", exception)
+                Logger.debug(group: "FWFramework", "%@", exception)
             }
         }
     }
