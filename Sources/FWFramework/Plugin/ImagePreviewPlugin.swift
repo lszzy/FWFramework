@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let previewPlugin = fw_property(forName: "fw_imagePreviewPlugin") as? ImagePreviewPlugin {
                 return previewPlugin
-            } else if let previewPlugin = PluginManager.loadPlugin(ImagePreviewPlugin.self) as? ImagePreviewPlugin {
+            } else if let previewPlugin = PluginManager.loadPlugin(ImagePreviewPlugin.self) {
                 return previewPlugin
             }
             return ImagePreviewPluginImpl.shared
