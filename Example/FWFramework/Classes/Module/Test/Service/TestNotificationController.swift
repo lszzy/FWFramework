@@ -47,7 +47,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
 @objc extension TestNotificationController {
     
     func onNotification1() {
-        NotificationManager.shared.registerLocalNotification("test", title: "立即通知", subtitle: nil, body: "body", userInfo: ["id": "test"], badge: 0, sound: nil, timeInterval: 0, repeats: false) { content in
+        NotificationManager.shared.registerLocalNotification("test", title: "立即通知", subtitle: nil, body: "body", userInfo: ["id": "test"], badge: 0, sound: "default", timeInterval: 0, repeats: false) { content in
             // iOS15时效性通知，需entitlements开启配置生效
             if #available(iOS 15.0, *) {
                 content.interruptionLevel = .timeSensitive
