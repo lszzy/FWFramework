@@ -81,14 +81,14 @@ public struct ModuleAnnotation<T> {
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
 public struct PluginAnnotation<T> {
-    let pluginProtocol: Protocol
+    let pluginProtocol: T.Type
     var plugin: T?
     
-    public init(_ pluginProtocol: Protocol) {
+    public init(_ pluginProtocol: T.Type) {
         self.pluginProtocol = pluginProtocol
     }
     
-    public init(_ pluginProtocol: Protocol, object: Any) {
+    public init(_ pluginProtocol: T.Type, object: Any) {
         self.pluginProtocol = pluginProtocol
         PluginManager.registerPlugin(pluginProtocol, object: object)
     }
@@ -98,7 +98,7 @@ public struct PluginAnnotation<T> {
             if let value = plugin {
                 return value
             } else {
-                return PluginManager.loadPlugin(pluginProtocol) as! T
+                return PluginManager.loadPlugin(pluginProtocol)!
             }
         }
         set {

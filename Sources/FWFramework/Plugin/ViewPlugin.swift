@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let viewPlugin = fw_property(forName: "fw_viewPlugin") as? ViewPlugin {
                 return viewPlugin
-            } else if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) as? ViewPlugin {
+            } else if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) {
                 return viewPlugin
             }
             return ViewPluginImpl.shared
@@ -53,7 +53,7 @@ import FWObjC
     @objc(__fw_progressViewWithStyle:)
     public static func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
         var plugin: ViewPlugin
-        if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) as? ViewPlugin,
+        if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self),
            viewPlugin.responds(to: #selector(viewPlugin.progressView(withStyle:))) {
             plugin = viewPlugin
         } else {
@@ -66,7 +66,7 @@ import FWObjC
     @objc(__fw_indicatorViewWithStyle:)
     public static func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         var plugin: ViewPlugin
-        if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) as? ViewPlugin,
+        if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self),
            viewPlugin.responds(to: #selector(viewPlugin.indicatorView(withStyle:))) {
             plugin = viewPlugin
         } else {
