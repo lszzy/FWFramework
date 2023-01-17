@@ -28,7 +28,7 @@ NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCaptur
 #define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]
 
-#define __FWLogGroup( aFormat, ... ) \
+#define __FWLogDebug( aFormat, ... ) \
     [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
@@ -91,7 +91,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     
 #ifdef DEBUG
     NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
-    __FWLogGroup(@"%@", errorMessage);
+    __FWLogDebug(@"%@", errorMessage);
 #endif
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

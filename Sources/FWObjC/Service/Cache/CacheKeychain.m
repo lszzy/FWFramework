@@ -8,6 +8,23 @@
 #import "CacheKeychain.h"
 #import <Security/Security.h>
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 @interface __FWCacheKeychain () <__FWCacheEngineProtocol>
 
 @property (nonatomic, copy, readonly) NSString *group;
@@ -82,7 +99,7 @@
         @try {
             object = [NSKeyedUnarchiver unarchiveObjectWithData:passwordData];
         } @catch (NSException *exception) {
-            NSLog(@"%@", exception);
+            __FWLogDebug(@"%@", exception);
         }
         return object;
     }
@@ -118,7 +135,7 @@
     @try {
         passwordData = [NSKeyedArchiver archivedDataWithRootObject:passwordObject];
     } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
+        __FWLogDebug(@"%@", exception);
     }
     if (passwordData) {
         return [self setPasswordData:passwordData forService:service account:account];

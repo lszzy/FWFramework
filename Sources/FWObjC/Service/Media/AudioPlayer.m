@@ -10,6 +10,23 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioSession.h>
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
     __FWAudioPauseReasonNone,
     __FWAudioPauseReasonForced,
@@ -83,21 +100,21 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
                 [audioSession setCategory:AVAudioSessionCategoryPlayback error:&aError];
                 if (aError) {
                     if (!self.disableLogs) {
-                        NSLog(@"FWAudioPlayer: set category error:%@",[aError description]);
+                        __FWLogDebug(@"FWAudioPlayer: set category error:%@",[aError description]);
                     }
                 }
                 aError = nil;
                 [audioSession setActive:YES error:&aError];
                 if (aError) {
                     if (!self.disableLogs) {
-                        NSLog(@"FWAudioPlayer: set active error:%@",[aError description]);
+                        __FWLogDebug(@"FWAudioPlayer: set active error:%@",[aError description]);
                     }
                 }
             }
         }
     }else {
         if (!self.disableLogs) {
-            NSLog(@"FWAudioPlayer: unable to register background playback");
+            __FWLogDebug(@"FWAudioPlayer: unable to register background playback");
         }
     }
 }
@@ -589,7 +606,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        NSLog(@"FWAudioPlayer: __FWAudioPlayer interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
+        __FWLogDebug(@"FWAudioPlayer: __FWAudioPlayer interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
     }
 }
 
@@ -606,7 +623,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        NSLog(@"FWAudioPlayer: __FWAudioPlayer routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
+        __FWLogDebug(@"FWAudioPlayer: __FWAudioPlayer routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
     }
 }
 
@@ -633,7 +650,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
             }
         } else if (self.audioPlayer.status == AVPlayerStatusFailed) {
             if (!self.disableLogs) {
-                NSLog(@"FWAudioPlayer: %@", self.audioPlayer.error);
+                __FWLogDebug(@"FWAudioPlayer: %@", self.audioPlayer.error);
             }
             
             if ([self.delegate respondsToSelector:@selector(audioPlayerDidFailed:error:)]) {
@@ -716,7 +733,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
                 if (CMTIME_COMPARE_INLINE(bufferdTime , >, milestone) && self.audioPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying) {
                     if (![self isPlaying]) {
                         if (!self.disableLogs) {
-                            NSLog(@"FWAudioPlayer: resume from buffering..");
+                            __FWLogDebug(@"FWAudioPlayer: resume from buffering..");
                         }
                         [self play];
                     }
@@ -818,7 +835,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     if (error) {
         if (!self.disableLogs) {
-            NSLog(@"FWAudioPlayer: set category error:%@", [error localizedDescription]);
+            __FWLogDebug(@"FWAudioPlayer: set category error:%@", [error localizedDescription]);
         }
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];

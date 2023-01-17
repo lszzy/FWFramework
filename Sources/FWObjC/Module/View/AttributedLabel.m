@@ -8,6 +8,23 @@
 #import "AttributedLabel.h"
 #import <objc/runtime.h>
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 #pragma mark - NSMutableAttributedString+__FWAttributedLabel
 
 @interface NSMutableAttributedString (__FWAttributedLabel)
@@ -1003,7 +1020,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                 }
                                 else
                                 {
-                                    NSLog(@"Attachment Content Not Supported %@",content);
+                                    __FWLogDebug(@"Attachment Content Not Supported %@",content);
                                 }
                             }
                         }
@@ -1145,7 +1162,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             }
             else
             {
-                NSLog(@"Attachment Content Not Supported %@",content);
+                __FWLogDebug(@"Attachment Content Not Supported %@",content);
             }
             
         }
