@@ -7,6 +7,23 @@
 
 #import "Task.h"
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 #pragma mark - __FWTask
 
 typedef NS_ENUM(NSInteger, __FWTaskState) {
@@ -53,7 +70,7 @@ typedef NS_ENUM(NSInteger, __FWTaskState) {
         self.state = __FWTaskStateLoading;
         
         // 调试日志
-        NSLog(@"\n********** TASK %@ STARTED", NSStringFromClass(self.class));
+        __FWLogDebug(@"\n********** TASK %@ STARTED", NSStringFromClass(self.class));
         
         [self.lock unlock];
         
@@ -87,12 +104,12 @@ typedef NS_ENUM(NSInteger, __FWTaskState) {
             self.state = __FWTaskStateFailure;
             
             // 调试日志
-            NSLog(@"\n********** TASK %@ FAILED", NSStringFromClass(self.class));
+            __FWLogDebug(@"\n********** TASK %@ FAILED", NSStringFromClass(self.class));
         } else {
             self.state = __FWTaskStateSuccess;
             
             // 调试日志
-            NSLog(@"\n********** TASK %@ FINISHED", NSStringFromClass(self.class));
+            __FWLogDebug(@"\n********** TASK %@ FINISHED", NSStringFromClass(self.class));
         }
     }
     [self.lock unlock];
@@ -112,7 +129,7 @@ typedef NS_ENUM(NSInteger, __FWTaskState) {
         [super cancel];
         
         // 调试日志
-        NSLog(@"\n********** TASK %@ CANCELLED", NSStringFromClass(self.class));
+        __FWLogDebug(@"\n********** TASK %@ CANCELLED", NSStringFromClass(self.class));
     }
     
     [self.lock unlock];

@@ -8,6 +8,23 @@
 #import "CacheSqlite.h"
 #import <sqlite3.h>
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 @interface __FWCacheSqlite () <__FWCacheEngineProtocol>
 
 @property (nonatomic, strong) NSString *dbPath;
@@ -98,7 +115,7 @@
                         @try {
                             object = [NSKeyedUnarchiver unarchiveObjectWithData:data];
                         } @catch (NSException *exception) {
-                            NSLog(@"%@", exception);
+                            __FWLogDebug(@"%@", exception);
                         }
                     }
                 }
@@ -119,7 +136,7 @@
             @try {
                 data = [NSKeyedArchiver archivedDataWithRootObject:object];
             } @catch (NSException *exception) {
-                NSLog(@"%@", exception);
+                __FWLogDebug(@"%@", exception);
             }
             NSString *sql = @"REPLACE INTO FWCache (key, object) VALUES (?, ?)";
             sqlite3_stmt *stmt;

@@ -30,7 +30,7 @@
 
 #endif
 
-#define __FWLogGroup( aFormat, ... ) \
+#define __FWLogDebug( aFormat, ... ) \
     [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark - __FWMediator
@@ -174,8 +174,8 @@
     }
     
 #ifdef DEBUG
-    __FWLogGroup(@"%@", __FWMediator.debugDescription);
-    __FWLogGroup(@"%@", __FWPluginManager.debugDescription);
+    __FWLogDebug(@"%@", __FWMediator.debugDescription);
+    __FWLogDebug(@"%@", __FWPluginManager.debugDescription);
 #endif
 }
 

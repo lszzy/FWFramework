@@ -7,6 +7,23 @@
 
 #import "PageControl.h"
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 #pragma mark - __FWPageControl
 
 @interface __FWPageControl()
@@ -201,7 +218,7 @@
         if ([dotView respondsToSelector:@selector(changeActivityState:)]) {
             [dotView changeActivityState:active];
         } else {
-            NSLog(@"Custom view : %@ must implement an 'changeActivityState' method for protocol %@", self.dotViewClass, NSStringFromProtocol(@protocol(__FWDotViewProtocol)));
+            __FWLogDebug(@"Custom view : %@ must implement an 'changeActivityState' method for protocol %@", self.dotViewClass, NSStringFromProtocol(@protocol(__FWDotViewProtocol)));
         }
     } else if (self.dotImage && self.currentDotImage) {
         UIImageView *dotView = (UIImageView *)[self.dots objectAtIndex:index];

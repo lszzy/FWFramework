@@ -31,6 +31,7 @@
 
 @interface NSObject ()
 
++ (void)__fw_logDebug:(NSString *)message;
 - (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 + (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
 - (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
@@ -58,6 +59,9 @@
 #import <FWFramework/FWFramework-Swift.h>
 
 #endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark - __FWWebView
 
@@ -566,14 +570,14 @@ static int logMaxLength = 500;
 
 - (void)flushMessageQueue:(NSString *)messageQueueString{
     if (messageQueueString == nil || messageQueueString.length == 0) {
-        NSLog(@"WebViewJavascriptBridge: WARNING: ObjC got nil while fetching the message queue JSON from webview. This can happen if the WebViewJavascriptBridge JS is not currently present in the webview, e.g if the webview just loaded a new page.");
+        __FWLogDebug(@"WebViewJavascriptBridge: WARNING: ObjC got nil while fetching the message queue JSON from webview. This can happen if the WebViewJavascriptBridge JS is not currently present in the webview, e.g if the webview just loaded a new page.");
         return;
     }
 
     id messages = [self _deserializeMessageJSON:messageQueueString];
     for (__FWJsBridgeMessage* message in messages) {
         if (![message isKindOfClass:[__FWJsBridgeMessage class]]) {
-            NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
+            __FWLogDebug(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
         [self _log:@"RCVD" json:message];
@@ -612,7 +616,7 @@ static int logMaxLength = 500;
                 continue;
             }
             
-            NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+            __FWLogDebug(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
             if (self.errorHandler) {
                 self.errorHandler(message[@"handlerName"], message[@"data"] ?: @{}, responseCallback);
             }
@@ -655,7 +659,7 @@ static int logMaxLength = 500;
 }
 
 - (void)logUnkownMessage:(NSURL*)url {
-    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@", [url absoluteString]);
+    __FWLogDebug(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@", [url absoluteString]);
 }
 
 - (NSString *)webViewJavascriptCheckCommand {
@@ -722,9 +726,9 @@ static int logMaxLength = 500;
         json = [self _serializeMessage:json pretty:YES];
     }
     if ([json length] > logMaxLength) {
-        NSLog(@"WVJB %@: %@ [...]", action, [json substringToIndex:logMaxLength]);
+        __FWLogDebug(@"WVJB %@: %@ [...]", action, [json substringToIndex:logMaxLength]);
     } else {
-        NSLog(@"WVJB %@: %@", action, json);
+        __FWLogDebug(@"WVJB %@: %@", action, json);
     }
 }
 
@@ -879,7 +883,7 @@ static int logMaxLength = 500;
 - (void)WKFlushMessageQueue {
     [_webView evaluateJavaScript:[_base webViewJavascriptFetchQueyCommand] completionHandler:^(NSString* result, NSError* error) {
         if (error != nil) {
-            NSLog(@"WebViewJavascriptBridge: WARNING: Error when trying to fetch data from WKWebView: %@", error);
+            __FWLogDebug(@"WebViewJavascriptBridge: WARNING: Error when trying to fetch data from WKWebView: %@", error);
         }
         [self->_base flushMessageQueue:result];
     }];

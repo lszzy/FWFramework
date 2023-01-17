@@ -10,6 +10,23 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CommonCrypto/CommonDigest.h>
 
+#if FWMacroSPM
+
+@interface NSObject ()
+
++ (void)__fw_logDebug:(NSString *)message;
+
+@end
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
 #pragma mark - __FWPlayerCacheLoaderManager
 
 static NSString *__FWPlayerCacheScheme = @"__FWPlayerCache___:";
@@ -892,7 +909,7 @@ static NSString *kURLKey = @"kURLKey";
     @try {
         configuration = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     } @catch (NSException *exception) {
-        NSLog(@"%@", exception);
+        __FWLogDebug(@"%@", exception);
     }
     
     if (!configuration) {
@@ -1004,7 +1021,7 @@ static NSString *kURLKey = @"kURLKey";
         @try {
             [NSKeyedArchiver archiveRootObject:self toFile:self.filePath];
         } @catch (NSException *exception) {
-            NSLog(@"%@", exception);
+            __FWLogDebug(@"%@", exception);
         }
     }
 }
@@ -1397,7 +1414,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
             self.writeBytes += data.length;
             [self.internalCacheConfiguration addCacheFragment:range];
         } @catch (NSException *exception) {
-            NSLog(@"write to file error");
+            __FWLogDebug(@"write to file error");
             *error = [NSError errorWithDomain:exception.name code:123 userInfo:@{NSLocalizedDescriptionKey: exception.reason, @"exception": exception}];
         }
     }
@@ -1410,7 +1427,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
             NSData *data = [self.readFileHandle readDataOfLength:range.length]; // 空数据也会返回，所以如果 range 错误，会导致播放失效
             return data;
         } @catch (NSException *exception) {
-            NSLog(@"read cached data error %@",exception);
+            __FWLogDebug(@"read cached data error %@",exception);
             *error = [NSError errorWithDomain:exception.name code:123 userInfo:@{NSLocalizedDescriptionKey: exception.reason, @"exception": exception}];
         }
     }
@@ -1501,7 +1518,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
         [self.writeFileHandle truncateFileAtOffset:contentInfo.contentLength];
         [self.writeFileHandle synchronizeFile];
     } @catch (NSException *exception) {
-        NSLog(@"read cached data error %@", exception);
+        __FWLogDebug(@"read cached data error %@", exception);
         *error = [NSError errorWithDomain:exception.name code:123 userInfo:@{NSLocalizedDescriptionKey: exception.reason, @"exception": exception}];
     }
 }
