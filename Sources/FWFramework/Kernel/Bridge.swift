@@ -12,7 +12,7 @@ import Foundation
     
     /// 记录内部分组调试日志
     @objc public static func __fw_logDebug(_ message: String) {
-        Logger.log(.debug, message: message, group: "FWFramework", userInfo: nil)
+        Logger.log(.debug, group: "FWFramework", message: message)
     }
     
 }
