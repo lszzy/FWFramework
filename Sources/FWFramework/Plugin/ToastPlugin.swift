@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let toastPlugin = fw_property(forName: "fw_toastPlugin") as? ToastPlugin {
                 return toastPlugin
-            } else if let toastPlugin = PluginManager.loadPlugin(ToastPlugin.self) as? ToastPlugin {
+            } else if let toastPlugin = PluginManager.loadPlugin(ToastPlugin.self) {
                 return toastPlugin
             }
             return ToastPluginImpl.shared

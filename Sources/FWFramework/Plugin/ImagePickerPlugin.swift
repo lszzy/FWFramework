@@ -286,7 +286,7 @@ import FWObjC
         get {
             if let pickerPlugin = fw_property(forName: "fw_imagePickerPlugin") as? ImagePickerPlugin {
                 return pickerPlugin
-            } else if let pickerPlugin = PluginManager.loadPlugin(ImagePickerPlugin.self) as? ImagePickerPlugin {
+            } else if let pickerPlugin = PluginManager.loadPlugin(ImagePickerPlugin.self) {
                 return pickerPlugin
             }
             return ImagePickerPluginImpl.shared

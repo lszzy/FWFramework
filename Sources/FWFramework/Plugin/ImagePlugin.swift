@@ -100,7 +100,7 @@ extension FW {
     public static func fw_image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
         guard let data = data, data.count > 0 else { return nil }
         
-        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.imageDecode(_:scale:options:))) {
             return imagePlugin.imageDecode?(data, scale: scale, options: options)
         }
@@ -116,7 +116,7 @@ extension FW {
     public static func fw_data(image: UIImage?, options: [ImageCoderOptions: Any]? = nil) -> Data? {
         guard let image = image else { return nil }
         
-        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.imageEncode(_:options:))) {
             return imagePlugin.imageEncode?(image, options: options)
         }
@@ -137,7 +137,7 @@ extension FW {
     /// 下载网络图片并返回下载凭据，指定option
     @discardableResult
     public static func fw_downloadImage(_ url: Any?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
-        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.downloadImage(_:options:context:completion:progress:))) {
             var imageURL: URL?
             if let string = url as? String, !string.isEmpty {
@@ -155,7 +155,7 @@ extension FW {
 
     /// 指定下载凭据取消网络图片下载
     public static func fw_cancelImageDownload(_ receipt: Any?) {
-        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.cancelImageDownload(_:))) {
             imagePlugin.cancelImageDownload?(receipt)
         }
@@ -171,7 +171,7 @@ extension FW {
             if let imagePlugin = fw_property(forName: "fw_imagePlugin") as? ImagePlugin {
                 return imagePlugin
             }
-            return PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin
+            return PluginManager.loadPlugin(ImagePlugin.self)
         }
         set {
             fw_setProperty(newValue, forName: "fw_imagePlugin")
@@ -223,12 +223,21 @@ extension FW {
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
     @objc(__fw_animatedImageView)
     public static func fw_animatedImageView() -> UIImageView {
-        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) as? ImagePlugin,
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.animatedImageView)) {
             return imagePlugin.animatedImageView!()
         }
         
         return UIImageView()
+    }
+    
+}
+
+// MARK: - ImagePluginAutoloader
+internal class ImagePluginAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        PluginManager.presetPlugin(ImagePlugin.self, object: ImagePluginImpl.self)
     }
     
 }

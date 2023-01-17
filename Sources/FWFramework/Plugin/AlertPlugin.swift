@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let alertPlugin = fw_property(forName: "fw_alertPlugin") as? AlertPlugin {
                 return alertPlugin
-            } else if let alertPlugin = PluginManager.loadPlugin(AlertPlugin.self) as? AlertPlugin {
+            } else if let alertPlugin = PluginManager.loadPlugin(AlertPlugin.self) {
                 return alertPlugin
             }
             return AlertPluginImpl.shared

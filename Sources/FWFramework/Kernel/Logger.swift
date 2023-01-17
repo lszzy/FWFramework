@@ -197,7 +197,7 @@ public class Logger: NSObject {
         if !check(type) { return }
         
         var plugin: LoggerPlugin
-        if let loggerPlugin = PluginManager.loadPlugin(LoggerPlugin.self) as? LoggerPlugin {
+        if let loggerPlugin = PluginManager.loadPlugin(LoggerPlugin.self) {
             plugin = loggerPlugin
         } else {
             plugin = LoggerPluginImpl.shared

@@ -801,14 +801,6 @@
 
 @implementation ____FWImagePluginImpl
 
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [__FWPluginManager presetPlugin:@protocol(__FWImagePlugin) object:[____FWImagePluginImpl class]];
-    });
-}
-
 + (____FWImagePluginImpl *)sharedInstance
 {
     static ____FWImagePluginImpl *instance = nil;

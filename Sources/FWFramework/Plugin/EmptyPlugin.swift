@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let emptyPlugin = fw_property(forName: "fw_emptyPlugin") as? EmptyPlugin {
                 return emptyPlugin
-            } else if let emptyPlugin = PluginManager.loadPlugin(EmptyPlugin.self) as? EmptyPlugin {
+            } else if let emptyPlugin = PluginManager.loadPlugin(EmptyPlugin.self) {
                 return emptyPlugin
             }
             return EmptyPluginImpl.shared

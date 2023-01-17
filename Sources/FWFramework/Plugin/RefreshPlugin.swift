@@ -17,7 +17,7 @@ import FWObjC
         get {
             if let refreshPlugin = fw_property(forName: "fw_refreshPlugin") as? RefreshPlugin {
                 return refreshPlugin
-            } else if let refreshPlugin = PluginManager.loadPlugin(RefreshPlugin.self) as? RefreshPlugin {
+            } else if let refreshPlugin = PluginManager.loadPlugin(RefreshPlugin.self) {
                 return refreshPlugin
             }
             return RefreshPluginImpl.shared

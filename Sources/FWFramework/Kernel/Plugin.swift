@@ -49,63 +49,63 @@ public class PluginManager: NSObject {
     public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for (protocolName, target) in pluginPool {
+        for (pluginId, target) in pluginPool {
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), protocolName, String.fw_safeString(target.instance ?? target.object)))
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), pluginId, String.fw_safeString(target.instance ?? target.object)))
         }
         return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
     }
     
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
-    public static let sharedLoader = Loader<Protocol, Any>()
+    public static let sharedLoader = Loader<Any, Any>()
     
     /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
     @discardableResult
-    public static func registerPlugin(_ proto: Protocol, object: Any) -> Bool {
-        return registerPlugin(proto, object: object, isPreset: false)
+    public static func registerPlugin<T>(_ type: T.Type, object: Any) -> Bool {
+        return registerPlugin(type, object: object, isPreset: false)
     }
     
     /// 预置单例插件，仅当插件未注册时生效，插件类或对象必须实现protocol
     @discardableResult
-    @objc public static func presetPlugin(_ proto: Protocol, object: Any) -> Bool {
-        return registerPlugin(proto, object: object, isPreset: true)
+    public static func presetPlugin<T>(_ type: T.Type, object: Any) -> Bool {
+        return registerPlugin(type, object: object, isPreset: true)
     }
     
-    private static func registerPlugin(_ proto: Protocol, object: Any, isPreset: Bool) -> Bool {
-        let protocolName = NSStringFromProtocol(proto)
-        if let target = pluginPool[protocolName] {
+    private static func registerPlugin<T>(_ type: T.Type, object: Any, isPreset: Bool) -> Bool {
+        let pluginId = String(describing: type)
+        if let target = pluginPool[pluginId] {
             if target.locked { return false }
             if isPreset { return false }
         }
         
         let plugin = Target()
         plugin.object = object
-        pluginPool[protocolName] = plugin
+        pluginPool[pluginId] = plugin
         return true
     }
     
     /// 取消插件注册，仅当插件未使用时生效
-    public static func unregisterPlugin(_ proto: Protocol) {
-        let protocolName = NSStringFromProtocol(proto)
-        guard let target = pluginPool[protocolName] else { return }
+    public static func unregisterPlugin<T>(_ type: T.Type) {
+        let pluginId = String(describing: type)
+        guard let target = pluginPool[pluginId] else { return }
         if target.locked { return }
         
-        pluginPool.removeValue(forKey: protocolName)
+        pluginPool.removeValue(forKey: pluginId)
     }
     
     /// 延迟加载插件对象，调用后不可再注册该插件
-    public static func loadPlugin(_ proto: Protocol) -> Any? {
-        let protocolName = NSStringFromProtocol(proto)
-        var target = pluginPool[protocolName]
+    public static func loadPlugin<T>(_ type: T.Type) -> T? {
+        let pluginId = String(describing: type)
+        var target = pluginPool[pluginId]
         if target == nil {
-            guard let object = sharedLoader.load(proto) else { return nil }
+            guard let object = sharedLoader.load(type) else { return nil }
             
-            registerPlugin(proto, object: object)
-            target = pluginPool[protocolName]
+            registerPlugin(type, object: object)
+            target = pluginPool[pluginId]
         }
         guard let plugin = target else { return nil }
         if plugin.instance != nil && !plugin.isFactory {
-            return plugin.instance
+            return plugin.instance as? T
         }
         
         plugin.locked = true
@@ -129,13 +129,13 @@ public class PluginManager: NSObject {
         }
         
         (plugin.instance as? PluginProtocol)?.pluginDidLoad?()
-        return plugin.instance
+        return plugin.instance as? T
     }
     
     /// 释放插件对象并标记为未使用，释放后可重新注册该插件
-    public static func unloadPlugin(_ proto: Protocol) {
-        let protocolName = NSStringFromProtocol(proto)
-        guard let plugin = pluginPool[protocolName] else { return }
+    public static func unloadPlugin<T>(_ type: T.Type) {
+        let pluginId = String(describing: type)
+        guard let plugin = pluginPool[pluginId] else { return }
         
         (plugin.instance as? PluginProtocol)?.pluginDidUnload?()
         plugin.instance = nil
