@@ -17,6 +17,12 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     public static let shared = NotificationManager()
     
     // MARK: - Authorize
+    /// 授权选项，默认[.badge, .sound, .alert]
+    public var authorizeOptions: UNAuthorizationOptions {
+        get { return AuthorizeNotifications.authorizeOptions }
+        set { AuthorizeNotifications.authorizeOptions = newValue }
+    }
+    
     /// 异步查询通知权限状态，当前线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
         AuthorizeManager.manager(type: .notifications)?.authorizeStatus?(completion)

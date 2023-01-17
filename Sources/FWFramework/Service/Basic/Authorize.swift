@@ -285,7 +285,9 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeNotifications
 /// 通知授权
-private class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+    static var authorizeOptions: UNAuthorizationOptions = [.badge, .sound, .alert]
+    
     func authorizeStatus() -> AuthorizeStatus {
         var status: AuthorizeStatus = .notDetermined
         // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
@@ -330,7 +332,7 @@ private class AuthorizeNotifications: NSObject, AuthorizeProtocol {
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        let options: UNAuthorizationOptions = [.badge, .sound, .alert]
+        let options = AuthorizeNotifications.authorizeOptions
         UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
