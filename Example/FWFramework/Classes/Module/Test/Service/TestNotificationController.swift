@@ -47,7 +47,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
 @objc extension TestNotificationController {
     
     func onNotification1() {
-        NotificationManager.shared.registerLocalNotification("test", title: "立即通知", subtitle: nil, body: "body", userInfo: ["id": "test"], badge: 0, soundName: nil, timeInterval: 0, repeats: false) { content in
+        NotificationManager.shared.registerLocalNotification("test", title: "立即通知", subtitle: nil, body: "body", userInfo: ["id": "test"], badge: 0, sound: nil, timeInterval: 0, repeats: false) { content in
             // iOS15时效性通知，需entitlements开启配置生效
             if #available(iOS 15.0, *) {
                 content.interruptionLevel = .timeSensitive
@@ -56,7 +56,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
     }
     
     func onNotification2() {
-        NotificationManager.shared.registerLocalNotification("test2", title: "5秒后通知", subtitle: "subtitle", body: "body", userInfo: ["id": "test2"], badge: 1, soundName: "default", timeInterval: 5, repeats: false) { content in
+        NotificationManager.shared.registerLocalNotification("test2", title: "5秒后通知", subtitle: "subtitle", body: "body", userInfo: ["id": "test2"], badge: 1, sound: "default", timeInterval: 5, repeats: false) { content in
             // iOS15时效性通知，需entitlements开启配置生效
             if #available(iOS 15.0, *) {
                 content.interruptionLevel = .timeSensitive
@@ -65,7 +65,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
     }
     
     func onNotification3() {
-        NotificationManager.shared.registerLocalNotification("test3", title: "重复1分钟通知", subtitle: "subtitle", body: "body", userInfo: ["id": "test3"], badge: 1, soundName: "default", timeInterval: 60, repeats: true)
+        NotificationManager.shared.registerLocalNotification("test3", title: "重复1分钟通知", subtitle: "subtitle", body: "body", userInfo: ["id": "test3"], badge: 1, sound: "default", timeInterval: 60, repeats: true)
     }
     
     func onNotification4() {

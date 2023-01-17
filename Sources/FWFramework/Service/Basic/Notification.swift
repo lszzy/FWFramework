@@ -76,15 +76,19 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     // MARK: - Local
-    /// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
-    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, soundName: String?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
+    /// 注册本地通知，badge为0时不改变，sound为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
+    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, sound: Any?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
         let notification = UNMutableNotificationContent()
         if let title = title { notification.title = title }
         if let subtitle = subtitle { notification.subtitle = subtitle }
         if let body = body { notification.body = body }
         if let userInfo = userInfo { notification.userInfo = userInfo }
         notification.badge = badge > 0 ? NSNumber(value: badge) : nil
-        if let soundName = soundName { notification.sound = (soundName == "default") ? .default : UNNotificationSound(named: UNNotificationSoundName(soundName)) }
+        if let sound = sound as? UNNotificationSound {
+            notification.sound = sound
+        } else if let soundName = sound as? String {
+            notification.sound = (soundName == "default") ? .default : UNNotificationSound(named: UNNotificationSoundName(soundName))
+        }
         block?(notification)
         
         let trigger = timeInterval > 0 ? UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: repeats) : nil
