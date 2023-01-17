@@ -116,6 +116,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface __FWBridge : NSObject
 
++ (void)logMessage:(NSString *)message;
+
 + (NSTimeInterval)systemUptime;
 
 + (NSString *)escapeHtml:(NSString *)string;
