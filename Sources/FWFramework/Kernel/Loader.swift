@@ -8,7 +8,7 @@
 import Foundation
 
 /// 通用加载器，添加处理句柄后指定输入即可加载输出结果
-public class Loader<Input, Output> {
+public class Loader<Input, Output>: NSObject {
     
     private class Target {
         let identifier: String = UUID().uuidString
@@ -30,9 +30,6 @@ public class Loader<Input, Output> {
     }
     
     private var allLoaders: [Target] = []
-    
-    /// 构造方法
-    public init() {}
     
     /// 添加block加载器，返回标志id
     @discardableResult
