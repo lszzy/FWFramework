@@ -356,7 +356,7 @@ public protocol LoggerPlugin {
     
 }
 
-/// NSLog日志插件
+/// NSLog日志插件，兼容FLEX、FWDebug等组件(使用OC版本NSLog实现)
 public class LoggerPluginNSLog: NSObject, LoggerPlugin {
     
     @objc(sharedInstance)
@@ -366,15 +366,15 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin {
     public func log(_ type: LogType, group: String, message: String) {
         switch type {
         case .error:
-            NSLog("%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message)
+            __FWBridge.logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
         case .warn:
-            NSLog("%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message)
+            __FWBridge.logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
         case .info:
-            NSLog("%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
+            __FWBridge.logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
         case .debug:
-            NSLog("%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
+            __FWBridge.logMessage(String(format: "%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
         default:
-            NSLog("%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message)
+            __FWBridge.logMessage(String(format: "%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
         }
     }
     
@@ -413,7 +413,7 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin {
 }
 
 // MARK: - LoggerPluginImpl
-/// 日志插件管理器，默认调试使用NSLog，正式为空需自行添加
+/// 日志插件管理器，默认使用NSLog
 public class LoggerPluginImpl: NSObject, LoggerPlugin {
     
     /// 单例模式对象
@@ -432,12 +432,10 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin {
     
     private var allTargets: [Target] = []
     
-    /// 初始化方法，默认调试使用NSLog
+    /// 初始化方法，默认使用NSLog
     public override init() {
         super.init()
-        #if DEBUG
         addLogger(LoggerPluginNSLog.shared)
-        #endif
     }
     
     /// 添加日志插件，并在指定等级生效(默认all)

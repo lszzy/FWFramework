@@ -637,6 +637,10 @@ typedef struct __ProxyBlock {
 
 @implementation __FWBridge
 
++ (void)logMessage:(NSString *)message {
+    NSLog(@"%@", message);
+}
+
 + (NSTimeInterval)systemUptime {
     struct timeval bootTime;
     int mib[2] = {CTL_KERN, KERN_BOOTTIME};
