@@ -233,7 +233,6 @@
         FWSwizzleClass(UINavigationBar, @selector(layoutSubviews), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             FWSwizzleOriginal();
             
-            if (!selfObject.fw_isFakeBar) return;
             UIView *backgroundView = selfObject.fw_backgroundView;
             CGRect frame = backgroundView.frame;
             frame.size.height = selfObject.frame.size.height + fabs(frame.origin.y);
@@ -254,6 +253,21 @@
             }
             
             FWSwizzleOriginal(hidden);
+        }));
+        FWSwizzleMethod(objc_getClass("_UIParallaxDimmingView"), @selector(layoutSubviews), nil, FWSwizzleType(UIView *), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
+            FWSwizzleOriginal();
+            
+            // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
+            if ([selfObject.subviews.firstObject isKindOfClass:[UIImageView class]] ||
+                [selfObject.subviews.firstObject isKindOfClass:[UIVisualEffectView class]]) {
+                UIView *shadowView = selfObject.subviews.firstObject;
+                if (selfObject.frame.origin.y > 0 && shadowView.frame.origin.y == 0) {
+                    shadowView.frame = CGRectMake(shadowView.frame.origin.x,
+                                                  shadowView.frame.origin.y - selfObject.frame.origin.y,
+                                                  shadowView.frame.size.width,
+                                                  shadowView.frame.size.height + selfObject.frame.origin.y);
+                }
+            }
         }));
         
         FWSwizzleClass(UIViewController, @selector(viewDidAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
