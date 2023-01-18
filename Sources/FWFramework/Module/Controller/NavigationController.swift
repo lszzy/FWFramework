@@ -110,7 +110,7 @@ import FWObjC
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if let backgroundView = selfObject.fw_backgroundView {
+            if selfObject.fw_isFakeBar, let backgroundView = selfObject.fw_backgroundView {
                 var frame = backgroundView.frame
                 frame.size.height = selfObject.frame.size.height + abs(frame.origin.y)
                 backgroundView.frame = frame
@@ -136,23 +136,6 @@ import FWObjC
             }
             
             store.original(selfObject, store.selector, hidden)
-        }}
-        
-        NSObject.fw_swizzleMethod(
-            objc_getClass("_UIParallaxDimmingView"),
-            selector: #selector(UIView.layoutSubviews),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            // 处理导航栏左侧阴影占不满的问题。兼容iOS13下如果navigationBar是磨砂的，则每个视图内部都会有一个磨砂，而磨砂再包裹了imageView等subview
-            if let shadowView = selfObject.subviews.first,
-               (shadowView is UIImageView || shadowView is UIVisualEffectView) {
-                if selfObject.frame.origin.y > 0 && shadowView.frame.origin.y == 0 {
-                    shadowView.frame = CGRect(x: shadowView.frame.origin.x, y: shadowView.frame.origin.y - selfObject.frame.origin.y, width: shadowView.frame.size.width, height: shadowView.frame.size.height + selfObject.frame.origin.y)
-                }
-            }
         }}
         
         NSObject.fw_swizzleInstanceMethod(
