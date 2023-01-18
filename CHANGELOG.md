@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.4.2] - 2023-01-18
+
+### Fixed
+* Fixed the problem that sliding the top navigation bar quickly will trigger the bottom navigation bar to slide back after the navigation bar interception is enabled
+
 ## [4.4.1] - 2023-01-06
 
 ### Changed
