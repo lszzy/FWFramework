@@ -41,6 +41,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             ["转场present", "onPresentTransition"],
             ["自定义present", "onPresentAnimation"],
             ["swipe present", "onPresentSwipe"],
+            ["边缘present", "onPushEdge"],
             ["自定义controller", "onPresentController"],
             ["自定义alert", "onPresentAlert"],
             ["自定义animator", "onPresentAnimator"],
@@ -51,7 +52,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             ["Block Push", "onPushBlock"],
             ["Option Push", "onPushOption"],
             ["Animation Push", "onPushAnimation"],
-            ["Custom Push", "onPushCustom"],
             ["Swipe Push", "onPushSwipe"],
             ["Proxy Push", "onPushProxy"],
             ["interactive Push", "onPushInteractive"],
@@ -154,6 +154,15 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         let vc = TestFullScreenViewController()
         vc.fw.modalTransition = transition
         present(vc, animated: true)
+    }
+    
+    @objc func onPushEdge() {
+        let nav = UINavigationController(rootViewController: TestFullScreenViewController())
+        let transition = nav.fw.setPresentTransition()
+        transition.interactEnabled = true
+        transition.interactScreenEdge = true
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
     
     @objc func onPresentController() {
@@ -308,31 +317,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
                 // 这种转场动画需要先隐藏目标视图
                 transition.transitionContext?.view(forKey: .from)?.isHidden = true
                 self?.navigationController?.view.fw.addTransition(type: .reveal, subtype: .fromBottom, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            }
-        }
-        
-        let vc = TestFullScreenViewController()
-        navigationController?.fw.navigationTransition = transition
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func onPushCustom() {
-        let transition = AnimatedTransition()
-        transition.transitionDuration = duration
-        transition.transitionBlock = { [weak self] transition in
-            if transition.transitionType == .push {
-                transition.start()
-                // 使用navigationController.view做动画，而非containerView做动画，下同
-                self?.navigationController?.view.fw.addAnimation(curve: .easeInOut, transition: .curlUp, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            } else if transition.transitionType == .pop {
-                transition.start()
-                // 这种转场动画需要先隐藏目标视图
-                transition.transitionContext?.view(forKey: .from)?.isHidden = true
-                self?.navigationController?.view.fw.addAnimation(curve: .easeInOut, transition: .curlDown, duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
                     transition.complete()
                 })
             }
