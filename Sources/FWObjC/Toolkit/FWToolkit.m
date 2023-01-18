@@ -2001,6 +2001,7 @@ static BOOL fwStaticAutoScaleFont = NO;
 
 - (BOOL)shouldForceReceive
 {
+    if (self.navigationController.presentedViewController != nil) return NO;
     if (self.navigationController.viewControllers.count <= 1) return NO;
     if (!self.navigationController.interactivePopGestureRecognizer.enabled) return NO;
     return self.navigationController.topViewController.allowsPopGesture;
