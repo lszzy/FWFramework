@@ -1868,6 +1868,7 @@ fileprivate protocol GestureRecognizerDelegateCompatible {
         weak var navigationController: UINavigationController?
         
         func shouldForceReceive() -> Bool {
+            if navigationController?.presentedViewController != nil { return false }
             if (navigationController?.viewControllers.count ?? 0) <= 1 { return false }
             if !(navigationController?.interactivePopGestureRecognizer?.isEnabled ?? false) { return false }
             return navigationController?.topViewController?.allowsPopGesture ?? false
