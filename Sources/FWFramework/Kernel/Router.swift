@@ -7,6 +7,11 @@
 
 import Foundation
 
+extension FW {
+    /// 路由快速访问
+    public static var router = Router.self
+}
+
 /// 路由处理句柄，仅支持openURL时可返回nil
 public typealias RouterHandler = (RouterContext) -> Any?
 
