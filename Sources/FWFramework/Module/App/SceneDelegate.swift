@@ -22,7 +22,7 @@ open class SceneResponder: UIResponder, UIWindowSceneDelegate {
     }
     
     // MARK: - UIWindowSceneDelegate
-    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    open func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
             window = UIWindow(windowScene: windowScene)
             window?.makeKeyAndVisible()
@@ -30,23 +30,23 @@ open class SceneResponder: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    public func sceneDidDisconnect(_ scene: UIScene) {
+    open func sceneDidDisconnect(_ scene: UIScene) {
         
     }
     
-    public func sceneDidBecomeActive(_ scene: UIScene) {
+    open func sceneDidBecomeActive(_ scene: UIScene) {
         
     }
     
-    public func sceneWillResignActive(_ scene: UIScene) {
+    open func sceneWillResignActive(_ scene: UIScene) {
         
     }
     
-    public func sceneWillEnterForeground(_ scene: UIScene) {
+    open func sceneWillEnterForeground(_ scene: UIScene) {
         
     }
     
-    public func sceneDidEnterBackground(_ scene: UIScene) {
+    open func sceneDidEnterBackground(_ scene: UIScene) {
         
     }
     
