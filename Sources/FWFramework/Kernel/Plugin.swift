@@ -76,7 +76,7 @@ public class PluginManager: NSObject {
     }
     
     private static func registerPlugin<T>(_ type: T.Type, object: Any, isPreset: Bool) -> Bool {
-        let pluginId = String(describing: type)
+        let pluginId = String.fw_safeString(type)
         if let target = pluginPool[pluginId] {
             if target.locked { return false }
             if isPreset { return false }
@@ -90,7 +90,7 @@ public class PluginManager: NSObject {
     
     /// 取消插件注册，仅当插件未使用时生效
     public static func unregisterPlugin<T>(_ type: T.Type) {
-        let pluginId = String(describing: type)
+        let pluginId = String.fw_safeString(type)
         guard let target = pluginPool[pluginId] else { return }
         if target.locked { return }
         
@@ -99,7 +99,7 @@ public class PluginManager: NSObject {
     
     /// 延迟加载插件对象，调用后不可再注册该插件
     public static func loadPlugin<T>(_ type: T.Type) -> T? {
-        let pluginId = String(describing: type)
+        let pluginId = String.fw_safeString(type)
         var target = pluginPool[pluginId]
         if target == nil {
             guard let object = sharedLoader.load(type) else { return nil }
@@ -138,7 +138,7 @@ public class PluginManager: NSObject {
     
     /// 释放插件对象并标记为未使用，释放后可重新注册该插件
     public static func unloadPlugin<T>(_ type: T.Type) {
-        let pluginId = String(describing: type)
+        let pluginId = String.fw_safeString(type)
         guard let plugin = pluginPool[pluginId] else { return }
         
         (plugin.instance as? PluginProtocol)?.pluginDidUnload?()
