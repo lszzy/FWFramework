@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import Foundation
+import UIKit
 
 extension FW {
     /// 路由快速访问

@@ -10,6 +10,12 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
+
++ (NSString *)__fw_bundleString:(NSString *)key;
+
+@end
+
 @interface UIScreen ()
 
 @property (class, nonatomic, assign, readonly) CGFloat __fw_toolBarHeight;
@@ -552,8 +558,8 @@
     BOOL verticalCropBox = self.cropView.cropBoxAspectRatioIsPortrait;
     
     //Prepare the localized options
-    NSString *cancelButtonTitle = _cancelButtonTitle ?: __FWAppBundle.cancelButton;
-    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : __FWAppBundle.originalButton;
+    NSString *cancelButtonTitle = _cancelButtonTitle ?: [NSObject __fw_bundleString:@"fw.cancel"];
+    NSString *originalButtonTitle = self.originalAspectRatioName.length > 0 ? self.originalAspectRatioName : [NSObject __fw_bundleString:@"fw.original"];
     
     //Prepare the list that will be fed to the alert view/controller
     
@@ -1305,7 +1311,7 @@ static const CGFloat k__FWImageCropOverLayerCornerWidth = 20.0f;
     
     _doneTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_doneTextButton setTitle: _doneTextButtonTitle ?
-        _doneTextButtonTitle : __FWAppBundle.doneButton
+        _doneTextButtonTitle : [NSObject __fw_bundleString:@"fw.done"]
                      forState:UIControlStateNormal];
     [_doneTextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_doneTextButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
@@ -1322,7 +1328,7 @@ static const CGFloat k__FWImageCropOverLayerCornerWidth = 20.0f;
     _cancelTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     
     [_cancelTextButton setTitle: _cancelTextButtonTitle ?
-        _cancelTextButtonTitle : __FWAppBundle.cancelButton
+        _cancelTextButtonTitle : [NSObject __fw_bundleString:@"fw.cancel"]
                        forState:UIControlStateNormal];
     [_cancelTextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_cancelTextButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];

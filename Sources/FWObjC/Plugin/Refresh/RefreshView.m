@@ -13,6 +13,7 @@
 
 @interface NSObject ()
 
++ (NSString *)__fw_bundleString:(NSString *)key;
 - (NSString *)__fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
 - (void)__fw_unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
 
@@ -143,9 +144,9 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         self.state = __FWPullRefreshStateIdle;
         self.pullingPercent = 0;
         
-        self.titles = [NSMutableArray arrayWithObjects:__FWAppBundle.refreshIdleTitle,
-                       __FWAppBundle.refreshTriggeredTitle,
-                       __FWAppBundle.refreshLoadingTitle,
+        self.titles = [NSMutableArray arrayWithObjects:[NSObject __fw_bundleString:@"fw.refreshIdle"],
+                       [NSObject __fw_bundleString:@"fw.refreshTriggered"],
+                       [NSObject __fw_bundleString:@"fw.refreshLoading"],
                        nil];
         self.subtitles = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
         self.viewForState = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
@@ -785,7 +786,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
         _finishedLabel.font = [UIFont systemFontOfSize:14];
         _finishedLabel.textAlignment = NSTextAlignmentCenter;
         _finishedLabel.textColor = [UIColor grayColor];
-        _finishedLabel.text = __FWAppBundle.refreshFinishedTitle;
+        _finishedLabel.text = [NSObject __fw_bundleString:@"fw.refreshFinished"];
         [_finishedLabel sizeToFit];
     }
     return _finishedLabel;

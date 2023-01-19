@@ -11,6 +11,12 @@
 
 #if FWMacroSPM
 
+@interface NSObject ()
+
++ (nullable UIImage *)__fw_bundleImage:(NSString *)name;
+
+@end
+
 @interface UIView ()
 
 @property (nonatomic, weak, readonly, nullable) UIViewController *__fw_viewController;
@@ -105,8 +111,8 @@
 + (void)setDefaultAppearance {
     __FWZoomImageView *appearance = [__FWZoomImageView appearance];
     appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
-    appearance.videoPlayButtonImage = [__FWAppBundle videoPlayImage];
-    appearance.videoCloseButtonImage = [__FWAppBundle navCloseImage];
+    appearance.videoPlayButtonImage = [NSObject __fw_bundleImage:@"fw.videoPlay"];
+    appearance.videoCloseButtonImage = [NSObject __fw_bundleImage:@"fw.navClose"];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -1029,8 +1035,8 @@
 
 + (void)setDefaultAppearance {
     __FWZoomImageVideoToolbar *appearance = [__FWZoomImageVideoToolbar appearance];
-    appearance.playButtonImage = [__FWAppBundle videoStartImage];
-    appearance.pauseButtonImage = [__FWAppBundle videoPauseImage];
+    appearance.playButtonImage = [NSObject __fw_bundleImage:@"fw.videoStart"];
+    appearance.pauseButtonImage = [NSObject __fw_bundleImage:@"fw.videoPause"];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
