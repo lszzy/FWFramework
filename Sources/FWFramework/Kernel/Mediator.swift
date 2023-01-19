@@ -40,7 +40,7 @@ public struct ModulePriority: RawRepresentable, Equatable, Hashable {
 @objc(__FWModuleProtocol)
 public protocol ModuleProtocol: UIApplicationDelegate {
     
-    /// 可选模块单例方法，默认查找@objc(sharedInstance)属性
+    /// 可选模块单例方法，默认查找\@objc(sharedInstance)属性
     @objc optional static func moduleInstance() -> Self
     
     /// 模块初始化方法，默认不处理，setupAllModules自动调用
@@ -57,7 +57,6 @@ public protocol ModuleProtocol: UIApplicationDelegate {
 /// iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
-@objc(__FWMediator)
 public class Mediator: NSObject {
     
     private static var modulePool: [String: ModuleProtocol.Type] = [:]
@@ -150,7 +149,7 @@ public class Mediator: NSObject {
     }
     
     /// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
-    @objc public static func setupAllModules() {
+    public static func setupAllModules() {
         let modules = allRegisteredModules()
         for moduleType in modules {
             guard let moduleInstance = moduleInstance(moduleType) else { continue }
@@ -173,7 +172,7 @@ public class Mediator: NSObject {
     
     /// 在UIApplicationDelegate检查所有模块方法
     @discardableResult
-    @objc public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
+    public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
         var result = false
         let modules = allRegisteredModules()
         for moduleType in modules {
