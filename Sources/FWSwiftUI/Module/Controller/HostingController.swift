@@ -7,6 +7,9 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - HostingController
 /// SwiftUI控制器包装类，可将View事件用delegate代理到VC
