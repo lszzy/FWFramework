@@ -453,6 +453,80 @@ typedef struct __ProxyBlock {
     return returnValue;
 }
 
++ (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(NSArray *)arguments returnValue:(void *)result {
+    if (!target || ![target respondsToSelector:selector]) return NO;
+    
+    NSMethodSignature *sig = [target methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    for (NSUInteger i = 0; i< arguments.count; i++) {
+        NSUInteger argIndex = i + 2;
+        id argument = arguments[i];
+        if ([argument isKindOfClass:NSNumber.class]) {
+            BOOL shouldContinue = NO;
+            NSNumber *num = (NSNumber *)argument;
+            const char *type = [sig getArgumentTypeAtIndex:argIndex];
+            if (strcmp(type, @encode(BOOL)) == 0) {
+                BOOL rawNum = [num boolValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if (strcmp(type, @encode(int)) == 0
+                       || strcmp(type, @encode(short)) == 0
+                       || strcmp(type, @encode(long)) == 0) {
+                NSInteger rawNum = [num integerValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if(strcmp(type, @encode(long long)) == 0) {
+                long long rawNum = [num longLongValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if (strcmp(type, @encode(unsigned int)) == 0
+                       || strcmp(type, @encode(unsigned short)) == 0
+                       || strcmp(type, @encode(unsigned long)) == 0) {
+                NSUInteger rawNum = [num unsignedIntegerValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if(strcmp(type, @encode(unsigned long long)) == 0) {
+                unsigned long long rawNum = [num unsignedLongLongValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if (strcmp(type, @encode(float)) == 0) {
+                float rawNum = [num floatValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            } else if (strcmp(type, @encode(double)) == 0) {
+                double rawNum = [num doubleValue];
+                [invocation setArgument:&rawNum atIndex:argIndex];
+                shouldContinue = YES;
+            }
+            if (shouldContinue) {
+                continue;
+            }
+        }
+        if ([argument isKindOfClass:[NSNull class]]) {
+            argument = nil;
+        }
+        [invocation setArgument:&argument atIndex:argIndex];
+    }
+    [invocation invoke];
+    
+    NSString *methodReturnType = [NSString stringWithUTF8String:sig.methodReturnType];
+    if (result && ![methodReturnType isEqualToString:@"v"]) {
+        if ([methodReturnType isEqualToString:@"@"]) {
+            CFTypeRef cfResult = nil;
+            [invocation getReturnValue:&cfResult];
+            if (cfResult) {
+                CFRetain(cfResult);
+                *(void**)result = (__bridge_retained void *)((__bridge_transfer id)cfResult);
+            }
+        } else {
+            [invocation getReturnValue:result];
+        }
+    }
+    return YES;
+}
+
 + (id)invokeGetter:(id)target name:(NSString *)name {
     name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
     NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;

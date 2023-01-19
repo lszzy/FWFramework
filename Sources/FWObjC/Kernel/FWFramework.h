@@ -7,7 +7,6 @@
 
 #import "Bridge.h"
 #import "Loader.h"
-#import "Mediator.h"
 #import "State.h"
 #import "Task.h"
 
