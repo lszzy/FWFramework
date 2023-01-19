@@ -76,9 +76,9 @@ public class Mediator: NSObject {
         
         var debugDescription = ""
         var debugCount = 0
-        for (moduleName, moduleType) in sortedModules {
+        for (moduleId, moduleType) in sortedModules {
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleName, String.fw_safeString(moduleType)))
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleId, String.fw_safeString(moduleType)))
         }
         return String(format: "\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription)
     }
