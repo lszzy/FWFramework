@@ -27,11 +27,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     open var customBlock: ((UIImageView) -> Void)?
     
     // MARK: - ImagePlugin
-    public func animatedImageView() -> UIImageView {
+    open func animatedImageView() -> UIImageView {
         return SDAnimatedImageView()
     }
     
-    public func imageDecode(
+    open func imageDecode(
         _ data: Data,
         scale: CGFloat,
         options: [ImageCoderOptions : Any]? = nil
@@ -51,7 +51,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         return SDImageCodersManager.shared.decodedImage(with: data, options: coderOptions)
     }
     
-    public func imageEncode(
+    open func imageEncode(
         _ image: UIImage,
         options: [ImageCoderOptions : Any]? = nil
     ) -> Data? {
@@ -72,11 +72,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         return SDImageCodersManager.shared.encodedData(with: image, format: .undefined, options: coderOptions)
     }
     
-    public func imageURL(_ imageView: UIImageView) -> URL? {
+    open func imageURL(_ imageView: UIImageView) -> URL? {
         return imageView.sd_imageURL
     }
     
-    public func imageView(
+    open func imageView(
         _ imageView: UIImageView,
         setImageURL imageURL: URL?,
         placeholder: UIImage?,
@@ -120,11 +120,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         )
     }
     
-    public func cancelImageRequest(_ imageView: UIImageView) {
+    open func cancelImageRequest(_ imageView: UIImageView) {
         imageView.sd_cancelCurrentImageLoad()
     }
     
-    public func downloadImage(
+    open func downloadImage(
         _ imageURL: URL?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
@@ -160,7 +160,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         )
     }
     
-    public func cancelImageDownload(_ receipt: Any?) {
+    open func cancelImageDownload(_ receipt: Any?) {
         if let receipt = receipt as? SDWebImageCombinedOperation {
             receipt.cancel()
         }

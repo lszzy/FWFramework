@@ -90,7 +90,7 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     
     // MARK: - Public
     /// 设置指示器进度，大于0小于1时自动显示
-    public func setProgress(_ value: CGFloat, animated: Bool) {
+    open func setProgress(_ value: CGFloat, animated: Bool) {
         let progress: CGFloat = max(0.0, min(value, 1.0))
         let showingProgress = 0 < progress && progress < 1
         if showingProgress { isHidden = false }
@@ -108,24 +108,24 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     }
     
     /// 设置动画json文件
-    public func setAnimation(name: String, bundle: Bundle? = nil) {
+    open func setAnimation(name: String, bundle: Bundle? = nil) {
         animationView.animation = LottieAnimation.named(name, bundle: bundle ?? .main)
     }
     
     /// 设置动画Data数据
-    public func setAnimation(data: Data) {
+    open func setAnimation(data: Data) {
         animationView.animation = try? LottieAnimation.from(data: data)
     }
     
     /// 开始加载动画
-    public func startAnimating() {
+    open func startAnimating() {
         if isAnimating { return }
         isHidden = false
         animationView.play()
     }
     
     /// 停止加载动画
-    public func stopAnimating() {
+    open func stopAnimating() {
         animationView.stop()
         if hidesWhenStopped { isHidden = true }
     }

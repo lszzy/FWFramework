@@ -32,12 +32,12 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
     public static let shared = LocationManager()
     
     /// 坐标转"纬度,经度"字符串
-    public class func locationString(_ coordinate: CLLocationCoordinate2D) -> String {
+    open class func locationString(_ coordinate: CLLocationCoordinate2D) -> String {
         return "\(coordinate.latitude),\(coordinate.longitude)"
     }
     
     /// "纬度,经度"字符串转坐标
-    public class func locationCoordinate(_ string: String) -> CLLocationCoordinate2D {
+    open class func locationCoordinate(_ string: String) -> CLLocationCoordinate2D {
         let degrees = string.components(separatedBy: ",")
         return CLLocationCoordinate2D(latitude: Double(degrees.first ?? "0") ?? 0, longitude: Double(degrees.last ?? "0") ?? 0)
     }
@@ -126,7 +126,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     // MARK: - CLLocationManagerDelegate
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if stopWhenCompleted {
             if isCompleted { return }
             isCompleted = true
@@ -154,7 +154,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    open func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         if stopWhenCompleted {
             if isCompleted { return }
             isCompleted = true
@@ -179,7 +179,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if stopWhenCompleted {
             if isCompleted { return }
             isCompleted = true
@@ -198,4 +198,5 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
             stopUpdateLocation()
         }
     }
+    
 }
