@@ -15,7 +15,7 @@ import FWDebug
 
 @objc extension Autoloader {
     func loadAppModule() {
-        Mediator.registerService(AppModuleProtocol.self, withModule: AppModule.self)
+        Mediator.registerService(AppModuleProtocol.self, module: AppModule.self)
     }
 }
 

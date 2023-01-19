@@ -7,7 +7,6 @@
 
 #import "RefreshView.h"
 #import "ViewPlugin.h"
-#import "AppBundle.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM

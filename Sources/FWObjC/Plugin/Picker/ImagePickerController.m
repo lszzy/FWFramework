@@ -14,7 +14,6 @@
 #import "AlertPlugin.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
-#import "AppBundle.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
 
