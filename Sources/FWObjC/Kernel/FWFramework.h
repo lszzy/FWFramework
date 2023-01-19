@@ -20,7 +20,6 @@
 #import "Icon.h"
 #import "Thread.h"
 
-#import "AppDelegate.h"
 #import "ViewTransition.h"
 #import "WebViewController.h"
 #import "ViewController.h"
