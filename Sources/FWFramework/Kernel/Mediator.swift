@@ -96,7 +96,7 @@ public class Mediator: NSObject {
     }
     
     private static func registerService<T>(_ type: T.Type, module: ModuleProtocol.Type, isPreset: Bool) -> Bool {
-        let moduleId = String(describing: type)
+        let moduleId = String.fw_safeString(type)
         if isPreset && modulePool[moduleId] != nil {
             return false
         }
@@ -107,13 +107,13 @@ public class Mediator: NSObject {
     
     /// 取消注册指定模块服务
     public static func unregisterService<T>(_ type: T.Type) {
-        let moduleId = String(describing: type)
+        let moduleId = String.fw_safeString(type)
         modulePool.removeValue(forKey: moduleId)
     }
     
     /// 通过服务协议获取指定模块实例
     public static func loadModule<T>(_ type: T.Type) -> T? {
-        let moduleId = String(describing: type)
+        let moduleId = String.fw_safeString(type)
         var moduleType = modulePool[moduleId]
         if moduleType == nil {
             guard let module = sharedLoader.load(type) else { return nil }
