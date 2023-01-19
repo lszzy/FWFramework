@@ -6,14 +6,13 @@
 //
 
 #import "Icon.h"
-#import "Loader.h"
 #import <CoreText/CoreText.h>
 
 @interface __FWIcon ()
 
 @property (nonatomic, strong) NSMutableAttributedString *mutableAttributedString;
 
-@property (nonatomic, strong) __FWLoader<NSString *, Class> *iconLoader;
+//@property (nonatomic, strong) __FWLoader<NSString *, Class> *iconLoader;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, Class> *iconMapper;
 
 @end
@@ -28,16 +27,17 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[__FWIcon alloc] init];
-        instance.iconLoader = [[__FWLoader<NSString *, Class> alloc] init];
+        //instance.iconLoader = [[__FWLoader<NSString *, Class> alloc] init];
         instance.iconMapper = [[NSMutableDictionary<NSString *, Class> alloc] init];
     });
     return instance;
 }
 
+/*
 + (__FWLoader<NSString *,Class> *)sharedLoader
 {
     return [self sharedInstance].iconLoader;
-}
+}*/
 
 + (BOOL)registerClass:(Class)iconClass
 {
@@ -52,7 +52,7 @@
 {
     Class iconClass = [[self sharedInstance].iconMapper objectForKey:name];
     if (!iconClass) {
-        iconClass = [[self sharedInstance].iconLoader load:name];
+        //iconClass = [[self sharedInstance].iconLoader load:name];
         if (!iconClass || ![self registerClass:iconClass]) return nil;
     }
     return [[iconClass alloc] initWithName:name size:size];

@@ -57,13 +57,14 @@ public protocol ModuleProtocol: UIApplicationDelegate {
 /// iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
+@objc(__FWMediator)
 public class Mediator: NSObject {
     
     private static var modulePool: [String: ModuleProtocol.Type] = [:]
     private static var moduleInvokePool: [String: Bool] = [:]
     
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
-    public static let sharedLoader = Loader<ModuleProtocol.Type, ModuleProtocol.Type>()
+    public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
     
     /// 插件调试描述
     public override class func debugDescription() -> String {
@@ -84,17 +85,17 @@ public class Mediator: NSObject {
     
     /// 注册指定模块服务，返回注册结果
     @discardableResult
-    public static func registerService<T: ModuleProtocol>(_ type: T.Type, module: T.Type) -> Bool {
+    public static func registerService<T>(_ type: T.Type, module: ModuleProtocol.Type) -> Bool {
         return registerService(type, module: module, isPreset: false)
     }
     
     /// 预置指定模块服务，仅当模块未注册时生效
     @discardableResult
-    public static func presetService<T: ModuleProtocol>(_ type: T.Type, module: T.Type) -> Bool {
+    public static func presetService<T>(_ type: T.Type, module: ModuleProtocol.Type) -> Bool {
         return registerService(type, module: module, isPreset: true)
     }
     
-    private static func registerService<T: ModuleProtocol>(_ type: T.Type, module: T.Type, isPreset: Bool) -> Bool {
+    private static func registerService<T>(_ type: T.Type, module: ModuleProtocol.Type, isPreset: Bool) -> Bool {
         let moduleId = String(describing: type)
         if isPreset && modulePool[moduleId] != nil {
             return false
@@ -105,17 +106,17 @@ public class Mediator: NSObject {
     }
     
     /// 取消注册指定模块服务
-    public static func unregisterService<T: ModuleProtocol>(_ type: T.Type) {
+    public static func unregisterService<T>(_ type: T.Type) {
         let moduleId = String(describing: type)
         modulePool.removeValue(forKey: moduleId)
     }
     
     /// 通过服务协议获取指定模块实例
-    public static func loadModule<T: ModuleProtocol>(_ type: T.Type) -> T? {
+    public static func loadModule<T>(_ type: T.Type) -> T? {
         let moduleId = String(describing: type)
         var moduleType = modulePool[moduleId]
         if moduleType == nil {
-            guard let module = sharedLoader.load(type) as? T.Type else { return nil }
+            guard let module = sharedLoader.load(type) else { return nil }
             
             registerService(type, module: module)
             moduleType = modulePool[moduleId]
@@ -149,7 +150,7 @@ public class Mediator: NSObject {
     }
     
     /// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
-    public static func setupAllModules() {
+    @objc public static func setupAllModules() {
         let modules = allRegisteredModules()
         for moduleType in modules {
             guard let moduleInstance = moduleInstance(moduleType) else { continue }
@@ -172,7 +173,7 @@ public class Mediator: NSObject {
     
     /// 在UIApplicationDelegate检查所有模块方法
     @discardableResult
-    public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
+    @objc public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
         var result = false
         let modules = allRegisteredModules()
         for moduleType in modules {

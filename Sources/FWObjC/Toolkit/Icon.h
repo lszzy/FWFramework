@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class __FWLoader<InputType, OutputType>;
+//@class __FWLoader<InputType, OutputType>;
 
 /**
  字体图标抽象基类，子类需继承
@@ -27,7 +27,7 @@ NS_SWIFT_NAME(Icon)
 #pragma mark - Static
 
 /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
-@property (class, nonatomic, readonly) __FWLoader<NSString *, Class> *sharedLoader;
+//@property (class, nonatomic, readonly) __FWLoader<NSString *, Class> *sharedLoader;
 
 /// 注册图标实现类，必须继承__FWIcon，用于name快速查找，注意name不要重复
 + (BOOL)registerClass:(Class)iconClass;

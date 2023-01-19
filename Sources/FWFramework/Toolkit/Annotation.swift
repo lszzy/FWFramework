@@ -48,16 +48,16 @@ public struct UserDefaultAnnotation<T> {
 /// static var userModule: UserModuleService
 @propertyWrapper
 public struct ModuleAnnotation<T> {
-    let serviceProtocol: Protocol
+    let serviceProtocol: T.Type
     var module: T?
     
-    public init(_ serviceProtocol: Protocol) {
+    public init(_ serviceProtocol: T.Type) {
         self.serviceProtocol = serviceProtocol
     }
     
-    public init(_ serviceProtocol: Protocol, module: ModuleProtocol.Type) {
+    public init(_ serviceProtocol: T.Type, module: ModuleProtocol.Type) {
         self.serviceProtocol = serviceProtocol
-        Mediator.registerService(serviceProtocol, withModule: module)
+        Mediator.registerService(serviceProtocol, module: module)
     }
     
     public var wrappedValue: T {
@@ -65,7 +65,7 @@ public struct ModuleAnnotation<T> {
             if let value = module {
                 return value
             } else {
-                return Mediator.loadModule(serviceProtocol) as! T
+                return Mediator.loadModule(serviceProtocol)!
             }
         }
         set {

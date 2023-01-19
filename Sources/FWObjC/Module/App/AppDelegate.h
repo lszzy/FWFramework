@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AppBundle.h"
 #import "SceneDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,6 +26,8 @@ NS_SWIFT_NAME(AppResponder)
 
 /// 初始化根控制器，子类重写
 - (void)setupController;
+
++ (nullable UIImage *)imageNamed:(NSString *)name;
 
 @end
 
