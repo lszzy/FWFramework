@@ -21,6 +21,8 @@
 
 @interface NSObject ()
 
++ (NSString *)__fw_bundleString:(NSString *)key;
++ (nullable UIImage *)__fw_bundleImage:(NSString *)name;
 - (void)__fw_applyAppearance;
 
 @end
@@ -223,7 +225,7 @@
     _showsDefaultLoading = YES;
     
     self.extendedLayoutIncludesOpaqueBars = YES;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:__FWAppBundle.navCloseImage style:UIBarButtonItemStylePlain target:self action:@selector(handleCancelButtonClick:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[NSObject __fw_bundleImage:@"fw.navClose"] style:UIBarButtonItemStylePlain target:self action:@selector(handleCancelButtonClick:)];
 }
 
 - (UIView *)backgroundView {
@@ -281,8 +283,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage new] style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationController.navigationBar.__fw_backImage = __FWAppBundle.navBackImage;
-    if (!self.title) self.title = __FWAppBundle.pickerAlbumTitle;
+    self.navigationController.navigationBar.__fw_backImage = [NSObject __fw_bundleImage:@"fw.navBack"];
+    if (!self.title) self.title = [NSObject __fw_bundleString:@"fw.pickerAlbum"];
     [self.view addSubview:self.backgroundView];
     [self.view addSubview:self.tableView];
     
@@ -385,7 +387,7 @@
         if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerWillShowEmpty:)]) {
             [self.albumControllerDelegate albumControllerWillShowEmpty:self];
         } else {
-            [self __fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
+            [self __fw_showEmptyViewWithText:[NSObject __fw_bundleString:@"fw.pickerEmpty"] detail:nil image:nil action:nil block:nil];
         }
     }
     
@@ -406,7 +408,7 @@
     } else {
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
-        NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
+        NSString *tipText = [NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerDenied"], appName];
         [self __fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
     }
     
@@ -453,7 +455,7 @@
         // 清空imagePickerController导航栏左侧按钮并添加默认按钮
         if (imagePickerController.navigationItem.leftBarButtonItem) {
             imagePickerController.navigationItem.leftBarButtonItem = nil;
-            imagePickerController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:__FWAppBundle.cancelButton style:UIBarButtonItemStylePlain target:imagePickerController action:@selector(handleCancelButtonClick:)];
+            imagePickerController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSObject __fw_bundleString:@"fw.cancel"] style:UIBarButtonItemStylePlain target:imagePickerController action:@selector(handleCancelButtonClick:)];
         }
         // 此处需要强引用imagePickerController，防止weak属性释放imagePickerController
         objc_setAssociatedObject(self, @selector(imagePickerController), imagePickerController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -756,10 +758,10 @@
         _toolBarBackgroundColor = [UIColor colorWithRed:27/255.f green:27/255.f blue:27/255.f alpha:1.f];
         _toolBarTintColor = UIColor.whiteColor;
         
-        _checkboxImage = __FWAppBundle.pickerCheckImage;
-        _checkboxCheckedImage = __FWAppBundle.pickerCheckedImage;
-        _originImageCheckboxImage = [__FWAppBundle.pickerCheckImage __fw_imageWithScaleSize:CGSizeMake(18, 18)];
-        _originImageCheckboxCheckedImage = [__FWAppBundle.pickerCheckedImage __fw_imageWithScaleSize:CGSizeMake(18, 18)];
+        _checkboxImage = [NSObject __fw_bundleImage:@"fw.pickerCheck"];
+        _checkboxCheckedImage = [NSObject __fw_bundleImage:@"fw.pickerChecked"];
+        _originImageCheckboxImage = [[NSObject __fw_bundleImage:@"fw.pickerCheck"] __fw_imageWithScaleSize:CGSizeMake(18, 18)];
+        _originImageCheckboxCheckedImage = [[NSObject __fw_bundleImage:@"fw.pickerChecked"] __fw_imageWithScaleSize:CGSizeMake(18, 18)];
     }
     return self;
 }
@@ -881,7 +883,7 @@
 - (UIButton *)backButton {
     if (!_backButton) {
         _backButton = [[UIButton alloc] init];
-        [_backButton setImage:__FWAppBundle.navBackImage forState:UIControlStateNormal];
+        [_backButton setImage:[NSObject __fw_bundleImage:@"fw.navBack"] forState:UIControlStateNormal];
         [_backButton sizeToFit];
         [_backButton addTarget:self action:@selector(handleCancelButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         _backButton.__fw_touchInsets = UIEdgeInsetsMake(30, 20, 50, 80);
@@ -929,7 +931,7 @@
         _editButton = [[UIButton alloc] init];
         _editButton.hidden = !self.showsEditButton;
         _editButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        [_editButton setTitle:__FWAppBundle.editButton forState:UIControlStateNormal];
+        [_editButton setTitle:[NSObject __fw_bundleString:@"fw.edit"] forState:UIControlStateNormal];
         _editButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_editButton sizeToFit];
         _editButton.__fw_disabledAlpha = 0.3;
@@ -944,7 +946,7 @@
     if (!_sendButton) {
         _sendButton = [[UIButton alloc] init];
         _sendButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        [_sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
+        [_sendButton setTitle:[NSObject __fw_bundleString:@"fw.done"] forState:UIControlStateNormal];
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_sendButton sizeToFit];
         _sendButton.__fw_disabledAlpha = 0.3;
@@ -963,7 +965,7 @@
         [_originImageCheckboxButton setImage:self.originImageCheckboxImage forState:UIControlStateNormal];
         [_originImageCheckboxButton setImage:self.originImageCheckboxCheckedImage forState:UIControlStateSelected];
         [_originImageCheckboxButton setImage:self.originImageCheckboxCheckedImage forState:UIControlStateSelected|UIControlStateHighlighted];
-        [_originImageCheckboxButton setTitle:__FWAppBundle.originalButton forState:UIControlStateNormal];
+        [_originImageCheckboxButton setTitle:[NSObject __fw_bundleString:@"fw.original"] forState:UIControlStateNormal];
         [_originImageCheckboxButton setImageEdgeInsets:UIEdgeInsetsMake(0, -5.0f, 0, 5.0f)];
         [_originImageCheckboxButton setContentEdgeInsets:UIEdgeInsetsMake(0, 5.0f, 0, 0)];
         [_originImageCheckboxButton sizeToFit];
@@ -1307,7 +1309,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.delegate imagePickerPreviewControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }
@@ -1426,7 +1428,7 @@
 - (void)handleOriginImageCheckboxButtonClick:(UIButton *)button {
     if (button.selected) {
         button.selected = NO;
-        [button setTitle:__FWAppBundle.originalButton forState:UIControlStateNormal];
+        [button setTitle:[NSObject __fw_bundleString:@"fw.original"] forState:UIControlStateNormal];
         [button sizeToFit];
         [self.bottomToolBarView setNeedsLayout];
     } else {
@@ -1497,10 +1499,10 @@
         NSUInteger selectedCount = [self.selectedImageAssetArray count];
         if (selectedCount > 0) {
             self.sendButton.enabled = selectedCount >= self.minimumSelectImageCount;
-            [self.sendButton setTitle:[NSString stringWithFormat:@"%@(%@)", __FWAppBundle.doneButton, @(selectedCount)] forState:UIControlStateNormal];
+            [self.sendButton setTitle:[NSString stringWithFormat:@"%@(%@)", [NSObject __fw_bundleString:@"fw.done"], @(selectedCount)] forState:UIControlStateNormal];
         } else {
             self.sendButton.enabled = self.minimumSelectImageCount <= 1;
-            [self.sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
+            [self.sendButton setTitle:[NSObject __fw_bundleString:@"fw.done"] forState:UIControlStateNormal];
         }
         if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewController:willChangeCheckedCount:)]) {
             [self.delegate imagePickerPreviewController:self willChangeCheckedCount:selectedCount];
@@ -1570,8 +1572,8 @@
 }
 
 + (void)setDefaultAppearance {
-    [__FWImagePickerCollectionCell appearance].checkboxImage = __FWAppBundle.pickerCheckImage;
-    [__FWImagePickerCollectionCell appearance].checkboxCheckedImage = __FWAppBundle.pickerCheckedImage;
+    [__FWImagePickerCollectionCell appearance].checkboxImage = [NSObject __fw_bundleImage:@"fw.pickerCheck"];
+    [__FWImagePickerCollectionCell appearance].checkboxCheckedImage = [NSObject __fw_bundleImage:@"fw.pickerChecked"];
     [__FWImagePickerCollectionCell appearance].checkboxButtonMargins = UIEdgeInsetsMake(6, 6, 6, 6);
     [__FWImagePickerCollectionCell appearance].disabledMaskColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
     [__FWImagePickerCollectionCell appearance].checkedMaskColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
@@ -1938,7 +1940,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     titleView.delegate = self;
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.navigationItem.titleView = titleView;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:__FWAppBundle.navCloseImage style:UIBarButtonItemStylePlain target:self action:@selector(handleCancelButtonClick:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[NSObject __fw_bundleImage:@"fw.navClose"] style:UIBarButtonItemStylePlain target:self action:@selector(handleCancelButtonClick:)];
 }
 
 - (void)setToolBarBackgroundColor:(UIColor *)toolBarBackgroundColor {
@@ -2097,14 +2099,14 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             } else {
                 NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
                 NSString *appName = infoDictionary[@"CFBundleDisplayName"] ?: infoDictionary[(NSString *)kCFBundleNameKey];
-                NSString *tipText = [NSString stringWithFormat:__FWAppBundle.pickerDeniedTitle, appName];
+                NSString *tipText = [NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerDenied"], appName];
                 [self __fw_showEmptyViewWithText:tipText detail:nil image:nil action:nil block:nil];
             }
         } else {
             if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerWillShowEmpty:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowEmpty:self];
             } else {
-                [self __fw_showEmptyViewWithText:__FWAppBundle.pickerEmptyTitle detail:nil image:nil action:nil block:nil];
+                [self __fw_showEmptyViewWithText:[NSObject __fw_bundleString:@"fw.pickerEmpty"] detail:nil image:nil action:nil block:nil];
             }
         }
     }
@@ -2310,7 +2312,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:16];
         _sendButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_sendButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
-        [_sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
+        [_sendButton setTitle:[NSObject __fw_bundleString:@"fw.done"] forState:UIControlStateNormal];
         _sendButton.__fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
         _sendButton.__fw_disabledAlpha = 0.3;
         _sendButton.__fw_highlightedAlpha = 0.5;
@@ -2327,7 +2329,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         _previewButton.enabled = NO;
         _previewButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_previewButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
-        [_previewButton setTitle:__FWAppBundle.previewButton forState:UIControlStateNormal];
+        [_previewButton setTitle:[NSObject __fw_bundleString:@"fw.preview"] forState:UIControlStateNormal];
         _previewButton.__fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
         _previewButton.__fw_disabledAlpha = 0.3;
         _previewButton.__fw_highlightedAlpha = 0.5;
@@ -2399,7 +2401,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
         } else {
-            [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+            [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
         }
         return;
     }
@@ -2536,7 +2538,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:__FWAppBundle.pickerExceedTitle, @(self.maximumSelectImageCount)] message:nil cancel:__FWAppBundle.closeButton cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }
@@ -2624,11 +2626,11 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (selectedCount > 0) {
             self.previewButton.enabled = selectedCount >= self.minimumSelectImageCount;
             self.sendButton.enabled = selectedCount >= self.minimumSelectImageCount;
-            [self.sendButton setTitle:[NSString stringWithFormat:@"%@(%@)", __FWAppBundle.doneButton, @(selectedCount)] forState:UIControlStateNormal];
+            [self.sendButton setTitle:[NSString stringWithFormat:@"%@(%@)", [NSObject __fw_bundleString:@"fw.done"], @(selectedCount)] forState:UIControlStateNormal];
         } else {
             self.previewButton.enabled = NO;
             self.sendButton.enabled = NO;
-            [self.sendButton setTitle:__FWAppBundle.doneButton forState:UIControlStateNormal];
+            [self.sendButton setTitle:[NSObject __fw_bundleString:@"fw.done"] forState:UIControlStateNormal];
         }
         if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerController:willChangeCheckedCount:)]) {
             [self.imagePickerControllerDelegate imagePickerController:self willChangeCheckedCount:selectedCount];
