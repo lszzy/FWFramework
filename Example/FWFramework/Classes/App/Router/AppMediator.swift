@@ -20,11 +20,9 @@ import FWDebug
 }
 
 class AppModule: NSObject, AppModuleProtocol {
-    private static let sharedModule = AppModule()
     
-    public static func sharedInstance() -> Self {
-        return sharedModule as! Self
-    }
+    @objc(sharedInstance)
+    public static let shared = AppModule()
     
     func setup() {
         #if DEBUG
