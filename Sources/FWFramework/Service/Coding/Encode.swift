@@ -86,7 +86,8 @@ extension FW {
         if let string = value as? String { return string }
         if let url = value as? URL { return url.absoluteString }
         if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
-        if let object = value as? NSObjectProtocol { return object.description }
+        if let clazz = value as? AnyClass { return NSStringFromClass(clazz) }
+        if let object = value as? NSObject { return object.description }
         return String(describing: value)
     }
     
