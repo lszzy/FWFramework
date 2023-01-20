@@ -59,7 +59,7 @@ extension FW {
     ///   - size: 图标大小
     /// - Returns: FWIcon对象
     public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
-        return Icon(named: named, size: size)
+        return Icon.iconNamed(named, size: size)
     }
     
     /// 快速创建图标图像

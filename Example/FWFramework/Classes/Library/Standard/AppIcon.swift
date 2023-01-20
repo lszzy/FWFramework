@@ -30,7 +30,7 @@ class MaterialIcons: Icon {
         Icon.registerClass(MaterialIcons.self)
     }
     
-    override class func iconFont(withSize size: CGFloat) -> UIFont {
+    override class func iconFont(size: CGFloat) -> UIFont {
         if let font = UIFont(name: "Material-Design-Iconic-Font", size: size) {
             return font
         }
