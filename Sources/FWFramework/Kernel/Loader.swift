@@ -11,7 +11,7 @@ import Foundation
 public class Loader<Input, Output>: NSObject {
     
     private class Target {
-        let identifier: String = UUID().uuidString
+        let identifier = UUID().uuidString
         var block: ((Input) -> Output?)?
         weak var target: AnyObject?
         var action: Selector?

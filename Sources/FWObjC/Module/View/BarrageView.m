@@ -483,8 +483,6 @@ NSString *const __FWBarrageAnimation = @"FWBarrageAnimation";
     } else if ([barrageCell.barrageAnimation isKindOfClass:[CAKeyframeAnimation class]]) {
         fromValue = [[(CAKeyframeAnimation *)barrageCell.barrageAnimation values] firstObject];
         toValue = [[(CAKeyframeAnimation *)barrageCell.barrageAnimation values] lastObject];
-    } else {
-        
     }
     const char *fromeValueType = [fromValue objCType];
     const char *toValueType = [toValue objCType];

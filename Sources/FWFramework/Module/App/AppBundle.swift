@@ -66,19 +66,12 @@ open class AppBundle: ModuleBundle {
     public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
     
     // MARK: - Override
-    public override class func bundle() -> Bundle {
-        if _bundle == nil {
-            _bundle = Bundle.fw_bundle(name: "FWFramework")?.fw_localizedBundle() ?? .main
-        }
-        return _bundle ?? .main
+    open override class func initializeBundle() -> Bundle? {
+        return Bundle.fw_bundle(name: "FWFramework")?.fw_localizedBundle()
     }
     
-    private static var _bundle: Bundle?
-    
-    public override class func imageNamed(_ name: String) -> UIImage? {
-        if let image = super.imageNamed(name) { return image }
-        
-        if name == "fw.navBack" {
+    open override class func didInitialize() {
+        addImage("fw.navBack") {
             let size = CGSize(width: 12, height: 20)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -91,7 +84,9 @@ open class AppBundle: ModuleBundle {
                 path.lineWidth = lineWidth
                 path.stroke()
             }
-        } else if name == "fw.navClose" {
+        }
+        
+        addImage("fw.navClose") {
             let size = CGSize(width: 16, height: 16)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -108,7 +103,9 @@ open class AppBundle: ModuleBundle {
                 path.lineCapStyle = .round
                 path.stroke()
             }
-        } else if name == "fw.videoPlay" {
+        }
+        
+        addImage("fw.videoPlay") {
             let size = CGSize(width: 60, height: 60)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -132,7 +129,9 @@ open class AppBundle: ModuleBundle {
                 triangle.apply(CGAffineTransformMakeTranslation(offset.horizontal, offset.vertical))
                 triangle.fill()
             }
-        } else if name == "fw.videoPause" {
+        }
+        
+        addImage("fw.videoPause") {
             let size = CGSize(width: 12, height: 18)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -146,7 +145,9 @@ open class AppBundle: ModuleBundle {
                 path.lineWidth = lineWidth
                 path.stroke()
             }
-        } else if name == "fw.videoStart" {
+        }
+        
+        addImage("fw.videoStart") {
             let size = CGSize(width: 17, height: 17)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -158,7 +159,9 @@ open class AppBundle: ModuleBundle {
                 path.close()
                 path.fill()
             }
-        } else if name == "fw.pickerCheck" {
+        }
+        
+        addImage("fw.pickerCheck") {
             let size = CGSize(width: 20, height: 20)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -171,7 +174,9 @@ open class AppBundle: ModuleBundle {
                 circle.stroke()
                 circle.fill()
             }
-        } else if name == "fw.pickerChecked" {
+        }
+        
+        addImage("fw.pickerChecked") {
             let size = CGSize(width: 20, height: 20)
             return UIImage.fw_image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -197,21 +202,8 @@ open class AppBundle: ModuleBundle {
                 path.stroke()
             }
         }
-        return nil
-    }
-    
-    public override class func localizedString(_ key: String, table: String? = nil) -> String {
-        if let table = table { return super.localizedString(key, table: table) }
-        let localized = bundle().localizedString(forKey: key, value: " ", table: table)
-        if localized != " " { return localized }
         
-        let language = Bundle.fw_currentLanguage ?? "en"
-        let strings = localizedStrings[language] ?? localizedStrings["en"]
-        return strings?[key] ?? key
-    }
-    
-    private static var localizedStrings: [String: [String: String]] = [
-        "zh-Hans": [
+        addStrings("zh-Hans", strings: [
             "fw.done": "完成",
             "fw.close": "关闭",
             "fw.confirm": "确定",
@@ -228,8 +220,9 @@ open class AppBundle: ModuleBundle {
             "fw.refreshTriggered": "松开立即刷新   ",
             "fw.refreshLoading": "正在刷新数据...",
             "fw.refreshFinished": "已经全部加载完毕",
-        ],
-        "zh-Hant": [
+        ])
+        
+        addStrings("zh-Hant", strings: [
             "fw.done": "完成",
             "fw.close": "關閉",
             "fw.confirm": "確定",
@@ -246,8 +239,9 @@ open class AppBundle: ModuleBundle {
             "fw.refreshTriggered": "鬆開立即刷新   ",
             "fw.refreshLoading": "正在刷新數據...",
             "fw.refreshFinished": "已經全部加載完畢",
-        ],
-        "en": [
+        ])
+        
+        addStrings("en", strings: [
             "fw.done": "Done",
             "fw.close": "OK",
             "fw.confirm": "Yes",
@@ -264,7 +258,7 @@ open class AppBundle: ModuleBundle {
             "fw.refreshTriggered": "Release to refresh",
             "fw.refreshLoading": "Loading...",
             "fw.refreshFinished": "No more data",
-        ],
-    ]
+        ])
+    }
     
 }

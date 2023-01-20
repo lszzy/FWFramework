@@ -500,9 +500,7 @@ public class WebSocketCompression: WebSocketCompressionHandler {
     var decompressorTakeOver = false
     var compressorTakeOver = false
     
-    public init() {
-        
-    }
+    public init() {}
     
     public func load(headers: [String: String]) {
         guard let extensionHeader = headers[headerWSExtensionName] else { return }
@@ -1976,9 +1974,7 @@ public class WebSocketFoundationHTTPHandler: WebSocketHTTPHandler {
     var buffer = Data()
     weak var delegate: WebSocketHTTPHandlerDelegate?
     
-    public init() {
-        
-    }
+    public init() {}
     
     public func convert(request: URLRequest) -> Data {
         let msg = CFHTTPMessageCreateRequest(kCFAllocatorDefault, request.httpMethod! as CFString,
