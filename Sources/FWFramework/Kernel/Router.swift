@@ -71,9 +71,9 @@ public class RouterContext: NSObject {
     public fileprivate(set) lazy var parameters: [AnyHashable: Any] = {
         var parameters: [AnyHashable: Any] = [:]
         if let userInfo = userInfo {
-            parameters.merge(userInfo) { key1, key2 in key2 }
+            parameters.merge(userInfo) { _, last in last }
         }
-        parameters.merge(urlParameters) { key1, key2 in key2 }
+        parameters.merge(urlParameters) { _, last in last }
         return parameters
     }()
     

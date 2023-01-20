@@ -30,24 +30,14 @@ open class SceneResponder: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    open func sceneDidDisconnect(_ scene: UIScene) {
-        
-    }
+    open func sceneDidDisconnect(_ scene: UIScene) {}
     
-    open func sceneDidBecomeActive(_ scene: UIScene) {
-        
-    }
+    open func sceneDidBecomeActive(_ scene: UIScene) {}
     
-    open func sceneWillResignActive(_ scene: UIScene) {
-        
-    }
+    open func sceneWillResignActive(_ scene: UIScene) {}
     
-    open func sceneWillEnterForeground(_ scene: UIScene) {
-        
-    }
+    open func sceneWillEnterForeground(_ scene: UIScene) {}
     
-    open func sceneDidEnterBackground(_ scene: UIScene) {
-        
-    }
+    open func sceneDidEnterBackground(_ scene: UIScene) {}
     
 }

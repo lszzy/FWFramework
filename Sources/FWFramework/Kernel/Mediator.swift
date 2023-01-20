@@ -237,39 +237,72 @@ public class Mediator: NSObject {
 /// 业务模块Bundle基类，各模块可继承
 open class ModuleBundle: NSObject {
     
-    /// 获取当前模块Bundle，默认主Bundle，子类可重写
+    private class Target {
+        let identifier = UUID().uuidString
+        var bundle: Bundle?
+        var images: [String: Any] = [:]
+        var strings: [String: [String: [String: String]]] = [:]
+    }
+    
+    /// 获取当前模块Bundle并缓存，默认主Bundle
     open class func bundle() -> Bundle {
-        return .main
+        if let bundle = bundleTarget.bundle {
+            return bundle
+        } else {
+            let bundle = initializeBundle() ?? .main
+            bundleTarget.bundle = bundle
+            didInitialize()
+            return bundle
+        }
     }
     
     /// 获取当前模块图片
     open class func imageNamed(_ name: String) -> UIImage? {
         if let image = UIImage.fw_imageNamed(name, bundle: bundle()) { return image }
         
-        let nameImages = __FWRuntime.getProperty(self.classForCoder(), forName: "imageNamed") as? NSMutableDictionary
-        return nameImages?[name] as? UIImage
+        let value = bundleTarget.images[name]
+        if let image = value as? UIImage {
+            return image
+        } else if let block = value as? () -> UIImage? {
+            return block()
+        }
+        return nil
     }
     
-    /// 设置当前模块图片
-    open class func setImage(_ image: UIImage?, for name: String) {
-        var nameImages: NSMutableDictionary
-        if let images = __FWRuntime.getProperty(self.classForCoder(), forName: "imageNamed") as? NSMutableDictionary {
-            nameImages = images
-        } else {
-            nameImages = NSMutableDictionary()
-            __FWRuntime.setPropertyPolicy(self.classForCoder(), with: nameImages, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: "imageNamed")
-        }
-        
-        if let image = image {
-            nameImages[name] = image
-        } else {
-            nameImages.removeObject(forKey: name)
-        }
+    /// 设置当前模块动态图片
+    open class func addImage(_ name: String, image: UIImage?) {
+        bundleTarget.images[name] = image
+    }
+    
+    /// 设置当前模块动态图片句柄
+    open class func addImage(_ name: String, block: (() -> UIImage?)?) {
+        bundleTarget.images[name] = block
     }
     
     /// 获取当前模块多语言，可指定文件
     open class func localizedString(_ key: String, table: String? = nil) -> String {
-        return bundle().localizedString(forKey: key, value: nil, table: table)
+        let localized = bundle().localizedString(forKey: key, value: bundleTarget.identifier, table: table)
+        if localized != bundleTarget.identifier { return localized }
+        
+        let tableKey = table ?? "Localizable"
+        let languageKey = Bundle.fw_currentLanguage ?? "en"
+        let tableStrings = bundleTarget.strings[tableKey]
+        let languageStrings = tableStrings?[languageKey] ?? tableStrings?["en"]
+        return languageStrings?[key] ?? key
+    }
+    
+    /// 设置当前模块动态多语言
+    open class func addStrings(_ language: String? = nil, table: String? = nil, strings: [String: String]) {
+        let languageKey = language ?? "en"
+        let tableKey = table ?? "Localizable"
+        if bundleTarget.strings[tableKey] == nil {
+            bundleTarget.strings[tableKey] = [:]
+        }
+        if bundleTarget.strings[tableKey]?[languageKey] == nil {
+            bundleTarget.strings[tableKey]?[languageKey] = strings
+        } else {
+            bundleTarget.strings[tableKey]?[languageKey]?.merge(strings) { _, last in last }
+        }
     }
     
     /// 获取当前模块资源文件路径
@@ -281,5 +314,24 @@ open class ModuleBundle: NSObject {
     open class func resourceURL(_ name: String) -> URL? {
         return bundle().url(forResource: name, withExtension: nil)
     }
+    
+    private class var bundleTarget: Target {
+        if let target = self.fw_property(forName: "bundleTarget") as? Target {
+            return target
+        } else {
+            let target = Target()
+            self.fw_setProperty(target, forName: "bundleTarget")
+            return target
+        }
+    }
+    
+    // MARK: - Override
+    /// 初始化模块Bundle，默认nil，子类可重写，用于加载自定义Bundle
+    open class func initializeBundle() -> Bundle? {
+        return nil
+    }
+    
+    /// 初始化完成钩子，bundle方法自动调用一次，子类可重写，用于加载动态资源等
+    open class func didInitialize() {}
     
 }

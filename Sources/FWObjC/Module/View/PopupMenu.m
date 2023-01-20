@@ -847,8 +847,6 @@ UITableViewDataSource
         }else {
             self.frame = CGRectMake(x, _point.y - _arrowPosition, _itemWidth + _arrowHeight, height);
         }
-    }else if (_arrowDirection == __FWPopupMenuArrowDirectionNone) {
-        
     }
     
     if (_isChangeDirection) {
