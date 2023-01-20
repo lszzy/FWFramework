@@ -1677,7 +1677,7 @@ extension FW {
 
 // MARK: - UIViewController+Toolkit
 /// 视图控制器生命周期状态枚举
-@objc public enum ViewControllerVisibleState: Int {
+public enum ViewControllerVisibleState: Int {
     case ready = 0
     case didLoad = 1
     case willAppear = 2
@@ -1689,7 +1689,6 @@ extension FW {
 @_spi(FW) extension UIViewController {
     
     /// 当前生命周期状态，默认Ready
-    @objc(__fw_visibleState)
     public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
         get {
             let value = fw_propertyInt(forName: "fw_visibleState")
