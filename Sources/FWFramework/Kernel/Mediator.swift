@@ -10,11 +10,13 @@ import Foundation
 import FWObjC
 #endif
 
+// MARK: - FW+Mediator
 extension FW {
     /// 中间件快速访问
     public static var mediator = Mediator.self
 }
 
+// MARK: - ModulePriority
 /// 模块可扩展优先级
 public struct ModulePriority: RawRepresentable, Equatable, Hashable {
     
@@ -36,24 +38,58 @@ public struct ModulePriority: RawRepresentable, Equatable, Hashable {
     
 }
 
+// MARK: - ModuleProtocol
 /// 业务模块协议，各业务必须实现
-@objc(__FWModuleProtocol)
 public protocol ModuleProtocol: UIApplicationDelegate {
     
-    /// 可选模块单例方法，默认查找\@objc(sharedInstance)属性
-    @objc optional static func moduleInstance() -> Self
+    /// 单例对象
+    static var shared: Self { get }
     
     /// 模块初始化方法，默认不处理，setupAllModules自动调用
-    @objc optional func setup()
+    func setup()
     
     /// 是否主线程同步调用setup，默认为false，后台线程异步调用
-    @objc optional static func setupSynchronously() -> Bool
+    static func setupSynchronously() -> Bool
     
     /// 模块优先级，0最低。默认为default优先级
-    @objc optional static func priority() -> UInt
+    static func priority() -> ModulePriority
     
 }
 
+extension ModuleProtocol {
+    
+    /// 默认初始化不处理
+    public func setup() {}
+    
+    /// 默认后台线程调用setup
+    public static func setupSynchronously() -> Bool { false }
+    
+    /// 默认优先级default
+    public static func priority() -> ModulePriority { .default }
+    
+}
+
+extension ModuleProtocol where Self: NSObject {
+    
+    /// 默认实现NSObject单例对象
+    public static var shared: Self {
+        var instance = self.fw_property(forName: "shared") as? Self
+        if let instance = instance { return instance }
+        
+        fw_synchronized {
+            if let object = self.fw_property(forName: "shared") as? Self {
+                instance = object
+            } else {
+                instance = self.init()
+                self.fw_setProperty(instance, forName: "shared")
+            }
+        }
+        return instance!
+    }
+    
+}
+
+// MARK: - Mediator
 /// iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
@@ -68,8 +104,8 @@ public class Mediator: NSObject {
     /// 插件调试描述
     public override class func debugDescription() -> String {
         let sortedModules = modulePool.sorted { module1, module2 in
-            let priority1 = module1.value.priority?() ?? ModulePriority.default.rawValue
-            let priority2 = module2.value.priority?() ?? ModulePriority.default.rawValue
+            let priority1 = module1.value.priority().rawValue
+            let priority2 = module2.value.priority().rawValue
             return priority1 > priority2
         }
         
@@ -122,27 +158,14 @@ public class Mediator: NSObject {
         }
         guard let moduleType = moduleType else { return nil }
         
-        let moduleInstance = moduleInstance(moduleType)
-        return moduleInstance as? T
-    }
-    
-    private static func moduleInstance(_ moduleType: ModuleProtocol.Type) -> ModuleProtocol? {
-        if let instance = moduleType.moduleInstance?() {
-            return instance
-        } else if let moduleClass = moduleType as? NSObject.Type {
-            let selector = NSSelectorFromString("sharedInstance")
-            if moduleClass.responds(to: selector) {
-                return moduleClass.perform(selector)?.takeUnretainedValue() as? ModuleProtocol
-            }
-        }
-        return nil
+        return moduleType.shared as? T
     }
     
     /// 获取所有已注册模块类数组，按照优先级排序
     public static func allRegisteredModules() -> [ModuleProtocol.Type] {
         let sortedModules = modulePool.values.sorted { module1, module2 in
-            let priority1 = module1.priority?() ?? ModulePriority.default.rawValue
-            let priority2 = module2.priority?() ?? ModulePriority.default.rawValue
+            let priority1 = module1.priority().rawValue
+            let priority2 = module2.priority().rawValue
             return priority1 > priority2
         }
         return sortedModules
@@ -152,14 +175,12 @@ public class Mediator: NSObject {
     public static func setupAllModules() {
         let modules = allRegisteredModules()
         for moduleType in modules {
-            guard let moduleInstance = moduleInstance(moduleType) else { continue }
-            
-            let setupSync = moduleType.setupSynchronously?() ?? false
+            let setupSync = moduleType.setupSynchronously()
             if setupSync {
-                moduleInstance.setup?()
+                moduleType.shared.setup()
             } else {
                 DispatchQueue.global().async {
-                    moduleInstance.setup?()
+                    moduleType.shared.setup()
                 }
             }
         }
@@ -176,13 +197,14 @@ public class Mediator: NSObject {
         var result = false
         let modules = allRegisteredModules()
         for moduleType in modules {
-            guard let moduleInstance = moduleInstance(moduleType),
-                  moduleInstance.responds(to: selector) else { continue }
+            let moduleInstance = moduleType.shared
+            guard moduleInstance.responds(to: selector) else { continue }
             
+            // 如果当前模块类为某个模块类的父类，则不调用当前模块类方法
             var shouldInvoke = true
             var moduleClass = ""
-            if let moduleInstance = moduleInstance as? NSObject {
-                moduleClass = NSStringFromClass(moduleInstance.classForCoder)
+            if let moduleObject = moduleInstance as? NSObject {
+                moduleClass = NSStringFromClass(moduleObject.classForCoder)
                 if moduleInvokePool[moduleClass] == nil {
                     for obj in modules {
                         if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
@@ -211,6 +233,7 @@ public class Mediator: NSObject {
     
 }
 
+// MARK: - ModuleBundle
 /// 业务模块Bundle基类，各模块可继承
 open class ModuleBundle: NSObject {
     
