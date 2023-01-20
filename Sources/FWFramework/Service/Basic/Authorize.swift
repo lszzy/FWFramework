@@ -54,7 +54,7 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-@objc public enum AuthorizeStatus: Int {
+public enum AuthorizeStatus: Int {
     /// 未确认
     case notDetermined = 0
     /// 受限制
@@ -67,7 +67,7 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
 
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
-@objc public protocol AuthorizeProtocol {
+public protocol AuthorizeProtocol {
     /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
     
@@ -75,7 +75,14 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?)
     
     /// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
-    @objc optional func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?)
+    func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?)
+}
+
+extension AuthorizeProtocol {
+    /// 默认实现异步查询权限状态
+    public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
+        completion?(authorizeStatus())
+    }
 }
 
 // MARK: - AuthorizeManager
