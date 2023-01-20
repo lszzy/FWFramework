@@ -25,7 +25,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     
     /// 异步查询通知权限状态，当前线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeManager.manager(type: .notifications)?.authorizeStatus?(completion)
+        AuthorizeManager.manager(type: .notifications)?.authorizeStatus(completion)
     }
     
     /// 执行通知权限授权，主线程回调
