@@ -123,20 +123,13 @@ extension Wrapper where Base: NSObject {
         return base.fw_propertyDouble(forName: forName)
     }
     
-    /// 设置强关联属性，支持KVO
+    /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
     ///   - object: 属性值
     ///   - forName: 属性名称
-    public func setProperty(_ object: Any?, forName: String) {
-        base.fw_setProperty(object, forName: forName)
-    }
-    
-    /// 设置赋值关联属性，支持KVO，注意可能会产生野指针
-    /// - Parameters:
-    ///   - object: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyAssign(_ object: Any?, forName: String) {
-        base.fw_setPropertyAssign(object, forName: forName)
+    ///   - policy: 关联策略，默认RETAIN_NONATOMIC
+    public func setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        base.fw_setProperty(object, forName: forName, policy: policy)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -179,8 +172,40 @@ extension Wrapper where Base: NSObject {
         base.fw_setPropertyDouble(value, forName: forName)
     }
     
-    // MARK: - Bind
+    // MARK: - Class
+    /// 读取类关联属性
+    /// - Parameter forName: 属性名称
+    /// - Returns: 属性值
+    public static func property(forName: String) -> Any? {
+        return Base.fw_property(forName: forName)
+    }
     
+    /// 设置类关联属性，可指定关联策略
+    /// - Parameters:
+    ///   - object: 属性值
+    ///   - forName: 属性名称
+    ///   - policy: 关联策略，默认RETAIN_NONATOMIC
+    public static func setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        Base.fw_setProperty(object, forName: forName, policy: policy)
+    }
+    
+    /// 设置类拷贝关联属性
+    /// - Parameters:
+    ///   - object: 属性值
+    ///   - forName: 属性名称
+    public static func setPropertyCopy(_ object: Any?, forName: String) {
+        Base.fw_setPropertyCopy(object, forName: forName)
+    }
+    
+    /// 设置类弱引用关联属性，OC不支持weak关联属性
+    /// - Parameters:
+    ///   - object: 属性值
+    ///   - forName: 属性名称
+    public static func setPropertyWeak(_ object: Any?, forName: String) {
+        Base.fw_setPropertyWeak(object, forName: forName)
+    }
+    
+    // MARK: - Bind
     /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
     ///   - object: 对象，会被 strong 强引用
