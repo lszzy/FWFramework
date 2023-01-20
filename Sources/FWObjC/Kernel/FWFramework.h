@@ -17,7 +17,6 @@
 #import "WebImage.h"
 
 #import "Appearance.h"
-#import "Icon.h"
 #import "Thread.h"
 
 #import "ViewTransition.h"
