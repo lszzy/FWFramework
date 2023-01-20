@@ -21,15 +21,15 @@ open class Configuration: NSObject {
     
     /// 单例模式对象
     public class var shared: Self {
-        var instance = __FWRuntime.getProperty(self.classForCoder(), forName: "sharedInstance") as? Self
+        var instance = self.fw_property(forName: "shared") as? Self
         if let instance = instance { return instance }
         
         fw_synchronized {
-            if let object = __FWRuntime.getProperty(self.classForCoder(), forName: "sharedInstance") as? Self {
+            if let object = self.fw_property(forName: "shared") as? Self {
                 instance = object
             } else {
                 instance = self.init()
-                __FWRuntime.setPropertyPolicy(self.classForCoder(), with: instance, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: "sharedInstance")
+                self.fw_setProperty(instance, forName: "shared")
                 instance?.initializeConfiguration()
             }
         }
