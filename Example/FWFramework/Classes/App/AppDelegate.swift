@@ -19,6 +19,7 @@ class AppDelegate: AppResponder {
         Router.registerClass(AppRouter.self)
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
+        Mediator.loadModule(AppModuleProtocol.self)?.moduleMethod()
         FW.debug("appId: %@", AppConfig.shared.appId)
         FW.debug("apiUrl: %@", AppConfig.shared.network.apiUrl)
         

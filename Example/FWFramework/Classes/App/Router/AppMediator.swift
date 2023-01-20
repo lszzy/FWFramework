@@ -11,7 +11,9 @@ import FWFramework
 import FWDebug
 #endif
 
-@objc protocol AppModuleProtocol: ModuleProtocol {}
+protocol AppModuleProtocol: ModuleProtocol {
+    func moduleMethod()
+}
 
 @objc extension Autoloader {
     func loadAppModule() {
@@ -19,10 +21,9 @@ import FWDebug
     }
 }
 
-class AppModule: NSObject, AppModuleProtocol {
+/*final*/ class AppModule: NSObject, AppModuleProtocol {
     
-    @objc(sharedInstance)
-    public static let shared = AppModule()
+    /*public static let shared = AppModule()*/
     
     func setup() {
         #if DEBUG
@@ -38,6 +39,10 @@ class AppModule: NSObject, AppModuleProtocol {
         DispatchQueue.main.async {
             ThemeManager.shared.overrideWindow = true
         }
+    }
+    
+    func moduleMethod() {
+        FW.debug("AppModule.moduleMethod")
     }
     
     // MARK: - UIApplicationDelegate
