@@ -23,8 +23,8 @@
 
 @end
 
-#define __FWViewControllerVisibleStateDidAppear 3
-#define __FWViewControllerVisibleStateDidDisappear 5
+#define ViewControllerVisibleStateDidAppear 3
+#define ViewControllerVisibleStateDidDisappear 5
 
 @interface UIViewController ()
 
@@ -492,7 +492,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    if (self.__fw_visibleState < __FWViewControllerVisibleStateDidAppear || self.__fw_visibleState >= __FWViewControllerVisibleStateDidDisappear) {
+    if (self.__fw_visibleState < ViewControllerVisibleStateDidAppear || self.__fw_visibleState >= ViewControllerVisibleStateDidDisappear) {
         // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
         if (self.presentingViewController) {
             BOOL statusBarHidden = NO;

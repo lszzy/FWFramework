@@ -1677,8 +1677,7 @@ extension FW {
 
 // MARK: - UIViewController+Toolkit
 /// 视图控制器生命周期状态枚举
-@objc(__FWViewControllerVisibleState)
-public enum ViewControllerVisibleState: Int {
+@objc public enum ViewControllerVisibleState: Int {
     case ready = 0
     case didLoad = 1
     case willAppear = 2
@@ -1830,8 +1829,7 @@ public enum ViewControllerVisibleState: Int {
 }
 
 // MARK: - UINavigationController+Toolkit
-@objc(__FWGestureRecognizerDelegateCompatible)
-fileprivate protocol GestureRecognizerDelegateCompatible {
+@objc fileprivate protocol GestureRecognizerDelegateCompatible {
     
     @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
     

@@ -16,8 +16,7 @@ extension FW {
 }
 
 /// 可选插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
-@objc(__FWPluginProtocol)
-public protocol PluginProtocol {
+@objc public protocol PluginProtocol {
     
     /// 可选插件单例方法，优先级高，仅调用一次
     @objc optional static func pluginInstance() -> Self

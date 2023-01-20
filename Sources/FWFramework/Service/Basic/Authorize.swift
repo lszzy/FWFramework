@@ -54,8 +54,7 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-@objc(__FWAuthorizeStatus)
-public enum AuthorizeStatus: Int {
+@objc public enum AuthorizeStatus: Int {
     /// 未确认
     case notDetermined = 0
     /// 受限制
@@ -68,8 +67,7 @@ public enum AuthorizeStatus: Int {
 
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
-@objc(__FWAuthorizeProtocol)
-public protocol AuthorizeProtocol {
+@objc public protocol AuthorizeProtocol {
     /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
     
