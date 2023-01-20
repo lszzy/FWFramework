@@ -13,6 +13,58 @@ import UIKit
 /// FWFramework所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
 open class AppBundle: ModuleBundle {
     
+    // MARK: - Image
+    /// 图片，导航栏返回，fw.navBack
+    public static var navBackImage: UIImage? { imageNamed("fw.navBack") }
+    /// 图片，导航栏关闭，fw.navClose
+    public static var navCloseImage: UIImage? { imageNamed("fw.navClose") }
+    /// 图片，视频播放大图，fw.videoPlay
+    public static var videoPlayImage: UIImage? { imageNamed("fw.videoPlay") }
+    /// 图片，视频暂停，fw.videoPause
+    public static var videoPauseImage: UIImage? { imageNamed("fw.videoPause") }
+    /// 图片，视频开始，fw.videoStart
+    public static var videoStartImage: UIImage? { imageNamed("fw.videoStart") }
+    /// 图片，相册多选，fw.pickerCheck
+    public static var pickerCheckImage: UIImage? { imageNamed("fw.pickerCheck") }
+    /// 图片，相册选中，fw.pickerChecked
+    public static var pickerCheckedImage: UIImage? { imageNamed("fw.pickerChecked") }
+
+    // MARK: - String
+    /// 多语言，取消，fw.cancel
+    public static var cancelButton: String { localizedString("fw.cancel") }
+    /// 多语言，确定，fw.confirm
+    public static var confirmButton: String { localizedString("fw.confirm") }
+    /// 多语言，关闭，fw.close
+    public static var closeButton: String { localizedString("fw.close") }
+    /// 多语言，完成，fw.done
+    public static var doneButton: String { localizedString("fw.done") }
+    /// 多语言，更多，fw.more
+    public static var moreButton: String { localizedString("fw.more") }
+    /// 多语言，编辑，fw.edit
+    public static var editButton: String { localizedString("fw.edit") }
+    /// 多语言，预览，fw.preview
+    public static var previewButton: String { localizedString("fw.preview") }
+    /// 多语言，原图，fw.original
+    public static var originalButton: String { localizedString("fw.original") }
+
+    /// 多语言，相册，fw.pickerAlbum
+    public static var pickerAlbumTitle: String { localizedString("fw.pickerAlbum") }
+    /// 多语言，无照片，fw.pickerEmpty
+    public static var pickerEmptyTitle: String { localizedString("fw.pickerEmpty") }
+    /// 多语言，无权限，fw.pickerDenied
+    public static var pickerDeniedTitle: String { localizedString("fw.pickerDenied") }
+    /// 多语言，超出数量，fw.pickerExceed
+    public static var pickerExceedTitle: String { localizedString("fw.pickerExceed") }
+
+    /// 多语言，下拉可以刷新，fw.refreshIdle
+    public static var refreshIdleTitle: String { localizedString("fw.refreshIdle") }
+    /// 多语言，松开立即刷新，fw.refreshTriggered
+    public static var refreshTriggeredTitle: String { localizedString("fw.refreshTriggered") }
+    /// 多语言，正在刷新数据，fw.refreshLoading
+    public static var refreshLoadingTitle: String { localizedString("fw.refreshLoading") }
+    /// 多语言，已经全部加载完毕，fw.refreshFinished
+    public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
+    
     // MARK: - Override
     public override class func bundle() -> Bundle {
         if _bundle == nil {

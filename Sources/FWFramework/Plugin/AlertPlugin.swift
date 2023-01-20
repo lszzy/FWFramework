@@ -96,7 +96,7 @@ import FWObjC
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? AppBundle.localizedString("fw.confirm"))
+        let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? AppBundle.confirmButton
         
         fw_showAlert(title: title, message: message, style: .default, cancel: cancel, actions: [targetConfirm], promptCount: 0, promptBlock: nil, actionBlock: { _, index in confirmBlock?() }, cancelBlock: cancelBlock, customBlock: nil)
     }
@@ -143,7 +143,7 @@ import FWObjC
         confirmBlock: (([String]) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? AppBundle.localizedString("fw.confirm"))
+        let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? AppBundle.confirmButton
         
         fw_showAlert(title: title, message: message, style: .default, cancel: cancel, actions: [targetConfirm], promptCount: promptCount, promptBlock: promptBlock, actionBlock: { values, _ in confirmBlock?(values) }, cancelBlock: cancelBlock, customBlock: nil)
     }
@@ -176,9 +176,9 @@ import FWObjC
         var targetCancel = cancel
         if cancel == nil {
             if (actions?.count ?? 0) > 0 {
-                targetCancel = AlertPluginImpl.shared.defaultCancelButton?(.alert) ?? AppBundle.localizedString("fw.cancel")
+                targetCancel = AlertPluginImpl.shared.defaultCancelButton?(.alert) ?? AppBundle.cancelButton
             } else {
-                targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.alert) ?? AppBundle.localizedString("fw.close")
+                targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.alert) ?? AppBundle.closeButton
             }
         }
         
@@ -269,9 +269,9 @@ import FWObjC
         var targetCancel = cancel
         if cancel == nil {
             if (actions?.count ?? 0) > 0 {
-                targetCancel = AlertPluginImpl.shared.defaultCancelButton?(.actionSheet) ?? AppBundle.localizedString("fw.cancel")
+                targetCancel = AlertPluginImpl.shared.defaultCancelButton?(.actionSheet) ?? AppBundle.cancelButton
             } else {
-                targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.actionSheet) ?? AppBundle.localizedString("fw.close")
+                targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.actionSheet) ?? AppBundle.closeButton
             }
         }
         
