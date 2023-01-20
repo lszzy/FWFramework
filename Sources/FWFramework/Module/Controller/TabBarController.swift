@@ -526,7 +526,7 @@ internal extension TabBar {
                     accessibilityTitle = item.accessibilityLabel ?? item.title ?? ""
                 }
                 if self.isMoreItem(idx) {
-                    accessibilityTitle = AppBundle.localizedString("fw.more")
+                    accessibilityTitle = AppBundle.moreButton
                 }
                 container.accessibilityLabel = accessibilityTitle
             }
@@ -1123,7 +1123,7 @@ open class TabBarItemMoreContentView: TabBarItemContentView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.title = AppBundle.localizedString("fw.more")
+        self.title = AppBundle.moreButton
         self.image = systemMore(highlighted: false)
         self.selectedImage = systemMore(highlighted: true)
     }
