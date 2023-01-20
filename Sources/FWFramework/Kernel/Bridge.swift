@@ -26,3 +26,17 @@ import UIKit
     }
     
 }
+
+/// UIViewController内部Swift桥接方法
+@_spi(FW) extension UIViewController {
+    
+    /// 内部判断是否处于可见状态
+    @objc public func __fw_isInvisibleState() -> Bool {
+        if self.fw_visibleState.rawValue < ViewControllerVisibleState.didAppear.rawValue ||
+            self.fw_visibleState.rawValue >= ViewControllerVisibleState.didDisappear.rawValue {
+            return true
+        }
+        return false
+    }
+    
+}
