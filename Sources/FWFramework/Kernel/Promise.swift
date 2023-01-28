@@ -27,13 +27,16 @@ extension FW {
 // MARK: - Promise
 /// 约定错误
 public enum PromiseError: Int, Swift.Error, CustomNSError {
-    case validation = 2001
-    case timeout = 2002
+    case failed = 2001
+    case validation = 2002
+    case timeout = 2003
     
     public static var errorDomain: String { "site.wuyong.error.promise" }
     public var errorCode: Int { self.rawValue }
     public var errorUserInfo: [String: Any] {
         switch self {
+        case .failed:
+            return [NSLocalizedDescriptionKey: "Promise failed."]
         case .validation:
             return [NSLocalizedDescriptionKey: "Promise validation failed."]
         case .timeout:
@@ -48,6 +51,12 @@ public class Promise: NSObject {
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = .main
+    /// 约定默认错误，约定失败时可选使用，可用于错误判断，支持自定义
+    public static var defaultError: Error = PromiseError.failed
+    /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
+    public static var validationError: Error = PromiseError.validation
+    /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
+    public static var timeoutError: Error = PromiseError.timeout
     
     /// 约定内部属性
     private let operation: (@escaping (_ result: Any?) -> Void) -> Void
@@ -282,7 +291,7 @@ extension Promise {
                 if let error = result as? Error {
                     completion(error)
                 } else if let valid = result as? Bool, !valid {
-                    completion(PromiseError.validation)
+                    completion(Promise.validationError)
                 } else {
                     completion(value)
                 }
@@ -330,7 +339,7 @@ extension Promise {
     public func timeout(_ time: TimeInterval, error: Error? = nil) -> Promise {
         let promise = Promise { completion in
             Promise.delay(time) {
-                completion(error ?? PromiseError.timeout)
+                completion(error ?? Promise.timeoutError)
             }
         }
         return Promise.race([self, promise])
