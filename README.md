@@ -8,7 +8,7 @@
 # [中文](https://github.com/lszzy/FWFramework/blob/master/README_CN.md)
 
 ## Tutorial
-iOS development framework, convenient for iOS development. From version 5.0, it is only compatible with Swift; for OC compatibility, please use version 4.x.
+iOS development framework, mainly solves the routine and pain points in native development, and builds a modular project structure to facilitate iOS development. From version 5.0, it is only compatible with Swift; for OC compatibility, please use version 4.x.
 
 All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
