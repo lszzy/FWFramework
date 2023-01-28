@@ -6,7 +6,6 @@
 //
 
 #import "Bridge.h"
-#import "State.h"
 #import "Task.h"
 
 #import "Exception.h"
