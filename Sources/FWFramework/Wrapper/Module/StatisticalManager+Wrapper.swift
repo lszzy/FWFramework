@@ -47,3 +47,24 @@ extension Wrapper where Base: UIView {
     }
     
 }
+
+extension Wrapper where Base: UIViewController {
+    
+    /// 绑定统计曝光事件，触发管理器
+    public var statisticalExposure: StatisticalObject? {
+        get { return base.fw_statisticalExposure }
+        set { base.fw_statisticalExposure = newValue }
+    }
+
+    /// 绑定统计曝光事件，仅触发回调
+    public var statisticalExposureBlock: StatisticalBlock? {
+        get { return base.fw_statisticalExposureBlock }
+        set { base.fw_statisticalExposureBlock = newValue }
+    }
+
+    /// 手工触发统计曝光事件，更新曝光次数和时长，duration为单次曝光时长(0表示开始)，可重复触发
+    public func statisticalTriggerExposure(duration: TimeInterval = 0) {
+        base.fw_statisticalTriggerExposure(duration: duration)
+    }
+    
+}

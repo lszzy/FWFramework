@@ -34,7 +34,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         result.autoScrollTimeInterval = 6
         result.placeholderImage = UIImage.fw.appIconImage()
         result.itemDidScrollOperationBlock = { index in
-            FW.debug("currentIndex: \(index)")
+            // FW.debug("currentIndex: \(index)")
         }
         return result
     }()
@@ -199,6 +199,9 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             }
         }
         
+        // ViewController
+        fw.statisticalExposure = StatisticalObject(name: "exposure_viewController", object: "viewController")
+        
         // Click
         testView.fw.statisticalClick = StatisticalObject(name: "click_view", object: "view")
         testButton.fw.statisticalClick = StatisticalObject(name: "click_button", object: "button")
@@ -240,9 +243,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func clickHandler(_ index: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            Router.openURL("http://kvm.wuyong.site/test.php")
-        }
+        FW.debug("点击了: %@", NSNumber(value: index))
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
