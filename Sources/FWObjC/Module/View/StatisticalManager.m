@@ -85,6 +85,7 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
 @property (nonatomic, strong) id object;
 @property (nonatomic, copy) NSDictionary *userInfo;
 @property (nonatomic, weak) __kindof UIView *view;
+@property (nonatomic, weak) __kindof UIViewController *viewController;
 @property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, assign) NSInteger triggerCount;
 @property (nonatomic, assign) NSTimeInterval triggerDuration;
@@ -133,6 +134,7 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
 - (void)__triggerClick:(UIView *)view indexPath:(NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount
 {
     self.view = view;
+    self.viewController = view.__fw_viewController;
     self.indexPath = indexPath;
     self.triggerCount = triggerCount;
     self.isExposure = NO;
@@ -142,7 +144,18 @@ NSNotificationName const __FWStatisticalEventTriggeredNotification = @"FWStatist
 - (void)__triggerExposure:(UIView *)view indexPath:(NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration
 {
     self.view = view;
+    self.viewController = view.__fw_viewController;
     self.indexPath = indexPath;
+    self.triggerCount = triggerCount;
+    self.triggerDuration = duration;
+    self.totalDuration = totalDuration;
+    self.isExposure = YES;
+    self.isFinished = duration > 0;
+}
+
+- (void)__triggerExposure:(UIViewController *)viewController triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration
+{
+    self.viewController = viewController;
     self.triggerCount = triggerCount;
     self.triggerDuration = duration;
     self.totalDuration = totalDuration;

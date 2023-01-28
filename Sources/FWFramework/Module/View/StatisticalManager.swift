@@ -43,7 +43,7 @@ import FWObjC
             object = StatisticalObject()
         }
         if object.triggerIgnored { return }
-        let triggerCount = self.fw_statisticalClickCount(indexPath)
+        let triggerCount = self.fw_statisticalClickTotalCount(indexPath)
         if triggerCount > 1 && object.triggerOnce { return }
         
         object.__triggerClick(self, indexPath: indexPath, triggerCount: triggerCount)
@@ -159,13 +159,13 @@ import FWObjC
         proxyView?.fw_statisticalClickRegister()
     }
     
-    private func fw_statisticalClickCount(_ indexPath: IndexPath?) -> Int {
+    private func fw_statisticalClickTotalCount(_ indexPath: IndexPath?) -> Int {
         var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalClickCount") as? NSMutableDictionary {
+        if let dict = fw_property(forName: "fw_statisticalClickTotalCount") as? NSMutableDictionary {
             triggerDict = dict
         } else {
             triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalClickCount")
+            fw_setProperty(triggerDict, forName: "fw_statisticalClickTotalCount")
         }
         
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
@@ -205,10 +205,11 @@ import FWObjC
             object = StatisticalObject()
         }
         if object.triggerIgnored { return }
-        let triggerCount = self.fw_statisticalExposureCount(indexPath)
+        let triggerCount = self.fw_statisticalExposureTotalCount(indexPath)
         if triggerCount > 1 && object.triggerOnce { return }
         
-        object.__triggerExposure(self, indexPath: indexPath, triggerCount: triggerCount, duration: duration, totalDuration: self.fw_statisticalExposureDuration(duration, indexPath: indexPath))
+        let totalDuration = self.fw_statisticalExposureTotalDuration(duration, indexPath: indexPath)
+        object.__triggerExposure(self, indexPath: indexPath, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
         
         if cell?.fw_statisticalExposureBlock != nil {
             cell?.fw_statisticalExposureBlock?(object)
@@ -326,6 +327,26 @@ import FWObjC
             if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
                 selfObject.fw_statisticalExposureCellRegister()
             }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            selfObject.fw_statisticalExposureDidAppear()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            selfObject.fw_statisticalExposureDidDisappear()
         }}
     }
     
@@ -582,13 +603,13 @@ import FWObjC
         return isFullState
     }
     
-    private func fw_statisticalExposureCount(_ indexPath: IndexPath?) -> Int {
+    private func fw_statisticalExposureTotalCount(_ indexPath: IndexPath?) -> Int {
         var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalExposureCount") as? NSMutableDictionary {
+        if let dict = fw_property(forName: "fw_statisticalExposureTotalCount") as? NSMutableDictionary {
             triggerDict = dict
         } else {
             triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalExposureCount")
+            fw_setProperty(triggerDict, forName: "fw_statisticalExposureTotalCount")
         }
         
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
@@ -597,18 +618,143 @@ import FWObjC
         return triggerCount
     }
     
-    private func fw_statisticalExposureDuration(_ duration: TimeInterval, indexPath: IndexPath?) -> TimeInterval {
+    private func fw_statisticalExposureTotalDuration(_ duration: TimeInterval, indexPath: IndexPath?) -> TimeInterval {
         var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalExposureDuration") as? NSMutableDictionary {
+        if let dict = fw_property(forName: "fw_statisticalExposureTotalDuration") as? NSMutableDictionary {
             triggerDict = dict
         } else {
             triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalExposureDuration")
+            fw_setProperty(triggerDict, forName: "fw_statisticalExposureTotalDuration")
         }
         
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
         let triggerDuration = ((triggerDict[triggerKey] as? NSNumber)?.doubleValue ?? 0) + duration
         triggerDict.setObject(NSNumber(value: triggerDuration), forKey: triggerKey)
+        return triggerDuration
+    }
+    
+}
+
+@_spi(FW) extension UIViewController {
+    
+    /// 绑定统计曝光事件，触发管理器
+    public var fw_statisticalExposure: StatisticalObject? {
+        get {
+            return fw_property(forName: "fw_statisticalExposure") as? StatisticalObject
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            self.fw_statisticalExposureRegister()
+        }
+    }
+
+    /// 绑定统计曝光事件，仅触发回调
+    public var fw_statisticalExposureBlock: StatisticalBlock? {
+        get {
+            return fw_property(forName: "fw_statisticalExposureBlock") as? StatisticalBlock
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureBlock")
+            self.fw_statisticalExposureRegister()
+        }
+    }
+
+    /// 手工触发统计曝光事件，更新曝光次数和时长，duration为单次曝光时长(0表示开始)，可重复触发
+    public func fw_statisticalTriggerExposure(duration: TimeInterval = 0) {
+        var object: StatisticalObject
+        if let exposureObject = self.fw_statisticalExposure {
+            object = exposureObject
+        } else {
+            object = StatisticalObject()
+        }
+        if object.triggerIgnored { return }
+        let triggerCount = self.fw_statisticalExposureTotalCount()
+        if triggerCount > 1 && object.triggerOnce { return }
+        
+        let totalDuration = self.fw_statisticalExposureTotalDuration(duration)
+        object.__triggerExposure(self, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
+        
+        if self.fw_statisticalExposureBlock != nil {
+            self.fw_statisticalExposureBlock?(object)
+        }
+        if self.fw_statisticalExposure != nil {
+            StatisticalManager.shared.__handleEvent(object)
+        }
+    }
+    
+    private func fw_statisticalExposureRegister() {
+        if self.fw_statisticalExposureIsRegistered { return }
+        self.fw_statisticalExposureIsRegistered = true
+        
+        fw_observeNotification(UIApplication.willResignActiveNotification, object: nil, target: self, action: #selector(fw_statisticalExposureResignActive))
+        fw_observeNotification(UIApplication.didBecomeActiveNotification, object: nil, target: self, action: #selector(fw_statisticalExposureBecomeActive))
+    }
+    
+    private var fw_statisticalExposureIsRegistered: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureIsRegistered") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsRegistered") }
+    }
+    
+    private var fw_statisticalExposureTimestamp: TimeInterval {
+        get { return fw_propertyDouble(forName: "fw_statisticalExposureTimestamp") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_statisticalExposureTimestamp") }
+    }
+    
+    private var fw_statisticalExposureDuration: TimeInterval {
+        get { return fw_propertyDouble(forName: "fw_statisticalExposureDuration") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_statisticalExposureDuration") }
+    }
+    
+    fileprivate func fw_statisticalExposureDidAppear() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        // 忽略侧滑返回手势取消触发viewDidAppear的情况
+        if fw_statisticalExposureDuration > 0 { return }
+        
+        fw_statisticalExposureTimestamp = Date().timeIntervalSince1970
+        fw_statisticalExposureDuration = 0
+        fw_statisticalTriggerExposure(duration: 0)
+    }
+    
+    fileprivate func fw_statisticalExposureDidDisappear() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        
+        var duration = fw_statisticalExposureDuration
+        let beginTime = fw_statisticalExposureTimestamp
+        if beginTime > 0 {
+            duration += Date().timeIntervalSince1970 - beginTime
+        }
+        fw_statisticalExposureTimestamp = 0
+        fw_statisticalExposureDuration = 0
+        fw_statisticalTriggerExposure(duration: duration)
+    }
+    
+    @objc(__fw_statisticalExposureResignActive)
+    private func fw_statisticalExposureResignActive() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        
+        let beginTime = fw_statisticalExposureTimestamp
+        if beginTime > 0 {
+            fw_statisticalExposureTimestamp = 0
+            fw_statisticalExposureDuration += Date().timeIntervalSince1970 - beginTime
+        }
+    }
+    
+    @objc(__fw_statisticalExposureBecomeActive)
+    private func fw_statisticalExposureBecomeActive() {
+        if !self.fw_statisticalExposureIsRegistered { return }
+        
+        fw_statisticalExposureTimestamp = Date().timeIntervalSince1970
+    }
+    
+    private func fw_statisticalExposureTotalCount() -> Int {
+        let triggerCount = fw_propertyInt(forName: "fw_statisticalExposureTotalCount") + 1
+        fw_setPropertyInt(triggerCount, forName: "fw_statisticalExposureTotalCount")
+        return triggerCount
+    }
+    
+    private func fw_statisticalExposureTotalDuration(_ duration: TimeInterval) -> TimeInterval {
+        let triggerDuration = fw_propertyDouble(forName: "fw_statisticalExposureTotalDuration") + duration
+        fw_setPropertyDouble(triggerDuration, forName: "fw_statisticalExposureTotalDuration")
         return triggerDuration
     }
     

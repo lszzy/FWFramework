@@ -74,6 +74,8 @@ NS_SWIFT_NAME(StatisticalObject)
 
 /// 事件来源视图，触发时自动赋值
 @property (nonatomic, weak, readonly, nullable) __kindof UIView *view;
+/// 事件来源控制器，触发时自动赋值
+@property (nonatomic, weak, readonly, nullable) __kindof UIViewController *viewController;
 /// 事件来源位置，触发时自动赋值
 @property (nonatomic, strong, readonly, nullable) NSIndexPath *indexPath;
 /// 事件触发次数，触发时自动赋值
@@ -107,6 +109,8 @@ NS_SWIFT_NAME(StatisticalObject)
 - (void)__triggerClick:(nullable UIView *)view indexPath:(nullable NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount;
 /// 内部方法，触发曝光事件更新属性
 - (void)__triggerExposure:(nullable UIView *)view indexPath:(nullable NSIndexPath *)indexPath triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration;
+/// 内部方法，触发控制器曝光事件更新属性
+- (void)__triggerExposure:(nullable UIViewController *)viewController triggerCount:(NSInteger)triggerCount duration:(NSTimeInterval)duration totalDuration:(NSTimeInterval)totalDuration;
 
 @end
 
