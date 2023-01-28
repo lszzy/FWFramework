@@ -308,7 +308,6 @@ open class VideoPlayer: UIViewController {
         self.removePlayerLayerObservers()
 
         self.playerView.player = nil
-        Logger.debug(group: "FWFramework", "VideoPlayer did dealloc")
     }
 
     open override func loadView() {

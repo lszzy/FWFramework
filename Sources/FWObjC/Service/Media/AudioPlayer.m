@@ -606,7 +606,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        __FWLogDebug(@"FWAudioPlayer: __FWAudioPlayer interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
+        __FWLogDebug(@"FWAudioPlayer: interruption: %@", interuptionType == AVAudioSessionInterruptionTypeBegan ? @"began" : @"end");
     }
 }
 
@@ -623,7 +623,7 @@ typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
         [self play];
     }
     if (!self.disableLogs) {
-        __FWLogDebug(@"FWAudioPlayer: __FWAudioPlayer routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
+        __FWLogDebug(@"FWAudioPlayer: routeChanged: %@", routeChangeType == AVAudioSessionRouteChangeReasonNewDeviceAvailable ? @"New Device Available" : @"Old Device Unavailable");
     }
 }
 

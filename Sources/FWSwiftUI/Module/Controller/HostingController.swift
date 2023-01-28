@@ -31,12 +31,6 @@ open class HostingController: UIHostingController<AnyView> {
         setupSubviews()
     }
     
-    #if DEBUG
-    deinit {
-        Logger.debug(group: "FWFramework", "%@ did dealloc", NSStringFromClass(self.classForCoder))
-    }
-    #endif
-    
     // MARK: - Setup
     /// 初始化导航栏，子类重写
     open func setupNavbar() {}
