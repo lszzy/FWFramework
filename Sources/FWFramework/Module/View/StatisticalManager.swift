@@ -13,14 +13,217 @@ import FWObjC
 @_spi(FW) extension UIView {
     
     private class StatisticalTarget: NSObject {
+        
+        private static var statisticalSwizzled = false
+        
+        static func swizzleStatistical() {
+            guard !statisticalSwizzled else { return }
+            statisticalSwizzled = true
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIView.self,
+                selector: #selector(setter: UIView.frame),
+                methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+                swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+            ) { store in { selfObject, frame in
+                store.original(selfObject, store.selector, frame)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIView.self,
+                selector: #selector(setter: UIView.isHidden),
+                methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
+                swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+            ) { store in { selfObject, hidden in
+                store.original(selfObject, store.selector, hidden)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIView.self,
+                selector: #selector(setter: UIView.alpha),
+                methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
+                swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
+            ) { store in { selfObject, alpha in
+                store.original(selfObject, store.selector, alpha)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIView.self,
+                selector: #selector(setter: UIView.bounds),
+                methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+                swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+            ) { store in { selfObject, bounds in
+                store.original(selfObject, store.selector, bounds)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIView.self,
+                selector: #selector(UIView.didMoveToWindow),
+                methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+                swizzleSignature: (@convention(block) (UIView) -> Void).self
+            ) { store in { selfObject in
+                store.original(selfObject, store.selector)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UITableView.self,
+                selector: #selector(UITableView.reloadData),
+                methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
+                swizzleSignature: (@convention(block) (UITableView) -> Void).self
+            ) { store in { selfObject in
+                store.original(selfObject, store.selector)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UICollectionView.self,
+                selector: #selector(UICollectionView.reloadData),
+                methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
+                swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
+            ) { store in { selfObject in
+                store.original(selfObject, store.selector)
+                selfObject.fw_statisticalExposureUpdate()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UITableViewCell.self,
+                selector: #selector(UITableViewCell.didMoveToSuperview),
+                methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+                swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+            ) { store in { selfObject in
+                store.original(selfObject, store.selector)
+                
+                if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                    selfObject.fw_statisticalClickCellRegister()
+                }
+                if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                    selfObject.fw_statisticalExposureCellRegister()
+                }
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UICollectionViewCell.self,
+                selector: #selector(UICollectionViewCell.didMoveToSuperview),
+                methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
+                swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
+            ) { store in { selfObject in
+                store.original(selfObject, store.selector)
+                
+                if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                    selfObject.fw_statisticalClickCellRegister()
+                }
+                if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                    selfObject.fw_statisticalExposureCellRegister()
+                }
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIViewController.self,
+                selector: #selector(UIViewController.viewDidAppear(_:)),
+                methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+                swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            ) { store in { selfObject, animated in
+                store.original(selfObject, store.selector, animated)
+                selfObject.fw_statisticalExposureDidAppear()
+            }}
+            
+            NSObject.fw_swizzleInstanceMethod(
+                UIViewController.self,
+                selector: #selector(UIViewController.viewDidDisappear(_:)),
+                methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+                swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            ) { store in { selfObject, animated in
+                store.original(selfObject, store.selector, animated)
+                selfObject.fw_statisticalExposureDidDisappear()
+            }}
+        }
+        
         private(set) weak var view: UIView?
+        
+        private var clickTotalCounts: [String: Int] = [:]
+        
+        private var exposureTotalCounts: [String: Int] = [:]
+        private var exposureTotalDurations: [String: TimeInterval] = [:]
         
         init(view: UIView?) {
             super.init()
             self.view = view
         }
         
-        @objc func statisticalExposureCalculate() {
+        func triggerClick(_ cell: UIView?, indexPath: IndexPath?) {
+            var object: StatisticalObject
+            if let clickObject = cell?.fw_statisticalClick ?? view?.fw_statisticalClick {
+                object = clickObject
+            } else {
+                object = StatisticalObject()
+            }
+            if object.triggerIgnored { return }
+            let triggerCount = clickTotalCount(indexPath)
+            if triggerCount > 1 && object.triggerOnce { return }
+            
+            object.__triggerClick(view, indexPath: indexPath, triggerCount: triggerCount)
+            
+            if cell?.fw_statisticalClickBlock != nil {
+                cell?.fw_statisticalClickBlock?(object)
+            } else if view?.fw_statisticalClickBlock != nil {
+                view?.fw_statisticalClickBlock?(object)
+            }
+            if cell?.fw_statisticalClick != nil || view?.fw_statisticalClick != nil {
+                StatisticalManager.shared.__handleEvent(object)
+            }
+        }
+        
+        private func clickTotalCount(_ indexPath: IndexPath?) -> Int {
+            let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
+            let triggerCount = (clickTotalCounts[triggerKey] ?? 0) + 1
+            clickTotalCounts[triggerKey] = triggerCount
+            return triggerCount
+        }
+        
+        func triggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval) {
+            var object: StatisticalObject
+            if let exposureObject = cell?.fw_statisticalExposure ?? view?.fw_statisticalExposure {
+                object = exposureObject
+            } else {
+                object = StatisticalObject()
+            }
+            if object.triggerIgnored { return }
+            let triggerCount = exposureTotalCount(indexPath)
+            if triggerCount > 1 && object.triggerOnce { return }
+            
+            let totalDuration = exposureTotalDuration(duration, indexPath: indexPath)
+            object.__triggerExposure(view, indexPath: indexPath, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
+            
+            if cell?.fw_statisticalExposureBlock != nil {
+                cell?.fw_statisticalExposureBlock?(object)
+            } else if view?.fw_statisticalExposureBlock != nil {
+                view?.fw_statisticalExposureBlock?(object)
+            }
+            if cell?.fw_statisticalExposure != nil || view?.fw_statisticalExposure != nil {
+                StatisticalManager.shared.__handleEvent(object)
+            }
+        }
+        
+        private func exposureTotalCount(_ indexPath: IndexPath?) -> Int {
+            let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
+            let triggerCount = (exposureTotalCounts[triggerKey] ?? 0) + 1
+            exposureTotalCounts[triggerKey] = triggerCount
+            return triggerCount
+        }
+        
+        private func exposureTotalDuration(_ duration: TimeInterval, indexPath: IndexPath?) -> TimeInterval {
+            let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
+            let triggerDuration = (exposureTotalDurations[triggerKey] ?? 0) + duration
+            exposureTotalDurations[triggerKey] = triggerDuration
+            return triggerDuration
+        }
+        
+        @objc func exposureCalculate() {
             if let view = self.view, (view is UITableView || view is UICollectionView) {
                 for subview in view.subviews {
                     subview.fw_updateStatisticalExposureState()
@@ -61,36 +264,17 @@ import FWObjC
 
     /// 手工触发统计点击事件，更新点击次数，列表可指定cell和位置，可重复触发
     public func fw_statisticalTriggerClick(_ cell: UIView?, indexPath: IndexPath?) {
-        var object: StatisticalObject
-        if let clickObject = cell?.fw_statisticalClick ?? self.fw_statisticalClick {
-            object = clickObject
-        } else {
-            object = StatisticalObject()
-        }
-        if object.triggerIgnored { return }
-        let triggerCount = self.fw_statisticalClickTotalCount(indexPath)
-        if triggerCount > 1 && object.triggerOnce { return }
-        
-        object.__triggerClick(self, indexPath: indexPath, triggerCount: triggerCount)
-        
-        if cell?.fw_statisticalClickBlock != nil {
-            cell?.fw_statisticalClickBlock?(object)
-        } else if self.fw_statisticalClickBlock != nil {
-            self.fw_statisticalClickBlock?(object)
-        }
-        if cell?.fw_statisticalClick != nil || self.fw_statisticalClick != nil {
-            StatisticalManager.shared.__handleEvent(object)
-        }
+        fw_statisticalTarget.triggerClick(cell, indexPath: indexPath)
     }
     
-    private var fw_statisticalClickIsRegistered: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalClickIsRegistered") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickIsRegistered") }
+    private var fw_statisticalClickEnabled: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalClickEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickEnabled") }
     }
     
     private func fw_statisticalClickRegister() {
-        if self.fw_statisticalClickIsRegistered { return }
-        self.fw_statisticalClickIsRegistered = true
+        if self.fw_statisticalClickEnabled { return }
+        self.fw_statisticalClickEnabled = true
         if self is UITableViewCell || self is UICollectionViewCell {
             self.fw_statisticalClickCellRegister()
             return
@@ -115,7 +299,7 @@ import FWObjC
                 store.original(selfObject, store.selector, tableView, indexPath)
                 
                 if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
-                if !tableView.fw_statisticalClickIsRegistered { return }
+                if !tableView.fw_statisticalClickEnabled { return }
                 let cell = tableView.cellForRow(at: indexPath)
                 tableView.fw_statisticalTriggerClick(cell, indexPath: indexPath)
             }}
@@ -133,7 +317,7 @@ import FWObjC
                 store.original(selfObject, store.selector, collectionView, indexPath)
                 
                 if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
-                if !collectionView.fw_statisticalClickIsRegistered { return }
+                if !collectionView.fw_statisticalClickEnabled { return }
                 let cell = collectionView.cellForItem(at: indexPath)
                 collectionView.fw_statisticalTriggerClick(cell, indexPath: indexPath)
             }}
@@ -184,21 +368,6 @@ import FWObjC
         proxyView?.fw_statisticalClickRegister()
     }
     
-    private func fw_statisticalClickTotalCount(_ indexPath: IndexPath?) -> Int {
-        var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalClickTotalCount") as? NSMutableDictionary {
-            triggerDict = dict
-        } else {
-            triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalClickTotalCount")
-        }
-        
-        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
-        let triggerCount = ((triggerDict[triggerKey] as? NSNumber)?.intValue ?? 0) + 1
-        triggerDict.setObject(NSNumber(value: triggerCount), forKey: triggerKey)
-        return triggerCount
-    }
-    
     /// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
     public var fw_statisticalExposure: StatisticalObject? {
         get {
@@ -223,163 +392,18 @@ import FWObjC
 
     /// 手工触发统计曝光事件，更新曝光次数和时长，列表可指定cell和位置，duration为单次曝光时长(0表示开始)，可重复触发
     public func fw_statisticalTriggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval = 0) {
-        var object: StatisticalObject
-        if let exposureObject = cell?.fw_statisticalExposure ?? self.fw_statisticalExposure {
-            object = exposureObject
-        } else {
-            object = StatisticalObject()
-        }
-        if object.triggerIgnored { return }
-        let triggerCount = self.fw_statisticalExposureTotalCount(indexPath)
-        if triggerCount > 1 && object.triggerOnce { return }
-        
-        let totalDuration = self.fw_statisticalExposureTotalDuration(duration, indexPath: indexPath)
-        object.__triggerExposure(self, indexPath: indexPath, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
-        
-        if cell?.fw_statisticalExposureBlock != nil {
-            cell?.fw_statisticalExposureBlock?(object)
-        } else if self.fw_statisticalExposureBlock != nil {
-            self.fw_statisticalExposureBlock?(object)
-        }
-        if cell?.fw_statisticalExposure != nil || self.fw_statisticalExposure != nil {
-            StatisticalManager.shared.__handleEvent(object)
-        }
+        fw_statisticalTarget.triggerExposure(cell, indexPath: indexPath, duration: duration)
     }
     
     /// 内部方法，启用统计功能
     @objc(__fw_enableStatistical)
     public static func fw_enableStatistical() {
-        guard !fw_staticStatisticalEnabled else { return }
-        fw_staticStatisticalEnabled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.frame),
-            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-        ) { store in { selfObject, frame in
-            store.original(selfObject, store.selector, frame)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.isHidden),
-            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
-        ) { store in { selfObject, hidden in
-            store.original(selfObject, store.selector, hidden)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.alpha),
-            methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
-        ) { store in { selfObject, alpha in
-            store.original(selfObject, store.selector, alpha)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.bounds),
-            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-        ) { store in { selfObject, bounds in
-            store.original(selfObject, store.selector, bounds)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.didMoveToWindow),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITableView.self,
-            selector: #selector(UITableView.reloadData),
-            methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UICollectionView.self,
-            selector: #selector(UICollectionView.reloadData),
-            methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITableViewCell.self,
-            selector: #selector(UITableViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                selfObject.fw_statisticalClickCellRegister()
-            }
-            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                selfObject.fw_statisticalExposureCellRegister()
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UICollectionViewCell.self,
-            selector: #selector(UICollectionViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                selfObject.fw_statisticalClickCellRegister()
-            }
-            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                selfObject.fw_statisticalExposureCellRegister()
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            selfObject.fw_statisticalExposureDidAppear()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            selfObject.fw_statisticalExposureDidDisappear()
-        }}
+        StatisticalTarget.swizzleStatistical()
     }
     
-    private static var fw_staticStatisticalEnabled = false
-    
-    private var fw_statisticalExposureIsRegistered: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureIsRegistered") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsRegistered") }
+    private var fw_statisticalExposureEnabled: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureEnabled") }
     }
     
     private var fw_statisticalExposureIsProxy: Bool {
@@ -525,8 +549,8 @@ import FWObjC
     }
     
     private func fw_statisticalExposureRegister() {
-        if self.fw_statisticalExposureIsRegistered { return }
-        self.fw_statisticalExposureIsRegistered = true
+        if self.fw_statisticalExposureEnabled { return }
+        self.fw_statisticalExposureEnabled = true
         if self is UITableViewCell || self is UICollectionViewCell {
             self.fw_statisticalExposureCellRegister()
             return
@@ -539,8 +563,8 @@ import FWObjC
         if self.fw_statisticalExposure != nil ||
             self.fw_statisticalExposureBlock != nil ||
             self.fw_statisticalExposureIsProxy {
-            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.statisticalExposureCalculate), object: nil)
-            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.statisticalExposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
+            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
+            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
     }
     
@@ -562,7 +586,7 @@ import FWObjC
     }
     
     private func fw_statisticalExposureUpdate() {
-        if !self.fw_statisticalExposureIsRegistered { return }
+        if !self.fw_statisticalExposureEnabled { return }
         
         if let viewController = self.fw_viewController,
            viewController.view.window == nil || viewController.presentedViewController != nil { return }
@@ -571,27 +595,17 @@ import FWObjC
     }
     
     private func fw_statisticalExposureRecursive() {
-        if !self.fw_statisticalExposureIsRegistered { return }
+        if !self.fw_statisticalExposureEnabled { return }
         
         if self.fw_statisticalExposure != nil ||
             self.fw_statisticalExposureBlock != nil ||
             self.fw_statisticalExposureIsProxy {
-            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.statisticalExposureCalculate), object: nil)
-            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.statisticalExposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
+            NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
+            self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
         
         for subview in self.subviews {
             subview.fw_statisticalExposureRecursive()
-        }
-    }
-    
-    private var fw_statisticalTarget: StatisticalTarget {
-        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
-            return target
-        } else {
-            let target = StatisticalTarget(view: self)
-            fw_setProperty(target, forName: "fw_statisticalTarget")
-            return target
         }
     }
     
@@ -603,34 +617,14 @@ import FWObjC
         return isFullState
     }
     
-    private func fw_statisticalExposureTotalCount(_ indexPath: IndexPath?) -> Int {
-        var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalExposureTotalCount") as? NSMutableDictionary {
-            triggerDict = dict
+    private var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
         } else {
-            triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalExposureTotalCount")
+            let target = StatisticalTarget(view: self)
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
         }
-        
-        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
-        let triggerCount = ((triggerDict[triggerKey] as? NSNumber)?.intValue ?? 0) + 1
-        triggerDict.setObject(NSNumber(value: triggerCount), forKey: triggerKey)
-        return triggerCount
-    }
-    
-    private func fw_statisticalExposureTotalDuration(_ duration: TimeInterval, indexPath: IndexPath?) -> TimeInterval {
-        var triggerDict: NSMutableDictionary
-        if let dict = fw_property(forName: "fw_statisticalExposureTotalDuration") as? NSMutableDictionary {
-            triggerDict = dict
-        } else {
-            triggerDict = NSMutableDictionary()
-            fw_setProperty(triggerDict, forName: "fw_statisticalExposureTotalDuration")
-        }
-        
-        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)" as NSString
-        let triggerDuration = ((triggerDict[triggerKey] as? NSNumber)?.doubleValue ?? 0) + duration
-        triggerDict.setObject(NSNumber(value: triggerDuration), forKey: triggerKey)
-        return triggerDuration
     }
     
 }
