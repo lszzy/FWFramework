@@ -12,6 +12,31 @@ import FWObjC
 
 @_spi(FW) extension UIView {
     
+    private class StatisticalTarget: NSObject {
+        private(set) weak var view: UIView?
+        
+        init(view: UIView?) {
+            super.init()
+            self.view = view
+        }
+        
+        @objc func statisticalExposureCalculate() {
+            if let view = self.view, (view is UITableView || view is UICollectionView) {
+                for subview in view.subviews {
+                    subview.fw_updateStatisticalExposureState()
+                }
+            } else {
+                self.view?.fw_updateStatisticalExposureState()
+            }
+        }
+    }
+    
+    private enum StatisticalExposureState: Int {
+        case none = 0
+        case partly
+        case fully
+    }
+    
     /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
     public var fw_statisticalClick: StatisticalObject? {
         get {
@@ -352,31 +377,6 @@ import FWObjC
     
     private static var fw_staticStatisticalEnabled = false
     
-    private class StatisticalTarget: NSObject {
-        private(set) weak var view: UIView?
-        
-        init(view: UIView?) {
-            super.init()
-            self.view = view
-        }
-        
-        @objc func statisticalExposureCalculate() {
-            if let view = self.view, (view is UITableView || view is UICollectionView) {
-                for subview in view.subviews {
-                    subview.fw_updateStatisticalExposureState()
-                }
-            } else {
-                self.view?.fw_updateStatisticalExposureState()
-            }
-        }
-    }
-    
-    private enum StatisticalExposureState: Int {
-        case none = 0
-        case partly
-        case fully
-    }
-    
     private var fw_statisticalExposureIsRegistered: Bool {
         get { return fw_propertyBool(forName: "fw_statisticalExposureIsRegistered") }
         set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsRegistered") }
@@ -637,125 +637,138 @@ import FWObjC
 
 @_spi(FW) extension UIViewController {
     
+    private class StatisticalTarget: NSObject {
+        var exposure: StatisticalObject?
+        var exposureBlock: StatisticalBlock?
+        var exposureTimestamp: TimeInterval = 0
+        var exposureDuration: TimeInterval = 0
+        var exposureTotalCount: Int = 0
+        var exposureTotalDuration: TimeInterval = 0
+        
+        private(set) weak var viewController: UIViewController?
+        
+        init(viewController: UIViewController?) {
+            super.init()
+            self.viewController = viewController
+        }
+        
+        deinit {
+            NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+        }
+        
+        func exposureRegister() {
+            NotificationCenter.default.addObserver(self, selector: #selector(appResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        }
+        
+        @objc func appResignActive() {
+            let beginTime = exposureTimestamp
+            if beginTime > 0 {
+                exposureTimestamp = 0
+                exposureDuration += Date().timeIntervalSince1970 - beginTime
+            }
+        }
+        
+        @objc func appBecomeActive() {
+            exposureTimestamp = Date().timeIntervalSince1970
+        }
+        
+        func viewDidAppear() {
+            // 忽略侧滑返回手势取消触发viewDidAppear的情况
+            if exposureDuration > 0 { return }
+            
+            exposureTimestamp = Date().timeIntervalSince1970
+            exposureDuration = 0
+            triggerExposure(duration: 0)
+        }
+        
+        func viewDidDisappear() {
+            var duration = exposureDuration
+            let beginTime = exposureTimestamp
+            if beginTime > 0 {
+                duration += Date().timeIntervalSince1970 - beginTime
+            }
+            exposureTimestamp = 0
+            exposureDuration = 0
+            triggerExposure(duration: duration)
+        }
+        
+        func triggerExposure(duration: TimeInterval) {
+            var object: StatisticalObject
+            if let exposureObject = exposure {
+                object = exposureObject
+            } else {
+                object = StatisticalObject()
+            }
+            if object.triggerIgnored { return }
+            exposureTotalCount += 1
+            if exposureTotalCount > 1 && object.triggerOnce { return }
+            
+            exposureTotalDuration += duration
+            object.__triggerExposure(viewController, triggerCount: exposureTotalCount, duration: duration, totalDuration: exposureTotalDuration)
+            
+            if exposureBlock != nil {
+                exposureBlock?(object)
+            }
+            if exposure != nil {
+                StatisticalManager.shared.__handleEvent(object)
+            }
+        }
+    }
+    
     /// 绑定统计曝光事件，触发管理器
     public var fw_statisticalExposure: StatisticalObject? {
-        get {
-            return fw_property(forName: "fw_statisticalExposure") as? StatisticalObject
-        }
+        get { return fw_statisticalTarget.exposure }
         set {
-            fw_setProperty(newValue, forName: "fw_statisticalExposure")
-            self.fw_statisticalExposureRegister()
+            fw_statisticalTarget.exposure = newValue
+            if !fw_statisticalExposureEnabled {
+                fw_statisticalExposureEnabled = true
+                fw_statisticalTarget.exposureRegister()
+            }
         }
     }
 
     /// 绑定统计曝光事件，仅触发回调
     public var fw_statisticalExposureBlock: StatisticalBlock? {
-        get {
-            return fw_property(forName: "fw_statisticalExposureBlock") as? StatisticalBlock
-        }
+        get { return fw_statisticalTarget.exposureBlock }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureBlock")
-            self.fw_statisticalExposureRegister()
+            fw_statisticalTarget.exposureBlock = newValue
+            if !fw_statisticalExposureEnabled {
+                fw_statisticalExposureEnabled = true
+                fw_statisticalTarget.exposureRegister()
+            }
         }
     }
 
     /// 手工触发统计曝光事件，更新曝光次数和时长，duration为单次曝光时长(0表示开始)，可重复触发
     public func fw_statisticalTriggerExposure(duration: TimeInterval = 0) {
-        var object: StatisticalObject
-        if let exposureObject = self.fw_statisticalExposure {
-            object = exposureObject
-        } else {
-            object = StatisticalObject()
-        }
-        if object.triggerIgnored { return }
-        let triggerCount = self.fw_statisticalExposureTotalCount()
-        if triggerCount > 1 && object.triggerOnce { return }
-        
-        let totalDuration = self.fw_statisticalExposureTotalDuration(duration)
-        object.__triggerExposure(self, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
-        
-        if self.fw_statisticalExposureBlock != nil {
-            self.fw_statisticalExposureBlock?(object)
-        }
-        if self.fw_statisticalExposure != nil {
-            StatisticalManager.shared.__handleEvent(object)
-        }
-    }
-    
-    private func fw_statisticalExposureRegister() {
-        if self.fw_statisticalExposureIsRegistered { return }
-        self.fw_statisticalExposureIsRegistered = true
-        
-        fw_observeNotification(UIApplication.willResignActiveNotification, object: nil, target: self, action: #selector(fw_statisticalExposureResignActive))
-        fw_observeNotification(UIApplication.didBecomeActiveNotification, object: nil, target: self, action: #selector(fw_statisticalExposureBecomeActive))
-    }
-    
-    private var fw_statisticalExposureIsRegistered: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureIsRegistered") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsRegistered") }
-    }
-    
-    private var fw_statisticalExposureTimestamp: TimeInterval {
-        get { return fw_propertyDouble(forName: "fw_statisticalExposureTimestamp") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_statisticalExposureTimestamp") }
-    }
-    
-    private var fw_statisticalExposureDuration: TimeInterval {
-        get { return fw_propertyDouble(forName: "fw_statisticalExposureDuration") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_statisticalExposureDuration") }
+        fw_statisticalTarget.triggerExposure(duration: duration)
     }
     
     fileprivate func fw_statisticalExposureDidAppear() {
-        if !self.fw_statisticalExposureIsRegistered { return }
-        // 忽略侧滑返回手势取消触发viewDidAppear的情况
-        if fw_statisticalExposureDuration > 0 { return }
-        
-        fw_statisticalExposureTimestamp = Date().timeIntervalSince1970
-        fw_statisticalExposureDuration = 0
-        fw_statisticalTriggerExposure(duration: 0)
+        if !self.fw_statisticalExposureEnabled { return }
+        fw_statisticalTarget.viewDidAppear()
     }
     
     fileprivate func fw_statisticalExposureDidDisappear() {
-        if !self.fw_statisticalExposureIsRegistered { return }
-        
-        var duration = fw_statisticalExposureDuration
-        let beginTime = fw_statisticalExposureTimestamp
-        if beginTime > 0 {
-            duration += Date().timeIntervalSince1970 - beginTime
+        if !self.fw_statisticalExposureEnabled { return }
+        fw_statisticalTarget.viewDidDisappear()
+    }
+    
+    private var fw_statisticalExposureEnabled: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalExposureEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureEnabled") }
+    }
+    
+    private var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
+        } else {
+            let target = StatisticalTarget(viewController: self)
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
         }
-        fw_statisticalExposureTimestamp = 0
-        fw_statisticalExposureDuration = 0
-        fw_statisticalTriggerExposure(duration: duration)
-    }
-    
-    @objc(__fw_statisticalExposureResignActive)
-    private func fw_statisticalExposureResignActive() {
-        if !self.fw_statisticalExposureIsRegistered { return }
-        
-        let beginTime = fw_statisticalExposureTimestamp
-        if beginTime > 0 {
-            fw_statisticalExposureTimestamp = 0
-            fw_statisticalExposureDuration += Date().timeIntervalSince1970 - beginTime
-        }
-    }
-    
-    @objc(__fw_statisticalExposureBecomeActive)
-    private func fw_statisticalExposureBecomeActive() {
-        if !self.fw_statisticalExposureIsRegistered { return }
-        
-        fw_statisticalExposureTimestamp = Date().timeIntervalSince1970
-    }
-    
-    private func fw_statisticalExposureTotalCount() -> Int {
-        let triggerCount = fw_propertyInt(forName: "fw_statisticalExposureTotalCount") + 1
-        fw_setPropertyInt(triggerCount, forName: "fw_statisticalExposureTotalCount")
-        return triggerCount
-    }
-    
-    private func fw_statisticalExposureTotalDuration(_ duration: TimeInterval) -> TimeInterval {
-        let triggerDuration = fw_propertyDouble(forName: "fw_statisticalExposureTotalDuration") + duration
-        fw_setPropertyDouble(triggerDuration, forName: "fw_statisticalExposureTotalDuration")
-        return triggerDuration
     }
     
 }
