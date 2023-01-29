@@ -10,6 +10,117 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - StatisticalManager
+extension Notification.Name {
+    
+    /// 统计事件触发通知，可统一处理。通知object为StatisticalObject统计对象，userInfo为附加信息
+    public static let StatisticalEventTriggered = NSNotification.Name("FWStatisticalEventTriggeredNotification")
+    
+}
+
+/// 统计通用block，参数object为StatisticalObject统计对象
+public typealias StatisticalBlock = (StatisticalObject) -> Void
+
+/// 事件统计管理器
+///
+/// 视图从不可见变为可见时曝光开始，触发曝光开始事件(triggerDuration为0)；
+/// 视图从可见到不可见时曝光结束，视为一次曝光，触发曝光结束事件(triggerDuration大于0)并统计曝光时长。
+/// 目前暂未实现曝光时长统计，仅触发开始事件用于统计次数，可自行处理时长统计，注意应用退后台时不计曝光时间。
+/// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
+public class StatisticalManager: NSObject {
+    
+    /// 单例模式
+    public static let shared = StatisticalManager()
+    
+    /// 是否启用事件统计，为提高性能，默认false未开启，需手动开启
+    public var statisticalEnabled = false {
+        didSet {
+            if statisticalEnabled {
+                UIView.fw_swizzleUIViewStatistical()
+            }
+        }
+    }
+
+    /// 是否启用通知，默认false
+    public var notificationEnabled = false
+
+    /// 设置运行模式，默认default快速滚动时不计算曝光
+    public var runLoopMode: RunLoop.Mode = .default
+
+    /// 是否部分可见时触发曝光，默认false，仅视图完全可见时才触发曝光
+    public var exposurePartly = false
+
+    /// 设置全局事件处理器
+    public var globalHandler: StatisticalBlock?
+    
+    private var eventHandlers: [String: StatisticalBlock] = [:]
+
+    /// 注册单个事件处理器
+    public func registerEvent(_ name: String, handler: @escaping StatisticalBlock) {
+        eventHandlers[name] = handler
+    }
+
+    /// 内部方法，处理事件
+    fileprivate func handleEvent(_ object: StatisticalObject) {
+        if let eventHandler = eventHandlers[object.name] {
+            eventHandler(object)
+        }
+        globalHandler?(object)
+        if notificationEnabled {
+            NotificationCenter.default.post(name: .StatisticalEventTriggered, object: object, userInfo: object.userInfo)
+        }
+    }
+    
+}
+
+// MARK: - StatisticalObject
+/// 事件统计对象
+public class StatisticalObject: NSObject {
+    
+    /// 事件绑定名称，未绑定时为空字符串
+    public private(set) var name: String = ""
+    /// 事件绑定对象，未绑定时为空
+    public private(set) var object: Any?
+    /// 事件绑定信息，未绑定时为空
+    public private(set) var userInfo: [AnyHashable: Any]?
+
+    /// 事件来源视图，触发时自动赋值
+    public fileprivate(set) weak var view: UIView?
+    /// 事件来源控制器，触发时自动赋值
+    public fileprivate(set) weak var viewController: UIViewController?
+    /// 事件来源位置，触发时自动赋值
+    public fileprivate(set) var indexPath: IndexPath?
+    /// 事件触发次数，触发时自动赋值
+    public fileprivate(set) var triggerCount: Int = 0
+    /// 事件触发单次时长，0表示曝光开始，仅曝光支持，触发时自动赋值
+    public fileprivate(set) var triggerDuration: TimeInterval = 0
+    /// 事件触发总时长，仅曝光支持，触发时自动赋值
+    public fileprivate(set) var totalDuration: TimeInterval = 0
+    /// 是否是曝光事件，默认false为点击事件
+    public fileprivate(set) var isExposure = false
+    /// 事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
+    public fileprivate(set) var isFinished = false
+
+    /// 是否事件仅触发一次，默认false
+    public var triggerOnce = false
+    /// 是否忽略事件触发，默认false
+    public var triggerIgnored = false
+    /// 曝光遮挡视图，被遮挡时不计曝光
+    public weak var shieldView: UIView?
+    /// 曝光遮挡视图句柄，被遮挡时不计曝光
+    public var shieldViewBlock: (() -> UIView?)?
+
+    /// 创建事件绑定信息，指定名称、对象和信息
+    public init(name: String = "", object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+        super.init()
+        self.name = name
+        self.object = object
+        self.userInfo = userInfo
+    }
+    
+}
+
+// MARK: - UIView+Statistical
 @_spi(FW) extension UIView {
     
     private class StatisticalTarget: NSObject {
@@ -29,135 +140,6 @@ import FWObjC
             self.view = view
         }
         
-        private static var statisticalSwizzled = false
-        
-        static func swizzleStatistical() {
-            guard !statisticalSwizzled else { return }
-            statisticalSwizzled = true
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIView.self,
-                selector: #selector(setter: UIView.frame),
-                methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-                swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-            ) { store in { selfObject, frame in
-                store.original(selfObject, store.selector, frame)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIView.self,
-                selector: #selector(setter: UIView.isHidden),
-                methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-                swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
-            ) { store in { selfObject, hidden in
-                store.original(selfObject, store.selector, hidden)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIView.self,
-                selector: #selector(setter: UIView.alpha),
-                methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
-                swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
-            ) { store in { selfObject, alpha in
-                store.original(selfObject, store.selector, alpha)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIView.self,
-                selector: #selector(setter: UIView.bounds),
-                methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-                swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-            ) { store in { selfObject, bounds in
-                store.original(selfObject, store.selector, bounds)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIView.self,
-                selector: #selector(UIView.didMoveToWindow),
-                methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-                swizzleSignature: (@convention(block) (UIView) -> Void).self
-            ) { store in { selfObject in
-                store.original(selfObject, store.selector)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UITableView.self,
-                selector: #selector(UITableView.reloadData),
-                methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
-                swizzleSignature: (@convention(block) (UITableView) -> Void).self
-            ) { store in { selfObject in
-                store.original(selfObject, store.selector)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UICollectionView.self,
-                selector: #selector(UICollectionView.reloadData),
-                methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
-                swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
-            ) { store in { selfObject in
-                store.original(selfObject, store.selector)
-                selfObject.fw_statisticalExposureUpdate()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UITableViewCell.self,
-                selector: #selector(UITableViewCell.didMoveToSuperview),
-                methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-                swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
-            ) { store in { selfObject in
-                store.original(selfObject, store.selector)
-                
-                if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                    selfObject.fw_statisticalClickCellRegister()
-                }
-                if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                    selfObject.fw_statisticalExposureCellRegister()
-                }
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UICollectionViewCell.self,
-                selector: #selector(UICollectionViewCell.didMoveToSuperview),
-                methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
-                swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
-            ) { store in { selfObject in
-                store.original(selfObject, store.selector)
-                
-                if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                    selfObject.fw_statisticalClickCellRegister()
-                }
-                if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                    selfObject.fw_statisticalExposureCellRegister()
-                }
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIViewController.self,
-                selector: #selector(UIViewController.viewDidAppear(_:)),
-                methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-                swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-            ) { store in { selfObject, animated in
-                store.original(selfObject, store.selector, animated)
-                selfObject.fw_statisticalExposureDidAppear()
-            }}
-            
-            NSObject.fw_swizzleInstanceMethod(
-                UIViewController.self,
-                selector: #selector(UIViewController.viewDidDisappear(_:)),
-                methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-                swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-            ) { store in { selfObject, animated in
-                store.original(selfObject, store.selector, animated)
-                selfObject.fw_statisticalExposureDidDisappear()
-            }}
-        }
-        
         func triggerClick(_ cell: UIView?, indexPath: IndexPath?) {
             var object: StatisticalObject
             if let clickObject = cell?.fw_statisticalClick ?? view?.fw_statisticalClick {
@@ -169,7 +151,12 @@ import FWObjC
             let triggerCount = clickTotalCount(indexPath)
             if triggerCount > 1 && object.triggerOnce { return }
             
-            object.__triggerClick(view, indexPath: indexPath, triggerCount: triggerCount)
+            object.view = view
+            object.viewController = view?.fw_viewController
+            object.indexPath = indexPath
+            object.triggerCount = triggerCount
+            object.isExposure = false
+            object.isFinished = true
             
             if cell?.fw_statisticalClickBlock != nil {
                 cell?.fw_statisticalClickBlock?(object)
@@ -177,7 +164,7 @@ import FWObjC
                 view?.fw_statisticalClickBlock?(object)
             }
             if cell?.fw_statisticalClick != nil || view?.fw_statisticalClick != nil {
-                StatisticalManager.shared.__handleEvent(object)
+                StatisticalManager.shared.handleEvent(object)
             }
         }
         
@@ -198,9 +185,16 @@ import FWObjC
             if object.triggerIgnored { return }
             let triggerCount = exposureTotalCount(indexPath)
             if triggerCount > 1 && object.triggerOnce { return }
-            
             let totalDuration = exposureTotalDuration(duration, indexPath: indexPath)
-            object.__triggerExposure(view, indexPath: indexPath, triggerCount: triggerCount, duration: duration, totalDuration: totalDuration)
+            
+            object.view = view
+            object.viewController = view?.fw_viewController
+            object.indexPath = indexPath
+            object.triggerCount = triggerCount
+            object.triggerDuration = duration
+            object.totalDuration = totalDuration
+            object.isExposure = true
+            object.isFinished = duration > 0
             
             if cell?.fw_statisticalExposureBlock != nil {
                 cell?.fw_statisticalExposureBlock?(object)
@@ -208,7 +202,7 @@ import FWObjC
                 view?.fw_statisticalExposureBlock?(object)
             }
             if cell?.fw_statisticalExposure != nil || view?.fw_statisticalExposure != nil {
-                StatisticalManager.shared.__handleEvent(object)
+                StatisticalManager.shared.handleEvent(object)
             }
         }
         
@@ -418,10 +412,133 @@ import FWObjC
         fw_statisticalTarget.triggerExposure(cell, indexPath: indexPath, duration: duration)
     }
     
-    /// 内部方法，启用统计功能
-    @objc(__fw_enableStatistical)
-    public static func fw_enableStatistical() {
-        StatisticalTarget.swizzleStatistical()
+    private static var fw_staticStatisticalSwizzled = false
+    
+    fileprivate static func fw_swizzleUIViewStatistical() {
+        guard !fw_staticStatisticalSwizzled else { return }
+        fw_staticStatisticalSwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.frame),
+            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+        ) { store in { selfObject, frame in
+            store.original(selfObject, store.selector, frame)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.isHidden),
+            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+        ) { store in { selfObject, hidden in
+            store.original(selfObject, store.selector, hidden)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.alpha),
+            methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
+        ) { store in { selfObject, alpha in
+            store.original(selfObject, store.selector, alpha)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.bounds),
+            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
+        ) { store in { selfObject, bounds in
+            store.original(selfObject, store.selector, bounds)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.didMoveToWindow),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableView.self,
+            selector: #selector(UITableView.reloadData),
+            methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UICollectionView.self,
+            selector: #selector(UICollectionView.reloadData),
+            methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            selfObject.fw_statisticalExposureUpdate()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableViewCell.self,
+            selector: #selector(UITableViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                selfObject.fw_statisticalClickCellRegister()
+            }
+            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                selfObject.fw_statisticalExposureCellRegister()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UICollectionViewCell.self,
+            selector: #selector(UICollectionViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
+                selfObject.fw_statisticalClickCellRegister()
+            }
+            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
+                selfObject.fw_statisticalExposureCellRegister()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            selfObject.fw_statisticalExposureDidAppear()
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            selfObject.fw_statisticalExposureDidDisappear()
+        }}
     }
     
     private var fw_statisticalExposureEnabled: Bool {
@@ -607,6 +724,7 @@ import FWObjC
     
 }
 
+// MARK: - UIViewController+Statistical
 @_spi(FW) extension UIViewController {
     
     private class StatisticalTarget: NSObject {
@@ -676,15 +794,20 @@ import FWObjC
             if object.triggerIgnored { return }
             exposureTotalCount += 1
             if exposureTotalCount > 1 && object.triggerOnce { return }
-            
             exposureTotalDuration += duration
-            object.__triggerExposure(viewController, triggerCount: exposureTotalCount, duration: duration, totalDuration: exposureTotalDuration)
+            
+            object.viewController = viewController
+            object.triggerCount = exposureTotalCount
+            object.triggerDuration = duration
+            object.totalDuration = exposureTotalDuration
+            object.isExposure = true
+            object.isFinished = duration > 0
             
             if exposureBlock != nil {
                 exposureBlock?(object)
             }
             if exposure != nil {
-                StatisticalManager.shared.__handleEvent(object)
+                StatisticalManager.shared.handleEvent(object)
             }
         }
     }

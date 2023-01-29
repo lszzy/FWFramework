@@ -37,7 +37,6 @@
 #import "PopupMenu.h"
 #import "QrcodeScanView.h"
 #import "SegmentedControl.h"
-#import "StatisticalManager.h"
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
 #import "WebView.h"

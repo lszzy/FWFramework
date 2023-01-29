@@ -6,7 +6,7 @@
 //
 
 #import "SegmentedControl.h"
-#import "StatisticalManager.h"
+#import "Bridge.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
