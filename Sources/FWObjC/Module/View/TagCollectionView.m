@@ -6,7 +6,7 @@
 //
 
 #import "TagCollectionView.h"
-#import "StatisticalManager.h"
+#import "Bridge.h"
 
 @interface __FWTagCollectionView () <__FWStatisticalDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
