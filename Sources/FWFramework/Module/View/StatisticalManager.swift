@@ -13,6 +13,21 @@ import FWObjC
 @_spi(FW) extension UIView {
     
     private class StatisticalTarget: NSObject {
+        private(set) weak var view: UIView?
+        
+        private var clickTotalCounts: [String: Int] = [:]
+        
+        var exposureIsProxy = false
+        var exposureIsFully = false
+        var exposureIdentifier: String = ""
+        var exposureState: StatisticalExposureState = .none
+        private var exposureTotalCounts: [String: Int] = [:]
+        private var exposureTotalDurations: [String: TimeInterval] = [:]
+        
+        init(view: UIView?) {
+            super.init()
+            self.view = view
+        }
         
         private static var statisticalSwizzled = false
         
@@ -143,18 +158,6 @@ import FWObjC
             }}
         }
         
-        private(set) weak var view: UIView?
-        
-        private var clickTotalCounts: [String: Int] = [:]
-        
-        private var exposureTotalCounts: [String: Int] = [:]
-        private var exposureTotalDurations: [String: TimeInterval] = [:]
-        
-        init(view: UIView?) {
-            super.init()
-            self.view = view
-        }
-        
         func triggerClick(_ cell: UIView?, indexPath: IndexPath?) {
             var object: StatisticalObject
             if let clickObject = cell?.fw_statisticalClick ?? view?.fw_statisticalClick {
@@ -221,6 +224,26 @@ import FWObjC
             let triggerDuration = (exposureTotalDurations[triggerKey] ?? 0) + duration
             exposureTotalDurations[triggerKey] = triggerDuration
             return triggerDuration
+        }
+        
+        func exposureViewIdentifier() -> String {
+            var indexPath: IndexPath?
+            if let cell = view as? UITableViewCell {
+                indexPath = cell.fw_indexPath
+            } else if let cell = view as? UICollectionViewCell {
+                indexPath = cell.fw_indexPath
+            }
+            
+            let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(view?.fw_statisticalExposure?.name ?? "")-\(String.fw_safeString(view?.fw_statisticalExposure?.object))"
+            return identifier
+        }
+        
+        static func exposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
+            var isFullState = (state == .fully) ? true : false
+            if !isFullState && StatisticalManager.shared.exposurePartly {
+                isFullState = (state == .partly) ? true : false
+            }
+            return isFullState
         }
         
         @objc func exposureCalculate() {
@@ -406,56 +429,19 @@ import FWObjC
         set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureEnabled") }
     }
     
-    private var fw_statisticalExposureIsProxy: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureIsProxy") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsProxy") }
-    }
-    
-    private var fw_statisticalExposureIsFully: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureIsFully") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureIsFully") }
-    }
-    
-    private var fw_statisticalExposureIdentifier: String {
-        get { return fw_property(forName: "fw_statisticalExposureIdentifier") as? String ?? "" }
-        set { fw_setProperty(newValue, forName: "fw_statisticalExposureIdentifier") }
-    }
-    
-    private func fw_statisticalExposureViewIdentifier() -> String {
-        var indexPath: IndexPath?
-        if let cell = self as? UITableViewCell {
-            indexPath = cell.fw_indexPath
-        } else if let cell = self as? UICollectionViewCell {
-            indexPath = cell.fw_indexPath
-        }
-        
-        let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(self.fw_statisticalExposure?.name ?? "")-\(String.fw_safeString(self.fw_statisticalExposure?.object))"
-        return identifier
-    }
-    
     @discardableResult
     private func fw_statisticalExposureCustom() -> Bool {
         if self.conforms(to: StatisticalDelegate.self),
            self.responds(to: #selector(StatisticalDelegate.statisticalExposure(callback:))) {
             (self as? StatisticalDelegate)?.statisticalExposure?(callback: { [weak self] cell, indexPath, duration in
                 guard let this = self else { return }
-                if this.fw_statisticalExposureIsFullyState(this.fw_statisticalExposureViewState()) {
+                if StatisticalTarget.exposureIsFullyState(this.fw_statisticalExposureViewState()) {
                     this.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
                 }
             })
             return true
         }
         return false
-    }
-    
-    private var fw_statisticalExposureState: StatisticalExposureState {
-        get {
-            let value = fw_propertyInt(forName: "fw_statisticalExposureState")
-            return .init(rawValue: value) ?? .none
-        }
-        set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_statisticalExposureState")
-        }
     }
     
     private func fw_statisticalExposureViewState() -> StatisticalExposureState {
@@ -519,22 +505,22 @@ import FWObjC
     }
     
     private func fw_updateStatisticalExposureState() {
-        let oldIdentifier = self.fw_statisticalExposureIdentifier
-        let identifier = self.fw_statisticalExposureViewIdentifier()
+        let oldIdentifier = self.fw_statisticalTarget.exposureIdentifier
+        let identifier = self.fw_statisticalTarget.exposureViewIdentifier()
         let identifierChanged = oldIdentifier.count > 0 && identifier != oldIdentifier
         if oldIdentifier.count < 1 || identifierChanged {
-            self.fw_statisticalExposureIdentifier = identifier
+            self.fw_statisticalTarget.exposureIdentifier = identifier
             if oldIdentifier.count < 1 { self.fw_statisticalExposureCustom() }
         }
         
-        let oldState = self.fw_statisticalExposureState
+        let oldState = self.fw_statisticalTarget.exposureState
         let state = self.fw_statisticalExposureViewState()
         if state == oldState && !identifierChanged { return }
-        self.fw_statisticalExposureState = state
+        self.fw_statisticalTarget.exposureState = state
         
-        if self.fw_statisticalExposureIsFullyState(state),
-           (!self.fw_statisticalExposureIsFully || identifierChanged) {
-            self.fw_statisticalExposureIsFully = true
+        if StatisticalTarget.exposureIsFullyState(state),
+           (!self.fw_statisticalTarget.exposureIsFully || identifierChanged) {
+            self.fw_statisticalTarget.exposureIsFully = true
             if self.fw_statisticalExposureCustom() {
             } else if let cell = self as? UITableViewCell {
                 cell.fw_tableView?.fw_statisticalTriggerExposure(self, indexPath: cell.fw_indexPath, duration: 0)
@@ -544,7 +530,7 @@ import FWObjC
                 self.fw_statisticalTriggerExposure(nil, indexPath: nil, duration: 0)
             }
         } else if state == .none || identifierChanged {
-            self.fw_statisticalExposureIsFully = false
+            self.fw_statisticalTarget.exposureIsFully = false
         }
     }
     
@@ -562,7 +548,7 @@ import FWObjC
         
         if self.fw_statisticalExposure != nil ||
             self.fw_statisticalExposureBlock != nil ||
-            self.fw_statisticalExposureIsProxy {
+            self.fw_statisticalTarget.exposureIsProxy {
             NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
             self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
@@ -581,7 +567,7 @@ import FWObjC
                 proxyView = cell.fw_collectionView
             }
         }
-        proxyView?.fw_statisticalExposureIsProxy = true
+        proxyView?.fw_statisticalTarget.exposureIsProxy = true
         proxyView?.fw_statisticalExposureRegister()
     }
     
@@ -599,7 +585,7 @@ import FWObjC
         
         if self.fw_statisticalExposure != nil ||
             self.fw_statisticalExposureBlock != nil ||
-            self.fw_statisticalExposureIsProxy {
+            self.fw_statisticalTarget.exposureIsProxy {
             NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
             self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
@@ -607,14 +593,6 @@ import FWObjC
         for subview in self.subviews {
             subview.fw_statisticalExposureRecursive()
         }
-    }
-    
-    private func fw_statisticalExposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
-        var isFullState = (state == .fully) ? true : false
-        if !isFullState && StatisticalManager.shared.exposurePartly {
-            isFullState = (state == .partly) ? true : false
-        }
-        return isFullState
     }
     
     private var fw_statisticalTarget: StatisticalTarget {
