@@ -22,7 +22,6 @@
 #import "ScrollViewController.h"
 #import "TableViewController.h"
 #import "AttributedLabel.h"
-#import "BadgeView.h"
 #import "BannerView.h"
 #import "BarrageView.h"
 #import "CollectionViewFlowLayout.h"
