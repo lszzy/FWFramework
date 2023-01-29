@@ -90,6 +90,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable id)invokeSetter:(id)target name:(NSString *)name object:(nullable id)object;
 
++ (id)appearanceForClass:(Class)aClass;
+
++ (Class)classForAppearance:(id)appearance;
+
++ (void)applyAppearance:(NSObject *)object;
+
 + (NSArray<Class> *)getClasses:(Class)superClass;
 
 + (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
