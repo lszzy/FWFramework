@@ -10,6 +10,12 @@ import Foundation
 // MARK: - NSObject+Runtime
 extension Wrapper where Base: NSObject {
     
+    // MARK: - Module
+    /// 获取类所在的模块名称，兼容主应用和framework等(可能不准确)
+    public static var moduleName: String {
+        return Base.fw_moduleName
+    }
+    
     // MARK: - Class
     /// 获取类方法列表，支持meta类(objc_getMetaClass)
     /// - Parameters:
@@ -55,6 +61,17 @@ extension Wrapper where Base: NSObject {
     @discardableResult
     public func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
         return base.fw_invokeMethod(selector, object: object)
+    }
+    
+    /// 安全调用方法，如果不能响应，则忽略之
+    /// - Parameters:
+    ///   - selector: 要执行的方法
+    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    public func invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
+        return base.fw_invokeMethod(selector, object: object1, object: object2)
     }
     
     /// 安全调用方法，支持多个参数
@@ -172,7 +189,6 @@ extension Wrapper where Base: NSObject {
         base.fw_setPropertyDouble(value, forName: forName)
     }
     
-    // MARK: - Class
     /// 读取类关联属性
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值

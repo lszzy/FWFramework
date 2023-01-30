@@ -427,6 +427,23 @@ typedef struct __ProxyBlock {
     return nil;
 }
 
++ (id)invokeMethod:(id)target selector:(SEL)aSelector object:(id)object1 object:(id)object2 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([target respondsToSelector:aSelector]) {
+        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
+        if (type && *type == 'v') {
+            free(type);
+            [target performSelector:aSelector withObject:object1 withObject:object2];
+        } else {
+            free(type);
+            return [target performSelector:aSelector withObject:object1 withObject:object2];
+        }
+    }
+#pragma clang diagnostic pop
+    return nil;
+}
+
 + (id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects {
     NSMethodSignature *signature = [object_getClass(target) instanceMethodSignatureForSelector:aSelector];
     if (!signature) return nil;

@@ -88,4 +88,9 @@ extension Wrapper where Base: Bundle {
         return Base.fw_localizedString(key, table: table, bundle: bundle)
     }
     
+    /// 读取当前bundle的可执行程序名称，一般和模块名称相同
+    public var executableName: String {
+        return base.fw_executableName
+    }
+    
 }
