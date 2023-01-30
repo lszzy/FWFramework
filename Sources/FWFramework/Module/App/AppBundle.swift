@@ -66,10 +66,6 @@ open class AppBundle: ModuleBundle {
     public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
     
     // MARK: - Override
-    open override class func initializeBundle() -> Bundle? {
-        return Bundle.fw_bundle(name: "FWFramework")?.fw_localizedBundle()
-    }
-    
     open override class func didInitialize() {
         addImage("fw.navBack") {
             let size = CGSize(width: 12, height: 20)

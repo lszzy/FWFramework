@@ -235,6 +235,12 @@ public class Mediator: NSObject {
 
 // MARK: - ModuleBundle
 /// 业务模块Bundle基类，各模块可继承
+///
+/// 资源查找规则如下：
+/// 1. ModuleBundle基类或主应用模块类只加载主Bundle
+/// 2. ModuleBundle子模块类优先加载主应用的{模块名称}.bundle(可替换模块)，如主应用内FWFramework.bundle
+/// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
+/// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
 open class ModuleBundle: NSObject {
     
     private class Target {
@@ -244,7 +250,7 @@ open class ModuleBundle: NSObject {
         var strings: [String: [String: [String: String]]] = [:]
     }
     
-    /// 获取当前模块Bundle并缓存，默认主Bundle
+    /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {
         if let bundle = bundleTarget.bundle {
             return bundle
@@ -326,8 +332,24 @@ open class ModuleBundle: NSObject {
     }
     
     // MARK: - Override
-    /// 初始化模块Bundle，默认nil，子类可重写，用于加载自定义Bundle
+    /// 初始化模块Bundle，子类可重写，用于加载自定义Bundle
     open class func initializeBundle() -> Bundle? {
+        // 1. ModuleBundle基类或主应用模块类只加载主Bundle
+        guard self != ModuleBundle.self,
+              Bundle(for: classForCoder()) != .main,
+              let moduleName = Bundle(for: classForCoder()).executableURL?.lastPathComponent else {
+            return nil
+        }
+        
+        // 2. ModuleBundle子模块类优先加载主应用的{模块名称}.bundle(可替换模块)，如主应用内FWFramework.bundle
+        if let appBundle = Bundle.fw_bundle(name: moduleName) {
+            return appBundle.fw_localizedBundle()
+        }
+        /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
+        if let moduleBundle = Bundle.fw_bundle(with: classForCoder(), name: moduleName) {
+            return moduleBundle.fw_localizedBundle()
+        }
+        /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
         return nil
     }
     
