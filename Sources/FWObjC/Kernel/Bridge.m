@@ -397,7 +397,7 @@ typedef struct __ProxyBlock {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
+        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
         if (type && *type == 'v') {
             free(type);
             [target performSelector:aSelector];
@@ -414,7 +414,7 @@ typedef struct __ProxyBlock {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
+        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
         if (type && *type == 'v') {
             free(type);
             [target performSelector:aSelector withObject:object];
@@ -431,7 +431,7 @@ typedef struct __ProxyBlock {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod([target class], aSelector));
+        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
         if (type && *type == 'v') {
             free(type);
             [target performSelector:aSelector withObject:object1 withObject:object2];
