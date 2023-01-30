@@ -12,7 +12,9 @@ import UIKit
     
     /// 记录内部分组调试日志
     @objc public static func __fw_logDebug(_ message: String) {
-        Logger.log(.debug, group: "FWFramework", message: message)
+        #if DEBUG
+        Logger.log(.debug, group: Logger.fw_moduleName, message: message)
+        #endif
     }
     
     /// 读取内部Bundle图片

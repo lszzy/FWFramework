@@ -50,11 +50,15 @@ open class Task: Operation {
             self.error = error
             state = .failure
             
-            Logger.debug(group: "FWFramework", "\n********** TASK %@ FAILED", NSStringFromClass(self.classForCoder))
+            #if DEBUG
+            Logger.debug(group: Logger.fw_moduleName, "\n********** TASK %@ FAILED", NSStringFromClass(self.classForCoder))
+            #endif
         } else {
             state = .success
             
-            Logger.debug(group: "FWFramework", "\n********** TASK %@ FINISHED", NSStringFromClass(self.classForCoder))
+            #if DEBUG
+            Logger.debug(group: Logger.fw_moduleName, "\n********** TASK %@ FINISHED", NSStringFromClass(self.classForCoder))
+            #endif
         }
         lock.unlock()
     }
@@ -74,7 +78,9 @@ open class Task: Operation {
         state = .loading
         lock.unlock()
         
-        Logger.debug(group: "FWFramework", "\n********** TASK %@ STARTED", NSStringFromClass(self.classForCoder))
+        #if DEBUG
+        Logger.debug(group: Logger.fw_moduleName, "\n********** TASK %@ STARTED", NSStringFromClass(self.classForCoder))
+        #endif
         
         if needMainThread() {
             if Thread.isMainThread {
@@ -94,7 +100,9 @@ open class Task: Operation {
             state = .cancelled
             super.cancel()
             
-            Logger.debug(group: "FWFramework", "\n********** TASK %@ CANCELLED", NSStringFromClass(self.classForCoder))
+            #if DEBUG
+            Logger.debug(group: Logger.fw_moduleName, "\n********** TASK %@ CANCELLED", NSStringFromClass(self.classForCoder))
+            #endif
         }
         
         lock.unlock()

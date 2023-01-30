@@ -128,7 +128,9 @@ public class StateMachine: NSObject {
         get { return _initialState }
         set {
             if isActive {
-                Logger.debug("FWFramework", "StateMachine is activated.")
+                #if DEBUG
+                Logger.debug(Logger.fw_moduleName, "StateMachine is activated.")
+                #endif
                 return
             }
             _initialState = newValue
@@ -145,7 +147,9 @@ public class StateMachine: NSObject {
     /// - Parameter object: 状态对象
     public func addState(_ object: StateObject) {
         if isActive {
-            Logger.debug("FWFramework", "StateMachine is activated.")
+            #if DEBUG
+            Logger.debug(Logger.fw_moduleName, "StateMachine is activated.")
+            #endif
             return
         }
         
@@ -191,7 +195,9 @@ public class StateMachine: NSObject {
     /// - Parameter event: 事件对象
     public func addEvent(_ event: StateEvent) {
         if isActive {
-            Logger.debug("FWFramework", "StateMachine is activated.")
+            #if DEBUG
+            Logger.debug(Logger.fw_moduleName, "StateMachine is activated.")
+            #endif
             return
         }
         
@@ -222,7 +228,9 @@ public class StateMachine: NSObject {
     /// 激活并锁定状态机，锁定后不能修改初始状态、添加状态和事件
     public func activate() {
         if isActive {
-            Logger.debug("FWFramework", "StateMachine is activated.")
+            #if DEBUG
+            Logger.debug(Logger.fw_moduleName, "StateMachine is activated.")
+            #endif
             return
         }
         

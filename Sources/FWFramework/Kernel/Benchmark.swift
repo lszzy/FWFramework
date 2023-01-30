@@ -50,7 +50,9 @@ public class Benchmark: NSObject {
         endTimes[name] = endTime
         
         let timeInterval = endTime - beginTime
-        Logger.debug(group: "FWFramework", "FWBenchmark-%@: %.3fms", name, timeInterval * 1000)
+        #if DEBUG
+        Logger.debug(group: Logger.fw_moduleName, "FWBenchmark-%@: %.3fms", name, timeInterval * 1000)
+        #endif
         return timeInterval
     }
     
