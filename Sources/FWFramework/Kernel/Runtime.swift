@@ -206,6 +206,46 @@ import FWObjC
         return __FWRuntime.invokeSetter(self, name: name, object: object)
     }
     
+    /// 安全调用类方法，如果不能响应，则忽略之
+    /// - Parameter selector: 要执行的方法
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    public class func fw_invokeMethod(_ selector: Selector) -> Any? {
+        return __FWRuntime.invokeMethod(classForCoder(), selector: selector)
+    }
+    
+    /// 安全调用类方法，如果不能响应，则忽略之
+    /// - Parameters:
+    ///   - selector: 要执行的方法
+    ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    public class func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
+        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, object: object)
+    }
+    
+    /// 安全调用类方法，如果不能响应，则忽略之
+    /// - Parameters:
+    ///   - selector: 要执行的方法
+    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    public class func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
+        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
+    }
+    
+    /// 安全调用类方法，支持多个参数
+    /// - Parameters:
+    ///   - selector: 要执行的方法
+    ///   - objects: 传递的参数数组
+    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    @discardableResult
+    @objc(__fw_invokeMethod:objects:)
+    public class func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, objects: objects)
+    }
+    
     // MARK: - Property
     /// 临时对象，强引用，支持KVO
     public var fw_tempObject: Any? {
