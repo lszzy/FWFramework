@@ -15,7 +15,7 @@ import FWObjC
     
     // MARK: - Module
     /// 获取类所在的模块名称，兼容主应用和framework等(可能不准确)
-    public static var fw_moduleName: String {
+    public class var fw_moduleName: String {
         return Bundle(for: classForCoder()).executableURL?.lastPathComponent ?? ""
     }
     
