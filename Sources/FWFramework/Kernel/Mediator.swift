@@ -186,8 +186,8 @@ public class Mediator: NSObject {
         }
         
         #if DEBUG
-        Logger.debug(group: "FWFramework", "%@", Mediator.debugDescription())
-        Logger.debug(group: "FWFramework", "%@", PluginManager.debugDescription())
+        Logger.debug(group: Logger.fw_moduleName, "%@", Mediator.debugDescription())
+        Logger.debug(group: Logger.fw_moduleName, "%@", PluginManager.debugDescription())
         #endif
     }
     

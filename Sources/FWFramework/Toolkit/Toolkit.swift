@@ -1800,7 +1800,7 @@ public enum ViewControllerVisibleState: Int {
             }
             
             #if DEBUG
-            Logger.debug(group: "FWFramework", "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
+            Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
             #endif
         }
     }

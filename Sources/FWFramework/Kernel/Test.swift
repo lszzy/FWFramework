@@ -88,7 +88,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
                 let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
                 queue.async {
                     UnitTest.shared.runTests()
-                    Logger.debug(group: "FWFramework", "%@", UnitTest.debugDescription())
+                    Logger.debug(group: Logger.fw_moduleName, "%@", UnitTest.debugDescription())
                 }
             }
         }

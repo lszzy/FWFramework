@@ -806,7 +806,7 @@ import FWObjC
             __FWRuntime.tryCatch {
                 self.priority = newValue
             } exceptionHandler: { exception in
-                Logger.debug(group: "FWFramework", "%@", exception)
+                Logger.debug(group: Logger.fw_moduleName, "%@", exception)
             }
         }
     }

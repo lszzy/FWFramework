@@ -115,7 +115,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         }
         
         #if DEBUG
-        Logger.debug(group: "FWFramework", "%@", debugDescription())
+        Logger.debug(group: Logger.fw_moduleName, "%@", debugDescription())
         #endif
     }
     
