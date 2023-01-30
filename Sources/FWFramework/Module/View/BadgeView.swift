@@ -35,9 +35,9 @@ open class BadgeView: UIView {
         self.badgeStyle = badgeStyle
         switch badgeStyle {
         case .small:
-            setup(badgeHeight: 18, badgeOffset: CGPoint(x: 7, y: 7), textInset: 5, textFont: UIFont.systemFont(ofSize: 12))
+            setup(badgeHeight: 18, badgeOffset: CGPoint(x: 7, y: 7), textInset: 5, fontSize: 12)
         case .big:
-            setup(badgeHeight: 24, badgeOffset: CGPoint(x: 9, y: 9), textInset: 6, textFont: UIFont.systemFont(ofSize: 14))
+            setup(badgeHeight: 24, badgeOffset: CGPoint(x: 9, y: 9), textInset: 6, fontSize: 14)
         default:
             setup(dotSize: 10, badgeOffset: CGPoint(x: 3, y: 3))
         }
@@ -50,9 +50,9 @@ open class BadgeView: UIView {
     }
 
     /// 初始化自定义文本提醒灯。宽高自动布局，其它手工布局
-    public init(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, textFont: UIFont) {
+    public init(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
         super.init(frame: .zero)
-        setup(badgeHeight: badgeHeight, badgeOffset: badgeOffset, textInset: textInset, textFont: textFont)
+        setup(badgeHeight: badgeHeight, badgeOffset: badgeOffset, textInset: textInset, fontSize: fontSize)
     }
     
     required public init?(coder: NSCoder) {
@@ -68,7 +68,7 @@ open class BadgeView: UIView {
         fw_setDimensions(CGSize(width: dotSize, height: dotSize))
     }
     
-    private func setup(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, textFont: UIFont) {
+    private func setup(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
         self.badgeOffset = badgeOffset
         
         isUserInteractionEnabled = false
@@ -80,7 +80,7 @@ open class BadgeView: UIView {
         let badgeLabel = UILabel()
         self.badgeLabel = badgeLabel
         badgeLabel.textColor = UIColor.white
-        badgeLabel.font = textFont
+        badgeLabel.font = UIFont.systemFont(ofSize: fontSize)
         badgeLabel.textAlignment = .center
         addSubview(badgeLabel)
         badgeLabel.fw_alignCenter()
