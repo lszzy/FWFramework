@@ -206,7 +206,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onPresentInteractive() {
-        let transtion = SwipeAnimatedTransition(in: .up, outDirection: .down)
+        let transtion = SwipeAnimatedTransition(inDirection: .up, outDirection: .down)
         transtion.transitionDuration = duration
         transtion.interactEnabled = true
         
@@ -363,12 +363,12 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         
         let vc = TestFullScreenViewController()
         vc.fw.viewTransition = transition
-        navigationController?.fw.navigationTransition = AnimatedTransition.system()
+        navigationController?.fw.navigationTransition = AnimatedTransition.system
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func onPushInteractive() {
-        let transition = SwipeAnimatedTransition(in: .up, outDirection: .down)
+        let transition = SwipeAnimatedTransition(inDirection: .up, outDirection: .down)
         transition.transitionDuration = duration
         transition.interactEnabled = true
         
@@ -379,7 +379,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onPushNoAnimate() {
-        let transition = SwipeAnimatedTransition(in: .up, outDirection: .down)
+        let transition = SwipeAnimatedTransition(inDirection: .up, outDirection: .down)
         transition.transitionDuration = duration
         transition.interactEnabled = true
         
@@ -503,7 +503,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
         modalPresentationStyle = .custom
         
         // 也可以封装present方法，手工指定UIPresentationController，无需使用block
-        let transition = TransformAnimatedTransition(in: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+        let transition = TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
         transition.presentationBlock = { [weak self] presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.cornerRadius = 10
