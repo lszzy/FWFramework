@@ -138,6 +138,12 @@ extension Wrapper where Base: UIView {
         get { return base.fw_touchInsets }
         set { base.fw_touchInsets = newValue }
     }
+    
+    /// 设置视图是否可穿透(子视图响应)
+    public var isPenetrable: Bool {
+        get { return base.fw_isPenetrable }
+        set { base.fw_isPenetrable = newValue }
+    }
 
     /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
     public var fitFrame: CGRect {

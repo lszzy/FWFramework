@@ -7,6 +7,9 @@
 //
 
 import FWFramework
+#if DEBUG
+import FWDebug
+#endif
 
 class TestAnimationController: UIViewController, ViewControllerProtocol {
     
@@ -21,6 +24,38 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
     
     func didInitialize() {
         fw.extendedLayoutEdge = .bottom
+    }
+    
+    func setupNavbar() {
+        fw.setRightBarItem(FW.localized("debugButton")) { _ in
+            guard UIWindow.fw.main?.fw.subview(tag: 1000) == nil else {
+                UIWindow.fw.main?.fw.subview(tag: 1000)?.removeFromSuperview()
+                return
+            }
+            
+            let circleView = UIView(frame: CGRect(x: FW.screenWidth / 2 - 25, y: FW.screenHeight / 2 - 25, width: 50, height: 50))
+            circleView.tag = 1000
+            circleView.fw.setCornerRadius(25)
+            circleView.backgroundColor = UIColor.fw.randomColor
+            circleView.fw.dragEnabled = true
+            circleView.fw.dragLimit = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight)
+            circleView.fw.isPenetrable = true
+            UIWindow.fw.main?.addSubview(circleView)
+            
+            let clickView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+            clickView.isUserInteractionEnabled = true
+            clickView.image = UIImage.fw.appIconImage()
+            clickView.fw.setCornerRadius(15)
+            clickView.fw.addTapGesture { _ in
+                #if DEBUG
+                FWDebugManager.sharedInstance().toggle()
+                #endif
+            }
+            clickView.addGestureRecognizer(UILongPressGestureRecognizer.fw.gestureRecognizer(block: { _ in
+                UIWindow.fw.main?.fw.subview(tag: 1000)?.removeFromSuperview()
+            }))
+            circleView.addSubview(clickView)
+        }
     }
     
     func setupSubviews() {

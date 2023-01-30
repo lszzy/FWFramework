@@ -366,6 +366,12 @@ import AdSupport
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_touchInsets")
         }
     }
+    
+    /// 设置视图是否可穿透(子视图响应)
+    public var fw_isPenetrable: Bool {
+        get { return fw_propertyBool(forName: "fw_isPenetrable") }
+        set { fw_setPropertyBool(newValue, forName: "fw_isPenetrable") }
+    }
 
     /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
     public var fw_fitFrame: CGRect {
@@ -825,6 +831,29 @@ import AdSupport
             }
             
             return store.original(selfObject, store.selector, point, event)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.hitTest(_:with:)),
+            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
+            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> UIView?).self
+        ) { store in { selfObject, point, event in
+            guard selfObject.fw_isPenetrable else {
+                return store.original(selfObject, store.selector, point, event)
+            }
+            
+            guard selfObject.fw_isViewVisible, !selfObject.subviews.isEmpty else { return nil }
+            for subview in selfObject.subviews.reversed() {
+                guard subview.isUserInteractionEnabled,
+                      subview.frame.contains(point),
+                      subview.fw_isViewVisible else { continue }
+                
+                let subPoint = selfObject.convert(point, to: subview)
+                guard let hitView = subview.hitTest(subPoint, with: event) else { continue }
+                return hitView
+            }
+            return nil
         }}
     }
     
