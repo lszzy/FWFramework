@@ -82,6 +82,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector object:(nullable id)object;
 
++ (nullable id)invokeMethod:(id)target selector:(SEL)aSelector object:(nullable id)object1 object:(nullable id)object2;
+
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects;
 
 + (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(nullable NSArray *)arguments returnValue:(void *)result;

@@ -190,6 +190,11 @@ extension Notification.Name {
         }
     }
     
+    /// 读取当前bundle的可执行程序名称，一般和模块名称相同
+    public var fw_executableName: String {
+        return executableURL?.lastPathComponent ?? ""
+    }
+    
 }
 
 internal class LanguageAutoloader: AutoloadProtocol {
