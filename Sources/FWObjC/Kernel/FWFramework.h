@@ -15,7 +15,6 @@
 #import "Database.h"
 #import "WebImage.h"
 
-#import "ViewTransition.h"
 #import "WebViewController.h"
 #import "ViewController.h"
 #import "CollectionViewController.h"

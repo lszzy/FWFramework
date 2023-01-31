@@ -46,7 +46,37 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open var transitionDuration: TimeInterval = 0.35
 
     /// 获取动画类型，默认根据上下文判断
-    open var transitionType: AnimatedTransitionType = .none
+    open var transitionType: AnimatedTransitionType {
+        get {
+            // 如果自定义type，优先使用之
+            if _transitionType != .none { return _transitionType }
+            // 自动根据上下文获取type
+            guard let transitionContext = transitionContext else { return .none }
+            
+            let fromVC = transitionContext.viewController(forKey: .from)
+            let toVC = transitionContext.viewController(forKey: .to)
+            // 导航栏为同一个时为push|pop
+            if let fromNav = fromVC?.navigationController, let toNav = toVC?.navigationController, fromNav == toNav {
+                let toIndex = toNav.viewControllers.firstIndex(of: toVC!)
+                let fromIndex = fromNav.viewControllers.firstIndex(of: fromVC!)
+                if let fromIndex = fromIndex, let toIndex = toIndex, toIndex > fromIndex {
+                    return .push
+                } else {
+                    return .pop
+                }
+            } else {
+                if toVC?.presentingViewController == fromVC {
+                    return .present
+                } else {
+                    return .dismiss
+                }
+            }
+        }
+        set {
+            _transitionType = newValue
+        }
+    }
+    private var _transitionType: AnimatedTransitionType = .none
     
     /// 创建动画转场
     public override init() {
@@ -64,7 +94,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 是否启用交互pan手势进行pop|dismiss，默认NO。可使用父类属性设置交互动画
     open var interactEnabled = false {
         didSet {
-            gestureRecognizer.isEnabled = interactEnabled
+            _gestureRecognizer?.isEnabled = interactEnabled
         }
     }
 
@@ -72,20 +102,29 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open var interactScreenEdge = false
 
     /// 指定交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
-    open lazy var gestureRecognizer: UIPanGestureRecognizer = {
-        if interactScreenEdge {
-            let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-            gesture.edges = .left
-            return gesture
-        } else {
-            let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-            return gesture
+    open var gestureRecognizer: UIPanGestureRecognizer {
+        get {
+            if let gesture = _gestureRecognizer {
+                return gesture
+            } else {
+                if interactScreenEdge {
+                    let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                    gesture.edges = .left
+                    _gestureRecognizer = gesture
+                    return gesture
+                } else {
+                    let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                    _gestureRecognizer = gesture
+                    return gesture
+                }
+            }
         }
-    }() {
-        didSet {
-            gestureRecognizer.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
+        set {
+            _gestureRecognizer = newValue
+            newValue.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
         }
     }
+    private var _gestureRecognizer: UIPanGestureRecognizer?
 
     /// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
     open private(set) var isInteractive = false
@@ -274,11 +313,11 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
     
     // MARK: - UIViewControllerAnimatedTransitioning
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return (transitionContext?.isAnimated ?? false) ? self.transitionDuration : 0
     }
     
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         self.transitionContext = transitionContext
         
         if self.transitionBlock != nil {
@@ -294,17 +333,55 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
 
     /// 标记动画开始(自动添加视图到容器)
     open func start() {
+        guard let transitionContext = transitionContext,
+              let fromView = transitionContext.view(forKey: .from),
+              let toView = transitionContext.view(forKey: .to) else { return }
         
+        switch transitionType {
+        // push时fromView在下，toView在上
+        case .push:
+            transitionContext.containerView.addSubview(fromView)
+            transitionContext.containerView.addSubview(toView)
+        // pop时fromView在上，toView在下
+        case .pop:
+            transitionContext.containerView.addSubview(toView)
+            transitionContext.containerView.addSubview(fromView)
+        // present时使用toView做动画
+        case .present:
+            transitionContext.containerView.addSubview(toView)
+        // dismiss时使用fromView做动画
+        case .dismiss:
+            transitionContext.containerView.addSubview(fromView)
+        default:
+            break
+        }
     }
 
     /// 执行动画，子类重写，可选
     open func animate() {
+        // 子类可重写，默认alpha动画
+        let type = self.transitionType
+        let transitionIn = type == .push || type == .present
+        let transitionView = transitionIn ? transitionContext?.view(forKey: .to) : transitionContext?.view(forKey: .from)
         
+        self.start()
+        if transitionIn { transitionView?.alpha = 0 }
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            transitionView?.alpha = transitionIn ? 1 : 0
+        } completion: { _ in
+            self.complete()
+        }
     }
 
     /// 自动标记动画完成(根据transitionContext是否被取消判断)
     open func complete() {
+        let type = self.transitionType
+        let didComplete = !(transitionContext?.transitionWasCancelled ?? false)
+        transitionContext?.completeTransition(didComplete)
         
+        if didComplete && dismissCompletion != nil && type == .dismiss {
+            dismissCompletion?()
+        }
     }
     
 }
@@ -318,12 +395,85 @@ open class SwipeAnimatedTransition: AnimatedTransition {
         self.init()
         self.inDirection = inDirection
         self.outDirection = outDirection
+        self.updateDirection()
     }
 
     /// 指定进入(push|present)方向，默认上滑Up
     open var inDirection: UISwipeGestureRecognizer.Direction = .up
     /// 指定消失(pop|dismiss)方向，默认下滑Down
-    open var outDirection: UISwipeGestureRecognizer.Direction = .down
+    open var outDirection: UISwipeGestureRecognizer.Direction = .down {
+        didSet { updateDirection() }
+    }
+    
+    open override func animate() {
+        guard let transitionContext = transitionContext,
+              let fromVC = transitionContext.viewController(forKey: .from),
+              let toVC = transitionContext.viewController(forKey: .to),
+              let fromView = transitionContext.view(forKey: .from),
+              let toView = transitionContext.view(forKey: .to) else { return }
+        
+        let type = self.transitionType
+        let transitionIn = type == .push || type == .present
+        let direction = transitionIn ? inDirection : outDirection
+        var offset: CGVector
+        switch direction {
+        case .left:
+            offset = CGVector(dx: -1, dy: 0)
+        case .right:
+            offset = CGVector(dx: 1, dy: 0)
+        case .up:
+            offset = CGVector(dx: 0, dy: -1)
+        default:
+            offset = CGVector(dx: 0, dy: 1)
+        }
+        
+        let fromFrame = transitionContext.initialFrame(for: fromVC)
+        let toFrame = transitionContext.finalFrame(for: toVC)
+        if transitionIn {
+            transitionContext.containerView.addSubview(toView)
+            toView.frame = animateFrame(frame: toFrame, offset: offset, initial: true, show: transitionIn)
+            fromView.frame = fromFrame
+        } else {
+            transitionContext.containerView.insertSubview(toView, belowSubview: fromView)
+            fromView.frame = animateFrame(frame: fromFrame, offset: offset, initial: true, show: transitionIn)
+            toView.frame = toFrame
+        }
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+            if transitionIn {
+                toView.frame = self.animateFrame(frame: toFrame, offset: offset, initial: false, show: transitionIn)
+            } else {
+                fromView.frame = self.animateFrame(frame: fromFrame, offset: offset, initial: false, show: transitionIn)
+            }
+        } completion: { _ in
+            if transitionContext.transitionWasCancelled {
+                toView.removeFromSuperview()
+            }
+            self.complete()
+        }
+    }
+    
+    private func animateFrame(frame: CGRect, offset: CGVector, initial: Bool, show: Bool) -> CGRect {
+        var vectorValue = offset.dx == 0 ? offset.dy : offset.dx
+        var flag: CGFloat = 0
+        if initial {
+            vectorValue = vectorValue > 0 ? -vectorValue : vectorValue
+            flag = show ? vectorValue : 0
+        } else {
+            vectorValue = vectorValue > 0 ? vectorValue : -vectorValue
+            flag = show ? 0 : vectorValue
+        }
+        
+        let offsetX = frame.size.width * offset.dx * flag
+        let offsetY = frame.size.height * offset.dy * flag
+        return CGRectOffset(frame, offsetX, offsetY)
+    }
+    
+    private func updateDirection() {
+        if let gestureRecognizer = gestureRecognizer as? PanGestureRecognizer {
+            gestureRecognizer.direction = outDirection
+        }
+    }
     
 }
 
@@ -343,6 +493,24 @@ open class TransformAnimatedTransition: AnimatedTransition {
     /// 指定消失(pop|dismiss)形变，默认缩放0.01
     open var outTransform: CGAffineTransform = .init(scaleX: 0.01, y: 0.01)
     
+    open override func animate() {
+        let type = self.transitionType
+        let transitionIn = type == .push || type == .present
+        let transitionView = transitionIn ? transitionContext?.view(forKey: .to) : transitionContext?.view(forKey: .from)
+        
+        self.start()
+        if transitionIn {
+            transitionView?.transform = inTransform
+            transitionView?.alpha = 0
+        }
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            transitionView?.transform = transitionIn ? .identity : self.outTransform
+            transitionView?.alpha = transitionIn ? 1 : 0
+        } completion: { _ in
+            self.complete()
+        }
+    }
+    
 }
 
 // MARK: - PresentationController
@@ -350,18 +518,26 @@ open class TransformAnimatedTransition: AnimatedTransition {
 open class PresentationController: UIPresentationController {
     
     /// 是否显示暗色背景，默认YES
-    open var showDimming = true
+    open var showDimming = true {
+        didSet {
+            dimmingView.isHidden = !showDimming
+        }
+    }
     /// 是否可以点击暗色背景关闭，默认YES。如果弹出视图占满容器，手势不生效(因为弹出视图挡住了暗色背景)
-    open var dimmingClick = true
+    open var dimmingClick = true {
+        didSet {
+            dimmingView.isUserInteractionEnabled = dimmingClick
+        }
+    }
     /// 是否执行暗黑背景透明度动画，默认YES
     open var dimmingAnimated = true
     /// 暗色背景颜色，默认黑色，透明度0.5
-    open var dimmingColor: UIColor?
+    open var dimmingColor: UIColor? = UIColor.black.withAlphaComponent(0.5)
     /// 设置点击暗色背景关闭完成回调，默认nil
     open var dismissCompletion: (() -> Void)?
 
     /// 设置弹出视图的圆角位置，默认左上和右上。如果弹出视图占满容器，不生效需弹出视图自定义
-    open var rectCorner: UIRectCorner = []
+    open var rectCorner: UIRectCorner = [.topLeft, .topRight]
     /// 设置弹出视图的圆角半径，默认0无圆角。如果弹出视图占满容器，不生效需弹出视图自定义
     open var cornerRadius: CGFloat = 0
 
@@ -374,11 +550,86 @@ open class PresentationController: UIPresentationController {
     /// 设置弹出视图的顶部距离，默认0占满容器，优先级低
     open var verticalInset: CGFloat = 0
     
+    private lazy var dimmingView: UIView = {
+        let result = UIView(frame: containerView?.bounds ?? .zero)
+        result.backgroundColor = dimmingColor
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTapAction(_:)))
+        result.addGestureRecognizer(tapGesture)
+        return result
+    }()
+    
+    @objc func onTapAction(_ sender: Any) {
+        presentedViewController.dismiss(animated: true, completion: dismissCompletion)
+    }
+    
+    // MARK: - Override
+    open override func presentationTransitionWillBegin() {
+        super.presentationTransitionWillBegin()
+        
+        presentedView?.frame = frameOfPresentedViewInContainerView
+        if cornerRadius > 0 {
+            presentedView?.layer.masksToBounds = true
+            if rectCorner.contains(.allCorners) {
+                presentedView?.layer.cornerRadius = cornerRadius
+            } else {
+                presentedView?.fw_setCornerLayer(rectCorner, radius: cornerRadius)
+            }
+        }
+        dimmingView.frame = containerView?.bounds ?? .zero
+        containerView?.insertSubview(dimmingView, at: 0)
+        
+        if dimmingAnimated {
+            dimmingView.alpha = 0
+            presentingViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
+                self.dimmingView.alpha = 1
+            }, completion: nil)
+        }
+    }
+    
+    open override func dismissalTransitionWillBegin() {
+        super.dismissalTransitionWillBegin()
+        
+        if dimmingAnimated {
+            presentingViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
+                self.dimmingView.alpha = 0
+            }, completion: nil)
+        }
+    }
+    
+    open override func dismissalTransitionDidEnd(_ completed: Bool) {
+        super.dismissalTransitionDidEnd(completed)
+        
+        if completed {
+            dimmingView.removeFromSuperview()
+        }
+    }
+    
+    open override var frameOfPresentedViewInContainerView: CGRect {
+        if let frameBlock = frameBlock {
+            return frameBlock(self)
+        } else if !CGRectEqualToRect(presentedFrame, .zero) {
+            return presentedFrame
+        } else if !CGSizeEqualToSize(presentedSize, .zero) {
+            var frame = CGRect(x: 0, y: 0, width: presentedSize.width, height: presentedSize.height)
+            frame.origin.x = ((containerView?.bounds.size.width ?? .zero) - presentedSize.width) / 2
+            frame.origin.y = ((containerView?.bounds.size.height ?? .zero) - presentedSize.height) / 2
+            return frame
+        } else if verticalInset != 0 {
+            var frame = containerView?.bounds ?? .zero
+            frame.origin.y = verticalInset
+            frame.size.height -= verticalInset
+            return frame
+        } else {
+            return containerView?.bounds ?? .zero
+        }
+    }
+    
 }
 
 // MARK: - PanGestureRecognizer
 /// 自动处理与滚动视图pan手势在指定方向的冲突，默认设置delegate为自身。如果找到滚动视图则处理之，否则同父类
-open class PanGestureRecognizer: UIPanGestureRecognizer {
+open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDelegate {
     
     /// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
     open var autoDetected = true
@@ -391,9 +642,6 @@ open class PanGestureRecognizer: UIPanGestureRecognizer {
 
     /// 指定与滚动视图pan手势的冲突交互方向，默认向下
     open var direction: UISwipeGestureRecognizer.Direction = .down
-
-    /// 获取当前手势在指定交互方向的滑动进度
-    open var swipePercent: CGFloat = 0
 
     /// 指定当前手势在指定交互方向的最大识别距离，默认0，无限制
     open var maximumDistance: CGFloat = 0
@@ -409,6 +657,194 @@ open class PanGestureRecognizer: UIPanGestureRecognizer {
 
     /// 自定义shouldRequireFailure判断句柄
     open var shouldRequireFailure: ((UIGestureRecognizer) -> Bool)?
+    
+    /// 获取当前手势在指定交互方向的滑动进度
+    open var swipePercent: CGFloat {
+        guard let view = view,
+              view.bounds.size.width > 0,
+              view.bounds.size.height > 0 else { return 0 }
+        
+        var percent: CGFloat = 0
+        let transition = translation(in: view)
+        switch direction {
+        case .left:
+            percent = -transition.x / view.bounds.size.width
+        case .right:
+            percent = transition.x / view.bounds.size.width
+        case .up:
+            percent = -transition.y / view.bounds.size.height
+        default:
+            percent = transition.y / view.bounds.size.height
+        }
+        return max(0, min(percent, 1))
+    }
+    
+    private var isFailed: Bool?
+    
+    public override init(target: Any?, action: Selector?) {
+        super.init(target: target, action: action)
+        self.delegate = self
+    }
+    
+    public convenience init() {
+        self.init(target: nil, action: nil)
+    }
+    
+    // MARK: - Override
+    open override func reset() {
+        super.reset()
+        isFailed = nil
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        if instantBegan && state == .began { return }
+        super.touchesBegan(touches, with: event)
+        if instantBegan { state = .began }
+    }
+    
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesMoved(touches, with: event)
+        guard let scrollView = scrollView, scrollView.isScrollEnabled else { return }
+        
+        if direction == .up || direction == .down {
+            if !scrollView.fw_canScrollVertical { return }
+        } else {
+            if !scrollView.fw_canScrollHorizontal { return }
+        }
+        
+        if state == .failed { return }
+        if let isFailed = isFailed {
+            if isFailed {
+                state = .failed
+            }
+            return
+        }
+        
+        let velocity = velocity(in: self.view)
+        let location = touches.first?.location(in: self.view) ?? .zero
+        let prevLocation = touches.first?.previousLocation(in: self.view) ?? .zero
+        if velocity == .zero && location == prevLocation { return }
+        
+        var isFailed = false
+        switch direction {
+        case .down:
+            let edgeOffset = scrollView.fw_contentOffset(of: .top).y
+            if (abs(velocity.x) < abs(velocity.y)) && (location.y > prevLocation.y) && (scrollView.contentOffset.y <= edgeOffset) {
+                isFailed = false
+            } else if scrollView.contentOffset.y >= edgeOffset {
+                isFailed = true
+            }
+        case .up:
+            let edgeOffset = scrollView.fw_contentOffset(of: .bottom).y
+            if (abs(velocity.x) < abs(velocity.y)) && (location.y < prevLocation.y) && (scrollView.contentOffset.y >= edgeOffset) {
+                isFailed = false
+            } else if scrollView.contentOffset.y <= edgeOffset {
+                isFailed = true
+            }
+        case .right:
+            let edgeOffset = scrollView.fw_contentOffset(of: .left).x
+            if (abs(velocity.y) < abs(velocity.x)) && (location.x > prevLocation.x) && (scrollView.contentOffset.x <= edgeOffset) {
+                isFailed = false
+            } else if scrollView.contentOffset.x >= edgeOffset {
+                isFailed = true
+            }
+        case .left:
+            let edgeOffset = scrollView.fw_contentOffset(of: .right).x
+            if (abs(velocity.y) < abs(velocity.x)) && (location.x < prevLocation.x) && (scrollView.contentOffset.x >= edgeOffset) {
+                isFailed = false
+            } else if scrollView.contentOffset.x <= edgeOffset {
+                isFailed = true
+            }
+        default:
+            break
+        }
+        
+        if isFailed, let shouldFailed = shouldFailed {
+            isFailed = shouldFailed(self)
+        }
+        
+        if isFailed {
+            state = .failed
+            self.isFailed = true
+        } else {
+            self.isFailed = false
+        }
+    }
+    
+    // MARK: - UIGestureRecognizerDelegate
+    open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBegin = shouldBegin {
+            return shouldBegin(self)
+        }
+        if maximumDistance <= 0 { return true }
+        
+        let location = gestureRecognizer.location(in: gestureRecognizer.view)
+        switch direction {
+        case .left:
+            return (gestureRecognizer.view?.bounds.size.width ?? .zero) - location.x <= maximumDistance
+        case .right:
+            return location.x <= maximumDistance
+        case .up:
+            return (gestureRecognizer.view?.bounds.size.height ?? .zero) - location.y <= maximumDistance
+        default:
+            return location.y <= maximumDistance
+        }
+    }
+    
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if otherGestureRecognizer is UIPanGestureRecognizer,
+           let otherScrollView = otherGestureRecognizer.view as? UIScrollView {
+            if autoDetected {
+                if direction == .up || direction == .down {
+                    if otherScrollView.fw_canScrollHorizontal { return false }
+                } else {
+                    if otherScrollView.fw_canScrollVertical { return false }
+                }
+                
+                if otherScrollView != scrollView { scrollView = otherScrollView }
+                return true
+            } else {
+                if scrollView == otherScrollView {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if otherGestureRecognizer is UIPanGestureRecognizer,
+           let otherScrollView = otherGestureRecognizer.view as? UIScrollView {
+            if autoDetected {
+                if direction == .up || direction == .down {
+                    if otherScrollView.fw_canScrollHorizontal { return false }
+                } else {
+                    if otherScrollView.fw_canScrollVertical { return false }
+                }
+                
+                if otherScrollView != scrollView { scrollView = otherScrollView }
+                if let shouldBeRequiredToFail = shouldBeRequiredToFail {
+                    return shouldBeRequiredToFail(otherGestureRecognizer)
+                }
+                return true
+            } else {
+                if scrollView == otherScrollView {
+                    if let shouldBeRequiredToFail = shouldBeRequiredToFail {
+                        return shouldBeRequiredToFail(otherGestureRecognizer)
+                    }
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldRequireFailure = shouldRequireFailure {
+            return shouldRequireFailure(otherGestureRecognizer)
+        }
+        return false
+    }
     
 }
 
