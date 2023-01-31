@@ -439,8 +439,11 @@ open class SwipeAnimatedTransition: AnimatedTransition {
             toView?.frame = animateFrame(frame: toFrame, offset: offset, initial: true, show: transitionIn)
             fromView?.frame = fromFrame
         } else {
-            if let fromView = fromView, let toView = toView {
-                transitionContext?.containerView.insertSubview(toView, belowSubview: fromView)
+            if let fromView = fromView {
+                transitionContext?.containerView.addSubview(fromView)
+                if let toView = toView {
+                    transitionContext?.containerView.insertSubview(toView, belowSubview: fromView)
+                }
             }
             fromView?.frame = animateFrame(frame: fromFrame, offset: offset, initial: true, show: transitionIn)
             toView?.frame = toFrame
