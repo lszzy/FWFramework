@@ -1676,6 +1676,14 @@ extension FW {
 }
 
 // MARK: - UIViewController+Toolkit
+/// 视图控制器状态枚举
+public enum ViewControllerState {
+    case ready
+    case loading
+    case success(Any? = nil)
+    case failure(Error? = nil)
+}
+
 /// 视图控制器生命周期状态枚举
 public enum ViewControllerVisibleState: Int {
     case ready = 0
