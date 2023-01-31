@@ -164,7 +164,7 @@ extension TestPreviewController: ViewControllerProtocol {
                 tipLabel.fw.origin = CGPoint(x: imageSize.width - 16.0 * labelScale - labelSize.width, y: imageSize.height - 16.0 * labelScale - labelSize.height)
                 tipLabel.isHidden = tipLabel.fw.y < 0
             }
-            imagePreviewController.fw.visibleStateChanged = { [weak self] viewController, visibleState in
+            imagePreviewController.fw.observeVisibleState { [weak self] viewController, visibleState in
                 guard let previewController = viewController as? ImagePreviewController else { return }
                 if visibleState == .willDisappear {
                     let exitAtIndex = previewController.imagePreviewView.currentImageIndex

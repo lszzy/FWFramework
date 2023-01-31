@@ -1696,6 +1696,10 @@ public enum ViewControllerVisibleState: Int {
 
 @_spi(FW) extension UIViewController {
     
+    private class VisibleStateTarget: NSObject {
+        var block: ((UIViewController, ViewControllerVisibleState) -> Void)?
+    }
+    
     /// 当前生命周期状态，默认Ready
     public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
         get {
@@ -1705,16 +1709,50 @@ public enum ViewControllerVisibleState: Int {
         set {
             let valueChanged = self.fw_visibleState != newValue
             fw_setPropertyInt(newValue.rawValue, forName: "fw_visibleState")
-            if valueChanged && self.fw_visibleStateChanged != nil {
-                self.fw_visibleStateChanged?(self, newValue)
+            
+            if valueChanged, let targets = fw_visibleStateTargets(false) {
+                for (_, elem) in targets.enumerated() {
+                    if let target = elem as? VisibleStateTarget {
+                        target.block?(self, newValue)
+                    }
+                }
             }
         }
     }
 
-    /// 生命周期变化时通知句柄，默认nil
-    public var fw_visibleStateChanged: ((UIViewController, ViewControllerVisibleState) -> Void)? {
-        get { fw_property(forName: "fw_visibleStateChanged") as? (UIViewController, ViewControllerVisibleState) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_visibleStateChanged") }
+    /// 添加生命周期变化监听句柄
+    @discardableResult
+    public func fw_observeVisibleState(_ block: @escaping (UIViewController, ViewControllerVisibleState) -> Void) -> String {
+        let targets = fw_visibleStateTargets(true)
+        let target = VisibleStateTarget()
+        target.block = block
+        targets?.add(target)
+        return "\(target.hash)"
+    }
+    
+    /// 根据标识移除生命周期监听句柄，传nil时移除所有
+    public func fw_unobserveVisibleState(_ identifier: String? = nil) {
+        guard let targets = fw_visibleStateTargets(false) else { return }
+        
+        if let identifier = identifier {
+            for (_, elem) in targets.enumerated() {
+                if let target = elem as? VisibleStateTarget,
+                   identifier == "\(target.hash)" {
+                    targets.remove(target)
+                }
+            }
+        } else {
+            targets.removeAllObjects()
+        }
+    }
+    
+    private func fw_visibleStateTargets(_ lazyload: Bool) -> NSMutableArray? {
+        var targets = fw_property(forName: "fw_visibleStateTargets") as? NSMutableArray
+        if targets == nil && lazyload {
+            targets = NSMutableArray()
+            fw_setProperty(targets, forName: "fw_visibleStateTargets")
+        }
+        return targets
     }
 
     /// 自定义完成结果对象，默认nil
