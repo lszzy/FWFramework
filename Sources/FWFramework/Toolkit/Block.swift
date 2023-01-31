@@ -240,8 +240,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 根据唯一标志移除事件句柄
-    public func fw_removeBlock(_ identifier: String?) {
-        guard let identifier = identifier else { return }
+    public func fw_removeBlock(_ identifier: String) {
         let targets = fw_blockTargets
         targets.enumerateObjects { target, _, _ in
             guard let target = target as? __FWBlockTarget else { return }
@@ -308,8 +307,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 根据唯一标志移除点击手势句柄
-    public func fw_removeTapGesture(_ identifier: String?) {
-        guard let identifier = identifier else { return }
+    public func fw_removeTapGesture(_ identifier: String) {
         self.gestureRecognizers?.forEach({ gesture in
             if gesture is UITapGestureRecognizer {
                 if let gestureIdentifier = gesture.fw_property(forName: "fw_tapGesture") as? String,
@@ -346,8 +344,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 根据唯一标志移除事件句柄
-    public func fw_removeBlock(_ identifier: String?, for controlEvents: UIControl.Event) {
-        guard let identifier = identifier else { return }
+    public func fw_removeBlock(_ identifier: String, for controlEvents: UIControl.Event) {
         fw_removeAllBlocks(for: controlEvents, identifier: identifier)
     }
 
@@ -393,7 +390,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 根据唯一标志移除点击句柄
-    public func fw_removeTouchBlock(_ identifier: String?) {
+    public func fw_removeTouchBlock(_ identifier: String) {
         fw_removeBlock(identifier, for: .touchUpInside)
     }
     

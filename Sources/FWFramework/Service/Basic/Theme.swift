@@ -475,7 +475,9 @@ public class ThemeObject<T>: NSObject {
                 fw_setPropertyWeak(newValue, forName: "fw_themeContext")
                 
                 if let oldContext = oldContext {
-                    oldContext.fw_removeThemeListener(fw_themeContextIdentifier)
+                    if let oldIdentifier = fw_themeContextIdentifier {
+                        oldContext.fw_removeThemeListener(oldIdentifier)
+                    }
                     fw_themeContextIdentifier = nil
                 }
                 
@@ -492,19 +494,17 @@ public class ThemeObject<T>: NSObject {
 
     /// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
     @discardableResult
-    public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String? {
+    public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String {
+        let identifier = UUID().uuidString
         if #available(iOS 13.0, *) {
-            let identifier = UUID().uuidString
             let listeners = fw_themeListeners(true)
             listeners?.setObject(listener, forKey: identifier as NSString)
-            return identifier
         }
-        return nil
+        return identifier
     }
 
     /// iOS13根据订阅唯一标志移除主题通知回调
-    public func fw_removeThemeListener(_ identifier: String?) {
-        guard let identifier = identifier else { return }
+    public func fw_removeThemeListener(_ identifier: String) {
         if #available(iOS 13.0, *) {
             let listeners = fw_themeListeners(false)
             listeners?.removeObject(forKey: identifier)
