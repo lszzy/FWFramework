@@ -333,25 +333,23 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
 
     /// 标记动画开始(自动添加视图到容器)
     open func start() {
-        guard let transitionContext = transitionContext,
-              let fromView = transitionContext.view(forKey: .from),
-              let toView = transitionContext.view(forKey: .to) else { return }
-        
+        let fromView = transitionContext?.view(forKey: .from)
+        let toView = transitionContext?.view(forKey: .to)
         switch transitionType {
         // push时fromView在下，toView在上
         case .push:
-            transitionContext.containerView.addSubview(fromView)
-            transitionContext.containerView.addSubview(toView)
+            if let fromView = fromView { transitionContext?.containerView.addSubview(fromView) }
+            if let toView = toView { transitionContext?.containerView.addSubview(toView) }
         // pop时fromView在上，toView在下
         case .pop:
-            transitionContext.containerView.addSubview(toView)
-            transitionContext.containerView.addSubview(fromView)
+            if let toView = toView { transitionContext?.containerView.addSubview(toView) }
+            if let fromView = fromView { transitionContext?.containerView.addSubview(fromView) }
         // present时使用toView做动画
         case .present:
-            transitionContext.containerView.addSubview(toView)
+            if let toView = toView { transitionContext?.containerView.addSubview(toView) }
         // dismiss时使用fromView做动画
         case .dismiss:
-            transitionContext.containerView.addSubview(fromView)
+            if let fromView = fromView { transitionContext?.containerView.addSubview(fromView) }
         default:
             break
         }
@@ -406,12 +404,6 @@ open class SwipeAnimatedTransition: AnimatedTransition {
     }
     
     open override func animate() {
-        guard let transitionContext = transitionContext,
-              let fromVC = transitionContext.viewController(forKey: .from),
-              let toVC = transitionContext.viewController(forKey: .to),
-              let fromView = transitionContext.view(forKey: .from),
-              let toView = transitionContext.view(forKey: .to) else { return }
-        
         let type = self.transitionType
         let transitionIn = type == .push || type == .present
         let direction = transitionIn ? inDirection : outDirection
@@ -427,27 +419,42 @@ open class SwipeAnimatedTransition: AnimatedTransition {
             offset = CGVector(dx: 0, dy: 1)
         }
         
-        let fromFrame = transitionContext.initialFrame(for: fromVC)
-        let toFrame = transitionContext.finalFrame(for: toVC)
+        let fromVC = transitionContext?.viewController(forKey: .from)
+        let toVC = transitionContext?.viewController(forKey: .to)
+        let fromView = transitionContext?.view(forKey: .from)
+        let toView = transitionContext?.view(forKey: .to)
+        var fromFrame: CGRect = .zero
+        if let fromVC = fromVC {
+            fromFrame = transitionContext?.initialFrame(for: fromVC) ?? .zero
+        }
+        var toFrame: CGRect = .zero
+        if let toVC = toVC {
+            toFrame = transitionContext?.finalFrame(for: toVC) ?? .zero
+        }
+        
         if transitionIn {
-            transitionContext.containerView.addSubview(toView)
-            toView.frame = animateFrame(frame: toFrame, offset: offset, initial: true, show: transitionIn)
-            fromView.frame = fromFrame
+            if let toView = toView {
+                transitionContext?.containerView.addSubview(toView)
+            }
+            toView?.frame = animateFrame(frame: toFrame, offset: offset, initial: true, show: transitionIn)
+            fromView?.frame = fromFrame
         } else {
-            transitionContext.containerView.insertSubview(toView, belowSubview: fromView)
-            fromView.frame = animateFrame(frame: fromFrame, offset: offset, initial: true, show: transitionIn)
-            toView.frame = toFrame
+            if let fromView = fromView, let toView = toView {
+                transitionContext?.containerView.insertSubview(toView, belowSubview: fromView)
+            }
+            fromView?.frame = animateFrame(frame: fromFrame, offset: offset, initial: true, show: transitionIn)
+            toView?.frame = toFrame
         }
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
             if transitionIn {
-                toView.frame = self.animateFrame(frame: toFrame, offset: offset, initial: false, show: transitionIn)
+                toView?.frame = self.animateFrame(frame: toFrame, offset: offset, initial: false, show: transitionIn)
             } else {
-                fromView.frame = self.animateFrame(frame: fromFrame, offset: offset, initial: false, show: transitionIn)
+                fromView?.frame = self.animateFrame(frame: fromFrame, offset: offset, initial: false, show: transitionIn)
             }
         } completion: { _ in
-            if transitionContext.transitionWasCancelled {
-                toView.removeFromSuperview()
+            if self.transitionContext?.transitionWasCancelled ?? false {
+                toView?.removeFromSuperview()
             }
             self.complete()
         }
