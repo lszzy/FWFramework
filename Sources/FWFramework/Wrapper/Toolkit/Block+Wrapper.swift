@@ -99,7 +99,7 @@ extension Wrapper where Base: UIGestureRecognizer {
     }
 
     /// 根据唯一标志移除事件句柄
-    public func removeBlock(_ identifier: String?) {
+    public func removeBlock(_ identifier: String) {
         base.fw_removeBlock(identifier)
     }
 
@@ -132,7 +132,7 @@ extension Wrapper where Base: UIView {
     }
 
     /// 根据唯一标志移除点击手势句柄
-    public func removeTapGesture(_ identifier: String?) {
+    public func removeTapGesture(_ identifier: String) {
         base.fw_removeTapGesture(identifier)
     }
 
@@ -155,7 +155,7 @@ extension Wrapper where Base: UIControl {
     }
 
     /// 根据唯一标志移除事件句柄
-    public func removeBlock(_ identifier: String?, for controlEvents: UIControl.Event) {
+    public func removeBlock(_ identifier: String, for controlEvents: UIControl.Event) {
         base.fw_removeBlock(identifier, for: controlEvents)
     }
 
@@ -178,7 +178,7 @@ extension Wrapper where Base: UIControl {
     }
 
     /// 根据唯一标志移除点击句柄
-    public func removeTouchBlock(_ identifier: String?) {
+    public func removeTouchBlock(_ identifier: String) {
         base.fw_removeTouchBlock(identifier)
     }
     

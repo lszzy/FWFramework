@@ -172,12 +172,12 @@ extension Wrapper where Base: NSObject {
 
     /// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
     @discardableResult
-    public func addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String? {
+    public func addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String {
         return base.fw_addThemeListener(listener)
     }
 
     /// iOS13根据订阅唯一标志移除主题通知回调
-    public func removeThemeListener(_ identifier: String?) {
+    public func removeThemeListener(_ identifier: String) {
         base.fw_removeThemeListener(identifier)
     }
 
