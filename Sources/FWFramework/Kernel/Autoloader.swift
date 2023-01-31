@@ -91,6 +91,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(ImagePluginAutoloader.self)
         autoload(NavigationControllerAutoloader.self)
         autoload(NavigationStyleAutoloader.self)
+        autoload(ViewControllerAutoloader.self)
         autoload(BadgeViewAutoloader.self)
         
         #if DEBUG
