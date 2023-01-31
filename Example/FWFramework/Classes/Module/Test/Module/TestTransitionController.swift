@@ -39,9 +39,8 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             ["默认Present", "onPresent"],
             ["全屏Present", "onPresentFullScreen"],
             ["转场present", "onPresentTransition"],
-            ["自定义present", "onPresentAnimation"],
-            ["swipe present", "onPresentSwipe"],
-            ["边缘present", "onPushEdge"],
+            ["滑动present", "onPresentSwipe"],
+            ["边缘present", "onPresentEdge"],
             ["自定义controller", "onPresentController"],
             ["自定义alert", "onPresentAlert"],
             ["自定义animator", "onPresentAnimator"],
@@ -49,9 +48,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             ["interactive present", "onPresentInteractive"],
             ["present without animation", "onPresentNoAnimate"],
             ["System Push", "onPush"],
-            ["Block Push", "onPushBlock"],
-            ["Option Push", "onPushOption"],
-            ["Animation Push", "onPushAnimation"],
             ["Swipe Push", "onPushSwipe"],
             ["Proxy Push", "onPushProxy"],
             ["interactive Push", "onPushInteractive"],
@@ -121,30 +117,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         present(vc, animated: true)
     }
     
-    @objc func onPresentAnimation() {
-        let transition = AnimatedTransition()
-        transition.transitionDuration = duration
-        transition.transitionBlock = { transiton in
-            if transition.transitionType == .present {
-                transition.start()
-                transition.transitionContext?.view(forKey: .to)?.fw.addTransition(type: .moveIn, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            } else if transition.transitionType == .dismiss {
-                transition.start()
-                // 这种转场动画需要先隐藏目标视图
-                transition.transitionContext?.view(forKey: .from)?.isHidden = true
-                transition.transitionContext?.view(forKey: .from)?.fw.addTransition(type: .reveal, subtype: .fromBottom, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            }
-        }
-        
-        let vc = TestFullScreenViewController()
-        vc.fw.modalTransition = transition
-        present(vc, animated: true)
-    }
-    
     @objc func onPresentSwipe() {
         let transition = SwipeAnimatedTransition()
         transition.transitionDuration = duration
@@ -156,7 +128,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         present(vc, animated: true)
     }
     
-    @objc func onPushEdge() {
+    @objc func onPresentEdge() {
         let nav = UINavigationController(rootViewController: TestFullScreenViewController())
         let transition = nav.fw.setPresentTransition()
         transition.interactEnabled = true
@@ -249,81 +221,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     
     @objc func onPush() {
         let vc = TestFullScreenViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func onPushOption() {
-        let transition = AnimatedTransition()
-        transition.transitionDuration = duration
-        transition.transitionBlock = { transition in
-            if transition.transitionType == .push {
-                transition.start()
-                UIView.transition(from: transition.transitionContext!.view(forKey: .from)!, to: transition.transitionContext!.view(forKey: .to)!, duration: transition.transitionDuration(using: transition.transitionContext), options: .transitionCurlUp) { _ in
-                    transition.complete()
-                }
-            } else if transition.transitionType == .pop {
-                transition.start()
-                UIView.transition(from: transition.transitionContext!.view(forKey: .from)!, to: transition.transitionContext!.view(forKey: .to)!, duration: transition.transitionDuration(using: transition.transitionContext), options: .transitionCurlDown) { _ in
-                    transition.complete()
-                }
-            }
-        }
-        
-        let vc = TestFullScreenViewController()
-        navigationController?.fw.navigationTransition = transition
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func onPushBlock() {
-        let transition = AnimatedTransition()
-        transition.transitionDuration = duration
-        transition.transitionBlock = { transition in
-            if transition.transitionType == .push {
-                transition.start()
-                transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: FW.screenHeight, width: FW.screenWidth, height: FW.screenHeight)
-                UIView.animate(withDuration: transition.transitionDuration(using: transition.transitionContext)) {
-                    transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight)
-                } completion: { _ in
-                    transition.complete()
-                }
-            } else if transition.transitionType == .pop {
-                transition.start()
-                transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight)
-                UIView.animate(withDuration: transition.transitionDuration(using: transition.transitionContext)) {
-                    transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: FW.screenHeight, width: FW.screenWidth, height: FW.screenHeight)
-                } completion: { _ in
-                    transition.complete()
-                }
-            }
-        }
-        
-        let vc = TestFullScreenViewController()
-        navigationController?.fw.navigationTransition = transition
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func onPushAnimation() {
-        let transition = AnimatedTransition()
-        transition.transitionDuration = duration
-        transition.transitionBlock = { [weak self] transition in
-            if transition.transitionType == .push {
-                transition.start()
-                // 使用navigationController.view做动画，而非containerView做动画，下同
-                self?.navigationController?.view.fw.addTransition(type: .moveIn, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            } else if transition.transitionType == .pop {
-                transition.start()
-                // 这种转场动画需要先隐藏目标视图
-                transition.transitionContext?.view(forKey: .from)?.isHidden = true
-                self?.navigationController?.view.fw.addTransition(type: .reveal, subtype: .fromBottom, timingFunction: .init(name: .easeInEaseOut), duration: transition.transitionDuration(using: transition.transitionContext), completion: { _ in
-                    transition.complete()
-                })
-            }
-        }
-        
-        let vc = TestFullScreenViewController()
-        navigationController?.fw.navigationTransition = transition
         navigationController?.pushViewController(vc, animated: true)
     }
     
