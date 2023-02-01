@@ -140,8 +140,7 @@ import FWObjC
             return fw_propertyBool(forName: "fw_collapsed")
         }
         set {
-            fw_collapseConstraints.enumerateObjects { constraint, _, _ in
-                guard let constraint = constraint as? NSLayoutConstraint else { return }
+            fw_collapseConstraints.forEach { constraint in
                 constraint.constant = newValue ? 0 : constraint.fw_originalConstant
             }
             
@@ -167,18 +166,13 @@ import FWObjC
     public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint) {
         constraint.fw_originalConstant = constraint.constant
         if !fw_collapseConstraints.contains(constraint) {
-            fw_collapseConstraints.add(constraint)
+            fw_collapseConstraints.append(constraint)
         }
     }
     
-    fileprivate var fw_collapseConstraints: NSMutableArray {
-        if let constraints = fw_property(forName: "fw_collapseConstraints") as? NSMutableArray {
-            return constraints
-        } else {
-            let constraints = NSMutableArray()
-            fw_setProperty(constraints, forName: "fw_collapseConstraints")
-            return constraints
-        }
+    fileprivate var fw_collapseConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_collapseConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
     }
     
     // MARK: - Axis
@@ -191,7 +185,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_alignAxis(toSuperview: .centerX, offset: offset.x))
         constraints.append(fw_alignAxis(toSuperview: .centerY, offset: offset.y))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -240,7 +234,7 @@ import FWObjC
         constraints.append(fw_pinEdge(toSuperview: .left, inset: insets.left))
         constraints.append(fw_pinEdge(toSuperview: .bottom, inset: insets.bottom))
         constraints.append(fw_pinEdge(toSuperview: .right, inset: insets.right))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
 
@@ -265,7 +259,7 @@ import FWObjC
         if excludingEdge != .trailing && excludingEdge != .right {
             constraints.append(fw_pinEdge(toSuperview: .right, inset: insets.right))
         }
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -279,7 +273,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSuperview: .left, inset: inset))
         constraints.append(fw_pinEdge(toSuperview: .right, inset: inset))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -292,7 +286,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSuperview: .top, inset: inset))
         constraints.append(fw_pinEdge(toSuperview: .bottom, inset: inset))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -333,7 +327,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_alignAxis(toSafeArea: .centerX, offset: offset.x))
         constraints.append(fw_alignAxis(toSafeArea: .centerY, offset: offset.y))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -357,7 +351,7 @@ import FWObjC
         constraints.append(fw_pinEdge(toSafeArea: .left, inset: insets.left))
         constraints.append(fw_pinEdge(toSafeArea: .bottom, inset: insets.bottom))
         constraints.append(fw_pinEdge(toSafeArea: .right, inset: insets.right))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
 
@@ -381,7 +375,7 @@ import FWObjC
         if excludingEdge != .trailing && excludingEdge != .right {
             constraints.append(fw_pinEdge(toSafeArea: .right, inset: insets.right))
         }
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
 
@@ -394,7 +388,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSafeArea: .left, inset: inset))
         constraints.append(fw_pinEdge(toSafeArea: .right, inset: inset))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -407,7 +401,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSafeArea: .top, inset: inset))
         constraints.append(fw_pinEdge(toSafeArea: .bottom, inset: inset))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
     
@@ -433,7 +427,7 @@ import FWObjC
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_setDimension(.width, size: size.width))
         constraints.append(fw_setDimension(.height, size: size.height))
-        fw_lastLayoutConstraints.setArray(constraints)
+        fw_lastConstraints = constraints
         return constraints
     }
 
@@ -613,21 +607,21 @@ import FWObjC
     /// - Returns: 布局约束
     public func fw_constraint(identifier: String?) -> NSLayoutConstraint? {
         guard let identifier = identifier, !identifier.isEmpty else { return nil }
-        let constraint = fw_allLayoutConstraints.first { obj in
-            guard let obj = obj as? NSLayoutConstraint else { return false }
+        return fw_allConstraints.first { obj in
             return obj.identifier == identifier
         }
-        return constraint as? NSLayoutConstraint
     }
     
     /// 最近一批添加或更新的布局约束
-    public var fw_lastConstraints: [NSLayoutConstraint] {
-        return fw_lastLayoutConstraints as? [NSLayoutConstraint] ?? []
+    public private(set) var fw_lastConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_lastConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_lastConstraints") }
     }
     
     /// 获取当前所有约束
-    public var fw_allConstraints: [NSLayoutConstraint] {
-        return fw_allLayoutConstraints as? [NSLayoutConstraint] ?? []
+    public private(set) var fw_allConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_allConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_allConstraints") }
     }
     
     /// 移除当前指定约束数组
@@ -635,8 +629,8 @@ import FWObjC
     public func fw_removeConstraints(_ constraints: [NSLayoutConstraint]?) {
         guard let constraints = constraints, !constraints.isEmpty else { return }
         NSLayoutConstraint.deactivate(constraints)
-        fw_allLayoutConstraints.removeObjects(in: constraints)
-        fw_lastLayoutConstraints.removeObjects(in: constraints)
+        fw_allConstraints.removeAll { constraints.contains($0) }
+        fw_lastConstraints.removeAll { constraints.contains($0) }
     }
     
     // MARK: - Private
@@ -703,9 +697,9 @@ import FWObjC
         } else {
             targetConstraint = NSLayoutConstraint(item: self, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: targetOffset)
             targetConstraint.identifier = constraintIdentifier
-            fw_allLayoutConstraints.add(targetConstraint)
+            fw_allConstraints.append(targetConstraint)
         }
-        fw_lastLayoutConstraints.setArray([targetConstraint])
+        fw_lastConstraints = [targetConstraint]
         if targetConstraint.priority != priority {
             targetConstraint.fw_priority = priority
         }
@@ -721,26 +715,6 @@ import FWObjC
             viewHash = String(describing: ofView)
         }
         return String(format: "%ld-%ld-%@-%ld-%@", attribute.rawValue, relation.rawValue, viewHash, toAttribute.rawValue, NSNumber(value: multiplier))
-    }
-    
-    private var fw_allLayoutConstraints: NSMutableArray {
-        if let constraints = fw_property(forName: "fw_allLayoutConstraints") as? NSMutableArray {
-            return constraints
-        } else {
-            let constraints = NSMutableArray()
-            fw_setProperty(constraints, forName: "fw_allLayoutConstraints")
-            return constraints
-        }
-    }
-    
-    private var fw_lastLayoutConstraints: NSMutableArray {
-        if let constraints = fw_property(forName: "fw_lastLayoutConstraints") as? NSMutableArray {
-            return constraints
-        } else {
-            let constraints = NSMutableArray()
-            fw_setProperty(constraints, forName: "fw_lastLayoutConstraints")
-            return constraints
-        }
     }
     
     fileprivate static func fw_swizzleAutoLayoutView() {

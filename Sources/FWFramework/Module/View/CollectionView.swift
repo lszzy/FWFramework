@@ -263,7 +263,7 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
               delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }
         
         self.register(CollectionViewReusableView.self, forDecorationViewOfKind: "FWCollectionViewElementKind")
-        self.fw_sectionConfigAttributes.removeAllObjects()
+        self.fw_sectionConfigAttributes.removeAll()
         let sectionCount = collectionView.numberOfSections
         for section in 0 ..< sectionCount {
             let itemCount = collectionView.numberOfItems(inSection: section)
@@ -295,7 +295,7 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
             attributes.frame = sectionFrame
             attributes.zIndex = -1
             attributes.sectionConfig = delegate.collectionView?(collectionView, layout: self, configForSectionAt: section)
-            self.fw_sectionConfigAttributes.add(attributes)
+            self.fw_sectionConfigAttributes.append(attributes)
         }
     }
 
@@ -304,22 +304,16 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     public func fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
         var attrs: [UICollectionViewLayoutAttributes] = []
         for attr in self.fw_sectionConfigAttributes {
-            if let attr = attr as? UICollectionViewLayoutAttributes,
-               CGRectIntersectsRect(rect, attr.frame) {
+            if CGRectIntersectsRect(rect, attr.frame) {
                 attrs.append(attr)
             }
         }
         return attrs
     }
     
-    private var fw_sectionConfigAttributes: NSMutableArray {
-        if let attributes = fw_property(forName: "fw_sectionConfigAttributes") as? NSMutableArray {
-            return attributes
-        } else {
-            let attributes = NSMutableArray()
-            fw_setProperty(attributes, forName: "fw_sectionConfigAttributes")
-            return attributes
-        }
+    private var fw_sectionConfigAttributes: [UICollectionViewLayoutAttributes] {
+        get { return fw_property(forName: "fw_sectionConfigAttributes") as? [UICollectionViewLayoutAttributes] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_sectionConfigAttributes") }
     }
     
 }
