@@ -24,6 +24,9 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             "ScrollViewController",
             "TableViewController",
             "WebViewController",
+            "TestSwiftProtocol默认实现",
+            "TestSwiftProtocol类实现",
+            "TestSwiftProtocol继承实现"
         ])
     }
     
@@ -51,6 +54,12 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             viewController = SwiftTestTableViewController()
         case 4:
             viewController = SwiftTestWebViewController()
+        case 5:
+            viewController = TestSwiftProtocolDefaultController()
+        case 6:
+            viewController = TestSwiftProtocolBaseController()
+        case 7:
+            viewController = TestSwiftProtocolViewController()
         default:
             viewController = SwiftTestViewController()
         }
@@ -296,4 +305,60 @@ class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {
         super.viewDidLayoutSubviews()
         contentView.fw.setCornerLayer([.topLeft, .topRight], radius: 8)
     }
+}
+
+protocol TestSwiftProtocol {
+    
+    func testMethod()
+    
+}
+
+extension TestSwiftProtocol where Self: UIViewController {
+    
+    func testMethod() {
+        UIWindow.fw.showMessage(text: "TestSwiftProtocol.testMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
+    
+}
+
+class TestSwiftProtocolDefaultController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
+    
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.fw.addTapGesture { [weak self] _ in
+            self?.testMethod()
+        }
+    }
+    
+}
+
+class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
+    
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.fw.addTapGesture { [weak self] _ in
+            self?.testMethod()
+        }
+    }
+    
+    // 如果testMethod方法放到extension中，则不能继承; 非extension中可以继承
+    func testMethod() {
+        UIWindow.fw.showMessage(text: "BaseController.testMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
+    
+}
+
+class TestSwiftProtocolViewController: TestSwiftProtocolBaseController {
+    
+    // 父类testMethod必须放到非extension中，否则编译报错
+    override func testMethod() {
+        UIWindow.fw.showMessage(text: "ViewController.testMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
+    
 }
