@@ -1676,7 +1676,7 @@ extension FW {
 }
 
 // MARK: - UIViewController+Toolkit
-/// 视图控制器状态枚举
+/// 视图控制器常用状态枚举
 public enum ViewControllerState {
     case ready
     case loading
@@ -1684,14 +1684,15 @@ public enum ViewControllerState {
     case failure(Error? = nil)
 }
 
-/// 视图控制器生命周期状态枚举
+/// 视图控制器常用生命周期状态枚举
 public enum ViewControllerVisibleState: Int {
     case ready = 0
     case didLoad = 1
     case willAppear = 2
-    case didAppear = 3
-    case willDisappear = 4
-    case didDisappear = 5
+    case didLayoutSubviews = 3
+    case didAppear = 4
+    case willDisappear = 5
+    case didDisappear = 6
 }
 
 @_spi(FW) extension UIViewController {
@@ -1701,12 +1702,13 @@ public enum ViewControllerVisibleState: Int {
     }
     
     /// 当前生命周期状态，默认Ready
-    public fileprivate(set) var fw_visibleState: ViewControllerVisibleState {
+    public internal(set) var fw_visibleState: ViewControllerVisibleState {
         get {
             let value = fw_propertyInt(forName: "fw_visibleState")
             return .init(rawValue: value) ?? .ready
         }
         set {
+            // 为提升性能，触发visibleState改变的swizzle代码统一放到了ViewController
             let valueChanged = self.fw_visibleState != newValue
             fw_setPropertyInt(newValue.rawValue, forName: "fw_visibleState")
             
@@ -1781,61 +1783,6 @@ public enum ViewControllerVisibleState: Int {
     }
     
     fileprivate static func fw_swizzleToolkitViewController() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLoad),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            selfObject.fw_visibleState = .didLoad
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .willAppear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .didAppear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .willDisappear
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            selfObject.fw_visibleState = .didDisappear
-        }}
-        
         NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
             // dealloc时不调用fw，防止释放时动态创建包装器对象
             let viewController = selfObject as? UIViewController
