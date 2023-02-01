@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ViewControllerProtocol
 /// 视图控制器挂钩协议，可覆写
-@objc private protocol ViewControllerProtocol {
+@objc public protocol ViewControllerProtocol {
     
     /// 初始化完成方法，init自动调用，默认未实现
     @objc optional func didInitialize()
@@ -27,7 +27,7 @@ import UIKit
 
 // MARK: - ViewControllerIntercepter
 /// 视图控制器拦截器
-private class ViewControllerIntercepter: NSObject {
+public class ViewControllerIntercepter: NSObject {
     
     public var initIntercepter: Selector?
     public var viewDidLoadIntercepter: Selector?
@@ -43,7 +43,7 @@ private class ViewControllerIntercepter: NSObject {
 /// 视图控制器管理器
 ///
 /// 框架默认未注册ViewControllerProtocol协议拦截器，如需全局配置控制器，使用全局自定义block即可
-private class ViewControllerManager: NSObject {
+public class ViewControllerManager: NSObject {
     
     /// 单例模式
     public static let shared = ViewControllerManager()
@@ -128,7 +128,7 @@ private class ViewControllerManager: NSObject {
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
             if viewController.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookInit(viewController: viewController)
+                ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
         }}
@@ -141,7 +141,7 @@ private class ViewControllerManager: NSObject {
         ) { store in { selfObject, coder in
             let viewController = store.original(selfObject, store.selector, coder)
             if let viewController = viewController, viewController.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookInit(viewController: viewController)
+                ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
         }}
@@ -156,7 +156,7 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .didLoad
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewDidLoad(viewController: selfObject)
+                ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
         }}
         
@@ -170,7 +170,7 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .willAppear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewWillAppear(viewController: selfObject, animated: animated)
+                ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
         }}
         
@@ -184,7 +184,7 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .didLayoutSubviews
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewDidLayoutSubviews(viewController: selfObject)
+                ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
         }}
         
@@ -198,7 +198,7 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .didAppear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewDidAppear(viewController: selfObject, animated: animated)
+                ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
         }}
         
@@ -212,7 +212,7 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .willDisappear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewWillDisappear(viewController: selfObject, animated: animated)
+                ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
         }}
         
@@ -226,37 +226,112 @@ private class ViewControllerManager: NSObject {
             
             selfObject.fw_visibleState = .didDisappear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
-                ViewControllerManager.shared.hookViewDidDisappear(viewController: selfObject, animated: animated)
+                ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
     }
     
+    fileprivate static func registerDefaultIntercepters() {
+        let scrollIntercepter = ViewControllerIntercepter()
+        scrollIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.scrollViewControllerViewDidLoad(_:))
+        ViewControllerManager.shared.registerProtocol(ScrollViewControllerProtocol.self, intercepter: scrollIntercepter)
+        
+        let collectionIntercepter = ViewControllerIntercepter()
+        collectionIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.collectionViewControllerViewDidLoad(_:))
+        ViewControllerManager.shared.registerProtocol(CollectionViewControllerProtocol.self, intercepter: collectionIntercepter)
+        
+        let tableIntercepter = ViewControllerIntercepter()
+        tableIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.tableViewControllerViewDidLoad(_:))
+        ViewControllerManager.shared.registerProtocol(TableViewControllerProtocol.self, intercepter: tableIntercepter)
+        
+        let webIntercepter = ViewControllerIntercepter()
+        webIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.webViewControllerViewDidLoad(_:))
+        ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
+    }
+    
     // MARK: - Hook
-    private func hookInit(viewController: UIViewController) {
+    private func hookInit(_ viewController: UIViewController) {
+        /*
+        // ViewControllerProtocol全局拦截器init方法示例：
+        // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
+        viewController.extendedLayoutIncludesOpaqueBars = true
+        // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
+        viewController.hidesBottomBarWhenPushed = true
+        // 视图默认all延伸到全部工具栏，可指定top|bottom不被工具栏遮挡
+        viewController.edgesForExtendedLayout = .all
+         */
+        
+        // 1. 默认init
+        hookInit?(viewController)
+        
+        // 2. 拦截器init
+        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
+        for protocolName in protocolNames {
+            if let intercepter = intercepters[protocolName],
+               let initIntercepter = intercepter.initIntercepter,
+               self.responds(to: initIntercepter) {
+                self.perform(initIntercepter, with: viewController)
+            }
+        }
+        
+        // 3. 控制器didInitialize
+        if let viewController = viewController as? ViewControllerProtocol {
+            viewController.didInitialize?()
+        }
+    }
+    
+    private func hookViewDidLoad(_ viewController: UIViewController) {
+        // 1. 默认viewDidLoad
+        hookViewDidLoad?(viewController)
+        
+        // 2. 拦截器viewDidLoad
+        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
+        for protocolName in protocolNames {
+            if let intercepter = intercepters[protocolName],
+               let viewDidLoadIntercepter = intercepter.viewDidLoadIntercepter,
+               self.responds(to: viewDidLoadIntercepter) {
+                self.perform(viewDidLoadIntercepter, with: viewController)
+            }
+        }
+        
+        if let viewController = viewController as? ViewControllerProtocol {
+            // 3. 控制器setupNavbar
+            viewController.setupNavbar?()
+            // 4. 控制器setupSubviews
+            viewController.setupSubviews?()
+            // 5. 控制器setupLayout
+            viewController.setupLayout?()
+        }
+    }
+    
+    private func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
         
     }
     
-    private func hookViewDidLoad(viewController: UIViewController) {
+    private func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
+        // 1. 默认viewDidLayoutSubviews
+        hookViewDidLayoutSubviews?(viewController)
+        
+        // 2. 拦截器viewDidLayoutSubviews
+        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
+        for protocolName in protocolNames {
+            if let intercepter = intercepters[protocolName],
+               let viewDidLayoutSubviewsIntercepter = intercepter.viewDidLayoutSubviewsIntercepter,
+               self.responds(to: viewDidLayoutSubviewsIntercepter) {
+                self.perform(viewDidLayoutSubviewsIntercepter, with: viewController)
+            }
+        }
+    }
+    
+    private func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         
     }
     
-    private func hookViewWillAppear(viewController: UIViewController, animated: Bool) {
+    private func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
         
     }
     
-    private func hookViewDidLayoutSubviews(viewController: UIViewController) {
-        
-    }
-    
-    private func hookViewDidAppear(viewController: UIViewController, animated: Bool) {
-        
-    }
-    
-    private func hookViewWillDisappear(viewController: UIViewController, animated: Bool) {
-        
-    }
-    
-    private func hookViewDidDisappear(viewController: UIViewController, animated: Bool) {
+    private func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
         
     }
     
@@ -267,6 +342,7 @@ internal class ViewControllerAutoloader: AutoloadProtocol {
     
     static func autoload() {
         ViewControllerManager.swizzleViewController()
+        ViewControllerManager.registerDefaultIntercepters()
     }
     
 }
