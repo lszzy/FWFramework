@@ -79,6 +79,10 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
             manager?.authorize({ [weak self] _ in
                 self?.tableView.reloadRows(at: [indexPath], with: .fade)
             })
+        } else if type == .notifications {
+            self.fw.showConfirm(title: "跳转通知设置", message: nil, cancel: "取消", confirm: "设置") {
+                UIApplication.fw.openAppNotificationSettings()
+            }
         }
     }
     
