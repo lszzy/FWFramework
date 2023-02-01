@@ -153,6 +153,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
+            
+            selfObject.fw_visibleState = .didLoad
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewDidLoad(viewController: selfObject)
             }
@@ -165,6 +167,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willAppear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewWillAppear(viewController: selfObject, animated: animated)
             }
@@ -177,6 +181,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
+            
+            selfObject.fw_visibleState = .didLayoutSubviews
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(viewController: selfObject)
             }
@@ -189,6 +195,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didAppear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewDidAppear(viewController: selfObject, animated: animated)
             }
@@ -201,6 +209,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .willDisappear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewWillDisappear(viewController: selfObject, animated: animated)
             }
@@ -213,6 +223,8 @@ private class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_visibleState = .didDisappear
             if selfObject.conforms(to: ViewControllerProtocol.self) {
                 ViewControllerManager.shared.hookViewDidDisappear(viewController: selfObject, animated: animated)
             }
