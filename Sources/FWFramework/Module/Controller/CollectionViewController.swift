@@ -75,7 +75,7 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+CollectionViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
+    func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & CollectionViewControllerProtocol else { return }
         
         let collectionView = viewController.collectionView

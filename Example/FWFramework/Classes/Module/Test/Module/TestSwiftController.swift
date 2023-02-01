@@ -245,7 +245,7 @@ class SwiftTestTableViewController: UIViewController, TableViewControllerProtoco
 }
 
 class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
-    var webItems: NSArray? = {
+    var webItems: [Any]? = {
         return [
             Icon.backImage as Any,
             Icon.closeImage as Any

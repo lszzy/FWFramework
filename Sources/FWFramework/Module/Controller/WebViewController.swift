@@ -109,7 +109,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+WebViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func webViewControllerViewDidLoad(_ viewController: UIViewController) {
+    func webViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
         
         let webView = viewController.webView
