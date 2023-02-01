@@ -12,7 +12,7 @@ import FWObjC
 
 // MARK: - WebViewControllerProtocol
 /// 网页视图控制器协议，可覆写
-@objc public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
+public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
     var webView: WebView { get }
@@ -23,17 +23,20 @@ import FWObjC
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     var webRequest: Any? { get set }
 
-    /// 渲染网页配置，setupWebView之前调用，默认未实现
-    @objc optional func setupWebConfiguration() -> WKWebViewConfiguration
+    /// 渲染网页配置，setupWebView之前调用，默认返回nil
+    func setupWebConfiguration() -> WKWebViewConfiguration?
 
-    /// 渲染网页视图，setupSubviews之前调用，默认未实现
-    @objc optional func setupWebView()
+    /// 渲染网页视图，setupSubviews之前调用，默认空实现
+    func setupWebView()
 
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
-    @objc optional func setupWebLayout()
+    func setupWebLayout()
+    
+    /// 是否启用网页桥接，启用后自动调用setupWebBridge，默认false
+    var webBridgeEnabled: Bool { get set }
 
-    /// 渲染网页桥接，setupSubviews之前调用，默认未实现
-    @objc optional func setupWebBridge(_ bridge: WebViewJsBridge)
+    /// 渲染网页桥接，setupSubviews之前调用，默认空实现
+    func setupWebBridge(_ bridge: WebViewJsBridge)
     
 }
 
@@ -45,7 +48,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
             return result
         } else {
             var result: WebView
-            if let configuration = setupWebConfiguration?() {
+            if let configuration = setupWebConfiguration() {
                 result = WebView(frame: .zero, configuration: configuration)
             } else {
                 result = WebView(frame: .zero)
@@ -79,17 +82,36 @@ extension WebViewControllerProtocol where Self: UIViewController {
         }
     }
     
+    /// 渲染网页配置，setupWebView之前调用，默认返回nil
+    public func setupWebConfiguration() -> WKWebViewConfiguration? {
+        return nil
+    }
+
+    /// 渲染网页视图，setupSubviews之前调用，默认空实现
+    public func setupWebView() {}
+    
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
     public func setupWebLayout() {
         webView.fw_pinEdges()
     }
+    
+    /// 是否启用网页桥接，启用后自动调用setupWebBridge，默认false
+    public var webBridgeEnabled: Bool {
+        get { fw_propertyBool(forName: "webBridgeEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "webBridgeEnabled") }
+    }
+    
+    /// 渲染网页桥接，setupSubviews之前调用，默认空实现
+    public func setupWebBridge(_ bridge: WebViewJsBridge) {}
     
 }
 
 // MARK: - ViewControllerManager+WebViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func webViewControllerViewDidLoad(_ viewController: UIViewController & WebViewControllerProtocol) {
+    @objc func webViewControllerViewDidLoad(_ viewController: UIViewController) {
+        guard let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
+        
         let webView = viewController.webView
         webView.delegate = viewController
         viewController.view.addSubview(webView)
@@ -103,18 +125,18 @@ internal extension ViewControllerManager {
         
         hookWebViewController?(viewController)
         
-        viewController.setupWebView?()
-        viewController.setupWebLayout?()
+        viewController.setupWebView()
+        viewController.setupWebLayout()
         webView.setNeedsLayout()
         webView.layoutIfNeeded()
         
-        if viewController.responds(to: #selector(WebViewControllerProtocol.setupWebBridge(_:))) {
+        if viewController.webBridgeEnabled {
             let delegate = webView.navigationDelegate
             let bridge = WebViewJsBridge(for: webView)
             bridge.setWebViewDelegate(delegate)
             webView.fw_jsBridge = bridge
             
-            viewController.setupWebBridge?(bridge)
+            viewController.setupWebBridge(bridge)
         }
         
         guard let webItems = viewController.webItems,

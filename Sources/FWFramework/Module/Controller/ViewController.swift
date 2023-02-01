@@ -9,19 +9,35 @@ import UIKit
 
 // MARK: - ViewControllerProtocol
 /// 视图控制器挂钩协议，可覆写
-@objc public protocol ViewControllerProtocol {
+public protocol ViewControllerProtocol: NSObjectProtocol {
     
-    /// 初始化完成方法，init自动调用，默认未实现
-    @objc optional func didInitialize()
+    /// 初始化完成方法，init自动调用，默认空实现
+    func didInitialize()
 
-    /// 初始化导航栏方法，viewDidLoad自动调用，默认未实现
-    @objc optional func setupNavbar()
+    /// 初始化导航栏方法，viewDidLoad自动调用，默认空实现
+    func setupNavbar()
 
-    /// 初始化子视图方法，viewDidLoad自动调用，默认未实现
-    @objc optional func setupSubviews()
+    /// 初始化子视图方法，viewDidLoad自动调用，默认空实现
+    func setupSubviews()
 
-    /// 初始化布局方法，viewDidLoad自动调用，默认未实现
-    @objc optional func setupLayout()
+    /// 初始化布局方法，viewDidLoad自动调用，默认空实现
+    func setupLayout()
+    
+}
+
+extension ViewControllerProtocol where Self: UIViewController {
+    
+    /// 初始化完成方法，init自动调用，默认空实现
+    public func didInitialize() {}
+
+    /// 初始化导航栏方法，viewDidLoad自动调用，默认空实现
+    public func setupNavbar() {}
+
+    /// 初始化子视图方法，viewDidLoad自动调用，默认空实现
+    public func setupSubviews() {}
+
+    /// 初始化布局方法，viewDidLoad自动调用，默认空实现
+    public func setupLayout() {}
     
 }
 
@@ -94,14 +110,14 @@ public class ViewControllerManager: NSObject {
         
         // 解析协议列表，包含父协议。始终包含ViewControllerProtocol，且位于第一位
         var protocolNames: [String] = []
-        protocolNames.append(NSStringFromProtocol(ViewControllerProtocol.self))
+        protocolNames.append(String.fw_safeString(ViewControllerProtocol.self))
         var targetClass: AnyClass? = aClass
         while targetClass != nil {
             var protocolCount: UInt32 = 0
             let protocolList = class_copyProtocolList(targetClass, &protocolCount)
             for i in 0 ..< Int(protocolCount) {
                 if let proto = protocolList?[i],
-                   protocol_conformsToProtocol(proto, ViewControllerProtocol.self),
+                   //TODO: protocol_conformsToProtocol(proto, ViewControllerProtocol.self),
                    let protocolName = String(utf8String: protocol_getName(proto)),
                    !protocolNames.contains(protocolName) {
                     protocolNames.append(protocolName)
@@ -127,7 +143,7 @@ public class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
-            if viewController.conforms(to: ViewControllerProtocol.self) {
+            if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
@@ -140,7 +156,7 @@ public class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             let viewController = store.original(selfObject, store.selector, coder)
-            if let viewController = viewController, viewController.conforms(to: ViewControllerProtocol.self) {
+            if let viewController = viewController, viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
@@ -155,7 +171,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector)
             
             selfObject.fw_visibleState = .didLoad
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
         }}
@@ -169,7 +185,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector, animated)
             
             selfObject.fw_visibleState = .willAppear
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
         }}
@@ -183,7 +199,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector)
             
             selfObject.fw_visibleState = .didLayoutSubviews
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
         }}
@@ -197,7 +213,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector, animated)
             
             selfObject.fw_visibleState = .didAppear
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
         }}
@@ -211,7 +227,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector, animated)
             
             selfObject.fw_visibleState = .willDisappear
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
         }}
@@ -225,7 +241,7 @@ public class ViewControllerManager: NSObject {
             store.original(selfObject, store.selector, animated)
             
             selfObject.fw_visibleState = .didDisappear
-            if selfObject.conforms(to: ViewControllerProtocol.self) {
+            if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
@@ -276,7 +292,7 @@ public class ViewControllerManager: NSObject {
         
         // 3. 控制器didInitialize
         if let viewController = viewController as? ViewControllerProtocol {
-            viewController.didInitialize?()
+            viewController.didInitialize()
         }
     }
     
@@ -296,11 +312,11 @@ public class ViewControllerManager: NSObject {
         
         if let viewController = viewController as? ViewControllerProtocol {
             // 3. 控制器setupNavbar
-            viewController.setupNavbar?()
+            viewController.setupNavbar()
             // 4. 控制器setupSubviews
-            viewController.setupSubviews?()
+            viewController.setupSubviews()
             // 5. 控制器setupLayout
-            viewController.setupLayout?()
+            viewController.setupLayout()
         }
     }
     

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - CollectionViewControllerProtocol
 /// 集合视图控制器协议，可覆写
-@objc public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate {
+public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate {
     
     /// 集合视图，默认不显示滚动条
     var collectionView: UICollectionView { get }
@@ -20,11 +20,11 @@ import UIKit
     /// 渲染集合视图内容布局，只调用一次
     func setupCollectionViewLayout() -> UICollectionViewLayout
 
-    /// 渲染集合视图，setupSubviews之前调用，默认未实现
-    @objc optional func setupCollectionView()
+    /// 渲染集合视图，setupSubviews之前调用，默认空实现
+    func setupCollectionView()
 
     /// 渲染集合视图布局，setupSubviews之前调用，默认铺满
-    @objc optional func setupCollectionLayout()
+    func setupCollectionLayout()
     
 }
 
@@ -61,6 +61,9 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
         result.minimumInteritemSpacing = 0
         return result
     }
+    
+    /// 渲染集合视图，setupSubviews之前调用，默认空实现
+    public func setupCollectionView() {}
 
     /// 渲染集合视图布局，setupSubviews之前调用，默认铺满
     public func setupCollectionLayout() {
@@ -72,7 +75,9 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+CollectionViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func collectionViewControllerViewDidLoad(_ viewController: UIViewController & CollectionViewControllerProtocol) {
+    @objc func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
+        guard let viewController = viewController as? UIViewController & CollectionViewControllerProtocol else { return }
+        
         let collectionView = viewController.collectionView
         collectionView.dataSource = viewController
         collectionView.delegate = viewController
@@ -80,8 +85,8 @@ internal extension ViewControllerManager {
         
         hookCollectionViewController?(viewController)
         
-        viewController.setupCollectionView?()
-        viewController.setupCollectionLayout?()
+        viewController.setupCollectionView()
+        viewController.setupCollectionLayout()
         collectionView.setNeedsLayout()
         collectionView.layoutIfNeeded()
     }
