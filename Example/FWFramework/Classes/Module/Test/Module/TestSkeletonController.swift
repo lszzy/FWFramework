@@ -52,8 +52,8 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
                 }
                 
                 if index == 6 {
-                    let lastIndex = self.tableData.lastObject.safeInt
-                    self.tableData.addObjects(from: [lastIndex + 1, lastIndex + 2])
+                    let lastIndex = self.tableData.last.safeInt
+                    self.tableData.append(contentsOf: [lastIndex + 1, lastIndex + 2])
                     self.tableView.reloadData()
                     self.renderData()
                     return
@@ -92,8 +92,8 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
             self.headerView.isHidden = false
             self.footerView.isHidden = false
             
-            self.tableData.removeAllObjects()
-            self.tableData.addObjects(from: [1, 2])
+            self.tableData.removeAll()
+            self.tableData.append(contentsOf: [1, 2])
             self.tableView.reloadData()
             
             self.tableView.fw.endRefreshing()
@@ -102,8 +102,8 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     @objc func onLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let lastIndex = self.tableData.lastObject.safeInt
-            self.tableData.addObjects(from: [lastIndex + 1, lastIndex + 2])
+            let lastIndex = self.tableData.last.safeInt
+            self.tableData.append(contentsOf: [lastIndex + 1, lastIndex + 2])
             self.tableView.reloadData()
             
             self.tableView.fw.endLoading()
@@ -116,13 +116,13 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.fw.height(cellClass: TestSkeletonCell.self) { [weak self] cell in
-            cell.configure(object: self?.tableData.object(at: indexPath.row) as? String ?? "")
+            cell.configure(object: self?.tableData[indexPath.row] as? String ?? "")
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TestSkeletonCell.fw.cell(tableView: tableView)
-        cell.configure(object: tableData.object(at: indexPath.row) as? String ?? "")
+        cell.configure(object: tableData[indexPath.row] as? String ?? "")
         return cell
     }
     

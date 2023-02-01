@@ -27,7 +27,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
                 SDImageCache.shared.clear(with: .all)
             }
             
-            self.tableData.removeAllObjects()
+            self.tableData.removeAll()
             self.tableView.reloadData()
             self.tableView.layoutIfNeeded()
             self.tableView.setContentOffset(.zero, animated: false)
@@ -41,7 +41,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
         SDWebImageImpl.shared.fadeAnimated = true
         ImagePluginImpl.shared.fadeAnimated = true
         
-        tableData.setArray([
+        tableData = [
             "Animation.png",
             "Loading.gif",
             "http://kvm.wuyong.site/images/images/progressive.jpg",
@@ -67,7 +67,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             "https://upload.wikimedia.org/wikipedia/commons/1/14/Mahuri.svg",
             "https://simpleicons.org/icons/github.svg",
             "http://via.placeholder.com/200x200.jpg",
-        ])
+        ]
         tableView.reloadData()
     }
     
@@ -81,7 +81,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TestImageCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
-        let fileName = tableData.object(at: indexPath.row) as? String ?? ""
+        let fileName = tableData[indexPath.row] as? String ?? ""
         cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.fw.mimeType(from: (fileName as NSString).pathExtension))
         if !fileName.fw.isFormatUrl {
             cell.fw.tempObject = fileName

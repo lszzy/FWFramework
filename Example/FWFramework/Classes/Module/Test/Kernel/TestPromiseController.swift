@@ -10,20 +10,22 @@ import FWFramework
 
 class TestPromiseController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
@@ -35,7 +37,7 @@ extension TestPromiseController {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["unsafe(Crash)", "onUnsafe"],
             ["safe", "onSafe"],
             ["-done", "onDone"],

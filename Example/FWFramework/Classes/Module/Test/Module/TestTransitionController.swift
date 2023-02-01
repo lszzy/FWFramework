@@ -10,6 +10,8 @@ import FWFramework
 
 class TestTransitionController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     let duration: TimeInterval = 0.35
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +37,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["默认Present", "onPresent"],
             ["全屏Present", "onPresentFullScreen"],
             ["转场present", "onPresentTransition"],
@@ -61,14 +63,14 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     

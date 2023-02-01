@@ -18,7 +18,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "ViewController",
             "CollectionViewController",
             "ScrollViewController",
@@ -39,7 +39,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let value = tableData.object(at: indexPath.row) as? String
+        let value = tableData[indexPath.row] as? String
         cell.textLabel?.text = value
         cell.accessoryType = .disclosureIndicator
         return cell
@@ -72,7 +72,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         default:
             viewController = SwiftTestViewController()
         }
-        viewController?.navigationItem.title = tableData.object(at: indexPath.row) as? String
+        viewController?.navigationItem.title = tableData[indexPath.row] as? String
         navigationController?.pushViewController(viewController!, animated: true)
     }
     
@@ -168,7 +168,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
     
     func setupSubviews() {
         for _ in 0 ..< 18 {
-            collectionData.add(UIColor.fw.randomColor)
+            collectionData.append(UIColor.fw.randomColor)
         }
         collectionView.reloadData()
     }
@@ -248,7 +248,7 @@ class SwiftTestTableViewController: UIViewController, TableViewControllerProtoco
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [0, 1, 2])
+        tableData.append(contentsOf: [0, 1, 2])
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

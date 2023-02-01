@@ -10,14 +10,16 @@ import FWFramework
 
 class TestPluginController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [Int]
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupTableView() {
-        tableData.add([0, 1])
-        tableData.add([0, 1, 2, 3, 4, 5, 6])
-        tableData.add([0])
+        tableData.append([0, 1])
+        tableData.append([0, 1, 2, 3, 4, 5, 6])
+        tableData.append([0])
         tableView.reloadData()
     }
     
@@ -26,13 +28,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionData = tableData.object(at: section) as! NSArray
+        let sectionData = tableData[section]
         return sectionData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let sectionData = tableData.object(at: indexPath.section) as! NSArray
-        let rowData = sectionData[indexPath.row] as? Int ?? 0
+        let sectionData = tableData[indexPath.section]
+        let rowData = sectionData[indexPath.row]
         if indexPath.section == 0 {
             let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "cell1")
             cell.selectionStyle = .none
@@ -129,8 +131,8 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             return
         }
         
-        let sectionData = tableData.object(at: indexPath.section) as! NSArray
-        let rowData = sectionData[indexPath.row] as? Int ?? 0
+        let sectionData = tableData[indexPath.section]
+        let rowData = sectionData[indexPath.row]
         let type = IndicatorViewAnimationType(rawValue: rowData)
         let toastPlugin = ToastPluginImpl()
         toastPlugin.customBlock = { toastView in
@@ -190,8 +192,8 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             return
         }
         
-        let sectionData = tableData.object(at: indexPath.section) as! NSArray
-        let rowData = sectionData[indexPath.row] as? Int ?? 0
+        let sectionData = tableData[indexPath.section]
+        let rowData = sectionData[indexPath.row]
         let type = IndicatorViewAnimationType(rawValue: rowData)
         ViewPluginImpl.shared.customIndicatorView = { style in
             return IndicatorView(type: type)

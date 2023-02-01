@@ -10,6 +10,8 @@ import FWFramework
 
 class TestAlertController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -26,7 +28,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["警告框(简单)", "onAlert1"],
             ["警告框(详细)", "onAlert2"],
             ["确认框(简单)", "onConfirm1"],
@@ -55,14 +57,14 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     

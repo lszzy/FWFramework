@@ -10,6 +10,8 @@ import FWFramework
 
 class TestThreadController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     var queueCount: Int = 10000
     
     func setupTableStyle() -> UITableView.Style {
@@ -37,7 +39,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["Associated不加锁", "onLock1"],
             ["Associated加锁", "onLock2"],
             ["NSMutableArray", "onArray1"],
@@ -57,14 +59,14 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
