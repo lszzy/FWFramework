@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - TableViewControllerProtocol
 /// 表格视图控制器协议，可覆写
-@objc public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableViewDataSource, UITableViewDelegate {
+public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableViewDataSource, UITableViewDelegate {
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     var tableView: UITableView { get }
@@ -20,11 +20,11 @@ import UIKit
     /// 渲染表格视图样式，默认Plain
     func setupTableStyle() -> UITableView.Style
 
-    /// 渲染表格视图，setupSubviews之前调用，默认未实现
-    @objc optional func setupTableView()
+    /// 渲染表格视图，setupSubviews之前调用，默认空实现
+    func setupTableView()
 
     /// 渲染表格视图布局，setupSubviews之前调用，默认铺满
-    @objc optional func setupTableLayout()
+    func setupTableLayout()
     
 }
 
@@ -63,6 +63,9 @@ extension TableViewControllerProtocol where Self: UIViewController {
         return .plain
     }
     
+    /// 渲染表格视图，setupSubviews之前调用，默认空实现
+    public func setupTableView() {}
+    
     /// 渲染表格视图布局，setupSubviews之前调用，默认铺满
     public func setupTableLayout() {
         tableView.fw_pinEdges()
@@ -73,7 +76,9 @@ extension TableViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+TableViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func tableViewControllerViewDidLoad(_ viewController: UIViewController & TableViewControllerProtocol) {
+    @objc func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
+        guard let viewController = viewController as? UIViewController & TableViewControllerProtocol else { return }
+        
         let tableView = viewController.tableView
         tableView.dataSource = viewController
         tableView.delegate = viewController
@@ -81,8 +86,8 @@ internal extension ViewControllerManager {
         
         hookTableViewController?(viewController)
         
-        viewController.setupTableView?()
-        viewController.setupTableLayout?()
+        viewController.setupTableView()
+        viewController.setupTableLayout()
         tableView.setNeedsLayout()
         tableView.layoutIfNeeded()
     }
