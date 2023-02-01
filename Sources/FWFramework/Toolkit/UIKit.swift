@@ -759,29 +759,26 @@ import AdSupport
 
     /// 根据sortIndex排序subviews，需结合sortIndex使用
     public func fw_sortSubviews() {
-        let sortViews = NSMutableArray()
-        for view in self.subviews {
-            if view.fw_sortIndex != 0 {
-                sortViews.add(view)
+        var sortViews: [UIView] = []
+        for subview in self.subviews {
+            if subview.fw_sortIndex != 0 {
+                sortViews.append(subview)
             }
         }
         guard sortViews.count > 0 else { return }
         
         sortViews.sort { view1, view2 in
-            guard let view1 = view1 as? UIView,
-                  let view2 = view2 as? UIView else { return .orderedSame }
             if view1.fw_sortIndex < 0 && view2.fw_sortIndex < 0 {
-                return NSNumber(value: view2.fw_sortIndex).compare(NSNumber(value: view1.fw_sortIndex))
+                return view2.fw_sortIndex < view1.fw_sortIndex
             } else {
-                return NSNumber(value: view1.fw_sortIndex).compare(NSNumber(value: view2.fw_sortIndex))
+                return view1.fw_sortIndex < view2.fw_sortIndex
             }
         }
-        sortViews.enumerateObjects { view, _, _ in
-            guard let view = view as? UIView else { return }
-            if view.fw_sortIndex < 0 {
-                self.sendSubviewToBack(view)
+        for subview in sortViews {
+            if subview.fw_sortIndex < 0 {
+                self.sendSubviewToBack(subview)
             } else {
-                self.bringSubviewToFront(view)
+                self.bringSubviewToFront(subview)
             }
         }
     }
