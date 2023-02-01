@@ -9,7 +9,9 @@ import UIKit
 
 // MARK: - ViewControllerProtocol
 /// 视图控制器挂钩协议，可覆写
-public protocol ViewControllerProtocol: NSObjectProtocol {
+///
+/// 如果需要支持继承，建议基类在非extension中实现该协议的所有方法，从而忽略协议扩展的默认实现
+public protocol ViewControllerProtocol {
     
     /// 初始化完成方法，init自动调用，默认空实现
     func didInitialize()
