@@ -10,6 +10,8 @@ import FWFramework
 
 class TestTableController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = TestTableDynamicLayoutObject
+    
     static var isExpanded = false
     
     func setupTableStyle() -> UITableView.Style {
@@ -75,7 +77,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         cell.imageClicked = { [weak self] object in
             self?.onPhotoBrowser(cell, indexPath: indexPath)
         }
-        cell.object = tableData.object(at: indexPath.row) as? TestTableDynamicLayoutObject
+        cell.object = tableData[indexPath.row]
         return cell
     }
     
@@ -86,7 +88,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.fw.height(cellClass: TestTableDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
-            cell.object = self?.tableData.object(at: indexPath.row) as? TestTableDynamicLayoutObject
+            cell.object = self?.tableData[indexPath.row]
         }
     }
     
@@ -104,7 +106,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            tableData.removeObject(at: indexPath.row)
+            tableData.remove(at: indexPath.row)
             tableView.fw.clearHeightCache()
             tableView.reloadData()
         }
@@ -185,9 +187,9 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("刷新完成")
-            self.tableData.removeAllObjects()
+            self.tableData.removeAll()
             for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+                self.tableData.append(self.randomObject())
             }
             self.tableView.fw.clearHeightCache()
             self.tableView.reloadData()
@@ -206,7 +208,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             guard let self = self else { return }
             NSLog("加载完成")
             for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+                self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             
@@ -222,7 +224,6 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         
         var pictureUrls: [Any] = []
         for object in self.tableData {
-            guard let object = object as? TestTableDynamicLayoutObject else { continue }
             if object.imageUrl.fw.isFormatUrl || object.imageUrl.isEmpty {
                 pictureUrls.append(object.imageUrl)
             } else {

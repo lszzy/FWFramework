@@ -10,6 +10,8 @@ import FWFramework
 
 class TestCollectionController: UIViewController, CollectionViewControllerProtocol, UICollectionViewDelegateFlowLayout, CollectionViewDelegateWaterfallLayout {
     
+    typealias CollectionElement = TestCollectionDynamicLayoutObject
+    
     static var isExpanded = false
     var mode: Int = 0
     var isWaterfall = false
@@ -118,7 +120,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         let cell = TestCollectionDynamicLayoutCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
-        cell.object = collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+        cell.object = collectionData[indexPath.row]
         return cell
     }
     
@@ -141,15 +143,15 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         
         if mode == 0 {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (FW.screenWidth - 30) / 2.0 : FW.screenWidth, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+                cell.object = self?.collectionData[indexPath.row]
             }
         } else if mode == 1 {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: FW.screenWidth - 30, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+                cell.object = self?.collectionData[indexPath.row]
             }
         } else {
             return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, height: FW.screenHeight - FW.topBarHeight, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+                cell.object = self?.collectionData[indexPath.row]
             }
         }
     }
@@ -241,9 +243,9 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("刷新完成")
-            self.collectionData.removeAllObjects()
+            self.collectionData.removeAll()
             for _ in 0 ..< 4 {
-                self.collectionData.add(self.randomObject())
+                self.collectionData.append(self.randomObject())
             }
             self.collectionView.fw.clearSizeCache()
             self.collectionView.fw.reloadDataWithoutAnimation()
@@ -262,7 +264,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
             guard let self = self else { return }
             NSLog("加载完成")
             for _ in 0 ..< 4 {
-                self.collectionData.add(self.randomObject())
+                self.collectionData.append(self.randomObject())
             }
             self.collectionView.fw.reloadDataWithoutAnimation()
             

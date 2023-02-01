@@ -10,6 +10,8 @@ import FWFramework
 
 class TestToastController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     static var isCancelled = false
     static var count: Int = 0
     
@@ -18,7 +20,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["无文本", "onIndicator"],
             ["有文本(可取消)", "onIndicator2"],
             ["文本太长", "onIndicator3"],
@@ -37,14 +39,14 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     

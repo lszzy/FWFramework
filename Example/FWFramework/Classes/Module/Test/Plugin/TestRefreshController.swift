@@ -93,9 +93,9 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("刷新完成")
             
-            self.tableData.removeAllObjects()
+            self.tableData.removeAll()
             for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+                self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             self.tableView.fw.shouldRefreshing = self.tableData.count < 20
@@ -109,7 +109,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
             NSLog("加载完成")
             
             for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+                self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             self.tableView.fw.loadingFinished = self.tableData.count >= 20

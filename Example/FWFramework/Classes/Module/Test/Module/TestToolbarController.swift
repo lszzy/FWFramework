@@ -10,6 +10,8 @@ import FWFramework
 
 class TestToolbarController: UIViewController, TableViewControllerProtocol, ToolbarTitleViewDelegate, PopupMenuDelegate {
     
+    typealias TableElement = String
+    
     private var horizontalAlignment: UIControl.ContentHorizontalAlignment = .center
     
     private var titleView: ToolbarTitleView?
@@ -89,7 +91,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "显示左边的loading",
             "显示右边的accessoryView",
             "显示副标题",
@@ -130,10 +132,10 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         case 3:
             cell.textLabel?.text = titleView.style == .horizontal ? "切换为上下两行显示" : "切换为水平一行显示"
         case 4:
-            cell.textLabel?.text = tableData.object(at: indexPath.row) as? String
+            cell.textLabel?.text = tableData[indexPath.row]
             cell.detailTextLabel?.text = (horizontalAlignment == .left ? "左对齐" : (horizontalAlignment == .right ? "右对齐" : "居中对齐"))
         default:
-            cell.textLabel?.text = tableData.object(at: indexPath.row) as? String
+            cell.textLabel?.text = tableData[indexPath.row]
         }
         return cell
     }

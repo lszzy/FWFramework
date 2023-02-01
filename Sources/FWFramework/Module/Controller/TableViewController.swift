@@ -11,8 +11,8 @@ import UIKit
 /// 表格视图控制器协议，可覆写
 public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableViewDataSource, UITableViewDelegate {
     
-    /// 关联表格数据元素类型
-    associatedtype TableElement
+    /// 关联表格数据元素类型，默认Any
+    associatedtype TableElement = Any
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     var tableView: UITableView { get }

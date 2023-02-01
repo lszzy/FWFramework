@@ -73,7 +73,7 @@ class TestController: UIViewController {
     ]
     
     var isSearch: Bool = false
-    var searchResult = NSMutableArray()
+    var searchResult = [Any]()
     
     // MARK: - Subviews
     private lazy var searchBar: UISearchBar = {
@@ -109,7 +109,7 @@ class TestController: UIViewController {
         return titleView
     }()
     
-    private var displayData: NSArray {
+    private var displayData: [Any] {
         return isSearch ? searchResult : tableData
     }
     
@@ -153,7 +153,7 @@ extension TestController: TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: testData)
+        tableData.append(contentsOf: testData)
         tableView.reloadData()
     }
     
@@ -166,33 +166,33 @@ extension TestController {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionData = displayData.object(at: section) as! NSArray
-        let sectionList = sectionData.object(at: 1) as! NSArray
+        let sectionData = displayData[section] as! [Any]
+        let sectionList = sectionData[1] as! [Any]
         return sectionList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
         cell.accessoryType = .disclosureIndicator
-        let sectionData = displayData.object(at: indexPath.section) as! NSArray
-        let sectionList = sectionData.object(at: 1) as! NSArray
-        let rowData = sectionList.object(at: indexPath.row) as! NSArray
-        cell.textLabel?.text = rowData.object(at: 0) as? String
+        let sectionData = displayData[indexPath.section] as! [Any]
+        let sectionList = sectionData[1] as! [Any]
+        let rowData = sectionList[indexPath.row] as! [Any]
+        cell.textLabel?.text = rowData[0] as? String
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionData = displayData.object(at: section) as! NSArray
-        return sectionData.object(at: 0) as? String
+        let sectionData = displayData[section] as! [Any]
+        return sectionData[0] as? String
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let sectionData = displayData.object(at: indexPath.section) as! NSArray
-        let sectionList = sectionData.object(at: 1) as! NSArray
-        let rowData = sectionList.object(at: indexPath.row) as! NSArray
+        let sectionData = displayData[indexPath.section] as! [Any]
+        let sectionList = sectionData[1] as! [Any]
+        let rowData = sectionList[indexPath.row] as! [Any]
         
-        var className = rowData.object(at: 1) as! String
+        var className = rowData[1] as! String
         var controllerClass: AnyClass? = NSClassFromString(className)
         if controllerClass == nil {
             className = UIApplication.fw.appExecutable + "." + className
@@ -201,7 +201,7 @@ extension TestController {
         
         if let controllerClass = controllerClass as? UIViewController.Type {
             let viewController = controllerClass.init()
-            viewController.navigationItem.title = rowData.object(at: 0) as? String
+            viewController.navigationItem.title = rowData[0] as? String
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -227,7 +227,7 @@ extension TestController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         isSearch = !searchText.fw.trimString.isEmpty
         if !isSearch {
-            searchResult.removeAllObjects()
+            searchResult.removeAll()
             tableView.reloadData()
             return
         }
@@ -245,7 +245,7 @@ extension TestController: UISearchBarDelegate {
                 resultData.append([sectionData[0], sectionResult])
             }
         }
-        searchResult.setArray(resultData)
+        searchResult = resultData
         tableView.reloadData()
     }
     

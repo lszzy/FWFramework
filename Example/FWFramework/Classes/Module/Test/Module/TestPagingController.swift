@@ -245,9 +245,9 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     func setupLayout() {
         for i in 0 ..< rows {
             if isRefreshed {
-                tableData.add("我是刷新的测试数据\(i)")
+                tableData.append("我是刷新的测试数据\(i)")
             } else {
-                tableData.add("我是测试数据\(i)")
+                tableData.append("我是测试数据\(i)")
             }
         }
         collectionView.reloadData()
@@ -267,7 +267,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
                     self.tableData.insert("我是插入的测试数据\(4 - i)", at: 0)
                 }
             } else {
-                self.tableData.removeAllObjects()
+                self.tableData.removeAll()
                 self.setupLayout()
             }
             self.collectionView.reloadData()
@@ -285,9 +285,9 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             let rows = self.tableData.count
             for i in 0 ..< 5 {
                 if self.isRefreshed {
-                    self.tableData.add("我是刷新的测试数据\(rows + i)")
+                    self.tableData.append("我是刷新的测试数据\(rows + i)")
                 } else {
-                    self.tableData.add("我是测试数据\(rows + i)")
+                    self.tableData.append("我是测试数据\(rows + i)")
                 }
             }
             self.collectionView.reloadData()
@@ -326,7 +326,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
         let index = indexPath.section * 5 + indexPath.row
-        cell.textLabel?.text = tableData.object(at: index) as? String
+        cell.textLabel?.text = tableData[index] as? String
         return cell
     }
     
