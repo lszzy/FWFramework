@@ -31,6 +31,8 @@ class SettingsController: UIViewController {
 
 extension SettingsController: TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -58,9 +60,9 @@ extension SettingsController: TableViewControllerProtocol {
             loginButton.setTitle(FW.localized("mediatorLogin"), for: .normal)
         }
 
-        tableData.removeAllObjects()
-        tableData.add([FW.localized("languageTitle"), "onLanguage"])
-        tableData.add([FW.localized("themeTitle"), "onTheme"])
+        tableData.removeAll()
+        tableData.append([FW.localized("languageTitle"), "onLanguage"])
+        tableData.append([FW.localized("themeTitle"), "onTheme"])
         tableView.reloadData()
     }
     
@@ -76,9 +78,9 @@ extension SettingsController {
         let cell = UITableViewCell.fw.cell(tableView: tableView, style: .value1)
         cell.accessoryType = .disclosureIndicator
         
-        let rowData = tableData[indexPath.row] as! NSArray
-        let text = FW.safeValue(rowData[0] as? String)
-        let action = FW.safeValue(rowData[1] as? String)
+        let rowData = tableData[indexPath.row]
+        let text = FW.safeValue(rowData[0])
+        let action = FW.safeValue(rowData[1])
         cell.textLabel?.text = text
         
         if "onLanguage" == action {
@@ -103,8 +105,8 @@ extension SettingsController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData[indexPath.row] as! NSArray
-        let action = FW.safeValue(rowData[1] as? String)
+        let rowData = tableData[indexPath.row]
+        let action = FW.safeValue(rowData[1])
         fw.invokeMethod(Selector(action))
     }
     

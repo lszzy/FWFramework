@@ -10,6 +10,8 @@ import FWFramework
 
 class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     var hideToast = false
     
     private lazy var frameLabel: UILabel = {
@@ -55,7 +57,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["状态栏切换", "onStatusBar"],
             ["状态栏样式", "onStatusStyle"],
             ["导航栏切换", "onNavigationBar"],
@@ -67,7 +69,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             ["导航栏转场", "onTransitionBar"],
         ])
         if !hideToast {
-            tableData.addObjects(from: [
+            tableData.append(contentsOf: [
                 ["Present(默认)", "onPresent"],
                 ["Present(FullScreen)", "onPresent2"],
                 ["Present(PageSheet)", "onPresent3"],
@@ -75,11 +77,11 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
                 ["Present(Popover)", "onPresent5:"],
             ])
         } else {
-            tableData.addObjects(from: [
+            tableData.append(contentsOf: [
                 ["Dismiss", "onDismiss"]
             ])
         }
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["设备转向", "onOrientation"]
         ])
     }
@@ -111,14 +113,14 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]), object: indexPath)
     }
     

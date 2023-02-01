@@ -11,8 +11,8 @@ import UIKit
 /// 集合视图控制器协议，可覆写
 public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    /// 关联表格数据元素类型
-    associatedtype CollectionElement
+    /// 关联表格数据元素类型，默认Any
+    associatedtype CollectionElement = Any
     
     /// 集合视图，默认不显示滚动条
     var collectionView: UICollectionView { get }
