@@ -8,7 +8,7 @@
 
 import FWFramework
 
-// 为了支持继承，WebViewControllerProtocol必须放到非extension中实现
+// 为了支持继承，WebViewControllerProtocol必须放到非extension中实现，且必须实现子类中需要继承的所有方法
 class WebController: UIViewController, WebViewControllerProtocol {
     
     var requestUrl: String?
@@ -171,5 +171,13 @@ class WebController: UIViewController, WebViewControllerProtocol {
         }
         return true
     }
+    
+    var webBridgeEnabled = false
+    
+    func setupWebBridge(_ bridge: WebViewJsBridge) {}
+    
+    func setupSubviews() { }
+    
+    func setupLayout() {}
     
 }
