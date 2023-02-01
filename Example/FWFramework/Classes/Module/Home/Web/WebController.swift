@@ -49,7 +49,7 @@ class WebController: UIViewController {
 
 extension WebController: WebViewControllerProtocol {
     
-    @objc var webItems: NSArray? {
+    var webItems: [Any]? {
         if navigationItem.leftBarButtonItem != nil {
             return nil
         } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {

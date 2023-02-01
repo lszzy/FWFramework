@@ -64,7 +64,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+ScrollViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func scrollViewControllerViewDidLoad(_ viewController: UIViewController) {
+    func scrollViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & ScrollViewControllerProtocol else { return }
         
         let scrollView = viewController.scrollView

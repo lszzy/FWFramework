@@ -76,7 +76,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+TableViewControllerProtocol
 internal extension ViewControllerManager {
     
-    @objc func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
+    func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & TableViewControllerProtocol else { return }
         
         let tableView = viewController.tableView

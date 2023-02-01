@@ -45,13 +45,15 @@ extension ViewControllerProtocol where Self: UIViewController {
 /// 视图控制器拦截器
 public class ViewControllerIntercepter: NSObject {
     
-    public var initIntercepter: Selector?
-    public var viewDidLoadIntercepter: Selector?
-    public var viewWillAppearIntercepter: Selector?
-    public var viewDidLayoutSubviewsIntercepter: Selector?
-    public var viewDidAppearIntercepter: Selector?
-    public var viewWillDisappearIntercepter: Selector?
-    public var viewDidDisappearIntercepter: Selector?
+    public var initIntercepter: ((UIViewController) -> Void)?
+    public var viewDidLoadIntercepter: ((UIViewController) -> Void)?
+    public var viewWillAppearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var viewDidLayoutSubviewsIntercepter: ((UIViewController) -> Void)?
+    public var viewDidAppearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var viewWillDisappearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var viewDidDisappearIntercepter: ((UIViewController, Bool) -> Void)?
+    
+    fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
     
 }
 
@@ -90,49 +92,42 @@ public class ViewControllerManager: NSObject {
     
     private var intercepters: [String: ViewControllerIntercepter] = [:]
     
-    private static var classProtocols: [String: [String]] = [:]
+    private var classIntercepters: [String: [String]] = [:]
 
     /// 注册协议拦截器，提供拦截和调用方法
     /// - Parameters:
-    ///   - type: 控制器协议类型，如ScrollViewControllerProtocol.self
+    ///   - type: 控制器协议类型，必须继承ViewControllerProtocol
     ///   - intercepter: 控制器拦截器对象，传nil时取消注册
     public func registerProtocol<T>(_ type: T.Type, intercepter: ViewControllerIntercepter?) {
         let intercepterId = String.fw_safeString(type)
-        intercepters[intercepterId] = intercepter
+        if let intercepter = intercepter {
+            intercepter.intercepterValidator = { $0 is T }
+            intercepters[intercepterId] = intercepter
+        } else {
+            intercepters.removeValue(forKey: intercepterId)
+        }
     }
     
-    private static func protocols(with aClass: AnyClass) -> [String] {
-        // 同一个类只解析一次
-        let className = NSStringFromClass(aClass)
-        if let protocolList = classProtocols[className] {
-            return protocolList
+    private func intercepterNames(for viewController: UIViewController) -> [String] {
+        // 同一个类只解析一次，优先加载类缓存
+        let className = NSStringFromClass(viewController.classForCoder)
+        if let intercepterNames = classIntercepters[className] {
+            return intercepterNames
         }
         
-        // 解析协议列表，包含父协议。始终包含ViewControllerProtocol，且位于第一位
-        var protocolNames: [String] = []
-        protocolNames.append(String.fw_safeString(ViewControllerProtocol.self))
-        var targetClass: AnyClass? = aClass
-        while targetClass != nil {
-            var protocolCount: UInt32 = 0
-            let protocolList = class_copyProtocolList(targetClass, &protocolCount)
-            for i in 0 ..< Int(protocolCount) {
-                if let proto = protocolList?[i],
-                   //TODO: protocol_conformsToProtocol(proto, ViewControllerProtocol.self),
-                   let protocolName = String(utf8String: protocol_getName(proto)),
-                   !protocolNames.contains(protocolName) {
-                    protocolNames.append(protocolName)
-                }
-            }
-            
-            targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
-                break
+        // 解析拦截器列表，ViewControllerProtocol始终位于第一位
+        var intercepterNames: [String] = []
+        intercepterNames.append(String.fw_safeString(ViewControllerProtocol.self))
+        for (intercepterName, intercepter) in intercepters {
+            if intercepter.intercepterValidator?(viewController) ?? false,
+               !intercepterNames.contains(intercepterName) {
+                intercepterNames.append(intercepterName)
             }
         }
         
-        // 写入协议缓存
-        classProtocols[className] = protocolNames
-        return protocolNames
+        // 写入类拦截器缓存
+        classIntercepters[className] = intercepterNames
+        return intercepterNames
     }
     
     fileprivate static func swizzleViewController() {
@@ -249,19 +244,27 @@ public class ViewControllerManager: NSObject {
     
     fileprivate static func registerDefaultIntercepters() {
         let scrollIntercepter = ViewControllerIntercepter()
-        scrollIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.scrollViewControllerViewDidLoad(_:))
+        scrollIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.scrollViewControllerViewDidLoad(viewController)
+        }
         ViewControllerManager.shared.registerProtocol(ScrollViewControllerProtocol.self, intercepter: scrollIntercepter)
         
         let collectionIntercepter = ViewControllerIntercepter()
-        collectionIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.collectionViewControllerViewDidLoad(_:))
+        collectionIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.collectionViewControllerViewDidLoad(viewController)
+        }
         ViewControllerManager.shared.registerProtocol(CollectionViewControllerProtocol.self, intercepter: collectionIntercepter)
         
         let tableIntercepter = ViewControllerIntercepter()
-        tableIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.tableViewControllerViewDidLoad(_:))
+        tableIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.tableViewControllerViewDidLoad(viewController)
+        }
         ViewControllerManager.shared.registerProtocol(TableViewControllerProtocol.self, intercepter: tableIntercepter)
         
         let webIntercepter = ViewControllerIntercepter()
-        webIntercepter.viewDidLoadIntercepter = #selector(ViewControllerManager.webViewControllerViewDidLoad(_:))
+        webIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
+        }
         ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
     }
     
@@ -281,17 +284,15 @@ public class ViewControllerManager: NSObject {
         hookInit?(viewController)
         
         // 2. 拦截器init
-        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
-        for protocolName in protocolNames {
-            if let intercepter = intercepters[protocolName],
-               let initIntercepter = intercepter.initIntercepter,
-               self.responds(to: initIntercepter) {
-                self.perform(initIntercepter, with: viewController)
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.initIntercepter?(viewController)
             }
         }
         
-        // 3. 控制器didInitialize
         if let viewController = viewController as? ViewControllerProtocol {
+            // 3. 控制器didInitialize
             viewController.didInitialize()
         }
     }
@@ -301,12 +302,10 @@ public class ViewControllerManager: NSObject {
         hookViewDidLoad?(viewController)
         
         // 2. 拦截器viewDidLoad
-        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
-        for protocolName in protocolNames {
-            if let intercepter = intercepters[protocolName],
-               let viewDidLoadIntercepter = intercepter.viewDidLoadIntercepter,
-               self.responds(to: viewDidLoadIntercepter) {
-                self.perform(viewDidLoadIntercepter, with: viewController)
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidLoadIntercepter?(viewController)
             }
         }
         
@@ -321,7 +320,16 @@ public class ViewControllerManager: NSObject {
     }
     
     private func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewWillAppear
+        hookViewWillAppear?(viewController, animated)
         
+        // 2. 拦截器viewWillAppear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewWillAppearIntercepter?(viewController, animated)
+            }
+        }
     }
     
     private func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
@@ -329,26 +337,51 @@ public class ViewControllerManager: NSObject {
         hookViewDidLayoutSubviews?(viewController)
         
         // 2. 拦截器viewDidLayoutSubviews
-        let protocolNames = ViewControllerManager.protocols(with: viewController.classForCoder)
-        for protocolName in protocolNames {
-            if let intercepter = intercepters[protocolName],
-               let viewDidLayoutSubviewsIntercepter = intercepter.viewDidLayoutSubviewsIntercepter,
-               self.responds(to: viewDidLayoutSubviewsIntercepter) {
-                self.perform(viewDidLayoutSubviewsIntercepter, with: viewController)
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidLayoutSubviewsIntercepter?(viewController)
             }
         }
     }
     
     private func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewDidAppear
+        hookViewDidAppear?(viewController, animated)
         
+        // 2. 拦截器viewDidAppear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidAppearIntercepter?(viewController, animated)
+            }
+        }
     }
     
     private func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewWillDisappear
+        hookViewWillDisappear?(viewController, animated)
         
+        // 2. 拦截器viewWillDisappear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewWillDisappearIntercepter?(viewController, animated)
+            }
+        }
     }
     
     private func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewDidDisappear
+        hookViewDidDisappear?(viewController, animated)
         
+        // 2. 拦截器viewDidDisappear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidDisappearIntercepter?(viewController, animated)
+            }
+        }
     }
     
 }
