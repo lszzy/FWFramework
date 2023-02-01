@@ -41,14 +41,9 @@ open class GradientView: UIView {
     }
     
     /// 初始化并指定渐变颜色、位置和渐变方向
-    public init(colors: [UIColor]?, locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) {
-        super.init(frame: .zero)
+    public convenience init(colors: [UIColor]?, locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) {
+        self.init(frame: .zero)
         setColors(colors, locations: locations, startPoint: startPoint, endPoint: endPoint)
-    }
-    
-    /// 从NSCoder初始化
-    required public init?(coder: NSCoder) {
-        super.init(coder: coder)
     }
     
     /// 指定layerClass为CAGradientLayer
