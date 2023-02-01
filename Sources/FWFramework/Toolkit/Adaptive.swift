@@ -531,7 +531,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         
         // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
         let isPortrait = !UIDevice.fw_isLandscape
-        if isPortrait && fw.isPageSheet { return 0 }
+        if isPortrait && fw_isPageSheet { return 0 }
         
         // 3. 竖屏且异形屏，导航栏显示时布局高度固定
         if isPortrait && UIScreen.fw_isNotchedScreen {
@@ -562,7 +562,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_tabBarHeight: CGFloat {
         guard let tabController = self.tabBarController,
               !tabController.tabBar.isHidden else { return 0 }
-        if self.hidesBottomBarWhenPushed && !fw.isRoot { return 0 }
+        if self.hidesBottomBarWhenPushed && !fw_isRoot { return 0 }
         return tabController.tabBar.frame.height
     }
 
@@ -574,7 +574,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         var height = navController.toolbar.frame.height
         if let tabController = self.tabBarController,
            !tabController.tabBar.isHidden,
-           !(self.hidesBottomBarWhenPushed && !fw.isRoot) {
+           !(self.hidesBottomBarWhenPushed && !fw_isRoot) {
         } else {
             height += UIScreen.fw_safeAreaInsets.bottom
         }

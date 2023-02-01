@@ -11,11 +11,14 @@ import UIKit
 /// 集合视图控制器协议，可覆写
 public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    /// 关联表格数据元素类型
+    associatedtype CollectionElement
+    
     /// 集合视图，默认不显示滚动条
     var collectionView: UICollectionView { get }
 
     /// 集合数据，默认空数组，延迟加载
-    var collectionData: NSMutableArray { get }
+    var collectionData: [CollectionElement] { get set }
 
     /// 渲染集合视图内容布局，只调用一次
     func setupCollectionViewLayout() -> UICollectionViewLayout
@@ -32,26 +35,21 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
     
     /// 集合视图，默认不显示滚动条
     public var collectionView: UICollectionView {
-        if let result = fw.property(forName: "collectionView") as? UICollectionView {
+        if let result = fw_property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
             let result = UICollectionView(frame: .zero, collectionViewLayout: setupCollectionViewLayout())
             result.showsVerticalScrollIndicator = false
             result.showsHorizontalScrollIndicator = false
-            fw.setProperty(result, forName: "collectionView")
+            fw_setProperty(result, forName: "collectionView")
             return result
         }
     }
     
     /// 集合数据，默认空数组，延迟加载
-    public var collectionData: NSMutableArray {
-        if let result = fw.property(forName: "collectionData") as? NSMutableArray {
-            return result
-        } else {
-            let result = NSMutableArray()
-            fw.setProperty(result, forName: "collectionData")
-            return result
-        }
+    public var collectionData: [CollectionElement] {
+        get { return fw_property(forName: "collectionData") as? [CollectionElement] ?? [] }
+        set { fw_setProperty(newValue, forName: "collectionData") }
     }
     
     /// 渲染集合视图内容布局，只调用一次
@@ -76,7 +74,7 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
 internal extension ViewControllerManager {
     
     func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
-        guard let viewController = viewController as? UIViewController & CollectionViewControllerProtocol else { return }
+        guard let viewController = viewController as? any UIViewController & CollectionViewControllerProtocol else { return }
         
         let collectionView = viewController.collectionView
         collectionView.dataSource = viewController
