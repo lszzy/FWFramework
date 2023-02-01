@@ -116,11 +116,11 @@ internal extension ViewControllerManager {
         webView.delegate = viewController
         viewController.view.addSubview(webView)
         
-        webView.fw_observeProperty("title") { _, _ in
-            viewController.navigationItem.title = viewController.webView.title
+        webView.fw_observeProperty("title") { [weak viewController] _, _ in
+            viewController?.navigationItem.title = viewController?.webView.title
         }
-        viewController.fw_allowsPopGesture = {
-            return !viewController.webView.canGoBack
+        viewController.fw_allowsPopGesture = { [weak viewController] in
+            return !(viewController?.webView.canGoBack ?? false)
         }
         
         hookWebViewController?(viewController)
@@ -152,38 +152,38 @@ internal extension ViewControllerManager {
                 leftItems.append(webItem)
             } else {
                 if i == 0 {
-                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { _ in
-                        if viewController.webView.canGoBack {
-                            viewController.webView.goBack()
+                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { [weak viewController] _ in
+                        if viewController?.webView.canGoBack ?? false {
+                            viewController?.webView.goBack()
                         } else {
-                            if let navigationController = viewController.navigationController,
+                            if let navigationController = viewController?.navigationController,
                                navigationController.popViewController(animated: true) != nil    {
                                 return
                             }
-                            if viewController.presentingViewController != nil {
-                                viewController.dismiss(animated: true, completion: nil)
+                            if viewController?.presentingViewController != nil {
+                                viewController?.dismiss(animated: true, completion: nil)
                                 return
                             }
                             
-                            if let firstItem = viewController.webView.backForwardList.backList.first {
-                                viewController.webView.go(to: firstItem)
+                            if let firstItem = viewController?.webView.backForwardList.backList.first {
+                                viewController?.webView.go(to: firstItem)
                             }
                         }
                     }
                     leftItems.append(leftItem)
                 } else {
-                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { _ in
-                        if let navigationController = viewController.navigationController,
+                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { [weak viewController] _ in
+                        if let navigationController = viewController?.navigationController,
                            navigationController.popViewController(animated: true) != nil    {
                             return
                         }
-                        if viewController.presentingViewController != nil {
-                            viewController.dismiss(animated: true, completion: nil)
+                        if viewController?.presentingViewController != nil {
+                            viewController?.dismiss(animated: true, completion: nil)
                             return
                         }
                         
-                        if let firstItem = viewController.webView.backForwardList.backList.first {
-                            viewController.webView.go(to: firstItem)
+                        if let firstItem = viewController?.webView.backForwardList.backList.first {
+                            viewController?.webView.go(to: firstItem)
                         }
                     }
                     leftItems.append(leftItem)
