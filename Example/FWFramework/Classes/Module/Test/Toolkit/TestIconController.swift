@@ -56,7 +56,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
                 return !icon.lowercased().contains(text.lowercased())
             }
         }
-        collectionData.setArray(array)
+        collectionData = array
         collectionView.backgroundColor = AppTheme.backgroundColor
         collectionView.keyboardDismissMode = .onDrag
         collectionView.reloadData()
@@ -68,7 +68,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestIconCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
-        let name = collectionData.object(at: indexPath.item) as? String
+        let name = collectionData[indexPath.item] as? String
         cell.imageView.fw.themeImage = FW.iconImage(name.safeValue, 60)?.fw.themeImage
         cell.nameLabel.text = name
         return cell
@@ -76,7 +76,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let name = collectionData.object(at: indexPath.item) as? String
+        let name = collectionData[indexPath.item] as? String
         UIPasteboard.general.string = FW.safeString(name)
         fw.showMessage(text: name)
     }

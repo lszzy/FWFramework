@@ -44,7 +44,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "照片选择器(图片)",
             "照片选择器(LivePhoto)",
             "照片选择器(视频)",
@@ -72,7 +72,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let value = tableData.object(at: indexPath.row) as? String
+        let value = tableData[indexPath.row] as? String
         cell.textLabel?.text = value
         cell.accessoryType = .disclosureIndicator
         return cell

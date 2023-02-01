@@ -26,7 +26,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     }
    
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["定位", AuthorizeType.locationWhenInUse],
             ["后台定位", AuthorizeType.locationAlways],
             ["麦克风", AuthorizeType.microphone],
@@ -47,12 +47,12 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! NSArray
-        let type = rowData.object(at: 1) as! AuthorizeType
+        let rowData = tableData[indexPath.row] as! [Any]
+        let type = rowData[1] as! AuthorizeType
         
         let manager = AuthorizeManager.manager(type: type)
         let status = manager?.authorizeStatus()
-        var typeText = rowData.object(at: 0) as! String
+        var typeText = rowData[0] as! String
         var canSelect = false
         if status == .restricted {
             typeText += "受限制"
@@ -71,8 +71,8 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! NSArray
-        let type = rowData.object(at: 1) as! AuthorizeType
+        let rowData = tableData[indexPath.row] as! [Any]
+        let type = rowData[1] as! AuthorizeType
         
         let manager = AuthorizeManager.manager(type: type)
         if manager?.authorizeStatus() == .notDetermined {

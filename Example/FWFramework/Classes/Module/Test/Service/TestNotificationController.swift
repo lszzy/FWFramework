@@ -10,12 +10,14 @@ import FWFramework
 
 class TestNotificationController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupTableView() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["本地通知(不重复，立即)", "onNotification1"],
             ["本地通知(不重复，5秒后)", "onNotification2"],
             ["本地通知(重复，每1分钟)", "onNotification3"],
@@ -30,15 +32,15 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! NSArray
-        cell.textLabel?.text = rowData.object(at: 0) as? String
+        let rowData = tableData[indexPath.row]
+        cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! NSArray
-        let selector = NSSelectorFromString(rowData.object(at: 1) as! String)
+        let rowData = tableData[indexPath.row]
+        let selector = NSSelectorFromString(rowData[1])
         fw.invokeMethod(selector)
     }
     

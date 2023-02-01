@@ -10,6 +10,8 @@ import FWFramework
 
 class TestRouterController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     static var popCount: Int = 0
     
     func setupTableStyle() -> UITableView.Style {
@@ -52,7 +54,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: 3)
         FW.debug("url: %@", urlStr)
         
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["打开Web", "onOpenHttp"],
             ["打开完整Web", "onOpenHttp2"],
             ["打开异常Web", "onOpenHttp3"],
@@ -95,14 +97,14 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let rowData = tableData[indexPath.row]
         fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     

@@ -83,7 +83,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "选择单张图片",
             "选择多张图片",
             "多选仅图片",
@@ -97,7 +97,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView)
-        cell.textLabel?.text = tableData.object(at: indexPath.row) as? String
+        cell.textLabel?.text = tableData[indexPath.row] as? String
         cell.accessoryType = .disclosureIndicator
         return cell
     }
