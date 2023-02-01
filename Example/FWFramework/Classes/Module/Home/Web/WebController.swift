@@ -49,20 +49,18 @@ class WebController: UIViewController {
 
 extension WebController: WebViewControllerProtocol {
     
-    var webItems: [Any]? {
-        if navigationItem.leftBarButtonItem != nil {
-            return nil
-        } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
-            return [backImage, closeImage]
-        } else {
-            return nil
-        }
-    }
-    
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
         webView.allowsSchemeURL = true
+        
+        if navigationItem.leftBarButtonItem != nil {
+            webItems = nil
+        } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
+            webItems = [backImage, closeImage]
+        } else {
+            webItems = nil
+        }
     }
     
     func setupWebLayout() {

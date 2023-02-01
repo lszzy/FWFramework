@@ -245,14 +245,12 @@ class SwiftTestTableViewController: UIViewController, TableViewControllerProtoco
 }
 
 class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
-    var webItems: [Any]? = {
-        return [
+    func setupWebView() {
+        webItems = [
             Icon.backImage as Any,
             Icon.closeImage as Any
         ]
-    }()
-    
-    func setupWebView() {
+        
         webRequest = "http://kvm.wuyong.site/test.php"
     }
 }
