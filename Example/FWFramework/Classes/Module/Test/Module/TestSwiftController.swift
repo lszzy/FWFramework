@@ -26,7 +26,10 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             "WebViewController",
             "TestSwiftProtocol默认实现",
             "TestSwiftProtocol类实现",
-            "TestSwiftProtocol继承实现"
+            "TestSwiftProtocol继承实现",
+            "TestObjcProtocol默认实现",
+            "TestObjcProtocol类实现",
+            "TestObjcProtocol继承实现"
         ])
     }
     
@@ -60,6 +63,12 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             viewController = TestSwiftProtocolBaseController()
         case 7:
             viewController = TestSwiftProtocolViewController()
+        case 8:
+            viewController = TestObjcProtocolDefaultController()
+        case 9:
+            viewController = TestObjcProtocolBaseController()
+        case 10:
+            viewController = TestObjcProtocolViewController()
         default:
             viewController = SwiftTestViewController()
         }
@@ -308,34 +317,27 @@ class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {
 }
 
 protocol TestSwiftProtocol {
-    
     func testMethod()
-    
 }
 
 extension TestSwiftProtocol where Self: UIViewController {
-    
     func testMethod() {
         UIWindow.fw.showMessage(text: "TestSwiftProtocol.testMethod") { [weak self] in
             self?.fw.close()
         }
     }
-    
 }
 
 class TestSwiftProtocolDefaultController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
-    
     func setupSubviews() {
         view.backgroundColor = AppTheme.backgroundColor
         view.fw.addTapGesture { [weak self] _ in
             self?.testMethod()
         }
     }
-    
 }
 
 class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
-    
     func setupSubviews() {
         view.backgroundColor = AppTheme.backgroundColor
         view.fw.addTapGesture { [weak self] _ in
@@ -345,20 +347,64 @@ class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol,
     
     // 如果testMethod方法放到extension中，则不能继承; 非extension中可以继承
     func testMethod() {
-        UIWindow.fw.showMessage(text: "BaseController.testMethod") { [weak self] in
+        UIWindow.fw.showMessage(text: "SwiftBaseController.testMethod") { [weak self] in
             self?.fw.close()
         }
     }
-    
 }
 
 class TestSwiftProtocolViewController: TestSwiftProtocolBaseController {
-    
     // 父类testMethod必须放到非extension中，否则编译报错
     override func testMethod() {
-        UIWindow.fw.showMessage(text: "ViewController.testMethod") { [weak self] in
+        UIWindow.fw.showMessage(text: "SwiftViewController.testMethod") { [weak self] in
             self?.fw.close()
         }
     }
-    
+}
+
+@objc protocol TestObjcProtocol {
+    func testObjcMethod()
+    // @objc optional func testObjcMethod()
+}
+
+extension UIViewController {
+    @objc func testObjcMethod() {
+        UIWindow.fw.showMessage(text: "TestObjcProtocol.testObjcMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
+}
+
+class TestObjcProtocolDefaultController: UIViewController, ViewControllerProtocol, TestObjcProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.fw.addTapGesture { [weak self] _ in
+            self?.testObjcMethod()
+        }
+    }
+}
+
+class TestObjcProtocolBaseController: UIViewController, ViewControllerProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.fw.addTapGesture { [weak self] _ in
+            self?.testObjcMethod()
+        }
+    }
+}
+
+extension TestObjcProtocolBaseController: TestObjcProtocol {
+    override func testObjcMethod() {
+        UIWindow.fw.showMessage(text: "ObjcBaseController.testObjcMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
+}
+
+class TestObjcProtocolViewController: TestObjcProtocolBaseController {
+    override func testObjcMethod() {
+        UIWindow.fw.showMessage(text: "ObjcViewController.testObjcMethod") { [weak self] in
+            self?.fw.close()
+        }
+    }
 }

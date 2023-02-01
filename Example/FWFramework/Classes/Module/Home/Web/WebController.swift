@@ -8,7 +8,8 @@
 
 import FWFramework
 
-class WebController: UIViewController {
+// 为了支持继承，WebViewControllerProtocol必须放到非extension中实现
+class WebController: UIViewController, WebViewControllerProtocol {
     
     var requestUrl: String?
     
@@ -44,10 +45,6 @@ class WebController: UIViewController {
         self.toolbarHidden = self.navigationController?.isToolbarHidden ?? false
         navigationController?.isToolbarHidden = true
     }
-    
-}
-
-extension WebController: WebViewControllerProtocol {
     
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
