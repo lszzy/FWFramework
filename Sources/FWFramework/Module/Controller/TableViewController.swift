@@ -11,11 +11,14 @@ import UIKit
 /// 表格视图控制器协议，可覆写
 public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableViewDataSource, UITableViewDelegate {
     
+    /// 关联表格数据元素类型
+    associatedtype TableElement
+    
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     var tableView: UITableView { get }
 
     /// 表格数据，默认空数组，延迟加载
-    var tableData: NSMutableArray { get }
+    var tableData: [TableElement] { get set }
 
     /// 渲染表格视图样式，默认Plain
     func setupTableStyle() -> UITableView.Style
@@ -32,7 +35,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     public var tableView: UITableView {
-        if let result = fw.property(forName: "tableView") as? UITableView {
+        if let result = fw_property(forName: "tableView") as? UITableView {
             return result
         } else {
             let result = UITableView(frame: .zero, style: setupTableStyle())
@@ -42,20 +45,15 @@ extension TableViewControllerProtocol where Self: UIViewController {
             if #available(iOS 15.0, *) {
                 result.sectionHeaderTopPadding = 0
             }
-            fw.setProperty(result, forName: "tableView")
+            fw_setProperty(result, forName: "tableView")
             return result
         }
     }
     
     /// 表格数据，默认空数组，延迟加载
-    public var tableData: NSMutableArray {
-        if let result = fw.property(forName: "tableData") as? NSMutableArray {
-            return result
-        } else {
-            let result = NSMutableArray()
-            fw.setProperty(result, forName: "tableData")
-            return result
-        }
+    public var tableData: [TableElement] {
+        get { return fw_property(forName: "tableData") as? [TableElement] ?? [] }
+        set { fw_setProperty(newValue, forName: "tableData") }
     }
     
     /// 渲染表格视图样式，默认Plain
@@ -77,7 +75,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
 internal extension ViewControllerManager {
     
     func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
-        guard let viewController = viewController as? UIViewController & TableViewControllerProtocol else { return }
+        guard let viewController = viewController as? any UIViewController & TableViewControllerProtocol else { return }
         
         let tableView = viewController.tableView
         tableView.dataSource = viewController

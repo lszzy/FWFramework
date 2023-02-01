@@ -44,7 +44,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
     public var webView: WebView {
-        if let result = fw.property(forName: "webView") as? WebView {
+        if let result = fw_property(forName: "webView") as? WebView {
             return result
         } else {
             var result: WebView
@@ -53,7 +53,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
             } else {
                 result = WebView(frame: .zero)
             }
-            fw.setProperty(result, forName: "webView")
+            fw_setProperty(result, forName: "webView")
             return result
         }
     }
