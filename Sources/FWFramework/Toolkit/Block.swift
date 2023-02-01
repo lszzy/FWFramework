@@ -235,40 +235,31 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         let target = __FWBlockTarget()
         target.block = block
         self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
-        fw_blockTargets.add(target)
+        fw_blockTargets.append(target)
         return target.identifier
     }
 
     /// 根据唯一标志移除事件句柄
     public func fw_removeBlock(_ identifier: String) {
-        let targets = fw_blockTargets
-        targets.enumerateObjects { target, _, _ in
-            guard let target = target as? __FWBlockTarget else { return }
+        fw_blockTargets.forEach { target in
             if identifier == target.identifier {
                 self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
-                targets.remove(target)
             }
         }
+        fw_blockTargets.removeAll { identifier == $0.identifier }
     }
 
     /// 移除所有事件句柄
     public func fw_removeAllBlocks() {
-        let targets = fw_blockTargets
-        targets.enumerateObjects { target, _, _ in
-            guard let target = target as? __FWBlockTarget else { return }
+        fw_blockTargets.forEach { target in
             self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
         }
-        targets.removeAllObjects()
+        fw_blockTargets.removeAll()
     }
     
-    private var fw_blockTargets: NSMutableArray {
-        if let targets = fw_property(forName: "fw_blockTargets") as? NSMutableArray {
-            return targets
-        } else {
-            let targets = NSMutableArray()
-            fw_setProperty(targets, forName: "fw_blockTargets")
-            return targets
-        }
+    private var fw_blockTargets: [__FWBlockTarget] {
+        get { return fw_property(forName: "fw_blockTargets") as? [__FWBlockTarget] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_blockTargets") }
     }
     
 }
@@ -339,7 +330,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         target.block = block
         target.events = controlEvents
         self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: controlEvents)
-        fw_blockTargets.add(target)
+        fw_blockTargets.append(target)
         return target.identifier
     }
 
@@ -354,11 +345,9 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     private func fw_removeAllBlocks(for controlEvents: UIControl.Event, identifier: String?) {
-        let targets = fw_blockTargets
         var removes: [__FWBlockTarget] = []
-        for target in targets {
-            if let target = target as? __FWBlockTarget,
-               !target.events.intersection(controlEvents).isEmpty {
+        for target in fw_blockTargets {
+            if !target.events.intersection(controlEvents).isEmpty {
                 let shouldRemove = identifier == nil || target.identifier == identifier
                 if !shouldRemove { continue }
                 
@@ -374,7 +363,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
                 }
             }
         }
-        targets.removeObjects(in: removes)
+        fw_blockTargets.removeAll { removes.contains($0) }
     }
 
     /// 添加点击事件
@@ -399,14 +388,9 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         fw_removeAllBlocks(for: .touchUpInside)
     }
     
-    private var fw_blockTargets: NSMutableArray {
-        if let targets = fw_property(forName: "fw_blockTargets") as? NSMutableArray {
-            return targets
-        } else {
-            let targets = NSMutableArray()
-            fw_setProperty(targets, forName: "fw_blockTargets")
-            return targets
-        }
+    private var fw_blockTargets: [__FWBlockTarget] {
+        get { return fw_property(forName: "fw_blockTargets") as? [__FWBlockTarget] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_blockTargets") }
     }
     
 }
