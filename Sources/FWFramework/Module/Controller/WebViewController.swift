@@ -12,6 +12,14 @@ import FWObjC
 
 // MARK: - WebViewControllerProtocol
 /// 网页视图控制器协议，可覆写
+///
+/// WebViewControllerProtocol默认未处理WebView重用，如需开启，步骤如下：
+/// 1. 监听应用启动完成时配置webViewConfigurationBlock并调用enqueueWebView(with: WebView.self)预加载第一个WebView
+/// 2. 实现懒加载webView协议方法返回：WebViewPool.shared.dequeueWebView(with: WebView.self, webViewHolder: self)
+/// 3. 网页加载完成webViewFinishLoad钩子中调用：webView.fw.prepareNextWebView() 预加载下一个WebView
+/// 4. 控制器释放deinit中调用：WebViewPool.shared.enqueueWebView(webView) 回收到缓存池
+///
+/// 如遇到WebView内存过大引起的白屏问题时，可在webViewWebContentProcessDidTerminate方法中调用webView.reload()即可
 public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
