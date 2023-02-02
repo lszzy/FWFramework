@@ -62,12 +62,12 @@ public class WebViewPool: NSObject {
         return webView
     }
     
-    /// 创建一个 webview，并且将它放入到回收池中
+    /// 创建一个 webview并将它放入到回收池中，保证至少有一个可复用的webView
     public func enqueueWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self) {
         lock.wait()
         let webViewTypeString = NSStringFromClass(webViewType)
         var webViewArray = enqueueWebViews[webViewTypeString] ?? []
-        if webViewArray.count < webViewMaxReuseCount {
+        if webViewArray.count < 1 {
             let webView = generateInstance(with: webViewType)
             webViewArray.append(webView)
             enqueueWebViews[webViewTypeString] = webViewArray
