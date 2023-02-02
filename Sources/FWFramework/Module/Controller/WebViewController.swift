@@ -20,8 +20,8 @@ public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelega
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     var webRequest: Any? { get set }
 
-    /// 渲染网页配置，setupWebView之前调用，默认返回nil
-    func setupWebConfiguration() -> WKWebViewConfiguration?
+    /// 渲染网页配置，setupWebView之前调用，默认空实现
+    func setupWebConfiguration(_ configuration: WKWebViewConfiguration)
 
     /// 渲染网页视图，setupSubviews之前调用，默认空实现
     func setupWebView()
@@ -41,12 +41,9 @@ extension WebViewControllerProtocol where Self: UIViewController {
         if let result = fw_property(forName: "webView") as? WebView {
             return result
         } else {
-            var result: WebView
-            if let configuration = setupWebConfiguration() {
-                result = WebView(frame: .zero, configuration: configuration)
-            } else {
-                result = WebView(frame: .zero)
-            }
+            let configuration = WKWebView.fw_defaultConfiguration()
+            setupWebConfiguration(configuration)
+            let result = WebView(frame: .zero, configuration: configuration)
             fw_setProperty(result, forName: "webView")
             return result
         }
@@ -66,10 +63,8 @@ extension WebViewControllerProtocol where Self: UIViewController {
         }
     }
     
-    /// 渲染网页配置，setupWebView之前调用，默认返回nil
-    public func setupWebConfiguration() -> WKWebViewConfiguration? {
-        return nil
-    }
+    /// 渲染网页配置，setupWebView之前调用，默认空实现
+    public func setupWebConfiguration(_ configuration: WKWebViewConfiguration) {}
 
     /// 渲染网页视图，setupSubviews之前调用，默认空实现
     public func setupWebView() {}

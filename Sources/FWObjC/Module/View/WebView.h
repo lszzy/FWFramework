@@ -33,9 +33,6 @@ NS_SWIFT_NAME(WebViewDelegate)
 NS_SWIFT_NAME(WebView)
 @interface __FWWebView : WKWebView
 
-/// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
-@property (class, nonatomic, strong) WKProcessPool *processPool;
-
 /// 事件代理，包含navigationDelegate和UIDelegate
 @property (nonatomic, weak, nullable) id<__FWWebViewDelegate> delegate;
 

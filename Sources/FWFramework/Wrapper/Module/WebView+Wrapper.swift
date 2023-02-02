@@ -21,10 +21,16 @@ extension Wrapper where Base: UIProgressView {
 }
 
 extension Wrapper where Base: WKWebView {
-
-    /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-    public var userAgent: String {
-        return base.fw_userAgent
+    
+    /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
+    public static var processPool: WKProcessPool {
+        get { return Base.fw_processPool }
+        set { Base.fw_processPool = newValue }
+    }
+    
+    /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
+    public static func defaultConfiguration() -> WKWebViewConfiguration {
+        return Base.fw_defaultConfiguration()
     }
     
     /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
@@ -40,6 +46,11 @@ extension Wrapper where Base: WKWebView {
     /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
     public static var requestUserAgent: String {
         return Base.fw_requestUserAgent
+    }
+    
+    /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+    public var userAgent: String {
+        return base.fw_userAgent
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
