@@ -50,7 +50,7 @@
 
 @interface WKWebView ()
 
-@property (class, nonatomic, copy, readonly) NSString *__fw_extensionUserAgent;
++ (WKWebViewConfiguration *)__fw_defaultConfiguration;
 
 @end
 
@@ -244,8 +244,6 @@
 
 @end
 
-static WKProcessPool *fwStaticProcessPool = nil;
-
 @interface __FWWebView ()
 
 @property (nonatomic, strong) __FWWebViewDelegateProxy *delegateProxy;
@@ -256,25 +254,9 @@ static WKProcessPool *fwStaticProcessPool = nil;
 
 @implementation __FWWebView
 
-+ (WKProcessPool *)processPool
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (!fwStaticProcessPool) fwStaticProcessPool = [[WKProcessPool alloc] init];
-    });
-    return fwStaticProcessPool;
-}
-
-+ (void)setProcessPool:(WKProcessPool *)processPool
-{
-    if (processPool) fwStaticProcessPool = processPool;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-    configuration.applicationNameForUserAgent = [WKWebView __fw_extensionUserAgent];
-    configuration.processPool = [__FWWebView processPool];
+    WKWebViewConfiguration *configuration = [WKWebView __fw_defaultConfiguration];
     return [self initWithFrame:frame configuration:configuration];
 }
 

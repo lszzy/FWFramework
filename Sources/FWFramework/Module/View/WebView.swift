@@ -19,8 +19,105 @@ public class WebViewPool: NSObject {
     /// 单例模式
     public static let shared = WebViewPool()
     
-    /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认nil
-    public var webViewReuseLoadUrlStr: String?
+    /// webView最大缓存数量，默认5个
+    public var webViewMaxReuseCount: Int = 5
+    
+    /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认空
+    public var webViewReuseLoadUrlStr = ""
+    
+    /// webview最大重用次数，默认为最大无限制
+    public var webViewMaxReuseTimes: Int = .max
+    
+    /// 构建 webView configuration，作为所有复用 webView 提供预先的默认 configuration
+    public var webViewConfigurationBlock: ((WKWebViewConfiguration) -> Void)?
+    
+    private var lock: DispatchSemaphore = .init(value: 1)
+    private var dequeueWebViews: [String: [WKWebView]] = [:]
+    private var enqueueWebViews: [String: [WKWebView]] = [:]
+    
+    // MARK: - Lifecycle
+    /// 初始化方法，内存警告时自动清理全部
+    public override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(clearAllReusableWebViews), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
+    }
+    
+    /// 析构方法
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        dequeueWebViews.removeAll()
+        enqueueWebViews.removeAll()
+    }
+    
+    // MARK: - Public
+    /// 获得一个可复用的webview
+    /// - Parameters:
+    ///   - webViewClass: webview的自定义class
+    ///   - webViewHolder: webview的持有者，用于自动回收webview
+    /// - Returns: 可复用的webview
+    public func dequeueWebView(with webViewClass: AnyClass = WKWebView.self, webViewHolder: NSObject?) -> WKWebView? {
+        guard webViewClass.isSubclass(of: WKWebView.self) else { return nil }
+        
+        tryCompactWeakHolderOfWebView()
+        let dequeueWebView = getWebView(with: webViewClass)
+        dequeueWebView?.fw_holderObject = webViewHolder
+        return dequeueWebView
+    }
+    
+    /// 创建一个 webview，并且将它放入到回收池中
+    public func enqueueWebView(with webViewClass: AnyClass = WKWebView.self) {
+        guard webViewClass.isSubclass(of: WKWebView.self) else { return }
+    }
+    
+    /// 回收可复用的WKWebView
+    public func enqueueWebView(_ webView: WKWebView?) {
+        
+    }
+    
+    /// 回收并销毁WKWebView，并且将之从回收池里删除
+    public func removeReusableWebView(_ webView: WKWebView?) {
+        
+    }
+    
+    /// 销毁在回收池中特定Class的WebView
+    public func clearReusableWebViews(with webViewClass: AnyClass = WKWebView.self) {
+        
+    }
+    
+    /// 销毁全部在回收池中的WebView
+    @objc public func clearAllReusableWebViews() {
+        
+    }
+    
+    /// 重新刷新在回收池中的WebView
+    public func reloadAllReusableWebViews() {
+        
+    }
+    
+    /// 判断回收池中是否包含特定Class的WebView
+    public func containsReusableWebView(with webViewClass: AnyClass = WKWebView.self) -> Bool {
+        return false
+    }
+    
+    // MARK: - Private
+    private func tryCompactWeakHolderOfWebView() {
+        
+    }
+    
+    private func recycleWebView(_ webView: WKWebView?) {
+        
+    }
+    
+    private func getWebView(with webViewClass: AnyClass) -> WKWebView? {
+        return nil
+    }
+    
+    private func generateInstance(webViewClass: AnyClass) -> WKWebView {
+        let configuration = WKWebView.fw_defaultConfiguration()
+        webViewConfigurationBlock?(configuration)
+        let webViewType = webViewClass as! WKWebView.Type
+        return webViewType.init(frame: .zero, configuration: configuration)
+    }
     
 }
 
@@ -75,8 +172,8 @@ public protocol WebViewReusableProtocol {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        if let reuseLoadUrl = WebViewPool.shared.webViewReuseLoadUrlStr, !reuseLoadUrl.isEmpty {
-            load(URLRequest(url: URL.fw_safeURL(reuseLoadUrl)))
+        if !WebViewPool.shared.webViewReuseLoadUrlStr.isEmpty {
+            load(URLRequest(url: URL.fw_safeURL(WebViewPool.shared.webViewReuseLoadUrlStr)))
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))
         }
@@ -125,16 +222,17 @@ public protocol WebViewReusableProtocol {
 
 // MARK: - WKWebView+WebView
 @_spi(FW) extension WKWebView {
-
-    /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-    public var fw_userAgent: String {
-        if let userAgent = customUserAgent, !userAgent.isEmpty {
-            return userAgent
-        }
-        if let userAgent = fw_invokeGetter("userAgent") as? String, !userAgent.isEmpty {
-            return userAgent
-        }
-        return WKWebView.fw_browserUserAgent
+    
+    /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
+    public static var fw_processPool = WKProcessPool()
+    
+    /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
+    @objc(__fw_defaultConfiguration)
+    public static func fw_defaultConfiguration() -> WKWebViewConfiguration {
+        let configuration = WKWebViewConfiguration()
+        configuration.applicationNameForUserAgent = fw_extensionUserAgent
+        configuration.processPool = fw_processPool
+        return configuration
     }
     
     /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
@@ -145,7 +243,6 @@ public protocol WebViewReusableProtocol {
     }
 
     /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-    @objc(__fw_extensionUserAgent)
     public static var fw_extensionUserAgent: String {
         let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw_appExecutable, UIApplication.fw_appVersion)
         return userAgent
@@ -155,6 +252,17 @@ public protocol WebViewReusableProtocol {
     public static var fw_requestUserAgent: String {
         let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw_appExecutable, UIApplication.fw_appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
         return userAgent
+    }
+    
+    /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+    public var fw_userAgent: String {
+        if let userAgent = customUserAgent, !userAgent.isEmpty {
+            return userAgent
+        }
+        if let userAgent = fw_invokeGetter("userAgent") as? String, !userAgent.isEmpty {
+            return userAgent
+        }
+        return WKWebView.fw_browserUserAgent
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
