@@ -103,6 +103,11 @@ class WebController: UIViewController, WebViewControllerProtocol {
         return true
     }
     
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        // 解决内存过大引起的白屏问题
+        webView.reload()
+    }
+    
     // MARK: - Private
     func setupToolbar() {
         let backItem = UIBarButtonItem.fw.item(object: Icon.backImage) { [weak self] _ in
