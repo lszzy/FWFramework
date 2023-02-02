@@ -87,4 +87,27 @@ extension Wrapper where Base: WKWebView {
         base.fw_setupNavigationItems(viewController)
     }
     
+    /// 持有者对象，弱引用
+    public weak var holderObject: NSObject? {
+        get { return base.fw_holderObject }
+        set { base.fw_holderObject = newValue }
+    }
+    
+    /// 重用次数
+    public var reusedTimes: Int {
+        get { return base.fw_reusedTimes }
+        set { base.fw_reusedTimes = newValue }
+    }
+    
+    /// 是否已失效，将自动从缓存池移除
+    public var isInvalid: Bool {
+        get { return base.fw_isInvalid }
+        set { base.fw_isInvalid = newValue }
+    }
+    
+    /// 根据需要预加载下一个WebView实例，供下个页面直接使用，一般在didFinishNavigation中调用
+    public func prepareNextWebViewIfNeed() {
+        base.fw_prepareNextWebViewIfNeed()
+    }
+    
 }

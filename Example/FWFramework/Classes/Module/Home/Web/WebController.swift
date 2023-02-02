@@ -8,6 +8,20 @@
 
 import FWFramework
 
+@objc extension Autoloader {
+    func loadWebView() {
+        var observer: Any = ""
+        observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
+            WebViewPool.shared.webViewConfigurationBlock = { configuration in
+                configuration.allowsInlineMediaPlayback = true
+            }
+            WebViewPool.shared.enqueueWebView(with: WebView.classForCoder())
+            
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+}
+
 // 为了支持继承，WebViewControllerProtocol必须放到非extension中实现，且必须实现子类中需要继承的所有方法
 class WebController: UIViewController, WebViewControllerProtocol {
     
@@ -29,6 +43,10 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        WebViewPool.shared.enqueueWebView(webView)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,6 +66,10 @@ class WebController: UIViewController, WebViewControllerProtocol {
     }
     
     // MARK: - WebViewControllerProtocol
+    lazy var webView: WebView = {
+        return WebViewPool.shared.dequeueWebView(with: WebView.self, webViewHolder: self)
+    }()
+    
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
@@ -82,6 +104,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fw.isLoaded = true
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+        
+        // 预加载下一个WebView
+        webView.fw.prepareNextWebViewIfNeed()
     }
     
     func webViewFailLoad(_ error: Error) {
