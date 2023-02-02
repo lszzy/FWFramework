@@ -43,13 +43,6 @@ import FWObjC
 }
 
 @_spi(FW) extension WKWebView {
-    
-    /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    @objc(__fw_jsBridge)
-    public var fw_jsBridge: WebViewJsBridge? {
-        get { fw_property(forName: "fw_jsBridge") as? WebViewJsBridge }
-        set { fw_setProperty(newValue, forName: "fw_jsBridge") }
-    }
 
     /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
     public var fw_userAgent: String {
@@ -89,6 +82,30 @@ import FWObjC
         WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
             completion?()
         }
+    }
+    
+    /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
+    @objc(__fw_jsBridge)
+    public var fw_jsBridge: WebViewJsBridge? {
+        get { fw_property(forName: "fw_jsBridge") as? WebViewJsBridge }
+        set { fw_setProperty(newValue, forName: "fw_jsBridge") }
+    }
+    
+    /// 是否启用Javascript桥接器，需结合setupJsBridge使用
+    public var fw_jsBridgeEnabled: Bool {
+        get { fw_propertyBool(forName: "fw_jsBridgeEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "fw_jsBridgeEnabled") }
+    }
+    
+    /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
+    @discardableResult
+    public func fw_setupJsBridge() -> WebViewJsBridge? {
+        guard fw_jsBridgeEnabled else { return nil }
+        let delegate = self.navigationDelegate
+        let jsBridge = WebViewJsBridge(for: self)
+        jsBridge.setWebViewDelegate(delegate)
+        self.fw_jsBridge = jsBridge
+        return jsBridge
     }
     
 }

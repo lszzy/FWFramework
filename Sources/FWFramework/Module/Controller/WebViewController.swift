@@ -31,11 +31,8 @@ public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelega
 
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
     func setupWebLayout()
-    
-    /// 是否启用网页桥接，启用后自动调用setupWebBridge，默认false
-    var webBridgeEnabled: Bool { get set }
 
-    /// 渲染网页桥接，setupSubviews之前调用，默认空实现
+    /// 渲染网页桥接，jsBridgeEnabled启用后生效，setupSubviews之前调用，默认空实现
     func setupWebBridge(_ bridge: WebViewJsBridge)
     
 }
@@ -95,12 +92,6 @@ extension WebViewControllerProtocol where Self: UIViewController {
         webView.fw_pinEdges()
     }
     
-    /// 是否启用网页桥接，启用后自动调用setupWebBridge，默认false
-    public var webBridgeEnabled: Bool {
-        get { fw_propertyBool(forName: "webBridgeEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "webBridgeEnabled") }
-    }
-    
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现
     public func setupWebBridge(_ bridge: WebViewJsBridge) {}
     
@@ -130,12 +121,7 @@ internal extension ViewControllerManager {
         webView.setNeedsLayout()
         webView.layoutIfNeeded()
         
-        if viewController.webBridgeEnabled {
-            let delegate = webView.navigationDelegate
-            let bridge = WebViewJsBridge(for: webView)
-            bridge.setWebViewDelegate(delegate)
-            webView.fw_jsBridge = bridge
-            
+        if webView.fw_jsBridgeEnabled, let bridge = webView.fw_setupJsBridge() {
             viewController.setupWebBridge(bridge)
         }
         
