@@ -1044,6 +1044,48 @@ typedef struct __ProxyBlock {
 #endif
 }
 
++ (NSString *)ipAddress:(NSString *)url {
+    if ([url hasPrefix:@"http"]) {
+        NSURL *nsurl = [NSURL URLWithString:url];
+        if (nsurl.host.length > 0) {
+            url = nsurl.host;
+        } else {
+            url = [[url stringByReplacingOccurrencesOfString:@"http://" withString:@""] stringByReplacingOccurrencesOfString:@"https://" withString:@""];
+        }
+    }
+    
+    Boolean result, bResolved;
+    CFHostRef hostRef;
+    CFArrayRef addresses = NULL;
+    NSMutableArray *ipsArr = [[NSMutableArray alloc] init];
+    CFStringRef hostNameRef = CFStringCreateWithCString(kCFAllocatorDefault, [url cStringUsingEncoding:NSASCIIStringEncoding], kCFStringEncodingASCII);
+    
+    hostRef = CFHostCreateWithName(kCFAllocatorDefault, hostNameRef);
+    result = CFHostStartInfoResolution(hostRef, kCFHostAddresses, NULL);
+    if (result == TRUE) {
+        addresses = CFHostGetAddressing(hostRef, &result);
+    }
+    bResolved = result == TRUE ? true : false;
+    
+    if (bResolved) {
+        struct sockaddr_in *remoteAddr;
+        for(int i = 0; i < CFArrayGetCount(addresses); i++){
+            CFDataRef saData = (CFDataRef)CFArrayGetValueAtIndex(addresses, i);
+            remoteAddr = (struct sockaddr_in *)CFDataGetBytePtr(saData);
+            if (remoteAddr != NULL) {
+                char ip[16];
+                strcpy(ip, inet_ntoa(remoteAddr->sin_addr));
+                NSString *ipStr = [NSString stringWithCString:ip encoding:NSUTF8StringEncoding];
+                [ipsArr addObject:ipStr];
+            }
+        }
+    }
+    if (ipsArr.count) {
+        return ipsArr[0];
+    }
+    return nil;
+}
+
 @end
 
 #pragma mark - __FWEncrypt

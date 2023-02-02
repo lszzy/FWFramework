@@ -14,6 +14,7 @@
 		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
 		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
+		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
 		2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */; };
@@ -103,6 +104,7 @@
 		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
 		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
+		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
 		2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPagingController.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				2FB9E30328C0A69B00C78850 /* TestCacheController.swift */,
 				2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */,
 				2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */,
+				2F36CBB8298B833300444127 /* TestRequestController.swift */,
 				2FDA141A28D2D42C00985FBD /* TestThemeController.swift */,
 				2F6A414A28B70E60003719E7 /* TestVideoController.swift */,
 			);
@@ -813,6 +816,7 @@
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
 				2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */,
 				2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */,
+				2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */,
 				2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */,
 				2FB11EF528DB055C00DCB965 /* TestGridController.swift in Sources */,
 				2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */,
