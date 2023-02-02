@@ -1044,21 +1044,16 @@ typedef struct __ProxyBlock {
 #endif
 }
 
-+ (NSString *)ipAddress:(NSString *)url {
-    if ([url hasPrefix:@"http"]) {
-        NSURL *nsurl = [NSURL URLWithString:url];
-        if (nsurl.host.length > 0) {
-            url = nsurl.host;
-        } else {
-            url = [[url stringByReplacingOccurrencesOfString:@"http://" withString:@""] stringByReplacingOccurrencesOfString:@"https://" withString:@""];
-        }
++ (NSString *)ipAddress:(NSString *)host {
+    if ([host hasPrefix:@"http"]) {
+        host = [NSURL URLWithString:host].host;
     }
     
     Boolean result, bResolved;
     CFHostRef hostRef;
     CFArrayRef addresses = NULL;
     NSMutableArray *ipsArr = [[NSMutableArray alloc] init];
-    CFStringRef hostNameRef = CFStringCreateWithCString(kCFAllocatorDefault, [url cStringUsingEncoding:NSASCIIStringEncoding], kCFStringEncodingASCII);
+    CFStringRef hostNameRef = CFStringCreateWithCString(kCFAllocatorDefault, [host cStringUsingEncoding:NSASCIIStringEncoding], kCFStringEncodingASCII);
     
     hostRef = CFHostCreateWithName(kCFAllocatorDefault, hostNameRef);
     result = CFHostStartInfoResolution(hostRef, kCFHostAddresses, NULL);
