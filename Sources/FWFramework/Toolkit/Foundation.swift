@@ -1200,6 +1200,51 @@ extension FW {
 }
 
 // MARK: - UserDefaults+Foundation
+@_spi(FW) extension URLSession {
+    
+    /// 是否禁止网络代理抓包，不影响App请求，默认false
+    public static var fw_httpProxyDisabled = false {
+        didSet {
+            if fw_httpProxyDisabled {
+                fw_swizzleHttpProxy()
+            }
+        }
+    }
+    
+    private static var fw_staticHttpProxySwizzled = false
+    
+    private static func fw_swizzleHttpProxy() {
+        guard !fw_staticHttpProxySwizzled else { return }
+        fw_staticHttpProxySwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            URLSession.self,
+            selector: #selector(URLSession.init(configuration:)),
+            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
+            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
+        ) { store in { selfObject, configuration in
+            if fw_httpProxyDisabled {
+                configuration.connectionProxyDictionary = [:]
+            }
+            return store.original(selfObject, store.selector, configuration)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            URLSession.self,
+            selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
+            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
+            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
+        ) { store in { selfObject, configuration, delegate, delegateQueue in
+            if fw_httpProxyDisabled {
+                configuration.connectionProxyDictionary = [:]
+            }
+            return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
+        }}
+    }
+    
+}
+
+// MARK: - UserDefaults+Foundation
 @_spi(FW) extension UserDefaults {
     
     /// 从standard读取对象，支持unarchive对象

@@ -684,6 +684,17 @@ extension Wrapper where Base == URL {
     
 }
 
+// MARK: - URLSession+Foundation
+extension Wrapper where Base: URLSession {
+    
+    /// 是否禁止网络代理抓包，不影响App请求，默认false
+    public static var httpProxyDisabled: Bool {
+        get { return Base.fw_httpProxyDisabled }
+        set { Base.fw_httpProxyDisabled = newValue }
+    }
+    
+}
+
 // MARK: - UserDefaults+Foundation
 extension Wrapper where Base: UserDefaults {
     
