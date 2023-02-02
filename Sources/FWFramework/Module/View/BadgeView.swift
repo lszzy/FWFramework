@@ -7,68 +7,97 @@
 
 import UIKit
 
+/// 提醒灯视图协议
+public protocol BadgeViewProtocol {
+    /// 提醒灯文本标签，默认nil
+    var badgeLabel: UILabel? { get }
+    /// 通用提醒灯右上偏移值，默认zero
+    var badgeOffset: CGPoint { get }
+    /// 导航栏提醒灯右上偏移值，默认badgeOffset
+    var navbarBadgeOffset: CGPoint { get }
+    /// 标签栏提醒灯右上偏移值，默认badgeOffset
+    var tabbarBadgeOffset: CGPoint { get }
+}
+
+/// 提醒灯视图协议默认实现
+extension BadgeViewProtocol {
+    public var badgeLabel: UILabel? { nil }
+    public var badgeOffset: CGPoint { .zero }
+    public var navbarBadgeOffset: CGPoint { badgeOffset }
+    public var tabbarBadgeOffset: CGPoint { badgeOffset }
+}
+
 /// 自带提醒灯样式
 public enum BadgeStyle: Int {
-    /// 小红点，(10)*(10)
-    case dot = 1
-    /// 小文本，同系统标签，(18+)*(18)，12号普通字体
+    /// 自定义
+    case custom = 0
+    /// 小红点，圆形，默认(10)*(10)
+    case dot
+    /// 小文本，同系统标签，默认(18+)*(18)，12号普通字体
     case small
-    /// 大文本，同系统桌面，(24+)*(24)，14号普通字体
+    /// 大文本，同系统桌面，默认(24+)*(24)，14号普通字体
     case big
 }
 
 /// 提醒灯视图，默认禁用userInteractionEnabled
-open class BadgeView: UIView {
+open class BadgeView: UIView, BadgeViewProtocol {
     
-    /// 提醒灯样式，默认nil自定义
-    open private(set) var badgeStyle: BadgeStyle?
+    /// 提醒灯样式，默认自定义
+    open private(set) var badgeStyle: BadgeStyle = .custom
     
     /// 提醒灯文本标签。可自定义样式
     open private(set) var badgeLabel: UILabel?
     
     /// 提醒灯右上偏移值
     open private(set) var badgeOffset: CGPoint = .zero
-
-    /// 初始化自带样式提醒灯。宽高自动布局，其它手工布局
-    public init(badgeStyle: BadgeStyle) {
-        super.init(frame: .zero)
-        self.badgeStyle = badgeStyle
-        switch badgeStyle {
-        case .small:
-            setup(badgeHeight: 18, badgeOffset: CGPoint(x: 7, y: 7), textInset: 5, fontSize: 12)
-        case .big:
-            setup(badgeHeight: 24, badgeOffset: CGPoint(x: 9, y: 9), textInset: 6, fontSize: 14)
-        default:
-            setup(dotSize: 10, badgeOffset: CGPoint(x: 3, y: 3))
-        }
+    
+    /// 导航栏提醒灯右上偏移值，默认badgeOffset
+    open var navbarBadgeOffset: CGPoint {
+        return badgeStyle == .custom ? badgeOffset : .zero
     }
     
-    /// 初始化自定义红点提醒灯。宽高自动布局，其它手工布局
-    public init(dotSize: CGFloat, badgeOffset: CGPoint) {
-        super.init(frame: .zero)
-        setup(dotSize: dotSize, badgeOffset: badgeOffset)
+    /// 标签栏提醒灯右上偏移值，默认badgeOffset
+    open var tabbarBadgeOffset: CGPoint {
+        return badgeStyle == .custom ? badgeOffset : CGPoint(x: badgeOffset.x, y: -2.0)
     }
-
-    /// 初始化自定义文本提醒灯。宽高自动布局，其它手工布局
-    public init(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
+    
+    /// 初始化方法，宽高自动布局，其它手工布局
+    /// - Parameters:
+    ///   - badgeStyle: 提醒灯样式
+    ///   - badgeHeight: 提醒灯高度，nil时使用默认
+    ///   - badgeOffset: 提醒灯偏移，nil时使用默认
+    ///   - textInset: 文本提醒灯边距，nil时使用默认
+    ///   - fontSize: 文本提醒灯字体，nil时使用默认
+    public init(badgeStyle: BadgeStyle, badgeHeight: CGFloat? = nil, badgeOffset: CGPoint? = nil, textInset: CGFloat? = nil, fontSize: CGFloat? = nil) {
         super.init(frame: .zero)
-        setup(badgeHeight: badgeHeight, badgeOffset: badgeOffset, textInset: textInset, fontSize: fontSize)
+        self.badgeStyle = badgeStyle
+        
+        switch badgeStyle {
+        case .dot:
+            setupDot(badgeHeight: badgeHeight ?? 10, badgeOffset: badgeOffset ?? CGPoint(x: 3, y: 3))
+        case .small:
+            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? CGPoint(x: 7, y: 7), textInset: textInset ?? 5, fontSize: fontSize ?? 12)
+        case .big:
+            setupLabel(badgeHeight: badgeHeight ?? 24, badgeOffset: badgeOffset ?? CGPoint(x: 9, y: 9), textInset: textInset ?? 6, fontSize: fontSize ?? 14)
+        default:
+            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? CGPoint(x: 7, y: 7), textInset: textInset ?? 5, fontSize: fontSize ?? 12)
+        }
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setup(dotSize: CGFloat, badgeOffset: CGPoint) {
+    private func setupDot(badgeHeight: CGFloat, badgeOffset: CGPoint) {
         self.badgeOffset = badgeOffset
         
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
-        layer.cornerRadius = dotSize / 2
-        fw_setDimensions(CGSize(width: dotSize, height: dotSize))
+        layer.cornerRadius = badgeHeight / 2
+        fw_setDimensions(CGSize(width: badgeHeight, height: badgeHeight))
     }
     
-    private func setup(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
+    private func setupLabel(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
         self.badgeOffset = badgeOffset
         
         isUserInteractionEnabled = false
@@ -93,7 +122,7 @@ open class BadgeView: UIView {
 @_spi(FW) extension UIView {
     
     /// 显示右上角提醒灯，上右偏移指定距离
-    public func fw_showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         badgeView.badgeLabel?.text = badgeValue
@@ -159,7 +188,7 @@ open class BadgeView: UIView {
 @_spi(FW) extension UIBarButtonItem {
     
     /// 显示右上角提醒灯，上右偏移指定距离
-    public func fw_showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
@@ -170,8 +199,8 @@ open class BadgeView: UIView {
             view.bringSubviewToFront(badgeView)
             
             // 自定义视图时默认偏移，否则固定偏移
-            badgeView.fw_pinEdge(toSuperview: .top, inset: badgeView.badgeStyle == nil ? -badgeView.badgeOffset.y : 0)
-            badgeView.fw_pinEdge(toSuperview: .right, inset: badgeView.badgeStyle == nil ? -badgeView.badgeOffset.x : 0)
+            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.navbarBadgeOffset.y)
+            badgeView.fw_pinEdge(toSuperview: .right, inset: -badgeView.navbarBadgeOffset.x)
         }
     }
 
@@ -198,13 +227,13 @@ open class BadgeView: UIView {
             
             // 解决因为层级关系变化导致的badgeView被遮挡问题
             for subview in selfObject.subviews {
-                if let badgeView = subview as? BadgeView {
+                if let badgeView = subview as? UIView & BadgeViewProtocol {
                     selfObject.bringSubviewToFront(badgeView)
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if #available(iOS 13.0, *) {
                         if let imageView = UITabBarItem.fw_imageView(selfObject) {
-                            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.badgeOffset.x)
+                            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
                         }
                     }
                     break
@@ -241,7 +270,7 @@ open class BadgeView: UIView {
     }
     
     /// 显示右上角提醒灯，上右偏移指定距离
-    public func fw_showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
@@ -254,8 +283,8 @@ open class BadgeView: UIView {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw_pinEdge(toSuperview: .top, inset: badgeView.badgeStyle == nil ? -badgeView.badgeOffset.y : 2.0)
-            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.badgeOffset.x)
+            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.tabbarBadgeOffset.y)
+            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
         }
     }
 
