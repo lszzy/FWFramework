@@ -17,9 +17,6 @@ public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelega
     /// 网页视图，默认显示滚动条，启用前进后退手势
     var webView: WebView { get }
 
-    /// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
-    var webItems: [Any]? { get set }
-
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     var webRequest: Any? { get set }
 
@@ -52,16 +49,6 @@ extension WebViewControllerProtocol where Self: UIViewController {
             }
             fw_setProperty(result, forName: "webView")
             return result
-        }
-    }
-    
-    /// 左侧按钮组，依次为返回|关闭，支持UIBarButtonItem|UIImage|NSString|NSNumber等。可覆写，默认nil
-    public var webItems: [Any]? {
-        get {
-            return fw_property(forName: "webItems") as? [Any]
-        }
-        set {
-            fw_setProperty(newValue, forName: "webItems")
         }
     }
     
@@ -125,71 +112,8 @@ internal extension ViewControllerManager {
             viewController.setupWebBridge(bridge)
         }
         
-        guard let webItems = viewController.webItems,
-              !webItems.isEmpty,
-              let navigationController = viewController.navigationController else {
-            webView.webRequest = viewController.webRequest
-            return
-        }
-        
-        var leftItems: [UIBarButtonItem] = []
-        for (i, webItem) in webItems.enumerated() {
-            if let webItem = webItem as? UIBarButtonItem {
-                leftItems.append(webItem)
-            } else {
-                if i == 0 {
-                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { [weak viewController] _ in
-                        if viewController?.webView.canGoBack ?? false {
-                            viewController?.webView.goBack()
-                        } else {
-                            if let navigationController = viewController?.navigationController,
-                               navigationController.popViewController(animated: true) != nil    {
-                                return
-                            }
-                            if viewController?.presentingViewController != nil {
-                                viewController?.dismiss(animated: true, completion: nil)
-                                return
-                            }
-                            
-                            if let firstItem = viewController?.webView.backForwardList.backList.first {
-                                viewController?.webView.go(to: firstItem)
-                            }
-                        }
-                    }
-                    leftItems.append(leftItem)
-                } else {
-                    let leftItem = UIBarButtonItem.fw_item(object: webItem) { [weak viewController] _ in
-                        if let navigationController = viewController?.navigationController,
-                           navigationController.popViewController(animated: true) != nil    {
-                            return
-                        }
-                        if viewController?.presentingViewController != nil {
-                            viewController?.dismiss(animated: true, completion: nil)
-                            return
-                        }
-                        
-                        if let firstItem = viewController?.webView.backForwardList.backList.first {
-                            viewController?.webView.go(to: firstItem)
-                        }
-                    }
-                    leftItems.append(leftItem)
-                }
-            }
-        }
-        
-        var showClose = true
-        if navigationController.viewControllers.first == viewController,
-           navigationController.presentingViewController?.presentedViewController != navigationController {
-            showClose = false
-        }
-        viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
-        viewController.webView.fw_observeProperty("canGoBack") { [weak viewController] webView, _ in
-            guard let webView = webView as? WKWebView else { return }
-            if webView.canGoBack {
-                viewController?.navigationItem.leftBarButtonItems = leftItems
-            } else {
-                viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
-            }
+        if webView.fw_navigationItems != nil {
+            webView.fw_setupNavigationItems(viewController)
         }
         
         webView.webRequest = viewController.webRequest

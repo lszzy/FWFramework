@@ -264,7 +264,7 @@ class SwiftTestTableViewController: UIViewController, TableViewControllerProtoco
 
 class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
     func setupWebView() {
-        webItems = [
+        webView.fw.navigationItems = [
             Icon.backImage as Any,
             Icon.closeImage as Any
         ]
