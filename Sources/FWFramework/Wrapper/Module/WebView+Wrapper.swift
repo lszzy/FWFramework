@@ -105,9 +105,9 @@ extension Wrapper where Base: WKWebView {
         set { base.fw_isInvalid = newValue }
     }
     
-    /// 根据需要预加载下一个WebView实例，供下个页面直接使用，一般在didFinishNavigation中调用
-    public func prepareNextWebViewIfNeed() {
-        base.fw_prepareNextWebViewIfNeed()
+    /// 按需预加载下一个WebView实例，一般在didFinishNavigation中调用
+    public func prepareNextWebView() {
+        base.fw_prepareNextWebView()
     }
     
 }
