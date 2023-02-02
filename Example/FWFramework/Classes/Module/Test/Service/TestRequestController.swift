@@ -32,6 +32,27 @@ class TestModelRequest: BaseRequest {
     
 }
 
+class TestWeatherRequest: BaseRequest {
+    
+    var city: String = ""
+    var temp: String = ""
+    
+    override func requestUrl() -> String {
+        "http://www.weather.com.cn/data/sk/101040100.html"
+    }
+    
+    override func responseSerializerType() -> ResponseSerializerType {
+        .HTTP
+    }
+    
+    override func requestCompleteFilter() {
+        let responseJSON = JSON(responseString?.fw.jsonDecode)
+        city = responseJSON["weatherinfo"]["city"].stringValue
+        temp = responseJSON["weatherinfo"]["temp"].stringValue
+    }
+    
+}
+
 class TestRequestController: UIViewController {
     
     private var httpProxyKey = "httpProxyDisabled"
@@ -41,6 +62,13 @@ class TestRequestController: UIViewController {
         let button = AppTheme.largeButton()
         button.setTitle("Start Request", for: .normal)
         button.fw.addTouch(target: self, action: #selector(onRequest))
+        return button
+    }()
+    
+    private lazy var weatherButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Start Weather", for: .normal)
+        button.fw.addTouch(target: self, action: #selector(onWeather))
         return button
     }()
     
@@ -101,12 +129,17 @@ extension TestRequestController: ViewControllerProtocol {
    
     func setupSubviews() {
         view.addSubview(requestButton)
+        view.addSubview(weatherButton)
     }
     
     func setupLayout() {
         requestButton.fw.layoutChain
             .centerX()
             .top(toSafeArea: 50)
+        
+        weatherButton.fw.layoutChain
+            .centerX()
+            .top(toViewBottom: requestButton, offset: 20)
     }
     
 }
@@ -115,11 +148,25 @@ extension TestRequestController: ViewControllerProtocol {
 private extension TestRequestController {
     
     @objc func onRequest() {
+        self.fw.showLoading()
         let request = TestModelRequest()
         request.startWithCompletionBlock { _ in
+            self.fw.hideLoading()
             self.fw.showMessage(text: "json请求成功: \n\(request.responseName)")
         } failure: { _ in
             self.fw.showAlert(title: "json请求失败", message: request.error?.localizedDescription)
+        }
+    }
+    
+    @objc func onWeather() {
+        self.fw.showLoading()
+        let request = TestWeatherRequest()
+        request.startWithCompletionBlock { _ in
+            self.fw.hideLoading()
+            self.fw.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
+        } failure: { _ in
+            self.fw.hideLoading()
+            self.fw.showAlert(title: "天气请求失败", message: request.error?.localizedDescription)
         }
     }
     
