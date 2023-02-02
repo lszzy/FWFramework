@@ -98,7 +98,7 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.fw.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         fw.setRightBarItem("切换") { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: ["禁止代理抓包", "允许代理抓包", "获取手机网络代理", "获取本地DNS的IP地址"], actionBlock: { index in
+            self?.fw.showSheet(title: nil, message: nil, actions: ["禁止代理抓包(下次启动生效)", "允许代理抓包(下次启动生效)", "获取手机网络代理", "获取本地DNS的IP地址"], actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {
                     URLSession.fw.httpProxyDisabled = true
