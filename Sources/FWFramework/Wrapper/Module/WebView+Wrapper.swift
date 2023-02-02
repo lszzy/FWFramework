@@ -65,4 +65,15 @@ extension Wrapper where Base: WKWebView {
         return base.fw_setupJsBridge()
     }
     
+    /// 绑定控制器导航栏左侧按钮组，需结合setupNavigationItems使用
+    public var navigationItems: [Any]? {
+        get { return base.fw_navigationItems }
+        set { base.fw_navigationItems = newValue }
+    }
+    
+    /// 自动初始化控制器导航栏左侧按钮组，navigationItems设置后生效
+    public func setupNavigationItems(_ viewController: UIViewController) {
+        base.fw_setupNavigationItems(viewController)
+    }
+    
 }

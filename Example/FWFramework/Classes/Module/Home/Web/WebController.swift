@@ -15,6 +15,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     private var toolbarHidden = true
     
+    // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -46,17 +47,18 @@ class WebController: UIViewController, WebViewControllerProtocol {
         navigationController?.isToolbarHidden = true
     }
     
+    // MARK: - WebViewControllerProtocol
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
         webView.allowsSchemeURL = true
         
         if navigationItem.leftBarButtonItem != nil {
-            webItems = nil
+            webView.fw.navigationItems = nil
         } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
-            webItems = [backImage, closeImage]
+            webView.fw.navigationItems = [backImage, closeImage]
         } else {
-            webItems = nil
+            webView.fw.navigationItems = nil
         }
     }
     
@@ -67,6 +69,41 @@ class WebController: UIViewController, WebViewControllerProtocol {
             .bottom(fw.bottomBarHeight)
     }
     
+    func setupWebBridge(_ bridge: WebViewJsBridge) {}
+    
+    func setupSubviews() {}
+    
+    func setupLayout() {}
+    
+    // MARK: - WebViewDelegate
+    func webViewFinishLoad() {
+        if fw.isLoaded { return }
+        fw.hideLoading()
+        fw.isLoaded = true
+        
+        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+    }
+    
+    func webViewFailLoad(_ error: Error) {
+        if fw.isLoaded { return }
+        fw.hideLoading()
+        
+        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
+        
+        fw.showEmptyView(text: error.localizedDescription, detail: nil, image: nil, action: "点击重试") { [weak self] _ in
+            self?.loadRequestUrl()
+        }
+    }
+    
+    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
+        if navigationAction.request.url?.scheme == "app" {
+            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
+            return false
+        }
+        return true
+    }
+    
+    // MARK: - Private
     func setupToolbar() {
         let backItem = UIBarButtonItem.fw.item(object: Icon.backImage) { [weak self] _ in
             guard let self = self else { return }
@@ -144,40 +181,5 @@ class WebController: UIViewController, WebViewControllerProtocol {
         urlRequest.setValue("test", forHTTPHeaderField: "Test-Token")
         webRequest = urlRequest
     }
-    
-    func webViewFinishLoad() {
-        if fw.isLoaded { return }
-        fw.hideLoading()
-        fw.isLoaded = true
-        
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
-    }
-    
-    func webViewFailLoad(_ error: Error) {
-        if fw.isLoaded { return }
-        fw.hideLoading()
-        
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
-        
-        fw.showEmptyView(text: error.localizedDescription, detail: nil, image: nil, action: "点击重试") { [weak self] _ in
-            self?.loadRequestUrl()
-        }
-    }
-    
-    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
-        if navigationAction.request.url?.scheme == "app" {
-            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
-            return false
-        }
-        return true
-    }
-    
-    var webBridgeEnabled = false
-    
-    func setupWebBridge(_ bridge: WebViewJsBridge) {}
-    
-    func setupSubviews() { }
-    
-    func setupLayout() {}
     
 }

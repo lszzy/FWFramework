@@ -108,4 +108,77 @@ import FWObjC
         return jsBridge
     }
     
+    /// 绑定控制器导航栏左侧按钮组，需结合setupNavigationItems使用
+    public var fw_navigationItems: [Any]? {
+        get { fw_property(forName: "fw_navigationItems") as? [Any] }
+        set { fw_setProperty(newValue, forName: "fw_navigationItems") }
+    }
+    
+    /// 自动初始化控制器导航栏左侧按钮组，navigationItems设置后生效
+    public func fw_setupNavigationItems(_ viewController: UIViewController) {
+        guard let navigationItems = fw_navigationItems,
+              !navigationItems.isEmpty,
+              let navigationController = viewController.navigationController else { return }
+        
+        var leftItems: [UIBarButtonItem] = []
+        for (i, navigationItem) in navigationItems.enumerated() {
+            if let leftItem = navigationItem as? UIBarButtonItem {
+                leftItems.append(leftItem)
+            } else {
+                if i == 0 {
+                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
+                        if self?.canGoBack ?? false {
+                            self?.goBack()
+                        } else {
+                            if let navigationController = viewController?.navigationController,
+                               navigationController.popViewController(animated: true) != nil    {
+                                return
+                            }
+                            if viewController?.presentingViewController != nil {
+                                viewController?.dismiss(animated: true, completion: nil)
+                                return
+                            }
+                            
+                            if let firstItem = self?.backForwardList.backList.first {
+                                self?.go(to: firstItem)
+                            }
+                        }
+                    }
+                    leftItems.append(leftItem)
+                } else {
+                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
+                        if let navigationController = viewController?.navigationController,
+                           navigationController.popViewController(animated: true) != nil    {
+                            return
+                        }
+                        if viewController?.presentingViewController != nil {
+                            viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
+                        if let firstItem = self?.backForwardList.backList.first {
+                            self?.go(to: firstItem)
+                        }
+                    }
+                    leftItems.append(leftItem)
+                }
+            }
+        }
+        
+        var showClose = true
+        if navigationController.viewControllers.first == viewController,
+           navigationController.presentingViewController?.presentedViewController != navigationController {
+            showClose = false
+        }
+        viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+        fw_observeProperty("canGoBack") { [weak viewController] webView, _ in
+            guard let webView = webView as? WKWebView else { return }
+            if webView.canGoBack {
+                viewController?.navigationItem.leftBarButtonItems = leftItems
+            } else {
+                viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+            }
+        }
+    }
+    
 }
