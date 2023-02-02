@@ -23,7 +23,7 @@ public class WebViewPool: NSObject {
     public var webViewMaxReuseCount: Int = 5
     
     /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认空
-    public var webViewReuseLoadUrlStr = ""
+    public var webViewReuseLoadUrl = ""
     
     /// webview最大重用次数，默认为最大无限制
     public var webViewMaxReuseTimes: Int = .max
@@ -55,61 +55,155 @@ public class WebViewPool: NSObject {
     ///   - webViewClass: webview的自定义class
     ///   - webViewHolder: webview的持有者，用于自动回收webview
     /// - Returns: 可复用的webview
-    public func dequeueWebView(with webViewClass: AnyClass = WKWebView.self, webViewHolder: NSObject?) -> WKWebView? {
-        guard webViewClass.isSubclass(of: WKWebView.self) else { return nil }
-        
+    public func dequeueWebView<T: WKWebView>(with webViewClass: T.Type = WKWebView.self, webViewHolder: NSObject?) -> T {
         tryCompactWeakHolderOfWebView()
-        let dequeueWebView = getWebView(with: webViewClass)
-        dequeueWebView?.fw_holderObject = webViewHolder
-        return dequeueWebView
+        let webView = getWebView(with: webViewClass)
+        webView.fw_holderObject = webViewHolder
+        return webView as! T
     }
     
     /// 创建一个 webview，并且将它放入到回收池中
     public func enqueueWebView(with webViewClass: AnyClass = WKWebView.self) {
-        guard webViewClass.isSubclass(of: WKWebView.self) else { return }
+        assert(webViewClass.isSubclass(of: WKWebView.self), "WebViewPool enqueue with invalid class: \(webViewClass)")
+        
+        lock.wait()
+        let webViewClassString = NSStringFromClass(webViewClass)
+        var webViewArray = enqueueWebViews[webViewClassString] ?? []
+        if webViewArray.count < webViewMaxReuseCount {
+            let webView = generateInstance(webViewClass: webViewClass)
+            webViewArray.append(webView)
+            enqueueWebViews[webViewClassString] = webViewArray
+        }
+        lock.signal()
     }
     
     /// 回收可复用的WKWebView
     public func enqueueWebView(_ webView: WKWebView?) {
+        guard let webView = webView else { return }
         
+        webView.removeFromSuperview()
+        if webView.fw_reusedTimes >= webViewMaxReuseTimes || webView.fw_isInvalid {
+            removeReusableWebView(webView)
+        } else {
+            recycleWebView(webView)
+        }
     }
     
     /// 回收并销毁WKWebView，并且将之从回收池里删除
     public func removeReusableWebView(_ webView: WKWebView?) {
+        guard let webView = webView else { return }
         
+        webView.webViewWillEnterPool()
+        lock.wait()
+        let webViewClassString = NSStringFromClass(webView.classForCoder)
+        if var webViewArray = dequeueWebViews[webViewClassString],
+           webViewArray.contains(webView) {
+            webViewArray.removeAll { $0 == webView }
+            dequeueWebViews[webViewClassString] = webViewArray
+        }
+        
+        if var webViewArray = enqueueWebViews[webViewClassString],
+           webViewArray.contains(webView) {
+            webViewArray.removeAll { $0 == webView }
+            enqueueWebViews[webViewClassString] = webViewArray
+        }
+        lock.signal()
     }
     
     /// 销毁在回收池中特定Class的WebView
     public func clearReusableWebViews(with webViewClass: AnyClass = WKWebView.self) {
-        
+        let webViewClassString = NSStringFromClass(webViewClass)
+        lock.wait()
+        if enqueueWebViews.keys.contains(webViewClassString) {
+            enqueueWebViews.removeValue(forKey: webViewClassString)
+        }
+        lock.signal()
     }
     
     /// 销毁全部在回收池中的WebView
     @objc public func clearAllReusableWebViews() {
-        
+        tryCompactWeakHolderOfWebView()
+        lock.wait()
+        enqueueWebViews.removeAll()
+        lock.signal()
     }
     
     /// 重新刷新在回收池中的WebView
     public func reloadAllReusableWebViews() {
-        
+        lock.wait()
+        for webViewArray in enqueueWebViews.values {
+            for webView in webViewArray {
+                webView.webViewWillEnterPool()
+            }
+        }
+        lock.signal()
     }
     
     /// 判断回收池中是否包含特定Class的WebView
     public func containsReusableWebView(with webViewClass: AnyClass = WKWebView.self) -> Bool {
-        return false
+        lock.wait()
+        let webViewClassString = NSStringFromClass(webViewClass)
+        var contains = false
+        if dequeueWebViews.keys.contains(webViewClassString) ||
+            enqueueWebViews.keys.contains(webViewClassString) {
+            contains = true
+        }
+        lock.signal()
+        return contains
     }
     
     // MARK: - Private
     private func tryCompactWeakHolderOfWebView() {
-        
+        let webViewDictionary = dequeueWebViews
+        if webViewDictionary.count > 0 {
+            for webViewArray in webViewDictionary.values {
+                for webView in webViewArray {
+                    if webView.fw_holderObject == nil {
+                        enqueueWebView(webView)
+                    }
+                }
+            }
+        }
     }
     
     private func recycleWebView(_ webView: WKWebView?) {
+        guard let webView = webView else { return }
         
+        webView.webViewWillEnterPool()
+        lock.wait()
+        let webViewClassString = NSStringFromClass(webView.classForCoder)
+        if var webViewArray = dequeueWebViews[webViewClassString],
+           webViewArray.contains(webView) {
+            webViewArray.removeAll { $0 == webView }
+            dequeueWebViews[webViewClassString] = webViewArray
+        }
+        
+        var webViewArray = enqueueWebViews[webViewClassString] ?? []
+        if webViewArray.count < webViewMaxReuseCount {
+            webViewArray.append(webView)
+            enqueueWebViews[webViewClassString] = webViewArray
+        }
+        lock.signal()
     }
     
-    private func getWebView(with webViewClass: AnyClass) -> WKWebView? {
-        return nil
+    private func getWebView(with webViewClass: AnyClass) -> WKWebView {
+        let webViewClassString = NSStringFromClass(webViewClass)
+        var enqueueWebView: WKWebView?
+        lock.wait()
+        if var webViewArray = enqueueWebViews[webViewClassString],
+           webViewArray.count > 0 {
+            enqueueWebView = webViewArray.removeFirst()
+            enqueueWebViews[webViewClassString] = webViewArray
+        }
+        
+        let webView = enqueueWebView ?? generateInstance(webViewClass: webViewClass)
+        var webViewArray = dequeueWebViews[webViewClassString] ?? []
+        webViewArray.append(webView)
+        dequeueWebViews[webViewClassString] = webViewArray
+        lock.signal()
+        
+        webView.webViewWillLeavePool()
+        return webView
     }
     
     private func generateInstance(webViewClass: AnyClass) -> WKWebView {
@@ -134,19 +228,29 @@ public protocol WebViewReusableProtocol {
 
 @_spi(FW) extension WKWebView {
     
+    /// 持有者对象，弱引用
     public weak var fw_holderObject: NSObject? {
         get { return fw_property(forName: "fw_holderObject") as? NSObject }
         set { fw_setPropertyWeak(newValue, forName: "fw_holderObject") }
     }
     
+    /// 重用次数
     public var fw_reusedTimes: Int {
         get { return fw_propertyInt(forName: "fw_reusedTimes") }
         set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }
     }
     
-    public var fw_invalid: Bool {
-        get { return fw_propertyBool(forName: "fw_invalid") }
-        set { fw_setPropertyBool(newValue, forName: "fw_invalid") }
+    /// 是否已失效，将自动从缓存池移除
+    public var fw_isInvalid: Bool {
+        get { return fw_propertyBool(forName: "fw_isInvalid") }
+        set { fw_setPropertyBool(newValue, forName: "fw_isInvalid") }
+    }
+    
+    /// 根据需要预加载下一个WebView实例，供下个页面直接使用，一般在didFinishNavigation中调用
+    public func fw_prepareNextWebViewIfNeed() {
+        if WebViewPool.shared.containsReusableWebView(with: classForCoder) {
+            WebViewPool.shared.enqueueWebView(with: classForCoder)
+        }
     }
     
     private func fw_clearBackForwardList() {
@@ -172,8 +276,8 @@ public protocol WebViewReusableProtocol {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        if !WebViewPool.shared.webViewReuseLoadUrlStr.isEmpty {
-            load(URLRequest(url: URL.fw_safeURL(WebViewPool.shared.webViewReuseLoadUrlStr)))
+        if !WebViewPool.shared.webViewReuseLoadUrl.isEmpty {
+            load(URLRequest(url: URL.fw_safeURL(WebViewPool.shared.webViewReuseLoadUrl)))
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))
         }
@@ -183,6 +287,20 @@ public protocol WebViewReusableProtocol {
     open func webViewWillLeavePool() {
         fw_reusedTimes += 1
         fw_clearBackForwardList()
+    }
+    
+}
+
+extension WebView {
+    
+    /// 即将进入回收池，必须调用super
+    open override func webViewWillEnterPool() {
+        delegate = nil
+        cookieEnabled = false
+        allowsUniversalLinks = false
+        allowsSchemeURL = false
+        webRequest = nil
+        super.webViewWillEnterPool()
     }
     
 }
