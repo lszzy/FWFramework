@@ -1228,7 +1228,7 @@ extension FW {
         guard !fw_staticHttpProxySwizzled else { return }
         fw_staticHttpProxySwizzled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw_swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
@@ -1240,7 +1240,7 @@ extension FW {
             return store.original(selfObject, store.selector, configuration)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw_swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
