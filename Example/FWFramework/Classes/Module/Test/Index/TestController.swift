@@ -22,6 +22,7 @@ class TestController: UIViewController {
             ["Authorize", "TestAuthorizeController"],
             ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
+            ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
             ["VideoPlayer", "TestVideoController"],

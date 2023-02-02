@@ -136,9 +136,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isBankcard:(NSString *)string;
 
-+ (NSString *)ipAddress;
++ (nullable NSString *)ipAddress;
 
-+ (NSString *)hostName;
++ (nullable NSString *)hostName;
+
++ (nullable NSString *)ipAddress:(NSString *)url;
 
 @end
 

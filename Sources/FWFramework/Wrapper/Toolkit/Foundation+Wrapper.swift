@@ -693,6 +693,16 @@ extension Wrapper where Base: URLSession {
         set { Base.fw_httpProxyDisabled = newValue }
     }
     
+    /// 获取手机网络代理，可能为空
+    public static var httpProxyString: String? {
+        return Base.fw_httpProxyString
+    }
+    
+    /// 获取url在本地DNS的IP地址，建议后台调用
+    public static func ipAddress(url: String) -> String? {
+        return Base.fw_ipAddress(url: url)
+    }
+    
 }
 
 // MARK: - UserDefaults+Foundation

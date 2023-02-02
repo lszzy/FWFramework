@@ -1211,6 +1211,17 @@ extension FW {
         }
     }
     
+    /// 获取手机网络代理，可能为空
+    public static var fw_httpProxyString: String? {
+        let proxy = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
+        return proxy?[kCFNetworkProxiesHTTPProxy as String] as? String
+    }
+    
+    /// 获取url在本地DNS的IP地址，建议后台调用
+    public static func fw_ipAddress(url: String) -> String? {
+        return __FWBridge.ipAddress(url)
+    }
+    
     private static var fw_staticHttpProxySwizzled = false
     
     private static func fw_swizzleHttpProxy() {

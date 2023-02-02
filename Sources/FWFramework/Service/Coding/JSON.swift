@@ -65,7 +65,11 @@ public struct JSON {
         self.init(jsonObject: object)
     }
 
-    public init(_ object: Any) {
+    public init(_ object: Any?) {
+        guard let object = object else {
+            self.init(jsonObject: NSNull())
+            return
+        }
         switch object {
         case let object as Data:
             do {
