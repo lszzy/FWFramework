@@ -10,6 +10,87 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - WebViewPool
+/// WKWebView缓存池
+///
+/// [KKJSBridge](https://github.com/karosLi/KKJSBridge)
+public class WebViewPool: NSObject {
+    
+    /// 单例模式
+    public static let shared = WebViewPool()
+    
+    /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认nil
+    public var webViewReuseLoadUrlStr: String?
+    
+}
+
+/// WKWebView重用协议
+public protocol WebViewReusableProtocol {
+    
+    /// 即将进入回收池
+    func webViewWillEnterPool()
+    
+    /// 即将离开回收池
+    func webViewWillLeavePool()
+    
+}
+
+@_spi(FW) extension WKWebView {
+    
+    public weak var fw_holderObject: NSObject? {
+        get { return fw_property(forName: "fw_holderObject") as? NSObject }
+        set { fw_setPropertyWeak(newValue, forName: "fw_holderObject") }
+    }
+    
+    public var fw_reusedTimes: Int {
+        get { return fw_propertyInt(forName: "fw_reusedTimes") }
+        set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }
+    }
+    
+    public var fw_invalid: Bool {
+        get { return fw_propertyBool(forName: "fw_invalid") }
+        set { fw_setPropertyBool(newValue, forName: "fw_invalid") }
+    }
+    
+    private func fw_clearBackForwardList() {
+        let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
+        if backForwardList.responds(to: selector) {
+            backForwardList.perform(selector)
+        }
+    }
+    
+}
+
+@objc extension WKWebView: WebViewReusableProtocol {
+    
+    /// 即将进入回收池，必须调用super
+    open func webViewWillEnterPool() {
+        fw_holderObject = nil
+        fw_jsBridge = nil
+        fw_jsBridgeEnabled = false
+        fw_navigationItems = nil
+        scrollView.delegate = nil
+        scrollView.isScrollEnabled = true
+        stopLoading()
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
+        evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
+        configuration.userContentController.removeAllUserScripts()
+        if let reuseLoadUrl = WebViewPool.shared.webViewReuseLoadUrlStr, !reuseLoadUrl.isEmpty {
+            load(URLRequest(url: URL.fw_safeURL(reuseLoadUrl)))
+        } else {
+            load(URLRequest(url: URL.fw_safeURL(nil)))
+        }
+    }
+    
+    /// 即将离开回收池，必须调用super
+    open func webViewWillLeavePool() {
+        fw_reusedTimes += 1
+        fw_clearBackForwardList()
+    }
+    
+}
+
+// MARK: - UIProgressView+WebView
 @_spi(FW) extension UIProgressView {
     
     /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
@@ -42,6 +123,7 @@ import FWObjC
     
 }
 
+// MARK: - WKWebView+WebView
 @_spi(FW) extension WKWebView {
 
     /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
