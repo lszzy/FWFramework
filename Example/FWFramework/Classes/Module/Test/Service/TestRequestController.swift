@@ -110,12 +110,12 @@ extension TestRequestController: ViewControllerProtocol {
                     let proxyString = URLSession.fw.httpProxyString ?? ""
                     self.fw.showMessage(text: "网络代理: \n\(proxyString)")
                 } else if index == 3 {
-                    self.fw.showPrompt(title: "请输入请求地址", message: nil, cancel: nil, confirm: nil, promptBlock: { textField in
-                        textField.text = "http://kvm.wuyong.site/"
-                    }, confirmBlock: { [weak self] url in
+                    self.fw.showPrompt(title: "请输入域名", message: nil, cancel: nil, confirm: nil, promptBlock: { textField in
+                        textField.text = "kvm.wuyong.site"
+                    }, confirmBlock: { [weak self] host in
                         self?.fw.showLoading()
                         DispatchQueue.global().async {
-                            let ipAddress = URLSession.fw.ipAddress(url: url) ?? ""
+                            let ipAddress = URLSession.fw.ipAddress(host: host) ?? ""
                             DispatchQueue.main.async {
                                 self?.fw.hideLoading()
                                 self?.fw.showMessage(text: "IP地址: \n\(ipAddress)")

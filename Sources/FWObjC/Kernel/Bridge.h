@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSString *)hostName;
 
-+ (nullable NSString *)ipAddress:(NSString *)url;
++ (nullable NSString *)ipAddress:(NSString *)host;
 
 @end
 
