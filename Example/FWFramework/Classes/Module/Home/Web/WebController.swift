@@ -15,7 +15,7 @@ import FWFramework
             WebViewPool.shared.webViewConfigurationBlock = { configuration in
                 configuration.allowsInlineMediaPlayback = true
             }
-            WebViewPool.shared.enqueueWebView(with: WebView.classForCoder())
+            WebViewPool.shared.enqueueWebView(with: WebView.self)
             
             NotificationCenter.default.removeObserver(observer)
         }
@@ -105,8 +105,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
         
-        // 预加载下一个WebView
-        webView.fw.prepareNextWebViewIfNeed()
+        webView.fw.prepareNextWebView()
     }
     
     func webViewFailLoad(_ error: Error) {

@@ -52,27 +52,25 @@ public class WebViewPool: NSObject {
     // MARK: - Public
     /// 获得一个可复用的webview
     /// - Parameters:
-    ///   - webViewClass: webview的自定义class
+    ///   - webViewType: webview的自定义class
     ///   - webViewHolder: webview的持有者，用于自动回收webview
     /// - Returns: 可复用的webview
-    public func dequeueWebView<T: WKWebView>(with webViewClass: T.Type = WKWebView.self, webViewHolder: NSObject?) -> T {
+    public func dequeueWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self, webViewHolder: NSObject?) -> T {
         tryCompactWeakHolderOfWebView()
-        let webView = getWebView(with: webViewClass)
+        let webView = getWebView(with: webViewType)
         webView.fw_holderObject = webViewHolder
-        return webView as! T
+        return webView
     }
     
     /// 创建一个 webview，并且将它放入到回收池中
-    public func enqueueWebView(with webViewClass: AnyClass = WKWebView.self) {
-        assert(webViewClass.isSubclass(of: WKWebView.self), "WebViewPool enqueue with invalid class: \(webViewClass)")
-        
+    public func enqueueWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self) {
         lock.wait()
-        let webViewClassString = NSStringFromClass(webViewClass)
-        var webViewArray = enqueueWebViews[webViewClassString] ?? []
+        let webViewTypeString = NSStringFromClass(webViewType)
+        var webViewArray = enqueueWebViews[webViewTypeString] ?? []
         if webViewArray.count < webViewMaxReuseCount {
-            let webView = generateInstance(webViewClass: webViewClass)
+            let webView = generateInstance(with: webViewType)
             webViewArray.append(webView)
-            enqueueWebViews[webViewClassString] = webViewArray
+            enqueueWebViews[webViewTypeString] = webViewArray
         }
         lock.signal()
     }
@@ -95,27 +93,27 @@ public class WebViewPool: NSObject {
         
         webView.webViewWillEnterPool()
         lock.wait()
-        let webViewClassString = NSStringFromClass(webView.classForCoder)
-        if var webViewArray = dequeueWebViews[webViewClassString],
+        let webViewTypeString = NSStringFromClass(webView.classForCoder)
+        if var webViewArray = dequeueWebViews[webViewTypeString],
            webViewArray.contains(webView) {
             webViewArray.removeAll { $0 == webView }
-            dequeueWebViews[webViewClassString] = webViewArray
+            dequeueWebViews[webViewTypeString] = webViewArray
         }
         
-        if var webViewArray = enqueueWebViews[webViewClassString],
+        if var webViewArray = enqueueWebViews[webViewTypeString],
            webViewArray.contains(webView) {
             webViewArray.removeAll { $0 == webView }
-            enqueueWebViews[webViewClassString] = webViewArray
+            enqueueWebViews[webViewTypeString] = webViewArray
         }
         lock.signal()
     }
     
     /// 销毁在回收池中特定Class的WebView
-    public func clearReusableWebViews(with webViewClass: AnyClass = WKWebView.self) {
-        let webViewClassString = NSStringFromClass(webViewClass)
+    public func clearReusableWebViews<T: WKWebView>(with webViewType: T.Type = WKWebView.self) {
+        let webViewTypeString = NSStringFromClass(webViewType)
         lock.wait()
-        if enqueueWebViews.keys.contains(webViewClassString) {
-            enqueueWebViews.removeValue(forKey: webViewClassString)
+        if enqueueWebViews.keys.contains(webViewTypeString) {
+            enqueueWebViews.removeValue(forKey: webViewTypeString)
         }
         lock.signal()
     }
@@ -140,12 +138,12 @@ public class WebViewPool: NSObject {
     }
     
     /// 判断回收池中是否包含特定Class的WebView
-    public func containsReusableWebView(with webViewClass: AnyClass = WKWebView.self) -> Bool {
+    public func containsReusableWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self) -> Bool {
         lock.wait()
-        let webViewClassString = NSStringFromClass(webViewClass)
+        let webViewTypeString = NSStringFromClass(webViewType)
         var contains = false
-        if dequeueWebViews.keys.contains(webViewClassString) ||
-            enqueueWebViews.keys.contains(webViewClassString) {
+        if dequeueWebViews.keys.contains(webViewTypeString) ||
+            enqueueWebViews.keys.contains(webViewTypeString) {
             contains = true
         }
         lock.signal()
@@ -171,45 +169,44 @@ public class WebViewPool: NSObject {
         
         webView.webViewWillEnterPool()
         lock.wait()
-        let webViewClassString = NSStringFromClass(webView.classForCoder)
-        if var webViewArray = dequeueWebViews[webViewClassString],
+        let webViewTypeString = NSStringFromClass(webView.classForCoder)
+        if var webViewArray = dequeueWebViews[webViewTypeString],
            webViewArray.contains(webView) {
             webViewArray.removeAll { $0 == webView }
-            dequeueWebViews[webViewClassString] = webViewArray
+            dequeueWebViews[webViewTypeString] = webViewArray
         }
         
-        var webViewArray = enqueueWebViews[webViewClassString] ?? []
+        var webViewArray = enqueueWebViews[webViewTypeString] ?? []
         if webViewArray.count < webViewMaxReuseCount {
             webViewArray.append(webView)
-            enqueueWebViews[webViewClassString] = webViewArray
+            enqueueWebViews[webViewTypeString] = webViewArray
         }
         lock.signal()
     }
     
-    private func getWebView(with webViewClass: AnyClass) -> WKWebView {
-        let webViewClassString = NSStringFromClass(webViewClass)
-        var enqueueWebView: WKWebView?
+    private func getWebView<T: WKWebView>(with webViewType: T.Type) -> T {
+        let webViewTypeString = NSStringFromClass(webViewType)
+        var enqueueWebView: T?
         lock.wait()
-        if var webViewArray = enqueueWebViews[webViewClassString],
+        if var webViewArray = enqueueWebViews[webViewTypeString],
            webViewArray.count > 0 {
-            enqueueWebView = webViewArray.removeFirst()
-            enqueueWebViews[webViewClassString] = webViewArray
+            enqueueWebView = webViewArray.removeFirst() as? T
+            enqueueWebViews[webViewTypeString] = webViewArray
         }
         
-        let webView = enqueueWebView ?? generateInstance(webViewClass: webViewClass)
-        var webViewArray = dequeueWebViews[webViewClassString] ?? []
+        let webView = enqueueWebView ?? generateInstance(with: webViewType)
+        var webViewArray = dequeueWebViews[webViewTypeString] ?? []
         webViewArray.append(webView)
-        dequeueWebViews[webViewClassString] = webViewArray
+        dequeueWebViews[webViewTypeString] = webViewArray
         lock.signal()
         
         webView.webViewWillLeavePool()
         return webView
     }
     
-    private func generateInstance(webViewClass: AnyClass) -> WKWebView {
+    private func generateInstance<T: WKWebView>(with webViewType: T.Type) -> T {
         let configuration = WKWebView.fw_defaultConfiguration()
         webViewConfigurationBlock?(configuration)
-        let webViewType = webViewClass as! WKWebView.Type
         return webViewType.init(frame: .zero, configuration: configuration)
     }
     
@@ -246,10 +243,10 @@ public protocol WebViewReusableProtocol {
         set { fw_setPropertyBool(newValue, forName: "fw_isInvalid") }
     }
     
-    /// 根据需要预加载下一个WebView实例，供下个页面直接使用，一般在didFinishNavigation中调用
-    public func fw_prepareNextWebViewIfNeed() {
-        if WebViewPool.shared.containsReusableWebView(with: classForCoder) {
-            WebViewPool.shared.enqueueWebView(with: classForCoder)
+    /// 按需预加载下一个WebView实例，一般在didFinishNavigation中调用
+    public func fw_prepareNextWebView() {
+        if WebViewPool.shared.containsReusableWebView(with: type(of: self)) {
+            WebViewPool.shared.enqueueWebView(with: type(of: self))
         }
     }
     
