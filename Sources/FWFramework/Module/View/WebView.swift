@@ -13,22 +13,22 @@ import FWObjC
 // MARK: - WKWebView+ReusableView
 @_spi(FW) extension WKWebView {
     
-    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
-    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
-        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration) -> Void }
+    /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
+    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
+        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
     }
     
-    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
-    public class var fw_reuseDefaultUrlBlock: (() -> Any?)? {
-        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? () -> String? }
+    /// WebView进入回收复用池前默认加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
+    public class var fw_reuseDefaultUrlBlock: ((String) -> Any?)? {
+        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? (String) -> String? }
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
     }
     
     /// 初始化WKWebView可重用视图
-    open override class func reusableViewInitialize() -> Self {
+    open override class func reusableViewInitialize(identifier: String) -> Self {
         let configuration = WKWebView.fw_defaultConfiguration()
-        self.fw_reuseConfigurationBlock?(configuration)
+        self.fw_reuseConfigurationBlock?(configuration, identifier)
         return self.init(frame: .zero, configuration: configuration)
     }
     
@@ -46,7 +46,8 @@ import FWObjC
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
         
-        if let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?() {
+        if let identifier = fw_reuseIdentifier,
+           let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?(identifier) {
             fw_loadRequest(defaultUrl)
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))

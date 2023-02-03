@@ -15,6 +15,12 @@ extension Wrapper where Base: UIView {
         set { base.fw_viewHolder = newValue }
     }
     
+    /// 重用唯一标志，默认nil
+    public var reuseIdentifier: String? {
+        get { return base.fw_reuseIdentifier }
+        set { base.fw_reuseIdentifier = newValue }
+    }
+    
     /// 视图已重用次数
     public var reusedTimes: Int {
         get { return base.fw_reusedTimes }
@@ -27,7 +33,7 @@ extension Wrapper where Base: UIView {
         set { base.fw_reuseInvalid = newValue }
     }
     
-    /// 按需预加载下一个可重用视图，仅当缓存池包含当前视图类型时生效
+    /// 按需预加载下一个可重用视图，仅当前视图可重用时生效
     public func preloadReusableView() {
         base.fw_preloadReusableView()
     }
