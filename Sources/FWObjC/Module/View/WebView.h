@@ -9,50 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWWebView
-
-NS_SWIFT_NAME(WebViewDelegate)
-@protocol __FWWebViewDelegate <WKNavigationDelegate, WKUIDelegate>
-
-@optional
-
-/// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等
-- (BOOL)webViewShouldLoad:(WKNavigationAction *)navigationAction;
-
-/// 已经加载完成，可用来获取title、设置按钮等
-- (void)webViewFinishLoad;
-
-/// 网页加载失败，可用来处理加载异常等
-- (void)webViewFailLoad:(NSError *)error;
-
-@end
-
-/**
- WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
- */
-NS_SWIFT_NAME(WebView)
-@interface __FWWebView : WKWebView
-
-/// 事件代理，包含navigationDelegate和UIDelegate
-@property (nonatomic, weak, nullable) id<__FWWebViewDelegate> delegate;
-
-/// 是否启用Cookie管理，默认NO未启用
-@property (nonatomic, assign) BOOL cookieEnabled;
-
-/// 进度视图，默认trackTintColor为clear
-@property (nonatomic, readonly) UIProgressView *progressView;
-
-/// 是否允许打开通用链接，默认NO
-@property (nonatomic, assign) BOOL allowsUniversalLinks;
-
-/// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
-@property (nonatomic, assign) BOOL allowsSchemeURL;
-
-/// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
-@property (nonatomic, strong, nullable) id webRequest;
-
-@end
-
 #pragma mark - __FWWebViewCookieManager
 
 /**

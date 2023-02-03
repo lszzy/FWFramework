@@ -165,28 +165,28 @@ extension FW {
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func fw_canOpenURL(_ url: Any) -> Bool {
+    public static func fw_canOpenURL(_ url: Any?) -> Bool {
         guard let url = fw_url(string: url) else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     @objc(__fw_openURL:completionHandler:)
-    public static func fw_openURL(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
+    public static func fw_openURL(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
     @objc(__fw_openUniversalLinks:completionHandler:)
-    public static func fw_openUniversalLinks(_ url: Any, completionHandler: ((Bool) -> Void)? = nil) {
+    public static func fw_openUniversalLinks(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
     @objc(__fw_isSystemURL:)
-    public static func fw_isSystemURL(_ url: Any) -> Bool {
+    public static func fw_isSystemURL(_ url: Any?) -> Bool {
         guard let url = fw_url(string: url) else { return false }
         if let scheme = url.scheme?.lowercased(),
            ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
@@ -212,7 +212,7 @@ extension FW {
     
     /// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
     @objc(__fw_isSchemeURL:)
-    public static func fw_isSchemeURL(_ url: Any) -> Bool {
+    public static func fw_isSchemeURL(_ url: Any?) -> Bool {
         guard let url = fw_url(string: url),
               let scheme = url.scheme, !scheme.isEmpty else { return false }
         if url.isFileURL || fw_isHttpURL(url) { return false }
@@ -220,7 +220,7 @@ extension FW {
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
-    public static func fw_isHttpURL(_ url: Any) -> Bool {
+    public static func fw_isHttpURL(_ url: Any?) -> Bool {
         var urlString = url as? String ?? ""
         if let url = url as? URL {
             urlString = url.absoluteString
@@ -229,7 +229,7 @@ extension FW {
     }
 
     /// 判断URL是否是AppStore链接，支持NSString|NSURL
-    public static func fw_isAppStoreURL(_ url: Any) -> Bool {
+    public static func fw_isAppStoreURL(_ url: Any?) -> Bool {
         guard let url = fw_url(string: url) else { return false }
         // itms-apps等
         if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
@@ -307,7 +307,7 @@ extension FW {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func fw_openSafariController(_ url: Any, completionHandler: (() -> Void)? = nil) {
+    public static func fw_openSafariController(_ url: Any?, completionHandler: (() -> Void)? = nil) {
         guard let url = fw_url(string: url), fw_isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
@@ -361,7 +361,7 @@ extension FW {
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-    public static func fw_openVideoPlayer(_ url: Any) -> AVPlayerViewController? {
+    public static func fw_openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
         var player: AVPlayer?
         if let playerItem = url as? AVPlayerItem {
             player = AVPlayer(playerItem: playerItem)
@@ -378,7 +378,7 @@ extension FW {
     }
 
     /// 打开音频播放器，支持NSURL|NSString
-    public static func fw_openAudioPlayer(_ url: Any) -> AVAudioPlayer? {
+    public static func fw_openAudioPlayer(_ url: Any?) -> AVAudioPlayer? {
         // 设置播放模式示例
         // try? AVAudioSession.sharedInstance().setCategory(.ambient)
         
@@ -401,7 +401,8 @@ extension FW {
         return audioPlayer
     }
     
-    private static func fw_url(string: Any) -> URL? {
+    private static func fw_url(string: Any?) -> URL? {
+        guard let string = string else { return nil }
         if let url = string as? URL {
             return url
         } else {
