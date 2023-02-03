@@ -20,7 +20,6 @@
 - (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
 - (void)__fw_showConfirmWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel confirm:(nullable id)confirm confirmBlock:(nullable void (^)(void))confirmBlock cancelBlock:(nullable void (^)(void))cancelBlock;
 - (void)__fw_showPromptWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel confirm:(nullable id)confirm promptBlock:(nullable void (^)(UITextField *))promptBlock confirmBlock:(nullable void (^)(NSString *))confirmBlock cancelBlock:(nullable void (^)(void))cancelBlock;
-- (void)__fw_preloadReusableView;
 
 @end
 
@@ -33,6 +32,7 @@
 @interface NSObject ()
 
 + (void)__fw_logDebug:(NSString *)message;
++ (void)__fw_preloadWebView:(UIView *)webView;
 - (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 + (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
 - (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
@@ -69,7 +69,6 @@
 @interface __FWWebViewDelegateProxy : __FWDelegateProxy <__FWWebViewDelegate>
 
 @property (nonatomic, weak, nullable) id delegate;
-@property (nonatomic, assign) BOOL isPreloaded;
 
 @end
 
@@ -157,10 +156,7 @@
         [self.delegate webViewFinishLoad];
     }
     
-    if (!self.isPreloaded) {
-        self.isPreloaded = YES;
-        [webView __fw_preloadReusableView];
-    }
+    [NSObject __fw_preloadWebView:webView];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
