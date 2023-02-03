@@ -131,12 +131,15 @@ import FWObjC
     /// - Parameters:
     ///   - name: 消息名称
     ///   - observer: 监听者
-    public func fw_unobserveMessage(_ name: Notification.Name, observer: Any) {
+    @discardableResult
+    public func fw_unobserveMessage(_ name: Notification.Name, observer: Any) -> Bool {
         guard let observer = observer as? __FWNotificationTarget,
               let dict = fw_messageTargets(false),
-              let array = dict[name] as? NSMutableArray else { return }
+              let array = dict[name] as? NSMutableArray else { return false }
         
+        let result = array.contains(observer)
         array.remove(observer)
+        return result
     }
     
     /// 手工移除某个点对点消息所有监听
@@ -366,17 +369,21 @@ import FWObjC
     /// - Parameters:
     ///   - name: 通知名称
     ///   - observer: 监听者
-    public func fw_unobserveNotification(_ name: Notification.Name, observer: Any) {
+    @discardableResult
+    public func fw_unobserveNotification(_ name: Notification.Name, observer: Any) -> Bool {
         guard let observer = observer as? __FWNotificationTarget,
               let dict = fw_notificationTargets(false),
-              let array = dict[name] as? NSMutableArray else { return }
+              let array = dict[name] as? NSMutableArray else { return false }
         
+        var result = false
         for (_, elem) in array.enumerated() {
             if let obj = elem as? __FWNotificationTarget, obj == observer {
                 NotificationCenter.default.removeObserver(obj)
                 array.remove(obj)
+                result = true
             }
         }
+        return result
     }
     
     /// 手工移除某个广播通知所有监听
@@ -527,17 +534,21 @@ import FWObjC
     /// - Parameters:
     ///   - property: 属性名称
     ///   - observer: 监听者
-    public func fw_unobserveProperty(_ property: String, observer: Any) {
+    @discardableResult
+    public func fw_unobserveProperty(_ property: String, observer: Any) -> Bool {
         guard let observer = observer as? __FWKvoTarget,
               let dict = fw_kvoTargets(false),
-              let array = dict[property] as? NSMutableArray else { return }
+              let array = dict[property] as? NSMutableArray else { return false }
         
+        var result = false
         for (_, elem) in array.enumerated() {
             if let obj = elem as? __FWKvoTarget, obj == observer {
                 obj.removeObserver()
                 array.remove(obj)
+                result = true
             }
         }
+        return result
     }
     
     /// 手工移除某个属性所有监听

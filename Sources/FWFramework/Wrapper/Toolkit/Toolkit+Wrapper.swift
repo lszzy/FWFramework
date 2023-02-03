@@ -725,8 +725,9 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 移除生命周期监听者，传nil时移除所有
-    public func unobserveState(observer: Any? = nil) {
-        base.fw_unobserveState(observer: observer)
+    @discardableResult
+    public func unobserveState(observer: Any? = nil) -> Bool {
+        return base.fw_unobserveState(observer: observer)
     }
 
     /// 自定义完成结果对象，默认nil
