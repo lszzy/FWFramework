@@ -12,7 +12,7 @@ import FWFramework
     func loadWebView() {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
-            WebView.fw.reuseConfigurationBlock = { configuration in
+            WebView.fw.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
             ReusableViewPool.shared.preloadReusableView(with: WebView.self)

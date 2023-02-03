@@ -12,14 +12,14 @@ import FWObjC
 
 extension Wrapper where Base: WKWebView {
     
-    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
-    public static var reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
+    /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
+    public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
         get { return Base.fw_reuseConfigurationBlock }
         set { Base.fw_reuseConfigurationBlock = newValue }
     }
     
-    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
-    public static var reuseDefaultUrlBlock: (() -> Any?)? {
+    /// WebView进入回收复用池前默认加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
+    public static var reuseDefaultUrlBlock: ((String) -> Any?)? {
         get { return Base.fw_reuseDefaultUrlBlock }
         set { Base.fw_reuseDefaultUrlBlock = newValue }
     }
