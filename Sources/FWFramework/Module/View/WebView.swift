@@ -10,247 +10,54 @@ import UIKit
 import FWObjC
 #endif
 
-// MARK: - WebViewPool
-/// WKWebView缓存池
-///
-/// [KKJSBridge](https://github.com/karosLi/KKJSBridge)
-public class WebViewPool: NSObject {
-    
-    /// 单例模式
-    public static let shared = WebViewPool()
-    
-    /// webView最大缓存数量，默认5个
-    public var webViewMaxReuseCount: Int = 5
-    
-    /// webView最大预加载数量，默认1个
-    public var webViewMaxPreloadCount: Int = 1
-    
-    /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认空
-    public var webViewReuseLoadUrl = ""
-    
-    /// webview最大重用次数，默认为最大无限制
-    public var webViewMaxReuseTimes: Int = .max
-    
-    /// 构建 webView configuration，作为所有复用 webView 提供预先的默认 configuration
-    public var webViewConfigurationBlock: ((WKWebViewConfiguration) -> Void)?
-    
-    private var lock: DispatchSemaphore = .init(value: 1)
-    private var dequeueWebViews: [String: [WKWebView]] = [:]
-    private var enqueueWebViews: [String: [WKWebView]] = [:]
-    
-    // MARK: - Lifecycle
-    /// 初始化方法，内存警告时自动清理全部
-    public override init() {
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(clearAllReusableWebViews), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
-    }
-    
-    /// 析构方法
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-        dequeueWebViews.removeAll()
-        enqueueWebViews.removeAll()
-    }
-    
-    // MARK: - Public
-    /// 获得一个可复用的webview
-    /// - Parameters:
-    ///   - webViewType: webview的自定义class
-    ///   - webViewHolder: webview的持有者，用于自动回收webview
-    /// - Returns: 可复用的webview
-    public func dequeueWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self, webViewHolder: NSObject?) -> T {
-        tryCompactWeakHolderOfWebView()
-        let webView = getWebView(with: webViewType)
-        webView.fw_holderObject = webViewHolder
-        return webView
-    }
-    
-    /// 创建一个 webview并将它放入到回收池中，保证至少有一个可复用的webView
-    public func enqueueWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self) {
-        lock.wait()
-        let webViewTypeString = NSStringFromClass(webViewType)
-        var webViewArray = enqueueWebViews[webViewTypeString] ?? []
-        if webViewArray.count < webViewMaxPreloadCount {
-            let webView = generateInstance(with: webViewType)
-            webViewArray.append(webView)
-            enqueueWebViews[webViewTypeString] = webViewArray
-        }
-        lock.signal()
-    }
-    
-    /// 回收可复用的WKWebView
-    public func enqueueWebView(_ webView: WKWebView?) {
-        guard let webView = webView else { return }
-        
-        webView.removeFromSuperview()
-        if webView.fw_reusedTimes >= webViewMaxReuseTimes || webView.fw_isInvalid {
-            removeReusableWebView(webView)
-        } else {
-            recycleWebView(webView)
-        }
-    }
-    
-    /// 回收并销毁WKWebView，并且将之从回收池里删除
-    public func removeReusableWebView(_ webView: WKWebView?) {
-        guard let webView = webView else { return }
-        
-        webView.webViewWillEnterPool()
-        lock.wait()
-        let webViewTypeString = NSStringFromClass(webView.classForCoder)
-        if var webViewArray = dequeueWebViews[webViewTypeString],
-           webViewArray.contains(webView) {
-            webViewArray.removeAll { $0 == webView }
-            dequeueWebViews[webViewTypeString] = webViewArray
-        }
-        
-        if var webViewArray = enqueueWebViews[webViewTypeString],
-           webViewArray.contains(webView) {
-            webViewArray.removeAll { $0 == webView }
-            enqueueWebViews[webViewTypeString] = webViewArray
-        }
-        lock.signal()
-    }
-    
-    /// 销毁在回收池中特定Class的WebView
-    public func clearReusableWebViews<T: WKWebView>(with webViewType: T.Type = WKWebView.self) {
-        let webViewTypeString = NSStringFromClass(webViewType)
-        lock.wait()
-        if enqueueWebViews.keys.contains(webViewTypeString) {
-            enqueueWebViews.removeValue(forKey: webViewTypeString)
-        }
-        lock.signal()
-    }
-    
-    /// 销毁全部在回收池中的WebView
-    @objc public func clearAllReusableWebViews() {
-        tryCompactWeakHolderOfWebView()
-        lock.wait()
-        enqueueWebViews.removeAll()
-        lock.signal()
-    }
-    
-    /// 重新刷新在回收池中的WebView
-    public func reloadAllReusableWebViews() {
-        lock.wait()
-        for webViewArray in enqueueWebViews.values {
-            for webView in webViewArray {
-                webView.webViewWillEnterPool()
-            }
-        }
-        lock.signal()
-    }
-    
-    /// 判断回收池中是否包含特定Class的WebView
-    public func containsReusableWebView<T: WKWebView>(with webViewType: T.Type = WKWebView.self) -> Bool {
-        lock.wait()
-        let webViewTypeString = NSStringFromClass(webViewType)
-        var contains = false
-        if dequeueWebViews.keys.contains(webViewTypeString) ||
-            enqueueWebViews.keys.contains(webViewTypeString) {
-            contains = true
-        }
-        lock.signal()
-        return contains
-    }
-    
-    // MARK: - Private
-    private func tryCompactWeakHolderOfWebView() {
-        let webViewDictionary = dequeueWebViews
-        if webViewDictionary.count > 0 {
-            for webViewArray in webViewDictionary.values {
-                for webView in webViewArray {
-                    if webView.fw_holderObject == nil {
-                        enqueueWebView(webView)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func recycleWebView(_ webView: WKWebView?) {
-        guard let webView = webView else { return }
-        
-        webView.webViewWillEnterPool()
-        lock.wait()
-        let webViewTypeString = NSStringFromClass(webView.classForCoder)
-        if var webViewArray = dequeueWebViews[webViewTypeString],
-           webViewArray.contains(webView) {
-            webViewArray.removeAll { $0 == webView }
-            dequeueWebViews[webViewTypeString] = webViewArray
-        }
-        
-        var webViewArray = enqueueWebViews[webViewTypeString] ?? []
-        if webViewArray.count < webViewMaxReuseCount {
-            webViewArray.append(webView)
-            enqueueWebViews[webViewTypeString] = webViewArray
-        }
-        lock.signal()
-    }
-    
-    private func getWebView<T: WKWebView>(with webViewType: T.Type) -> T {
-        let webViewTypeString = NSStringFromClass(webViewType)
-        var enqueueWebView: T?
-        lock.wait()
-        if var webViewArray = enqueueWebViews[webViewTypeString],
-           webViewArray.count > 0 {
-            enqueueWebView = webViewArray.removeFirst() as? T
-            enqueueWebViews[webViewTypeString] = webViewArray
-        }
-        
-        let webView = enqueueWebView ?? generateInstance(with: webViewType)
-        var webViewArray = dequeueWebViews[webViewTypeString] ?? []
-        webViewArray.append(webView)
-        dequeueWebViews[webViewTypeString] = webViewArray
-        lock.signal()
-        
-        webView.webViewWillLeavePool()
-        return webView
-    }
-    
-    private func generateInstance<T: WKWebView>(with webViewType: T.Type) -> T {
-        let configuration = WKWebView.fw_defaultConfiguration()
-        webViewConfigurationBlock?(configuration)
-        return webViewType.init(frame: .zero, configuration: configuration)
-    }
-    
-}
-
-/// WKWebView重用协议
-public protocol WebViewReusableProtocol {
-    
-    /// 即将进入回收池
-    func webViewWillEnterPool()
-    
-    /// 即将离开回收池
-    func webViewWillLeavePool()
-    
-}
-
+// MARK: - WKWebView+ReusableView
 @_spi(FW) extension WKWebView {
     
-    /// 持有者对象，弱引用
-    public weak var fw_holderObject: NSObject? {
-        get { return fw_property(forName: "fw_holderObject") as? NSObject }
-        set { fw_setPropertyWeak(newValue, forName: "fw_holderObject") }
+    /// 初始化WKWebView可重用视图
+    open override class func reusableViewInitialize() -> Self {
+        let configuration = WKWebView.fw_defaultConfiguration()
+        self.fw_reuseConfigurationBlock?(configuration)
+        return self.init(frame: .zero, configuration: configuration)
     }
     
-    /// 重用次数
-    public var fw_reusedTimes: Int {
-        get { return fw_propertyInt(forName: "fw_reusedTimes") }
-        set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }
-    }
-    
-    /// 是否已失效，将自动从缓存池移除
-    public var fw_isInvalid: Bool {
-        get { return fw_propertyBool(forName: "fw_isInvalid") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isInvalid") }
-    }
-    
-    /// 按需预加载下一个WebView实例，一般在didFinishNavigation中调用
-    public func fw_prepareNextWebView() {
-        if WebViewPool.shared.containsReusableWebView(with: type(of: self)) {
-            WebViewPool.shared.enqueueWebView(with: type(of: self))
+    /// 即将进入回收池，必须调用super
+    open override func reusableViewWillEnterPool() {
+        super.reusableViewWillEnterPool()
+        
+        fw_jsBridge = nil
+        fw_jsBridgeEnabled = false
+        fw_navigationItems = nil
+        scrollView.delegate = nil
+        scrollView.isScrollEnabled = true
+        stopLoading()
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
+        evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
+        configuration.userContentController.removeAllUserScripts()
+        
+        if let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?() {
+            load(URLRequest(url: URL.fw_safeURL(defaultUrl)))
+        } else {
+            load(URLRequest(url: URL.fw_safeURL(nil)))
         }
+    }
+    
+    /// 即将离开回收池，必须调用super
+    open override func reusableViewWillLeavePool() {
+        super.reusableViewWillLeavePool()
+        
+        fw_clearBackForwardList()
+    }
+    
+    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
+    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
+        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration) -> Void }
+        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
+    }
+    
+    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
+    public class var fw_reuseDefaultUrlBlock: (() -> String?)? {
+        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? () -> String? }
+        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
     }
     
     private func fw_clearBackForwardList() {
@@ -262,78 +69,18 @@ public protocol WebViewReusableProtocol {
     
 }
 
-@objc extension WKWebView: WebViewReusableProtocol {
+// MARK: - WebView+ReusableView
+@_spi(FW) extension WebView {
     
     /// 即将进入回收池，必须调用super
-    open func webViewWillEnterPool() {
-        fw_holderObject = nil
-        fw_jsBridge = nil
-        fw_jsBridgeEnabled = false
-        fw_navigationItems = nil
-        scrollView.delegate = nil
-        scrollView.isScrollEnabled = true
-        stopLoading()
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
-        configuration.userContentController.removeAllUserScripts()
-        if !WebViewPool.shared.webViewReuseLoadUrl.isEmpty {
-            load(URLRequest(url: URL.fw_safeURL(WebViewPool.shared.webViewReuseLoadUrl)))
-        } else {
-            load(URLRequest(url: URL.fw_safeURL(nil)))
-        }
-    }
-    
-    /// 即将离开回收池，必须调用super
-    open func webViewWillLeavePool() {
-        fw_reusedTimes += 1
-        fw_clearBackForwardList()
-    }
-    
-}
-
-extension WebView {
-    
-    /// 即将进入回收池，必须调用super
-    open override func webViewWillEnterPool() {
+    open override func reusableViewWillEnterPool() {
         delegate = nil
         cookieEnabled = false
         allowsUniversalLinks = false
         allowsSchemeURL = false
         webRequest = nil
-        super.webViewWillEnterPool()
-    }
-    
-}
-
-// MARK: - UIProgressView+WebView
-@_spi(FW) extension UIProgressView {
-    
-    /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-    @objc(__fw_webProgress)
-    public var fw_webProgress: Float {
-        get {
-            return self.progress
-        }
-        set {
-            if newValue <= 0 {
-                self.alpha = 0
-            } else if newValue > 0 && newValue < 1.0 {
-                if self.alpha == 0 {
-                    self.progress = 0
-                    UIView.animate(withDuration: 0.2) {
-                        self.alpha = 1.0
-                    }
-                }
-            } else {
-                self.alpha = 1.0
-                UIView.animate(withDuration: 0.2) {
-                    self.alpha = 0
-                } completion: { _ in
-                    self.progress = 0
-                }
-            }
-            self.setProgress(newValue, animated: true)
-        }
+        
+        super.reusableViewWillEnterPool()
     }
     
 }
@@ -486,6 +233,39 @@ extension WebView {
             } else {
                 viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
             }
+        }
+    }
+    
+}
+
+// MARK: - UIProgressView+WebView
+@_spi(FW) extension UIProgressView {
+    
+    /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
+    @objc(__fw_webProgress)
+    public var fw_webProgress: Float {
+        get {
+            return self.progress
+        }
+        set {
+            if newValue <= 0 {
+                self.alpha = 0
+            } else if newValue > 0 && newValue < 1.0 {
+                if self.alpha == 0 {
+                    self.progress = 0
+                    UIView.animate(withDuration: 0.2) {
+                        self.alpha = 1.0
+                    }
+                }
+            } else {
+                self.alpha = 1.0
+                UIView.animate(withDuration: 0.2) {
+                    self.alpha = 0
+                } completion: { _ in
+                    self.progress = 0
+                }
+            }
+            self.setProgress(newValue, animated: true)
         }
     }
     

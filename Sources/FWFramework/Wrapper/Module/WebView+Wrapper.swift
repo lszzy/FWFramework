@@ -10,12 +10,18 @@ import UIKit
 import FWObjC
 #endif
 
-extension Wrapper where Base: UIProgressView {
+extension Wrapper where Base: WKWebView {
     
-    /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-    public var webProgress: Float {
-        get { return base.fw_webProgress }
-        set { base.fw_webProgress = newValue }
+    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
+    public static var reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
+        get { return Base.fw_reuseConfigurationBlock }
+        set { Base.fw_reuseConfigurationBlock = newValue }
+    }
+    
+    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
+    public static var reuseDefaultUrlBlock: (() -> String?)? {
+        get { return Base.fw_reuseDefaultUrlBlock }
+        set { Base.fw_reuseDefaultUrlBlock = newValue }
     }
     
 }
@@ -87,27 +93,14 @@ extension Wrapper where Base: WKWebView {
         base.fw_setupNavigationItems(viewController)
     }
     
-    /// 持有者对象，弱引用
-    public weak var holderObject: NSObject? {
-        get { return base.fw_holderObject }
-        set { base.fw_holderObject = newValue }
-    }
+}
+
+extension Wrapper where Base: UIProgressView {
     
-    /// 重用次数
-    public var reusedTimes: Int {
-        get { return base.fw_reusedTimes }
-        set { base.fw_reusedTimes = newValue }
-    }
-    
-    /// 是否已失效，将自动从缓存池移除
-    public var isInvalid: Bool {
-        get { return base.fw_isInvalid }
-        set { base.fw_isInvalid = newValue }
-    }
-    
-    /// 按需预加载下一个WebView实例，一般在didFinishNavigation中调用
-    public func prepareNextWebView() {
-        base.fw_prepareNextWebView()
+    /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
+    public var webProgress: Float {
+        get { return base.fw_webProgress }
+        set { base.fw_webProgress = newValue }
     }
     
 }
