@@ -98,18 +98,15 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.fw.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         fw.setRightBarItem("切换") { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: ["禁止代理抓包(下次启动生效)", "允许代理抓包(下次启动生效)", "获取手机网络代理", "获取本地DNS的IP地址"], actionBlock: { index in
+            self?.fw.showSheet(title: nil, message: nil, actions: [URLSession.fw.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "获取本地DNS的IP地址"], actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {
-                    URLSession.fw.httpProxyDisabled = true
-                    UserDefaults.fw.setObject(true, forKey: self.httpProxyKey)
+                    URLSession.fw.httpProxyDisabled = !URLSession.fw.httpProxyDisabled
+                    UserDefaults.fw.setObject(URLSession.fw.httpProxyDisabled, forKey: self.httpProxyKey)
                 } else if index == 1 {
-                    URLSession.fw.httpProxyDisabled = false
-                    UserDefaults.fw.setObject(false, forKey: self.httpProxyKey)
-                } else if index == 2 {
                     let proxyString = URLSession.fw.httpProxyString ?? ""
                     self.fw.showMessage(text: "网络代理: \n\(proxyString)")
-                } else if index == 3 {
+                } else if index == 2 {
                     self.fw.showPrompt(title: "请输入域名", message: nil, cancel: nil, confirm: nil, promptBlock: { textField in
                         textField.text = "kvm.wuyong.site"
                     }, confirmBlock: { [weak self] host in
