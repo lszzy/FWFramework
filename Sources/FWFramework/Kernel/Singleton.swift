@@ -20,7 +20,7 @@ public protocol SingletonProtocol {
 
 extension SingletonProtocol where Self: NSObject {
     
-    /// 默认实现单例对象
+    /// 默认实现单例对象，NSObject子类可直接调用
     public static var shared: Self {
         var instance = self.fw_property(forName: "shared") as? Self
         if let instance = instance { return instance }
