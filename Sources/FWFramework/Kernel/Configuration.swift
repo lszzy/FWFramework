@@ -19,7 +19,7 @@ import FWObjC
 /// 3. 当前模块.[配置类]+DefaultTemplate
 open class Configuration: NSObject {
     
-    /// 单例模式对象
+    /// 单例模式对象，子类可直接调用
     public class var shared: Self {
         var instance = self.fw_property(forName: "shared") as? Self
         if let instance = instance { return instance }
