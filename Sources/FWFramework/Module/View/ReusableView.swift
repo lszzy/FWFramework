@@ -287,7 +287,6 @@ public protocol ReusableViewProtocol {
     }
     
     /// 按需预加载下一个可重用视图，仅当前视图可重用时生效
-    @objc(__fw_preloadReusableView)
     public func fw_preloadReusableView() {
         guard let reuseIdentifier = fw_reuseIdentifier else { return }
         ReusableViewPool.shared.preloadReusableView(with: type(of: self), reuseIdentifier: reuseIdentifier)

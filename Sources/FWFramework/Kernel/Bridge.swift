@@ -27,6 +27,13 @@ import UIKit
         return AppBundle.localizedString(key)
     }
     
+    /// 动态预加载WebView
+    @objc public static func __fw_preloadWebView(_ webView: UIView) {
+        if ViewControllerManager.shared.webViewReuseIdentifier != nil {
+            webView.fw_preloadReusableView()
+        }
+    }
+    
 }
 
 /// UIViewController内部Swift桥接方法
