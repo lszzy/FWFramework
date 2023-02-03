@@ -13,10 +13,11 @@ import FWObjC
 // MARK: - WebViewControllerProtocol
 /// 网页视图控制器协议，可覆写
 ///
-/// WebViewControllerProtocol默认未处理WebView重用，如需开启，步骤如下：
+/// WebViewControllerProtocol默认未开启WebView重用，如需开启，步骤如下：
 /// 1. 需在使用前(如应用启动完成时)设置ViewControllerManager.webViewReuseIdentifier，不能为nil
-/// 2. 配置WebView.reuseConfigurationBlock并调用preloadReusableView(with: WebView.self)预加载第一个WebView即可
-/// 3. 其他初始化、预加载、回收等操作框架会自动处理，详见源码
+/// 2. 配置WebView.reuseConfigurationBlock并调用preloadReusableView(with: WebView.self)预加载第一个WebView
+/// 3. 按需调用webView.preloadReusableView预加载下一个WebView，一般在webViewFinishLoad中
+/// 4. 其他初始化、回收等重用操作框架会自动处理，详见源码
 ///
 /// 如遇到WebView内存过大引起的白屏问题时，可在webViewWebContentProcessDidTerminate方法中调用webView.reload()即可
 public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {

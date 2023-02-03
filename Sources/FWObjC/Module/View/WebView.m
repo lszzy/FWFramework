@@ -32,7 +32,6 @@
 @interface NSObject ()
 
 + (void)__fw_logDebug:(NSString *)message;
-+ (void)__fw_preloadWebView:(UIView *)webView;
 - (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
 + (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
 - (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
@@ -155,8 +154,6 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(webViewFinishLoad)]) {
         [self.delegate webViewFinishLoad];
     }
-    
-    [NSObject __fw_preloadWebView:webView];
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
