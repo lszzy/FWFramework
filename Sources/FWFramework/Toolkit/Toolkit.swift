@@ -1693,6 +1693,7 @@ public enum ViewControllerState: Int {
     case didAppear = 4
     case willDisappear = 5
     case didDisappear = 6
+    case dealloc = 7
 }
 
 /// 为提升性能，触发state改变等的swizzle代码统一放到了ViewController
