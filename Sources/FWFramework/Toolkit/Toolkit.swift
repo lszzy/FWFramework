@@ -1734,17 +1734,22 @@ public enum ViewControllerState: Int {
     }
     
     /// 移除生命周期监听者，传nil时移除所有
-    public func fw_unobserveState(observer: Any? = nil) {
-        guard let targets = fw_stateTargets(false) else { return }
+    @discardableResult
+    public func fw_unobserveState(observer: Any? = nil) -> Bool {
+        guard let targets = fw_stateTargets(false) else { return false }
         
         if let observer = observer as? StateTarget {
+            var result = false
             for (_, elem) in targets.enumerated() {
                 if let target = elem as? StateTarget, observer == target {
                     targets.remove(target)
+                    result = true
                 }
             }
+            return result
         } else {
             targets.removeAllObjects()
+            return true
         }
     }
     

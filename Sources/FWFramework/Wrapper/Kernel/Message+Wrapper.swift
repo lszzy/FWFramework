@@ -78,8 +78,9 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 消息名称
     ///   - observer: 监听者
-    public func unobserveMessage(_ name: Notification.Name, observer: Any) {
-        base.fw_unobserveMessage(name, observer: observer)
+    @discardableResult
+    public func unobserveMessage(_ name: Notification.Name, observer: Any) -> Bool {
+        return base.fw_unobserveMessage(name, observer: observer)
     }
     
     /// 手工移除某个点对点消息所有监听
@@ -229,8 +230,9 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 通知名称
     ///   - observer: 监听者
-    public func unobserveNotification(_ name: Notification.Name, observer: Any) {
-        base.fw_unobserveNotification(name, observer: observer)
+    @discardableResult
+    public func unobserveNotification(_ name: Notification.Name, observer: Any) -> Bool {
+        return base.fw_unobserveNotification(name, observer: observer)
     }
     
     /// 手工移除某个广播通知所有监听
@@ -313,8 +315,9 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - property: 属性名称
     ///   - observer: 监听者
-    public func unobserveProperty(_ property: String, observer: Any) {
-        base.fw_unobserveProperty(property, observer: observer)
+    @discardableResult
+    public func unobserveProperty(_ property: String, observer: Any) -> Bool {
+        return base.fw_unobserveProperty(property, observer: observer)
     }
     
     /// 手工移除某个属性所有监听
