@@ -1794,14 +1794,6 @@ typedef struct __ProxyBlock {
 
 @implementation __FWNotificationTarget
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _identifier = NSUUID.UUID.UUIDString;
-    }
-    return self;
-}
-
 - (void)dealloc {
     if (self.broadcast) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -1835,14 +1827,6 @@ typedef struct __ProxyBlock {
 #pragma mark - __FWKvoTarget
 
 @implementation __FWKvoTarget
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _identifier = NSUUID.UUID.UUIDString;
-    }
-    return self;
-}
 
 - (void)dealloc {
     [self removeObserver];
@@ -1902,14 +1886,6 @@ typedef struct __ProxyBlock {
 #pragma mark - __FWBlockTarget
 
 @implementation __FWBlockTarget
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _identifier = NSUUID.UUID.UUIDString;
-    }
-    return self;
-}
 
 - (void)invoke:(id)sender {
     if (self.block) {

@@ -1723,24 +1723,23 @@ public enum ViewControllerState: Int {
         }
     }
 
-    /// 添加生命周期变化监听句柄
+    /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
-    public func fw_observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> String {
+    public func fw_observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> NSObjectProtocol {
         let targets = fw_stateTargets(true)
         let target = StateTarget()
         target.block = block
         targets?.add(target)
-        return "\(target.hash)"
+        return target
     }
     
-    /// 根据标识移除生命周期监听句柄，传nil时移除所有
-    public func fw_unobserveState(_ identifier: String? = nil) {
+    /// 移除生命周期监听者，传nil时移除所有
+    public func fw_unobserveState(observer: Any? = nil) {
         guard let targets = fw_stateTargets(false) else { return }
         
-        if let identifier = identifier {
+        if let observer = observer as? StateTarget {
             for (_, elem) in targets.enumerated() {
-                if let target = elem as? StateTarget,
-                   identifier == "\(target.hash)" {
+                if let target = elem as? StateTarget, observer == target {
                     targets.remove(target)
                 }
             }

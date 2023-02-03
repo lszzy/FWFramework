@@ -229,24 +229,29 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         return gestureRecognizer
     }
     
-    /// 添加事件句柄，返回唯一标志
+    /// 添加事件句柄，返回监听者
     @discardableResult
-    public func fw_addBlock(_ block: @escaping (Any) -> Void) -> String {
+    public func fw_addBlock(_ block: @escaping (Any) -> Void) -> NSObjectProtocol {
         let target = __FWBlockTarget()
         target.block = block
         self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
         fw_blockTargets.append(target)
-        return target.identifier
+        return target
     }
 
-    /// 根据唯一标志移除事件句柄
-    public func fw_removeBlock(_ identifier: String) {
+    /// 移除事件句柄监听者，返回是否成功
+    @discardableResult
+    public func fw_removeBlock(observer: Any) -> Bool {
+        guard let observer = observer as? __FWBlockTarget else { return false }
+        var result = false
         fw_blockTargets.forEach { target in
-            if identifier == target.identifier {
+            if observer == target {
                 self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)))
+                result = true
             }
         }
-        fw_blockTargets.removeAll { identifier == $0.identifier }
+        fw_blockTargets.removeAll { observer == $0 }
+        return result
     }
 
     /// 移除所有事件句柄
@@ -286,27 +291,28 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
     @objc(__fw_addTapGestureWithBlock:customize:)
-    public func fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+    public func fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> NSObjectProtocol {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer() : UITapGestureRecognizer()
-        let identifier = gesture.fw_addBlock(block)
-        gesture.fw_setPropertyCopy(identifier, forName: "fw_tapGesture")
+        let observer = gesture.fw_addBlock(block)
         self.addGestureRecognizer(gesture)
         if customize != nil, let tapGesture = gesture as? TapGestureRecognizer {
             customize?(tapGesture)
         }
-        return identifier
+        return observer
     }
 
-    /// 根据唯一标志移除点击手势句柄
-    public func fw_removeTapGesture(_ identifier: String) {
+    /// 移除点击手势句柄监听者，返回是否成功
+    @discardableResult
+    public func fw_removeTapGesture(observer: Any) -> Bool {
+        var result = false
         self.gestureRecognizers?.forEach({ gesture in
-            if gesture is UITapGestureRecognizer {
-                if let gestureIdentifier = gesture.fw_property(forName: "fw_tapGesture") as? String,
-                   gestureIdentifier == identifier {
-                    self.removeGestureRecognizer(gesture)
-                }
+            if gesture is UITapGestureRecognizer,
+               gesture.fw_removeBlock(observer: observer) {
+                self.removeGestureRecognizer(gesture)
+                result = true
             }
         })
+        return result
     }
 
     /// 移除所有点击手势
@@ -323,32 +329,36 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 // MARK: UIControl+Block
 @_spi(FW) extension UIControl {
     
-    /// 添加事件句柄
+    /// 添加事件句柄，返回监听者
     @discardableResult
-    public func fw_addBlock(_ block: @escaping (Any) -> Void, for controlEvents: UIControl.Event) -> String {
+    public func fw_addBlock(_ block: @escaping (Any) -> Void, for controlEvents: UIControl.Event) -> NSObjectProtocol {
         let target = __FWBlockTarget()
         target.block = block
         target.events = controlEvents
         self.addTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: controlEvents)
         fw_blockTargets.append(target)
-        return target.identifier
+        return target
     }
 
-    /// 根据唯一标志移除事件句柄
-    public func fw_removeBlock(_ identifier: String, for controlEvents: UIControl.Event) {
-        fw_removeAllBlocks(for: controlEvents, identifier: identifier)
+    /// 移除事件句柄监听者
+    @discardableResult
+    public func fw_removeBlock(observer: Any, for controlEvents: UIControl.Event) -> Bool {
+        guard let observer = observer as? __FWBlockTarget else { return false }
+        return fw_removeAllBlocks(for: controlEvents, observer: observer)
     }
 
     /// 移除所有事件句柄
-    public func fw_removeAllBlocks(for controlEvents: UIControl.Event) {
-        fw_removeAllBlocks(for: controlEvents, identifier: nil)
+    @discardableResult
+    public func fw_removeAllBlocks(for controlEvents: UIControl.Event) -> Bool {
+        return fw_removeAllBlocks(for: controlEvents, observer: nil)
     }
     
-    private func fw_removeAllBlocks(for controlEvents: UIControl.Event, identifier: String?) {
+    private func fw_removeAllBlocks(for controlEvents: UIControl.Event, observer: __FWBlockTarget?) -> Bool {
+        var result = false
         var removes: [__FWBlockTarget] = []
         for target in fw_blockTargets {
             if !target.events.intersection(controlEvents).isEmpty {
-                let shouldRemove = identifier == nil || target.identifier == identifier
+                let shouldRemove = observer == nil || target == observer
                 if !shouldRemove { continue }
                 
                 var newEvent = target.events
@@ -361,9 +371,11 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
                     self.removeTarget(target, action: #selector(__FWBlockTarget.invoke(_:)), for: target.events)
                     removes.append(target)
                 }
+                result = true
             }
         }
         fw_blockTargets.removeAll { removes.contains($0) }
+        return result
     }
 
     /// 添加点击事件
@@ -374,13 +386,14 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     /// 添加点击句柄
     @discardableResult
     @objc(__fw_addTouchWithBlock:)
-    public func fw_addTouch(block: @escaping (Any) -> Void) -> String {
+    public func fw_addTouch(block: @escaping (Any) -> Void) -> NSObjectProtocol {
         return fw_addBlock(block, for: .touchUpInside)
     }
 
-    /// 根据唯一标志移除点击句柄
-    public func fw_removeTouchBlock(_ identifier: String) {
-        fw_removeBlock(identifier, for: .touchUpInside)
+    /// 移除点击句柄监听者
+    @discardableResult
+    public func fw_removeTouchBlock(observer: Any) -> Bool {
+        return fw_removeBlock(observer: observer, for: .touchUpInside)
     }
     
     /// 移除所有点击句柄

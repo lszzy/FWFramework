@@ -78,11 +78,11 @@ class Tests: XCTestCase {
     func testMessage() {
         var messageValue: Int = 0
         let messageName = Notification.Name.init(rawValue: "Test")
-        let observeId = fw.observeMessage(messageName) { _ in
+        let observer = fw.observeMessage(messageName) { _ in
             messageValue += 1
         }
         fw.sendMessage(messageName, toReceiver: self)
-        fw.unobserveMessage(messageName, identifier: observeId)
+        fw.unobserveMessage(messageName, observer: observer)
         fw.sendMessage(messageName, toReceiver: self)
         XCTAssertEqual(messageValue, 1)
         
