@@ -54,6 +54,7 @@ public class ViewControllerIntercepter: NSObject {
     public var viewDidAppearIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewWillDisappearIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewDidDisappearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var deinitIntercepter: ((UIViewController) -> Void)?
     
     fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
     
@@ -82,6 +83,8 @@ public class ViewControllerManager: NSObject {
     public var hookViewWillDisappear: ((UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidDisappear钩子句柄，viewDidDisappear优先自动调用
     public var hookViewDidDisappear: ((UIViewController, Bool) -> Void)?
+    /// 默认全局控制器deinit钩子句柄，dealloc优先自动调用
+    public var hookDeinit: ((UIViewController) -> Void)?
     
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
     public var hookScrollViewController: ((UIViewController & ScrollViewControllerProtocol) -> Void)?
@@ -246,6 +249,11 @@ public class ViewControllerManager: NSObject {
         NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
             // dealloc时不调用fw，防止释放时动态创建包装器对象
             let viewController = selfObject as? UIViewController
+            viewController?.fw_state = .dealloc
+            if let viewController = viewController, viewController is ViewControllerProtocol {
+                ViewControllerManager.shared.hookDeinit(viewController)
+            }
+            
             let completionHandler = viewController?.fw_completionHandler
             if completionHandler != nil {
                 let completionResult = viewController?.fw_completionResult
@@ -396,6 +404,19 @@ public class ViewControllerManager: NSObject {
         for intercepterName in intercepterNames {
             if let intercepter = intercepters[intercepterName] {
                 intercepter.viewDidDisappearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    private func hookDeinit(_ viewController: UIViewController) {
+        // 1. 默认deinit
+        hookDeinit?(viewController)
+        
+        // 2. 拦截器deinit
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.deinitIntercepter?(viewController)
             }
         }
     }
