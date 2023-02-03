@@ -14,10 +14,9 @@ import FWObjC
 /// 网页视图控制器协议，可覆写
 ///
 /// WebViewControllerProtocol默认未处理WebView重用，如需开启，步骤如下：
-/// 1. 监听应用启动完成时配置webViewConfigurationBlock并调用enqueueWebView(with: WebView.self)预加载第一个WebView
-/// 2. 实现懒加载webView协议方法返回：WebViewPool.shared.dequeueWebView(with: WebView.self, webViewHolder: self)
-/// 3. 网页加载完成webViewFinishLoad钩子中调用：webView.fw.prepareNextWebView() 预加载下一个WebView
-/// 4. 控制器释放deinit中调用：WebViewPool.shared.enqueueWebView(webView) 回收到缓存池
+/// 1. 需在使用前(如应用启动完成时)设置ViewControllerManager.webViewReuseIdentifier，不能为nil
+/// 2. 配置WebView.reuseConfigurationBlock并调用preloadReusableView(with: WebView.self)预加载第一个WebView即可
+/// 3. 其他初始化、预加载、回收等操作框架会自动处理，详见源码
 ///
 /// 如遇到WebView内存过大引起的白屏问题时，可在webViewWebContentProcessDidTerminate方法中调用webView.reload()即可
 public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
@@ -49,9 +48,14 @@ extension WebViewControllerProtocol where Self: UIViewController {
         if let result = fw_property(forName: "webView") as? WebView {
             return result
         } else {
-            let configuration = WKWebView.fw_defaultConfiguration()
-            setupWebConfiguration(configuration)
-            let result = WebView(frame: .zero, configuration: configuration)
+            var result: WebView
+            if let reuseIdentifier = ViewControllerManager.shared.webViewReuseIdentifier {
+                result = ReusableViewPool.shared.dequeueReusableView(with: WebView.self, viewHolder: self, reuseIdentifier: reuseIdentifier)
+            } else {
+                let configuration = WKWebView.fw_defaultConfiguration()
+                setupWebConfiguration(configuration)
+                result = WebView(frame: .zero, configuration: configuration)
+            }
             fw_setProperty(result, forName: "webView")
             return result
         }
@@ -120,6 +124,13 @@ internal extension ViewControllerManager {
         }
         
         webView.webRequest = viewController.webRequest
+    }
+    
+    func webViewControllerDeinit(_ viewController: UIViewController) {
+        guard webViewReuseIdentifier != nil,
+              let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
+        
+        ReusableViewPool.shared.recycleReusableView(viewController.webView)
     }
     
 }

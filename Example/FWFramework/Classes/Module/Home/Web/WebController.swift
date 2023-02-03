@@ -12,10 +12,8 @@ import FWFramework
     func loadWebView() {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
-            WebView.fw.reuseConfigurationBlock = { configuration, _ in
-                configuration.allowsInlineMediaPlayback = true
-            }
-            ReusableViewPool.shared.preloadReusableView(with: WebView.self)
+            let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
+            WebController.toggleReuse(enabled: reuseEnabled)
             
             if let observer = observer {
                 NotificationCenter.default.removeObserver(observer)
@@ -45,10 +43,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        ReusableViewPool.shared.recycleReusableView(webView)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -68,11 +62,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
     }
     
     // MARK: - WebViewControllerProtocol
-    lazy var webView: WebView = {
-        let result = ReusableViewPool.shared.dequeueReusableView(with: WebView.self, viewHolder: self)
-        return result
-    }()
-    
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
@@ -100,6 +89,19 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     func setupLayout() {}
     
+    static func toggleReuse(enabled: Bool) {
+        if enabled {
+            let reuseIdentifier = "WebView"
+            ViewControllerManager.shared.webViewReuseIdentifier = reuseIdentifier
+            WebView.fw.reuseConfigurationBlock = { configuration, _ in
+                configuration.allowsInlineMediaPlayback = true
+            }
+            ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
+        } else {
+            ViewControllerManager.shared.webViewReuseIdentifier = nil
+        }
+    }
+    
     // MARK: - WebViewDelegate
     func webViewFinishLoad() {
         if fw.isLoaded { return }
@@ -107,8 +109,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fw.isLoaded = true
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
-        
-        webView.fw.preloadReusableView()
     }
     
     func webViewFailLoad(_ error: Error) {
@@ -199,7 +199,15 @@ class WebController: UIViewController, WebViewControllerProtocol {
     }
     
     @objc func shareRequestUrl() {
-        UIApplication.fw.openActivityItems([FW.safeURL(requestUrl)])
+        let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
+        fw.showSheet(title: nil, message: nil, actions: ["分享", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+            if index == 0 {
+                UIApplication.fw.openActivityItems([FW.safeURL(self?.requestUrl)])
+            } else {
+                UserDefaults.fw.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
+                WebController.toggleReuse(enabled: !reuseEnabled)
+            }
+        }
     }
     
     @objc func loadRequestUrl() {

@@ -69,6 +69,7 @@ public class ViewControllerManager: NSObject {
     /// 单例模式
     public static let shared = ViewControllerManager()
     
+    // MARK: - Global
     /// 默认全局控制器init钩子句柄，init优先自动调用
     public var hookInit: ((UIViewController) -> Void)?
     /// 默认全局控制器viewDidLoad钩子句柄，viewDidLoad优先自动调用
@@ -86,6 +87,7 @@ public class ViewControllerManager: NSObject {
     /// 默认全局控制器deinit钩子句柄，dealloc优先自动调用
     public var hookDeinit: ((UIViewController) -> Void)?
     
+    // MARK: - ViewController
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
     public var hookScrollViewController: ((UIViewController & ScrollViewControllerProtocol) -> Void)?
     /// 默认全局tableViewController钩子句柄，viewDidLoad自动调用，先于setupTableView
@@ -95,6 +97,10 @@ public class ViewControllerManager: NSObject {
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
     public var hookWebViewController: ((UIViewController & WebViewControllerProtocol) -> Void)?
     
+    /// WebView重用标志，默认nil未开启重用
+    public var webViewReuseIdentifier: String?
+    
+    // MARK: - Intercepter
     private var intercepters: [String: ViewControllerIntercepter] = [:]
     
     private var classIntercepters: [String: [String]] = [:]
@@ -288,6 +294,9 @@ public class ViewControllerManager: NSObject {
         let webIntercepter = ViewControllerIntercepter()
         webIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
+        }
+        webIntercepter.deinitIntercepter = { viewController in
+            ViewControllerManager.shared.webViewControllerDeinit(viewController)
         }
         ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
     }
