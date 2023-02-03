@@ -20,7 +20,7 @@ import FWObjC
     }
     
     /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
-    public class var fw_reuseDefaultUrlBlock: (() -> String?)? {
+    public class var fw_reuseDefaultUrlBlock: (() -> Any?)? {
         get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? () -> String? }
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
     }
@@ -47,7 +47,7 @@ import FWObjC
         configuration.userContentController.removeAllUserScripts()
         
         if let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?() {
-            load(URLRequest(url: URL.fw_safeURL(defaultUrl)))
+            fw_loadRequest(defaultUrl)
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))
         }
@@ -121,6 +121,31 @@ import FWObjC
             return userAgent
         }
         return WKWebView.fw_browserUserAgent
+    }
+    
+    /// 加载网页请求，支持String|URL|URLRequest等
+    @discardableResult
+    public func fw_loadRequest(_ request: Any?) -> WKNavigation? {
+        guard let request = request else { return nil }
+        if let urlRequest = request as? URLRequest {
+            return load(urlRequest)
+        }
+        
+        var requestUrl = request as? URL
+        if requestUrl == nil, let urlString = request as? String {
+            requestUrl = URL.fw_url(string: urlString)
+        }
+        guard let requestUrl = requestUrl,
+              !requestUrl.absoluteString.isEmpty else { return nil }
+        
+        if requestUrl.isFileURL {
+            if let htmlString = try? String(contentsOf: requestUrl, encoding: .utf8) {
+                return loadHTMLString(htmlString, baseURL: requestUrl)
+            }
+        } else {
+            return load(URLRequest(url: requestUrl))
+        }
+        return nil
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
