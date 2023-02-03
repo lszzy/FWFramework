@@ -26,9 +26,9 @@ import FWObjC
     }
     
     /// 初始化WKWebView可重用视图
-    open override class func reusableViewInitialize(identifier: String) -> Self {
+    open override class func reusableViewInitialize(reuseIdentifier: String) -> Self {
         let configuration = WKWebView.fw_defaultConfiguration()
-        self.fw_reuseConfigurationBlock?(configuration, identifier)
+        self.fw_reuseConfigurationBlock?(configuration, reuseIdentifier)
         return self.init(frame: .zero, configuration: configuration)
     }
     
@@ -46,8 +46,8 @@ import FWObjC
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
         
-        if let identifier = fw_reuseIdentifier,
-           let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?(identifier) {
+        if let reuseIdentifier = fw_reuseIdentifier,
+           let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?(reuseIdentifier) {
             fw_loadRequest(defaultUrl)
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))
