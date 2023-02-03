@@ -90,18 +90,18 @@ extension Wrapper where Base: UIGestureRecognizer {
         }
     }
     
-    /// 添加事件句柄，返回监听者
+    /// 添加事件句柄，返回监听唯一标志
     @discardableResult
-    public func addBlock(_ block: @escaping (Base) -> Void) -> NSObjectProtocol {
+    public func addBlock(_ block: @escaping (Base) -> Void) -> String {
         return base.fw_addBlock { sender in
             block(sender as! Base)
         }
     }
 
-    /// 移除事件句柄监听者，返回是否成功
+    /// 根据监听唯一标志移除事件句柄，返回是否成功
     @discardableResult
-    public func removeBlock(observer: Any) -> Bool {
-        return base.fw_removeBlock(observer: observer)
+    public func removeBlock(identifier: String) -> Bool {
+        return base.fw_removeBlock(identifier: identifier)
     }
 
     /// 移除所有事件句柄
@@ -126,16 +126,16 @@ extension Wrapper where Base: UIView {
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> NSObjectProtocol {
+    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
         return base.fw_addTapGesture(block: { sender in
             block(sender as! UITapGestureRecognizer)
         }, customize: customize)
     }
 
-    /// 移除点击手势句柄监听者，返回是否成功
+    /// 根据监听唯一标志移除点击手势句柄，返回是否成功
     @discardableResult
-    public func removeTapGesture(observer: Any) -> Bool {
-        return base.fw_removeTapGesture(observer: observer)
+    public func removeTapGesture(identifier: String) -> Bool {
+        return base.fw_removeTapGesture(identifier: identifier)
     }
 
     /// 移除所有点击手势
@@ -148,18 +148,18 @@ extension Wrapper where Base: UIView {
 // MARK: UIControl+Block
 extension Wrapper where Base: UIControl {
     
-    /// 添加事件句柄，返回监听者
+    /// 添加事件句柄，返回监听唯一标志
     @discardableResult
-    public func addBlock(_ block: @escaping (Base) -> Void, for controlEvents: UIControl.Event) -> NSObjectProtocol {
+    public func addBlock(_ block: @escaping (Base) -> Void, for controlEvents: UIControl.Event) -> String {
         return base.fw_addBlock({ sender in
             block(sender as! Base)
         }, for: controlEvents)
     }
 
-    /// 移除事件句柄监听者
+    /// 根据监听唯一标志移除事件句柄
     @discardableResult
-    public func removeBlock(observer: Any, for controlEvents: UIControl.Event) -> Bool {
-        return base.fw_removeBlock(observer: observer, for: controlEvents)
+    public func removeBlock(identifier: String, for controlEvents: UIControl.Event) -> Bool {
+        return base.fw_removeBlock(identifier: identifier, for: controlEvents)
     }
 
     /// 移除所有事件句柄
@@ -173,18 +173,18 @@ extension Wrapper where Base: UIControl {
         base.fw_addTouch(target: target, action: action)
     }
 
-    /// 添加点击句柄
+    /// 添加点击句柄，返回监听唯一标志
     @discardableResult
-    public func addTouch(block: @escaping (Base) -> Void) -> NSObjectProtocol {
+    public func addTouch(block: @escaping (Base) -> Void) -> String {
         return base.fw_addTouch { sender in
             block(sender as! Base)
         }
     }
 
-    /// 移除点击句柄监听者
+    /// 根据监听唯一标志移除点击句柄
     @discardableResult
-    public func removeTouchBlock(observer: Any) -> Bool {
-        base.fw_removeTouchBlock(observer: observer)
+    public func removeTouchBlock(identifier: String) -> Bool {
+        base.fw_removeTouchBlock(identifier: identifier)
     }
     
     /// 移除所有点击句柄
