@@ -12,10 +12,10 @@ import FWFramework
     func loadWebView() {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
-            WebViewPool.shared.webViewConfigurationBlock = { configuration in
+            WebView.fw.reuseConfigurationBlock = { configuration in
                 configuration.allowsInlineMediaPlayback = true
             }
-            WebViewPool.shared.enqueueWebView(with: WebView.self)
+            ReusableViewPool.shared.preloadReusableView(with: WebView.self)
             
             if let observer = observer {
                 NotificationCenter.default.removeObserver(observer)
@@ -46,7 +46,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     }
     
     deinit {
-        WebViewPool.shared.enqueueWebView(webView)
+        ReusableViewPool.shared.recycleReusableView(webView)
     }
     
     override func viewDidLoad() {
@@ -69,7 +69,8 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     // MARK: - WebViewControllerProtocol
     lazy var webView: WebView = {
-        return WebViewPool.shared.dequeueWebView(with: WebView.self, webViewHolder: self)
+        let result = ReusableViewPool.shared.dequeueReusableView(with: WebView.self, viewHolder: self)
+        return result
     }()
     
     func setupWebView() {
@@ -107,7 +108,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
         
-        webView.fw.prepareNextWebView()
+        webView.fw.preloadReusableView()
     }
     
     func webViewFailLoad(_ error: Error) {

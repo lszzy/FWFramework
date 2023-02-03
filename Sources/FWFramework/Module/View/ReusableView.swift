@@ -223,20 +223,20 @@ open class ReusableViewPool: NSObject {
 /// 可重用视图协议
 public protocol ReusableViewProtocol {
     
-    /// 初始化可重用视图，默认调用init(frame:)，必须调用super
+    /// 初始化可重用视图，默认调用init(frame:)
     static func reusableViewInitialize() -> Self
     /// 可重用视图初始化完成，默认空实现，必须调用super
     func reusableViewDidInitialize()
-    /// 即将进入回收池，默认空实现，必须调用super
+    /// 即将进入回收池，默认清空viewHolder，必须调用super
     func reusableViewWillEnterPool()
-    /// 即将离开回收池，默认空实现，必须调用super
+    /// 即将离开回收池，默认重用次数+1，必须调用super
     func reusableViewWillLeavePool()
     
 }
 
 @objc extension UIView: ReusableViewProtocol {
     
-    /// 初始化可重用视图，默认调用init(frame:)，必须调用super
+    /// 初始化可重用视图，默认调用init(frame:)
     open class func reusableViewInitialize() -> Self {
         return self.init(frame: .zero)
     }
@@ -244,11 +244,15 @@ public protocol ReusableViewProtocol {
     /// 可重用视图初始化完成，默认空实现，必须调用super
     open func reusableViewDidInitialize() {}
     
-    /// 即将进入回收池，默认空实现，必须调用super
-    open func reusableViewWillEnterPool() {}
+    /// 即将进入回收池，默认清空viewHolder，必须调用super
+    open func reusableViewWillEnterPool() {
+        fw_viewHolder = nil
+    }
     
-    /// 即将离开回收池，默认空实现，必须调用super
-    open func reusableViewWillLeavePool() {}
+    /// 即将离开回收池，默认重用次数+1，必须调用super
+    open func reusableViewWillLeavePool() {
+        fw_reusedTimes += 1
+    }
     
 }
 
