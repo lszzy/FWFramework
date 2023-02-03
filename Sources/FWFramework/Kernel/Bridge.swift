@@ -34,8 +34,8 @@ import UIKit
     
     /// 内部判断是否处于可见状态
     @objc public func __fw_isInvisibleState() -> Bool {
-        if self.fw_visibleState.rawValue < ViewControllerVisibleState.didAppear.rawValue ||
-            self.fw_visibleState.rawValue >= ViewControllerVisibleState.didDisappear.rawValue {
+        if self.fw_state.rawValue < ViewControllerState.didAppear.rawValue ||
+            self.fw_state.rawValue >= ViewControllerState.didDisappear.rawValue {
             return true
         }
         return false
