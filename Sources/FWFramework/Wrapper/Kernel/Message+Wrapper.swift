@@ -11,39 +11,18 @@ import Foundation
 extension Wrapper where Base: NSObject {
     
     // MARK: - Observer
-    /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - block: 消息句柄
-    /// - Returns: 监听者
-    @discardableResult
-    public func observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
-        return base.fw_observeMessage(name, block: block)
-    }
-    
-    /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
     ///   - block: 消息句柄
     /// - Returns: 监听者
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func observeMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         return base.fw_observeMessage(name, object: object, block: block)
     }
     
-    /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - target: 消息目标
-    ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听者
-    @discardableResult
-    public func observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        return base.fw_observeMessage(name, target: target, action: action)
-    }
-    
-    /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个指定对象点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
@@ -51,26 +30,17 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听者
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+    public func observeMessage(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         return base.fw_observeMessage(name, object: object, target: target, action: action)
     }
     
-    /// 手工移除某个点对点消息指定监听
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - target: 消息目标
-    ///   - action: 目标动作
-    public func unobserveMessage(_ name: Notification.Name, target: Any?, action: Selector?) {
-        base.fw_unobserveMessage(name, target: target, action: action)
-    }
-    
-    /// 手工移除某个指定对象点对点消息指定监听
+    /// 手工移除某个点对点消息指定监听，可指定对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func unobserveMessage(_ name: Notification.Name, object: AnyObject?, target: Any?, action: Selector?) {
+    public func unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: Any?, action: Selector?) {
         base.fw_unobserveMessage(name, object: object, target: target, action: action)
     }
     
@@ -83,17 +53,11 @@ extension Wrapper where Base: NSObject {
         return base.fw_unobserveMessage(name, observer: observer)
     }
     
-    /// 手工移除某个点对点消息所有监听
-    /// - Parameter name: 消息名称
-    public func unobserveMessage(_ name: Notification.Name) {
-        base.fw_unobserveMessage(name)
-    }
-    
-    /// 手工移除某个指定对象点对点消息所有监听
+    /// 手工移除某个点对点消息所有监听，可指定对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
-    public func unobserveMessage(_ name: Notification.Name, object: AnyObject?) {
+    public func unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil) {
         base.fw_unobserveMessage(name, object: object)
     }
     
@@ -103,57 +67,23 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Subject
-    /// 发送点对点消息
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        base.fw_sendMessage(name, toReceiver: toReceiver)
-    }
-    
-    /// 发送点对点消息，附带对象
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        base.fw_sendMessage(name, object: object, toReceiver: toReceiver)
-    }
-    
     /// 发送点对点消息，附带对象和用户信息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - userInfo: 用户信息
+    ///   - object: 消息对象，默认nil
+    ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+    public func sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         base.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
-    /// 发送点对点消息
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        Base.fw_sendMessage(name, toReceiver: toReceiver)
-    }
-    
-    /// 发送点对点消息，附带对象
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        Base.fw_sendMessage(name, object: object, toReceiver: toReceiver)
-    }
-    
     /// 发送点对点消息，附带对象和用户信息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - userInfo: 用户信息
+    ///   - object: 消息对象，默认nil
+    ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+    public static func sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         Base.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     

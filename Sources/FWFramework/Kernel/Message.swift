@@ -14,24 +14,14 @@ import FWObjC
 @_spi(FW) extension NSObject {
     
     // MARK: - Observer
-    /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - block: 消息句柄
-    /// - Returns: 监听者
-    @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
-        return fw_observeMessage(name, object: nil, block: block)
-    }
-    
-    /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
     ///   - block: 消息句柄
     /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -47,18 +37,7 @@ import FWObjC
         return messageTarget
     }
     
-    /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - target: 消息目标
-    ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听者
-    @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        return fw_observeMessage(name, object: nil, target: target, action: action)
-    }
-    
-    /// 监听某个指定对象点对点消息，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
@@ -66,7 +45,7 @@ import FWObjC
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -83,22 +62,13 @@ import FWObjC
         return messageTarget
     }
     
-    /// 手工移除某个点对点消息指定监听
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - target: 消息目标
-    ///   - action: 目标动作
-    public func fw_unobserveMessage(_ name: Notification.Name, target: Any?, action: Selector?) {
-        fw_unobserveMessage(name, object: nil, target: target, action: action)
-    }
-    
-    /// 手工移除某个指定对象点对点消息指定监听
+    /// 手工移除某个点对点消息指定监听，可指定对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject?, target: Any?, action: Selector?) {
+    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: Any?, action: Selector?) {
         guard let dict = fw_messageTargets(false) else { return }
         
         // object为nil且target为nil始终移除
@@ -142,17 +112,11 @@ import FWObjC
         return result
     }
     
-    /// 手工移除某个点对点消息所有监听
-    /// - Parameter name: 消息名称
-    public func fw_unobserveMessage(_ name: Notification.Name) {
-        fw_unobserveMessage(name, object: nil)
-    }
-    
-    /// 手工移除某个指定对象点对点消息所有监听
+    /// 手工移除某个点对点消息所有监听，可指定对象
     /// - Parameters:
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
-    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject?) {
+    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil) {
         fw_unobserveMessage(name, object: object, target: nil, action: nil)
     }
     
@@ -172,57 +136,23 @@ import FWObjC
     }
     
     // MARK: - Subject
-    /// 发送点对点消息
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - toReceiver: 消息接收者
-    public func fw_sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        fw_sendMessage(name, object: nil, toReceiver: toReceiver)
-    }
-    
-    /// 发送点对点消息，附带对象
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - toReceiver: 消息接收者
-    public func fw_sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        fw_sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
-    }
-    
     /// 发送点对点消息，附带对象和用户信息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - userInfo: 用户信息
+    ///   - object: 消息对象，默认nil
+    ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public func fw_sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+    public func fw_sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         NSObject.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
-    /// 发送点对点消息
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - toReceiver: 消息接收者
-    public static func fw_sendMessage(_ name: Notification.Name, toReceiver: Any) {
-        fw_sendMessage(name, object: nil, toReceiver: toReceiver)
-    }
-    
-    /// 发送点对点消息，附带对象
-    /// - Parameters:
-    ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - toReceiver: 消息接收者
-    public static func fw_sendMessage(_ name: Notification.Name, object: Any?, toReceiver: Any) {
-        fw_sendMessage(name, object: object, userInfo: nil, toReceiver: toReceiver)
-    }
-    
     /// 发送点对点消息，附带对象和用户信息
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - object: 消息对象
-    ///   - userInfo: 用户信息
+    ///   - object: 消息对象，默认nil
+    ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public static func fw_sendMessage(_ name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?, toReceiver: Any) {
+    public static func fw_sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         guard let receiver = toReceiver as? NSObject,
               let dict = receiver.fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
