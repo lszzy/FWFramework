@@ -10,9 +10,278 @@ import UIKit
 import FWObjC
 #endif
 
-// MARK: - WKWebView+ReusableView
+// MARK: - WebView
+/// WebView事件代理协议
+@objc public protocol WebViewDelegate: WKNavigationDelegate, WKUIDelegate {
+    
+    /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认未实现
+    @objc optional func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool
+
+    /// 已经加载完成，可用来获取title、设置按钮等，默认未实现
+    @objc optional func webViewFinishLoad()
+
+    /// 网页加载失败，可用来处理加载异常等，默认未实现
+    @objc optional func webViewFailLoad(_ error: Error)
+    
+}
+
+/// WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
+open class WebView: WKWebView {
+    
+    private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate {
+        
+        // MARK: - WKNavigationDelegate
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            if let webView = webView as? WebView,
+               webView.cookieEnabled,
+               let request = navigationAction.request as? NSMutableURLRequest {
+                WebViewCookieManager.syncRequestCookie(request)
+            }
+            
+            if self.delegate?.responds(to: NSSelectorFromString("webView:decidePolicyForNavigationAction:decisionHandler:")) ?? false {
+                self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
+                return
+            }
+            
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewShouldLoad(_:))) ?? false,
+               !(self.delegate?.webViewShouldLoad?(navigationAction) ?? true) {
+                decisionHandler(.cancel)
+                return
+            }
+            
+            if UIApplication.fw_isSystemURL(navigationAction.request.url) {
+                UIApplication.fw_openURL(navigationAction.request.url)
+                decisionHandler(.cancel)
+                return
+            }
+            
+            if let webView = webView as? WebView,
+               webView.allowsSchemeURL,
+               UIApplication.fw_isSchemeURL(navigationAction.request.url) {
+                UIApplication.fw_openURL(navigationAction.request.url)
+                decisionHandler(.cancel)
+                return
+            }
+            
+            if let webView = webView as? WebView,
+               webView.allowsUniversalLinks,
+               navigationAction.request.url?.scheme == "https" {
+                UIApplication.fw_openUniversalLinks(navigationAction.request.url) { success in
+                    decisionHandler(success ? .cancel : .allow)
+                }
+                return
+            }
+            
+            decisionHandler(.allow)
+        }
+        
+        func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+            if let webView = webView as? WebView,
+               webView.cookieEnabled {
+                WebViewCookieManager.copyWebViewCookie(webView)
+            }
+            
+            if self.delegate?.responds(to: NSSelectorFromString("webView:decidePolicyForNavigationResponse:decisionHandler:")) ?? false {
+                self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
+                return
+            }
+            
+            decisionHandler(.allow)
+        }
+        
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFinish:))) ?? false {
+                self.delegate?.webView?(webView, didFinish: navigation)
+                return
+            }
+            
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFinishLoad)) ?? false {
+                self.delegate?.webViewFinishLoad?()
+            }
+        }
+        
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFailProvisionalNavigation:withError:))) ?? false {
+                self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error)
+                return
+            }
+            
+            if (error as NSError).code == NSURLErrorCancelled { return }
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFailLoad(_:))) ?? false {
+                self.delegate?.webViewFailLoad?(error)
+            }
+        }
+        
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFail:withError:))) ?? false {
+                self.delegate?.webView?(webView, didFail: navigation, withError: error)
+                return
+            }
+            
+            if (error as NSError).code == NSURLErrorCancelled { return }
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFailLoad(_:))) ?? false {
+                self.delegate?.webViewFailLoad?(error)
+            }
+        }
+        
+        // MARK: - WKUIDelegate
+        func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:))) ?? false {
+                self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)
+                return
+            }
+            
+            webView.fw_showAlert(title: nil, message: message, cancel: nil) {
+                completionHandler()
+            }
+        }
+        
+        func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:))) ?? false {
+                self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)
+                return
+            }
+            
+            webView.fw_showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
+                completionHandler(true)
+            } cancelBlock: {
+                completionHandler(false)
+            }
+        }
+        
+        func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:))) ?? false {
+                self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler)
+                return
+            }
+            
+            webView.fw_showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
+                textField.text = defaultText
+            } confirmBlock: { text in
+                completionHandler(text)
+            } cancelBlock: {
+                completionHandler(nil)
+            }
+        }
+        
+        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:createWebViewWith:for:windowFeatures:))) ?? false {
+                return self.delegate?.webView?(webView, createWebViewWith: configuration, for: navigationAction, windowFeatures: windowFeatures)
+            }
+            
+            if !(navigationAction.targetFrame?.isMainFrame ?? false) {
+                if let webView = webView as? WebView, webView.cookieEnabled {
+                    webView.load(WebViewCookieManager.fix(navigationAction.request) as URLRequest)
+                } else {
+                    webView.load(navigationAction.request)
+                }
+            }
+            return nil
+        }
+        
+    }
+    
+    /// 事件代理，包含navigationDelegate和UIDelegate
+    open weak var delegate: WebViewDelegate? {
+        get { return delegateProxy.delegate }
+        set { delegateProxy.delegate = newValue }
+    }
+
+    /// 是否启用Cookie管理，默认NO未启用
+    open var cookieEnabled = false
+
+    /// 进度视图，默认trackTintColor为clear
+    open private(set) lazy var progressView: UIProgressView = {
+        let result = UIProgressView(frame: .zero)
+        result.trackTintColor = .clear
+        result.fw_webProgress = 0
+        return result
+    }()
+
+    /// 是否允许打开通用链接，默认NO
+    open var allowsUniversalLinks = false
+
+    /// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
+    open var allowsSchemeURL = false
+
+    /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
+    open var webRequest: Any? {
+        didSet {
+            fw_loadRequest(webRequest)
+        }
+    }
+    
+    private var delegateProxy = WebViewDelegateProxy()
+    
+    // MARK: - Lifecycle
+    public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
+        super.init(frame: frame, configuration: configuration)
+        didInitialize()
+    }
+    
+    public convenience init(frame: CGRect) {
+        let configuration = WKWebView.fw_defaultConfiguration()
+        self.init(frame: frame, configuration: configuration)
+    }
+    
+    required public init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        navigationDelegate = delegateProxy
+        uiDelegate = delegateProxy
+        allowsBackForwardNavigationGestures = true
+        
+        addSubview(progressView)
+        progressView.fw_pinEdges(excludingEdge: .bottom)
+        progressView.fw_setDimension(.height, size: 2.0)
+        fw_observeProperty("estimatedProgress") { webView, _ in
+            guard let webView = webView as? WebView else { return }
+            webView.progressView.fw_webProgress = Float(webView.estimatedProgress)
+        }
+        fw_observeProperty("loading") { webView, _ in
+            guard let webView = webView as? WebView else { return }
+            if !webView.isLoading && webView.progressView.fw_webProgress < 1.0 {
+                webView.progressView.fw_webProgress = 1.0
+            }
+        }
+    }
+    
+    @discardableResult
+    open override func load(_ request: URLRequest) -> WKNavigation? {
+        if cookieEnabled && (request.url?.scheme?.count ?? 0) > 0 {
+            let cookieScript = WKUserScript(source: WebViewCookieManager.ajaxCookieScripts(), injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            configuration.userContentController.addUserScript(cookieScript)
+            
+            if let cookieRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest {
+                WebViewCookieManager.syncRequestCookie(cookieRequest)
+                return super.load(cookieRequest as URLRequest)
+            }
+        }
+        
+        return super.load(request)
+    }
+    
+    // MARK: - ReusableViewProtocol
+    /// 即将进入回收池，必须调用super
+    open override func reusableViewWillEnterPool() {
+        delegate = nil
+        cookieEnabled = false
+        allowsUniversalLinks = false
+        allowsSchemeURL = false
+        webRequest = nil
+        
+        super.reusableViewWillEnterPool()
+    }
+    
+}
+
+// MARK: - WKWebView+WebView
 @_spi(FW) extension WKWebView {
     
+    // MARK: - ReusableViewProtocol
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
         get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
@@ -61,27 +330,7 @@ import FWObjC
         fw_clearBackForwardList()
     }
     
-}
-
-// MARK: - WebView+ReusableView
-@_spi(FW) extension WebView {
-    
-    /// 即将进入回收池，必须调用super
-    open override func reusableViewWillEnterPool() {
-        delegate = nil
-        cookieEnabled = false
-        allowsUniversalLinks = false
-        allowsSchemeURL = false
-        webRequest = nil
-        
-        super.reusableViewWillEnterPool()
-    }
-    
-}
-
-// MARK: - WKWebView+WebView
-@_spi(FW) extension WKWebView {
-    
+    // MARK: - WebView
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
     public static var fw_processPool = WKProcessPool()
     
