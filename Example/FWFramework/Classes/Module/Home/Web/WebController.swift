@@ -109,6 +109,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fw.isLoaded = true
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+        
+        // 同一个VC只预加载一次
+        webView.fw.preloadReusableView()
     }
     
     func webViewFailLoad(_ error: Error) {
