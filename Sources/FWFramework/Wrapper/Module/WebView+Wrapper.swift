@@ -19,7 +19,7 @@ extension Wrapper where Base: WKWebView {
     }
     
     /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
-    public static var reuseDefaultUrlBlock: (() -> String?)? {
+    public static var reuseDefaultUrlBlock: (() -> Any?)? {
         get { return Base.fw_reuseDefaultUrlBlock }
         set { Base.fw_reuseDefaultUrlBlock = newValue }
     }
@@ -57,6 +57,12 @@ extension Wrapper where Base: WKWebView {
     /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
     public var userAgent: String {
         return base.fw_userAgent
+    }
+    
+    /// 加载网页请求，支持String|URL|URLRequest等
+    @discardableResult
+    public func loadRequest(_ request: Any?) -> WKNavigation? {
+        return base.fw_loadRequest(request)
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
