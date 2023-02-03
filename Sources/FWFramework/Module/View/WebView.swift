@@ -13,6 +13,18 @@ import FWObjC
 // MARK: - WKWebView+ReusableView
 @_spi(FW) extension WKWebView {
     
+    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
+    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
+        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration) -> Void }
+        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
+    }
+    
+    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
+    public class var fw_reuseDefaultUrlBlock: (() -> String?)? {
+        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? () -> String? }
+        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
+    }
+    
     /// 初始化WKWebView可重用视图
     open override class func reusableViewInitialize() -> Self {
         let configuration = WKWebView.fw_defaultConfiguration()
@@ -46,25 +58,6 @@ import FWObjC
         super.reusableViewWillLeavePool()
         
         fw_clearBackForwardList()
-    }
-    
-    /// 重用WebView全局配置句柄，为所有复用WebView提供预先的默认configuration
-    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration) -> Void)? {
-        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration) -> Void }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
-    }
-    
-    /// WebView进入回收复用池前默认加载的url句柄，用于刷新WebView和容错，默认nil
-    public class var fw_reuseDefaultUrlBlock: (() -> String?)? {
-        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? () -> String? }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
-    }
-    
-    private func fw_clearBackForwardList() {
-        let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
-        if backForwardList.responds(to: selector) {
-            backForwardList.perform(selector)
-        }
     }
     
 }
@@ -136,6 +129,14 @@ import FWObjC
         let sinceDate = Date(timeIntervalSince1970: 0)
         WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
             completion?()
+        }
+    }
+    
+    /// 清空WebView后退和前进的网页栈
+    public func fw_clearBackForwardList() {
+        let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
+        if backForwardList.responds(to: selector) {
+            backForwardList.perform(selector)
         }
     }
     

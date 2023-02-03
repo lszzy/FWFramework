@@ -64,6 +64,11 @@ extension Wrapper where Base: WKWebView {
         Base.fw_clearCache(completion)
     }
     
+    /// 清空WebView后退和前进的网页栈
+    public func clearBackForwardList() {
+        base.fw_clearBackForwardList()
+    }
+    
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
     public var jsBridge: WebViewJsBridge? {
         get { return base.fw_jsBridge }
