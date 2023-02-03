@@ -22,6 +22,9 @@ public class WebViewPool: NSObject {
     /// webView最大缓存数量，默认5个
     public var webViewMaxReuseCount: Int = 5
     
+    /// webView最大预加载数量，默认1个
+    public var webViewMaxPreloadCount: Int = 1
+    
     /// webview进入回收复用池前加载的url，用于刷新webview和容错，默认空
     public var webViewReuseLoadUrl = ""
     
@@ -67,7 +70,7 @@ public class WebViewPool: NSObject {
         lock.wait()
         let webViewTypeString = NSStringFromClass(webViewType)
         var webViewArray = enqueueWebViews[webViewTypeString] ?? []
-        if webViewArray.count < 1 {
+        if webViewArray.count < webViewMaxPreloadCount {
             let webView = generateInstance(with: webViewType)
             webViewArray.append(webView)
             enqueueWebViews[webViewTypeString] = webViewArray
