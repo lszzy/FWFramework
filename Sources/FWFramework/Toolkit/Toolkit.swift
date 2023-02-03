@@ -1695,6 +1695,7 @@ public enum ViewControllerState: Int {
     case didDisappear = 6
 }
 
+/// 为提升性能，触发state改变等的swizzle代码统一放到了ViewController
 @_spi(FW) extension UIViewController {
     
     private class StateTarget: NSObject {
@@ -1708,7 +1709,6 @@ public enum ViewControllerState: Int {
             return .init(rawValue: value) ?? .ready
         }
         set {
-            // 为提升性能，触发state改变的swizzle代码统一放到了ViewController
             let valueChanged = self.fw_state != newValue
             fw_setPropertyInt(newValue.rawValue, forName: "fw_state")
             
@@ -1780,22 +1780,6 @@ public enum ViewControllerState: Int {
     public var fw_shouldPopController: (() -> Bool)? {
         get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
         set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
-    }
-    
-    fileprivate static func fw_swizzleToolkitViewController() {
-        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
-            // dealloc时不调用fw，防止释放时动态创建包装器对象
-            let viewController = selfObject as? UIViewController
-            let completionHandler = viewController?.fw_completionHandler
-            if completionHandler != nil {
-                let completionResult = viewController?.fw_completionResult
-                completionHandler?(completionResult)
-            }
-            
-            #if DEBUG
-            Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
-            #endif
-        }
     }
     
 }
@@ -2009,15 +1993,6 @@ public enum ViewControllerState: Int {
                 return store.original(selfObject, store.selector)
             }
         }}
-    }
-    
-}
-
-// MARK: - ToolkitAutoloader
-internal class ToolkitAutoloader: AutoloadProtocol {
-    
-    static func autoload() {
-        UIViewController.fw_swizzleToolkitViewController()
     }
     
 }

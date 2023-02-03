@@ -242,6 +242,20 @@ public class ViewControllerManager: NSObject {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
+        
+        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
+            // dealloc时不调用fw，防止释放时动态创建包装器对象
+            let viewController = selfObject as? UIViewController
+            let completionHandler = viewController?.fw_completionHandler
+            if completionHandler != nil {
+                let completionResult = viewController?.fw_completionResult
+                completionHandler?(completionResult)
+            }
+            
+            #if DEBUG
+            Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
+            #endif
+        }
     }
     
     fileprivate static func registerDefaultIntercepters() {
