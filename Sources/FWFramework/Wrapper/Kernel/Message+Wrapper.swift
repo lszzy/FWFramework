@@ -93,39 +93,18 @@ extension Wrapper where Base: NSObject {
 extension Wrapper where Base: NSObject {
     
     // MARK: - Observer
-    /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - block: 通知句柄
-    /// - Returns: 监听者
-    @discardableResult
-    public func observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
-        return base.fw_observeNotification(name, block: block)
-    }
-    
-    /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
     ///   - block: 通知句柄
     /// - Returns: 监听者
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func observeNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         return base.fw_observeNotification(name, object: object, block: block)
     }
     
-    /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - target: 通知目标
-    ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听者
-    @discardableResult
-    public func observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        return base.fw_observeNotification(name, target: target, action: action)
-    }
-    
-    /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
@@ -133,26 +112,17 @@ extension Wrapper where Base: NSObject {
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听者
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+    public func observeNotification(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         return base.fw_observeNotification(name, object: object, target: target, action: action)
     }
     
-    /// 手工移除某个广播通知指定监听
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - target: 通知目标
-    ///   - action: 目标动作
-    public func unobserveNotification(_ name: Notification.Name, target: Any?, action: Selector?) {
-        base.fw_unobserveNotification(name, target: target, action: action)
-    }
-    
-    /// 手工移除某个指定对象广播通知指定监听
+    /// 手工移除某个广播通知指定监听，可指定对象
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func unobserveNotification(_ name: Notification.Name, object: Any?, target: Any?, action: Selector?) {
+    public func unobserveNotification(_ name: Notification.Name, object: Any? = nil, target: Any?, action: Selector?) {
         base.fw_unobserveNotification(name, object: object, target: target, action: action)
     }
     
@@ -165,17 +135,11 @@ extension Wrapper where Base: NSObject {
         return base.fw_unobserveNotification(name, observer: observer)
     }
     
-    /// 手工移除某个广播通知所有监听
-    /// - Parameter name: 通知名称
-    public func unobserveNotification(_ name: Notification.Name) {
-        base.fw_unobserveNotification(name)
-    }
-
-    /// 手工移除某个指定对象广播通知所有监听
+    /// 手工移除某个广播通知所有监听，可指定对象
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
-    public func unobserveNotification(_ name: Notification.Name, object: Any?) {
+    public func unobserveNotification(_ name: Notification.Name, object: Any? = nil) {
         base.fw_unobserveNotification(name, object: object)
     }
     

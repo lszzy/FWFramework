@@ -173,24 +173,14 @@ import FWObjC
 @_spi(FW) extension NSObject {
     
     // MARK: - Observer
-    /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - block: 通知句柄
-    /// - Returns: 监听者
-    @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
-        return fw_observeNotification(name, object: nil, block: block)
-    }
-    
-    /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
     ///   - block: 通知句柄
     /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -207,18 +197,7 @@ import FWObjC
         return notificationTarget
     }
     
-    /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - target: 通知目标
-    ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听者
-    @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        return fw_observeNotification(name, object: nil, target: target, action: action)
-    }
-    
-    /// 监听某个指定对象广播通知，对象释放时自动移除监听，添加多次执行多次
+    /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
@@ -226,7 +205,7 @@ import FWObjC
     ///   - action: 目标动作，参数为通知对象
     /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -244,22 +223,13 @@ import FWObjC
         return notificationTarget
     }
     
-    /// 手工移除某个广播通知指定监听
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - target: 通知目标
-    ///   - action: 目标动作
-    public func fw_unobserveNotification(_ name: Notification.Name, target: Any?, action: Selector?) {
-        fw_unobserveNotification(name, object: nil, target: target, action: action)
-    }
-    
-    /// 手工移除某个指定对象广播通知指定监听
+    /// 手工移除某个广播通知指定监听，可指定对象
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func fw_unobserveNotification(_ name: Notification.Name, object: Any?, target: Any?, action: Selector?) {
+    public func fw_unobserveNotification(_ name: Notification.Name, object: Any? = nil, target: Any?, action: Selector?) {
         guard let dict = fw_notificationTargets(false) else { return }
         
         // object为nil且target为nil始终移除
@@ -316,17 +286,11 @@ import FWObjC
         return result
     }
     
-    /// 手工移除某个广播通知所有监听
-    /// - Parameter name: 通知名称
-    public func fw_unobserveNotification(_ name: Notification.Name) {
-        fw_unobserveNotification(name, object: nil)
-    }
-
-    /// 手工移除某个指定对象广播通知所有监听
+    /// 手工移除某个广播通知所有监听，可指定对象
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
-    public func fw_unobserveNotification(_ name: Notification.Name, object: Any?) {
+    public func fw_unobserveNotification(_ name: Notification.Name, object: Any? = nil) {
         fw_unobserveNotification(name, object: object, target: nil, action: nil)
     }
     
@@ -354,7 +318,6 @@ import FWObjC
     }
     
     // MARK: - Subject
-    
     /// 发送广播通知，附带对象和用户信息
     /// - Parameters:
     ///   - name: 通知名称
