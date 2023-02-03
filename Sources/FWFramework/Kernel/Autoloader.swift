@@ -85,13 +85,12 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(AutoLayoutAutoloader.self)
         autoload(ThemeAutoloader.self)
         autoload(LanguageAutoloader.self)
-        autoload(ToolkitAutoloader.self)
         autoload(UIKitAutoloader.self)
-        autoload(AlertPluginAutoloader.self)
-        autoload(ImagePluginAutoloader.self)
+        autoload(ViewControllerAutoloader.self)
         autoload(NavigationControllerAutoloader.self)
         autoload(NavigationStyleAutoloader.self)
-        autoload(ViewControllerAutoloader.self)
+        autoload(AlertPluginAutoloader.self)
+        autoload(ImagePluginAutoloader.self)
         autoload(BadgeViewAutoloader.self)
         
         #if DEBUG
