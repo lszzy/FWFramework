@@ -198,8 +198,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface __FWNotificationTarget : NSObject
 
-@property (nonatomic, copy, readonly) NSString *identifier;
-
 @property (nonatomic, assign) BOOL broadcast;
 
 @property (nonatomic, weak, nullable) id object;
@@ -221,8 +219,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - __FWKvoTarget
 
 @interface __FWKvoTarget : NSObject
-
-@property (nonatomic, copy, readonly) NSString *identifier;
 
 @property (nonatomic, unsafe_unretained, nullable) id object;
 
@@ -247,8 +243,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - __FWBlockTarget
 
 @interface __FWBlockTarget : NSObject
-
-@property (nonatomic, copy) NSString *identifier;
 
 @property (nonatomic, copy, nullable) void (^block)(id sender);
 

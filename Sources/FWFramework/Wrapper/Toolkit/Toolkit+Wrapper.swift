@@ -718,15 +718,15 @@ extension Wrapper where Base: UIViewController {
         return base.fw_state
     }
 
-    /// 添加生命周期变化监听句柄
+    /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
-    public func observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> String {
+    public func observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> NSObjectProtocol {
         return base.fw_observeState(block)
     }
     
-    /// 根据标识移除生命周期监听句柄，传nil时移除所有
-    public func unobserveState(_ identifier: String? = nil) {
-        base.fw_unobserveState(identifier)
+    /// 移除生命周期监听者，传nil时移除所有
+    public func unobserveState(observer: Any? = nil) {
+        base.fw_unobserveState(observer: observer)
     }
 
     /// 自定义完成结果对象，默认nil

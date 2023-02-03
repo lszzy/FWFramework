@@ -18,9 +18,9 @@ import FWObjC
     /// - Parameters:
     ///   - name: 消息名称
     ///   - block: 消息句柄
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
+    public func fw_observeMessage(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         return fw_observeMessage(name, object: nil, block: block)
     }
     
@@ -29,9 +29,9 @@ import FWObjC
     ///   - name: 消息名称
     ///   - object: 消息对象，值为nil时表示所有
     ///   - block: 消息句柄
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -44,7 +44,7 @@ import FWObjC
         messageTarget.object = object
         messageTarget.block = block
         array?.add(messageTarget)
-        return messageTarget.identifier
+        return messageTarget
     }
     
     /// 监听某个点对点消息，对象释放时自动移除监听，添加多次执行多次
@@ -52,9 +52,9 @@ import FWObjC
     ///   - name: 消息名称
     ///   - target: 消息目标
     ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
+    public func fw_observeMessage(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         return fw_observeMessage(name, object: nil, target: target, action: action)
     }
     
@@ -64,9 +64,9 @@ import FWObjC
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
+    public func fw_observeMessage(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         let dict = fw_messageTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -80,7 +80,7 @@ import FWObjC
         messageTarget.target = target
         messageTarget.action = action
         array?.add(messageTarget)
-        return messageTarget.identifier
+        return messageTarget
     }
     
     /// 手工移除某个点对点消息指定监听
@@ -130,17 +130,13 @@ import FWObjC
     /// 手工移除某个指定对象点对点消息指定监听
     /// - Parameters:
     ///   - name: 消息名称
-    ///   - identifier: 监听唯一标志
-    public func fw_unobserveMessage(_ name: Notification.Name, identifier: String) {
-        guard let dict = fw_messageTargets(false),
+    ///   - observer: 监听者
+    public func fw_unobserveMessage(_ name: Notification.Name, observer: Any) {
+        guard let observer = observer as? __FWNotificationTarget,
+              let dict = fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
-        for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWNotificationTarget,
-               obj.identifier == identifier {
-                array.remove(obj)
-            }
-        }
+        array.remove(observer)
     }
     
     /// 手工移除某个点对点消息所有监听
@@ -248,9 +244,9 @@ import FWObjC
     /// - Parameters:
     ///   - name: 通知名称
     ///   - block: 通知句柄
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> String {
+    public func fw_observeNotification(_ name: Notification.Name, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         return fw_observeNotification(name, object: nil, block: block)
     }
     
@@ -259,9 +255,9 @@ import FWObjC
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
     ///   - block: 通知句柄
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> String {
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
         let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -275,7 +271,7 @@ import FWObjC
         notificationTarget.block = block
         array?.add(notificationTarget)
         NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
-        return notificationTarget.identifier
+        return notificationTarget
     }
     
     /// 监听某个广播通知，对象释放时自动移除监听，添加多次执行多次
@@ -283,9 +279,9 @@ import FWObjC
     ///   - name: 通知名称
     ///   - target: 通知目标
     ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> String {
+    public func fw_observeNotification(_ name: Notification.Name, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         return fw_observeNotification(name, object: nil, target: target, action: action)
     }
     
@@ -295,9 +291,9 @@ import FWObjC
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作，参数为通知对象
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> String {
+    public func fw_observeNotification(_ name: Notification.Name, object: AnyObject?, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         let dict = fw_notificationTargets(true)
         var array = dict?[name] as? NSMutableArray
         if array == nil {
@@ -312,7 +308,7 @@ import FWObjC
         notificationTarget.action = action
         array?.add(notificationTarget)
         NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
-        return notificationTarget.identifier
+        return notificationTarget
     }
     
     /// 手工移除某个广播通知指定监听
@@ -369,14 +365,14 @@ import FWObjC
     /// 手工移除某个指定对象广播通知指定监听
     /// - Parameters:
     ///   - name: 通知名称
-    ///   - identifier: 监听唯一标志
-    public func fw_unobserveNotification(_ name: Notification.Name, identifier: String) {
-        guard let dict = fw_notificationTargets(false),
+    ///   - observer: 监听者
+    public func fw_unobserveNotification(_ name: Notification.Name, observer: Any) {
+        guard let observer = observer as? __FWNotificationTarget,
+              let dict = fw_notificationTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWNotificationTarget,
-               obj.identifier == identifier {
+            if let obj = elem as? __FWNotificationTarget, obj == observer {
                 NotificationCenter.default.removeObserver(obj)
                 array.remove(obj)
             }
@@ -449,10 +445,10 @@ import FWObjC
     /// - Parameters:
     ///   - property: 属性名称
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
     @objc(__fw_observeProperty:block:)
-    public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> String {
+    public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
         let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
@@ -466,7 +462,7 @@ import FWObjC
         kvoTarget.block = block
         array?.add(kvoTarget)
         kvoTarget.addObserver()
-        return kvoTarget.identifier
+        return kvoTarget
     }
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -474,9 +470,9 @@ import FWObjC
     ///   - property: 属性名称
     ///   - target: 目标对象
     ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
-    /// - Returns: 监听唯一标志
+    /// - Returns: 监听者
     @discardableResult
-    public func fw_observeProperty(_ property: String, target: AnyObject?, action: Selector) -> String {
+    public func fw_observeProperty(_ property: String, target: AnyObject?, action: Selector) -> NSObjectProtocol {
         let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
@@ -491,7 +487,7 @@ import FWObjC
         kvoTarget.action = action
         array?.add(kvoTarget)
         kvoTarget.addObserver()
-        return kvoTarget.identifier
+        return kvoTarget
     }
     
     /// 手工移除某个属性指定监听
@@ -530,14 +526,14 @@ import FWObjC
     /// 手工移除某个属性指定监听
     /// - Parameters:
     ///   - property: 属性名称
-    ///   - identifier: 监听唯一标志
-    public func fw_unobserveProperty(_ property: String, identifier: String) {
-        guard let dict = fw_kvoTargets(false),
+    ///   - observer: 监听者
+    public func fw_unobserveProperty(_ property: String, observer: Any) {
+        guard let observer = observer as? __FWKvoTarget,
+              let dict = fw_kvoTargets(false),
               let array = dict[property] as? NSMutableArray else { return }
         
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWKvoTarget,
-               obj.identifier == identifier {
+            if let obj = elem as? __FWKvoTarget, obj == observer {
                 obj.removeObserver()
                 array.remove(obj)
             }
