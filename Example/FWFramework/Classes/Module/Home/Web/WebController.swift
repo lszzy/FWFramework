@@ -10,14 +10,16 @@ import FWFramework
 
 @objc extension Autoloader {
     func loadWebView() {
-        var observer: Any = ""
+        var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
             WebViewPool.shared.webViewConfigurationBlock = { configuration in
                 configuration.allowsInlineMediaPlayback = true
             }
             WebViewPool.shared.enqueueWebView(with: WebView.self)
             
-            NotificationCenter.default.removeObserver(observer)
+            if let observer = observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
         }
     }
 }

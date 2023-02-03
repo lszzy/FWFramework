@@ -167,7 +167,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_visibleState = .didLoad
+            selfObject.fw_state = .didLoad
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
@@ -181,7 +181,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_visibleState = .willAppear
+            selfObject.fw_state = .willAppear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
@@ -195,7 +195,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_visibleState = .didLayoutSubviews
+            selfObject.fw_state = .didLayoutSubviews
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
@@ -209,7 +209,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_visibleState = .didAppear
+            selfObject.fw_state = .didAppear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
@@ -223,7 +223,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_visibleState = .willDisappear
+            selfObject.fw_state = .willDisappear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
@@ -237,7 +237,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_visibleState = .didDisappear
+            selfObject.fw_state = .didDisappear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }

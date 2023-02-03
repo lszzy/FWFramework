@@ -1676,8 +1676,8 @@ extension FW {
 }
 
 // MARK: - UIViewController+Toolkit
-/// 视图控制器常用状态枚举
-public enum ViewControllerState {
+/// 视图控制器常用加载状态枚举
+public enum ViewControllerLoadState {
     case ready
     case loading
     case success(Any? = nil)
@@ -1685,7 +1685,7 @@ public enum ViewControllerState {
 }
 
 /// 视图控制器常用生命周期状态枚举
-public enum ViewControllerVisibleState: Int {
+public enum ViewControllerState: Int {
     case ready = 0
     case didLoad = 1
     case willAppear = 2
@@ -1697,24 +1697,24 @@ public enum ViewControllerVisibleState: Int {
 
 @_spi(FW) extension UIViewController {
     
-    private class VisibleStateTarget: NSObject {
-        var block: ((UIViewController, ViewControllerVisibleState) -> Void)?
+    private class StateTarget: NSObject {
+        var block: ((UIViewController, ViewControllerState) -> Void)?
     }
     
     /// 当前生命周期状态，默认Ready
-    public internal(set) var fw_visibleState: ViewControllerVisibleState {
+    public internal(set) var fw_state: ViewControllerState {
         get {
-            let value = fw_propertyInt(forName: "fw_visibleState")
+            let value = fw_propertyInt(forName: "fw_state")
             return .init(rawValue: value) ?? .ready
         }
         set {
-            // 为提升性能，触发visibleState改变的swizzle代码统一放到了ViewController
-            let valueChanged = self.fw_visibleState != newValue
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_visibleState")
+            // 为提升性能，触发state改变的swizzle代码统一放到了ViewController
+            let valueChanged = self.fw_state != newValue
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_state")
             
-            if valueChanged, let targets = fw_visibleStateTargets(false) {
+            if valueChanged, let targets = fw_stateTargets(false) {
                 for (_, elem) in targets.enumerated() {
-                    if let target = elem as? VisibleStateTarget {
+                    if let target = elem as? StateTarget {
                         target.block?(self, newValue)
                     }
                 }
@@ -1724,21 +1724,21 @@ public enum ViewControllerVisibleState: Int {
 
     /// 添加生命周期变化监听句柄
     @discardableResult
-    public func fw_observeVisibleState(_ block: @escaping (UIViewController, ViewControllerVisibleState) -> Void) -> String {
-        let targets = fw_visibleStateTargets(true)
-        let target = VisibleStateTarget()
+    public func fw_observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> String {
+        let targets = fw_stateTargets(true)
+        let target = StateTarget()
         target.block = block
         targets?.add(target)
         return "\(target.hash)"
     }
     
     /// 根据标识移除生命周期监听句柄，传nil时移除所有
-    public func fw_unobserveVisibleState(_ identifier: String? = nil) {
-        guard let targets = fw_visibleStateTargets(false) else { return }
+    public func fw_unobserveState(_ identifier: String? = nil) {
+        guard let targets = fw_stateTargets(false) else { return }
         
         if let identifier = identifier {
             for (_, elem) in targets.enumerated() {
-                if let target = elem as? VisibleStateTarget,
+                if let target = elem as? StateTarget,
                    identifier == "\(target.hash)" {
                     targets.remove(target)
                 }
@@ -1748,11 +1748,11 @@ public enum ViewControllerVisibleState: Int {
         }
     }
     
-    private func fw_visibleStateTargets(_ lazyload: Bool) -> NSMutableArray? {
-        var targets = fw_property(forName: "fw_visibleStateTargets") as? NSMutableArray
+    private func fw_stateTargets(_ lazyload: Bool) -> NSMutableArray? {
+        var targets = fw_property(forName: "fw_stateTargets") as? NSMutableArray
         if targets == nil && lazyload {
             targets = NSMutableArray()
-            fw_setProperty(targets, forName: "fw_visibleStateTargets")
+            fw_setProperty(targets, forName: "fw_stateTargets")
         }
         return targets
     }
