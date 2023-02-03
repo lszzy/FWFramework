@@ -1883,18 +1883,6 @@ typedef struct __ProxyBlock {
 
 @end
 
-#pragma mark - __FWBlockTarget
-
-@implementation __FWBlockTarget
-
-- (void)invoke:(id)sender {
-    if (self.block) {
-        self.block(sender);
-    }
-}
-
-@end
-
 #pragma mark - __FWInputTarget
 
 @interface __FWInputTarget ()

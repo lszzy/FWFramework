@@ -240,18 +240,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWBlockTarget
-
-@interface __FWBlockTarget : NSObject
-
-@property (nonatomic, copy, nullable) void (^block)(id sender);
-
-@property (nonatomic, assign) UIControlEvents events;
-
-- (void)invoke:(id)sender;
-
-@end
-
 #pragma mark - __FWInputTarget
 
 @interface __FWInputTarget : NSObject
