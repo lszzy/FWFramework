@@ -96,6 +96,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
             WebView.fw.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
+            WebView.fw.reuseDefaultUrlBlock = { _ in
+                return "http://kvm.wuyong.site/test.php#anchor"
+            }
             ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
         } else {
             ViewControllerManager.shared.webViewReuseIdentifier = nil
