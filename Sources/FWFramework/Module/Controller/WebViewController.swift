@@ -16,7 +16,7 @@ import FWObjC
 /// WebViewControllerProtocol默认未开启WebView重用，如需开启，步骤如下：
 /// 1. 需在使用前(如应用启动完成时)设置ViewControllerManager.webViewReuseIdentifier，不能为nil
 /// 2. 配置WebView.reuseConfigurationBlock并调用preloadReusableView(with: WebView.self)预加载第一个WebView
-/// 3. 按需调用webView.preloadReusableView预加载下一个WebView，一般在webViewFinishLoad中
+/// 3. 默认webViewFinishLoad会自动预加载下一个WebView，如果重写了该方法，需自行处理预加载逻辑
 /// 4. 其他初始化、回收等重用操作框架会自动处理，详见源码
 ///
 /// 如遇到WebView内存过大引起的白屏问题时，可在webViewWebContentProcessDidTerminate方法中调用webView.reload()即可
@@ -89,6 +89,15 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现
     public func setupWebBridge(_ bridge: WebViewJsBridge) {}
+    
+    /// 网页加载完成，默认预加载一次重用WebView。如果重写了本方法，需自行处理预加载逻辑
+    public func webViewFinishLoad() {
+        if ViewControllerManager.shared.webViewReuseIdentifier != nil,
+           !fw_propertyBool(forName: "fw_preloadReusableView") {
+            fw_setPropertyBool(true, forName: "fw_preloadReusableView")
+            webView.fw_preloadReusableView()
+        }
+    }
     
 }
 

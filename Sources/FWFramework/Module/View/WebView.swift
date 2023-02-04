@@ -12,16 +12,31 @@ import FWObjC
 
 // MARK: - WebView
 /// WebView事件代理协议
-@objc public protocol WebViewDelegate: WKNavigationDelegate, WKUIDelegate {
+public protocol WebViewDelegate: WKNavigationDelegate, WKUIDelegate {
     
-    /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认未实现
-    @objc optional func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool
+    /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
+    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool
 
-    /// 已经加载完成，可用来获取title、设置按钮等，默认未实现
-    @objc optional func webViewFinishLoad()
+    /// 已经加载完成，可用来获取title、设置按钮等，默认空实现
+    func webViewFinishLoad()
 
-    /// 网页加载失败，可用来处理加载异常等，默认未实现
-    @objc optional func webViewFailLoad(_ error: Error)
+    /// 网页加载失败，可用来处理加载异常等，默认空实现
+    func webViewFailLoad(_ error: Error)
+    
+}
+
+extension WebViewDelegate {
+    
+    /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
+    public func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
+        return true
+    }
+
+    /// 已经加载完成，可用来获取title、设置按钮等，默认空实现
+    public func webViewFinishLoad() {}
+
+    /// 网页加载失败，可用来处理加载异常等，默认空实现
+    public func webViewFailLoad(_ error: Error) {}
     
 }
 
@@ -43,8 +58,8 @@ open class WebView: WKWebView {
                 return
             }
             
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewShouldLoad(_:))) ?? false,
-               !(self.delegate?.webViewShouldLoad?(navigationAction) ?? true) {
+            if let delegate = self.delegate,
+               !delegate.webViewShouldLoad(navigationAction) {
                 decisionHandler(.cancel)
                 return
             }
@@ -95,9 +110,7 @@ open class WebView: WKWebView {
                 return
             }
             
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFinishLoad)) ?? false {
-                self.delegate?.webViewFinishLoad?()
-            }
+            self.delegate?.webViewFinishLoad()
         }
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -107,9 +120,7 @@ open class WebView: WKWebView {
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFailLoad(_:))) ?? false {
-                self.delegate?.webViewFailLoad?(error)
-            }
+            self.delegate?.webViewFailLoad(error)
         }
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -119,9 +130,7 @@ open class WebView: WKWebView {
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webViewFailLoad(_:))) ?? false {
-                self.delegate?.webViewFailLoad?(error)
-            }
+            self.delegate?.webViewFailLoad(error)
         }
         
         // MARK: - WKUIDelegate

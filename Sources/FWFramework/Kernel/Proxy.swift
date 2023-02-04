@@ -24,12 +24,12 @@ open class BlockProxy: __FWBlockProxy {}
 
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
-open class DelegateProxy<T: AnyObject>: __FWDelegateProxy {
+open class DelegateProxy<T>: __FWDelegateProxy {
     
     /// 泛型事件代理对象
-    open weak var delegate: T? {
+    open var delegate: T? {
         get { return proxyDelegate as? T }
-        set { proxyDelegate = newValue }
+        set { proxyDelegate = newValue as? AnyObject }
     }
     
 }
