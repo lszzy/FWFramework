@@ -110,7 +110,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
         
-        // 同一个VC只预加载一次
+        // 因为重写了webViewFinishLoad，需自行处理预加载逻辑
         webView.fw.preloadReusableView()
     }
     
