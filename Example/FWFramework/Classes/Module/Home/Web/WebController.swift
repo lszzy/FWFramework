@@ -91,12 +91,10 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     static func toggleReuse(enabled: Bool) {
         if enabled {
-            let reuseIdentifier = "WebView"
-            ViewControllerManager.shared.webViewReuseIdentifier = reuseIdentifier
             WebView.fw.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
-            ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
+            ViewControllerManager.shared.webViewReuseIdentifier = "WebView"
         } else {
             ViewControllerManager.shared.webViewReuseIdentifier = nil
         }

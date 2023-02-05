@@ -13,13 +13,10 @@ import FWObjC
 // MARK: - WebViewControllerProtocol
 /// 网页视图控制器协议，可覆写
 ///
-/// WebViewControllerProtocol默认未开启WebView重用，如需开启，步骤如下：
-/// 1. 需在使用前(如应用启动完成时)设置ViewControllerManager.webViewReuseIdentifier，不能为nil
-/// 2. 配置WebView.reuseConfigurationBlock并调用preloadReusableView(with: WebView.self)预加载第一个WebView
-/// 3. 默认webViewFinishLoad会自动预加载下一个WebView，如果重写了该方法，需自行处理预加载逻辑
-/// 4. 其他初始化、回收等重用操作框架会自动处理，详见源码
-///
-/// 如遇到WebView内存过大引起的白屏问题时，可在webViewWebContentProcessDidTerminate方法中调用webView.reload()即可
+/// WebViewControllerProtocol默认未开启WebView重用，如需开启，方式如下：
+/// 1. 只需配置WebView.reuseConfigurationBlock并设置ViewControllerManager.webViewReuseIdentifier不为nil即可
+/// 2. 如果重写了webViewFinishLoad，需自行处理预加载逻辑，默认会自动预加载下一个WebView
+/// 3. 其他初始化、预加载、回收等重用操作框架会自动处理，详见源码
 public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势

@@ -12,20 +12,12 @@ import FWObjC
 
 extension Wrapper where Base: WKWebView {
     
-    // MARK: - ReusableView
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
         get { return Base.fw_reuseConfigurationBlock }
         set { Base.fw_reuseConfigurationBlock = newValue }
     }
     
-    /// WebView进入回收复用池前预加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
-    public static var reusePreloadUrlBlock: ((String) -> Any?)? {
-        get { return Base.fw_reusePreloadUrlBlock }
-        set { Base.fw_reusePreloadUrlBlock = newValue }
-    }
-    
-    // MARK: - WebView
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
     public static var processPool: WKProcessPool {
         get { return Base.fw_processPool }
