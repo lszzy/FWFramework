@@ -218,7 +218,6 @@ open class ReusableViewPool: NSObject {
     private func initializeReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
         let reusableView = reusableViewType.reusableViewInitialize(reuseIdentifier: reuseIdentifier)
         reusableView.fw_reuseIdentifier = reuseIdentifier
-        reusableView.reusableViewDidInitialize()
         return reusableView
     }
     
@@ -229,8 +228,6 @@ public protocol ReusableViewProtocol {
     
     /// 初始化可重用视图，默认调用init(frame:)
     static func reusableViewInitialize(reuseIdentifier: String) -> Self
-    /// 可重用视图初始化完成，默认空实现，必须调用super
-    func reusableViewDidInitialize()
     /// 即将进入回收池，默认清空viewHolder，必须调用super
     func reusableViewWillEnterPool()
     /// 即将离开回收池，默认重用次数+1，必须调用super
@@ -244,9 +241,6 @@ public protocol ReusableViewProtocol {
     open class func reusableViewInitialize(reuseIdentifier: String) -> Self {
         return self.init(frame: .zero)
     }
-    
-    /// 可重用视图初始化完成，默认空实现，必须调用super
-    open func reusableViewDidInitialize() {}
     
     /// 即将进入回收池，默认清空viewHolder，必须调用super
     open func reusableViewWillEnterPool() {
