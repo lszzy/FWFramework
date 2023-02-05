@@ -19,10 +19,10 @@ extension Wrapper where Base: WKWebView {
         set { Base.fw_reuseConfigurationBlock = newValue }
     }
     
-    /// WebView进入回收复用池前默认加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
-    public static var reuseDefaultUrlBlock: ((String) -> Any?)? {
-        get { return Base.fw_reuseDefaultUrlBlock }
-        set { Base.fw_reuseDefaultUrlBlock = newValue }
+    /// WebView进入回收复用池前预加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
+    public static var reusePreloadUrlBlock: ((String) -> Any?)? {
+        get { return Base.fw_reusePreloadUrlBlock }
+        set { Base.fw_reusePreloadUrlBlock = newValue }
     }
     
     // MARK: - WebView
