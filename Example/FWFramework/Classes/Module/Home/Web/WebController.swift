@@ -96,9 +96,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
             WebView.fw.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
-            WebView.fw.reuseDefaultUrlBlock = { _ in
-                return "http://kvm.wuyong.site/test.php#anchor"
-            }
             ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
         } else {
             ViewControllerManager.shared.webViewReuseIdentifier = nil
@@ -134,11 +131,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
             return false
         }
         return true
-    }
-    
-    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        // 解决内存过大引起的白屏问题
-        webView.reload()
     }
     
     // MARK: - Private
@@ -206,9 +198,17 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     @objc func shareRequestUrl() {
         let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
-        fw.showSheet(title: nil, message: nil, actions: ["分享", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+        fw.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
             if index == 0 {
                 UIApplication.fw.openActivityItems([FW.safeURL(self?.requestUrl)])
+            } else if index == 1 {
+                self?.webView.reload()
+            } else if index == 2 {
+                self?.webView.load(URLRequest(url: FW.safeURL(self?.requestUrl)))
+                self?.webView.fw.clearBackForwardList()
+            } else if index == 3 {
+                self?.webView.load(URLRequest(url: FW.safeURL(nil)))
+                self?.webView.fw.clearBackForwardList()
             } else {
                 UserDefaults.fw.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
