@@ -133,6 +133,20 @@ open class WebView: WKWebView {
             self.delegate?.webViewFailLoad(error)
         }
         
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+            if let webView = webView as? WebView {
+                webView.wasTerminated = true
+            }
+            
+            if self.delegate?.responds(to: #selector(WKNavigationDelegate.webViewWebContentProcessDidTerminate(_:))) ?? false {
+                self.delegate?.webViewWebContentProcessDidTerminate?(webView)
+                return
+            }
+            
+            // 默认调用reload解决内存过大引起的白屏问题，可重写
+            webView.reload()
+        }
+        
         // MARK: - WKUIDelegate
         func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
             if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:))) ?? false {
@@ -220,6 +234,9 @@ open class WebView: WKWebView {
         }
     }
     
+    /// 是否触发过didTerminate，建议异常终止时不回收到重用池
+    open private(set) var wasTerminated = false
+    
     private var delegateProxy = WebViewDelegateProxy()
     
     // MARK: - Lifecycle
@@ -297,10 +314,10 @@ open class WebView: WKWebView {
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
     }
     
-    /// WebView进入回收复用池前默认加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
-    public class var fw_reuseDefaultUrlBlock: ((String) -> Any?)? {
-        get { return self.fw_property(forName: "fw_reuseDefaultUrlBlock") as? (String) -> String? }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseDefaultUrlBlock") }
+    /// WebView进入回收复用池前预加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
+    public class var fw_reusePreloadUrlBlock: ((String) -> Any?)? {
+        get { return self.fw_property(forName: "fw_reusePreloadUrlBlock") as? (String) -> String? }
+        set { self.fw_setPropertyCopy(newValue, forName: "fw_reusePreloadUrlBlock") }
     }
     
     /// 初始化WKWebView可重用视图
@@ -325,8 +342,8 @@ open class WebView: WKWebView {
         configuration.userContentController.removeAllUserScripts()
         
         if let reuseIdentifier = fw_reuseIdentifier,
-           let defaultUrl = type(of: self).fw_reuseDefaultUrlBlock?(reuseIdentifier) {
-            fw_loadRequest(defaultUrl)
+           let preloadUrl = type(of: self).fw_reusePreloadUrlBlock?(reuseIdentifier) {
+            fw_loadRequest(preloadUrl)
         } else {
             load(URLRequest(url: URL.fw_safeURL(nil)))
         }
