@@ -316,7 +316,7 @@ open class WebView: WKWebView {
     
     /// WebView进入回收复用池前预加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
     public class var fw_reusePreloadUrlBlock: ((String) -> Any?)? {
-        get { return self.fw_property(forName: "fw_reusePreloadUrlBlock") as? (String) -> String? }
+        get { return self.fw_property(forName: "fw_reusePreloadUrlBlock") as? (String) -> Any? }
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reusePreloadUrlBlock") }
     }
     
