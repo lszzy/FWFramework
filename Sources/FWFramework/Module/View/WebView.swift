@@ -314,12 +314,6 @@ open class WebView: WKWebView {
         set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
     }
     
-    /// WebView进入回收复用池前预加载的url句柄(第一个参数为重用标志)，用于刷新WebView和容错，默认nil
-    public class var fw_reusePreloadUrlBlock: ((String) -> Any?)? {
-        get { return self.fw_property(forName: "fw_reusePreloadUrlBlock") as? (String) -> Any? }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reusePreloadUrlBlock") }
-    }
-    
     /// 初始化WKWebView可重用视图
     open override class func reusableViewInitialize(reuseIdentifier: String) -> Self {
         let configuration = WKWebView.fw_defaultConfiguration()
@@ -340,20 +334,8 @@ open class WebView: WKWebView {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        
-        if let reuseIdentifier = fw_reuseIdentifier,
-           let preloadUrl = type(of: self).fw_reusePreloadUrlBlock?(reuseIdentifier) {
-            fw_loadRequest(preloadUrl)
-        } else {
-            load(URLRequest(url: URL.fw_safeURL(nil)))
-        }
-    }
-    
-    /// 即将离开回收池，必须调用super
-    open override func reusableViewWillLeavePool() {
-        super.reusableViewWillLeavePool()
-        
         fw_clearBackForwardList()
+        load(URLRequest(url: NSURL() as URL))
     }
     
     // MARK: - WebView
@@ -361,7 +343,6 @@ open class WebView: WKWebView {
     public static var fw_processPool = WKProcessPool()
     
     /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
-    @objc(__fw_defaultConfiguration)
     public static func fw_defaultConfiguration() -> WKWebViewConfiguration {
         let configuration = WKWebViewConfiguration()
         configuration.applicationNameForUserAgent = fw_extensionUserAgent

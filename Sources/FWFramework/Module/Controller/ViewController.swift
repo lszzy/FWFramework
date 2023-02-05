@@ -97,8 +97,14 @@ public class ViewControllerManager: NSObject {
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
     public var hookWebViewController: ((UIViewController & WebViewControllerProtocol) -> Void)?
     
-    /// WebView重用标志，默认nil未开启重用
-    public var webViewReuseIdentifier: String?
+    /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
+    public var webViewReuseIdentifier: String? {
+        didSet {
+            if let reuseIdentifier = webViewReuseIdentifier {
+                ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
+            }
+        }
+    }
     
     // MARK: - Intercepter
     private var intercepters: [String: ViewControllerIntercepter] = [:]
