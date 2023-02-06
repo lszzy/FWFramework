@@ -29,8 +29,8 @@ extension Wrapper where Base: UIView {
     
     /// 标记重用准备中(true)，准备中的视图在完成(false)之前都不会被dequeue，默认false
     public var reusePrepareing: Bool {
-        get { return base.fw_reusePrepareing }
-        set { base.fw_reusePrepareing = newValue }
+        get { return base.fw_reusePreparing }
+        set { base.fw_reusePreparing = newValue }
     }
     
     /// 标记重用失效，将自动从缓存池移除
