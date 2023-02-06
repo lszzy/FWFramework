@@ -137,9 +137,7 @@ internal extension ViewControllerManager {
         guard webViewReuseIdentifier != nil,
               let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
         
-        if !viewController.webView.wasTerminated {
-            ReusableViewPool.shared.recycleReusableView(viewController.webView)
-        }
+        ReusableViewPool.shared.recycleReusableView(viewController.webView)
     }
     
 }
