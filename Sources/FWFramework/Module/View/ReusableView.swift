@@ -78,15 +78,19 @@ open class ReusableViewPool: NSObject {
     
     /// 预加载一个指定类和唯一标志的可重用视图并将它放入到回收池中，最多不超过maxPreloadCount
     open func preloadReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String = "") {
+        var enqueueReusableView: T?
         lock.wait()
         let classIdentifier = NSStringFromClass(reusableViewType) + reuseIdentifier
         var reusableViews = enqueueReusableViews[classIdentifier] ?? []
         if reusableViews.count < maxPreloadCount {
             let reusableView = initializeReusableView(with: reusableViewType, reuseIdentifier: reuseIdentifier)
+            enqueueReusableView = reusableView
             reusableViews.append(reusableView)
             enqueueReusableViews[classIdentifier] = reusableViews
         }
         lock.signal()
+        
+        enqueueReusableView?.reusableViewWillEnterPool()
     }
     
     /// 回收可复用的视图
@@ -122,7 +126,6 @@ open class ReusableViewPool: NSObject {
         guard let reusableView = reusableView,
               let reuseIdentifier = reusableView.fw_reuseIdentifier else { return }
         
-        reusableView.reusableViewWillEnterPool()
         lock.wait()
         let classIdentifier = NSStringFromClass(type(of: reusableView)) + reuseIdentifier
         if var reusableViews = dequeueReusableViews[classIdentifier],
