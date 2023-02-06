@@ -234,8 +234,7 @@ open class WebView: WKWebView {
         }
     }
     
-    /// 是否触发过didTerminate，建议异常终止时不回收到重用池
-    open private(set) var wasTerminated = false
+    internal private(set) var wasTerminated = false
     
     private var delegateProxy = WebViewDelegateProxy()
     

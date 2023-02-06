@@ -32,6 +32,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        Benchmark.begin("WebView")
     }
     
     convenience init(requestUrl: String? = nil) {
@@ -107,6 +108,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fw.isLoaded = true
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+        
+        let loadTime = Benchmark.end("WebView")
+        fw.showMessage(text: String(format: "%.3fms", loadTime))
         
         // 因为重写了webViewFinishLoad，需自行处理预加载逻辑
         webView.fw.preloadReusableView()
