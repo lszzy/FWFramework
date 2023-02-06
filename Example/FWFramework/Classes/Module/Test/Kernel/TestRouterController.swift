@@ -230,7 +230,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenPreload() {
-        Router.openURL("https://www.wuyong.site/")
+        Router.openURL("https://www.wuyong.site/#slide=1")
     }
     
     func onOpenCookie() {

@@ -112,13 +112,13 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.isFirstLoad,
-               !webView.fw_reusePrepareing {
+               !webView.fw_reusePreparing {
                 webView.isFirstLoad = false
                 webView.fw_preloadReusableView()
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePrepareing {
-                webView.fw_reusePrepareing = false
+            if let webView = webView as? WebView, webView.fw_reusePreparing {
+                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
             }
         }
@@ -129,9 +129,9 @@ open class WebView: WKWebView {
                 return
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePrepareing {
+            if let webView = webView as? WebView, webView.fw_reusePreparing {
+                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
-                webView.fw_reusePrepareing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -144,9 +144,9 @@ open class WebView: WKWebView {
                 return
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePrepareing {
+            if let webView = webView as? WebView, webView.fw_reusePreparing {
+                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
-                webView.fw_reusePrepareing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -328,12 +328,13 @@ open class WebView: WKWebView {
         super.reusableViewWillEnterPool()
         
         if fw_reusedTimes < 1,
+           !fw_reusePreparing,
            let reuseIdentifier = fw_reuseIdentifier,
            !WebView.preloadedReuseIdentifiers.contains(reuseIdentifier),
            let preloadUrl = WebView.reusePreloadUrlBlock?(reuseIdentifier) {
             WebView.preloadedReuseIdentifiers.append(reuseIdentifier)
             
-            fw_reusePrepareing = true
+            fw_reusePreparing = true
             reusableViewWillLeavePool()
             fw_loadRequest(preloadUrl)
         }
