@@ -302,9 +302,15 @@ open class WebView: WKWebView {
         allowsUniversalLinks = false
         allowsSchemeURL = false
         webRequest = nil
-        isFirstLoad = true
+        isFirstLoad = false
         
         super.reusableViewWillEnterPool()
+    }
+    
+    open override func reusableViewWillLeavePool() {
+        super.reusableViewWillLeavePool()
+        
+        isFirstLoad = true
     }
     
 }
@@ -341,8 +347,13 @@ open class WebView: WKWebView {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        fw_clearBackForwardList()
         load(URLRequest(url: NSURL() as URL))
+    }
+    
+    open override func reusableViewWillLeavePool() {
+        super.reusableViewWillLeavePool()
+        
+        fw_clearBackForwardList()
     }
     
     // MARK: - WebView
