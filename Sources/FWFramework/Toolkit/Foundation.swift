@@ -169,6 +169,8 @@ extension FW {
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
     public static func fw_date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateFormat = format
         if let timeZone = timeZone {
             formatter.timeZone = timeZone
@@ -185,6 +187,8 @@ extension FW {
     /// 转化为字符串，自定义格式和时区
     public func fw_string(format: String, timeZone: TimeZone? = nil) -> String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateFormat = format
         if let timeZone = timeZone {
             formatter.timeZone = timeZone
