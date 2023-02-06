@@ -135,7 +135,7 @@ open class WebView: WKWebView {
         
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
             if let webView = webView as? WebView {
-                webView.wasTerminated = true
+                webView.fw_reuseInvalid = true
             }
             
             if self.delegate?.responds(to: #selector(WKNavigationDelegate.webViewWebContentProcessDidTerminate(_:))) ?? false {
@@ -233,8 +233,6 @@ open class WebView: WKWebView {
             fw_loadRequest(webRequest)
         }
     }
-    
-    internal private(set) var wasTerminated = false
     
     private var delegateProxy = WebViewDelegateProxy()
     
