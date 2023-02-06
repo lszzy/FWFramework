@@ -111,9 +111,15 @@ open class WebView: WKWebView {
                 self.delegate?.webViewFinishLoad()
             }
             
-            if let webView = webView as? WebView, webView.isFirstLoad {
+            if let webView = webView as? WebView, webView.isFirstLoad,
+               !webView.fw_reusePrepareing {
                 webView.isFirstLoad = false
                 webView.fw_preloadReusableView()
+            }
+            
+            if let webView = webView as? WebView, webView.fw_reusePrepareing {
+                webView.fw_reusePrepareing = false
+                webView.reusableViewWillEnterPool()
             }
         }
         
@@ -121,6 +127,11 @@ open class WebView: WKWebView {
             if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFailProvisionalNavigation:withError:))) ?? false {
                 self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error)
                 return
+            }
+            
+            if let webView = webView as? WebView, webView.fw_reusePrepareing {
+                webView.reusableViewWillEnterPool()
+                webView.fw_reusePrepareing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -131,6 +142,11 @@ open class WebView: WKWebView {
             if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFail:withError:))) ?? false {
                 self.delegate?.webView?(webView, didFail: navigation, withError: error)
                 return
+            }
+            
+            if let webView = webView as? WebView, webView.fw_reusePrepareing {
+                webView.reusableViewWillEnterPool()
+                webView.fw_reusePrepareing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -241,6 +257,11 @@ open class WebView: WKWebView {
     /// 是否是第一次加载，第一次加载成功及以前都为true
     open var isFirstLoad = true
     
+    /// 设置重用时预缓存资源的url句柄，同一个reuseIdentifier仅生效一次，自动处理堆栈
+    public static var reusePreloadUrlBlock: ((String) -> Any?)?
+    
+    private static var preloadedReuseIdentifiers: [String] = []
+    
     private var delegateProxy = WebViewDelegateProxy()
     
     // MARK: - Lifecycle
@@ -305,6 +326,17 @@ open class WebView: WKWebView {
         isFirstLoad = false
         
         super.reusableViewWillEnterPool()
+        
+        if fw_reusedTimes < 1,
+           let reuseIdentifier = fw_reuseIdentifier,
+           !WebView.preloadedReuseIdentifiers.contains(reuseIdentifier),
+           let preloadUrl = WebView.reusePreloadUrlBlock?(reuseIdentifier) {
+            WebView.preloadedReuseIdentifiers.append(reuseIdentifier)
+            
+            fw_reusePrepareing = true
+            reusableViewWillLeavePool()
+            fw_loadRequest(preloadUrl)
+        }
     }
     
     open override func reusableViewWillLeavePool() {
@@ -347,13 +379,8 @@ open class WebView: WKWebView {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        load(URLRequest(url: NSURL() as URL))
-    }
-    
-    open override func reusableViewWillLeavePool() {
-        super.reusableViewWillLeavePool()
-        
         fw_clearBackForwardList()
+        load(URLRequest(url: NSURL() as URL))
     }
     
     // MARK: - WebView
@@ -410,8 +437,7 @@ open class WebView: WKWebView {
         if requestUrl == nil, let urlString = request as? String {
             requestUrl = URL.fw_url(string: urlString)
         }
-        guard let requestUrl = requestUrl,
-              !requestUrl.absoluteString.isEmpty else { return nil }
+        guard let requestUrl = requestUrl else { return nil }
         
         if requestUrl.isFileURL {
             if let htmlString = try? String(contentsOf: requestUrl, encoding: .utf8) {
@@ -434,6 +460,9 @@ open class WebView: WKWebView {
     
     /// 清空WebView后退和前进的网页栈
     public func fw_clearBackForwardList() {
+        guard !backForwardList.backList.isEmpty ||
+              !backForwardList.forwardList.isEmpty else { return }
+        
         let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
         if backForwardList.responds(to: selector) {
             backForwardList.perform(selector)

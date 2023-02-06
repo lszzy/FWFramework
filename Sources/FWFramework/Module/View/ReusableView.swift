@@ -203,8 +203,8 @@ open class ReusableViewPool: NSObject {
         var enqueueReusableView: T?
         lock.wait()
         if var reusableViews = enqueueReusableViews[classIdentifier],
-           reusableViews.count > 0 {
-            enqueueReusableView = reusableViews.removeFirst() as? T
+           let enqueueIndex = reusableViews.firstIndex(where: { !$0.fw_reusePrepareing }) {
+            enqueueReusableView = reusableViews.remove(at: enqueueIndex) as? T
             enqueueReusableViews[classIdentifier] = reusableViews
         }
         
@@ -275,6 +275,12 @@ public protocol ReusableViewProtocol {
     public var fw_reusedTimes: Int {
         get { return fw_propertyInt(forName: "fw_reusedTimes") }
         set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }
+    }
+    
+    /// 标记重用准备中(true)，准备中的视图在完成(false)之前都不会被dequeue，默认false
+    public var fw_reusePrepareing: Bool {
+        get { return fw_propertyBool(forName: "fw_reusePrepareing") }
+        set { fw_setPropertyBool(newValue, forName: "fw_reusePrepareing") }
     }
     
     /// 标记重用失效，将自动从缓存池移除
