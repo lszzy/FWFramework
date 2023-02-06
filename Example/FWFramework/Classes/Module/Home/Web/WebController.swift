@@ -211,6 +211,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
                 self?.webView.load(URLRequest(url: FW.safeURL(nil)))
                 self?.webView.fw.clearBackForwardList()
             } else {
+                WebView.fw.processPool = WKProcessPool()
                 UserDefaults.fw.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
             }
