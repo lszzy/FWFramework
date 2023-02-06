@@ -32,9 +32,17 @@ extension Wrapper where Base: UIBarItem {
     }
 
     /// 当item内的view生成后就会调用一次这个block，仅对UIBarButtonItem、UITabBarItem有效
-    public var viewLoadedBlock: ((UIBarItem, UIView) -> Void)? {
+    public var viewLoadedBlock: ((Base, UIView) -> Void)? {
         get { return base.fw_viewLoadedBlock }
-        set { base.fw_viewLoadedBlock = newValue }
+        set {
+            if newValue != nil {
+                base.fw_viewLoadedBlock = { item, view in
+                    newValue?(item as! Base, view)
+                }
+            } else {
+                base.fw_viewLoadedBlock = nil
+            }
+        }
     }
     
 }
