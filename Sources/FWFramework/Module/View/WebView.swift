@@ -107,10 +107,14 @@ open class WebView: WKWebView {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFinish:))) ?? false {
                 self.delegate?.webView?(webView, didFinish: navigation)
-                return
+            } else {
+                self.delegate?.webViewFinishLoad()
             }
             
-            self.delegate?.webViewFinishLoad()
+            if let webView = webView as? WebView, webView.isFirstLoad {
+                webView.isFirstLoad = false
+                webView.fw_preloadReusableView()
+            }
         }
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -234,6 +238,9 @@ open class WebView: WKWebView {
         }
     }
     
+    /// 是否是第一次加载，第一次加载成功及以前都为true
+    open var isFirstLoad = true
+    
     private var delegateProxy = WebViewDelegateProxy()
     
     // MARK: - Lifecycle
@@ -295,6 +302,7 @@ open class WebView: WKWebView {
         allowsUniversalLinks = false
         allowsSchemeURL = false
         webRequest = nil
+        isFirstLoad = true
         
         super.reusableViewWillEnterPool()
     }
