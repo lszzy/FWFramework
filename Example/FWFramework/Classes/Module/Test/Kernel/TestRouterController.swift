@@ -58,6 +58,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
             ["打开Web", "onOpenHttp"],
             ["打开完整Web", "onOpenHttp2"],
             ["打开异常Web", "onOpenHttp3"],
+            ["打开预缓存Web，需开启重用", "onOpenPreload"],
             ["测试Cookie", "onOpenCookie"],
             ["Url编码", "onOpenEncode"],
             ["Url未编码", "onOpenImage"],
@@ -226,6 +227,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func onOpenHttp3() {
         Router.openURL("http://username:password@localhost:8000/test:8001/directory%202/index.html?param=value#anchor")
+    }
+    
+    func onOpenPreload() {
+        Router.openURL("https://www.wuyong.site/")
     }
     
     func onOpenCookie() {

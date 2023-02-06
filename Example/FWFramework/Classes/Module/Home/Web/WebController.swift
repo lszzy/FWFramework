@@ -95,6 +95,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
             WebView.fw.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
+            WebView.reusePreloadUrlBlock = { _ in
+                return "https://www.wuyong.site/"
+            }
             ViewControllerManager.shared.webViewReuseIdentifier = "WebView"
         } else {
             ViewControllerManager.shared.webViewReuseIdentifier = nil
