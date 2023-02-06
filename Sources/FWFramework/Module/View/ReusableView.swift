@@ -271,7 +271,7 @@ public protocol ReusableViewProtocol {
         set { fw_setProperty(newValue, forName: "fw_reuseIdentifier") }
     }
     
-    /// 视图已重用次数
+    /// 视图已重用次数，默认0
     public var fw_reusedTimes: Int {
         get { return fw_propertyInt(forName: "fw_reusedTimes") }
         set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }

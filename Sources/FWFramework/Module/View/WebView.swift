@@ -325,6 +325,8 @@ open class WebView: WKWebView {
         fw_jsBridge = nil
         fw_jsBridgeEnabled = false
         fw_navigationItems = nil
+        guard fw_reusedTimes > 0 else { return }
+        
         scrollView.delegate = nil
         scrollView.isScrollEnabled = true
         stopLoading()
