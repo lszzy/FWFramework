@@ -21,7 +21,7 @@ extension Wrapper where Base: UIView {
         set { base.fw_reuseIdentifier = newValue }
     }
     
-    /// 视图已重用次数
+    /// 视图已重用次数，默认0
     public var reusedTimes: Int {
         get { return base.fw_reusedTimes }
         set { base.fw_reusedTimes = newValue }

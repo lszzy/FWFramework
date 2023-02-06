@@ -111,9 +111,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
         
         let loadTime = Benchmark.end("WebView")
         fw.showMessage(text: String(format: "%.3fms", loadTime * 1000))
-        
-        // 因为重写了webViewFinishLoad，需自行处理预加载逻辑
-        webView.fw.preloadReusableView()
     }
     
     func webViewFailLoad(_ error: Error) {
