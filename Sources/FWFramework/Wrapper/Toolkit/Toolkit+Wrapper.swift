@@ -720,8 +720,10 @@ extension Wrapper where Base: UIViewController {
 
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
-    public func observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> NSObjectProtocol {
-        return base.fw_observeState(block)
+    public func observeState(_ block: @escaping (Base, ViewControllerState) -> Void) -> NSObjectProtocol {
+        return base.fw_observeState { viewController, state in
+            block(viewController as! Base, state)
+        }
     }
     
     /// 移除生命周期监听者，传nil时移除所有
