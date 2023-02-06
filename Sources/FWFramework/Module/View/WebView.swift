@@ -118,8 +118,8 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
+                webView.fw_reusePreparing = false
             }
         }
         
@@ -130,8 +130,8 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
+                webView.fw_reusePreparing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -145,8 +145,8 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.fw_reusePreparing = false
                 webView.reusableViewWillEnterPool()
+                webView.fw_reusePreparing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -380,8 +380,13 @@ open class WebView: WKWebView {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        fw_clearBackForwardList()
         load(URLRequest(url: NSURL() as URL))
+    }
+    
+    open override func reusableViewWillLeavePool() {
+        super.reusableViewWillLeavePool()
+        
+        fw_clearBackForwardList()
     }
     
     // MARK: - WebView
@@ -461,9 +466,6 @@ open class WebView: WKWebView {
     
     /// 清空WebView后退和前进的网页栈
     public func fw_clearBackForwardList() {
-        guard !backForwardList.backList.isEmpty ||
-              !backForwardList.forwardList.isEmpty else { return }
-        
         let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
         if backForwardList.responds(to: selector) {
             backForwardList.perform(selector)
