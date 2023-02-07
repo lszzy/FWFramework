@@ -794,6 +794,7 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 - (NSString *)fw_stringWithFormat:(NSString *)format timeZone:(NSTimeZone *)timeZone
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = format;
     if (timeZone) formatter.timeZone = timeZone;
     NSString *string = [formatter stringFromDate:self];
@@ -865,6 +866,7 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 + (NSDate *)fw_dateWithString:(NSString *)string format:(NSString *)format timeZone:(NSTimeZone *)timeZone
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = format;
     if (timeZone) formatter.timeZone = timeZone;
     NSDate *date = [formatter dateFromString:string];
@@ -1510,6 +1512,7 @@ static dispatch_semaphore_t fwStaticSemaphore;
     int strDay = [[carid substringWithRange:NSMakeRange(12, 2)] intValue];
     NSTimeZone *localZone = [NSTimeZone localTimeZone];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setTimeZone:localZone];
