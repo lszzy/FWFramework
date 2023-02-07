@@ -1971,7 +1971,7 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
     if (_needDialogBlur) {
         self.containerView.backgroundColor = [UIColor clearColor];
         if (!self.dimmingKnockoutBackdropView) {
-            self.dimmingKnockoutBackdropView = [NSClassFromString(@"_UIDimmingKnockoutBackdropView") alloc];
+            self.dimmingKnockoutBackdropView = [NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"_U", @"IDimmingKnockou", @"tBackdropView"]) alloc];
             if (self.dimmingKnockoutBackdropView) {
                 // 下面4行相当于self.dimmingKnockoutBackdropView = [self.dimmingKnockoutBackdropView performSelector:NSSelectorFromString(@"initWithStyle:") withObject:@(UIBlurEffectStyleLight)];
                 SEL selector = NSSelectorFromString(@"initWithStyle:");

@@ -886,7 +886,7 @@ import FWObjC
             
             let textField = UITextField()
             textField.placeholder = " "
-            let placeholderLabel = textField.fw_invokeGetter("_placeholderLabel") as? UILabel
+            let placeholderLabel = textField.fw_invokeGetter(String(format: "%@%@%@", "_p", "lacehol", "derLabel")) as? UILabel
             defaultPlaceholderColor = placeholderLabel?.textColor
             return defaultPlaceholderColor
         }

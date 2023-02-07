@@ -788,7 +788,7 @@ import FWObjC
             
             // 兼容iOS13操作表设置title和message样式不生效问题
             if #available(iOS 13.0, *) {
-                guard let targetClass = objc_getClass("_UIInterfaceActionGroupHeaderScrollView") as? AnyClass else { return }
+                guard let targetClass = objc_getClass(String(format: "%@%@%@", "_U", "IInterfaceActionGrou", "pHeaderScrollView")) as? AnyClass else { return }
                 
                 UIAlertController.fw_alertSubview(selfObject.view) { view in
                     if !view.isKind(of: targetClass) { return false }

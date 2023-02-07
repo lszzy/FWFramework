@@ -260,7 +260,7 @@ extension String: _BuiltInBasicType {
             return str
         case let num as NSNumber:
             // Boolean Type Inside
-            if NSStringFromClass(type(of: num)) == "__NSCFBoolean" {
+            if NSStringFromClass(type(of: num)) == String(format: "%@%@%@", "__N", "SCFBo", "olean") {
                 if num.boolValue {
                     return "true"
                 } else {

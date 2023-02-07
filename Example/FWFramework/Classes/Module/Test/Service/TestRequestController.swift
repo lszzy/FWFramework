@@ -25,6 +25,21 @@ class TestModelRequest: BaseRequest {
         30
     }
     
+    override func filterUrlRequest(_ urlRequest: NSMutableURLRequest) {
+        // 一般在filterUrlRequest中进行请求签名，注意header不能含有中文等非法字符
+        let headers = [
+            "Authorization": "",
+            "X-Access-Key": "",
+            "X-Timestamp": "",
+            "X-Nonce-Data": "",
+            "X-Meta-Data": "",
+            "X-Sign-Data": "",
+        ]
+        for (field, value) in headers {
+            urlRequest.setValue(value, forHTTPHeaderField: field)
+        }
+    }
+    
     override func requestCompleteFilter() {
         let responseJSON = JSON(responseJSONObject)
         responseName = responseJSON["name"].stringValue

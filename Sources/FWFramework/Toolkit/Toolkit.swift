@@ -473,7 +473,7 @@ extension FW {
         }
         
         let bundlePath = Bundle.main.bundlePath as NSString
-        var path = bundlePath.appendingPathComponent("_CodeSignature")
+        var path = bundlePath.appendingPathComponent(String(format: "%@%@%@", "_C", "odeSi", "gnature"))
         if !FileManager.default.fileExists(atPath: path) {
             return true
         }

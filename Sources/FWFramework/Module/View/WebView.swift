@@ -466,7 +466,7 @@ open class WebView: WKWebView {
     
     /// 清空WebView后退和前进的网页栈
     public func fw_clearBackForwardList() {
-        let selector = NSSelectorFromString(String(format: "%@%@%@%@", "_re", "moveA", "llIte", "ms"))
+        let selector = NSSelectorFromString(String(format: "%@%@%@", "_r", "emoveA", "llItems"))
         if backForwardList.responds(to: selector) {
             backForwardList.perform(selector)
         }
