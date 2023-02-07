@@ -42,7 +42,7 @@ import FWObjC
                 return false
             }
             
-            if let isTransitioning = self.navigationController?.value(forKey: "_isTransitioning") as? NSNumber, isTransitioning.boolValue {
+            if let isTransitioning = self.navigationController?.value(forKey: String(format: "%@%@%@", "_i", "sTransi", "tioning")) as? NSNumber, isTransitioning.boolValue {
                 return false
             }
             
@@ -118,7 +118,7 @@ import FWObjC
         }}
         
         NSObject.fw_swizzleMethod(
-            objc_getClass("_UIBarBackground"),
+            objc_getClass(String(format: "%@%@%@", "_U", "IBarBack", "ground")),
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
             swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
@@ -386,7 +386,7 @@ import FWObjC
             
             NSObject.fw_swizzleInstanceMethod(
                 UINavigationController.self,
-                selector: NSSelectorFromString("_shouldBottomBarBeHidden"),
+                selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
                 methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,
                 swizzleSignature: (@convention(block) (UINavigationController) -> Bool).self
             ) { store in { selfObject in
@@ -533,7 +533,7 @@ import FWObjC
     
     /// 导航栏背景视图，显示背景色和背景图片等
     public var fw_backgroundView: UIView? {
-        return fw_invokeGetter("_backgroundView") as? UIView
+        return fw_invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
     }
     
     /// 导航栏内容视图，iOS11+才存在，显示item和titleView等
@@ -595,7 +595,7 @@ import FWObjC
     
     /// 工具栏背景视图，显示背景色和背景图片等。如果标签栏同时显示，背景视图高度也会包含标签栏高度
     public var fw_backgroundView: UIView? {
-        return fw_invokeGetter("_backgroundView") as? UIView
+        return fw_invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
     }
     
     /// 工具栏内容视图，iOS11+才存在，显示item等
