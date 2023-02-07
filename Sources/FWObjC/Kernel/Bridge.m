@@ -905,6 +905,7 @@ typedef struct __ProxyBlock {
     int strDay = [[carid substringWithRange:NSMakeRange(12, 2)] intValue];
     NSTimeZone *localZone = [NSTimeZone localTimeZone];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setTimeZone:localZone];
