@@ -103,19 +103,25 @@ extension Wrapper where Base == Date {
         set { Base.fw_currentTime = newValue }
     }
     
-    /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
-    public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
-        return Base.fw_date(string: string, format: format, timeZone: timeZone)
+    /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
+    public static var dateFormatter: DateFormatter {
+        get { Base.fw_dateFormatter }
+        set { Base.fw_dateFormatter = newValue }
     }
     
-    /// 转化为字符串，默认当前时区，格式：yyyy-MM-dd HH:mm:ss
+    /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
+    public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
+        return Base.fw_date(string: string, format: format)
+    }
+    
+    /// 转化为字符串，格式：yyyy-MM-dd HH:mm:ss
     public var stringValue: String {
         return base.fw_stringValue
     }
     
-    /// 转化为字符串，自定义格式和时区
-    public func string(format: String, timeZone: TimeZone? = nil) -> String {
-        return base.fw_string(format: format, timeZone: timeZone)
+    /// 转化为字符串，自定义格式
+    public func string(format: String) -> String {
+        return base.fw_string(format: format)
     }
     
     /// 格式化时长，格式"00:00"或"00:00:00"

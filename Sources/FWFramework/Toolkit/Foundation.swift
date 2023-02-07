@@ -166,33 +166,31 @@ extension FW {
     private static var fw_staticCurrentBaseTime: TimeInterval = 0
     private static var fw_staticLocalBaseTime: TimeInterval = 0
     
-    /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)和时区(默认当前时区)
-    public static func fw_date(string: String, format: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone? = nil) -> Date? {
+    /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
+    public static var fw_dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
+        return formatter
+    }()
+    
+    /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
+    public static func fw_date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
+        let formatter = fw_dateFormatter
         formatter.dateFormat = format
-        if let timeZone = timeZone {
-            formatter.timeZone = timeZone
-        }
         let date = formatter.date(from: string)
         return date
     }
     
-    /// 转化为字符串，默认当前时区，格式：yyyy-MM-dd HH:mm:ss
+    /// 转化为字符串，格式：yyyy-MM-dd HH:mm:ss
     public var fw_stringValue: String {
         return fw_string(format: "yyyy-MM-dd HH:mm:ss")
     }
     
-    /// 转化为字符串，自定义格式和时区
-    public func fw_string(format: String, timeZone: TimeZone? = nil) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = Calendar(identifier: .gregorian)
+    /// 转化为字符串，自定义格式
+    public func fw_string(format: String) -> String {
+        let formatter = Date.fw_dateFormatter
         formatter.dateFormat = format
-        if let timeZone = timeZone {
-            formatter.timeZone = timeZone
-        }
         let string = formatter.string(from: self)
         return string
     }
