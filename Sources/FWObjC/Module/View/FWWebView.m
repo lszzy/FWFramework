@@ -474,6 +474,7 @@ static WKProcessPool *fwStaticProcessPool = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         formatter = [NSDateFormatter new];
+        formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
         formatter.dateFormat = @"EEE, d MMM yyyy HH:mm:ss zzz";
     });

@@ -598,6 +598,7 @@ NSURL * FWSafeURL(id value) {
         return (NSString *)self;
     } else if ([self isKindOfClass:[NSDate class]]) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         return [formatter stringFromDate:(NSDate *)self];
     } else if ([self isKindOfClass:[NSData class]]) {
@@ -613,6 +614,7 @@ NSURL * FWSafeURL(id value) {
         return (NSDate *)self;
     } else if ([self isKindOfClass:[NSString class]]) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         return [formatter dateFromString:(NSString *)self] ?: [NSDate date];
     } else if ([self isKindOfClass:[NSNumber class]]) {
