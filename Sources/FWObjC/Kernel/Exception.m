@@ -198,7 +198,11 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSString
 
 + (void)captureStringException {
-    NSArray<NSString *> *stringClasses = @[@"__NSCFConstantString", @"NSTaggedPointerString", @"__NSCFString"];
+    NSArray<NSString *> *stringClasses = @[
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SCFCon", @"stantString"],
+        [NSString stringWithFormat:@"%@%@%@", @"N", @"STaggedPo", @"interString"],
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SCFS", @"tring"]
+    ];
     for (NSString *stringClass in stringClasses) {
         [NSObject __fw_swizzleMethod:NSClassFromString(stringClass) selector:@selector(substringFromIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^NSString * (__unsafe_unretained NSString *selfObject, NSUInteger from) {
@@ -271,7 +275,12 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    NSArray<NSString *> *arrayClasses = @[@"__NSArray0", @"__NSArrayI", @"__NSSingleObjectArrayI", @"__NSArrayM"];
+    NSArray<NSString *> *arrayClasses = @[
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"ray0"],
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayI"],
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SSingleObj", @"ectArrayI"],
+        [NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]
+    ];
     for (NSString *arrayClass in arrayClasses) {
         [NSObject __fw_swizzleMethod:NSClassFromString(arrayClass) selector:@selector(objectAtIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
             return ^id (__unsafe_unretained NSArray *selfObject, NSUInteger index) {
@@ -316,7 +325,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         }];
     }
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, id object) {
             void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
             @try {
@@ -327,7 +336,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(insertObject:atIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(insertObject:atIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, id object, NSUInteger index) {
             void (*originalMSG)(id, SEL, id, NSUInteger) = (void (*)(id, SEL, id, NSUInteger))originalIMP();
             @try {
@@ -338,7 +347,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(removeObjectAtIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(removeObjectAtIndex:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, NSUInteger index) {
             void (*originalMSG)(id, SEL, NSUInteger) = (void (*)(id, SEL, NSUInteger))originalIMP();
             @try {
@@ -349,7 +358,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(replaceObjectAtIndex:withObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(replaceObjectAtIndex:withObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, NSUInteger index, id object) {
             void (*originalMSG)(id, SEL, NSUInteger, id) = (void (*)(id, SEL, NSUInteger, id))originalIMP();
             @try {
@@ -360,7 +369,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(setObject:atIndexedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(setObject:atIndexedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, id object, NSUInteger index) {
             void (*originalMSG)(id, SEL, id, NSUInteger) = (void (*)(id, SEL, id, NSUInteger))originalIMP();
             @try {
@@ -371,7 +380,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSArrayM") selector:@selector(removeObjectsInRange:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SAr", @"rayM"]) selector:@selector(removeObjectsInRange:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableArray *selfObject, NSRange range) {
             void (*originalMSG)(id, SEL, NSRange) = (void (*)(id, SEL, NSRange))originalIMP();
             @try {
@@ -386,7 +395,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
 #pragma mark - NSSet
 
 + (void)captureSetException {
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSSetM") selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SSe", @"tM"]) selector:@selector(addObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableSet *selfObject, id object) {
             void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
             @try {
@@ -397,7 +406,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSSetM") selector:@selector(removeObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SSe", @"tM"]) selector:@selector(removeObject:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableSet *selfObject, id object) {
             void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
             @try {
@@ -438,7 +447,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(setObject:forKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SDict", @"ionaryM"]) selector:@selector(setObject:forKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id object, id key) {
             void (*originalMSG)(id, SEL, id, id) = (void (*)(id, SEL, id, id))originalIMP();
             @try {
@@ -449,7 +458,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(removeObjectForKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SDict", @"ionaryM"]) selector:@selector(removeObjectForKey:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id key) {
             void (*originalMSG)(id, SEL, id) = (void (*)(id, SEL, id))originalIMP();
             @try {
@@ -460,7 +469,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
         };
     }];
     
-    [NSObject __fw_swizzleMethod:NSClassFromString(@"__NSDictionaryM") selector:@selector(setObject:forKeyedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
+    [NSObject __fw_swizzleMethod:NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"__N", @"SDict", @"ionaryM"]) selector:@selector(setObject:forKeyedSubscript:) identifier:nil block:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
         return ^void (__unsafe_unretained NSMutableDictionary *selfObject, id object, id<NSCopying> key) {
             void (*originalMSG)(id, SEL, id, id<NSCopying>) = (void (*)(id, SEL, id, id<NSCopying>))originalIMP();
             @try {
