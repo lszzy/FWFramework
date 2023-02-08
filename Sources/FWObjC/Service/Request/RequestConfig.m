@@ -1,5 +1,5 @@
 //
-//  NetworkConfig.m
+//  RequestConfig.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,7 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NetworkConfig.h"
+#import "RequestConfig.h"
 #import "BaseRequest.h"
 #import "SecurityPolicy.h"
 #import <CommonCrypto/CommonDigest.h>
@@ -42,14 +42,14 @@
 #endif
 
 #define __FWRequestLog( aFormat, ... ) \
-    if ([__FWNetworkConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
-@implementation __FWNetworkConfig {
+@implementation __FWRequestConfig {
     NSMutableArray<id<__FWUrlFilterProtocol>> *_urlFilters;
     NSMutableArray<id<__FWCacheDirPathFilterProtocol>> *_cacheDirPathFilters;
 }
 
-+ (__FWNetworkConfig *)sharedConfig {
++ (__FWRequestConfig *)sharedConfig {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 
 #import "ChainRequest.h"
-#import "NetworkConfig.h"
+#import "RequestConfig.h"
 #import "BaseRequest.h"
 
 #if FWMacroSPM
@@ -40,7 +40,7 @@
 #endif
 
 #define __FWRequestLog( aFormat, ... ) \
-    if ([__FWNetworkConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 @interface __FWChainRequest()<__FWRequestDelegate>
 
@@ -74,7 +74,7 @@
 
     _succeedRequest = nil;
     _failedRequest = nil;
-    [[__FWNetworkManager sharedManager] addChainRequest:self];
+    [[__FWRequestManager sharedManager] addChainRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     if (![self startNextRequest:nil]) {
         __FWRequestLog(@"Error! Chain request array is empty.");
@@ -86,7 +86,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWNetworkManager sharedManager] removeChainRequest:self];
+    [[__FWRequestManager sharedManager] removeChainRequest:self];
 }
 
 - (void)startWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
@@ -123,7 +123,7 @@
 }
 
 - (void)startSynchronouslyWithCompletion:(void (^)(__FWChainRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWNetworkManager sharedManager] synchronousChainRequest:self completion:completion condition:condition];
+    [[__FWRequestManager sharedManager] synchronousChainRequest:self completion:completion condition:condition];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
@@ -252,7 +252,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWNetworkManager sharedManager] removeChainRequest:self];
+    [[__FWRequestManager sharedManager] removeChainRequest:self];
 }
 
 - (void)clearRequest {

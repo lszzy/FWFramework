@@ -23,7 +23,7 @@
 
 #import "BatchRequest.h"
 #import "BaseRequest.h"
-#import "NetworkConfig.h"
+#import "RequestConfig.h"
 
 #if FWMacroSPM
 
@@ -40,7 +40,7 @@
 #endif
 
 #define __FWRequestLog( aFormat, ... ) \
-    if ([__FWNetworkConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 @interface __FWBatchRequest() <__FWRequestDelegate>
 
@@ -74,7 +74,7 @@
         return;
     }
     [_failedRequestArray removeAllObjects];
-    [[__FWNetworkManager sharedManager] addBatchRequest:self];
+    [[__FWRequestManager sharedManager] addBatchRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     for (__FWBaseRequest * req in _requestArray) {
         req.delegate = self;
@@ -88,7 +88,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWNetworkManager sharedManager] removeBatchRequest:self];
+    [[__FWRequestManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)startWithSuccess:(void (^)(__FWBatchRequest *batchRequest))success
@@ -125,7 +125,7 @@
 }
 
 - (void)startSynchronouslyWithCompletion:(void (^)(__FWBatchRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWNetworkManager sharedManager] synchronousBatchRequest:self completion:completion condition:condition];
+    [[__FWRequestManager sharedManager] synchronousBatchRequest:self completion:completion condition:condition];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
@@ -228,7 +228,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWNetworkManager sharedManager] removeBatchRequest:self];
+    [[__FWRequestManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)clearRequest {
