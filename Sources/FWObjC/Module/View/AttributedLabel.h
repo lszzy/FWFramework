@@ -45,6 +45,7 @@ NS_SWIFT_NAME(AttributedLabel)
 @property (nonatomic,assign)                CGFloat shadowBlur;                     //阴影半径
 @property (nonatomic,assign)                BOOL    underLineForLink;               //链接是否带下划线
 @property (nonatomic,assign)                BOOL    autoDetectLinks;                //自动检测
+@property (nonatomic,copy,nullable)         void (^clickedOnLink)(id linkData);     //链接点击句柄
 @property (nonatomic,assign)                NSInteger   numberOfLines;              //行数
 @property (nonatomic,assign)                CTTextAlignment textAlignment;          //文字排版样式
 @property (nonatomic,assign)                CTLineBreakMode lineBreakMode;          //LineBreakMode
