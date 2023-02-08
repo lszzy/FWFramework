@@ -22,7 +22,6 @@
 //  THE SOFTWARE.
 
 #import "ChainRequest.h"
-#import "RequestManager.h"
 #import "NetworkConfig.h"
 #import "BaseRequest.h"
 
@@ -75,7 +74,7 @@
 
     _succeedRequest = nil;
     _failedRequest = nil;
-    [[__FWRequestManager sharedManager] addChainRequest:self];
+    [[__FWNetworkManager sharedManager] addChainRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     if (![self startNextRequest:nil]) {
         __FWRequestLog(@"Error! Chain request array is empty.");
@@ -87,7 +86,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWRequestManager sharedManager] removeChainRequest:self];
+    [[__FWNetworkManager sharedManager] removeChainRequest:self];
 }
 
 - (void)startWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
@@ -253,7 +252,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWRequestManager sharedManager] removeChainRequest:self];
+    [[__FWNetworkManager sharedManager] removeChainRequest:self];
 }
 
 - (void)clearRequest {

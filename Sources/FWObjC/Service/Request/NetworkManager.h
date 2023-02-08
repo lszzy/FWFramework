@@ -25,12 +25,13 @@
 #import "BaseRequest.h"
 #import "BatchRequest.h"
 #import "ChainRequest.h"
-#import "RequestManager.h"
 #import "NetworkConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class __FWBaseRequest;
+@class __FWBatchRequest;
+@class __FWChainRequest;
 @class __FWHTTPSessionManager;
 @class __FWHTTPResponseSerializer;
 @class __FWJSONResponseSerializer;
@@ -55,6 +56,18 @@ NS_SWIFT_NAME(NetworkManager)
 
 ///  Cancel all requests that were previously added.
 - (void)cancelAllRequests;
+
+///  Add a batch request.
+- (void)addBatchRequest:(__FWBatchRequest *)request;
+
+///  Remove a previously added batch request.
+- (void)removeBatchRequest:(__FWBatchRequest *)request;
+
+///  Add a chain request.
+- (void)addChainRequest:(__FWChainRequest *)request;
+
+///  Remove a previously added chain request.
+- (void)removeChainRequest:(__FWChainRequest *)request;
 
 /// Start request synchronously if condition is true or nil, and callback on main thread.
 - (void)synchronousRequest:(__FWBaseRequest *)request completion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion condition:(nullable BOOL (^)(void))condition;
