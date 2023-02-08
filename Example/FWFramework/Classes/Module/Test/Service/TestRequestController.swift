@@ -200,7 +200,7 @@ private extension TestRequestController {
     @objc func onRequest() {
         self.fw.showLoading()
         let request = TestModelRequest()
-        request.startWithCompletionBlock { _ in
+        request.start { _ in
             self.fw.hideLoading()
             self.fw.showMessage(text: "json请求成功: \n\(request.responseName)")
         } failure: { _ in
@@ -212,7 +212,7 @@ private extension TestRequestController {
     @objc func onWeather() {
         self.fw.showLoading()
         let request = TestWeatherRequest()
-        request.startWithCompletionBlock { _ in
+        request.start { _ in
             self.fw.hideLoading()
             self.fw.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
@@ -225,7 +225,7 @@ private extension TestRequestController {
         self.fw.showLoading()
         let request = TestWeatherRequest()
         request.testFailed = true
-        request.startWithCompletionBlock { _ in
+        request.start { _ in
             self.fw.hideLoading()
             self.fw.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
@@ -245,7 +245,7 @@ private extension TestRequestController {
         var finishedCount: Int = 0
         Benchmark.begin("async")
         for request in requests {
-            request.startWithCompletionBlock { _ in
+            request.start { _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
                     self.fw.hideLoading()
@@ -274,7 +274,7 @@ private extension TestRequestController {
         var finishedCount: Int = 0
         Benchmark.begin("sync")
         for request in requests {
-            request.startWithCompletionBlock { _ in
+            request.startSynchronously { _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
                     self.fw.hideLoading()

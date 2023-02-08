@@ -90,14 +90,14 @@
     [[__FWRequestManager sharedManager] removeChainRequest:self];
 }
 
-- (void)startWithCompletionBlockWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
-                                    failure:(void (^)(__FWChainRequest *chainRequest))failure {
+- (void)startWithSuccess:(void (^)(__FWChainRequest *chainRequest))success
+                 failure:(void (^)(__FWChainRequest *chainRequest))failure {
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];
 }
 
 - (void)startWithCompletion:(void (^)(__FWChainRequest *))completion {
-    [self startWithCompletionBlockWithSuccess:completion failure:completion];
+    [self startWithSuccess:completion failure:completion];
 }
 
 - (void)startWithWillStart:(nullable void (^)(__FWChainRequest *chainRequest))willStart
@@ -110,8 +110,7 @@
     accessory.willStopBlock = willStop;
     accessory.didStopBlock = didStop;
     [self addAccessory:accessory];
-    [self startWithCompletionBlockWithSuccess:success
-                                      failure:failure];
+    [self startWithSuccess:success failure:failure];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {

@@ -107,8 +107,8 @@ NS_SWIFT_NAME(BatchRequest)
 - (void)stop;
 
 ///  Convenience method to start the batch request with block callbacks.
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(__FWBatchRequest *batchRequest))success
-                                    failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure;
+- (void)startWithSuccess:(nullable void (^)(__FWBatchRequest *batchRequest))success
+                 failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure;
 
 ///  Convenience method to start the batch request with completion block.
 - (void)startWithCompletion:(nullable void (^)(__FWBatchRequest *batchRequest))completion;

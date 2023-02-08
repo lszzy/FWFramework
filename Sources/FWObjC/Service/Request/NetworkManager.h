@@ -56,6 +56,9 @@ NS_SWIFT_NAME(NetworkManager)
 ///  Cancel all requests that were previously added.
 - (void)cancelAllRequests;
 
+/// Start request synchronously if condition is true or nil, and callback on main thread.
+- (void)synchronousRequest:(__FWBaseRequest *)request completion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion condition:(nullable BOOL (^)(void))condition;
+
 ///  Return the constructed URL of request.
 ///
 ///  @param request The request to parse. Should not be nil.
