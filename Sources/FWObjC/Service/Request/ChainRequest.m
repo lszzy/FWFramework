@@ -113,6 +113,20 @@
     [self startWithSuccess:success failure:failure];
 }
 
+- (void)startSynchronouslyWithSuccess:(void (^)(__FWChainRequest * _Nonnull))success failure:(void (^)(__FWChainRequest * _Nonnull))failure {
+    [self startSynchronouslyWithCompletion:^(__FWChainRequest * _Nullable chainRequest) {
+        if (chainRequest.failedRequest == nil) {
+            if (success) success(chainRequest);
+        } else {
+            if (failure) failure(chainRequest);
+        }
+    } condition:nil];
+}
+
+- (void)startSynchronouslyWithCompletion:(void (^)(__FWChainRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    [[__FWNetworkManager sharedManager] synchronousChainRequest:self completion:completion condition:condition];
+}
+
 - (void)toggleAccessoriesWillStartCallBack {
     for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStart:)]) {

@@ -115,6 +115,20 @@
     [self startWithSuccess:success failure:failure];
 }
 
+- (void)startSynchronouslyWithSuccess:(void (^)(__FWBatchRequest * _Nonnull))success failure:(void (^)(__FWBatchRequest * _Nonnull))failure {
+    [self startSynchronouslyWithCompletion:^(__FWBatchRequest * _Nullable batchRequest) {
+        if (batchRequest.failedRequest == nil) {
+            if (success) success(batchRequest);
+        } else {
+            if (failure) failure(batchRequest);
+        }
+    } condition:nil];
+}
+
+- (void)startSynchronouslyWithCompletion:(void (^)(__FWBatchRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    [[__FWNetworkManager sharedManager] synchronousBatchRequest:self completion:completion condition:condition];
+}
+
 - (void)toggleAccessoriesWillStartCallBack {
     for (id<__FWRequestAccessory> accessory in self.requestAccessories) {
         if ([accessory respondsToSelector:@selector(requestWillStart:)]) {

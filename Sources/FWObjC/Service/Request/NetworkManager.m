@@ -302,6 +302,42 @@
     });
 }
 
+- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest completion:(void (^)(__FWBatchRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [batchRequest startWithCompletion:^(__FWBatchRequest * _Nonnull batchRequest) {
+                if (completion) completion(batchRequest);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
+}
+
+- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest completion:(void (^)(__FWChainRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [chainRequest startWithCompletion:^(__FWChainRequest * _Nonnull chainRequest) {
+                if (completion) completion(chainRequest);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
+}
+
 - (BOOL)validateResult:(__FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
     BOOL result = [request statusCodeValidator];
     if (!result) {
