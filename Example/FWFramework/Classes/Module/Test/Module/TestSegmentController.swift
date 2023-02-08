@@ -148,11 +148,15 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = AppTheme.textColor
         label.textAlignment = .center
+        label.numberOfLines = 0
+        label.clickedOnLink = { url in
+            Router.openURL(url)
+        }
         view.addSubview(label)
         label.fw.layoutChain
             .horizontal()
             .top(toViewBottom: textLabel, offset: 10)
-            .height(30)
+            .height(60)
         
         label.appendText("文本 ")
         let labelView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -163,6 +167,21 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         if let image = UIImage.fw.image(color: .blue, size: CGSize(width: 30, height: 30)) {
             label.append(image, maxSize: image.size, margin: .zero, alignment: .center)
         }
+        label.appendAttributedText(NSAttributedString(string: " 删除线 ", attributes: [
+            .font: UIFont.systemFont(ofSize: 15),
+            .foregroundColor: AppTheme.textColor,
+            .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+            .strikethroughColor: AppTheme.textColor,
+        ]))
+        let linkStart = label.attributedText?.length ?? 0
+        let linkString = "我是可以换行的链接，我可以被点击😀，点击后会跳转链接"
+        label.appendAttributedText(NSAttributedString(string: linkString, attributes: [
+            .font: UIFont.systemFont(ofSize: 15),
+            .foregroundColor: AppTheme.textColor,
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .underlineColor: AppTheme.textColor,
+        ]))
+        label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), linkColor: AppTheme.buttonColor)
         label.appendText(" 结束")
         
         view.addSubview(tagCollectionView)

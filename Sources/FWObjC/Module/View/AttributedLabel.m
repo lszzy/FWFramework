@@ -1180,6 +1180,10 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         {
             [_delegate attributedLabel:self clickedOnLink:linkData];
         }
+        else if (self.clickedOnLink)
+        {
+            self.clickedOnLink(linkData);
+        }
         else
         {
             NSURL *url = nil;
