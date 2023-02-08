@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 
 #import "BaseRequest.h"
-#import "NetworkManager.h"
+#import "RequestManager.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
@@ -40,7 +40,7 @@
 #endif
 
 #define __FWRequestLog( aFormat, ... ) \
-    if ([__FWNetworkConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11
@@ -279,13 +279,13 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
 - (void)startWithoutCache {
     [self clearCacheVariables];
     [self toggleAccessoriesWillStartCallBack];
-    [[__FWNetworkManager sharedManager] addRequest:self];
+    [[__FWRequestManager sharedManager] addRequest:self];
 }
 
 - (void)stop {
     [self toggleAccessoriesWillStopCallBack];
     self.delegate = nil;
-    [[__FWNetworkManager sharedManager] cancelRequest:self];
+    [[__FWRequestManager sharedManager] cancelRequest:self];
     [self toggleAccessoriesDidStopCallBack];
 }
 
@@ -323,7 +323,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
 }
 
 - (void)startSynchronouslyWithCompletion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWNetworkManager sharedManager] synchronousRequest:self completion:completion condition:condition];
+    [[__FWRequestManager sharedManager] synchronousRequest:self completion:completion condition:condition];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
@@ -353,15 +353,15 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
 #pragma mark - Subclass Override
 
 - (BOOL)responseMockValidator {
-    if (__FWNetworkConfig.sharedConfig.debugMockValidator) {
-        return __FWNetworkConfig.sharedConfig.debugMockValidator(self);
+    if (__FWRequestConfig.sharedConfig.debugMockValidator) {
+        return __FWRequestConfig.sharedConfig.debugMockValidator(self);
     }
     return [self responseStatusCode] == 404;
 }
 
 - (BOOL)responseMockProcessor {
-    if (__FWNetworkConfig.sharedConfig.debugMockProcessor) {
-        return __FWNetworkConfig.sharedConfig.debugMockProcessor(self);
+    if (__FWRequestConfig.sharedConfig.debugMockProcessor) {
+        return __FWRequestConfig.sharedConfig.debugMockProcessor(self);
     }
     return NO;
 }
@@ -742,7 +742,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
     NSString *path = [pathOfLibrary stringByAppendingPathComponent:@"LazyRequestCache"];
 
     // Filter cache base path
-    NSArray<id<__FWCacheDirPathFilterProtocol>> *filters = [[__FWNetworkConfig sharedConfig] cacheDirPathFilters];
+    NSArray<id<__FWCacheDirPathFilterProtocol>> *filters = [[__FWRequestConfig sharedConfig] cacheDirPathFilters];
     if (filters.count > 0) {
         for (id<__FWCacheDirPathFilterProtocol> filter in filters) {
             if ([filter respondsToSelector:@selector(filterCacheDirPath:withRequest:)]) {
@@ -757,7 +757,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
 
 - (NSString *)cacheFileName {
     NSString *requestUrl = [self requestUrl];
-    NSString *baseUrl = [__FWNetworkConfig sharedConfig].baseUrl;
+    NSString *baseUrl = [__FWRequestConfig sharedConfig].baseUrl;
     id argument = [self cacheFileNameFilter:[self requestArgument]];
     NSString *requestInfo = [NSString stringWithFormat:@"Method:%ld Host:%@ Url:%@ Argument:%@",
                              (long)[self requestMethod], baseUrl, requestUrl, argument];

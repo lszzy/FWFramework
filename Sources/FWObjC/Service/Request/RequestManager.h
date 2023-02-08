@@ -1,5 +1,5 @@
 //
-//  NetworkManager.h
+//  RequestManager.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -25,7 +25,7 @@
 #import "BaseRequest.h"
 #import "BatchRequest.h"
 #import "ChainRequest.h"
-#import "NetworkConfig.h"
+#import "RequestConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,16 +37,16 @@ NS_ASSUME_NONNULL_BEGIN
 @class __FWJSONResponseSerializer;
 @class __FWXMLParserResponseSerializer;
 
-///  __FWNetworkManager is the underlying class that handles actual request generation,
+///  __FWRequestManager is the underlying class that handles actual request generation,
 ///  serialization and response handling.
-NS_SWIFT_NAME(NetworkManager)
-@interface __FWNetworkManager : NSObject
+NS_SWIFT_NAME(RequestManager)
+@interface __FWRequestManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 ///  Get the shared manager.
-+ (__FWNetworkManager *)sharedManager;
++ (__FWRequestManager *)sharedManager;
 
 ///  Add request to session and start it.
 - (void)addRequest:(__FWBaseRequest *)request;

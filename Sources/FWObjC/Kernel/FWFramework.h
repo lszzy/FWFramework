@@ -11,7 +11,7 @@
 
 #import "CacheManager.h"
 #import "HTTPSessionManager.h"
-#import "NetworkManager.h"
+#import "RequestManager.h"
 #import "Database.h"
 #import "WebImage.h"
 

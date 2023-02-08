@@ -1,5 +1,5 @@
 //
-//  NetworkConfig.h
+//  RequestConfig.h
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -73,16 +73,16 @@ NS_SWIFT_NAME(CacheDirPathFilterProtocol)
 - (NSString *)filterCacheDirPath:(NSString *)originPath withRequest:(__FWBaseRequest *)request;
 @end
 
-///  __FWNetworkConfig stored global network-related configurations, which will be used in `__FWNetworkManager`
+///  __FWRequestConfig stored global network-related configurations, which will be used in `__FWRequestManager`
 ///  to form and filter requests, as well as caching response.
-NS_SWIFT_NAME(NetworkConfig)
-@interface __FWNetworkConfig : NSObject
+NS_SWIFT_NAME(RequestConfig)
+@interface __FWRequestConfig : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 ///  Return a shared config object.
-+ (__FWNetworkConfig *)sharedConfig;
++ (__FWRequestConfig *)sharedConfig;
 
 ///  Request base URL, such as "http://www.yuantiku.com". Default is empty string.
 @property (nonatomic, strong) NSString *baseUrl;

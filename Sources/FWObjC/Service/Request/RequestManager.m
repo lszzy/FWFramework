@@ -1,5 +1,5 @@
 //
-//  NetworkManager.m
+//  RequestManager.m
 //
 //  Copyright (c) 2012-2016 FWNetwork https://github.com/yuantiku
 //
@@ -21,7 +21,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NetworkManager.h"
+#import "RequestManager.h"
 #import <pthread/pthread.h>
 #import "HTTPSessionManager.h"
 
@@ -40,23 +40,23 @@
 #endif
 
 #define __FWRequestLog( aFormat, ... ) \
-    if ([__FWNetworkConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)
 
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
-@interface __FWNetworkManager ()
+@interface __FWRequestManager ()
 
 @property (strong, nonatomic) NSMutableArray<__FWBatchRequest *> *batchRequestArray;
 @property (strong, nonatomic) NSMutableArray<__FWChainRequest *> *chainRequestArray;
 
 @end
 
-@implementation __FWNetworkManager {
+@implementation __FWRequestManager {
     __FWHTTPSessionManager *_manager;
-    __FWNetworkConfig *_config;
+    __FWRequestConfig *_config;
     __FWJSONResponseSerializer *_jsonResponseSerializer;
     __FWXMLParserResponseSerializer *_xmlParserResponseSerialzier;
     NSMutableDictionary<NSNumber *, __FWBaseRequest *> *_requestsRecord;
@@ -68,7 +68,7 @@
     dispatch_semaphore_t _synchronousSemaphore;
 }
 
-+ (__FWNetworkManager *)sharedManager {
++ (__FWRequestManager *)sharedManager {
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -80,7 +80,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _config = [__FWNetworkConfig sharedConfig];
+        _config = [__FWRequestConfig sharedConfig];
         _manager = [[__FWHTTPSessionManager alloc] initWithSessionConfiguration:_config.sessionConfiguration];
         _requestsRecord = [NSMutableDictionary dictionary];
         _processingQueue = dispatch_queue_create("site.wuyong.queue.request.processing", DISPATCH_QUEUE_CONCURRENT);
@@ -740,7 +740,7 @@
 
 #pragma mark - Testing
 
-- (__FWNetworkConfig *)config {
+- (__FWRequestConfig *)config {
     return _config;
 }
 

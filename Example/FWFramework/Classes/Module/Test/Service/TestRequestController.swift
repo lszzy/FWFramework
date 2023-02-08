@@ -132,7 +132,7 @@ extension TestRequestController: ViewControllerProtocol {
     }
     
     func setupNavbar() {
-        NetworkConfig.shared().debugLogEnabled = true
+        RequestConfig.shared().debugLogEnabled = true
         URLSession.fw.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         fw.setRightBarItem("切换") { [weak self] _ in
