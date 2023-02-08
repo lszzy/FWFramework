@@ -372,9 +372,9 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin {
         case .info:
             __FWBridge.logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
         case .debug:
-            __FWBridge.logMessage(String(format: "%@ DEBUG:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWBridge.logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
         default:
-            __FWBridge.logMessage(String(format: "%@ VERBOSE:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWBridge.logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
         }
     }
     
@@ -404,9 +404,9 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin {
         case .info:
             os_log("%@ INFO:%@ %@", log: log, type: .info, "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
         case .debug:
-            os_log("%@ DEBUG:%@ %@", log: log, type: .debug, "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@ DEBUG:%@ %@", log: log, type: .debug, "📝", !group.isEmpty ? " [\(group)]" : "", message)
         default:
-            os_log("%@ VERBOSE:%@ %@", log: log, type: .debug, "📝", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@ VERBOSE:%@ %@", log: log, type: .debug, "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
         }
     }
     
