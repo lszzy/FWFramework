@@ -87,6 +87,20 @@ class TestRequestController: UIViewController {
         return button
     }()
     
+    private lazy var asyncButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Async Request", for: .normal)
+        button.fw.addTouch(target: self, action: #selector(onAsync))
+        return button
+    }()
+    
+    private lazy var syncButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Sync Request", for: .normal)
+        button.fw.addTouch(target: self, action: #selector(onSync))
+        return button
+    }()
+    
 }
 
 // MARK: - Setup
@@ -110,6 +124,7 @@ extension TestRequestController: ViewControllerProtocol {
     }
     
     func setupNavbar() {
+        NetworkConfig.shared().debugLogEnabled = true
         URLSession.fw.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         fw.setRightBarItem("切换") { [weak self] _ in
@@ -142,6 +157,8 @@ extension TestRequestController: ViewControllerProtocol {
     func setupSubviews() {
         view.addSubview(requestButton)
         view.addSubview(weatherButton)
+        view.addSubview(asyncButton)
+        view.addSubview(syncButton)
     }
     
     func setupLayout() {
@@ -152,6 +169,14 @@ extension TestRequestController: ViewControllerProtocol {
         weatherButton.fw.layoutChain
             .centerX()
             .top(toViewBottom: requestButton, offset: 20)
+        
+        asyncButton.fw.layoutChain
+            .centerX()
+            .top(toViewBottom: weatherButton, offset: 20)
+        
+        syncButton.fw.layoutChain
+            .centerX()
+            .top(toViewBottom: asyncButton, offset: 20)
     }
     
 }
@@ -179,6 +204,64 @@ private extension TestRequestController {
         } failure: { _ in
             self.fw.hideLoading()
             self.fw.showAlert(title: "天气请求失败", message: request.error?.localizedDescription)
+        }
+    }
+    
+    @objc func onAsync() {
+        self.fw.showLoading()
+        let requests: [BaseRequest] = [
+            TestWeatherRequest(),
+            TestWeatherRequest(),
+            TestModelRequest(),
+            TestModelRequest(),
+        ]
+        var finishedCount: Int = 0
+        Benchmark.begin("async")
+        for request in requests {
+            request.startWithCompletionBlock { _ in
+                finishedCount += 1
+                if finishedCount == requests.count {
+                    self.fw.hideLoading()
+                    let requestTime = Benchmark.end("async")
+                    self.fw.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                }
+            } failure: { _ in
+                finishedCount += 1
+                if finishedCount == requests.count {
+                    self.fw.hideLoading()
+                    let requestTime = Benchmark.end("async")
+                    self.fw.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                }
+            }
+        }
+    }
+    
+    @objc func onSync() {
+        self.fw.showLoading()
+        let requests: [BaseRequest] = [
+            TestWeatherRequest(),
+            TestWeatherRequest(),
+            TestModelRequest(),
+            TestModelRequest(),
+        ]
+        var finishedCount: Int = 0
+        Benchmark.begin("sync")
+        for request in requests {
+            request.startWithCompletionBlock { _ in
+                finishedCount += 1
+                if finishedCount == requests.count {
+                    self.fw.hideLoading()
+                    let requestTime = Benchmark.end("sync")
+                    self.fw.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                }
+            } failure: { _ in
+                finishedCount += 1
+                if finishedCount == requests.count {
+                    self.fw.hideLoading()
+                    let requestTime = Benchmark.end("sync")
+                    self.fw.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                }
+            }
         }
     }
     

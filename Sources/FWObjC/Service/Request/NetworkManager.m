@@ -236,9 +236,11 @@
     }
 
     // Retain request
-    __FWRequestLog(@"Add request: %@", NSStringFromClass([request class]));
     [self addRequestToRecord:request];
     [request.requestTask resume];
+    #ifdef DEBUG
+    __FWRequestLog(@"\n===========REQUEST STARTED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    #endif
 }
 
 - (void)cancelRequest:(__FWBaseRequest *)request {
@@ -256,6 +258,9 @@
 
     [self removeRequestFromRecord:request];
     [request clearCompletionBlock];
+    #ifdef DEBUG
+    __FWRequestLog(@"\n===========REQUEST CANCELLED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    #endif
 }
 
 - (void)cancelAllRequests {
@@ -311,8 +316,6 @@
     if (!request) {
         return;
     }
-
-    __FWRequestLog(@"Finished Request: %@", NSStringFromClass([request class]));
 
     NSError * __autoreleasing serializationError = nil;
     NSError * __autoreleasing validationError = nil;
@@ -400,6 +403,10 @@
 }
 
 - (void)requestDidSucceedWithRequest:(__FWBaseRequest *)request {
+    #ifdef DEBUG
+    __FWRequestLog(@"\n===========REQUEST SUCCEED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseObject ?: (request.responseString ?: @"")]);
+    #endif
+    
     @autoreleasepool {
         [request requestCompletePreprocessor];
     }
@@ -419,8 +426,9 @@
 
 - (void)requestDidFailWithRequest:(__FWBaseRequest *)request error:(NSError *)error {
     request.error = error;
-    __FWRequestLog(@"Request %@ failed, status code = %ld, error = %@",
-           NSStringFromClass([request class]), (long)request.responseStatusCode, error.localizedDescription);
+    #ifdef DEBUG
+    __FWRequestLog(@"\n===========REQUEST FAILED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseObject ?: (request.error ?: @"")]);
+    #endif
 
     // Save incomplete download data.
     NSData *incompleteDownloadData = error.userInfo[NSURLSessionDownloadTaskResumeData];
@@ -470,7 +478,11 @@
 - (void)removeRequestFromRecord:(__FWBaseRequest *)request {
     Lock();
     [_requestsRecord removeObjectForKey:@(request.requestIdentifier)];
-    __FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
+    #ifdef DEBUG
+    if ([_requestsRecord count] > 0) {
+        __FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
+    }
+    #endif
     Unlock();
 }
 
