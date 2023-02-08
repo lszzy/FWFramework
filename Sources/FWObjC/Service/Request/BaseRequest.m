@@ -568,7 +568,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
     }
 
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST CACHED===========\n%@ %@:\n%@", [self requestMethodString], [self requestUrl], [NSString stringWithFormat:@"%@", self.responseObject ?: (self.responseString ?: @"")]);
+    __FWRequestLog(@"\n===========REQUEST CACHED===========\n%@%@ %@:\n%@\n===========REQUEST CACHED===========", @"↥ ", [self requestMethodString], [self requestUrl], [NSString stringWithFormat:@"%@", self.responseJSONObject ?: (self.responseString ?: @"")]);
     #endif
     return YES;
 }

@@ -51,13 +51,14 @@ class TestWeatherRequest: BaseRequest {
     
     var city: String = ""
     var temp: String = ""
+    var testFailed = false
     
     override func requestUrl() -> String {
         "http://www.weather.com.cn/data/sk/101040100.html"
     }
     
     override func responseSerializerType() -> ResponseSerializerType {
-        .HTTP
+        testFailed ? .JSON : .HTTP
     }
     
     override func requestCompleteFilter() {
@@ -84,6 +85,13 @@ class TestRequestController: UIViewController {
         let button = AppTheme.largeButton()
         button.setTitle("Start Weather", for: .normal)
         button.fw.addTouch(target: self, action: #selector(onWeather))
+        return button
+    }()
+    
+    private lazy var failedButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Failed Request", for: .normal)
+        button.fw.addTouch(target: self, action: #selector(onFailed))
         return button
     }()
     
@@ -157,6 +165,7 @@ extension TestRequestController: ViewControllerProtocol {
     func setupSubviews() {
         view.addSubview(requestButton)
         view.addSubview(weatherButton)
+        view.addSubview(failedButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
     }
@@ -170,9 +179,13 @@ extension TestRequestController: ViewControllerProtocol {
             .centerX()
             .top(toViewBottom: requestButton, offset: 20)
         
-        asyncButton.fw.layoutChain
+        failedButton.fw.layoutChain
             .centerX()
             .top(toViewBottom: weatherButton, offset: 20)
+        
+        asyncButton.fw.layoutChain
+            .centerX()
+            .top(toViewBottom: failedButton, offset: 20)
         
         syncButton.fw.layoutChain
             .centerX()
@@ -191,7 +204,8 @@ private extension TestRequestController {
             self.fw.hideLoading()
             self.fw.showMessage(text: "json请求成功: \n\(request.responseName)")
         } failure: { _ in
-            self.fw.showAlert(title: "json请求失败", message: request.error?.localizedDescription)
+            self.fw.hideLoading()
+            self.fw.showMessage(text: "json请求失败: \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
@@ -203,7 +217,20 @@ private extension TestRequestController {
             self.fw.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
             self.fw.hideLoading()
-            self.fw.showAlert(title: "天气请求失败", message: request.error?.localizedDescription)
+            self.fw.showMessage(text: "天气请求失败: \n\(request.error?.localizedDescription ?? "")")
+        }
+    }
+    
+    @objc func onFailed() {
+        self.fw.showLoading()
+        let request = TestWeatherRequest()
+        request.testFailed = true
+        request.startWithCompletionBlock { _ in
+            self.fw.hideLoading()
+            self.fw.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
+        } failure: { _ in
+            self.fw.hideLoading()
+            self.fw.showMessage(text: "天气请求失败: \n\(request.error?.localizedDescription ?? "")")
         }
     }
     

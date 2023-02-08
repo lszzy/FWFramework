@@ -239,7 +239,7 @@
     [self addRequestToRecord:request];
     [request.requestTask resume];
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST STARTED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    __FWRequestLog(@"\n===========REQUEST STARTED===========\n%@%@ %@:\n%@\n===========REQUEST STARTED===========", @"↧ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
     #endif
 }
 
@@ -259,7 +259,7 @@
     [self removeRequestFromRecord:request];
     [request clearCompletionBlock];
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST CANCELLED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    __FWRequestLog(@"\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@\n===========REQUEST CANCELLED===========", @"↥ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
     #endif
 }
 
@@ -404,7 +404,7 @@
 
 - (void)requestDidSucceedWithRequest:(__FWBaseRequest *)request {
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST SUCCEED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseObject ?: (request.responseString ?: @"")]);
+    __FWRequestLog(@"\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@\n===========REQUEST SUCCEED===========", @"↥ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.responseString ?: @"")]);
     #endif
     
     @autoreleasepool {
@@ -427,7 +427,7 @@
 - (void)requestDidFailWithRequest:(__FWBaseRequest *)request error:(NSError *)error {
     request.error = error;
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST FAILED===========\n%@ %@:\n%@", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseObject ?: (request.error ?: @"")]);
+    __FWRequestLog(@"\n===========REQUEST FAILED===========\n%@%@ %@:\n%@\n===========REQUEST FAILED===========", @"↥ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.error ?: @"")]);
     #endif
 
     // Save incomplete download data.
