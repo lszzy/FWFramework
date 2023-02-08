@@ -289,14 +289,14 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
     [self toggleAccessoriesDidStopCallBack];
 }
 
-- (void)startWithCompletionBlockWithSuccess:(__FWRequestCompletionBlock)success
+- (void)startWithSuccess:(__FWRequestCompletionBlock)success
                                     failure:(__FWRequestCompletionBlock)failure {
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];
 }
 
 - (void)startWithCompletion:(__FWRequestCompletionBlock)completion {
-    [self startWithCompletionBlockWithSuccess:completion failure:completion];
+    [self startWithSuccess:completion failure:completion];
 }
 
 - (void)startWithWillStart:(nullable __FWRequestCompletionBlock)willStart
@@ -309,8 +309,21 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
     accessory.willStopBlock = willStop;
     accessory.didStopBlock = didStop;
     [self addAccessory:accessory];
-    [self startWithCompletionBlockWithSuccess:success
-                                      failure:failure];
+    [self startWithSuccess:success failure:failure];
+}
+
+- (void)startSynchronouslyWithSuccess:(__FWRequestCompletionBlock)success failure:(__FWRequestCompletionBlock)failure {
+    [self startSynchronouslyWithCompletion:^(__kindof __FWBaseRequest * _Nullable request) {
+        if (request.error == nil) {
+            if (success) success(request);
+        } else {
+            if (failure) failure(request);
+        }
+    } condition:nil];
+}
+
+- (void)startSynchronouslyWithCompletion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    [[__FWNetworkManager sharedManager] synchronousRequest:self completion:completion condition:condition];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {

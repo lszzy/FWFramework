@@ -294,8 +294,7 @@ NS_SWIFT_NAME(BaseRequest)
 - (void)stop;
 
 ///  Convenience method to start the request with block callbacks.
-- (void)startWithCompletionBlockWithSuccess:(nullable __FWRequestCompletionBlock)success
-                                    failure:(nullable __FWRequestCompletionBlock)failure;
+- (void)startWithSuccess:(nullable __FWRequestCompletionBlock)success failure:(nullable __FWRequestCompletionBlock)failure;
 
 ///  Convenience method to start the request with completion block.
 - (void)startWithCompletion:(nullable __FWRequestCompletionBlock)completion;
@@ -305,6 +304,10 @@ NS_SWIFT_NAME(BaseRequest)
                    success:(nullable __FWRequestCompletionBlock)success
                    failure:(nullable __FWRequestCompletionBlock)failure
                    didStop:(nullable __FWRequestCompletionBlock)didStop;
+
+- (void)startSynchronouslyWithSuccess:(nullable __FWRequestCompletionBlock)success failure:(nullable __FWRequestCompletionBlock)failure;
+
+- (void)startSynchronouslyWithCompletion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion condition:(nullable BOOL (^)(void))condition;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;

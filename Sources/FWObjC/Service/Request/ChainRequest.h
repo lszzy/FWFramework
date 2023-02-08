@@ -111,8 +111,8 @@ NS_SWIFT_NAME(ChainRequest)
 - (void)stop;
 
 ///  Convenience method to start the chain request with block callbacks.
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(__FWChainRequest *chainRequest))success
-                                    failure:(nullable void (^)(__FWChainRequest *chainRequest))failure;
+- (void)startWithSuccess:(nullable void (^)(__FWChainRequest *chainRequest))success
+                 failure:(nullable void (^)(__FWChainRequest *chainRequest))failure;
 
 ///  Convenience method to start the chain request with completion block.
 - (void)startWithCompletion:(nullable void (^)(__FWChainRequest *chainRequest))completion;

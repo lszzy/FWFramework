@@ -92,14 +92,14 @@
     [[__FWRequestManager sharedManager] removeBatchRequest:self];
 }
 
-- (void)startWithCompletionBlockWithSuccess:(void (^)(__FWBatchRequest *batchRequest))success
-                                    failure:(void (^)(__FWBatchRequest *batchRequest))failure {
+- (void)startWithSuccess:(void (^)(__FWBatchRequest *batchRequest))success
+                 failure:(void (^)(__FWBatchRequest *batchRequest))failure {
     [self setCompletionBlockWithSuccess:success failure:failure];
     [self start];
 }
 
 - (void)startWithCompletion:(void (^)(__FWBatchRequest *))completion {
-    [self startWithCompletionBlockWithSuccess:completion failure:completion];
+    [self startWithSuccess:completion failure:completion];
 }
 
 - (void)startWithWillStart:(nullable void (^)(__FWBatchRequest *batchRequest))willStart
@@ -112,8 +112,7 @@
     accessory.willStopBlock = willStop;
     accessory.didStopBlock = didStop;
     [self addAccessory:accessory];
-    [self startWithCompletionBlockWithSuccess:success
-                                      failure:failure];
+    [self startWithSuccess:success failure:failure];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {

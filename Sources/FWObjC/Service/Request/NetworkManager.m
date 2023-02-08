@@ -57,6 +57,8 @@
     dispatch_queue_t _processingQueue;
     pthread_mutex_t _lock;
     NSIndexSet *_allStatusCodes;
+    dispatch_queue_t _synchronousQueue;
+    dispatch_semaphore_t _synchronousSemaphore;
 }
 
 + (__FWNetworkManager *)sharedManager {
@@ -77,6 +79,8 @@
         _processingQueue = dispatch_queue_create("site.wuyong.queue.request.processing", DISPATCH_QUEUE_CONCURRENT);
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         pthread_mutex_init(&_lock, NULL);
+        _synchronousQueue = dispatch_queue_create("site.wuyong.queue.request.synchronous", DISPATCH_QUEUE_SERIAL);
+        _synchronousSemaphore = dispatch_semaphore_create(1);
 
         _manager.securityPolicy = _config.securityPolicy;
         _manager.responseSerializer = [__FWHTTPResponseSerializer serializer];
@@ -278,6 +282,24 @@
             [request stop];
         }
     }
+}
+
+- (void)synchronousRequest:(__FWBaseRequest *)request completion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [request startWithCompletion:^(__kindof __FWBaseRequest * _Nonnull request) {
+                if (completion) completion(request);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
 }
 
 - (BOOL)validateResult:(__FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
