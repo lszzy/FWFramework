@@ -247,6 +247,7 @@ open class ModuleBundle: NSObject {
         let identifier = UUID().uuidString
         var bundle: Bundle?
         var images: [String: Any] = [:]
+        var colors: [String: Any] = [:]
         var strings: [String: [String: [String: String]]] = [:]
     }
     
@@ -285,6 +286,29 @@ open class ModuleBundle: NSObject {
         bundleTarget.images[name] = block
     }
     
+    /// 获取当前模块颜色
+    open class func colorNamed(_ name: String) -> UIColor? {
+        if let color = UIColor(named: name, in: bundle(), compatibleWith: nil) { return color }
+        
+        let value = bundleTarget.colors[name]
+        if let color = value as? UIColor {
+            return color
+        } else if let block = value as? () -> UIColor? {
+            return block()
+        }
+        return nil
+    }
+    
+    /// 设置当前模块动态颜色
+    open class func addColor(_ name: String, color: UIColor?) {
+        bundleTarget.colors[name] = color
+    }
+    
+    /// 设置当前模块动态颜色句柄
+    open class func addColor(_ name: String, block: (() -> UIColor?)?) {
+        bundleTarget.colors[name] = block
+    }
+    
     /// 获取当前模块多语言，可指定文件
     open class func localizedString(_ key: String, table: String? = nil) -> String {
         let localized = bundle().localizedString(forKey: key, value: bundleTarget.identifier, table: table)
@@ -312,13 +336,13 @@ open class ModuleBundle: NSObject {
     }
     
     /// 获取当前模块资源文件路径
-    open class func resourcePath(_ name: String) -> String? {
-        return bundle().path(forResource: name, ofType: nil)
+    open class func resourcePath(_ name: String, type: String? = nil) -> String? {
+        return bundle().path(forResource: name, ofType: type)
     }
     
     /// 获取当前模块资源文件URL
-    open class func resourceURL(_ name: String) -> URL? {
-        return bundle().url(forResource: name, withExtension: nil)
+    open class func resourceURL(_ name: String, type: String? = nil) -> URL? {
+        return bundle().url(forResource: name, withExtension: type)
     }
     
     private class var bundleTarget: Target {
