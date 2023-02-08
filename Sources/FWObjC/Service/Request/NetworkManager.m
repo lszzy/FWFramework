@@ -47,6 +47,13 @@
 
 #define kFWNetworkIncompleteDownloadFolderName @"Incomplete"
 
+@interface __FWNetworkManager ()
+
+@property (strong, nonatomic) NSMutableArray<__FWBatchRequest *> *batchRequestArray;
+@property (strong, nonatomic) NSMutableArray<__FWChainRequest *> *chainRequestArray;
+
+@end
+
 @implementation __FWNetworkManager {
     __FWHTTPSessionManager *_manager;
     __FWNetworkConfig *_config;
@@ -81,6 +88,8 @@
         pthread_mutex_init(&_lock, NULL);
         _synchronousQueue = dispatch_queue_create("site.wuyong.queue.request.synchronous", DISPATCH_QUEUE_SERIAL);
         _synchronousSemaphore = dispatch_semaphore_create(1);
+        _batchRequestArray = [NSMutableArray array];
+        _chainRequestArray = [NSMutableArray array];
 
         _manager.securityPolicy = _config.securityPolicy;
         _manager.responseSerializer = [__FWHTTPResponseSerializer serializer];
@@ -281,6 +290,30 @@
             // Do not lock `stop`, otherwise deadlock may occur.
             [request stop];
         }
+    }
+}
+
+- (void)addBatchRequest:(__FWBatchRequest *)request {
+    @synchronized(self) {
+        [_batchRequestArray addObject:request];
+    }
+}
+
+- (void)removeBatchRequest:(__FWBatchRequest *)request {
+    @synchronized(self) {
+        [_batchRequestArray removeObject:request];
+    }
+}
+
+- (void)addChainRequest:(__FWChainRequest *)request {
+    @synchronized(self) {
+        [_chainRequestArray addObject:request];
+    }
+}
+
+- (void)removeChainRequest:(__FWChainRequest *)request {
+    @synchronized(self) {
+        [_chainRequestArray removeObject:request];
     }
 }
 

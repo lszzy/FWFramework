@@ -23,7 +23,6 @@
 
 #import "BatchRequest.h"
 #import "BaseRequest.h"
-#import "RequestManager.h"
 #import "NetworkConfig.h"
 
 #if FWMacroSPM
@@ -75,7 +74,7 @@
         return;
     }
     [_failedRequestArray removeAllObjects];
-    [[__FWRequestManager sharedManager] addBatchRequest:self];
+    [[__FWNetworkManager sharedManager] addBatchRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     for (__FWBaseRequest * req in _requestArray) {
         req.delegate = self;
@@ -89,7 +88,7 @@
     _delegate = nil;
     [self clearRequest];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWRequestManager sharedManager] removeBatchRequest:self];
+    [[__FWNetworkManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)startWithSuccess:(void (^)(__FWBatchRequest *batchRequest))success
@@ -229,7 +228,7 @@
     
     [self clearCompletionBlock];
     [self toggleAccessoriesDidStopCallBack];
-    [[__FWRequestManager sharedManager] removeBatchRequest:self];
+    [[__FWNetworkManager sharedManager] removeBatchRequest:self];
 }
 
 - (void)clearRequest {
