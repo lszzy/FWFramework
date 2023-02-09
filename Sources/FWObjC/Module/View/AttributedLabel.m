@@ -742,10 +742,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    if (ctx == nil)
-    {
-        return;
-    }
+    if (ctx == nil) { return; }
     CGContextSaveGState(ctx);
     CGAffineTransform transform = [self transformForCoreText];
     CGContextConcatCTM(ctx, transform);
@@ -759,9 +756,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         [self drawHighlightWithRect:rect];
         [self drawAttachments];
         [self drawShadow:ctx];
-        [self drawText:drawString
-                  rect:rect
-               context:ctx];
+        [self drawText:drawString rect:rect context:ctx];
+        [self drawStrikethroughWithRect:rect context:ctx];
     }
     CGContextRestoreGState(ctx);
 }
@@ -985,6 +981,136 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     }
 }
 
+- (void)drawStrikethroughWithRect:(CGRect)rect
+                          context:(CGContextRef)context
+{
+    if (!_textFrame) return;
+    CFArrayRef lines = CTFrameGetLines(_textFrame);
+    NSInteger numberOfLines = [self numberOfDisplayedLines];
+    CGFloat scale = UIScreen.mainScreen.scale;
+    
+    CGPoint lineOrigins[numberOfLines];
+    CTFrameGetLineOrigins(_textFrame, CFRangeMake(0, numberOfLines), lineOrigins);
+    
+    for (CFIndex lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
+    {
+        CGPoint lineOrigin = lineOrigins[lineIndex];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, lineIndex);
+        CFArrayRef runs = CTLineGetGlyphRuns(line);
+        
+        for (CFIndex runIndex = 0; runIndex < CFArrayGetCount(runs); runIndex ++) {
+            CTRunRef run = CFArrayGetValueAtIndex(runs, runIndex);
+            CFIndex glyphCount = CTRunGetGlyphCount(run);
+            if (glyphCount <= 0) continue;
+            
+            NSDictionary *attrs = (id)CTRunGetAttributes(run);
+            NSNumber *strikethrough = attrs[NSStrikethroughStyleAttributeName];
+            if (!strikethrough || ![strikethrough isKindOfClass:[NSNumber class]]) continue;
+            NSUnderlineStyle style = strikethrough.integerValue;
+            NSUInteger styleBase = style & 0xFF;
+            if (styleBase == 0) continue;
+            
+            CGColorRef color = (__bridge CGColorRef)attrs[NSStrikethroughColorAttributeName];
+            if (!color) color = (__bridge CGColorRef)(attrs[(id)kCTForegroundColorAttributeName]);
+            if (!color) color = (__bridge CGColorRef)(attrs[NSForegroundColorAttributeName]);
+            if ([((__bridge NSObject *)color) respondsToSelector:@selector(CGColor)]) {
+                color = ((__bridge UIColor *)color).CGColor;
+            }
+            
+            CGFloat xHeight = 0, underLinePosition = 0, lineThickness = 0;
+            [self drawMaxMetric:runs xHeight:&xHeight underlinePosition:&underLinePosition lineThickness:&lineThickness];
+            
+            CGPoint position = CGPointMake(lineOrigin.x - underLinePosition, lineOrigin.y + xHeight / 2);
+            CGPoint runPosition = CGPointZero;
+            CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition);
+            position.x = lineOrigin.x + runPosition.x;
+            CGFloat width = lineThickness;
+            CGFloat length = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), NULL, NULL, NULL);
+            CGFloat phase = position.x;
+            
+            CGFloat x1, x2, y, w;
+            x1 = round(position.x * scale) / scale;
+            x2 = round((position.x + length) * scale) / scale;
+            w = (styleBase == NSUnderlineStyleThick) ? width * 2 : width;
+            CGFloat linePixel = w * scale;
+            if (fabs(linePixel - floor(linePixel)) < 0.1) {
+                int iPixel = linePixel;
+                if (iPixel == 0 || (iPixel % 2)) {
+                    y = (floor(position.y * scale) + 0.5) / scale;
+                } else {
+                    y = floor(position.y * scale) / scale;
+                }
+            } else {
+                y = position.y;
+            }
+            
+            CGContextSetStrokeColorWithColor(context, color);
+            CGContextSetLineWidth(context, width);
+            CGContextSetLineCap(context, kCGLineCapButt);
+            CGContextSetLineJoin(context, kCGLineJoinMiter);
+            CGFloat dash = 12, dot = 5, space = 3;
+            NSUInteger pattern = style & 0xF00;
+            if (pattern == NSUnderlinePatternSolid) {
+                CGContextSetLineDash(context, phase, NULL, 0);
+            } else if (pattern == NSUnderlinePatternDot) {
+                CGFloat lengths[2] = {width * dot, width * space};
+                CGContextSetLineDash(context, phase, lengths, 2);
+            } else if (pattern == NSUnderlinePatternDash) {
+                CGFloat lengths[2] = {width * dash, width * space};
+                CGContextSetLineDash(context, phase, lengths, 2);
+            } else if (pattern == NSUnderlinePatternDashDot) {
+                CGFloat lengths[4] = {width * dash, width * space, width * dot, width * space};
+                CGContextSetLineDash(context, phase, lengths, 4);
+            } else if (pattern == NSUnderlinePatternDashDotDot) {
+                CGFloat lengths[6] = {width * dash, width * space, width * dot, width * space, width * dot, width * space};
+                CGContextSetLineDash(context, phase, lengths, 6);
+            }
+            
+            CGContextSetLineWidth(context, w);
+            if (styleBase == NSUnderlineStyleSingle) {
+                CGContextMoveToPoint(context, x1, y);
+                CGContextAddLineToPoint(context, x2, y);
+                CGContextStrokePath(context);
+            } else if (styleBase == NSUnderlineStyleThick) {
+                CGContextMoveToPoint(context, x1, y);
+                CGContextAddLineToPoint(context, x2, y);
+                CGContextStrokePath(context);
+            } else if (styleBase == NSUnderlineStyleDouble) {
+                CGContextMoveToPoint(context, x1, y - w);
+                CGContextAddLineToPoint(context, x2, y - w);
+                CGContextStrokePath(context);
+                CGContextMoveToPoint(context, x1, y + w);
+                CGContextAddLineToPoint(context, x2, y + w);
+                CGContextStrokePath(context);
+            }
+        }
+    }
+}
+
+- (void)drawMaxMetric:(CFArrayRef)runs xHeight:(CGFloat *)xHeight underlinePosition:(CGFloat *)underlinePosition lineThickness:(CGFloat *)lineThickness
+{
+    CGFloat maxXHeight = 0;
+    CGFloat maxUnderlinePos = 0;
+    CGFloat maxLineThickness = 0;
+    for (NSUInteger i = 0, max = CFArrayGetCount(runs); i < max; i++) {
+        CTRunRef run = CFArrayGetValueAtIndex(runs, i);
+        CFDictionaryRef attrs = CTRunGetAttributes(run);
+        if (attrs) {
+            CTFontRef font = CFDictionaryGetValue(attrs, kCTFontAttributeName);
+            if (font) {
+                CGFloat xHeight = CTFontGetXHeight(font);
+                if (xHeight > maxXHeight) maxXHeight = xHeight;
+                CGFloat underlinePos = CTFontGetUnderlinePosition(font);
+                if (underlinePos < maxUnderlinePos) maxUnderlinePos = underlinePos;
+                CGFloat lineThickness = CTFontGetUnderlineThickness(font);
+                if (lineThickness > maxLineThickness) maxLineThickness = lineThickness;
+            }
+        }
+    }
+    if (xHeight) *xHeight = maxXHeight;
+    if (underlinePosition) *underlinePosition = maxUnderlinePos;
+    if (lineThickness) *lineThickness = maxLineThickness;
+}
 
 - (void)drawAttachments
 {
