@@ -125,7 +125,7 @@ NS_SWIFT_NAME(ChainRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable void (^)(__FWChainRequest *chainRequest))success failure:(nullable void (^)(__FWChainRequest *chainRequest))failure;
 
-- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__FWChainRequest * _Nullable chainRequest))completion;
+- (void)startSynchronouslyWithFilter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(__FWChainRequest *chainRequest))completion;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;
