@@ -1340,370 +1340,377 @@
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 48,
-      "symbol": "FWAttributedLabel.numberOfLines",
+      "symbol": "FWAttributedLabel.clickedOnLink",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 49,
-      "symbol": "FWAttributedLabel.textAlignment",
+      "symbol": "FWAttributedLabel.numberOfLines",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 50,
-      "symbol": "FWAttributedLabel.lineBreakMode",
+      "symbol": "FWAttributedLabel.textAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 51,
-      "symbol": "FWAttributedLabel.lineSpacing",
+      "symbol": "FWAttributedLabel.lineBreakMode",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 52,
-      "symbol": "FWAttributedLabel.paragraphSpacing",
+      "symbol": "FWAttributedLabel.lineSpacing",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 53,
-      "symbol": "FWAttributedLabel.text",
+      "symbol": "FWAttributedLabel.paragraphSpacing",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
       "line": 54,
+      "symbol": "FWAttributedLabel.text",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAttributedLabel.h",
+      "line": 55,
       "symbol": "FWAttributedLabel.attributedText",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 56,
+      "line": 57,
       "symbol": "FWAttributedLabel.lineTruncatingSpacing",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 57,
+      "line": 58,
       "symbol": "FWAttributedLabel.lineTruncatingAttachment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 60,
+      "line": 61,
       "symbol": "FWAttributedLabel.-appendText:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 61,
+      "line": 62,
       "symbol": "FWAttributedLabel.-appendAttributedText:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 64,
+      "line": 65,
       "symbol": "FWAttributedLabel.-appendImage:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 65,
+      "line": 66,
       "symbol": "FWAttributedLabel.-appendImage:maxSize:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 67,
+      "line": 68,
       "symbol": "FWAttributedLabel.-appendImage:maxSize:margin:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 70,
+      "line": 71,
       "symbol": "FWAttributedLabel.-appendImage:maxSize:margin:alignment:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 76,
+      "line": 77,
       "symbol": "FWAttributedLabel.-appendView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 77,
+      "line": 78,
       "symbol": "FWAttributedLabel.-appendView:margin:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 79,
+      "line": 80,
       "symbol": "FWAttributedLabel.-appendView:margin:alignment:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 84,
+      "line": 85,
       "symbol": "FWAttributedLabel.-addCustomLink:forRange:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 87,
+      "line": 88,
       "symbol": "FWAttributedLabel.-addCustomLink:forRange:linkColor:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 92,
+      "line": 93,
       "symbol": "FWAttributedLabel.-sizeThatFits:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 99,
+      "line": 100,
       "symbol": "FWAttributedLabelURL",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 101,
+      "line": 102,
       "symbol": "FWAttributedLabelURL.linkData",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 102,
+      "line": 103,
       "symbol": "FWAttributedLabelURL.range",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 103,
+      "line": 104,
       "symbol": "FWAttributedLabelURL.color",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 105,
+      "line": 106,
       "symbol": "FWAttributedLabelURL.+urlWithLinkData:range:color:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 113,
+      "line": 114,
       "symbol": "FWAttributedLinkDetectCompletion",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 116,
+      "line": 117,
       "symbol": "FWAttributedLabelCustomURLDetector",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 117,
+      "line": 118,
       "symbol": "FWAttributedLabelCustomURLDetector.-detectLinks:completion:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 121,
+      "line": 122,
       "symbol": "FWAttributedLabelURLDetector",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 122,
+      "line": 123,
       "symbol": "FWAttributedLabelURLDetector.detector",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 124,
+      "line": 125,
       "symbol": "FWAttributedLabelURLDetector.+shared",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 126,
+      "line": 127,
       "symbol": "FWAttributedLabelURLDetector.-detectLinks:completion:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 131,
+      "line": 132,
       "symbol": "fw_attributedDeallocCallback",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 132,
+      "line": 133,
       "symbol": "fw_attributedAscentCallback",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 133,
+      "line": 134,
       "symbol": "fw_attributedDescentCallback",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 134,
+      "line": 135,
       "symbol": "fw_attributedWidthCallback",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 137,
+      "line": 138,
       "symbol": "FWAttributedLabelAttachment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 139,
+      "line": 140,
       "symbol": "FWAttributedLabelAttachment.content",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 140,
+      "line": 141,
       "symbol": "FWAttributedLabelAttachment.margin",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 141,
+      "line": 142,
       "symbol": "FWAttributedLabelAttachment.alignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 142,
+      "line": 143,
       "symbol": "FWAttributedLabelAttachment.fontAscent",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 143,
+      "line": 144,
       "symbol": "FWAttributedLabelAttachment.fontDescent",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 144,
+      "line": 145,
       "symbol": "FWAttributedLabelAttachment.maxSize",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 147,
+      "line": 148,
       "symbol": "FWAttributedLabelAttachment.+attachmentWith:margin:alignment:maxSize:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 152,
+      "line": 153,
       "symbol": "FWAttributedLabelAttachment.-boxSize",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 158,
+      "line": 159,
       "symbol": "NSMutableAttributedString(FWAttributedLabel)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 160,
+      "line": 161,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).fw_textColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 161,
+      "line": 162,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).-fw_setTextColor:range:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 163,
+      "line": 164,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).fw_font",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 164,
+      "line": 165,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).-fw_setFont:range:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 166,
+      "line": 167,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).-fw_setUnderlineStyle:modifier:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAttributedLabel.h",
-      "line": 168,
+      "line": 169,
       "symbol": "NSMutableAttributedString(FWAttributedLabel).-fw_setUnderlineStyle:modifier:range:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -3907,6 +3914,34 @@
       "warning": "undocumented"
     },
     {
+      "file": "docs/FWFramework/FWBaseRequest.h",
+      "line": 279,
+      "symbol": "FWBaseRequest.-startSynchronouslyWithSuccess:failure:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWBaseRequest.h",
+      "line": 281,
+      "symbol": "FWBaseRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWBatchRequest.h",
+      "line": 116,
+      "symbol": "FWBatchRequest.-startSynchronouslyWithSuccess:failure:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWBatchRequest.h",
+      "line": 118,
+      "symbol": "FWBatchRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "docs/FWFramework/FWBlock.h",
       "line": 70,
       "symbol": "NSTimer(FWBlock)",
@@ -3932,6 +3967,20 @@
       "line": 202,
       "symbol": "UIControl(FWBlock)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWChainRequest.h",
+      "line": 120,
+      "symbol": "FWChainRequest.-startSynchronouslyWithSuccess:failure:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWChainRequest.h",
+      "line": 122,
+      "symbol": "FWChainRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
@@ -5784,14 +5833,14 @@
     },
     {
       "file": "docs/FWFramework/FWNetworkAgent.h",
-      "line": 35,
+      "line": 37,
       "symbol": "FWNetworkAgent.-init",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkAgent.h",
-      "line": 36,
+      "line": 38,
       "symbol": "FWNetworkAgent.+new",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"

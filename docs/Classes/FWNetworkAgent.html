@@ -17,7 +17,7 @@
     <a title="FWNetworkAgent Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.4.3 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.5.0 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2826,6 +2826,99 @@ serialization and response handling.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)FWNetworkAgent(im)synchronousRequest:condition:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-synchronousRequest:condition:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWNetworkAgent(im)synchronousRequest:condition:completion:">-synchronousRequest:<wbr>condition:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start request synchronously if condition is true or nil, and callback on main thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">synchronousRequest</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWBaseRequest.html">FWBaseRequest</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">request</span>
+                 <span class="nf">condition</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">condition</span>
+                <span class="nf">completion</span><span class="p">:</span>
+                    <span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span>
+                        <span class="n">__kindof</span> <span class="n"><a href="../Classes/FWBaseRequest.html">FWBaseRequest</a></span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">))</span><span class="n">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWNetworkAgent(im)synchronousBatchRequest:condition:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-synchronousBatchRequest:condition:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWNetworkAgent(im)synchronousBatchRequest:condition:completion:">-synchronousBatchRequest:<wbr>condition:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start batch request synchronously if condition is true or nil, and callback on main thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">synchronousBatchRequest</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWBatchRequest.html">FWBatchRequest</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">batchRequest</span>
+                      <span class="nf">condition</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">condition</span>
+                     <span class="nf">completion</span><span class="p">:</span>
+                         <span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n"><a href="../Classes/FWBatchRequest.html">FWBatchRequest</a></span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">))</span>
+                             <span class="n">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWNetworkAgent(im)synchronousChainRequest:condition:completion:"></a>
+                    <a name="//apple_ref/swift/Method/-synchronousChainRequest:condition:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWNetworkAgent(im)synchronousChainRequest:condition:completion:">-synchronousChainRequest:<wbr>condition:<wbr>completion:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Start chain request synchronously if condition is true or nil, and callback on main thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">synchronousChainRequest</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWChainRequest.html">FWChainRequest</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">chainRequest</span>
+                      <span class="nf">condition</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">condition</span>
+                     <span class="nf">completion</span><span class="p">:</span>
+                         <span class="p">(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n"><a href="../Classes/FWChainRequest.html">FWChainRequest</a></span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">))</span>
+                             <span class="n">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)FWNetworkAgent(im)buildRequestUrl:"></a>
                     <a name="//apple_ref/swift/Method/-buildRequestUrl:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)FWNetworkAgent(im)buildRequestUrl:">-buildRequestUrl:<wbr></a>
@@ -3080,7 +3173,7 @@ serialization and response handling.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-02-07)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-02-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

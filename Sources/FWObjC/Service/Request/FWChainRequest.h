@@ -117,6 +117,10 @@ NS_SWIFT_NAME(ChainRequest)
 ///  Convenience method to start the chain request with completion block.
 - (void)startWithCompletion:(nullable void (^)(FWChainRequest *chainRequest))completion;
 
+- (void)startSynchronouslyWithSuccess:(nullable void (^)(FWChainRequest *chainRequest))success failure:(nullable void (^)(FWChainRequest *chainRequest))failure;
+
+- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWChainRequest * _Nullable chainRequest))completion;
+
 ///  Add request to request chain.
 ///
 ///  @param request  The request to be chained.

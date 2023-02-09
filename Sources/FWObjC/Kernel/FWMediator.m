@@ -316,6 +316,11 @@
     }
 }
 
++ (UIColor *)colorNamed:(NSString *)name
+{
+    return [UIColor colorNamed:name inBundle:[self bundle] compatibleWithTraitCollection:nil];
+}
+
 + (NSString *)localizedString:(NSString *)key
 {
     return [self localizedString:key table:nil];
