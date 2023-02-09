@@ -468,7 +468,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
     return 0;
 }
 
-- (NSTimeInterval)requestRetryInternval {
+- (NSTimeInterval)requestRetryInterval {
     return 0;
 }
 
