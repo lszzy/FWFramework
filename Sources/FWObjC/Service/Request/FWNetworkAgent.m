@@ -42,6 +42,8 @@
     dispatch_queue_t _processingQueue;
     pthread_mutex_t _lock;
     NSIndexSet *_allStatusCodes;
+    dispatch_queue_t _synchronousQueue;
+    dispatch_semaphore_t _synchronousSemaphore;
 }
 
 + (FWNetworkAgent *)sharedAgent {
@@ -62,6 +64,8 @@
         _processingQueue = dispatch_queue_create("site.wuyong.queue.request.processing", DISPATCH_QUEUE_CONCURRENT);
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         pthread_mutex_init(&_lock, NULL);
+        _synchronousQueue = dispatch_queue_create("site.wuyong.queue.request.synchronous", DISPATCH_QUEUE_SERIAL);
+        _synchronousSemaphore = dispatch_semaphore_create(1);
 
         _manager.securityPolicy = _config.securityPolicy;
         _manager.responseSerializer = [FWHTTPResponseSerializer serializer];
@@ -258,6 +262,60 @@
             [request stop];
         }
     }
+}
+
+- (void)synchronousRequest:(FWBaseRequest *)request condition:(BOOL (^)(void))condition completion:(void (^)(__kindof FWBaseRequest * _Nullable))completion {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [request startWithCompletion:^(__kindof FWBaseRequest * _Nonnull request) {
+                if (completion) completion(request);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
+}
+
+- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest condition:(BOOL (^)(void))condition completion:(void (^)(FWBatchRequest * _Nullable))completion {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [batchRequest startWithCompletion:^(FWBatchRequest * _Nonnull batchRequest) {
+                if (completion) completion(batchRequest);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
+}
+
+- (void)synchronousChainRequest:(FWChainRequest *)chainRequest condition:(BOOL (^)(void))condition completion:(void (^)(FWChainRequest * _Nullable))completion {
+    dispatch_async(_synchronousQueue, ^{
+        dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
+        BOOL conditionResult = condition != nil ? condition() : YES;
+        if (!conditionResult) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            });
+        } else {
+            [chainRequest startWithCompletion:^(FWChainRequest * _Nonnull chainRequest) {
+                if (completion) completion(chainRequest);
+                dispatch_semaphore_signal(self->_synchronousSemaphore);
+            }];
+        }
+    });
 }
 
 - (BOOL)validateResult:(FWBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error {

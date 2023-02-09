@@ -169,10 +169,10 @@ static FWLogLevel fwStaticLogLevel = FWLogLevelOff;
             NSLog(@"%@ INFO:%@ %@%@", @"ℹ️", groupStr, message, infoStr);
             break;
         case FWLogTypeDebug:
-            NSLog(@"%@ DEBUG:%@ %@%@", @"⏱️", groupStr, message, infoStr);
+            NSLog(@"%@ DEBUG:%@ %@%@", @"📝", groupStr, message, infoStr);
             break;
         default:
-            NSLog(@"%@ TRACE:%@ %@%@", @"📝", groupStr, message, infoStr);
+            NSLog(@"%@ TRACE:%@ %@%@", @"⏱️", groupStr, message, infoStr);
             break;
     }
 }
