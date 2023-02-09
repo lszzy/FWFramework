@@ -108,6 +108,9 @@ NS_SWIFT_NAME(ModuleBundle)
 /// 设置当前模块图片
 + (void)setImage:(nullable UIImage *)image forName:(NSString *)name;
 
+/// 获取当前模块颜色
++ (nullable UIColor *)colorNamed:(NSString *)name;
+
 /// 获取当前模块多语言
 + (NSString *)localizedString:(NSString *)key;
 
