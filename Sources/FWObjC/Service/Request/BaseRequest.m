@@ -313,17 +313,17 @@ static dispatch_queue_t __fw_request_cache_writing_queue() {
 }
 
 - (void)startSynchronouslyWithSuccess:(__FWRequestCompletionBlock)success failure:(__FWRequestCompletionBlock)failure {
-    [self startSynchronouslyWithCompletion:^(__kindof __FWBaseRequest * _Nullable request) {
+    [self startSynchronouslyWithCondition:nil completion:^(__kindof __FWBaseRequest * _Nullable request) {
         if (request.error == nil) {
             if (success) success(request);
         } else {
             if (failure) failure(request);
         }
-    } condition:nil];
+    }];
 }
 
-- (void)startSynchronouslyWithCompletion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWRequestManager sharedManager] synchronousRequest:self completion:completion condition:condition];
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion {
+    [[__FWRequestManager sharedManager] synchronousRequest:self condition:condition completion:completion];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {

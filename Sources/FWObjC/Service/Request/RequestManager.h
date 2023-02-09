@@ -70,13 +70,13 @@ NS_SWIFT_NAME(RequestManager)
 - (void)removeChainRequest:(__FWChainRequest *)request;
 
 /// Start request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousRequest:(__FWBaseRequest *)request completion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion condition:(nullable BOOL (^)(void))condition;
+- (void)synchronousRequest:(__FWBaseRequest *)request condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion;
 
 /// Start batch request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest completion:(nullable void (^)(__FWBatchRequest * _Nullable batchRequest))completion condition:(nullable BOOL (^)(void))condition;
+- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__FWBatchRequest * _Nullable batchRequest))completion;
 
 /// Start chain request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest completion:(nullable void (^)(__FWChainRequest * _Nullable chainRequest))completion condition:(nullable BOOL (^)(void))condition;
+- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__FWChainRequest * _Nullable chainRequest))completion;
 
 ///  Return the constructed URL of request.
 ///

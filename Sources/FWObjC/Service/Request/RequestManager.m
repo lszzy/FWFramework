@@ -317,7 +317,7 @@
     }
 }
 
-- (void)synchronousRequest:(__FWBaseRequest *)request completion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+- (void)synchronousRequest:(__FWBaseRequest *)request condition:(BOOL (^)(void))condition completion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
         BOOL conditionResult = condition != nil ? condition() : YES;
@@ -335,7 +335,7 @@
     });
 }
 
-- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest completion:(void (^)(__FWBatchRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest condition:(BOOL (^)(void))condition completion:(void (^)(__FWBatchRequest * _Nullable))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
         BOOL conditionResult = condition != nil ? condition() : YES;
@@ -353,7 +353,7 @@
     });
 }
 
-- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest completion:(void (^)(__FWChainRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
+- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest condition:(BOOL (^)(void))condition completion:(void (^)(__FWChainRequest * _Nullable))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
         BOOL conditionResult = condition != nil ? condition() : YES;

@@ -121,7 +121,7 @@ NS_SWIFT_NAME(BatchRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable void (^)(__FWBatchRequest *batchRequest))success failure:(nullable void (^)(__FWBatchRequest *batchRequest))failure;
 
-- (void)startSynchronouslyWithCompletion:(nullable void (^)(__FWBatchRequest * _Nullable batchRequest))completion condition:(nullable BOOL (^)(void))condition;
+- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__FWBatchRequest * _Nullable batchRequest))completion;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;

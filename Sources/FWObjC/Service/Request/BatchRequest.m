@@ -115,17 +115,17 @@
 }
 
 - (void)startSynchronouslyWithSuccess:(void (^)(__FWBatchRequest * _Nonnull))success failure:(void (^)(__FWBatchRequest * _Nonnull))failure {
-    [self startSynchronouslyWithCompletion:^(__FWBatchRequest * _Nullable batchRequest) {
+    [self startSynchronouslyWithCondition:nil completion:^(__FWBatchRequest * _Nullable batchRequest) {
         if (batchRequest.failedRequest == nil) {
             if (success) success(batchRequest);
         } else {
             if (failure) failure(batchRequest);
         }
-    } condition:nil];
+    }];
 }
 
-- (void)startSynchronouslyWithCompletion:(void (^)(__FWBatchRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWRequestManager sharedManager] synchronousBatchRequest:self completion:completion condition:condition];
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__FWBatchRequest * _Nullable))completion {
+    [[__FWRequestManager sharedManager] synchronousBatchRequest:self condition:condition completion:completion];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
