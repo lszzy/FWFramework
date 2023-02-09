@@ -286,17 +286,17 @@ open class ModuleBundle: NSObject {
         bundleTarget.images[name] = block
     }
     
-    /// 获取当前模块颜色
-    open class func colorNamed(_ name: String) -> UIColor? {
+    /// 获取当前模块颜色，不存在时默认clear
+    open class func colorNamed(_ name: String) -> UIColor {
         if let color = UIColor(named: name, in: bundle(), compatibleWith: nil) { return color }
         
         let value = bundleTarget.colors[name]
         if let color = value as? UIColor {
             return color
-        } else if let block = value as? () -> UIColor? {
+        } else if let block = value as? () -> UIColor {
             return block()
         }
-        return nil
+        return .clear
     }
     
     /// 设置当前模块动态颜色
@@ -305,7 +305,7 @@ open class ModuleBundle: NSObject {
     }
     
     /// 设置当前模块动态颜色句柄
-    open class func addColor(_ name: String, block: (() -> UIColor?)?) {
+    open class func addColor(_ name: String, block: (() -> UIColor)?) {
         bundleTarget.colors[name] = block
     }
     
