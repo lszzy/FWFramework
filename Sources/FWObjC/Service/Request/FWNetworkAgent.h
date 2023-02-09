@@ -26,6 +26,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FWBaseRequest;
+@class FWBatchRequest;
+@class FWChainRequest;
 
 ///  FWNetworkAgent is the underlying class that handles actual request generation,
 ///  serialization and response handling.
@@ -46,6 +48,15 @@ NS_SWIFT_NAME(NetworkAgent)
 
 ///  Cancel all requests that were previously added.
 - (void)cancelAllRequests;
+
+/// Start request synchronously if condition is true or nil, and callback on main thread.
+- (void)synchronousRequest:(FWBaseRequest *)request condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__kindof FWBaseRequest * _Nullable request))completion;
+
+/// Start batch request synchronously if condition is true or nil, and callback on main thread.
+- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWBatchRequest * _Nullable batchRequest))completion;
+
+/// Start chain request synchronously if condition is true or nil, and callback on main thread.
+- (void)synchronousChainRequest:(FWChainRequest *)chainRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWChainRequest * _Nullable chainRequest))completion;
 
 ///  Return the constructed URL of request.
 ///

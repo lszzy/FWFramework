@@ -83,6 +83,21 @@
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
 }
 
+- (void)startSynchronouslyWithSuccess:(void (^)(FWChainRequest * _Nonnull))success failure:(void (^)(FWChainRequest * _Nonnull))failure {
+    [self startSynchronouslyWithCondition:nil completion:^(FWChainRequest * _Nullable chainRequest) {
+        if (chainRequest.failedRequest == nil) {
+            if (success) success(chainRequest);
+        } else {
+            if (failure) failure(chainRequest);
+        }
+    }];
+}
+
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(FWChainRequest * _Nullable))completion {
+    [[FWNetworkAgent sharedAgent] synchronousChainRequest:self condition:condition completion:completion];
+}
+
+
 - (void)setCompletionBlockWithSuccess:(void (^)(FWChainRequest *chainRequest))success
                               failure:(void (^)(FWChainRequest *chainRequest))failure {
     self.successCompletionBlock = success;
