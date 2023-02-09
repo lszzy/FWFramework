@@ -123,7 +123,11 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         var attrFont = FW.font(16, .light)
         attrStr.append(NSAttributedString.fw.attributedString("细体16 ", font: attrFont))
         attrFont = FW.font(16, .regular)
-        attrStr.append(NSAttributedString.fw.attributedString("常规16 ", font: attrFont))
+        attrStr.append(NSAttributedString(string: "常规16 ", attributes: [
+            .font: attrFont,
+            .foregroundColor: AppTheme.buttonColor,
+            .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+        ]))
         attrFont = FW.font(16, .bold)
         attrStr.append(NSAttributedString.fw.attributedString("粗体16 ", font: attrFont))
         attrFont = UIFont.italicSystemFont(ofSize: 16)
@@ -134,7 +138,12 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         attrFont = UIFont.fw.font(ofSize: 16, weight: .light)
         attrStr.append(NSAttributedString.fw.attributedString("\n细体16 ", font: attrFont))
         attrFont = UIFont.fw.font(ofSize: 16, weight: .regular)
-        attrStr.append(NSAttributedString.fw.attributedString("常规16 ", font: attrFont))
+        attrStr.append(NSAttributedString(string: "常规16 ", attributes: [
+            .font: attrFont,
+            .foregroundColor: AppTheme.buttonColor,
+            .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
+            .strikethroughColor: AppTheme.textColor,
+        ]))
         attrFont = UIFont.fw.font(ofSize: 16, weight: .bold)
         attrStr.append(NSAttributedString.fw.attributedString("粗体16 ", font: attrFont))
         attrFont = UIFont.fw.font(ofSize: 16).fw.italicFont
@@ -167,14 +176,8 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         if let image = UIImage.fw.image(color: .blue, size: CGSize(width: 30, height: 30)) {
             label.append(image, maxSize: image.size, margin: .zero, alignment: .center)
         }
-        label.appendAttributedText(NSAttributedString(string: " 删除线 ", attributes: [
-            .font: UIFont.systemFont(ofSize: 15),
-            .foregroundColor: AppTheme.textColor,
-            .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-            .strikethroughColor: AppTheme.textColor,
-        ]))
         let linkStart = label.attributedText?.length ?? 0
-        let linkString = "我是可以换行的链接，我可以被点击😀，点击后会跳转链接"
+        let linkString = " 我是链接"
         label.appendAttributedText(NSAttributedString(string: linkString, attributes: [
             .font: UIFont.systemFont(ofSize: 15),
             .foregroundColor: AppTheme.textColor,
@@ -182,6 +185,17 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .underlineColor: AppTheme.textColor,
         ]))
         label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), linkColor: AppTheme.buttonColor)
+        label.appendAttributedText(NSAttributedString(string: " 我是删除线", attributes: [
+            .font: UIFont.systemFont(ofSize: 15),
+            .foregroundColor: AppTheme.buttonColor,
+            .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
+        ]))
+        label.appendAttributedText(NSAttributedString(string: " 我是可以换行的删除线😀，我可以换行哦", attributes: [
+            .font: UIFont.systemFont(ofSize: 15),
+            .foregroundColor: AppTheme.textColor,
+            .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+            .strikethroughColor: AppTheme.textColor,
+        ]))
         label.appendText(" 结束")
         
         view.addSubview(tagCollectionView)
