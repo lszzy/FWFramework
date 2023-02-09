@@ -413,7 +413,7 @@ NS_SWIFT_NAME(BaseRequest)
 - (NSInteger)requestRetryCount;
 
 ///  Retry interval for request. Default is 0.
-- (NSTimeInterval)requestRetryInternval;
+- (NSTimeInterval)requestRetryInterval;
 
 ///  Retry timeout for request. Default is 0.
 - (NSTimeInterval)requestRetryTimeout;
