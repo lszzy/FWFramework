@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.5.0] - 2023-02-09
+
+### Added
+* Request组件支持同步请求
+* ModuleBundle支持加载模块颜色
+* AttributedLabel支持删除线样式
+
 ## [4.4.3] - 2023-02-07
 
 ### Fixed

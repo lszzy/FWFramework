@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.0] - 2023-02-09
+
+### Added
+* The Request component supports synchronous requests
+* ModuleBundle supports loading module colors
+* AttributedLabel supports strikethrough style
+
 ## [4.4.3] - 2023-02-07
 
 ### Fixed
