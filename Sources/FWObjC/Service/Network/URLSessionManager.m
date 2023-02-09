@@ -731,7 +731,7 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
 
 - (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
                                           retryCount:(NSInteger)retryCount
-                                       retryInterval:(NSTimeInterval)retryInterval
+                                       retryInterval:(NSTimeInterval (^)(NSInteger))retryInterval
                                      timeoutInterval:(NSTimeInterval)timeoutInterval
                                          shouldRetry:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
                                          taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
@@ -750,7 +750,7 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
 - (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
                                           retryCount:(NSInteger)retryCount
                                          remainCount:(NSInteger)remainCount
-                                       retryInterval:(NSTimeInterval)retryInterval
+                                       retryInterval:(NSTimeInterval (^)(NSInteger requestCount))retryInterval
                                      timeoutInterval:(NSTimeInterval)timeoutInterval
                                            startTime:(NSTimeInterval)startTime
                                          shouldRetry:(void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
@@ -768,7 +768,8 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
             shouldRetry(response, responseObject, error, ^(BOOL retry){
                 
                 if (retry) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(retryInterval, 0) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    NSTimeInterval waitTime = retryInterval ? retryInterval(retryCount - remainCount + 1) : 0;
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(waitTime, 0) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         
                         NSURLSessionDataTask *dataTask = [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:remainCount - 1 retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
                         
