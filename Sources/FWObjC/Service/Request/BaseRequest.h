@@ -307,7 +307,7 @@ NS_SWIFT_NAME(BaseRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable __FWRequestCompletionBlock)success failure:(nullable __FWRequestCompletionBlock)failure;
 
-- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__kindof __FWBaseRequest * _Nullable request))completion;
+- (void)startSynchronouslyWithFilter:(nullable BOOL (^)(void))filter completion:(nullable __FWRequestCompletionBlock)completion;
 
 - (void)toggleAccessoriesWillStartCallBack;
 - (void)toggleAccessoriesWillStopCallBack;

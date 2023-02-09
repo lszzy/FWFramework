@@ -115,7 +115,7 @@
 }
 
 - (void)startSynchronouslyWithSuccess:(void (^)(__FWBatchRequest * _Nonnull))success failure:(void (^)(__FWBatchRequest * _Nonnull))failure {
-    [self startSynchronouslyWithCondition:nil completion:^(__FWBatchRequest * _Nullable batchRequest) {
+    [self startSynchronouslyWithFilter:nil completion:^(__FWBatchRequest *batchRequest) {
         if (batchRequest.failedRequest == nil) {
             if (success) success(batchRequest);
         } else {
@@ -124,8 +124,8 @@
     }];
 }
 
-- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__FWBatchRequest * _Nullable))completion {
-    [[__FWRequestManager sharedManager] synchronousBatchRequest:self condition:condition completion:completion];
+- (void)startSynchronouslyWithFilter:(BOOL (^)(void))filter completion:(void (^)(__FWBatchRequest * _Nonnull))completion {
+    [[__FWRequestManager sharedManager] synchronousBatchRequest:self filter:filter completion:completion];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {

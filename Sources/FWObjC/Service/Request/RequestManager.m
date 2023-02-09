@@ -317,57 +317,51 @@
     }
 }
 
-- (void)synchronousRequest:(__FWBaseRequest *)request condition:(BOOL (^)(void))condition completion:(void (^)(__kindof __FWBaseRequest * _Nullable))completion {
+- (void)synchronousRequest:(__FWBaseRequest *)request filter:(BOOL (^)(void))filter completion:(__FWRequestCompletionBlock)completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [request startWithCompletion:^(__kindof __FWBaseRequest * _Nonnull request) {
-                if (completion) completion(request);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [request startWithCompletion:^(__kindof __FWBaseRequest * _Nonnull request) {
+            if (completion) completion(request);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
-- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest condition:(BOOL (^)(void))condition completion:(void (^)(__FWBatchRequest * _Nullable))completion {
+- (void)synchronousBatchRequest:(__FWBatchRequest *)batchRequest filter:(BOOL (^)(void))filter completion:(void (^)(__FWBatchRequest * _Nonnull))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [batchRequest startWithCompletion:^(__FWBatchRequest * _Nonnull batchRequest) {
-                if (completion) completion(batchRequest);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [batchRequest startWithCompletion:^(__FWBatchRequest * _Nonnull batchRequest) {
+            if (completion) completion(batchRequest);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
-- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest condition:(BOOL (^)(void))condition completion:(void (^)(__FWChainRequest * _Nullable))completion {
+- (void)synchronousChainRequest:(__FWChainRequest *)chainRequest filter:(BOOL (^)(void))filter completion:(nullable void (^)(__FWChainRequest * _Nonnull))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [chainRequest startWithCompletion:^(__FWChainRequest * _Nonnull chainRequest) {
-                if (completion) completion(chainRequest);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [chainRequest startWithCompletion:^(__FWChainRequest * _Nonnull chainRequest) {
+            if (completion) completion(chainRequest);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
