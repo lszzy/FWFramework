@@ -1012,7 +1012,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             
             CGColorRef color = (__bridge CGColorRef)attrs[NSStrikethroughColorAttributeName];
             if (!color) color = (__bridge CGColorRef)(attrs[(id)kCTForegroundColorAttributeName]);
-            if (!color) color = (__bridge CGColorRef)(attrs[NSForegroundColorAttributeName]);
+            if (!color) color = (__bridge CGColorRef)(attrs[NSForegroundColorAttributeName]) ?: UIColor.blackColor.CGColor;
             if ([((__bridge NSObject *)color) respondsToSelector:@selector(CGColor)]) {
                 color = ((__bridge UIColor *)color).CGColor;
             }
