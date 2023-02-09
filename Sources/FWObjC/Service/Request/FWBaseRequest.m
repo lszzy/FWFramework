@@ -165,6 +165,20 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
 }
 
+- (void)startSynchronouslyWithSuccess:(FWRequestCompletionBlock)success failure:(FWRequestCompletionBlock)failure {
+    [self startSynchronouslyWithCondition:nil completion:^(__kindof FWBaseRequest * _Nullable request) {
+        if (request.error == nil) {
+            if (success) success(request);
+        } else {
+            if (failure) failure(request);
+        }
+    }];
+}
+
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__kindof FWBaseRequest * _Nullable))completion {
+    [[FWNetworkAgent sharedAgent] synchronousRequest:self condition:condition completion:completion];
+}
+
 #pragma mark - Subclass Override
 
 - (BOOL)responseMockValidator {

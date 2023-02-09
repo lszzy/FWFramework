@@ -85,6 +85,20 @@
     [self startWithCompletionBlockWithSuccess:completion failure:completion];
 }
 
+- (void)startSynchronouslyWithSuccess:(void (^)(FWBatchRequest * _Nonnull))success failure:(void (^)(FWBatchRequest * _Nonnull))failure {
+    [self startSynchronouslyWithCondition:nil completion:^(FWBatchRequest * _Nullable batchRequest) {
+        if (batchRequest.failedRequest == nil) {
+            if (success) success(batchRequest);
+        } else {
+            if (failure) failure(batchRequest);
+        }
+    }];
+}
+
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(FWBatchRequest * _Nullable))completion {
+    [[FWNetworkAgent sharedAgent] synchronousBatchRequest:self condition:condition completion:completion];
+}
+
 - (void)setCompletionBlockWithSuccess:(void (^)(FWBatchRequest *batchRequest))success
                               failure:(void (^)(FWBatchRequest *batchRequest))failure {
     self.successCompletionBlock = success;
