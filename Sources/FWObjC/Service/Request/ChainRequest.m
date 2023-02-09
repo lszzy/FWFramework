@@ -113,17 +113,17 @@
 }
 
 - (void)startSynchronouslyWithSuccess:(void (^)(__FWChainRequest * _Nonnull))success failure:(void (^)(__FWChainRequest * _Nonnull))failure {
-    [self startSynchronouslyWithCompletion:^(__FWChainRequest * _Nullable chainRequest) {
+    [self startSynchronouslyWithCondition:nil completion:^(__FWChainRequest * _Nullable chainRequest) {
         if (chainRequest.failedRequest == nil) {
             if (success) success(chainRequest);
         } else {
             if (failure) failure(chainRequest);
         }
-    } condition:nil];
+    }];
 }
 
-- (void)startSynchronouslyWithCompletion:(void (^)(__FWChainRequest * _Nullable))completion condition:(BOOL (^)(void))condition {
-    [[__FWRequestManager sharedManager] synchronousChainRequest:self completion:completion condition:condition];
+- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__FWChainRequest * _Nullable))completion {
+    [[__FWRequestManager sharedManager] synchronousChainRequest:self condition:condition completion:completion];
 }
 
 - (void)toggleAccessoriesWillStartCallBack {
