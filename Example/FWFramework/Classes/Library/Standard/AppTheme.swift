@@ -13,12 +13,16 @@ import UIKit
 public typealias APP = FW
 
 extension WrapperCompatible {
+    
     public static var app: Wrapper<Self>.Type { get { fw } set {} }
     public var app: Wrapper<Self> { get { fw } set {} }
+    
 }
 
 extension UIView {
+    
     public var chain: LayoutChain { fw_layoutChain }
+    
 }
 
 // MARK: - AppTheme
