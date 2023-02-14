@@ -254,19 +254,75 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     }
     
     func onAlertP() {
-        fw.showAlert(title: "高优先级", message: "警告框消息", cancel: nil) { [weak self] in
-            self?.fw.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
-                self?.fw.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: nil)
+        let taskManager = TaskManager()
+        taskManager.maxConcurrentTaskCount = 1
+        
+        let task = Task()
+        task.onMainThread = true
+        task.queuePriority = .low
+        task.taskBlock = { [weak self] task in
+            self?.fw.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
             })
         }
+        
+        let task2 = Task()
+        task2.onMainThread = true
+        task2.queuePriority = .normal
+        task2.taskBlock = { [weak self] task in
+            self?.fw.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        let task3 = Task()
+        task3.onMainThread = true
+        task3.queuePriority = .high
+        task3.taskBlock = { [weak self] task in
+            self?.fw.showAlert(title: "高优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        taskManager.addTasks([task, task2, task3])
     }
     
     func onSheetP() {
-        fw.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) { [weak self] in
-            self?.fw.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
-                self?.fw.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: nil)
+        let taskManager = TaskManager()
+        taskManager.maxConcurrentTaskCount = 1
+        taskManager.isSuspended = true
+        
+        let task = Task()
+        task.onMainThread = true
+        task.queuePriority = .low
+        task.taskBlock = { [weak self] task in
+            self?.fw.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                task.finish()
             })
         }
+        
+        let task2 = Task()
+        task2.onMainThread = true
+        task2.queuePriority = .normal
+        task2.taskBlock = { [weak self] task in
+            self?.fw.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        let task3 = Task()
+        task3.onMainThread = true
+        task3.queuePriority = .high
+        task3.taskBlock = { [weak self] task in
+            self?.fw.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) {
+                task.finish()
+            }
+        }
+        
+        taskManager.addTask(task)
+        taskManager.addTask(task2)
+        taskManager.addTask(task3)
+        taskManager.isSuspended = false
     }
     
     func onSheetM() {
