@@ -38,7 +38,7 @@ class TestSocketController: UIViewController {
     private let serverPort = UInt16(8009)
     
     @UserDefaultAnnotation("WebSocketUrl", defaultValue: "http://127.0.0.1:8009")
-    private var clientURL: String
+    private var clientURL: String = ""
     private var clientInited = false
     
     private lazy var server: WebSocketServer = {

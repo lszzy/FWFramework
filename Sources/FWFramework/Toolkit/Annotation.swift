@@ -11,28 +11,37 @@ import FWObjC
 #endif
 
 // MARK: - UserDefaultAnnotation
-/// UserDefault属性包装器注解
+/// UserDefault属性包装器注解，支持默认值
+///
 /// 使用示例：
 /// @UserDefaultAnnotation("userName", defaultValue: "test")
 /// static var userName: String
 @propertyWrapper
-public struct UserDefaultAnnotation<T> {
-    let key: String
-    let value: T
+public struct UserDefaultAnnotation<Value> {
+    private let key: String
+    private let defaultValue: Value
     
-    public init(wrappedValue value: T, _ key: String) {
+    public init(
+        wrappedValue: Value,
+        _ key: String,
+        defaultValue: @autoclosure @escaping () -> Value? = nil
+    ) {
         self.key = key
-        self.value = value
+        self.defaultValue = defaultValue() ?? wrappedValue
     }
     
-    public init(_ key: String, defaultValue: T) {
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: @autoclosure @escaping () -> Value? = nil
+    ) where WrappedValue? == Value {
         self.key = key
-        self.value = defaultValue
+        self.defaultValue = defaultValue() ?? wrappedValue
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? value
+            return UserDefaults.standard.object(forKey: key) as? Value ?? defaultValue
         }
         set {
             UserDefaults.standard.set(newValue, forKey: key)
@@ -43,19 +52,25 @@ public struct UserDefaultAnnotation<T> {
 
 // MARK: - ModuleAnnotation
 /// 模块属性包装器注解
+///
 /// 使用示例：
 /// @ModuleAnnotation(UserModuleService.self)
 /// static var userModule: UserModuleService
 @propertyWrapper
 public struct ModuleAnnotation<T> {
-    let serviceProtocol: T.Type
-    var module: T?
+    private let serviceProtocol: T.Type
+    private var module: T?
     
-    public init(_ serviceProtocol: T.Type) {
+    public init(
+        _ serviceProtocol: T.Type
+    ) {
         self.serviceProtocol = serviceProtocol
     }
     
-    public init(_ serviceProtocol: T.Type, module: ModuleProtocol.Type) {
+    public init(
+        _ serviceProtocol: T.Type,
+        module: ModuleProtocol.Type
+    ) {
         self.serviceProtocol = serviceProtocol
         Mediator.registerService(serviceProtocol, module: module)
     }
@@ -76,19 +91,25 @@ public struct ModuleAnnotation<T> {
 
 // MARK: - PluginAnnotation
 /// 插件属性包装器注解
+///
 /// 使用示例：
 /// @PluginAnnotation(TestPluginProtocol.self)
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
 public struct PluginAnnotation<T> {
-    let pluginProtocol: T.Type
-    var plugin: T?
+    private let pluginProtocol: T.Type
+    private var plugin: T?
     
-    public init(_ pluginProtocol: T.Type) {
+    public init(
+        _ pluginProtocol: T.Type
+    ) {
         self.pluginProtocol = pluginProtocol
     }
     
-    public init(_ pluginProtocol: T.Type, object: Any) {
+    public init(
+        _ pluginProtocol: T.Type,
+        object: Any
+    ) {
         self.pluginProtocol = pluginProtocol
         PluginManager.registerPlugin(pluginProtocol, object: object)
     }
@@ -109,19 +130,26 @@ public struct PluginAnnotation<T> {
 
 // MARK: - RouterAnnotation
 /// 路由属性包装器注解
+///
 /// 使用示例：
 /// @RouterAnnotation(AppRouter.pluginRouter(_:))
 /// static var pluginUrl: String = "app://plugin/:id"
 @propertyWrapper
 public struct RouterAnnotation {
-    var pattern: String
+    private var pattern: String
     
-    public init(wrappedValue value: String, _ handler: @escaping RouterHandler) {
+    public init(
+        wrappedValue value: String,
+        _ handler: @escaping RouterHandler
+    ) {
         self.pattern = value
         Router.registerURL(value, handler: handler)
     }
     
-    public init(_ pattern: String, handler: @escaping RouterHandler) {
+    public init(
+        _ pattern: String,
+        handler: @escaping RouterHandler
+    ) {
         self.pattern = pattern
         Router.registerURL(pattern, handler: handler)
     }
@@ -133,64 +161,50 @@ public struct RouterAnnotation {
 }
 
 // MARK: - ValidatorAnnotation
-/// ValidatorAnnotation属性包装器注解
+/// ValidatorAnnotation属性包装器注解，可指定默认值，未指定时为初始值
+///
 /// 使用示例：
 /// @ValidatorAnnotation(.isEmail)
 /// var email: String = ""
 @propertyWrapper
-public struct ValidatorAnnotation<Value>: Validatable {
-    
-    /// 当前验证器
-    public var validator: Validator<Value> {
-        didSet {
-            self.isValid = self.validator.validate(self.value)
-        }
-    }
-    
-    /// 是否有效
-    public private(set) var isValid: Bool
-    
-    /// 是否无效
-    public var isInvalid: Bool { !self.isValid }
-    
-    /// 验证后的值，如果验证未通过，返回nil
-    public var validatedValue: Value? {
-        self.isValid ? self.value : nil
-    }
-    
+public struct ValidatorAnnotation<Value> {
+    private let validator: Validator<Value>
+    private let defaultValue: Value
     private var value: Value
     
-    /// 初始化并指定验证器
     public init(
         wrappedValue: Value,
-        _ validator: Validator<Value>
+        _ validator: Validator<Value>,
+        defaultValue: @autoclosure @escaping () -> Value? = nil
     ) {
         self.validator = validator
+        self.defaultValue = defaultValue() ?? wrappedValue
         self.value = wrappedValue
-        self.isValid = validator.validate(wrappedValue)
     }
     
-    /// 初始化并指定包装验证器
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
+        defaultValue: @autoclosure @escaping () -> Value? = nil,
         defaultValid: @autoclosure @escaping () -> Bool = false
     ) where WrappedValue? == Value {
         self.init(
             wrappedValue: wrappedValue,
-            Validator(validator, defaultValid: defaultValid())
+            Validator(validator, defaultValid: defaultValid()),
+            defaultValue: defaultValue() ?? wrappedValue
         )
     }
     
-    /// 当前包装值
     public var wrappedValue: Value {
         get {
             return self.value
         }
         set {
-            self.value = newValue
-            self.isValid = self.validator.validate(newValue)
+            if self.validator.validate(newValue) {
+                self.value = newValue
+            } else {
+                self.value = self.defaultValue
+            }
         }
     }
-    
 }

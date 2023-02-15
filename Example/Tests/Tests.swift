@@ -9,8 +9,17 @@ class Tests: XCTestCase {
     // MARK: - Accessor
     dynamic var observeValue: Int = 0
     
+    @UserDefaultAnnotation("testKey")
+    var defaultsValue = ""
+    
+    @UserDefaultAnnotation("testOptionKey", defaultValue: 0)
+    var defaultsOptionValue: Int?
+    
     @ValidatorAnnotation(.isEmail)
     var validateValue = ""
+    
+    @ValidatorAnnotation(.isEmail, defaultValue: "")
+    var validateOptionValue: String?
     
     // MARK: - Test
     func testLoader() {
@@ -111,6 +120,18 @@ class Tests: XCTestCase {
         XCTAssertEqual(propertyValue, 3)
     }
     
+    func testDefaults() {
+        defaultsValue = "testValue"
+        XCTAssertEqual(defaultsValue, "testValue")
+        defaultsValue = ""
+        XCTAssertEqual(defaultsValue, "")
+        
+        defaultsOptionValue = 1
+        XCTAssertEqual(defaultsOptionValue, 1)
+        defaultsOptionValue = nil
+        XCTAssertEqual(defaultsOptionValue, 0)
+    }
+    
     func testValidator() {
         validateValue = "errorValue"
         XCTAssertEqual(validateValue, "")
@@ -118,6 +139,13 @@ class Tests: XCTestCase {
         XCTAssertEqual(validateValue, "test@test.com")
         validateValue = "errorValue"
         XCTAssertEqual(validateValue, "")
+        
+        validateOptionValue = "errorValue"
+        XCTAssertEqual(validateOptionValue, "")
+        validateOptionValue = "test@test.com"
+        XCTAssertEqual(validateOptionValue, "test@test.com")
+        validateOptionValue = "errorValue"
+        XCTAssertEqual(validateOptionValue, "")
     }
     
 }

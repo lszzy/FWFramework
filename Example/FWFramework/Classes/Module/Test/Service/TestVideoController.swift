@@ -14,8 +14,8 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     fileprivate var player = VideoPlayer()
     lazy var resourceLoader = PlayerCacheLoaderManager()
     
-    @UserDefaultAnnotation("TestVideoCacheEnabled", defaultValue: false)
-    private var cacheEnabled: Bool
+    @UserDefaultAnnotation("TestVideoCacheEnabled")
+    private var cacheEnabled: Bool = false
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
