@@ -132,10 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)escapeHtml:(NSString *)string;
 
-+ (BOOL)isIdcard:(NSString *)string;
-
-+ (BOOL)isBankcard:(NSString *)string;
-
 + (nullable NSString *)ipAddress;
 
 + (nullable NSString *)hostName;

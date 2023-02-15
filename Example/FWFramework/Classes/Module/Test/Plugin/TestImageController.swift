@@ -83,7 +83,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
         let cell = TestImageCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
         let fileName = tableData[indexPath.row] as? String ?? ""
         cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.fw.mimeType(from: (fileName as NSString).pathExtension))
-        if !fileName.fw.isFormatUrl {
+        if !fileName.fw.isValid(.isUrl) {
             cell.fw.tempObject = fileName
             DispatchQueue.global().async {
                 let image = ModuleBundle.imageNamed(fileName)

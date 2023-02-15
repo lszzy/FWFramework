@@ -289,7 +289,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         didSet {
             guard let object = object else { return }
             myTitleLabel.text = object.title
-            if object.imageUrl.fw.isFormatUrl {
+            if object.imageUrl.fw.isValid(.isUrl) {
                 myImageView.fw.setImage(url: object.imageUrl, placeholderImage: UIImage.fw.appIconImage())
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)

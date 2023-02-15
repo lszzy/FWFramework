@@ -417,128 +417,9 @@ extension FW {
         return __FWBridge.escapeHtml(self)
     }
     
-    /**
-     *  是否符合正则表达式
-     *  示例：用户名：^[a-zA-Z][a-zA-Z0-9_]{4,13}$
-     *       密码：^[a-zA-Z0-9_]{6,20}$
-     *       昵称：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
-     *
-     *  @param regex 正则表达式
-     */
-    public func fw_isFormatRegex(_ regex: String) -> Bool {
-        let regexPredicate = NSPredicate(format: "SELF MATCHES %@", regex)
-        return regexPredicate.evaluate(with: self)
-    }
-
-    /// 是否是手机号
-    public var fw_isFormatMobile: Bool {
-        return fw_isFormatRegex("^1\\d{10}$")
-    }
-
-    /// 是否是座机号
-    public var fw_isFormatTelephone: Bool {
-        return fw_isFormatRegex("^(\\d{3}\\-)?\\d{8}|(\\d{4}\\-)?\\d{7}$")
-    }
-    
-    /// 是否是整数
-    public var fw_isFormatInteger: Bool {
-        return fw_isFormatRegex("^\\-?\\d+$")
-    }
-    
-    /// 是否是数字
-    public var fw_isFormatNumber: Bool {
-        return fw_isFormatRegex("^\\-?\\d+\\.?\\d*$")
-    }
-    
-    /// 是否是合法金额，两位小数点
-    public var fw_isFormatMoney: Bool {
-        return fw_isFormatRegex("^\\d+\\.?\\d{0,2}$")
-    }
-    
-    /// 是否是身份证号
-    public var fw_isFormatIdcard: Bool {
-        return __FWBridge.isIdcard(self)
-    }
-    
-    /// 是否是银行卡号
-    public var fw_isFormatBankcard: Bool {
-        return __FWBridge.isBankcard(self)
-    }
-    
-    /// 是否是车牌号
-    public var fw_isFormatCarno: Bool {
-        // 车牌号:湘K-DE829 香港车牌号码:粤Z-J499港。\u4e00-\u9fa5表示unicode编码中汉字已编码部分，\u9fa5-\u9fff是保留部分
-        return fw_isFormatRegex("^[\\u4e00-\\u9fff]{1}[a-zA-Z]{1}[-][a-zA-Z_0-9]{4}[a-zA-Z_0-9_\\u4e00-\\u9fff]$")
-    }
-    
-    /// 是否是邮政编码
-    public var fw_isFormatPostcode: Bool {
-        return fw_isFormatRegex("^[0-8]\\d{5}(?!\\d)$")
-    }
-    
-    /// 是否是邮箱
-    public var fw_isFormatEmail: Bool {
-        return fw_isFormatRegex("^[A-Z0-9a-z._\\%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
-    }
-    
-    /// 是否是URL
-    public var fw_isFormatUrl: Bool {
-        return lowercased().hasPrefix("http://") || lowercased().hasPrefix("https://")
-    }
-    
-    /// 是否是HTML
-    public var fw_isFormatHtml: Bool {
-        return range(of: "<[^>]+>", options: .regularExpression) != nil
-    }
-    
-    /// 是否是IP
-    public var fw_isFormatIp: Bool {
-        // 简单版本
-        // return fw_isFormatRegex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$")
-        
-        // 复杂版本
-        let components = self.components(separatedBy: ".")
-        let invalidCharacters = CharacterSet(charactersIn: "1234567890").inverted
-        
-        if components.count == 4 {
-            let part1 = components[0]
-            let part2 = components[1]
-            let part3 = components[2]
-            let part4 = components[3]
-            
-            if part1.rangeOfCharacter(from: invalidCharacters) == nil &&
-                part2.rangeOfCharacter(from: invalidCharacters) == nil &&
-                part3.rangeOfCharacter(from: invalidCharacters) == nil &&
-                part4.rangeOfCharacter(from: invalidCharacters) == nil {
-                if (part1 as NSString).intValue < 255 &&
-                    (part2 as NSString).intValue < 255 &&
-                    (part3 as NSString).intValue < 255 &&
-                    (part4 as NSString).intValue < 255 {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    
-    /// 是否全是中文
-    public var fw_isFormatChinese: Bool {
-        return fw_isFormatRegex("^[\\x{4e00}-\\x{9fa5}]+$")
-    }
-    
-    /// 是否是合法时间，格式：yyyy-MM-dd HH:mm:ss
-    public var fw_isFormatDatetime: Bool {
-        return fw_isFormatRegex("^\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}\\:\\d{2}\\:\\d{2}$")
-    }
-    
-    /// 是否是合法时间戳，格式：1301234567
-    public var fw_isFormatTimestamp: Bool {
-        return fw_isFormatRegex("^\\d{10}$")
-    }
-    
-    /// 是否是坐标点字符串，格式：latitude,longitude
-    public var fw_isFormatCoordinate: Bool {
-        return fw_isFormatRegex("^\\-?\\d+\\.?\\d*,\\-?\\d+\\.?\\d*$")
+    /// 是否符合验证器
+    public func fw_isValid(_ validator: Validator<String>) -> Bool {
+        return validator.validate(self)
     }
     
 }
@@ -1134,7 +1015,7 @@ extension FW {
     public static func fw_baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
-            if addr.fw_isFormatCoordinate {
+            if addr.fw_isValid(.isCoordinate) {
                 params["location"] = addr
             } else {
                 params["address"] = addr
