@@ -7,69 +7,15 @@
 
 import Foundation
 
-// MARK: - Validatable
-/// 验证协议
-public protocol Validatable {
-    
-    /// 是否有效
-    var isValid: Bool { get }
-    
-}
-
-extension Validatable {
-    
-    /// 创建非验证器
-    public static prefix func ! (
-        validatable: Self
-    ) -> Validatable {
-        DefaultValidator(isValid: !validatable.isValid)
-    }
-    
-    /// 创建与验证器
-    public static func && (
-        lhs: Self,
-        rhs: @autoclosure @escaping () -> Self
-    ) -> Validatable {
-        DefaultValidator(isValid: lhs.isValid && rhs().isValid)
-    }
-    
-    /// 创建或验证器
-    public static func || (
-        lhs: Self,
-        rhs: @autoclosure @escaping () -> Self
-    ) -> Validatable {
-        DefaultValidator(isValid: lhs.isValid || rhs().isValid)
-    }
-    
-}
-
-// MARK: - DefaultValidator
-public struct DefaultValidator: Validatable {
-    
-    /// 是否有效
-    public let isValid: Bool
-    
-    /// 初始化并指定是否有效
-    public init(isValid: Bool) {
-        self.isValid = isValid
-    }
-    
-}
-
 // MARK: - Validator
 /// 规则验证器，可扩展
-///
-/// [ValidatedPropertyKit](https://github.com/SvenTiigi/ValidatedPropertyKit)
 public struct Validator<Value> {
     
-    /// 验证规则句柄
-    public typealias Predicate = (Value) -> Bool
-    
-    private let predicate: Predicate
+    private let predicate: (Value) -> Bool
     
     /// 初始化验证器
     public init(
-        predicate: @escaping Predicate
+        predicate: @escaping (Value) -> Bool
     ) {
         self.predicate = predicate
     }
