@@ -12,14 +12,14 @@ class Tests: XCTestCase {
     @UserDefaultAnnotation("testKey")
     var defaultsValue = ""
     
-    @UserDefaultAnnotation("testOptionKey", defaultValue: 0)
-    var defaultsOptionValue: Int?
+    @UserDefaultAnnotation("testOptionKey")
+    var defaultsOptionValue: Int? = 0
     
     @ValidatorAnnotation(.isEmail)
     var validateValue = ""
     
-    @ValidatorAnnotation(.isEmail, defaultValue: "")
-    var validateOptionValue: String?
+    @ValidatorAnnotation(.isEmail)
+    var validateOptionValue: String? = ""
     
     // MARK: - Test
     func testLoader() {
@@ -144,7 +144,7 @@ class Tests: XCTestCase {
         XCTAssertEqual(validateOptionValue, "")
         validateOptionValue = "test@test.com"
         XCTAssertEqual(validateOptionValue, "test@test.com")
-        validateOptionValue = "errorValue"
+        validateOptionValue = nil
         XCTAssertEqual(validateOptionValue, "")
     }
     
