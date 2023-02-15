@@ -10,46 +10,6 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - UserDefaultAnnotation
-/// UserDefault属性包装器注解，支持默认值
-///
-/// 使用示例：
-/// @UserDefaultAnnotation("userName", defaultValue: "test")
-/// static var userName: String
-@propertyWrapper
-public struct UserDefaultAnnotation<Value> {
-    private let key: String
-    private let defaultValue: Value
-    
-    public init(
-        wrappedValue: Value,
-        _ key: String,
-        defaultValue: @autoclosure @escaping () -> Value? = nil
-    ) {
-        self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
-    }
-    
-    public init<WrappedValue>(
-        wrappedValue: WrappedValue? = nil,
-        _ key: String,
-        defaultValue: @autoclosure @escaping () -> Value? = nil
-    ) where WrappedValue? == Value {
-        self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
-    }
-    
-    public var wrappedValue: Value {
-        get {
-            return UserDefaults.standard.object(forKey: key) as? Value ?? defaultValue
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: key)
-            UserDefaults.standard.synchronize()
-        }
-    }
-}
-
 // MARK: - ModuleAnnotation
 /// 模块属性包装器注解
 ///
@@ -161,50 +121,92 @@ public struct RouterAnnotation {
 }
 
 // MARK: - ValidatorAnnotation
-/// ValidatorAnnotation属性包装器注解，可指定默认值，未指定时为初始值
+/// ValidatorAnnotation属性包装器注解，默认初始值
 ///
 /// 使用示例：
 /// @ValidatorAnnotation(.isEmail)
 /// var email: String = ""
 @propertyWrapper
-public struct ValidatorAnnotation<Value> {
-    private let validator: Validator<Value>
-    private let defaultValue: Value
-    private var value: Value
+public struct ValidatorAnnotation<T> {
+    private let validator: Validator<T>
+    private let initialValue: T
+    private var value: T
     
     public init(
-        wrappedValue: Value,
-        _ validator: Validator<Value>,
-        defaultValue: @autoclosure @escaping () -> Value? = nil
+        wrappedValue: T,
+        _ validator: Validator<T>
     ) {
         self.validator = validator
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.initialValue = wrappedValue
         self.value = wrappedValue
     }
     
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure @escaping () -> Value? = nil,
         defaultValid: @autoclosure @escaping () -> Bool = false
-    ) where WrappedValue? == Value {
+    ) where WrappedValue? == T {
         self.init(
             wrappedValue: wrappedValue,
-            Validator(validator, defaultValid: defaultValid()),
-            defaultValue: defaultValue() ?? wrappedValue
+            Validator(validator, defaultValid: defaultValid())
         )
     }
     
-    public var wrappedValue: Value {
-        get {
-            return self.value
+    public var wrappedValue: T {
+        get { return value }
+        set { value = validator.validate(newValue) ? newValue : initialValue }
+    }
+}
+
+// MARK: - UserDefaultAnnotation
+/// UserDefault属性包装器注解，默认初始值
+///
+/// 使用示例：
+/// @UserDefaultAnnotation("userName")
+/// static var userName: String = ""
+@propertyWrapper
+public struct UserDefaultAnnotation<T> {
+    private let key: String
+    private let initialValue: T
+    private let wrappedGetter: (String, T) -> T
+    private let wrappedSetter: (String, T) -> Void
+    
+    public init(
+        wrappedValue: T,
+        _ key: String
+    ) {
+        self.key = key
+        self.initialValue = wrappedValue
+        self.wrappedGetter = { key, initialValue in
+            UserDefaults.standard.object(forKey: key) as? T ?? initialValue
         }
-        set {
-            if self.validator.validate(newValue) {
-                self.value = newValue
+        self.wrappedSetter = { key, value in
+            UserDefaults.standard.set(value, forKey: key)
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String
+    ) where WrappedValue? == T {
+        self.key = key
+        self.initialValue = wrappedValue
+        self.wrappedGetter = { key, initialValue in
+            UserDefaults.standard.object(forKey: key) as? WrappedValue ?? initialValue
+        }
+        self.wrappedSetter = { key, value in
+            if let value = value {
+                UserDefaults.standard.set(value, forKey: key)
             } else {
-                self.value = self.defaultValue
+                UserDefaults.standard.removeObject(forKey: key)
             }
+            UserDefaults.standard.synchronize()
         }
+    }
+    
+    public var wrappedValue: T {
+        get { wrappedGetter(key, initialValue) }
+        set { wrappedSetter(key, newValue) }
     }
 }

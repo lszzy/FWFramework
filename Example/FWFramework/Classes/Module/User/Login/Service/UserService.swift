@@ -19,7 +19,7 @@ class UserService {
     
     @UserDefaultAnnotation("userId")
     private var userId: String = ""
-    @UserDefaultAnnotation("userName", defaultValue: "")
+    @UserDefaultAnnotation("userName")
     private var userName: String = ""
     
 }
