@@ -9,6 +9,9 @@ class Tests: XCTestCase {
     // MARK: - Accessor
     dynamic var observeValue: Int = 0
     
+    @ValidatorAnnotation(.isEmail)
+    var validateValue = ""
+    
     // MARK: - Test
     func testLoader() {
         let loader = Loader<NSString, NSString>()
@@ -106,6 +109,15 @@ class Tests: XCTestCase {
         fw.unobserveAllProperties()
         observeValue = 4
         XCTAssertEqual(propertyValue, 3)
+    }
+    
+    func testValidator() {
+        validateValue = "errorValue"
+        XCTAssertEqual(validateValue, "")
+        validateValue = "test@test.com"
+        XCTAssertEqual(validateValue, "test@test.com")
+        validateValue = "errorValue"
+        XCTAssertEqual(validateValue, "")
     }
     
 }

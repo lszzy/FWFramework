@@ -77,10 +77,10 @@ public struct Validator<Value> {
     /// 初始化包装验证器
     public init<WrappedValue>(
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure @escaping () -> Bool = false
+        defaultValid: @autoclosure @escaping () -> Bool = false
     ) where WrappedValue? == Value {
         self.init { value in
-            value.flatMap(validator.validate) ?? defaultValue()
+            value.flatMap(validator.validate) ?? defaultValid()
         }
     }
     

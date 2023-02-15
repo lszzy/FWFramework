@@ -174,11 +174,11 @@ public struct ValidatorAnnotation<Value>: Validatable {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure @escaping () -> Bool = false
+        defaultValid: @autoclosure @escaping () -> Bool = false
     ) where WrappedValue? == Value {
         self.init(
             wrappedValue: wrappedValue,
-            Validator(validator, defaultValue: defaultValue())
+            Validator(validator, defaultValid: defaultValid())
         )
     }
     
