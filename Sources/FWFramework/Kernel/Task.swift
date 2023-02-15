@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// 任务基类
-open class Task: Operation {
+/// 任务操作类，可继承或直接使用
+open class TaskOperation: Operation {
     
     private enum TaskState: Int {
         case created = 0
@@ -20,13 +20,25 @@ open class Task: Operation {
     }
     
     /// 任务句柄，执行完成需调用task.finish(error:)
-    open var taskBlock: ((Task) -> Void)?
+    open var taskBlock: ((TaskOperation) -> Void)?
     
     /// 是否在主线程执行，会阻碍UI渲染，默认false
     open var onMainThread = false
     
     /// 任务错误信息
     open private(set) var error: Error?
+    
+    public override init() {
+        super.init()
+        self.state = .ready
+    }
+    
+    public convenience init(onMainThread: Bool = false, queuePriority: Operation.QueuePriority = .normal, taskBlock: ((TaskOperation) -> Void)?) {
+        self.init()
+        self.onMainThread = onMainThread
+        self.queuePriority = queuePriority
+        self.taskBlock = taskBlock
+    }
 
     /// 子类可重写，默认调用taskBlock，任务完成需调用finish(error:)
     @objc open func executeTask() {
@@ -61,11 +73,6 @@ open class Task: Operation {
             #endif
         }
         lock.unlock()
-    }
-    
-    public override init() {
-        super.init()
-        self.state = .ready
     }
     
     open override func start() {
@@ -232,6 +239,12 @@ open class TaskManager: NSObject {
         queue.name = "FWTaskManager.taskQueue"
         return queue
     }()
+    
+    public convenience init(maxConcurrentTaskCount: Int, isSuspended: Bool = false) {
+        self.init()
+        self.maxConcurrentTaskCount = maxConcurrentTaskCount
+        if isSuspended { self.isSuspended = isSuspended }
+    }
     
     /// 添加单个任务
     open func addTask(_ task: Operation) {
