@@ -14,7 +14,7 @@ import FWObjC
 /// UserDefault属性包装器注解
 /// 使用示例：
 /// @UserDefaultAnnotation("userName", defaultValue: "test")
-/// public static var userName: String
+/// static var userName: String
 @propertyWrapper
 public struct UserDefaultAnnotation<T> {
     let key: String
@@ -130,4 +130,67 @@ public struct RouterAnnotation {
         get { return pattern }
         set { pattern = newValue }
     }
+}
+
+// MARK: - ValidatorAnnotation
+/// ValidatorAnnotation属性包装器注解
+/// 使用示例：
+/// @ValidatorAnnotation(.isEmail)
+/// var email: String = ""
+@propertyWrapper
+public struct ValidatorAnnotation<Value>: Validatable {
+    
+    /// 当前验证器
+    public var validator: Validator<Value> {
+        didSet {
+            self.isValid = self.validator.validate(self.value)
+        }
+    }
+    
+    /// 是否有效
+    public private(set) var isValid: Bool
+    
+    /// 是否无效
+    public var isInvalid: Bool { !self.isValid }
+    
+    /// 验证后的值，如果验证未通过，返回nil
+    public var validatedValue: Value? {
+        self.isValid ? self.value : nil
+    }
+    
+    private var value: Value
+    
+    /// 初始化并指定验证器
+    public init(
+        wrappedValue: Value,
+        _ validator: Validator<Value>
+    ) {
+        self.validator = validator
+        self.value = wrappedValue
+        self.isValid = validator.validate(wrappedValue)
+    }
+    
+    /// 初始化并指定包装验证器
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ validator: Validator<WrappedValue>,
+        defaultValue: @autoclosure @escaping () -> Bool = false
+    ) where WrappedValue? == Value {
+        self.init(
+            wrappedValue: wrappedValue,
+            Validator(validator, defaultValue: defaultValue())
+        )
+    }
+    
+    /// 当前包装值
+    public var wrappedValue: Value {
+        get {
+            return self.value
+        }
+        set {
+            self.value = newValue
+            self.isValid = self.validator.validate(newValue)
+        }
+    }
+    
 }

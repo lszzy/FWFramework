@@ -224,7 +224,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         
         var pictureUrls: [Any] = []
         for object in self.tableData {
-            if object.imageUrl.fw.isFormatUrl || object.imageUrl.isEmpty {
+            if object.imageUrl.fw.isValid(.isUrl) || object.imageUrl.isEmpty {
                 pictureUrls.append(object.imageUrl)
             } else {
                 pictureUrls.append(ModuleBundle.imageNamed(object.imageUrl) as Any)
@@ -253,7 +253,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         didSet {
             guard let object = object else { return }
             myTitleLabel.text = object.title
-            if object.imageUrl.fw.isFormatUrl {
+            if object.imageUrl.fw.isValid(.isUrl) {
                 myImageView.fw.setImage(url: object.imageUrl, placeholderImage: UIImage.fw.appIconImage())
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
