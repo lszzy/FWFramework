@@ -66,6 +66,7 @@ public struct ValidatorAnnotation<T> {
     private let validator: Validator<T>
     private let defaultValue: T
     private var value: T
+    private var isValid: Bool
     
     public init(
         wrappedValue: T,
@@ -75,6 +76,7 @@ public struct ValidatorAnnotation<T> {
         self.validator = validator
         self.defaultValue = defaultValue() ?? wrappedValue
         self.value = wrappedValue
+        self.isValid = validator.validate(wrappedValue)
     }
     
     public init<WrappedValue>(
@@ -91,8 +93,13 @@ public struct ValidatorAnnotation<T> {
     }
     
     public var wrappedValue: T {
-        get { validator.validate(value) ? value : defaultValue }
-        set { value = newValue }
+        get {
+            isValid ? value : defaultValue
+        }
+        set {
+            value = newValue
+            isValid = validator.validate(newValue)
+        }
     }
 }
 
