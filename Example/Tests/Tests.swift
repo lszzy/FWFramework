@@ -15,11 +15,17 @@ class Tests: XCTestCase {
     @UserDefaultAnnotation("testOptionKey")
     var defaultsOptionValue: Int? = 0
     
+    @UserDefaultAnnotation("testNilKey")
+    var defaultsNilValue: Int?
+    
     @ValidatorAnnotation(.isEmail)
     var validateValue = ""
     
     @ValidatorAnnotation(.isEmail)
     var validateOptionValue: String? = ""
+    
+    @ValidatorAnnotation(.isEmail)
+    var validateNilValue: String?
     
     // MARK: - Test
     func testLoader() {
@@ -130,6 +136,11 @@ class Tests: XCTestCase {
         XCTAssertEqual(defaultsOptionValue, 1)
         defaultsOptionValue = nil
         XCTAssertEqual(defaultsOptionValue, 0)
+        
+        defaultsNilValue = 1
+        XCTAssertEqual(defaultsNilValue, 1)
+        defaultsNilValue = nil
+        XCTAssertEqual(defaultsNilValue, nil)
     }
     
     func testValidator() {
@@ -146,6 +157,13 @@ class Tests: XCTestCase {
         XCTAssertEqual(validateOptionValue, "test@test.com")
         validateOptionValue = nil
         XCTAssertEqual(validateOptionValue, "")
+        
+        validateNilValue = "errorValue"
+        XCTAssertEqual(validateNilValue, nil)
+        validateNilValue = "test@test.com"
+        XCTAssertEqual(validateNilValue, "test@test.com")
+        validateNilValue = nil
+        XCTAssertEqual(validateNilValue, nil)
     }
     
 }
