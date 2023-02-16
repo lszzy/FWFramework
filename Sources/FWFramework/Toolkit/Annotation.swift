@@ -91,8 +91,8 @@ public struct ValidatorAnnotation<T> {
     }
     
     public var wrappedValue: T {
-        get { value }
-        set { value = validator.validate(newValue) ? newValue : defaultValue }
+        get { validator.validate(value) ? value : defaultValue }
+        set { value = newValue }
     }
 }
 
