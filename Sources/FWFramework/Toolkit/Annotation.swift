@@ -30,20 +30,26 @@ public struct UserDefaultAnnotation<T> {
         self.defaultValue = defaultValue() ?? wrappedValue
     }
     
-    public init(
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: @autoclosure @escaping () -> T
-    ) {
+        defaultValue: @autoclosure @escaping () -> T? = nil
+    ) where WrappedValue? == T {
         self.key = key
-        self.defaultValue = defaultValue()
+        self.defaultValue = defaultValue() ?? wrappedValue
     }
     
     public var wrappedValue: T {
         get {
-            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            let value = UserDefaults.standard.object(forKey: key) as? T
+            return !Optional<Any>.isNone(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: key)
+            if !Optional<Any>.isNone(newValue) {
+                UserDefaults.standard.set(newValue, forKey: key)
+            } else {
+                UserDefaults.standard.removeObject(forKey: key)
+            }
             UserDefaults.standard.synchronize()
         }
     }

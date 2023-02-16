@@ -42,10 +42,7 @@ extension FW {
     
     /// 判断是否为none，兼容嵌套Optional
     public static func isNone(_ value: Any?) -> Bool {
-        if value == nil || value._plainValue() == nil {
-            return true
-        }
-        return false
+        return Optional<Any>.isNone(value)
     }
 }
 
@@ -529,6 +526,9 @@ extension Optional {
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
     
+    public static func isNone(_ value: Wrapped?) -> Bool {
+        return value == nil || value._plainValue() == nil
+    }
     public var isSome: Bool { return self != nil }
     public var isNone: Bool { return !isSome }
     @discardableResult
