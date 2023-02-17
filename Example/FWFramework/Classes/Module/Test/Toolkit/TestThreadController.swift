@@ -43,10 +43,10 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             ["Associated不加锁", "onLock1"],
             ["Associated加锁", "onLock2"],
             ["NSMutableArray", "onArray1"],
-            ["FWMutableArray", "onArray2"],
+            ["NSMutableArray串行", "onArray2"],
             ["NSMutableArray加锁", "onArray3"],
             ["NSMutableDictionary", "onDictionary1"],
-            ["FWMutableDictionary", "onDictionary2"],
+            ["NSMutableDictionary并行加锁", "onDictionary2"],
             ["NSMutableDictionary加锁", "onDictionary3"],
             ["FWCacheMemory", "onCache1"],
             ["FWCacheMemory加锁", "onCache2"],
@@ -145,15 +145,19 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onArray2() {
         let key = "onArray2"
-        let array = MutableArray<NSObject>()
+        let array = NSMutableArray()
         array.add(NSObject())
+        let queue = DispatchQueue(label: "testArray")
         
         onQueue {
             
-            array.enumerateObjects { arg, idx, stop in
-                guard let obj = arg as? NSObject else { return }
-                let value = obj.fw.boundInt(forKey: key)
-                obj.fw.bindInt(value + 1, forKey: key)
+            // 串行读sync，写async
+            queue.sync {
+                array.enumerateObjects { arg, idx, stop in
+                    guard let obj = arg as? NSObject else { return }
+                    let value = obj.fw.boundInt(forKey: key)
+                    obj.fw.bindInt(value + 1, forKey: key)
+                }
             }
         } completion: { [weak self] in
             
@@ -207,15 +211,19 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onDictionary2() {
         let key = "object"
-        let dict = MutableDictionary<NSString, NSObject>()
+        let dict = NSMutableDictionary()
         dict.setObject(NSObject(), forKey: key as NSString)
+        let queue = DispatchQueue(label: "testDictionary", attributes: .concurrent)
         
         onQueue {
             
-            dict.enumerateKeysAndObjects { _, arg, stop in
-                guard let obj = arg as? NSObject else { return }
-                let value = obj.fw.boundInt(forKey: key)
-                obj.fw.bindInt(value + 1, forKey: key)
+            // 并行读sync，写async，用flags为barrier加共享互斥锁
+            queue.sync(flags: .barrier) {
+                dict.enumerateKeysAndObjects { _, arg, stop in
+                    guard let obj = arg as? NSObject else { return }
+                    let value = obj.fw.boundInt(forKey: key)
+                    obj.fw.bindInt(value + 1, forKey: key)
+                }
             }
         } completion: { [weak self] in
             
