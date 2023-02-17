@@ -171,21 +171,18 @@ extension FW {
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    @objc(__fw_openURL:completionHandler:)
     public static func fw_openURL(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    @objc(__fw_openUniversalLinks:completionHandler:)
     public static func fw_openUniversalLinks(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
         guard let url = fw_url(string: url) else { return }
         UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    @objc(__fw_isSystemURL:)
     public static func fw_isSystemURL(_ url: Any?) -> Bool {
         guard let url = fw_url(string: url) else { return false }
         if let scheme = url.scheme?.lowercased(),
@@ -210,13 +207,18 @@ extension FW {
         return false
     }
     
-    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
-    @objc(__fw_isSchemeURL:)
-    public static func fw_isSchemeURL(_ url: Any?) -> Bool {
+    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
+    public static func fw_isSchemeURL(_ url: Any?, scheme: String? = nil) -> Bool {
         guard let url = fw_url(string: url),
-              let scheme = url.scheme, !scheme.isEmpty else { return false }
-        if url.isFileURL || fw_isHttpURL(url) { return false }
-        return true
+              let urlScheme = url.scheme,
+              !urlScheme.isEmpty else { return false }
+        
+        if let scheme = scheme {
+            return urlScheme == scheme
+        } else {
+            if url.isFileURL || fw_isHttpURL(url) { return false }
+            return true
+        }
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
