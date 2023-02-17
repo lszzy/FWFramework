@@ -414,7 +414,7 @@ extension Wrapper where Base: NSObject {
     
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
-        _ token: String,
+        _ token: AnyHashable,
         closure: @escaping () -> Void
     ) {
         Base.fw_dispatchOnce(token, closure: closure)
