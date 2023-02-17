@@ -30,13 +30,13 @@ class Tests: XCTestCase {
     // MARK: - Test
     func testLoader() {
         let loader = Loader<NSString, NSString>()
-        let identifier = loader.add { value in
+        let identifier = loader.append { value in
             return value.appending("Block") as NSString
         }
         XCTAssertEqual(loader.load("Hello "), "Hello Block")
         
         loader.remove(identifier)
-        loader.add(target: self, action: #selector(loaderAction(_:)))
+        loader.append(target: self, action: #selector(loaderAction(_:)))
         XCTAssertEqual(loader.load("Hello "), "Hello Target")
     }
     

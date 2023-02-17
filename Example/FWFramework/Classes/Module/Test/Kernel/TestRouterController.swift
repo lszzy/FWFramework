@@ -377,7 +377,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     static func registerFilters() {
-        Router.sharedLoader.add { input in
+        Router.sharedLoader.append { input in
             if (input as String) == TestRouter.loaderUrl {
                 return TestRouterResultController.self
             }

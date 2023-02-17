@@ -33,7 +33,7 @@ public class Loader<Input, Output>: NSObject {
     
     /// 添加block加载器，返回标志id
     @discardableResult
-    public func add(block: @escaping (Input) -> Output?) -> String {
+    public func append(block: @escaping (Input) -> Output?) -> String {
         let loader = Target()
         loader.block = block
         allLoaders.append(loader)
@@ -42,7 +42,7 @@ public class Loader<Input, Output>: NSObject {
     
     /// 添加target和action加载器，返回标志id
     @discardableResult
-    public func add(target: AnyObject?, action: Selector) -> String {
+    public func append(target: AnyObject?, action: Selector) -> String {
         let loader = Target()
         loader.target = target
         loader.action = action

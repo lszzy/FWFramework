@@ -32,6 +32,106 @@ public typealias BlockBoolParam = (Bool, Any?) -> ()
 /// 通用(Int, Any)参数block
 public typealias BlockIntParam = (Int, Any?) -> ()
 
+// MARK: - MulticastBlock
+/// 多句柄代理，线程安全，支持多种调用策略
+///
+/// 串行安全：读sync，写async
+/// 并行安全：读sync，写async， 用flags:.barrier加共享互斥锁
+public class MulticastBlock: NSObject {
+    
+    /// 调用策略枚举
+    public enum Strategy: Int {
+        /// invoke时立即触发，可多次调用，默认
+        case invoke = 0
+        /// invoke时立即触发并移除，仅单次调用
+        case invokeOnce
+        /// 等待invoke调用后才触发，可多次调用
+        case wait
+        /// 等待invoke调用后才触发并移除，仅单次调用
+        case waitOnce
+    }
+    
+    /// 当前调用策略，默认invoke
+    public private(set) var strategy: Strategy = .invoke
+    
+    private var blocks: [() -> Void] = []
+    private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
+    private var isInvoked = false
+    
+    private static var instances: [AnyHashable: MulticastBlock] = [:]
+    
+    /// 指定Key并返回代理单例
+    public static func sharedBlock(_ key: AnyHashable, strategy: Strategy = .invoke) -> MulticastBlock {
+        return fw_synchronized {
+            if let instance = instances[key] {
+                return instance
+            } else {
+                let instance = MulticastBlock(strategy: strategy)
+                instances[key] = instance
+                return instance
+            }
+        }
+    }
+    
+    /// 指定策略并初始化，默认invoked
+    public init(strategy: Strategy = .invoke) {
+        super.init()
+        self.strategy = strategy
+    }
+    
+    /// 根据策略添加句柄，主线程调用
+    public func append(_ block: @escaping () -> Void) {
+        queue.sync {
+            switch strategy {
+            case .wait:
+                if isInvoked {
+                    DispatchQueue.main.async {
+                        block()
+                    }
+                }
+                blocks.append(block)
+            case .waitOnce:
+                if isInvoked {
+                    DispatchQueue.main.async {
+                        block()
+                    }
+                } else {
+                    blocks.append(block)
+                }
+            default:
+                blocks.append(block)
+            }
+        }
+    }
+    
+    /// 手动清空所有句柄
+    public func removeAll() {
+        queue.sync {
+            blocks.removeAll()
+        }
+    }
+    
+    /// 根据策略调用句柄，主线程调用
+    public func invoke() {
+        queue.sync {
+            isInvoked = true
+            blocks.forEach { block in
+                DispatchQueue.main.async {
+                    block()
+                }
+            }
+            
+            switch strategy {
+            case .invokeOnce, .waitOnce:
+                blocks.removeAll()
+            default:
+                break
+            }
+        }
+    }
+    
+}
+
 // MARK: - TapGestureRecognizer
 /// 支持高亮状态的点击手势
 open class TapGestureRecognizer: UITapGestureRecognizer {
