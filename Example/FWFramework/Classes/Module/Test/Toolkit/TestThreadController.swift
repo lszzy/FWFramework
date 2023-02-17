@@ -42,6 +42,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         tableData.append(contentsOf: [
             ["Associated不加锁", "onLock1"],
             ["Associated加锁", "onLock2"],
+            ["Array串行", "onArray"],
             ["NSMutableArray", "onArray1"],
             ["NSMutableArray串行", "onArray2"],
             ["NSMutableArray加锁", "onArray3"],
@@ -120,6 +121,26 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             
             let value = self.fw.boundInt(forKey: key)
             self.onResult(value)
+        }
+    }
+    
+    @objc func onArray() {
+        var array = [Int]()
+        let queue = DispatchQueue(label: "onArray")
+        var count = 0
+        
+        DispatchQueue.concurrentPerform(iterations: queueCount) { index in
+            queue.sync {
+                let last = array.last ?? 0
+                array.append(last + 1)
+                
+                count += 1
+                if count == queueCount {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.onResult(array.last ?? 0)
+                    }
+                }
+            }
         }
     }
     
