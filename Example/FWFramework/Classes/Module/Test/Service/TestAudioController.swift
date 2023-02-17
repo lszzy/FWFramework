@@ -14,7 +14,7 @@ class TestAudioController: UIViewController {
     lazy var audioPlayer = AudioPlayer.shared
     lazy var resourceLoader = PlayerCacheLoaderManager()
     
-    @UserDefaultAnnotation("TestAudioCacheEnabled")
+    @StoredValue("TestAudioCacheEnabled")
     private var cacheEnabled: Bool = false
     
     // MARK: - Subviews

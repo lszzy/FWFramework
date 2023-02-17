@@ -9,22 +9,22 @@ class Tests: XCTestCase {
     // MARK: - Accessor
     dynamic var observeValue: Int = 0
     
-    @UserDefaultAnnotation("testKey")
+    @StoredValue("testKey")
     var defaultsValue = ""
     
-    @UserDefaultAnnotation("testOptionKey")
+    @StoredValue("testOptionKey")
     var defaultsOptionValue: Int? = 0
     
-    @UserDefaultAnnotation("testNilKey")
+    @StoredValue("testNilKey")
     var defaultsNilValue: Int?
     
-    @ValidatorAnnotation(.isEmail)
+    @ValidatedValue(.isEmail)
     var validateValue = ""
     
-    @ValidatorAnnotation(.isEmail)
+    @ValidatedValue(.isEmail)
     var validateOptionValue: String? = ""
     
-    @ValidatorAnnotation(.isEmail)
+    @ValidatedValue(.isEmail)
     var validateNilValue: String?
     
     // MARK: - Test
