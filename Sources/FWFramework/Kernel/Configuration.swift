@@ -21,19 +21,16 @@ open class Configuration: NSObject {
     
     /// 单例模式对象，子类可直接调用
     public class var shared: Self {
-        var instance = self.fw_property(forName: "shared") as? Self
-        if let instance = instance { return instance }
-        
-        fw_synchronized {
-            if let object = self.fw_property(forName: "shared") as? Self {
-                instance = object
+        return fw_synchronized {
+            if let instance = self.fw_property(forName: "shared") as? Self {
+                return instance
             } else {
-                instance = self.init()
+                let instance = self.init()
                 self.fw_setProperty(instance, forName: "shared")
-                instance?.initializeConfiguration()
+                instance.initializeConfiguration()
+                return instance
             }
         }
-        return instance!
     }
     
     /// 当前所使用配置模板
