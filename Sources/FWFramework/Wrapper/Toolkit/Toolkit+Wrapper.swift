@@ -78,9 +78,9 @@ extension Wrapper where Base: UIApplication {
         return Base.fw_isSystemURL(url)
     }
     
-    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持NSString|NSURL
-    public static func isSchemeURL(_ url: Any?) -> Bool {
-        return Base.fw_isSchemeURL(url)
+    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
+    public static func isSchemeURL(_ url: Any?, scheme: String? = nil) -> Bool {
+        return Base.fw_isSchemeURL(url, scheme: scheme)
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
