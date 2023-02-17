@@ -35,7 +35,7 @@ extension FW {
     
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
-        _ token: String,
+        _ token: AnyHashable,
         closure: @escaping () -> Void
     ) {
         NSObject.fw_dispatchOnce(token, closure: closure)
@@ -746,7 +746,7 @@ extension FW {
     
     /// 同一个token仅执行一次闭包，全局范围
     public static func fw_dispatchOnce(
-        _ token: String,
+        _ token: AnyHashable,
         closure: @escaping () -> Void
     ) {
         objc_sync_enter(NSObject.self)
@@ -759,7 +759,7 @@ extension FW {
         closure()
     }
     
-    private static var fw_staticTokens = [String]()
+    private static var fw_staticTokens = [AnyHashable]()
     
     /// 同一个token仅执行一次block，对象范围
     public func fw_dispatchOnce(
