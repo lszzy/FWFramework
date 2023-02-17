@@ -1185,7 +1185,10 @@ import AdSupport
     }
     
     /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
-    public func fw_attributes(gesture: UIGestureRecognizer, allowsSpacing: Bool) -> [NSAttributedString.Key: Any] {
+    public func fw_attributes(
+        gesture: UIGestureRecognizer,
+        allowsSpacing: Bool
+    ) -> [NSAttributedString.Key: Any] {
         guard let attributedString = self.attributedText else { return [:] }
         let textContainer = NSTextContainer(size: self.bounds.size)
         textContainer.lineFragmentPadding = 0
@@ -1204,16 +1207,30 @@ import AdSupport
     }
 
     /// 快速设置标签并指定文本
-    public func fw_setFont(_ font: UIFont?, textColor: UIColor?, text: String? = nil) {
+    public func fw_setFont(
+        _ font: UIFont?,
+        textColor: UIColor?,
+        text: String? = nil,
+        textAlignment: NSTextAlignment? = nil,
+        numberOfLines: Int? = nil
+    ) {
         if let font = font { self.font = font }
         if let textColor = textColor { self.textColor = textColor }
         if let text = text { self.text = text }
+        if let textAlignment = textAlignment { self.textAlignment = textAlignment }
+        if let numberOfLines = numberOfLines { self.numberOfLines = numberOfLines }
     }
     
     /// 快速创建标签并指定文本
-    public static func fw_label(font: UIFont?, textColor: UIColor?, text: String? = nil) -> Self {
+    public static func fw_label(
+        font: UIFont?,
+        textColor: UIColor?,
+        text: String? = nil,
+        textAlignment: NSTextAlignment? = nil,
+        numberOfLines: Int? = nil
+    ) -> Self {
         let label = Self()
-        label.fw_setFont(font, textColor: textColor, text: text)
+        label.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
         return label
     }
     
