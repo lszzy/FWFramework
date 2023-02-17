@@ -169,7 +169,7 @@ class Tests: XCTestCase {
     func testOptional() {
         var string: String?
         XCTAssertEqual(string.then({ _ in 3 }), nil)
-        string = string.otherwise("Hello")
+        string = string.or("Hello")
         XCTAssertEqual(string, "Hello")
         XCTAssertEqual(string.filter({ value in true }), "Hello")
         XCTAssertEqual(string.filter({ value in false }), nil)
