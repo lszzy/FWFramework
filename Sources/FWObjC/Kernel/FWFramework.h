@@ -7,7 +7,6 @@
 
 #import "Bridge.h"
 #import "Exception.h"
-#import "Thread.h"
 
 #import "CacheManager.h"
 #import "HTTPSessionManager.h"
