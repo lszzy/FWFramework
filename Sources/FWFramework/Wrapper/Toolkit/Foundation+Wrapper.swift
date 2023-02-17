@@ -397,9 +397,19 @@ extension Wrapper where Base: NSObject {
         Base.fw_synchronized(closure)
     }
     
+    /// 通用互斥锁方法，返回指定对象
+    public static func synchronized<T>(_ closure: () -> T) -> T {
+        return Base.fw_synchronized(closure)
+    }
+    
     /// 通用互斥锁方法
     public func synchronized(_ closure: () -> Void) {
         base.fw_synchronized(closure)
+    }
+    
+    /// 通用互斥锁方法，返回指定对象
+    public func synchronized<T>(_ closure: () -> T) -> T {
+        return base.fw_synchronized(closure)
     }
     
     /// 同一个token仅执行一次block，全局范围

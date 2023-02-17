@@ -23,6 +23,16 @@ extension FW {
         closure()
     }
     
+    /// 通用互斥锁方法，返回指定对象
+    public static func synchronized<T>(_ object: Any, closure: () -> T) -> T {
+        objc_sync_enter(object)
+        defer {
+            objc_sync_exit(object)
+        }
+        
+        return closure()
+    }
+    
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
         _ token: String,
@@ -683,18 +693,14 @@ extension FW {
     }
     
     private var fw_lockSemaphore: DispatchSemaphore {
-        if let semaphore = fw_property(forName: "fw_lockSemaphore") as? DispatchSemaphore {
-            return semaphore
-        } else {
-            var semaphore: DispatchSemaphore?
-            fw_synchronized {
-                semaphore = fw_property(forName: "fw_lockSemaphore") as? DispatchSemaphore
-                if semaphore == nil {
-                    semaphore = DispatchSemaphore(value: 1)
-                    fw_setProperty(semaphore, forName: "fw_lockSemaphore")
-                }
+        return fw_synchronized {
+            if let semaphore = fw_property(forName: "fw_lockSemaphore") as? DispatchSemaphore {
+                return semaphore
+            } else {
+                let semaphore = DispatchSemaphore(value: 1)
+                fw_setProperty(semaphore, forName: "fw_lockSemaphore")
+                return semaphore
             }
-            return semaphore!
         }
     }
     
@@ -708,6 +714,16 @@ extension FW {
         closure()
     }
     
+    /// 通用互斥锁方法，返回指定对象
+    public static func fw_synchronized<T>(_ closure: () -> T) -> T {
+        objc_sync_enter(self)
+        defer {
+            objc_sync_exit(self)
+        }
+        
+        return closure()
+    }
+    
     /// 通用互斥锁方法
     public func fw_synchronized(_ closure: () -> Void) {
         objc_sync_enter(self)
@@ -716,6 +732,16 @@ extension FW {
         }
         
         closure()
+    }
+    
+    /// 通用互斥锁方法，返回指定对象
+    public func fw_synchronized<T>(_ closure: () -> T) -> T {
+        objc_sync_enter(self)
+        defer {
+            objc_sync_exit(self)
+        }
+        
+        return closure()
     }
     
     /// 同一个token仅执行一次闭包，全局范围
