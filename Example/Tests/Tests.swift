@@ -181,6 +181,64 @@ class Tests: XCTestCase {
         XCTAssertEqual(string, "Hello World")
     }
     
+    func testBlock() {
+        var value: Int = 0
+        var block = MulticastBlock(strategy: .invoke)
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 1)
+        block.invoke()
+        XCTAssertEqual(value, 3)
+        
+        value = 0
+        block = MulticastBlock(strategy: .invokeOnce)
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 1)
+        block.invoke()
+        XCTAssertEqual(value, 2)
+        
+        value = 0
+        block = MulticastBlock(strategy: .wait)
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 2)
+        block.invoke()
+        XCTAssertEqual(value, 4)
+        
+        value = 0
+        block = MulticastBlock(strategy: .waitOnce)
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 2)
+        block.invoke()
+        XCTAssertEqual(value, 2)
+    }
+    
 }
 
 // MARK: - Private
