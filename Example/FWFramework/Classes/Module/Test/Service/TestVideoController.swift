@@ -14,7 +14,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     fileprivate var player = VideoPlayer()
     lazy var resourceLoader = PlayerCacheLoaderManager()
     
-    @UserDefaultAnnotation("TestVideoCacheEnabled")
+    @StoredValue("TestVideoCacheEnabled")
     private var cacheEnabled: Bool = false
 
     // MARK: - Lifecycle
