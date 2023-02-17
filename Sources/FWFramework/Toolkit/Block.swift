@@ -79,22 +79,18 @@ public class MulticastBlock: NSObject {
         self.strategy = strategy
     }
     
-    /// 根据策略添加句柄，主线程调用
+    /// 根据策略添加句柄
     public func append(_ block: @escaping () -> Void) {
         queue.sync {
             switch strategy {
             case .wait:
                 if isInvoked {
-                    DispatchQueue.main.async {
-                        block()
-                    }
+                    block()
                 }
                 blocks.append(block)
             case .waitOnce:
                 if isInvoked {
-                    DispatchQueue.main.async {
-                        block()
-                    }
+                    block()
                 } else {
                     blocks.append(block)
                 }
@@ -111,14 +107,12 @@ public class MulticastBlock: NSObject {
         }
     }
     
-    /// 根据策略调用句柄，主线程调用
+    /// 根据策略调用句柄
     public func invoke() {
         queue.sync {
             isInvoked = true
             blocks.forEach { block in
-                DispatchQueue.main.async {
-                    block()
-                }
+                block()
             }
             
             switch strategy {
