@@ -541,12 +541,16 @@ extension Optional {
         if isNone { block() }
         return self
     }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        return self ?? defaultValue()
+    }
+    public func then<T>(_ optional: @autoclosure () -> T?) -> T? {
+        guard self != nil else { return nil }
+        return optional()
+    }
     public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
         guard let this = self else { return nil }
         return try block(this)
-    }
-    public func otherwise(_ defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
-        return self ?? defaultValue()
     }
     public func filter(_ condition: (Wrapped) -> Bool) -> Self {
         return map(condition) == .some(true) ? self : .none
@@ -559,9 +563,14 @@ public protocol SafeType {
     var isEmpty: Bool { get }
 }
 
+extension SafeType {
+    public var isNotEmpty: Bool { return !self.isEmpty }
+}
+
 extension Optional where Wrapped: SafeType {
     public static var safeValue: Wrapped { return .safeValue }
     public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
+    public var isNotEmpty: Bool { if let value = self { return !value.isEmpty } else { return false } }
     public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
 }
 
