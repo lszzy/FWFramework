@@ -24,7 +24,7 @@ public struct UserDefaultAnnotation<T> {
     public init(
         wrappedValue: T,
         _ key: String,
-        defaultValue: @autoclosure @escaping () -> T? = nil
+        defaultValue: @autoclosure () -> T? = nil
     ) {
         self.key = key
         self.defaultValue = defaultValue() ?? wrappedValue
@@ -33,7 +33,7 @@ public struct UserDefaultAnnotation<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: @autoclosure @escaping () -> T? = nil
+        defaultValue: @autoclosure () -> T? = nil
     ) where WrappedValue? == T {
         self.key = key
         self.defaultValue = defaultValue() ?? wrappedValue
@@ -71,7 +71,7 @@ public struct ValidatorAnnotation<T> {
     public init(
         wrappedValue: T,
         _ validator: Validator<T>,
-        defaultValue: @autoclosure @escaping () -> T? = nil
+        defaultValue: @autoclosure () -> T? = nil
     ) {
         self.validator = validator
         self.defaultValue = defaultValue() ?? wrappedValue
@@ -82,7 +82,7 @@ public struct ValidatorAnnotation<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure @escaping () -> T? = nil,
+        defaultValue: @autoclosure () -> T? = nil,
         defaultValid: @autoclosure @escaping () -> Bool = false
     ) where WrappedValue? == T {
         self.init(

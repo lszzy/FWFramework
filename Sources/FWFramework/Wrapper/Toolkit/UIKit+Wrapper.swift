@@ -388,18 +388,33 @@ extension Wrapper where Base: UILabel {
     }
     
     /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
-    public func attributes(gesture: UIGestureRecognizer, allowsSpacing: Bool) -> [NSAttributedString.Key: Any] {
+    public func attributes(
+        gesture: UIGestureRecognizer,
+        allowsSpacing: Bool
+    ) -> [NSAttributedString.Key: Any] {
         return base.fw_attributes(gesture: gesture, allowsSpacing: allowsSpacing)
     }
 
     /// 快速设置标签并指定文本
-    public func setFont(_ font: UIFont?, textColor: UIColor?, text: String? = nil) {
-        base.fw_setFont(font, textColor: textColor, text: text)
+    public func setFont(
+        _ font: UIFont?,
+        textColor: UIColor?,
+        text: String? = nil,
+        textAlignment: NSTextAlignment? = nil,
+        numberOfLines: Int? = nil
+    ) {
+        base.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
     }
     
     /// 快速创建标签并指定文本
-    public static func label(font: UIFont?, textColor: UIColor?, text: String? = nil) -> Base {
-        return Base.fw_label(font: font, textColor: textColor, text: text)
+    public static func label(
+        font: UIFont?,
+        textColor: UIColor?,
+        text: String? = nil,
+        textAlignment: NSTextAlignment? = nil,
+        numberOfLines: Int? = nil
+    ) -> Base {
+        return Base.fw_label(font: font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
     }
     
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
