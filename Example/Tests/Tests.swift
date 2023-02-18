@@ -183,7 +183,7 @@ class Tests: XCTestCase {
     
     func testBlock() {
         var value: Int = 0
-        var block = MulticastBlock(strategy: .invoke)
+        var block = MulticastBlock()
         block.append {
             value += 1
         }
@@ -197,7 +197,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(value, 3)
         
         value = 0
-        block = MulticastBlock(strategy: .invokeOnce)
+        block = MulticastBlock()
+        block.autoRemoved = true
         block.append {
             value += 1
         }
@@ -211,21 +212,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(value, 2)
         
         value = 0
-        block = MulticastBlock(strategy: .wait)
-        block.append {
-            value += 1
-        }
-        block.invoke()
-        XCTAssertEqual(value, 1)
-        block.append {
-            value += 1
-        }
-        XCTAssertEqual(value, 2)
-        block.invoke()
-        XCTAssertEqual(value, 4)
-        
-        value = 0
-        block = MulticastBlock(strategy: .waitOnce)
+        block = MulticastBlock()
+        block.invokeOnce = true
         block.append {
             value += 1
         }

@@ -33,70 +33,46 @@ public typealias BlockBoolParam = (Bool, Any?) -> ()
 public typealias BlockIntParam = (Int, Any?) -> ()
 
 // MARK: - MulticastBlock
-/// 多句柄代理，线程安全，支持多种调用策略
+/// 多句柄代理，线程安全，可实现重复、单次或延迟调用功能
 ///
 /// 串行安全：读sync，写async
 /// 并行安全：读sync，写async， 用flags:.barrier加共享互斥锁
 public class MulticastBlock: NSObject {
     
-    /// 调用策略枚举
-    public enum Strategy: Int {
-        /// invoke时立即触发，可多次调用，默认
-        case invoke = 0
-        /// invoke时立即触发并移除，仅单次调用
-        case invokeOnce
-        /// 等待invoke调用后才触发，可多次调用
-        case wait
-        /// 等待invoke调用后才触发并移除，仅单次调用
-        case waitOnce
-    }
+    /// 调用后是否自动移除句柄，默认false可重复执行
+    public var autoRemoved = false
     
-    /// 当前调用策略，默认invoke
-    public private(set) var strategy: Strategy = .invoke
+    /// 是否只能invoke一次，开启时invoke后再append会立即执行而不是添加，默认false
+    public var invokeOnce = false
     
     private var blocks: [() -> Void] = []
-    private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
     private var isInvoked = false
+    private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
     
     private static var instances: [AnyHashable: MulticastBlock] = [:]
     
     /// 指定Key并返回代理单例
-    public static func sharedBlock(_ key: AnyHashable, strategy: Strategy = .invoke) -> MulticastBlock {
+    public static func sharedBlock(_ key: AnyHashable) -> MulticastBlock {
         return fw_synchronized {
             if let instance = instances[key] {
                 return instance
             } else {
-                let instance = MulticastBlock(strategy: strategy)
+                let instance = MulticastBlock()
                 instances[key] = instance
                 return instance
             }
         }
     }
     
-    /// 指定策略并初始化，默认invoked
-    public init(strategy: Strategy = .invoke) {
-        super.init()
-        self.strategy = strategy
-    }
-    
-    /// 根据策略添加句柄
+    /// 添加句柄，invokeOnce开启且调用了invoke后会立即执行而不是添加
     public func append(_ block: @escaping () -> Void) {
         queue.sync {
-            switch strategy {
-            case .wait:
-                if isInvoked {
-                    block()
-                }
-                blocks.append(block)
-            case .waitOnce:
-                if isInvoked {
-                    block()
-                } else {
-                    blocks.append(block)
-                }
-            default:
-                blocks.append(block)
+            if invokeOnce && isInvoked {
+                block()
+                return
             }
+            
+            blocks.append(block)
         }
     }
     
@@ -107,19 +83,18 @@ public class MulticastBlock: NSObject {
         }
     }
     
-    /// 根据策略调用句柄
+    /// 调用句柄，invokeOnce开启时多次调用无效
     public func invoke() {
         queue.sync {
+            if invokeOnce && isInvoked { return }
             isInvoked = true
+            
             blocks.forEach { block in
                 block()
             }
             
-            switch strategy {
-            case .invokeOnce, .waitOnce:
+            if invokeOnce || autoRemoved {
                 blocks.removeAll()
-            default:
-                break
             }
         }
     }
