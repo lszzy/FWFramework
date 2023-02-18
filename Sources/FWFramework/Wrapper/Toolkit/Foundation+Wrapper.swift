@@ -392,6 +392,12 @@ extension Wrapper where Base: NSObject {
         base.fw_unlock()
     }
     
+    /// 延迟创建队列，默认串行队列
+    public var queue: DispatchQueue {
+        get { base.fw_queue }
+        set { base.fw_queue = newValue }
+    }
+    
     /// 通用互斥锁方法
     public static func synchronized(_ closure: () -> Void) {
         Base.fw_synchronized(closure)

@@ -704,6 +704,26 @@ extension FW {
         }
     }
     
+    /// 延迟创建队列，默认串行队列
+    public var fw_queue: DispatchQueue {
+        get {
+            return fw_synchronized {
+                if let queue = fw_property(forName: "fw_queue") as? DispatchQueue {
+                    return queue
+                } else {
+                    let queue = DispatchQueue(label: "fw_queue")
+                    fw_setProperty(queue, forName: "fw_queue")
+                    return queue
+                }
+            }
+        }
+        set {
+            fw_synchronized {
+                fw_setProperty(newValue, forName: "fw_queue")
+            }
+        }
+    }
+    
     /// 通用互斥锁方法
     public static func fw_synchronized(_ closure: () -> Void) {
         objc_sync_enter(self)
