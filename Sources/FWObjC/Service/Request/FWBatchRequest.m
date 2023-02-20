@@ -86,7 +86,7 @@
 }
 
 - (void)startSynchronouslyWithSuccess:(void (^)(FWBatchRequest * _Nonnull))success failure:(void (^)(FWBatchRequest * _Nonnull))failure {
-    [self startSynchronouslyWithCondition:nil completion:^(FWBatchRequest * _Nullable batchRequest) {
+    [self startSynchronouslyWithFilter:nil completion:^(FWBatchRequest *batchRequest) {
         if (batchRequest.failedRequest == nil) {
             if (success) success(batchRequest);
         } else {
@@ -95,8 +95,8 @@
     }];
 }
 
-- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(FWBatchRequest * _Nullable))completion {
-    [[FWNetworkAgent sharedAgent] synchronousBatchRequest:self condition:condition completion:completion];
+- (void)startSynchronouslyWithFilter:(BOOL (^)(void))filter completion:(void (^)(FWBatchRequest * _Nonnull))completion {
+    [[FWNetworkAgent sharedAgent] synchronousBatchRequest:self filter:filter completion:completion];
 }
 
 - (void)setCompletionBlockWithSuccess:(void (^)(FWBatchRequest *batchRequest))success

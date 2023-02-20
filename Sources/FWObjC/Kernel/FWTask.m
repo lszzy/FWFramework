@@ -73,9 +73,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 - (void)executeTask
 {
-    @throw [NSException exceptionWithName:@"FWTask"
-                                   reason:[NSString stringWithFormat:@"task %@ must override executeTask", [self.class description]]
-                                 userInfo:nil];
+    if (self.taskBlock) self.taskBlock(self);
 }
 
 - (void)finishWithError:(NSError *)error
@@ -100,7 +98,7 @@ typedef NS_ENUM(NSInteger, FWTaskState) {
 
 - (BOOL)needMainThread
 {
-    return NO;
+    return self.onMainThread;
 }
 
 - (void)cancel

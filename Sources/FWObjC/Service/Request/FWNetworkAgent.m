@@ -264,57 +264,51 @@
     }
 }
 
-- (void)synchronousRequest:(FWBaseRequest *)request condition:(BOOL (^)(void))condition completion:(void (^)(__kindof FWBaseRequest * _Nullable))completion {
+- (void)synchronousRequest:(FWBaseRequest *)request filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(__kindof FWBaseRequest * _Nonnull))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [request startWithCompletion:^(__kindof FWBaseRequest * _Nonnull request) {
-                if (completion) completion(request);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [request startWithCompletion:^(__kindof FWBaseRequest * _Nonnull request) {
+            if (completion) completion(request);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
-- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest condition:(BOOL (^)(void))condition completion:(void (^)(FWBatchRequest * _Nullable))completion {
+- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWBatchRequest * _Nonnull))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [batchRequest startWithCompletion:^(FWBatchRequest * _Nonnull batchRequest) {
-                if (completion) completion(batchRequest);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [batchRequest startWithCompletion:^(FWBatchRequest * _Nonnull batchRequest) {
+            if (completion) completion(batchRequest);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
-- (void)synchronousChainRequest:(FWChainRequest *)chainRequest condition:(BOOL (^)(void))condition completion:(void (^)(FWChainRequest * _Nullable))completion {
+- (void)synchronousChainRequest:(FWChainRequest *)chainRequest filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWChainRequest * _Nonnull))completion {
     dispatch_async(_synchronousQueue, ^{
         dispatch_semaphore_wait(self->_synchronousSemaphore, DISPATCH_TIME_FOREVER);
-        BOOL conditionResult = condition != nil ? condition() : YES;
-        if (!conditionResult) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(nil);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            });
-        } else {
-            [chainRequest startWithCompletion:^(FWChainRequest * _Nonnull chainRequest) {
-                if (completion) completion(chainRequest);
-                dispatch_semaphore_signal(self->_synchronousSemaphore);
-            }];
+        BOOL filterResult = filter != nil ? filter() : YES;
+        if (!filterResult) {
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+            return;
         }
+        
+        [chainRequest startWithCompletion:^(FWChainRequest * _Nonnull chainRequest) {
+            if (completion) completion(chainRequest);
+            dispatch_semaphore_signal(self->_synchronousSemaphore);
+        }];
     });
 }
 
