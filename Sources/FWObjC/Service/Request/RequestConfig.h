@@ -96,7 +96,7 @@ NS_SWIFT_NAME(RequestConfig)
 @property (nonatomic, strong) __FWSecurityPolicy *securityPolicy;
 ///  Whether to remove NSNull values from response JSON. Defaults to YES.
 @property (nonatomic, assign) BOOL removeNullValues;
-///  Whether to log debug info. Default is NO;
+///  Whether to log debug info. Default is YES in DEBUG and NO in RELEASE.
 @property (nonatomic) BOOL debugLogEnabled;
 ///  Whether to enable mock response when failed in debug mode. Default is NO.
 @property (nonatomic, assign) BOOL debugMockEnabled;
