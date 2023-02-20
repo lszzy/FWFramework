@@ -278,7 +278,7 @@ NS_SWIFT_NAME(BaseRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable FWRequestCompletionBlock)success failure:(nullable FWRequestCompletionBlock)failure;
 
-- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__kindof FWBaseRequest * _Nullable request))completion;
+- (void)startSynchronouslyWithFilter:(nullable BOOL (^)(void))filter completion:(nullable FWRequestCompletionBlock)completion;
 
 #pragma mark - Subclass Override
 ///=============================================================================

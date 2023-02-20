@@ -166,7 +166,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 }
 
 - (void)startSynchronouslyWithSuccess:(FWRequestCompletionBlock)success failure:(FWRequestCompletionBlock)failure {
-    [self startSynchronouslyWithCondition:nil completion:^(__kindof FWBaseRequest * _Nullable request) {
+    [self startSynchronouslyWithFilter:nil completion:^(__kindof FWBaseRequest *request) {
         if (request.error == nil) {
             if (success) success(request);
         } else {
@@ -175,8 +175,8 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
     }];
 }
 
-- (void)startSynchronouslyWithCondition:(BOOL (^)(void))condition completion:(void (^)(__kindof FWBaseRequest * _Nullable))completion {
-    [[FWNetworkAgent sharedAgent] synchronousRequest:self condition:condition completion:completion];
+- (void)startSynchronouslyWithFilter:(BOOL (^)(void))filter completion:(FWRequestCompletionBlock)completion {
+    [[FWNetworkAgent sharedAgent] synchronousRequest:self filter:filter completion:completion];
 }
 
 #pragma mark - Subclass Override

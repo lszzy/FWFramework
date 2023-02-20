@@ -111,7 +111,12 @@ extension View {
         }
     }
     
-    /// 条件成立时执行下一步
+    /// 执行闭包并返回新的视图
+    public func then<T: View>(_ body: (Self) -> T) -> T {
+        return body(self)
+    }
+    
+    /// 条件成立时执行闭包并返回新的视图
     public func then<T: View>(_ condition: Bool, body: (Self) -> T) -> some View {
         if condition {
             return AnyView(body(self))
