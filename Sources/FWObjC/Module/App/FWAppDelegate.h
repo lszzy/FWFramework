@@ -29,6 +29,9 @@ NS_SWIFT_NAME(AppResponder)
 /// 初始化根控制器，子类重写
 - (void)setupController;
 
+/// 初始化基础服务，子类重写
+- (void)setupService:(nullable NSDictionary<UIApplicationLaunchOptionsKey,id> *)options;
+
 @end
 
 NS_ASSUME_NONNULL_END
