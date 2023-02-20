@@ -43,6 +43,13 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
          */
     }
     
+    /// 初始化基础服务，子类重写
+    open func setupService(options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
+        /*
+        预加载启动广告、检查App更新等
+         */
+    }
+    
     // MARK: - UIApplicationDelegate
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Mediator.setupAllModules()
@@ -54,6 +61,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         setupApplication(application, options: launchOptions)
         setupController()
+        setupService(options: launchOptions)
         return true
     }
     
