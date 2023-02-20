@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if FWMacroSPM
+import FWObjC
+#endif
 
 /// 分析上报者协议
 @objc(FWAnalysisReporter)
