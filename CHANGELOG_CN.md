@@ -1,5 +1,16 @@
 # 更新日志
 
+## [4.6.0] - 2023-02-20
+
+### Added
+* 新增Analyzer分析组件
+* 新增Validator Swift验证组件
+* 新增MulticastBlock多句柄代理组件
+* 新增Optional常用扩展方法
+* 重构Swift Annotation组件
+* 重构Request组件同步请求
+* 移除NetworkMocker组件
+
 ## [4.5.0] - 2023-02-09
 
 ### Added
