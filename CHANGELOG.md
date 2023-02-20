@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.6.0] - 2023-02-20
+
+### Added
+* Added Analyzer analysis component
+* Added Validator Swift verification component
+* Added MulticastBlock multi-handle proxy component
+* Added Optional commonly used extension methods
+* Refactor the Swift Annotation component
+* Refactoring Request component synchronous request
+* Remove the NetworkMocker component
+
 ## [4.5.0] - 2023-02-09
 
 ### Added

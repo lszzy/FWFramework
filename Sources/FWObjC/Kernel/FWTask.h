@@ -12,19 +12,25 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - FWTask
 
 /// 任务基类
-NS_SWIFT_NAME(Task)
+NS_SWIFT_NAME(TaskOperation)
 @interface FWTask : NSOperation
+
+/// 任务句柄，执行完成需调用task.finish(error:)
+@property (nonatomic, copy, nullable) void (^taskBlock)(FWTask *task);
+
+/// 是否在主线程执行，会阻碍UI渲染，默认false
+@property (nonatomic, assign) BOOL onMainThread;
 
 /** 错误信息 */
 @property (nonatomic, readonly, nullable) NSError *error;
 
-/// 子类重写，任务执行完成，需调用finishWithError:
+/// 子类可重写，默认调用taskBlock，任务完成需调用finish(error:)
 - (void)executeTask;
 
 /// 标记任务完成，error为空表示任务成功
 - (void)finishWithError:(nullable NSError *)error;
 
-/// 是否需要主线程执行，会阻碍UI渲染，默认NO
+/// 是否主线程执行，子类可重写，会阻碍UI渲染，默认返回onMainThread
 - (BOOL)needMainThread;
 
 @end

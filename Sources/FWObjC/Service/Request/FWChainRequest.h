@@ -119,7 +119,7 @@ NS_SWIFT_NAME(ChainRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable void (^)(FWChainRequest *chainRequest))success failure:(nullable void (^)(FWChainRequest *chainRequest))failure;
 
-- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWChainRequest * _Nullable chainRequest))completion;
+- (void)startSynchronouslyWithFilter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWChainRequest *chainRequest))completion;
 
 ///  Add request to request chain.
 ///

@@ -17,7 +17,7 @@
     <a title="Structures  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.5.0 Docs</a> (70% documented)</p>
+        <p><a href="index.html">FWFramework 4.6.0 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -340,6 +340,9 @@
           <li class="nav-group-name">
             <a href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/Analyzer.html">Analyzer</a>
+              </li>
               <li class="nav-group-task">
                 <a href="Classes/AuthorizeManager.html">AuthorizeManager</a>
               </li>
@@ -968,10 +971,10 @@
                 <a href="Classes/MappingPropertyHandler.html">MappingPropertyHandler</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/NSDecimalNumberTransform.html">NSDecimalNumberTransform</a>
+                <a href="Classes/MulticastBlock.html">MulticastBlock</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/NetworkMockerURLProtocol.html">NetworkMockerURLProtocol</a>
+                <a href="Classes/NSDecimalNumberTransform.html">NSDecimalNumberTransform</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/NotificationManager.html">NotificationManager</a>
@@ -1705,6 +1708,9 @@
           <li class="nav-group-name">
             <a href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AnalysisReporter.html">AnalysisReporter</a>
+              </li>
               <li class="nav-group-task">
                 <a href="Protocols/AnyDateFormatter.html">AnyDateFormatter</a>
               </li>
@@ -2554,34 +2560,22 @@
                 <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/ModuleAnnotation.html">ModuleAnnotation</a>
+                <a href="Structs/ModuleValue.html">ModuleValue</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/NetworkMock.html">NetworkMock</a>
+                <a href="Structs/PluginValue.html">PluginValue</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/NetworkMock/HTTPMethod.html">– HTTPMethod</a>
+                <a href="Structs/RouterValue.html">RouterValue</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/NetworkMock/DataType.html">– DataType</a>
+                <a href="Structs/StoredValue.html">StoredValue</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/NetworkMocker.html">NetworkMocker</a>
+                <a href="Structs/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/NetworkMocker/HTTPVersion.html">– HTTPVersion</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/NetworkMocker/Mode.html">– Mode</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/PluginAnnotation.html">PluginAnnotation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/RouterAnnotation.html">RouterAnnotation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/UserDefaultAnnotation.html">UserDefaultAnnotation</a>
+                <a href="Structs/Validator.html">Validator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/WebSocketError.html">WebSocketError</a>
@@ -2695,6 +2689,39 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Validator"></a>
+                <a name="//apple_ref/swift/Section/Validator" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Validator"></a>
+                  <h3 class="section-name"><span>Validator</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Struct/Validator" class="dashAnchor"></a>
+                    <a class="token" href="#/">Validator</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>规则验证器，可扩展</p>
+
+                        <a href="Structs/Validator.html" class="slightly-smaller">See more</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/JSON"></a>
                 <a name="//apple_ref/swift/Section/JSON" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -2732,46 +2759,6 @@
                           <p class="aside-title">Swift</p>
                           
                         </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/NetworkMocker" class="dashAnchor"></a>
-                    <a class="token" href="#/">NetworkMocker</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Can be used for registering Mocked data, returned by the <code>MockingURLProtocol</code>.</p>
-
-                        <a href="Structs/NetworkMocker.html" class="slightly-smaller">See more</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/NetworkMock" class="dashAnchor"></a>
-                    <a class="token" href="#/">NetworkMock</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>A Mock which can be used for mocking data requests with the <code>Mocker</code> by calling <code>Mocker.register(...)</code>.</p>
-
-                        <a href="Structs/NetworkMock.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
@@ -2880,11 +2867,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/UserDefaultAnnotation"></a>
-                <a name="//apple_ref/swift/Section/UserDefaultAnnotation" class="dashAnchor"></a>
+                <a name="/StoredValue"></a>
+                <a name="//apple_ref/swift/Section/StoredValue" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/UserDefaultAnnotation"></a>
-                  <h3 class="section-name"><span>UserDefaultAnnotation</span>
+                  <a class="section-name-link" href="#/StoredValue"></a>
+                  <h3 class="section-name"><span>StoredValue</span>
 </h3>
                 </div>
               </div>
@@ -2893,8 +2880,8 @@
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/UserDefaultAnnotation" class="dashAnchor"></a>
-                    <a class="token" href="#/">UserDefaultAnnotation</a>
+                    <a name="//apple_ref/swift/Struct/StoredValue" class="dashAnchor"></a>
+                    <a class="token" href="#/">StoredValue</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2902,12 +2889,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>UserDefault属性包装器注解
-使用示例：
-@UserDefaultAnnotation(&ldquo;userName&rdquo;, defaultValue: &ldquo;test&rdquo;)
-public static var userName: String</p>
+                        <p>UserDefault存储属性包装器注解，默认为手工指定或初始值</p>
 
-                        <a href="Structs/UserDefaultAnnotation.html" class="slightly-smaller">See more</a>
+<p>使用示例：
+@StoredValue(&ldquo;userName&rdquo;)
+static var userName: String = &ldquo;&rdquo;</p>
+
+                        <a href="Structs/StoredValue.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
@@ -2916,11 +2904,11 @@ public static var userName: String</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/ModuleAnnotation"></a>
-                <a name="//apple_ref/swift/Section/ModuleAnnotation" class="dashAnchor"></a>
+                <a name="/ValidatedValue"></a>
+                <a name="//apple_ref/swift/Section/ValidatedValue" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/ModuleAnnotation"></a>
-                  <h3 class="section-name"><span>ModuleAnnotation</span>
+                  <a class="section-name-link" href="#/ValidatedValue"></a>
+                  <h3 class="section-name"><span>ValidatedValue</span>
 </h3>
                 </div>
               </div>
@@ -2929,8 +2917,8 @@ public static var userName: String</p>
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/ModuleAnnotation" class="dashAnchor"></a>
-                    <a class="token" href="#/">ModuleAnnotation</a>
+                    <a name="//apple_ref/swift/Struct/ValidatedValue" class="dashAnchor"></a>
+                    <a class="token" href="#/">ValidatedValue</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2938,12 +2926,50 @@ public static var userName: String</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>模块属性包装器注解
-使用示例：
-@ModuleAnnotation(UserModuleService.self)
+                        <p>ValidatedValue属性包装器注解，默认为手工指定或初始值</p>
+
+<p>使用示例：
+@ValidatedValue(.isEmail)
+var email: String = &ldquo;&rdquo;</p>
+
+                        <a href="Structs/ValidatedValue.html" class="slightly-smaller">See more</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ModuleValue"></a>
+                <a name="//apple_ref/swift/Section/ModuleValue" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ModuleValue"></a>
+                  <h3 class="section-name"><span>ModuleValue</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Struct/ModuleValue" class="dashAnchor"></a>
+                    <a class="token" href="#/">ModuleValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>模块属性包装器注解</p>
+
+<p>使用示例：
+@ModuleValue(UserModuleService.self)
 static var userModule: UserModuleService</p>
 
-                        <a href="Structs/ModuleAnnotation.html" class="slightly-smaller">See more</a>
+                        <a href="Structs/ModuleValue.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
@@ -2952,11 +2978,11 @@ static var userModule: UserModuleService</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/PluginAnnotation"></a>
-                <a name="//apple_ref/swift/Section/PluginAnnotation" class="dashAnchor"></a>
+                <a name="/PluginValue"></a>
+                <a name="//apple_ref/swift/Section/PluginValue" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/PluginAnnotation"></a>
-                  <h3 class="section-name"><span>PluginAnnotation</span>
+                  <a class="section-name-link" href="#/PluginValue"></a>
+                  <h3 class="section-name"><span>PluginValue</span>
 </h3>
                 </div>
               </div>
@@ -2965,8 +2991,8 @@ static var userModule: UserModuleService</p>
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/PluginAnnotation" class="dashAnchor"></a>
-                    <a class="token" href="#/">PluginAnnotation</a>
+                    <a name="//apple_ref/swift/Struct/PluginValue" class="dashAnchor"></a>
+                    <a class="token" href="#/">PluginValue</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2974,12 +3000,13 @@ static var userModule: UserModuleService</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>插件属性包装器注解
-使用示例：
-@PluginAnnotation(TestPluginProtocol.self)
+                        <p>插件属性包装器注解</p>
+
+<p>使用示例：
+@PluginValue(TestPluginProtocol.self)
 static var testPlugin: TestPluginProtocol</p>
 
-                        <a href="Structs/PluginAnnotation.html" class="slightly-smaller">See more</a>
+                        <a href="Structs/PluginValue.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
@@ -2988,11 +3015,11 @@ static var testPlugin: TestPluginProtocol</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/RouterAnnotation"></a>
-                <a name="//apple_ref/swift/Section/RouterAnnotation" class="dashAnchor"></a>
+                <a name="/RouterValue"></a>
+                <a name="//apple_ref/swift/Section/RouterValue" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/RouterAnnotation"></a>
-                  <h3 class="section-name"><span>RouterAnnotation</span>
+                  <a class="section-name-link" href="#/RouterValue"></a>
+                  <h3 class="section-name"><span>RouterValue</span>
 </h3>
                 </div>
               </div>
@@ -3001,8 +3028,8 @@ static var testPlugin: TestPluginProtocol</p>
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Struct/RouterAnnotation" class="dashAnchor"></a>
-                    <a class="token" href="#/">RouterAnnotation</a>
+                    <a name="//apple_ref/swift/Struct/RouterValue" class="dashAnchor"></a>
+                    <a class="token" href="#/">RouterValue</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3010,12 +3037,13 @@ static var testPlugin: TestPluginProtocol</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>路由属性包装器注解
-使用示例：
-@RouterAnnotation(AppRouter.pluginRouter(_:))
+                        <p>路由属性包装器注解</p>
+
+<p>使用示例：
+@RouterValue(AppRouter.pluginRouter(_:))
 static var pluginUrl: String = &ldquo;app://plugin/:id&rdquo;</p>
 
-                        <a href="Structs/RouterAnnotation.html" class="slightly-smaller">See more</a>
+                        <a href="Structs/RouterValue.html" class="slightly-smaller">See more</a>
                       </div>
                     </section>
                   </div>
@@ -3025,7 +3053,7 @@ static var pluginUrl: String = &ldquo;app://plugin/:id&rdquo;</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-02-09)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-02-20)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

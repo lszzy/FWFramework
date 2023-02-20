@@ -10,54 +10,118 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - UserDefaultAnnotation
-/// UserDefault属性包装器注解
+// MARK: - StoredValue
+/// UserDefault存储属性包装器注解，默认为手工指定或初始值
+///
 /// 使用示例：
-/// @UserDefaultAnnotation("userName", defaultValue: "test")
-/// public static var userName: String
+/// @StoredValue("userName")
+/// static var userName: String = ""
 @propertyWrapper
-public struct UserDefaultAnnotation<T> {
-    let key: String
-    let value: T
+public struct StoredValue<T> {
+    private let key: String
+    private let defaultValue: T
     
-    public init(wrappedValue value: T, _ key: String) {
+    public init(
+        wrappedValue: T,
+        _ key: String,
+        defaultValue: @autoclosure () -> T? = nil
+    ) {
         self.key = key
-        self.value = value
+        self.defaultValue = defaultValue() ?? wrappedValue
     }
     
-    public init(_ key: String, defaultValue: T) {
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: @autoclosure () -> T? = nil
+    ) where WrappedValue? == T {
         self.key = key
-        self.value = defaultValue
+        self.defaultValue = defaultValue() ?? wrappedValue
     }
     
     public var wrappedValue: T {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? value
+            let value = UserDefaults.standard.object(forKey: key) as? T
+            return !Optional<Any>.isNone(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: key)
+            if !Optional<Any>.isNone(newValue) {
+                UserDefaults.standard.set(newValue, forKey: key)
+            } else {
+                UserDefaults.standard.removeObject(forKey: key)
+            }
             UserDefaults.standard.synchronize()
         }
     }
 }
 
-// MARK: - ModuleAnnotation
-/// 模块属性包装器注解
+// MARK: - ValidatedValue
+/// ValidatedValue属性包装器注解，默认为手工指定或初始值
+///
 /// 使用示例：
-/// @ModuleAnnotation(UserModuleService.self)
-/// static var userModule: UserModuleService
+/// @ValidatedValue(.isEmail)
+/// var email: String = ""
 @propertyWrapper
-public struct ModuleAnnotation<T> {
-    let serviceProtocol: Protocol
-    var module: T?
+public struct ValidatedValue<T> {
+    private let validator: Validator<T>
+    private let defaultValue: T
+    private var value: T
+    private var isValid: Bool
     
-    public init(_ serviceProtocol: Protocol) {
-        self.serviceProtocol = serviceProtocol
+    public init(
+        wrappedValue: T,
+        _ validator: Validator<T>,
+        defaultValue: @autoclosure () -> T? = nil
+    ) {
+        self.validator = validator
+        self.defaultValue = defaultValue() ?? wrappedValue
+        self.value = wrappedValue
+        self.isValid = validator.validate(wrappedValue)
     }
     
-    public init(_ serviceProtocol: Protocol, module: ModuleProtocol.Type) {
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ validator: Validator<WrappedValue>,
+        defaultValue: @autoclosure () -> T? = nil,
+        defaultValid: @autoclosure @escaping () -> Bool = false
+    ) where WrappedValue? == T {
+        self.init(
+            wrappedValue: wrappedValue,
+            Validator(validator, defaultValid: defaultValid()),
+            defaultValue: defaultValue()
+        )
+    }
+    
+    public var wrappedValue: T {
+        get {
+            isValid ? value : defaultValue
+        }
+        set {
+            value = newValue
+            isValid = validator.validate(newValue)
+        }
+    }
+}
+
+// MARK: - ModuleValue
+/// 模块属性包装器注解
+///
+/// 使用示例：
+/// @ModuleValue(UserModuleService.self)
+/// static var userModule: UserModuleService
+@propertyWrapper
+public struct ModuleValue<T> {
+    private let serviceProtocol: Protocol
+    private var module: T?
+    
+    public init(
+        _ serviceProtocol: Protocol,
+        module: ModuleProtocol.Type? = nil
+    ) {
         self.serviceProtocol = serviceProtocol
-        Mediator.registerService(serviceProtocol, withModule: module)
+        if let module = module {
+            Mediator.registerService(serviceProtocol, withModule: module)
+        }
     }
     
     public var wrappedValue: T {
@@ -74,23 +138,25 @@ public struct ModuleAnnotation<T> {
     }
 }
 
-// MARK: - PluginAnnotation
+// MARK: - PluginValue
 /// 插件属性包装器注解
+///
 /// 使用示例：
-/// @PluginAnnotation(TestPluginProtocol.self)
+/// @PluginValue(TestPluginProtocol.self)
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
-public struct PluginAnnotation<T> {
-    let pluginProtocol: Protocol
-    var plugin: T?
+public struct PluginValue<T> {
+    private let pluginProtocol: Protocol
+    private var plugin: T?
     
-    public init(_ pluginProtocol: Protocol) {
+    public init(
+        _ pluginProtocol: Protocol,
+        object: Any? = nil
+    ) {
         self.pluginProtocol = pluginProtocol
-    }
-    
-    public init(_ pluginProtocol: Protocol, object: Any) {
-        self.pluginProtocol = pluginProtocol
-        PluginManager.registerPlugin(pluginProtocol, with: object)
+        if let object = object {
+            PluginManager.registerPlugin(pluginProtocol, with: object)
+        }
     }
     
     public var wrappedValue: T {
@@ -107,27 +173,51 @@ public struct PluginAnnotation<T> {
     }
 }
 
-// MARK: - RouterAnnotation
+// MARK: - RouterValue
 /// 路由属性包装器注解
+///
 /// 使用示例：
-/// @RouterAnnotation(AppRouter.pluginRouter(_:))
+/// @RouterValue(AppRouter.pluginRouter(_:))
 /// static var pluginUrl: String = "app://plugin/:id"
 @propertyWrapper
-public struct RouterAnnotation {
-    var pattern: String
+public struct RouterValue {
+    private var pattern: String
+    private let parameters: Any?
     
-    public init(wrappedValue value: String, _ handler: @escaping RouterHandler) {
+    public init(
+        wrappedValue value: String,
+        parameters: @autoclosure () -> Any? = nil,
+        _ handler: RouterHandler? = nil
+    ) {
         self.pattern = value
-        Router.registerURL(value, withHandler: handler)
+        self.parameters = parameters()
+        if let handler = handler {
+            Router.registerURL(value, withHandler: handler)
+        }
     }
     
-    public init(_ pattern: String, handler: @escaping RouterHandler) {
+    public init(
+        _ pattern: String,
+        parameters: @autoclosure () -> Any? = nil,
+        handler: RouterHandler? = nil
+    ) {
         self.pattern = pattern
-        Router.registerURL(pattern, withHandler: handler)
+        self.parameters = parameters()
+        if let handler = handler {
+            Router.registerURL(pattern, withHandler: handler)
+        }
     }
     
     public var wrappedValue: String {
-        get { return pattern }
-        set { pattern = newValue }
+        get {
+            if let parameters = parameters {
+                return Router.generateURL(pattern, parameters: parameters)
+            } else {
+                return pattern
+            }
+        }
+        set {
+            pattern = newValue
+        }
     }
 }

@@ -503,6 +503,36 @@ extension Optional {
     public var safeNumber: NSNumber { return FW.safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
+    
+    public static func isNone(_ value: Wrapped?) -> Bool {
+        return value == nil || value._plainValue() == nil
+    }
+    public var isSome: Bool { return self != nil }
+    public var isNone: Bool { return !isSome }
+    @discardableResult
+    public func onSome(_ block: (Wrapped) -> Void) -> Self {
+        if let this = self { block(this) }
+        return self
+    }
+    @discardableResult
+    public func onNone(_ block: () -> Void) -> Self {
+        if isNone { block() }
+        return self
+    }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        return self ?? defaultValue()
+    }
+    public func then<T>(_ optional: @autoclosure () -> T?) -> T? {
+        guard self != nil else { return nil }
+        return optional()
+    }
+    public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
+        guard let this = self else { return nil }
+        return try block(this)
+    }
+    public func filter(_ condition: (Wrapped) -> Bool) -> Self {
+        return map(condition) == .some(true) ? self : .none
+    }
 }
 
 // MARK: - SafeType
@@ -515,6 +545,11 @@ extension FW {
     /// 判断是否为空
     public static func isEmpty<T: SafeType>(_ value: T?) -> Bool {
         return value.isEmpty
+    }
+    
+    /// 判断是否为none，兼容嵌套Optional
+    public static func isNone(_ value: Any?) -> Bool {
+        return Optional<Any>.isNone(value)
     }
 }
 

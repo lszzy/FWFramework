@@ -49,14 +49,14 @@ NS_SWIFT_NAME(NetworkAgent)
 ///  Cancel all requests that were previously added.
 - (void)cancelAllRequests;
 
-/// Start request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousRequest:(FWBaseRequest *)request condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(__kindof FWBaseRequest * _Nullable request))completion;
+/// Start request synchronously if filter is true or nil, and callback on main thread.
+- (void)synchronousRequest:(FWBaseRequest *)request filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(__kindof FWBaseRequest *request))completion;
 
-/// Start batch request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWBatchRequest * _Nullable batchRequest))completion;
+/// Start batch request synchronously if filter is true or nil, and callback on main thread.
+- (void)synchronousBatchRequest:(FWBatchRequest *)batchRequest filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWBatchRequest *batchRequest))completion;
 
-/// Start chain request synchronously if condition is true or nil, and callback on main thread.
-- (void)synchronousChainRequest:(FWChainRequest *)chainRequest condition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWChainRequest * _Nullable chainRequest))completion;
+/// Start chain request synchronously if filter is true or nil, and callback on main thread.
+- (void)synchronousChainRequest:(FWChainRequest *)chainRequest filter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWChainRequest *chainRequest))completion;
 
 ///  Return the constructed URL of request.
 ///

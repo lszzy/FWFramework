@@ -30,6 +30,7 @@
     [FWMediator checkAllModulesWithSelector:_cmd arguments:@[FWSafeArgument(application), FWSafeArgument(launchOptions)]];
     [self setupApplication:application options:launchOptions];
     [self setupController];
+    [self setupService:launchOptions];
     return YES;
 }
 
@@ -140,6 +141,13 @@
 {
     /*
     self.window.rootViewController = [TabBarController new];
+     */
+}
+
+- (void)setupService:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)options
+{
+    /*
+    预加载启动广告、检查App更新等
      */
 }
 

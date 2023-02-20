@@ -115,7 +115,7 @@ NS_SWIFT_NAME(BatchRequest)
 
 - (void)startSynchronouslyWithSuccess:(nullable void (^)(FWBatchRequest *batchRequest))success failure:(nullable void (^)(FWBatchRequest *batchRequest))failure;
 
-- (void)startSynchronouslyWithCondition:(nullable BOOL (^)(void))condition completion:(nullable void (^)(FWBatchRequest * _Nullable batchRequest))completion;
+- (void)startSynchronouslyWithFilter:(nullable BOOL (^)(void))filter completion:(nullable void (^)(FWBatchRequest *batchRequest))completion;
 
 ///  Whether all response data is from local cache.
 - (BOOL)isDataFromCache;
