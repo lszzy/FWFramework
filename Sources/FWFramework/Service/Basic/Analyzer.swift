@@ -14,16 +14,16 @@ public protocol AnalysisReporter {
     func setupReporter()
     
     /// 上报公共参数，公共参数发生变化时调用
-    func reportDefaultParameters(_ parameters: [AnyHashable: Any]?)
+    func reportParameters(_ parameters: [AnyHashable: Any]?)
     
-    /// 上报用户参数，用户参数发生变化时调用
-    func reportUserParameters(_ parameters: [AnyHashable: Any]?)
+    /// 上报用户信息，用户信息发生变化时调用
+    func reportUser(_ parameters: [AnyHashable: Any]?)
     
-    /// 上报事件，事件发生时调用
-    func reportEvent(_ name: String, parameters: [AnyHashable: Any]?)
+    /// 上报事件，支持分组，事件发生时调用
+    func reportEvent(group: String, _ name: String, parameters: [AnyHashable: Any]?)
     
-    /// 上报错误，错误发生时调用
-    func reportError(_ name: String, error: Error, parameters: [AnyHashable: Any]?)
+    /// 上报错误，支持分组，错误发生时调用
+    func reportError(group: String, _ name: String, error: Error, parameters: [AnyHashable: Any]?)
     
 }
 
@@ -83,53 +83,53 @@ public class Analyzer: NSObject {
     }
     
     /// 跟踪上报公共参数，公共参数发生变化时调用
-    public func trackDefaultParameters(_ parameters: [AnyHashable: Any]? = nil) {
+    public func trackParameters(_ parameters: [AnyHashable: Any]? = nil) {
         if logEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER PARAMETERS===========\n%@", parameters ?? "")
         }
         
         queue.sync {
             reporters.forEach { reporter in
-                reporter.reportDefaultParameters(parameters)
+                reporter.reportParameters(parameters)
             }
         }
     }
     
-    /// 跟踪上报用户参数，用户参数发生变化时调用
-    public func trackUserParameters(_ parameters: [AnyHashable: Any]? = nil) {
+    /// 跟踪上报用户信息，用户信息发生变化时调用
+    public func trackUser(_ parameters: [AnyHashable: Any]? = nil) {
         if logEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER USER===========\n%@", parameters ?? "")
+            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER USER===========\n%@%@", parameters ?? "")
         }
         
         queue.sync {
             reporters.forEach { reporter in
-                reporter.reportUserParameters(parameters)
+                reporter.reportUser(parameters)
             }
         }
     }
     
-    /// 跟踪上报事件，事件发生时调用
-    public func trackEvent(_ name: String, parameters: [AnyHashable: Any]? = nil) {
+    /// 跟踪上报事件，支持分组，事件发生时调用
+    public func trackEvent(group: String = "", _ name: String, parameters: [AnyHashable: Any]? = nil) {
         if logEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER EVENT===========\n%@:\n%@", name, parameters ?? "")
+            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER EVENT===========\n%@%@:\n%@", !group.isEmpty ? "[\(group)] " : "", name, parameters ?? "")
         }
         
         queue.async { [weak self] in
             self?.reporters.forEach { reporter in
-                reporter.reportEvent(name, parameters: parameters)
+                reporter.reportEvent(group: group, name, parameters: parameters)
             }
         }
     }
     
-    /// 跟踪上报错误，错误发生时调用
-    public func trackError(_ name: String, error: Error, parameters: [AnyHashable: Any]? = nil) {
+    /// 跟踪上报错误，支持分组，错误发生时调用
+    public func trackError(group: String = "", _ name: String, error: Error, parameters: [AnyHashable: Any]? = nil) {
         if logEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER ERROR===========\n%@: %@\n%@", name, error.localizedDescription, parameters ?? "")
+            Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER ERROR===========\n%@%@: %@\n%@", !group.isEmpty ? "[\(group)] " : "", name, error.localizedDescription, parameters ?? "")
         }
         
         queue.async { [weak self] in
             self?.reporters.forEach({ reporter in
-                reporter.reportError(name, error: error, parameters: parameters)
+                reporter.reportError(group: group, name, error: error, parameters: parameters)
             })
         }
     }
