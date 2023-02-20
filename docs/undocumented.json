@@ -3923,7 +3923,7 @@
     {
       "file": "docs/FWFramework/FWBaseRequest.h",
       "line": 281,
-      "symbol": "FWBaseRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol": "FWBaseRequest.-startSynchronouslyWithFilter:completion:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
@@ -3937,7 +3937,7 @@
     {
       "file": "docs/FWFramework/FWBatchRequest.h",
       "line": 118,
-      "symbol": "FWBatchRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol": "FWBatchRequest.-startSynchronouslyWithFilter:completion:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
@@ -3979,7 +3979,7 @@
     {
       "file": "docs/FWFramework/FWChainRequest.h",
       "line": 122,
-      "symbol": "FWChainRequest.-startSynchronouslyWithCondition:completion:",
+      "symbol": "FWChainRequest.-startSynchronouslyWithFilter:completion:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
