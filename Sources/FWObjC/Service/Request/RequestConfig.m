@@ -67,7 +67,11 @@
         _cacheDirPathFilters = [NSMutableArray array];
         _securityPolicy = [__FWSecurityPolicy defaultPolicy];
         _removeNullValues = YES;
+        #ifdef DEBUG
+        _debugLogEnabled = YES;
+        #else
         _debugLogEnabled = NO;
+        #endif
         _debugMockEnabled = NO;
     }
     return self;
