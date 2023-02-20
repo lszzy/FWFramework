@@ -43,6 +43,9 @@ public class StatisticalManager: NSObject {
 
     /// 是否启用通知，默认false
     public var notificationEnabled = false
+    
+    /// 是否启用分析上报，默认false
+    public var reportEnabled = false
 
     /// 设置运行模式，默认default快速滚动时不计算曝光
     public var runLoopMode: RunLoop.Mode = .default
@@ -66,6 +69,9 @@ public class StatisticalManager: NSObject {
             eventHandler(object)
         }
         globalHandler?(object)
+        if reportEnabled, !object.name.isEmpty {
+            Analyzer.shared.trackEvent(object.name, parameters: object.userInfo)
+        }
         if notificationEnabled {
             NotificationCenter.default.post(name: .StatisticalEventTriggered, object: object, userInfo: object.userInfo)
         }
