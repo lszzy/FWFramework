@@ -17,10 +17,10 @@ class UserService {
     
     static let shared = UserService()
     
-    @UserDefaultAnnotation("userId", defaultValue: "")
-    private var userId: String
-    @UserDefaultAnnotation("userName", defaultValue: "")
-    private var userName: String
+    @StoredValue("userId")
+    private var userId: String = ""
+    @StoredValue("userName")
+    private var userName: String = ""
     
 }
 

@@ -308,6 +308,11 @@ extension Wrapper where Base == String {
         return (base as NSString).__fw_escapeHtml
     }
     
+    /// 是否符合验证器
+    public func isValid(_ validator: Validator<String>) -> Bool {
+        return validator.validate(base)
+    }
+    
     /**
      *  是否符合正则表达式
      *  示例：用户名：^[a-zA-Z][a-zA-Z0-9_]{4,13}$
