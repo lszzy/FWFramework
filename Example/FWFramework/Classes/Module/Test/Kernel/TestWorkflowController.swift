@@ -8,10 +8,24 @@
 
 import FWFramework
 
+@objc protocol TestWorkflowProtocol {
+    @objc optional func testMethod1()
+    @objc optional func testMethod2()
+}
+
 class TestWorkflowController: UIViewController {
     
     // MARK: - Accessor
     var step: Int = 1
+    weak var delegate: TestWorkflowProtocol?
+    
+    // MARK: - Subviews
+    private lazy var delegateButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Optional delegate method", for: .normal)
+        button.addTarget(self, action: #selector(onDelegate), for: .touchUpInside)
+        return button
+    }()
     
 }
 
@@ -29,10 +43,23 @@ extension TestWorkflowController: ViewControllerProtocol {
             fw.addRightBarItem("重来", target: self, action: #selector(onOpen))
         }
     }
+    
+    func setupSubviews() {
+        self.delegate = self
+        view.addSubview(delegateButton)
+    }
+    
+    func setupLayout() {
+        delegateButton.fw.layoutChain
+            .horizontal()
+            .top(toSafeArea: 20)
+            .height(30)
+    }
+    
 }
 
 // MARK: - Action
-@objc private extension TestWorkflowController {
+@objc extension TestWorkflowController: TestWorkflowProtocol {
     
     func onNext() {
         let workflow = TestWorkflowController()
@@ -46,6 +73,16 @@ extension TestWorkflowController: ViewControllerProtocol {
     
     func onOpen() {
         navigationController?.fw.push(TestWorkflowController(), popWorkflows: ["workflow"], animated: true, completion: nil)
+    }
+    
+    func onDelegate() {
+        let result1 = delegate?.testMethod1?() != nil
+        let result2 = delegate?.testMethod2?() != nil
+        fw.showMessage(text: "testMethod1: \(result1)\ntestMethod2: \(result2)")
+    }
+    
+    func testMethod1() {
+        print("testMethod1")
     }
     
 }
