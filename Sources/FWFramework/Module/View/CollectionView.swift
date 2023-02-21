@@ -273,11 +273,9 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
                   let lastAttr = self.layoutAttributesForItem(at: IndexPath(item: itemCount - 1, section: section)) else { continue }
             
             var sectionInset = self.sectionInset
-            if delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:insetForSectionAt:))) {
-                let inset = delegate.collectionView!(collectionView, layout: self, insetForSectionAt: section)
-                if inset != sectionInset {
-                    sectionInset = inset
-                }
+            if let inset = delegate.collectionView?(collectionView, layout: self, insetForSectionAt: section),
+               inset != sectionInset {
+                sectionInset = inset
             }
             
             var sectionFrame = firstAttr.frame.union(lastAttr.frame)

@@ -303,11 +303,9 @@ public class StatisticalObject: NSObject {
             return
         }
         
-        if self.conforms(to: StatisticalDelegate.self),
-           self.responds(to: #selector(StatisticalDelegate.statisticalClick(callback:))) {
-            (self as? StatisticalDelegate)?.statisticalClick?(callback: { [weak self] cell, indexPath in
-                self?.fw_statisticalTriggerClick(cell, indexPath: indexPath)
-            })
+        if (self as? StatisticalDelegate)?.statisticalClick?(callback: { [weak self] cell, indexPath in
+            self?.fw_statisticalTriggerClick(cell, indexPath: indexPath)
+        }) != nil {
             return
         }
         
@@ -554,14 +552,12 @@ public class StatisticalObject: NSObject {
     
     @discardableResult
     private func fw_statisticalExposureCustom() -> Bool {
-        if self.conforms(to: StatisticalDelegate.self),
-           self.responds(to: #selector(StatisticalDelegate.statisticalExposure(callback:))) {
-            (self as? StatisticalDelegate)?.statisticalExposure?(callback: { [weak self] cell, indexPath, duration in
-                guard let this = self else { return }
-                if StatisticalTarget.exposureIsFullyState(this.fw_statisticalExposureViewState()) {
-                    this.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
-                }
-            })
+        if (self as? StatisticalDelegate)?.statisticalExposure?(callback: { [weak self] cell, indexPath, duration in
+            guard let this = self else { return }
+            if StatisticalTarget.exposureIsFullyState(this.fw_statisticalExposureViewState()) {
+                this.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
+            }
+        }) != nil {
             return true
         }
         return false
