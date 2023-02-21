@@ -27,6 +27,25 @@ public protocol AnalysisReporter {
     
 }
 
+extension AnalysisReporter {
+    
+    /// 默认实现初始化上报者方法，仅调用一次
+    public func setupReporter() {}
+    
+    /// 默认实现上报公共参数方法，公共参数发生变化时调用
+    public func reportParameters(_ parameters: [AnyHashable: Any]?) {}
+    
+    /// 默认实现上报用户信息方法，用户信息发生变化时调用
+    public func reportUser(_ parameters: [AnyHashable: Any]?) {}
+    
+    /// 默认实现上报事件方法，支持分组，事件发生时调用
+    public func reportEvent(group: String, _ name: String, parameters: [AnyHashable: Any]?) {}
+    
+    /// 默认实现上报错误方法，支持分组，错误发生时调用
+    public func reportError(group: String, _ name: String, error: Error, parameters: [AnyHashable: Any]?) {}
+    
+}
+
 /// 事件分析器
 public class Analyzer: NSObject {
     
