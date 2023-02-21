@@ -7,6 +7,16 @@
 
 import UIKit
 
+// MARK: - DispatchQueue+Block
+extension Wrapper where Base: DispatchQueue {
+    
+    /// 主线程安全异步执行句柄
+    public static func mainAsync(execute block: @escaping () -> Void) {
+        Base.fw_mainAsync(execute: block)
+    }
+    
+}
+
 // MARK: - Timer+Block
 extension Wrapper where Base: Timer {
     

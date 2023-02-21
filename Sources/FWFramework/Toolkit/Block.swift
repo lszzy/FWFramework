@@ -185,6 +185,22 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     
 }
 
+// MARK: - DispatchQueue+Block
+@_spi(FW) extension DispatchQueue {
+    
+    /// 主线程安全异步执行句柄
+    public static func fw_mainAsync(execute block: @escaping () -> Void) {
+        if Thread.isMainThread {
+            block()
+        } else {
+            DispatchQueue.main.async {
+                block()
+            }
+        }
+    }
+    
+}
+
 // MARK: - Timer+Block
 @_spi(FW) extension Timer {
     
