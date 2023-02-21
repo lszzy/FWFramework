@@ -53,8 +53,7 @@ open class WebView: WKWebView {
                 WebViewCookieManager.syncRequestCookie(request)
             }
             
-            if self.delegate?.responds(to: NSSelectorFromString("webView:decidePolicyForNavigationAction:decisionHandler:")) ?? false {
-                self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
+            if self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler) != nil {
                 return
             }
             
@@ -96,8 +95,7 @@ open class WebView: WKWebView {
                 WebViewCookieManager.copyWebViewCookie(webView)
             }
             
-            if self.delegate?.responds(to: NSSelectorFromString("webView:decidePolicyForNavigationResponse:decisionHandler:")) ?? false {
-                self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
+            if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler) != nil {
                 return
             }
             
@@ -105,8 +103,7 @@ open class WebView: WKWebView {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFinish:))) ?? false {
-                self.delegate?.webView?(webView, didFinish: navigation)
+            if self.delegate?.webView?(webView, didFinish: navigation) != nil {
             } else {
                 self.delegate?.webViewFinishLoad()
             }
@@ -124,8 +121,7 @@ open class WebView: WKWebView {
         }
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFailProvisionalNavigation:withError:))) ?? false {
-                self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error)
+            if self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error) != nil {
                 return
             }
             
@@ -139,8 +135,7 @@ open class WebView: WKWebView {
         }
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:didFail:withError:))) ?? false {
-                self.delegate?.webView?(webView, didFail: navigation, withError: error)
+            if self.delegate?.webView?(webView, didFail: navigation, withError: error) != nil {
                 return
             }
             
@@ -158,8 +153,7 @@ open class WebView: WKWebView {
                 webView.fw_reuseInvalid = true
             }
             
-            if self.delegate?.responds(to: #selector(WKNavigationDelegate.webViewWebContentProcessDidTerminate(_:))) ?? false {
-                self.delegate?.webViewWebContentProcessDidTerminate?(webView)
+            if self.delegate?.webViewWebContentProcessDidTerminate?(webView) != nil {
                 return
             }
             
@@ -169,8 +163,7 @@ open class WebView: WKWebView {
         
         // MARK: - WKUIDelegate
         func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptAlertPanelWithMessage:initiatedByFrame:completionHandler:))) ?? false {
-                self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)
+            if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
                 return
             }
             
@@ -180,8 +173,7 @@ open class WebView: WKWebView {
         }
         
         func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:))) ?? false {
-                self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)
+            if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
                 return
             }
             
@@ -193,8 +185,7 @@ open class WebView: WKWebView {
         }
         
         func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:))) ?? false {
-                self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler)
+            if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
                 return
             }
             
