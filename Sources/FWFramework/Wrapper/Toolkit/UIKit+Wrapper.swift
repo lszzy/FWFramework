@@ -248,6 +248,11 @@ extension Wrapper where Base: UIView {
         return base.fw_subview(block: block)
     }
     
+    /// 递归查找指定父类的第一个父视图(含自身)
+    public func superview(of clazz: AnyClass) -> UIView? {
+        return base.fw_superview(of: clazz)
+    }
+    
     /// 递归查找指定条件的第一个父视图(含自身)
     public func superview(block: @escaping (UIView) -> Bool) -> UIView? {
         return base.fw_superview(block: block)

@@ -117,10 +117,8 @@ public class StatisticalObject: NSObject {
     public var triggerOnce: Bool?
     /// 是否忽略事件触发，默认false
     public var triggerIgnored = false
-    /// 曝光遮挡视图，被遮挡时不计曝光
-    public weak var shieldView: UIView?
-    /// 曝光遮挡视图句柄，被遮挡时不计曝光
-    public var shieldViewBlock: (() -> UIView?)?
+    /// 曝光遮挡视图句柄，被遮挡时不计曝光，参数为所在视图
+    public var shieldView: ((UIView) -> UIView?)?
 
     /// 创建事件绑定信息，指定名称、对象和信息
     public init(name: String = "", object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
@@ -611,12 +609,7 @@ public class StatisticalObject: NSObject {
             return state
         }
         
-        var shieldView: UIView?
-        if self.fw_statisticalExposure?.shieldView != nil {
-            shieldView = self.fw_statisticalExposure?.shieldView
-        } else if self.fw_statisticalExposure?.shieldViewBlock != nil {
-            shieldView = self.fw_statisticalExposure?.shieldViewBlock?()
-        }
+        let shieldView = self.fw_statisticalExposure?.shieldView?(self)
         guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
             return state
         }
