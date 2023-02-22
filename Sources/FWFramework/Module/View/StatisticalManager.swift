@@ -52,6 +52,12 @@ public class StatisticalManager: NSObject {
 
     /// 是否部分可见时触发曝光，默认false，仅视图完全可见时才触发曝光
     public var exposurePartly = false
+    
+    /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
+    public var clickOnce = false
+    
+    /// 是否相同曝光只触发一次，默认false，视图自定义后覆盖默认
+    public var exposureOnce = false
 
     /// 设置全局事件处理器
     public var globalHandler: StatisticalBlock?
@@ -107,8 +113,8 @@ public class StatisticalObject: NSObject {
     /// 事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
 
-    /// 是否事件仅触发一次，默认false
-    public var triggerOnce = false
+    /// 是否事件仅触发一次，默认nil时采用全局配置
+    public var triggerOnce: Bool?
     /// 是否忽略事件触发，默认false
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光
@@ -155,7 +161,8 @@ public class StatisticalObject: NSObject {
             }
             if object.triggerIgnored { return }
             let triggerCount = clickTotalCount(indexPath)
-            if triggerCount > 1 && object.triggerOnce { return }
+            let triggerOnce = object.triggerOnce != nil ? (object.triggerOnce ?? false) : StatisticalManager.shared.clickOnce
+            if triggerCount > 1 && triggerOnce { return }
             
             object.view = view
             object.viewController = view?.fw_viewController
@@ -190,7 +197,8 @@ public class StatisticalObject: NSObject {
             }
             if object.triggerIgnored { return }
             let triggerCount = exposureTotalCount(indexPath)
-            if triggerCount > 1 && object.triggerOnce { return }
+            let triggerOnce = object.triggerOnce != nil ? (object.triggerOnce ?? false) : StatisticalManager.shared.exposureOnce
+            if triggerCount > 1 && triggerOnce { return }
             let totalDuration = exposureTotalDuration(duration, indexPath: indexPath)
             
             object.view = view
@@ -795,7 +803,8 @@ public class StatisticalObject: NSObject {
             }
             if object.triggerIgnored { return }
             exposureTotalCount += 1
-            if exposureTotalCount > 1 && object.triggerOnce { return }
+            let triggerOnce = object.triggerOnce != nil ? (object.triggerOnce ?? false) : StatisticalManager.shared.exposureOnce
+            if exposureTotalCount > 1 && triggerOnce { return }
             exposureTotalDuration += duration
             
             object.viewController = viewController
