@@ -164,7 +164,7 @@ extension TestPreviewController: ViewControllerProtocol {
                 tipLabel.fw.origin = CGPoint(x: imageSize.width - 16.0 * labelScale - labelSize.width, y: imageSize.height - 16.0 * labelScale - labelSize.height)
                 tipLabel.isHidden = tipLabel.fw.y < 0
             }
-            imagePreviewController.fw.observeState { [weak self] previewController, state in
+            imagePreviewController.fw.observeLifecycleState { [weak self] previewController, state in
                 if state == .willDisappear {
                     let exitAtIndex = previewController.imagePreviewView.currentImageIndex
                     self?.tipsLabel.text = "浏览到第\(exitAtIndex + 1)张就退出了"

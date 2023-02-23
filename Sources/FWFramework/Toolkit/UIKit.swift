@@ -2758,6 +2758,11 @@ import AdSupport
         return self.isViewLoaded && self.view.window != nil
     }
     
+    /// 控制器是否可见，视图可见、尾部控制器、且不含presented控制器时为YES
+    public var fw_isVisible: Bool {
+        return fw_isViewVisible && fw_isTail && presentedViewController == nil
+    }
+    
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
     @objc(__fw_ancestorView)
     public var fw_ancestorView: UIView {
@@ -2779,19 +2784,19 @@ import AdSupport
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
-    public func fw_removeChildViewController(_ viewController: UIViewController) {
+    public func fw_removeChild(_ viewController: UIViewController) {
         viewController.willMove(toParent: nil)
         viewController.removeFromParent()
         viewController.view.removeFromSuperview()
     }
     
     /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChildViewController(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        fw_addChildViewController(viewController, in: nil, layout: layout)
+    public func fw_addChild(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
+        fw_addChild(viewController, in: nil, layout: layout)
     }
 
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChildViewController(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
+    public func fw_addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
         self.addChild(viewController)
         let superview: UIView = view ?? self.view
         superview.addSubview(viewController.view)

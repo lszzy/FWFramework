@@ -714,22 +714,22 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIViewController {
     
     /// 当前生命周期状态，默认Ready
-    public var state: ViewControllerState {
-        return base.fw_state
+    public var lifecycleState: ViewControllerLifecycleState {
+        return base.fw_lifecycleState
     }
 
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
-    public func observeState(_ block: @escaping (Base, ViewControllerState) -> Void) -> NSObjectProtocol {
-        return base.fw_observeState { viewController, state in
+    public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
+        return base.fw_observeLifecycleState { viewController, state in
             block(viewController as! Base, state)
         }
     }
     
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
-    public func unobserveState(observer: Any? = nil) -> Bool {
-        return base.fw_unobserveState(observer: observer)
+    public func unobserveLifecycleState(observer: Any? = nil) -> Bool {
+        return base.fw_unobserveLifecycleState(observer: observer)
     }
 
     /// 自定义完成结果对象，默认nil

@@ -182,7 +182,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_state = .didLoad
+            selfObject.fw_lifecycleState = .didLoad
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
@@ -196,7 +196,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_state = .willAppear
+            selfObject.fw_lifecycleState = .willAppear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
@@ -210,7 +210,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_state = .didLayoutSubviews
+            selfObject.fw_lifecycleState = .didLayoutSubviews
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
@@ -224,7 +224,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_state = .didAppear
+            selfObject.fw_lifecycleState = .didAppear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
@@ -238,7 +238,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_state = .willDisappear
+            selfObject.fw_lifecycleState = .willDisappear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
@@ -252,7 +252,7 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_state = .didDisappear
+            selfObject.fw_lifecycleState = .didDisappear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
@@ -261,7 +261,7 @@ public class ViewControllerManager: NSObject {
         NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
             // dealloc时不调用fw，防止释放时动态创建包装器对象
             let viewController = selfObject as? UIViewController
-            viewController?.fw_state = .dealloc
+            viewController?.fw_lifecycleState = .dealloc
             if let viewController = viewController, viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookDeinit(viewController)
             }

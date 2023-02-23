@@ -1688,7 +1688,7 @@ public enum ViewControllerLoadState {
 }
 
 /// 视图控制器常用生命周期状态枚举
-public enum ViewControllerState: Int {
+public enum ViewControllerLifecycleState: Int {
     case ready = 0
     case didLoad = 1
     case willAppear = 2
@@ -1699,26 +1699,26 @@ public enum ViewControllerState: Int {
     case dealloc = 7
 }
 
-/// 为提升性能，触发state改变等的swizzle代码统一放到了ViewController
+/// 为提升性能，触发lifecycleState改变等的swizzle代码统一放到了ViewController
 @_spi(FW) extension UIViewController {
     
-    private class StateTarget: NSObject {
-        var block: ((UIViewController, ViewControllerState) -> Void)?
+    private class LifecycleStateTarget: NSObject {
+        var block: ((UIViewController, ViewControllerLifecycleState) -> Void)?
     }
     
     /// 当前生命周期状态，默认Ready
-    public internal(set) var fw_state: ViewControllerState {
+    public internal(set) var fw_lifecycleState: ViewControllerLifecycleState {
         get {
-            let value = fw_propertyInt(forName: "fw_state")
+            let value = fw_propertyInt(forName: "fw_lifecycleState")
             return .init(rawValue: value) ?? .ready
         }
         set {
-            let valueChanged = self.fw_state != newValue
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_state")
+            let valueChanged = self.fw_lifecycleState != newValue
+            fw_setPropertyInt(newValue.rawValue, forName: "fw_lifecycleState")
             
-            if valueChanged, let targets = fw_stateTargets(false) {
+            if valueChanged, let targets = fw_lifecycleStateTargets(false) {
                 for (_, elem) in targets.enumerated() {
-                    if let target = elem as? StateTarget {
+                    if let target = elem as? LifecycleStateTarget {
                         target.block?(self, newValue)
                     }
                 }
@@ -1728,9 +1728,9 @@ public enum ViewControllerState: Int {
 
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
-    public func fw_observeState(_ block: @escaping (UIViewController, ViewControllerState) -> Void) -> NSObjectProtocol {
-        let targets = fw_stateTargets(true)
-        let target = StateTarget()
+    public func fw_observeLifecycleState(_ block: @escaping (UIViewController, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
+        let targets = fw_lifecycleStateTargets(true)
+        let target = LifecycleStateTarget()
         target.block = block
         targets?.add(target)
         return target
@@ -1738,13 +1738,13 @@ public enum ViewControllerState: Int {
     
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
-    public func fw_unobserveState(observer: Any? = nil) -> Bool {
-        guard let targets = fw_stateTargets(false) else { return false }
+    public func fw_unobserveLifecycleState(observer: Any? = nil) -> Bool {
+        guard let targets = fw_lifecycleStateTargets(false) else { return false }
         
-        if let observer = observer as? StateTarget {
+        if let observer = observer as? LifecycleStateTarget {
             var result = false
             for (_, elem) in targets.enumerated() {
-                if let target = elem as? StateTarget, observer == target {
+                if let target = elem as? LifecycleStateTarget, observer == target {
                     targets.remove(target)
                     result = true
                 }
@@ -1756,11 +1756,11 @@ public enum ViewControllerState: Int {
         }
     }
     
-    private func fw_stateTargets(_ lazyload: Bool) -> NSMutableArray? {
-        var targets = fw_property(forName: "fw_stateTargets") as? NSMutableArray
+    private func fw_lifecycleStateTargets(_ lazyload: Bool) -> NSMutableArray? {
+        var targets = fw_property(forName: "fw_lifecycleStateTargets") as? NSMutableArray
         if targets == nil && lazyload {
             targets = NSMutableArray()
-            fw_setProperty(targets, forName: "fw_stateTargets")
+            fw_setProperty(targets, forName: "fw_lifecycleStateTargets")
         }
         return targets
     }
