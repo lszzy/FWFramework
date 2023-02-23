@@ -177,6 +177,20 @@ public class StatisticalObject: NSObject {
             self.view = view
         }
         
+        deinit {
+            NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
+        }
+        
+        func exposureRegister() {
+            if StatisticalManager.shared.exposureAppState {
+                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.didEnterBackgroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.willTerminateNotification, object: nil)
+            }
+        }
+        
         func triggerClick(_ cell: UIView?, indexPath: IndexPath?) {
             var object: StatisticalObject
             if let clickObject = cell?.fw_statisticalClick ?? view?.fw_statisticalClick {
@@ -283,6 +297,10 @@ public class StatisticalObject: NSObject {
             let isNan = rect.origin.x.isNaN || rect.origin.y.isNaN || rect.size.width.isNaN || rect.size.height.isNaN
             let isInf = rect.origin.x.isInfinite || rect.origin.y.isInfinite || rect.size.width.isInfinite || rect.size.height.isInfinite
             return !rect.isNull && !rect.isInfinite && !isNan && !isInf
+        }
+        
+        @objc func exposureUpdate() {
+            self.view?.fw_statisticalExposureUpdate()
         }
         
         @objc func exposureCalculate() {
@@ -627,6 +645,12 @@ public class StatisticalObject: NSObject {
             return state
         }
         
+        if StatisticalManager.shared.exposureAppState {
+            if UIApplication.shared.applicationState == .background {
+                return state
+            }
+        }
+        
         let viewController = self.fw_viewController
         if let viewController = viewController {
             if !viewController.fw_isViewVisible { return state }
@@ -792,6 +816,8 @@ public class StatisticalObject: NSObject {
         if self.fw_statisticalExposure != nil ||
             self.fw_statisticalExposureBlock != nil ||
             self.fw_statisticalTarget.exposureIsProxy {
+            self.fw_statisticalTarget.exposureRegister()
+            
             NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
             self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
