@@ -49,12 +49,12 @@ public class StatisticalManager: NSObject {
 
     /// 设置运行模式，默认default快速滚动时不计算曝光
     public var runLoopMode: RunLoop.Mode = .default
-
-    /// 是否部分可见时触发曝光，默认false，仅视图完全可见时才触发曝光
-    public var exposurePartly = false
     
     /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
     public var exposureThresholds: CGFloat = 1
+    
+    /// 计算曝光时是否自动屏蔽控制器的顶部栏和底部栏，默认true
+    public var exposureIgnoredBar = true
     
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -120,8 +120,8 @@ public class StatisticalObject: NSObject {
     public weak var containerView: UIView?
     /// 自定义容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
     public var containerViewBlock: ((UIView) -> UIView?)?
-    /// 自定义容器内边距，默认zero
-    public var containerInset: UIEdgeInsets = .zero
+    /// 自定义容器内边距，设置后忽略全局ignoredBar配置，默认nil
+    public var containerInset: UIEdgeInsets?
     /// 是否事件仅触发一次，默认nil时采用全局配置
     public var triggerOnce: Bool?
     /// 是否忽略事件触发，默认false
@@ -256,11 +256,14 @@ public class StatisticalObject: NSObject {
         }
         
         static func exposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
-            var isFullState = (state == .fully) ? true : false
-            if !isFullState && StatisticalManager.shared.exposurePartly {
-                isFullState = (state == .partly) ? true : false
-            }
+            let isFullState = (state == .fully) ? true : false
             return isFullState
+        }
+        
+        static func exposureIsValidRect(_ rect: CGRect) -> Bool {
+            let isNan = rect.origin.x.isNaN || rect.origin.y.isNaN || rect.size.width.isNaN || rect.size.height.isNaN
+            let isInf = rect.origin.x.isInfinite || rect.origin.y.isInfinite || rect.size.width.isInfinite || rect.size.height.isInfinite
+            return !rect.isNull && !rect.isInfinite && !isNan && !isInf
         }
         
         @objc func exposureCalculate() {
@@ -276,8 +279,14 @@ public class StatisticalObject: NSObject {
     
     private enum StatisticalExposureState: Int {
         case none = 0
-        case partly
         case fully
+    }
+    
+    private struct StatisticalExposureRatio {
+        var ratio: CGFloat = .zero
+        var viewportRect: CGRect = .zero
+        var intersectionRect: CGRect = .zero
+        var shieldIntersectionRect: CGRect = .zero
     }
     
     /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
@@ -587,12 +596,22 @@ public class StatisticalObject: NSObject {
         
         let viewController = self.fw_viewController
         if let viewController = viewController,
-           viewController.view.window == nil || viewController.presentedViewController != nil {
+           !viewController.fw_isViewVisible || viewController.presentedViewController != nil {
             return .none
         }
         
         var containerView = self.fw_statisticalExposure?.containerView ?? self.fw_statisticalExposure?.containerViewBlock?(self)
-        if containerView == nil { containerView = viewController?.view ?? self.window }
+        if let containerView = containerView {
+            if !containerView.fw_isViewVisible {
+                return .none
+            }
+        } else {
+            containerView = viewController?.view ?? self.window
+        }
+        guard let containerView = containerView else {
+            return .none
+        }
+        
         var superview = self.superview
         var superviewHidden = false
         while superview != nil && superview != containerView {
@@ -606,37 +625,89 @@ public class StatisticalObject: NSObject {
             return .none
         }
         
+        let ratio = fw_statisticalExposureCalculateRatio(containerView: containerView, viewController: viewController)
+        let state: StatisticalExposureState = ratio.ratio >= StatisticalManager.shared.exposureThresholds ? .fully : .none
+        return state
+    }
+    
+    private func fw_statisticalExposureCalculateRatio(containerView: UIView, viewController: UIViewController?) -> StatisticalExposureRatio {
+        var ratio = StatisticalExposureRatio()
         var viewRect = self.convert(self.bounds, to: containerView)
         viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
-        var containerRect = containerView?.bounds ?? .zero
+        
+        var tx = CGRectGetMinX(viewRect) - floor(containerView.bounds.origin.x)
+        var ty = CGRectGetMinY(viewRect) - floor(containerView.bounds.origin.y)
+        var cw = CGRectGetWidth(containerView.bounds)
+        var ch = CGRectGetHeight(containerView.bounds)
+        
+        if let containerWindow = containerView.window {
+            let containerRect = containerView.convert(containerView.bounds, to: containerWindow)
+            if containerRect.origin.x < 0 {
+                tx += containerRect.origin.x
+            }
+            if containerRect.origin.y < 0 {
+                ty += containerRect.origin.y
+            }
+            let intersectionRect = CGRectIntersection(containerWindow.bounds, containerRect)
+            cw = intersectionRect.size.width
+            ch = intersectionRect.size.height
+        }
+        
+        let viewportRect = CGRect(x: tx, y: ty, width: CGRectGetWidth(viewRect), height: CGRectGetHeight(viewRect))
+        var containerRect = CGRect(x: 0, y: 0, width: cw, height: ch)
         if let containerInset = self.fw_statisticalExposure?.containerInset {
             containerRect = containerRect.inset(by: containerInset)
+        } else if StatisticalManager.shared.exposureIgnoredBar, let viewController = viewController {
+            containerRect = containerRect.inset(by: UIEdgeInsets(top: viewController.fw_topBarHeight, left: 0, bottom: viewController.fw_bottomBarHeight, right: 0))
         }
-        var state: StatisticalExposureState = .none
-        if !CGRectIsEmpty(viewRect) {
-            if CGRectContainsRect(containerRect, viewRect) {
-                state = .fully
-            } else if CGRectIntersectsRect(containerRect, viewRect) {
-                state = .partly
-            }
+        
+        if !StatisticalTarget.exposureIsValidRect(viewportRect) {
+            return ratio
         }
-        if state == .none {
-            return state
+        let viewSize = CGRectGetWidth(viewRect) * CGRectGetHeight(viewRect)
+        if viewSize <= 0 {
+            return ratio
+        }
+        if !StatisticalTarget.exposureIsValidRect(containerRect) {
+            return ratio
+        }
+        
+        var intersectionRect = CGRectIntersection(containerRect, viewportRect)
+        if !StatisticalTarget.exposureIsValidRect(intersectionRect) {
+            intersectionRect = .zero
+        }
+        let intersectionSize = CGRectGetWidth(intersectionRect) * CGRectGetHeight(intersectionRect)
+        ratio.ratio = intersectionSize > 0 ? ceil(intersectionSize / viewSize * 100.0) / 100.0 : 0
+        ratio.viewportRect = viewportRect
+        ratio.intersectionRect = intersectionRect
+        if ratio.ratio <= 0 {
+            return ratio
         }
         
         let shieldView = self.fw_statisticalExposure?.shieldView ?? self.fw_statisticalExposure?.shieldViewBlock?(self)
         guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
-            return state
+            return ratio
         }
         let shieldRect = shieldView.convert(shieldView.bounds, to: containerView)
-        if !CGRectIsEmpty(shieldRect) {
-            if CGRectContainsRect(shieldRect, viewRect) {
-                return .none
-            } else if CGRectIntersectsRect(shieldRect, viewRect) {
-                return .partly
+        if !CGRectIsEmpty(shieldRect) && !CGRectIsEmpty(intersectionRect) {
+            if CGRectContainsRect(shieldRect, intersectionRect) {
+                ratio.ratio = 0
+                ratio.viewportRect = .zero
+                ratio.intersectionRect = .zero
+                return ratio
+            } else if CGRectIntersectsRect(shieldRect, intersectionRect) {
+                var shieldIntersectionRect = CGRectIntersection(shieldRect, intersectionRect)
+                if !StatisticalTarget.exposureIsValidRect(shieldIntersectionRect) {
+                    shieldIntersectionRect = .zero
+                }
+                let shieldIntersectionSize = CGRectGetWidth(shieldIntersectionRect) * CGRectGetHeight(shieldIntersectionRect)
+                let shieldRatio = shieldIntersectionSize > 0 ? ceil(shieldIntersectionSize / intersectionSize * 100.0) / 100.0 : 0
+                ratio.ratio = ceil(ratio.ratio * (1.0 - shieldRatio) * 100.0) / 100.0
+                ratio.shieldIntersectionRect = shieldIntersectionRect
+                return ratio
             }
         }
-        return state
+        return ratio
     }
     
     private func fw_updateStatisticalExposureState() {
@@ -710,7 +781,7 @@ public class StatisticalObject: NSObject {
         if !self.fw_statisticalExposureEnabled { return }
         
         if let viewController = self.fw_viewController,
-           viewController.view.window == nil || viewController.presentedViewController != nil { return }
+           !viewController.fw_isViewVisible || viewController.presentedViewController != nil { return }
         
         self.fw_statisticalExposureRecursive()
     }
