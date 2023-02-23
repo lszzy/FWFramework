@@ -1035,6 +1035,11 @@ extension Wrapper where Base: UIViewController {
         return base.fw_isViewVisible
     }
     
+    /// 控制器是否可见，视图可见、尾部控制器、且不含presented控制器时为YES
+    public var isVisible: Bool {
+        return base.fw_isVisible
+    }
+    
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
     public var ancestorView: UIView {
         return base.fw_ancestorView
@@ -1047,18 +1052,18 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
-    public func removeChildViewController(_ viewController: UIViewController) {
-        base.fw_removeChildViewController(viewController)
+    public func removeChild(_ viewController: UIViewController) {
+        base.fw_removeChild(viewController)
     }
     
     /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-    public func addChildViewController(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        base.fw_addChildViewController(viewController, layout: layout)
+    public func addChild(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
+        base.fw_addChild(viewController, layout: layout)
     }
 
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
-    public func addChildViewController(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
-        base.fw_addChildViewController(viewController, in: view, layout: layout)
+    public func addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
+        base.fw_addChild(viewController, in: view, layout: layout)
     }
     
 }

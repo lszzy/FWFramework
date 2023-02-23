@@ -93,7 +93,7 @@ class TestTabbarController: UIViewController, ViewControllerProtocol {
     
     @objc func onButtonClicked(_ sender: UIButton) {
         if let child = childController {
-            fw.removeChildViewController(child)
+            fw.removeChild(child)
         }
         
         var child: UIViewController
@@ -116,7 +116,7 @@ class TestTabbarController: UIViewController, ViewControllerProtocol {
             
             child = settingsController
         }
-        fw.addChildViewController(child, in: childView)
+        fw.addChild(child, in: childView)
     }
     
 }
