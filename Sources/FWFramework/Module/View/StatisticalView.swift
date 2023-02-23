@@ -152,7 +152,7 @@ public class StatisticalObject: NSObject {
         var exposureIsProxy = false
         var exposureIsFully = false
         var exposureIdentifier: String = ""
-        var exposureState: StatisticalExposureState = .none
+        var exposureState = StatisticalExposureState()
         private var exposureTotalCounts: [String: Int] = [:]
         private var exposureTotalDurations: [String: TimeInterval] = [:]
         
@@ -256,7 +256,10 @@ public class StatisticalObject: NSObject {
         }
         
         static func exposureIsFullyState(_ state: StatisticalExposureState) -> Bool {
-            let isFullState = (state == .fully) ? true : false
+            var isFullState = (state.state == .fully) ? true : false
+            if !isFullState && state.state == .partly {
+                isFullState = state.ratio >= StatisticalManager.shared.exposureThresholds
+            }
             return isFullState
         }
         
@@ -277,16 +280,27 @@ public class StatisticalObject: NSObject {
         }
     }
     
-    private enum StatisticalExposureState: Int {
-        case none = 0
-        case fully
-    }
-    
-    private struct StatisticalExposureRatio {
+    private struct StatisticalExposureState {
+        enum State: Int {
+            case none = 0
+            case partly
+            case fully
+        }
+        
         var ratio: CGFloat = .zero
         var viewportRect: CGRect = .zero
         var intersectionRect: CGRect = .zero
         var shieldIntersectionRect: CGRect = .zero
+        
+        var state: State {
+            if ratio >= 1.0 {
+                return .fully
+            } else if ratio > 0 {
+                return .partly
+            } else {
+                return .none
+            }
+        }
     }
     
     /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
@@ -590,26 +604,27 @@ public class StatisticalObject: NSObject {
     }
     
     private func fw_statisticalExposureViewState() -> StatisticalExposureState {
+        var state = StatisticalExposureState()
         if !self.fw_isViewVisible {
-            return .none
+            return state
         }
         
         let viewController = self.fw_viewController
         if let viewController = viewController,
            !viewController.fw_isViewVisible || viewController.presentedViewController != nil {
-            return .none
+            return state
         }
         
         var containerView = self.fw_statisticalExposure?.containerView ?? self.fw_statisticalExposure?.containerViewBlock?(self)
         if let containerView = containerView {
             if !containerView.fw_isViewVisible {
-                return .none
+                return state
             }
         } else {
             containerView = viewController?.view ?? self.window
         }
         guard let containerView = containerView else {
-            return .none
+            return state
         }
         
         var superview = self.superview
@@ -622,16 +637,15 @@ public class StatisticalObject: NSObject {
             superview = superview?.superview
         }
         if superviewHidden {
-            return .none
+            return state
         }
         
-        let ratio = fw_statisticalExposureCalculateRatio(containerView: containerView, viewController: viewController)
-        let state: StatisticalExposureState = ratio.ratio >= StatisticalManager.shared.exposureThresholds ? .fully : .none
+        state = fw_statisticalExposureCalculateRatio(containerView: containerView, viewController: viewController)
         return state
     }
     
-    private func fw_statisticalExposureCalculateRatio(containerView: UIView, viewController: UIViewController?) -> StatisticalExposureRatio {
-        var ratio = StatisticalExposureRatio()
+    private func fw_statisticalExposureCalculateRatio(containerView: UIView, viewController: UIViewController?) -> StatisticalExposureState {
+        var ratio = StatisticalExposureState()
         var viewRect = self.convert(self.bounds, to: containerView)
         viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
         
@@ -721,7 +735,7 @@ public class StatisticalObject: NSObject {
         
         let oldState = self.fw_statisticalTarget.exposureState
         let state = self.fw_statisticalExposureViewState()
-        if state == oldState && !identifierChanged { return }
+        if state.state == oldState.state && !identifierChanged { return }
         self.fw_statisticalTarget.exposureState = state
         
         if StatisticalTarget.exposureIsFullyState(state),
@@ -735,7 +749,7 @@ public class StatisticalObject: NSObject {
             } else {
                 self.fw_statisticalTriggerExposure(nil, indexPath: nil, duration: 0)
             }
-        } else if state == .none || identifierChanged {
+        } else if state.state == .none || identifierChanged {
             self.fw_statisticalTarget.exposureIsFully = false
         }
     }
