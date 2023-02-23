@@ -53,8 +53,17 @@ public class StatisticalManager: NSObject {
     /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
     public var exposureThresholds: CGFloat = 1
     
+    /// 是否统计曝光时长，开启后会触发曝光结束事件，默认true
+    public var exposureDurationEnabled = true
+    
     /// 计算曝光时是否自动屏蔽控制器的顶部栏和底部栏，默认true
     public var exposureIgnoredBar = true
+    
+    /// 从后台返回时是否重新计算曝光，默认true
+    public var exposureAppState = true
+    
+    /// 从界面返回时是否重新计算曝光，默认true
+    public var exposureWhenPopped = true
     
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -90,6 +99,7 @@ public class StatisticalManager: NSObject {
 
 // MARK: - StatisticalObject
 /// 事件统计对象
+/// TODO: 改名为Option？
 public class StatisticalObject: NSObject {
     
     /// 事件绑定名称，未绑定时为空字符串
@@ -115,6 +125,12 @@ public class StatisticalObject: NSObject {
     public fileprivate(set) var isExposure = false
     /// 事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
+    
+    /// TODO: 监听App Terminate时触发一次曝光
+    public fileprivate(set) var isTerminated = false
+    /// TODO: 退后台或关闭或离开界面时状态从fully变为none时触发结束并计算时间，这样可以不用计算退后台的时间
+    /// 一定要监听background防止授权等弹窗触发曝光计算
+    public fileprivate(set) var isBackground = false
 
     /// 自定义容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
@@ -603,6 +619,8 @@ public class StatisticalObject: NSObject {
         return false
     }
     
+    /// TODO: 支持曝光状态监听，变化时触发block，类似vc.fw_state监听机制，这样可以移除exposureBlock，从而支持多个block的效果
+    
     private func fw_statisticalExposureViewState() -> StatisticalExposureState {
         var state = StatisticalExposureState()
         if !self.fw_isViewVisible {
@@ -610,9 +628,12 @@ public class StatisticalObject: NSObject {
         }
         
         let viewController = self.fw_viewController
-        if let viewController = viewController,
-           !viewController.fw_isViewVisible || viewController.presentedViewController != nil {
-            return state
+        if let viewController = viewController {
+            if !viewController.fw_isViewVisible { return state }
+            if viewController.presentedViewController != nil { return state }
+            if StatisticalManager.shared.exposureWhenPopped && !viewController.fw_isTail {
+                return state
+            }
         }
         
         var containerView = self.fw_statisticalExposure?.containerView ?? self.fw_statisticalExposure?.containerViewBlock?(self)
@@ -751,6 +772,8 @@ public class StatisticalObject: NSObject {
             }
         } else if state.state == .none || identifierChanged {
             self.fw_statisticalTarget.exposureIsFully = false
+            
+            // TODO: 触发曝光结束计算时间并调用triggerExposure
         }
     }
     
@@ -794,9 +817,6 @@ public class StatisticalObject: NSObject {
     private func fw_statisticalExposureUpdate() {
         if !self.fw_statisticalExposureEnabled { return }
         
-        if let viewController = self.fw_viewController,
-           !viewController.fw_isViewVisible || viewController.presentedViewController != nil { return }
-        
         self.fw_statisticalExposureRecursive()
     }
     
@@ -828,6 +848,7 @@ public class StatisticalObject: NSObject {
 }
 
 // MARK: - UIViewController+Statistical
+/// TODO: 退后台、关闭时自动触发结束，重构下，这样不用计算时间
 @_spi(FW) extension UIViewController {
     
     private class StatisticalTarget: NSObject {
@@ -853,6 +874,8 @@ public class StatisticalObject: NSObject {
         func exposureRegister() {
             NotificationCenter.default.addObserver(self, selector: #selector(appResignActive), name: UIApplication.willResignActiveNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+            
+            // TODO: 注册时检查是否要触发一次
         }
         
         @objc func appResignActive() {

@@ -562,7 +562,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_tabBarHeight: CGFloat {
         guard let tabController = self.tabBarController,
               !tabController.tabBar.isHidden else { return 0 }
-        if self.hidesBottomBarWhenPushed && !fw_isRoot { return 0 }
+        if self.hidesBottomBarWhenPushed && !fw_isHead { return 0 }
         return tabController.tabBar.frame.height
     }
 
@@ -574,7 +574,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         var height = navController.toolbar.frame.height
         if let tabController = self.tabBarController,
            !tabController.tabBar.isHidden,
-           !(self.hidesBottomBarWhenPushed && !fw_isRoot) {
+           !(self.hidesBottomBarWhenPushed && !fw_isHead) {
         } else {
             height += UIScreen.fw_safeAreaInsets.bottom
         }
