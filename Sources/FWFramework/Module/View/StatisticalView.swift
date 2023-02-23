@@ -132,6 +132,7 @@ public class StatisticalObject: NSObject {
     /// 一定要监听background防止授权等弹窗触发曝光计算
     public fileprivate(set) var isBackground = false
 
+    /// TODO: 如果指定了containerView，优化效率，只监听父视图和当前视图，未指定时是否同理
     /// 自定义容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
     /// 自定义容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
@@ -185,9 +186,9 @@ public class StatisticalObject: NSObject {
         
         func exposureRegister() {
             if StatisticalManager.shared.exposureAppState {
-                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.didEnterBackgroundNotification, object: nil)
-                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
-                NotificationCenter.default.addObserver(self, selector: #selector(exposureUpdate), name: UIApplication.willTerminateNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(appEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
@@ -299,7 +300,18 @@ public class StatisticalObject: NSObject {
             return !rect.isNull && !rect.isInfinite && !isNan && !isInf
         }
         
-        @objc func exposureUpdate() {
+        @objc func appEnterBackground() {
+            // TODO: 标记并更新
+            self.view?.fw_statisticalExposureUpdate()
+        }
+        
+        @objc func appEnterForeground() {
+            // TODO: 标记并更新
+            self.view?.fw_statisticalExposureUpdate()
+        }
+        
+        @objc func appWillTerminate() {
+            // TODO: 标记并更新
             self.view?.fw_statisticalExposureUpdate()
         }
         
@@ -797,7 +809,7 @@ public class StatisticalObject: NSObject {
         } else if state.state == .none || identifierChanged {
             self.fw_statisticalTarget.exposureIsFully = false
             
-            // TODO: 触发曝光结束计算时间并调用triggerExposure
+            // TODO: 触发曝光结束计算时间并调用triggerExposure，需要更新是否是后台和是否关闭属性等
         }
     }
     
@@ -902,6 +914,7 @@ public class StatisticalObject: NSObject {
             NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
             
             // TODO: 注册时检查是否要触发一次
+            // TODO: 还需监听关闭
         }
         
         @objc func appResignActive() {
