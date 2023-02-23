@@ -235,8 +235,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         configShieldView(testButton.fw.statisticalExposure)
         testSwitch.fw.statisticalExposure = StatisticalObject(name: "exposure_switch", object: "switch")
         configShieldView(testSwitch.fw.statisticalExposure)
-        tableView.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
-        configShieldView(tableView.fw.statisticalExposure)
+        // tableView.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
+        // configShieldView(tableView.fw.statisticalExposure)
         bannerView.fw.statisticalExposure = StatisticalObject(name: "exposure_banner", object: "banner")
         configShieldView(bannerView.fw.statisticalExposure)
         segmentedControl.fw.statisticalExposure = StatisticalObject(name: "exposure_segment", object: "segment")
@@ -275,6 +275,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default)
         cell.textLabel?.text = "\(indexPath.row)"
         cell.contentView.backgroundColor = UIColor.fw.randomColor
+        cell.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
+        configShieldView(cell.fw.statisticalExposure)
         return cell
     }
     
