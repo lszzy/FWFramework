@@ -39,6 +39,16 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         return result
     }()
     
+    lazy var hoverView: UIView = {
+        let result = UIView()
+        result.backgroundColor = UIColor.fw.randomColor
+        result.fw.dragEnabled = true
+        result.fw.addTapGesture { [weak self] _ in
+            self?.hoverView.removeFromSuperview()
+        }
+        return result
+    }()
+    
     lazy var testView: UIView = {
         let result = UIView()
         result.backgroundColor = UIColor.fw.randomColor
@@ -133,6 +143,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func setupSubviews() {
         UIWindow.fw.main?.addSubview(shieldView)
         shieldView.fw.layoutChain.edges()
+        
+        view.addSubview(hoverView)
+        view.bringSubviewToFront(hoverView)
+        hoverView.fw.layoutChain
+            .center()
+            .size(CGSize(width: 100, height: 100))
         
         testView.fw.addTapGesture { [weak self] _ in
             self?.testView.backgroundColor = UIColor.fw.randomColor
@@ -234,7 +250,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             if !(self?.shieldView.isHidden ?? false) {
                 return self?.shieldView
             }
-            return nil
+            return self?.hoverView
         }
     }
     
