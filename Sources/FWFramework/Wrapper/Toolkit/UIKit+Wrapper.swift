@@ -1005,9 +1005,14 @@ extension Wrapper where Base: UISearchBar {
 // MARK: - UIViewController+UIKit
 extension Wrapper where Base: UIViewController {
     
-    /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-    public var isRoot: Bool {
-        return base.fw_isRoot
+    /// 判断当前控制器是否是头部控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+    public var isHead: Bool {
+        return base.fw_isHead
+    }
+    
+    /// 判断当前控制器是否是尾部控制器。如果是导航栏的最后一个控制器或者不含有导航栏，则返回YES
+    public var isTail: Bool {
+        return base.fw_isTail
     }
 
     /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES

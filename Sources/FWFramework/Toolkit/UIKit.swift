@@ -2709,10 +2709,16 @@ import AdSupport
 // MARK: - UIViewController+UIKit
 @_spi(FW) extension UIViewController {
     
-    /// 判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-    public var fw_isRoot: Bool {
+    /// 判断当前控制器是否是头部控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
+    public var fw_isHead: Bool {
         return self.navigationController == nil ||
             self.navigationController?.viewControllers.first == self
+    }
+    
+    /// 判断当前控制器是否是尾部控制器。如果是导航栏的最后一个控制器或者不含有导航栏，则返回YES
+    public var fw_isTail: Bool {
+        return self.navigationController == nil ||
+            self.navigationController?.viewControllers.last == self
     }
 
     /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES

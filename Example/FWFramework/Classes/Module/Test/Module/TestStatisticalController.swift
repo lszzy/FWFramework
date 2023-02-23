@@ -260,6 +260,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     
     func clickHandler(_ index: Int) {
         FW.debug("点击了: %@", NSNumber(value: index))
+        Router.openURL("https://www.baidu.com")
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
