@@ -230,7 +230,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func configShieldView(_ object: StatisticalObject?) {
-        object?.shieldView = { [weak self] _ in
+        object?.shieldViewBlock = { [weak self] _ in
             if !(self?.shieldView.isHidden ?? false) {
                 return self?.shieldView
             }

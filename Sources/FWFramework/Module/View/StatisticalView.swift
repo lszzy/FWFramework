@@ -1,5 +1,5 @@
 //
-//  StatisticalManager.swift
+//  StatisticalView.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -52,6 +52,9 @@ public class StatisticalManager: NSObject {
 
     /// 是否部分可见时触发曝光，默认false，仅视图完全可见时才触发曝光
     public var exposurePartly = false
+    
+    /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
+    public var exposureThresholds: CGFloat = 1
     
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -113,12 +116,20 @@ public class StatisticalObject: NSObject {
     /// 事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
 
+    /// 自定义容器视图，默认nil时获取VC视图或window
+    public weak var containerView: UIView?
+    /// 自定义容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
+    public var containerViewBlock: ((UIView) -> UIView?)?
+    /// 自定义容器内边距，默认zero
+    public var containerInset: UIEdgeInsets = .zero
     /// 是否事件仅触发一次，默认nil时采用全局配置
     public var triggerOnce: Bool?
     /// 是否忽略事件触发，默认false
     public var triggerIgnored = false
+    /// 曝光遮挡视图，被遮挡时不计曝光
+    public weak var shieldView: UIView?
     /// 曝光遮挡视图句柄，被遮挡时不计曝光，参数为所在视图
-    public var shieldView: ((UIView) -> UIView?)?
+    public var shieldViewBlock: ((UIView) -> UIView?)?
 
     /// 创建事件绑定信息，指定名称、对象和信息
     public init(name: String = "", object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
@@ -580,10 +591,11 @@ public class StatisticalObject: NSObject {
             return .none
         }
         
-        let targetView = viewController?.view ?? self.window
+        var containerView = self.fw_statisticalExposure?.containerView ?? self.fw_statisticalExposure?.containerViewBlock?(self)
+        if containerView == nil { containerView = viewController?.view ?? self.window }
         var superview = self.superview
         var superviewHidden = false
-        while superview != nil && superview != targetView {
+        while superview != nil && superview != containerView {
             if !(superview?.fw_isViewVisible ?? false) {
                 superviewHidden = true
                 break
@@ -594,14 +606,17 @@ public class StatisticalObject: NSObject {
             return .none
         }
         
-        var viewRect = self.convert(self.bounds, to: targetView)
+        var viewRect = self.convert(self.bounds, to: containerView)
         viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
-        let targetRect = targetView?.bounds ?? .zero
+        var containerRect = containerView?.bounds ?? .zero
+        if let containerInset = self.fw_statisticalExposure?.containerInset {
+            containerRect = containerRect.inset(by: containerInset)
+        }
         var state: StatisticalExposureState = .none
         if !CGRectIsEmpty(viewRect) {
-            if CGRectContainsRect(targetRect, viewRect) {
+            if CGRectContainsRect(containerRect, viewRect) {
                 state = .fully
-            } else if CGRectIntersectsRect(targetRect, viewRect) {
+            } else if CGRectIntersectsRect(containerRect, viewRect) {
                 state = .partly
             }
         }
@@ -609,11 +624,11 @@ public class StatisticalObject: NSObject {
             return state
         }
         
-        let shieldView = self.fw_statisticalExposure?.shieldView?(self)
+        let shieldView = self.fw_statisticalExposure?.shieldView ?? self.fw_statisticalExposure?.shieldViewBlock?(self)
         guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
             return state
         }
-        let shieldRect = shieldView.convert(shieldView.bounds, to: targetView)
+        let shieldRect = shieldView.convert(shieldView.bounds, to: containerView)
         if !CGRectIsEmpty(shieldRect) {
             if CGRectContainsRect(shieldRect, viewRect) {
                 return .none
