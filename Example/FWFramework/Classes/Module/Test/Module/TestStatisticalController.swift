@@ -156,14 +156,14 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.bannerView.makeScrollScroll(to: 0)
             
             let event = StatisticalEvent(name: "click_view", object: "view")
-            self?.testView.fw.trackClick(event)
+            StatisticalManager.shared.trackClick(view: self?.testView, event: event)
         }
         
         testButton.fw.addTouch { [weak self] _ in
             self?.testButton.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
             
             let event = StatisticalEvent(name: "click_button", object: "button")
-            self?.testButton.fw.trackClick(event)
+            StatisticalManager.shared.trackClick(view: self?.testButton, event: event)
         }
         
         testSwitch.fw.addBlock({ [weak self] _ in
@@ -171,7 +171,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
             
             let event = StatisticalEvent(name: "click_switch", object: "switch")
-            self?.testSwitch.fw.trackClick(event)
+            StatisticalManager.shared.trackClick(view: self?.testSwitch, event: event)
         }, for: .valueChanged)
         
         self.bannerView.clickItemOperationBlock = { [weak self] index in
@@ -181,14 +181,14 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             ])
             
             let event = StatisticalEvent(name: "click_banner", object: "banner")
-            self?.bannerView.fw.trackClick(event, indexPath: IndexPath(row: index, section: 0))
+            StatisticalManager.shared.trackClick(view: self?.bannerView, indexPath: IndexPath(row: index, section: 0), event: event)
         }
         
         self.segmentedControl.indexChangeBlock = { [weak self] index in
             self?.segmentedControl.selectionIndicatorBoxColor = UIColor.fw.randomColor
             
             let event = StatisticalEvent(name: "click_segment", object: "segment")
-            self?.segmentedControl.fw.trackClick(event, indexPath: IndexPath(row: Int(index), section: 0))
+            StatisticalManager.shared.trackClick(view: self?.segmentedControl, indexPath: IndexPath(row: Int(index), section: 0), event: event)
         }
     }
     
@@ -288,7 +288,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         FW.debug("点击了: %@", NSNumber(value: index))
         
         let event = StatisticalEvent(name: "click_tag", object: "tag")
-        self.tagCollectionView.fw.trackClick(event, indexPath: IndexPath(row: Int(index), section: 0))
+        StatisticalManager.shared.trackClick(view: self.tagCollectionView, indexPath: IndexPath(row: Int(index), section: 0), event: event)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

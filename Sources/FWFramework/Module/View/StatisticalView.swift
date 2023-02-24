@@ -22,6 +22,7 @@ extension Notification.Name {
 /// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
 public class StatisticalManager: NSObject {
     
+    // MARK: - Accessor
     /// 单例模式
     public static let shared = StatisticalManager()
     
@@ -52,13 +53,35 @@ public class StatisticalManager: NSObject {
     
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
+    // MARK: - Public
     /// 注册单个事件处理器
     public func registerEvent(_ name: String, handler: @escaping (StatisticalEvent) -> Void) {
         eventHandlers[name] = handler
     }
     
+    /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
+    public func trackClick(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+        let event = closure()
+        if event.triggerIgnored { return }
+        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
+        let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : StatisticalManager.shared.clickOnce
+        if triggerCount > 1 && triggerOnce { return }
+        view?.fw_trackClickCounts[triggerKey] = triggerCount
+        
+        event.view = view
+        event.viewController = view?.fw_viewController
+        event.indexPath = indexPath
+        event.triggerCount = triggerCount
+        event.triggerTimestamp = Date.fw_currentTime
+        event.isExposure = false
+        event.isFinished = true
+        handleEvent(event)
+    }
+    
+    // MARK: - Private
     /// 内部方法，处理事件
-    fileprivate func handleEvent(_ event: StatisticalEvent) {
+    private func handleEvent(_ event: StatisticalEvent) {
         if let eventHandler = eventHandlers[event.name] {
             eventHandler(event)
         }
@@ -136,35 +159,25 @@ public class StatisticalEvent: NSObject {
 // MARK: - UIView+StatisticalClick
 @_spi(FW) extension UIView {
     
-    /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
-    public func fw_trackClick(_ event: StatisticalEvent, indexPath: IndexPath? = nil) {
-        if event.triggerIgnored { return }
-        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
-        let triggerCount = (fw_trackClickData[triggerKey] ?? 0) + 1
-        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : StatisticalManager.shared.clickOnce
-        if triggerCount > 1 && triggerOnce { return }
-        fw_trackClickData[triggerKey] = triggerCount
-        
-        event.view = self
-        event.viewController = self.fw_viewController
-        event.indexPath = indexPath
-        event.triggerCount = triggerCount
-        event.triggerTimestamp = Date.fw_currentTime
-        event.isExposure = false
-        event.isFinished = true
-        
-        StatisticalManager.shared.handleEvent(event)
-    }
-    
-    private var fw_trackClickData: [String: Int] {
-        get { return fw_property(forName: "fw_trackClickData") as? [String: Int] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_trackClickData") }
+    fileprivate var fw_trackClickCounts: [String: Int] {
+        get { return fw_property(forName: "fw_trackClickCounts") as? [String: Int] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_trackClickCounts") }
     }
     
 }
 
 // MARK: - UIView+StatisticalExposure
 @_spi(FW) extension UIView {
+    
+    fileprivate var fw_trackExposureCounts: [String: Int] {
+        get { return fw_property(forName: "fw_trackExposureCounts") as? [String: Int] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_trackExposureCounts") }
+    }
+    
+    fileprivate var fw_trackExposureDurations: [String: TimeInterval] {
+        get { return fw_property(forName: "fw_trackExposureDurations") as? [String: TimeInterval] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_trackExposureDurations") }
+    }
     
 }
 
