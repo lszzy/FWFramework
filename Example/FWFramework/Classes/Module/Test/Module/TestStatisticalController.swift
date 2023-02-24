@@ -97,7 +97,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }()
     
     func didInitialize() {
-        StatisticalManager.shared.statisticalEnabled = true
+        FWStatisticalManager.shared.statisticalEnabled = true
     }
     
     func setupTableView() {
@@ -164,8 +164,11 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
         }, for: .valueChanged)
         
-        self.bannerView.clickItemOperationBlock = { [weak self] index in
-            self?.clickHandler(index)
+        self.bannerView.clickItemOperationBlock = { index in
+            FW.debug("点击了: %@", NSNumber(value: index))
+            Router.openURL("https://www.baidu.com", userInfo: [
+                RouterUserInfoKey.routerOptions: NavigatorOptions.transitionPresent
+            ])
         }
         
         self.segmentedControl.indexChangeBlock = { [weak self] _ in
@@ -207,7 +210,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func renderData() {
-        StatisticalManager.shared.globalHandler = { [weak self] object in
+        FWStatisticalManager.shared.globalHandler = { [weak self] object in
             if object.isExposure {
                 FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(object.view?.classForCoder ?? Self.classForCoder()), "\(object.indexPath?.section ?? 0).\(object.indexPath?.row ?? 0)", "\(object.triggerCount)", FW.safeString(object.name), FW.safeString(object.object), FW.safeString(object.userInfo), "\(object.triggerDuration)", "\(object.totalDuration)")
             } else {
@@ -216,36 +219,36 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         
         // ViewController
-        fw.statisticalExposure = StatisticalObject(name: "exposure_viewController", object: "viewController")
+        fw.statisticalExposure = FWStatisticalObject(name: "exposure_viewController", object: "viewController")
         
         // Click
-        testView.fw.statisticalClick = StatisticalObject(name: "click_view", object: "view")
-        testButton.fw.statisticalClick = StatisticalObject(name: "click_button", object: "button")
-        testSwitch.fw.statisticalClick = StatisticalObject(name: "click_switch", object: "switch")
-        tableView.fw.statisticalClick = StatisticalObject(name: "click_tableView", object: "table")
-        bannerView.fw.statisticalClick = StatisticalObject(name: "click_banner", object: "banner")
-        segmentedControl.fw.statisticalClick = StatisticalObject(name: "click_segment", object: "segment")
-        tagCollectionView.fw.statisticalClick = StatisticalObject(name: "click_tag", object: "tag")
+        testView.fw.statisticalClick = FWStatisticalObject(name: "click_view", object: "view")
+        testButton.fw.statisticalClick = FWStatisticalObject(name: "click_button", object: "button")
+        testSwitch.fw.statisticalClick = FWStatisticalObject(name: "click_switch", object: "switch")
+        tableView.fw.statisticalClick = FWStatisticalObject(name: "click_tableView", object: "table")
+        bannerView.fw.statisticalClick = FWStatisticalObject(name: "click_banner", object: "banner")
+        segmentedControl.fw.statisticalClick = FWStatisticalObject(name: "click_segment", object: "segment")
+        tagCollectionView.fw.statisticalClick = FWStatisticalObject(name: "click_tag", object: "tag")
         
         // Exposure
-        testView.fw.statisticalExposure = StatisticalObject(name: "exposure_view", object: "view")
+        testView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_view", object: "view")
         configShieldView(testView.fw.statisticalExposure)
-        testButton.fw.statisticalExposure = StatisticalObject(name: "exposure_button", object: "button")
+        testButton.fw.statisticalExposure = FWStatisticalObject(name: "exposure_button", object: "button")
         testButton.fw.statisticalExposure?.triggerOnce = true
         configShieldView(testButton.fw.statisticalExposure)
-        testSwitch.fw.statisticalExposure = StatisticalObject(name: "exposure_switch", object: "switch")
+        testSwitch.fw.statisticalExposure = FWStatisticalObject(name: "exposure_switch", object: "switch")
         configShieldView(testSwitch.fw.statisticalExposure)
-        // tableView.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
+        // tableView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_tableView", object: "table")
         // configShieldView(tableView.fw.statisticalExposure)
-        bannerView.fw.statisticalExposure = StatisticalObject(name: "exposure_banner", object: "banner")
+        bannerView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_banner", object: "banner")
         configShieldView(bannerView.fw.statisticalExposure)
-        segmentedControl.fw.statisticalExposure = StatisticalObject(name: "exposure_segment", object: "segment")
+        segmentedControl.fw.statisticalExposure = FWStatisticalObject(name: "exposure_segment", object: "segment")
         configShieldView(segmentedControl.fw.statisticalExposure)
-        tagCollectionView.fw.statisticalExposure = StatisticalObject(name: "exposure_tag", object: "tag")
+        tagCollectionView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_tag", object: "tag")
         configShieldView(tagCollectionView.fw.statisticalExposure)
     }
     
-    func configShieldView(_ object: StatisticalObject?) {
+    func configShieldView(_ object: FWStatisticalObject?) {
         object?.shieldViewBlock = { [weak self] _ in
             if !(self?.shieldView.isHidden ?? false) {
                 return self?.shieldView
@@ -275,7 +278,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default)
         cell.textLabel?.text = "\(indexPath.row)"
         cell.contentView.backgroundColor = UIColor.fw.randomColor
-        cell.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
+        cell.fw.statisticalExposure = FWStatisticalObject(name: "exposure_tableView", object: "table")
         configShieldView(cell.fw.statisticalExposure)
         return cell
     }
@@ -294,8 +297,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let cell = TestStatisticalCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
         cell.textLabel.text = "\(indexPath.row)"
         cell.contentView.backgroundColor = UIColor.fw.randomColor
-        cell.fw.statisticalClick = StatisticalObject(name: "click_collectionView", object: "cell")
-        cell.fw.statisticalExposure = StatisticalObject(name: "exposure_collectionView", object: "cell")
+        cell.fw.statisticalClick = FWStatisticalObject(name: "click_collectionView", object: "cell")
+        cell.fw.statisticalExposure = FWStatisticalObject(name: "exposure_collectionView", object: "cell")
         cell.fw.statisticalExposure?.triggerOnce = true
         configShieldView(cell.fw.statisticalExposure)
         return cell
