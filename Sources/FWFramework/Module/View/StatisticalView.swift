@@ -60,13 +60,14 @@ public class StatisticalManager: NSObject {
     }
     
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
-    public func trackClick(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+    @discardableResult
+    public func trackClick(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
         let event = closure()
-        if event.triggerIgnored { return }
+        if event.triggerIgnored { return false }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : clickOnce
-        if triggerCount > 1 && triggerOnce { return }
+        if triggerCount > 1 && triggerOnce { return false }
         view?.fw_trackClickCounts[triggerKey] = triggerCount
         
         event.view = view
@@ -77,16 +78,18 @@ public class StatisticalManager: NSObject {
         event.isExposure = false
         event.isFinished = true
         handleEvent(event)
+        return true
     }
     
     /// 手工触发曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
-    public func trackExposureBegin(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+    @discardableResult
+    public func trackExposureBegin(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
         let event = closure()
-        if event.triggerIgnored { return }
+        if event.triggerIgnored { return false }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return }
+        if triggerCount > 1 && triggerOnce { return false }
         view?.fw_trackExposureCounts[triggerKey] = triggerCount
         let triggerTimestamp = Date.fw_currentTime
         view?.fw_trackExposureTimestamps[triggerKey] = triggerTimestamp
@@ -103,17 +106,19 @@ public class StatisticalManager: NSObject {
         event.isFinished = false
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
+        return true
     }
     
     /// 手工触发曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
-    public func trackExposureEnd(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
-        guard trackingTime else { return }
+    @discardableResult
+    public func trackExposureEnd(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
+        guard trackingTime else { return false }
         let event = closure()
-        if event.triggerIgnored { return }
+        if event.triggerIgnored { return false }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = view?.fw_trackExposureCounts[triggerKey] ?? 0
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return }
+        if triggerCount > 1 && triggerOnce { return false }
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         // TODO: duration需要减去退后台的时间
@@ -134,6 +139,7 @@ public class StatisticalManager: NSObject {
         event.isFinished = true
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
+        return true
     }
     
     // MARK: - Private
@@ -213,8 +219,164 @@ public class StatisticalEvent: NSObject {
     
 }
 
+// MARK: - StatisticalViewProtocol
+/// 可统计视图协议，UIView默认实现，子类可重写
+@objc public protocol StatisticalViewProtocol {
+    
+    /// 可统计视图绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
+    func statisticalViewWillBindClick(containerView: UIView?) -> Bool
+    
+}
+
+@objc extension UIView: StatisticalViewProtocol {
+    
+    /// 默认实现绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
+    open func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        guard let gestureRecognizers = self.gestureRecognizers else { return false }
+        for gesture in gestureRecognizers {
+            if let tapGesture = gesture as? UITapGestureRecognizer {
+                tapGesture.fw_addBlock { sender in
+                    (sender as? UIGestureRecognizer)?.view?.fw_statisticalTrackClick()
+                }
+                return true
+            }
+        }
+        return false
+    }
+    
+}
+
+@_spi(FW) extension UIControl {
+    
+    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        var controlEvents = UIControl.Event.touchUpInside
+        if self is UIDatePicker ||
+            self is UIPageControl ||
+            self is UISegmentedControl ||
+            self is UISlider ||
+            self is UIStepper ||
+            self is UISwitch ||
+            self is UITextField {
+            controlEvents = .valueChanged
+        }
+        self.fw_addBlock({ sender in
+            (sender as? UIControl)?.fw_statisticalTrackClick()
+        }, for: controlEvents)
+        return true
+    }
+    
+}
+
+@_spi(FW) extension UITableView {
+    
+    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        guard let tableDelegate = self.delegate as? NSObject else { return false }
+        NSObject.fw_swizzleMethod(
+            tableDelegate,
+            selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
+            identifier: "FWStatisticalManager",
+            methodSignature: (@convention(c) (NSObject, Selector, UITableView, IndexPath) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, UITableView, IndexPath) -> Void).self
+        ) { store in { selfObject, tableView, indexPath in
+            store.original(selfObject, store.selector, tableView, indexPath)
+            
+            if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
+            if !tableView.fw_statisticalClickBounded { return }
+            
+            let cell = tableView.cellForRow(at: indexPath)
+            if cell?.fw_statisticalClick != nil {
+                cell?.fw_statisticalTrackClick(indexPath: indexPath)
+            } else if tableView.fw_statisticalClick != nil {
+                tableView.fw_statisticalTrackClick(indexPath: indexPath)
+            }
+        }}
+        return true
+    }
+    
+}
+
+@_spi(FW) extension UICollectionView {
+    
+    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        guard let collectionDelegate = self.delegate as? NSObject else { return false }
+        NSObject.fw_swizzleMethod(
+            collectionDelegate,
+            selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
+            identifier: "FWStatisticalManager",
+            methodSignature: (@convention(c) (NSObject, Selector, UICollectionView, IndexPath) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, UICollectionView, IndexPath) -> Void).self
+        ) { store in { selfObject, collectionView, indexPath in
+            store.original(selfObject, store.selector, collectionView, indexPath)
+            
+            if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
+            if !collectionView.fw_statisticalClickBounded { return }
+            
+            let cell = collectionView.cellForItem(at: indexPath)
+            if cell?.fw_statisticalClick != nil {
+                cell?.fw_statisticalTrackClick(indexPath: indexPath)
+            } else if collectionView.fw_statisticalClick != nil {
+                collectionView.fw_statisticalTrackClick(indexPath: indexPath)
+            }
+        }}
+        return true
+    }
+    
+}
+
+@_spi(FW) extension UITableViewCell {
+    
+    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else { return false }
+        return tableView.fw_statisticalBindClick()
+    }
+    
+}
+
+@_spi(FW) extension UICollectionViewCell {
+    
+    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+        guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else { return false }
+        return collectionView.fw_statisticalBindClick()
+    }
+    
+}
+
 // MARK: - UIView+StatisticalClick
 @_spi(FW) extension UIView {
+    
+    // MARK: - Public
+    /// 设置并尝试自动绑定点击事件统计，containerView参数为nil
+    public var fw_statisticalClick: StatisticalEvent? {
+        get {
+            return fw_property(forName: "fw_statisticalClick") as? StatisticalEvent
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_statisticalClick")
+            fw_statisticalBindClick(containerView: nil)
+        }
+    }
+    
+    /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
+    @discardableResult
+    public func fw_statisticalBindClick(containerView: UIView? = nil) -> Bool {
+        guard !fw_statisticalClickBounded else { return true }
+        let result = statisticalViewWillBindClick(containerView: containerView)
+        if result { fw_statisticalClickBounded = true }
+        return result
+    }
+    
+    /// 触发视图点击事件统计，仅绑定statisticalClick后生效
+    @discardableResult
+    public func fw_statisticalTrackClick(indexPath: IndexPath? = nil, _ event: @autoclosure () -> StatisticalEvent? = nil) -> Bool {
+        guard let event = event() ?? fw_statisticalClick else { return false }
+        return StatisticalManager.shared.trackClick(view: self, indexPath: indexPath, event: event)
+    }
+    
+    // MARK: - Private
+    fileprivate var fw_statisticalClickBounded: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalClickBounded") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickBounded") }
+    }
     
     fileprivate var fw_trackClickCounts: [String: Int] {
         get { return fw_property(forName: "fw_trackClickCounts") as? [String: Int] ?? [:] }
@@ -226,6 +388,7 @@ public class StatisticalEvent: NSObject {
 // MARK: - UIView+StatisticalExposure
 @_spi(FW) extension UIView {
     
+    // MARK: - Private
     fileprivate var fw_trackExposureCounts: [String: Int] {
         get { return fw_property(forName: "fw_trackExposureCounts") as? [String: Int] ?? [:] }
         set { fw_setProperty(newValue, forName: "fw_trackExposureCounts") }

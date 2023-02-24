@@ -159,8 +159,6 @@ public class FWStatisticalObject: NSObject {
     private class StatisticalTarget: NSObject {
         private(set) weak var view: UIView?
         
-        private var clickTotalCounts: [String: Int] = [:]
-        
         var exposureIsProxy = false
         var exposureIsFully = false
         var exposureIdentifier: String = ""
@@ -185,42 +183,6 @@ public class FWStatisticalObject: NSObject {
                 NotificationCenter.default.addObserver(self, selector: #selector(appEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
                 NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
-        }
-        
-        func triggerClick(_ cell: UIView?, indexPath: IndexPath?) {
-            var object: FWStatisticalObject
-            if let clickObject = cell?.fw_statisticalClick ?? view?.fw_statisticalClick {
-                object = clickObject
-            } else {
-                object = FWStatisticalObject()
-            }
-            if object.triggerIgnored { return }
-            let triggerCount = clickTotalCount(indexPath)
-            let triggerOnce = object.triggerOnce != nil ? (object.triggerOnce ?? false) : FWStatisticalManager.shared.clickOnce
-            if triggerCount > 1 && triggerOnce { return }
-            
-            object.view = view
-            object.viewController = view?.fw_viewController
-            object.indexPath = indexPath
-            object.triggerCount = triggerCount
-            object.isExposure = false
-            object.isFinished = true
-            
-            if cell?.fw_statisticalClickBlock != nil {
-                cell?.fw_statisticalClickBlock?(object)
-            } else if view?.fw_statisticalClickBlock != nil {
-                view?.fw_statisticalClickBlock?(object)
-            }
-            if cell?.fw_statisticalClick != nil || view?.fw_statisticalClick != nil {
-                FWStatisticalManager.shared.handleEvent(object)
-            }
-        }
-        
-        private func clickTotalCount(_ indexPath: IndexPath?) -> Int {
-            let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
-            let triggerCount = (clickTotalCounts[triggerKey] ?? 0) + 1
-            clickTotalCounts[triggerKey] = triggerCount
-            return triggerCount
         }
         
         func triggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval) {
@@ -344,132 +306,6 @@ public class FWStatisticalObject: NSObject {
         }
     }
     
-    /// 绑定统计点击事件，触发管理器。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
-    public var fw_statisticalClick: FWStatisticalObject? {
-        get {
-            return fw_property(forName: "fw_statisticalClick") as? FWStatisticalObject
-        }
-        set {
-            fw_setProperty(newValue, forName: "fw_statisticalClick")
-            self.fw_statisticalClickRegister()
-        }
-    }
-
-    /// 绑定统计点击事件，仅触发回调。view为添加的Tap手势(需先添加手势)，control为TouchUpInside|ValueChanged，tableView|collectionView为Select(需先设置delegate)
-    public var fw_statisticalClickBlock: FWStatisticalBlock? {
-        get {
-            return fw_property(forName: "fw_statisticalClickBlock") as? FWStatisticalBlock
-        }
-        set {
-            fw_setPropertyCopy(newValue, forName: "fw_statisticalClickBlock")
-            self.fw_statisticalClickRegister()
-        }
-    }
-
-    /// 手工触发统计点击事件，更新点击次数，列表可指定cell和位置，可重复触发
-    public func fw_statisticalTriggerClick(_ cell: UIView?, indexPath: IndexPath?) {
-        fw_statisticalTarget.triggerClick(cell, indexPath: indexPath)
-    }
-    
-    private var fw_statisticalClickEnabled: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalClickEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickEnabled") }
-    }
-    
-    private func fw_statisticalClickRegister() {
-        if self.fw_statisticalClickEnabled { return }
-        self.fw_statisticalClickEnabled = true
-        if self is UITableViewCell || self is UICollectionViewCell {
-            self.fw_statisticalClickCellRegister()
-            return
-        }
-        
-        if (self as? StatisticalDelegate)?.statisticalClick?(callback: { [weak self] cell, indexPath in
-            self?.fw_statisticalTriggerClick(cell, indexPath: indexPath)
-        }) != nil {
-            return
-        }
-        
-        if let tableView = self as? UITableView, let tableDelegate = tableView.delegate as? NSObject {
-            NSObject.fw_swizzleMethod(
-                tableDelegate,
-                selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
-                identifier: "FWFWStatisticalManager",
-                methodSignature: (@convention(c) (NSObject, Selector, UITableView, IndexPath) -> Void).self,
-                swizzleSignature: (@convention(block) (NSObject, UITableView, IndexPath) -> Void).self
-            ) { store in { selfObject, tableView, indexPath in
-                store.original(selfObject, store.selector, tableView, indexPath)
-                
-                if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWFWStatisticalManager") { return }
-                if !tableView.fw_statisticalClickEnabled { return }
-                let cell = tableView.cellForRow(at: indexPath)
-                tableView.fw_statisticalTriggerClick(cell, indexPath: indexPath)
-            }}
-            return
-        }
-        
-        if let collectionView = self as? UICollectionView, let collectionDelegate = collectionView.delegate as? NSObject {
-            NSObject.fw_swizzleMethod(
-                collectionDelegate,
-                selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
-                identifier: "FWFWStatisticalManager",
-                methodSignature: (@convention(c) (NSObject, Selector, UICollectionView, IndexPath) -> Void).self,
-                swizzleSignature: (@convention(block) (NSObject, UICollectionView, IndexPath) -> Void).self
-            ) { store in { selfObject, collectionView, indexPath in
-                store.original(selfObject, store.selector, collectionView, indexPath)
-                
-                if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWFWStatisticalManager") { return }
-                if !collectionView.fw_statisticalClickEnabled { return }
-                let cell = collectionView.cellForItem(at: indexPath)
-                collectionView.fw_statisticalTriggerClick(cell, indexPath: indexPath)
-            }}
-            return
-        }
-        
-        if let control = self as? UIControl {
-            var controlEvents = UIControl.Event.touchUpInside
-            if self is UIDatePicker ||
-                self is UIPageControl ||
-                self is UISegmentedControl ||
-                self is UISlider ||
-                self is UIStepper ||
-                self is UISwitch ||
-                self is UITextField {
-                controlEvents = .valueChanged
-            }
-            control.fw_addBlock({ sender in
-                (sender as? UIControl)?.fw_statisticalTriggerClick(nil, indexPath: nil)
-            }, for: controlEvents)
-            return
-        }
-        
-        if let gestureRecognizers = self.gestureRecognizers {
-            for gesture in gestureRecognizers {
-                if let tapGesture = gesture as? UITapGestureRecognizer {
-                    tapGesture.fw_addBlock { sender in
-                        (sender as? UIGestureRecognizer)?.view?.fw_statisticalTriggerClick(nil, indexPath: nil)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func fw_statisticalClickCellRegister() {
-        if self.superview == nil { return }
-        var proxyView: UIView?
-        if self.conforms(to: StatisticalDelegate.self),
-           self.responds(to: #selector(StatisticalDelegate.statisticalCellProxyView)) {
-            proxyView = (self as? StatisticalDelegate)?.statisticalCellProxyView?()
-        } else {
-            if let cell = self as? UITableViewCell {
-                proxyView = cell.fw_tableView
-            } else if let cell = self as? UICollectionViewCell {
-                proxyView = cell.fw_collectionView
-            }
-        }
-        proxyView?.fw_statisticalClickRegister()
-    }
-    
     /// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
     public var fw_statisticalExposure: FWStatisticalObject? {
         get {
@@ -581,9 +417,6 @@ public class FWStatisticalObject: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                selfObject.fw_statisticalClickCellRegister()
-            }
             if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
                 selfObject.fw_statisticalExposureCellRegister()
             }
@@ -597,9 +430,6 @@ public class FWStatisticalObject: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_statisticalClick != nil || selfObject.fw_statisticalClickBlock != nil {
-                selfObject.fw_statisticalClickCellRegister()
-            }
             if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
                 selfObject.fw_statisticalExposureCellRegister()
             }
