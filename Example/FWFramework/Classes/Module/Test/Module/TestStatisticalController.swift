@@ -8,7 +8,7 @@
 
 import FWFramework
 
-class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol {
+class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol, TextTagCollectionViewDelegate {
     
     lazy var shieldView: UIView = {
         let result = UIView()
@@ -93,6 +93,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let result = TextTagCollectionView()
         result.verticalSpacing = 10
         result.horizontalSpacing = 10
+        result.delegate = self
         return result
     }()
     
@@ -153,26 +154,41 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         testView.fw.addTapGesture { [weak self] _ in
             self?.testView.backgroundColor = UIColor.fw.randomColor
             self?.bannerView.makeScrollScroll(to: 0)
+            
+            let event = StatisticalEvent(name: "click_view", object: "view")
+            self?.testView.fw.trackClick(event)
         }
         
         testButton.fw.addTouch { [weak self] _ in
             self?.testButton.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
+            
+            let event = StatisticalEvent(name: "click_button", object: "button")
+            self?.testButton.fw.trackClick(event)
         }
         
         testSwitch.fw.addBlock({ [weak self] _ in
             self?.testSwitch.thumbTintColor = UIColor.fw.randomColor
             self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
+            
+            let event = StatisticalEvent(name: "click_switch", object: "switch")
+            self?.testSwitch.fw.trackClick(event)
         }, for: .valueChanged)
         
-        self.bannerView.clickItemOperationBlock = { index in
+        self.bannerView.clickItemOperationBlock = { [weak self] index in
             FW.debug("点击了: %@", NSNumber(value: index))
             Router.openURL("https://www.baidu.com", userInfo: [
-                RouterUserInfoKey.routerOptions: NavigatorOptions.transitionPresent
+                RouterUserInfoKey.routerOptions: NavigatorOptions.embedInNavigation
             ])
+            
+            let event = StatisticalEvent(name: "click_banner", object: "banner")
+            self?.bannerView.fw.trackClick(event, indexPath: IndexPath(row: index, section: 0))
         }
         
-        self.segmentedControl.indexChangeBlock = { [weak self] _ in
+        self.segmentedControl.indexChangeBlock = { [weak self] index in
             self?.segmentedControl.selectionIndicatorBoxColor = UIColor.fw.randomColor
+            
+            let event = StatisticalEvent(name: "click_segment", object: "segment")
+            self?.segmentedControl.fw.trackClick(event, indexPath: IndexPath(row: Int(index), section: 0))
         }
     }
     
@@ -210,6 +226,14 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func renderData() {
+        StatisticalManager.shared.globalHandler = { [weak self] event in
+            if event.isExposure {
+                FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", FW.safeString(event.name), FW.safeString(event.object), FW.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
+            } else {
+                self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", FW.safeString(event.name), FW.safeString(event.object), FW.safeString(event.userInfo)))
+            }
+        }
+        
         FWStatisticalManager.shared.globalHandler = { [weak self] object in
             if object.isExposure {
                 FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(object.view?.classForCoder ?? Self.classForCoder()), "\(object.indexPath?.section ?? 0).\(object.indexPath?.row ?? 0)", "\(object.triggerCount)", FW.safeString(object.name), FW.safeString(object.object), FW.safeString(object.userInfo), "\(object.triggerDuration)", "\(object.totalDuration)")
@@ -222,13 +246,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         fw.statisticalExposure = FWStatisticalObject(name: "exposure_viewController", object: "viewController")
         
         // Click
-        testView.fw.statisticalClick = FWStatisticalObject(name: "click_view", object: "view")
-        testButton.fw.statisticalClick = FWStatisticalObject(name: "click_button", object: "button")
-        testSwitch.fw.statisticalClick = FWStatisticalObject(name: "click_switch", object: "switch")
         tableView.fw.statisticalClick = FWStatisticalObject(name: "click_tableView", object: "table")
-        bannerView.fw.statisticalClick = FWStatisticalObject(name: "click_banner", object: "banner")
-        segmentedControl.fw.statisticalClick = FWStatisticalObject(name: "click_segment", object: "segment")
-        tagCollectionView.fw.statisticalClick = FWStatisticalObject(name: "click_tag", object: "tag")
         
         // Exposure
         testView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_view", object: "view")
@@ -264,6 +282,13 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func clickHandler(_ index: Int) {
         FW.debug("点击了: %@", NSNumber(value: index))
         Router.openURL("https://www.baidu.com")
+    }
+    
+    func textTagCollectionView(_ textTagCollectionView: TextTagCollectionView, didTapTag tagText: String, at index: UInt, selected: Bool, tagConfig config: TextTagConfig) {
+        FW.debug("点击了: %@", NSNumber(value: index))
+        
+        let event = StatisticalEvent(name: "click_tag", object: "tag")
+        self.tagCollectionView.fw.trackClick(event, indexPath: IndexPath(row: Int(index), section: 0))
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
