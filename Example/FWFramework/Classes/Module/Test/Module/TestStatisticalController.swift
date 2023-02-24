@@ -8,7 +8,7 @@
 
 import FWFramework
 
-class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol, TextTagCollectionViewDelegate {
+class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol {
     
     lazy var shieldView: UIView = {
         let result = UIView()
@@ -93,7 +93,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let result = TextTagCollectionView()
         result.verticalSpacing = 10
         result.horizontalSpacing = 10
-        result.delegate = self
         return result
     }()
     
@@ -154,41 +153,26 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         testView.fw.addTapGesture { [weak self] _ in
             self?.testView.backgroundColor = UIColor.fw.randomColor
             self?.bannerView.makeScrollScroll(to: 0)
-            
-            let event = StatisticalEvent(name: "click_view", object: "view")
-            StatisticalManager.shared.trackClick(view: self?.testView, event: event)
         }
         
         testButton.fw.addTouch { [weak self] _ in
             self?.testButton.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
-            
-            let event = StatisticalEvent(name: "click_button", object: "button")
-            StatisticalManager.shared.trackClick(view: self?.testButton, event: event)
         }
         
         testSwitch.fw.addBlock({ [weak self] _ in
             self?.testSwitch.thumbTintColor = UIColor.fw.randomColor
             self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
-            
-            let event = StatisticalEvent(name: "click_switch", object: "switch")
-            StatisticalManager.shared.trackClick(view: self?.testSwitch, event: event)
         }, for: .valueChanged)
         
-        self.bannerView.clickItemOperationBlock = { [weak self] index in
+        self.bannerView.clickItemOperationBlock = { index in
             FW.debug("点击了: %@", NSNumber(value: index))
             Router.openURL("https://www.baidu.com", userInfo: [
                 RouterUserInfoKey.routerOptions: NavigatorOptions.embedInNavigation
             ])
-            
-            let event = StatisticalEvent(name: "click_banner", object: "banner")
-            StatisticalManager.shared.trackClick(view: self?.bannerView, indexPath: IndexPath(row: index, section: 0), event: event)
         }
         
         self.segmentedControl.indexChangeBlock = { [weak self] index in
             self?.segmentedControl.selectionIndicatorBoxColor = UIColor.fw.randomColor
-            
-            let event = StatisticalEvent(name: "click_segment", object: "segment")
-            StatisticalManager.shared.trackClick(view: self?.segmentedControl, indexPath: IndexPath(row: Int(index), section: 0), event: event)
         }
     }
     
@@ -246,7 +230,13 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         fw.statisticalExposure = FWStatisticalObject(name: "exposure_viewController", object: "viewController")
         
         // Click
-        tableView.fw.statisticalClick = FWStatisticalObject(name: "click_tableView", object: "table")
+        testView.fw.statisticalClick = StatisticalEvent(name: "click_view", object: "view")
+        testButton.fw.statisticalClick = StatisticalEvent(name: "click_button", object: "button")
+        testSwitch.fw.statisticalClick = StatisticalEvent(name: "click_switch", object: "switch")
+        tableView.fw.statisticalClick = StatisticalEvent(name: "click_tableView", object: "table")
+        bannerView.fw.statisticalClick = StatisticalEvent(name: "click_banner", object: "banner")
+        segmentedControl.fw.statisticalClick = StatisticalEvent(name: "click_segment", object: "segment")
+        tagCollectionView.fw.statisticalClick = StatisticalEvent(name: "click_tag", object: "tag")
         
         // Exposure
         testView.fw.statisticalExposure = FWStatisticalObject(name: "exposure_view", object: "view")
@@ -284,13 +274,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         Router.openURL("https://www.baidu.com")
     }
     
-    func textTagCollectionView(_ textTagCollectionView: TextTagCollectionView, didTapTag tagText: String, at index: UInt, selected: Bool, tagConfig config: TextTagConfig) {
-        FW.debug("点击了: %@", NSNumber(value: index))
-        
-        let event = StatisticalEvent(name: "click_tag", object: "tag")
-        StatisticalManager.shared.trackClick(view: self.tagCollectionView, indexPath: IndexPath(row: Int(index), section: 0), event: event)
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         50
     }
@@ -322,7 +305,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let cell = TestStatisticalCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
         cell.textLabel.text = "\(indexPath.row)"
         cell.contentView.backgroundColor = UIColor.fw.randomColor
-        cell.fw.statisticalClick = FWStatisticalObject(name: "click_collectionView", object: "cell")
+        cell.fw.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.fw.statisticalExposure = FWStatisticalObject(name: "exposure_collectionView", object: "cell")
         cell.fw.statisticalExposure?.triggerOnce = true
         configShieldView(cell.fw.statisticalExposure)
