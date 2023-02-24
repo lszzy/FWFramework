@@ -133,12 +133,42 @@ public class StatisticalEvent: NSObject {
     
 }
 
-// MARK: - UIView+StatisticalView
+// MARK: - UIView+StatisticalClick
+@_spi(FW) extension UIView {
+    
+    /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
+    public func fw_trackClick(_ event: StatisticalEvent, indexPath: IndexPath? = nil) {
+        if event.triggerIgnored { return }
+        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)"
+        let triggerCount = (fw_trackClickData[triggerKey] ?? 0) + 1
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : StatisticalManager.shared.clickOnce
+        if triggerCount > 1 && triggerOnce { return }
+        fw_trackClickData[triggerKey] = triggerCount
+        
+        event.view = self
+        event.viewController = self.fw_viewController
+        event.indexPath = indexPath
+        event.triggerCount = triggerCount
+        event.triggerTimestamp = Date.fw_currentTime
+        event.isExposure = false
+        event.isFinished = true
+        
+        StatisticalManager.shared.handleEvent(event)
+    }
+    
+    private var fw_trackClickData: [String: Int] {
+        get { return fw_property(forName: "fw_trackClickData") as? [String: Int] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_trackClickData") }
+    }
+    
+}
+
+// MARK: - UIView+StatisticalExposure
 @_spi(FW) extension UIView {
     
 }
 
-// MARK: - UIViewController+StatisticalView
+// MARK: - UIViewController+StatisticalExposure
 @_spi(FW) extension UIViewController {
     
 }
