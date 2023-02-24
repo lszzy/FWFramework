@@ -87,7 +87,7 @@ open class ReusableViewPool: NSObject {
         }
         lock.signal()
         
-        enqueueReusableView?.reusableViewWillEnterPool()
+        enqueueReusableView?.reusableViewWillRecycle()
     }
     
     /// 回收可复用的视图
@@ -101,7 +101,7 @@ open class ReusableViewPool: NSObject {
             return
         }
         
-        reusableView.reusableViewWillEnterPool()
+        reusableView.reusableViewWillRecycle()
         lock.wait()
         let classIdentifier = NSStringFromClass(type(of: reusableView)) + reuseIdentifier
         if var reusableViews = dequeueReusableViews[classIdentifier],
@@ -162,7 +162,7 @@ open class ReusableViewPool: NSObject {
         lock.wait()
         for reusableViews in enqueueReusableViews.values {
             for reusableView in reusableViews {
-                reusableView.reusableViewWillEnterPool()
+                reusableView.reusableViewWillRecycle()
             }
         }
         lock.signal()
@@ -211,7 +211,7 @@ open class ReusableViewPool: NSObject {
         dequeueReusableViews[classIdentifier] = reusableViews
         lock.signal()
         
-        reusableView.reusableViewWillLeavePool()
+        reusableView.reusableViewWillReuse()
         return reusableView
     }
     
@@ -228,10 +228,10 @@ public protocol ReusableViewProtocol {
     
     /// 初始化可重用视图，默认调用init(frame:)
     static func reusableViewInitialize(reuseIdentifier: String) -> Self
-    /// 即将进入回收池，默认清空viewHolder，必须调用super
-    func reusableViewWillEnterPool()
-    /// 即将离开回收池，默认重用次数+1，必须调用super
-    func reusableViewWillLeavePool()
+    /// 即将回收视图，默认清空viewHolder，必须调用super
+    func reusableViewWillRecycle()
+    /// 即将重用视图，默认重用次数+1，必须调用super
+    func reusableViewWillReuse()
     
 }
 
@@ -242,13 +242,13 @@ public protocol ReusableViewProtocol {
         return self.init(frame: .zero)
     }
     
-    /// 即将进入回收池，默认清空viewHolder，必须调用super
-    open func reusableViewWillEnterPool() {
+    /// 即将回收视图，默认清空viewHolder，必须调用super
+    open func reusableViewWillRecycle() {
         fw_viewHolder = nil
     }
     
-    /// 即将离开回收池，默认重用次数+1，必须调用super
-    open func reusableViewWillLeavePool() {
+    /// 即将重用视图，默认重用次数+1，必须调用super
+    open func reusableViewWillReuse() {
         fw_reusedTimes += 1
     }
     
