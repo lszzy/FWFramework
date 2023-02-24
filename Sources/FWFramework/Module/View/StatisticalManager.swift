@@ -187,7 +187,7 @@ public class FWStatisticalObject: NSObject {
         
         func triggerExposure(_ cell: UIView?, indexPath: IndexPath?, duration: TimeInterval) {
             var object: FWStatisticalObject
-            if let exposureObject = cell?.fw_statisticalExposure ?? view?.fw_statisticalExposure {
+            if let exposureObject = cell?.__fw_statisticalExposure ?? view?.__fw_statisticalExposure {
                 object = exposureObject
             } else {
                 object = FWStatisticalObject()
@@ -207,12 +207,12 @@ public class FWStatisticalObject: NSObject {
             object.isExposure = true
             object.isFinished = duration > 0
             
-            if cell?.fw_statisticalExposureBlock != nil {
-                cell?.fw_statisticalExposureBlock?(object)
-            } else if view?.fw_statisticalExposureBlock != nil {
-                view?.fw_statisticalExposureBlock?(object)
+            if cell?.__fw_statisticalExposureBlock != nil {
+                cell?.__fw_statisticalExposureBlock?(object)
+            } else if view?.__fw_statisticalExposureBlock != nil {
+                view?.__fw_statisticalExposureBlock?(object)
             }
-            if cell?.fw_statisticalExposure != nil || view?.fw_statisticalExposure != nil {
+            if cell?.__fw_statisticalExposure != nil || view?.__fw_statisticalExposure != nil {
                 FWStatisticalManager.shared.handleEvent(object)
             }
         }
@@ -239,7 +239,7 @@ public class FWStatisticalObject: NSObject {
                 indexPath = cell.fw_indexPath
             }
             
-            let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(view?.fw_statisticalExposure?.name ?? "")-\(String.fw_safeString(view?.fw_statisticalExposure?.object))"
+            let identifier = "\(indexPath?.section ?? -1)-\(indexPath?.row ?? -1)-\(view?.__fw_statisticalExposure?.name ?? "")-\(String.fw_safeString(view?.__fw_statisticalExposure?.object))"
             return identifier
         }
         
@@ -259,17 +259,17 @@ public class FWStatisticalObject: NSObject {
         
         @objc func appEnterBackground() {
             // TODO: 标记并更新
-            self.view?.fw_statisticalExposureUpdate()
+            self.view?.__fw_statisticalExposureUpdate()
         }
         
         @objc func appEnterForeground() {
             // TODO: 标记并更新
-            self.view?.fw_statisticalExposureUpdate()
+            self.view?.__fw_statisticalExposureUpdate()
         }
         
         @objc func appWillTerminate() {
             // TODO: 标记并更新
-            self.view?.fw_statisticalExposureUpdate()
+            self.view?.__fw_statisticalExposureUpdate()
         }
         
         @objc func exposureCalculate() {
@@ -307,24 +307,24 @@ public class FWStatisticalObject: NSObject {
     }
     
     /// 绑定统计曝光事件，触发管理器。如果对象发生变化(indexPath|name|object)，也会触发
-    public var fw_statisticalExposure: FWStatisticalObject? {
+    fileprivate var __fw_statisticalExposure: FWStatisticalObject? {
         get {
-            return fw_property(forName: "fw_statisticalExposure") as? FWStatisticalObject
+            return fw_property(forName: "__fw_statisticalExposure") as? FWStatisticalObject
         }
         set {
-            fw_setProperty(newValue, forName: "fw_statisticalExposure")
-            self.fw_statisticalExposureRegister()
+            fw_setProperty(newValue, forName: "__fw_statisticalExposure")
+            self.__fw_statisticalExposureRegister()
         }
     }
 
     /// 绑定统计曝光事件，仅触发回调
-    public var fw_statisticalExposureBlock: FWStatisticalBlock? {
+    public var __fw_statisticalExposureBlock: FWStatisticalBlock? {
         get {
-            return fw_property(forName: "fw_statisticalExposureBlock") as? FWStatisticalBlock
+            return fw_property(forName: "__fw_statisticalExposureBlock") as? FWStatisticalBlock
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureBlock")
-            self.fw_statisticalExposureRegister()
+            fw_setPropertyCopy(newValue, forName: "__fw_statisticalExposureBlock")
+            self.__fw_statisticalExposureRegister()
         }
     }
 
@@ -346,7 +346,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
         ) { store in { selfObject, frame in
             store.original(selfObject, store.selector, frame)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -356,7 +356,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
         ) { store in { selfObject, hidden in
             store.original(selfObject, store.selector, hidden)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -366,7 +366,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
         ) { store in { selfObject, alpha in
             store.original(selfObject, store.selector, alpha)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -376,7 +376,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
         ) { store in { selfObject, bounds in
             store.original(selfObject, store.selector, bounds)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -386,7 +386,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -396,7 +396,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UITableView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -406,7 +406,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            selfObject.fw_statisticalExposureUpdate()
+            selfObject.__fw_statisticalExposureUpdate()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -417,8 +417,8 @@ public class FWStatisticalObject: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                selfObject.fw_statisticalExposureCellRegister()
+            if selfObject.__fw_statisticalExposure != nil || selfObject.__fw_statisticalExposureBlock != nil {
+                selfObject.__fw_statisticalExposureCellRegister()
             }
         }}
         
@@ -430,8 +430,8 @@ public class FWStatisticalObject: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_statisticalExposure != nil || selfObject.fw_statisticalExposureBlock != nil {
-                selfObject.fw_statisticalExposureCellRegister()
+            if selfObject.__fw_statisticalExposure != nil || selfObject.__fw_statisticalExposureBlock != nil {
+                selfObject.__fw_statisticalExposureCellRegister()
             }
         }}
         
@@ -442,7 +442,7 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            selfObject.fw_statisticalExposureDidAppear()
+            selfObject.__fw_statisticalExposureDidAppear()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -452,20 +452,20 @@ public class FWStatisticalObject: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            selfObject.fw_statisticalExposureDidDisappear()
+            selfObject.__fw_statisticalExposureDidDisappear()
         }}
     }
     
-    private var fw_statisticalExposureEnabled: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureEnabled") }
+    private var __fw_statisticalExposureEnabled: Bool {
+        get { return fw_propertyBool(forName: "__fw_statisticalExposureEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "__fw_statisticalExposureEnabled") }
     }
     
     @discardableResult
-    private func fw_statisticalExposureCustom() -> Bool {
+    private func __fw_statisticalExposureCustom() -> Bool {
         if (self as? StatisticalDelegate)?.statisticalExposure?(callback: { [weak self] cell, indexPath, duration in
             guard let this = self else { return }
-            if StatisticalTarget.exposureIsFullyState(this.fw_statisticalExposureViewState()) {
+            if StatisticalTarget.exposureIsFullyState(this.__fw_statisticalExposureViewState()) {
                 this.fw_statisticalTriggerExposure(cell, indexPath: indexPath, duration: duration)
             }
         }) != nil {
@@ -476,7 +476,7 @@ public class FWStatisticalObject: NSObject {
     
     /// TODO: 支持曝光状态监听，变化时触发block，类似vc.fw_state监听机制，这样可以移除exposureBlock，从而支持多个block的效果
     
-    private func fw_statisticalExposureViewState() -> StatisticalExposureState {
+    private func __fw_statisticalExposureViewState() -> StatisticalExposureState {
         var state = StatisticalExposureState()
         if !self.fw_isViewVisible {
             return state
@@ -497,7 +497,7 @@ public class FWStatisticalObject: NSObject {
             }
         }
         
-        var containerView = self.fw_statisticalExposure?.containerView ?? self.fw_statisticalExposure?.containerViewBlock?(self)
+        var containerView = self.__fw_statisticalExposure?.containerView ?? self.__fw_statisticalExposure?.containerViewBlock?(self)
         if let containerView = containerView {
             if !containerView.fw_isViewVisible {
                 return state
@@ -522,11 +522,11 @@ public class FWStatisticalObject: NSObject {
             return state
         }
         
-        state = fw_statisticalExposureCalculateRatio(containerView: containerView, viewController: viewController)
+        state = __fw_statisticalExposureCalculateRatio(containerView: containerView, viewController: viewController)
         return state
     }
     
-    private func fw_statisticalExposureCalculateRatio(containerView: UIView, viewController: UIViewController?) -> StatisticalExposureState {
+    private func __fw_statisticalExposureCalculateRatio(containerView: UIView, viewController: UIViewController?) -> StatisticalExposureState {
         var ratio = StatisticalExposureState()
         var viewRect = self.convert(self.bounds, to: containerView)
         viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
@@ -551,7 +551,7 @@ public class FWStatisticalObject: NSObject {
         
         let viewportRect = CGRect(x: tx, y: ty, width: CGRectGetWidth(viewRect), height: CGRectGetHeight(viewRect))
         var containerRect = CGRect(x: 0, y: 0, width: cw, height: ch)
-        if let containerInset = self.fw_statisticalExposure?.containerInset {
+        if let containerInset = self.__fw_statisticalExposure?.containerInset {
             containerRect = containerRect.inset(by: containerInset)
         } else if FWStatisticalManager.shared.exposureIgnoredBar, let viewController = viewController {
             containerRect = containerRect.inset(by: UIEdgeInsets(top: viewController.fw_topBarHeight, left: 0, bottom: viewController.fw_bottomBarHeight, right: 0))
@@ -580,7 +580,7 @@ public class FWStatisticalObject: NSObject {
             return ratio
         }
         
-        let shieldView = self.fw_statisticalExposure?.shieldView ?? self.fw_statisticalExposure?.shieldViewBlock?(self)
+        let shieldView = self.__fw_statisticalExposure?.shieldView ?? self.__fw_statisticalExposure?.shieldViewBlock?(self)
         guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
             return ratio
         }
@@ -612,18 +612,18 @@ public class FWStatisticalObject: NSObject {
         let identifierChanged = oldIdentifier.count > 0 && identifier != oldIdentifier
         if oldIdentifier.count < 1 || identifierChanged {
             self.fw_statisticalTarget.exposureIdentifier = identifier
-            if oldIdentifier.count < 1 { self.fw_statisticalExposureCustom() }
+            if oldIdentifier.count < 1 { self.__fw_statisticalExposureCustom() }
         }
         
         let oldState = self.fw_statisticalTarget.exposureState
-        let state = self.fw_statisticalExposureViewState()
+        let state = self.__fw_statisticalExposureViewState()
         if state.state == oldState.state && !identifierChanged { return }
         self.fw_statisticalTarget.exposureState = state
         
         if StatisticalTarget.exposureIsFullyState(state),
            (!self.fw_statisticalTarget.exposureIsFully || identifierChanged) {
             self.fw_statisticalTarget.exposureIsFully = true
-            if self.fw_statisticalExposureCustom() {
+            if self.__fw_statisticalExposureCustom() {
             } else if let cell = self as? UITableViewCell {
                 cell.fw_tableView?.fw_statisticalTriggerExposure(self, indexPath: cell.fw_indexPath, duration: 0)
             } else if let cell = self as? UICollectionViewCell {
@@ -638,20 +638,20 @@ public class FWStatisticalObject: NSObject {
         }
     }
     
-    private func fw_statisticalExposureRegister() {
-        if self.fw_statisticalExposureEnabled { return }
-        self.fw_statisticalExposureEnabled = true
+    private func __fw_statisticalExposureRegister() {
+        if self.__fw_statisticalExposureEnabled { return }
+        self.__fw_statisticalExposureEnabled = true
         if self is UITableViewCell || self is UICollectionViewCell {
-            self.fw_statisticalExposureCellRegister()
+            self.__fw_statisticalExposureCellRegister()
             return
         }
         
         if self.superview != nil {
-            self.superview?.fw_statisticalExposureRegister()
+            self.superview?.__fw_statisticalExposureRegister()
         }
         
-        if self.fw_statisticalExposure != nil ||
-            self.fw_statisticalExposureBlock != nil ||
+        if self.__fw_statisticalExposure != nil ||
+            self.__fw_statisticalExposureBlock != nil ||
             self.fw_statisticalTarget.exposureIsProxy {
             self.fw_statisticalTarget.exposureRegister()
             
@@ -660,7 +660,7 @@ public class FWStatisticalObject: NSObject {
         }
     }
     
-    private func fw_statisticalExposureCellRegister() {
+    private func __fw_statisticalExposureCellRegister() {
         if self.superview == nil { return }
         var proxyView: UIView?
         if self.conforms(to: StatisticalDelegate.self),
@@ -674,27 +674,27 @@ public class FWStatisticalObject: NSObject {
             }
         }
         proxyView?.fw_statisticalTarget.exposureIsProxy = true
-        proxyView?.fw_statisticalExposureRegister()
+        proxyView?.__fw_statisticalExposureRegister()
     }
     
-    private func fw_statisticalExposureUpdate() {
-        if !self.fw_statisticalExposureEnabled { return }
+    private func __fw_statisticalExposureUpdate() {
+        if !self.__fw_statisticalExposureEnabled { return }
         
-        self.fw_statisticalExposureRecursive()
+        self.__fw_statisticalExposureRecursive()
     }
     
-    private func fw_statisticalExposureRecursive() {
-        if !self.fw_statisticalExposureEnabled { return }
+    private func __fw_statisticalExposureRecursive() {
+        if !self.__fw_statisticalExposureEnabled { return }
         
-        if self.fw_statisticalExposure != nil ||
-            self.fw_statisticalExposureBlock != nil ||
+        if self.__fw_statisticalExposure != nil ||
+            self.__fw_statisticalExposureBlock != nil ||
             self.fw_statisticalTarget.exposureIsProxy {
             NSObject.cancelPreviousPerformRequests(withTarget: self.fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureCalculate), object: nil)
             self.fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureCalculate), with: nil, afterDelay: 0, inModes: [FWStatisticalManager.shared.runLoopMode])
         }
         
         for subview in self.subviews {
-            subview.fw_statisticalExposureRecursive()
+            subview.__fw_statisticalExposureRecursive()
         }
     }
     
@@ -804,24 +804,24 @@ public class FWStatisticalObject: NSObject {
     }
     
     /// 绑定统计曝光事件，触发管理器
-    public var fw_statisticalExposure: FWStatisticalObject? {
+    fileprivate var __fw_statisticalExposure: FWStatisticalObject? {
         get { return fw_statisticalTarget.exposure }
         set {
             fw_statisticalTarget.exposure = newValue
-            if !fw_statisticalExposureEnabled {
-                fw_statisticalExposureEnabled = true
+            if !__fw_statisticalExposureEnabled {
+                __fw_statisticalExposureEnabled = true
                 fw_statisticalTarget.exposureRegister()
             }
         }
     }
 
     /// 绑定统计曝光事件，仅触发回调
-    public var fw_statisticalExposureBlock: FWStatisticalBlock? {
+    public var __fw_statisticalExposureBlock: FWStatisticalBlock? {
         get { return fw_statisticalTarget.exposureBlock }
         set {
             fw_statisticalTarget.exposureBlock = newValue
-            if !fw_statisticalExposureEnabled {
-                fw_statisticalExposureEnabled = true
+            if !__fw_statisticalExposureEnabled {
+                __fw_statisticalExposureEnabled = true
                 fw_statisticalTarget.exposureRegister()
             }
         }
@@ -832,19 +832,19 @@ public class FWStatisticalObject: NSObject {
         fw_statisticalTarget.triggerExposure(duration: duration)
     }
     
-    fileprivate func fw_statisticalExposureDidAppear() {
-        if !self.fw_statisticalExposureEnabled { return }
+    fileprivate func __fw_statisticalExposureDidAppear() {
+        if !self.__fw_statisticalExposureEnabled { return }
         fw_statisticalTarget.viewDidAppear()
     }
     
-    fileprivate func fw_statisticalExposureDidDisappear() {
-        if !self.fw_statisticalExposureEnabled { return }
+    fileprivate func __fw_statisticalExposureDidDisappear() {
+        if !self.__fw_statisticalExposureEnabled { return }
         fw_statisticalTarget.viewDidDisappear()
     }
     
-    private var fw_statisticalExposureEnabled: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalExposureEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalExposureEnabled") }
+    private var __fw_statisticalExposureEnabled: Bool {
+        get { return fw_propertyBool(forName: "__fw_statisticalExposureEnabled") }
+        set { fw_setPropertyBool(newValue, forName: "__fw_statisticalExposureEnabled") }
     }
     
     private var fw_statisticalTarget: StatisticalTarget {
