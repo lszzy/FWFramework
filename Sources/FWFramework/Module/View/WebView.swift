@@ -115,7 +115,7 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillEnterPool()
+                webView.reusableViewWillRecycle()
                 webView.fw_reusePreparing = false
             }
         }
@@ -126,7 +126,7 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillEnterPool()
+                webView.reusableViewWillRecycle()
                 webView.fw_reusePreparing = false
             }
             
@@ -140,7 +140,7 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillEnterPool()
+                webView.reusableViewWillRecycle()
                 webView.fw_reusePreparing = false
             }
             
@@ -307,8 +307,8 @@ open class WebView: WKWebView {
     }
     
     // MARK: - ReusableViewProtocol
-    /// 即将进入回收池，必须调用super
-    open override func reusableViewWillEnterPool() {
+    /// 即将回收视图，必须调用super
+    open override func reusableViewWillRecycle() {
         delegate = nil
         cookieEnabled = false
         allowsUniversalLinks = false
@@ -316,7 +316,7 @@ open class WebView: WKWebView {
         webRequest = nil
         isFirstLoad = false
         
-        super.reusableViewWillEnterPool()
+        super.reusableViewWillRecycle()
         
         if fw_reusedTimes < 1,
            !fw_reusePreparing,
@@ -326,13 +326,14 @@ open class WebView: WKWebView {
             WebView.preloadedReuseIdentifiers.append(reuseIdentifier)
             
             fw_reusePreparing = true
-            reusableViewWillLeavePool()
+            reusableViewWillReuse()
             fw_loadRequest(preloadUrl)
         }
     }
     
-    open override func reusableViewWillLeavePool() {
-        super.reusableViewWillLeavePool()
+    /// 即将重用视图，默认重用次数+1，必须调用super
+    open override func reusableViewWillReuse() {
+        super.reusableViewWillReuse()
         
         isFirstLoad = true
     }
@@ -356,9 +357,9 @@ open class WebView: WKWebView {
         return self.init(frame: .zero, configuration: configuration)
     }
     
-    /// 即将进入回收池，必须调用super
-    open override func reusableViewWillEnterPool() {
-        super.reusableViewWillEnterPool()
+    /// 即将回收视图，必须调用super
+    open override func reusableViewWillRecycle() {
+        super.reusableViewWillRecycle()
         
         fw_jsBridge = nil
         fw_jsBridgeEnabled = false
@@ -374,8 +375,9 @@ open class WebView: WKWebView {
         load(URLRequest(url: NSURL() as URL))
     }
     
-    open override func reusableViewWillLeavePool() {
-        super.reusableViewWillLeavePool()
+    /// 即将重用视图，默认重用次数+1，必须调用super
+    open override func reusableViewWillReuse() {
+        super.reusableViewWillReuse()
         
         fw_clearBackForwardList()
     }
