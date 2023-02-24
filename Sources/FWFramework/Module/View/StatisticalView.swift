@@ -10,7 +10,7 @@ import UIKit
 // MARK: - StatisticalManager
 extension Notification.Name {
     
-    /// 统计事件触发通知，可统一处理。通知object为StatisticalObject统计对象，userInfo为附加信息
+    /// 统计事件触发通知，可统一处理。通知object为StatisticalEvent对象，userInfo为附加信息
     public static let StatisticalEventTriggered = NSNotification.Name("FWStatisticalEventTriggeredNotification")
     
 }
@@ -30,7 +30,7 @@ public class StatisticalManager: NSObject {
     /// 是否启用分析上报，默认false
     public var reportEnabled = false
     /// 设置全局事件处理器
-    public var globalHandler: ((StatisticalObject) -> Void)?
+    public var globalHandler: ((StatisticalEvent) -> Void)?
     
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -50,32 +50,32 @@ public class StatisticalManager: NSObject {
     /// 界面可见状态改变(present或push)时是否重新计算曝光，默认true
     public var exposureWhenVisibilityChanged = true
     
-    private var eventHandlers: [String: (StatisticalObject) -> Void] = [:]
+    private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
     /// 注册单个事件处理器
-    public func registerEvent(_ name: String, handler: @escaping (StatisticalObject) -> Void) {
+    public func registerEvent(_ name: String, handler: @escaping (StatisticalEvent) -> Void) {
         eventHandlers[name] = handler
     }
     
     /// 内部方法，处理事件
-    fileprivate func handleEvent(_ object: StatisticalObject) {
-        if let eventHandler = eventHandlers[object.name] {
-            eventHandler(object)
+    fileprivate func handleEvent(_ event: StatisticalEvent) {
+        if let eventHandler = eventHandlers[event.name] {
+            eventHandler(event)
         }
-        globalHandler?(object)
-        if reportEnabled, !object.name.isEmpty {
-            Analyzer.shared.trackEvent(object.name, parameters: object.userInfo)
+        globalHandler?(event)
+        if reportEnabled, !event.name.isEmpty {
+            Analyzer.shared.trackEvent(event.name, parameters: event.userInfo)
         }
         if notificationEnabled {
-            NotificationCenter.default.post(name: .StatisticalEventTriggered, object: object, userInfo: object.userInfo)
+            NotificationCenter.default.post(name: .StatisticalEventTriggered, object: event, userInfo: event.userInfo)
         }
     }
     
 }
 
-// MARK: - StatisticalObject
+// MARK: - StatisticalEvent
 /// 事件统计对象
-public class StatisticalObject: NSObject {
+public class StatisticalEvent: NSObject {
     
     /// 事件绑定名称
     public private(set) var name: String = ""
@@ -84,11 +84,11 @@ public class StatisticalObject: NSObject {
     /// 事件绑定信息
     public private(set) var userInfo: [AnyHashable: Any]?
     
-    /// 自定义容器视图，默认nil时获取VC视图或window
+    /// 自定义曝光容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
-    /// 自定义容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
+    /// 自定义曝光容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
     public var containerViewBlock: ((UIView) -> UIView?)?
-    /// 自定义容器内边距，设置后忽略全局ignoredBar配置，默认nil
+    /// 自定义曝光容器内边距，设置后忽略全局ignoredBars配置，默认nil
     public var containerInset: UIEdgeInsets?
     /// 是否事件仅触发一次，默认nil时采用全局配置
     public var triggerOnce: Bool?
@@ -107,18 +107,20 @@ public class StatisticalObject: NSObject {
     public fileprivate(set) var indexPath: IndexPath?
     /// 事件触发次数，触发时自动赋值
     public fileprivate(set) var triggerCount: Int = 0
-    /// 事件触发单次时长，0表示曝光开始，仅曝光支持，触发时自动赋值
+    /// 事件触发时间戳，触发时自动赋值
+    public fileprivate(set) var triggerTimestamp: TimeInterval = 0
+    /// 曝光事件触发单次时长，0表示曝光开始，触发时自动赋值
     public fileprivate(set) var triggerDuration: TimeInterval = 0
-    /// 事件触发总时长，仅曝光支持，触发时自动赋值
+    /// 曝光事件触发总时长，触发时自动赋值
     public fileprivate(set) var totalDuration: TimeInterval = 0
     
     /// 是否是曝光事件，默认false为点击事件
     public fileprivate(set) var isExposure = false
-    /// 事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
+    /// 曝光事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
-    /// 是否是应用即将Terminate触发的事件，用于自定义处理
+    /// 是否是应用即将Terminate触发的曝光事件，用于自定义处理
     public fileprivate(set) var isTerminate = false
-    /// 是否是应用退后台时触发的事件，用于自定义处理
+    /// 是否是应用退后台时触发的曝光事件，用于自定义处理
     public fileprivate(set) var isBackground = false
     
     /// 创建事件统计对象，指定名称、对象和信息
