@@ -31,7 +31,7 @@ public class StatisticalManager: NSObject {
     /// 是否启用分析上报，默认false
     public var reportEnabled = false
     /// 设置全局事件处理器
-    public var globalHandler: ((StatisticalEvent) -> Void)?
+    public var eventHandler: ((StatisticalEvent) -> Void)?
     
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -51,14 +51,7 @@ public class StatisticalManager: NSObject {
     /// 界面可见状态改变(present或push)时是否重新计算曝光，默认true
     public var exposureWhenVisibilityChanged = true
     
-    private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
-    
     // MARK: - Public
-    /// 注册单个事件处理器
-    public func registerEvent(_ name: String, handler: @escaping (StatisticalEvent) -> Void) {
-        eventHandlers[name] = handler
-    }
-    
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
     @discardableResult
     public func trackClick(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
@@ -145,10 +138,12 @@ public class StatisticalManager: NSObject {
     // MARK: - Private
     /// 内部方法，处理事件
     private func handleEvent(_ event: StatisticalEvent) {
-        if let eventHandler = eventHandlers[event.name] {
-            eventHandler(event)
+        if event.isExposure {
+            event.view?.fw_statisticalExposureHandler?(event)
+        } else {
+            event.view?.fw_statisticalClickHandler?(event)
         }
-        globalHandler?(event)
+        eventHandler?(event)
         if reportEnabled, !event.name.isEmpty {
             Analyzer.shared.trackEvent(event.name, parameters: event.userInfo)
         }
@@ -363,6 +358,12 @@ public class StatisticalEvent: NSObject {
         }
     }
     
+    /// 设置统计点击事件触发时自定义句柄，默认nil
+    public var fw_statisticalClickHandler: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalClickHandler") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalClickHandler") }
+    }
+    
     /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
     @objc(__fw_statisticalBindClickWithContainerView:)
     @discardableResult
@@ -441,6 +442,12 @@ public class StatisticalEvent: NSObject {
         }
     }
     
+    /// 设置统计曝光事件触发时自定义句柄，默认nil
+    public var fw_statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalExposureHandler") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureHandler") }
+    }
+    
     // MARK: - Private
     fileprivate var fw_trackExposureCounts: [String: Int] {
         get { return fw_property(forName: "fw_trackExposureCounts") as? [String: Int] ?? [:] }
@@ -470,6 +477,12 @@ public class StatisticalEvent: NSObject {
         set {
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
         }
+    }
+    
+    /// 设置统计曝光事件触发时自定义句柄，默认nil
+    public var fw_statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalExposureHandler") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureHandler") }
     }
     
 }

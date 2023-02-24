@@ -207,7 +207,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func renderData() {
-        StatisticalManager.shared.globalHandler = { [weak self] event in
+        StatisticalManager.shared.eventHandler = { [weak self] event in
             if event.isExposure {
                 FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", FW.safeString(event.name), FW.safeString(event.object), FW.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
             } else {
