@@ -16,6 +16,12 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalClick = newValue }
     }
     
+    /// 设置统计点击事件触发时自定义句柄，默认nil
+    public var statisticalClickHandler: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalClickHandler }
+        set { base.fw_statisticalClickHandler = newValue }
+    }
+    
     /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
     @discardableResult
     public func statisticalBindClick(containerView: UIView? = nil) -> Bool {
@@ -39,6 +45,12 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalExposure = newValue }
     }
     
+    /// 设置统计曝光事件触发时自定义句柄，默认nil
+    public var statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalExposureHandler }
+        set { base.fw_statisticalExposureHandler = newValue }
+    }
+    
 }
 
 // MARK: - UIViewController+StatisticalExposure
@@ -48,6 +60,12 @@ extension Wrapper where Base: UIViewController {
     public var statisticalExposure: StatisticalEvent? {
         get { base.fw_statisticalExposure }
         set { base.fw_statisticalExposure = newValue }
+    }
+    
+    /// 设置统计曝光事件触发时自定义句柄，默认nil
+    public var statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalExposureHandler }
+        set { base.fw_statisticalExposureHandler = newValue }
     }
     
 }
