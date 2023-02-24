@@ -65,7 +65,7 @@ public class StatisticalManager: NSObject {
         if event.triggerIgnored { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
-        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : StatisticalManager.shared.clickOnce
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : clickOnce
         if triggerCount > 1 && triggerOnce { return }
         view?.fw_trackClickCounts[triggerKey] = triggerCount
         
@@ -76,6 +76,63 @@ public class StatisticalManager: NSObject {
         event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = false
         event.isFinished = true
+        handleEvent(event)
+    }
+    
+    /// 手工触发曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
+    public func trackExposureBegin(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+        let event = closure()
+        if event.triggerIgnored { return }
+        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
+        let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
+        if triggerCount > 1 && triggerOnce { return }
+        view?.fw_trackExposureCounts[triggerKey] = triggerCount
+        let triggerTimestamp = Date.fw_currentTime
+        view?.fw_trackExposureTimestamps[triggerKey] = triggerTimestamp
+        let totalDuration = view?.fw_trackExposureDurations[triggerKey] ?? 0
+        
+        event.view = view
+        event.viewController = view?.fw_viewController
+        event.indexPath = indexPath
+        event.triggerCount = triggerCount
+        event.triggerDuration = 0
+        event.totalDuration = totalDuration
+        event.triggerTimestamp = triggerTimestamp
+        event.isExposure = true
+        event.isFinished = false
+        // TODO: 标记isTerminate和isBackground
+        handleEvent(event)
+    }
+    
+    /// 手工触发曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
+    public func trackExposureEnd(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+        guard trackingTime else { return }
+        let event = closure()
+        if event.triggerIgnored { return }
+        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
+        let triggerCount = view?.fw_trackExposureCounts[triggerKey] ?? 0
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
+        if triggerCount > 1 && triggerOnce { return }
+        var duration: TimeInterval = 0
+        let triggerTimestamp = Date.fw_currentTime
+        // TODO: duration需要减去退后台的时间
+        if let beginTime = view?.fw_trackExposureTimestamps[triggerKey] {
+            duration = triggerTimestamp - beginTime
+        }
+        let totalDuration = (view?.fw_trackExposureDurations[triggerKey] ?? 0) + duration
+        view?.fw_trackExposureDurations[triggerKey] = totalDuration
+        
+        event.view = view
+        event.viewController = view?.fw_viewController
+        event.indexPath = indexPath
+        event.triggerCount = triggerCount
+        event.triggerDuration = duration
+        event.totalDuration = totalDuration
+        event.triggerTimestamp = Date.fw_currentTime
+        event.isExposure = true
+        event.isFinished = true
+        // TODO: 标记isTerminate和isBackground
         handleEvent(event)
     }
     
@@ -177,6 +234,11 @@ public class StatisticalEvent: NSObject {
     fileprivate var fw_trackExposureDurations: [String: TimeInterval] {
         get { return fw_property(forName: "fw_trackExposureDurations") as? [String: TimeInterval] ?? [:] }
         set { fw_setProperty(newValue, forName: "fw_trackExposureDurations") }
+    }
+    
+    fileprivate var fw_trackExposureTimestamps: [String: TimeInterval] {
+        get { return fw_property(forName: "fw_trackExposureTimestamps") as? [String: TimeInterval] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_trackExposureTimestamps") }
     }
     
 }

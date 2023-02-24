@@ -22,6 +22,8 @@ public typealias FWStatisticalBlock = (FWStatisticalObject) -> Void
 /// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
 public class FWStatisticalManager: NSObject {
     
+    /// TODO: 都需要监听退后台，when开关唯一的差别是是否触发曝光结束Event而已，不影响时间
+    
     /// 单例模式
     public static let shared = FWStatisticalManager()
     
