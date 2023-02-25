@@ -54,8 +54,7 @@ public class StatisticalManager: NSObject {
     // MARK: - Public
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
     @discardableResult
-    public func trackClick(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
-        let event = closure()
+    public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) -> Bool {
         if event.triggerIgnored { return false }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
@@ -74,10 +73,9 @@ public class StatisticalManager: NSObject {
         return true
     }
     
-    /// 手工触发曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
+    /// 手工触发视图曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
     @discardableResult
-    public func trackExposureBegin(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
-        let event = closure()
+    public func trackExposureBegin(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) -> Bool {
         if event.triggerIgnored { return false }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
@@ -102,9 +100,9 @@ public class StatisticalManager: NSObject {
         return true
     }
     
-    /// 手工触发曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
+    /// 手工触发视图曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
     @discardableResult
-    public func trackExposureEnd(view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
+    public func trackExposureEnd(_ view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
         guard trackingTime else { return false }
         let event = closure()
         if event.triggerIgnored { return false }
@@ -135,14 +133,77 @@ public class StatisticalManager: NSObject {
         return true
     }
     
+    /// 手工触发控制器曝光开始并统计次数，曝光开始时调用
+    @discardableResult
+    public func trackExposureBegin(_ viewController: UIViewController?, event: StatisticalEvent) -> Bool {
+        if event.triggerIgnored { return false }
+        let triggerCount = (viewController?.fw_trackExposureCount ?? 0) + 1
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
+        if triggerCount > 1 && triggerOnce { return false }
+        viewController?.fw_trackExposureCount = triggerCount
+        let triggerTimestamp = Date.fw_currentTime
+        viewController?.fw_trackExposureTimestamp = triggerTimestamp
+        let totalDuration = viewController?.fw_trackExposureDuration ?? 0
+        
+        event.view = nil
+        event.viewController = viewController
+        event.indexPath = nil
+        event.triggerCount = triggerCount
+        event.triggerDuration = 0
+        event.totalDuration = totalDuration
+        event.triggerTimestamp = triggerTimestamp
+        event.isExposure = true
+        event.isFinished = false
+        // TODO: 标记isTerminate和isBackground
+        handleEvent(event)
+        return true
+    }
+    
+    /// 手工触发控制器曝光结束并统计时长，曝光结束时调用
+    @discardableResult
+    public func trackExposureEnd(_ viewController: UIViewController?, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
+        guard trackingTime else { return false }
+        let event = closure()
+        if event.triggerIgnored { return false }
+        let triggerCount = viewController?.fw_trackExposureCount ?? 0
+        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
+        if triggerCount > 1 && triggerOnce { return false }
+        var duration: TimeInterval = 0
+        let triggerTimestamp = Date.fw_currentTime
+        // TODO: duration需要减去退后台的时间
+        if let beginTime = viewController?.fw_trackExposureTimestamp {
+            duration = triggerTimestamp - beginTime
+        }
+        let totalDuration = (viewController?.fw_trackExposureDuration ?? 0) + duration
+        viewController?.fw_trackExposureDuration = totalDuration
+        
+        event.view = nil
+        event.viewController = viewController
+        event.indexPath = nil
+        event.triggerCount = triggerCount
+        event.triggerDuration = duration
+        event.totalDuration = totalDuration
+        event.triggerTimestamp = Date.fw_currentTime
+        event.isExposure = true
+        event.isFinished = true
+        // TODO: 标记isTerminate和isBackground
+        handleEvent(event)
+        return true
+    }
+    
     // MARK: - Private
     /// 内部方法，处理事件
     private func handleEvent(_ event: StatisticalEvent) {
         if event.isExposure {
-            event.view?.fw_statisticalExposureHandler?(event)
+            if event.view != nil {
+                event.view?.fw_statisticalExposureListener?(event)
+            } else {
+                event.viewController?.fw_statisticalExposureListener?(event)
+            }
         } else {
-            event.view?.fw_statisticalClickHandler?(event)
+            event.view?.fw_statisticalClickListener?(event)
         }
+        
         eventHandler?(event)
         if reportEnabled, !event.name.isEmpty {
             Analyzer.shared.trackEvent(event.name, parameters: event.userInfo)
@@ -358,10 +419,10 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    /// 设置统计点击事件触发时自定义句柄，默认nil
-    public var fw_statisticalClickHandler: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalClickHandler") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalClickHandler") }
+    /// 设置统计点击事件触发时自定义监听器，默认nil
+    public var fw_statisticalClickListener: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalClickListener") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalClickListener") }
     }
     
     /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
@@ -377,9 +438,9 @@ public class StatisticalEvent: NSObject {
     /// 触发视图点击事件统计，仅绑定statisticalClick后生效
     @objc(__fw_statisticalTrackClickWithIndexPath:event:)
     @discardableResult
-    public func fw_statisticalTrackClick(indexPath: IndexPath? = nil, _ event: @autoclosure () -> StatisticalEvent? = nil) -> Bool {
-        guard let event = event() ?? fw_statisticalClick else { return false }
-        return StatisticalManager.shared.trackClick(view: self, indexPath: indexPath, event: event)
+    public func fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
+        guard let event = event ?? fw_statisticalClick else { return false }
+        return StatisticalManager.shared.trackClick(self, indexPath: indexPath, event: event)
     }
     
     // MARK: - Private
@@ -442,10 +503,10 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    /// 设置统计曝光事件触发时自定义句柄，默认nil
-    public var fw_statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalExposureHandler") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureHandler") }
+    /// 设置统计曝光事件触发时自定义监听器，默认nil
+    public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
     }
     
     // MARK: - Private
@@ -479,10 +540,26 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    /// 设置统计曝光事件触发时自定义句柄，默认nil
-    public var fw_statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalExposureHandler") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureHandler") }
+    /// 设置统计曝光事件触发时自定义监听器，默认nil
+    public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
+    }
+    
+    // MARK: - Private
+    fileprivate var fw_trackExposureCount: Int {
+        get { return fw_propertyInt(forName: "fw_trackExposureCount") }
+        set { fw_setPropertyInt(newValue, forName: "fw_trackExposureCount") }
+    }
+    
+    fileprivate var fw_trackExposureDuration: TimeInterval {
+        get { return fw_propertyDouble(forName: "fw_trackExposureDuration") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_trackExposureDuration") }
+    }
+    
+    fileprivate var fw_trackExposureTimestamp: TimeInterval {
+        get { return fw_propertyDouble(forName: "fw_trackExposureTimestamp") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_trackExposureTimestamp") }
     }
     
 }
