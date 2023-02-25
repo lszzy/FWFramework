@@ -52,7 +52,7 @@ extension TableViewControllerProtocol where Self: UIViewController {
     
     /// 表格视图代理，调用时自动生效
     public var tableDelegate: TableViewDelegate {
-        return tableView.fw_delegate
+        return tableView.fw_tableDelegate
     }
     
     /// 表格数据，默认空数组，延迟加载

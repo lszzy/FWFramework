@@ -8,8 +8,8 @@
 import UIKit
 
 extension Wrapper where Base: UITableView {
-    public var delegate: TableViewDelegate {
-        return base.fw_delegate
+    public var tableDelegate: TableViewDelegate {
+        return base.fw_tableDelegate
     }
     
     public static func tableView() -> Base {

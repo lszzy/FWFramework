@@ -979,16 +979,16 @@ extension UITableView: SkeletonViewDataSource {
         tableView.tableDelegate.sectionCount = numberOfSections
         guard numberOfSections > 0 else { return tableView }
         
-        tableView.tableDelegate.viewForHeader = { [weak self] (section) in
+        tableView.tableDelegate.viewForHeader = { [weak self] (_, section) in
             return self?.headerView(forSection: section)
         }
-        tableView.tableDelegate.viewForFooter = { [weak self] (section) in
+        tableView.tableDelegate.viewForFooter = { [weak self] (_, section) in
             return self?.footerView(forSection: section)
         }
         tableView.tableDelegate.countForRow = { [weak self] (section) in
             return self?.numberOfRows(inSection: section) ?? 0
         }
-        tableView.tableDelegate.cellForRow = { [weak self] (indexPath) in
+        tableView.tableDelegate.cellForRow = { [weak self] (_, indexPath) in
             return self?.cellForRow(at: indexPath)
         }
         return tableView
@@ -1017,16 +1017,16 @@ extension UICollectionView: SkeletonViewDataSource {
         collectionView.collectionDelegate.sectionCount = numberOfSections
         guard numberOfSections > 0 else { return collectionView }
         
-        collectionView.collectionDelegate.viewForHeader = { [weak self] (indexPath) in
+        collectionView.collectionDelegate.viewForHeader = { [weak self] (_, indexPath) in
             return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath)
         }
-        collectionView.collectionDelegate.viewForFooter = { [weak self] (indexPath) in
+        collectionView.collectionDelegate.viewForFooter = { [weak self] (_, indexPath) in
             return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: indexPath)
         }
         collectionView.collectionDelegate.countForItem = { [weak self] (section) in
             return self?.numberOfItems(inSection: section) ?? 0
         }
-        collectionView.collectionDelegate.cellForItem = { [weak self] (indexPath) in
+        collectionView.collectionDelegate.cellForItem = { [weak self] (_, indexPath) in
             return self?.cellForItem(at: indexPath)
         }
         return collectionView

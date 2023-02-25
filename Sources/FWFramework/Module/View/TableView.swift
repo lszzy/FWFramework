@@ -20,35 +20,35 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     open var rowCount: Int = 0
     
     /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
-    open var viewForHeader: ((Int) -> Any?)?
+    open var viewForHeader: ((UITableView, Int) -> Any?)?
     /// 表格section头视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var headerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var headerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var heightForHeader: ((Int) -> CGFloat)?
+    open var heightForHeader: ((UITableView, Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
     open var headerHeight: CGFloat?
     
     /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
-    open var viewForFooter: ((Int) -> Any?)?
+    open var viewForFooter: ((UITableView, Int) -> Any?)?
     /// 表格section尾视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
     open var footerViewClass: Any?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
     open var footerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var heightForFooter: ((Int) -> CGFloat)?
+    open var heightForFooter: ((UITableView, Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
     open var footerHeight: CGFloat?
     
     /// 表格cell类句柄，style为default，支持cell或cellClass，默认nil
-    open var cellForRow: ((IndexPath) -> Any?)?
+    open var cellForRow: ((UITableView, IndexPath) -> Any?)?
     /// 表格cell类，支持cell或cellClass，默认nil，优先级低
     open var cellClass: Any?
     /// 表格cell配置句柄，参数为对应cellClass对象
     open var cellConfiguation: ((UITableViewCell, IndexPath) -> Void)?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
-    open var heightForRow: ((IndexPath) -> CGFloat)?
+    open var heightForRow: ((UITableView, IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
     open var rowHeight: CGFloat?
     
@@ -61,8 +61,15 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     /// 表格删除事件，默认nil
     open var didDeleteRow: ((IndexPath) -> Void)?
     
-    // MARK: - UITableView
+    // MARK: - Lifecycle
+    /// 初始化并绑定tableView
+    public convenience init(tableView: UITableView) {
+        self.init()
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
     
+    // MARK: - UITableView
     open func numberOfSections(in tableView: UITableView) -> Int {
         if let countBlock = countForSection {
             return countBlock()
@@ -78,7 +85,7 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let rowCell = cellForRow?(indexPath) ?? cellClass
+        let rowCell = cellForRow?(tableView, indexPath) ?? cellClass
         if let cell = rowCell as? UITableViewCell {
             return cell
         }
@@ -94,13 +101,13 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let heightBlock = heightForRow {
-            return heightBlock(indexPath)
+            return heightBlock(tableView, indexPath)
         }
         if let rowHeight = rowHeight {
             return rowHeight
         }
         
-        let rowCell = cellForRow?(indexPath) ?? cellClass
+        let rowCell = cellForRow?(tableView, indexPath) ?? cellClass
         if let cell = rowCell as? UITableViewCell {
             return cell.frame.size.height
         }
@@ -114,7 +121,7 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let viewClass = viewForHeader?(section) ?? headerViewClass
+        let viewClass = viewForHeader?(tableView, section) ?? headerViewClass
         guard let header = viewClass else { return nil }
         
         if let view = header as? UIView {
@@ -131,13 +138,13 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if let heightBlock = heightForHeader {
-            return heightBlock(section)
+            return heightBlock(tableView, section)
         }
         if let headerHeight = headerHeight {
             return headerHeight
         }
         
-        let viewClass = viewForHeader?(section) ?? headerViewClass
+        let viewClass = viewForHeader?(tableView, section) ?? headerViewClass
         guard let header = viewClass else { return 0 }
         
         if let view = header as? UIView {
@@ -152,7 +159,7 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let viewClass = viewForFooter?(section) ?? footerViewClass
+        let viewClass = viewForFooter?(tableView, section) ?? footerViewClass
         guard let footer = viewClass else { return nil }
         
         if let view = footer as? UIView {
@@ -169,13 +176,13 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if let heightBlock = heightForFooter {
-            return heightBlock(section)
+            return heightBlock(tableView, section)
         }
         if let footerHeight = footerHeight {
             return footerHeight
         }
         
-        let viewClass = viewForFooter?(section) ?? footerViewClass
+        let viewClass = viewForFooter?(tableView, section) ?? footerViewClass
         guard let footer = viewClass else { return 0 }
         
         if let view = footer as? UIView {
@@ -215,14 +222,12 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
 }
 
 @_spi(FW) extension UITableView {
-    public var fw_delegate: TableViewDelegate {
-        if let result = fw_property(forName: "fw_delegate") as? TableViewDelegate {
+    public var fw_tableDelegate: TableViewDelegate {
+        if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
             return result
         } else {
-            let result = TableViewDelegate()
-            fw_setProperty(result, forName: "fw_delegate")
-            dataSource = result
-            delegate = result
+            let result = TableViewDelegate(tableView: self)
+            fw_setProperty(result, forName: "fw_tableDelegate")
             return result
         }
     }
