@@ -16,10 +16,10 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalClick = newValue }
     }
     
-    /// 设置统计点击事件触发时自定义句柄，默认nil
-    public var statisticalClickHandler: ((StatisticalEvent) -> Void)? {
-        get { base.fw_statisticalClickHandler }
-        set { base.fw_statisticalClickHandler = newValue }
+    /// 设置统计点击事件触发时自定义监听器，默认nil
+    public var statisticalClickListener: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalClickListener }
+        set { base.fw_statisticalClickListener = newValue }
     }
     
     /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
@@ -30,8 +30,8 @@ extension Wrapper where Base: UIView {
     
     /// 触发视图点击事件统计，仅绑定statisticalClick后生效
     @discardableResult
-    public func statisticalTrackClick(indexPath: IndexPath? = nil, _ event: @autoclosure () -> StatisticalEvent? = nil) -> Bool {
-        return base.fw_statisticalTrackClick(indexPath: indexPath, event())
+    public func statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
+        return base.fw_statisticalTrackClick(indexPath: indexPath, event: event)
     }
     
 }
@@ -45,10 +45,10 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalExposure = newValue }
     }
     
-    /// 设置统计曝光事件触发时自定义句柄，默认nil
-    public var statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
-        get { base.fw_statisticalExposureHandler }
-        set { base.fw_statisticalExposureHandler = newValue }
+    /// 设置统计曝光事件触发时自定义监听器，默认nil
+    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalExposureListener }
+        set { base.fw_statisticalExposureListener = newValue }
     }
     
 }
@@ -62,10 +62,10 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_statisticalExposure = newValue }
     }
     
-    /// 设置统计曝光事件触发时自定义句柄，默认nil
-    public var statisticalExposureHandler: ((StatisticalEvent) -> Void)? {
-        get { base.fw_statisticalExposureHandler }
-        set { base.fw_statisticalExposureHandler = newValue }
+    /// 设置统计曝光事件触发时自定义监听器，默认nil
+    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { base.fw_statisticalExposureListener }
+        set { base.fw_statisticalExposureListener = newValue }
     }
     
 }

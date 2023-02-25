@@ -24,19 +24,19 @@ public struct StoredValue<T> {
     public init(
         wrappedValue: T,
         _ key: String,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) {
         self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
     }
     
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) where WrappedValue? == T {
         self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
     }
     
     public var wrappedValue: T {
@@ -71,10 +71,10 @@ public struct ValidatedValue<T> {
     public init(
         wrappedValue: T,
         _ validator: Validator<T>,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) {
         self.validator = validator
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
         self.value = wrappedValue
         self.isValid = validator.validate(wrappedValue)
     }
@@ -82,13 +82,13 @@ public struct ValidatedValue<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure () -> T? = nil,
+        defaultValue: T? = nil,
         defaultValid: @autoclosure @escaping () -> Bool = false
     ) where WrappedValue? == T {
         self.init(
             wrappedValue: wrappedValue,
             Validator(validator, defaultValid: defaultValid()),
-            defaultValue: defaultValue()
+            defaultValue: defaultValue
         )
     }
     
@@ -186,11 +186,11 @@ public struct RouterValue {
     
     public init(
         wrappedValue value: String,
-        parameters: @autoclosure () -> Any? = nil,
+        parameters: Any? = nil,
         _ handler: RouterHandler? = nil
     ) {
         self.pattern = value
-        self.parameters = parameters()
+        self.parameters = parameters
         if let handler = handler {
             Router.registerURL(value, handler: handler)
         }
@@ -198,11 +198,11 @@ public struct RouterValue {
     
     public init(
         _ pattern: String,
-        parameters: @autoclosure () -> Any? = nil,
+        parameters: Any? = nil,
         handler: RouterHandler? = nil
     ) {
         self.pattern = pattern
-        self.parameters = parameters()
+        self.parameters = parameters
         if let handler = handler {
             Router.registerURL(pattern, handler: handler)
         }
