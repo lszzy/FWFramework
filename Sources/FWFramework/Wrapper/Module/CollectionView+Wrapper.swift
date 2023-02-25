@@ -8,8 +8,8 @@
 import UIKit
 
 extension Wrapper where Base: UICollectionView {
-    public var delegate: CollectionViewDelegate {
-        return base.fw_delegate
+    public var collectionDelegate: CollectionViewDelegate {
+        return base.fw_collectionDelegate
     }
     
     public static func collectionView() -> Base {

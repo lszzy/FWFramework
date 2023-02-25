@@ -29,9 +29,9 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
             guard let self = self else { return 0 }
             return self.tableData.count
         }
-        tableDelegate.cellForRow = { [weak self] indexPath in
+        tableDelegate.cellForRow = { [weak self] tableView, indexPath in
             guard let self = self else { return nil }
-            let cell = UITableViewCell.fw.cell(tableView: self.tableView)
+            let cell = UITableViewCell.fw.cell(tableView: tableView)
             let rowData = self.tableData[indexPath.row]
             cell.textLabel?.text = rowData[0]
             return cell
