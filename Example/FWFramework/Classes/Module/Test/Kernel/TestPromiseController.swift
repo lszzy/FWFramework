@@ -12,28 +12,36 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [String]
     
+    func setupTableStyle() -> UITableView.Style {
+        .grouped
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData[indexPath.row]
-        cell.textLabel?.text = rowData[0]
-        return cell
+        return UITableViewCell.fw.cell(tableView: tableView)
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData[indexPath.row]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
-    }
-    
-}
-
-extension TestPromiseController {
-    func setupTableStyle() -> UITableView.Style {
-        .grouped
+    func setupTableView() {
+        tableDelegate.countForRow = { [weak self] section in
+            guard let self = self else { return 0 }
+            return self.tableData.count
+        }
+        tableDelegate.cellForRow = { [weak self] indexPath in
+            guard let self = self else { return nil }
+            let cell = UITableViewCell.fw.cell(tableView: self.tableView)
+            let rowData = self.tableData[indexPath.row]
+            cell.textLabel?.text = rowData[0]
+            return cell
+        }
+        tableDelegate.didSelectRow = { [weak self] indexPath in
+            guard let self = self else { return }
+            self.tableView.deselectRow(at: indexPath, animated: true)
+            let rowData = self.tableData[indexPath.row]
+            self.fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        }
     }
     
     func setupSubviews() {
@@ -57,6 +65,10 @@ extension TestPromiseController {
             ["+progress", "onProgress2"],
         ])
     }
+    
+}
+
+extension TestPromiseController {
     
     private static func successPromise(_ value: Int = 0) -> Promise {
         return Promise { resolve, reject in
