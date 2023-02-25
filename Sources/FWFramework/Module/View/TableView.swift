@@ -12,8 +12,8 @@ import UIKit
 open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
     /// 表格section数
     open var countForSection: (() -> Int)?
-    /// 表格section数，优先级低
-    open var sectionCount: Int = 0
+    /// 表格section数，默认1，优先级低
+    open var sectionCount: Int = 1
     /// 表格row数句柄
     open var countForRow: ((Int) -> Int)?
     /// 表格row数，优先级低

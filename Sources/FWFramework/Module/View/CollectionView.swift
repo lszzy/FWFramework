@@ -15,8 +15,8 @@ import FWObjC
 open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var countForSection: (() -> Int)?
-    /// 集合section数，优先级低
-    open var sectionCount: Int = 0
+    /// 集合section数，默认1，优先级低
+    open var sectionCount: Int = 1
     /// 集合item数句柄
     open var countForItem: ((Int) -> Int)?
     /// 集合item数，优先级低
