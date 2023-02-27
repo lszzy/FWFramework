@@ -21,27 +21,16 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
+        cell.textLabel?.text = rowData[0]
+        return cell
     }
     
-    func setupTableView() {
-        tableView.fw.tableDelegate.countForRow = { [weak self] section in
-            guard let self = self else { return 0 }
-            return self.tableData.count
-        }
-        tableView.fw.tableDelegate.cellForRow = { [weak self] tableView, indexPath in
-            guard let self = self else { return nil }
-            let cell = UITableViewCell.fw.cell(tableView: tableView)
-            let rowData = self.tableData[indexPath.row]
-            cell.textLabel?.text = rowData[0]
-            return cell
-        }
-        tableView.fw.tableDelegate.didSelectRow = { [weak self] tableView, indexPath in
-            guard let self = self else { return }
-            tableView.deselectRow(at: indexPath, animated: true)
-            let rowData = self.tableData[indexPath.row]
-            self.fw.invokeMethod(NSSelectorFromString(rowData[1]))
-        }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let rowData = tableData[indexPath.row]
+        fw.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
     func setupSubviews() {
