@@ -11,8 +11,8 @@ import FWObjC
 #endif
 
 // MARK: - CollectionViewDelegate
-/// 便捷集合视图数据源和事件代理，注意仅代理UICollectionViewDelegate
-open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+/// 常用集合视图数据源和事件代理，可继承
+open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var countForSection: (() -> Int)?
     /// 集合section数，默认1，优先级低
@@ -39,8 +39,6 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     open var sizeForHeader: ((UICollectionView, Int) -> CGSize)?
     /// 集合section头尺寸，默认nil，可设置为automaticSize，优先级低
     open var headerSize: CGSize?
-    /// 集合section头自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
     
     /// 集合section尾视图句柄，size未指定时为automaticSize，默认nil
     open var viewForFooter: ((UICollectionView, IndexPath) -> UICollectionReusableView?)?
@@ -54,8 +52,6 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     open var sizeForFooter: ((UICollectionView, Int) -> CGSize)?
     /// 集合section尾尺寸，默认nil，可设置为automaticSize，优先级低
     open var footerSize: CGSize?
-    /// 集合section尾自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
     
     /// 集合cell视图句柄，size未指定时为automaticSize，默认nil
     open var cellForItem: ((UICollectionView, IndexPath) -> UICollectionViewCell?)?
@@ -69,13 +65,21 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     open var sizeForItem: ((UICollectionView, IndexPath) -> CGSize)?
     /// 集合cell尺寸，默认nil，可设置为automaticSize，优先级低
     open var itemSize: CGSize?
-    /// 集合cell自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForItem: ((IndexPath) -> AnyHashable?)?
     
     /// 是否启用默认尺寸缓存，优先级低于cacheKey句柄，默认false
     open var sizeCacheEnabled = false
+    /// 集合cell自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForItem: ((IndexPath) -> AnyHashable?)?
+    /// 集合section头自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
+    /// 集合section尾自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
+    
     /// 集合选中事件，默认nil
-    open var didSelectItem: ((IndexPath) -> Void)?
+    open var didSelectItem: ((UICollectionView, IndexPath) -> Void)?
+    
+    /// 集合滚动方法，默认nil
+    open var didScroll: ((UIScrollView) -> Void)?
     
     // MARK: - Lifecycle
     /// 初始化并绑定collectionView
@@ -169,7 +173,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return itemSize
         }
         
-        if cellForItem != nil {
+        if cellForItem != nil || cellConfiguration == nil {
             return UICollectionViewFlowLayout.automaticSize
         }
         let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
@@ -204,6 +208,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         guard let viewClass = viewClass else {
             return .zero
         }
+        if headerConfiguration == nil {
+            return UICollectionViewFlowLayout.automaticSize
+        }
         
         let cacheKey = cacheKeyForHeader?(section) ?? (sizeCacheEnabled ? section : nil)
         return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
@@ -227,6 +234,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         guard let viewClass = viewClass else {
             return .zero
         }
+        if footerConfiguration == nil {
+            return UICollectionViewFlowLayout.automaticSize
+        }
         
         let cacheKey = cacheKeyForFooter?(section) ?? (sizeCacheEnabled ? section : nil)
         return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
@@ -236,7 +246,12 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     
     // MARK: - UICollectionViewDelegate
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didSelectItem?(indexPath)
+        didSelectItem?(collectionView, indexPath)
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScroll?(scrollView)
     }
 }
 

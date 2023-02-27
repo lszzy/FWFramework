@@ -8,8 +8,8 @@
 import UIKit
 
 // MARK: - TableViewDelegate
-/// 便捷表格视图数据源和事件代理，注意仅代理UITableViewDelegate
-open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
+/// 常用表格视图数据源和事件代理，可继承
+open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
     open var countForSection: (() -> Int)?
     /// 表格section数，默认1，优先级低
@@ -31,8 +31,6 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     open var heightForHeader: ((UITableView, Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
     open var headerHeight: CGFloat?
-    /// 表格section头自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
     
     /// 表格section尾视图句柄，高度未指定时automaticDimension，默认nil
     open var viewForFooter: ((UITableView, Int) -> UIView?)?
@@ -46,8 +44,6 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     open var heightForFooter: ((UITableView, Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
     open var footerHeight: CGFloat?
-    /// 表格section尾自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
     
     /// 表格cell视图句柄，高度未指定时automaticDimension，默认nil
     open var cellForRow: ((UITableView, IndexPath) -> UITableViewCell?)?
@@ -61,19 +57,27 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     open var heightForRow: ((UITableView, IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
     open var rowHeight: CGFloat?
-    /// 表格cell自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForRow: ((IndexPath) -> AnyHashable?)?
     
     /// 是否启用默认高度缓存，优先级低于cacheKey句柄，默认false
     open var heightCacheEnabled = false
+    /// 表格cell自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForRow: ((IndexPath) -> AnyHashable?)?
+    /// 表格section头自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
+    /// 表格section尾自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
+    
     /// 表格选中事件，默认nil
-    open var didSelectRow: ((IndexPath) -> Void)?
+    open var didSelectRow: ((UITableView, IndexPath) -> Void)?
     /// 表格删除标题句柄，不为空才能删除，默认nil不能删除
     open var titleForDelete: ((IndexPath) -> String?)?
     /// 表格删除标题，不为空才能删除，默认nil不能删除，优先级低
     open var deleteTitle: String?
     /// 表格删除事件，默认nil
-    open var didDeleteRow: ((IndexPath) -> Void)?
+    open var didDeleteRow: ((UITableView, IndexPath) -> Void)?
+    
+    /// 表格滚动方法，默认nil
+    open var didScroll: ((UIScrollView) -> Void)?
     
     // MARK: - Lifecycle
     /// 初始化并绑定tableView
@@ -116,7 +120,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     
     open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            didDeleteRow?(indexPath)
+            didDeleteRow?(tableView, indexPath)
         }
     }
     
@@ -129,7 +133,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
             return rowHeight
         }
         
-        if cellForRow != nil {
+        if cellForRow != nil || cellConfiguation == nil {
             return UITableView.automaticDimension
         }
         let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
@@ -165,6 +169,9 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         let viewClass = viewClassForHeader?(tableView, section) ?? headerViewClass
         guard let viewClass = viewClass else { return 0 }
+        if headerConfiguration == nil {
+            return UITableView.automaticDimension
+        }
         
         let cacheKey = cacheKeyForHeader?(section) ?? (heightCacheEnabled ? section : nil)
         return tableView.fw_height(headerFooterViewClass: viewClass, type: .header, cacheBy: cacheKey) { [weak self] (headerView) in
@@ -198,6 +205,9 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         let viewClass = viewClassForFooter?(tableView, section) ?? footerViewClass
         guard let viewClass = viewClass else { return 0 }
+        if footerConfiguration == nil {
+            return UITableView.automaticDimension
+        }
         
         let cacheKey = cacheKeyForFooter?(section) ?? (heightCacheEnabled ? section : nil)
         return tableView.fw_height(headerFooterViewClass: viewClass, type: .footer, cacheBy: cacheKey) { [weak self] (footerView) in
@@ -206,7 +216,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        didSelectRow?(indexPath)
+        didSelectRow?(tableView, indexPath)
     }
     
     open func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
@@ -216,6 +226,11 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         let title = titleForDelete?(indexPath) ?? deleteTitle
         return title != nil ? .delete : .none
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScroll?(scrollView)
     }
 }
 
