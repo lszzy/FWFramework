@@ -31,6 +31,8 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     open var heightForHeader: ((UITableView, Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
     open var headerHeight: CGFloat?
+    /// 表格section头自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
     
     /// 表格section尾视图句柄，高度未指定时automaticDimension，默认nil
     open var viewForFooter: ((UITableView, Int) -> UIView?)?
@@ -44,6 +46,8 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     open var heightForFooter: ((UITableView, Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
     open var footerHeight: CGFloat?
+    /// 表格section尾自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
     
     /// 表格cell视图句柄，高度未指定时automaticDimension，默认nil
     open var cellForRow: ((UITableView, IndexPath) -> UITableViewCell?)?
@@ -57,7 +61,11 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     open var heightForRow: ((UITableView, IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
     open var rowHeight: CGFloat?
+    /// 表格cell自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForRow: ((IndexPath) -> AnyHashable?)?
     
+    /// 是否启用默认高度缓存，优先级低于cacheKey句柄，默认false
+    open var heightCacheEnabled = false
     /// 表格选中事件，默认nil
     open var didSelectRow: ((IndexPath) -> Void)?
     /// 表格删除标题句柄，不为空才能删除，默认nil不能删除
@@ -113,7 +121,8 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
             return UITableView.automaticDimension
         }
         let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
-        return tableView.fw_height(cellClass: cellClass, cacheBy: indexPath) { [weak self] (cell) in
+        let cacheKey = cacheKeyForRow?(indexPath) ?? (heightCacheEnabled ? indexPath : nil)
+        return tableView.fw_height(cellClass: cellClass, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguation?(cell, indexPath)
         }
     }
@@ -145,7 +154,8 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
         let viewClass = viewClassForHeader?(tableView, section) ?? headerViewClass
         guard let viewClass = viewClass else { return 0 }
         
-        return tableView.fw_height(headerFooterViewClass: viewClass, type: .header, cacheBy: section) { [weak self] (headerView) in
+        let cacheKey = cacheKeyForHeader?(section) ?? (heightCacheEnabled ? section : nil)
+        return tableView.fw_height(headerFooterViewClass: viewClass, type: .header, cacheBy: cacheKey) { [weak self] (headerView) in
             self?.headerConfiguration?(headerView, section)
         }
     }
@@ -177,7 +187,8 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
         let viewClass = viewClassForFooter?(tableView, section) ?? footerViewClass
         guard let viewClass = viewClass else { return 0 }
         
-        return tableView.fw_height(headerFooterViewClass: viewClass, type: .footer, cacheBy: section) { [weak self] (footerView) in
+        let cacheKey = cacheKeyForFooter?(section) ?? (heightCacheEnabled ? section : nil)
+        return tableView.fw_height(headerFooterViewClass: viewClass, type: .footer, cacheBy: cacheKey) { [weak self] (footerView) in
             self?.footerConfiguration?(footerView, section)
         }
     }

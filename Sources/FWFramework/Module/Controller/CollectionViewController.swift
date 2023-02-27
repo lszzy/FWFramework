@@ -46,11 +46,6 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
         }
     }
     
-    /// 集合视图代理，调用时自动生效
-    public var collectionDelegate: CollectionViewDelegate {
-        return collectionView.fw_collectionDelegate
-    }
-    
     /// 集合数据，默认空数组，延迟加载
     public var collectionData: [CollectionElement] {
         get { return fw_property(forName: "collectionData") as? [CollectionElement] ?? [] }

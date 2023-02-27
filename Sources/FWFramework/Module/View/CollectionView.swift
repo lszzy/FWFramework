@@ -39,6 +39,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     open var sizeForHeader: ((UICollectionView, Int) -> CGSize)?
     /// 集合section头尺寸，默认nil，可设置为automaticSize，优先级低
     open var headerSize: CGSize?
+    /// 集合section头自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
     
     /// 集合section尾视图句柄，size未指定时为automaticSize，默认nil
     open var viewForFooter: ((UICollectionView, IndexPath) -> UICollectionReusableView?)?
@@ -52,6 +54,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     open var sizeForFooter: ((UICollectionView, Int) -> CGSize)?
     /// 集合section尾尺寸，默认nil，可设置为automaticSize，优先级低
     open var footerSize: CGSize?
+    /// 集合section尾自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
     
     /// 集合cell视图句柄，size未指定时为automaticSize，默认nil
     open var cellForItem: ((UICollectionView, IndexPath) -> UICollectionViewCell?)?
@@ -65,7 +69,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
     open var sizeForItem: ((UICollectionView, IndexPath) -> CGSize)?
     /// 集合cell尺寸，默认nil，可设置为automaticSize，优先级低
     open var itemSize: CGSize?
+    /// 集合cell自定义尺寸缓存key句柄，默认nil，优先级高
+    open var cacheKeyForItem: ((IndexPath) -> AnyHashable?)?
     
+    /// 是否启用默认尺寸缓存，优先级低于cacheKey句柄，默认false
+    open var sizeCacheEnabled = false
     /// 集合选中事件，默认nil
     open var didSelectItem: ((IndexPath) -> Void)?
     
@@ -135,7 +143,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
         if inset != .zero && collectionView.frame.size.width > 0 {
             width = collectionView.frame.size.width - inset.left - inset.right
         }
-        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: indexPath) { [weak self] (cell) in
+        let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
+        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguration?(cell, indexPath)
         }
     }
@@ -195,7 +204,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
             return .zero
         }
         
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { [weak self] (reusableView) in
+        let cacheKey = cacheKeyForHeader?(section) ?? (sizeCacheEnabled ? section : nil)
+        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.headerConfiguration?(reusableView, indexPath)
         }
     }
@@ -217,7 +227,8 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
             return .zero
         }
         
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { [weak self] (reusableView) in
+        let cacheKey = cacheKeyForFooter?(section) ?? (sizeCacheEnabled ? section : nil)
+        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.footerConfiguration?(reusableView, indexPath)
         }
     }
