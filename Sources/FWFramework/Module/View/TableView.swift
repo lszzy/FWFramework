@@ -75,9 +75,21 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     open var deleteTitle: String?
     /// 表格删除事件，默认nil
     open var didDeleteRow: ((UITableView, IndexPath) -> Void)?
+    /// 表格cell即将显示句柄，默认nil
+    open var willDisplayCell: ((UITableViewCell, IndexPath) -> Void)?
+    /// 表格cell即将停止显示，默认nil
+    open var didEndDisplayingCell: ((UITableViewCell, IndexPath) -> Void)?
     
-    /// 表格滚动方法，默认nil
+    /// 表格滚动句柄，默认nil
     open var didScroll: ((UIScrollView) -> Void)?
+    /// 表格即将开始拖动句柄，默认nil
+    open var willBeginDragging: ((UIScrollView) -> Void)?
+    /// 表格已经停止拖动句柄，默认nil
+    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
+    /// 表格已经停止减速句柄，默认nil
+    open var didEndDecelerating: ((UIScrollView) -> Void)?
+    /// 表格已经停止滚动动画句柄，默认nil
+    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
     
     // MARK: - Lifecycle
     /// 初始化并绑定tableView
@@ -228,9 +240,33 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
         return title != nil ? .delete : .none
     }
     
+    open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        willDisplayCell?(cell, indexPath)
+    }
+    
+    open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        didEndDisplayingCell?(cell, indexPath)
+    }
+    
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         didScroll?(scrollView)
+    }
+    
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        willBeginDragging?(scrollView)
+    }
+    
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        didEndDragging?(scrollView, decelerate)
+    }
+    
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        didEndDecelerating?(scrollView)
+    }
+    
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        didEndScrollingAnimation?(scrollView)
     }
 }
 
