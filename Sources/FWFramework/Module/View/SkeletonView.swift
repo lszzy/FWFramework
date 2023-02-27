@@ -991,7 +991,7 @@ extension UITableView: SkeletonViewDataSource {
         tableView.tableDelegate.heightForFooter = { [weak self] (_, section) in
             return self?.footerView(forSection: section)?.frame.size.height ?? 0
         }
-        tableView.tableDelegate.countForRow = { [weak self] (section) in
+        tableView.tableDelegate.numberOfRows = { [weak self] (section) in
             return self?.numberOfRows(inSection: section) ?? 0
         }
         tableView.tableDelegate.cellForRow = { [weak self] (_, indexPath) in
@@ -1038,7 +1038,7 @@ extension UICollectionView: SkeletonViewDataSource {
         collectionView.collectionDelegate.sizeForFooter = { [weak self] (_, section) in
             return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: section))?.frame.size ?? .zero
         }
-        collectionView.collectionDelegate.countForItem = { [weak self] (section) in
+        collectionView.collectionDelegate.numberOfItems = { [weak self] (section) in
             return self?.numberOfItems(inSection: section) ?? 0
         }
         collectionView.collectionDelegate.cellForItem = { [weak self] (_, indexPath) in

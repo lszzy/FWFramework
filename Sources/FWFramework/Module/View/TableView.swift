@@ -14,11 +14,11 @@ import FWObjC
 /// 常用表格视图数据源和事件代理，可继承
 open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
-    open var countForSection: (() -> Int)?
+    open var numberOfSections: (() -> Int)?
     /// 表格section数，默认1，优先级低
     open var sectionCount: Int = 1
     /// 表格row数句柄
-    open var countForRow: ((Int) -> Int)?
+    open var numberOfRows: ((Int) -> Int)?
     /// 表格row数，优先级低
     open var rowCount: Int = 0
     
@@ -109,7 +109,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
             return sectionCount
         }
         
-        if let countBlock = countForSection {
+        if let countBlock = numberOfSections {
             return countBlock()
         }
         return sectionCount
@@ -121,7 +121,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
             return rowCount
         }
         
-        if let countBlock = countForRow {
+        if let countBlock = numberOfRows {
             return countBlock(section)
         }
         return rowCount
