@@ -36,9 +36,9 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
             cell.textLabel?.text = rowData[0]
             return cell
         }
-        tableView.fw.tableDelegate.didSelectRow = { [weak self] indexPath in
+        tableView.fw.tableDelegate.didSelectRow = { [weak self] tableView, indexPath in
             guard let self = self else { return }
-            self.tableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
             let rowData = self.tableData[indexPath.row]
             self.fw.invokeMethod(NSSelectorFromString(rowData[1]))
         }
