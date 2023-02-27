@@ -14,11 +14,11 @@ import FWObjC
 /// 常用集合视图数据源和事件代理，可继承
 open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
-    open var countForSection: (() -> Int)?
+    open var numberOfSections: (() -> Int)?
     /// 集合section数，默认1，优先级低
     open var sectionCount: Int = 1
     /// 集合item数句柄
-    open var countForItem: ((Int) -> Int)?
+    open var numberOfItems: ((Int) -> Int)?
     /// 集合item数，优先级低
     open var itemCount: Int = 0
     
@@ -123,7 +123,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return sectionCount
         }
         
-        if let countBlock = countForSection {
+        if let countBlock = numberOfSections {
             return countBlock()
         }
         return sectionCount
@@ -135,7 +135,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return itemCount
         }
         
-        if let countBlock = countForItem {
+        if let countBlock = numberOfItems {
             return countBlock(section)
         }
         return itemCount
