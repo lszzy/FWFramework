@@ -7,15 +7,18 @@
 
 import UIKit
 
-// MARK: - CollectionViewControllerProtocol
-/// 集合视图控制器协议，可覆写
-public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate {
+// MARK: - CollectionDelegateControllerProtocol
+/// 集合代理控制器协议，数据源和事件代理为collectionDelegate，可覆写
+public protocol CollectionDelegateControllerProtocol: ViewControllerProtocol, UICollectionViewDelegate {
     
     /// 关联表格数据元素类型，默认Any
     associatedtype CollectionElement = Any
     
     /// 集合视图，默认不显示滚动条
     var collectionView: UICollectionView { get }
+    
+    /// 集合代理，同集合collectionDelegate，延迟加载
+    var collectionDelegate: CollectionViewDelegate { get }
 
     /// 集合数据，默认空数组，延迟加载
     var collectionData: [CollectionElement] { get set }
@@ -31,31 +34,27 @@ public protocol CollectionViewControllerProtocol: ViewControllerProtocol, UIColl
     
 }
 
-extension CollectionViewControllerProtocol where Self: UIViewController {
+// MARK: - CollectionViewControllerProtocol
+/// 集合视图控制器协议，数据源和事件代理为控制器，可覆写
+public protocol CollectionViewControllerProtocol: CollectionDelegateControllerProtocol, UICollectionViewDataSource {}
+
+// MARK: - UIViewController+CollectionViewControllerProtocol
+extension CollectionDelegateControllerProtocol where Self: UIViewController {
     
     /// 集合视图，默认不显示滚动条
     public var collectionView: UICollectionView {
         if let result = fw_property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
-            let result = UICollectionView(frame: .zero, collectionViewLayout: setupCollectionViewLayout())
-            result.showsVerticalScrollIndicator = false
-            result.showsHorizontalScrollIndicator = false
+            let result = UICollectionView.fw_collectionView(setupCollectionViewLayout())
             fw_setProperty(result, forName: "collectionView")
             return result
         }
     }
     
-    /// 集合视图代理，调用时自动生效
+    /// 集合代理，同集合collectionDelegate，延迟加载
     public var collectionDelegate: CollectionViewDelegate {
-        if let result = fw_property(forName: "collectionDelegate") as? CollectionViewDelegate {
-            return result
-        } else {
-            let result = collectionView.fw_collectionDelegate
-            result.delegate = self
-            fw_setProperty(result, forName: "collectionDelegate")
-            return result
-        }
+        return collectionView.fw_collectionDelegate
     }
     
     /// 集合数据，默认空数组，延迟加载
@@ -86,11 +85,16 @@ extension CollectionViewControllerProtocol where Self: UIViewController {
 internal extension ViewControllerManager {
     
     func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
-        guard let viewController = viewController as? any UIViewController & CollectionViewControllerProtocol else { return }
+        guard let viewController = viewController as? any UIViewController & CollectionDelegateControllerProtocol else { return }
         
         let collectionView = viewController.collectionView
-        collectionView.dataSource = viewController
-        collectionView.delegate = viewController
+        if let viewController = viewController as? any UIViewController & CollectionViewControllerProtocol {
+            collectionView.dataSource = viewController
+            collectionView.delegate = viewController
+        } else {
+            collectionView.dataSource = viewController.collectionDelegate
+            collectionView.delegate = viewController.collectionDelegate
+        }
         viewController.view.addSubview(collectionView)
         
         hookCollectionViewController?(viewController)

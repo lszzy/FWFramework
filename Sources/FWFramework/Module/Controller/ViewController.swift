@@ -91,9 +91,9 @@ public class ViewControllerManager: NSObject {
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
     public var hookScrollViewController: ((UIViewController & ScrollViewControllerProtocol) -> Void)?
     /// 默认全局tableViewController钩子句柄，viewDidLoad自动调用，先于setupTableView
-    public var hookTableViewController: ((any UIViewController & TableViewControllerProtocol) -> Void)?
+    public var hookTableViewController: ((any UIViewController & TableDelegateControllerProtocol) -> Void)?
     /// 默认全局collectionViewController钩子句柄，viewDidLoad自动调用，先于setupCollectionView
-    public var hookCollectionViewController: ((any UIViewController & CollectionViewControllerProtocol) -> Void)?
+    public var hookCollectionViewController: ((any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
     public var hookWebViewController: ((UIViewController & WebViewControllerProtocol) -> Void)?
     
@@ -289,13 +289,13 @@ public class ViewControllerManager: NSObject {
         collectionIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.collectionViewControllerViewDidLoad(viewController)
         }
-        ViewControllerManager.shared.registerProtocol((any CollectionViewControllerProtocol).self, intercepter: collectionIntercepter)
+        ViewControllerManager.shared.registerProtocol((any CollectionDelegateControllerProtocol).self, intercepter: collectionIntercepter)
         
         let tableIntercepter = ViewControllerIntercepter()
         tableIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.tableViewControllerViewDidLoad(viewController)
         }
-        ViewControllerManager.shared.registerProtocol((any TableViewControllerProtocol).self, intercepter: tableIntercepter)
+        ViewControllerManager.shared.registerProtocol((any TableDelegateControllerProtocol).self, intercepter: tableIntercepter)
         
         let webIntercepter = ViewControllerIntercepter()
         webIntercepter.viewDidLoadIntercepter = { viewController in

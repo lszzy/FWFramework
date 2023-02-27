@@ -7,15 +7,18 @@
 
 import UIKit
 
-// MARK: - TableViewControllerProtocol
-/// 表格视图控制器协议，可覆写
-public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableViewDataSource, UITableViewDelegate {
+// MARK: - TableDelegateControllerProtocol
+/// 表格代理控制器协议，数据源和事件代理为tableDelegate，可覆写
+public protocol TableDelegateControllerProtocol: ViewControllerProtocol, UITableViewDelegate {
     
     /// 关联表格数据元素类型，默认Any
     associatedtype TableElement = Any
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     var tableView: UITableView { get }
+    
+    /// 表格代理，同表格tableDelegate，延迟加载
+    var tableDelegate: TableViewDelegate { get }
 
     /// 表格数据，默认空数组，延迟加载
     var tableData: [TableElement] { get set }
@@ -31,35 +34,27 @@ public protocol TableViewControllerProtocol: ViewControllerProtocol, UITableView
     
 }
 
-extension TableViewControllerProtocol where Self: UIViewController {
+// MARK: - TableViewControllerProtocol
+/// 表格视图控制器协议，数据源和事件代理为控制器，可覆写
+public protocol TableViewControllerProtocol: TableDelegateControllerProtocol, UITableViewDataSource {}
+
+// MARK: - UIViewController+TableViewControllerProtocol
+extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     public var tableView: UITableView {
         if let result = fw_property(forName: "tableView") as? UITableView {
             return result
         } else {
-            let result = UITableView(frame: .zero, style: setupTableStyle())
-            result.showsVerticalScrollIndicator = false
-            result.showsHorizontalScrollIndicator = false
-            result.tableFooterView = UIView(frame: .zero)
-            if #available(iOS 15.0, *) {
-                result.sectionHeaderTopPadding = 0
-            }
+            let result = UITableView.fw_tableView(setupTableStyle())
             fw_setProperty(result, forName: "tableView")
             return result
         }
     }
     
-    /// 表格视图代理，调用时自动生效
+    /// 表格代理，同表格tableDelegate，延迟加载
     public var tableDelegate: TableViewDelegate {
-        if let result = fw_property(forName: "tableDelegate") as? TableViewDelegate {
-            return result
-        } else {
-            let result = tableView.fw_tableDelegate
-            result.delegate = self
-            fw_setProperty(result, forName: "tableDelegate")
-            return result
-        }
+        return tableView.fw_tableDelegate
     }
     
     /// 表格数据，默认空数组，延迟加载
@@ -87,11 +82,16 @@ extension TableViewControllerProtocol where Self: UIViewController {
 internal extension ViewControllerManager {
     
     func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
-        guard let viewController = viewController as? any UIViewController & TableViewControllerProtocol else { return }
+        guard let viewController = viewController as? any UIViewController & TableDelegateControllerProtocol else { return }
         
         let tableView = viewController.tableView
-        tableView.dataSource = viewController
-        tableView.delegate = viewController
+        if let viewController = viewController as? any UIViewController & TableViewControllerProtocol {
+            tableView.dataSource = viewController
+            tableView.delegate = viewController
+        } else {
+            tableView.dataSource = viewController.tableDelegate
+            tableView.delegate = viewController.tableDelegate
+        }
         viewController.view.addSubview(tableView)
         
         hookTableViewController?(viewController)
