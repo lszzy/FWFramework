@@ -982,14 +982,23 @@ extension UITableView: SkeletonViewDataSource {
         tableView.tableDelegate.viewForHeader = { [weak self] (_, section) in
             return self?.headerView(forSection: section)
         }
+        tableView.tableDelegate.heightForHeader = { [weak self] (_, section) in
+            return self?.headerView(forSection: section)?.frame.size.height ?? 0
+        }
         tableView.tableDelegate.viewForFooter = { [weak self] (_, section) in
             return self?.footerView(forSection: section)
+        }
+        tableView.tableDelegate.heightForFooter = { [weak self] (_, section) in
+            return self?.footerView(forSection: section)?.frame.size.height ?? 0
         }
         tableView.tableDelegate.countForRow = { [weak self] (section) in
             return self?.numberOfRows(inSection: section) ?? 0
         }
         tableView.tableDelegate.cellForRow = { [weak self] (_, indexPath) in
             return self?.cellForRow(at: indexPath)
+        }
+        tableView.tableDelegate.heightForRow = { [weak self] (_, indexPath) in
+            return self?.cellForRow(at: indexPath)?.frame.size.height ?? 0
         }
         return tableView
     }
@@ -1020,14 +1029,23 @@ extension UICollectionView: SkeletonViewDataSource {
         collectionView.collectionDelegate.viewForHeader = { [weak self] (_, indexPath) in
             return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath)
         }
+        collectionView.collectionDelegate.sizeForHeader = { [weak self] (_, section) in
+            return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: section))?.frame.size ?? .zero
+        }
         collectionView.collectionDelegate.viewForFooter = { [weak self] (_, indexPath) in
             return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: indexPath)
+        }
+        collectionView.collectionDelegate.sizeForFooter = { [weak self] (_, section) in
+            return self?.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: section))?.frame.size ?? .zero
         }
         collectionView.collectionDelegate.countForItem = { [weak self] (section) in
             return self?.numberOfItems(inSection: section) ?? 0
         }
         collectionView.collectionDelegate.cellForItem = { [weak self] (_, indexPath) in
             return self?.cellForItem(at: indexPath)
+        }
+        collectionView.collectionDelegate.sizeForItem = { [weak self] (_, indexPath) in
+            return self?.cellForItem(at: indexPath)?.frame.size ?? .zero
         }
         return collectionView
     }
