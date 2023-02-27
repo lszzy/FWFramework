@@ -77,9 +77,21 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     
     /// 集合选中事件，默认nil
     open var didSelectItem: ((UICollectionView, IndexPath) -> Void)?
+    /// 集合cell即将显示句柄，默认nil
+    open var willDisplayCell: ((UICollectionViewCell, IndexPath) -> Void)?
+    /// 集合cell即将停止显示，默认nil
+    open var didEndDisplayingCell: ((UICollectionViewCell, IndexPath) -> Void)?
     
-    /// 集合滚动方法，默认nil
+    /// 集合滚动句柄，默认nil
     open var didScroll: ((UIScrollView) -> Void)?
+    /// 集合即将开始拖动句柄，默认nil
+    open var willBeginDragging: ((UIScrollView) -> Void)?
+    /// 集合已经停止拖动句柄，默认nil
+    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
+    /// 集合已经停止减速句柄，默认nil
+    open var didEndDecelerating: ((UIScrollView) -> Void)?
+    /// 集合已经停止滚动动画句柄，默认nil
+    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
     
     // MARK: - Lifecycle
     /// 初始化并绑定collectionView
@@ -249,9 +261,33 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
         didSelectItem?(collectionView, indexPath)
     }
     
+    open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        willDisplayCell?(cell, indexPath)
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        didEndDisplayingCell?(cell, indexPath)
+    }
+    
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         didScroll?(scrollView)
+    }
+    
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        willBeginDragging?(scrollView)
+    }
+    
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        didEndDragging?(scrollView, decelerate)
+    }
+    
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        didEndDecelerating?(scrollView)
+    }
+    
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        didEndScrollingAnimation?(scrollView)
     }
 }
 
