@@ -369,7 +369,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             if let result = fw_property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
                 return result
             } else {
-                let result = CollectionViewDelegate(collectionView: self)
+                let result = CollectionViewDelegate()
                 fw_setProperty(result, forName: "fw_collectionDelegate")
                 return result
             }

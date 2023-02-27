@@ -364,7 +364,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
             if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
                 return result
             } else {
-                let result = TableViewDelegate(tableView: self)
+                let result = TableViewDelegate()
                 fw_setProperty(result, forName: "fw_tableDelegate")
                 return result
             }
