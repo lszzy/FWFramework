@@ -92,6 +92,7 @@ internal extension ViewControllerManager {
             collectionView.dataSource = viewController
             collectionView.delegate = viewController
         } else {
+            viewController.collectionDelegate.delegate = viewController
             collectionView.dataSource = viewController.collectionDelegate
             collectionView.delegate = viewController.collectionDelegate
         }

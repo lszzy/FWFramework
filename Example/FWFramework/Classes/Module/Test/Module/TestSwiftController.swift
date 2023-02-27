@@ -114,7 +114,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
     
 }
 
-class SwiftTestCollectionViewController: UIViewController, CollectionViewControllerProtocol, CollectionViewDelegateFlowLayout {
+class SwiftTestCollectionViewController: UIViewController, CollectionDelegateControllerProtocol, CollectionViewDelegateFlowLayout {
     lazy var contentView: UIView = {
         let contentView = UIView()
         contentView.layer.masksToBounds = true
@@ -140,9 +140,54 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
         view.backgroundColor = AppTheme.backgroundColor
         collectionView.backgroundColor = AppTheme.tableColor
         collectionView.isPagingEnabled = true
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "view")
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "view")
+        collectionDelegate.sectionCount = 2
+        collectionDelegate.countForItem = { [weak self] _ in
+            guard let self = self else { return 0 }
+            return self.flowLayout.itemRenderCount(self.collectionData.count)
+        }
+        collectionDelegate.cellForItem = { [weak self] collectionView, indexPath in
+            guard let self = self else { return nil }
+            let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+            var label = cell.contentView.viewWithTag(100) as? UILabel
+            if label == nil {
+                let textLabel = UILabel.fw.label(font: .systemFont(ofSize: 16), textColor: .white)
+                label = textLabel
+                textLabel.tag = 100
+                cell.contentView.addSubview(textLabel)
+                textLabel.fw.layoutChain.center()
+            }
+            if indexPath.item < self.collectionData.count {
+                label?.text = "\(indexPath.section) : \(indexPath.item)"
+            } else {
+                label?.text = nil
+            }
+            return cell
+        }
+        collectionDelegate.sizeForItem = { collectionView, indexPath in
+            return CGSize(width: (FW.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
+        }
+        collectionDelegate.viewForHeader = { collectionView, indexPath in
+            let view = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionHeader, indexPath: indexPath)
+            view.backgroundColor = UIColor.fw.randomColor
+            return view
+        }
+        collectionDelegate.viewForFooter = { collectionView, indexPath in
+            let view = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionFooter, indexPath: indexPath)
+            view.backgroundColor = UIColor.fw.randomColor
+            return view
+        }
+        collectionDelegate.sizeForHeader = { collectionView, section in
+            return CGSize(width: 40, height: 200)
+        }
+        collectionDelegate.sizeForFooter = { collectionView, section in
+            return CGSize(width: 40, height: 200)
+        }
+        collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+            guard let self = self else { return }
+            if indexPath.item < self.collectionData.count {
+                self.fw.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
+            }
+        }
     }
     
     func setupCollectionLayout() {
@@ -173,60 +218,10 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
         collectionView.reloadData()
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return flowLayout.itemRenderCount(collectionData.count)
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        var label = cell.contentView.viewWithTag(100) as? UILabel
-        if label == nil {
-            let textLabel = UILabel.fw.label(font: .systemFont(ofSize: 16), textColor: .white)
-            label = textLabel
-            textLabel.tag = 100
-            cell.contentView.addSubview(textLabel)
-            textLabel.fw.layoutChain.center()
-        }
-        if indexPath.item < collectionData.count {
-            label?.text = "\(indexPath.section) : \(indexPath.item)"
-        } else {
-            label?.text = nil
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "view", for: indexPath)
-        view.backgroundColor = UIColor.fw.randomColor
-        return view
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, configForSectionAt section: Int) -> CollectionViewSectionConfig? {
         let sectionConfig = CollectionViewSectionConfig()
         sectionConfig.backgroundColor = UIColor.fw.randomColor
         return sectionConfig
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (FW.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: 40, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: 40, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item < collectionData.count {
-            view.fw.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
-        }
     }
     
 }
@@ -242,23 +237,20 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
     }
 }
 
-class SwiftTestTableViewController: UIViewController, TableViewControllerProtocol {
+class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol {
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
+        tableDelegate.countForRow = { [weak self] _ in
+            return self?.tableData.count ?? 0
+        }
+        tableDelegate.cellConfiguation = { cell, indexPath in
+            cell.fw.maxYViewExpanded = true
+            cell.textLabel?.text = "\(indexPath.row)"
+        }
     }
     
     func setupSubviews() {
         tableData.append(contentsOf: [0, 1, 2])
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        cell.textLabel?.text = "\(indexPath.row)"
-        return cell
     }
 }
 
