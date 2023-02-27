@@ -8,8 +8,8 @@
 import UIKit
 
 // MARK: - TableViewDelegate
-/// 便捷表格视图代理
-open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+/// 便捷表格视图数据源和事件代理，注意仅代理UITableViewDelegate
+open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
     open var countForSection: (() -> Int)?
     /// 表格section数，默认1，优先级低
@@ -83,7 +83,7 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
         tableView.delegate = self
     }
     
-    // MARK: - UITableView
+    // MARK: - UITableViewDataSource
     open func numberOfSections(in tableView: UITableView) -> Int {
         if let countBlock = countForSection {
             return countBlock()
@@ -109,6 +109,18 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
+    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let title = titleForDelete?(indexPath) ?? deleteTitle
+        return title != nil ? true : false
+    }
+    
+    open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            didDeleteRow?(indexPath)
+        }
+    }
+    
+    // MARK: - UITableViewDelegate
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let heightBlock = heightForRow {
             return heightBlock(tableView, indexPath)
@@ -197,11 +209,6 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
         didSelectRow?(indexPath)
     }
     
-    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let title = titleForDelete?(indexPath) ?? deleteTitle
-        return title != nil ? true : false
-    }
-    
     open func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return titleForDelete?(indexPath) ?? deleteTitle
     }
@@ -209,12 +216,6 @@ open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelega
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         let title = titleForDelete?(indexPath) ?? deleteTitle
         return title != nil ? .delete : .none
-    }
-    
-    open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            didDeleteRow?(indexPath)
-        }
     }
 }
 

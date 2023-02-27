@@ -11,8 +11,8 @@ import FWObjC
 #endif
 
 // MARK: - CollectionViewDelegate
-/// 便捷集合视图代理
-open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+/// 便捷集合视图数据源和事件代理，注意仅代理UICollectionViewDelegate
+open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var countForSection: (() -> Int)?
     /// 集合section数，默认1，优先级低
@@ -100,7 +100,7 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
         return .zero
     }
     
-    // MARK: - UICollectionView
+    // MARK: - UICollectionViewDataSource
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let countBlock = countForSection {
             return countBlock()
@@ -124,33 +124,6 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
         let cell = cellClass.fw_cell(collectionView: collectionView, indexPath: indexPath)
         cellConfiguration?(cell, indexPath)
         return cell
-    }
-    
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if let sizeBlock = sizeForItem {
-            return sizeBlock(collectionView, indexPath)
-        }
-        if let itemSize = itemSize {
-            return itemSize
-        }
-        
-        if cellForItem != nil {
-            return UICollectionViewFlowLayout.automaticSize
-        }
-        let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
-        let inset = sectionInset(indexPath.section, collectionView)
-        var width: CGFloat = 0
-        if inset != .zero && collectionView.frame.size.width > 0 {
-            width = collectionView.frame.size.width - inset.left - inset.right
-        }
-        let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
-        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
-            self?.cellConfiguration?(cell, indexPath)
-        }
-    }
-    
-    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInset(section, collectionView)
     }
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -185,6 +158,34 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
         }
         
         return UICollectionReusableView()
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let sizeBlock = sizeForItem {
+            return sizeBlock(collectionView, indexPath)
+        }
+        if let itemSize = itemSize {
+            return itemSize
+        }
+        
+        if cellForItem != nil {
+            return UICollectionViewFlowLayout.automaticSize
+        }
+        let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
+        let inset = sectionInset(indexPath.section, collectionView)
+        var width: CGFloat = 0
+        if inset != .zero && collectionView.frame.size.width > 0 {
+            width = collectionView.frame.size.width - inset.left - inset.right
+        }
+        let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
+        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
+            self?.cellConfiguration?(cell, indexPath)
+        }
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInset(section, collectionView)
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -233,6 +234,7 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColle
         }
     }
     
+    // MARK: - UICollectionViewDelegate
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         didSelectItem?(indexPath)
     }
