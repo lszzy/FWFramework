@@ -141,7 +141,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         collectionView.backgroundColor = AppTheme.tableColor
         collectionView.isPagingEnabled = true
         collectionDelegate.sectionCount = 2
-        collectionDelegate.countForItem = { [weak self] _ in
+        collectionDelegate.numberOfItems = { [weak self] _ in
             guard let self = self else { return 0 }
             return self.flowLayout.itemRenderCount(self.collectionData.count)
         }
@@ -240,7 +240,7 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
 class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol {
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
-        tableDelegate.countForRow = { [weak self] _ in
+        tableDelegate.numberOfRows = { [weak self] _ in
             return self?.tableData.count ?? 0
         }
         tableDelegate.cellConfiguation = { cell, indexPath in
