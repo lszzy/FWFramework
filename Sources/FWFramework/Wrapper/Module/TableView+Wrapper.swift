@@ -9,7 +9,8 @@ import UIKit
 
 extension Wrapper where Base: UITableView {
     public var tableDelegate: TableViewDelegate {
-        return base.fw_tableDelegate
+        get { base.fw_tableDelegate }
+        set { base.fw_tableDelegate = newValue }
     }
     
     public static func tableView() -> Base {

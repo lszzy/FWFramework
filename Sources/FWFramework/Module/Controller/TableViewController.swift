@@ -50,6 +50,18 @@ extension TableViewControllerProtocol where Self: UIViewController {
         }
     }
     
+    /// 表格视图代理，调用时自动生效
+    public var tableDelegate: TableViewDelegate {
+        if let result = fw_property(forName: "tableDelegate") as? TableViewDelegate {
+            return result
+        } else {
+            let result = tableView.fw_tableDelegate
+            result.delegate = self
+            fw_setProperty(result, forName: "tableDelegate")
+            return result
+        }
+    }
+    
     /// 表格数据，默认空数组，延迟加载
     public var tableData: [TableElement] {
         get { return fw_property(forName: "tableData") as? [TableElement] ?? [] }

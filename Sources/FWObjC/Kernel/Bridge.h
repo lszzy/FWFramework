@@ -26,35 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWBlockProxy
-
-@interface __FWBlockProxy : NSObject
-
-@property (nonatomic, copy, readonly) id block;
-
-@property (nonatomic, strong, readonly) NSMethodSignature *methodSignature;
-
-+ (nullable NSMethodSignature *)methodSignatureForBlock:(id)block;
-
-- (instancetype)initWithBlock:(id)block;
-
-+ (instancetype)proxyWithBlock:(id)block;
-
-- (BOOL)invokeWithInvocation:(NSInvocation *)invocation returnValue:(out NSValue * __nullable * __nonnull)returnValue;
-
-- (void)invokeWithInvocation:(NSInvocation *)invocation;
-
-@end
-
 #pragma mark - __FWDelegateProxy
 
 @interface __FWDelegateProxy : NSObject
 
 @property (nonatomic, weak, nullable) id proxyDelegate;
-
-- (void)setSelector:(SEL)selector withBlock:(nullable id)block;
-
-- (nullable id)blockForSelector:(SEL)selector;
 
 @end
 

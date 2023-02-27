@@ -9,7 +9,8 @@ import UIKit
 
 extension Wrapper where Base: UICollectionView {
     public var collectionDelegate: CollectionViewDelegate {
-        return base.fw_collectionDelegate
+        get { base.fw_collectionDelegate }
+        set { base.fw_collectionDelegate = newValue }
     }
     
     public static func collectionView() -> Base {

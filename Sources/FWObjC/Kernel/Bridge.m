@@ -107,193 +107,9 @@
 
 @end
 
-#pragma mark - __FWBlockProxy
-
-typedef NS_OPTIONS(int, __ProxyBlockFlags) {
-    __ProxyBlockFlagsHasCopyDisposeHelpers = (1 << 25),
-    __ProxyBlockFlagsHasSignature          = (1 << 30),
-};
-
-typedef struct __ProxyBlock {
-    __unused Class isa;
-    __ProxyBlockFlags flags;
-    __unused int reserved;
-    void (__unused *invoke)(struct __ProxyBlock *block, ...);
-    struct {
-        unsigned long int reserved;
-        unsigned long int size;
-        void (*copy)(void *dst, const void *src);
-        void (*dispose)(const void *);
-        const char *signature;
-        const char *layout;
-    } *descriptor;
-} *__ProxyBlockRef;
-
-@interface __FWBlockProxy ()
-
-@property (nonatomic, readonly) NSMethodSignature *blockSignature;
-
-@end
-
-@implementation __FWBlockProxy
-
-+ (NSMethodSignature *)typeSignatureForBlock:(id)block __attribute__((pure, nonnull(1))) {
-    __ProxyBlockRef layout = (__bridge void *)block;
-    
-    if (!(layout->flags & __ProxyBlockFlagsHasSignature))
-        return nil;
-    
-    void *desc = layout->descriptor;
-    desc += 2 * sizeof(unsigned long int);
-    
-    if (layout->flags & __ProxyBlockFlagsHasCopyDisposeHelpers)
-        desc += 2 * sizeof(void *);
-    
-    if (!desc)
-        return nil;
-    
-    const char *signature = (*(const char **)desc);
-    
-    return [NSMethodSignature signatureWithObjCTypes:signature];
-}
-
-+ (NSMethodSignature *)methodSignatureForBlockSignature:(NSMethodSignature *)original {
-    if (!original) return nil;
-    
-    if (original.numberOfArguments < 1) {
-        return nil;
-    }
-    
-    if (original.numberOfArguments >= 2 && strcmp(@encode(SEL), [original getArgumentTypeAtIndex:1]) == 0) {
-        return original;
-    }
-    
-    NSMutableString *signature = [[NSMutableString alloc] initWithCapacity:original.numberOfArguments + 1];
-    
-    const char *retTypeStr = original.methodReturnType;
-    [signature appendFormat:@"%s%s%s", retTypeStr, @encode(id), @encode(SEL)];
-    
-    for (NSUInteger i = 1; i < original.numberOfArguments; i++) {
-        const char *typeStr = [original getArgumentTypeAtIndex:i];
-        NSString *type = [[NSString alloc] initWithBytesNoCopy:(void *)typeStr length:strlen(typeStr) encoding:NSUTF8StringEncoding freeWhenDone:NO];
-        [signature appendString:type];
-    }
-    
-    return [NSMethodSignature signatureWithObjCTypes:signature.UTF8String];
-}
-
-+ (NSMethodSignature *)methodSignatureForBlock:(id)block {
-    NSMethodSignature *original = [self typeSignatureForBlock:block];
-    if (!original) return nil;
-    return [self methodSignatureForBlockSignature:original];
-}
-
-+ (instancetype)proxyWithBlock:(id)block {
-    return [[self alloc] initWithBlock:block];
-}
-
-- (instancetype)initWithBlock:(id)block {
-    NSParameterAssert(block);
-    NSMethodSignature *blockSignature = [[self class] typeSignatureForBlock:block];
-    NSMethodSignature *methodSignature = [[self class] methodSignatureForBlockSignature:blockSignature];
-    NSAssert(methodSignature, @"Incompatible block: %@", block);
-    return (self = [self initWithBlock:block methodSignature:methodSignature blockSignature:blockSignature]);
-}
-
-- (instancetype)initWithBlock:(id)block methodSignature:(NSMethodSignature *)methodSignature blockSignature:(NSMethodSignature *)blockSignature {
-    self = [super init];
-    if (self) {
-        _block = [block copy];
-        _methodSignature = methodSignature;
-        _blockSignature = blockSignature;
-    }
-    return self;
-}
-
-- (BOOL)invokeWithInvocation:(NSInvocation *)outerInv returnValue:(out NSValue **)outReturnValue setOnInvocation:(BOOL)setOnInvocation {
-    NSParameterAssert(outerInv);
-    
-    NSMethodSignature *sig = self.methodSignature;
-    
-    if (![outerInv.methodSignature isEqual:sig]) {
-        NSAssert(0, @"Attempted to invoke block invocation with incompatible frame");
-        return NO;
-    }
-    
-    NSInvocation *innerInv = [NSInvocation invocationWithMethodSignature:self.blockSignature];
-    
-    void *argBuf = NULL;
-    
-    for (NSUInteger i = 2; i < sig.numberOfArguments; i++) {
-        const char *type = [sig getArgumentTypeAtIndex:i];
-        NSUInteger argSize;
-        NSGetSizeAndAlignment(type, &argSize, NULL);
-        
-        if (!(argBuf = reallocf(argBuf, argSize))) {
-            return NO;
-        }
-        
-        [outerInv getArgument:argBuf atIndex:i];
-        [innerInv setArgument:argBuf atIndex:i - 1];
-    }
-    
-    [innerInv invokeWithTarget:self.block];
-    
-    NSUInteger retSize = sig.methodReturnLength;
-    if (retSize) {
-        if (outReturnValue || setOnInvocation) {
-            if (!(argBuf = reallocf(argBuf, retSize))) {
-                return NO;
-            }
-            
-            [innerInv getReturnValue:argBuf];
-            
-            if (setOnInvocation) {
-                [outerInv setReturnValue:argBuf];
-            }
-            
-            if (outReturnValue) {
-                *outReturnValue = [NSValue valueWithBytes:argBuf objCType:sig.methodReturnType];
-            }
-        }
-    } else {
-        if (outReturnValue) {
-            *outReturnValue = nil;
-        }
-    }
-    
-    free(argBuf);
-    
-    return YES;
-}
-
-- (void)invokeWithInvocation:(NSInvocation *)invocation {
-    [self invokeWithInvocation:invocation returnValue:NULL setOnInvocation:YES];
-}
-
-- (BOOL)invokeWithInvocation:(NSInvocation *)invocation returnValue:(out NSValue **)returnValue {
-    return [self invokeWithInvocation:invocation returnValue:returnValue setOnInvocation:NO];
-}
-
-@end
-
 #pragma mark - __FWDelegateProxy
 
-@interface __FWDelegateProxy ()
-
-@property (nonatomic, strong) NSMutableDictionary *blockProxies;
-
-@end
-
 @implementation __FWDelegateProxy
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _blockProxies = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
 
 - (BOOL)isProxy {
     return YES;
@@ -307,19 +123,12 @@ typedef struct __ProxyBlock {
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
-    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(invocation.selector)];
-    if (blockProxy) {
-        [blockProxy invokeWithInvocation:invocation];
-    } else if ([self.proxyDelegate respondsToSelector:invocation.selector]) {
+    if ([self.proxyDelegate respondsToSelector:invocation.selector]) {
         [invocation invokeWithTarget:self.proxyDelegate];
     }
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
-    if (blockProxy) {
-        return blockProxy.methodSignature;
-    }
     if ([self.proxyDelegate respondsToSelector:selector]) {
         return [self.proxyDelegate methodSignatureForSelector:selector];
     }
@@ -327,31 +136,10 @@ typedef struct __ProxyBlock {
 }
 
 - (BOOL)respondsToSelector:(SEL)selector {
-    if ([self.blockProxies objectForKey:NSStringFromSelector(selector)]) {
-        return YES;
-    }
     if ([self.proxyDelegate respondsToSelector:selector]) {
         return YES;
     }
     return [super respondsToSelector:selector];
-}
-
-- (void)setSelector:(SEL)selector withBlock:(id)block {
-    NSCAssert(selector, @"Attempt to implement or remove NULL selector");
-    
-    NSString *blockKey = NSStringFromSelector(selector);
-    if (!block) {
-        [self.blockProxies removeObjectForKey:blockKey];
-        return;
-    }
-    
-    __FWBlockProxy *blockProxy = [[__FWBlockProxy alloc] initWithBlock:block];
-    [self.blockProxies setObject:blockProxy forKey:blockKey];
-}
-
-- (id)blockForSelector:(SEL)selector {
-    __FWBlockProxy *blockProxy = [self.blockProxies objectForKey:NSStringFromSelector(selector)];
-    return blockProxy ? blockProxy.block : nil;
 }
 
 @end
