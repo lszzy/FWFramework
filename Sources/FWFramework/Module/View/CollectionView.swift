@@ -12,7 +12,7 @@ import FWObjC
 
 // MARK: - CollectionViewDelegate
 /// 常用集合视图数据源和事件代理，可继承
-open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var countForSection: (() -> Int)?
     /// 集合section数，默认1，优先级低
@@ -118,6 +118,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     
     // MARK: - UICollectionViewDataSource
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
+        let dataSource = delegate as? UICollectionViewDataSource
+        if let sectionCount = dataSource?.numberOfSections?(in: collectionView) {
+            return sectionCount
+        }
+        
         if let countBlock = countForSection {
             return countBlock()
         }
@@ -125,6 +130,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     }
     
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let dataSource = delegate as? UICollectionViewDataSource
+        if let itemCount = dataSource?.collectionView(collectionView, numberOfItemsInSection: section) {
+            return itemCount
+        }
+        
         if let countBlock = countForItem {
             return countBlock(section)
         }
@@ -132,6 +142,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let dataSource = delegate as? UICollectionViewDataSource
+        if let cell = dataSource?.collectionView(collectionView, cellForItemAt: indexPath) {
+            return cell
+        }
+        
         if let cell = cellForItem?(collectionView, indexPath) {
             return cell
         }
@@ -143,6 +158,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     }
     
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let dataSource = delegate as? UICollectionViewDataSource
+        if let view = dataSource?.collectionView?(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) {
+            return view
+        }
+        
         if kind == UICollectionView.elementKindSectionHeader {
             if let view = viewForHeader?(collectionView, indexPath) {
                 return view
@@ -178,6 +198,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     
     // MARK: - UICollectionViewDelegateFlowLayout
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let itemSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath) {
+            return itemSize
+        }
+        
         if let sizeBlock = sizeForItem {
             return sizeBlock(collectionView, indexPath)
         }
@@ -201,10 +226,20 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let sectionInset = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, insetForSectionAt: section) {
+            return sectionInset
+        }
+        
         return sectionInset(section, collectionView)
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let headerSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section) {
+            return headerSize
+        }
+        
         if let sizeBlock = sizeForHeader {
             return sizeBlock(collectionView, section)
         }
@@ -231,6 +266,11 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let footerSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section) {
+            return footerSize
+        }
+        
         if let sizeBlock = sizeForFooter {
             return sizeBlock(collectionView, section)
         }
@@ -258,47 +298,84 @@ open class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollect
     
     // MARK: - UICollectionViewDelegate
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if delegate?.collectionView?(collectionView, didSelectItemAt: indexPath) != nil {
+            return
+        }
+        
         didSelectItem?(collectionView, indexPath)
     }
     
     open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if delegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath) != nil {
+            return
+        }
+        
         willDisplayCell?(cell, indexPath)
     }
     
     open func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if delegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath) != nil {
+            return
+        }
+        
         didEndDisplayingCell?(cell, indexPath)
     }
     
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidScroll?(scrollView) != nil {
+            return
+        }
+        
         didScroll?(scrollView)
     }
     
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewWillBeginDragging?(scrollView) != nil {
+            return
+        }
+        
         willBeginDragging?(scrollView)
     }
     
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if delegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate) != nil {
+            return
+        }
+        
         didEndDragging?(scrollView, decelerate)
     }
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndDecelerating?(scrollView) != nil {
+            return
+        }
+        
         didEndDecelerating?(scrollView)
     }
     
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndScrollingAnimation?(scrollView) != nil {
+            return
+        }
+        
         didEndScrollingAnimation?(scrollView)
     }
 }
 
 @_spi(FW) extension UICollectionView {
     public var fw_collectionDelegate: CollectionViewDelegate {
-        if let result = fw_property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
-            return result
-        } else {
-            let result = CollectionViewDelegate(collectionView: self)
-            fw_setProperty(result, forName: "fw_collectionDelegate")
-            return result
+        get {
+            if let result = fw_property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
+                return result
+            } else {
+                let result = CollectionViewDelegate(collectionView: self)
+                fw_setProperty(result, forName: "fw_collectionDelegate")
+                return result
+            }
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_collectionDelegate")
         }
     }
     

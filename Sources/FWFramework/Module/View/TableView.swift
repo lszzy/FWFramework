@@ -6,10 +6,13 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWObjC
+#endif
 
 // MARK: - TableViewDelegate
 /// 常用表格视图数据源和事件代理，可继承
-open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSource {
+open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
     open var countForSection: (() -> Int)?
     /// 表格section数，默认1，优先级低
@@ -101,6 +104,11 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     
     // MARK: - UITableViewDataSource
     open func numberOfSections(in tableView: UITableView) -> Int {
+        let dataSource = delegate as? UITableViewDataSource
+        if let sectionCount = dataSource?.numberOfSections?(in: tableView) {
+            return sectionCount
+        }
+        
         if let countBlock = countForSection {
             return countBlock()
         }
@@ -108,6 +116,11 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let dataSource = delegate as? UITableViewDataSource
+        if let rowCount = dataSource?.tableView(tableView, numberOfRowsInSection: section) {
+            return rowCount
+        }
+        
         if let countBlock = countForRow {
             return countBlock(section)
         }
@@ -115,6 +128,11 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let dataSource = delegate as? UITableViewDataSource
+        if let cell = dataSource?.tableView(tableView, cellForRowAt: indexPath) {
+            return cell
+        }
+        
         if let cell = cellForRow?(tableView, indexPath) {
             return cell
         }
@@ -126,11 +144,21 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let dataSource = delegate as? UITableViewDataSource
+        if let canEdit = dataSource?.tableView?(tableView, canEditRowAt: indexPath) {
+            return canEdit
+        }
+        
         let title = titleForDelete?(indexPath) ?? deleteTitle
         return title != nil ? true : false
     }
     
     open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        let dataSource = delegate as? UITableViewDataSource
+        if dataSource?.tableView?(tableView, commit: editingStyle, forRowAt: indexPath) != nil {
+            return
+        }
+        
         if editingStyle == .delete {
             didDeleteRow?(tableView, indexPath)
         }
@@ -138,6 +166,10 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     
     // MARK: - UITableViewDelegate
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let rowHeight = delegate?.tableView?(tableView, heightForRowAt: indexPath) {
+            return rowHeight
+        }
+        
         if let heightBlock = heightForRow {
             return heightBlock(tableView, indexPath)
         }
@@ -156,6 +188,10 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:viewForHeaderInSection:))) ?? false {
+            return delegate?.tableView?(tableView, viewForHeaderInSection: section)
+        }
+        
         if viewForHeader != nil {
             return viewForHeader?(tableView, section)
         }
@@ -169,6 +205,10 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if let headerHeight = delegate?.tableView?(tableView, heightForHeaderInSection: section) {
+            return headerHeight
+        }
+        
         if let heightBlock = heightForHeader {
             return heightBlock(tableView, section)
         }
@@ -192,6 +232,10 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:viewForFooterInSection:))) ?? false {
+            return delegate?.tableView?(tableView, viewForFooterInSection: section)
+        }
+        
         if viewForFooter != nil {
             return viewForFooter?(tableView, section)
         }
@@ -205,6 +249,10 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if let footerHeight = delegate?.tableView?(tableView, heightForFooterInSection: section) {
+            return footerHeight
+        }
+        
         if let heightBlock = heightForFooter {
             return heightBlock(tableView, section)
         }
@@ -228,56 +276,101 @@ open class TableViewDelegate: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if delegate?.tableView?(tableView, didSelectRowAt: indexPath) != nil {
+            return
+        }
+        
         didSelectRow?(tableView, indexPath)
     }
     
     open func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:titleForDeleteConfirmationButtonForRowAt:))) ?? false {
+            return delegate?.tableView?(tableView, titleForDeleteConfirmationButtonForRowAt: indexPath)
+        }
+        
         return titleForDelete?(indexPath) ?? deleteTitle
     }
     
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if let editingStyle = delegate?.tableView?(tableView, editingStyleForRowAt: indexPath) {
+            return editingStyle
+        }
+        
         let title = titleForDelete?(indexPath) ?? deleteTitle
         return title != nil ? .delete : .none
     }
     
     open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if delegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath) != nil {
+            return
+        }
+        
         willDisplayCell?(cell, indexPath)
     }
     
     open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath) != nil {
+            return
+        }
+        
         didEndDisplayingCell?(cell, indexPath)
     }
     
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidScroll?(scrollView) != nil {
+            return
+        }
+        
         didScroll?(scrollView)
     }
     
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewWillBeginDragging?(scrollView) != nil {
+            return
+        }
+        
         willBeginDragging?(scrollView)
     }
     
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if delegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate) != nil {
+            return
+        }
+        
         didEndDragging?(scrollView, decelerate)
     }
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndDecelerating?(scrollView) != nil {
+            return
+        }
+        
         didEndDecelerating?(scrollView)
     }
     
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndScrollingAnimation?(scrollView) != nil {
+            return
+        }
+        
         didEndScrollingAnimation?(scrollView)
     }
 }
 
 @_spi(FW) extension UITableView {
     public var fw_tableDelegate: TableViewDelegate {
-        if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
-            return result
-        } else {
-            let result = TableViewDelegate(tableView: self)
-            fw_setProperty(result, forName: "fw_tableDelegate")
-            return result
+        get {
+            if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
+                return result
+            } else {
+                let result = TableViewDelegate(tableView: self)
+                fw_setProperty(result, forName: "fw_tableDelegate")
+                return result
+            }
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_tableDelegate")
         }
     }
     

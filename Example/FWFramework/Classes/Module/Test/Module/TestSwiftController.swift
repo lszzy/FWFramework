@@ -245,14 +245,6 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
 class SwiftTestTableViewController: UIViewController, TableViewControllerProtocol {
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
-        tableView.fw.tableDelegate.countForRow = { [weak self] section in
-            guard let self = self else { return 0 }
-            return self.tableData.count
-        }
-        tableView.fw.tableDelegate.cellConfiguation = { cell, indexPath in
-            cell.fw.maxYViewExpanded = true
-            cell.textLabel?.text = "\(indexPath.row)"
-        }
     }
     
     func setupSubviews() {
@@ -260,11 +252,13 @@ class SwiftTestTableViewController: UIViewController, TableViewControllerProtoco
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return tableData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        cell.textLabel?.text = "\(indexPath.row)"
+        return cell
     }
 }
 
