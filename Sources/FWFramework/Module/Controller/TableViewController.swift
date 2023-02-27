@@ -89,6 +89,7 @@ internal extension ViewControllerManager {
             tableView.dataSource = viewController
             tableView.delegate = viewController
         } else {
+            viewController.tableDelegate.delegate = viewController
             tableView.dataSource = viewController.tableDelegate
             tableView.delegate = viewController.tableDelegate
         }
