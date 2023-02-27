@@ -25,18 +25,18 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableDelegate.countForRow = { [weak self] section in
+        tableView.fw.tableDelegate.countForRow = { [weak self] section in
             guard let self = self else { return 0 }
             return self.tableData.count
         }
-        tableDelegate.cellForRow = { [weak self] tableView, indexPath in
+        tableView.fw.tableDelegate.cellForRow = { [weak self] tableView, indexPath in
             guard let self = self else { return nil }
             let cell = UITableViewCell.fw.cell(tableView: tableView)
             let rowData = self.tableData[indexPath.row]
             cell.textLabel?.text = rowData[0]
             return cell
         }
-        tableDelegate.didSelectRow = { [weak self] indexPath in
+        tableView.fw.tableDelegate.didSelectRow = { [weak self] indexPath in
             guard let self = self else { return }
             self.tableView.deselectRow(at: indexPath, animated: true)
             let rowData = self.tableData[indexPath.row]
