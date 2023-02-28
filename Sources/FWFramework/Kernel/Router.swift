@@ -178,7 +178,7 @@ public class Router: NSObject {
         }
         guard let targetClass = targetClass else { return [:] }
         
-        let methods = NSObject.fw_classMethods(targetClass, superclass: false)
+        let methods = NSObject.fw_classMethods(targetClass)
         if let mapper = mapper {
             return mapper(methods)
         }

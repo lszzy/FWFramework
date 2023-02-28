@@ -17,31 +17,28 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Class
-    /// 获取类方法列表，支持meta类(objc_getMetaClass)
+    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 方法列表
-    public static func classMethods(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.fw_classMethods(clazz, superclass: superclass)
+    public static func classMethods(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classMethods(clazz)
     }
     
-    /// 获取类属性列表，支持meta类(objc_getMetaClass)
+    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 属性列表
-    public static func classProperties(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.fw_classProperties(clazz, superclass: superclass)
+    public static func classProperties(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classProperties(clazz)
     }
     
-    /// 获取类Ivar列表，支持meta类(objc_getMetaClass)
+    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: Ivar列表
-    public static func classIvars(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        return Base.fw_classIvars(clazz, superclass: superclass)
+    public static func classIvars(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classIvars(clazz)
     }
     
     // MARK: - Runtime
