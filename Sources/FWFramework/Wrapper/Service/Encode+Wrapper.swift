@@ -271,7 +271,7 @@ extension Wrapper where Base == URL {
 extension Wrapper where Base: NSObject {
     
     /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
-    public static func mirrorDictionary(_ object: Any) -> [String: Any] {
+    public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
         return Base.fw_mirrorDictionary(object)
     }
     
