@@ -91,7 +91,6 @@ public class Autoloader: NSObject, AutoloadProtocol {
         autoload(NavigationStyleAutoloader.self)
         autoload(AlertPluginAutoloader.self)
         autoload(ImagePluginAutoloader.self)
-        autoload(BadgeViewAutoloader.self)
         
         #if DEBUG
         // 调试模式自动执行单元测试

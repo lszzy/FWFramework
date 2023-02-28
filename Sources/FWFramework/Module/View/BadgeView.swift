@@ -216,7 +216,12 @@ open class BadgeView: UIView, BadgeViewProtocol {
 
 @_spi(FW) extension UITabBarItem {
     
+    private static var fw_staticBadgeViewSwizzled = false
+    
     fileprivate static func fw_swizzleBadgeView() {
+        guard !fw_staticBadgeViewSwizzled else { return }
+        fw_staticBadgeViewSwizzled = true
+        
         NSObject.fw_swizzleMethod(
             objc_getClass("UITabBarButton"),
             selector: #selector(UIView.layoutSubviews),
@@ -273,6 +278,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
     public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
+        UITabBarItem.fw_swizzleBadgeView()
         // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
         self.fw_viewLoadedBlock = { item, view in
             guard let item = item as? UITabBarItem,
@@ -294,15 +300,6 @@ open class BadgeView: UIView, BadgeViewProtocol {
            let badgeView = superview.viewWithTag(2041) {
             badgeView.removeFromSuperview()
         }
-    }
-    
-}
-
-// MARK: - BadgeViewAutoloader
-internal class BadgeViewAutoloader: AutoloadProtocol {
-    
-    static func autoload() {
-        UITabBarItem.fw_swizzleBadgeView()
     }
     
 }
