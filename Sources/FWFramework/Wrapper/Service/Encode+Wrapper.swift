@@ -267,3 +267,12 @@ extension Wrapper where Base == URL {
         return base.fw_pathURI
     }
 }
+
+extension Wrapper where Base: NSObject {
+    
+    /// 获取任意对象的反射字典，不含nil值，默认不包含父类
+    public static func mirrorDictionary(_ object: Any, superclass: Bool = false) -> [String: Any] {
+        return Base.fw_mirrorDictionary(object, superclass: superclass)
+    }
+    
+}
