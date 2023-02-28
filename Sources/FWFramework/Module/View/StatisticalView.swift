@@ -53,13 +53,12 @@ public class StatisticalManager: NSObject {
     
     // MARK: - Public
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
-    @discardableResult
-    public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) -> Bool {
-        if event.triggerIgnored { return false }
+    public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
+        if event.triggerIgnored { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : clickOnce
-        if triggerCount > 1 && triggerOnce { return false }
+        if triggerCount > 1 && triggerOnce { return }
         view?.fw_trackClickCounts[triggerKey] = triggerCount
         
         event.view = view
@@ -70,17 +69,15 @@ public class StatisticalManager: NSObject {
         event.isExposure = false
         event.isFinished = true
         handleEvent(event)
-        return true
     }
     
     /// 手工触发视图曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
-    @discardableResult
-    public func trackExposureBegin(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) -> Bool {
-        if event.triggerIgnored { return false }
+    public func trackExposureBegin(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
+        if event.triggerIgnored { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return false }
+        if triggerCount > 1 && triggerOnce { return }
         view?.fw_trackExposureCounts[triggerKey] = triggerCount
         let triggerTimestamp = Date.fw_currentTime
         view?.fw_trackExposureTimestamps[triggerKey] = triggerTimestamp
@@ -97,19 +94,17 @@ public class StatisticalManager: NSObject {
         event.isFinished = false
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
-        return true
     }
     
     /// 手工触发视图曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
-    @discardableResult
-    public func trackExposureEnd(_ view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
-        guard trackingTime else { return false }
+    public func trackExposureEnd(_ view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
+        guard trackingTime else { return }
         let event = closure()
-        if event.triggerIgnored { return false }
+        if event.triggerIgnored { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = view?.fw_trackExposureCounts[triggerKey] ?? 0
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return false }
+        if triggerCount > 1 && triggerOnce { return }
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         // TODO: duration需要减去退后台的时间
@@ -130,16 +125,14 @@ public class StatisticalManager: NSObject {
         event.isFinished = true
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
-        return true
     }
     
     /// 手工触发控制器曝光开始并统计次数，曝光开始时调用
-    @discardableResult
-    public func trackExposureBegin(_ viewController: UIViewController?, event: StatisticalEvent) -> Bool {
-        if event.triggerIgnored { return false }
+    public func trackExposureBegin(_ viewController: UIViewController?, event: StatisticalEvent) {
+        if event.triggerIgnored { return }
         let triggerCount = (viewController?.fw_trackExposureCount ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return false }
+        if triggerCount > 1 && triggerOnce { return }
         viewController?.fw_trackExposureCount = triggerCount
         let triggerTimestamp = Date.fw_currentTime
         viewController?.fw_trackExposureTimestamp = triggerTimestamp
@@ -156,18 +149,16 @@ public class StatisticalManager: NSObject {
         event.isFinished = false
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
-        return true
     }
     
     /// 手工触发控制器曝光结束并统计时长，曝光结束时调用
-    @discardableResult
-    public func trackExposureEnd(_ viewController: UIViewController?, event closure: @autoclosure () -> StatisticalEvent) -> Bool {
-        guard trackingTime else { return false }
+    public func trackExposureEnd(_ viewController: UIViewController?, event closure: @autoclosure () -> StatisticalEvent) {
+        guard trackingTime else { return }
         let event = closure()
-        if event.triggerIgnored { return false }
+        if event.triggerIgnored { return }
         let triggerCount = viewController?.fw_trackExposureCount ?? 0
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return false }
+        if triggerCount > 1 && triggerOnce { return }
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         // TODO: duration需要减去退后台的时间
@@ -188,7 +179,6 @@ public class StatisticalManager: NSObject {
         event.isFinished = true
         // TODO: 标记isTerminate和isBackground
         handleEvent(event)
-        return true
     }
     
     // MARK: - Private
@@ -340,9 +330,8 @@ public class StatisticalEvent: NSObject {
             if !tableView.fw_statisticalClickEnabled { return }
             
             let cell = tableView.cellForRow(at: indexPath)
-            if cell?.fw_statisticalClick != nil {
-                cell?.fw_statisticalTrackClick(indexPath: indexPath)
-            } else if tableView.fw_statisticalClick != nil {
+            let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
+            if !cellTracked {
                 tableView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
@@ -368,9 +357,8 @@ public class StatisticalEvent: NSObject {
             if !collectionView.fw_statisticalClickEnabled { return }
             
             let cell = collectionView.cellForItem(at: indexPath)
-            if cell?.fw_statisticalClick != nil {
-                cell?.fw_statisticalTrackClick(indexPath: indexPath)
-            } else if collectionView.fw_statisticalClick != nil {
+            let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
+            if !cellTracked {
                 collectionView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
@@ -408,7 +396,6 @@ public class StatisticalEvent: NSObject {
     
     // MARK: - Public
     /// 设置并尝试自动绑定点击事件统计，containerView参数为nil
-    @objc(__fw_statisticalClick)
     public var fw_statisticalClick: StatisticalEvent? {
         get {
             return fw_property(forName: "fw_statisticalClick") as? StatisticalEvent
@@ -426,7 +413,6 @@ public class StatisticalEvent: NSObject {
     }
     
     /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
-    @objc(__fw_statisticalBindClickWithContainerView:)
     @discardableResult
     public func fw_statisticalBindClick(containerView: UIView? = nil) -> Bool {
         guard !fw_statisticalClickEnabled else { return true }
@@ -440,7 +426,8 @@ public class StatisticalEvent: NSObject {
     @discardableResult
     public func fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
         guard let event = event ?? fw_statisticalClick else { return false }
-        return StatisticalManager.shared.trackClick(self, indexPath: indexPath, event: event)
+        StatisticalManager.shared.trackClick(self, indexPath: indexPath, event: event)
+        return true
     }
     
     // MARK: - Private

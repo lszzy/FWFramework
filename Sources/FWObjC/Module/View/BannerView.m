@@ -259,7 +259,6 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
 @property (nonatomic, assign) NSInteger pageControlIndex;
-@property (nonatomic, copy) __FWStatisticalClickCallback clickCallback;
 @property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 
 @end
@@ -901,15 +900,18 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger index = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     if ([self.delegate respondsToSelector:@selector(bannerView:didSelectItemAtIndex:)]) {
-        [self.delegate bannerView:self didSelectItemAtIndex:[self pageControlIndexWithCurrentCellIndex:indexPath.item]];
+        [self.delegate bannerView:self didSelectItemAtIndex:index];
     }
     if (self.clickItemOperationBlock) {
-        self.clickItemOperationBlock([self pageControlIndexWithCurrentCellIndex:indexPath.item]);
+        self.clickItemOperationBlock(index);
     }
-    if (self.clickCallback) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        self.clickCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:indexPath.item] inSection:0]);
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    BOOL cellTracked = [cell __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:index inSection:0] event:nil];
+    if (!cellTracked) {
+        [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:index inSection:0] event:nil];
     }
 }
 
@@ -994,12 +996,14 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
-#pragma mark - __FWStatisticalDelegate
+#pragma mark - StatisticalViewProtocol
 
-- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback
+- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
 {
-    self.clickCallback = callback;
+    return YES;
 }
+
+#pragma mark - __FWStatisticalDelegate
 
 - (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback
 {
@@ -1117,6 +1121,13 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
         _imageView.frame = _insetView.bounds;
         _titleLabel.frame = CGRectMake(0, _insetView.frame.size.height - _titleLabelHeight, _insetView.frame.size.width, _titleLabelHeight);
     }
+}
+
+#pragma mark - StatisticalViewProtocol
+
+- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+{
+    return YES;
 }
 
 #pragma mark - __FWStatisticalDelegate

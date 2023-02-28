@@ -10,6 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
+#if FWMacroSPM
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 @protocol __FWAccessibilityDelegate <NSObject>
@@ -35,7 +43,6 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 @property (nonatomic, strong) NSMutableArray *accessibilityElements;
 @property (nonatomic, strong) NSMutableArray *titleBackgroundLayers;
 
-@property (nonatomic, copy) __FWStatisticalClickCallback clickCallback;
 @property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 @property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 
@@ -1112,8 +1119,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     if (self.indexChangeBlock)
         self.indexChangeBlock(index);
     
-    if (self.clickCallback)
-        self.clickCallback(nil, [NSIndexPath indexPathForRow:index inSection:0]);
+    [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:index inSection:0] event:nil];
 }
 
 #pragma mark - Styling Support
@@ -1203,11 +1209,14 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     return [[self accessibilityElements] objectAtIndex:index];
 }
 
-#pragma mark - __FWStatisticalDelegate
+#pragma mark - StatisticalViewProtocol
 
-- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback {
-    self.clickCallback = callback;
+- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+{
+    return YES;
 }
+
+#pragma mark - __FWStatisticalDelegate
 
 - (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
     self.exposureCallback = callback;

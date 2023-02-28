@@ -8,12 +8,19 @@
 #import "TagCollectionView.h"
 #import "Bridge.h"
 
+#if FWMacroSPM
+
+#else
+
+#import <FWFramework/FWFramework-Swift.h>
+
+#endif
+
 @interface __FWTagCollectionView () <__FWStatisticalDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign) BOOL needsLayoutTagViews;
 @property (nonatomic, assign) NSUInteger actualNumberOfLines;
-@property (nonatomic, copy) __FWStatisticalClickCallback clickCallback;
 @property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 @property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 @end
@@ -129,15 +136,11 @@
             if ([self.delegate respondsToSelector:@selector(tagCollectionView:shouldSelectTag:atIndex:)]) {
                 if ([self.delegate tagCollectionView:self shouldSelectTag:tagView atIndex:i]) {
                     [self.delegate tagCollectionView:self didSelectTag:tagView atIndex:i];
-                    if (self.clickCallback) {
-                        self.clickCallback(nil, [NSIndexPath indexPathForRow:i inSection:0]);
-                    }
+                    [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:i inSection:0] event:nil];
                 }
             } else {
                 [self.delegate tagCollectionView:self didSelectTag:tagView atIndex:i];
-                if (self.clickCallback) {
-                    self.clickCallback(nil, [NSIndexPath indexPathForRow:i inSection:0]);
-                }
+                [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:i inSection:0] event:nil];
             }
         }
     }
@@ -500,11 +503,14 @@
     return _scrollView.showsVerticalScrollIndicator;
 }
 
-#pragma mark - __FWStatisticalDelegate
+#pragma mark - StatisticalViewProtocol
 
-- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback {
-    self.clickCallback = callback;
+- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+{
+    return YES;
 }
+
+#pragma mark - __FWStatisticalDelegate
 
 - (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
     self.exposureCallback = callback;
@@ -1145,6 +1151,8 @@
         if ([_delegate respondsToSelector:@selector(textTagCollectionView:didTapTag:atIndex:selected:tagConfig:)]) {
             [_delegate textTagCollectionView:self didTapTag:(label.label.text ?: @"") atIndex:index selected:label.selected tagConfig:label.config];
         }
+        
+        [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:index inSection:0] event:nil];
     }
 }
 
@@ -1296,11 +1304,14 @@
     return label;
 }
 
-#pragma mark - __FWStatisticalDelegate
+#pragma mark - StatisticalViewProtocol
 
-- (void)statisticalClickWithCallback:(__FWStatisticalClickCallback)callback {
-    [self.tagCollectionView statisticalClickWithCallback:callback];
+- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+{
+    return YES;
 }
+
+#pragma mark - __FWStatisticalDelegate
 
 - (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
     [self.tagCollectionView statisticalExposureWithCallback:callback];
