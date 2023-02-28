@@ -100,7 +100,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
     
     private static func autoloadAutoloader() {
         autoloadMethods = NSObject.fw
-            .classMethods(Autoloader.self, superclass: false)
+            .classMethods(Autoloader.self)
             .filter({ methodName in
                 return methodName.hasPrefix("load") && !methodName.contains(":")
             })

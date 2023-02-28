@@ -20,14 +20,13 @@ import FWObjC
     }
     
     // MARK: - Class
-    /// 获取类方法列表，支持meta类(objc_getMetaClass)
+    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 方法列表
-    @objc(__fw_classMethods:superclass:)
-    public static func fw_classMethods(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, superclass: superclass, type: "M")
+    @objc(__fw_classMethods:)
+    public static func fw_classMethods(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "M")
         if let cacheNames = NSObject.fw_classCaches[cacheKey] {
             return cacheNames
         }
@@ -47,7 +46,7 @@ import FWObjC
             }
             free(methodList)
             
-            targetClass = superclass ? class_getSuperclass(targetClass) : nil
+            targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.classForCoder() {
                 break
             }
@@ -57,13 +56,12 @@ import FWObjC
         return resultNames
     }
     
-    /// 获取类属性列表，支持meta类(objc_getMetaClass)
+    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: 属性列表
-    public static func fw_classProperties(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, superclass: superclass, type: "P")
+    public static func fw_classProperties(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "P")
         if let cacheNames = NSObject.fw_classCaches[cacheKey] {
             return cacheNames
         }
@@ -83,7 +81,7 @@ import FWObjC
             }
             free(propertyList)
             
-            targetClass = superclass ? class_getSuperclass(targetClass) : nil
+            targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.classForCoder() {
                 break
             }
@@ -93,13 +91,12 @@ import FWObjC
         return resultNames
     }
     
-    /// 获取类Ivar列表，支持meta类(objc_getMetaClass)
+    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
-    ///   - superclass: 是否包含父类，包含则递归到NSObject，默认false
     /// - Returns: Ivar列表
-    public static func fw_classIvars(_ clazz: AnyClass, superclass: Bool = false) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, superclass: superclass, type: "V")
+    public static func fw_classIvars(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "V")
         if let cacheNames = NSObject.fw_classCaches[cacheKey] {
             return cacheNames
         }
@@ -120,7 +117,7 @@ import FWObjC
             }
             free(ivarList)
             
-            targetClass = superclass ? class_getSuperclass(targetClass) : nil
+            targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.classForCoder() {
                 break
             }
@@ -132,12 +129,10 @@ import FWObjC
     
     private static func fw_classCacheKey(
         _ clazz: AnyClass,
-        superclass: Bool,
         type: String
     ) -> String {
         let cacheKey = NSStringFromClass(clazz) + "."
-            + (class_isMetaClass(clazz) ? "M" : "C")
-            + (superclass ? "S" : "C") + type
+            + (class_isMetaClass(clazz) ? "M" : "C") + type
         return cacheKey
     }
     

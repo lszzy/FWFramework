@@ -109,7 +109,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
     
     private class func testMethods(_ clazz: AnyClass) -> [String] {
         var methodNames: [String] = []
-        let selectorNames = NSObject.fw_classMethods(clazz, superclass: true)
+        let selectorNames = NSObject.fw_classMethods(clazz)
         for selectorName in selectorNames {
             if selectorName.hasPrefix("test"), !selectorName.contains(":") {
                 methodNames.append(selectorName)

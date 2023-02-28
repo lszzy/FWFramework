@@ -14,7 +14,7 @@
 @interface NSObject ()
 
 + (void)__fw_logDebug:(NSString *)message;
-+ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz superclass:(BOOL)superclass;
++ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz;
 - (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
 
 @end
@@ -466,7 +466,7 @@ static int logMaxLength = 500;
     }
     if (!metaClass) return @{};
     
-    NSArray<NSString *> *methods = [NSObject __fw_classMethods:metaClass superclass:NO];
+    NSArray<NSString *> *methods = [NSObject __fw_classMethods:metaClass];
     if (mapper) {
         return mapper(methods);
     }
