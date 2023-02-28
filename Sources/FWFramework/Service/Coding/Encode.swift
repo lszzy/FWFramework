@@ -516,7 +516,30 @@ extension FW {
 
 @_spi(FW) extension NSObject {
     
-    /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
+    /// 非递归方式获取任意对象的反射属性数组(含父类直至NSObject)
+    public static func fw_mirrorProperties(_ object: Any?) -> [String] {
+        var array: [String] = []
+        guard let object = object else { return array }
+        var mirror = Mirror(reflecting: object)
+        for child in mirror.children {
+            if let label = child.label, !label.isEmpty {
+                array.append(label)
+            }
+        }
+        
+        while let superclassMirror = mirror.superclassMirror,
+              superclassMirror.subjectType != NSObject.self {
+            for child in superclassMirror.children {
+                if let label = child.label, !label.isEmpty, !array.contains(label) {
+                    array.append(label)
+                }
+            }
+            mirror = superclassMirror
+        }
+        return array
+    }
+    
+    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject)，不含nil值
     public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
         var dict: [String: Any] = [:]
         guard let object = object else { return dict }
@@ -539,6 +562,25 @@ extension FW {
             mirror = superclassMirror
         }
         return dict
+    }
+    
+    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject)，不含nil值
+    public var fw_mirrorDictionary: [String: Any] {
+        return NSObject.fw_mirrorDictionary(self)
+    }
+    
+    /// 非递归方式根据字典创建NSObject类对象，属性需标记objc
+    /// TODO: 不依赖objc
+    public static func fw_mirrorObject(_ dict: [String: Any]?) -> Self {
+        let object = Self.init()
+        let properties = fw_mirrorProperties(object)
+        for (key, value) in dict ?? [:] {
+            if properties.contains(key),
+                object.responds(to: NSSelectorFromString("set\(key.fw_ucfirstString):")) {
+                object.setValue(value, forKey: key)
+            }
+        }
+        return object
     }
     
 }
