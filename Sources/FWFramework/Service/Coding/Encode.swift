@@ -517,8 +517,9 @@ extension FW {
 @_spi(FW) extension NSObject {
     
     /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
-    public static func fw_mirrorDictionary(_ object: Any) -> [String: Any] {
+    public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
         var dict: [String: Any] = [:]
+        guard let object = object else { return dict }
         var mirror = Mirror(reflecting: object)
         for child in mirror.children {
             if let label = child.label, !label.isEmpty,
