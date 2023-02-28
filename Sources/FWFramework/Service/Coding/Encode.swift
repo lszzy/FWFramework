@@ -569,14 +569,14 @@ extension FW {
         return NSObject.fw_mirrorDictionary(self)
     }
     
-    /// 非递归方式根据字典创建NSObject类对象，属性需标记objc
-    /// TODO: 不依赖objc
+    /// 非递归方式根据字典创建NSObject类对象，属性需OC可访问(objc)
     public static func fw_mirrorObject(_ dict: [String: Any]?) -> Self {
         let object = Self.init()
+        guard let dict = dict, !dict.isEmpty else { return object }
         let properties = fw_mirrorProperties(object)
-        for (key, value) in dict ?? [:] {
+        for (key, value) in dict {
             if properties.contains(key),
-                object.responds(to: NSSelectorFromString("set\(key.fw_ucfirstString):")) {
+               object.responds(to: NSSelectorFromString("set\(key.fw_ucfirstString):")) {
                 object.setValue(value, forKey: key)
             }
         }

@@ -285,7 +285,7 @@ extension Wrapper where Base: NSObject {
         return base.fw_mirrorDictionary
     }
     
-    /// 非递归方式根据字典创建NSObject类对象，属性需标记objc
+    /// 非递归方式根据字典创建NSObject类对象，属性需OC可访问(objc)
     public static func mirrorObject(_ dict: [String: Any]?) -> Base {
         return Base.fw_mirrorObject(dict)
     }
