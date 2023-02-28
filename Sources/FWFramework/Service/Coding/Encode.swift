@@ -514,6 +514,36 @@ extension FW {
     }
 }
 
+@_spi(FW) extension NSObject {
+    
+    /// 获取任意对象的反射字典，不含nil值，默认不包含父类
+    public static func fw_mirrorDictionary(_ object: Any, superclass: Bool = false) -> [String: Any] {
+        var dict: [String: Any] = [:]
+        var mirror = Mirror(reflecting: object)
+        for child in mirror.children {
+            if let label = child.label, !label.isEmpty,
+               !Optional<Any>.isNone(child.value) {
+                dict[label] = child.value
+            }
+        }
+        
+        if superclass {
+            while let superclassMirror = mirror.superclassMirror,
+                  superclassMirror.subjectType != NSObject.self {
+                for child in superclassMirror.children {
+                    if let label = child.label, !label.isEmpty,
+                       !Optional<Any>.isNone(child.value) {
+                        dict[label] = child.value
+                    }
+                }
+                mirror = superclassMirror
+            }
+        }
+        return dict
+    }
+    
+}
+
 // MARK: - SafeValue
 /// 可选类安全转换，不为nil
 extension Optional {
