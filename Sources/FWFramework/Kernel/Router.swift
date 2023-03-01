@@ -7,38 +7,29 @@
 
 import UIKit
 
-extension FW {
-    /// 路由快速访问
-    public static var router = Router.self
-}
-
-/// 路由处理句柄，仅支持openURL时可返回nil
-public typealias RouterHandler = (RouterContext) -> Any?
-
-/// 路由用户信息Key定义
-public struct RouterUserInfoKey: RawRepresentable, Equatable, Hashable {
+// MARK: - RouterParameter
+/// 默认路由参数类，可继承使用，也可完全自定义
+open class RouterParameter: ParameterModel {
     
-    public typealias RawValue = String
+    /// 路由信息来源Key，兼容字典传参，默认未使用
+    public static let routerSourceKey = "routerSource"
+    /// 路由信息选项Key，兼容字典传参，支持NavigationOptions
+    public static let routerOptionsKey = "routerOptions"
+    /// 路由信息句柄Key，兼容字典传参，仅open生效
+    public static let routerHandlerKey = "routerHandler"
     
-    /// 路由信息来源Key，默认未处理
-    public static let routerSource: RouterUserInfoKey = .init("routerSource")
-    /// 路由信息选项Key，默认支持NavigationOptions
-    public static let routerOptions: RouterUserInfoKey = .init("routerOptions")
-    /** 路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效 */
-    public static let routerHandler: RouterUserInfoKey = .init("routerHandler")
+    /// 路由信息来源，默认未使用
+    open var routerSource: String?
+    /// 路由信息选项，支持NavigationOptions
+    open var routerOptions: NavigatorOptions = []
+    /// 路由信息句柄，仅open生效
+    open var routerHandler: ((RouterContext, UIViewController) -> Void)?
     
-    public var rawValue: String
-    
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-    
-    public init(_ rawValue: String) {
-        self.rawValue = rawValue
-    }
+    public required init() {}
     
 }
 
+// MARK: - RouterContext
 /// URL路由上下文
 public class RouterContext: NSObject {
     
@@ -86,9 +77,18 @@ public class RouterContext: NSObject {
     
 }
 
+// MARK: - Router
+extension FW {
+    /// 路由快速访问
+    public static var router = Router.self
+}
+
+/// 路由处理句柄，仅支持openURL时可返回nil
+public typealias RouterHandler = (RouterContext) -> Any?
+
 /// URL路由器
 ///
-/// 由于Function也是闭包，FWRouterHandler参数支持静态方法，示例：AppRouter.routePlugin(_:)
+/// 由于Function也是闭包，RouterHandler参数支持静态方法，示例：AppRouter.routePlugin(_:)
 /// [MGJRouter](https://github.com/meili/MGJRouter)
 /// [FFRouter](https://github.com/imlifengfeng/FFRouter)
 public class Router: NSObject {
@@ -278,7 +278,7 @@ public class Router: NSObject {
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
     public static var errorHandler: ((RouterContext) -> Void)?
     
-    /// 预置全局路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
+    /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
     public class func presetRouteHandler(_ handler: ((RouterContext, Any) -> Any?)? = nil) {
         if routeHandler != nil { return }
@@ -287,16 +287,12 @@ public class Router: NSObject {
             if !context.isOpening { return object }
             guard let viewController = object as? UIViewController else { return object }
             
-            if let routerHandler = context.userInfo?[RouterUserInfoKey.routerHandler] as? (RouterContext, UIViewController) -> Void {
+            // 解析默认路由参数userInfo
+            let userInfo = RouterParameter.fromDictionary(context.userInfo)
+            if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                var routerOptions: NavigatorOptions = []
-                if let navigatorOptions = context.userInfo?[RouterUserInfoKey.routerOptions] as? NavigatorOptions {
-                    routerOptions = navigatorOptions
-                } else if let optionsNumber = context.userInfo?[RouterUserInfoKey.routerOptions] as? NSNumber {
-                    routerOptions = .init(rawValue: optionsNumber.intValue)
-                }
-                UIWindow.fw_mainWindow?.fw_open(viewController, animated: true, options: routerOptions, completion: nil)
+                UIWindow.fw_mainWindow?.fw_open(viewController, animated: true, options: userInfo.routerOptions, completion: nil)
             }
             return nil
         }
@@ -313,10 +309,19 @@ public class Router: NSObject {
         return URLParameters[routeBlockKey] != nil
     }
     
+    /// 打开此 URL，带上附加信息对象，同时当操作完成时，执行额外的代码
+    /// - Parameters:
+    ///   - url: 带 Scheme 的 URL，如 app://beauty/4
+    ///   - userInfo: 附加信息对象，可自定义
+    ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
+    public class func openURL(_ url: Any, userInfo: ParameterCodable?, completion: ((Any?) -> Void)? = nil) {
+        openURL(url, userInfo: userInfo?.toDictionary(), completion: completion)
+    }
+    
     /// 打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
     /// - Parameters:
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
-    ///   - userInfo: 附加参数
+    ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
     public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
         let rewriteURL = rewriteURL(url)
@@ -354,7 +359,16 @@ public class Router: NSObject {
     /// 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
     /// - Parameters:
     ///   - url: URL 带 Scheme，如 app://beauty/3
-    ///   - userInfo: 附加参数
+    ///   - userInfo: 附加信息对象
+    /// - Returns: URL返回的对象
+    public class func object(forURL url: Any, userInfo: ParameterCodable?) -> Any? {
+        return object(forURL: url, userInfo: userInfo?.toDictionary())
+    }
+    
+    /// 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
+    /// - Parameters:
+    ///   - url: URL 带 Scheme，如 app://beauty/3
+    ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
     public class func object(forURL url: Any, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)

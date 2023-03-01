@@ -163,8 +163,15 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         self.bannerView.clickItemOperationBlock = { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 Router.openURL("https://www.baidu.com", userInfo: [
-                    RouterUserInfoKey.routerOptions: NavigatorOptions.embedInNavigation
+                    RouterParameter.routerOptionsKey: NavigatorOptions.embedInNavigation
                 ])
+                /*
+                Router.openURL("https://www.baidu.com", userInfo: {
+                    let userInfo = RouterParameter()
+                    userInfo.routerOptions = .embedInNavigation
+                    return userInfo
+                }())
+                */
             }
         }
         
