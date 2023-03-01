@@ -17,8 +17,9 @@ extension Notification.Name {
 
 /// 事件统计管理器
 ///
-/// 视图从不可见变为可见时曝光开始，触发曝光开始事件；
-/// 视图从可见到不可见时曝光结束，视为一次曝光，触发曝光结束事件并统计曝光时长(注意应用退后台时不计曝光时间)。
+/// 视图从不可见变为可见时曝光开始，触发曝光开始事件(triggerDuration为0)；
+/// 视图从可见到不可见时曝光结束，视为一次曝光，触发曝光结束事件(triggerDuration大于0)并统计曝光时长。
+/// 目前暂未实现曝光时长统计，仅触发开始事件用于统计次数，可自行处理时长统计，注意应用退后台时不计曝光时间。
 /// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
 public class StatisticalManager: NSObject {
     
@@ -39,8 +40,6 @@ public class StatisticalManager: NSObject {
     public var exposureOnce = false
     /// 设置运行模式，默认default快速滚动时不计算曝光
     public var runLoopMode: RunLoop.Mode = .default
-    /// 是否触发曝光结束事件并统计时长，如果只需要触发开始事件并统计次数可设为false，默认true
-    public var trackingTime = true
     
     /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
     public var exposureThresholds: CGFloat = 1
@@ -65,52 +64,19 @@ public class StatisticalManager: NSObject {
         event.viewController = view?.fw_viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
-        event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = false
         event.isFinished = true
         handleEvent(event)
     }
     
-    /// 手工触发视图曝光开始并统计次数，如果为cell需指定indexPath，曝光开始时调用
-    public func trackExposureBegin(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
+    /// 手工触发视图曝光并统计次数，如果为cell需指定indexPath，duration为单次曝光时长(0表示开始)，可重复触发
+    public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
         view?.fw_trackExposureCounts[triggerKey] = triggerCount
-        let triggerTimestamp = Date.fw_currentTime
-        view?.fw_trackExposureTimestamps[triggerKey] = triggerTimestamp
-        let totalDuration = view?.fw_trackExposureDurations[triggerKey] ?? 0
-        
-        event.view = view
-        event.viewController = view?.fw_viewController
-        event.indexPath = indexPath
-        event.triggerCount = triggerCount
-        event.triggerDuration = 0
-        event.totalDuration = totalDuration
-        event.triggerTimestamp = triggerTimestamp
-        event.isExposure = true
-        event.isFinished = false
-        // TODO: 标记isTerminate和isBackground
-        handleEvent(event)
-    }
-    
-    /// 手工触发视图曝光结束并统计时长，如果为cell需指定indexPath，曝光结束时调用
-    public func trackExposureEnd(_ view: UIView?, indexPath: IndexPath? = nil, event closure: @autoclosure () -> StatisticalEvent) {
-        guard trackingTime else { return }
-        let event = closure()
-        if event.triggerIgnored { return }
-        let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
-        let triggerCount = view?.fw_trackExposureCounts[triggerKey] ?? 0
-        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return }
-        var duration: TimeInterval = 0
-        let triggerTimestamp = Date.fw_currentTime
-        // TODO: duration需要减去退后台的时间
-        if let beginTime = view?.fw_trackExposureTimestamps[triggerKey] {
-            duration = triggerTimestamp - beginTime
-        }
         let totalDuration = (view?.fw_trackExposureDurations[triggerKey] ?? 0) + duration
         view?.fw_trackExposureDurations[triggerKey] = totalDuration
         
@@ -120,51 +86,18 @@ public class StatisticalManager: NSObject {
         event.triggerCount = triggerCount
         event.triggerDuration = duration
         event.totalDuration = totalDuration
-        event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = true
-        event.isFinished = true
-        // TODO: 标记isTerminate和isBackground
+        event.isFinished = duration > 0
         handleEvent(event)
     }
     
-    /// 手工触发控制器曝光开始并统计次数，曝光开始时调用
-    public func trackExposureBegin(_ viewController: UIViewController?, event: StatisticalEvent) {
+    /// 手工触发控制器曝光并统计次数，duration为单次曝光时长(0表示开始)，可重复触发
+    public func trackExposure(_ viewController: UIViewController?, duration: TimeInterval = 0, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         let triggerCount = (viewController?.fw_trackExposureCount ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
         viewController?.fw_trackExposureCount = triggerCount
-        let triggerTimestamp = Date.fw_currentTime
-        viewController?.fw_trackExposureTimestamp = triggerTimestamp
-        let totalDuration = viewController?.fw_trackExposureDuration ?? 0
-        
-        event.view = nil
-        event.viewController = viewController
-        event.indexPath = nil
-        event.triggerCount = triggerCount
-        event.triggerDuration = 0
-        event.totalDuration = totalDuration
-        event.triggerTimestamp = triggerTimestamp
-        event.isExposure = true
-        event.isFinished = false
-        // TODO: 标记isTerminate和isBackground
-        handleEvent(event)
-    }
-    
-    /// 手工触发控制器曝光结束并统计时长，曝光结束时调用
-    public func trackExposureEnd(_ viewController: UIViewController?, event closure: @autoclosure () -> StatisticalEvent) {
-        guard trackingTime else { return }
-        let event = closure()
-        if event.triggerIgnored { return }
-        let triggerCount = viewController?.fw_trackExposureCount ?? 0
-        let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
-        if triggerCount > 1 && triggerOnce { return }
-        var duration: TimeInterval = 0
-        let triggerTimestamp = Date.fw_currentTime
-        // TODO: duration需要减去退后台的时间
-        if let beginTime = viewController?.fw_trackExposureTimestamp {
-            duration = triggerTimestamp - beginTime
-        }
         let totalDuration = (viewController?.fw_trackExposureDuration ?? 0) + duration
         viewController?.fw_trackExposureDuration = totalDuration
         
@@ -174,10 +107,8 @@ public class StatisticalManager: NSObject {
         event.triggerCount = triggerCount
         event.triggerDuration = duration
         event.totalDuration = totalDuration
-        event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = true
-        event.isFinished = true
-        // TODO: 标记isTerminate和isBackground
+        event.isFinished = false
         handleEvent(event)
     }
     
@@ -239,21 +170,14 @@ public class StatisticalEvent: NSObject {
     public fileprivate(set) var indexPath: IndexPath?
     /// 事件触发次数，触发时自动赋值
     public fileprivate(set) var triggerCount: Int = 0
-    /// 事件触发时间戳，触发时自动赋值
-    public fileprivate(set) var triggerTimestamp: TimeInterval = 0
     /// 曝光事件触发单次时长，0表示曝光开始，触发时自动赋值
     public fileprivate(set) var triggerDuration: TimeInterval = 0
     /// 曝光事件触发总时长，触发时自动赋值
     public fileprivate(set) var totalDuration: TimeInterval = 0
-    
     /// 是否是曝光事件，默认false为点击事件
     public fileprivate(set) var isExposure = false
     /// 曝光事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
-    /// 是否是应用即将Terminate触发的曝光事件，用于自定义处理
-    public fileprivate(set) var isTerminate = false
-    /// 是否是应用退后台时触发的曝光事件，用于自定义处理
-    public fileprivate(set) var isBackground = false
     
     /// 创建事件统计对象，指定名称、对象和信息
     public init(name: String, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
@@ -507,11 +431,6 @@ public class StatisticalEvent: NSObject {
         set { fw_setProperty(newValue, forName: "fw_trackExposureDurations") }
     }
     
-    fileprivate var fw_trackExposureTimestamps: [String: TimeInterval] {
-        get { return fw_property(forName: "fw_trackExposureTimestamps") as? [String: TimeInterval] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_trackExposureTimestamps") }
-    }
-    
 }
 
 // MARK: - UIViewController+StatisticalExposure
@@ -542,11 +461,6 @@ public class StatisticalEvent: NSObject {
     fileprivate var fw_trackExposureDuration: TimeInterval {
         get { return fw_propertyDouble(forName: "fw_trackExposureDuration") }
         set { fw_setPropertyDouble(newValue, forName: "fw_trackExposureDuration") }
-    }
-    
-    fileprivate var fw_trackExposureTimestamp: TimeInterval {
-        get { return fw_propertyDouble(forName: "fw_trackExposureTimestamp") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_trackExposureTimestamp") }
     }
     
 }
