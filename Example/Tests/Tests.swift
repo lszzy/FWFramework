@@ -143,6 +143,22 @@ class Tests: XCTestCase {
         XCTAssertEqual(defaultsNilValue, nil)
     }
     
+    func testRouter() {
+        let parameter = RouterParameter()
+        parameter.routerSource = "test"
+        parameter.routerOptions = .embedInNavigation
+        parameter.routerHandler = { _, _ in }
+        let dict = parameter.toDictionary()
+        XCTAssertEqual(dict[RouterParameter.routerSourceKey] as? String, parameter.routerSource)
+        XCTAssertEqual(dict[RouterParameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
+        XCTAssertTrue(dict[RouterParameter.routerHandlerKey] != nil)
+        
+        let object = RouterParameter.fromDictionary(dict)
+        XCTAssertEqual(object.routerSource, parameter.routerSource)
+        XCTAssertEqual(object.routerOptions, parameter.routerOptions)
+        XCTAssertTrue(object.routerHandler != nil)
+    }
+    
     func testValidator() {
         validateValue = "errorValue"
         XCTAssertEqual(validateValue, "")
