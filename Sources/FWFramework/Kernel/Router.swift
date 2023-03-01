@@ -15,9 +15,6 @@ extension FW {
 /// 路由处理句柄，仅支持openURL时可返回nil
 public typealias RouterHandler = (RouterContext) -> Any?
 
-/// 路由完成句柄，openURL时可设置完成回调
-public typealias RouterCompletion = (Any?) -> Void
-
 /// 路由用户信息Key定义
 public struct RouterUserInfoKey: RawRepresentable, Equatable, Hashable {
     
@@ -52,7 +49,7 @@ public class RouterContext: NSObject {
     public private(set) var userInfo: [AnyHashable: Any]?
     
     /// 路由完成回调
-    public private(set) var completion: RouterCompletion?
+    public private(set) var completion: ((Any?) -> Void)?
     
     /// 路由URL解析参数字典
     public fileprivate(set) lazy var urlParameters: [AnyHashable: Any] = {
@@ -81,7 +78,7 @@ public class RouterContext: NSObject {
     public fileprivate(set) var isOpening: Bool = false
     
     /// 创建路由参数对象
-    public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: RouterCompletion? = nil) {
+    public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
         self.url = url
         self.userInfo = userInfo
         self.completion = completion
@@ -321,7 +318,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加参数
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: RouterCompletion? = nil) {
+    public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
