@@ -270,11 +270,6 @@ extension Wrapper where Base == URL {
 
 extension Wrapper where Base: NSObject {
     
-    /// 非递归方式获取任意对象的反射属性数组(含父类直至NSObject)
-    public static func mirrorProperties(_ object: Any?) -> [String] {
-        return Base.fw_mirrorProperties(object)
-    }
-    
     /// 非递归方式获取任意对象的反射字典(含父类直至NSObject)，不含nil值
     public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
         return Base.fw_mirrorDictionary(object)
@@ -283,11 +278,6 @@ extension Wrapper where Base: NSObject {
     /// 非递归方式获取当前对象的反射字典(含父类直至NSObject)，不含nil值
     public var mirrorDictionary: [String: Any] {
         return base.fw_mirrorDictionary
-    }
-    
-    /// 非递归方式根据字典创建NSObject类对象，属性需OC可访问(objc)
-    public static func mirrorObject(_ dict: [String: Any]?) -> Base {
-        return Base.fw_mirrorObject(dict)
     }
     
 }
