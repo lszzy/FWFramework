@@ -404,11 +404,8 @@ class TestRouter: NSObject, AutoloadProtocol {
         Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
-                    var options: NavigatorOptions = []
-                    if let navigatorOptions = context.userInfo?[RouterUserInfoKey.routerOptions] as? NavigatorOptions {
-                        options = navigatorOptions
-                    }
-                    Navigator.open(vc, animated: true, options: options)
+                    let userInfo = RouterParameter.fromDictionary(context.userInfo)
+                    Navigator.open(vc, animated: true, options: userInfo.routerOptions)
                 } else {
                     Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
                 }
