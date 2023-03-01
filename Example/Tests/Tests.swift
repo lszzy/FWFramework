@@ -144,16 +144,20 @@ class Tests: XCTestCase {
     }
     
     func testRouter() {
-        let parameter = RouterParameter()
+        let parameter = TestParameter()
+        parameter.isTrue = true
         parameter.routerSource = "test"
         parameter.routerOptions = .embedInNavigation
         parameter.routerHandler = { _, _ in }
-        let dict = parameter.toDictionary()
+        var dict = parameter.toDictionary()
+        XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
         XCTAssertEqual(dict[RouterParameter.routerSourceKey] as? String, parameter.routerSource)
         XCTAssertEqual(dict[RouterParameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
         XCTAssertTrue(dict[RouterParameter.routerHandlerKey] != nil)
         
-        let object = RouterParameter.fromDictionary(dict)
+        dict["isTrue"] = "true"
+        let object = TestParameter.fromDictionary(dict)
+        XCTAssertTrue(object.isTrue)
         XCTAssertEqual(object.routerSource, parameter.routerSource)
         XCTAssertEqual(object.routerOptions, parameter.routerOptions)
         XCTAssertTrue(object.routerHandler != nil)
@@ -247,6 +251,10 @@ class Tests: XCTestCase {
 
 // MARK: - Private
 extension Tests {
+    
+    class TestParameter: RouterParameter {
+        var isTrue: Bool = false
+    }
     
     @objc func loaderAction(_ input: NSString) -> NSString? {
         return input.appending("Target") as NSString
