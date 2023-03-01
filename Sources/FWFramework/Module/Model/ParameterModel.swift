@@ -19,14 +19,13 @@ public protocol ParameterCodable {
 }
 
 /// 通用参数与字典非递归编码模型，用于解决字典传参时Key不清晰问题，可直接使用
-public protocol ParameterModel: ParameterCodable, _ExtendCustomModelType {}
+public protocol ParameterModel: ParameterCodable, JSONModel {}
 
 extension ParameterModel {
     
     /// 从字典解码为参数，非递归方式
     public static func fromDictionary(_ dict: [AnyHashable: Any]?) -> Self {
-        guard let dict = dict as? [String: Any] else { return Self() }
-        return Self._transform(dict: dict, recursive: false) as? Self ?? Self()
+        return safeDeserialize(dict)
     }
     
     /// 编码为字典，非递归方式
