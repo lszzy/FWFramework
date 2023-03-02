@@ -194,6 +194,9 @@ public class StatisticalEvent: NSObject {
     /// 可统计视图绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
     func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool
     
+    /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
+    func statisticalViewWillBindExposure(_ bindView: UIView?) -> Bool
+    
 }
 
 @objc extension UIView: StatisticalViewProtocol {
@@ -209,6 +212,12 @@ public class StatisticalEvent: NSObject {
                 return true
             }
         }
+        return false
+    }
+    
+    /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
+    open func statisticalViewWillBindExposure(_ bindView: UIView?) -> Bool {
+        // TODO: - TODO
         return false
     }
     
@@ -402,6 +411,7 @@ public class StatisticalEvent: NSObject {
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            fw_statisticalBindExposure(newValue?.bindView)
         }
     }
     
@@ -409,6 +419,24 @@ public class StatisticalEvent: NSObject {
     public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
         get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
         set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
+    }
+    
+    /// 手工绑定曝光事件统计，可指定绑定视图，自动绑定失败时可手工调用
+    @discardableResult
+    public func fw_statisticalBindExposure(_ bindView: UIView? = nil) -> Bool {
+        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return true }
+        let result = statisticalViewWillBindExposure(bindView)
+        if result { fw_setPropertyBool(true, forName: "fw_statisticalBindExposure") }
+        return result
+    }
+    
+    /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
+    @objc(__fw_statisticalTrackExposureWithIndexPath:duration:event:)
+    @discardableResult
+    public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+        guard let event = event ?? fw_statisticalExposure else { return false }
+        StatisticalManager.shared.trackExposure(self, indexPath: indexPath, duration: duration, event: event)
+        return true
     }
     
     // MARK: - Private
@@ -434,6 +462,7 @@ public class StatisticalEvent: NSObject {
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            fw_statisticalBindExposure()
         }
     }
     
@@ -443,7 +472,21 @@ public class StatisticalEvent: NSObject {
         set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
     }
     
+    /// 触发控制器曝光事件统计，仅绑定statisticalExposure后生效
+    @discardableResult
+    public func fw_statisticalTrackExposure(duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+        guard let event = event ?? fw_statisticalExposure else { return false }
+        StatisticalManager.shared.trackExposure(self, duration: duration, event: event)
+        return true
+    }
+    
     // MARK: - Private
+    private func fw_statisticalBindExposure() {
+        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        // TODO: - TODO
+        fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+    }
+    
     fileprivate var fw_trackExposureCount: Int {
         get { return fw_propertyInt(forName: "fw_trackExposureCount") }
         set { fw_setPropertyInt(newValue, forName: "fw_trackExposureCount") }
