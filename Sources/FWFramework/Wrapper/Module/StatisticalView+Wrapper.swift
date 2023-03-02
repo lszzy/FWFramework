@@ -51,6 +51,18 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalExposureListener = newValue }
     }
     
+    /// 手工绑定曝光事件统计，可指定绑定视图，自动绑定失败时可手工调用
+    @discardableResult
+    public func statisticalBindExposure(_ bindView: UIView? = nil) -> Bool {
+        return base.fw_statisticalBindExposure(bindView)
+    }
+    
+    /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
+    @discardableResult
+    public func statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+        return base.fw_statisticalTrackExposure(indexPath: indexPath, duration: duration, event: event)
+    }
+    
 }
 
 // MARK: - UIViewController+StatisticalExposure
@@ -66,6 +78,12 @@ extension Wrapper where Base: UIViewController {
     public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
         get { base.fw_statisticalExposureListener }
         set { base.fw_statisticalExposureListener = newValue }
+    }
+    
+    /// 触发控制器曝光事件统计，仅绑定statisticalExposure后生效
+    @discardableResult
+    public func statisticalTrackExposure(duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+        return base.fw_statisticalTrackExposure(duration: duration, event: event)
     }
     
 }
