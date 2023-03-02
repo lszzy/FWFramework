@@ -249,7 +249,6 @@ public class StatisticalEvent: NSObject {
             store.original(selfObject, store.selector, tableView, indexPath)
             
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
-            if !tableView.fw_statisticalClickBound { return }
             
             let cell = tableView.cellForRow(at: indexPath)
             let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
@@ -276,7 +275,6 @@ public class StatisticalEvent: NSObject {
             store.original(selfObject, store.selector, collectionView, indexPath)
             
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
-            if !collectionView.fw_statisticalClickBound { return }
             
             let cell = collectionView.cellForItem(at: indexPath)
             let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
@@ -337,9 +335,9 @@ public class StatisticalEvent: NSObject {
     /// 手工绑定点击事件统计，可指定绑定视图，自动绑定失败时可手工调用
     @discardableResult
     public func fw_statisticalBindClick(_ bindView: UIView? = nil) -> Bool {
-        guard !fw_statisticalClickBound else { return true }
+        guard !fw_propertyBool(forName: "fw_statisticalBindClick") else { return true }
         let result = statisticalViewWillBindClick(bindView)
-        if result { fw_statisticalClickBound = true }
+        if result { fw_setPropertyBool(true, forName: "fw_statisticalBindClick") }
         return result
     }
     
@@ -353,11 +351,6 @@ public class StatisticalEvent: NSObject {
     }
     
     // MARK: - Private
-    fileprivate var fw_statisticalClickBound: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalClickBound") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickBound") }
-    }
-    
     fileprivate var fw_trackClickCounts: [String: Int] {
         get { return fw_property(forName: "fw_trackClickCounts") as? [String: Int] ?? [:] }
         set { fw_setProperty(newValue, forName: "fw_trackClickCounts") }
