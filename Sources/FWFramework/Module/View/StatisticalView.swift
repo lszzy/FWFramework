@@ -147,20 +147,18 @@ public class StatisticalEvent: NSObject {
     /// 事件绑定信息
     public private(set) var userInfo: [AnyHashable: Any]?
     
+    /// 自定义绑定视图，作为bindClick参数，默认nil
+    public weak var bindView: UIView?
     /// 自定义曝光容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
-    /// 自定义曝光容器视图句柄，默认nil时获取VC视图或window，参数为所在视图
-    public var containerViewBlock: ((UIView) -> UIView?)?
     /// 自定义曝光容器内边距，设置后忽略全局ignoredBars配置，默认nil
     public var containerInset: UIEdgeInsets?
     /// 是否事件仅触发一次，默认nil时采用全局配置
     public var triggerOnce: Bool?
     /// 是否忽略事件触发，默认false
     public var triggerIgnored = false
-    /// 曝光遮挡视图，被遮挡时不计曝光
-    public weak var shieldView: UIView?
-    /// 曝光遮挡视图句柄，被遮挡时不计曝光，参数为所在视图
-    public var shieldViewBlock: ((UIView) -> UIView?)?
+    /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
+    public var shieldView: ((UIView) -> UIView?)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -194,14 +192,14 @@ public class StatisticalEvent: NSObject {
 @objc public protocol StatisticalViewProtocol {
     
     /// 可统计视图绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
-    func statisticalViewWillBindClick(containerView: UIView?) -> Bool
+    func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool
     
 }
 
 @objc extension UIView: StatisticalViewProtocol {
     
     /// 默认实现绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
-    open func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+    open func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         guard let gestureRecognizers = self.gestureRecognizers else { return false }
         for gesture in gestureRecognizers {
             if let tapGesture = gesture as? UITapGestureRecognizer {
@@ -218,7 +216,7 @@ public class StatisticalEvent: NSObject {
 
 @_spi(FW) extension UIControl {
     
-    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+    open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         var controlEvents = UIControl.Event.touchUpInside
         if self is UIDatePicker ||
             self is UIPageControl ||
@@ -239,7 +237,7 @@ public class StatisticalEvent: NSObject {
 
 @_spi(FW) extension UITableView {
     
-    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+    open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         guard let tableDelegate = self.delegate as? NSObject else { return false }
         NSObject.fw_swizzleMethod(
             tableDelegate,
@@ -251,7 +249,7 @@ public class StatisticalEvent: NSObject {
             store.original(selfObject, store.selector, tableView, indexPath)
             
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
-            if !tableView.fw_statisticalClickEnabled { return }
+            if !tableView.fw_statisticalClickBound { return }
             
             let cell = tableView.cellForRow(at: indexPath)
             let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
@@ -266,7 +264,7 @@ public class StatisticalEvent: NSObject {
 
 @_spi(FW) extension UICollectionView {
     
-    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
+    open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         guard let collectionDelegate = self.delegate as? NSObject else { return false }
         NSObject.fw_swizzleMethod(
             collectionDelegate,
@@ -278,7 +276,7 @@ public class StatisticalEvent: NSObject {
             store.original(selfObject, store.selector, collectionView, indexPath)
             
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
-            if !collectionView.fw_statisticalClickEnabled { return }
+            if !collectionView.fw_statisticalClickBound { return }
             
             let cell = collectionView.cellForItem(at: indexPath)
             let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
@@ -293,8 +291,8 @@ public class StatisticalEvent: NSObject {
 
 @_spi(FW) extension UITableViewCell {
     
-    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
-        guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
+    open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
+        guard let tableView = (bindView as? UITableView) ?? self.fw_tableView else {
             UIView.fw_swizzleStatisticalView()
             return false
         }
@@ -305,8 +303,8 @@ public class StatisticalEvent: NSObject {
 
 @_spi(FW) extension UICollectionViewCell {
     
-    open override func statisticalViewWillBindClick(containerView: UIView?) -> Bool {
-        guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
+    open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
+        guard let collectionView = (bindView as? UICollectionView) ?? self.fw_collectionView else {
             UIView.fw_swizzleStatisticalView()
             return false
         }
@@ -319,14 +317,14 @@ public class StatisticalEvent: NSObject {
 @_spi(FW) extension UIView {
     
     // MARK: - Public
-    /// 设置并尝试自动绑定点击事件统计，containerView参数为nil
+    /// 设置并尝试自动绑定点击事件统计
     public var fw_statisticalClick: StatisticalEvent? {
         get {
             return fw_property(forName: "fw_statisticalClick") as? StatisticalEvent
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalClick")
-            fw_statisticalBindClick()
+            fw_statisticalBindClick(newValue?.bindView)
         }
     }
     
@@ -336,12 +334,12 @@ public class StatisticalEvent: NSObject {
         set { fw_setPropertyCopy(newValue, forName: "fw_statisticalClickListener") }
     }
     
-    /// 手工绑定点击事件统计，可指定containerView，自动绑定失败时可手工调用
+    /// 手工绑定点击事件统计，可指定绑定视图，自动绑定失败时可手工调用
     @discardableResult
-    public func fw_statisticalBindClick(containerView: UIView? = nil) -> Bool {
-        guard !fw_statisticalClickEnabled else { return true }
-        let result = statisticalViewWillBindClick(containerView: containerView)
-        if result { fw_statisticalClickEnabled = true }
+    public func fw_statisticalBindClick(_ bindView: UIView? = nil) -> Bool {
+        guard !fw_statisticalClickBound else { return true }
+        let result = statisticalViewWillBindClick(bindView)
+        if result { fw_statisticalClickBound = true }
         return result
     }
     
@@ -355,9 +353,9 @@ public class StatisticalEvent: NSObject {
     }
     
     // MARK: - Private
-    fileprivate var fw_statisticalClickEnabled: Bool {
-        get { return fw_propertyBool(forName: "fw_statisticalClickEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickEnabled") }
+    fileprivate var fw_statisticalClickBound: Bool {
+        get { return fw_propertyBool(forName: "fw_statisticalClickBound") }
+        set { fw_setPropertyBool(newValue, forName: "fw_statisticalClickBound") }
     }
     
     fileprivate var fw_trackClickCounts: [String: Int] {
@@ -404,7 +402,7 @@ public class StatisticalEvent: NSObject {
 @_spi(FW) extension UIView {
     
     // MARK: - Public
-    /// 设置并尝试自动绑定曝光事件统计，containerView参数为nil。如果对象发生变化(indexPath|name|object)，也会触发
+    /// 设置并尝试自动绑定曝光事件统计。如果对象发生变化(indexPath|name|object)，也会触发
     public var fw_statisticalExposure: StatisticalEvent? {
         get {
             return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
@@ -436,7 +434,7 @@ public class StatisticalEvent: NSObject {
 // MARK: - UIViewController+StatisticalExposure
 @_spi(FW) extension UIViewController {
     
-    /// 设置并尝试自动绑定曝光事件统计，containerView参数为nil
+    /// 设置并尝试自动绑定曝光事件统计
     public var fw_statisticalExposure: StatisticalEvent? {
         get {
             return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent

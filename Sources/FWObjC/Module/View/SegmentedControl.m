@@ -1211,7 +1211,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 #pragma mark - StatisticalViewProtocol
 
-- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+- (BOOL)statisticalViewWillBindClick:(UIView *)bindView
 {
     return YES;
 }
