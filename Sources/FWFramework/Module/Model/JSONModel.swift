@@ -547,9 +547,8 @@ fileprivate func getRawValueFrom(dict: [String: Any], property: PropertyInfo, ma
     return dict[property.key]
 }
 
-fileprivate func convertValue(rawValue: Any, property: PropertyInfo, mapper: HelpingMapper, recursive: Bool = true) -> Any? {
+fileprivate func convertValue(rawValue: Any, property: PropertyInfo, mapper: HelpingMapper) -> Any? {
     if rawValue is NSNull { return nil }
-    if !recursive { return rawValue }
     if let mappingHandler = mapper.getMappingHandler(key: Int(bitPattern: property.address)), let transformer = mappingHandler.assignmentClosure {
         return transformer(rawValue)
     }
@@ -616,7 +615,7 @@ extension _ExtendCustomModelType {
         return nil
     }
 
-    static func _transform(dict: [String: Any], recursive: Bool = true) -> _ExtendCustomModelType? {
+    static func _transform(dict: [String: Any]) -> _ExtendCustomModelType? {
 
         var instance: Self
         if let _nsType = Self.self as? NSObject.Type {
@@ -625,12 +624,12 @@ extension _ExtendCustomModelType {
             instance = Self.init()
         }
         instance.willStartMapping()
-        _transform(dict: dict, to: &instance, recursive: recursive)
+        _transform(dict: dict, to: &instance)
         instance.didFinishMapping()
         return instance
     }
 
-    static func _transform(dict: [String: Any], to instance: inout Self, recursive: Bool = true) {
+    static func _transform(dict: [String: Any], to instance: inout Self) {
         guard let properties = getProperties(forType: Self.self) else {
             InternalLogger.logDebug("Failed when try to get properties from type: \(type(of: Self.self))")
             return
@@ -664,7 +663,7 @@ extension _ExtendCustomModelType {
             InternalLogger.logVerbose("field: ", property.key, "  offset: ", property.offset, "  isBridgeProperty: ", isBridgedProperty)
 
             if let rawValue = getRawValueFrom(dict: _dict, property: propertyDetail, mapper: mapper) {
-                if let convertedValue = convertValue(rawValue: rawValue, property: propertyDetail, mapper: mapper, recursive: recursive) {
+                if let convertedValue = convertValue(rawValue: rawValue, property: propertyDetail, mapper: mapper) {
                     assignProperty(convertedValue: convertedValue, instance: instance, property: propertyDetail)
                     continue
                 }
