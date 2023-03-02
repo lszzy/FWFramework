@@ -505,7 +505,7 @@
 
 #pragma mark - StatisticalViewProtocol
 
-- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+- (BOOL)statisticalViewWillBindClick:(UIView *)bindView
 {
     return YES;
 }
@@ -1306,7 +1306,7 @@
 
 #pragma mark - StatisticalViewProtocol
 
-- (BOOL)statisticalViewWillBindClickWithContainerView:(UIView *)containerView
+- (BOOL)statisticalViewWillBindClick:(UIView *)bindView
 {
     return YES;
 }
