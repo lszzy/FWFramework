@@ -31,6 +31,8 @@ public class StatisticalManager: NSObject {
     public var notificationEnabled = false
     /// 是否启用分析上报，默认false
     public var reportEnabled = false
+    /// 设置全局事件过滤器
+    public var eventFilter: ((StatisticalEvent) -> Bool)?
     /// 设置全局事件处理器
     public var eventHandler: ((StatisticalEvent) -> Void)?
     
@@ -50,10 +52,18 @@ public class StatisticalManager: NSObject {
     /// 界面可见状态改变(present或push)时是否重新计算曝光，默认true
     public var exposureWhenVisibilityChanged = true
     
+    private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
+    
     // MARK: - Public
+    /// 注册单个事件处理器
+    public func registerEvent(_ name: String, handler: @escaping (StatisticalEvent) -> Void) {
+        eventHandlers[name] = handler
+    }
+    
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
     public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
         if event.triggerIgnored { return }
+        if let eventFilter = eventFilter, !eventFilter(event) { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : clickOnce
@@ -64,6 +74,7 @@ public class StatisticalManager: NSObject {
         event.viewController = view?.fw_viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
+        event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = false
         event.isFinished = true
         handleEvent(event)
@@ -72,43 +83,65 @@ public class StatisticalManager: NSObject {
     /// 手工触发视图曝光并统计次数，如果为cell需指定indexPath，duration为单次曝光时长(0表示开始)，可重复触发
     public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent) {
         if event.triggerIgnored { return }
+        if let eventFilter = eventFilter, !eventFilter(event) { return }
+        let isFinished = duration > 0
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
-        let triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0) + 1
+        var triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0)
+        if !isFinished {
+            triggerCount += 1
+        }
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
-        view?.fw_trackExposureCounts[triggerKey] = triggerCount
-        let totalDuration = (view?.fw_trackExposureDurations[triggerKey] ?? 0) + duration
-        view?.fw_trackExposureDurations[triggerKey] = totalDuration
+        if !isFinished {
+            view?.fw_trackExposureCounts[triggerKey] = triggerCount
+        }
+        var totalDuration = (view?.fw_trackExposureDurations[triggerKey] ?? 0)
+        if isFinished {
+            totalDuration += duration
+            view?.fw_trackExposureDurations[triggerKey] = totalDuration
+        }
         
         event.view = view
         event.viewController = view?.fw_viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
+        event.triggerTimestamp = Date.fw_currentTime
         event.triggerDuration = duration
         event.totalDuration = totalDuration
         event.isExposure = true
-        event.isFinished = duration > 0
+        event.isFinished = isFinished
         handleEvent(event)
     }
     
     /// 手工触发控制器曝光并统计次数，duration为单次曝光时长(0表示开始)，可重复触发
     public func trackExposure(_ viewController: UIViewController?, duration: TimeInterval = 0, event: StatisticalEvent) {
         if event.triggerIgnored { return }
-        let triggerCount = (viewController?.fw_trackExposureCount ?? 0) + 1
+        if let eventFilter = eventFilter, !eventFilter(event) { return }
+        let isFinished = duration > 0
+        var triggerCount = (viewController?.fw_trackExposureCount ?? 0)
+        if !isFinished {
+            triggerCount += 1
+        }
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
-        viewController?.fw_trackExposureCount = triggerCount
-        let totalDuration = (viewController?.fw_trackExposureDuration ?? 0) + duration
-        viewController?.fw_trackExposureDuration = totalDuration
+        if !isFinished {
+            viewController?.fw_trackExposureCount = triggerCount
+        }
+        var totalDuration = (viewController?.fw_trackExposureDuration ?? 0)
+        if isFinished {
+            totalDuration += duration
+            viewController?.fw_trackExposureDuration = totalDuration
+        }
         
         event.view = nil
         event.viewController = viewController
         event.indexPath = nil
         event.triggerCount = triggerCount
+        event.triggerTimestamp = Date.fw_currentTime
         event.triggerDuration = duration
         event.totalDuration = totalDuration
         event.isExposure = true
-        event.isFinished = false
+        event.isFinished = isFinished
         handleEvent(event)
     }
     
@@ -125,6 +158,9 @@ public class StatisticalManager: NSObject {
             event.view?.fw_statisticalClickListener?(event)
         }
         
+        if let handler = eventHandlers[event.name] {
+            handler(event)
+        }
         eventHandler?(event)
         if reportEnabled, !event.name.isEmpty {
             Analyzer.shared.trackEvent(event.name, parameters: event.userInfo)
@@ -159,6 +195,8 @@ public class StatisticalEvent: NSObject {
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
     public var shieldView: ((UIView) -> UIView?)?
+    /// 自定义曝光计算句柄，返回是否曝光，用于自定义处理
+    public var customBlock: ((UIView) -> Bool)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -168,6 +206,8 @@ public class StatisticalEvent: NSObject {
     public fileprivate(set) var indexPath: IndexPath?
     /// 事件触发次数，触发时自动赋值
     public fileprivate(set) var triggerCount: Int = 0
+    /// 事件触发时间戳，触发时自动赋值
+    public fileprivate(set) var triggerTimestamp: TimeInterval = 0
     /// 曝光事件触发单次时长，0表示曝光开始，触发时自动赋值
     public fileprivate(set) var triggerDuration: TimeInterval = 0
     /// 曝光事件触发总时长，触发时自动赋值
