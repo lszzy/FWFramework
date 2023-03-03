@@ -302,7 +302,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         cell.contentView.backgroundColor = UIColor.fw.randomColor
         cell.fw.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.fw.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
-        cell.fw.statisticalExposure?.triggerOnce = true
         configShieldView(cell.fw.statisticalExposure)
         return cell
     }
