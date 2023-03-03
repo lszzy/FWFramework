@@ -47,10 +47,8 @@ public class StatisticalManager: NSObject {
     public var exposureThresholds: CGFloat = 1
     /// 计算曝光时是否自动屏蔽控制器的顶部栏和底部栏，默认true
     public var exposureIgnoredBars = true
-    /// 应用状态改变(前后台切换)时是否重新计算曝光，默认true
-    public var exposureWhenAppStateChanged = true
-    /// 界面可见状态改变(present或push)时是否重新计算曝光，默认true
-    public var exposureWhenVisibilityChanged = true
+    /// 应用回到前台时是否重新计算曝光，默认true
+    public var exposureBecomeActive = true
     
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
@@ -201,19 +199,6 @@ public class StatisticalManager: NSObject {
                 selfObject.fw_statisticalBindClick()
             }
         }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject.fw_statisticalExposure != nil {
-                selfObject.fw_statisticalTrackExposure()
-            }
-        }}
     }
     
 }
@@ -241,8 +226,8 @@ public class StatisticalEvent: NSObject {
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
     public var shieldView: ((UIView) -> UIView?)?
-    /// 自定义曝光句柄，参数为所在视图，用于自定义处理
-    public var exposureBlock: ((UIView) -> Bool)?
+    /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
+    public var exposureBlock: ((Any) -> Bool)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -512,6 +497,31 @@ public class StatisticalEvent: NSObject {
         
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
+        
+        deinit {
+            removeObserver()
+        }
+        
+        func addObserver() {
+            viewController?.fw_observeLifecycleState({ vc, state in
+                if state == .didAppear {
+                    vc.fw_statisticalExposureUpdate()
+                }
+            })
+            if StatisticalManager.shared.exposureBecomeActive {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+        }
+        
+        func removeObserver() {
+            if StatisticalManager.shared.exposureBecomeActive {
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+        }
+        
+        @objc func appBecomeActive() {
+            viewController?.fw_statisticalExposureUpdate()
+        }
     }
     
     // MARK: - Public
@@ -552,14 +562,22 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    private func fw_statisticalBindExposure() {
+    fileprivate func fw_statisticalBindExposure() {
         guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        StatisticalManager.swizzleStatistical()
+        fw_statisticalTarget.addObserver()
         fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
         
-        if fw_lifecycleState == .didAppear {
-            fw_statisticalTrackExposure()
+        fw_statisticalExposureUpdate()
+    }
+    
+    fileprivate func fw_statisticalExposureUpdate() {
+        if presentedViewController != nil || !fw_isTail { return }
+        if fw_lifecycleState != .didAppear { return }
+        if let exposureBlock = fw_statisticalExposure?.exposureBlock {
+            if !exposureBlock(self) { return }
         }
+        
+        fw_statisticalTrackExposure()
     }
     
 }
