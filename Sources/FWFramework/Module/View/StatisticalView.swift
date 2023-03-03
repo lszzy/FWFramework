@@ -340,8 +340,8 @@ public class StatisticalEvent: NSObject {
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
             
             let cell = tableView.cellForRow(at: indexPath)
-            let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
-            if !cellTracked {
+            let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
+            if !isTracked {
                 tableView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
@@ -366,8 +366,8 @@ public class StatisticalEvent: NSObject {
             if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
             
             let cell = collectionView.cellForItem(at: indexPath)
-            let cellTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
-            if !cellTracked {
+            let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
+            if !isTracked {
                 collectionView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
@@ -616,7 +616,12 @@ public class StatisticalEvent: NSObject {
         
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
-            fw_statisticalTrackExposure(indexPath: indexPath)
+            let isTracked = fw_statisticalTrackExposure(indexPath: indexPath)
+            if !isTracked, let cell = self as? UITableViewCell {
+                cell.fw_tableView?.fw_statisticalTrackExposure(indexPath: indexPath)
+            } else if !isTracked, let cell = self as? UICollectionViewCell {
+                cell.fw_collectionView?.fw_statisticalTrackExposure(indexPath: indexPath)
+            }
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
         }
