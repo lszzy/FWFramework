@@ -170,6 +170,52 @@ public class StatisticalManager: NSObject {
         }
     }
     
+    private static var statisticalSwizzled = false
+    
+    fileprivate static func swizzleStatistical() {
+        guard !statisticalSwizzled else { return }
+        statisticalSwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableViewCell.self,
+            selector: #selector(UITableViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil {
+                selfObject.fw_statisticalBindClick()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UICollectionViewCell.self,
+            selector: #selector(UICollectionViewCell.didMoveToSuperview),
+            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalClick != nil {
+                selfObject.fw_statisticalBindClick()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject.fw_statisticalExposure != nil {
+                selfObject.fw_statisticalTrackExposure()
+            }
+        }}
+    }
+    
 }
 
 // MARK: - StatisticalEvent
@@ -195,8 +241,8 @@ public class StatisticalEvent: NSObject {
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
     public var shieldView: ((UIView) -> UIView?)?
-    /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
-    public var exposureBlock: ((Any) -> Bool)?
+    /// 自定义曝光句柄，参数为所在视图，用于自定义处理
+    public var exposureBlock: ((UIView) -> Bool)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -340,7 +386,7 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         guard let tableView = (bindView as? UITableView) ?? self.fw_tableView else {
-            UIView.fw_swizzleStatisticalView()
+            StatisticalManager.swizzleStatistical()
             return false
         }
         return tableView.fw_statisticalBindClick()
@@ -352,7 +398,7 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindClick(_ bindView: UIView?) -> Bool {
         guard let collectionView = (bindView as? UICollectionView) ?? self.fw_collectionView else {
-            UIView.fw_swizzleStatisticalView()
+            StatisticalManager.swizzleStatistical()
             return false
         }
         return collectionView.fw_statisticalBindClick()
@@ -456,39 +502,6 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    private static var fw_staticStatisticalViewSwizzled = false
-    
-    fileprivate static func fw_swizzleStatisticalView() {
-        guard !fw_staticStatisticalViewSwizzled else { return }
-        fw_staticStatisticalViewSwizzled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITableViewCell.self,
-            selector: #selector(UITableViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_statisticalClick != nil {
-                selfObject.fw_statisticalBindClick()
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UICollectionViewCell.self,
-            selector: #selector(UICollectionViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_statisticalClick != nil {
-                selfObject.fw_statisticalBindClick()
-            }
-        }}
-    }
-    
 }
 
 // MARK: - UIViewController+StatisticalView
@@ -541,8 +554,12 @@ public class StatisticalEvent: NSObject {
     
     private func fw_statisticalBindExposure() {
         guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        // TODO: - TODO
+        StatisticalManager.swizzleStatistical()
         fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+        
+        if fw_lifecycleState == .didAppear {
+            fw_statisticalTrackExposure()
+        }
     }
     
 }
