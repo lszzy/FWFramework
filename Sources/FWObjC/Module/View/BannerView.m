@@ -998,7 +998,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
 #pragma mark - StatisticalViewProtocol
 
-- (BOOL)statisticalViewWillBindClick:(UIView *)bindView
+- (BOOL)statisticalViewWillBindClick:(UIView *)containerView
 {
     return YES;
 }
@@ -1125,7 +1125,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
 #pragma mark - StatisticalViewProtocol
 
-- (BOOL)statisticalViewWillBindClick:(UIView *)bindView
+- (BOOL)statisticalViewWillBindClick:(UIView *)containerView
 {
     return YES;
 }
