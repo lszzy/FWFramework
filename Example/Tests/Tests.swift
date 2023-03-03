@@ -201,6 +201,28 @@ class Tests: XCTestCase {
         XCTAssertEqual(string, "Hello World")
     }
     
+    func testEnum() {
+        let optionalVal: TestEnum? = nil
+        XCTAssertTrue(optionalVal == nil)
+        XCTAssertTrue(optionalVal != TestEnum.none)
+        
+        var val: TestEnum = .none
+        XCTAssertTrue(val == .none)
+        XCTAssertTrue(val != .partly(0.5))
+        XCTAssertTrue(val != .fully)
+        
+        val = .partly(0.5)
+        XCTAssertTrue(val != .none)
+        XCTAssertTrue(val == .partly(0.5))
+        XCTAssertTrue(val != .partly(0.8))
+        XCTAssertTrue(val != .fully)
+        
+        val = .fully
+        XCTAssertTrue(val != .none)
+        XCTAssertTrue(val != .partly(0.5))
+        XCTAssertTrue(val == .fully)
+    }
+    
     func testBlock() {
         var value: Int = 0
         var block = MulticastBlock()
@@ -254,6 +276,12 @@ extension Tests {
     
     class TestParameter: RouterParameter {
         var isTrue: Bool = false
+    }
+    
+    enum TestEnum: Equatable {
+        case none
+        case partly(CGFloat)
+        case fully
     }
     
     @objc func loaderAction(_ input: NSString) -> NSString? {

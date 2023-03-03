@@ -648,10 +648,12 @@ extension UInt64: SafeType {
 extension Float: SafeType {
     public static var safeValue: Float = .zero
     public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return !isNaN && !isInfinite }
 }
 extension Double: SafeType {
     public static var safeValue: Double = .zero
     public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return !isNaN && !isInfinite }
 }
 extension Bool: SafeType {
     public static var safeValue: Bool = false
@@ -681,4 +683,24 @@ extension Set: SafeType {
 }
 extension Dictionary: SafeType {
     public static var safeValue: Dictionary<Key, Value> { return [:] }
+}
+extension CGFloat: SafeType {
+    public static var safeValue: CGFloat = .zero
+    public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return !isNaN && !isInfinite }
+}
+extension CGPoint: SafeType {
+    public static var safeValue: CGPoint = .zero
+    public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return x.isValid && y.isValid }
+}
+extension CGSize: SafeType {
+    public static var safeValue: CGSize = .zero
+    public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return width.isValid && height.isValid }
+}
+extension CGRect: SafeType {
+    public static var safeValue: CGRect = .zero
+    public var isEmpty: Bool { return self == .safeValue }
+    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
 }

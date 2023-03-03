@@ -23,10 +23,10 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalClickListener = newValue }
     }
     
-    /// 手工绑定点击事件统计，可指定绑定视图，自动绑定失败时可手工调用
+    /// 手工绑定点击事件统计，可指定容器视图，自动绑定失败时可手工调用
     @discardableResult
-    public func statisticalBindClick(_ bindView: UIView? = nil) -> Bool {
-        return base.fw_statisticalBindClick(bindView)
+    public func statisticalBindClick(_ containerView: UIView? = nil) -> Bool {
+        return base.fw_statisticalBindClick(containerView)
     }
     
     /// 触发视图点击事件统计，仅绑定statisticalClick后生效
@@ -48,10 +48,10 @@ extension Wrapper where Base: UIView {
         set { base.fw_statisticalExposureListener = newValue }
     }
     
-    /// 手工绑定曝光事件统计，可指定绑定视图，自动绑定失败时可手工调用
+    /// 手工绑定曝光事件统计，可指定容器视图，自动绑定失败时可手工调用
     @discardableResult
-    public func statisticalBindExposure(_ bindView: UIView? = nil) -> Bool {
-        return base.fw_statisticalBindExposure(bindView)
+    public func statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
+        return base.fw_statisticalBindExposure(containerView)
     }
     
     /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
