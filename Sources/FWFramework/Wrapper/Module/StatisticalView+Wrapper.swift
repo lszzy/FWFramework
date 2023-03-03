@@ -7,9 +7,10 @@
 
 import UIKit
 
-// MARK: - UIView+StatisticalClick
+// MARK: - UIView+StatisticalView
 extension Wrapper where Base: UIView {
     
+    // MARK: - Click
     /// 设置并尝试自动绑定点击事件统计
     public var statisticalClick: StatisticalEvent? {
         get { base.fw_statisticalClick }
@@ -34,11 +35,7 @@ extension Wrapper where Base: UIView {
         return base.fw_statisticalTrackClick(indexPath: indexPath, event: event)
     }
     
-}
-
-// MARK: - UIView+StatisticalExposure
-extension Wrapper where Base: UIView {
-    
+    // MARK: - Exposure
     /// 设置并尝试自动绑定曝光事件统计。如果对象发生变化(indexPath|name|object)，也会触发
     public var statisticalExposure: StatisticalEvent? {
         get { base.fw_statisticalExposure }

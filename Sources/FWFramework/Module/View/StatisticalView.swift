@@ -65,10 +65,10 @@ public class StatisticalManager: NSObject {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
-        let triggerCount = (view?.fw_trackClickCounts[triggerKey] ?? 0) + 1
+        let triggerCount = (view?.fw_statisticalTarget.clickCounts[triggerKey] ?? 0) + 1
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : clickOnce
         if triggerCount > 1 && triggerOnce { return }
-        view?.fw_trackClickCounts[triggerKey] = triggerCount
+        view?.fw_statisticalTarget.clickCounts[triggerKey] = triggerCount
         
         event.view = view
         event.viewController = view?.fw_viewController
@@ -86,19 +86,19 @@ public class StatisticalManager: NSObject {
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         let isFinished = duration > 0
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
-        var triggerCount = (view?.fw_trackExposureCounts[triggerKey] ?? 0)
+        var triggerCount = (view?.fw_statisticalTarget.exposureCounts[triggerKey] ?? 0)
         if !isFinished {
             triggerCount += 1
         }
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
         if !isFinished {
-            view?.fw_trackExposureCounts[triggerKey] = triggerCount
+            view?.fw_statisticalTarget.exposureCounts[triggerKey] = triggerCount
         }
-        var totalDuration = (view?.fw_trackExposureDurations[triggerKey] ?? 0)
+        var totalDuration = (view?.fw_statisticalTarget.exposureDurations[triggerKey] ?? 0)
         if isFinished {
             totalDuration += duration
-            view?.fw_trackExposureDurations[triggerKey] = totalDuration
+            view?.fw_statisticalTarget.exposureDurations[triggerKey] = totalDuration
         }
         
         event.view = view
@@ -118,19 +118,19 @@ public class StatisticalManager: NSObject {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         let isFinished = duration > 0
-        var triggerCount = (viewController?.fw_trackExposureCount ?? 0)
+        var triggerCount = (viewController?.fw_statisticalTarget.exposureCount ?? 0)
         if !isFinished {
             triggerCount += 1
         }
         let triggerOnce = event.triggerOnce != nil ? (event.triggerOnce ?? false) : exposureOnce
         if triggerCount > 1 && triggerOnce { return }
         if !isFinished {
-            viewController?.fw_trackExposureCount = triggerCount
+            viewController?.fw_statisticalTarget.exposureCount = triggerCount
         }
-        var totalDuration = (viewController?.fw_trackExposureDuration ?? 0)
+        var totalDuration = (viewController?.fw_statisticalTarget.exposureDuration ?? 0)
         if isFinished {
             totalDuration += duration
-            viewController?.fw_trackExposureDuration = totalDuration
+            viewController?.fw_statisticalTarget.exposureDuration = totalDuration
         }
         
         event.view = nil
@@ -195,8 +195,8 @@ public class StatisticalEvent: NSObject {
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
     public var shieldView: ((UIView) -> UIView?)?
-    /// 自定义曝光计算句柄，返回是否曝光，用于自定义处理
-    public var customBlock: ((UIView) -> Bool)?
+    /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
+    public var exposureBlock: ((Any) -> Bool)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -360,10 +360,19 @@ public class StatisticalEvent: NSObject {
     
 }
 
-// MARK: - UIView+StatisticalClick
+// MARK: - UIView+StatisticalView
 @_spi(FW) extension UIView {
     
-    // MARK: - Public
+    fileprivate class StatisticalTarget: NSObject {
+        weak var view: UIView?
+        
+        var clickCounts: [String: Int] = [:]
+        
+        var exposureCounts: [String: Int] = [:]
+        var exposureDurations: [String: TimeInterval] = [:]
+    }
+    
+    // MARK: - Click
     /// 设置并尝试自动绑定点击事件统计
     public var fw_statisticalClick: StatisticalEvent? {
         get {
@@ -399,10 +408,52 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
+    // MARK: - Exposure
+    /// 设置并尝试自动绑定曝光事件统计。如果对象发生变化(indexPath|name|object)，也会触发
+    public var fw_statisticalExposure: StatisticalEvent? {
+        get {
+            return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            fw_statisticalBindExposure(newValue?.bindView)
+        }
+    }
+    
+    /// 设置统计曝光事件触发时自定义监听器，默认nil
+    public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
+    }
+    
+    /// 手工绑定曝光事件统计，可指定绑定视图，自动绑定失败时可手工调用
+    @discardableResult
+    public func fw_statisticalBindExposure(_ bindView: UIView? = nil) -> Bool {
+        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return true }
+        let result = statisticalViewWillBindExposure(bindView)
+        if result { fw_setPropertyBool(true, forName: "fw_statisticalBindExposure") }
+        return result
+    }
+    
+    /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
+    @objc(__fw_statisticalTrackExposureWithIndexPath:duration:event:)
+    @discardableResult
+    public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+        guard let event = event ?? fw_statisticalExposure else { return false }
+        StatisticalManager.shared.trackExposure(self, indexPath: indexPath, duration: duration, event: event)
+        return true
+    }
+    
     // MARK: - Private
-    fileprivate var fw_trackClickCounts: [String: Int] {
-        get { return fw_property(forName: "fw_trackClickCounts") as? [String: Int] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_trackClickCounts") }
+    fileprivate var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
+        } else {
+            let target = StatisticalTarget()
+            target.view = self
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
+        }
     }
     
     private static var fw_staticStatisticalViewSwizzled = false
@@ -440,61 +491,17 @@ public class StatisticalEvent: NSObject {
     
 }
 
-// MARK: - UIView+StatisticalExposure
-@_spi(FW) extension UIView {
-    
-    // MARK: - Public
-    /// 设置并尝试自动绑定曝光事件统计。如果对象发生变化(indexPath|name|object)，也会触发
-    public var fw_statisticalExposure: StatisticalEvent? {
-        get {
-            return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
-        }
-        set {
-            fw_setProperty(newValue, forName: "fw_statisticalExposure")
-            fw_statisticalBindExposure(newValue?.bindView)
-        }
-    }
-    
-    /// 设置统计曝光事件触发时自定义监听器，默认nil
-    public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
-    }
-    
-    /// 手工绑定曝光事件统计，可指定绑定视图，自动绑定失败时可手工调用
-    @discardableResult
-    public func fw_statisticalBindExposure(_ bindView: UIView? = nil) -> Bool {
-        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return true }
-        let result = statisticalViewWillBindExposure(bindView)
-        if result { fw_setPropertyBool(true, forName: "fw_statisticalBindExposure") }
-        return result
-    }
-    
-    /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
-    @objc(__fw_statisticalTrackExposureWithIndexPath:duration:event:)
-    @discardableResult
-    public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
-        guard let event = event ?? fw_statisticalExposure else { return false }
-        StatisticalManager.shared.trackExposure(self, indexPath: indexPath, duration: duration, event: event)
-        return true
-    }
-    
-    // MARK: - Private
-    fileprivate var fw_trackExposureCounts: [String: Int] {
-        get { return fw_property(forName: "fw_trackExposureCounts") as? [String: Int] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_trackExposureCounts") }
-    }
-    
-    fileprivate var fw_trackExposureDurations: [String: TimeInterval] {
-        get { return fw_property(forName: "fw_trackExposureDurations") as? [String: TimeInterval] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_trackExposureDurations") }
-    }
-    
-}
-
-// MARK: - UIViewController+StatisticalExposure
+// MARK: - UIViewController+StatisticalView
 @_spi(FW) extension UIViewController {
     
+    fileprivate class StatisticalTarget: NSObject {
+        weak var viewController: UIViewController?
+        
+        var exposureCount: Int = 0
+        var exposureDuration: TimeInterval = 0
+    }
+    
+    // MARK: - Public
     /// 设置并尝试自动绑定曝光事件统计
     public var fw_statisticalExposure: StatisticalEvent? {
         get {
@@ -521,20 +528,21 @@ public class StatisticalEvent: NSObject {
     }
     
     // MARK: - Private
+    fileprivate var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
+        } else {
+            let target = StatisticalTarget()
+            target.viewController = self
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
+        }
+    }
+    
     private func fw_statisticalBindExposure() {
         guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
         // TODO: - TODO
         fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
-    }
-    
-    fileprivate var fw_trackExposureCount: Int {
-        get { return fw_propertyInt(forName: "fw_trackExposureCount") }
-        set { fw_setPropertyInt(newValue, forName: "fw_trackExposureCount") }
-    }
-    
-    fileprivate var fw_trackExposureDuration: TimeInterval {
-        get { return fw_propertyDouble(forName: "fw_trackExposureDuration") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_trackExposureDuration") }
     }
     
 }
