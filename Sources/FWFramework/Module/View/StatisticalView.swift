@@ -426,17 +426,50 @@ public class StatisticalEvent: NSObject {
         
         var clickCounts: [String: Int] = [:]
         
+        var exposureFully = false
+        var exposureIdentifier = ""
+        var exposureState: StatisticalState = .none
+        
         var exposureCounts: [String: Int] = [:]
         var exposureDurations: [String: TimeInterval] = [:]
         
-        @objc func exposureUpdate() {
+        deinit {
+            removeObserver()
+        }
+        
+        func addObserver() {
+            view?.fw_observeProperty("alpha", block: { view, _ in
+                (view as? UIView)?.fw_statisticalExposureUpdate()
+            })
+            view?.fw_observeProperty("hidden", block: { view, _ in
+                (view as? UIView)?.fw_statisticalExposureUpdate()
+            })
+            view?.fw_observeProperty("layer.bounds", block: { view, _ in
+                (view as? UIView)?.fw_statisticalExposureUpdate()
+            })
+            view?.fw_observeProperty("layer.position", block: { view, _ in
+                (view as? UIView)?.fw_statisticalExposureUpdate()
+            })
+        }
+        
+        func removeObserver() {
             
+        }
+        
+        @objc func exposureUpdate() {
+            if let view = view, (view is UITableView || view is UICollectionView) {
+                view.subviews.forEach { cell in
+                    cell.fw_statisticalStateUpdate()
+                }
+            } else {
+                view?.fw_statisticalStateUpdate()
+            }
         }
     }
     
-    fileprivate enum StatisticalState: Equatable {
-        case none
-        case partly(CGFloat)
+    fileprivate enum StatisticalState: Int {
+        case none = 0
+        case partly
         case fully
     }
     
@@ -500,9 +533,12 @@ public class StatisticalEvent: NSObject {
         guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return true }
         let result = statisticalViewWillBindExposure(bindView)
         if result {
+            fw_statisticalTarget.addObserver()
             fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
             
-            fw_statisticalExposureUpdate()
+            if fw_statisticalExposure != nil {
+                fw_statisticalExposureUpdate()
+            }
         }
         return result
     }
@@ -539,6 +575,84 @@ public class StatisticalEvent: NSObject {
         subviews.forEach { subview in
             subview.fw_statisticalExposureUpdate()
         }
+    }
+    
+    fileprivate func fw_statisticalStateUpdate() {
+        var indexPath: IndexPath?
+        if let cell = self as? UITableViewCell {
+            indexPath = cell.fw_indexPath
+        } else if let cell = self as? UICollectionViewCell {
+            indexPath = cell.fw_indexPath
+        }
+        let identifier = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(String.fw_safeString(fw_statisticalExposure?.name))-\(String.fw_safeString(fw_statisticalExposure?.object))"
+        
+        let oldIdentifier = fw_statisticalTarget.exposureIdentifier
+        let identifierChanged = !oldIdentifier.isEmpty && identifier != oldIdentifier
+        if oldIdentifier.isEmpty || identifierChanged {
+            fw_statisticalTarget.exposureIdentifier = identifier
+        }
+        
+        let oldState = fw_statisticalTarget.exposureState
+        let state = fw_statisticalState
+        if state == oldState, !identifierChanged { return }
+        fw_statisticalTarget.exposureState = state
+        
+        if state == .fully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
+            fw_statisticalTarget.exposureFully = true
+            fw_statisticalTrackExposure(indexPath: indexPath)
+        } else if state == .none || identifierChanged {
+            fw_statisticalTarget.exposureFully = false
+        }
+    }
+    
+    fileprivate var fw_statisticalState: StatisticalState {
+        var state: StatisticalState = .none
+        if !fw_isViewVisible {
+            return state
+        }
+        
+        if let exposureBlock = fw_statisticalExposure?.exposureBlock,
+           !exposureBlock(self) {
+            return state
+        }
+        
+        if StatisticalManager.shared.exposureBecomeActive,
+           UIApplication.shared.applicationState == .background {
+            return state
+        }
+        
+        let viewController = fw_viewController
+        if let viewController = viewController,
+            !viewController.fw_isVisible {
+            return state
+        }
+        
+        var containerView = fw_statisticalExposure?.containerView
+        if let containerView = containerView {
+            if !containerView.fw_isViewVisible {
+                return state
+            }
+        } else {
+            containerView = viewController?.view ?? self.window
+        }
+        guard let containerView = containerView else {
+            return state
+        }
+        
+        var superview = self.superview
+        var superviewHidden = false
+        while superview != nil && superview != containerView {
+            if !(superview?.fw_isViewVisible ?? false) {
+                superviewHidden = true
+                break
+            }
+            superview = superview?.superview
+        }
+        if superviewHidden {
+            return state
+        }
+        
+        return .none
     }
     
 }
@@ -625,8 +739,7 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalExposureUpdate() {
-        if presentedViewController != nil || !fw_isTail { return }
-        if fw_lifecycleState != .didAppear { return }
+        if !fw_isVisible || fw_lifecycleState != .didAppear { return }
         if let exposureBlock = fw_statisticalExposure?.exposureBlock {
             if !exposureBlock(self) { return }
         }
