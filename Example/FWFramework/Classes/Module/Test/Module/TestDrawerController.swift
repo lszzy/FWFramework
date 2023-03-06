@@ -17,6 +17,14 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         return result
     }()
     
+    private lazy var bottomView: UIView = {
+        let result = UIView()
+        result.isHidden = true
+        result.frame = CGRect(x: 0, y: 100, width: FW.screenWidth, height: view.fw.height)
+        result.backgroundColor = .brown
+        return result
+    }()
+    
     private lazy var imageView: UIImageView = {
         let result = UIImageView()
         result.contentMode = .scaleAspectFit
@@ -50,14 +58,32 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         let topLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 100, height: 30))
         topLabel.text = "Menu 1"
         contentView.addSubview(topLabel)
+        topLabel.isUserInteractionEnabled = true
+        topLabel.fw.addTapGesture { [weak self] _ in
+            guard let self = self else { return }
+            self.bottomView.isHidden = false
+            self.bottomView.fw.drawerView?.setPosition(100, animated: true)
+        }
         
         let middleLabel = UILabel(frame: CGRect(x: 50, y: 250, width: 100, height: 30))
         middleLabel.text = "Menu 2"
         contentView.addSubview(middleLabel)
+        middleLabel.isUserInteractionEnabled = true
+        middleLabel.fw.addTapGesture { [weak self] _ in
+            guard let self = self else { return }
+            self.bottomView.isHidden = false
+            self.bottomView.fw.drawerView?.setPosition(self.view.fw.height / 2.0, animated: true)
+        }
         
         let bottomLabel = UILabel(frame: CGRect(x: 50, y: 300, width: 100, height: 30))
         bottomLabel.text = "Menu 3"
         contentView.addSubview(bottomLabel)
+        bottomLabel.isUserInteractionEnabled = true
+        bottomLabel.fw.addTapGesture { [weak self] _ in
+            guard let self = self else { return }
+            self.bottomView.isHidden = false
+            self.bottomView.fw.drawerView?.setPosition(self.view.fw.height - 100.0, animated: true)
+        }
         
         let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
         closeLabel.text = "Back"
@@ -78,6 +104,14 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         imageView.fw.layoutChain
             .center()
             .size(CGSize(width: 200, height: 200))
+        
+        view.addSubview(bottomView)
+        
+        bottomView.fw.drawerView(
+            .up,
+            positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
+            kickbackHeight: 0
+        )
     }
     
     @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
