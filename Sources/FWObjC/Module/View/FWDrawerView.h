@@ -42,6 +42,9 @@ NS_SWIFT_NAME(DrawerView)
 // 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。先尝试设置delegate为自身，尝试失败请手工调用scrollViewDidScroll
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
 
+// 滚动视图过滤器，默认只处理可滚动的视图。如果不可滚动时也需要触发抽屉效果，可自定义此句柄
+@property (nullable, nonatomic, copy) BOOL (^scrollViewFilter)(UIScrollView *scrollView);
+
 // 抽屉视图，自动添加pan手势
 @property (nonatomic, weak, readonly) UIView *view;
 
@@ -62,6 +65,12 @@ NS_SWIFT_NAME(DrawerView)
 
 // 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+
+// 获取抽屉视图指定索引位置，获取失败返回0
+- (CGFloat)positionAtIndex:(NSInteger)index;
+
+// 设置抽屉效果视图到指定索引位置，如果位置发生改变，会触发抽屉callback回调
+- (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated;
 
 @end
 
