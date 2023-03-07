@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.7.0] - 2023-03-07
+
+### Added
+* 新增Swift版本ParameterModel组件
+* DrawerView新增scrollViewFilter配置
+* NotificationManager新增delegate配置
+
 ## [4.6.0] - 2023-02-20
 
 ### Added
