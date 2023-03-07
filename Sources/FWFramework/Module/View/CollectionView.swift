@@ -24,8 +24,16 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     
     /// 集合section边距句柄，默认nil
     open var insetForSection: ((UICollectionView, Int) -> UIEdgeInsets)?
-    /// 集合section边距，默认zero，优先级低
-    open var sectionInset: UIEdgeInsets = .zero
+    /// 集合section边距，默认nil
+    open var sectionInset: UIEdgeInsets?
+    /// 集合section滚动方向最小平行间距句柄，默认nil
+    open var minimumLineSpacingForSection: ((UICollectionView, Int) -> CGFloat)?
+    /// 集合section滚动方向最小平行间距，默认nil
+    open var minimumLineSpacing: CGFloat?
+    /// 集合section滚动方向最小垂直间距句柄，默认nil
+    open var minimumInteritemSpacingForSection: ((UICollectionView, Int) -> CGFloat)?
+    /// 集合section滚动方向最小垂直间距，默认nil
+    open var minimumInteritemSpacing: CGFloat?
     
     /// 集合section头视图句柄，size未指定时为automaticSize，默认nil
     open var viewForHeader: ((UICollectionView, IndexPath) -> UICollectionReusableView?)?
@@ -101,21 +109,6 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         self.init()
         collectionView.dataSource = self
         collectionView.delegate = self
-    }
-    
-    // MARK: - Private
-    func sectionInset(_ section: Int, _ collectionView: UICollectionView) -> UIEdgeInsets {
-        if let insetBlock = insetForSection {
-            return insetBlock(collectionView, section)
-        }
-        if sectionInset != .zero {
-            return sectionInset
-        }
-        
-        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            return flowLayout.sectionInset
-        }
-        return .zero
     }
     
     // MARK: - UICollectionViewDataSource
@@ -200,8 +193,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     
     // MARK: - UICollectionViewDelegateFlowLayout
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
-        if let itemSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath) {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let itemSize = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath) {
             return itemSize
         }
         
@@ -213,13 +206,16 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         if cellForItem != nil || cellConfiguration == nil {
+            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+                return flowLayout.itemSize
+            }
             return UICollectionViewFlowLayout.automaticSize
         }
         let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
-        let inset = sectionInset(indexPath.section, collectionView)
+        let sectionInset = self.collectionView(collectionView, layout: collectionViewLayout, insetForSectionAt: indexPath.section)
         var width: CGFloat = 0
-        if inset != .zero && collectionView.frame.size.width > 0 {
-            width = collectionView.frame.size.width - inset.left - inset.right
+        if sectionInset != .zero && collectionView.frame.size.width > 0 {
+            width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
         }
         let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
         return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
@@ -228,17 +224,65 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
-        if let sectionInset = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, insetForSectionAt: section) {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let sectionInset = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, insetForSectionAt: section) {
             return sectionInset
         }
         
-        return sectionInset(section, collectionView)
+        if let insetBlock = insetForSection {
+            return insetBlock(collectionView, section)
+        }
+        if let sectionInset = sectionInset {
+            return sectionInset
+        }
+        
+        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            return flowLayout.sectionInset
+        }
+        return .zero
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let minimumLineSpacing = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, minimumLineSpacingForSectionAt: section) {
+            return minimumLineSpacing
+        }
+        
+        if let spacingBlock = minimumLineSpacingForSection {
+            return spacingBlock(collectionView, section)
+        }
+        if let minimumLineSpacing = minimumLineSpacing {
+            return minimumLineSpacing
+        }
+        
+        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            return flowLayout.minimumLineSpacing
+        }
+        return .zero
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let minimumInteritemSpacing = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, minimumInteritemSpacingForSectionAt: section) {
+            return minimumInteritemSpacing
+        }
+        
+        if let spacingBlock = minimumInteritemSpacingForSection {
+            return spacingBlock(collectionView, section)
+        }
+        if let minimumInteritemSpacing = minimumInteritemSpacing {
+            return minimumInteritemSpacing
+        }
+        
+        if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            return flowLayout.minimumInteritemSpacing
+        }
+        return .zero
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
-        if let headerSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section) {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let headerSize = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section) {
             return headerSize
         }
         
@@ -251,6 +295,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         
         let indexPath = IndexPath(item: 0, section: section)
         if viewForHeader != nil {
+            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+                return flowLayout.headerReferenceSize
+            }
             return UICollectionViewFlowLayout.automaticSize
         }
         let viewClass = viewClassForHeader?(collectionView, indexPath) ?? headerViewClass
@@ -258,6 +305,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return .zero
         }
         if headerConfiguration == nil {
+            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+                return flowLayout.headerReferenceSize
+            }
             return UICollectionViewFlowLayout.automaticSize
         }
         
@@ -268,8 +318,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        let flowLayout = delegate as? UICollectionViewDelegateFlowLayout
-        if let footerSize = flowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section) {
+        let delegateFlowLayout = delegate as? UICollectionViewDelegateFlowLayout
+        if let footerSize = delegateFlowLayout?.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section) {
             return footerSize
         }
         
@@ -282,6 +332,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         
         let indexPath = IndexPath(item: 0, section: section)
         if viewForFooter != nil {
+            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+                return flowLayout.footerReferenceSize
+            }
             return UICollectionViewFlowLayout.automaticSize
         }
         let viewClass = viewClassForFooter?(collectionView, indexPath) ?? footerViewClass
@@ -289,6 +342,9 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return .zero
         }
         if footerConfiguration == nil {
+            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+                return flowLayout.footerReferenceSize
+            }
             return UICollectionViewFlowLayout.automaticSize
         }
         
