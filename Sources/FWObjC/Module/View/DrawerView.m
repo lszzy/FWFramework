@@ -171,6 +171,7 @@
 
 - (BOOL)canScroll:(UIScrollView *)scrollView
 {
+    if (self.scrollViewFilter) return self.scrollViewFilter(scrollView);
     if (!scrollView.scrollEnabled) return NO;
     if (self.isVertical) {
         if (![scrollView __fw_canScrollVertical]) return NO;
@@ -235,6 +236,18 @@
         self.position = position;
         [self notifyPosition:YES];
     }];
+}
+
+- (CGFloat)positionAtIndex:(NSInteger)index
+{
+    if (index < 0 || index >= self.positions.count) return 0;
+    return [self.positions[index] doubleValue];
+}
+
+- (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated
+{
+    if (index < 0 || index >= self.positions.count) return;
+    [self setPosition:[self.positions[index] doubleValue] animated:animated];
 }
 
 - (void)displayLinkAction
