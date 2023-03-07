@@ -132,6 +132,31 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         return flowLayout
     }()
     
+    lazy var testView: UICollectionView = {
+        let layout = CollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 0
+        
+        let result = UICollectionView.fw.collectionView(layout)
+        result.isPagingEnabled = true
+        result.decelerationRate = .fast
+        result.backgroundColor = AppTheme.backgroundColor
+        result.delegate = result.fw.collectionDelegate
+        result.dataSource = result.fw.collectionDelegate
+        result.fw.collectionDelegate.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        result.fw.collectionDelegate.itemCount = 10
+        result.fw.collectionDelegate.cellForItem = { collectionView, indexPath in
+            let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+            cell.contentView.backgroundColor = UIColor.fw.randomColor
+            return cell
+        }
+        result.fw.collectionDelegate.sizeForItem = { collectionView, indexPath in
+            return CGSize(width: FW.screenWidth - 60, height: 150)
+        }
+        return result
+    }()
+    
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         return flowLayout
     }
@@ -200,6 +225,12 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         collectionView.removeFromSuperview()
         contentView.addSubview(collectionView)
         collectionView.fw.layoutChain.edges(excludingEdge: .bottom).height(200)
+        
+        view.addSubview(testView)
+        testView.fw.layoutChain
+            .horizontal()
+            .top(toViewBottom: contentView, offset: 20)
+            .height(150)
     }
     
     func setupNavbar() {

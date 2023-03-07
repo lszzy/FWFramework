@@ -86,6 +86,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     open var didScroll: ((UIScrollView) -> Void)?
     /// 集合即将开始拖动句柄，默认nil
     open var willBeginDragging: ((UIScrollView) -> Void)?
+    /// 集合即将停止拖动句柄，默认nil
+    open var willEndDragging: ((UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
     /// 集合已经停止拖动句柄，默认nil
     open var didEndDragging: ((UIScrollView, Bool) -> Void)?
     /// 集合已经停止减速句柄，默认nil
@@ -336,6 +338,14 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         willBeginDragging?(scrollView)
+    }
+    
+    open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if delegate?.scrollViewWillEndDragging?(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset) != nil {
+            return
+        }
+        
+        willEndDragging?(scrollView, velocity, targetContentOffset)
     }
     
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
