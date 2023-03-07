@@ -454,6 +454,37 @@ extension Wrapper where Base == URL {
     }
 }
 
+extension Wrapper where Base: NSObject {
+    
+    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject)，不含nil值
+    public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
+        guard let object = object else { return [:] }
+        var mirror = Mirror(reflecting: object)
+        var children: [Mirror.Child] = []
+        children += mirror.children
+        while let superclassMirror = mirror.superclassMirror,
+              superclassMirror.subjectType != NSObject.self {
+            children += superclassMirror.children
+            mirror = superclassMirror
+        }
+        
+        var result: [String: Any] = [:]
+        children.forEach { child in
+            if let label = child.label, !label.isEmpty,
+               !Optional<Any>.isNone(child.value) {
+                result[label] = child.value
+            }
+        }
+        return result
+    }
+    
+    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject)，不含nil值
+    public var mirrorDictionary: [String: Any] {
+        return NSObject.fw.mirrorDictionary(self)
+    }
+    
+}
+
 // MARK: - SafeValue
 extension FW {
     /// 安全字符串，不为nil

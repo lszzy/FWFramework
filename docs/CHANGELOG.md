@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.7.0] - 2023-03-07
+
+### Added
+* Added Swift version ParameterModel component
+* Added scrollViewFilter configuration for DrawerView
+* NotificationManager adds delegate configuration
+
 ## [4.6.0] - 2023-02-20
 
 ### Added

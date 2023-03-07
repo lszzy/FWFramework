@@ -4119,76 +4119,97 @@
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 46,
-      "symbol": "FWDrawerView.view",
+      "symbol": "FWDrawerView.scrollViewFilter",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 49,
-      "symbol": "FWDrawerView.gestureRecognizer",
+      "symbol": "FWDrawerView.view",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 52,
-      "symbol": "FWDrawerView.position",
+      "symbol": "FWDrawerView.gestureRecognizer",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 55,
-      "symbol": "FWDrawerView.openPosition",
+      "symbol": "FWDrawerView.position",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 58,
-      "symbol": "FWDrawerView.closePosition",
+      "symbol": "FWDrawerView.openPosition",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
       "line": 61,
+      "symbol": "FWDrawerView.closePosition",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWDrawerView.h",
+      "line": 64,
       "symbol": "FWDrawerView.-setPosition:animated:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 64,
+      "line": 67,
       "symbol": "FWDrawerView.-scrollViewDidScroll:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 74,
+      "line": 70,
+      "symbol": "FWDrawerView.-positionAtIndex:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWDrawerView.h",
+      "line": 73,
+      "symbol": "FWDrawerView.-setPositionIndex:animated:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWDrawerView.h",
+      "line": 83,
       "symbol": "UIView(FWAdaptive).fw_drawerView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 98,
+      "line": 107,
       "symbol": "UIScrollView(FWDrawerView).fw_drawerSuperviewFixed",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 101,
+      "line": 110,
       "symbol": "UIScrollView(FWDrawerView).-fw_drawerSuperviewDidScroll:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 104,
+      "line": 113,
       "symbol": "UIScrollView(FWDrawerView).-fw_drawerSubviewDidScroll:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"

@@ -3875,6 +3875,208 @@
     ]
   }
 }, {
+  "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Kernel\/Router.swift" : {
+    "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
+    "key.length" : 1645,
+    "key.offset" : 0,
+    "key.substructure" : [
+      {
+        "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
+        "key.length" : 23,
+        "key.name" : "MARK: - RouterParameter",
+        "key.offset" : 137
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.open",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.open",
+            "key.length" : 4,
+            "key.offset" : 229
+          }
+        ],
+        "key.bodylength" : 345,
+        "key.bodyoffset" : 273,
+        "key.doc.comment" : "默认路由参数类，可继承使用，也可完全自定义",
+        "key.doclength" : 68,
+        "key.docoffset" : 161,
+        "key.elements" : [
+          {
+            "key.kind" : "source.lang.swift.structure.elem.typeref",
+            "key.length" : 14,
+            "key.offset" : 257
+          }
+        ],
+        "key.inheritedtypes" : [
+          {
+            "key.name" : "ParameterModel"
+          }
+        ],
+        "key.kind" : "source.lang.swift.decl.class",
+        "key.length" : 385,
+        "key.name" : "RouterParameter",
+        "key.namelength" : 15,
+        "key.nameoffset" : 240,
+        "key.offset" : 234,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.open",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.open",
+                "key.length" : 4,
+                "key.offset" : 328
+              }
+            ],
+            "key.doc.comment" : "路由信息来源，默认未使用",
+            "key.doclength" : 41,
+            "key.docoffset" : 283,
+            "key.kind" : "source.lang.swift.decl.var.instance",
+            "key.length" : 25,
+            "key.name" : "routerSource",
+            "key.namelength" : 12,
+            "key.nameoffset" : 337,
+            "key.offset" : 333,
+            "key.setter_accessibility" : "source.lang.swift.accessibility.open",
+            "key.typename" : "String?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.open",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.open",
+                "key.length" : 4,
+                "key.offset" : 416
+              }
+            ],
+            "key.doc.comment" : "路由信息选项，支持NavigationOptions",
+            "key.doclength" : 49,
+            "key.docoffset" : 363,
+            "key.kind" : "source.lang.swift.decl.var.instance",
+            "key.length" : 40,
+            "key.name" : "routerOptions",
+            "key.namelength" : 13,
+            "key.nameoffset" : 425,
+            "key.offset" : 421,
+            "key.setter_accessibility" : "source.lang.swift.accessibility.open",
+            "key.typename" : "NavigatorOptions"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.open",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.open",
+                "key.length" : 4,
+                "key.offset" : 509
+              }
+            ],
+            "key.doc.comment" : "路由信息句柄，仅open生效",
+            "key.doclength" : 39,
+            "key.docoffset" : 466,
+            "key.kind" : "source.lang.swift.decl.var.instance",
+            "key.length" : 63,
+            "key.name" : "routerHandler",
+            "key.namelength" : 13,
+            "key.nameoffset" : 518,
+            "key.offset" : 514,
+            "key.setter_accessibility" : "source.lang.swift.accessibility.open",
+            "key.typename" : "((RouterContext, UIViewController) -> Void)?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.required",
+                "key.length" : 8,
+                "key.offset" : 594
+              },
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 587
+              }
+            ],
+            "key.bodylength" : 0,
+            "key.bodyoffset" : 611,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 9,
+            "key.name" : "init()",
+            "key.namelength" : 6,
+            "key.nameoffset" : 603,
+            "key.offset" : 603
+          }
+        ]
+      },
+      {
+        "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
+        "key.length" : 30,
+        "key.name" : "MARK: - Router+RouterParameter",
+        "key.offset" : 624
+      },
+      {
+        "key.bodylength" : 970,
+        "key.bodyoffset" : 673,
+        "key.kind" : "source.lang.swift.decl.extension",
+        "key.length" : 989,
+        "key.name" : "Router",
+        "key.namelength" : 6,
+        "key.nameoffset" : 665,
+        "key.offset" : 655,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 1016
+              }
+            ],
+            "key.bodylength" : 86,
+            "key.bodyoffset" : 1121,
+            "key.doc.comment" : "打开此 URL，带上附加信息对象，同时当操作完成时，执行额外的代码\n- Parameters:\n  - url: 带 Scheme 的 URL，如 app:\/\/beauty\/4\n  - userInfo: 附加信息对象，可自定义\n  - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关",
+            "key.doclength" : 329,
+            "key.docoffset" : 683,
+            "key.kind" : "source.lang.swift.decl.function.method.class",
+            "key.length" : 185,
+            "key.name" : "openURL(_:userInfo:completion:)",
+            "key.namelength" : 85,
+            "key.nameoffset" : 1034,
+            "key.offset" : 1023,
+            "key.substructure" : [
+
+            ]
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 1480
+              }
+            ],
+            "key.bodylength" : 76,
+            "key.bodyoffset" : 1560,
+            "key.doc.comment" : "查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil\n- Parameters:\n  - url: URL 带 Scheme，如 app:\/\/beauty\/3\n  - userInfo: 附加信息对象\n- Returns: URL返回的对象",
+            "key.doclength" : 258,
+            "key.docoffset" : 1218,
+            "key.kind" : "source.lang.swift.decl.function.method.class",
+            "key.length" : 150,
+            "key.name" : "object(forURL:userInfo:)",
+            "key.namelength" : 52,
+            "key.nameoffset" : 1498,
+            "key.offset" : 1487,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "Any?"
+          }
+        ]
+      }
+    ]
+  }
+}, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Kernel\/Runtime.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
     "key.length" : 9643,
@@ -20850,6 +21052,219 @@
 
             ],
             "key.typename" : "String"
+          }
+        ]
+      }
+    ]
+  }
+}, {
+  "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Module\/Model\/ParameterModel.swift" : {
+    "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
+    "key.length" : 1318,
+    "key.offset" : 0,
+    "key.substructure" : [
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 222
+          }
+        ],
+        "key.bodylength" : 223,
+        "key.bodyoffset" : 256,
+        "key.doc.comment" : "通用参数与字典非递归编码协议，用于解决字典传参时Key不清晰问题，可自定义实现",
+        "key.doclength" : 116,
+        "key.docoffset" : 106,
+        "key.kind" : "source.lang.swift.decl.protocol",
+        "key.length" : 251,
+        "key.name" : "ParameterCodable",
+        "key.namelength" : 16,
+        "key.nameoffset" : 238,
+        "key.offset" : 229,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.doc.comment" : "从字典解码为参数，非递归方式",
+            "key.doclength" : 47,
+            "key.docoffset" : 266,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 63,
+            "key.name" : "fromDictionary(_:)",
+            "key.namelength" : 43,
+            "key.nameoffset" : 329,
+            "key.offset" : 317,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "Self"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.doc.comment" : "编码为字典，非递归方式",
+            "key.doclength" : 38,
+            "key.docoffset" : 390,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 41,
+            "key.name" : "toDictionary()",
+            "key.namelength" : 14,
+            "key.nameoffset" : 437,
+            "key.offset" : 432,
+            "key.typename" : "[AnyHashable: Any]"
+          }
+        ]
+      },
+      {
+        "key.accessibility" : "source.lang.swift.accessibility.public",
+        "key.attributes" : [
+          {
+            "key.attribute" : "source.decl.attribute.public",
+            "key.length" : 6,
+            "key.offset" : 595
+          }
+        ],
+        "key.bodylength" : 0,
+        "key.bodyoffset" : 656,
+        "key.doc.comment" : "通用参数与字典非递归编码模型，用于解决字典传参时Key不清晰问题，可直接使用",
+        "key.doclength" : 113,
+        "key.docoffset" : 482,
+        "key.elements" : [
+          {
+            "key.kind" : "source.lang.swift.structure.elem.typeref",
+            "key.length" : 16,
+            "key.offset" : 627
+          },
+          {
+            "key.kind" : "source.lang.swift.structure.elem.typeref",
+            "key.length" : 9,
+            "key.offset" : 645
+          }
+        ],
+        "key.inheritedtypes" : [
+          {
+            "key.name" : "ParameterCodable"
+          },
+          {
+            "key.name" : "JSONModel"
+          }
+        ],
+        "key.kind" : "source.lang.swift.decl.protocol",
+        "key.length" : 55,
+        "key.name" : "ParameterModel",
+        "key.namelength" : 14,
+        "key.nameoffset" : 611,
+        "key.offset" : 602
+      },
+      {
+        "key.bodylength" : 631,
+        "key.bodyoffset" : 685,
+        "key.kind" : "source.lang.swift.decl.extension",
+        "key.length" : 658,
+        "key.name" : "ParameterModel",
+        "key.namelength" : 14,
+        "key.nameoffset" : 669,
+        "key.offset" : 659,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 746
+              }
+            ],
+            "key.bodylength" : 42,
+            "key.bodyoffset" : 818,
+            "key.doc.comment" : "从字典解码为参数，非递归方式",
+            "key.doclength" : 47,
+            "key.docoffset" : 695,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 108,
+            "key.name" : "fromDictionary(_:)",
+            "key.namelength" : 43,
+            "key.nameoffset" : 765,
+            "key.offset" : 753,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "Self"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 913
+              }
+            ],
+            "key.bodylength" : 55,
+            "key.bodyoffset" : 963,
+            "key.doc.comment" : "编码为字典，非递归方式",
+            "key.doclength" : 38,
+            "key.docoffset" : 871,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 99,
+            "key.name" : "toDictionary()",
+            "key.namelength" : 14,
+            "key.nameoffset" : 925,
+            "key.offset" : 920,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "[AnyHashable: Any]"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 1078
+              }
+            ],
+            "key.bodylength" : 58,
+            "key.bodyoffset" : 1129,
+            "key.doc.comment" : "从JSON解码为参数，非递归方式",
+            "key.doclength" : 45,
+            "key.docoffset" : 1029,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 103,
+            "key.name" : "fromJSON(_:)",
+            "key.namelength" : 22,
+            "key.nameoffset" : 1097,
+            "key.offset" : 1085,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "Self"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 1238
+              }
+            ],
+            "key.bodylength" : 41,
+            "key.bodyoffset" : 1268,
+            "key.doc.comment" : "编码为JSON，非递归方式",
+            "key.doclength" : 36,
+            "key.docoffset" : 1198,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 65,
+            "key.name" : "toJSON()",
+            "key.namelength" : 8,
+            "key.nameoffset" : 1250,
+            "key.offset" : 1245,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "JSON"
           }
         ]
       }
@@ -40727,7 +41142,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Service\/Basic\/Notification.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 6223,
+    "key.length" : 7050,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -40755,7 +41170,7 @@
             "key.offset" : 175
           }
         ],
-        "key.bodylength" : 5926,
+        "key.bodylength" : 6753,
         "key.bodyoffset" : 295,
         "key.doc.comment" : "通知管理器",
         "key.doclength" : 20,
@@ -40781,7 +41196,7 @@
           }
         ],
         "key.kind" : "source.lang.swift.decl.class",
-        "key.length" : 5998,
+        "key.length" : 6825,
         "key.name" : "NotificationManager",
         "key.namelength" : 19,
         "key.nameoffset" : 230,
@@ -40819,10 +41234,36 @@
             "key.offset" : 383
           },
           {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.weak",
+                "key.length" : 4,
+                "key.offset" : 486
+              },
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 479
+              }
+            ],
+            "key.doc.comment" : "通知代理，设置后优先调用",
+            "key.doclength" : 41,
+            "key.docoffset" : 434,
+            "key.kind" : "source.lang.swift.decl.var.instance",
+            "key.length" : 47,
+            "key.name" : "delegate",
+            "key.namelength" : 8,
+            "key.nameoffset" : 495,
+            "key.offset" : 491,
+            "key.setter_accessibility" : "source.lang.swift.accessibility.public",
+            "key.typename" : "UNUserNotificationCenterDelegate?"
+          },
+          {
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 17,
             "key.name" : "MARK: - Authorize",
-            "key.offset" : 437
+            "key.offset" : 551
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -40830,20 +41271,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 519
+                "key.offset" : 633
               }
             ],
             "key.bodylength" : 90,
-            "key.bodyoffset" : 592,
+            "key.bodyoffset" : 706,
             "key.doc.comment" : "异步查询通知权限状态，当前线程回调",
             "key.doclength" : 56,
-            "key.docoffset" : 459,
+            "key.docoffset" : 573,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 157,
             "key.name" : "authorizeStatus(_:)",
             "key.namelength" : 59,
-            "key.nameoffset" : 531,
-            "key.offset" : 526,
+            "key.nameoffset" : 645,
+            "key.offset" : 640,
             "key.substructure" : [
 
             ]
@@ -40854,20 +41295,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 744
+                "key.offset" : 858
               }
             ],
             "key.bodylength" : 83,
-            "key.bodyoffset" : 818,
+            "key.bodyoffset" : 932,
             "key.doc.comment" : "执行通知权限授权，主线程回调",
             "key.doclength" : 47,
-            "key.docoffset" : 693,
+            "key.docoffset" : 807,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 151,
             "key.name" : "requestAuthorize(_:)",
             "key.namelength" : 60,
-            "key.nameoffset" : 756,
-            "key.offset" : 751,
+            "key.nameoffset" : 870,
+            "key.offset" : 865,
             "key.substructure" : [
 
             ]
@@ -40876,7 +41317,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 13,
             "key.name" : "MARK: - Badge",
-            "key.offset" : 915
+            "key.offset" : 1029
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -40884,26 +41325,26 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 966
+                "key.offset" : 1080
               }
             ],
             "key.bodylength" : 65,
-            "key.bodyoffset" : 1005,
+            "key.bodyoffset" : 1119,
             "key.doc.comment" : "清空图标通知计数",
             "key.doclength" : 29,
-            "key.docoffset" : 933,
+            "key.docoffset" : 1047,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 98,
             "key.name" : "clearNotificationBadges()",
             "key.namelength" : 25,
-            "key.nameoffset" : 978,
-            "key.offset" : 973
+            "key.nameoffset" : 1092,
+            "key.offset" : 1087
           },
           {
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 15,
             "key.name" : "MARK: - Handler",
-            "key.offset" : 1084
+            "key.offset" : 1198
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -40911,18 +41352,18 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1184
+                "key.offset" : 1298
               }
             ],
             "key.doc.comment" : "设置远程推送处理句柄，参数为userInfo和原始通知对象",
             "key.doclength" : 76,
-            "key.docoffset" : 1104,
+            "key.docoffset" : 1218,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 68,
             "key.name" : "remoteNotificationHandler",
             "key.namelength" : 25,
-            "key.nameoffset" : 1195,
-            "key.offset" : 1191,
+            "key.nameoffset" : 1309,
+            "key.offset" : 1305,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "(([AnyHashable: Any]?, Any) -> Void)?"
           },
@@ -40932,18 +41373,18 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1349
+                "key.offset" : 1463
               }
             ],
             "key.doc.comment" : "设置本地推送处理句柄，参数为userInfo和原始通知对象",
             "key.doclength" : 76,
-            "key.docoffset" : 1269,
+            "key.docoffset" : 1383,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 67,
             "key.name" : "localNotificationHandler",
             "key.namelength" : 24,
-            "key.nameoffset" : 1360,
-            "key.offset" : 1356,
+            "key.nameoffset" : 1474,
+            "key.offset" : 1470,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "(([AnyHashable: Any]?, Any) -> Void)?"
           },
@@ -40953,20 +41394,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1519
+                "key.offset" : 1633
               }
             ],
             "key.bodylength" : 64,
-            "key.bodyoffset" : 1562,
+            "key.bodyoffset" : 1676,
             "key.doc.comment" : "注册通知处理器，iOS10+生效，iOS10以下详见UIApplicationDelegate",
             "key.doclength" : 82,
-            "key.docoffset" : 1433,
+            "key.docoffset" : 1547,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 101,
             "key.name" : "registerNotificationHandler()",
             "key.namelength" : 29,
-            "key.nameoffset" : 1531,
-            "key.offset" : 1526,
+            "key.nameoffset" : 1645,
+            "key.offset" : 1640,
             "key.substructure" : [
 
             ]
@@ -40977,28 +41418,28 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1729
+                "key.offset" : 1843
               }
             ],
             "key.bodylength" : 553,
-            "key.bodyoffset" : 1788,
+            "key.bodyoffset" : 1902,
             "key.doc.comment" : "处理远程推送通知，支持NSDictionary|UNNotification|UNNotificationResponse",
             "key.doclength" : 88,
-            "key.docoffset" : 1637,
+            "key.docoffset" : 1751,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 606,
             "key.name" : "handleRemoteNotification(_:)",
             "key.namelength" : 45,
-            "key.nameoffset" : 1741,
-            "key.offset" : 1736,
+            "key.nameoffset" : 1855,
+            "key.offset" : 1850,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 33,
                 "key.name" : "userInfo",
                 "key.namelength" : 8,
-                "key.nameoffset" : 1873,
-                "key.offset" : 1869,
+                "key.nameoffset" : 1987,
+                "key.offset" : 1983,
                 "key.typename" : "[AnyHashable: Any]?"
               }
             ]
@@ -41009,28 +41450,28 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2438
+                "key.offset" : 2552
               }
             ],
             "key.bodylength" : 551,
-            "key.bodyoffset" : 2496,
+            "key.bodyoffset" : 2610,
             "key.doc.comment" : "处理本地通知，支持NSDictionary|UNNotification|UNNotificationResponse",
             "key.doclength" : 82,
-            "key.docoffset" : 2352,
+            "key.docoffset" : 2466,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 603,
             "key.name" : "handleLocalNotification(_:)",
             "key.namelength" : 44,
-            "key.nameoffset" : 2450,
-            "key.offset" : 2445,
+            "key.nameoffset" : 2564,
+            "key.offset" : 2559,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 33,
                 "key.name" : "userInfo",
                 "key.namelength" : 8,
-                "key.nameoffset" : 2580,
-                "key.offset" : 2576,
+                "key.nameoffset" : 2694,
+                "key.offset" : 2690,
                 "key.typename" : "[AnyHashable: Any]?"
               }
             ]
@@ -41039,7 +41480,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 13,
             "key.name" : "MARK: - Local",
-            "key.offset" : 3061
+            "key.offset" : 3175
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -41047,44 +41488,44 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3316
+                "key.offset" : 3430
               }
             ],
             "key.bodylength" : 914,
-            "key.bodyoffset" : 3589,
+            "key.bodyoffset" : 3703,
             "key.doc.comment" : "注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启",
             "key.doclength" : 233,
-            "key.docoffset" : 3079,
+            "key.docoffset" : 3193,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 1181,
             "key.name" : "registerLocalNotification(_:title:subtitle:body:userInfo:badge:soundName:timeInterval:repeats:block:)",
             "key.namelength" : 259,
-            "key.nameoffset" : 3328,
-            "key.offset" : 3323,
+            "key.nameoffset" : 3442,
+            "key.offset" : 3437,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 49,
                 "key.name" : "notification",
                 "key.namelength" : 12,
-                "key.nameoffset" : 3602,
-                "key.offset" : 3598
+                "key.nameoffset" : 3716,
+                "key.offset" : 3712
               },
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 118,
                 "key.name" : "trigger",
                 "key.namelength" : 7,
-                "key.nameoffset" : 4191,
-                "key.offset" : 4187
+                "key.nameoffset" : 4305,
+                "key.offset" : 4301
               },
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 100,
                 "key.name" : "request",
                 "key.namelength" : 7,
-                "key.nameoffset" : 4318,
-                "key.offset" : 4314
+                "key.nameoffset" : 4432,
+                "key.offset" : 4428
               }
             ]
           },
@@ -41094,20 +41535,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4570
+                "key.offset" : 4684
               }
             ],
             "key.bodylength" : 214,
-            "key.bodyoffset" : 4632,
+            "key.bodyoffset" : 4746,
             "key.doc.comment" : "批量删除本地通知(未发出和已发出)",
             "key.doclength" : 52,
-            "key.docoffset" : 4514,
+            "key.docoffset" : 4628,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 270,
             "key.name" : "removeLocalNotification(_:)",
             "key.namelength" : 48,
-            "key.nameoffset" : 4582,
-            "key.offset" : 4577,
+            "key.nameoffset" : 4696,
+            "key.offset" : 4691,
             "key.substructure" : [
 
             ]
@@ -41118,20 +41559,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4913
+                "key.offset" : 5027
               }
             ],
             "key.bodylength" : 164,
-            "key.bodyoffset" : 4956,
+            "key.bodyoffset" : 5070,
             "key.doc.comment" : "删除所有本地通知(未发出和已发出)",
             "key.doclength" : 52,
-            "key.docoffset" : 4857,
+            "key.docoffset" : 4971,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 201,
             "key.name" : "removeAllLocalNotifications()",
             "key.namelength" : 29,
-            "key.nameoffset" : 4925,
-            "key.offset" : 4920,
+            "key.nameoffset" : 5039,
+            "key.offset" : 5034,
             "key.substructure" : [
 
             ]
@@ -41140,7 +41581,7 @@
             "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
             "key.length" : 40,
             "key.name" : "MARK: - UNUserNotificationCenterDelegate",
-            "key.offset" : 5134
+            "key.offset" : 5248
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -41148,20 +41589,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5206
+                "key.offset" : 5418
               }
             ],
-            "key.bodylength" : 263,
-            "key.bodyoffset" : 5416,
-            "key.doc.comment" : "前台收到推送",
-            "key.doclength" : 23,
-            "key.docoffset" : 5179,
+            "key.bodylength" : 384,
+            "key.bodyoffset" : 5628,
+            "key.doc.comment" : "前台收到推送，notification.request.trigger为UNPushNotificationTrigger时为远程推送，否则本地推送",
+            "key.doclength" : 121,
+            "key.docoffset" : 5293,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 467,
+            "key.length" : 588,
             "key.name" : "userNotificationCenter(_:willPresent:withCompletionHandler:)",
             "key.namelength" : 196,
-            "key.nameoffset" : 5218,
-            "key.offset" : 5213,
+            "key.nameoffset" : 5430,
+            "key.offset" : 5425,
             "key.substructure" : [
 
             ]
@@ -41172,20 +41613,49 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5717
+                "key.offset" : 6157
               }
             ],
-            "key.bodylength" : 317,
-            "key.bodyoffset" : 5897,
-            "key.doc.comment" : "后台收到推送",
-            "key.doclength" : 23,
-            "key.docoffset" : 5690,
+            "key.bodylength" : 433,
+            "key.bodyoffset" : 6337,
+            "key.doc.comment" : "后台收到推送，response.notification.request.trigger为UNPushNotificationTrigger时为远程推送，否则本地推送",
+            "key.doclength" : 130,
+            "key.docoffset" : 6023,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 491,
+            "key.length" : 607,
             "key.name" : "userNotificationCenter(_:didReceive:withCompletionHandler:)",
             "key.namelength" : 166,
-            "key.nameoffset" : 5729,
-            "key.offset" : 5724,
+            "key.nameoffset" : 6169,
+            "key.offset" : 6164,
+            "key.substructure" : [
+
+            ]
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 6836
+              },
+              {
+                "key.attribute" : "source.decl.attribute.available",
+                "key.length" : 23,
+                "key.offset" : 6808
+              }
+            ],
+            "key.bodylength" : 86,
+            "key.bodyoffset" : 6955,
+            "key.doc.comment" : "打开推送设置",
+            "key.doclength" : 23,
+            "key.docoffset" : 6781,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 199,
+            "key.name" : "userNotificationCenter(_:openSettingsFor:)",
+            "key.namelength" : 105,
+            "key.nameoffset" : 6848,
+            "key.offset" : 6843,
             "key.substructure" : [
 
             ]
@@ -45746,7 +46216,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Service\/Coding\/Encode.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 24229,
+    "key.length" : 25353,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -47063,20 +47533,14 @@
         ]
       },
       {
-        "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
-        "key.length" : 17,
-        "key.name" : "MARK: - SafeValue",
-        "key.offset" : 17416
-      },
-      {
-        "key.bodylength" : 1051,
-        "key.bodyoffset" : 17448,
+        "key.bodylength" : 1081,
+        "key.bodyoffset" : 17453,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1066,
-        "key.name" : "FW",
-        "key.namelength" : 2,
-        "key.nameoffset" : 17444,
-        "key.offset" : 17434,
+        "key.length" : 1122,
+        "key.name" : "Wrapper",
+        "key.namelength" : 7,
+        "key.nameoffset" : 17423,
+        "key.offset" : 17413,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47084,20 +47548,110 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17489
+                "key.offset" : 17560
+              }
+            ],
+            "key.bodylength" : 690,
+            "key.bodyoffset" : 17630,
+            "key.doc.comment" : "非递归方式获取任意对象的反射字典(含父类直至NSObject)，不含nil值",
+            "key.doclength" : 93,
+            "key.docoffset" : 17463,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 754,
+            "key.name" : "mirrorDictionary(_:)",
+            "key.namelength" : 32,
+            "key.nameoffset" : 17579,
+            "key.offset" : 17567,
+            "key.substructure" : [
+              {
+                "key.kind" : "source.lang.swift.decl.var.local",
+                "key.length" : 39,
+                "key.name" : "mirror",
+                "key.namelength" : 6,
+                "key.nameoffset" : 17697,
+                "key.offset" : 17693
+              },
+              {
+                "key.kind" : "source.lang.swift.decl.var.local",
+                "key.length" : 33,
+                "key.name" : "children",
+                "key.namelength" : 8,
+                "key.nameoffset" : 17745,
+                "key.offset" : 17741,
+                "key.typename" : "[Mirror.Child]"
+              },
+              {
+                "key.kind" : "source.lang.swift.decl.var.local",
+                "key.length" : 31,
+                "key.name" : "result",
+                "key.namelength" : 6,
+                "key.nameoffset" : 18054,
+                "key.offset" : 18050,
+                "key.typename" : "[String: Any]"
+              }
+            ],
+            "key.typename" : "[String: Any]"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 18428
+              }
+            ],
+            "key.bodylength" : 55,
+            "key.bodyoffset" : 18472,
+            "key.doc.comment" : "非递归方式获取当前对象的反射字典(含父类直至NSObject)，不含nil值",
+            "key.doclength" : 93,
+            "key.docoffset" : 18331,
+            "key.kind" : "source.lang.swift.decl.var.instance",
+            "key.length" : 93,
+            "key.name" : "mirrorDictionary",
+            "key.namelength" : 16,
+            "key.nameoffset" : 18439,
+            "key.offset" : 18435,
+            "key.typename" : "[String: Any]"
+          }
+        ]
+      },
+      {
+        "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
+        "key.length" : 17,
+        "key.name" : "MARK: - SafeValue",
+        "key.offset" : 18540
+      },
+      {
+        "key.bodylength" : 1051,
+        "key.bodyoffset" : 18572,
+        "key.kind" : "source.lang.swift.decl.extension",
+        "key.length" : 1066,
+        "key.name" : "FW",
+        "key.namelength" : 2,
+        "key.nameoffset" : 18568,
+        "key.offset" : 18558,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 18613
               }
             ],
             "key.bodylength" : 347,
-            "key.bodyoffset" : 17545,
+            "key.bodyoffset" : 18669,
             "key.doc.comment" : "安全字符串，不为nil",
             "key.doclength" : 32,
-            "key.docoffset" : 17453,
+            "key.docoffset" : 18577,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 397,
             "key.name" : "safeString(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 17508,
-            "key.offset" : 17496,
+            "key.nameoffset" : 18632,
+            "key.offset" : 18620,
             "key.substructure" : [
 
             ],
@@ -47109,20 +47663,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17932
+                "key.offset" : 19056
               }
             ],
             "key.bodylength" : 198,
-            "key.bodyoffset" : 17990,
+            "key.bodyoffset" : 19114,
             "key.doc.comment" : "安全数字，不为nil",
             "key.doclength" : 29,
-            "key.docoffset" : 17899,
+            "key.docoffset" : 19023,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 250,
             "key.name" : "safeNumber(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 17951,
-            "key.offset" : 17939,
+            "key.nameoffset" : 19075,
+            "key.offset" : 19063,
             "key.substructure" : [
 
             ],
@@ -47134,20 +47688,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18225
+                "key.offset" : 19349
               }
             ],
             "key.bodylength" : 222,
-            "key.bodyoffset" : 18275,
+            "key.bodyoffset" : 19399,
             "key.doc.comment" : "安全URL，不为nil",
             "key.doclength" : 26,
-            "key.docoffset" : 18195,
+            "key.docoffset" : 19319,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 266,
             "key.name" : "safeURL(_:)",
             "key.namelength" : 22,
-            "key.nameoffset" : 18244,
-            "key.offset" : 18232,
+            "key.nameoffset" : 19368,
+            "key.offset" : 19356,
             "key.substructure" : [
 
             ],
@@ -47157,16 +47711,16 @@
       },
       {
         "key.bodylength" : 551,
-        "key.bodyoffset" : 18559,
+        "key.bodyoffset" : 19683,
         "key.doc.comment" : "包装器安全转换，不为nil",
         "key.doclength" : 38,
-        "key.docoffset" : 18502,
+        "key.docoffset" : 19626,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 571,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 18550,
-        "key.offset" : 18540,
+        "key.nameoffset" : 19674,
+        "key.offset" : 19664,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47174,17 +47728,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18564
+                "key.offset" : 19688
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 18589,
+            "key.bodyoffset" : 19713,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "safeInt",
             "key.namelength" : 7,
-            "key.nameoffset" : 18575,
-            "key.offset" : 18571,
+            "key.nameoffset" : 19699,
+            "key.offset" : 19695,
             "key.typename" : "Int"
           },
           {
@@ -47193,17 +47747,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18623
+                "key.offset" : 19747
               }
             ],
             "key.bodylength" : 29,
-            "key.bodyoffset" : 18650,
+            "key.bodyoffset" : 19774,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 50,
             "key.name" : "safeBool",
             "key.namelength" : 8,
-            "key.nameoffset" : 18634,
-            "key.offset" : 18630,
+            "key.nameoffset" : 19758,
+            "key.offset" : 19754,
             "key.typename" : "Bool"
           },
           {
@@ -47212,17 +47766,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18685
+                "key.offset" : 19809
               }
             ],
             "key.bodylength" : 30,
-            "key.bodyoffset" : 18714,
+            "key.bodyoffset" : 19838,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 53,
             "key.name" : "safeFloat",
             "key.namelength" : 9,
-            "key.nameoffset" : 18696,
-            "key.offset" : 18692,
+            "key.nameoffset" : 19820,
+            "key.offset" : 19816,
             "key.typename" : "Float"
           },
           {
@@ -47231,17 +47785,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18750
+                "key.offset" : 19874
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 18781,
+            "key.bodyoffset" : 19905,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 56,
             "key.name" : "safeDouble",
             "key.namelength" : 10,
-            "key.nameoffset" : 18761,
-            "key.offset" : 18757,
+            "key.nameoffset" : 19885,
+            "key.offset" : 19881,
             "key.typename" : "Double"
           },
           {
@@ -47250,17 +47804,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18818
+                "key.offset" : 19942
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 18849,
+            "key.bodyoffset" : 19973,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 53,
             "key.name" : "safeString",
             "key.namelength" : 10,
-            "key.nameoffset" : 18829,
-            "key.offset" : 18825,
+            "key.nameoffset" : 19953,
+            "key.offset" : 19949,
             "key.typename" : "String"
           },
           {
@@ -47269,17 +47823,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18883
+                "key.offset" : 20007
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 18916,
+            "key.bodyoffset" : 20040,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 55,
             "key.name" : "safeNumber",
             "key.namelength" : 10,
-            "key.nameoffset" : 18894,
-            "key.offset" : 18890,
+            "key.nameoffset" : 20018,
+            "key.offset" : 20014,
             "key.typename" : "NSNumber"
           },
           {
@@ -47288,17 +47842,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18950
+                "key.offset" : 20074
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 18979,
+            "key.bodyoffset" : 20103,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 54,
             "key.name" : "safeArray",
             "key.namelength" : 9,
-            "key.nameoffset" : 18961,
-            "key.offset" : 18957,
+            "key.nameoffset" : 20085,
+            "key.offset" : 20081,
             "key.typename" : "[Any]"
           },
           {
@@ -47307,33 +47861,33 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19016
+                "key.offset" : 20140
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 19063,
+            "key.bodyoffset" : 20187,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 86,
             "key.name" : "safeDictionary",
             "key.namelength" : 14,
-            "key.nameoffset" : 19027,
-            "key.offset" : 19023,
+            "key.nameoffset" : 20151,
+            "key.offset" : 20147,
             "key.typename" : "[AnyHashable: Any]"
           }
         ]
       },
       {
         "key.bodylength" : 1620,
-        "key.bodyoffset" : 19171,
+        "key.bodyoffset" : 20295,
         "key.doc.comment" : "可选类安全转换，不为nil",
         "key.doclength" : 38,
-        "key.docoffset" : 19113,
+        "key.docoffset" : 20237,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 1641,
         "key.name" : "Optional",
         "key.namelength" : 8,
-        "key.nameoffset" : 19161,
-        "key.offset" : 19151,
+        "key.nameoffset" : 20285,
+        "key.offset" : 20275,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47341,17 +47895,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19176
+                "key.offset" : 20300
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 19201,
+            "key.bodyoffset" : 20325,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "safeInt",
             "key.namelength" : 7,
-            "key.nameoffset" : 19187,
-            "key.offset" : 19183,
+            "key.nameoffset" : 20311,
+            "key.offset" : 20307,
             "key.typename" : "Int"
           },
           {
@@ -47360,17 +47914,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19235
+                "key.offset" : 20359
               }
             ],
             "key.bodylength" : 29,
-            "key.bodyoffset" : 19262,
+            "key.bodyoffset" : 20386,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 50,
             "key.name" : "safeBool",
             "key.namelength" : 8,
-            "key.nameoffset" : 19246,
-            "key.offset" : 19242,
+            "key.nameoffset" : 20370,
+            "key.offset" : 20366,
             "key.typename" : "Bool"
           },
           {
@@ -47379,17 +47933,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19297
+                "key.offset" : 20421
               }
             ],
             "key.bodylength" : 30,
-            "key.bodyoffset" : 19326,
+            "key.bodyoffset" : 20450,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 53,
             "key.name" : "safeFloat",
             "key.namelength" : 9,
-            "key.nameoffset" : 19308,
-            "key.offset" : 19304,
+            "key.nameoffset" : 20432,
+            "key.offset" : 20428,
             "key.typename" : "Float"
           },
           {
@@ -47398,17 +47952,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19362
+                "key.offset" : 20486
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 19393,
+            "key.bodyoffset" : 20517,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 56,
             "key.name" : "safeDouble",
             "key.namelength" : 10,
-            "key.nameoffset" : 19373,
-            "key.offset" : 19369,
+            "key.nameoffset" : 20497,
+            "key.offset" : 20493,
             "key.typename" : "Double"
           },
           {
@@ -47417,17 +47971,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19430
+                "key.offset" : 20554
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 19461,
+            "key.bodyoffset" : 20585,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 53,
             "key.name" : "safeString",
             "key.namelength" : 10,
-            "key.nameoffset" : 19441,
-            "key.offset" : 19437,
+            "key.nameoffset" : 20565,
+            "key.offset" : 20561,
             "key.typename" : "String"
           },
           {
@@ -47436,17 +47990,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19495
+                "key.offset" : 20619
               }
             ],
             "key.bodylength" : 28,
-            "key.bodyoffset" : 19528,
+            "key.bodyoffset" : 20652,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 55,
             "key.name" : "safeNumber",
             "key.namelength" : 10,
-            "key.nameoffset" : 19506,
-            "key.offset" : 19502,
+            "key.nameoffset" : 20630,
+            "key.offset" : 20626,
             "key.typename" : "NSNumber"
           },
           {
@@ -47455,17 +48009,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19562
+                "key.offset" : 20686
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 19591,
+            "key.bodyoffset" : 20715,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 54,
             "key.name" : "safeArray",
             "key.namelength" : 9,
-            "key.nameoffset" : 19573,
-            "key.offset" : 19569,
+            "key.nameoffset" : 20697,
+            "key.offset" : 20693,
             "key.typename" : "[Any]"
           },
           {
@@ -47474,17 +48028,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19628
+                "key.offset" : 20752
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 19675,
+            "key.bodyoffset" : 20799,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 86,
             "key.name" : "safeDictionary",
             "key.namelength" : 14,
-            "key.nameoffset" : 19639,
-            "key.offset" : 19635,
+            "key.nameoffset" : 20763,
+            "key.offset" : 20759,
             "key.typename" : "[AnyHashable: Any]"
           },
           {
@@ -47493,17 +48047,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19731
+                "key.offset" : 20855
               }
             ],
             "key.bodylength" : 63,
-            "key.bodyoffset" : 19785,
+            "key.bodyoffset" : 20909,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 111,
             "key.name" : "isNone(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 19750,
-            "key.offset" : 19738,
+            "key.nameoffset" : 20874,
+            "key.offset" : 20862,
             "key.substructure" : [
 
             ],
@@ -47515,17 +48069,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19854
+                "key.offset" : 20978
               }
             ],
             "key.bodylength" : 20,
-            "key.bodyoffset" : 19879,
+            "key.bodyoffset" : 21003,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 39,
             "key.name" : "isSome",
             "key.namelength" : 6,
-            "key.nameoffset" : 19865,
-            "key.offset" : 19861,
+            "key.nameoffset" : 20989,
+            "key.offset" : 20985,
             "key.typename" : "Bool"
           },
           {
@@ -47534,17 +48088,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19905
+                "key.offset" : 21029
               }
             ],
             "key.bodylength" : 16,
-            "key.bodyoffset" : 19930,
+            "key.bodyoffset" : 21054,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 35,
             "key.name" : "isNone",
             "key.namelength" : 6,
-            "key.nameoffset" : 19916,
-            "key.offset" : 19912,
+            "key.nameoffset" : 21040,
+            "key.offset" : 21036,
             "key.typename" : "Bool"
           },
           {
@@ -47553,22 +48107,22 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19975
+                "key.offset" : 21099
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 19952
+                "key.offset" : 21076
               }
             ],
             "key.bodylength" : 68,
-            "key.bodyoffset" : 20031,
+            "key.bodyoffset" : 21155,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 118,
             "key.name" : "onSome(_:)",
             "key.namelength" : 34,
-            "key.nameoffset" : 19987,
-            "key.offset" : 19982,
+            "key.nameoffset" : 21111,
+            "key.offset" : 21106,
             "key.substructure" : [
 
             ],
@@ -47580,22 +48134,22 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20128
+                "key.offset" : 21252
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 20105
+                "key.offset" : 21229
               }
             ],
             "key.bodylength" : 55,
-            "key.bodyoffset" : 20177,
+            "key.bodyoffset" : 21301,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 98,
             "key.name" : "onNone(_:)",
             "key.namelength" : 27,
-            "key.nameoffset" : 20140,
-            "key.offset" : 20135,
+            "key.nameoffset" : 21264,
+            "key.offset" : 21259,
             "key.substructure" : [
 
             ],
@@ -47607,17 +48161,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20238
+                "key.offset" : 21362
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 20309,
+            "key.bodyoffset" : 21433,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 108,
             "key.name" : "or(_:)",
             "key.namelength" : 46,
-            "key.nameoffset" : 20250,
-            "key.offset" : 20245,
+            "key.nameoffset" : 21374,
+            "key.offset" : 21369,
             "key.substructure" : [
 
             ],
@@ -47629,25 +48183,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20358
+                "key.offset" : 21482
               }
             ],
             "key.bodylength" : 77,
-            "key.bodyoffset" : 20420,
+            "key.bodyoffset" : 21544,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 133,
             "key.name" : "then(_:)",
             "key.namelength" : 42,
-            "key.nameoffset" : 20370,
-            "key.offset" : 20365,
+            "key.nameoffset" : 21494,
+            "key.offset" : 21489,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.generic_type_param",
                 "key.length" : 1,
                 "key.name" : "T",
                 "key.namelength" : 1,
-                "key.nameoffset" : 20375,
-                "key.offset" : 20375
+                "key.nameoffset" : 21499,
+                "key.offset" : 21499
               }
             ],
             "key.typename" : "T?"
@@ -47658,30 +48212,30 @@
               {
                 "key.attribute" : "source.decl.attribute.rethrows",
                 "key.length" : 8,
-                "key.offset" : 20556
+                "key.offset" : 21680
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20503
+                "key.offset" : 21627
               }
             ],
             "key.bodylength" : 86,
-            "key.bodyoffset" : 20572,
+            "key.bodyoffset" : 21696,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 149,
             "key.name" : "then(_:)",
             "key.namelength" : 40,
-            "key.nameoffset" : 20515,
-            "key.offset" : 20510,
+            "key.nameoffset" : 21639,
+            "key.offset" : 21634,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.generic_type_param",
                 "key.length" : 1,
                 "key.name" : "T",
                 "key.namelength" : 1,
-                "key.nameoffset" : 20520,
-                "key.offset" : 20520
+                "key.nameoffset" : 21644,
+                "key.offset" : 21644
               }
             ],
             "key.typename" : "T?"
@@ -47692,17 +48246,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20664
+                "key.offset" : 21788
               }
             ],
             "key.bodylength" : 65,
-            "key.bodyoffset" : 20724,
+            "key.bodyoffset" : 21848,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 119,
             "key.name" : "filter(_:)",
             "key.namelength" : 38,
-            "key.nameoffset" : 20676,
-            "key.offset" : 20671,
+            "key.nameoffset" : 21800,
+            "key.offset" : 21795,
             "key.substructure" : [
 
             ],
@@ -47714,17 +48268,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 16,
         "key.name" : "MARK: - SafeType",
-        "key.offset" : 20797
+        "key.offset" : 21921
       },
       {
         "key.bodylength" : 418,
-        "key.bodyoffset" : 20828,
+        "key.bodyoffset" : 21952,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 433,
         "key.name" : "FW",
         "key.namelength" : 2,
-        "key.nameoffset" : 20824,
-        "key.offset" : 20814,
+        "key.nameoffset" : 21948,
+        "key.offset" : 21938,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47732,27 +48286,27 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20857
+                "key.offset" : 21981
               }
             ],
             "key.bodylength" : 36,
-            "key.bodyoffset" : 20918,
+            "key.bodyoffset" : 22042,
             "key.doc.comment" : "获取安全值",
             "key.doclength" : 20,
-            "key.docoffset" : 20833,
+            "key.docoffset" : 21957,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 91,
             "key.name" : "safeValue(_:)",
             "key.namelength" : 35,
-            "key.nameoffset" : 20876,
-            "key.offset" : 20864,
+            "key.nameoffset" : 22000,
+            "key.offset" : 21988,
             "key.substructure" : [
               {
                 "key.elements" : [
                   {
                     "key.kind" : "source.lang.swift.structure.elem.typeref",
                     "key.length" : 8,
-                    "key.offset" : 20889
+                    "key.offset" : 22013
                   }
                 ],
                 "key.inheritedtypes" : [
@@ -47764,8 +48318,8 @@
                 "key.length" : 11,
                 "key.name" : "T",
                 "key.namelength" : 1,
-                "key.nameoffset" : 20886,
-                "key.offset" : 20886
+                "key.nameoffset" : 22010,
+                "key.offset" : 22010
               }
             ],
             "key.typename" : "T"
@@ -47776,27 +48330,27 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20988
+                "key.offset" : 22112
               }
             ],
             "key.bodylength" : 34,
-            "key.bodyoffset" : 21050,
+            "key.bodyoffset" : 22174,
             "key.doc.comment" : "判断是否为空",
             "key.doclength" : 23,
-            "key.docoffset" : 20961,
+            "key.docoffset" : 22085,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 90,
             "key.name" : "isEmpty(_:)",
             "key.namelength" : 33,
-            "key.nameoffset" : 21007,
-            "key.offset" : 20995,
+            "key.nameoffset" : 22131,
+            "key.offset" : 22119,
             "key.substructure" : [
               {
                 "key.elements" : [
                   {
                     "key.kind" : "source.lang.swift.structure.elem.typeref",
                     "key.length" : 8,
-                    "key.offset" : 21018
+                    "key.offset" : 22142
                   }
                 ],
                 "key.inheritedtypes" : [
@@ -47808,8 +48362,8 @@
                 "key.length" : 11,
                 "key.name" : "T",
                 "key.namelength" : 1,
-                "key.nameoffset" : 21015,
-                "key.offset" : 21015
+                "key.nameoffset" : 22139,
+                "key.offset" : 22139
               }
             ],
             "key.typename" : "Bool"
@@ -47820,20 +48374,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21146
+                "key.offset" : 22270
               }
             ],
             "key.bodylength" : 48,
-            "key.bodyoffset" : 21196,
+            "key.bodyoffset" : 22320,
             "key.doc.comment" : "判断是否为none，兼容嵌套Optional",
             "key.doclength" : 47,
-            "key.docoffset" : 21095,
+            "key.docoffset" : 22219,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 92,
             "key.name" : "isNone(_:)",
             "key.namelength" : 21,
-            "key.nameoffset" : 21165,
-            "key.offset" : 21153,
+            "key.nameoffset" : 22289,
+            "key.offset" : 22277,
             "key.substructure" : [
 
             ],
@@ -47847,53 +48401,53 @@
           {
             "key.attribute" : "source.decl.attribute.public",
             "key.length" : 6,
-            "key.offset" : 21249
+            "key.offset" : 22373
           }
         ],
         "key.bodylength" : 70,
-        "key.bodyoffset" : 21275,
+        "key.bodyoffset" : 22399,
         "key.kind" : "source.lang.swift.decl.protocol",
         "key.length" : 90,
         "key.name" : "SafeType",
         "key.namelength" : 8,
-        "key.nameoffset" : 21265,
-        "key.offset" : 21256,
+        "key.nameoffset" : 22389,
+        "key.offset" : 22380,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
             "key.bodylength" : 5,
-            "key.bodyoffset" : 21308,
+            "key.bodyoffset" : 22432,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 34,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21291,
-            "key.offset" : 21280,
+            "key.nameoffset" : 22415,
+            "key.offset" : 22404,
             "key.typename" : "Self"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
             "key.bodylength" : 5,
-            "key.bodyoffset" : 21338,
+            "key.bodyoffset" : 22462,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 25,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 21323,
-            "key.offset" : 21319,
+            "key.nameoffset" : 22447,
+            "key.offset" : 22443,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 265,
-        "key.bodyoffset" : 21392,
+        "key.bodyoffset" : 22516,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 310,
         "key.name" : "Optional",
         "key.namelength" : 8,
-        "key.nameoffset" : 21358,
-        "key.offset" : 21348,
+        "key.nameoffset" : 22482,
+        "key.offset" : 22472,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47901,17 +48455,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21397
+                "key.offset" : 22521
               }
             ],
             "key.bodylength" : 19,
-            "key.bodyoffset" : 21435,
+            "key.bodyoffset" : 22559,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 51,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21415,
-            "key.offset" : 21404,
+            "key.nameoffset" : 22539,
+            "key.offset" : 22528,
             "key.typename" : "Wrapped"
           },
           {
@@ -47920,17 +48474,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21460
+                "key.offset" : 22584
               }
             ],
             "key.bodylength" : 67,
-            "key.bodyoffset" : 21486,
+            "key.bodyoffset" : 22610,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 87,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 21471,
-            "key.offset" : 21467,
+            "key.nameoffset" : 22595,
+            "key.offset" : 22591,
             "key.typename" : "Bool"
           },
           {
@@ -47939,29 +48493,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21559
+                "key.offset" : 22683
               }
             ],
             "key.bodylength" : 65,
-            "key.bodyoffset" : 21590,
+            "key.bodyoffset" : 22714,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 90,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21570,
-            "key.offset" : 21566,
+            "key.nameoffset" : 22694,
+            "key.offset" : 22690,
             "key.typename" : "Wrapped"
           }
         ]
       },
       {
         "key.bodylength" : 105,
-        "key.bodyoffset" : 21685,
+        "key.bodyoffset" : 22809,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 21675
+            "key.offset" : 22799
           }
         ],
         "key.inheritedtypes" : [
@@ -47973,8 +48527,8 @@
         "key.length" : 131,
         "key.name" : "Int",
         "key.namelength" : 3,
-        "key.nameoffset" : 21670,
-        "key.offset" : 21660,
+        "key.nameoffset" : 22794,
+        "key.offset" : 22784,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -47982,15 +48536,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21690
+                "key.offset" : 22814
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 33,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21708,
-            "key.offset" : 21697,
+            "key.nameoffset" : 22832,
+            "key.offset" : 22821,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -48000,29 +48554,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21735
+                "key.offset" : 22859
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 21761,
+            "key.bodyoffset" : 22885,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 21746,
-            "key.offset" : 21742,
+            "key.nameoffset" : 22870,
+            "key.offset" : 22866,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 106,
-        "key.bodyoffset" : 21818,
+        "key.bodyoffset" : 22942,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 21808
+            "key.offset" : 22932
           }
         ],
         "key.inheritedtypes" : [
@@ -48034,8 +48588,8 @@
         "key.length" : 133,
         "key.name" : "Int8",
         "key.namelength" : 4,
-        "key.nameoffset" : 21802,
-        "key.offset" : 21792,
+        "key.nameoffset" : 22926,
+        "key.offset" : 22916,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48043,15 +48597,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21823
+                "key.offset" : 22947
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 34,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21841,
-            "key.offset" : 21830,
+            "key.nameoffset" : 22965,
+            "key.offset" : 22954,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int8"
           },
@@ -48061,29 +48615,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21869
+                "key.offset" : 22993
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 21895,
+            "key.bodyoffset" : 23019,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 21880,
-            "key.offset" : 21876,
+            "key.nameoffset" : 23004,
+            "key.offset" : 23000,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 107,
-        "key.bodyoffset" : 21953,
+        "key.bodyoffset" : 23077,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 21943
+            "key.offset" : 23067
           }
         ],
         "key.inheritedtypes" : [
@@ -48095,8 +48649,8 @@
         "key.length" : 135,
         "key.name" : "Int16",
         "key.namelength" : 5,
-        "key.nameoffset" : 21936,
-        "key.offset" : 21926,
+        "key.nameoffset" : 23060,
+        "key.offset" : 23050,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48104,15 +48658,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21958
+                "key.offset" : 23082
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 21976,
-            "key.offset" : 21965,
+            "key.nameoffset" : 23100,
+            "key.offset" : 23089,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int16"
           },
@@ -48122,29 +48676,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22005
+                "key.offset" : 23129
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22031,
+            "key.bodyoffset" : 23155,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22016,
-            "key.offset" : 22012,
+            "key.nameoffset" : 23140,
+            "key.offset" : 23136,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 107,
-        "key.bodyoffset" : 22089,
+        "key.bodyoffset" : 23213,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22079
+            "key.offset" : 23203
           }
         ],
         "key.inheritedtypes" : [
@@ -48156,8 +48710,8 @@
         "key.length" : 135,
         "key.name" : "Int32",
         "key.namelength" : 5,
-        "key.nameoffset" : 22072,
-        "key.offset" : 22062,
+        "key.nameoffset" : 23196,
+        "key.offset" : 23186,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48165,15 +48719,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22094
+                "key.offset" : 23218
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22112,
-            "key.offset" : 22101,
+            "key.nameoffset" : 23236,
+            "key.offset" : 23225,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int32"
           },
@@ -48183,29 +48737,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22141
+                "key.offset" : 23265
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22167,
+            "key.bodyoffset" : 23291,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22152,
-            "key.offset" : 22148,
+            "key.nameoffset" : 23276,
+            "key.offset" : 23272,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 107,
-        "key.bodyoffset" : 22225,
+        "key.bodyoffset" : 23349,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22215
+            "key.offset" : 23339
           }
         ],
         "key.inheritedtypes" : [
@@ -48217,8 +48771,8 @@
         "key.length" : 135,
         "key.name" : "Int64",
         "key.namelength" : 5,
-        "key.nameoffset" : 22208,
-        "key.offset" : 22198,
+        "key.nameoffset" : 23332,
+        "key.offset" : 23322,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48226,15 +48780,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22230
+                "key.offset" : 23354
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22248,
-            "key.offset" : 22237,
+            "key.nameoffset" : 23372,
+            "key.offset" : 23361,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int64"
           },
@@ -48244,29 +48798,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22277
+                "key.offset" : 23401
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22303,
+            "key.bodyoffset" : 23427,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22288,
-            "key.offset" : 22284,
+            "key.nameoffset" : 23412,
+            "key.offset" : 23408,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 106,
-        "key.bodyoffset" : 22360,
+        "key.bodyoffset" : 23484,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22350
+            "key.offset" : 23474
           }
         ],
         "key.inheritedtypes" : [
@@ -48278,8 +48832,8 @@
         "key.length" : 133,
         "key.name" : "UInt",
         "key.namelength" : 4,
-        "key.nameoffset" : 22344,
-        "key.offset" : 22334,
+        "key.nameoffset" : 23468,
+        "key.offset" : 23458,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48287,15 +48841,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22365
+                "key.offset" : 23489
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 34,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22383,
-            "key.offset" : 22372,
+            "key.nameoffset" : 23507,
+            "key.offset" : 23496,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UInt"
           },
@@ -48305,29 +48859,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22411
+                "key.offset" : 23535
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22437,
+            "key.bodyoffset" : 23561,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22422,
-            "key.offset" : 22418,
+            "key.nameoffset" : 23546,
+            "key.offset" : 23542,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 107,
-        "key.bodyoffset" : 22495,
+        "key.bodyoffset" : 23619,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22485
+            "key.offset" : 23609
           }
         ],
         "key.inheritedtypes" : [
@@ -48339,8 +48893,8 @@
         "key.length" : 135,
         "key.name" : "UInt8",
         "key.namelength" : 5,
-        "key.nameoffset" : 22478,
-        "key.offset" : 22468,
+        "key.nameoffset" : 23602,
+        "key.offset" : 23592,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48348,15 +48902,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22500
+                "key.offset" : 23624
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22518,
-            "key.offset" : 22507,
+            "key.nameoffset" : 23642,
+            "key.offset" : 23631,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UInt8"
           },
@@ -48366,29 +48920,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22547
+                "key.offset" : 23671
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22573,
+            "key.bodyoffset" : 23697,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22558,
-            "key.offset" : 22554,
+            "key.nameoffset" : 23682,
+            "key.offset" : 23678,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 108,
-        "key.bodyoffset" : 22632,
+        "key.bodyoffset" : 23756,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22622
+            "key.offset" : 23746
           }
         ],
         "key.inheritedtypes" : [
@@ -48400,8 +48954,8 @@
         "key.length" : 137,
         "key.name" : "UInt16",
         "key.namelength" : 6,
-        "key.nameoffset" : 22614,
-        "key.offset" : 22604,
+        "key.nameoffset" : 23738,
+        "key.offset" : 23728,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48409,15 +48963,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22637
+                "key.offset" : 23761
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 36,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22655,
-            "key.offset" : 22644,
+            "key.nameoffset" : 23779,
+            "key.offset" : 23768,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UInt16"
           },
@@ -48427,29 +48981,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22685
+                "key.offset" : 23809
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22711,
+            "key.bodyoffset" : 23835,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22696,
-            "key.offset" : 22692,
+            "key.nameoffset" : 23820,
+            "key.offset" : 23816,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 108,
-        "key.bodyoffset" : 22770,
+        "key.bodyoffset" : 23894,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22760
+            "key.offset" : 23884
           }
         ],
         "key.inheritedtypes" : [
@@ -48461,8 +49015,8 @@
         "key.length" : 137,
         "key.name" : "UInt32",
         "key.namelength" : 6,
-        "key.nameoffset" : 22752,
-        "key.offset" : 22742,
+        "key.nameoffset" : 23876,
+        "key.offset" : 23866,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48470,15 +49024,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22775
+                "key.offset" : 23899
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 36,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22793,
-            "key.offset" : 22782,
+            "key.nameoffset" : 23917,
+            "key.offset" : 23906,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UInt32"
           },
@@ -48488,29 +49042,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22823
+                "key.offset" : 23947
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22849,
+            "key.bodyoffset" : 23973,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22834,
-            "key.offset" : 22830,
+            "key.nameoffset" : 23958,
+            "key.offset" : 23954,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 108,
-        "key.bodyoffset" : 22908,
+        "key.bodyoffset" : 24032,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 22898
+            "key.offset" : 24022
           }
         ],
         "key.inheritedtypes" : [
@@ -48522,8 +49076,8 @@
         "key.length" : 137,
         "key.name" : "UInt64",
         "key.namelength" : 6,
-        "key.nameoffset" : 22890,
-        "key.offset" : 22880,
+        "key.nameoffset" : 24014,
+        "key.offset" : 24004,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48531,15 +49085,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22913
+                "key.offset" : 24037
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 36,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 22931,
-            "key.offset" : 22920,
+            "key.nameoffset" : 24055,
+            "key.offset" : 24044,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UInt64"
           },
@@ -48549,29 +49103,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22961
+                "key.offset" : 24085
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 22987,
+            "key.bodyoffset" : 24111,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 22972,
-            "key.offset" : 22968,
+            "key.nameoffset" : 24096,
+            "key.offset" : 24092,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 107,
-        "key.bodyoffset" : 23045,
+        "key.bodyoffset" : 24169,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23035
+            "key.offset" : 24159
           }
         ],
         "key.inheritedtypes" : [
@@ -48583,8 +49137,8 @@
         "key.length" : 135,
         "key.name" : "Float",
         "key.namelength" : 5,
-        "key.nameoffset" : 23028,
-        "key.offset" : 23018,
+        "key.nameoffset" : 24152,
+        "key.offset" : 24142,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48592,15 +49146,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23050
+                "key.offset" : 24174
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23068,
-            "key.offset" : 23057,
+            "key.nameoffset" : 24192,
+            "key.offset" : 24181,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Float"
           },
@@ -48610,29 +49164,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23097
+                "key.offset" : 24221
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 23123,
+            "key.bodyoffset" : 24247,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 23108,
-            "key.offset" : 23104,
+            "key.nameoffset" : 24232,
+            "key.offset" : 24228,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 108,
-        "key.bodyoffset" : 23182,
+        "key.bodyoffset" : 24306,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23172
+            "key.offset" : 24296
           }
         ],
         "key.inheritedtypes" : [
@@ -48644,8 +49198,8 @@
         "key.length" : 137,
         "key.name" : "Double",
         "key.namelength" : 6,
-        "key.nameoffset" : 23164,
-        "key.offset" : 23154,
+        "key.nameoffset" : 24288,
+        "key.offset" : 24278,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48653,15 +49207,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23187
+                "key.offset" : 24311
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 36,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23205,
-            "key.offset" : 23194,
+            "key.nameoffset" : 24329,
+            "key.offset" : 24318,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Double"
           },
@@ -48671,29 +49225,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23235
+                "key.offset" : 24359
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 23261,
+            "key.bodyoffset" : 24385,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 23246,
-            "key.offset" : 23242,
+            "key.nameoffset" : 24370,
+            "key.offset" : 24366,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 106,
-        "key.bodyoffset" : 23318,
+        "key.bodyoffset" : 24442,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23308
+            "key.offset" : 24432
           }
         ],
         "key.inheritedtypes" : [
@@ -48705,8 +49259,8 @@
         "key.length" : 133,
         "key.name" : "Bool",
         "key.namelength" : 4,
-        "key.nameoffset" : 23302,
-        "key.offset" : 23292,
+        "key.nameoffset" : 24426,
+        "key.offset" : 24416,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48714,15 +49268,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23323
+                "key.offset" : 24447
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 34,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23341,
-            "key.offset" : 23330,
+            "key.nameoffset" : 24465,
+            "key.offset" : 24454,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -48732,29 +49286,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23369
+                "key.offset" : 24493
               }
             ],
             "key.bodylength" : 27,
-            "key.bodyoffset" : 23395,
+            "key.bodyoffset" : 24519,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 47,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 23380,
-            "key.offset" : 23376,
+            "key.nameoffset" : 24504,
+            "key.offset" : 24500,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 118,
-        "key.bodyoffset" : 23451,
+        "key.bodyoffset" : 24575,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23441
+            "key.offset" : 24565
           }
         ],
         "key.inheritedtypes" : [
@@ -48766,8 +49320,8 @@
         "key.length" : 144,
         "key.name" : "URL",
         "key.namelength" : 3,
-        "key.nameoffset" : 23436,
-        "key.offset" : 23426,
+        "key.nameoffset" : 24560,
+        "key.offset" : 24550,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48775,15 +49329,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23456
+                "key.offset" : 24580
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 42,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23474,
-            "key.offset" : 23463,
+            "key.nameoffset" : 24598,
+            "key.offset" : 24587,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "URL"
           },
@@ -48793,29 +49347,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23510
+                "key.offset" : 24634
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 23536,
+            "key.bodyoffset" : 24660,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 51,
             "key.name" : "isEmpty",
             "key.namelength" : 7,
-            "key.nameoffset" : 23521,
-            "key.offset" : 23517,
+            "key.nameoffset" : 24645,
+            "key.offset" : 24641,
             "key.typename" : "Bool"
           }
         ]
       },
       {
         "key.bodylength" : 48,
-        "key.bodyoffset" : 23597,
+        "key.bodyoffset" : 24721,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23587
+            "key.offset" : 24711
           }
         ],
         "key.inheritedtypes" : [
@@ -48827,8 +49381,8 @@
         "key.length" : 75,
         "key.name" : "Data",
         "key.namelength" : 4,
-        "key.nameoffset" : 23581,
-        "key.offset" : 23571,
+        "key.nameoffset" : 24705,
+        "key.offset" : 24695,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48836,15 +49390,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23602
+                "key.offset" : 24726
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 35,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23620,
-            "key.offset" : 23609,
+            "key.nameoffset" : 24744,
+            "key.offset" : 24733,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Data"
           }
@@ -48852,12 +49406,12 @@
       },
       {
         "key.bodylength" : 46,
-        "key.bodyoffset" : 23675,
+        "key.bodyoffset" : 24799,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23665
+            "key.offset" : 24789
           }
         ],
         "key.inheritedtypes" : [
@@ -48869,8 +49423,8 @@
         "key.length" : 75,
         "key.name" : "String",
         "key.namelength" : 6,
-        "key.nameoffset" : 23657,
-        "key.offset" : 23647,
+        "key.nameoffset" : 24781,
+        "key.offset" : 24771,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48878,15 +49432,15 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23680
+                "key.offset" : 24804
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 33,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23698,
-            "key.offset" : 23687,
+            "key.nameoffset" : 24822,
+            "key.offset" : 24811,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "String"
           }
@@ -48894,12 +49448,12 @@
       },
       {
         "key.bodylength" : 283,
-        "key.bodyoffset" : 23750,
+        "key.bodyoffset" : 24874,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 23740
+            "key.offset" : 24864
           }
         ],
         "key.inheritedtypes" : [
@@ -48911,8 +49465,8 @@
         "key.length" : 311,
         "key.name" : "Array",
         "key.namelength" : 5,
-        "key.nameoffset" : 23733,
-        "key.offset" : 23723,
+        "key.nameoffset" : 24857,
+        "key.offset" : 24847,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -48920,17 +49474,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23755
+                "key.offset" : 24879
               }
             ],
             "key.bodylength" : 11,
-            "key.bodyoffset" : 23800,
+            "key.bodyoffset" : 24924,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 50,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 23773,
-            "key.offset" : 23762,
+            "key.nameoffset" : 24897,
+            "key.offset" : 24886,
             "key.typename" : "Array<Element>"
           },
           {
@@ -48939,17 +49493,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23817
+                "key.offset" : 24941
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 23868,
+            "key.bodyoffset" : 24992,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 116,
             "key.name" : "safeElement(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 23829,
-            "key.offset" : 23824,
+            "key.nameoffset" : 24953,
+            "key.offset" : 24948,
             "key.substructure" : [
 
             ],
@@ -48961,17 +49515,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23945
+                "key.offset" : 25069
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 23992,
+            "key.bodyoffset" : 25116,
             "key.kind" : "source.lang.swift.decl.function.subscript",
             "key.length" : 80,
             "key.name" : "subscript(safe:)",
             "key.namelength" : 26,
-            "key.nameoffset" : 23952,
-            "key.offset" : 23952,
+            "key.nameoffset" : 25076,
+            "key.offset" : 25076,
             "key.substructure" : [
 
             ],
@@ -48981,12 +49535,12 @@
       },
       {
         "key.bodylength" : 61,
-        "key.bodyoffset" : 24060,
+        "key.bodyoffset" : 25184,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 24050
+            "key.offset" : 25174
           }
         ],
         "key.inheritedtypes" : [
@@ -48998,8 +49552,8 @@
         "key.length" : 87,
         "key.name" : "Set",
         "key.namelength" : 3,
-        "key.nameoffset" : 24045,
-        "key.offset" : 24035,
+        "key.nameoffset" : 25169,
+        "key.offset" : 25159,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -49007,29 +49561,29 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24065
+                "key.offset" : 25189
               }
             ],
             "key.bodylength" : 11,
-            "key.bodyoffset" : 24108,
+            "key.bodyoffset" : 25232,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 48,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 24083,
-            "key.offset" : 24072,
+            "key.nameoffset" : 25207,
+            "key.offset" : 25196,
             "key.typename" : "Set<Element>"
           }
         ]
       },
       {
         "key.bodylength" : 72,
-        "key.bodyoffset" : 24155,
+        "key.bodyoffset" : 25279,
         "key.elements" : [
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 8,
-            "key.offset" : 24145
+            "key.offset" : 25269
           }
         ],
         "key.inheritedtypes" : [
@@ -49041,8 +49595,8 @@
         "key.length" : 105,
         "key.name" : "Dictionary",
         "key.namelength" : 10,
-        "key.nameoffset" : 24133,
-        "key.offset" : 24123,
+        "key.nameoffset" : 25257,
+        "key.offset" : 25247,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -49050,17 +49604,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24160
+                "key.offset" : 25284
               }
             ],
             "key.bodylength" : 12,
-            "key.bodyoffset" : 24213,
+            "key.bodyoffset" : 25337,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 59,
             "key.name" : "safeValue",
             "key.namelength" : 9,
-            "key.nameoffset" : 24178,
-            "key.offset" : 24167,
+            "key.nameoffset" : 25302,
+            "key.offset" : 25291,
             "key.typename" : "Dictionary<Key, Value>"
           }
         ]
@@ -71934,7 +72488,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Toolkit\/Block.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 13400,
+    "key.length" : 13767,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -72420,19 +72974,19 @@
       },
       {
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
-        "key.length" : 17,
-        "key.name" : "MARK: Timer+Block",
+        "key.length" : 27,
+        "key.name" : "MARK: - DispatchQueue+Block",
         "key.offset" : 3218
       },
       {
-        "key.bodylength" : 2931,
-        "key.bodyoffset" : 3273,
+        "key.bodylength" : 288,
+        "key.bodyoffset" : 3291,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 2969,
+        "key.length" : 334,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 3246,
-        "key.offset" : 3236,
+        "key.nameoffset" : 3256,
+        "key.offset" : 3246,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -72440,20 +72994,62 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3618
+                "key.offset" : 3343
+              }
+            ],
+            "key.bodylength" : 162,
+            "key.bodyoffset" : 3410,
+            "key.doc.comment" : "主线程安全异步执行句柄",
+            "key.doclength" : 38,
+            "key.docoffset" : 3301,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 223,
+            "key.name" : "mainAsync(execute:)",
+            "key.namelength" : 46,
+            "key.nameoffset" : 3362,
+            "key.offset" : 3350,
+            "key.substructure" : [
+
+            ]
+          }
+        ]
+      },
+      {
+        "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
+        "key.length" : 17,
+        "key.name" : "MARK: Timer+Block",
+        "key.offset" : 3585
+      },
+      {
+        "key.bodylength" : 2931,
+        "key.bodyoffset" : 3640,
+        "key.kind" : "source.lang.swift.decl.extension",
+        "key.length" : 2969,
+        "key.name" : "Wrapper",
+        "key.namelength" : 7,
+        "key.nameoffset" : 3613,
+        "key.offset" : 3603,
+        "key.substructure" : [
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 3985
               }
             ],
             "key.bodylength" : 148,
-            "key.bodyoffset" : 3751,
+            "key.bodyoffset" : 4118,
             "key.doc.comment" : "创建Timer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n- Parameters:\n  - timeInterval: 时间\n  - target: 目标\n  - selector: 方法\n  - userInfo: 参数\n  - repeats: 是否重复\n- Returns: 定时器",
             "key.doclength" : 331,
-            "key.docoffset" : 3283,
+            "key.docoffset" : 3650,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 275,
             "key.name" : "commonTimer(timeInterval:target:selector:userInfo:repeats:)",
             "key.namelength" : 103,
-            "key.nameoffset" : 3637,
-            "key.offset" : 3625,
+            "key.nameoffset" : 4004,
+            "key.offset" : 3992,
             "key.substructure" : [
 
             ],
@@ -72465,20 +73061,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4177
+                "key.offset" : 4544
               }
             ],
             "key.bodylength" : 106,
-            "key.bodyoffset" : 4295,
+            "key.bodyoffset" : 4662,
             "key.doc.comment" : "创建Timer，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发\n- Parameters:\n  - timeInterval: 时间\n  - block: 代码块\n  - repeats: 是否重复\n- Returns: 定时器",
             "key.doclength" : 267,
-            "key.docoffset" : 3906,
+            "key.docoffset" : 4273,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 218,
             "key.name" : "commonTimer(timeInterval:block:repeats:)",
             "key.namelength" : 88,
-            "key.nameoffset" : 4196,
-            "key.offset" : 4184,
+            "key.nameoffset" : 4563,
+            "key.offset" : 4551,
             "key.substructure" : [
 
             ],
@@ -72490,20 +73086,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 4608
+                "key.offset" : 4975
               }
             ],
             "key.bodylength" : 82,
-            "key.bodyoffset" : 4697,
+            "key.bodyoffset" : 5064,
             "key.doc.comment" : "创建倒计时定时器\n- Parameters:\n  - countDown: 倒计时时间\n  - block: 每秒执行block，为0时自动停止\n- Returns: 定时器，可手工停止",
             "key.doclength" : 196,
-            "key.docoffset" : 4408,
+            "key.docoffset" : 4775,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 165,
             "key.name" : "commonTimer(countDown:block:)",
             "key.namelength" : 59,
-            "key.nameoffset" : 4627,
-            "key.offset" : 4615,
+            "key.nameoffset" : 4994,
+            "key.offset" : 4982,
             "key.substructure" : [
 
             ],
@@ -72515,20 +73111,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5180
+                "key.offset" : 5547
               }
             ],
             "key.bodylength" : 100,
-            "key.bodyoffset" : 5292,
+            "key.bodyoffset" : 5659,
             "key.doc.comment" : "创建Timer，使用block，需要调用addTimer:forMode:安排到当前的运行循环中(CommonModes避免ScrollView滚动时不触发)。\n\n示例：[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes]\n- Parameters:\n  - timeInterval: 时间\n  - block: 代码块\n  - repeats: 是否重复\n- Returns: 定时器",
             "key.doclength" : 390,
-            "key.docoffset" : 4786,
+            "key.docoffset" : 5153,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 206,
             "key.name" : "timer(timeInterval:block:repeats:)",
             "key.namelength" : 82,
-            "key.nameoffset" : 5199,
-            "key.offset" : 5187,
+            "key.nameoffset" : 5566,
+            "key.offset" : 5554,
             "key.substructure" : [
 
             ],
@@ -72540,20 +73136,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5628
+                "key.offset" : 5995
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 5749,
+            "key.bodyoffset" : 6116,
             "key.doc.comment" : "创建Timer，使用block，默认模式安排到当前的运行循环中\n- Parameters:\n  - timeInterval: 时间\n  - block: 代码块\n  - repeats: 是否重复\n- Returns: 定时器",
             "key.doclength" : 225,
-            "key.docoffset" : 5399,
+            "key.docoffset" : 5766,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 224,
             "key.name" : "scheduledTimer(timeInterval:block:repeats:)",
             "key.namelength" : 91,
-            "key.nameoffset" : 5647,
-            "key.offset" : 5635,
+            "key.nameoffset" : 6014,
+            "key.offset" : 6002,
             "key.substructure" : [
 
             ],
@@ -72565,20 +73161,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5891
+                "key.offset" : 6258
               }
             ],
             "key.bodylength" : 31,
-            "key.bodyoffset" : 5917,
+            "key.bodyoffset" : 6284,
             "key.doc.comment" : "暂停NSTimer",
             "key.doclength" : 18,
-            "key.docoffset" : 5869,
+            "key.docoffset" : 6236,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 51,
             "key.name" : "pauseTimer()",
             "key.namelength" : 12,
-            "key.nameoffset" : 5903,
-            "key.offset" : 5898,
+            "key.nameoffset" : 6270,
+            "key.offset" : 6265,
             "key.substructure" : [
 
             ]
@@ -72589,20 +73185,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 5977
+                "key.offset" : 6344
               }
             ],
             "key.bodylength" : 37,
-            "key.bodyoffset" : 6004,
+            "key.bodyoffset" : 6371,
             "key.doc.comment" : "开始NSTimer",
             "key.doclength" : 18,
-            "key.docoffset" : 5955,
+            "key.docoffset" : 6322,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 58,
             "key.name" : "resumeTimer()",
             "key.namelength" : 13,
-            "key.nameoffset" : 5989,
-            "key.offset" : 5984,
+            "key.nameoffset" : 6356,
+            "key.offset" : 6351,
             "key.substructure" : [
 
             ]
@@ -72613,20 +73209,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6087
+                "key.offset" : 6454
               }
             ],
             "key.bodylength" : 59,
-            "key.bodyoffset" : 6138,
+            "key.bodyoffset" : 6505,
             "key.doc.comment" : "延迟delay秒后开始NSTimer",
             "key.doclength" : 35,
-            "key.docoffset" : 6048,
+            "key.docoffset" : 6415,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 104,
             "key.name" : "resumeTimer(afterDelay:)",
             "key.namelength" : 37,
-            "key.nameoffset" : 6099,
-            "key.offset" : 6094,
+            "key.nameoffset" : 6466,
+            "key.offset" : 6461,
             "key.substructure" : [
 
             ]
@@ -72637,17 +73233,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 33,
         "key.name" : "MARK: - UIGestureRecognizer+Block",
-        "key.offset" : 6210
+        "key.offset" : 6577
       },
       {
         "key.bodylength" : 631,
-        "key.bodyoffset" : 6295,
+        "key.bodyoffset" : 6662,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 683,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 6254,
-        "key.offset" : 6244,
+        "key.nameoffset" : 6621,
+        "key.offset" : 6611,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -72655,20 +73251,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6338
+                "key.offset" : 6705
               }
             ],
             "key.bodylength" : 55,
-            "key.bodyoffset" : 6416,
+            "key.bodyoffset" : 6783,
             "key.doc.comment" : "从事件句柄初始化",
             "key.doclength" : 29,
-            "key.docoffset" : 6305,
+            "key.docoffset" : 6672,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 127,
             "key.name" : "gestureRecognizer(block:)",
             "key.namelength" : 49,
-            "key.nameoffset" : 6357,
-            "key.offset" : 6345,
+            "key.nameoffset" : 6724,
+            "key.offset" : 6712,
             "key.substructure" : [
 
             ],
@@ -72680,25 +73276,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6553
+                "key.offset" : 6920
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 6530
+                "key.offset" : 6897
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 6619,
+            "key.bodyoffset" : 6986,
             "key.doc.comment" : "添加事件句柄，返回唯一标志",
             "key.doclength" : 44,
-            "key.docoffset" : 6482,
+            "key.docoffset" : 6849,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 101,
             "key.name" : "addBlock(_:)",
             "key.namelength" : 42,
-            "key.nameoffset" : 6565,
-            "key.offset" : 6560,
+            "key.nameoffset" : 6932,
+            "key.offset" : 6927,
             "key.substructure" : [
 
             ],
@@ -72710,20 +73306,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6712
+                "key.offset" : 7079
               }
             ],
             "key.bodylength" : 47,
-            "key.bodyoffset" : 6760,
+            "key.bodyoffset" : 7127,
             "key.doc.comment" : "根据唯一标志移除事件句柄",
             "key.doclength" : 41,
-            "key.docoffset" : 6667,
+            "key.docoffset" : 7034,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 89,
             "key.name" : "removeBlock(_:)",
             "key.namelength" : 34,
-            "key.nameoffset" : 6724,
-            "key.offset" : 6719,
+            "key.nameoffset" : 7091,
+            "key.offset" : 7086,
             "key.substructure" : [
 
             ]
@@ -72734,20 +73330,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 6847
+                "key.offset" : 7214
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 6878,
+            "key.bodyoffset" : 7245,
             "key.doc.comment" : "移除所有事件句柄",
             "key.doclength" : 29,
-            "key.docoffset" : 6814,
+            "key.docoffset" : 7181,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 66,
             "key.name" : "removeAllBlocks()",
             "key.namelength" : 17,
-            "key.nameoffset" : 6859,
-            "key.offset" : 6854,
+            "key.nameoffset" : 7226,
+            "key.offset" : 7221,
             "key.substructure" : [
 
             ]
@@ -72758,17 +73354,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 18,
         "key.name" : "MARK: UIView+Block",
-        "key.offset" : 6932
+        "key.offset" : 7299
       },
       {
         "key.bodylength" : 1038,
-        "key.bodyoffset" : 6989,
+        "key.bodyoffset" : 7356,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 1077,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 6961,
-        "key.offset" : 6951,
+        "key.nameoffset" : 7328,
+        "key.offset" : 7318,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -72776,20 +73372,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7068
+                "key.offset" : 7435
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 7116,
+            "key.bodyoffset" : 7483,
             "key.doc.comment" : "获取当前视图添加的第一个点击手势，默认nil",
             "key.doclength" : 65,
-            "key.docoffset" : 6999,
+            "key.docoffset" : 7366,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 83,
             "key.name" : "tapGesture",
             "key.namelength" : 10,
-            "key.nameoffset" : 7079,
-            "key.offset" : 7075,
+            "key.nameoffset" : 7446,
+            "key.offset" : 7442,
             "key.typename" : "UITapGestureRecognizer?"
           },
           {
@@ -72798,20 +73394,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7237
+                "key.offset" : 7604
               }
             ],
             "key.bodylength" : 95,
-            "key.bodyoffset" : 7347,
+            "key.bodyoffset" : 7714,
             "key.doc.comment" : "添加点击手势事件，可自定义点击高亮句柄等",
             "key.doclength" : 65,
-            "key.docoffset" : 7168,
+            "key.docoffset" : 7535,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 199,
             "key.name" : "addTapGesture(target:action:customize:)",
             "key.namelength" : 96,
-            "key.nameoffset" : 7249,
-            "key.offset" : 7244,
+            "key.nameoffset" : 7616,
+            "key.offset" : 7611,
             "key.substructure" : [
 
             ]
@@ -72822,25 +73418,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7541
+                "key.offset" : 7908
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 7518
+                "key.offset" : 7885
               }
             ],
             "key.bodylength" : 73,
-            "key.bodyoffset" : 7662,
+            "key.bodyoffset" : 8029,
             "key.doc.comment" : "添加点击手势句柄，可自定义点击高亮句柄等",
             "key.doclength" : 65,
-            "key.docoffset" : 7449,
+            "key.docoffset" : 7816,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 188,
             "key.name" : "addTapGesture(block:customize:)",
             "key.namelength" : 97,
-            "key.nameoffset" : 7553,
-            "key.offset" : 7548,
+            "key.nameoffset" : 7920,
+            "key.offset" : 7915,
             "key.substructure" : [
 
             ],
@@ -72852,20 +73448,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7793
+                "key.offset" : 8160
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 7846,
+            "key.bodyoffset" : 8213,
             "key.doc.comment" : "根据唯一标志移除点击手势句柄",
             "key.doclength" : 47,
-            "key.docoffset" : 7742,
+            "key.docoffset" : 8109,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 99,
             "key.name" : "removeTapGesture(_:)",
             "key.namelength" : 39,
-            "key.nameoffset" : 7805,
-            "key.offset" : 7800,
+            "key.nameoffset" : 8172,
+            "key.offset" : 8167,
             "key.substructure" : [
 
             ]
@@ -72876,20 +73472,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 7938
+                "key.offset" : 8305
               }
             ],
             "key.bodylength" : 46,
-            "key.bodyoffset" : 7974,
+            "key.bodyoffset" : 8341,
             "key.doc.comment" : "移除所有点击手势",
             "key.doclength" : 29,
-            "key.docoffset" : 7905,
+            "key.docoffset" : 8272,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 76,
             "key.name" : "removeAllTapGestures()",
             "key.namelength" : 22,
-            "key.nameoffset" : 7950,
-            "key.offset" : 7945,
+            "key.nameoffset" : 8317,
+            "key.offset" : 8312,
             "key.substructure" : [
 
             ]
@@ -72900,17 +73496,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 21,
         "key.name" : "MARK: UIControl+Block",
-        "key.offset" : 8033
+        "key.offset" : 8400
       },
       {
         "key.bodylength" : 1196,
-        "key.bodyoffset" : 8096,
+        "key.bodyoffset" : 8463,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 1238,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 8065,
-        "key.offset" : 8055,
+        "key.nameoffset" : 8432,
+        "key.offset" : 8422,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -72918,25 +73514,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8156
+                "key.offset" : 8523
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8133
+                "key.offset" : 8500
               }
             ],
             "key.bodylength" : 61,
-            "key.bodyoffset" : 8258,
+            "key.bodyoffset" : 8625,
             "key.doc.comment" : "添加事件句柄",
             "key.doclength" : 23,
-            "key.docoffset" : 8106,
+            "key.docoffset" : 8473,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 157,
             "key.name" : "addBlock(_:for:)",
             "key.namelength" : 78,
-            "key.nameoffset" : 8168,
-            "key.offset" : 8163,
+            "key.nameoffset" : 8535,
+            "key.offset" : 8530,
             "key.substructure" : [
 
             ],
@@ -72948,20 +73544,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8371
+                "key.offset" : 8738
               }
             ],
             "key.bodylength" : 67,
-            "key.bodyoffset" : 8455,
+            "key.bodyoffset" : 8822,
             "key.doc.comment" : "根据唯一标志移除事件句柄",
             "key.doclength" : 41,
-            "key.docoffset" : 8326,
+            "key.docoffset" : 8693,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 145,
             "key.name" : "removeBlock(_:for:)",
             "key.namelength" : 70,
-            "key.nameoffset" : 8383,
-            "key.offset" : 8378,
+            "key.nameoffset" : 8750,
+            "key.offset" : 8745,
             "key.substructure" : [
 
             ]
@@ -72972,20 +73568,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8562
+                "key.offset" : 8929
               }
             ],
             "key.bodylength" : 59,
-            "key.bodyoffset" : 8627,
+            "key.bodyoffset" : 8994,
             "key.doc.comment" : "移除所有事件句柄",
             "key.doclength" : 29,
-            "key.docoffset" : 8529,
+            "key.docoffset" : 8896,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 118,
             "key.name" : "removeAllBlocks(for:)",
             "key.namelength" : 51,
-            "key.nameoffset" : 8574,
-            "key.offset" : 8569,
+            "key.nameoffset" : 8941,
+            "key.offset" : 8936,
             "key.substructure" : [
 
             ]
@@ -72996,20 +73592,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8720
+                "key.offset" : 9087
               }
             ],
             "key.bodylength" : 62,
-            "key.bodyoffset" : 8773,
+            "key.bodyoffset" : 9140,
             "key.doc.comment" : "添加点击事件",
             "key.doclength" : 23,
-            "key.docoffset" : 8693,
+            "key.docoffset" : 9060,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 109,
             "key.name" : "addTouch(target:action:)",
             "key.namelength" : 39,
-            "key.nameoffset" : 8732,
-            "key.offset" : 8727,
+            "key.nameoffset" : 9099,
+            "key.offset" : 9094,
             "key.substructure" : [
 
             ]
@@ -73020,25 +73616,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 8892
+                "key.offset" : 9259
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 8869
+                "key.offset" : 9236
               }
             ],
             "key.bodylength" : 46,
-            "key.bodyoffset" : 8956,
+            "key.bodyoffset" : 9323,
             "key.doc.comment" : "添加点击句柄",
             "key.doclength" : 23,
-            "key.docoffset" : 8842,
+            "key.docoffset" : 9209,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 104,
             "key.name" : "addTouch(block:)",
             "key.namelength" : 40,
-            "key.nameoffset" : 8904,
-            "key.offset" : 8899,
+            "key.nameoffset" : 9271,
+            "key.offset" : 9266,
             "key.substructure" : [
 
             ],
@@ -73050,20 +73646,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9054
+                "key.offset" : 9421
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 9107,
+            "key.bodyoffset" : 9474,
             "key.doc.comment" : "根据唯一标志移除点击句柄",
             "key.doclength" : 41,
-            "key.docoffset" : 9009,
+            "key.docoffset" : 9376,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 99,
             "key.name" : "removeTouchBlock(_:)",
             "key.namelength" : 39,
-            "key.nameoffset" : 9066,
-            "key.offset" : 9061,
+            "key.nameoffset" : 9433,
+            "key.offset" : 9428,
             "key.substructure" : [
 
             ]
@@ -73074,20 +73670,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9203
+                "key.offset" : 9570
               }
             ],
             "key.bodylength" : 46,
-            "key.bodyoffset" : 9239,
+            "key.bodyoffset" : 9606,
             "key.doc.comment" : "移除所有点击句柄",
             "key.doclength" : 29,
-            "key.docoffset" : 9170,
+            "key.docoffset" : 9537,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 76,
             "key.name" : "removeAllTouchBlocks()",
             "key.namelength" : 22,
-            "key.nameoffset" : 9215,
-            "key.offset" : 9210,
+            "key.nameoffset" : 9582,
+            "key.offset" : 9577,
             "key.substructure" : [
 
             ]
@@ -73098,20 +73694,20 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 27,
         "key.name" : "MARK: UIBarButtonItem+Block",
-        "key.offset" : 9298
+        "key.offset" : 9665
       },
       {
         "key.bodylength" : 957,
-        "key.bodyoffset" : 9510,
+        "key.bodyoffset" : 9877,
         "key.doc.comment" : "iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可",
         "key.doclength" : 137,
-        "key.docoffset" : 9326,
+        "key.docoffset" : 9693,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 1005,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 9473,
-        "key.offset" : 9463,
+        "key.nameoffset" : 9840,
+        "key.offset" : 9830,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -73119,20 +73715,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9622
+                "key.offset" : 9989
               }
             ],
             "key.bodylength" : 81,
-            "key.bodyoffset" : 9713,
+            "key.bodyoffset" : 10080,
             "key.doc.comment" : "使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等",
             "key.doclength" : 98,
-            "key.docoffset" : 9520,
+            "key.docoffset" : 9887,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 166,
             "key.name" : "item(object:target:action:)",
             "key.namelength" : 51,
-            "key.nameoffset" : 9641,
-            "key.offset" : 9629,
+            "key.nameoffset" : 10008,
+            "key.offset" : 9996,
             "key.substructure" : [
 
             ],
@@ -73144,20 +73740,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 9903
+                "key.offset" : 10270
               }
             ],
             "key.bodylength" : 63,
-            "key.bodyoffset" : 9986,
+            "key.bodyoffset" : 10353,
             "key.doc.comment" : "使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等",
             "key.doclength" : 98,
-            "key.docoffset" : 9801,
+            "key.docoffset" : 10168,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 140,
             "key.name" : "item(object:block:)",
             "key.namelength" : 43,
-            "key.nameoffset" : 9922,
-            "key.offset" : 9910,
+            "key.nameoffset" : 10289,
+            "key.offset" : 10277,
             "key.substructure" : [
 
             ],
@@ -73169,20 +73765,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10136
+                "key.offset" : 10503
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 10196,
+            "key.bodyoffset" : 10563,
             "key.doc.comment" : "自定义标题样式属性，兼容appearance，默认nil同系统",
             "key.doclength" : 72,
-            "key.docoffset" : 10060,
+            "key.docoffset" : 10427,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 161,
             "key.name" : "titleAttributes",
             "key.namelength" : 15,
-            "key.nameoffset" : 10147,
-            "key.offset" : 10143,
+            "key.nameoffset" : 10514,
+            "key.offset" : 10510,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "[NSAttributedString.Key: Any]?"
           },
@@ -73192,20 +73788,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10372
+                "key.offset" : 10739
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 10421,
+            "key.bodyoffset" : 10788,
             "key.doc.comment" : "设置当前Item触发句柄，nil时清空句柄",
             "key.doclength" : 54,
-            "key.docoffset" : 10314,
+            "key.docoffset" : 10681,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 82,
             "key.name" : "setBlock(_:)",
             "key.namelength" : 35,
-            "key.nameoffset" : 10384,
-            "key.offset" : 10379,
+            "key.nameoffset" : 10751,
+            "key.offset" : 10746,
             "key.substructure" : [
 
             ]
@@ -73216,17 +73812,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 28,
         "key.name" : "MARK: UIViewController+Block",
-        "key.offset" : 10473
+        "key.offset" : 10840
       },
       {
         "key.bodylength" : 2848,
-        "key.bodyoffset" : 10550,
+        "key.bodyoffset" : 10917,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2897,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 10512,
-        "key.offset" : 10502,
+        "key.nameoffset" : 10879,
+        "key.offset" : 10869,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -73234,20 +73830,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10598
+                "key.offset" : 10965
               }
             ],
             "key.bodylength" : 87,
-            "key.bodyoffset" : 10625,
+            "key.bodyoffset" : 10992,
             "key.doc.comment" : "快捷设置导航栏标题文字",
             "key.doclength" : 38,
-            "key.docoffset" : 10556,
+            "key.docoffset" : 10923,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 108,
             "key.name" : "title",
             "key.namelength" : 5,
-            "key.nameoffset" : 10609,
-            "key.offset" : 10605,
+            "key.nameoffset" : 10976,
+            "key.offset" : 10972,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "String?"
           },
@@ -73257,20 +73853,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 10851
+                "key.offset" : 11218
               }
             ],
             "key.bodylength" : 99,
-            "key.bodyoffset" : 10881,
+            "key.bodyoffset" : 11248,
             "key.doc.comment" : "设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效",
             "key.doclength" : 124,
-            "key.docoffset" : 10723,
+            "key.docoffset" : 11090,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 123,
             "key.name" : "backBarItem",
             "key.namelength" : 11,
-            "key.nameoffset" : 10862,
-            "key.offset" : 10858,
+            "key.nameoffset" : 11229,
+            "key.offset" : 11225,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Any?"
           },
@@ -73280,20 +73876,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11119
+                "key.offset" : 11486
               }
             ],
             "key.bodylength" : 99,
-            "key.bodyoffset" : 11149,
+            "key.bodyoffset" : 11516,
             "key.doc.comment" : "设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效",
             "key.doclength" : 124,
-            "key.docoffset" : 10991,
+            "key.docoffset" : 11358,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 123,
             "key.name" : "leftBarItem",
             "key.namelength" : 11,
-            "key.nameoffset" : 11130,
-            "key.offset" : 11126,
+            "key.nameoffset" : 11497,
+            "key.offset" : 11493,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Any?"
           },
@@ -73303,20 +73899,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11387
+                "key.offset" : 11754
               }
             ],
             "key.bodylength" : 101,
-            "key.bodyoffset" : 11418,
+            "key.bodyoffset" : 11785,
             "key.doc.comment" : "设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效",
             "key.doclength" : 124,
-            "key.docoffset" : 11259,
+            "key.docoffset" : 11626,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 126,
             "key.name" : "rightBarItem",
             "key.namelength" : 12,
-            "key.nameoffset" : 11398,
-            "key.offset" : 11394,
+            "key.nameoffset" : 11765,
+            "key.offset" : 11761,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Any?"
           },
@@ -73326,20 +73922,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11633
+                "key.offset" : 12000
               }
             ],
             "key.bodylength" : 78,
-            "key.bodyoffset" : 11708,
+            "key.bodyoffset" : 12075,
             "key.doc.comment" : "快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效",
             "key.doclength" : 99,
-            "key.docoffset" : 11530,
+            "key.docoffset" : 11897,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 147,
             "key.name" : "setLeftBarItem(_:target:action:)",
             "key.namelength" : 61,
-            "key.nameoffset" : 11645,
-            "key.offset" : 11640,
+            "key.nameoffset" : 12012,
+            "key.offset" : 12007,
             "key.substructure" : [
 
             ]
@@ -73350,20 +73946,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 11914
+                "key.offset" : 12281
               }
             ],
             "key.bodylength" : 60,
-            "key.bodyoffset" : 11990,
+            "key.bodyoffset" : 12357,
             "key.doc.comment" : "快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效",
             "key.doclength" : 113,
-            "key.docoffset" : 11797,
+            "key.docoffset" : 12164,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 130,
             "key.name" : "setLeftBarItem(_:block:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 11926,
-            "key.offset" : 11921,
+            "key.nameoffset" : 12293,
+            "key.offset" : 12288,
             "key.substructure" : [
 
             ]
@@ -73374,20 +73970,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12103
+                "key.offset" : 12470
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 12179,
+            "key.bodyoffset" : 12546,
             "key.doc.comment" : "快捷设置导航栏右侧按钮",
             "key.doclength" : 38,
-            "key.docoffset" : 12061,
+            "key.docoffset" : 12428,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 149,
             "key.name" : "setRightBarItem(_:target:action:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 12115,
-            "key.offset" : 12110,
+            "key.nameoffset" : 12482,
+            "key.offset" : 12477,
             "key.substructure" : [
 
             ]
@@ -73398,20 +73994,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12325
+                "key.offset" : 12692
               }
             ],
             "key.bodylength" : 61,
-            "key.bodyoffset" : 12402,
+            "key.bodyoffset" : 12769,
             "key.doc.comment" : "快捷设置导航栏右侧按钮，block事件",
             "key.doclength" : 52,
-            "key.docoffset" : 12269,
+            "key.docoffset" : 12636,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 132,
             "key.name" : "setRightBarItem(_:block:)",
             "key.namelength" : 63,
-            "key.nameoffset" : 12337,
-            "key.offset" : 12332,
+            "key.nameoffset" : 12704,
+            "key.offset" : 12699,
             "key.substructure" : [
 
             ]
@@ -73422,20 +74018,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12573
+                "key.offset" : 12940
               }
             ],
             "key.bodylength" : 78,
-            "key.bodyoffset" : 12648,
+            "key.bodyoffset" : 13015,
             "key.doc.comment" : "快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效",
             "key.doclength" : 99,
-            "key.docoffset" : 12470,
+            "key.docoffset" : 12837,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 147,
             "key.name" : "addLeftBarItem(_:target:action:)",
             "key.namelength" : 61,
-            "key.nameoffset" : 12585,
-            "key.offset" : 12580,
+            "key.nameoffset" : 12952,
+            "key.offset" : 12947,
             "key.substructure" : [
 
             ]
@@ -73446,20 +74042,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 12850
+                "key.offset" : 13217
               }
             ],
             "key.bodylength" : 60,
-            "key.bodyoffset" : 12926,
+            "key.bodyoffset" : 13293,
             "key.doc.comment" : "快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效",
             "key.doclength" : 113,
-            "key.docoffset" : 12733,
+            "key.docoffset" : 13100,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 130,
             "key.name" : "addLeftBarItem(_:block:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 12862,
-            "key.offset" : 12857,
+            "key.nameoffset" : 13229,
+            "key.offset" : 13224,
             "key.substructure" : [
 
             ]
@@ -73470,20 +74066,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13035
+                "key.offset" : 13402
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 13111,
+            "key.bodyoffset" : 13478,
             "key.doc.comment" : "快捷添加导航栏右侧按钮",
             "key.doclength" : 38,
-            "key.docoffset" : 12993,
+            "key.docoffset" : 13360,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 149,
             "key.name" : "addRightBarItem(_:target:action:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 13047,
-            "key.offset" : 13042,
+            "key.nameoffset" : 13414,
+            "key.offset" : 13409,
             "key.substructure" : [
 
             ]
@@ -73494,20 +74090,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13253
+                "key.offset" : 13620
               }
             ],
             "key.bodylength" : 61,
-            "key.bodyoffset" : 13330,
+            "key.bodyoffset" : 13697,
             "key.doc.comment" : "快捷添加导航栏右侧按钮，block事件",
             "key.doclength" : 52,
-            "key.docoffset" : 13197,
+            "key.docoffset" : 13564,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 132,
             "key.name" : "addRightBarItem(_:block:)",
             "key.namelength" : 63,
-            "key.nameoffset" : 13265,
-            "key.offset" : 13260,
+            "key.nameoffset" : 13632,
+            "key.offset" : 13627,
             "key.substructure" : [
 
             ]
