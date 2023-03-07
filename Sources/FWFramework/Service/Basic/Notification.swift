@@ -18,6 +18,9 @@ import UserNotifications
     @objc(sharedInstance)
     public static let shared = NotificationManager()
     
+    /// 通知代理，设置后优先调用
+    public weak var delegate: UNUserNotificationCenterDelegate?
+    
     // MARK: - Authorize
     /// 异步查询通知权限状态，当前线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
@@ -107,28 +110,38 @@ import UserNotifications
     }
     
     // MARK: - UNUserNotificationCenterDelegate
-    /// 前台收到推送
+    /// 前台收到推送，notification.request.trigger为UNPushNotificationTrigger时为远程推送，否则本地推送
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // 远程推送
+        if delegate?.userNotificationCenter?(center, willPresent: notification, withCompletionHandler: completionHandler) != nil {
+            return
+        }
+        
         if notification.request.trigger is UNPushNotificationTrigger {
             completionHandler([.badge, .sound, .alert])
-        // 本地推送
         } else {
             completionHandler([.badge, .sound, .alert])
         }
     }
     
-    /// 后台收到推送
+    /// 后台收到推送，response.notification.request.trigger为UNPushNotificationTrigger时为远程推送，否则本地推送
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // 远程推送
+        if delegate?.userNotificationCenter?(center, didReceive: response, withCompletionHandler: completionHandler) != nil {
+            return
+        }
+        
         if response.notification.request.trigger is UNPushNotificationTrigger {
             handleRemoteNotification(response)
             completionHandler()
-        // 本地推送
         } else {
             handleLocalNotification(response)
             completionHandler()
         }
+    }
+    
+    /// 打开推送设置
+    @available(iOS 12.0, *)
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
+        delegate?.userNotificationCenter?(center, openSettingsFor: notification)
     }
     
 }
