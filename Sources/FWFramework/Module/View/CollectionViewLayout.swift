@@ -224,7 +224,7 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
             if isPagingCenter {
                 newOffset = candidateAttributesForRect.center.x - collectionView.bounds.size.width / 2
             } else {
-                newOffset = candidateAttributesForRect.center.x - sectionInset.left - itemSize.width / 2
+                newOffset = candidateAttributesForRect.center.x - collectionView.contentInset.left - sectionInset.left - itemSize.width / 2
             }
             offset = newOffset - collectionView.contentOffset.x
             
@@ -236,7 +236,7 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
             if isPagingCenter {
                 newOffset = candidateAttributesForRect.center.y - collectionView.bounds.size.height / 2
             } else {
-                newOffset = candidateAttributesForRect.center.y - sectionInset.top - itemSize.height / 2
+                newOffset = candidateAttributesForRect.center.y - collectionView.contentInset.top - sectionInset.top - itemSize.height / 2
             }
             offset = newOffset - collectionView.contentOffset.y
             
@@ -272,13 +272,13 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
             if isPagingCenter {
                 proposedCenterOffset = proposedContentOffset.x + collectionView.bounds.size.width / 2
             } else {
-                proposedCenterOffset = proposedContentOffset.x + sectionInset.left + itemSize.width / 2
+                proposedCenterOffset = proposedContentOffset.x + collectionView.contentInset.left + sectionInset.left + itemSize.width / 2
             }
         case .vertical:
             if isPagingCenter {
                 proposedCenterOffset = proposedContentOffset.y + collectionView.bounds.size.height / 2
             } else {
-                proposedCenterOffset = proposedContentOffset.y + sectionInset.top + itemSize.height / 2
+                proposedCenterOffset = proposedContentOffset.y + collectionView.contentInset.top + sectionInset.top + itemSize.height / 2
             }
         default:
             proposedCenterOffset = .zero
