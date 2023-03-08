@@ -221,7 +221,11 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
         let offset: CGFloat
         switch scrollDirection {
         case .horizontal:
-            newOffset = candidateAttributesForRect.center.x - collectionView.bounds.size.width / 2
+            if isPagingCenter {
+                newOffset = candidateAttributesForRect.center.x - collectionView.bounds.size.width / 2
+            } else {
+                newOffset = candidateAttributesForRect.center.x - sectionInset.left - itemSize.width / 2
+            }
             offset = newOffset - collectionView.contentOffset.x
             
             if (velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0) {
@@ -229,7 +233,11 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
             }
             return CGPoint(x: newOffset, y: proposedContentOffset.y)
         case .vertical:
-            newOffset = candidateAttributesForRect.center.y - collectionView.bounds.size.height / 2
+            if isPagingCenter {
+                newOffset = candidateAttributesForRect.center.y - collectionView.bounds.size.height / 2
+            } else {
+                newOffset = candidateAttributesForRect.center.y - sectionInset.top - itemSize.height / 2
+            }
             offset = newOffset - collectionView.contentOffset.y
             
             if (velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0) {
@@ -261,9 +269,17 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
         
         switch scrollDirection {
         case .horizontal:
-            proposedCenterOffset = proposedContentOffset.x + collectionView.bounds.size.width / 2
+            if isPagingCenter {
+                proposedCenterOffset = proposedContentOffset.x + collectionView.bounds.size.width / 2
+            } else {
+                proposedCenterOffset = proposedContentOffset.x + sectionInset.left + itemSize.width / 2
+            }
         case .vertical:
-            proposedCenterOffset = proposedContentOffset.y + collectionView.bounds.size.height / 2
+            if isPagingCenter {
+                proposedCenterOffset = proposedContentOffset.y + collectionView.bounds.size.height / 2
+            } else {
+                proposedCenterOffset = proposedContentOffset.y + sectionInset.top + itemSize.height / 2
+            }
         default:
             proposedCenterOffset = .zero
         }
