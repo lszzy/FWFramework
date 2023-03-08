@@ -7,25 +7,127 @@
 
 import UIKit
 
-// MARK: - CollectionViewCenterLayout
-/// UICollectionView居中布局
+// MARK: - CollectionViewFlowLayout
+/// 集合视图流式布局，支持纵向渲染和分页滚动效果
+///
+/// 系统FlowLayout水平滚动时默认横向渲染，可通过本类开启纵向渲染，示例效果如下：
+/// [0  3  6   9 ]      [0  1   2   3 ]
+/// [1  4  7  10] => [4  5   6   7 ]
+/// [2  5  8  11]      [8  9  10 11]
 ///
 /// [CenteredCollectionView](https://github.com/BenEmdon/CenteredCollectionView)
-open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
+open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
     
-    open var isPagingEnabled = true
+    // MARK: - Vertical
+    /// 是否启用元素纵向渲染，默认关闭，开启时需设置渲染总数itemRenderCount
+    open var itemRenderVertical = false
+    /// 纵向渲染列数，开启itemRenderVertical且大于0时生效
+    open var verticalColumnCount: Int = 0
+    /// 纵向渲染行数，开启itemRenderVertical且大于0时生效
+    open var verticalRowCount: Int = 0
     
-    open var currentPage: Int? {
-        guard let collectionView = collectionView else { return nil }
-        let currentCenteredPoint = CGPoint(x: collectionView.contentOffset.x + collectionView.bounds.width/2, y: collectionView.contentOffset.y + collectionView.bounds.height/2)
-        return collectionView.indexPathForItem(at: currentCenteredPoint)?.row
+    private var allAttributes: [UICollectionViewLayoutAttributes] = []
+    
+    /// 计算实际渲染总数，超出部分需渲染空数据，一般numberOfItems中调用
+    open func itemRenderCount(_ itemCount: Int) -> Int {
+        guard verticalColumnCount > 0,
+              verticalRowCount > 0 else { return itemCount }
+        
+        let pageCount = verticalColumnCount * verticalRowCount
+        let page = ceil(Double(itemCount) / Double(pageCount))
+        return Int(page) * pageCount
     }
     
-    private var lastCollectionViewSize: CGSize = CGSize.zero
-    private var lastScrollDirection: UICollectionView.ScrollDirection = .horizontal
-    private var lastItemSize: CGSize = CGSize.zero
+    /// 转换指定indexPath为纵向索引indexPath，一般无需调用
+    open func verticalIndexPath(_ indexPath: IndexPath) -> IndexPath {
+        guard verticalColumnCount > 0,
+              verticalRowCount > 0 else { return indexPath }
+        
+        let page = indexPath.item / (verticalColumnCount * verticalRowCount)
+        let x = (indexPath.item % (verticalColumnCount * verticalRowCount)) / verticalRowCount
+        let y = indexPath.item % verticalRowCount + page * verticalRowCount
+        let item = y * verticalColumnCount + x
+        return IndexPath(item: item, section: indexPath.section)
+    }
     
-    private var pageWidth: CGFloat {
+    open override func prepare() {
+        super.prepare()
+        self.fw_sectionConfigPrepareLayout()
+        guard let collectionView = collectionView,
+              itemRenderVertical,
+              verticalColumnCount > 0,
+              verticalRowCount > 0 else { return }
+        
+        allAttributes.removeAll()
+        let sectionCount = collectionView.numberOfSections
+        for section in 0 ..< sectionCount {
+            let itemCount = collectionView.numberOfItems(inSection: section)
+            for item in 0 ..< itemCount {
+                if let attributes = layoutAttributesForItem(at: IndexPath(item: item, section: section)) {
+                    allAttributes.append(attributes)
+                }
+            }
+        }
+    }
+    
+    open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        guard itemRenderVertical,
+              verticalColumnCount > 0,
+              verticalRowCount > 0 else {
+            return super.layoutAttributesForItem(at: indexPath)
+        }
+        
+        let page = indexPath.item / (verticalColumnCount * verticalRowCount)
+        let x = indexPath.item % verticalColumnCount + page * verticalColumnCount
+        let y = indexPath.item / verticalColumnCount - page * verticalRowCount
+        let item = x * verticalRowCount + y
+        let attributes = super.layoutAttributesForItem(at: IndexPath(item: item, section: indexPath.section))
+        attributes?.indexPath = indexPath
+        return attributes
+    }
+    
+    open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        var newAttributes: [UICollectionViewLayoutAttributes] = []
+        if let attributes = super.layoutAttributesForElements(in: rect) {
+            if itemRenderVertical,
+               verticalColumnCount > 0,
+               verticalRowCount > 0 {
+                for attribute in attributes {
+                    if attribute.representedElementCategory != .cell {
+                        newAttributes.append(attribute)
+                        continue
+                    }
+                    for newAttribute in allAttributes {
+                        if attribute.indexPath.section == newAttribute.indexPath.section,
+                           attribute.indexPath.item == newAttribute.indexPath.item {
+                            newAttributes.append(newAttribute)
+                            break
+                        }
+                    }
+                }
+            } else {
+                newAttributes.append(contentsOf: attributes)
+            }
+        }
+        
+        let sectionAttributes = fw_sectionConfigLayoutAttributes(forElementsIn: rect)
+        newAttributes.append(contentsOf: sectionAttributes)
+        return newAttributes
+    }
+    
+    // MARK: - Paging
+    /// 是否启用分页滚动，默认false。需设置decelerationRate为fast且关闭集合视图isPagingEnabled
+    open var isPagingEnabled = false
+    
+    /// 获取当前页数，可能为nil
+    open var currentPage: Int? {
+        guard let collectionView = collectionView else { return nil }
+        let centerPoint = CGPoint(x: collectionView.contentOffset.x + collectionView.bounds.width / 2, y: collectionView.contentOffset.y + collectionView.bounds.height / 2)
+        return collectionView.indexPathForItem(at: centerPoint)?.row
+    }
+    
+    /// 获取每页宽度，必须设置itemSize
+    open var pageWidth: CGFloat {
         switch scrollDirection {
         case .horizontal:
             return itemSize.width + minimumLineSpacing
@@ -36,19 +138,12 @@ open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
         }
     }
     
-    public override init() {
-        super.init()
-        scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
-    }
+    private var lastCollectionViewSize: CGSize = .zero
+    private var lastScrollDirection: UICollectionView.ScrollDirection = .vertical
+    private var lastItemSize: CGSize = .zero
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
-    }
-    
-    open func scrollToPage(_ index: Int, animated: Bool) {
+    /// 滚动到指定页数
+    open func scrollToPage(_ index: Int, animated: Bool = true) {
         guard let collectionView = collectionView else { return }
         
         let proposedContentOffset: CGPoint
@@ -71,7 +166,7 @@ open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
     
     override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         super.invalidateLayout(with: context)
-        guard let collectionView = collectionView else { return }
+        guard isPagingEnabled, let collectionView = collectionView else { return }
         
         let currentCollectionViewSize = collectionView.bounds.size
         if (!currentCollectionViewSize.equalTo(lastCollectionViewSize) || lastScrollDirection != scrollDirection || lastItemSize != itemSize), !currentCollectionViewSize.equalTo(.zero) {
@@ -95,16 +190,18 @@ open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
     }
     
     override open func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        guard let collectionView = collectionView else { return proposedContentOffset }
+        guard isPagingEnabled else {
+            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+        }
         
-        let proposedRect: CGRect = determineProposedRect(collectionView: collectionView, proposedContentOffset: proposedContentOffset)
-        
+        guard let collectionView = collectionView else {
+            return proposedContentOffset
+        }
+        let proposedRect = determineProposedRect(collectionView: collectionView, proposedContentOffset: proposedContentOffset)
         guard let layoutAttributes = layoutAttributesForElements(in: proposedRect),
-            let candidateAttributesForRect = attributesForRect(
-                collectionView: collectionView,
-                layoutAttributes: layoutAttributes,
-                proposedContentOffset: proposedContentOffset
-            ) else { return proposedContentOffset }
+              let candidateAttributesForRect = attributesForRect(collectionView: collectionView, layoutAttributes: layoutAttributes, proposedContentOffset: proposedContentOffset) else {
+            return proposedContentOffset
+        }
         
         var newOffset: CGFloat
         let offset: CGFloat
@@ -114,21 +211,17 @@ open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
             offset = newOffset - collectionView.contentOffset.x
             
             if (velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0) {
-                let pageWidth = itemSize.width + minimumLineSpacing
                 newOffset += velocity.x > 0 ? pageWidth : -pageWidth
             }
             return CGPoint(x: newOffset, y: proposedContentOffset.y)
-            
         case .vertical:
             newOffset = candidateAttributesForRect.center.y - collectionView.bounds.size.height / 2
             offset = newOffset - collectionView.contentOffset.y
             
             if (velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0) {
-                let pageHeight = itemSize.height + minimumLineSpacing
-                newOffset += velocity.y > 0 ? pageHeight : -pageHeight
+                newOffset += velocity.y > 0 ? pageWidth : -pageWidth
             }
             return CGPoint(x: proposedContentOffset.x, y: newOffset)
-            
         default:
             return .zero
         }
@@ -148,12 +241,7 @@ open class CollectionViewCenterLayout: UICollectionViewFlowLayout {
         return CGRect(origin: origin, size: size)
     }
     
-    func attributesForRect(
-        collectionView: UICollectionView,
-        layoutAttributes: [UICollectionViewLayoutAttributes],
-        proposedContentOffset: CGPoint
-        ) -> UICollectionViewLayoutAttributes? {
-        
+    func attributesForRect(collectionView: UICollectionView, layoutAttributes: [UICollectionViewLayoutAttributes], proposedContentOffset: CGPoint) -> UICollectionViewLayoutAttributes? {
         var candidateAttributes: UICollectionViewLayoutAttributes?
         let proposedCenterOffset: CGFloat
         
