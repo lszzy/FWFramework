@@ -516,7 +516,7 @@ extension FW {
 
 @_spi(FW) extension NSObject {
     
-    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject)，不含nil值
+    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
         guard let object = object else { return [:] }
         var mirror = Mirror(reflecting: object)
@@ -530,7 +530,7 @@ extension FW {
         
         var result: [String: Any] = [:]
         children.forEach { child in
-            if let label = child.label, !label.isEmpty,
+            if let label = child.label, !label.isEmpty, !label.hasPrefix("_"),
                !Optional<Any>.isNone(child.value) {
                 result[label] = child.value
             }
@@ -538,7 +538,7 @@ extension FW {
         return result
     }
     
-    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject)，不含nil值
+    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public var fw_mirrorDictionary: [String: Any] {
         return NSObject.fw_mirrorDictionary(self)
     }
