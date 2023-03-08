@@ -127,13 +127,14 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.sectionInset = .zero
         flowLayout.scrollDirection = .horizontal
-        flowLayout.columnCount = 4
-        flowLayout.rowCount = 3
+        flowLayout.verticalColumnCount = 4
+        flowLayout.verticalRowCount = 3
         return flowLayout
     }()
     
-    lazy var centerLayout: CollectionViewCenterLayout = {
-        let layout = CollectionViewCenterLayout()
+    lazy var centerLayout: CollectionViewFlowLayout = {
+        let layout = CollectionViewFlowLayout()
+        layout.isPagingEnabled = true
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 0
