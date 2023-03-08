@@ -144,13 +144,19 @@ class Tests: XCTestCase {
     }
     
     func testRouter() {
-        let parameter = TestParameter()
+        var parameter = TestParameter()
         parameter.isTrue = true
         parameter.routerSource = "test"
         parameter.routerOptions = .embedInNavigation
         parameter.routerHandler = { _, _ in }
+        parameter._privateValue = 1
+        parameter.merge([
+            "routerSource": "test2"
+        ])
+        XCTAssertEqual(parameter.routerSource, "test2")
         var dict = parameter.toDictionary()
         XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
+        XCTAssertEqual(dict["_privateValue"] as? Int, nil)
         XCTAssertEqual(dict[RouterParameter.routerSourceKey] as? String, parameter.routerSource)
         XCTAssertEqual(dict[RouterParameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
         XCTAssertTrue(dict[RouterParameter.routerHandlerKey] != nil)
@@ -158,6 +164,7 @@ class Tests: XCTestCase {
         dict["isTrue"] = "true"
         let object = TestParameter.fromDictionary(dict)
         XCTAssertTrue(object.isTrue)
+        XCTAssertEqual(object._privateValue, 0)
         XCTAssertEqual(object.routerSource, parameter.routerSource)
         XCTAssertEqual(object.routerOptions, parameter.routerOptions)
         XCTAssertTrue(object.routerHandler != nil)
@@ -276,6 +283,7 @@ extension Tests {
     
     class TestParameter: RouterParameter {
         var isTrue: Bool = false
+        var _privateValue: Int = 0
     }
     
     enum TestEnum: Equatable {
