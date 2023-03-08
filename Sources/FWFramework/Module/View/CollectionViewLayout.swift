@@ -21,8 +21,10 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
     // MARK: - Vertical
     /// 是否启用元素纵向渲染，默认关闭，开启时需设置渲染总数itemRenderCount
     open var itemRenderVertical = false
+    
     /// 纵向渲染列数，开启itemRenderVertical且大于0时生效
     open var verticalColumnCount: Int = 0
+    
     /// 纵向渲染行数，开启itemRenderVertical且大于0时生效
     open var verticalRowCount: Int = 0
     
@@ -119,11 +121,14 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
     /// 是否启用分页滚动，默认false。需设置decelerationRate为fast且关闭集合视图isPagingEnabled
     open var isPagingEnabled = false
     
-    /// 获取当前页数，可能为nil
+    /// 是否启用居中分页，默认false
+    open var isPagingCenter = false
+    
+    /// 获取当前页数，即居中cell的item，可能为nil
     open var currentPage: Int? {
         guard let collectionView = collectionView else { return nil }
         let centerPoint = CGPoint(x: collectionView.contentOffset.x + collectionView.bounds.width / 2, y: collectionView.contentOffset.y + collectionView.bounds.height / 2)
-        return collectionView.indexPathForItem(at: centerPoint)?.row
+        return collectionView.indexPathForItem(at: centerPoint)?.item
     }
     
     /// 获取每页宽度，必须设置itemSize
@@ -150,11 +155,17 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
         let shouldAnimate: Bool
         switch scrollDirection {
         case .horizontal:
-            let pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.left
+            var pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.left
+            if !isPagingCenter {
+                pageOffset = min(pageOffset, collectionView.fw_contentOffset(of: .right).x)
+            }
             proposedContentOffset = CGPoint(x: pageOffset, y: collectionView.contentOffset.y)
             shouldAnimate = abs(collectionView.contentOffset.x - pageOffset) > 1 ? animated : false
         case .vertical:
-            let pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
+            var pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
+            if !isPagingCenter {
+                pageOffset = min(pageOffset, collectionView.fw_contentOffset(of: .bottom).y)
+            }
             proposedContentOffset = CGPoint(x: collectionView.contentOffset.x, y: pageOffset)
             shouldAnimate = abs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false
         default:
@@ -170,19 +181,22 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
         
         let currentCollectionViewSize = collectionView.bounds.size
         if (!currentCollectionViewSize.equalTo(lastCollectionViewSize) || lastScrollDirection != scrollDirection || lastItemSize != itemSize), !currentCollectionViewSize.equalTo(.zero) {
-            switch scrollDirection {
-            case .horizontal:
-                let inset = (currentCollectionViewSize.width - itemSize.width - sectionInset.left - sectionInset.right) / 2
-                collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
-                collectionView.contentOffset = CGPoint(x: -inset, y: 0)
-            case .vertical:
-                let inset = (currentCollectionViewSize.height - itemSize.height - sectionInset.top - sectionInset.bottom) / 2
-                collectionView.contentInset = UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
-                collectionView.contentOffset = CGPoint(x: 0, y: -inset)
-            default:
-                collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                collectionView.contentOffset = .zero
+            if isPagingCenter {
+                switch scrollDirection {
+                case .horizontal:
+                    let inset = (currentCollectionViewSize.width - itemSize.width - sectionInset.left - sectionInset.right) / 2
+                    collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+                    collectionView.contentOffset = CGPoint(x: -inset, y: 0)
+                case .vertical:
+                    let inset = (currentCollectionViewSize.height - itemSize.height - sectionInset.top - sectionInset.bottom) / 2
+                    collectionView.contentInset = UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
+                    collectionView.contentOffset = CGPoint(x: 0, y: -inset)
+                default:
+                    collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                    collectionView.contentOffset = .zero
+                }
             }
+            
             lastCollectionViewSize = currentCollectionViewSize
             lastScrollDirection = scrollDirection
             lastItemSize = itemSize

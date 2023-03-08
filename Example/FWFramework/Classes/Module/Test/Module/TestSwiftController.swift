@@ -132,19 +132,17 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         return flowLayout
     }()
     
-    lazy var centerLayout: CollectionViewFlowLayout = {
+    lazy var centerView: UICollectionView = {
         let layout = CollectionViewFlowLayout()
         layout.isPagingEnabled = true
+        layout.isPagingCenter = true
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
         layout.itemSize = CGSize(width: FW.screenWidth - 60, height: 150)
-        return layout
-    }()
-    
-    lazy var centerView: UICollectionView = {
-        let result = UICollectionView.fw.collectionView(centerLayout)
+        
+        let result = UICollectionView.fw.collectionView(layout)
         result.decelerationRate = .fast
         result.backgroundColor = AppTheme.backgroundColor
         result.delegate = result.fw.collectionDelegate
@@ -156,7 +154,33 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             return cell
         }
         result.fw.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
-            self?.centerLayout.scrollToPage(indexPath.item, animated: true)
+            layout.scrollToPage(indexPath.item)
+        }
+        return result
+    }()
+    
+    lazy var bottomView: UICollectionView = {
+        let layout = CollectionViewFlowLayout()
+        layout.isPagingEnabled = true
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        layout.itemSize = CGSize(width: (FW.screenWidth - 40) / 3.0 * 2.0, height: 150)
+        
+        let result = UICollectionView.fw.collectionView(layout)
+        result.decelerationRate = .fast
+        result.backgroundColor = AppTheme.backgroundColor
+        result.delegate = result.fw.collectionDelegate
+        result.dataSource = result.fw.collectionDelegate
+        result.fw.collectionDelegate.itemCount = 10
+        result.fw.collectionDelegate.cellForItem = { collectionView, indexPath in
+            let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+            cell.contentView.backgroundColor = UIColor.fw.randomColor
+            return cell
+        }
+        result.fw.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+            layout.scrollToPage(indexPath.item)
         }
         return result
     }()
@@ -193,7 +217,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             return cell
         }
         collectionDelegate.sizeForItem = { collectionView, indexPath in
-            return CGSize(width: (FW.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
+            return CGSize(width: (FW.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 70 : 40)
         }
         collectionDelegate.viewForHeader = { collectionView, indexPath in
             let view = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionHeader, indexPath: indexPath)
@@ -206,10 +230,10 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             return view
         }
         collectionDelegate.sizeForHeader = { collectionView, section in
-            return CGSize(width: 40, height: 200)
+            return CGSize(width: 40, height: 150)
         }
         collectionDelegate.sizeForFooter = { collectionView, section in
-            return CGSize(width: 40, height: 200)
+            return CGSize(width: 40, height: 150)
         }
         collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
             guard let self = self else { return }
@@ -224,16 +248,22 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         contentView.fw.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
-            .height(200)
+            .height(150)
         
         collectionView.removeFromSuperview()
         contentView.addSubview(collectionView)
-        collectionView.fw.layoutChain.edges(excludingEdge: .bottom).height(200)
+        collectionView.fw.layoutChain.edges(excludingEdge: .bottom).height(150)
         
         view.addSubview(centerView)
         centerView.fw.layoutChain
             .horizontal()
             .top(toViewBottom: contentView, offset: 20)
+            .height(150)
+        
+        view.addSubview(bottomView)
+        bottomView.fw.layoutChain
+            .horizontal()
+            .top(toViewBottom: centerView, offset: 20)
             .height(150)
     }
     
