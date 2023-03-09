@@ -2376,6 +2376,14 @@ public extension JSONModel {
         return deserialize(from: json.dictionaryObject) ?? Self()
     }
     
+    mutating func merge(_ dict: [AnyHashable: Any]?) {
+        JSONDeserializer.update(object: &self, from: dict as? [String: Any])
+    }
+
+    mutating func merge(_ json: JSON) {
+        merge(json.dictionaryObject)
+    }
+    
 }
 
 public extension Array where Element: JSONModel {
