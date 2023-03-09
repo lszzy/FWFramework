@@ -160,13 +160,16 @@ NS_SWIFT_NAME(TapGestureRecognizer)
 @property (nonatomic, assign, getter=isHighlighted) BOOL highlighted;
 
 /// 自定义高亮状态变化时处理句柄
-@property (nonatomic, copy, nullable) void (^highlightedChanged)(FWTapGestureRecognizer *gesture);
+@property (nonatomic, copy, nullable) void (^highlightedChanged)(FWTapGestureRecognizer *gesture, BOOL highlighted);
 
 /// 高亮状态时view的透明度，默认0不生效
 @property (nonatomic, assign) CGFloat highlightedAlpha;
 
 /// 禁用状态时view的透明度，默认0不生效
 @property (nonatomic, assign) CGFloat disabledAlpha;
+
+/// 自定义禁用状态变化时处理句柄
+@property (nonatomic, copy, nullable) void (^disabledChanged)(FWTapGestureRecognizer *gesture, BOOL enabled);
 
 @end
 
