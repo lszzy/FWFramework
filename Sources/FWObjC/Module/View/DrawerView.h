@@ -33,6 +33,9 @@ NS_SWIFT_NAME(DrawerView)
 // 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
 @property (nullable, nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
 
+// 自定义动画句柄，动画必须调用animations和completion句柄
+@property (nullable, nonatomic, copy) void (^animationBlock)(void (^animations)(void), void (^completion)(BOOL finished));
+
 // 是否启用拖拽，默认YES。其实就是设置手势的enabled
 @property (nonatomic, assign) BOOL enabled;
 

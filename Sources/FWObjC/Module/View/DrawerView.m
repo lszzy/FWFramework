@@ -201,6 +201,19 @@
     }
 }
 
+- (void)animateComplete:(CGFloat)position
+{
+    // 动画完成时需释放displayLink
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+    
+    [self togglePosition:position];
+    self.position = position;
+    [self notifyPosition:YES];
+}
+
 #pragma mark - Public
 
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated
@@ -224,18 +237,22 @@
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
-    [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self togglePosition:position];
-    } completion:^(BOOL finished) {
-        // 动画完成时需释放displayLink
-        if (self.displayLink) {
-            [self.displayLink invalidate];
-            self.displayLink = nil;
-        }
-        
-        self.position = position;
-        [self notifyPosition:YES];
-    }];
+    if (self.animationBlock) {
+        __weak __typeof__(self) self_weak_ = self;
+        self.animationBlock(^{
+            __typeof__(self) self = self_weak_;
+            [self togglePosition:position];
+        }, ^(BOOL finished) {
+            __typeof__(self) self = self_weak_;
+            [self animateComplete:position];
+        });
+    } else {
+        [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self togglePosition:position];
+        } completion:^(BOOL finished) {
+            [self animateComplete:position];
+        }];
+    }
 }
 
 - (CGFloat)positionAtIndex:(NSInteger)index
