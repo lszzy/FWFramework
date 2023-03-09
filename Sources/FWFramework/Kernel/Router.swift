@@ -18,6 +18,8 @@ open class RouterParameter: ParameterModel {
     open var routerSource: String?
     /// 路由信息选项，支持NavigationOptions
     open var routerOptions: NavigatorOptions = []
+    /// 路由动画选项，仅open生效
+    open var routerAnimated: Bool?
     /// 路由信息句柄，仅open生效
     open var routerHandler: ((RouterContext, UIViewController) -> Void)?
     

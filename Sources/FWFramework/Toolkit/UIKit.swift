@@ -453,6 +453,18 @@ extension Wrapper where Base: UIButton {
         get { return base.__fw_highlightedAlpha }
         set { base.__fw_highlightedAlpha = newValue }
     }
+    
+    /// 自定义按钮禁用状态改变时的句柄，默认nil
+    public var disabledChanged: ((UIButton, Bool) -> Void)? {
+        get { return base.__fw_disabledChanged }
+        set { base.__fw_disabledChanged = newValue }
+    }
+
+    /// 自定义按钮高亮状态改变时的句柄，默认nil
+    public var highlightedChanged: ((UIButton, Bool) -> Void)? {
+        get { return base.__fw_highlightedChanged }
+        set { base.__fw_highlightedChanged = newValue }
+    }
 
     /// 快速设置文本按钮
     public func setTitle(_ title: String?, font: UIFont?, textColor: UIColor?) {

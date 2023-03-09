@@ -1,5 +1,13 @@
 # 更新日志
 
+## [4.7.1] - 2023-03-09
+
+### Added
+* JSONModel新增merge方法
+* ParameterModel.toDictionary方法自动过滤下划线开头属性
+* UIButton和点击手势支持自定义高亮状态、禁用状态句柄
+* 修复DrawerView特殊场景时调用setPosition不生效问题
+
 ## [4.7.0] - 2023-03-07
 
 ### Added

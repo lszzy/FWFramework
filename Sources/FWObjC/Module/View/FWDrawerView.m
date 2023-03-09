@@ -171,7 +171,7 @@
 - (void)notifyPosition:(BOOL)finished
 {
     if (finished) {
-        [self gestureRecognizerDidScroll];
+        [self gestureRecognizerDidScroll:NO];
     }
     
     if (self.callback) {
@@ -261,7 +261,7 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
-            [self gestureRecognizerDidScroll];
+            [self gestureRecognizerDidScroll:YES];
             [self notifyPosition:NO];
             break;
         }
@@ -297,10 +297,10 @@
     }
 }
 
-- (void)gestureRecognizerDidScroll
+- (void)gestureRecognizerDidScroll:(BOOL)isScrolling
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (![self canScroll:self.scrollView]) return;
+    if (!isScrolling || ![self canScroll:self.scrollView]) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;

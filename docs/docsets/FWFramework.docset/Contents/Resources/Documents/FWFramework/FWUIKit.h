@@ -276,6 +276,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
 @property (nonatomic, assign) CGFloat fw_highlightedAlpha NS_REFINED_FOR_SWIFT;
 
+/// 自定义按钮禁用状态改变时的句柄，默认nil
+@property (nonatomic, copy, nullable) void (^fw_disabledChanged)(UIButton *button, BOOL disabled) NS_REFINED_FOR_SWIFT;
+
+/// 自定义按钮高亮状态改变时的句柄，默认nil
+@property (nonatomic, copy, nullable) void (^fw_highlightedChanged)(UIButton *button, BOOL highlighted) NS_REFINED_FOR_SWIFT;
+
 /// 快速设置文本按钮
 - (void)fw_setTitle:(nullable NSString *)title font:(nullable UIFont *)font titleColor:(nullable UIColor *)titleColor NS_REFINED_FOR_SWIFT;
 
