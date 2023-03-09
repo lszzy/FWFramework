@@ -1468,6 +1468,32 @@ import AdSupport
             }
         }
     }
+    
+    /// 自定义按钮禁用状态改变时的句柄，默认nil
+    public var fw_disabledChanged: ((UIButton, Bool) -> Void)? {
+        get {
+            return fw_property(forName: "fw_disabledChanged") as? (UIButton, Bool) -> Void
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_disabledChanged")
+            if newValue != nil {
+                newValue?(self, self.isEnabled)
+            }
+        }
+    }
+
+    /// 自定义按钮高亮状态改变时的句柄，默认nil
+    public var fw_highlightedChanged: ((UIButton, Bool) -> Void)? {
+        get {
+            return fw_property(forName: "fw_highlightedChanged") as? (UIButton, Bool) -> Void
+        }
+        set {
+            fw_setPropertyCopy(newValue, forName: "fw_highlightedChanged")
+            if self.isEnabled && newValue != nil {
+                newValue?(self, self.isHighlighted)
+            }
+        }
+    }
 
     /// 快速设置文本按钮
     public func fw_setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
@@ -1570,6 +1596,9 @@ import AdSupport
             if selfObject.fw_disabledAlpha > 0 {
                 selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
             }
+            if selfObject.fw_disabledChanged != nil {
+                selfObject.fw_disabledChanged?(selfObject, enabled)
+            }
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -1582,6 +1611,9 @@ import AdSupport
             
             if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
                 selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
+            }
+            if selfObject.isEnabled && selfObject.fw_highlightedChanged != nil {
+                selfObject.fw_highlightedChanged?(selfObject, highlighted)
             }
         }}
     }
