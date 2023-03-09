@@ -41,7 +41,7 @@ public class RouterContext: NSObject {
     public private(set) var url: String
     
     /// 路由用户信息
-    public private(set) var userInfo: [AnyHashable: Any]?
+    public private(set) var userInfo: [AnyHashable: Any]
     
     /// 路由完成回调
     public private(set) var completion: ((Any?) -> Void)?
@@ -62,9 +62,7 @@ public class RouterContext: NSObject {
     /// 路由userInfo和URLParameters合并参数，URL参数优先级高
     public fileprivate(set) lazy var parameters: [AnyHashable: Any] = {
         var parameters: [AnyHashable: Any] = [:]
-        if let userInfo = userInfo {
-            parameters.merge(userInfo) { _, last in last }
-        }
+        parameters.merge(userInfo) { _, last in last }
         parameters.merge(urlParameters) { _, last in last }
         return parameters
     }()
@@ -75,7 +73,7 @@ public class RouterContext: NSObject {
     /// 创建路由参数对象
     public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
         self.url = url
-        self.userInfo = userInfo
+        self.userInfo = userInfo ?? [:]
         self.completion = completion
     }
     
