@@ -113,16 +113,16 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
                 view?.alpha = isHighlighted ? highlightedAlpha : 1
             }
             if isEnabled && highlightedChanged != nil {
-                highlightedChanged?(self)
+                highlightedChanged?(self, isHighlighted)
             }
         }
     }
 
     /// 自定义高亮状态变化时处理句柄
-    open var highlightedChanged: ((TapGestureRecognizer) -> Void)? {
+    open var highlightedChanged: ((TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if isEnabled && highlightedChanged != nil {
-                highlightedChanged?(self)
+                highlightedChanged?(self, isHighlighted)
             }
         }
     }
@@ -132,6 +132,15 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         didSet {
             if isEnabled && highlightedAlpha > 0 {
                 view?.alpha = isHighlighted ? highlightedAlpha : 1
+            }
+        }
+    }
+    
+    /// 自定义禁用状态变化时处理句柄
+    open var disabledChanged: ((TapGestureRecognizer, Bool) -> Void)? {
+        didSet {
+            if disabledChanged != nil {
+                disabledChanged?(self, isEnabled)
             }
         }
     }
@@ -149,6 +158,9 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         didSet {
             if disabledAlpha > 0 {
                 view?.alpha = isEnabled ? 1 : disabledAlpha
+            }
+            if disabledChanged != nil {
+                disabledChanged?(self, isEnabled)
             }
         }
     }
