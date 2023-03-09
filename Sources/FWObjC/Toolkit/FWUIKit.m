@@ -456,6 +456,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             if (selfObject.fw_disabledAlpha > 0) {
                 selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha;
             }
+            if (selfObject.fw_disabledChanged) {
+                selfObject.fw_disabledChanged(selfObject, enabled);
+            }
         }));
         
         FWSwizzleClass(UIButton, @selector(setHighlighted:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL highlighted), FWSwizzleCode({
@@ -463,6 +466,9 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             
             if (selfObject.enabled && selfObject.fw_highlightedAlpha > 0) {
                 selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1;
+            }
+            if (selfObject.enabled && selfObject.fw_highlightedChanged) {
+                selfObject.fw_highlightedChanged(selfObject, highlighted);
             }
         }));
     });
@@ -1544,6 +1550,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
+- (void (^)(UIButton * _Nonnull, BOOL))fw_disabledChanged
+{
+    return objc_getAssociatedObject(self, @selector(fw_disabledChanged));
+}
+
+- (void)setFw_disabledChanged:(void (^)(UIButton * _Nonnull, BOOL))block
+{
+    objc_setAssociatedObject(self, @selector(fw_disabledChanged), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    
+    if (block) {
+        block(self, self.isEnabled);
+    }
+}
+
 - (CGFloat)fw_highlightedAlpha
 {
     return [objc_getAssociatedObject(self, @selector(fw_highlightedAlpha)) doubleValue];
@@ -1555,6 +1575,20 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     
     if (self.enabled && alpha > 0) {
         self.alpha = self.isHighlighted ? alpha : 1;
+    }
+}
+
+- (void (^)(UIButton * _Nonnull, BOOL))fw_highlightedChanged
+{
+    return objc_getAssociatedObject(self, @selector(fw_highlightedChanged));
+}
+
+- (void)setFw_highlightedChanged:(void (^)(UIButton * _Nonnull, BOOL))block
+{
+    objc_setAssociatedObject(self, @selector(fw_highlightedChanged), block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    
+    if (self.enabled && block) {
+        block(self, self.isHighlighted);
     }
 }
 
