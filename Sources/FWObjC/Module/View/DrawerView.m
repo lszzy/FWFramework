@@ -172,7 +172,7 @@
 - (BOOL)canScroll:(UIScrollView *)scrollView
 {
     if (self.scrollViewFilter) return self.scrollViewFilter(scrollView);
-    if (!scrollView.scrollEnabled) return NO;
+    if (!scrollView.__fw_isViewVisible || !scrollView.scrollEnabled) return NO;
     if (self.isVertical) {
         if (![scrollView __fw_canScrollVertical]) return NO;
     } else {
