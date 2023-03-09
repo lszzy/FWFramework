@@ -334,6 +334,7 @@ import AdSupport
     }
     
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
+    @objc(__fw_isViewVisible)
     public var fw_isViewVisible: Bool {
         if isHidden || alpha <= 0.01 || self.window == nil { return false }
         if bounds.width == 0 || bounds.height == 0 { return false }
