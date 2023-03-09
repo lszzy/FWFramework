@@ -15,6 +15,8 @@ open class RouterParameter: ParameterModel {
     public static let routerSourceKey = "routerSource"
     /// 路由信息选项Key，兼容字典传参，支持NavigationOptions
     public static let routerOptionsKey = "routerOptions"
+    /// 路由动画选项Key，兼容字典传参，仅open生效
+    public static let routerAnimatedKey = "routerAnimated"
     /// 路由信息句柄Key，兼容字典传参，仅open生效
     public static let routerHandlerKey = "routerHandler"
     
@@ -22,6 +24,8 @@ open class RouterParameter: ParameterModel {
     open var routerSource: String?
     /// 路由信息选项，支持NavigationOptions
     open var routerOptions: NavigatorOptions = []
+    /// 路由动画选项，仅open生效
+    open var routerAnimated: Bool?
     /// 路由信息句柄，仅open生效
     open var routerHandler: ((RouterContext, UIViewController) -> Void)?
     
@@ -292,7 +296,7 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                UIWindow.fw_mainWindow?.fw_open(viewController, animated: true, options: userInfo.routerOptions, completion: nil)
+                UIWindow.fw_mainWindow?.fw_open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions, completion: nil)
             }
             return nil
         }
