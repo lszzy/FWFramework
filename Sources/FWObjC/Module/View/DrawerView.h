@@ -30,12 +30,6 @@ NS_SWIFT_NAME(DrawerView)
 // 回弹高度，拖拽小于该高度执行回弹，默认为0
 @property (nonatomic, assign) CGFloat kickbackHeight;
 
-// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
-@property (nullable, nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
-
-// 自定义动画句柄，动画必须调用animations和completion句柄
-@property (nullable, nonatomic, copy) void (^animationBlock)(void (^animations)(void), void (^completion)(BOOL finished));
-
 // 是否启用拖拽，默认YES。其实就是设置手势的enabled
 @property (nonatomic, assign) BOOL enabled;
 
@@ -44,9 +38,6 @@ NS_SWIFT_NAME(DrawerView)
 
 // 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。先尝试设置delegate为自身，尝试失败请手工调用scrollViewDidScroll
 @property (nullable, nonatomic, weak) UIScrollView *scrollView;
-
-// 滚动视图过滤器，默认只处理可滚动的视图。如果不可滚动时也需要触发抽屉效果，可自定义此句柄
-@property (nullable, nonatomic, copy) BOOL (^scrollViewFilter)(UIScrollView *scrollView);
 
 // 抽屉视图，自动添加pan手势
 @property (nonatomic, weak, readonly) UIView *view;
@@ -63,6 +54,15 @@ NS_SWIFT_NAME(DrawerView)
 // 抽屉视图关闭位置
 @property (nonatomic, assign, readonly) CGFloat closePosition;
 
+// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
+@property (nullable, nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
+
+// 自定义动画句柄，动画必须调用animations和completion句柄
+@property (nullable, nonatomic, copy) void (^animationBlock)(void (^animations)(void), void (^completion)(BOOL finished));
+
+// 滚动视图过滤器，默认只处理可滚动视图的冲突。如需其它条件，可自定义此句柄
+@property (nullable, nonatomic, copy) BOOL (^scrollViewFilter)(UIScrollView *scrollView);
+
 // 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated;
 
@@ -71,6 +71,9 @@ NS_SWIFT_NAME(DrawerView)
 
 // 获取抽屉视图指定索引位置，获取失败返回0
 - (CGFloat)positionAtIndex:(NSInteger)index;
+
+// 判断当前抽屉效果视图是否在指定索引位置
+- (BOOL)isPositionIndex:(NSInteger)index;
 
 // 设置抽屉效果视图到指定索引位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated;

@@ -21,7 +21,16 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         let result = UIView()
         result.isHidden = true
         result.frame = CGRect(x: 0, y: 100, width: FW.screenWidth, height: view.fw.height)
-        result.backgroundColor = .brown
+        result.backgroundColor = .fw.randomColor
+        result.addSubview(scrollView)
+        return result
+    }()
+    
+    private lazy var scrollView: UIScrollView = {
+        let result = UIScrollView()
+        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 50)
+        result.backgroundColor = UIColor.fw.randomColor
+        result.contentSize = CGSize(width: FW.screenWidth, height: view.fw.height + 250)
         return result
     }()
     

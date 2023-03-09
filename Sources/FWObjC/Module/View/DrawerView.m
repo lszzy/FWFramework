@@ -261,6 +261,12 @@
     return [self.positions[index] doubleValue];
 }
 
+- (BOOL)isPositionIndex:(NSInteger)index
+{
+    if (index < 0 || index >= self.positions.count) return NO;
+    return self.position == [self.positions[index] doubleValue];
+}
+
 - (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated
 {
     if (index < 0 || index >= self.positions.count) return;
@@ -362,7 +368,8 @@
                 return YES;
             }
         } else {
-            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view &&
+                [self canScroll:self.scrollView]) {
                 return YES;
             }
         }
