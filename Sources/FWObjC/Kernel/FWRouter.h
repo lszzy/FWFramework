@@ -25,6 +25,8 @@ typedef NSString *FWRouterUserInfoKey NS_SWIFT_NAME(RouterUserInfoKey);
 FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterSourceKey NS_SWIFT_NAME(RouterSourceKey);
 /** 路由信息选项Key，默认支持NavigationOptions */
 FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterOptionsKey NS_SWIFT_NAME(RouterOptionsKey);
+/** 路由动画选项Key，默认未设置时为YES，仅open生效 */
+FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterAnimatedKey NS_SWIFT_NAME(RouterAnimatedKey);
 /** 路由信息句柄Key，默认参数context、viewController，无返回值，仅open生效 */
 FOUNDATION_EXPORT FWRouterUserInfoKey const FWRouterHandlerKey NS_SWIFT_NAME(RouterHandlerKey);
 

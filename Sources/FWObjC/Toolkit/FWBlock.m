@@ -196,7 +196,7 @@ void FWSynchronized(id object, void (^closure)(void)) {
         self.view.alpha = highlighted ? self.highlightedAlpha : 1;
     }
     if (self.enabled && self.highlightedChanged) {
-        self.highlightedChanged(self);
+        self.highlightedChanged(self, highlighted);
     }
 }
 
@@ -208,6 +208,14 @@ void FWSynchronized(id object, void (^closure)(void)) {
     }
 }
 
+- (void)setDisabledChanged:(void (^)(FWTapGestureRecognizer * _Nonnull, BOOL))changed
+{
+    _disabledChanged = changed;
+    if (changed) {
+        changed(self, self.enabled);
+    }
+}
+
 - (void)setHighlightedAlpha:(CGFloat)alpha
 {
     _highlightedAlpha = alpha;
@@ -216,11 +224,11 @@ void FWSynchronized(id object, void (^closure)(void)) {
     }
 }
 
-- (void)setHighlightedChanged:(void (^)(FWTapGestureRecognizer *))changed
+- (void)setHighlightedChanged:(void (^)(FWTapGestureRecognizer *, BOOL))changed
 {
     _highlightedChanged = changed;
     if (self.enabled && changed) {
-        changed(self);
+        changed(self, self.highlighted);
     }
 }
 
@@ -229,6 +237,9 @@ void FWSynchronized(id object, void (^closure)(void)) {
     [super setEnabled:enabled];
     if (self.disabledAlpha > 0) {
         self.view.alpha = enabled ? 1 : self.disabledAlpha;
+    }
+    if (self.disabledChanged) {
+        self.disabledChanged(self, enabled);
     }
 }
 

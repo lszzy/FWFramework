@@ -13,6 +13,7 @@
 
 FWRouterUserInfoKey const FWRouterSourceKey = @"routerSource";
 FWRouterUserInfoKey const FWRouterOptionsKey = @"routerOptions";
+FWRouterUserInfoKey const FWRouterAnimatedKey = @"routerAnimated";
 FWRouterUserInfoKey const FWRouterHandlerKey = @"routerHandler";
 
 #pragma mark - FWRouterContext
@@ -326,7 +327,12 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
             if (routerOptions && [routerOptions isKindOfClass:[NSNumber class]]) {
                 options = [routerOptions unsignedIntegerValue];
             }
-            [FWNavigator openViewController:viewController animated:YES options:options completion:nil];
+            BOOL animated = YES;
+            NSNumber *routerAnimated = context.userInfo[FWRouterAnimatedKey];
+            if (routerAnimated && [routerAnimated isKindOfClass:[NSNumber class]]) {
+                animated = [routerAnimated boolValue];
+            }
+            [FWNavigator openViewController:viewController animated:animated options:options completion:nil];
         }
         return nil;
     };
