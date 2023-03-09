@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.7.1] - 2023-03-09
+
+### Added
+* Added merge method to JSONModel
+* The ParameterModel.toDictionary method automatically filters attributes starting with an underscore
+* UIButton and click gesture support custom highlight state, disabled state handle
+* Fixed the problem that calling setPosition does not take effect when the DrawerView is in a special scene
+
 ## [4.7.0] - 2023-03-07
 
 ### Added
