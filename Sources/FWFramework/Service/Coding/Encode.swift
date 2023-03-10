@@ -556,6 +556,7 @@ extension Optional {
     public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
+    public var safeJSON: JSON { return JSON(self) }
     
     public static func isNone(_ value: Wrapped?) -> Bool {
         return value == nil || value._plainValue() == nil

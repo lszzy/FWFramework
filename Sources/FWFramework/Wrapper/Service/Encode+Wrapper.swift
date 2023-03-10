@@ -17,6 +17,7 @@ extension Wrapper {
     public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(base) }
     public var safeArray: [Any] { return (base as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
+    public var safeJSON: JSON { return JSON(base) }
 }
 
 extension Wrapper where Base == Data {
