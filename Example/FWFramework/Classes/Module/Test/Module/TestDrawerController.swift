@@ -27,9 +27,16 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     private lazy var scrollView: UIScrollView = {
         let result = UIScrollView()
+        result.showsVerticalScrollIndicator = false
+        result.showsHorizontalScrollIndicator = false
         result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 50)
         result.backgroundColor = UIColor.fw.randomColor
         result.contentSize = CGSize(width: FW.screenWidth, height: view.fw.height + 250)
+        
+        let topView = UIView()
+        topView.frame = CGRectMake(0, 0, FW.screenWidth, 300)
+        topView.backgroundColor = UIColor.fw.randomColor
+        result.addSubview(topView)
         return result
     }()
     
@@ -52,9 +59,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     func setupNavbar() {
         fw.setLeftBarItem(FW.iconImage("zmdi-var-menu", 24)) { [weak self] _ in
-            guard let drawerView = self?.contentView.fw.drawerView else { return }
-            let position = drawerView.position == drawerView.openPosition ? drawerView.closePosition : drawerView.openPosition
-            drawerView.setPosition(position, animated: true)
+            self?.toggleMenu()
         }
         
         fw.addRightBarItem("相册", target: self, action: #selector(self.onPhotoSheet(_:)))
@@ -71,6 +76,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
             drawerView.shouldRecognizeSimultaneously = nil
             drawerView.shouldRequireFailure = nil
+            self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
@@ -85,6 +91,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             drawerView.shouldRequireFailure = { scrollView in
                 return true
             }
+            self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
@@ -99,6 +106,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
                 return false
             }
             drawerView.shouldRequireFailure = nil
+            self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
@@ -131,6 +139,12 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
             kickbackHeight: 25
         )
+    }
+    
+    func toggleMenu() {
+        guard let drawerView = contentView.fw.drawerView else { return }
+        let position = drawerView.position == drawerView.openPosition ? drawerView.closePosition : drawerView.openPosition
+        drawerView.setPosition(position, animated: true)
     }
     
     @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
