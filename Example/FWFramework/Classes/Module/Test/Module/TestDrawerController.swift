@@ -89,7 +89,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
             drawerView.shouldRecognizeSimultaneously = nil
             drawerView.shouldRequireFailure = { scrollView in
-                return true
+                return drawerView.position == drawerView.position(at: 1)
             }
             self?.toggleMenu()
         } customize: { gesture in
@@ -130,7 +130,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         bottomView.fw.drawerView(
             .up,
             positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
-            kickbackHeight: 0
+            kickbackHeight: 25
         )
         
         view.addSubview(contentView)

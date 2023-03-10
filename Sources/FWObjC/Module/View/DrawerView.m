@@ -37,6 +37,7 @@
 
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
+@property (nonatomic, assign) BOOL originValid;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
 
@@ -146,6 +147,22 @@
     }
 }
 
+- (UISwipeGestureRecognizerDirection)scrollDirection
+{
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
+            return UISwipeGestureRecognizerDirectionDown;
+        case UISwipeGestureRecognizerDirectionDown:
+            return UISwipeGestureRecognizerDirectionUp;
+        case UISwipeGestureRecognizerDirectionLeft:
+            return UISwipeGestureRecognizerDirectionRight;
+        case UISwipeGestureRecognizerDirectionRight:
+            return UISwipeGestureRecognizerDirectionLeft;
+        default:
+            return 0;
+    }
+}
+
 - (CGFloat)nextPosition
 {
     __block CGFloat position;
@@ -248,7 +265,7 @@
             [self animateComplete:position];
         });
     } else {
-        [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
             [self togglePosition:position];
         } completion:^(BOOL finished) {
             [self animateComplete:position];
@@ -288,6 +305,12 @@
         case UIGestureRecognizerStateBegan: {
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
+            if ([self.scrollView __fw_isScrollTo:self.scrollEdge] &&
+                gestureRecognizer.__fw_swipeDirection == self.scrollDirection) {
+                self.originValid = YES;
+            } else {
+                self.originValid = NO;
+            }
             break;
         }
         // 拖动改变时更新视图位置
@@ -335,11 +358,20 @@
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self shouldRecognizeSimultaneously:self.scrollView]) return;
     
-    if ([self.scrollView __fw_isScrollTo:self.scrollEdge]) {
+    if (self.shouldRequireFailure && self.shouldRequireFailure(self.scrollView)) {
         self.panDisabled = NO;
-    }
-    if (!self.panDisabled) {
-        [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
+        if (self.originValid) {
+            [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
+        } else {
+            [self setPosition:self.originPosition animated:NO];
+        }
+    } else {
+        if ([self.scrollView __fw_isScrollTo:self.scrollEdge]) {
+            self.panDisabled = NO;
+        }
+        if (!self.panDisabled) {
+            [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
+        }
     }
 }
 
