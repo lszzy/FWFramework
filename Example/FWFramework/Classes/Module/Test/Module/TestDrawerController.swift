@@ -74,8 +74,8 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         topLabel.isUserInteractionEnabled = true
         topLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.shouldRecognizeSimultaneously = nil
-            drawerView.shouldRequireFailure = nil
+            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewPositions = nil
             self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
@@ -87,9 +87,9 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         middleLabel.isUserInteractionEnabled = true
         middleLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.shouldRecognizeSimultaneously = nil
-            drawerView.shouldRequireFailure = { scrollView in
-                return drawerView.position == drawerView.position(at: 1)
+            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewPositions = { _ in
+                return [NSNumber(value: drawerView.position(at: 1))]
             }
             self?.toggleMenu()
         } customize: { gesture in
@@ -102,10 +102,8 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         bottomLabel.isUserInteractionEnabled = true
         bottomLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.shouldRecognizeSimultaneously = { scrollView in
-                return false
-            }
-            drawerView.shouldRequireFailure = nil
+            drawerView.scrollViewFilter = { _ in false }
+            drawerView.scrollViewPositions = nil
             self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5

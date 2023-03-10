@@ -54,6 +54,7 @@
         _view = view;
         _autoDetected = YES;
         _kickbackHeight = 0;
+        _positions = @[];
         _direction = UISwipeGestureRecognizerDirectionUp;
         _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
         if ([view isKindOfClass:[UIScrollView class]]) {
@@ -186,11 +187,9 @@
     return position;
 }
 
-- (BOOL)shouldRecognizeSimultaneously:(UIScrollView *)scrollView
+- (BOOL)canScroll:(UIScrollView *)scrollView
 {
-    if (self.shouldRecognizeSimultaneously) {
-        return self.shouldRecognizeSimultaneously(scrollView);
-    }
+    if (self.scrollViewFilter) return self.scrollViewFilter(scrollView);
     if (!scrollView.__fw_isViewVisible || !scrollView.scrollEnabled) return NO;
     if (self.isVertical) {
         if (![scrollView __fw_canScrollVertical]) return NO;
@@ -203,10 +202,11 @@
 - (void)togglePosition:(CGFloat)position
 {
     self.view.frame = CGRectMake(
-                                 self.isVertical ? self.view.frame.origin.x : position,
-                                 self.isVertical ? position : self.view.frame.origin.y,
-                                 self.view.frame.size.width,
-                                 self.view.frame.size.height);
+        self.isVertical ? self.view.frame.origin.x : position,
+        self.isVertical ? position : self.view.frame.origin.y,
+        self.view.frame.size.width,
+        self.view.frame.size.height
+    );
 }
 
 - (void)notifyPosition:(BOOL)finished
@@ -356,9 +356,10 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (![self shouldRecognizeSimultaneously:self.scrollView]) return;
+    if (![self canScroll:self.scrollView]) return;
     
-    if (self.shouldRequireFailure && self.shouldRequireFailure(self.scrollView)) {
+    NSArray<NSNumber *> *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : @[];
+    if (positions.count > 0 && [positions containsObject:@(self.originPosition)]) {
         self.panDisabled = NO;
         if (self.originValid) {
             [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
@@ -378,7 +379,7 @@
 - (void)gestureRecognizerDidScroll
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (![self shouldRecognizeSimultaneously:self.scrollView]) return;
+    if (![self canScroll:self.scrollView]) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
@@ -396,13 +397,13 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if ([self shouldRecognizeSimultaneously:scrollView]) {
+            if ([self canScroll:scrollView]) {
                 self.scrollView = scrollView;
                 return YES;
             }
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view &&
-                [self shouldRecognizeSimultaneously:self.scrollView]) {
+                [self canScroll:self.scrollView]) {
                 return YES;
             }
         }
