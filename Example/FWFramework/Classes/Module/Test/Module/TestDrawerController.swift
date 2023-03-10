@@ -69,30 +69,36 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         topLabel.isUserInteractionEnabled = true
         topLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.scrollViewFilter = nil
+            drawerView.shouldRecognizeSimultaneously = nil
+            drawerView.shouldRequireFailure = nil
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
         
         let middleLabel = UILabel(frame: CGRect(x: 50, y: 250, width: 100, height: 30))
-        middleLabel.text = "滚动模式"
+        middleLabel.text = "可滚动模式"
         contentView.addSubview(middleLabel)
         middleLabel.isUserInteractionEnabled = true
         middleLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.shouldRecognizeSimultaneously = nil
+            drawerView.shouldRequireFailure = { scrollView in
+                return true
+            }
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
         
         let bottomLabel = UILabel(frame: CGRect(x: 50, y: 300, width: 100, height: 30))
-        bottomLabel.text = "拖动模式"
+        bottomLabel.text = "仅拖动模式"
         contentView.addSubview(bottomLabel)
         bottomLabel.isUserInteractionEnabled = true
         bottomLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.scrollViewFilter = { scrollView in
+            drawerView.shouldRecognizeSimultaneously = { scrollView in
                 return false
             }
+            drawerView.shouldRequireFailure = nil
         } customize: { gesture in
             gesture.highlightedAlpha = 0.5
         }
@@ -106,13 +112,6 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             gesture.highlightedAlpha = 0.5
         }
         contentView.addSubview(closeLabel)
-        view.addSubview(contentView)
-        
-        contentView.fw.drawerView(
-            .right,
-            positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
-            kickbackHeight: 25
-        )
         
         view.addSubview(imageView)
         imageView.fw.layoutChain
@@ -120,11 +119,17 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             .size(CGSize(width: 200, height: 200))
         
         view.addSubview(bottomView)
-        
         bottomView.fw.drawerView(
             .up,
             positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
             kickbackHeight: 0
+        )
+        
+        view.addSubview(contentView)
+        contentView.fw.drawerView(
+            .right,
+            positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
+            kickbackHeight: 25
         )
     }
     

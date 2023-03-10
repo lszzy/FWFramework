@@ -169,9 +169,11 @@
     return position;
 }
 
-- (BOOL)canScroll:(UIScrollView *)scrollView
+- (BOOL)shouldRecognizeSimultaneously:(UIScrollView *)scrollView
 {
-    if (self.scrollViewFilter) return self.scrollViewFilter(scrollView);
+    if (self.shouldRecognizeSimultaneously) {
+        return self.shouldRecognizeSimultaneously(scrollView);
+    }
     if (!scrollView.__fw_isViewVisible || !scrollView.scrollEnabled) return NO;
     if (self.isVertical) {
         if (![scrollView __fw_canScrollVertical]) return NO;
@@ -192,10 +194,6 @@
 
 - (void)notifyPosition:(BOOL)finished
 {
-    if (finished) {
-        [self gestureRecognizerDidScroll:NO];
-    }
-    
     if (self.positionChanged) {
         self.positionChanged(self.position, finished);
     }
@@ -309,7 +307,7 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
-            [self gestureRecognizerDidScroll:YES];
+            [self gestureRecognizerDidScroll];
             [self notifyPosition:NO];
             break;
         }
@@ -335,7 +333,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (![self canScroll:self.scrollView]) return;
+    if (![self shouldRecognizeSimultaneously:self.scrollView]) return;
     
     if ([self.scrollView __fw_isScrollTo:self.scrollEdge]) {
         self.panDisabled = NO;
@@ -345,10 +343,10 @@
     }
 }
 
-- (void)gestureRecognizerDidScroll:(BOOL)isScrolling
+- (void)gestureRecognizerDidScroll
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (!isScrolling || ![self canScroll:self.scrollView]) return;
+    if (![self shouldRecognizeSimultaneously:self.scrollView]) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
@@ -366,13 +364,13 @@
         [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
         if (self.autoDetected) {
             UIScrollView *scrollView = (UIScrollView *)otherGestureRecognizer.view;
-            if ([self canScroll:scrollView]) {
+            if ([self shouldRecognizeSimultaneously:scrollView]) {
                 self.scrollView = scrollView;
                 return YES;
             }
         } else {
             if (self.scrollView && self.scrollView == otherGestureRecognizer.view &&
-                [self canScroll:self.scrollView]) {
+                [self shouldRecognizeSimultaneously:self.scrollView]) {
                 return YES;
             }
         }
