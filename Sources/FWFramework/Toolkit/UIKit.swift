@@ -1926,6 +1926,7 @@ import AdSupport
 @_spi(FW) extension UIPanGestureRecognizer {
     
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
+    @objc(__fw_swipeDirection)
     public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
         let transition = self.translation(in: self.view)
         if abs(transition.x) > abs(transition.y) {
@@ -2654,7 +2655,7 @@ import AdSupport
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if #available(iOS 13.0, *) { } else {
+            if #available(iOS 13.0, *) {} else {
                 var textFieldMaxX = selfObject.bounds.size.width
                 if let cancelInsetValue = selfObject.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
                    let cancelButton = selfObject.fw_cancelButton {
