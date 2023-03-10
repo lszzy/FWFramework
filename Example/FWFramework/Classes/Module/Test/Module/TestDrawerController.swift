@@ -89,7 +89,10 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
             drawerView.scrollViewFilter = nil
             drawerView.scrollViewPositions = { _ in
-                return [NSNumber(value: drawerView.position(at: 1))]
+                return [
+                    NSNumber(value: drawerView.openPosition),
+                    NSNumber(value: drawerView.position(at: 1))
+                ]
             }
             self?.toggleMenu()
         } customize: { gesture in
