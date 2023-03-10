@@ -9,9 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class __FWDrawerView;
+
+/// 抽屉拖拽视图事件代理
+NS_SWIFT_NAME(DrawerViewDelegate)
+@protocol __FWDrawerViewDelegate <NSObject>
+@optional
+
+/// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
+- (void)drawerView:(__FWDrawerView *)drawerView positionChanged:(CGFloat)position finished:(BOOL)finished;
+
+@end
+
 /**
-抽屉拖拽视图
-*/
+ 抽屉拖拽视图
+ */
 NS_SWIFT_NAME(DrawerView)
 @interface __FWDrawerView : NSObject
 
@@ -20,6 +32,9 @@ NS_SWIFT_NAME(DrawerView)
 
 // 请使用initWithView
 - (instancetype)init NS_UNAVAILABLE;
+
+// 事件代理，默认nil
+@property (nonatomic, weak, nullable) id<__FWDrawerViewDelegate> delegate;
 
 // 拖拽方向，如向上拖动视图时为Up，向下为Down，向右为Right，向左为Left。默认向上
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
@@ -55,7 +70,7 @@ NS_SWIFT_NAME(DrawerView)
 @property (nonatomic, assign, readonly) CGFloat closePosition;
 
 // 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
-@property (nullable, nonatomic, copy) void (^callback)(CGFloat position, BOOL finished);
+@property (nullable, nonatomic, copy) void (^positionChanged)(CGFloat position, BOOL finished);
 
 // 自定义动画句柄，动画必须调用animations和completion句柄
 @property (nullable, nonatomic, copy) void (^animationBlock)(void (^animations)(void), void (^completion)(BOOL finished));
