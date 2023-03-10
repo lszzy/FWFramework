@@ -196,8 +196,11 @@
         [self gestureRecognizerDidScroll:NO];
     }
     
-    if (self.callback) {
-        self.callback(self.position, finished);
+    if (self.positionChanged) {
+        self.positionChanged(self.position, finished);
+    }
+    if ([self.delegate respondsToSelector:@selector(drawerView:positionChanged:finished:)]) {
+        [self.delegate drawerView:self positionChanged:self.position finished:finished];
     }
 }
 
