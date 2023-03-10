@@ -306,7 +306,8 @@
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
             if ([self.scrollView __fw_isScrollTo:self.scrollEdge] &&
-                gestureRecognizer.__fw_swipeDirection == self.scrollDirection) {
+                (self.scrollView.panGestureRecognizer.__fw_swipeDirection == self.scrollDirection ||
+                 gestureRecognizer.__fw_swipeDirection == self.scrollDirection)) {
                 self.originValid = YES;
             } else {
                 self.originValid = NO;
