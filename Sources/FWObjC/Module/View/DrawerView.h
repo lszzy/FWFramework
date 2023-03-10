@@ -38,7 +38,7 @@ NS_SWIFT_NAME(DrawerView)
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
 /// 抽屉位置，至少两级，相对于view父视图的originY位置
-@property (nullable, nonatomic, strong) NSArray<NSNumber *> *positions;
+@property (nonatomic, strong) NSArray<NSNumber *> *positions;
 
 /// 回弹高度，拖拽小于该高度执行回弹，默认为0
 @property (nonatomic, assign) CGFloat kickbackHeight;
@@ -73,11 +73,11 @@ NS_SWIFT_NAME(DrawerView)
 /// 自定义动画句柄，动画必须调用animations和completion句柄
 @property (nullable, nonatomic, copy) void (^animationBlock)(void (^animations)(void), void (^completion)(BOOL finished));
 
-/// 是否允许同时识别指定滚动视图pan手势(自动处理冲突)，默认仅允许同时识别可滚动视图
-@property (nullable, nonatomic, copy) BOOL (^shouldRecognizeSimultaneously)(UIScrollView *scrollView);
+/// 滚动视图过滤器，默认只处理可滚动视图的冲突。如需其它条件，可自定义此句柄
+@property (nullable, nonatomic, copy) BOOL (^scrollViewFilter)(UIScrollView *scrollView);
 
-/// 是否指定滚动视图在滚动时不能拖拽抽屉，默认nil滚动时可拖拽抽屉
-@property (nullable, nonatomic, copy) BOOL (^shouldRequireFailure)(UIScrollView *scrollView);
+/// 自定义滚动视图允许滚动的位置，默认nil时仅openPosition可滚动
+@property (nullable, nonatomic, copy) NSArray<NSNumber *> * (^scrollViewPositions)(UIScrollView *scrollView);
 
 /// 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated;
