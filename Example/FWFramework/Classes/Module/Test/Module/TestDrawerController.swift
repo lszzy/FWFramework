@@ -19,8 +19,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     private lazy var bottomView: UIView = {
         let result = UIView()
-        result.isHidden = true
-        result.frame = CGRect(x: 0, y: 100, width: FW.screenWidth, height: view.fw.height)
+        result.frame = CGRect(x: 0, y: self.view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height)
         result.backgroundColor = .fw.randomColor
         result.addSubview(scrollView)
         return result
@@ -65,40 +64,46 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         view.backgroundColor = AppTheme.tableColor
         
         let topLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 100, height: 30))
-        topLabel.text = "Menu 1"
+        topLabel.text = "默认模式"
         contentView.addSubview(topLabel)
         topLabel.isUserInteractionEnabled = true
         topLabel.fw.addTapGesture { [weak self] _ in
-            guard let self = self else { return }
-            self.bottomView.isHidden = false
-            self.bottomView.fw.drawerView?.setPosition(100, animated: true)
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.scrollViewFilter = nil
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
         }
         
         let middleLabel = UILabel(frame: CGRect(x: 50, y: 250, width: 100, height: 30))
-        middleLabel.text = "Menu 2"
+        middleLabel.text = "滚动模式"
         contentView.addSubview(middleLabel)
         middleLabel.isUserInteractionEnabled = true
         middleLabel.fw.addTapGesture { [weak self] _ in
-            guard let self = self else { return }
-            self.bottomView.isHidden = false
-            self.bottomView.fw.drawerView?.setPosition(self.view.fw.height / 2.0, animated: true)
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
         }
         
         let bottomLabel = UILabel(frame: CGRect(x: 50, y: 300, width: 100, height: 30))
-        bottomLabel.text = "Menu 3"
+        bottomLabel.text = "拖动模式"
         contentView.addSubview(bottomLabel)
         bottomLabel.isUserInteractionEnabled = true
         bottomLabel.fw.addTapGesture { [weak self] _ in
-            guard let self = self else { return }
-            self.bottomView.isHidden = false
-            self.bottomView.fw.drawerView?.setPosition(self.view.fw.height - 100.0, animated: true)
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.scrollViewFilter = { scrollView in
+                return false
+            }
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
         }
         
         let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
-        closeLabel.text = "Back"
+        closeLabel.text = "返回"
         closeLabel.isUserInteractionEnabled = true
         closeLabel.fw.addTapGesture { [weak self] _ in
             self?.fw.close()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
         }
         contentView.addSubview(closeLabel)
         view.addSubview(contentView)
