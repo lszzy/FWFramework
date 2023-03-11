@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.7.2] - 2023-03-11
+
+### Added
+* Refactor DrawerView to support multiple modes
+* Added safeJSON fast conversion JSON method
+* Added method to get TabBar root controller
+
 ## [4.7.1] - 2023-03-09
 
 ### Added
