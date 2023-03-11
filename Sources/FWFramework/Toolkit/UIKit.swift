@@ -348,6 +348,21 @@ extension Wrapper where Base: UIImageView {
 // MARK: - UIWindow+UIKit
 extension Wrapper where Base: UIWindow {
     
+    /// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    public func getTabBarIndex(_ index: Int) -> UIViewController? {
+        return base.__fw_getTabBarIndex(index)
+    }
+    
+    /// 获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    public func getTabBarController(_ clazz: AnyClass) -> UIViewController? {
+        return base.__fw_getTabBarController(clazz)
+    }
+
+    /// 获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    public func getTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
+        return base.__fw_getTabBarBlock(block)
+    }
+    
     /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
     @discardableResult
     public func selectTabBarIndex(_ index: UInt) -> UIViewController? {
