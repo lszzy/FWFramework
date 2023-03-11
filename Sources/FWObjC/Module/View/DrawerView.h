@@ -37,7 +37,7 @@ NS_SWIFT_NAME(DrawerView)
 /// 拖拽方向，如向上拖动视图时为Up，向下为Down，向右为Right，向左为Left。默认向上
 @property (nonatomic, assign) UISwipeGestureRecognizerDirection direction;
 
-/// 抽屉位置，至少两级，相对于view父视图的originY位置
+/// 抽屉位置，至少两级，相对于view父视图的originY位置，自动从小到大排序
 @property (nonatomic, strong) NSArray<NSNumber *> *positions;
 
 /// 回弹高度，拖拽小于该高度执行回弹，默认为0
@@ -64,6 +64,9 @@ NS_SWIFT_NAME(DrawerView)
 /// 抽屉视图打开位置
 @property (nonatomic, assign, readonly) CGFloat openPosition;
 
+/// 抽屉视图中间位置，建议单数时调用
+@property (nonatomic, assign, readonly) CGFloat middlePosition;
+
 /// 抽屉视图关闭位置
 @property (nonatomic, assign, readonly) CGFloat closePosition;
 
@@ -82,17 +85,17 @@ NS_SWIFT_NAME(DrawerView)
 /// 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated;
 
-/// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
-
-/// 获取抽屉视图指定索引位置，获取失败返回0
+/// 获取抽屉视图指定索引位置(从小到大)，获取失败返回0
 - (CGFloat)positionAtIndex:(NSInteger)index;
 
-/// 判断当前抽屉效果视图是否在指定索引位置
+/// 判断当前抽屉效果视图是否在指定索引位置(从小到大)
 - (BOOL)isPositionIndex:(NSInteger)index;
 
-/// 设置抽屉效果视图到指定索引位置，如果位置发生改变，会触发抽屉callback回调
+/// 设置抽屉效果视图到指定索引位置(从小到大)，如果位置发生改变，会触发抽屉callback回调
 - (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated;
+
+/// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 @end
 

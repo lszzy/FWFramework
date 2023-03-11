@@ -115,6 +115,11 @@
     return self.isReverse ? self.positions.firstObject.doubleValue : self.positions.lastObject.doubleValue;
 }
 
+- (CGFloat)middlePosition
+{
+    return [self positionAtIndex:self.positions.count / 2];
+}
+
 - (CGFloat)closePosition
 {
     return self.isReverse ? self.positions.lastObject.doubleValue : self.positions.firstObject.doubleValue;
