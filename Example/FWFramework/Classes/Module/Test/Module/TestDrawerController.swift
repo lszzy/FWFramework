@@ -91,7 +91,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             drawerView.scrollViewPositions = { _ in
                 return [
                     NSNumber(value: drawerView.openPosition),
-                    NSNumber(value: drawerView.position(at: 1))
+                    NSNumber(value: drawerView.middlePosition)
                 ]
             }
             self?.toggleMenu()
