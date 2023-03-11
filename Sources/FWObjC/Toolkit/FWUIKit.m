@@ -1079,7 +1079,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UIWindow (FWUIKit)
 
-- (__kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index
+- (__kindof UIViewController *)fw_getTabBarIndex:(NSUInteger)index
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
@@ -1088,12 +1088,10 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     if (tabbarController.viewControllers.count > index) {
         targetNavigation = tabbarController.viewControllers[index];
     }
-    if (!targetNavigation) return nil;
-    
-    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+    return targetNavigation;
 }
 
-- (__kindof UIViewController *)fw_selectTabBarController:(Class)viewController
+- (__kindof UIViewController *)fw_getTabBarController:(Class)viewController
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
@@ -1107,12 +1105,10 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             break;
         }
     }
-    if (!targetNavigation) return nil;
-    
-    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+    return targetNavigation;
 }
 
-- (__kindof UIViewController *)fw_selectTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
+- (__kindof UIViewController *)fw_getTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
@@ -1128,9 +1124,28 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             break;
         }
     }
+    return targetNavigation;
+}
+
+- (__kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index
+{
+    UINavigationController *targetNavigation = [self fw_getTabBarIndex:index];
     if (!targetNavigation) return nil;
-    
-    return [self fw_selectTabBar:tabbarController navigation:targetNavigation];
+    return [self fw_selectTabBarNavigation:targetNavigation];
+}
+
+- (__kindof UIViewController *)fw_selectTabBarController:(Class)viewController
+{
+    UINavigationController *targetNavigation = [self fw_getTabBarController:viewController];
+    if (!targetNavigation) return nil;
+    return [self fw_selectTabBarNavigation:targetNavigation];
+}
+
+- (__kindof UIViewController *)fw_selectTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
+{
+    UINavigationController *targetNavigation = [self fw_getTabBarBlock:block];
+    if (!targetNavigation) return nil;
+    return [self fw_selectTabBarNavigation:targetNavigation];
 }
 
 - (UITabBarController *)fw_rootTabBarController
@@ -1149,8 +1164,11 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return nil;
 }
 
-- (UIViewController *)fw_selectTabBar:(UITabBarController *)tabbarController navigation:(UINavigationController *)targetNavigation
+- (UIViewController *)fw_selectTabBarNavigation:(UINavigationController *)targetNavigation
 {
+    UITabBarController *tabbarController = [self fw_rootTabBarController];
+    if (!tabbarController) return nil;
+    
     UINavigationController *currentNavigation = tabbarController.selectedViewController;
     if (currentNavigation != targetNavigation) {
         if ([currentNavigation isKindOfClass:[UINavigationController class]] &&

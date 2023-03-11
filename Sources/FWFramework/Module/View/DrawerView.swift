@@ -24,12 +24,12 @@ extension Wrapper where Base: UIView {
      @param direction 拖拽方向，如向上拖动视图时为Up，默认向上
      @param positions 抽屉位置，至少两级，相对于view父视图的originY位置
      @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
-     @param callback 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
+     @param positionChanged 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
      @return 抽屉拖拽视图
      */
     @discardableResult
-    public func drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [NSNumber], kickbackHeight: CGFloat, callback: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
-        return base.__fw_drawerView(direction, positions: positions, kickbackHeight: kickbackHeight, callback: callback)
+    public func drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [NSNumber], kickbackHeight: CGFloat, positionChanged: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
+        return base.__fw_drawerView(direction, positions: positions, kickbackHeight: kickbackHeight, positionChanged: positionChanged)
     }
     
 }
