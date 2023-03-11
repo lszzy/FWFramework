@@ -15,6 +15,7 @@
 
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
+@property (nonatomic, assign) BOOL originValid;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
 
@@ -31,6 +32,7 @@
         _view = view;
         _autoDetected = YES;
         _kickbackHeight = 0;
+        _positions = @[];
         _direction = UISwipeGestureRecognizerDirectionUp;
         _position = self.isVertical ? view.frame.origin.y : view.frame.origin.x;
         if ([view isKindOfClass:[UIScrollView class]]) {
@@ -91,6 +93,11 @@
     return self.isReverse ? self.positions.firstObject.doubleValue : self.positions.lastObject.doubleValue;
 }
 
+- (CGFloat)middlePosition
+{
+    return [self positionAtIndex:self.positions.count / 2];
+}
+
 - (CGFloat)closePosition
 {
     return self.isReverse ? self.positions.lastObject.doubleValue : self.positions.firstObject.doubleValue;
@@ -124,6 +131,22 @@
     }
 }
 
+- (UISwipeGestureRecognizerDirection)scrollDirection
+{
+    switch (self.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
+            return UISwipeGestureRecognizerDirectionDown;
+        case UISwipeGestureRecognizerDirectionDown:
+            return UISwipeGestureRecognizerDirectionUp;
+        case UISwipeGestureRecognizerDirectionLeft:
+            return UISwipeGestureRecognizerDirectionRight;
+        case UISwipeGestureRecognizerDirectionRight:
+            return UISwipeGestureRecognizerDirectionLeft;
+        default:
+            return 0;
+    }
+}
+
 - (CGFloat)nextPosition
 {
     __block CGFloat position;
@@ -150,7 +173,7 @@
 - (BOOL)canScroll:(UIScrollView *)scrollView
 {
     if (self.scrollViewFilter) return self.scrollViewFilter(scrollView);
-    if (!scrollView.scrollEnabled) return NO;
+    if (!scrollView.fw_isViewVisible || !scrollView.scrollEnabled) return NO;
     if (self.isVertical) {
         if (![scrollView fw_canScrollVertical]) return NO;
     } else {
@@ -162,21 +185,34 @@
 - (void)togglePosition:(CGFloat)position
 {
     self.view.frame = CGRectMake(
-                                 self.isVertical ? self.view.frame.origin.x : position,
-                                 self.isVertical ? position : self.view.frame.origin.y,
-                                 self.view.frame.size.width,
-                                 self.view.frame.size.height);
+        self.isVertical ? self.view.frame.origin.x : position,
+        self.isVertical ? position : self.view.frame.origin.y,
+        self.view.frame.size.width,
+        self.view.frame.size.height
+    );
 }
 
 - (void)notifyPosition:(BOOL)finished
 {
-    if (finished) {
-        [self gestureRecognizerDidScroll:NO];
+    if (self.positionChanged) {
+        self.positionChanged(self.position, finished);
+    }
+    if ([self.delegate respondsToSelector:@selector(drawerView:positionChanged:finished:)]) {
+        [self.delegate drawerView:self positionChanged:self.position finished:finished];
+    }
+}
+
+- (void)animateComplete:(CGFloat)position
+{
+    // 动画完成时需释放displayLink
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
     }
     
-    if (self.callback) {
-        self.callback(self.position, finished);
-    }
+    [self togglePosition:position];
+    self.position = position;
+    [self notifyPosition:YES];
 }
 
 #pragma mark - Public
@@ -202,24 +238,34 @@
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
-    [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self togglePosition:position];
-    } completion:^(BOOL finished) {
-        // 动画完成时需释放displayLink
-        if (self.displayLink) {
-            [self.displayLink invalidate];
-            self.displayLink = nil;
-        }
-        
-        self.position = position;
-        [self notifyPosition:YES];
-    }];
+    if (self.animationBlock) {
+        __weak __typeof__(self) self_weak_ = self;
+        self.animationBlock(^{
+            __typeof__(self) self = self_weak_;
+            [self togglePosition:position];
+        }, ^(BOOL finished) {
+            __typeof__(self) self = self_weak_;
+            [self animateComplete:position];
+        });
+    } else {
+        [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self togglePosition:position];
+        } completion:^(BOOL finished) {
+            [self animateComplete:position];
+        }];
+    }
 }
 
 - (CGFloat)positionAtIndex:(NSInteger)index
 {
     if (index < 0 || index >= self.positions.count) return 0;
     return [self.positions[index] doubleValue];
+}
+
+- (BOOL)isPositionIndex:(NSInteger)index
+{
+    if (index < 0 || index >= self.positions.count) return NO;
+    return self.position == [self.positions[index] doubleValue];
 }
 
 - (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated
@@ -242,6 +288,13 @@
         case UIGestureRecognizerStateBegan: {
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
+            if ([self.scrollView fw_isScrollToEdge:self.scrollEdge] &&
+                (self.scrollView.panGestureRecognizer.fw_swipeDirection == self.scrollDirection ||
+                 gestureRecognizer.fw_swipeDirection == self.scrollDirection)) {
+                self.originValid = YES;
+            } else {
+                self.originValid = NO;
+            }
             break;
         }
         // 拖动改变时更新视图位置
@@ -261,7 +314,7 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
-            [self gestureRecognizerDidScroll:YES];
+            [self gestureRecognizerDidScroll];
             [self notifyPosition:NO];
             break;
         }
@@ -289,18 +342,28 @@
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
     
-    if ([self.scrollView fw_isScrollToEdge:self.scrollEdge]) {
+    NSArray<NSNumber *> *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : @[];
+    if (positions.count > 0 && [positions containsObject:@(self.originPosition)]) {
         self.panDisabled = NO;
-    }
-    if (!self.panDisabled) {
-        [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+        if (self.originValid) {
+            [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+        } else {
+            [self setPosition:self.originPosition animated:NO];
+        }
+    } else {
+        if ([self.scrollView fw_isScrollToEdge:self.scrollEdge]) {
+            self.panDisabled = NO;
+        }
+        if (!self.panDisabled) {
+            [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+        }
     }
 }
 
-- (void)gestureRecognizerDidScroll:(BOOL)isScrolling
+- (void)gestureRecognizerDidScroll
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (!isScrolling || ![self canScroll:self.scrollView]) return;
+    if (![self canScroll:self.scrollView]) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
@@ -323,7 +386,8 @@
                 return YES;
             }
         } else {
-            if (self.scrollView && self.scrollView == otherGestureRecognizer.view) {
+            if (self.scrollView && self.scrollView == otherGestureRecognizer.view &&
+                [self canScroll:self.scrollView]) {
                 return YES;
             }
         }
@@ -348,15 +412,15 @@
 }
 
 - (FWDrawerView *)fw_drawerView:(UISwipeGestureRecognizerDirection)direction
-                     positions:(NSArray<NSNumber *> *)positions
-                kickbackHeight:(CGFloat)kickbackHeight
-                      callback:(void (^)(CGFloat, BOOL))callback
+                      positions:(NSArray<NSNumber *> *)positions
+                 kickbackHeight:(CGFloat)kickbackHeight
+                positionChanged:(void (^)(CGFloat, BOOL))positionChanged
 {
     FWDrawerView *drawerView = [[FWDrawerView alloc] initWithView:self];
     if (direction > 0) drawerView.direction = direction;
     drawerView.positions = positions;
     drawerView.kickbackHeight = kickbackHeight;
-    drawerView.callback = callback;
+    drawerView.positionChanged = positionChanged;
     return drawerView;
 }
 

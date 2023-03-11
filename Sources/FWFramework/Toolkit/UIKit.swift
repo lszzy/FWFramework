@@ -349,7 +349,7 @@ extension Wrapper where Base: UIImageView {
 extension Wrapper where Base: UIWindow {
     
     /// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func getTabBarIndex(_ index: Int) -> UIViewController? {
+    public func getTabBarIndex(_ index: UInt) -> UIViewController? {
         return base.__fw_getTabBarIndex(index)
     }
     
