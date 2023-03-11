@@ -17,6 +17,29 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         return result
     }()
     
+    private lazy var bottomView: UIView = {
+        let result = UIView()
+        result.frame = CGRect(x: 0, y: self.view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height)
+        result.backgroundColor = .fw.randomColor
+        result.addSubview(scrollView)
+        return result
+    }()
+    
+    private lazy var scrollView: UIScrollView = {
+        let result = UIScrollView()
+        result.showsVerticalScrollIndicator = false
+        result.showsHorizontalScrollIndicator = false
+        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 50)
+        result.backgroundColor = UIColor.fw.randomColor
+        result.contentSize = CGSize(width: FW.screenWidth, height: view.fw.height + 250)
+        
+        let topView = UIView()
+        topView.frame = CGRectMake(0, 0, FW.screenWidth, 300)
+        topView.backgroundColor = UIColor.fw.randomColor
+        result.addSubview(topView)
+        return result
+    }()
+    
     private lazy var imageView: UIImageView = {
         let result = UIImageView()
         result.contentMode = .scaleAspectFit
@@ -36,9 +59,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     func setupNavbar() {
         fw.setLeftBarItem(FW.iconImage("zmdi-var-menu", 24)) { [weak self] _ in
-            guard let drawerView = self?.contentView.fw.drawerView else { return }
-            let position = drawerView.position == drawerView.openPosition ? drawerView.closePosition : drawerView.openPosition
-            drawerView.setPosition(position, animated: true)
+            self?.toggleMenu()
         }
         
         fw.addRightBarItem("相册", target: self, action: #selector(self.onPhotoSheet(_:)))
@@ -48,36 +69,83 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         view.backgroundColor = AppTheme.tableColor
         
         let topLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 100, height: 30))
-        topLabel.text = "Menu 1"
+        topLabel.text = "默认模式"
         contentView.addSubview(topLabel)
+        topLabel.isUserInteractionEnabled = true
+        topLabel.fw.addTapGesture { [weak self] _ in
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewPositions = nil
+            self?.toggleMenu()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
+        }
         
         let middleLabel = UILabel(frame: CGRect(x: 50, y: 250, width: 100, height: 30))
-        middleLabel.text = "Menu 2"
+        middleLabel.text = "可滚动模式"
         contentView.addSubview(middleLabel)
+        middleLabel.isUserInteractionEnabled = true
+        middleLabel.fw.addTapGesture { [weak self] _ in
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewPositions = { _ in
+                return [
+                    NSNumber(value: drawerView.openPosition),
+                    NSNumber(value: drawerView.middlePosition)
+                ]
+            }
+            self?.toggleMenu()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
+        }
         
         let bottomLabel = UILabel(frame: CGRect(x: 50, y: 300, width: 100, height: 30))
-        bottomLabel.text = "Menu 3"
+        bottomLabel.text = "仅拖动模式"
         contentView.addSubview(bottomLabel)
+        bottomLabel.isUserInteractionEnabled = true
+        bottomLabel.fw.addTapGesture { [weak self] _ in
+            guard let drawerView = self?.bottomView.fw.drawerView else { return }
+            drawerView.scrollViewFilter = { _ in false }
+            drawerView.scrollViewPositions = nil
+            self?.toggleMenu()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
+        }
         
         let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
-        closeLabel.text = "Back"
+        closeLabel.text = "返回"
         closeLabel.isUserInteractionEnabled = true
         closeLabel.fw.addTapGesture { [weak self] _ in
             self?.fw.close()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
         }
         contentView.addSubview(closeLabel)
-        view.addSubview(contentView)
-        
-        contentView.fw.drawerView(
-            .right,
-            positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
-            kickbackHeight: 25
-        )
         
         view.addSubview(imageView)
         imageView.fw.layoutChain
             .center()
             .size(CGSize(width: 200, height: 200))
+        
+        view.addSubview(bottomView)
+        bottomView.fw.drawerView(
+            .up,
+            positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
+            kickbackHeight: 25
+        )
+        
+        view.addSubview(contentView)
+        contentView.fw.drawerView(
+            .right,
+            positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
+            kickbackHeight: 25
+        )
+    }
+    
+    func toggleMenu() {
+        guard let drawerView = contentView.fw.drawerView else { return }
+        let position = drawerView.position == drawerView.openPosition ? drawerView.closePosition : drawerView.openPosition
+        drawerView.setPosition(position, animated: true)
     }
     
     @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
