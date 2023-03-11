@@ -4055,161 +4055,28 @@
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 19,
-      "symbol": "FWDrawerView.-initWithView:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 22,
-      "symbol": "FWDrawerView.-init",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 25,
-      "symbol": "FWDrawerView.direction",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 28,
-      "symbol": "FWDrawerView.positions",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 31,
-      "symbol": "FWDrawerView.kickbackHeight",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 34,
-      "symbol": "FWDrawerView.callback",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 37,
-      "symbol": "FWDrawerView.enabled",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 40,
-      "symbol": "FWDrawerView.autoDetected",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 43,
-      "symbol": "FWDrawerView.scrollView",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 46,
-      "symbol": "FWDrawerView.scrollViewFilter",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 49,
-      "symbol": "FWDrawerView.view",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 52,
-      "symbol": "FWDrawerView.gestureRecognizer",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 55,
-      "symbol": "FWDrawerView.position",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 58,
-      "symbol": "FWDrawerView.openPosition",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 61,
-      "symbol": "FWDrawerView.closePosition",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 64,
-      "symbol": "FWDrawerView.-setPosition:animated:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 67,
-      "symbol": "FWDrawerView.-scrollViewDidScroll:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 70,
-      "symbol": "FWDrawerView.-positionAtIndex:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 73,
-      "symbol": "FWDrawerView.-setPositionIndex:animated:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 83,
+      "line": 108,
       "symbol": "UIView(FWAdaptive).fw_drawerView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 107,
+      "line": 132,
       "symbol": "UIScrollView(FWDrawerView).fw_drawerSuperviewFixed",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 110,
+      "line": 135,
       "symbol": "UIScrollView(FWDrawerView).-fw_drawerSuperviewDidScroll:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWDrawerView.h",
-      "line": 113,
+      "line": 138,
       "symbol": "UIScrollView(FWDrawerView).-fw_drawerSubviewDidScroll:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -9508,105 +9375,105 @@
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 219,
+      "line": 228,
       "symbol": "UILabel(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 271,
+      "line": 280,
       "symbol": "UIButton(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 316,
+      "line": 325,
       "symbol": "UIScrollView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 408,
+      "line": 417,
       "symbol": "UIPanGestureRecognizer(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 423,
+      "line": 432,
       "symbol": "UIPageControl(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 432,
+      "line": 441,
       "symbol": "UISlider(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 444,
+      "line": 453,
       "symbol": "UISwitch(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 453,
+      "line": 462,
       "symbol": "UITextField(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 495,
+      "line": 504,
       "symbol": "UITextView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 543,
+      "line": 552,
       "symbol": "UITableView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 564,
+      "line": 573,
       "symbol": "UITableViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 579,
+      "line": 588,
       "symbol": "UICollectionView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 591,
+      "line": 600,
       "symbol": "UICollectionViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 603,
+      "line": 612,
       "symbol": "UISearchBar(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 639,
+      "line": 648,
       "symbol": "UIViewController(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

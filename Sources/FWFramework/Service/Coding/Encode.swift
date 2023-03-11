@@ -522,6 +522,7 @@ extension Wrapper {
     public var safeNumber: NSNumber { return FW.safeNumber(base) }
     public var safeArray: [Any] { return (base as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
+    public var safeJSON: JSON { return JSON(base) }
 }
 
 /// 可选类安全转换，不为nil
@@ -534,6 +535,7 @@ extension Optional {
     public var safeNumber: NSNumber { return FW.safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
+    public var safeJSON: JSON { return JSON(self) }
     
     public static func isNone(_ value: Wrapped?) -> Bool {
         return value == nil || value._plainValue() == nil

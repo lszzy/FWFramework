@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.7.1 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.7.2 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1791,6 +1791,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWDotViewProtocol.html">FWDotViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWDrawerViewDelegate.html">FWDrawerViewDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWEmptyPlugin.html">FWEmptyPlugin</a>
@@ -6046,8 +6049,8 @@ NSObject.fw.swizzleInstanceMethod(
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Method/drawerView(_:positions:kickbackHeight:callback:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">drawerView(_:<wbr>positions:<wbr>kickbackHeight:<wbr>callback:<wbr>)</a>
+                    <a name="//apple_ref/swift/Method/drawerView(_:positions:kickbackHeight:positionChanged:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">drawerView(_:<wbr>positions:<wbr>kickbackHeight:<wbr>positionChanged:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -6060,7 +6063,7 @@ NSObject.fw.swizzleInstanceMethod(
 <p>@param direction 拖拽方向，如向上拖动视图时为Up，默认向上
 @param positions 抽屉位置，至少两级，相对于view父视图的originY位置
 @param kickbackHeight 回弹高度，拖拽小于该高度执行回弹
-@param callback 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
+@param positionChanged 抽屉视图位移回调，参数为相对父视图的origin位置和是否拖拽完成的标记
 @return 抽屉拖拽视图</p>
 
                       </div>
@@ -10969,6 +10972,24 @@ NSObject.fw.swizzleInstanceMethod(
                     <a name="/"></a>
                     <a name="//apple_ref/swift/Property/safeDictionary" class="dashAnchor"></a>
                     <a class="token" href="#/">safeDictionary</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Property/safeJSON" class="dashAnchor"></a>
+                    <a class="token" href="#/">safeJSON</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -22864,6 +22885,63 @@ NSObject.fw.swizzleInstanceMethod(
                   <div>
                     <code>
                     <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/getTabBarIndex(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">getTabBarIndex(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/getTabBarController(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">getTabBarController(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/getTabBarBlock(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">getTabBarBlock(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
                     <a name="//apple_ref/swift/Method/selectTabBarIndex(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/">selectTabBarIndex(_:<wbr>)</a>
                     </code>
@@ -24727,7 +24805,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-09)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

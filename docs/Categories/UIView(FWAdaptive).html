@@ -17,7 +17,7 @@
     <a title="UIView(FWAdaptive) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.7.1 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.7.2 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1791,6 +1791,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWDotViewProtocol.html">FWDotViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWDrawerViewDelegate.html">FWDrawerViewDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWEmptyPlugin.html">FWEmptyPlugin</a>
@@ -9127,9 +9130,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIView(im)fw_drawerView:positions:kickbackHeight:callback:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_drawerView:positions:kickbackHeight:callback:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIView(im)fw_drawerView:positions:kickbackHeight:callback:">-fw_drawerView:<wbr>positions:<wbr>kickbackHeight:<wbr>callback:<wbr></a>
+                    <a name="/c:objc(cs)UIView(im)fw_drawerView:positions:kickbackHeight:positionChanged:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_drawerView:positions:kickbackHeight:positionChanged:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_drawerView:positions:kickbackHeight:positionChanged:">-fw_drawerView:<wbr>positions:<wbr>kickbackHeight:<wbr>positionChanged:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -9145,10 +9148,10 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/FWDrawerView.html">FWDrawerView</a></span> <span class="o">*</span><span class="p">)</span>
-     <span class="nf">fw_drawerView</span><span class="p">:(</span><span class="n">UISwipeGestureRecognizerDirection</span><span class="p">)</span><span class="nv">direction</span>
-         <span class="nf">positions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSNumber</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">positions</span>
-    <span class="nf">kickbackHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">kickbackHeight</span>
-          <span class="nf">callback</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">CGFloat</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">))</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+      <span class="nf">fw_drawerView</span><span class="p">:(</span><span class="n">UISwipeGestureRecognizerDirection</span><span class="p">)</span><span class="nv">direction</span>
+          <span class="nf">positions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSNumber</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">positions</span>
+     <span class="nf">kickbackHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">kickbackHeight</span>
+    <span class="nf">positionChanged</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">CGFloat</span><span class="p">,</span> <span class="n">BOOL</span><span class="p">))</span><span class="nv">positionChanged</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -9195,7 +9198,7 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>callback</em>
+                                <em>positionChanged</em>
                                 </code>
                               </td>
                               <td>
@@ -14343,7 +14346,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-09)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
