@@ -17,7 +17,7 @@
     <a title="UIWindow(FWUIKit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.7.2 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.7.3 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2655,23 +2655,23 @@
                   
                   <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UIWindow</span> <span class="p">(</span><span class="nl">FWUIKit</span><span class="p">)</span>
 
-<span class="c1">/// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarIndex</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">index</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerWithIndex</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarController</span><span class="p">:(</span><span class="n">Class</span><span class="p">)</span><span class="nv">viewController</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerOfClass</span><span class="p">:(</span><span class="n">Class</span><span class="p">)</span><span class="nv">clazz</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarBlock</span><span class="p">:(</span><span class="n">BOOL</span> <span class="p">(</span><span class="n">NS_NOESCAPE</span> <span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">viewController</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerWithBlock</span><span class="p">:(</span><span class="n">BOOL</span> <span class="p">(</span><span class="n">NS_NOESCAPE</span> <span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">viewController</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarIndex</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">index</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerWithIndex</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarController</span><span class="p">:(</span><span class="n">Class</span><span class="p">)</span><span class="nv">viewController</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerOfClass</span><span class="p">:(</span><span class="n">Class</span><span class="p">)</span><span class="nv">clazz</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarBlock</span><span class="p">:(</span><span class="n">BOOL</span> <span class="p">(</span><span class="n">NS_NOESCAPE</span> <span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">viewController</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerWithBlock</span><span class="p">:(</span><span class="n">BOOL</span> <span class="p">(</span><span class="n">NS_NOESCAPE</span> <span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">viewController</span><span class="p">))</span><span class="nv">block</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -2686,9 +2686,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarIndex:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_getTabBarIndex:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarIndex:">-fw_getTabBarIndex:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarControllerWithIndex:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_getTabBarControllerWithIndex:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarControllerWithIndex:">-fw_getTabBarControllerWithIndex:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2696,14 +2696,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarIndex</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerWithIndex</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2713,9 +2714,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarController:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_getTabBarController:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarController:">-fw_getTabBarController:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarControllerOfClass:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_getTabBarControllerOfClass:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarControllerOfClass:">-fw_getTabBarControllerOfClass:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2723,15 +2724,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarController</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n">Class</span><span class="p">)</span><span class="nv">viewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerOfClass</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">Class</span><span class="p">)</span><span class="nv">clazz</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2741,9 +2742,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarBlock:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_getTabBarBlock:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarBlock:">-fw_getTabBarBlock:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_getTabBarControllerWithBlock:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_getTabBarControllerWithBlock:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_getTabBarControllerWithBlock:">-fw_getTabBarControllerWithBlock:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2751,14 +2752,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarBlock</span><span class="p">:</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_getTabBarControllerWithBlock</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -2769,9 +2770,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarIndex:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_selectTabBarIndex:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarIndex:">-fw_selectTabBarIndex:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarControllerWithIndex:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_selectTabBarControllerWithIndex:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarControllerWithIndex:">-fw_selectTabBarControllerWithIndex:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2779,14 +2780,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarIndex</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerWithIndex</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2796,9 +2798,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarController:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_selectTabBarController:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarController:">-fw_selectTabBarController:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarControllerOfClass:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_selectTabBarControllerOfClass:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarControllerOfClass:">-fw_selectTabBarControllerOfClass:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2806,15 +2808,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarController</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n">Class</span><span class="p">)</span><span class="nv">viewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerOfClass</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">Class</span><span class="p">)</span><span class="nv">clazz</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2824,9 +2826,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarBlock:"></a>
-                    <a name="//apple_ref/swift/Method/-fw_selectTabBarBlock:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarBlock:">-fw_selectTabBarBlock:<wbr></a>
+                    <a name="/c:objc(cs)UIWindow(im)fw_selectTabBarControllerWithBlock:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_selectTabBarControllerWithBlock:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIWindow(im)fw_selectTabBarControllerWithBlock:">-fw_selectTabBarControllerWithBlock:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2834,14 +2836,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil</p>
+                        <p>选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarBlock</span><span class="p">:</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_selectTabBarControllerWithBlock</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">BOOL</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="nv">block</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -2854,7 +2856,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-11)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-13)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
