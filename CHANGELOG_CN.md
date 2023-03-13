@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.7.3] - 2023-03-13
+
+### Changed
+* 重构获取和选中TabBar指定控制器方法名称
+* 优化DrawerView位于非scrollViewPositions时不自动回到顶部
+
 ## [4.7.2] - 2023-03-11
 
 ### Added
