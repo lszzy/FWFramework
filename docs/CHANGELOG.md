@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.7.3] - 2023-03-13
+
+### Changed
+* Refactor the method name of obtaining and selecting the TabBar specified controller
+* Optimize DrawerView not automatically return to the top when it is in non-scrollViewPositions
+
 ## [4.7.2] - 2023-03-11
 
 ### Added

@@ -85715,7 +85715,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Toolkit\/UIKit.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 39769,
+    "key.length" : 39647,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -87164,10 +87164,10 @@
         "key.offset" : 12849
       },
       {
-        "key.bodylength" : 1662,
+        "key.bodylength" : 1540,
         "key.bodyoffset" : 12912,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1703,
+        "key.length" : 1581,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
         "key.nameoffset" : 12882,
@@ -87179,20 +87179,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13040
+                "key.offset" : 13014
               }
             ],
-            "key.bodylength" : 52,
-            "key.bodyoffset" : 13104,
-            "key.doc.comment" : "获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 114,
+            "key.bodylength" : 63,
+            "key.bodyoffset" : 13080,
+            "key.doc.comment" : "获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 88,
             "key.docoffset" : 12922,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 110,
-            "key.name" : "getTabBarIndex(_:)",
-            "key.namelength" : 29,
-            "key.nameoffset" : 13052,
-            "key.offset" : 13047,
+            "key.length" : 123,
+            "key.name" : "getTabBarController(index:)",
+            "key.namelength" : 31,
+            "key.nameoffset" : 13026,
+            "key.offset" : 13021,
             "key.substructure" : [
 
             ],
@@ -87204,135 +87204,135 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 13282
+                "key.offset" : 13243
+              }
+            ],
+            "key.bodylength" : 61,
+            "key.bodyoffset" : 13317,
+            "key.doc.comment" : "获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 85,
+            "key.docoffset" : 13154,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 129,
+            "key.name" : "getTabBarController(of:)",
+            "key.namelength" : 39,
+            "key.nameoffset" : 13255,
+            "key.offset" : 13250,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "UIViewController?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 13477
               }
             ],
             "key.bodylength" : 57,
-            "key.bodyoffset" : 13355,
-            "key.doc.comment" : "获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 111,
-            "key.docoffset" : 13167,
+            "key.bodyoffset" : 13566,
+            "key.doc.comment" : "获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 88,
+            "key.docoffset" : 13385,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 124,
-            "key.name" : "getTabBarController(_:)",
-            "key.namelength" : 38,
-            "key.nameoffset" : 13294,
-            "key.offset" : 13289,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "UIViewController?"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 13537
-              }
-            ],
-            "key.bodylength" : 52,
-            "key.bodyoffset" : 13623,
-            "key.doc.comment" : "获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 114,
-            "key.docoffset" : 13419,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 132,
-            "key.name" : "getTabBarBlock(_:)",
-            "key.namelength" : 51,
-            "key.nameoffset" : 13549,
-            "key.offset" : 13544,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "UIViewController?"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 13836
-              },
-              {
-                "key.attribute" : "source.decl.attribute.discardableResult",
-                "key.length" : 18,
-                "key.offset" : 13813
-              }
-            ],
-            "key.bodylength" : 55,
-            "key.bodyoffset" : 13903,
-            "key.doc.comment" : "选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 123,
-            "key.docoffset" : 13686,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 116,
-            "key.name" : "selectTabBarIndex(_:)",
-            "key.namelength" : 32,
-            "key.nameoffset" : 13848,
-            "key.offset" : 13843,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "UIViewController?"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 14112
-              },
-              {
-                "key.attribute" : "source.decl.attribute.discardableResult",
-                "key.length" : 18,
-                "key.offset" : 14089
-              }
-            ],
-            "key.bodylength" : 69,
-            "key.bodyoffset" : 14197,
-            "key.doc.comment" : "选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 120,
-            "key.docoffset" : 13965,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 148,
-            "key.name" : "selectTabBarController(_:)",
-            "key.namelength" : 50,
-            "key.nameoffset" : 14124,
-            "key.offset" : 14119,
-            "key.substructure" : [
-
-            ],
-            "key.typename" : "UIViewController?"
-          },
-          {
-            "key.accessibility" : "source.lang.swift.accessibility.public",
-            "key.attributes" : [
-              {
-                "key.attribute" : "source.decl.attribute.public",
-                "key.length" : 6,
-                "key.offset" : 14423
-              },
-              {
-                "key.attribute" : "source.decl.attribute.discardableResult",
-                "key.length" : 18,
-                "key.offset" : 14400
-              }
-            ],
-            "key.bodylength" : 55,
-            "key.bodyoffset" : 14512,
-            "key.doc.comment" : "选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil",
-            "key.doclength" : 123,
-            "key.docoffset" : 14273,
-            "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 138,
-            "key.name" : "selectTabBarBlock(_:)",
+            "key.length" : 140,
+            "key.name" : "getTabBarController(block:)",
             "key.namelength" : 54,
-            "key.nameoffset" : 14435,
-            "key.offset" : 14430,
+            "key.nameoffset" : 13489,
+            "key.offset" : 13484,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "UIViewController?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 13758
+              },
+              {
+                "key.attribute" : "source.decl.attribute.discardableResult",
+                "key.length" : 18,
+                "key.offset" : 13735
+              }
+            ],
+            "key.bodylength" : 66,
+            "key.bodyoffset" : 13827,
+            "key.doc.comment" : "选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 97,
+            "key.docoffset" : 13634,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 129,
+            "key.name" : "selectTabBarController(index:)",
+            "key.namelength" : 34,
+            "key.nameoffset" : 13770,
+            "key.offset" : 13765,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "UIViewController?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 14021
+              },
+              {
+                "key.attribute" : "source.decl.attribute.discardableResult",
+                "key.length" : 18,
+                "key.offset" : 13998
+              }
+            ],
+            "key.bodylength" : 64,
+            "key.bodyoffset" : 14098,
+            "key.doc.comment" : "选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 94,
+            "key.docoffset" : 13900,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 135,
+            "key.name" : "selectTabBarController(of:)",
+            "key.namelength" : 42,
+            "key.nameoffset" : 14033,
+            "key.offset" : 14028,
+            "key.substructure" : [
+
+            ],
+            "key.typename" : "UIViewController?"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 14293
+              },
+              {
+                "key.attribute" : "source.decl.attribute.discardableResult",
+                "key.length" : 18,
+                "key.offset" : 14270
+              }
+            ],
+            "key.bodylength" : 60,
+            "key.bodyoffset" : 14385,
+            "key.doc.comment" : "选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil",
+            "key.doclength" : 97,
+            "key.docoffset" : 14169,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 146,
+            "key.name" : "selectTabBarController(block:)",
+            "key.namelength" : 57,
+            "key.nameoffset" : 14305,
+            "key.offset" : 14300,
             "key.substructure" : [
 
             ],
@@ -87344,17 +87344,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 21,
         "key.name" : "MARK: - UILabel+UIKit",
-        "key.offset" : 14580
+        "key.offset" : 14458
       },
       {
         "key.bodylength" : 2550,
-        "key.bodyoffset" : 14641,
+        "key.bodyoffset" : 14519,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2590,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 14612,
-        "key.offset" : 14602,
+        "key.nameoffset" : 14490,
+        "key.offset" : 14480,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -87362,20 +87362,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 14760
+                "key.offset" : 14638
               }
             ],
             "key.bodylength" : 105,
-            "key.bodyoffset" : 14819,
+            "key.bodyoffset" : 14697,
             "key.doc.comment" : "快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法",
             "key.doclength" : 105,
-            "key.docoffset" : 14651,
+            "key.docoffset" : 14529,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 158,
             "key.name" : "textAttributes",
             "key.namelength" : 14,
-            "key.nameoffset" : 14771,
-            "key.offset" : 14767,
+            "key.nameoffset" : 14649,
+            "key.offset" : 14645,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "[NSAttributedString.Key: Any]?"
           },
@@ -87385,20 +87385,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15100
+                "key.offset" : 14978
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 15132,
+            "key.bodyoffset" : 15010,
             "key.doc.comment" : "快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高",
             "key.doclength" : 165,
-            "key.docoffset" : 14931,
+            "key.docoffset" : 14809,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 123,
             "key.name" : "lineHeight",
             "key.namelength" : 10,
-            "key.nameoffset" : 15111,
-            "key.offset" : 15107,
+            "key.nameoffset" : 14989,
+            "key.offset" : 14985,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -87408,20 +87408,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15389
+                "key.offset" : 15267
               }
             ],
             "key.bodylength" : 101,
-            "key.bodyoffset" : 15428,
+            "key.bodyoffset" : 15306,
             "key.doc.comment" : "自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局",
             "key.doclength" : 149,
-            "key.docoffset" : 15236,
+            "key.docoffset" : 15114,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 134,
             "key.name" : "contentInset",
             "key.namelength" : 12,
-            "key.nameoffset" : 15400,
-            "key.offset" : 15396,
+            "key.nameoffset" : 15278,
+            "key.offset" : 15274,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIEdgeInsets"
           },
@@ -87431,20 +87431,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15578
+                "key.offset" : 15456
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 15644,
+            "key.bodyoffset" : 15522,
             "key.doc.comment" : "纵向分布方式，默认居中",
             "key.doclength" : 38,
-            "key.docoffset" : 15536,
+            "key.docoffset" : 15414,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 171,
             "key.name" : "verticalAlignment",
             "key.namelength" : 17,
-            "key.nameoffset" : 15589,
-            "key.offset" : 15585,
+            "key.nameoffset" : 15467,
+            "key.offset" : 15463,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIControl.ContentVerticalAlignment"
           },
@@ -87454,20 +87454,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 15897
+                "key.offset" : 15775
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 15958,
+            "key.bodyoffset" : 15836,
             "key.doc.comment" : "添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil",
             "key.doclength" : 127,
-            "key.docoffset" : 15766,
+            "key.docoffset" : 15644,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 100,
             "key.name" : "addLinkGesture(block:)",
             "key.namelength" : 47,
-            "key.nameoffset" : 15909,
-            "key.offset" : 15904,
+            "key.nameoffset" : 15787,
+            "key.offset" : 15782,
             "key.substructure" : [
 
             ]
@@ -87478,20 +87478,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16197
+                "key.offset" : 16075
               }
             ],
             "key.bodylength" : 93,
-            "key.bodyoffset" : 16305,
+            "key.bodyoffset" : 16183,
             "key.doc.comment" : "获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font",
             "key.doclength" : 179,
-            "key.docoffset" : 16014,
+            "key.docoffset" : 15892,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 195,
             "key.name" : "attributes(gesture:allowsSpacing:)",
             "key.namelength" : 61,
-            "key.nameoffset" : 16209,
-            "key.offset" : 16204,
+            "key.nameoffset" : 16087,
+            "key.offset" : 16082,
             "key.substructure" : [
 
             ],
@@ -87503,20 +87503,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16447
+                "key.offset" : 16325
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 16527,
+            "key.bodyoffset" : 16405,
             "key.doc.comment" : "快速设置标签并指定文本",
             "key.doclength" : 38,
-            "key.docoffset" : 16405,
+            "key.docoffset" : 16283,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 145,
             "key.name" : "setFont(_:textColor:text:)",
             "key.namelength" : 66,
-            "key.nameoffset" : 16459,
-            "key.offset" : 16454,
+            "key.nameoffset" : 16337,
+            "key.offset" : 16332,
             "key.substructure" : [
 
             ]
@@ -87527,20 +87527,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16651
+                "key.offset" : 16529
               }
             ],
             "key.bodylength" : 82,
-            "key.bodyoffset" : 16742,
+            "key.bodyoffset" : 16620,
             "key.doc.comment" : "快速创建标签并指定文本",
             "key.doclength" : 38,
-            "key.docoffset" : 16609,
+            "key.docoffset" : 16487,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 167,
             "key.name" : "label(font:textColor:text:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 16670,
-            "key.offset" : 16658,
+            "key.nameoffset" : 16548,
+            "key.offset" : 16536,
             "key.substructure" : [
 
             ],
@@ -87552,20 +87552,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 16909
+                "key.offset" : 16787
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 16938,
+            "key.bodyoffset" : 16816,
             "key.doc.comment" : "计算当前文本所占尺寸，需frame或者宽度布局完整",
             "key.doclength" : 70,
-            "key.docoffset" : 16835,
+            "key.docoffset" : 16713,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 62,
             "key.name" : "textSize",
             "key.namelength" : 8,
-            "key.nameoffset" : 16920,
-            "key.offset" : 16916,
+            "key.nameoffset" : 16798,
+            "key.offset" : 16794,
             "key.typename" : "CGSize"
           },
           {
@@ -87574,20 +87574,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17096
+                "key.offset" : 16974
               }
             ],
             "key.bodylength" : 49,
-            "key.bodyoffset" : 17135,
+            "key.bodyoffset" : 17013,
             "key.doc.comment" : "计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体",
             "key.doclength" : 108,
-            "key.docoffset" : 16984,
+            "key.docoffset" : 16862,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 82,
             "key.name" : "attributedTextSize",
             "key.namelength" : 18,
-            "key.nameoffset" : 17107,
-            "key.offset" : 17103,
+            "key.nameoffset" : 16985,
+            "key.offset" : 16981,
             "key.typename" : "CGSize"
           }
         ]
@@ -87596,20 +87596,20 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 23,
         "key.name" : "MARK: - UIControl+UIKit",
-        "key.offset" : 17197
+        "key.offset" : 17075
       },
       {
         "key.bodylength" : 258,
-        "key.bodyoffset" : 17391,
+        "key.bodyoffset" : 17269,
         "key.doc.comment" : "防重复点击可以手工控制enabled或userInteractionEnabled或loading，如request开始时禁用，结束时启用等",
         "key.doclength" : 129,
-        "key.docoffset" : 17221,
+        "key.docoffset" : 17099,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 300,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 17360,
-        "key.offset" : 17350,
+        "key.nameoffset" : 17238,
+        "key.offset" : 17228,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -87617,17 +87617,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17484
+                "key.offset" : 17362
               }
             ],
             "key.bodylength" : 113,
-            "key.bodyoffset" : 17529,
+            "key.bodyoffset" : 17407,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 152,
             "key.name" : "touchEventInterval",
             "key.namelength" : 18,
-            "key.nameoffset" : 17495,
-            "key.offset" : 17491,
+            "key.nameoffset" : 17373,
+            "key.offset" : 17369,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "TimeInterval"
           }
@@ -87637,17 +87637,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 22,
         "key.name" : "MARK: - UIButton+UIKit",
-        "key.offset" : 17655
+        "key.offset" : 17533
       },
       {
         "key.bodylength" : 2798,
-        "key.bodyoffset" : 17718,
+        "key.bodyoffset" : 17596,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2839,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 17688,
-        "key.offset" : 17678,
+        "key.nameoffset" : 17566,
+        "key.offset" : 17556,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -87655,20 +87655,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 17797
+                "key.offset" : 17675
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 17832,
+            "key.bodyoffset" : 17710,
             "key.doc.comment" : "自定义按钮禁用时的alpha，如0.5，默认0不生效",
             "key.doclength" : 65,
-            "key.docoffset" : 17728,
+            "key.docoffset" : 17606,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 132,
             "key.name" : "disabledAlpha",
             "key.namelength" : 13,
-            "key.nameoffset" : 17808,
-            "key.offset" : 17804,
+            "key.nameoffset" : 17686,
+            "key.offset" : 17682,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -87678,20 +87678,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18011
+                "key.offset" : 17889
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 18049,
+            "key.bodyoffset" : 17927,
             "key.doc.comment" : "自定义按钮高亮时的alpha，如0.5，默认0不生效",
             "key.doclength" : 65,
-            "key.docoffset" : 17942,
+            "key.docoffset" : 17820,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 141,
             "key.name" : "highlightedAlpha",
             "key.namelength" : 16,
-            "key.nameoffset" : 18022,
-            "key.offset" : 18018,
+            "key.nameoffset" : 17900,
+            "key.offset" : 17896,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -87701,20 +87701,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18235
+                "key.offset" : 18113
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 18292,
+            "key.bodyoffset" : 18170,
             "key.doc.comment" : "自定义按钮禁用状态改变时的句柄，默认nil",
             "key.doclength" : 62,
-            "key.docoffset" : 18169,
+            "key.docoffset" : 18047,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 158,
             "key.name" : "disabledChanged",
             "key.namelength" : 15,
-            "key.nameoffset" : 18246,
-            "key.offset" : 18242,
+            "key.nameoffset" : 18124,
+            "key.offset" : 18120,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIButton, Bool) -> Void)?"
           },
@@ -87724,20 +87724,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18472
+                "key.offset" : 18350
               }
             ],
             "key.bodylength" : 113,
-            "key.bodyoffset" : 18532,
+            "key.bodyoffset" : 18410,
             "key.doc.comment" : "自定义按钮高亮状态改变时的句柄，默认nil",
             "key.doclength" : 62,
-            "key.docoffset" : 18406,
+            "key.docoffset" : 18284,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 167,
             "key.name" : "highlightedChanged",
             "key.namelength" : 18,
-            "key.nameoffset" : 18483,
-            "key.offset" : 18479,
+            "key.nameoffset" : 18361,
+            "key.offset" : 18357,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIButton, Bool) -> Void)?"
           },
@@ -87747,20 +87747,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18685
+                "key.offset" : 18563
               }
             ],
             "key.bodylength" : 74,
-            "key.bodyoffset" : 18761,
+            "key.bodyoffset" : 18639,
             "key.doc.comment" : "快速设置文本按钮",
             "key.doclength" : 29,
-            "key.docoffset" : 18652,
+            "key.docoffset" : 18530,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 144,
             "key.name" : "setTitle(_:font:textColor:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 18697,
-            "key.offset" : 18692,
+            "key.nameoffset" : 18575,
+            "key.offset" : 18570,
             "key.substructure" : [
 
             ]
@@ -87771,20 +87771,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18869
+                "key.offset" : 18747
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 18909,
+            "key.bodyoffset" : 18787,
             "key.doc.comment" : "快速设置文本",
             "key.doclength" : 23,
-            "key.docoffset" : 18842,
+            "key.docoffset" : 18720,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 73,
             "key.name" : "setTitle(_:)",
             "key.namelength" : 26,
-            "key.nameoffset" : 18881,
-            "key.offset" : 18876,
+            "key.nameoffset" : 18759,
+            "key.offset" : 18754,
             "key.substructure" : [
 
             ]
@@ -87795,20 +87795,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 18982
+                "key.offset" : 18860
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 19023,
+            "key.bodyoffset" : 18901,
             "key.doc.comment" : "快速设置图片",
             "key.doclength" : 23,
-            "key.docoffset" : 18955,
+            "key.docoffset" : 18833,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 74,
             "key.name" : "setImage(_:)",
             "key.namelength" : 27,
-            "key.nameoffset" : 18994,
-            "key.offset" : 18989,
+            "key.nameoffset" : 18872,
+            "key.offset" : 18867,
             "key.substructure" : [
 
             ]
@@ -87819,20 +87819,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19434
+                "key.offset" : 19312
               }
             ],
             "key.bodylength" : 60,
-            "key.bodyoffset" : 19498,
+            "key.bodyoffset" : 19376,
             "key.doc.comment" : "设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距\n\nimageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title\ntitleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image",
             "key.doclength" : 361,
-            "key.docoffset" : 19069,
+            "key.docoffset" : 18947,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 118,
             "key.name" : "setImageEdge(_:spacing:)",
             "key.namelength" : 50,
-            "key.nameoffset" : 19446,
-            "key.offset" : 19441,
+            "key.nameoffset" : 19324,
+            "key.offset" : 19319,
             "key.substructure" : [
 
             ]
@@ -87843,20 +87843,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19599
+                "key.offset" : 19477
               }
             ],
             "key.bodylength" : 71,
-            "key.bodyoffset" : 19688,
+            "key.bodyoffset" : 19566,
             "key.doc.comment" : "设置状态背景色",
             "key.doclength" : 26,
-            "key.docoffset" : 19569,
+            "key.docoffset" : 19447,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 154,
             "key.name" : "setBackgroundColor(_:for:)",
             "key.namelength" : 75,
-            "key.nameoffset" : 19611,
-            "key.offset" : 19606,
+            "key.nameoffset" : 19489,
+            "key.offset" : 19484,
             "key.substructure" : [
 
             ]
@@ -87867,20 +87867,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 19803
+                "key.offset" : 19681
               }
             ],
             "key.bodylength" : 91,
-            "key.bodyoffset" : 19891,
+            "key.bodyoffset" : 19769,
             "key.doc.comment" : "快速创建文本按钮",
             "key.doclength" : 29,
-            "key.docoffset" : 19770,
+            "key.docoffset" : 19648,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 173,
             "key.name" : "button(title:font:titleColor:)",
             "key.namelength" : 59,
-            "key.nameoffset" : 19822,
-            "key.offset" : 19810,
+            "key.nameoffset" : 19700,
+            "key.offset" : 19688,
             "key.substructure" : [
 
             ],
@@ -87892,20 +87892,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20022
+                "key.offset" : 19900
               }
             ],
             "key.bodylength" : 50,
-            "key.bodyoffset" : 20074,
+            "key.bodyoffset" : 19952,
             "key.doc.comment" : "快速创建图片按钮",
             "key.doclength" : 29,
-            "key.docoffset" : 19989,
+            "key.docoffset" : 19867,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 96,
             "key.name" : "button(image:)",
             "key.namelength" : 23,
-            "key.nameoffset" : 20041,
-            "key.offset" : 20029,
+            "key.nameoffset" : 19919,
+            "key.offset" : 19907,
             "key.substructure" : [
 
             ],
@@ -87917,25 +87917,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20323
+                "key.offset" : 20201
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 20300
+                "key.offset" : 20178
               }
             ],
             "key.bodylength" : 90,
-            "key.bodyoffset" : 20419,
+            "key.bodyoffset" : 20297,
             "key.doc.comment" : "设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)",
             "key.doclength" : 161,
-            "key.docoffset" : 20135,
+            "key.docoffset" : 20013,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 180,
             "key.name" : "startCountDown(_:title:waitTitle:)",
             "key.namelength" : 64,
-            "key.nameoffset" : 20335,
-            "key.offset" : 20330,
+            "key.nameoffset" : 20213,
+            "key.offset" : 20208,
             "key.substructure" : [
 
             ],
@@ -87947,17 +87947,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 26,
         "key.name" : "MARK: - UIScrollView+UIKit",
-        "key.offset" : 20522
+        "key.offset" : 20400
       },
       {
         "key.bodylength" : 4066,
-        "key.bodyoffset" : 20593,
+        "key.bodyoffset" : 20471,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 4111,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 20559,
-        "key.offset" : 20549,
+        "key.nameoffset" : 20437,
+        "key.offset" : 20427,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -87965,20 +87965,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20658
+                "key.offset" : 20536
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 20686,
+            "key.bodyoffset" : 20564,
             "key.doc.comment" : "判断当前scrollView内容是否足够滚动",
             "key.doclength" : 51,
-            "key.docoffset" : 20603,
+            "key.docoffset" : 20481,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 62,
             "key.name" : "canScroll",
             "key.namelength" : 9,
-            "key.nameoffset" : 20669,
-            "key.offset" : 20665,
+            "key.nameoffset" : 20547,
+            "key.offset" : 20543,
             "key.typename" : "Bool"
           },
           {
@@ -87987,20 +87987,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20797
+                "key.offset" : 20675
               }
             ],
             "key.bodylength" : 50,
-            "key.bodyoffset" : 20835,
+            "key.bodyoffset" : 20713,
             "key.doc.comment" : "判断当前的scrollView内容是否足够水平滚动",
             "key.doclength" : 60,
-            "key.docoffset" : 20733,
+            "key.docoffset" : 20611,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 82,
             "key.name" : "canScrollHorizontal",
             "key.namelength" : 19,
-            "key.nameoffset" : 20808,
-            "key.offset" : 20804,
+            "key.nameoffset" : 20686,
+            "key.offset" : 20682,
             "key.typename" : "Bool"
           },
           {
@@ -88009,20 +88009,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 20956
+                "key.offset" : 20834
               }
             ],
             "key.bodylength" : 48,
-            "key.bodyoffset" : 20992,
+            "key.bodyoffset" : 20870,
             "key.doc.comment" : "判断当前的scrollView内容是否足够纵向滚动",
             "key.doclength" : 60,
-            "key.docoffset" : 20892,
+            "key.docoffset" : 20770,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 78,
             "key.name" : "canScrollVertical",
             "key.namelength" : 17,
-            "key.nameoffset" : 20967,
-            "key.offset" : 20963,
+            "key.nameoffset" : 20845,
+            "key.offset" : 20841,
             "key.typename" : "Bool"
           },
           {
@@ -88031,20 +88031,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21090
+                "key.offset" : 20968
               }
             ],
             "key.bodylength" : 60,
-            "key.bodyoffset" : 21154,
+            "key.bodyoffset" : 21032,
             "key.doc.comment" : "当前scrollView滚动到指定边",
             "key.doclength" : 39,
-            "key.docoffset" : 21047,
+            "key.docoffset" : 20925,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 118,
             "key.name" : "scroll(to:animated:)",
             "key.namelength" : 50,
-            "key.nameoffset" : 21102,
-            "key.offset" : 21097,
+            "key.nameoffset" : 20980,
+            "key.offset" : 20975,
             "key.substructure" : [
 
             ]
@@ -88055,20 +88055,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21257
+                "key.offset" : 21135
               }
             ],
             "key.bodylength" : 49,
-            "key.bodyoffset" : 21308,
+            "key.bodyoffset" : 21186,
             "key.doc.comment" : "是否已滚动到指定边",
             "key.doclength" : 32,
-            "key.docoffset" : 21221,
+            "key.docoffset" : 21099,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 94,
             "key.name" : "isScroll(to:)",
             "key.namelength" : 29,
-            "key.nameoffset" : 21269,
-            "key.offset" : 21264,
+            "key.nameoffset" : 21147,
+            "key.offset" : 21142,
             "key.substructure" : [
 
             ],
@@ -88080,20 +88080,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21455
+                "key.offset" : 21333
               }
             ],
             "key.bodylength" : 54,
-            "key.bodyoffset" : 21514,
+            "key.bodyoffset" : 21392,
             "key.doc.comment" : "获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)",
             "key.doclength" : 87,
-            "key.docoffset" : 21364,
+            "key.docoffset" : 21242,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 107,
             "key.name" : "contentOffset(of:)",
             "key.namelength" : 34,
-            "key.nameoffset" : 21467,
-            "key.offset" : 21462,
+            "key.nameoffset" : 21345,
+            "key.offset" : 21340,
             "key.substructure" : [
 
             ],
@@ -88105,20 +88105,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21620
+                "key.offset" : 21498
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 21647,
+            "key.bodyoffset" : 21525,
             "key.doc.comment" : "总页数，自动识别翻页方向",
             "key.doclength" : 41,
-            "key.docoffset" : 21575,
+            "key.docoffset" : 21453,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 61,
             "key.name" : "totalPage",
             "key.namelength" : 9,
-            "key.nameoffset" : 21631,
-            "key.offset" : 21627,
+            "key.nameoffset" : 21509,
+            "key.offset" : 21505,
             "key.typename" : "Int"
           },
           {
@@ -88127,20 +88127,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21760
+                "key.offset" : 21638
               }
             ],
             "key.bodylength" : 99,
-            "key.bodyoffset" : 21789,
+            "key.bodyoffset" : 21667,
             "key.doc.comment" : "当前页数，不支持动画，自动识别翻页方向",
             "key.doclength" : 62,
-            "key.docoffset" : 21694,
+            "key.docoffset" : 21572,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 122,
             "key.name" : "currentPage",
             "key.namelength" : 11,
-            "key.nameoffset" : 21771,
-            "key.offset" : 21767,
+            "key.nameoffset" : 21649,
+            "key.offset" : 21645,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -88150,20 +88150,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 21964
+                "key.offset" : 21842
               }
             ],
             "key.bodylength" : 64,
-            "key.bodyoffset" : 22028,
+            "key.bodyoffset" : 21906,
             "key.doc.comment" : "设置当前页数，支持动画，自动识别翻页方向",
             "key.doclength" : 65,
-            "key.docoffset" : 21895,
+            "key.docoffset" : 21773,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 122,
             "key.name" : "setCurrentPage(_:animated:)",
             "key.namelength" : 50,
-            "key.nameoffset" : 21976,
-            "key.offset" : 21971,
+            "key.nameoffset" : 21854,
+            "key.offset" : 21849,
             "key.substructure" : [
 
             ]
@@ -88174,20 +88174,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22156
+                "key.offset" : 22034
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 22185,
+            "key.bodyoffset" : 22063,
             "key.doc.comment" : "是否是最后一页，自动识别翻页方向",
             "key.doclength" : 53,
-            "key.docoffset" : 22099,
+            "key.docoffset" : 21977,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 64,
             "key.name" : "isLastPage",
             "key.namelength" : 10,
-            "key.nameoffset" : 22167,
-            "key.offset" : 22163,
+            "key.nameoffset" : 22045,
+            "key.offset" : 22041,
             "key.typename" : "Bool"
           },
           {
@@ -88196,20 +88196,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22273
+                "key.offset" : 22151
               }
             ],
             "key.bodylength" : 105,
-            "key.bodyoffset" : 22309,
+            "key.bodyoffset" : 22187,
             "key.doc.comment" : "快捷设置contentOffset.x",
             "key.doclength" : 32,
-            "key.docoffset" : 22237,
+            "key.docoffset" : 22115,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 135,
             "key.name" : "contentOffsetX",
             "key.namelength" : 14,
-            "key.nameoffset" : 22284,
-            "key.offset" : 22280,
+            "key.nameoffset" : 22162,
+            "key.offset" : 22158,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -88219,20 +88219,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22457
+                "key.offset" : 22335
               }
             ],
             "key.bodylength" : 105,
-            "key.bodyoffset" : 22493,
+            "key.bodyoffset" : 22371,
             "key.doc.comment" : "快捷设置contentOffset.y",
             "key.doclength" : 32,
-            "key.docoffset" : 22421,
+            "key.docoffset" : 22299,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 135,
             "key.name" : "contentOffsetY",
             "key.namelength" : 14,
-            "key.nameoffset" : 22468,
-            "key.offset" : 22464,
+            "key.nameoffset" : 22346,
+            "key.offset" : 22342,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -88242,20 +88242,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 22702
+                "key.offset" : 22580
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 22734,
+            "key.bodyoffset" : 22612,
             "key.doc.comment" : "内容视图，子视图需添加到本视图，布局约束完整时可自动滚动",
             "key.doclength" : 89,
-            "key.docoffset" : 22609,
+            "key.docoffset" : 22487,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 68,
             "key.name" : "contentView",
             "key.namelength" : 11,
-            "key.nameoffset" : 22713,
-            "key.offset" : 22709,
+            "key.nameoffset" : 22591,
+            "key.offset" : 22587,
             "key.typename" : "UIView"
           },
           {
@@ -88264,25 +88264,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23359
+                "key.offset" : 23237
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 23336
+                "key.offset" : 23214
               }
             ],
             "key.bodylength" : 122,
-            "key.bodyoffset" : 23474,
+            "key.bodyoffset" : 23352,
             "key.doc.comment" : "设置自动布局视图悬停到指定父视图固定位置，在scrollViewDidScroll:中调用即可\n\n@param view 需要悬停的视图，须占满fromSuperview\n@param fromSuperview 起始的父视图，须是scrollView的子视图\n@param toSuperview 悬停的目标视图，须是scrollView的父级视图，一般控制器self.view\n@param toPosition 需要悬停的目标位置，相对于toSuperview的originY位置\n@return 相对于悬浮位置的距离，可用来设置导航栏透明度等",
             "key.doclength" : 544,
-            "key.docoffset" : 22787,
+            "key.docoffset" : 22665,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 231,
             "key.name" : "hoverView(_:fromSuperview:toSuperview:toPosition:)",
             "key.namelength" : 90,
-            "key.nameoffset" : 23371,
-            "key.offset" : 23366,
+            "key.nameoffset" : 23249,
+            "key.offset" : 23244,
             "key.substructure" : [
 
             ],
@@ -88294,20 +88294,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23643
+                "key.offset" : 23521
               }
             ],
             "key.bodylength" : 99,
-            "key.bodyoffset" : 23701,
+            "key.bodyoffset" : 23579,
             "key.doc.comment" : "是否开始识别pan手势",
             "key.doclength" : 32,
-            "key.docoffset" : 23607,
+            "key.docoffset" : 23485,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 151,
             "key.name" : "shouldBegin",
             "key.namelength" : 11,
-            "key.nameoffset" : 23654,
-            "key.offset" : 23650,
+            "key.nameoffset" : 23532,
+            "key.offset" : 23528,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIGestureRecognizer) -> Bool)?"
           },
@@ -88317,20 +88317,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23852
+                "key.offset" : 23730
               }
             ],
             "key.bodylength" : 135,
-            "key.bodyoffset" : 23949,
+            "key.bodyoffset" : 23827,
             "key.doc.comment" : "是否允许同时识别多个手势",
             "key.doclength" : 41,
-            "key.docoffset" : 23807,
+            "key.docoffset" : 23685,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 226,
             "key.name" : "shouldRecognizeSimultaneously",
             "key.namelength" : 29,
-            "key.nameoffset" : 23863,
-            "key.offset" : 23859,
+            "key.nameoffset" : 23741,
+            "key.offset" : 23737,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIGestureRecognizer, UIGestureRecognizer) -> Bool)?"
           },
@@ -88340,20 +88340,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24160
+                "key.offset" : 24038
               }
             ],
             "key.bodylength" : 117,
-            "key.bodyoffset" : 24248,
+            "key.bodyoffset" : 24126,
             "key.doc.comment" : "是否另一个手势识别失败后，才能识别pan手势",
             "key.doclength" : 65,
-            "key.docoffset" : 24091,
+            "key.docoffset" : 23969,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 199,
             "key.name" : "shouldRequireFailure",
             "key.namelength" : 20,
-            "key.nameoffset" : 24171,
-            "key.offset" : 24167,
+            "key.nameoffset" : 24049,
+            "key.offset" : 24045,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIGestureRecognizer, UIGestureRecognizer) -> Bool)?"
           },
@@ -88363,20 +88363,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24441
+                "key.offset" : 24319
               }
             ],
             "key.bodylength" : 121,
-            "key.bodyoffset" : 24531,
+            "key.bodyoffset" : 24409,
             "key.doc.comment" : "是否pan手势识别失败后，才能识别另一个手势",
             "key.doclength" : 65,
-            "key.docoffset" : 24372,
+            "key.docoffset" : 24250,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 205,
             "key.name" : "shouldBeRequiredToFail",
             "key.namelength" : 22,
-            "key.nameoffset" : 24452,
-            "key.offset" : 24448,
+            "key.nameoffset" : 24330,
+            "key.offset" : 24326,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((UIGestureRecognizer, UIGestureRecognizer) -> Bool)?"
           }
@@ -88386,20 +88386,20 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 33,
         "key.name" : "MARK: - UIGestureRecognizer+UIKit",
-        "key.offset" : 24665
+        "key.offset" : 24543
       },
       {
         "key.bodylength" : 439,
-        "key.bodyoffset" : 25259,
+        "key.bodyoffset" : 25137,
         "key.doc.comment" : "gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES\nshouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO\nshouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败\nshouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败",
         "key.doclength" : 509,
-        "key.docoffset" : 24699,
+        "key.docoffset" : 24577,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 491,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 25218,
-        "key.offset" : 25208,
+        "key.nameoffset" : 25096,
+        "key.offset" : 25086,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88407,25 +88407,25 @@
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 25358
+                "key.offset" : 25236
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25351
+                "key.offset" : 25229
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 25388,
+            "key.bodyoffset" : 25266,
             "key.doc.comment" : "获取手势直接作用的view，不同于view，此处是view的subview",
             "key.doclength" : 78,
-            "key.docoffset" : 25269,
+            "key.docoffset" : 25147,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 67,
             "key.name" : "targetView",
             "key.namelength" : 10,
-            "key.nameoffset" : 25367,
-            "key.offset" : 25363,
+            "key.nameoffset" : 25245,
+            "key.offset" : 25241,
             "key.typename" : "UIView?"
           },
           {
@@ -88434,20 +88434,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25485
+                "key.offset" : 25363
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 25514,
+            "key.bodyoffset" : 25392,
             "key.doc.comment" : "是否正在拖动中：Began || Changed",
             "key.doclength" : 45,
-            "key.docoffset" : 25436,
+            "key.docoffset" : 25314,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 64,
             "key.name" : "isTracking",
             "key.namelength" : 10,
-            "key.nameoffset" : 25496,
-            "key.offset" : 25492,
+            "key.nameoffset" : 25374,
+            "key.offset" : 25370,
             "key.typename" : "Bool"
           },
           {
@@ -88456,20 +88456,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25625
+                "key.offset" : 25503
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 25652,
+            "key.bodyoffset" : 25530,
             "key.doc.comment" : "是否是激活状态: isEnabled && (Began || Changed)",
             "key.doclength" : 59,
-            "key.docoffset" : 25562,
+            "key.docoffset" : 25440,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 60,
             "key.name" : "isActive",
             "key.namelength" : 8,
-            "key.nameoffset" : 25636,
-            "key.offset" : 25632,
+            "key.nameoffset" : 25514,
+            "key.offset" : 25510,
             "key.typename" : "Bool"
           }
         ]
@@ -88478,17 +88478,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 36,
         "key.name" : "MARK: - UIPanGestureRecognizer+UIKit",
-        "key.offset" : 25704
+        "key.offset" : 25582
       },
       {
         "key.bodylength" : 581,
-        "key.bodyoffset" : 25795,
+        "key.bodyoffset" : 25673,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 636,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 25751,
-        "key.offset" : 25741,
+        "key.nameoffset" : 25629,
+        "key.offset" : 25619,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88496,20 +88496,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25905
+                "key.offset" : 25783
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 25968,
+            "key.bodyoffset" : 25846,
             "key.doc.comment" : "当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0",
             "key.doclength" : 96,
-            "key.docoffset" : 25805,
+            "key.docoffset" : 25683,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 102,
             "key.name" : "swipeDirection",
             "key.namelength" : 14,
-            "key.nameoffset" : 25916,
-            "key.offset" : 25912,
+            "key.nameoffset" : 25794,
+            "key.offset" : 25790,
             "key.typename" : "UISwipeGestureRecognizer.Direction"
           },
           {
@@ -88518,20 +88518,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26098
+                "key.offset" : 25976
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 26132,
+            "key.bodyoffset" : 26010,
             "key.doc.comment" : "当前滑动进度，滑动绝对值相对于手势视图的宽或高",
             "key.doclength" : 74,
-            "key.docoffset" : 26020,
+            "key.docoffset" : 25898,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 71,
             "key.name" : "swipePercent",
             "key.namelength" : 12,
-            "key.nameoffset" : 26109,
-            "key.offset" : 26105,
+            "key.nameoffset" : 25987,
+            "key.offset" : 25983,
             "key.typename" : "CGFloat"
           },
           {
@@ -88540,20 +88540,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26224
+                "key.offset" : 26102
               }
             ],
             "key.bodylength" : 58,
-            "key.bodyoffset" : 26311,
+            "key.bodyoffset" : 26189,
             "key.doc.comment" : "计算指定方向的滑动进度",
             "key.doclength" : 38,
-            "key.docoffset" : 26182,
+            "key.docoffset" : 26060,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 139,
             "key.name" : "swipePercent(of:)",
             "key.namelength" : 62,
-            "key.nameoffset" : 26236,
-            "key.offset" : 26231,
+            "key.nameoffset" : 26114,
+            "key.offset" : 26109,
             "key.substructure" : [
 
             ],
@@ -88565,17 +88565,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 27,
         "key.name" : "MARK: - UIPageControl+UIKit",
-        "key.offset" : 26382
+        "key.offset" : 26260
       },
       {
         "key.bodylength" : 201,
-        "key.bodyoffset" : 26455,
+        "key.bodyoffset" : 26333,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 247,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 26420,
-        "key.offset" : 26410,
+        "key.nameoffset" : 26298,
+        "key.offset" : 26288,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88583,20 +88583,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26512
+                "key.offset" : 26390
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 26546,
+            "key.bodyoffset" : 26424,
             "key.doc.comment" : "自定义圆点大小，默认{10, 10}",
             "key.doclength" : 43,
-            "key.docoffset" : 26465,
+            "key.docoffset" : 26343,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 131,
             "key.name" : "preferredSize",
             "key.namelength" : 13,
-            "key.nameoffset" : 26523,
-            "key.offset" : 26519,
+            "key.nameoffset" : 26401,
+            "key.offset" : 26397,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGSize"
           }
@@ -88606,17 +88606,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 22,
         "key.name" : "MARK: - UISlider+UIKit",
-        "key.offset" : 26662
+        "key.offset" : 26540
       },
       {
         "key.bodylength" : 364,
-        "key.bodyoffset" : 26725,
+        "key.bodyoffset" : 26603,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 405,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 26695,
-        "key.offset" : 26685,
+        "key.nameoffset" : 26573,
+        "key.offset" : 26563,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88624,20 +88624,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26778
+                "key.offset" : 26656
               }
             ],
             "key.bodylength" : 95,
-            "key.bodyoffset" : 26808,
+            "key.bodyoffset" : 26686,
             "key.doc.comment" : "中间圆球的大小，默认zero",
             "key.doclength" : 39,
-            "key.docoffset" : 26735,
+            "key.docoffset" : 26613,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 119,
             "key.name" : "thumbSize",
             "key.namelength" : 9,
-            "key.nameoffset" : 26789,
-            "key.offset" : 26785,
+            "key.nameoffset" : 26667,
+            "key.offset" : 26663,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGSize"
           },
@@ -88647,20 +88647,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26952
+                "key.offset" : 26830
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 26985,
+            "key.bodyoffset" : 26863,
             "key.doc.comment" : "中间圆球的颜色，默认nil",
             "key.doclength" : 38,
-            "key.docoffset" : 26910,
+            "key.docoffset" : 26788,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 124,
             "key.name" : "thumbColor",
             "key.namelength" : 10,
-            "key.nameoffset" : 26963,
-            "key.offset" : 26959,
+            "key.nameoffset" : 26841,
+            "key.offset" : 26837,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIColor?"
           }
@@ -88670,17 +88670,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 22,
         "key.name" : "MARK: - UISwitch+UIKit",
-        "key.offset" : 27095
+        "key.offset" : 26973
       },
       {
         "key.bodylength" : 200,
-        "key.bodyoffset" : 27158,
+        "key.bodyoffset" : 27036,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 241,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 27128,
-        "key.offset" : 27118,
+        "key.nameoffset" : 27006,
+        "key.offset" : 26996,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88688,20 +88688,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27214
+                "key.offset" : 27092
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 27248,
+            "key.bodyoffset" : 27126,
             "key.doc.comment" : "自定义尺寸大小，默认{51,31}",
             "key.doclength" : 42,
-            "key.docoffset" : 27168,
+            "key.docoffset" : 27046,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 131,
             "key.name" : "preferredSize",
             "key.namelength" : 13,
-            "key.nameoffset" : 27225,
-            "key.offset" : 27221,
+            "key.nameoffset" : 27103,
+            "key.offset" : 27099,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGSize"
           }
@@ -88711,17 +88711,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 25,
         "key.name" : "MARK: - UITextField+UIKit",
-        "key.offset" : 27364
+        "key.offset" : 27242
       },
       {
         "key.bodylength" : 2473,
-        "key.bodyoffset" : 27433,
+        "key.bodyoffset" : 27311,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2517,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 27400,
-        "key.offset" : 27390,
+        "key.nameoffset" : 27278,
+        "key.offset" : 27268,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -88729,20 +88729,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27498
+                "key.offset" : 27376
               }
             ],
             "key.bodylength" : 95,
-            "key.bodyoffset" : 27525,
+            "key.bodyoffset" : 27403,
             "key.doc.comment" : "最大字数限制，0为无限制，二选一",
             "key.doclength" : 51,
-            "key.docoffset" : 27443,
+            "key.docoffset" : 27321,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 116,
             "key.name" : "maxLength",
             "key.namelength" : 9,
-            "key.nameoffset" : 27509,
-            "key.offset" : 27505,
+            "key.nameoffset" : 27387,
+            "key.offset" : 27383,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -88752,20 +88752,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27716
+                "key.offset" : 27594
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 27750,
+            "key.bodyoffset" : 27628,
             "key.doc.comment" : "最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一",
             "key.doclength" : 85,
-            "key.docoffset" : 27627,
+            "key.docoffset" : 27505,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 137,
             "key.name" : "maxUnicodeLength",
             "key.namelength" : 16,
-            "key.nameoffset" : 27727,
-            "key.offset" : 27723,
+            "key.nameoffset" : 27605,
+            "key.offset" : 27601,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -88775,20 +88775,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27943
+                "key.offset" : 27821
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 27993,
+            "key.bodyoffset" : 27871,
             "key.doc.comment" : "自定义文字改变处理句柄，自动trimString，默认nil",
             "key.doclength" : 69,
-            "key.docoffset" : 27870,
+            "key.docoffset" : 27748,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 153,
             "key.name" : "textChangedBlock",
             "key.namelength" : 16,
-            "key.nameoffset" : 27954,
-            "key.offset" : 27950,
+            "key.nameoffset" : 27832,
+            "key.offset" : 27828,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((String) -> Void)?"
           },
@@ -88798,20 +88798,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28203
+                "key.offset" : 28081
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 28236,
+            "key.bodyoffset" : 28114,
             "key.doc.comment" : "文本长度发生改变，自动检测字数限制，用于代码设置text等场景",
             "key.doclength" : 90,
-            "key.docoffset" : 28109,
+            "key.docoffset" : 27987,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 70,
             "key.name" : "textLengthChanged()",
             "key.namelength" : 19,
-            "key.nameoffset" : 28215,
-            "key.offset" : 28210,
+            "key.nameoffset" : 28093,
+            "key.offset" : 28088,
             "key.substructure" : [
 
             ]
@@ -88822,20 +88822,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28381
+                "key.offset" : 28259
               }
             ],
             "key.bodylength" : 47,
-            "key.bodyoffset" : 28431,
+            "key.bodyoffset" : 28309,
             "key.doc.comment" : "获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged",
             "key.doclength" : 91,
-            "key.docoffset" : 28286,
+            "key.docoffset" : 28164,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 91,
             "key.name" : "filterText(_:)",
             "key.namelength" : 26,
-            "key.nameoffset" : 28393,
-            "key.offset" : 28388,
+            "key.nameoffset" : 28271,
+            "key.offset" : 28266,
             "key.substructure" : [
 
             ],
@@ -88847,20 +88847,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28574
+                "key.offset" : 28452
               }
             ],
             "key.bodylength" : 117,
-            "key.bodyoffset" : 28621,
+            "key.bodyoffset" : 28499,
             "key.doc.comment" : "设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用",
             "key.doclength" : 85,
-            "key.docoffset" : 28485,
+            "key.docoffset" : 28363,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 158,
             "key.name" : "autoCompleteInterval",
             "key.namelength" : 20,
-            "key.nameoffset" : 28585,
-            "key.offset" : 28581,
+            "key.nameoffset" : 28463,
+            "key.offset" : 28459,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "TimeInterval"
           },
@@ -88870,20 +88870,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28863
+                "key.offset" : 28741
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 28914,
+            "key.bodyoffset" : 28792,
             "key.doc.comment" : "设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发",
             "key.doclength" : 114,
-            "key.docoffset" : 28745,
+            "key.docoffset" : 28623,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 156,
             "key.name" : "autoCompleteBlock",
             "key.namelength" : 17,
-            "key.nameoffset" : 28874,
-            "key.offset" : 28870,
+            "key.nameoffset" : 28752,
+            "key.offset" : 28748,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((String) -> Void)?"
           },
@@ -88893,20 +88893,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29109
+                "key.offset" : 28987
               }
             ],
             "key.bodylength" : 101,
-            "key.bodyoffset" : 29140,
+            "key.bodyoffset" : 29018,
             "key.doc.comment" : "是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO",
             "key.doclength" : 69,
-            "key.docoffset" : 29036,
+            "key.docoffset" : 28914,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 126,
             "key.name" : "menuDisabled",
             "key.namelength" : 12,
-            "key.nameoffset" : 29120,
-            "key.offset" : 29116,
+            "key.nameoffset" : 28998,
+            "key.offset" : 28994,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -88916,20 +88916,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29322
+                "key.offset" : 29200
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 29353,
+            "key.bodyoffset" : 29231,
             "key.doc.comment" : "自定义光标大小，不为0才会生效，默认zero不生效",
             "key.doclength" : 70,
-            "key.docoffset" : 29248,
+            "key.docoffset" : 29126,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 122,
             "key.name" : "cursorRect",
             "key.namelength" : 10,
-            "key.nameoffset" : 29333,
-            "key.offset" : 29329,
+            "key.nameoffset" : 29211,
+            "key.offset" : 29207,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGRect"
           },
@@ -88939,20 +88939,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29505
+                "key.offset" : 29383
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 29540,
+            "key.bodyoffset" : 29418,
             "key.doc.comment" : "获取及设置当前选中文字范围",
             "key.doclength" : 44,
-            "key.docoffset" : 29457,
+            "key.docoffset" : 29335,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 132,
             "key.name" : "selectedRange",
             "key.namelength" : 13,
-            "key.nameoffset" : 29516,
-            "key.offset" : 29512,
+            "key.nameoffset" : 29394,
+            "key.offset" : 29390,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "NSRange"
           },
@@ -88962,20 +88962,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29680
+                "key.offset" : 29558
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 29710,
+            "key.bodyoffset" : 29588,
             "key.doc.comment" : "移动光标到最后",
             "key.doclength" : 26,
-            "key.docoffset" : 29650,
+            "key.docoffset" : 29528,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 64,
             "key.name" : "selectAllRange()",
             "key.namelength" : 16,
-            "key.nameoffset" : 29692,
-            "key.offset" : 29687,
+            "key.nameoffset" : 29570,
+            "key.offset" : 29565,
             "key.substructure" : [
 
             ]
@@ -88986,20 +88986,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 29818
+                "key.offset" : 29696
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 29857,
+            "key.bodyoffset" : 29735,
             "key.doc.comment" : "移动光标到指定位置，兼容动态text赋值",
             "key.doclength" : 57,
-            "key.docoffset" : 29757,
+            "key.docoffset" : 29635,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 75,
             "key.name" : "moveCursor(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 29830,
-            "key.offset" : 29825,
+            "key.nameoffset" : 29708,
+            "key.offset" : 29703,
             "key.substructure" : [
 
             ]
@@ -89010,17 +89010,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 24,
         "key.name" : "MARK: - UITextView+UIKit",
-        "key.offset" : 29912
+        "key.offset" : 29790
       },
       {
         "key.bodylength" : 2864,
-        "key.bodyoffset" : 29979,
+        "key.bodyoffset" : 29857,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2907,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 29947,
-        "key.offset" : 29937,
+        "key.nameoffset" : 29825,
+        "key.offset" : 29815,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89028,20 +89028,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 30044
+                "key.offset" : 29922
               }
             ],
             "key.bodylength" : 95,
-            "key.bodyoffset" : 30071,
+            "key.bodyoffset" : 29949,
             "key.doc.comment" : "最大字数限制，0为无限制，二选一",
             "key.doclength" : 51,
-            "key.docoffset" : 29989,
+            "key.docoffset" : 29867,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 116,
             "key.name" : "maxLength",
             "key.namelength" : 9,
-            "key.nameoffset" : 30055,
-            "key.offset" : 30051,
+            "key.nameoffset" : 29933,
+            "key.offset" : 29929,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -89051,20 +89051,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 30262
+                "key.offset" : 30140
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 30296,
+            "key.bodyoffset" : 30174,
             "key.doc.comment" : "最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一",
             "key.doclength" : 85,
-            "key.docoffset" : 30173,
+            "key.docoffset" : 30051,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 137,
             "key.name" : "maxUnicodeLength",
             "key.namelength" : 16,
-            "key.nameoffset" : 30273,
-            "key.offset" : 30269,
+            "key.nameoffset" : 30151,
+            "key.offset" : 30147,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Int"
           },
@@ -89074,20 +89074,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 30489
+                "key.offset" : 30367
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 30539,
+            "key.bodyoffset" : 30417,
             "key.doc.comment" : "自定义文字改变处理句柄，自动trimString，默认nil",
             "key.doclength" : 69,
-            "key.docoffset" : 30416,
+            "key.docoffset" : 30294,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 153,
             "key.name" : "textChangedBlock",
             "key.namelength" : 16,
-            "key.nameoffset" : 30500,
-            "key.offset" : 30496,
+            "key.nameoffset" : 30378,
+            "key.offset" : 30374,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((String) -> Void)?"
           },
@@ -89097,20 +89097,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 30749
+                "key.offset" : 30627
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 30782,
+            "key.bodyoffset" : 30660,
             "key.doc.comment" : "文本长度发生改变，自动检测字数限制，用于代码设置text等场景",
             "key.doclength" : 90,
-            "key.docoffset" : 30655,
+            "key.docoffset" : 30533,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 70,
             "key.name" : "textLengthChanged()",
             "key.namelength" : 19,
-            "key.nameoffset" : 30761,
-            "key.offset" : 30756,
+            "key.nameoffset" : 30639,
+            "key.offset" : 30634,
             "key.substructure" : [
 
             ]
@@ -89121,20 +89121,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 30927
+                "key.offset" : 30805
               }
             ],
             "key.bodylength" : 47,
-            "key.bodyoffset" : 30977,
+            "key.bodyoffset" : 30855,
             "key.doc.comment" : "获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged",
             "key.doclength" : 91,
-            "key.docoffset" : 30832,
+            "key.docoffset" : 30710,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 91,
             "key.name" : "filterText(_:)",
             "key.namelength" : 26,
-            "key.nameoffset" : 30939,
-            "key.offset" : 30934,
+            "key.nameoffset" : 30817,
+            "key.offset" : 30812,
             "key.substructure" : [
 
             ],
@@ -89146,20 +89146,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 31120
+                "key.offset" : 30998
               }
             ],
             "key.bodylength" : 117,
-            "key.bodyoffset" : 31167,
+            "key.bodyoffset" : 31045,
             "key.doc.comment" : "设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用",
             "key.doclength" : 85,
-            "key.docoffset" : 31031,
+            "key.docoffset" : 30909,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 158,
             "key.name" : "autoCompleteInterval",
             "key.namelength" : 20,
-            "key.nameoffset" : 31131,
-            "key.offset" : 31127,
+            "key.nameoffset" : 31009,
+            "key.offset" : 31005,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "TimeInterval"
           },
@@ -89169,20 +89169,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 31390
+                "key.offset" : 31268
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 31441,
+            "key.bodyoffset" : 31319,
             "key.doc.comment" : "设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发",
             "key.doclength" : 95,
-            "key.docoffset" : 31291,
+            "key.docoffset" : 31169,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 156,
             "key.name" : "autoCompleteBlock",
             "key.namelength" : 17,
-            "key.nameoffset" : 31401,
-            "key.offset" : 31397,
+            "key.nameoffset" : 31279,
+            "key.offset" : 31275,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "((String) -> Void)?"
           },
@@ -89192,20 +89192,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 31636
+                "key.offset" : 31514
               }
             ],
             "key.bodylength" : 101,
-            "key.bodyoffset" : 31667,
+            "key.bodyoffset" : 31545,
             "key.doc.comment" : "是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO",
             "key.doclength" : 69,
-            "key.docoffset" : 31563,
+            "key.docoffset" : 31441,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 126,
             "key.name" : "menuDisabled",
             "key.namelength" : 12,
-            "key.nameoffset" : 31647,
-            "key.offset" : 31643,
+            "key.nameoffset" : 31525,
+            "key.offset" : 31521,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -89215,20 +89215,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 31849
+                "key.offset" : 31727
               }
             ],
             "key.bodylength" : 97,
-            "key.bodyoffset" : 31880,
+            "key.bodyoffset" : 31758,
             "key.doc.comment" : "自定义光标大小，不为0才会生效，默认zero不生效",
             "key.doclength" : 70,
-            "key.docoffset" : 31775,
+            "key.docoffset" : 31653,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 122,
             "key.name" : "cursorRect",
             "key.namelength" : 10,
-            "key.nameoffset" : 31860,
-            "key.offset" : 31856,
+            "key.nameoffset" : 31738,
+            "key.offset" : 31734,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGRect"
           },
@@ -89238,20 +89238,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32032
+                "key.offset" : 31910
               }
             ],
             "key.bodylength" : 103,
-            "key.bodyoffset" : 32067,
+            "key.bodyoffset" : 31945,
             "key.doc.comment" : "获取及设置当前选中文字范围",
             "key.doclength" : 44,
-            "key.docoffset" : 31984,
+            "key.docoffset" : 31862,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 132,
             "key.name" : "selectedRange",
             "key.namelength" : 13,
-            "key.nameoffset" : 32043,
-            "key.offset" : 32039,
+            "key.nameoffset" : 31921,
+            "key.offset" : 31917,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "NSRange"
           },
@@ -89261,20 +89261,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32207
+                "key.offset" : 32085
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 32237,
+            "key.bodyoffset" : 32115,
             "key.doc.comment" : "移动光标到最后",
             "key.doclength" : 26,
-            "key.docoffset" : 32177,
+            "key.docoffset" : 32055,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 64,
             "key.name" : "selectAllRange()",
             "key.namelength" : 16,
-            "key.nameoffset" : 32219,
-            "key.offset" : 32214,
+            "key.nameoffset" : 32097,
+            "key.offset" : 32092,
             "key.substructure" : [
 
             ]
@@ -89285,20 +89285,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32345
+                "key.offset" : 32223
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 32384,
+            "key.bodyoffset" : 32262,
             "key.doc.comment" : "移动光标到指定位置，兼容动态text赋值",
             "key.doclength" : 57,
-            "key.docoffset" : 32284,
+            "key.docoffset" : 32162,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 75,
             "key.name" : "moveCursor(_:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 32357,
-            "key.offset" : 32352,
+            "key.nameoffset" : 32235,
+            "key.offset" : 32230,
             "key.substructure" : [
 
             ]
@@ -89309,20 +89309,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32534
+                "key.offset" : 32412
               }
             ],
             "key.bodylength" : 39,
-            "key.bodyoffset" : 32563,
+            "key.bodyoffset" : 32441,
             "key.doc.comment" : "计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整",
             "key.doclength" : 97,
-            "key.docoffset" : 32433,
+            "key.docoffset" : 32311,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 62,
             "key.name" : "textSize",
             "key.namelength" : 8,
-            "key.nameoffset" : 32545,
-            "key.offset" : 32541,
+            "key.nameoffset" : 32423,
+            "key.offset" : 32419,
             "key.typename" : "CGSize"
           },
           {
@@ -89331,20 +89331,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32748
+                "key.offset" : 32626
               }
             ],
             "key.bodylength" : 49,
-            "key.bodyoffset" : 32787,
+            "key.bodyoffset" : 32665,
             "key.doc.comment" : "计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体",
             "key.doclength" : 135,
-            "key.docoffset" : 32609,
+            "key.docoffset" : 32487,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 82,
             "key.name" : "attributedTextSize",
             "key.namelength" : 18,
-            "key.nameoffset" : 32759,
-            "key.offset" : 32755,
+            "key.nameoffset" : 32637,
+            "key.offset" : 32633,
             "key.typename" : "CGSize"
           }
         ]
@@ -89353,17 +89353,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 25,
         "key.name" : "MARK: - UITableView+UIKit",
-        "key.offset" : 32849
+        "key.offset" : 32727
       },
       {
         "key.bodylength" : 928,
-        "key.bodyoffset" : 32918,
+        "key.bodyoffset" : 32796,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 972,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 32885,
-        "key.offset" : 32875,
+        "key.nameoffset" : 32763,
+        "key.offset" : 32753,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89371,20 +89371,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 32976
+                "key.offset" : 32854
               }
             ],
             "key.bodylength" : 41,
-            "key.bodyoffset" : 33014,
+            "key.bodyoffset" : 32892,
             "key.doc.comment" : "全局清空TableView默认多余边距",
             "key.doclength" : 44,
-            "key.docoffset" : 32928,
+            "key.docoffset" : 32806,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 73,
             "key.name" : "resetTableStyle()",
             "key.namelength" : 17,
-            "key.nameoffset" : 32995,
-            "key.offset" : 32983,
+            "key.nameoffset" : 32873,
+            "key.offset" : 32861,
             "key.substructure" : [
 
             ]
@@ -89395,20 +89395,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 33230
+                "key.offset" : 33108
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 33264,
+            "key.bodyoffset" : 33142,
             "key.doc.comment" : "是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)",
             "key.doclength" : 160,
-            "key.docoffset" : 33066,
+            "key.docoffset" : 32944,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 135,
             "key.name" : "estimatedLayout",
             "key.namelength" : 15,
-            "key.nameoffset" : 33241,
-            "key.offset" : 33237,
+            "key.nameoffset" : 33119,
+            "key.offset" : 33115,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -89418,20 +89418,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 33476
+                "key.offset" : 33354
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 33509,
+            "key.bodyoffset" : 33387,
             "key.doc.comment" : "清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效",
             "key.doclength" : 90,
-            "key.docoffset" : 33382,
+            "key.docoffset" : 33260,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 70,
             "key.name" : "resetGroupedStyle()",
             "key.namelength" : 19,
-            "key.nameoffset" : 33488,
-            "key.offset" : 33483,
+            "key.nameoffset" : 33366,
+            "key.offset" : 33361,
             "key.substructure" : [
 
             ]
@@ -89442,20 +89442,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 33594
+                "key.offset" : 33472
               }
             ],
             "key.bodylength" : 58,
-            "key.bodyoffset" : 33645,
+            "key.bodyoffset" : 33523,
             "key.doc.comment" : "reloadData完成回调",
             "key.doclength" : 27,
-            "key.docoffset" : 33563,
+            "key.docoffset" : 33441,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 103,
             "key.name" : "reloadData(completion:)",
             "key.namelength" : 37,
-            "key.nameoffset" : 33606,
-            "key.offset" : 33601,
+            "key.nameoffset" : 33484,
+            "key.offset" : 33479,
             "key.substructure" : [
 
             ]
@@ -89466,20 +89466,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 33745
+                "key.offset" : 33623
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 33787,
+            "key.bodyoffset" : 33665,
             "key.doc.comment" : "reloadData禁用动画",
             "key.doclength" : 27,
-            "key.docoffset" : 33714,
+            "key.docoffset" : 33592,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 88,
             "key.name" : "reloadDataWithoutAnimation()",
             "key.namelength" : 28,
-            "key.nameoffset" : 33757,
-            "key.offset" : 33752,
+            "key.nameoffset" : 33635,
+            "key.offset" : 33630,
             "key.substructure" : [
 
             ]
@@ -89490,17 +89490,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 29,
         "key.name" : "MARK: - UITableViewCell+UIKit",
-        "key.offset" : 33852
+        "key.offset" : 33730
       },
       {
         "key.bodylength" : 489,
-        "key.bodyoffset" : 33929,
+        "key.bodyoffset" : 33807,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 537,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 33892,
-        "key.offset" : 33882,
+        "key.nameoffset" : 33770,
+        "key.offset" : 33760,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89508,20 +89508,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34024
+                "key.offset" : 33902
               }
             ],
             "key.bodylength" : 105,
-            "key.bodyoffset" : 34065,
+            "key.bodyoffset" : 33943,
             "key.doc.comment" : "设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉",
             "key.doclength" : 81,
-            "key.docoffset" : 33939,
+            "key.docoffset" : 33817,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 140,
             "key.name" : "separatorInset",
             "key.namelength" : 14,
-            "key.nameoffset" : 34035,
-            "key.offset" : 34031,
+            "key.nameoffset" : 33913,
+            "key.offset" : 33909,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIEdgeInsets"
           },
@@ -89531,25 +89531,25 @@
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 34220
+                "key.offset" : 34098
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34213
+                "key.offset" : 34091
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 34254,
+            "key.bodyoffset" : 34132,
             "key.doc.comment" : "获取当前所属tableView",
             "key.doclength" : 32,
-            "key.docoffset" : 34177,
+            "key.docoffset" : 34055,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 70,
             "key.name" : "tableView",
             "key.namelength" : 9,
-            "key.nameoffset" : 34229,
-            "key.offset" : 34225,
+            "key.nameoffset" : 34107,
+            "key.offset" : 34103,
             "key.typename" : "UITableView?"
           },
           {
@@ -89558,20 +89558,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34337
+                "key.offset" : 34215
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 34371,
+            "key.bodyoffset" : 34249,
             "key.doc.comment" : "获取当前显示indexPath",
             "key.doclength" : 32,
-            "key.docoffset" : 34301,
+            "key.docoffset" : 34179,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 68,
             "key.name" : "indexPath",
             "key.namelength" : 9,
-            "key.nameoffset" : 34348,
-            "key.offset" : 34344,
+            "key.nameoffset" : 34226,
+            "key.offset" : 34222,
             "key.typename" : "IndexPath?"
           }
         ]
@@ -89580,17 +89580,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 30,
         "key.name" : "MARK: - UICollectionView+UIKit",
-        "key.offset" : 34424
+        "key.offset" : 34302
       },
       {
         "key.bodylength" : 293,
-        "key.bodyoffset" : 34503,
+        "key.bodyoffset" : 34381,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 342,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 34465,
-        "key.offset" : 34455,
+        "key.nameoffset" : 34343,
+        "key.offset" : 34333,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89598,20 +89598,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34544
+                "key.offset" : 34422
               }
             ],
             "key.bodylength" : 58,
-            "key.bodyoffset" : 34595,
+            "key.bodyoffset" : 34473,
             "key.doc.comment" : "reloadData完成回调",
             "key.doclength" : 27,
-            "key.docoffset" : 34513,
+            "key.docoffset" : 34391,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 103,
             "key.name" : "reloadData(completion:)",
             "key.namelength" : 37,
-            "key.nameoffset" : 34556,
-            "key.offset" : 34551,
+            "key.nameoffset" : 34434,
+            "key.offset" : 34429,
             "key.substructure" : [
 
             ]
@@ -89622,20 +89622,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34695
+                "key.offset" : 34573
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 34737,
+            "key.bodyoffset" : 34615,
             "key.doc.comment" : "reloadData禁用动画",
             "key.doclength" : 27,
-            "key.docoffset" : 34664,
+            "key.docoffset" : 34542,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 88,
             "key.name" : "reloadDataWithoutAnimation()",
             "key.namelength" : 28,
-            "key.nameoffset" : 34707,
-            "key.offset" : 34702,
+            "key.nameoffset" : 34585,
+            "key.offset" : 34580,
             "key.substructure" : [
 
             ]
@@ -89646,17 +89646,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 34,
         "key.name" : "MARK: - UICollectionViewCell+UIKit",
-        "key.offset" : 34802
+        "key.offset" : 34680
       },
       {
         "key.bodylength" : 271,
-        "key.bodyoffset" : 34889,
+        "key.bodyoffset" : 34767,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 324,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 34847,
-        "key.offset" : 34837,
+        "key.nameoffset" : 34725,
+        "key.offset" : 34715,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89664,25 +89664,25 @@
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 34947
+                "key.offset" : 34825
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 34940
+                "key.offset" : 34818
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 34991,
+            "key.bodyoffset" : 34869,
             "key.doc.comment" : "获取当前所属collectionView",
             "key.doclength" : 37,
-            "key.docoffset" : 34899,
+            "key.docoffset" : 34777,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 85,
             "key.name" : "collectionView",
             "key.namelength" : 14,
-            "key.nameoffset" : 34956,
-            "key.offset" : 34952,
+            "key.nameoffset" : 34834,
+            "key.offset" : 34830,
             "key.typename" : "UICollectionView?"
           },
           {
@@ -89691,20 +89691,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 35079
+                "key.offset" : 34957
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 35113,
+            "key.bodyoffset" : 34991,
             "key.doc.comment" : "获取当前显示indexPath",
             "key.doclength" : 32,
-            "key.docoffset" : 35043,
+            "key.docoffset" : 34921,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 68,
             "key.name" : "indexPath",
             "key.namelength" : 9,
-            "key.nameoffset" : 35090,
-            "key.offset" : 35086,
+            "key.nameoffset" : 34968,
+            "key.offset" : 34964,
             "key.typename" : "IndexPath?"
           }
         ]
@@ -89713,17 +89713,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 25,
         "key.name" : "MARK: - UISearchBar+UIKit",
-        "key.offset" : 35166
+        "key.offset" : 35044
       },
       {
         "key.bodylength" : 2146,
-        "key.bodyoffset" : 35235,
+        "key.bodyoffset" : 35113,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2190,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 35202,
-        "key.offset" : 35192,
+        "key.nameoffset" : 35080,
+        "key.offset" : 35070,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89731,20 +89731,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 35347
+                "key.offset" : 35225
               }
             ],
             "key.bodylength" : 101,
-            "key.bodyoffset" : 35386,
+            "key.bodyoffset" : 35264,
             "key.doc.comment" : "自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认",
             "key.doclength" : 98,
-            "key.docoffset" : 35245,
+            "key.docoffset" : 35123,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 134,
             "key.name" : "contentInset",
             "key.namelength" : 12,
-            "key.nameoffset" : 35358,
-            "key.offset" : 35354,
+            "key.nameoffset" : 35236,
+            "key.offset" : 35232,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIEdgeInsets"
           },
@@ -89754,20 +89754,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 35560
+                "key.offset" : 35438
               }
             ],
             "key.bodylength" : 111,
-            "key.bodyoffset" : 35604,
+            "key.bodyoffset" : 35482,
             "key.doc.comment" : "自定义取消按钮边距，未设置时为系统默认",
             "key.doclength" : 62,
-            "key.docoffset" : 35494,
+            "key.docoffset" : 35372,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 149,
             "key.name" : "cancelButtonInset",
             "key.namelength" : 17,
-            "key.nameoffset" : 35571,
-            "key.offset" : 35567,
+            "key.nameoffset" : 35449,
+            "key.offset" : 35445,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIEdgeInsets"
           },
@@ -89777,25 +89777,25 @@
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 35759
+                "key.offset" : 35637
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 35752
+                "key.offset" : 35630
               }
             ],
             "key.bodylength" : 40,
-            "key.bodyoffset" : 35793,
+            "key.bodyoffset" : 35671,
             "key.doc.comment" : "输入框内部视图",
             "key.doclength" : 26,
-            "key.docoffset" : 35722,
+            "key.docoffset" : 35600,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 70,
             "key.name" : "textField",
             "key.namelength" : 9,
-            "key.nameoffset" : 35768,
-            "key.offset" : 35764,
+            "key.nameoffset" : 35646,
+            "key.offset" : 35642,
             "key.typename" : "UITextField?"
           },
           {
@@ -89804,25 +89804,25 @@
               {
                 "key.attribute" : "source.decl.attribute.weak",
                 "key.length" : 4,
-                "key.offset" : 35918
+                "key.offset" : 35796
               },
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 35911
+                "key.offset" : 35789
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 35952,
+            "key.bodyoffset" : 35830,
             "key.doc.comment" : "取消按钮内部视图，showsCancelButton开启后才存在",
             "key.doclength" : 67,
-            "key.docoffset" : 35840,
+            "key.docoffset" : 35718,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 73,
             "key.name" : "cancelButton",
             "key.namelength" : 12,
-            "key.nameoffset" : 35927,
-            "key.offset" : 35923,
+            "key.nameoffset" : 35805,
+            "key.offset" : 35801,
             "key.typename" : "UIButton?"
           },
           {
@@ -89831,20 +89831,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 36032
+                "key.offset" : 35910
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 36070,
+            "key.bodyoffset" : 35948,
             "key.doc.comment" : "设置整体背景色",
             "key.doclength" : 26,
-            "key.docoffset" : 36002,
+            "key.docoffset" : 35880,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 139,
             "key.name" : "backgroundColor",
             "key.namelength" : 15,
-            "key.nameoffset" : 36043,
-            "key.offset" : 36039,
+            "key.nameoffset" : 35921,
+            "key.offset" : 35917,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIColor?"
           },
@@ -89854,20 +89854,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 36217
+                "key.offset" : 36095
               }
             ],
             "key.bodylength" : 125,
-            "key.bodyoffset" : 36264,
+            "key.bodyoffset" : 36142,
             "key.doc.comment" : "设置输入框背景色",
             "key.doclength" : 29,
-            "key.docoffset" : 36184,
+            "key.docoffset" : 36062,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 166,
             "key.name" : "textFieldBackgroundColor",
             "key.namelength" : 24,
-            "key.nameoffset" : 36228,
-            "key.offset" : 36224,
+            "key.nameoffset" : 36106,
+            "key.offset" : 36102,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "UIColor?"
           },
@@ -89877,20 +89877,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 36468
+                "key.offset" : 36346
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 36506,
+            "key.bodyoffset" : 36384,
             "key.doc.comment" : "设置搜索图标离左侧的偏移位置，非居中时生效",
             "key.doclength" : 68,
-            "key.docoffset" : 36396,
+            "key.docoffset" : 36274,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 141,
             "key.name" : "searchIconOffset",
             "key.namelength" : 16,
-            "key.nameoffset" : 36479,
-            "key.offset" : 36475,
+            "key.nameoffset" : 36357,
+            "key.offset" : 36353,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -89900,20 +89900,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 36679
+                "key.offset" : 36557
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 36717,
+            "key.bodyoffset" : 36595,
             "key.doc.comment" : "设置搜索文本离左侧图标的偏移位置",
             "key.doclength" : 53,
-            "key.docoffset" : 36622,
+            "key.docoffset" : 36500,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 141,
             "key.name" : "searchTextOffset",
             "key.namelength" : 16,
-            "key.nameoffset" : 36690,
-            "key.offset" : 36686,
+            "key.nameoffset" : 36568,
+            "key.offset" : 36564,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           },
@@ -89923,20 +89923,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 36909
+                "key.offset" : 36787
               }
             ],
             "key.bodylength" : 109,
-            "key.bodyoffset" : 36944,
+            "key.bodyoffset" : 36822,
             "key.doc.comment" : "设置TextField搜索图标(placeholder)是否居中，否则居左",
             "key.doclength" : 72,
-            "key.docoffset" : 36833,
+            "key.docoffset" : 36711,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 138,
             "key.name" : "searchIconCenter",
             "key.namelength" : 16,
-            "key.nameoffset" : 36920,
-            "key.offset" : 36916,
+            "key.nameoffset" : 36798,
+            "key.offset" : 36794,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -89946,20 +89946,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 37206
+                "key.offset" : 37084
               }
             ],
             "key.bodylength" : 125,
-            "key.bodyoffset" : 37249,
+            "key.bodyoffset" : 37127,
             "key.doc.comment" : "强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击",
             "key.doclength" : 142,
-            "key.docoffset" : 37060,
+            "key.docoffset" : 36938,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 162,
             "key.name" : "forceCancelButtonEnabled",
             "key.namelength" : 24,
-            "key.nameoffset" : 37217,
-            "key.offset" : 37213,
+            "key.nameoffset" : 37095,
+            "key.offset" : 37091,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           }
@@ -89969,17 +89969,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 30,
         "key.name" : "MARK: - UIViewController+UIKit",
-        "key.offset" : 37387
+        "key.offset" : 37265
       },
       {
         "key.bodylength" : 2301,
-        "key.bodyoffset" : 37466,
+        "key.bodyoffset" : 37344,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 2350,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 37428,
-        "key.offset" : 37418,
+        "key.nameoffset" : 37306,
+        "key.offset" : 37296,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -89987,20 +89987,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 37608
+                "key.offset" : 37486
               }
             ],
             "key.bodylength" : 37,
-            "key.bodyoffset" : 37633,
+            "key.bodyoffset" : 37511,
             "key.doc.comment" : "判断当前控制器是否是根控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES",
             "key.doclength" : 128,
-            "key.docoffset" : 37476,
+            "key.docoffset" : 37354,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 56,
             "key.name" : "isRoot",
             "key.namelength" : 6,
-            "key.nameoffset" : 37619,
-            "key.offset" : 37615,
+            "key.nameoffset" : 37497,
+            "key.offset" : 37493,
             "key.typename" : "Bool"
           },
           {
@@ -90009,20 +90009,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 37812
+                "key.offset" : 37690
               }
             ],
             "key.bodylength" : 38,
-            "key.bodyoffset" : 37838,
+            "key.bodyoffset" : 37716,
             "key.doc.comment" : "判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES",
             "key.doclength" : 131,
-            "key.docoffset" : 37677,
+            "key.docoffset" : 37555,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 58,
             "key.name" : "isChild",
             "key.namelength" : 7,
-            "key.nameoffset" : 37823,
-            "key.offset" : 37819,
+            "key.nameoffset" : 37701,
+            "key.offset" : 37697,
             "key.typename" : "Bool"
           },
           {
@@ -90031,20 +90031,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 38020
+                "key.offset" : 37898
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 38050,
+            "key.bodyoffset" : 37928,
             "key.doc.comment" : "判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES",
             "key.doclength" : 133,
-            "key.docoffset" : 37883,
+            "key.docoffset" : 37761,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 66,
             "key.name" : "isPresented",
             "key.namelength" : 11,
-            "key.nameoffset" : 38031,
-            "key.offset" : 38027,
+            "key.nameoffset" : 37909,
+            "key.offset" : 37905,
             "key.typename" : "Bool"
           },
           {
@@ -90053,20 +90053,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 38225
+                "key.offset" : 38103
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 38255,
+            "key.bodyoffset" : 38133,
             "key.doc.comment" : "判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同",
             "key.doclength" : 122,
-            "key.docoffset" : 38099,
+            "key.docoffset" : 37977,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 66,
             "key.name" : "isPageSheet",
             "key.namelength" : 11,
-            "key.nameoffset" : 38236,
-            "key.offset" : 38232,
+            "key.nameoffset" : 38114,
+            "key.offset" : 38110,
             "key.typename" : "Bool"
           },
           {
@@ -90075,20 +90075,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 38384
+                "key.offset" : 38262
               }
             ],
             "key.bodylength" : 44,
-            "key.bodyoffset" : 38416,
+            "key.bodyoffset" : 38294,
             "key.doc.comment" : "视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO",
             "key.doclength" : 76,
-            "key.docoffset" : 38304,
+            "key.docoffset" : 38182,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 70,
             "key.name" : "isViewVisible",
             "key.namelength" : 13,
-            "key.nameoffset" : 38395,
-            "key.offset" : 38391,
+            "key.nameoffset" : 38273,
+            "key.offset" : 38269,
             "key.typename" : "Bool"
           },
           {
@@ -90097,20 +90097,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 38612
+                "key.offset" : 38490
               }
             ],
             "key.bodylength" : 43,
-            "key.bodyoffset" : 38645,
+            "key.bodyoffset" : 38523,
             "key.doc.comment" : "获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图",
             "key.doclength" : 137,
-            "key.docoffset" : 38471,
+            "key.docoffset" : 38349,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 70,
             "key.name" : "ancestorView",
             "key.namelength" : 12,
-            "key.nameoffset" : 38623,
-            "key.offset" : 38619,
+            "key.nameoffset" : 38501,
+            "key.offset" : 38497,
             "key.typename" : "UIView"
           },
           {
@@ -90119,20 +90119,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 38821
+                "key.offset" : 38699
               }
             ],
             "key.bodylength" : 93,
-            "key.bodyoffset" : 38848,
+            "key.bodyoffset" : 38726,
             "key.doc.comment" : "是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断",
             "key.doclength" : 122,
-            "key.docoffset" : 38695,
+            "key.docoffset" : 38573,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 114,
             "key.name" : "isLoaded",
             "key.namelength" : 8,
-            "key.nameoffset" : 38832,
-            "key.offset" : 38828,
+            "key.nameoffset" : 38710,
+            "key.offset" : 38706,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -90142,20 +90142,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 39023
+                "key.offset" : 38901
               }
             ],
             "key.bodylength" : 65,
-            "key.bodyoffset" : 39098,
+            "key.bodyoffset" : 38976,
             "key.doc.comment" : "移除子控制器，解决不能触发viewWillAppear等的bug",
             "key.doclength" : 67,
-            "key.docoffset" : 38952,
+            "key.docoffset" : 38830,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 134,
             "key.name" : "removeChildViewController(_:)",
             "key.namelength" : 61,
-            "key.nameoffset" : 39035,
-            "key.offset" : 39030,
+            "key.nameoffset" : 38913,
+            "key.offset" : 38908,
             "key.substructure" : [
 
             ]
@@ -90166,20 +90166,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 39260
+                "key.offset" : 39138
               }
             ],
             "key.bodylength" : 87,
-            "key.bodyoffset" : 39367,
+            "key.bodyoffset" : 39245,
             "key.doc.comment" : "添加子控制器到当前视图，解决不能触发viewWillAppear等的bug",
             "key.doclength" : 82,
-            "key.docoffset" : 39174,
+            "key.docoffset" : 39052,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 188,
             "key.name" : "addChildViewController(_:layout:)",
             "key.namelength" : 93,
-            "key.nameoffset" : 39272,
-            "key.offset" : 39267,
+            "key.nameoffset" : 39150,
+            "key.offset" : 39145,
             "key.substructure" : [
 
             ]
@@ -90190,20 +90190,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 39547
+                "key.offset" : 39425
               }
             ],
             "key.bodylength" : 88,
-            "key.bodyoffset" : 39672,
+            "key.bodyoffset" : 39550,
             "key.doc.comment" : "添加子控制器到指定视图，解决不能触发viewWillAppear等的bug",
             "key.doclength" : 82,
-            "key.docoffset" : 39461,
+            "key.docoffset" : 39339,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 207,
             "key.name" : "addChildViewController(_:in:layout:)",
             "key.namelength" : 111,
-            "key.nameoffset" : 39559,
-            "key.offset" : 39554,
+            "key.nameoffset" : 39437,
+            "key.offset" : 39432,
             "key.substructure" : [
 
             ]

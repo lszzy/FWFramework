@@ -15,6 +15,7 @@
 
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
+@property (nonatomic, assign) CGPoint originOffset;
 @property (nonatomic, assign) BOOL originValid;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
@@ -288,6 +289,7 @@
         case UIGestureRecognizerStateBegan: {
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
+            self.originOffset = self.scrollView.contentOffset;
             if ([self.scrollView fw_isScrollToEdge:self.scrollEdge] &&
                 (self.scrollView.panGestureRecognizer.fw_swipeDirection == self.scrollDirection ||
                  gestureRecognizer.fw_swipeDirection == self.scrollDirection)) {
@@ -342,21 +344,27 @@
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
     
-    NSArray<NSNumber *> *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : @[];
-    if (positions.count > 0 && [positions containsObject:@(self.originPosition)]) {
+    NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
+    if (positions.count > 0) {
         self.panDisabled = NO;
-        if (self.originValid) {
-            [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+        if ([positions containsObject:@(self.originPosition)] ||
+            self.originPosition == self.openPosition) {
+            if (self.originValid) {
+                [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
+            } else {
+                [self setPosition:self.originPosition animated:NO];
+            }
         } else {
-            [self setPosition:self.originPosition animated:NO];
+            self.scrollView.contentOffset = self.originOffset;
         }
-    } else {
-        if ([self.scrollView fw_isScrollToEdge:self.scrollEdge]) {
-            self.panDisabled = NO;
-        }
-        if (!self.panDisabled) {
-            [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
-        }
+        return;
+    }
+    
+    if ([self.scrollView fw_isScrollToEdge:self.scrollEdge]) {
+        self.panDisabled = NO;
+    }
+    if (!self.panDisabled) {
+        [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
     }
 }
 
@@ -364,6 +372,7 @@
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
+    if (self.scrollViewPositions && self.scrollViewPositions(self.scrollView).count > 0) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
