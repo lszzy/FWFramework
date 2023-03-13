@@ -203,23 +203,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIWindow (FWUIKit)
 
-/// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_getTabBarIndex:(NSUInteger)index NS_REFINED_FOR_SWIFT;
+/// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_getTabBarControllerWithIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
-/// 获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_getTabBarController:(Class)viewController NS_REFINED_FOR_SWIFT;
+/// 获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_getTabBarControllerOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
 
-/// 获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_getTabBarBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
+/// 获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_getTabBarControllerWithBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
 
-/// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index NS_REFINED_FOR_SWIFT;
+/// 选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarControllerWithIndex:(NSInteger)index NS_REFINED_FOR_SWIFT;
 
-/// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarController:(Class)viewController NS_REFINED_FOR_SWIFT;
+/// 选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarControllerOfClass:(Class)clazz NS_REFINED_FOR_SWIFT;
 
-/// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-- (nullable __kindof UIViewController *)fw_selectTabBarBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
+/// 选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
+- (nullable __kindof UIViewController *)fw_selectTabBarControllerWithBlock:(BOOL (NS_NOESCAPE ^)(__kindof UIViewController *viewController))block NS_REFINED_FOR_SWIFT;
 
 @end
 
