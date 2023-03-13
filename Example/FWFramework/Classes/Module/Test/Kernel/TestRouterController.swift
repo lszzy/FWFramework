@@ -310,7 +310,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     class func homeRouter(_ context: RouterContext) -> Any? {
-        UIWindow.fw.main?.fw.selectTabBarIndex(0)
+        UIWindow.fw.main?.fw.selectTabBarController(index: 0)
         return nil
     }
     

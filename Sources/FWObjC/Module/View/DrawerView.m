@@ -366,10 +366,11 @@
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
     
-    NSArray<NSNumber *> *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : @[];
+    NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
-        if ([positions containsObject:@(self.originPosition)]) {
-            self.panDisabled = NO;
+        self.panDisabled = NO;
+        if ([positions containsObject:@(self.originPosition)] ||
+            self.originPosition == self.openPosition) {
             if (self.originValid) {
                 [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
             } else {
@@ -378,13 +379,14 @@
         } else {
             self.scrollView.contentOffset = self.originOffset;
         }
-    } else {
-        if ([self.scrollView __fw_isScrollTo:self.scrollEdge]) {
-            self.panDisabled = NO;
-        }
-        if (!self.panDisabled) {
-            [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
-        }
+        return;
+    }
+    
+    if ([self.scrollView __fw_isScrollTo:self.scrollEdge]) {
+        self.panDisabled = NO;
+    }
+    if (!self.panDisabled) {
+        [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
     }
 }
 
@@ -392,6 +394,7 @@
 {
     if (!self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
+    if (self.scrollViewPositions && self.scrollViewPositions(self.scrollView).count > 0) return;
     
     if (self.position == self.openPosition) {
         self.panDisabled = YES;
