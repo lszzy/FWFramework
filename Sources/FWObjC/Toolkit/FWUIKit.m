@@ -1079,73 +1079,79 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UIWindow (FWUIKit)
 
-- (__kindof UIViewController *)fw_getTabBarIndex:(NSUInteger)index
+- (__kindof UIViewController *)fw_getTabBarControllerWithIndex:(NSInteger)index
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
     
-    UINavigationController *targetNavigation = nil;
-    if (tabbarController.viewControllers.count > index) {
-        targetNavigation = tabbarController.viewControllers[index];
+    UINavigationController *targetController = nil;
+    if (tabbarController.viewControllers.count > index && index >= 0) {
+        targetController = tabbarController.viewControllers[index];
     }
-    return targetNavigation;
+    
+    if ([targetController isKindOfClass:[UINavigationController class]]) {
+        targetController = targetController.viewControllers.firstObject;
+    }
+    return targetController;
 }
 
-- (__kindof UIViewController *)fw_getTabBarController:(Class)viewController
+- (__kindof UIViewController *)fw_getTabBarControllerOfClass:(Class)clazz
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
     
-    UINavigationController *targetNavigation = nil;
+    UIViewController *targetController = nil;
     for (UINavigationController *navigationController in tabbarController.viewControllers) {
-        if ([navigationController isKindOfClass:viewController] ||
-            ([navigationController isKindOfClass:[UINavigationController class]] &&
-             [navigationController.viewControllers.firstObject isKindOfClass:viewController])) {
-            targetNavigation = navigationController;
+        UIViewController *viewController = navigationController;
+        if ([navigationController isKindOfClass:[UINavigationController class]]) {
+            viewController = navigationController.viewControllers.firstObject;
+        }
+        if ([viewController isKindOfClass:clazz]) {
+            targetController = viewController;
             break;
         }
     }
-    return targetNavigation;
+    return targetController;
 }
 
-- (__kindof UIViewController *)fw_getTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
+- (__kindof UIViewController *)fw_getTabBarControllerWithBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
     
-    UINavigationController *targetNavigation = nil;
+    UIViewController *targetController = nil;
     for (UINavigationController *navigationController in tabbarController.viewControllers) {
         UIViewController *viewController = navigationController;
         if ([navigationController isKindOfClass:[UINavigationController class]]) {
             viewController = navigationController.viewControllers.firstObject;
         }
         if (viewController && block(viewController)) {
-            targetNavigation = navigationController;
+            targetController = viewController;
             break;
         }
     }
-    return targetNavigation;
+    return targetController;
 }
 
-- (__kindof UIViewController *)fw_selectTabBarIndex:(NSUInteger)index
+- (__kindof UIViewController *)fw_selectTabBarControllerWithIndex:(NSInteger)index
 {
-    UINavigationController *targetNavigation = [self fw_getTabBarIndex:index];
-    if (!targetNavigation) return nil;
-    return [self fw_selectTabBarNavigation:targetNavigation];
+    UIViewController *viewController = [self fw_getTabBarControllerWithIndex:index];
+    if (!viewController) return nil;
+    return [self fw_selectTabBarController:viewController];
 }
 
-- (__kindof UIViewController *)fw_selectTabBarController:(Class)viewController
+- (__kindof UIViewController *)fw_selectTabBarControllerOfClass:(Class)clazz
 {
-    UINavigationController *targetNavigation = [self fw_getTabBarController:viewController];
-    if (!targetNavigation) return nil;
-    return [self fw_selectTabBarNavigation:targetNavigation];
+    UIViewController *viewController = [self fw_getTabBarControllerOfClass:clazz];
+    if (!viewController) return nil;
+    return [self fw_selectTabBarController:viewController];
 }
 
-- (__kindof UIViewController *)fw_selectTabBarBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
+- (__kindof UIViewController *)fw_selectTabBarControllerWithBlock:(__attribute__((noescape)) BOOL (^)(__kindof UIViewController *))block
 {
-    UINavigationController *targetNavigation = [self fw_getTabBarBlock:block];
-    if (!targetNavigation) return nil;
-    return [self fw_selectTabBarNavigation:targetNavigation];
+    UIViewController *viewController = [self fw_getTabBarControllerWithBlock:block];
+    if (!viewController) return nil;
+    return [self fw_selectTabBarController:viewController];
 }
 
 - (UITabBarController *)fw_rootTabBarController
@@ -1164,11 +1170,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     return nil;
 }
 
-- (UIViewController *)fw_selectTabBarNavigation:(UINavigationController *)targetNavigation
+- (UIViewController *)fw_selectTabBarController:(__kindof UIViewController *)viewController
 {
     UITabBarController *tabbarController = [self fw_rootTabBarController];
     if (!tabbarController) return nil;
     
+    UINavigationController *targetNavigation = viewController.navigationController ?: viewController;
     UINavigationController *currentNavigation = tabbarController.selectedViewController;
     if (currentNavigation != targetNavigation) {
         if ([currentNavigation isKindOfClass:[UINavigationController class]] &&
@@ -1178,14 +1185,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         tabbarController.selectedViewController = targetNavigation;
     }
     
-    UIViewController *targetController = targetNavigation;
     if ([targetNavigation isKindOfClass:[UINavigationController class]]) {
-        targetController = targetNavigation.viewControllers.firstObject;
         if (targetNavigation.viewControllers.count > 1) {
             [targetNavigation popToRootViewControllerAnimated:NO];
         }
     }
-    return targetController;
+    return viewController;
 }
 
 @end
