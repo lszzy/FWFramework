@@ -936,76 +936,80 @@ import AdSupport
 // MARK: - UIWindow+UIKit
 @_spi(FW) extension UIWindow {
     
-    /// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func fw_getTabBarIndex(_ index: Int) -> UIViewController? {
+    /// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func fw_getTabBarController(index: Int) -> UIViewController? {
         guard let tabBarController = fw_rootTabBarController() else { return nil }
         
-        var targetNavigation: UIViewController?
+        var targetController: UIViewController?
         if (tabBarController.viewControllers?.count ?? 0) > index, index >= 0 {
-            targetNavigation = tabBarController.viewControllers?[index]
+            targetController = tabBarController.viewControllers?[index]
         }
-        return targetNavigation
+        
+        if let navigationController = targetController as? UINavigationController {
+            targetController = navigationController.viewControllers.first
+        }
+        return targetController
     }
     
-    /// 获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func fw_getTabBarController(_ clazz: AnyClass) -> UIViewController? {
+    /// 获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func fw_getTabBarController(of clazz: AnyClass) -> UIViewController? {
         guard let tabBarController = fw_rootTabBarController() else { return nil }
         
-        var targetNavigation: UIViewController?
+        var targetController: UIViewController?
         let navigationControllers = tabBarController.viewControllers ?? []
         for navigationController in navigationControllers {
-            var targetController: UIViewController? = navigationController
+            var viewController: UIViewController? = navigationController
             if let navigationController = navigationController as? UINavigationController {
-                targetController = navigationController.viewControllers.first
+                viewController = navigationController.viewControllers.first
             }
-            if let targetController = targetController,
-               targetController.isKind(of: clazz) {
-                targetNavigation = navigationController
+            if let viewController = viewController,
+               viewController.isKind(of: clazz) {
+                targetController = viewController
                 break
             }
         }
-        return targetNavigation
+        return targetController
     }
 
-    /// 获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func fw_getTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
+    /// 获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func fw_getTabBarController(block: (UIViewController) -> Bool) -> UIViewController? {
         guard let tabBarController = fw_rootTabBarController() else { return nil }
         
-        var targetNavigation: UIViewController?
+        var targetController: UIViewController?
         let navigationControllers = tabBarController.viewControllers ?? []
         for navigationController in navigationControllers {
-            var targetController: UIViewController? = navigationController
+            var viewController: UIViewController? = navigationController
             if let navigationController = navigationController as? UINavigationController {
-                targetController = navigationController.viewControllers.first
+                viewController = navigationController.viewControllers.first
             }
-            if let targetController = targetController,
-               block(targetController) {
-                targetNavigation = navigationController
+            if let viewController = viewController,
+               block(viewController) {
+                targetController = viewController
                 break
             }
         }
-        return targetNavigation
+        return targetController
     }
     
-    /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func fw_selectTabBarIndex(_ index: Int) -> UIViewController? {
-        guard let targetNavigation = fw_getTabBarIndex(index) else { return nil }
-        return fw_selectTabBar(navigation: targetNavigation)
+    public func fw_selectTabBarController(index: Int) -> UIViewController? {
+        guard let targetController = fw_getTabBarController(index: index) else { return nil }
+        return fw_selectTabBarController(viewController: targetController)
     }
 
-    /// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func fw_selectTabBarController(_ clazz: AnyClass) -> UIViewController? {
-        guard let targetNavigation = fw_getTabBarController(clazz) else { return nil }
-        return fw_selectTabBar(navigation: targetNavigation)
+    public func fw_selectTabBarController(of clazz: AnyClass) -> UIViewController? {
+        guard let targetController = fw_getTabBarController(of: clazz) else { return nil }
+        return fw_selectTabBarController(viewController: targetController)
     }
 
-    /// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func fw_selectTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
-        guard let targetNavigation = fw_getTabBarBlock(block) else { return nil }
-        return fw_selectTabBar(navigation: targetNavigation)
+    public func fw_selectTabBarController(block: (UIViewController) -> Bool) -> UIViewController? {
+        guard let targetController = fw_getTabBarController(block: block) else { return nil }
+        return fw_selectTabBarController(viewController: targetController)
     }
     
     private func fw_rootTabBarController() -> UITabBarController? {
@@ -1021,9 +1025,10 @@ import AdSupport
         return nil
     }
     
-    private func fw_selectTabBar(navigation targetNavigation: UIViewController) -> UIViewController? {
+    private func fw_selectTabBarController(viewController: UIViewController) -> UIViewController? {
         guard let tabBarController = fw_rootTabBarController() else { return nil }
         
+        let targetNavigation = viewController.navigationController ?? viewController
         let currentNavigation = tabBarController.selectedViewController
         if currentNavigation != targetNavigation {
             if let navigationController = currentNavigation as? UINavigationController,
@@ -1033,14 +1038,12 @@ import AdSupport
             tabBarController.selectedViewController = targetNavigation
         }
         
-        var targetController: UIViewController? = targetNavigation
         if let navigationController = targetNavigation as? UINavigationController {
-            targetController = navigationController.viewControllers.first
             if navigationController.viewControllers.count > 1 {
                 navigationController.popToRootViewController(animated: false)
             }
         }
-        return targetController
+        return viewController
     }
     
 }

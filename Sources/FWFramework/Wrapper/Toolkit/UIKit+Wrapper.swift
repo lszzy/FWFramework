@@ -340,37 +340,37 @@ extension Wrapper where Base: UIImageView {
 // MARK: - UIWindow+UIKit
 extension Wrapper where Base: UIWindow {
     
-    /// 获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func getTabBarIndex(_ index: Int) -> UIViewController? {
-        return base.fw_getTabBarIndex(index)
+    /// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func getTabBarController(index: Int) -> UIViewController? {
+        return base.fw_getTabBarController(index: index)
     }
     
-    /// 获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func getTabBarController(_ clazz: AnyClass) -> UIViewController? {
-        return base.fw_getTabBarController(clazz)
+    /// 获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func getTabBarController(of clazz: AnyClass) -> UIViewController? {
+        return base.fw_getTabBarController(of: clazz)
     }
 
-    /// 获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
-    public func getTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
-        return base.fw_getTabBarBlock(block)
+    /// 获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
+    public func getTabBarController(block: (UIViewController) -> Bool) -> UIViewController? {
+        return base.fw_getTabBarController(block: block)
     }
     
-    /// 选中并获取指定索引TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func selectTabBarIndex(_ index: Int) -> UIViewController? {
-        return base.fw_selectTabBarIndex(index)
+    public func selectTabBarController(index: Int) -> UIViewController? {
+        return base.fw_selectTabBarController(index: index)
     }
 
-    /// 选中并获取指定类TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func selectTabBarController(_ clazz: AnyClass) -> UIViewController? {
-        return base.fw_selectTabBarController(clazz)
+    public func selectTabBarController(of clazz: AnyClass) -> UIViewController? {
+        return base.fw_selectTabBarController(of: clazz)
     }
 
-    /// 选中并获取指定条件TabBar根视图控制器，适用于Tabbar包含多个Navigation结构，找不到返回nil
+    /// 选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func selectTabBarBlock(_ block: (UIViewController) -> Bool) -> UIViewController? {
-        return base.fw_selectTabBarBlock(block)
+    public func selectTabBarController(block: (UIViewController) -> Bool) -> UIViewController? {
+        return base.fw_selectTabBarController(block: block)
     }
     
 }
