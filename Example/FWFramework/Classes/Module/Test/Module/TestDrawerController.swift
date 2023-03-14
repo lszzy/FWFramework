@@ -19,24 +19,43 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     private lazy var bottomView: UIView = {
         let result = UIView()
-        result.frame = CGRect(x: 0, y: self.view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height)
+        result.frame = CGRect(x: 0, y: view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height - 100)
         result.backgroundColor = .fw.randomColor
         result.addSubview(scrollView)
+        
+        let lineView = UIView()
+        lineView.frame = CGRect(x: FW.screenWidth / 2 - 24, y: 8, width: 48, height: 4)
+        lineView.backgroundColor = .gray
+        lineView.layer.cornerRadius = 2
+        result.addSubview(lineView)
         return result
     }()
     
     private lazy var scrollView: UIScrollView = {
-        let result = UIScrollView()
-        result.showsVerticalScrollIndicator = false
-        result.showsHorizontalScrollIndicator = false
-        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 50)
-        result.backgroundColor = UIColor.fw.randomColor
-        result.contentSize = CGSize(width: FW.screenWidth, height: view.fw.height + 250)
+        let result = UITableView.fw.tableView()
+        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 150)
+        result.contentInsetAdjustmentBehavior = .never
+        result.backgroundColor = AppTheme.tableColor
+        result.dataSource = result.fw.tableDelegate
+        result.delegate = result.fw.tableDelegate
+        result.fw.tableDelegate.numberOfRows = { [weak self] _ in
+            return 30
+        }
+        result.fw.tableDelegate.cellConfiguation = { cell, indexPath in
+            cell.fw.maxYViewExpanded = true
+            cell.contentView.backgroundColor = AppTheme.cellColor
+            cell.textLabel?.text = "\(indexPath.row + 1)"
+        }
+        result.fw.tableDelegate.didScroll = { [weak self] scrollView in
+            self?.bottomView.fw.drawerView?.scrollDidScroll(scrollView)
+        }
         
-        let topView = UIView()
-        topView.frame = CGRectMake(0, 0, FW.screenWidth, 300)
-        topView.backgroundColor = UIColor.fw.randomColor
-        result.addSubview(topView)
+        result.fw.setLoading { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self?.scrollView.fw.endLoading()
+            }
+        }
+        result.fw.loadingFinished = true
         return result
     }()
     
