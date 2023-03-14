@@ -757,7 +757,9 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         [self drawAttachments];
         [self drawShadow:ctx];
         [self drawText:drawString rect:rect context:ctx];
-        [self drawStrikethroughWithRect:rect context:ctx];
+        if (@available(iOS 15.0, *)) {} else {
+            [self drawStrikethroughWithRect:rect context:ctx];
+        }
     }
     CGContextRestoreGState(ctx);
 }
