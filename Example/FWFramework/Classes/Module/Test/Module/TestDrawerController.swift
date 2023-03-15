@@ -49,13 +49,6 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         result.fw.tableDelegate.didScroll = { [weak self] scrollView in
             self?.bottomView.fw.drawerView?.scrollDidScroll(scrollView)
         }
-        
-        result.fw.setLoading { [weak self] in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self?.scrollView.fw.endLoading()
-            }
-        }
-        result.fw.loadingFinished = true
         return result
     }()
     
@@ -147,11 +140,20 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             .size(CGSize(width: 200, height: 200))
         
         view.addSubview(bottomView)
-        bottomView.fw.drawerView(
+        let drawerView = bottomView.fw.drawerView(
             .up,
             positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
             kickbackHeight: 25
-        )
+        ) { [weak self] position, finished in
+            self?.navigationItem.title = "DrawerView-\(String(format: "%.2f", position))"
+        }
+        drawerView.scrollViewInsets = { _ in
+            return [
+                NSValue(uiEdgeInsets: .zero),
+                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0)),
+                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
+            ]
+        }
         
         view.addSubview(contentView)
         contentView.fw.drawerView(
