@@ -16,7 +16,9 @@
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, assign) CGPoint originOffset;
-@property (nonatomic, assign) BOOL originValid;
+@property (nonatomic, assign) BOOL originDraggable;
+@property (nonatomic, assign) BOOL originScrollable;
+@property (nonatomic, assign) BOOL originDisable;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
 
@@ -132,19 +134,20 @@
     }
 }
 
-- (UISwipeGestureRecognizerDirection)scrollDirection
+- (BOOL)isDirection:(UIPanGestureRecognizer *)gestureRecognizer
 {
+    UISwipeGestureRecognizerDirection direction = gestureRecognizer.fw_swipeDirection;
     switch (self.direction) {
         case UISwipeGestureRecognizerDirectionUp:
-            return UISwipeGestureRecognizerDirectionDown;
+            return direction == UISwipeGestureRecognizerDirectionDown;
         case UISwipeGestureRecognizerDirectionDown:
-            return UISwipeGestureRecognizerDirectionUp;
+            return direction == UISwipeGestureRecognizerDirectionUp;
         case UISwipeGestureRecognizerDirectionLeft:
-            return UISwipeGestureRecognizerDirectionRight;
+            return direction == UISwipeGestureRecognizerDirectionRight;
         case UISwipeGestureRecognizerDirectionRight:
-            return UISwipeGestureRecognizerDirectionLeft;
+            return direction == UISwipeGestureRecognizerDirectionLeft;
         default:
-            return 0;
+            return NO;
     }
 }
 
@@ -195,11 +198,30 @@
 
 - (void)notifyPosition:(BOOL)finished
 {
+    [self adjustScrollInset];
+    
     if (self.positionChanged) {
         self.positionChanged(self.position, finished);
     }
     if ([self.delegate respondsToSelector:@selector(drawerView:positionChanged:finished:)]) {
         [self.delegate drawerView:self positionChanged:self.position finished:finished];
+    }
+}
+
+- (void)adjustScrollInset
+{
+    NSArray *insets = self.scrollViewInsets && self.scrollView ? self.scrollViewInsets(self.scrollView) : nil;
+    if (insets.count > 0 && insets.count == self.positions.count) {
+        [self.positions enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSNumber *next = idx < (self.positions.count - 1) ? self.positions[idx + 1] : nil;
+            if ((next && self.position < next.doubleValue) || !next) {
+                UIEdgeInsets inset = [insets[idx] UIEdgeInsetsValue];
+                if (!UIEdgeInsetsEqualToEdgeInsets(self.scrollView.contentInset, inset)) {
+                    self.scrollView.contentInset = inset;
+                }
+                *stop = YES;
+            }
+        }];
     }
 }
 
@@ -285,18 +307,18 @@
 - (void)gestureRecognizerAction:(UIPanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
-        // 拖动开始时记录起始位置
+        // 拖动开始时记录起始位置信息
         case UIGestureRecognizerStateBegan: {
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
+            
+            BOOL hitScrollView = [gestureRecognizer fw_hitTestWithView:self.scrollView];
+            BOOL isSwipeDirection = [self isDirection:gestureRecognizer] || [self isDirection:self.scrollView.panGestureRecognizer];
             self.originOffset = self.scrollView.contentOffset;
-            if ([self.scrollView fw_isScrollToEdge:self.scrollEdge] &&
-                (self.scrollView.panGestureRecognizer.fw_swipeDirection == self.scrollDirection ||
-                 gestureRecognizer.fw_swipeDirection == self.scrollDirection)) {
-                self.originValid = YES;
-            } else {
-                self.originValid = NO;
-            }
+            self.originDraggable = isSwipeDirection && [self.scrollView fw_isScrollToEdge:self.scrollEdge];
+            self.originDisable = !self.originDraggable && (hitScrollView || !isSwipeDirection);
+            NSArray *positions = self.scrollViewPositions && self.scrollView ? self.scrollViewPositions(self.scrollView) : nil;
+            self.originScrollable = self.originPosition == self.openPosition || [positions containsObject:@(self.originPosition)];
             break;
         }
         // 拖动改变时更新视图位置
@@ -316,8 +338,8 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
-            [self gestureRecognizerDidScroll];
-            [self notifyPosition:NO];
+            BOOL notify = [self gestureRecognizerDidScroll];
+            if (notify) [self notifyPosition:NO];
             break;
         }
         // 拖动结束时停留指定位置
@@ -347,12 +369,12 @@
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
-        if ([positions containsObject:@(self.originPosition)] ||
-            self.originPosition == self.openPosition) {
-            if (self.originValid) {
+        if (self.originScrollable) {
+            if (self.originDraggable) {
                 [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
             } else {
-                [self setPosition:self.originPosition animated:NO];
+                [self togglePosition:self.originPosition];
+                self.position = self.originPosition;
             }
         } else {
             self.scrollView.contentOffset = self.originOffset;
@@ -368,18 +390,28 @@
     }
 }
 
-- (void)gestureRecognizerDidScroll
+- (BOOL)gestureRecognizerDidScroll
 {
-    if (!self.scrollView || !self.gestureRecognizer.enabled) return;
-    if (![self canScroll:self.scrollView]) return;
-    if (self.scrollViewPositions && self.scrollViewPositions(self.scrollView).count > 0) return;
+    if (!self.scrollView || !self.gestureRecognizer.enabled) return YES;
+    if (![self canScroll:self.scrollView]) return YES;
+    
+    NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
+    if (positions.count > 0) {
+        self.panDisabled = NO;
+        if (self.originScrollable && self.originDisable) return NO;
+        return YES;
+    }
     
     if (self.position == self.openPosition) {
-        self.panDisabled = YES;
+        self.panDisabled = self.originDisable;
     }
     if (self.panDisabled) {
-        [self setPosition:self.openPosition animated:NO];
+        [self togglePosition:self.openPosition];
+        self.position = self.openPosition;
+    } else {
+        [self.scrollView fw_scrollToEdge:self.scrollEdge animated:NO];
     }
+    return YES;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
