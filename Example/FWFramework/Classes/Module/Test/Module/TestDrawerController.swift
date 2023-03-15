@@ -156,7 +156,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             .size(CGSize(width: 200, height: 200))
         
         view.addSubview(bottomView)
-        let drawerView = bottomView.fw.drawerView(
+        bottomView.fw.drawerView(
             .up,
             positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
             kickbackHeight: 25
