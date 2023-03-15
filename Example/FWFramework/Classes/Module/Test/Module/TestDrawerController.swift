@@ -10,6 +10,8 @@ import FWFramework
 
 class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    private var canScroll = true
+        
     private lazy var contentView: UIView = {
         let result = UIView()
         result.frame = CGRect(x: -FW.screenWidth / 2.0, y: 0, width: FW.screenWidth / 2.0, height: view.fw.height)
@@ -19,24 +21,25 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     
     private lazy var bottomView: UIView = {
         let result = UIView()
-        result.frame = CGRect(x: 0, y: self.view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height)
+        result.frame = CGRect(x: 0, y: view.fw.height - 100.0, width: FW.screenWidth, height: view.fw.height - 100)
         result.backgroundColor = .fw.randomColor
-        result.addSubview(scrollView)
+        result.addSubview(tableView)
+        
+        let lineView = UIView()
+        lineView.frame = CGRect(x: FW.screenWidth / 2 - 24, y: 8, width: 48, height: 4)
+        lineView.backgroundColor = .gray
+        lineView.layer.cornerRadius = 2
+        result.addSubview(lineView)
         return result
     }()
     
-    private lazy var scrollView: UIScrollView = {
-        let result = UIScrollView()
-        result.showsVerticalScrollIndicator = false
-        result.showsHorizontalScrollIndicator = false
-        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 50)
-        result.backgroundColor = UIColor.fw.randomColor
-        result.contentSize = CGSize(width: FW.screenWidth, height: view.fw.height + 250)
-        
-        let topView = UIView()
-        topView.frame = CGRectMake(0, 0, FW.screenWidth, 300)
-        topView.backgroundColor = UIColor.fw.randomColor
-        result.addSubview(topView)
+    private lazy var tableView: UITableView = {
+        let result = UITableView.fw.tableView()
+        result.frame = CGRect(x: 0, y: 50, width: FW.screenWidth, height: view.fw.height - 150)
+        result.contentInsetAdjustmentBehavior = .never
+        result.backgroundColor = AppTheme.tableColor
+        result.dataSource = self
+        result.delegate = self
         return result
     }()
     
@@ -74,7 +77,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         topLabel.isUserInteractionEnabled = true
         topLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewFilter = { _ in true }
             drawerView.scrollViewPositions = nil
             self?.toggleMenu()
         } customize: { gesture in
@@ -87,7 +90,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         middleLabel.isUserInteractionEnabled = true
         middleLabel.fw.addTapGesture { [weak self] _ in
             guard let drawerView = self?.bottomView.fw.drawerView else { return }
-            drawerView.scrollViewFilter = nil
+            drawerView.scrollViewFilter = { _ in true }
             drawerView.scrollViewPositions = { _ in
                 return [
                     NSNumber(value: drawerView.openPosition),
@@ -112,7 +115,21 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             gesture.highlightedAlpha = 0.5
         }
         
-        let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
+        let toggleLabel = UILabel(frame: CGRect(x: 50, y: 350, width: 100, height: 30))
+        toggleLabel.text = "高度切换"
+        contentView.addSubview(toggleLabel)
+        toggleLabel.isUserInteractionEnabled = true
+        toggleLabel.fw.addTapGesture { [weak self] _ in
+            guard let self = self else { return }
+            self.canScroll = !self.canScroll
+            self.tableView.reloadData()
+            self.toggleInset()
+            self.toggleMenu()
+        } customize: { gesture in
+            gesture.highlightedAlpha = 0.5
+        }
+        
+        let closeLabel = UILabel(frame: CGRect(x: 50, y: 450, width: 100, height: 30))
         closeLabel.text = "返回"
         closeLabel.isUserInteractionEnabled = true
         closeLabel.fw.addTapGesture { [weak self] _ in
@@ -132,7 +149,10 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             .up,
             positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
             kickbackHeight: 25
-        )
+        ) { [weak self] position, finished in
+            self?.navigationItem.title = "DrawerView-\(String(format: "%.2f", position))"
+        }
+        toggleInset()
         
         view.addSubview(contentView)
         contentView.fw.drawerView(
@@ -146,6 +166,17 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         guard let drawerView = contentView.fw.drawerView else { return }
         let position = drawerView.position == drawerView.openPosition ? drawerView.closePosition : drawerView.openPosition
         drawerView.setPosition(position, animated: true)
+    }
+    
+    func toggleInset() {
+        guard let drawerView = bottomView.fw.drawerView else { return }
+        drawerView.scrollViewInsets = canScroll ? { _ in
+            return [
+                NSValue(uiEdgeInsets: .zero),
+                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0)),
+                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
+            ]
+        } : nil
     }
     
     @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
@@ -186,6 +217,34 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
                 UIWindow.fw.main?.fw.showAlert(title: "扫描结果", message: message)
             }
         }
+    }
+    
+}
+
+extension TestDrawerController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return canScroll ? 30 : 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        cell.fw.maxYViewExpanded = true
+        cell.contentView.backgroundColor = AppTheme.cellColor
+        cell.textLabel?.text = "\(indexPath.row + 1)"
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView.fw.height(cellClass: UITableViewCell.self) { cell in
+            cell.fw.maxYViewExpanded = true
+            cell.contentView.backgroundColor = AppTheme.cellColor
+            cell.textLabel?.text = "\(indexPath.row + 1)"
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        bottomView.fw.drawerView?.scrollDidScroll(scrollView)
     }
     
 }
