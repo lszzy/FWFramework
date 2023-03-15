@@ -1908,9 +1908,7 @@ import AdSupport
     
     /// 获取手势直接作用的view，不同于view，此处是view的subview
     public weak var fw_targetView: UIView? {
-        let location = self.location(in: self.view)
-        let targetView = self.view?.hitTest(location, with: nil)
-        return targetView
+        return view?.hitTest(location(in: view), with: nil)
     }
 
     /// 是否正在拖动中：Began || Changed
@@ -1921,6 +1919,12 @@ import AdSupport
     /// 是否是激活状态: isEnabled && (Began || Changed)
     public var fw_isActive: Bool {
         return isEnabled && (state == .began || state == .changed)
+    }
+    
+    /// 判断手势是否正作用于指定视图
+    @objc(__fw_hitTestWithView:)
+    public func fw_hitTest(view: UIView?) -> Bool {
+        return view?.hitTest(location(in: view), with: nil) != nil
     }
     
 }
