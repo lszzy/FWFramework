@@ -219,11 +219,30 @@
 
 - (void)notifyPosition:(BOOL)finished
 {
+    [self adjustScrollInset];
+    
     if (self.positionChanged) {
         self.positionChanged(self.position, finished);
     }
     if ([self.delegate respondsToSelector:@selector(drawerView:positionChanged:finished:)]) {
         [self.delegate drawerView:self positionChanged:self.position finished:finished];
+    }
+}
+
+- (void)adjustScrollInset
+{
+    NSArray *insets = self.scrollViewInsets && self.scrollView ? self.scrollViewInsets(self.scrollView) : nil;
+    if (insets.count > 0 && insets.count == self.positions.count) {
+        [self.positions enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSNumber *next = idx < (self.positions.count - 1) ? self.positions[idx + 1] : nil;
+            if ((next && self.position < next.doubleValue) || !next) {
+                UIEdgeInsets inset = [insets[idx] UIEdgeInsetsValue];
+                if (!UIEdgeInsetsEqualToEdgeInsets(self.scrollView.contentInset, inset)) {
+                    self.scrollView.contentInset = inset;
+                }
+                *stop = YES;
+            }
+        }];
     }
 }
 
