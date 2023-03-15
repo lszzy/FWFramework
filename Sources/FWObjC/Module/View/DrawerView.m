@@ -38,9 +38,9 @@
 @property (nonatomic, assign) CGFloat position;
 @property (nonatomic, assign) CGFloat originPosition;
 @property (nonatomic, assign) CGPoint originOffset;
-@property (nonatomic, assign) BOOL isOriginDraggable;
-@property (nonatomic, assign) BOOL isDraggingScrollView;
-@property (nonatomic, assign) BOOL isScrollablePosition;
+@property (nonatomic, assign) BOOL originDraggable;
+@property (nonatomic, assign) BOOL originScrollView;
+@property (nonatomic, assign) BOOL originScrollable;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
 
@@ -328,25 +328,23 @@
 - (void)gestureRecognizerAction:(UIPanGestureRecognizer *)gestureRecognizer
 {
     switch (gestureRecognizer.state) {
-        // 拖动开始时记录起始位置
+        // 拖动开始时记录起始位置信息
         case UIGestureRecognizerStateBegan: {
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
             
-            // 滚动模式时记录起始信息
-            NSArray *positions = self.scrollViewPositions && self.scrollView ? self.scrollViewPositions(self.scrollView) : nil;
-            if (positions.count > 0) {
-                self.originOffset = self.scrollView.contentOffset;
-                self.isScrollablePosition = [positions containsObject:@(self.originPosition)] || self.originPosition == self.openPosition;
-                self.isDraggingScrollView = [gestureRecognizer __fw_hitTestWithView:self.scrollView];
-                if ([self.scrollView __fw_isScrollTo:self.scrollEdge] &&
-                    (self.scrollView.panGestureRecognizer.__fw_swipeDirection == self.scrollDirection ||
-                     gestureRecognizer.__fw_swipeDirection == self.scrollDirection)) {
-                    self.isOriginDraggable = YES;
-                } else {
-                    self.isOriginDraggable = NO;
-                }
+            self.originOffset = self.scrollView.contentOffset;
+            self.originScrollView = [gestureRecognizer __fw_hitTestWithView:self.scrollView];
+            if ([self.scrollView __fw_isScrollTo:self.scrollEdge] &&
+                (self.scrollView.panGestureRecognizer.__fw_swipeDirection == self.scrollDirection ||
+                 gestureRecognizer.__fw_swipeDirection == self.scrollDirection)) {
+                self.originDraggable = YES;
+            } else {
+                self.originDraggable = NO;
             }
+            
+            NSArray *positions = self.scrollViewPositions && self.scrollView ? self.scrollViewPositions(self.scrollView) : nil;
+            self.originScrollable = self.originPosition == self.openPosition || [positions containsObject:@(self.originPosition)];
             break;
         }
         // 拖动改变时更新视图位置
@@ -397,8 +395,8 @@
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
-        if (self.isScrollablePosition) {
-            if (self.isOriginDraggable) {
+        if (self.originScrollable) {
+            if (self.originDraggable) {
                 [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
             } else {
                 [self togglePosition:self.originPosition];
@@ -426,14 +424,15 @@
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
-        if (self.isScrollablePosition) {
-            if (!self.isOriginDraggable && self.isDraggingScrollView) return NO;
+        if (self.originScrollable) {
+            if (!self.originDraggable && self.originScrollView) return NO;
         }
         return YES;
     }
     
     if (self.position == self.openPosition) {
-        self.panDisabled = YES;
+        self.panDisabled = !self.originDraggable && self.originScrollView;
+        if (!self.panDisabled) [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
     }
     if (self.panDisabled) {
         [self togglePosition:self.openPosition];
