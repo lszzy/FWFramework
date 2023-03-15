@@ -681,11 +681,6 @@ extension Wrapper where Base: UIPanGestureRecognizer {
     public var swipeDirection: UISwipeGestureRecognizer.Direction {
         return base.fw_swipeDirection
     }
-    
-    /// 当前滚动方向的滑动方向，失败返回0
-    public func fw_swipeDirection(of scrollDirection: UICollectionView.ScrollDirection) -> UISwipeGestureRecognizer.Direction {
-        return base.fw_swipeDirection(of: scrollDirection)
-    }
 
     /// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
     public var swipePercent: CGFloat {

@@ -1933,28 +1933,10 @@ import AdSupport
 @_spi(FW) extension UIPanGestureRecognizer {
     
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
+    @objc(__fw_swipeDirection)
     public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
         let transition = self.translation(in: self.view)
         if abs(transition.x) > abs(transition.y) {
-            if transition.x < 0 {
-                return .left
-            } else if transition.x > 0 {
-                return .right
-            }
-        } else {
-            if transition.y > 0 {
-                return .down
-            } else if transition.y < 0 {
-                return .up
-            }
-        }
-        return []
-    }
-    
-    /// 当前滚动方向的滑动方向，失败返回0
-    public func fw_swipeDirection(of scrollDirection: UICollectionView.ScrollDirection) -> UISwipeGestureRecognizer.Direction {
-        let transition = self.translation(in: self.view)
-        if scrollDirection == .horizontal {
             if transition.x < 0 {
                 return .left
             } else if transition.x > 0 {

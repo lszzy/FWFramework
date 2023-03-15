@@ -158,16 +158,16 @@
 
 - (BOOL)isDirection:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    CGPoint transition = [gestureRecognizer translationInView:gestureRecognizer.view];
+    UISwipeGestureRecognizerDirection direction = gestureRecognizer.__fw_swipeDirection;
     switch (self.direction) {
         case UISwipeGestureRecognizerDirectionUp:
-            return transition.y > 0;
+            return direction == UISwipeGestureRecognizerDirectionDown;
         case UISwipeGestureRecognizerDirectionDown:
-            return transition.y < 0;
+            return direction == UISwipeGestureRecognizerDirectionUp;
         case UISwipeGestureRecognizerDirectionLeft:
-            return transition.x > 0;
+            return direction == UISwipeGestureRecognizerDirectionRight;
         case UISwipeGestureRecognizerDirectionRight:
-            return transition.x < 0;
+            return direction == UISwipeGestureRecognizerDirectionLeft;
         default:
             return NO;
     }
