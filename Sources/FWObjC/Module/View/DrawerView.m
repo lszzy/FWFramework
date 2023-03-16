@@ -36,13 +36,14 @@
 @interface __FWDrawerView () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, assign) CGFloat position;
-@property (nonatomic, assign) CGFloat originPosition;
-@property (nonatomic, assign) CGPoint originOffset;
-@property (nonatomic, assign) BOOL originDraggable;
-@property (nonatomic, assign) BOOL originScrollable;
-@property (nonatomic, assign) BOOL originDisable;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) BOOL panDisabled;
+@property (nonatomic, assign) CGFloat originPosition;
+@property (nonatomic, assign) CGPoint originOffset;
+@property (nonatomic, assign) BOOL isOriginDraggable;
+@property (nonatomic, assign) BOOL isOriginScrollable;
+@property (nonatomic, assign) BOOL isOriginScrollView;
+@property (nonatomic, assign) BOOL isOriginDirection;
 
 @end
 
@@ -334,13 +335,12 @@
             self.position = self.isVertical ? self.view.frame.origin.y : self.view.frame.origin.x;
             self.originPosition = self.position;
             
-            BOOL hitScrollView = [gestureRecognizer __fw_hitTestWithView:self.scrollView];
-            BOOL isSwipeDirection = [self isDirection:gestureRecognizer] || [self isDirection:self.scrollView.panGestureRecognizer];
+            self.isOriginScrollView = [gestureRecognizer __fw_hitTestWithView:self.scrollView];
+            self.isOriginDirection = [self isDirection:gestureRecognizer] || [self isDirection:self.scrollView.panGestureRecognizer];
             self.originOffset = self.scrollView.contentOffset;
-            self.originDraggable = isSwipeDirection && [self.scrollView __fw_isScrollTo:self.scrollEdge];
-            self.originDisable = !self.originDraggable && (hitScrollView || !isSwipeDirection);
+            self.isOriginDraggable = self.isOriginDirection && [self.scrollView __fw_isScrollTo:self.scrollEdge];
             NSArray *positions = self.scrollViewPositions && self.scrollView ? self.scrollViewPositions(self.scrollView) : nil;
-            self.originScrollable = self.originPosition == self.openPosition || [positions containsObject:@(self.originPosition)];
+            self.isOriginScrollable = self.originPosition == self.openPosition || [positions containsObject:@(self.originPosition)];
             break;
         }
         // 拖动改变时更新视图位置
@@ -391,8 +391,8 @@
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
-        if (self.originScrollable) {
-            if (self.originDraggable) {
+        if (self.isOriginScrollable) {
+            if (self.isOriginDraggable) {
                 [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
             } else {
                 [self togglePosition:self.originPosition];
@@ -420,12 +420,14 @@
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
-        if (self.originScrollable && self.originDisable) return NO;
+        if (self.isOriginScrollable) {
+            if (!self.isOriginDraggable && self.isOriginScrollView) return NO;
+        }
         return YES;
     }
     
     if (self.position == self.openPosition) {
-        self.panDisabled = self.originDisable;
+        self.panDisabled = !self.isOriginDraggable && (self.isOriginScrollView || !self.isOriginDirection);
     }
     if (self.panDisabled) {
         [self togglePosition:self.openPosition];
