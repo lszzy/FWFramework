@@ -187,6 +187,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             } : nil
         } else {
             drawerView.scrollViewInsets = nil
+            tableView.contentInset = .zero
             // 使用tableFooterView占满底部
             if canScroll {
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: drawerView.middlePosition - drawerView.openPosition))
