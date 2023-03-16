@@ -360,8 +360,8 @@
             // 执行位移并回调
             [self togglePosition:position];
             self.position = position;
-            BOOL notify = [self gestureRecognizerDidScroll];
-            if (notify) [self notifyPosition:NO];
+            [self gestureRecognizerDidScroll];
+            [self notifyPosition:NO];
             break;
         }
         // 拖动结束时停留指定位置
@@ -412,18 +412,21 @@
     }
 }
 
-- (BOOL)gestureRecognizerDidScroll
+- (void)gestureRecognizerDidScroll
 {
-    if (!self.scrollView || !self.gestureRecognizer.enabled) return YES;
-    if (![self canScroll:self.scrollView]) return YES;
+    if (!self.scrollView || !self.gestureRecognizer.enabled) return;
+    if (![self canScroll:self.scrollView]) return;
     
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
         self.panDisabled = NO;
         if (self.isOriginScrollable) {
-            if (!self.isOriginDraggable && self.isOriginScrollView) return NO;
+            if (!self.isOriginDraggable && self.isOriginScrollView) {
+                [self togglePosition:self.originPosition];
+                self.position = self.originPosition;
+            }
         }
-        return YES;
+        return;
     }
     
     if (self.position == self.openPosition) {
@@ -435,7 +438,6 @@
     } else {
         [self.scrollView __fw_scrollTo:self.scrollEdge animated:NO];
     }
-    return YES;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
