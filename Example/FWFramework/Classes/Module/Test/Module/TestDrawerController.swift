@@ -11,6 +11,7 @@ import FWFramework
 class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     private var canScroll = true
+    private var isInset = true
     
     private lazy var contentView: UIView = {
         let result = UIView()
@@ -54,12 +55,6 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         return result
     }()
     
-    private lazy var imageView: UIImageView = {
-        let result = UIImageView()
-        result.contentMode = .scaleAspectFit
-        return result
-    }()
-    
     func didInitialize() {
         fw.extendedLayoutEdge = .top
         fw.navigationBarStyle = .transparent
@@ -76,7 +71,24 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             self?.toggleMenu()
         }
         
-        fw.addRightBarItem("相册", target: self, action: #selector(self.onPhotoSheet(_:)))
+        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换内容高度", "contentInset撑开", "footerView撑开", "文字识别"], currentIndex: -1, actionBlock: { index in
+                guard let self = self else { return }
+                if index == 0 {
+                    self.canScroll = !self.canScroll
+                    self.tableView.reloadData()
+                    self.toggleInset()
+                } else if index == 1 {
+                    self.isInset = true
+                    self.toggleInset()
+                } else if index == 2 {
+                    self.isInset = false
+                    self.toggleInset()
+                } else {
+                    self.onPhotoSheet()
+                }
+            })
+        }
     }
     
     func setupSubviews() {
@@ -126,21 +138,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             gesture.highlightedAlpha = 0.5
         }
         
-        let toggleLabel = UILabel(frame: CGRect(x: 50, y: 350, width: 100, height: 30))
-        toggleLabel.text = "高度切换"
-        contentView.addSubview(toggleLabel)
-        toggleLabel.isUserInteractionEnabled = true
-        toggleLabel.fw.addTapGesture { [weak self] _ in
-            guard let self = self else { return }
-            self.canScroll = !self.canScroll
-            self.tableView.reloadData()
-            self.toggleInset()
-            self.toggleMenu()
-        } customize: { gesture in
-            gesture.highlightedAlpha = 0.5
-        }
-        
-        let closeLabel = UILabel(frame: CGRect(x: 50, y: 450, width: 100, height: 30))
+        let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
         closeLabel.text = "返回"
         closeLabel.isUserInteractionEnabled = true
         closeLabel.fw.addTapGesture { [weak self] _ in
@@ -149,11 +147,6 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             gesture.highlightedAlpha = 0.5
         }
         contentView.addSubview(closeLabel)
-        
-        view.addSubview(imageView)
-        imageView.fw.layoutChain
-            .center()
-            .size(CGSize(width: 200, height: 200))
         
         view.addSubview(bottomView)
         bottomView.fw.drawerView(
@@ -180,28 +173,31 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     }
     
     func toggleInset() {
-        // 使用scrollViewInsets占满底部
         guard let drawerView = bottomView.fw.drawerView else { return }
-        drawerView.scrollViewInsets = canScroll ? { _ in
-            return [
-                NSValue(uiEdgeInsets: .zero),
-                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0)),
-                NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
-            ]
-        } : nil
         
-        /*
-        // 使用tableFooterView占满底部
-        guard let drawerView = bottomView.fw.drawerView else { return }
-        if canScroll {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: drawerView.middlePosition - drawerView.openPosition))
-            tableView.tableFooterView = view
-        } else {
+        if isInset {
             tableView.tableFooterView = nil
-        }*/
+            // 使用scrollViewInsets占满底部
+            drawerView.scrollViewInsets = canScroll ? { _ in
+                return [
+                    NSValue(uiEdgeInsets: .zero),
+                    NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0)),
+                    NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
+                ]
+            } : nil
+        } else {
+            drawerView.scrollViewInsets = nil
+            // 使用tableFooterView占满底部
+            if canScroll {
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: drawerView.middlePosition - drawerView.openPosition))
+                tableView.tableFooterView = view
+            } else {
+                tableView.tableFooterView = nil
+            }
+        }
     }
     
-    @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
+    func onPhotoSheet() {
         fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["拍照", "选取相册"]) { [weak self] index in
             if index == 0 {
                 if !UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -221,8 +217,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     }
     
     func onPickerResult(_ image: UIImage?, cancelled: Bool) {
-        imageView.image = cancelled ? nil : image
-        guard let cgImage = imageView.image?.cgImage else { return }
+        guard let cgImage = image?.cgImage else { return }
         
         if #available(iOS 13.0, *) {
             UIWindow.fw.showLoading()
