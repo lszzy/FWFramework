@@ -180,6 +180,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     }
     
     func toggleInset() {
+        // 使用scrollViewInsets占满底部
         guard let drawerView = bottomView.fw.drawerView else { return }
         drawerView.scrollViewInsets = canScroll ? { _ in
             return [
@@ -188,6 +189,16 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
                 NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
             ]
         } : nil
+        
+        /*
+        // 使用tableFooterView占满底部
+        guard let drawerView = bottomView.fw.drawerView else { return }
+        if canScroll {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: drawerView.middlePosition - drawerView.openPosition))
+            tableView.tableFooterView = view
+        } else {
+            tableView.tableFooterView = nil
+        }*/
     }
     
     @objc func onPhotoSheet(_ sender: UIBarButtonItem) {
