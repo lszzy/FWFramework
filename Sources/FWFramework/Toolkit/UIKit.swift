@@ -1917,6 +1917,7 @@ import AdSupport
     }
 
     /// 是否是激活状态: isEnabled && (Began || Changed)
+    @objc(__fw_isActive)
     public var fw_isActive: Bool {
         return isEnabled && (state == .began || state == .changed)
     }
