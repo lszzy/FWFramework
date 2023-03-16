@@ -387,6 +387,8 @@
 {
     if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
     if (![self canScroll:self.scrollView]) return;
+    UIGestureRecognizerState state = scrollView.panGestureRecognizer.state;
+    if (state != UIGestureRecognizerStateBegan && state != UIGestureRecognizerStateChanged) return;
     
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
     if (positions.count > 0) {
