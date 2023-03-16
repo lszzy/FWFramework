@@ -363,7 +363,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView != self.scrollView || !self.gestureRecognizer.enabled) return;
+    if (scrollView != self.scrollView || !self.gestureRecognizer.fw_isActive) return;
     if (![self canScroll:self.scrollView]) return;
     
     NSArray *positions = self.scrollViewPositions ? self.scrollViewPositions(self.scrollView) : nil;
