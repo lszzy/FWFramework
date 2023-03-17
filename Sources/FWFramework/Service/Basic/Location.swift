@@ -42,6 +42,11 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         return CLLocationCoordinate2D(latitude: Double(degrees.first ?? "0") ?? 0, longitude: Double(degrees.last ?? "0") ?? 0)
     }
     
+    /// 计算两个经纬度间的距离
+    open class func locationDistance(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> CLLocationDistance {
+        return CLLocation(latitude: from.latitude, longitude: from.longitude).distance(from: CLLocation(latitude: to.latitude, longitude: to.longitude))
+    }
+    
     /// 是否启用Always定位，默认NO，请求WhenInUse定位
     open var alwaysLocation: Bool = false
     
