@@ -97,7 +97,7 @@ NS_SWIFT_NAME(DrawerView)
 /// 设置抽屉效果视图到指定索引位置(从小到大)，如果位置发生改变，会触发抽屉callback回调
 - (void)setPositionIndex:(NSInteger)index animated:(BOOL)animated;
 
-/// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法。仅处理手势拖动时的滚动效果
+/// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 @end
