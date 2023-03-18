@@ -48,13 +48,25 @@ extension Wrapper where Base: UIView {
     }
 
     /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutHeight(width: CGFloat) -> CGFloat {
-        return base.fw_layoutHeight(width: width)
+    public func layoutHeight(width: CGFloat, shouldCache: Bool = false) -> CGFloat {
+        return base.fw_layoutHeight(width: width, shouldCache: shouldCache)
     }
 
     /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutWidth(height: CGFloat) -> CGFloat {
-        return base.fw_layoutWidth(height: height)
+    public func layoutWidth(height: CGFloat, shouldCache: Bool = false) -> CGFloat {
+        return base.fw_layoutWidth(height: height, shouldCache: shouldCache)
+    }
+    
+    /// 获取或设置高度缓存，小于等于0时表示无缓存
+    public var cachedHeight: CGFloat {
+        get { base.fw_cachedHeight }
+        set { base.fw_cachedHeight = newValue }
+    }
+    
+    /// 获取或设置宽度缓存，小于等于0时表示无缓存
+    public var cachedWidth: CGFloat {
+        get { base.fw_cachedWidth }
+        set { base.fw_cachedWidth = newValue }
     }
     
     // MARK: - Compression
