@@ -73,9 +73,12 @@ import FWObjC
     }
 
     /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。注意UILabel可使用preferredMaxLayoutWidth限制多行文本自动布局时的最大宽度
-    public func fw_layoutHeight(width: CGFloat) -> CGFloat {
-        var fittingHeight: CGFloat = 0
+    public func fw_layoutHeight(width: CGFloat, shouldCache: Bool = false) -> CGFloat {
+        if shouldCache && fw_cachedHeight > 0 {
+            return fw_cachedHeight
+        }
         
+        var fittingHeight: CGFloat = 0
         // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
         let widthFenceConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: width)
         self.addConstraint(widthFenceConstraint)
@@ -87,13 +90,20 @@ import FWObjC
             // 尝试frame布局，调用sizeThatFits:
             fittingHeight = self.sizeThatFits(CGSize(width: width, height: 0)).height
         }
+        
+        if shouldCache && fittingHeight > 0 {
+            fw_cachedHeight = fittingHeight
+        }
         return fittingHeight
     }
 
     /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func fw_layoutWidth(height: CGFloat) -> CGFloat {
-        var fittingWidth: CGFloat = 0
+    public func fw_layoutWidth(height: CGFloat, shouldCache: Bool = false) -> CGFloat {
+        if shouldCache && fw_cachedWidth > 0 {
+            return fw_cachedWidth
+        }
         
+        var fittingWidth: CGFloat = 0
         // 添加固定的height约束，从而使动态视图(如UILabel)横向扩张。而不是纵向增长，flow-layout的方式
         let heightFenceConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: height)
         self.addConstraint(heightFenceConstraint)
@@ -105,7 +115,23 @@ import FWObjC
             // 尝试frame布局，调用sizeThatFits:
             fittingWidth = self.sizeThatFits(CGSize(width: 0, height: height)).width
         }
+        
+        if shouldCache && fittingWidth > 0 {
+            fw_cachedWidth = fittingWidth
+        }
         return fittingWidth
+    }
+    
+    /// 获取或设置高度缓存，小于等于0时表示无缓存
+    public var fw_cachedHeight: CGFloat {
+        get { fw_propertyDouble(forName: "fw_cachedHeight") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_cachedHeight") }
+    }
+    
+    /// 获取或设置宽度缓存，小于等于0时表示无缓存
+    public var fw_cachedWidth: CGFloat {
+        get { fw_propertyDouble(forName: "fw_cachedWidth") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_cachedWidth") }
     }
     
     // MARK: - Compression
