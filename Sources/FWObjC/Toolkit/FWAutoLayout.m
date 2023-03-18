@@ -197,6 +197,76 @@ static BOOL fwStaticAutoScaleView = NO;
     return fittingWidth;
 }
 
+- (CGFloat)fw_dynamicHeightWithWidth:(CGFloat)width maxYViewExpanded:(BOOL)maxYViewExpanded maxYViewPadding:(CGFloat)maxYViewPadding maxYView:(UIView *)maxYView
+{
+    UIView *view = [UIView new];
+    [view addSubview:self];
+    view.frame = CGRectMake(0.0, 0.0, width, 0.0);
+    self.frame = CGRectMake(0.0, 0.0, width, 0.0);
+    
+    CGFloat dynamicHeight = 0.0;
+    // 自动撑开方式
+    if (maxYViewExpanded) {
+        dynamicHeight = [self fw_layoutHeightWithWidth:width];
+    // 无需撑开
+    } else {
+        [view setNeedsLayout];
+        [view layoutIfNeeded];
+        
+        __block CGFloat maxY = 0.0;
+        if (maxYView) {
+            maxY = CGRectGetMaxY(maxYView.frame);
+        } else {
+            [self.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                CGFloat tempY = CGRectGetMaxY(obj.frame);
+                if (tempY > maxY) {
+                    maxY = tempY;
+                }
+            }];
+        }
+        dynamicHeight = maxY + maxYViewPadding;
+    }
+    
+    [self removeFromSuperview];
+    self.frame = CGRectMake(0, 0, width, dynamicHeight);
+    return dynamicHeight;
+}
+
+- (CGFloat)fw_dynamicWidthWithHeight:(CGFloat)height maxYViewExpanded:(BOOL)maxYViewExpanded maxYViewPadding:(CGFloat)maxYViewPadding maxYView:(UIView *)maxYView
+{
+    UIView *view = [UIView new];
+    [view addSubview:self];
+    view.frame = CGRectMake(0.0, 0.0, 0.0, height);
+    self.frame = CGRectMake(0.0, 0.0, 0.0, height);
+    
+    CGFloat dynamicWidth = 0.0;
+    // 自动撑开方式
+    if (maxYViewExpanded) {
+        dynamicWidth = [self fw_layoutWidthWithHeight:height];
+    // 无需撑开
+    } else {
+        [view setNeedsLayout];
+        [view layoutIfNeeded];
+        
+        __block CGFloat maxY = 0.0;
+        if (maxYView) {
+            maxY = CGRectGetMaxX(maxYView.frame);
+        } else {
+            [self.subviews enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                CGFloat tempY = CGRectGetMaxX(obj.frame);
+                if (tempY > maxY) {
+                    maxY = tempY;
+                }
+            }];
+        }
+        dynamicWidth = maxY + maxYViewPadding;
+    }
+    
+    [self removeFromSuperview];
+    self.frame = CGRectMake(0, 0, dynamicWidth, height);
+    return dynamicWidth;
+}
+
 #pragma mark - Compression
 
 - (UILayoutPriority)fw_compressionHorizontal
