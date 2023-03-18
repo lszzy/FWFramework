@@ -68,6 +68,13 @@ NSNotificationName const FWHeadingUpdatedNotification = @"FWHeadingUpdatedNotifi
     return CLLocationCoordinate2DMake(degrees.firstObject.doubleValue, degrees.lastObject.doubleValue);
 }
 
++ (CLLocationDistance)locationDistance:(CLLocationCoordinate2D)from to:(CLLocationCoordinate2D)to
+{
+    CLLocation *fromLocation = [[CLLocation alloc] initWithLatitude:from.latitude longitude:from.longitude];
+    CLLocation *toLocation = [[CLLocation alloc] initWithLatitude:to.latitude longitude:to.longitude];
+    return [fromLocation distanceFromLocation:toLocation];
+}
+
 #pragma mark - Public
 
 - (void)startUpdateLocation

@@ -157,7 +157,7 @@
 }
 
 + (CGFloat)fw_heightWithTableView:(UITableView *)tableView
-                 configuration:(FWCellConfigurationBlock)configuration {
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration {
     return [tableView fw_heightWithCellClass:self configuration:configuration];
 }
 
@@ -216,7 +216,7 @@
 
 + (CGFloat)fw_heightWithTableView:(UITableView *)tableView
                           type:(FWHeaderFooterViewType)type
-                 configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+                 configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration {
     return [tableView fw_heightWithHeaderFooterViewClass:self type:type configuration:configuration];
 }
 
@@ -373,19 +373,19 @@
 }
 
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
-                 configuration:(FWCellConfigurationBlock)configuration {
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration {
     return [self fw_dynamicHeightWithCellClass:clazz configuration:configuration shouldCache:NULL];
 }
 
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
               cacheByIndexPath:(NSIndexPath *)indexPath
-                 configuration:(FWCellConfigurationBlock)configuration {
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration {
     return [self fw_heightWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
 }
 
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
                     cacheByKey:(id<NSCopying>)key
-                 configuration:(FWCellConfigurationBlock)configuration {
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration {
     if (key && self.fw_dynamicLayoutHeightCache.heightDictionary[key]) {
         return self.fw_dynamicLayoutHeightCache.heightDictionary[key].doubleValue;
     }
@@ -481,21 +481,21 @@
 
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration {
     return [self fw_dynamicHeightWithHeaderFooterViewClass:clazz type:type configuration:configuration shouldCache:NULL];
 }
 
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
                             cacheBySection:(NSInteger)section
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration {
     return [self fw_heightWithHeaderFooterViewClass:clazz type:type cacheByKey:@(section) configuration:configuration];
 }
 
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
                                 cacheByKey:(id<NSCopying>)key
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration {
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration {
     if (type == FWHeaderFooterViewTypeHeader) {
         if (key && self.fw_dynamicLayoutHeightCache.headerHeightDictionary[key]) {
             return self.fw_dynamicLayoutHeightCache.headerHeightDictionary[key].doubleValue;
@@ -669,19 +669,19 @@
 }
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
-                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [collectionView fw_sizeWithCellClass:self configuration:configuration];
 }
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                            width:(CGFloat)width
-                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [collectionView fw_sizeWithCellClass:self width:width configuration:configuration];
 }
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                           height:(CGFloat)height
-                   configuration:(FWCollectionCellConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [collectionView fw_sizeWithCellClass:self height:height configuration:configuration];
 }
 
@@ -745,21 +745,21 @@
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [collectionView fw_sizeWithReusableViewClass:self kind:kind configuration:configuration];
 }
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                            width:(CGFloat)width
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [collectionView fw_sizeWithReusableViewClass:self width:width kind:kind configuration:configuration];
 }
 
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                           height:(CGFloat)height
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration {
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [collectionView fw_sizeWithReusableViewClass:self height:height kind:kind configuration:configuration];
 }
 
@@ -931,56 +931,56 @@
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
-              configuration:(FWCollectionCellConfigurationBlock)configuration {
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithCellClass:clazz width:0 height:0 configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithCellClass:clazz width:width height:0 configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithCellClass:clazz width:0 height:height configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
              cacheByIndexPath:(NSIndexPath *)indexPath
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz cacheByKey:indexPath configuration:configuration];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
              cacheByIndexPath:(NSIndexPath *)indexPath
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz width:width cacheByKey:indexPath configuration:configuration];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                        height:(CGFloat)height
              cacheByIndexPath:(NSIndexPath *)indexPath
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz height:height cacheByKey:indexPath configuration:configuration];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                    cacheByKey:(id<NSCopying>)key
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz width:0 height:0 cacheByKey:key configuration:configuration];
 }
 
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                         width:(CGFloat)width
                    cacheByKey:(id<NSCopying>)key
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz width:width height:0 cacheByKey:key configuration:configuration];
 }
 
-- (CGSize)fw_sizeWithCellClass:(Class)clazz height:(CGFloat)height cacheByKey:(id<NSCopying>)key configuration:(FWCollectionCellConfigurationBlock)configuration {
+- (CGSize)fw_sizeWithCellClass:(Class)clazz height:(CGFloat)height cacheByKey:(id<NSCopying>)key configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     return [self fw_sizeWithCellClass:clazz width:0 height:height cacheByKey:key configuration:configuration];
 }
 
@@ -988,7 +988,7 @@
                         width:(CGFloat)width
                        height:(CGFloat)height
                    cacheByKey:(id<NSCopying>)key
-                configuration:(FWCollectionCellConfigurationBlock)configuration {
+                configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration {
     id<NSCopying> cacheKey = key;
     if (cacheKey && (width > 0 || height > 0)) {
         cacheKey = [NSString stringWithFormat:@"%@-%@-%@", cacheKey, @(width), @(height)];
@@ -1102,28 +1102,28 @@
 
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithReusableViewClass:clazz width:0 height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithReusableViewClass:clazz width:width height:0 kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                height:(CGFloat)height
                                  kind:(NSString *)kind
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_dynamicSizeWithReusableViewClass:clazz width:0 height:height kind:kind configuration:configuration shouldCache:NULL];
 }
 
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
@@ -1131,7 +1131,7 @@
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz width:width kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
@@ -1139,14 +1139,14 @@
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                        cacheBySection:(NSInteger)section
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz height:height kind:kind cacheByKey:@(section) configuration:configuration];
 }
 
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz width:0 height:0 kind:kind cacheByKey:key configuration:configuration];
 }
 
@@ -1154,7 +1154,7 @@
                                 width:(CGFloat)width
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz width:width height:0 kind:kind cacheByKey:key configuration:configuration];
 }
 
@@ -1162,7 +1162,7 @@
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     return [self fw_sizeWithReusableViewClass:clazz width:0 height:height kind:kind cacheByKey:key configuration:configuration];
 }
 
@@ -1171,7 +1171,7 @@
                                height:(CGFloat)height
                                  kind:(NSString *)kind
                            cacheByKey:(id<NSCopying>)key
-                        configuration:(FWReusableViewConfigurationBlock)configuration {
+                        configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration {
     id<NSCopying> cacheKey = key;
     if (cacheKey && (width > 0 || height > 0)) {
         cacheKey = [NSString stringWithFormat:@"%@-%@-%@", cacheKey, @(width), @(height)];

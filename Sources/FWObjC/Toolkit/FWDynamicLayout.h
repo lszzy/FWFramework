@@ -39,7 +39,7 @@ typedef void(^FWCellIndexPathBlock)(__kindof UITableViewCell *cell, NSIndexPath 
 
 /// 根据配置自动计算cell高度，不使用缓存，子类可重写
 + (CGFloat)fw_heightWithTableView:(UITableView *)tableView
-                 configuration:(FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -73,7 +73,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// 根据配置自动计算cell高度，不使用缓存，子类可重写
 + (CGFloat)fw_heightWithTableView:(UITableView *)tableView
                           type:(FWHeaderFooterViewType)type
-                 configuration:(FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                 configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -123,7 +123,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// @param configuration 布局cell句柄，内部不会拥有Block，不需要__weak
 /// @return cell高度
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
-                 configuration:(FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 indexPath
 /// @param clazz cell class
@@ -131,7 +131,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
               cacheByIndexPath:(NSIndexPath *)indexPath
-                 configuration:(FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的高度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
@@ -139,7 +139,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGFloat)fw_heightWithCellClass:(Class)clazz
                     cacheByKey:(nullable id<NSCopying>)key
-                 configuration:(FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                 configuration:(NS_NOESCAPE FWCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 #pragma mark - HeaderFooterView
 
@@ -149,7 +149,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 /// @param configuration 布局 HeaderFooter，内部不会拥有 Block，不需要 __weak
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 section
 /// @param clazz HeaderFooter class
@@ -159,7 +159,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
                             cacheBySection:(NSInteger)section
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 HeaderFooter 需要的高度，内部自动处理缓存，缓存标识 key
 /// @param clazz HeaderFooter class
@@ -169,7 +169,7 @@ typedef void(^FWHeaderFooterViewSectionBlock)(__kindof UITableViewHeaderFooterVi
 - (CGFloat)fw_heightWithHeaderFooterViewClass:(Class)clazz
                                       type:(FWHeaderFooterViewType)type
                                 cacheByKey:(nullable id<NSCopying>)key
-                             configuration:(FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                             configuration:(NS_NOESCAPE FWHeaderFooterViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -200,17 +200,17 @@ typedef void(^FWCollectionCellIndexPathBlock)(__kindof UICollectionViewCell *cel
 
 /// 根据配置自动计算view大小，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
-                   configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 根据配置自动计算view大小，固定宽度，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                            width:(CGFloat)width
-                   configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 根据配置自动计算view大小，固定高度，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                           height:(CGFloat)height
-                   configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -244,19 +244,19 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// 根据配置自动计算view大小，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 根据配置自动计算view大小，固定宽度，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                            width:(CGFloat)width
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 根据配置自动计算view大小，固定高度，子类可重写
 + (CGSize)fw_sizeWithCollectionView:(UICollectionView *)collectionView
                           height:(CGFloat)height
                             kind:(NSString *)kind
-                   configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                   configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -305,7 +305,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param configuration 布局cell句柄，内部不会拥有Block，不需要__weak
 /// @return cell尺寸
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定宽度，内部无缓存操作
 /// @param clazz cell类
@@ -314,7 +314,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @return cell尺寸
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                       width:(CGFloat)width
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定高度，内部无缓存操作
 /// @param clazz cell类
@@ -323,7 +323,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @return cell尺寸
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                      height:(CGFloat)height
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 indexPath
 /// @param clazz cell class
@@ -331,7 +331,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
            cacheByIndexPath:(NSIndexPath *)indexPath
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 indexPath
 /// @param clazz cell class
@@ -341,7 +341,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                       width:(CGFloat)width
            cacheByIndexPath:(NSIndexPath *)indexPath
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 indexPath
 /// @param clazz cell class
@@ -351,7 +351,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                      height:(CGFloat)height
            cacheByIndexPath:(NSIndexPath *)indexPath
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
@@ -359,7 +359,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param configuration 布局 cell，内部不会拥有 Block，不需要 __weak
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                  cacheByKey:(nullable id<NSCopying>)key
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
@@ -369,7 +369,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                       width:(CGFloat)width
                  cacheByKey:(nullable id<NSCopying>)key
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 Cell 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key
 /// @param clazz cell class
@@ -379,7 +379,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithCellClass:(Class)clazz
                      height:(CGFloat)height
                  cacheByKey:(nullable id<NSCopying>)key
-              configuration:(FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+              configuration:(NS_NOESCAPE FWCollectionCellConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 #pragma mark - ReusableView
 
@@ -389,7 +389,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 /// @param configuration 布局 ReusableView，内部不会拥有 Block，不需要 __weak
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                kind:(NSString *)kind
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定宽度，内部无缓存操作
 /// @param clazz ReusableView class
@@ -399,7 +399,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                               width:(CGFloat)width
                                kind:(NSString *)kind
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定高度，内部无缓存操作
 /// @param clazz ReusableView class
@@ -409,7 +409,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                              height:(CGFloat)height
                                kind:(NSString *)kind
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 section
 /// @param clazz ReusableView class
@@ -419,7 +419,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                kind:(NSString *)kind
                      cacheBySection:(NSInteger)section
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 section
 /// @param clazz ReusableView class
@@ -431,7 +431,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                               width:(CGFloat)width
                                kind:(NSString *)kind
                      cacheBySection:(NSInteger)section
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 section
 /// @param clazz ReusableView class
@@ -443,7 +443,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                              height:(CGFloat)height
                                kind:(NSString *)kind
                      cacheBySection:(NSInteger)section
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，内部自动处理缓存，缓存标识 key
 /// @param clazz ReusableView class
@@ -453,7 +453,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
 - (CGSize)fw_sizeWithReusableViewClass:(Class)clazz
                                kind:(NSString *)kind
                          cacheByKey:(nullable id<NSCopying>)key
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定宽度，内部自动处理缓存，缓存标识 key
 /// @param clazz ReusableView class
@@ -465,7 +465,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                               width:(CGFloat)width
                                kind:(NSString *)kind
                          cacheByKey:(nullable id<NSCopying>)key
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 /// 获取 ReusableView 需要的尺寸，固定高度，内部自动处理缓存，缓存标识 key
 /// @param clazz ReusableView class
@@ -477,7 +477,7 @@ typedef void(^FWReusableViewIndexPathBlock)(__kindof UICollectionReusableView *r
                              height:(CGFloat)height
                                kind:(NSString *)kind
                          cacheByKey:(nullable id<NSCopying>)key
-                      configuration:(FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
+                      configuration:(NS_NOESCAPE FWReusableViewConfigurationBlock)configuration NS_REFINED_FOR_SWIFT;
 
 @end
 
