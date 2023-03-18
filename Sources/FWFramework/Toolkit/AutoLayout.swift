@@ -60,6 +60,42 @@ extension Wrapper where Base: UIView {
         return base.__fw_layoutWidth(withHeight: height)
     }
     
+    /// 计算动态AutoLayout布局视图指定宽度时的高度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - width: 指定宽度
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图，默认nil
+    /// - Returns: 高度
+    public func dynamicHeight(
+        width: CGFloat,
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
+    ) -> CGFloat {
+        return base.__fw_dynamicHeight(withWidth: width, maxYViewExpanded: maxYViewExpanded, maxYViewPadding: maxYViewPadding, maxYView: maxYView)
+    }
+    
+    /// 计算动态AutoLayout布局视图指定高度时的宽度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - height: 指定高度
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图(横向时为X)，默认nil
+    /// - Returns: 宽度
+    public func dynamicWidth(
+        height: CGFloat,
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
+    ) -> CGFloat {
+        return base.__fw_dynamicWidth(withHeight: height, maxYViewExpanded: maxYViewExpanded, maxYViewPadding: maxYViewPadding, maxYView: maxYView)
+    }
+    
     // MARK: - Compression
     /// 设置水平方向抗压缩优先级
     public var compressionHorizontal: UILayoutPriority {

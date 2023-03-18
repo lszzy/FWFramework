@@ -660,6 +660,11 @@ extension Wrapper where Base: UIGestureRecognizer {
         return base.__fw_isActive
     }
     
+    /// 判断手势是否正作用于指定视图
+    public func hitTest(view: UIView?) -> Bool {
+        return base.__fw_hitTest(with: view)
+    }
+    
 }
 
 // MARK: - UIPanGestureRecognizer+UIKit

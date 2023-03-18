@@ -43,7 +43,7 @@ extension Wrapper where Base: UITableViewCell {
     /// 根据配置自动计算cell高度，不使用缓存，子类可重写
     public static func height(
         tableView: UITableView,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGFloat {
         return Base.__fw_height(with: tableView) { cell in
             configuration(cell as! Base)
@@ -85,7 +85,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
     public static func height(
         tableView: UITableView,
         type: HeaderFooterViewType,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGFloat {
         return Base.__fw_height(with: tableView, type: type) { headerFooterView in
             configuration(headerFooterView as! Base)
@@ -155,7 +155,7 @@ extension Wrapper where Base: UITableView {
     /// - Returns: cell高度
     public func height<T: UITableViewCell>(
         cellClass: T.Type,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withCellClass: cellClass) { cell in
             configuration(cell as! T)
@@ -171,7 +171,7 @@ extension Wrapper where Base: UITableView {
     public func height<T: UITableViewCell>(
         cellClass: T.Type,
         cacheBy indexPath: IndexPath,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withCellClass: cellClass, cacheBy: indexPath) { cell in
             configuration(cell as! T)
@@ -187,7 +187,7 @@ extension Wrapper where Base: UITableView {
     public func height<T: UITableViewCell>(
         cellClass: T.Type,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withCellClass: cellClass, cacheByKey: key) { cell in
             configuration(cell as! T)
@@ -204,7 +204,7 @@ extension Wrapper where Base: UITableView {
     public func height<T: UITableViewHeaderFooterView>(
         headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type) { headerFooterView in
             configuration(headerFooterView as! T)
@@ -222,7 +222,7 @@ extension Wrapper where Base: UITableView {
         headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
         cacheBy section: Int,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheBySection: section) { headerFooterView in
             configuration(headerFooterView as! T)
@@ -240,7 +240,7 @@ extension Wrapper where Base: UITableView {
         headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.__fw_height(withHeaderFooterViewClass: headerFooterViewClass, type: type, cacheByKey: key) { headerFooterView in
             configuration(headerFooterView as! T)
@@ -282,7 +282,7 @@ extension Wrapper where Base: UICollectionViewCell {
     /// 根据配置自动计算view大小，子类可重写
     public static func size(
         collectionView: UICollectionView,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView) { cell in
             configuration(cell as! Base)
@@ -293,7 +293,7 @@ extension Wrapper where Base: UICollectionViewCell {
     public static func size(
         collectionView: UICollectionView,
         width: CGFloat,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView, width: width) { cell in
             configuration(cell as! Base)
@@ -304,7 +304,7 @@ extension Wrapper where Base: UICollectionViewCell {
     public static func size(
         collectionView: UICollectionView,
         height: CGFloat,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView, height: height) { cell in
             configuration(cell as! Base)
@@ -348,7 +348,7 @@ extension Wrapper where Base: UICollectionReusableView {
     public static func size(
         collectionView: UICollectionView,
         kind: String,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView, kind: kind) { reusableView in
             configuration(reusableView as! Base)
@@ -360,7 +360,7 @@ extension Wrapper where Base: UICollectionReusableView {
         collectionView: UICollectionView,
         width: CGFloat,
         kind: String,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView, width: width, kind: kind) { reusableView in
             configuration(reusableView as! Base)
@@ -372,7 +372,7 @@ extension Wrapper where Base: UICollectionReusableView {
         collectionView: UICollectionView,
         height: CGFloat,
         kind: String,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.__fw_size(with: collectionView, height: height, kind: kind) { reusableView in
             configuration(reusableView as! Base)
@@ -441,7 +441,7 @@ extension Wrapper where Base: UICollectionView {
     /// - Returns: cell尺寸
     public func size<T: UICollectionViewCell>(
         cellClass: T.Type,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass) { cell in
             configuration(cell as! T)
@@ -457,7 +457,7 @@ extension Wrapper where Base: UICollectionView {
     public func size<T: UICollectionViewCell>(
         cellClass: T.Type,
         width: CGFloat,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, width: width) { cell in
             configuration(cell as! T)
@@ -473,7 +473,7 @@ extension Wrapper where Base: UICollectionView {
     public func size<T: UICollectionViewCell>(
         cellClass: T.Type,
         height: CGFloat,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, height: height) { cell in
             configuration(cell as! T)
@@ -489,7 +489,7 @@ extension Wrapper where Base: UICollectionView {
     public func size<T: UICollectionViewCell>(
         cellClass: T.Type,
         cacheBy indexPath: IndexPath,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, cacheBy: indexPath) { cell in
             configuration(cell as! T)
@@ -507,7 +507,7 @@ extension Wrapper where Base: UICollectionView {
         cellClass: T.Type,
         width: CGFloat,
         cacheBy indexPath: IndexPath,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, width: width, cacheBy: indexPath) { cell in
             configuration(cell as! T)
@@ -525,7 +525,7 @@ extension Wrapper where Base: UICollectionView {
         cellClass: T.Type,
         height: CGFloat,
         cacheBy indexPath: IndexPath,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, height: height, cacheBy: indexPath) { cell in
             configuration(cell as! T)
@@ -541,7 +541,7 @@ extension Wrapper where Base: UICollectionView {
     public func size<T: UICollectionViewCell>(
         cellClass: T.Type,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, cacheByKey: key) { cell in
             configuration(cell as! T)
@@ -559,7 +559,7 @@ extension Wrapper where Base: UICollectionView {
         cellClass: T.Type,
         width: CGFloat,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, width: width, cacheByKey: key) { cell in
             configuration(cell as! T)
@@ -577,7 +577,7 @@ extension Wrapper where Base: UICollectionView {
         cellClass: T.Type,
         height: CGFloat,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withCellClass: cellClass, height: height, cacheByKey: key) { cell in
             configuration(cell as! T)
@@ -594,7 +594,7 @@ extension Wrapper where Base: UICollectionView {
     public func size<T: UICollectionReusableView>(
         reusableViewClass: T.Type,
         kind: String,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind) { reusableView in
             configuration(reusableView as! T)
@@ -612,7 +612,7 @@ extension Wrapper where Base: UICollectionView {
         reusableViewClass: T.Type,
         width: CGFloat,
         kind: String,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind) { reusableView in
             configuration(reusableView as! T)
@@ -630,7 +630,7 @@ extension Wrapper where Base: UICollectionView {
         reusableViewClass: T.Type,
         height: CGFloat,
         kind: String,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind) { reusableView in
             configuration(reusableView as! T)
@@ -648,7 +648,7 @@ extension Wrapper where Base: UICollectionView {
         reusableViewClass: T.Type,
         kind: String,
         cacheBy section: Int,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind, cacheBySection: section) { reusableView in
             configuration(reusableView as! T)
@@ -668,7 +668,7 @@ extension Wrapper where Base: UICollectionView {
         width: CGFloat,
         kind: String,
         cacheBy section: Int,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheBySection: section) { reusableView in
             configuration(reusableView as! T)
@@ -688,7 +688,7 @@ extension Wrapper where Base: UICollectionView {
         height: CGFloat,
         kind: String,
         cacheBy section: Int,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheBySection: section) { reusableView in
             configuration(reusableView as! T)
@@ -706,7 +706,7 @@ extension Wrapper where Base: UICollectionView {
         reusableViewClass: T.Type,
         kind: String,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, kind: kind, cacheByKey: key) { reusableView in
             configuration(reusableView as! T)
@@ -726,7 +726,7 @@ extension Wrapper where Base: UICollectionView {
         width: CGFloat,
         kind: String,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, width: width, kind: kind, cacheByKey: key) { reusableView in
             configuration(reusableView as! T)
@@ -746,7 +746,7 @@ extension Wrapper where Base: UICollectionView {
         height: CGFloat,
         kind: String,
         cacheBy key: NSCopying?,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.__fw_size(withReusableViewClass: reusableViewClass, height: height, kind: kind, cacheByKey: key) { reusableView in
             configuration(reusableView as! T)

@@ -82,6 +82,9 @@ NS_SWIFT_NAME(DrawerView)
 /// 自定义滚动视图允许滚动的位置，默认nil时仅openPosition可滚动
 @property (nullable, nonatomic, copy) NSArray<NSNumber *> * (^scrollViewPositions)(UIScrollView *scrollView);
 
+/// 自定义滚动视图在各个位置的contentInset(从小到大，数量同positions)，默认nil时不处理。UITableView时也可使用tableFooterView等实现
+@property (nullable, nonatomic, copy) NSArray<NSValue *> * (^scrollViewInsets)(UIScrollView *scrollView);
+
 /// 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
 - (void)setPosition:(CGFloat)position animated:(BOOL)animated;
 

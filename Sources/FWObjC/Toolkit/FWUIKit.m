@@ -1985,9 +1985,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (UIView *)fw_targetView
 {
-    CGPoint location = [self locationInView:self.view];
-    UIView *targetView = [self.view hitTest:location withEvent:nil];
-    return targetView;
+    return [self.view hitTest:[self locationInView:self.view] withEvent:nil];
 }
 
 - (BOOL)fw_isTracking
@@ -1998,6 +1996,11 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 - (BOOL)fw_isActive
 {
     return self.isEnabled && (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged);
+}
+
+- (BOOL)fw_hitTestWithView:(UIView *)view
+{
+    return [view hitTest:[self locationInView:view] withEvent:nil] != nil;
 }
 
 @end
