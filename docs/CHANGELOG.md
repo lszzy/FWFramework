@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.7.4] - 2023-03-18
+
+### Added
+* Added a method to dynamically calculate the width and height of the AutoLayout layout view
+* DynamicLayout method adds NS_NOESCAPE flag
+* Added scrollViewInsets padding configuration for DrawerView
+* AttributedLabel compatible with iOS15+ system comes with strikethrough
+
 ## [4.7.3] - 2023-03-13
 
 ### Changed

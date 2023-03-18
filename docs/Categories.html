@@ -17,7 +17,7 @@
     <a title="Categories  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.7.3 Docs</a> (70% documented)</p>
+        <p><a href="index.html">FWFramework 4.7.4 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -4030,7 +4030,7 @@
 
 <span class="c1">/// 根据配置自动计算cell高度，不使用缓存，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_heightWithTableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span>
-                 <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCellConfigurationBlock">FWCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                 <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCellConfigurationBlock">FWCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -4093,7 +4093,7 @@
 <span class="c1">/// 根据配置自动计算cell高度，不使用缓存，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_heightWithTableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span>
                           <span class="nf">type</span><span class="p">:(</span><span class="n"><a href="Enums/FWHeaderFooterViewType.html">FWHeaderFooterViewType</a></span><span class="p">)</span><span class="nv">type</span>
-                 <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWHeaderFooterViewConfigurationBlock">FWHeaderFooterViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                 <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWHeaderFooterViewConfigurationBlock">FWHeaderFooterViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -4206,17 +4206,17 @@
 
 <span class="c1">/// 根据配置自动计算view大小，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 根据配置自动计算view大小，固定宽度，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
                            <span class="nf">width</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 根据配置自动计算view大小，固定高度，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
                           <span class="nf">height</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWCollectionCellConfigurationBlock">FWCollectionCellConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -4284,19 +4284,19 @@
 <span class="c1">/// 根据配置自动计算view大小，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
                             <span class="nf">kind</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 根据配置自动计算view大小，固定宽度，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
                            <span class="nf">width</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span>
                             <span class="nf">kind</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 根据配置自动计算view大小，固定高度，子类可重写</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_sizeWithCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span>
                           <span class="nf">height</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span>
                             <span class="nf">kind</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">kind</span>
-                   <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+                   <span class="nf">configuration</span><span class="p">:(</span><span class="n">NS_NOESCAPE</span> <span class="n"><a href="Type%20Definitions.html#/c:FWDynamicLayout.h@T@FWReusableViewConfigurationBlock">FWReusableViewConfigurationBlock</a></span><span class="p">)</span><span class="nv">configuration</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -8838,7 +8838,7 @@ shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其�
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-13)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-18)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
