@@ -70,7 +70,7 @@ import UIKit
         } else if let viewClass = self as? UITableViewHeaderFooterView.Type {
             return viewClass.init(reuseIdentifier: nil) as! Self
         }
-        return .init(frame: .zero)
+        return self.init(frame: .zero)
     }
     
     /// 获取可重用动态布局视图内容视图
