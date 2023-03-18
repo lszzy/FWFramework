@@ -7,8 +7,22 @@
 
 import UIKit
 
-// MARK: - UITableViewCell+DynamicLayout
-@_spi(FW) extension UITableViewCell {
+// MARK: - DynamicLayoutProtocol
+/// 动态布局视图协议
+@_spi(FW) public protocol DynamicLayoutProtocol {
+    
+    /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
+    var fw_maxYViewFixed: Bool { get set }
+    
+    /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
+    var fw_maxYViewPadding: CGFloat { get set }
+    
+    /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+    var fw_maxYViewExpanded: Bool { get set }
+    
+}
+
+extension DynamicLayoutProtocol where Self: UIView {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -16,7 +30,7 @@ import UIKit
         set { fw_setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
     }
 
-    /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
+    /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
     public var fw_maxYViewPadding: CGFloat {
         get {
             if let number = fw_property(forName: "fw_maxYViewPadding") as? NSNumber {
@@ -29,7 +43,7 @@ import UIKit
         }
     }
 
-    /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+    /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var fw_maxYViewExpanded: Bool {
         get { fw_propertyBool(forName: "fw_maxYViewExpanded") }
         set { fw_setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
@@ -39,6 +53,11 @@ import UIKit
         get { fw_property(forName: "fw_maxYView") as? UIView }
         set { fw_setProperty(newValue, forName: "fw_maxYView") }
     }
+    
+}
+
+// MARK: - UITableViewCell+DynamicLayout
+@_spi(FW) extension UITableViewCell: DynamicLayoutProtocol {
     
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
     public static func fw_cell(
@@ -70,37 +89,7 @@ public enum HeaderFooterViewType: Int {
     case footer = 1
 }
 
-@_spi(FW) extension UITableViewHeaderFooterView {
-    
-    /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
-    public var fw_maxYViewFixed: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewFixed") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
-    }
-
-    /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
-    public var fw_maxYViewPadding: CGFloat {
-        get {
-            if let number = fw_property(forName: "fw_maxYViewPadding") as? NSNumber {
-                return number.doubleValue
-            }
-            return .zero
-        }
-        set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
-        }
-    }
-
-    /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-    public var fw_maxYViewExpanded: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewExpanded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
-    }
-    
-    fileprivate var fw_maxYView: UIView? {
-        get { fw_property(forName: "fw_maxYView") as? UIView }
-        set { fw_setProperty(newValue, forName: "fw_maxYView") }
-    }
+@_spi(FW) extension UITableViewHeaderFooterView: DynamicLayoutProtocol {
     
     /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
     public static func fw_headerFooterView(
@@ -477,37 +466,7 @@ public enum HeaderFooterViewType: Int {
 }
 
 // MARK: - UICollectionReusableView+DynamicLayout
-@_spi(FW) extension UICollectionReusableView {
-    
-    /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
-    public var fw_maxYViewFixed: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewFixed") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
-    }
-
-    /// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
-    public var fw_maxYViewPadding: CGFloat {
-        get {
-            if let number = fw_property(forName: "fw_maxYViewPadding") as? NSNumber {
-                return number.doubleValue
-            }
-            return .zero
-        }
-        set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
-        }
-    }
-
-    /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-    public var fw_maxYViewExpanded: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewExpanded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
-    }
-    
-    fileprivate var fw_maxYView: UIView? {
-        get { fw_property(forName: "fw_maxYView") as? UIView }
-        set { fw_setProperty(newValue, forName: "fw_maxYView") }
-    }
+@_spi(FW) extension UICollectionReusableView: DynamicLayoutProtocol {
     
     /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
     public static func fw_reusableView(
