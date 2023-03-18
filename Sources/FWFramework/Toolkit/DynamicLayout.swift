@@ -7,9 +7,9 @@
 
 import UIKit
 
-// MARK: - DynamicLayoutProtocol
+// MARK: - DynamicLayoutViewProtocol
 /// 动态布局视图协议
-@_spi(FW) public protocol DynamicLayoutProtocol {
+@_spi(FW) public protocol DynamicLayoutViewProtocol {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     var fw_maxYViewFixed: Bool { get set }
@@ -20,9 +20,18 @@ import UIKit
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     var fw_maxYViewExpanded: Bool { get set }
     
+    /// 创建可重用动态布局视图方法
+    static func fw_dynamicLayoutView() -> Self
+    
+    /// 获取可重用动态布局视图内容视图
+    var fw_dynamicLayoutContentView: UIView { get }
+    
+    /// 准备可重用动态布局视图方法
+    func fw_dynamicLayoutPrepare()
+    
 }
 
-@_spi(FW) extension DynamicLayoutProtocol where Self: UIView {
+@_spi(FW) extension DynamicLayoutViewProtocol where Self: UIView {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -54,6 +63,41 @@ import UIKit
         set { fw_setProperty(newValue, forName: "fw_maxYView") }
     }
     
+    /// 创建可重用动态布局视图方法
+    public static func fw_dynamicLayoutView() -> Self {
+        if let cellClass = self as? UITableViewCell.Type {
+            return cellClass.init(style: .default, reuseIdentifier: nil) as! Self
+        } else if let viewClass = self as? UITableViewHeaderFooterView.Type {
+            return viewClass.init(reuseIdentifier: nil) as! Self
+        }
+        return .init(frame: .zero)
+    }
+    
+    /// 获取可重用动态布局视图内容视图
+    public var fw_dynamicLayoutContentView: UIView {
+        if let cell = self as? UITableViewCell {
+            return cell.contentView
+        } else if let view = self as? UITableViewHeaderFooterView {
+            return view.contentView.subviews.count > 0 ? view.contentView : view
+        } else if let cell = self as? UICollectionViewCell {
+            return cell.contentView
+        }
+        return self
+    }
+    
+    /// 可重用动态布局视图重用方法
+    public func fw_dynamicLayoutPrepare() {
+        if let cell = self as? UITableViewCell {
+            cell.prepareForReuse()
+        } else if let view = self as? UITableViewHeaderFooterView {
+            view.prepareForReuse()
+        } else if let cell = self as? UICollectionViewCell {
+            cell.prepareForReuse()
+        } else if let view = self as? UICollectionReusableView {
+            view.prepareForReuse()
+        }
+    }
+    
 }
 
 // MARK: - UIView+DynamicLayout
@@ -62,23 +106,102 @@ import UIKit
     /// 获取动态布局视图类的尺寸，可固定宽度或高度
     /// - Parameters:
     ///   - viewClass: 视图类
+    ///   - viewIdentifier: 视图标记
     ///   - fixedWidth: 固定宽度，默认0不固定
     ///   - fixedHeight: 固定高度，默认0不固定
     ///   - configuration: 布局cell句柄，内部不会持有Block，不需要weak
     /// - Returns: 尺寸
-    public func fw_dynamicSize<T: UIView & DynamicLayoutProtocol>(
+    public func fw_dynamicSize<T: UIView & DynamicLayoutViewProtocol>(
         viewClass: T.Type,
-        width fixedWidth: CGFloat,
-        height fixedHeight: CGFloat,
+        viewIdentifier: String,
+        width fixedWidth: CGFloat = 0,
+        height fixedHeight: CGFloat = 0,
         configuration: (T) -> Void
     ) -> CGSize {
-        return .zero
+        // 获取用于计算尺寸的视图
+        let classIdentifier = NSStringFromClass(viewClass).appending(viewIdentifier)
+        var dict = fw_property(forName: "fw_dynamicSizeViews") as? NSMutableDictionary
+        if dict == nil {
+            dict = NSMutableDictionary()
+            fw_setProperty(dict, forName: "fw_dynamicSizeViews")
+        }
+        var view: UIView
+        if let reuseView = dict?[classIdentifier] as? UIView {
+            view = reuseView
+        } else {
+            let dynamicView = viewClass.fw_dynamicLayoutView()
+            view = UIView()
+            view.addSubview(dynamicView)
+            dict?[classIdentifier] = view
+        }
+        guard let dynamicView = view.subviews.first as? T else { return .zero }
+        
+        // 自动获取宽度
+        var width = fixedWidth
+        var height = fixedHeight
+        if width <= 0 && height <= 0 {
+            width = CGRectGetWidth(frame)
+            if width <= 0 && superview != nil {
+                superview?.setNeedsLayout()
+                superview?.layoutIfNeeded()
+                width = CGRectGetWidth(frame)
+            }
+        }
+        
+        // 设置frame并布局视图
+        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        dynamicView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        dynamicView.fw_dynamicLayoutPrepare()
+        configuration(dynamicView)
+        
+        // 自动撑开方式
+        if dynamicView.fw_maxYViewExpanded {
+            if fixedHeight > 0 {
+                width = dynamicView.fw_layoutWidth(height: height)
+            } else {
+                height = dynamicView.fw_layoutHeight(width: width)
+            }
+            return CGSize(width: width, height: height)
+        }
+        
+        // 无需撑开方式
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        
+        var maxY: CGFloat = 0
+        let maxYBlock: (UIView) -> CGFloat = { view in
+            return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
+        }
+        if dynamicView.fw_maxYViewFixed {
+            if let maxYView = dynamicView.fw_maxYView {
+                maxY = maxYBlock(maxYView)
+            } else {
+                var maxYView: UIView?
+                for tempView in dynamicView.fw_dynamicLayoutContentView.subviews.reversed() {
+                    let tempY = maxYBlock(tempView)
+                    if tempY > maxY {
+                        maxY = tempY
+                        maxYView = tempView
+                    }
+                }
+                dynamicView.fw_maxYView = maxYView
+            }
+        } else {
+            for tempView in dynamicView.fw_dynamicLayoutContentView.subviews.reversed() {
+                let tempY = maxYBlock(tempView)
+                if tempY > maxY {
+                    maxY = tempY
+                }
+            }
+        }
+        maxY += dynamicView.fw_maxYViewPadding
+        return fixedHeight > 0 ? CGSize(width: maxY, height: height) : CGSize(width: width, height: maxY)
     }
     
 }
 
 // MARK: - UITableViewCell+DynamicLayout
-@_spi(FW) extension UITableViewCell: DynamicLayoutProtocol {
+@_spi(FW) extension UITableViewCell: DynamicLayoutViewProtocol {
     
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
     public static func fw_cell(
@@ -110,7 +233,7 @@ public enum HeaderFooterViewType: Int {
     case footer = 1
 }
 
-@_spi(FW) extension UITableViewHeaderFooterView: DynamicLayoutProtocol {
+@_spi(FW) extension UITableViewHeaderFooterView: DynamicLayoutViewProtocol {
     
     /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
     public static func fw_headerFooterView(
@@ -252,97 +375,21 @@ public enum HeaderFooterViewType: Int {
         configuration: (UITableViewCell) -> Void
     ) -> CGFloat {
         guard let key = key else {
-            return fw_dynamicHeight(cellClass: cellClass, configuration: configuration, shouldCache: nil)
+            let cellSize = fw_dynamicSize(viewClass: cellClass, viewIdentifier: "", configuration: configuration)
+            return cellSize.height
         }
         
         var cellHeight = fw_cellHeightCache(for: key)
         if cellHeight != UITableView.automaticDimension {
             return cellHeight
         }
-        var shouldCache = true
-        cellHeight = fw_dynamicHeight(cellClass: cellClass, configuration: configuration, shouldCache: &shouldCache)
+        let cellSize = fw_dynamicSize(viewClass: cellClass, viewIdentifier: "", configuration: configuration)
+        cellHeight = cellSize.height
+        let shouldCache = cellSize.width > 0
         if shouldCache {
             fw_setCellHeightCache(cellHeight, for: key)
         }
         return cellHeight
-    }
-    
-    private func fw_dynamicView(cellClass: UITableViewCell.Type) -> UIView {
-        let classIdentifier = NSStringFromClass(cellClass)
-        var dict = fw_property(forName: "fw_dynamicCellViews") as? NSMutableDictionary
-        if dict == nil {
-            dict = NSMutableDictionary()
-            fw_setProperty(dict, forName: "fw_dynamicCellViews")
-        }
-        if let view = dict?[classIdentifier] as? UIView {
-            return view
-        }
-        
-        // 这里使用默认的 UITableViewCellStyleDefault 类型。如果需要自定义高度，通常都是使用的此类型, 暂时不考虑其他
-        let cell = cellClass.init(style: .default, reuseIdentifier: nil)
-        let view = UIView()
-        view.addSubview(cell)
-        dict?[classIdentifier] = view
-        return view
-    }
-    
-    private func fw_dynamicHeight(cellClass: UITableViewCell.Type, configuration: (UITableViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
-        let view = fw_dynamicView(cellClass: cellClass)
-        var width = CGRectGetWidth(self.frame)
-        if width <= 0 && self.superview != nil {
-            // 获取 TableView 宽度
-            self.superview?.setNeedsLayout()
-            self.superview?.layoutIfNeeded()
-            width = CGRectGetWidth(self.frame)
-        }
-        if let shouldCache = shouldCache {
-            shouldCache.pointee = width > 0
-        }
-        
-        // 设置 Frame
-        view.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        guard let cell = view.subviews.first as? UITableViewCell else { return .zero }
-        cell.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        
-        // 让外面布局 Cell
-        cell.prepareForReuse()
-        configuration(cell)
-        
-        // 自动撑开方式
-        if cell.fw_maxYViewExpanded {
-            return cell.fw_layoutHeight(width: width)
-        }
-        
-        // 刷新布局
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        
-        // 获取需要的高度
-        var maxY: CGFloat = 0
-        if cell.fw_maxYViewFixed {
-            if let maxYView = cell.fw_maxYView {
-                maxY = CGRectGetMaxY(maxYView.frame)
-            } else {
-                var maxYView: UIView?
-                for tempView in cell.contentView.subviews.reversed() {
-                    let tempY = CGRectGetMaxY(tempView.frame)
-                    if tempY > maxY {
-                        maxY = tempY
-                        maxYView = tempView
-                    }
-                }
-                cell.fw_maxYView = maxYView
-            }
-        } else {
-            for tempView in cell.contentView.subviews.reversed() {
-                let tempY = CGRectGetMaxY(tempView.frame)
-                if tempY > maxY {
-                    maxY = tempY
-                }
-            }
-        }
-        maxY += cell.fw_maxYViewPadding
-        return maxY
     }
 
     // MARK: - HeaderFooterView
@@ -360,97 +407,21 @@ public enum HeaderFooterViewType: Int {
         configuration: (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         guard let key = key else {
-            return fw_dynamicHeight(headerFooterViewClass: headerFooterViewClass, type: type, configuration: configuration, shouldCache: nil)
+            let viewSize = fw_dynamicSize(viewClass: headerFooterViewClass, viewIdentifier: "\(type.rawValue)", configuration: configuration)
+            return viewSize.height
         }
         
         var viewHeight = fw_headerFooterHeightCache(type, for: key)
         if viewHeight != UITableView.automaticDimension {
             return viewHeight
         }
-        var shouldCache = true
-        viewHeight = fw_dynamicHeight(headerFooterViewClass: headerFooterViewClass, type: type, configuration: configuration, shouldCache: &shouldCache)
+        let viewSize = fw_dynamicSize(viewClass: headerFooterViewClass, viewIdentifier: "\(type.rawValue)", configuration: configuration)
+        viewHeight = viewSize.height
+        let shouldCache = viewSize.width > 0
         if shouldCache {
             fw_setHeaderFooterHeightCache(viewHeight, type: type, for: key)
         }
         return viewHeight
-    }
-    
-    private func fw_dynamicView(headerFooterViewClass: UITableViewHeaderFooterView.Type, identifier: String) -> UIView {
-        let classIdentifier = NSStringFromClass(headerFooterViewClass).appending(identifier)
-        var dict = fw_property(forName: "fw_dynamicHeaderFooterViews") as? NSMutableDictionary
-        if dict == nil {
-            dict = NSMutableDictionary()
-            fw_setProperty(dict, forName: "fw_dynamicHeaderFooterViews")
-        }
-        if let view = dict?[classIdentifier] as? UIView {
-            return view
-        }
-        
-        let headerFooterView = headerFooterViewClass.init(reuseIdentifier: nil)
-        let view = UIView()
-        view.addSubview(headerFooterView)
-        dict?[classIdentifier] = view
-        return view
-    }
-    
-    private func fw_dynamicHeight(headerFooterViewClass: UITableViewHeaderFooterView.Type, type: HeaderFooterViewType, configuration: (UITableViewHeaderFooterView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
-        let view = fw_dynamicView(headerFooterViewClass: headerFooterViewClass, identifier: "\(type.rawValue)")
-        var width = CGRectGetWidth(self.frame)
-        if width <= 0 && self.superview != nil {
-            // 获取 TableView 宽度
-            self.superview?.setNeedsLayout()
-            self.superview?.layoutIfNeeded()
-            width = CGRectGetWidth(self.frame)
-        }
-        if let shouldCache = shouldCache {
-            shouldCache.pointee = width > 0
-        }
-        
-        // 设置 Frame
-        view.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        guard let headerFooterView = view.subviews.first as? UITableViewHeaderFooterView else { return .zero }
-        headerFooterView.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        
-        // 让外面布局 UITableViewHeaderFooterView
-        headerFooterView.prepareForReuse()
-        configuration(headerFooterView)
-        
-        // 自动撑开方式
-        if headerFooterView.fw_maxYViewExpanded {
-            return headerFooterView.fw_layoutHeight(width: width)
-        }
-        
-        // 刷新布局
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        
-        // 获取需要的高度
-        var maxY: CGFloat = 0
-        let contentView = headerFooterView.contentView.subviews.count > 0 ? headerFooterView.contentView : headerFooterView
-        if headerFooterView.fw_maxYViewFixed {
-            if let maxYView = headerFooterView.fw_maxYView {
-                maxY = CGRectGetMaxY(maxYView.frame)
-            } else {
-                var maxYView: UIView?
-                for tempView in contentView.subviews.reversed() {
-                    let tempY = CGRectGetMaxY(tempView.frame)
-                    if tempY > maxY {
-                        maxY = tempY
-                        maxYView = tempView
-                    }
-                }
-                headerFooterView.fw_maxYView = maxYView
-            }
-        } else {
-            for tempView in contentView.subviews.reversed() {
-                let tempY = CGRectGetMaxY(tempView.frame)
-                if tempY > maxY {
-                    maxY = tempY
-                }
-            }
-        }
-        maxY += headerFooterView.fw_maxYViewPadding
-        return maxY
     }
     
 }
@@ -487,7 +458,7 @@ public enum HeaderFooterViewType: Int {
 }
 
 // MARK: - UICollectionReusableView+DynamicLayout
-@_spi(FW) extension UICollectionReusableView: DynamicLayoutProtocol {
+@_spi(FW) extension UICollectionReusableView: DynamicLayoutViewProtocol {
     
     /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
     public static func fw_reusableView(
@@ -637,7 +608,7 @@ public enum HeaderFooterViewType: Int {
         configuration: (UICollectionViewCell) -> Void
     ) -> CGSize {
         guard let key = key else {
-            return fw_dynamicSize(cellClass: cellClass, width: width, height: height, configuration: configuration, shouldCache: nil)
+            return fw_dynamicSize(viewClass: cellClass, viewIdentifier: "\(width)-\(height)", width: width, height: height, configuration: configuration)
         }
         
         var cacheKey = key
@@ -648,101 +619,12 @@ public enum HeaderFooterViewType: Int {
         if cellSize != UICollectionViewFlowLayout.automaticSize {
             return cellSize
         }
-        var shouldCache = true
-        cellSize = fw_dynamicSize(cellClass: cellClass, width: width, height: height, configuration: configuration, shouldCache: &shouldCache)
+        cellSize = fw_dynamicSize(viewClass: cellClass, viewIdentifier: "\(width)-\(height)", width: width, height: height, configuration: configuration)
+        let shouldCache = height > 0 || cellSize.width > 0
         if shouldCache {
             fw_setCellSizeCache(cellSize, for: cacheKey)
         }
         return cellSize
-    }
-    
-    private func fw_dynamicView(cellClass: UICollectionViewCell.Type, identifier: String) -> UIView {
-        let classIdentifier = NSStringFromClass(cellClass).appending(identifier)
-        var dict = fw_property(forName: "fw_dynamicCellViews") as? NSMutableDictionary
-        if dict == nil {
-            dict = NSMutableDictionary()
-            fw_setProperty(dict, forName: "fw_dynamicCellViews")
-        }
-        if let view = dict?[classIdentifier] as? UIView {
-            return view
-        }
-        
-        let cell = cellClass.init()
-        let view = UIView()
-        view.addSubview(cell)
-        dict?[classIdentifier] = view
-        return view
-    }
-    
-    private func fw_dynamicSize(cellClass: UICollectionViewCell.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, configuration: (UICollectionViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
-        let view = fw_dynamicView(cellClass: cellClass, identifier: "\(fixedWidth)-\(fixedHeight)")
-        var width = fixedWidth
-        var height = fixedHeight
-        if width <= 0 && height <= 0 {
-            width = CGRectGetWidth(self.frame)
-            if width <= 0 && self.superview != nil {
-                // 获取 CollectionView 宽度
-                self.superview?.setNeedsLayout()
-                self.superview?.layoutIfNeeded()
-                width = CGRectGetWidth(self.frame)
-            }
-        }
-        if let shouldCache = shouldCache {
-            shouldCache.pointee = fixedHeight > 0 || width > 0
-        }
-        
-        // 设置 Frame
-        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        guard let cell = view.subviews.first as? UICollectionViewCell else { return .zero }
-        cell.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        
-        // 让外面布局 Cell
-        cell.prepareForReuse()
-        configuration(cell)
-        
-        // 自动撑开方式
-        if cell.fw_maxYViewExpanded {
-            if fixedHeight > 0 {
-                width = cell.fw_layoutWidth(height: height)
-            } else {
-                height = cell.fw_layoutHeight(width: width)
-            }
-            return CGSize(width: width, height: height)
-        }
-        
-        // 刷新布局
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        
-        // 获取需要的高度
-        var maxY: CGFloat = 0
-        let maxYBlock: (UIView) -> CGFloat = { view in
-            return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
-        }
-        if cell.fw_maxYViewFixed {
-            if let maxYView = cell.fw_maxYView {
-                maxY = maxYBlock(maxYView)
-            } else {
-                var maxYView: UIView?
-                for tempView in cell.contentView.subviews.reversed() {
-                    let tempY = maxYBlock(tempView)
-                    if tempY > maxY {
-                        maxY = tempY
-                        maxYView = tempView
-                    }
-                }
-                cell.fw_maxYView = maxYView
-            }
-        } else {
-            for tempView in cell.contentView.subviews.reversed() {
-                let tempY = maxYBlock(tempView)
-                if tempY > maxY {
-                    maxY = tempY
-                }
-            }
-        }
-        maxY += cell.fw_maxYViewPadding
-        return fixedHeight > 0 ? CGSize(width: maxY, height: height) : CGSize(width: width, height: maxY)
     }
 
     // MARK: - ReusableView
@@ -764,7 +646,7 @@ public enum HeaderFooterViewType: Int {
         configuration: (UICollectionReusableView) -> Void
     ) -> CGSize {
         guard let key = key else {
-            return fw_dynamicSize(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, configuration: configuration, shouldCache: nil)
+            return fw_dynamicSize(viewClass: reusableViewClass, viewIdentifier: "\(kind)-\(width)-\(height)", width: width, height: height, configuration: configuration)
         }
         
         var cacheKey = key
@@ -775,101 +657,12 @@ public enum HeaderFooterViewType: Int {
         if viewSize != UICollectionViewFlowLayout.automaticSize {
             return viewSize
         }
-        var shouldCache = true
-        viewSize = fw_dynamicSize(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, configuration: configuration, shouldCache: &shouldCache)
+        viewSize = fw_dynamicSize(viewClass: reusableViewClass, viewIdentifier: "\(kind)-\(width)-\(height)", width: width, height: height, configuration: configuration)
+        let shouldCache = height > 0 || viewSize.width > 0
         if shouldCache {
             fw_setReusableViewSizeCache(viewSize, kind: kind, for: cacheKey)
         }
         return viewSize
-    }
-    
-    private func fw_dynamicView(reusableViewClass: UICollectionReusableView.Type, identifier: String) -> UIView {
-        let classIdentifier = NSStringFromClass(reusableViewClass).appending(identifier)
-        var dict = fw_property(forName: "fw_dynamicReusableViews") as? NSMutableDictionary
-        if dict == nil {
-            dict = NSMutableDictionary()
-            fw_setProperty(dict, forName: "fw_dynamicReusableViews")
-        }
-        if let view = dict?[classIdentifier] as? UIView {
-            return view
-        }
-        
-        let reusableView = reusableViewClass.init()
-        let view = UIView()
-        view.addSubview(reusableView)
-        dict?[classIdentifier] = view
-        return view
-    }
-    
-    private func fw_dynamicSize(reusableViewClass: UICollectionReusableView.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, kind: String, configuration: (UICollectionReusableView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
-        let view = fw_dynamicView(reusableViewClass: reusableViewClass, identifier: "\(kind)-\(fixedWidth)-\(fixedHeight)")
-        var width = fixedWidth
-        var height = fixedHeight
-        if width <= 0 && height <= 0 {
-            width = CGRectGetWidth(self.frame)
-            if width <= 0 && self.superview != nil {
-                // 获取 CollectionView 宽度
-                self.superview?.setNeedsLayout()
-                self.superview?.layoutIfNeeded()
-                width = CGRectGetWidth(self.frame)
-            }
-        }
-        if let shouldCache = shouldCache {
-            shouldCache.pointee = fixedHeight > 0 || width > 0
-        }
-        
-        // 设置 Frame
-        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        guard let reusableView = view.subviews.first as? UICollectionReusableView else { return .zero }
-        reusableView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        
-        // 让外面布局 UICollectionReusableView
-        reusableView.prepareForReuse()
-        configuration(reusableView)
-        
-        // 自动撑开方式
-        if reusableView.fw_maxYViewExpanded {
-            if fixedHeight > 0 {
-                width = reusableView.fw_layoutWidth(height: height)
-            } else {
-                height = reusableView.fw_layoutHeight(width: width)
-            }
-            return CGSize(width: width, height: height)
-        }
-        
-        // 刷新布局
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        
-        // 获取需要的高度
-        var maxY: CGFloat = 0
-        let maxYBlock: (UIView) -> CGFloat = { view in
-            return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
-        }
-        if reusableView.fw_maxYViewFixed {
-            if let maxYView = reusableView.fw_maxYView {
-                maxY = maxYBlock(maxYView)
-            } else {
-                var maxYView: UIView?
-                for tempView in reusableView.subviews.reversed() {
-                    let tempY = maxYBlock(tempView)
-                    if tempY > maxY {
-                        maxY = tempY
-                        maxYView = tempView
-                    }
-                }
-                reusableView.fw_maxYView = maxYView
-            }
-        } else {
-            for tempView in reusableView.subviews.reversed() {
-                let tempY = maxYBlock(tempView)
-                if tempY > maxY {
-                    maxY = tempY
-                }
-            }
-        }
-        maxY += reusableView.fw_maxYViewPadding
-        return fixedHeight > 0 ? CGSize(width: maxY, height: height) : CGSize(width: width, height: maxY)
     }
     
 }
