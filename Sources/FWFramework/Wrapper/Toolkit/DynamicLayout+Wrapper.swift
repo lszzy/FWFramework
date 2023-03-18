@@ -173,13 +173,13 @@ extension Wrapper where Base: UICollectionViewCell {
         set { base.fw_maxYViewFixed = newValue }
     }
 
-    /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
+    /// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
         get { return base.fw_maxYViewPadding }
         set { base.fw_maxYViewPadding = newValue }
     }
 
-    /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
+    /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
         get { return base.fw_maxYViewExpanded }
         set { base.fw_maxYViewExpanded = newValue }

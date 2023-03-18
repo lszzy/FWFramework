@@ -159,15 +159,15 @@ import FWObjC
     /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
     /// - Parameters:
     ///   - height: 指定高度
-    ///   - maxXViewExpanded: 最大X视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
-    ///   - maxXViewPadding: 最大X视图的底部内边距，maxXViewExpanded为true时不起作用，默认0
-    ///   - maxXView: 指定最大X视图，默认nil
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图(横向时为X)，默认nil
     /// - Returns: 宽度
     public func fw_dynamicWidth(
         height: CGFloat,
-        maxXViewExpanded: Bool = false,
-        maxXViewPadding: CGFloat = 0,
-        maxXView: UIView? = nil
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
     ) -> CGFloat {
         let view = UIView()
         view.addSubview(self)
@@ -176,25 +176,25 @@ import FWObjC
         
         var dynamicWidth: CGFloat = 0
         // 自动撑开方式
-        if maxXViewExpanded {
+        if maxYViewExpanded {
             dynamicWidth = fw_layoutWidth(height: height)
         // 无需撑开
         } else {
             view.setNeedsLayout()
             view.layoutIfNeeded()
             
-            var maxX: CGFloat = 0
-            if let maxXView = maxXView {
-                maxX = CGRectGetMaxX(maxXView.frame)
+            var maxY: CGFloat = 0
+            if let maxYView = maxYView {
+                maxY = CGRectGetMaxX(maxYView.frame)
             } else {
                 for tempView in subviews.reversed() {
-                    let tempX = CGRectGetMaxX(tempView.frame)
-                    if tempX > maxX {
-                        maxX = tempX
+                    let tempY = CGRectGetMaxX(tempView.frame)
+                    if tempY > maxY {
+                        maxY = tempY
                     }
                 }
             }
-            dynamicWidth = maxX + maxXViewPadding
+            dynamicWidth = maxY + maxYViewPadding
         }
         
         removeFromSuperview()
