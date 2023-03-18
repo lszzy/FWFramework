@@ -67,6 +67,9 @@ NS_SWIFT_NAME(LocationManager)
 /// "纬度,经度"字符串转坐标
 + (CLLocationCoordinate2D)locationCoordinate:(NSString *)string;
 
+/// 计算两个经纬度间的距离
++ (CLLocationDistance)locationDistance:(CLLocationCoordinate2D)from to:(CLLocationCoordinate2D)to;
+
 /// 开始更新位置
 - (void)startUpdateLocation;
 
