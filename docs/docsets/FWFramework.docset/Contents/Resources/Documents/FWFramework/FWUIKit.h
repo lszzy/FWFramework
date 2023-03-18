@@ -410,6 +410,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否是激活状态: isEnabled && (Began || Changed)
 @property (nonatomic, assign, readonly) BOOL fw_isActive NS_REFINED_FOR_SWIFT;
 
+/// 判断手势是否正作用于指定视图
+- (BOOL)fw_hitTestWithView:(nullable UIView *)view NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIPanGestureRecognizer+FWUIKit

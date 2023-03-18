@@ -1,5 +1,13 @@
 # 更新日志
 
+## [4.7.4] - 2023-03-18
+
+### Added
+* 新增动态计算AutoLayout布局视图宽高方法
+* DynamicLayout方法新增NS_NOESCAPE标记
+* DrawerView新增scrollViewInsets内边距配置
+* AttributedLabel兼容iOS15+系统自带删除线
+
 ## [4.7.3] - 2023-03-13
 
 ### Changed

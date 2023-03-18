@@ -17,7 +17,7 @@
     <a title="UIView(FWAdaptive) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.7.3 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.7.4 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -4436,6 +4436,180 @@
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_layoutWidthWithHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIView(im)fw_dynamicHeightWithWidth:maxYViewExpanded:maxYViewPadding:maxYView:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_dynamicHeightWithWidth:maxYViewExpanded:maxYViewPadding:maxYView:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_dynamicHeightWithWidth:maxYViewExpanded:maxYViewPadding:maxYView:">-fw_dynamicHeightWithWidth:<wbr>maxYViewExpanded:<wbr>maxYViewPadding:<wbr>maxYView:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>计算动态AutoLayout布局视图指定宽度时的高度。</p>
+
+<p>注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_dynamicHeightWithWidth</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">width</span>
+                    <span class="nf">maxYViewExpanded</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">maxYViewExpanded</span>
+                     <span class="nf">maxYViewPadding</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">maxYViewPadding</span>
+                            <span class="nf">maxYView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">maxYView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定宽度</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYViewExpanded</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYViewPadding</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>最大Y视图的底部内边距，maxYViewExpanded为YES时不起作用，默认0</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定最大Y视图，默认nil</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIView(im)fw_dynamicWidthWithHeight:maxYViewExpanded:maxYViewPadding:maxYView:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_dynamicWidthWithHeight:maxYViewExpanded:maxYViewPadding:maxYView:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIView(im)fw_dynamicWidthWithHeight:maxYViewExpanded:maxYViewPadding:maxYView:">-fw_dynamicWidthWithHeight:<wbr>maxYViewExpanded:<wbr>maxYViewPadding:<wbr>maxYView:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>计算动态AutoLayout布局视图指定高度时的宽度。</p>
+
+<p>注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_dynamicWidthWithHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">height</span>
+                    <span class="nf">maxYViewExpanded</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">maxYViewExpanded</span>
+                     <span class="nf">maxYViewPadding</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">maxYViewPadding</span>
+                            <span class="nf">maxYView</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">maxYView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>height</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定高度</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYViewExpanded</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYViewPadding</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为YES时不起作用，默认0</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxYView</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>指定最大Y视图(横向时为X)，默认nil</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -14346,7 +14520,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-13)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-18)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
