@@ -41,7 +41,7 @@ extension Wrapper where Base: UITableViewCell {
     public static func height(
         tableView: UITableView,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGFloat {
         return Base.fw_height(tableView: tableView, cacheBy: key) { cell in
             configuration(cell as! Base)
@@ -84,7 +84,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         tableView: UITableView,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGFloat {
         return Base.fw_height(tableView: tableView, type: type, cacheBy: key) { headerFooterView in
             configuration(headerFooterView as! Base)
@@ -136,7 +136,7 @@ extension Wrapper where Base: UITableView {
     public func height<T: UITableViewCell>(
         cellClass: T.Type,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.fw_height(cellClass: cellClass, cacheBy: key) { cell in
             configuration(cell as! T)
@@ -155,7 +155,7 @@ extension Wrapper where Base: UITableView {
         headerFooterViewClass: T.Type,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGFloat {
         return base.fw_height(headerFooterViewClass: headerFooterViewClass, type: type, cacheBy: key) { headerFooterView in
             configuration(headerFooterView as! T)
@@ -200,7 +200,7 @@ extension Wrapper where Base: UICollectionViewCell {
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.fw_size(collectionView: collectionView, width: width, height: height, cacheBy: key) { cell in
             configuration(cell as! Base)
@@ -247,7 +247,7 @@ extension Wrapper where Base: UICollectionReusableView {
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (Base) -> Void
+        configuration: (Base) -> Void
     ) -> CGSize {
         return Base.fw_size(collectionView: collectionView, width: width, height: height, kind: kind, cacheBy: key) { reusableView in
             configuration(reusableView as! Base)
@@ -302,7 +302,7 @@ extension Wrapper where Base: UICollectionView {
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.fw_size(cellClass: cellClass, width: width, height: height, cacheBy: key) { cell in
             configuration(cell as! T)
@@ -325,7 +325,7 @@ extension Wrapper where Base: UICollectionView {
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (T) -> Void
+        configuration: (T) -> Void
     ) -> CGSize {
         return base.fw_size(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, cacheBy: key) { reusableView in
             configuration(reusableView as! T)
