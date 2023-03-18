@@ -48,25 +48,49 @@ extension Wrapper where Base: UIView {
     }
 
     /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutHeight(width: CGFloat, shouldCache: Bool = false) -> CGFloat {
-        return base.fw_layoutHeight(width: width, shouldCache: shouldCache)
+    public func layoutHeight(width: CGFloat) -> CGFloat {
+        return base.fw_layoutHeight(width: width)
     }
 
     /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutWidth(height: CGFloat, shouldCache: Bool = false) -> CGFloat {
-        return base.fw_layoutWidth(height: height, shouldCache: shouldCache)
+    public func layoutWidth(height: CGFloat) -> CGFloat {
+        return base.fw_layoutWidth(height: height)
     }
     
-    /// 获取或设置高度缓存，小于等于0时表示无缓存
-    public var cachedHeight: CGFloat {
-        get { base.fw_cachedHeight }
-        set { base.fw_cachedHeight = newValue }
+    /// 计算动态AutoLayout布局视图指定宽度时的高度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - width: 指定宽度
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图，默认nil
+    /// - Returns: 高度
+    public func dynamicHeight(
+        width: CGFloat,
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
+    ) -> CGFloat {
+        return base.fw_dynamicHeight(width: width, maxYViewExpanded: maxYViewExpanded, maxYViewPadding: maxYViewPadding, maxYView: maxYView)
     }
     
-    /// 获取或设置宽度缓存，小于等于0时表示无缓存
-    public var cachedWidth: CGFloat {
-        get { base.fw_cachedWidth }
-        set { base.fw_cachedWidth = newValue }
+    /// 计算动态AutoLayout布局视图指定高度时的宽度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - height: 指定高度
+    ///   - maxXViewExpanded: 最大X视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
+    ///   - maxXViewPadding: 最大X视图的底部内边距，maxXViewExpanded为true时不起作用，默认0
+    ///   - maxXView: 指定最大X视图，默认nil
+    /// - Returns: 宽度
+    public func dynamicWidth(
+        height: CGFloat,
+        maxXViewExpanded: Bool = false,
+        maxXViewPadding: CGFloat = 0,
+        maxXView: UIView? = nil
+    ) -> CGFloat {
+        return base.fw_dynamicWidth(height: height, maxXViewExpanded: maxXViewExpanded, maxXViewPadding: maxXViewPadding, maxXView: maxXView)
     }
     
     // MARK: - Compression
