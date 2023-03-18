@@ -22,7 +22,7 @@ import UIKit
     
 }
 
-extension DynamicLayoutProtocol where Self: UIView {
+@_spi(FW) extension DynamicLayoutProtocol where Self: UIView {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
@@ -56,6 +56,27 @@ extension DynamicLayoutProtocol where Self: UIView {
     
 }
 
+// MARK: - UIView+DynamicLayout
+@_spi(FW) extension UIView {
+    
+    /// 获取动态布局视图类的尺寸，可固定宽度或高度
+    /// - Parameters:
+    ///   - viewClass: 视图类
+    ///   - fixedWidth: 固定宽度，默认0不固定
+    ///   - fixedHeight: 固定高度，默认0不固定
+    ///   - configuration: 布局cell句柄，内部不会持有Block，不需要weak
+    /// - Returns: 尺寸
+    public func fw_dynamicSize<T: UIView & DynamicLayoutProtocol>(
+        viewClass: T.Type,
+        width fixedWidth: CGFloat,
+        height fixedHeight: CGFloat,
+        configuration: (T) -> Void
+    ) -> CGSize {
+        return .zero
+    }
+    
+}
+
 // MARK: - UITableViewCell+DynamicLayout
 @_spi(FW) extension UITableViewCell: DynamicLayoutProtocol {
     
@@ -76,7 +97,7 @@ extension DynamicLayoutProtocol where Self: UIView {
     public static func fw_height(
         tableView: UITableView,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UITableViewCell) -> Void
+        configuration: (UITableViewCell) -> Void
     ) -> CGFloat {
         return tableView.fw_height(cellClass: self, cacheBy: key, configuration: configuration)
     }
@@ -110,7 +131,7 @@ public enum HeaderFooterViewType: Int {
         tableView: UITableView,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UITableViewHeaderFooterView) -> Void
+        configuration: (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         return tableView.fw_height(headerFooterViewClass: self, type: type, cacheBy: key, configuration: configuration)
     }
@@ -228,7 +249,7 @@ public enum HeaderFooterViewType: Int {
     public func fw_height(
         cellClass: UITableViewCell.Type,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UITableViewCell) -> Void
+        configuration: (UITableViewCell) -> Void
     ) -> CGFloat {
         guard let key = key else {
             return fw_dynamicHeight(cellClass: cellClass, configuration: configuration, shouldCache: nil)
@@ -265,7 +286,7 @@ public enum HeaderFooterViewType: Int {
         return view
     }
     
-    private func fw_dynamicHeight(cellClass: UITableViewCell.Type, configuration: @escaping (UITableViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
+    private func fw_dynamicHeight(cellClass: UITableViewCell.Type, configuration: (UITableViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
         let view = fw_dynamicView(cellClass: cellClass)
         var width = CGRectGetWidth(self.frame)
         if width <= 0 && self.superview != nil {
@@ -336,7 +357,7 @@ public enum HeaderFooterViewType: Int {
         headerFooterViewClass: UITableViewHeaderFooterView.Type,
         type: HeaderFooterViewType,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UITableViewHeaderFooterView) -> Void
+        configuration: (UITableViewHeaderFooterView) -> Void
     ) -> CGFloat {
         guard let key = key else {
             return fw_dynamicHeight(headerFooterViewClass: headerFooterViewClass, type: type, configuration: configuration, shouldCache: nil)
@@ -372,7 +393,7 @@ public enum HeaderFooterViewType: Int {
         return view
     }
     
-    private func fw_dynamicHeight(headerFooterViewClass: UITableViewHeaderFooterView.Type, type: HeaderFooterViewType, configuration: @escaping (UITableViewHeaderFooterView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
+    private func fw_dynamicHeight(headerFooterViewClass: UITableViewHeaderFooterView.Type, type: HeaderFooterViewType, configuration: (UITableViewHeaderFooterView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGFloat {
         let view = fw_dynamicView(headerFooterViewClass: headerFooterViewClass, identifier: "\(type.rawValue)")
         var width = CGRectGetWidth(self.frame)
         if width <= 0 && self.superview != nil {
@@ -458,7 +479,7 @@ public enum HeaderFooterViewType: Int {
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UICollectionViewCell) -> Void
+        configuration: (UICollectionViewCell) -> Void
     ) -> CGSize {
         return collectionView.fw_size(cellClass: self, width: width, height: height, cacheBy: key, configuration: configuration)
     }
@@ -492,7 +513,7 @@ public enum HeaderFooterViewType: Int {
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UICollectionReusableView) -> Void
+        configuration: (UICollectionReusableView) -> Void
     ) -> CGSize {
         return collectionView.fw_size(reusableViewClass: self, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
     }
@@ -613,7 +634,7 @@ public enum HeaderFooterViewType: Int {
         width: CGFloat = 0,
         height: CGFloat = 0,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UICollectionViewCell) -> Void
+        configuration: (UICollectionViewCell) -> Void
     ) -> CGSize {
         guard let key = key else {
             return fw_dynamicSize(cellClass: cellClass, width: width, height: height, configuration: configuration, shouldCache: nil)
@@ -653,7 +674,7 @@ public enum HeaderFooterViewType: Int {
         return view
     }
     
-    private func fw_dynamicSize(cellClass: UICollectionViewCell.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, configuration: @escaping (UICollectionViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
+    private func fw_dynamicSize(cellClass: UICollectionViewCell.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, configuration: (UICollectionViewCell) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
         let view = fw_dynamicView(cellClass: cellClass, identifier: "\(fixedWidth)-\(fixedHeight)")
         var width = fixedWidth
         var height = fixedHeight
@@ -740,7 +761,7 @@ public enum HeaderFooterViewType: Int {
         height: CGFloat = 0,
         kind: String,
         cacheBy key: AnyHashable? = nil,
-        configuration: @escaping (UICollectionReusableView) -> Void
+        configuration: (UICollectionReusableView) -> Void
     ) -> CGSize {
         guard let key = key else {
             return fw_dynamicSize(reusableViewClass: reusableViewClass, width: width, height: height, kind: kind, configuration: configuration, shouldCache: nil)
@@ -780,7 +801,7 @@ public enum HeaderFooterViewType: Int {
         return view
     }
     
-    private func fw_dynamicSize(reusableViewClass: UICollectionReusableView.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, kind: String, configuration: @escaping (UICollectionReusableView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
+    private func fw_dynamicSize(reusableViewClass: UICollectionReusableView.Type, width fixedWidth: CGFloat, height fixedHeight: CGFloat, kind: String, configuration: (UICollectionReusableView) -> Void, shouldCache: UnsafeMutablePointer<Bool>?) -> CGSize {
         let view = fw_dynamicView(reusableViewClass: reusableViewClass, identifier: "\(kind)-\(fixedWidth)-\(fixedHeight)")
         var width = fixedWidth
         var height = fixedHeight
