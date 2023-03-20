@@ -448,10 +448,20 @@ public class StatisticalEvent: NSObject {
             view?.fw_observeProperty("layer.position", block: { view, _ in
                 (view as? UIView)?.fw_statisticalUpdateExposure()
             })
+            
+            if StatisticalManager.shared.exposureBecomeActive {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
         }
         
         func removeObserver() {
-            
+            if StatisticalManager.shared.exposureBecomeActive {
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+        }
+        
+        @objc func appBecomeActive() {
+            view?.fw_statisticalUpdateExposure()
         }
         
         @objc func exposureUpdate() {
