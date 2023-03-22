@@ -42,8 +42,6 @@ public class StatisticalManager: NSObject {
     public var exposureOnce = false
     /// 设置运行模式，默认default快速滚动时不计算曝光
     public var runLoopMode: RunLoop.Mode = .default
-    /// 设置曝光延时，延时越大性能越高但准确率越低，默认0
-    public var exposureDelay: TimeInterval = 0
     
     /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
     public var exposureThresholds: CGFloat = 1
@@ -177,26 +175,23 @@ public class StatisticalManager: NSObject {
         statisticalSwizzled = true
         
         NSObject.fw_swizzleInstanceMethod(
-            UITableViewCell.self,
-            selector: #selector(UITableViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+            UIView.self,
+            selector: #selector(UIView.didMoveToWindow),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_statisticalClick != nil {
-                selfObject.fw_statisticalBindClick()
-            }
             if selfObject.fw_statisticalExposure != nil {
-                selfObject.fw_statisticalBindExposure()
+                selfObject.fw_statisticalUpdateExposure()
             }
         }}
         
         NSObject.fw_swizzleInstanceMethod(
-            UICollectionViewCell.self,
-            selector: #selector(UICollectionViewCell.didMoveToSuperview),
-            methodSignature: (@convention(c) (UICollectionViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UICollectionViewCell) -> Void).self
+            UIView.self,
+            selector: #selector(UIView.didMoveToSuperview),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -280,6 +275,23 @@ public class StatisticalEvent: NSObject {
     
     /// 默认实现绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
     open func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
+        if let control = self as? UIControl {
+            var controlEvents = UIControl.Event.touchUpInside
+            if self is UIDatePicker ||
+                self is UIPageControl ||
+                self is UISegmentedControl ||
+                self is UISlider ||
+                self is UIStepper ||
+                self is UISwitch ||
+                self is UITextField {
+                controlEvents = .valueChanged
+            }
+            control.fw_addBlock({ sender in
+                (sender as? UIControl)?.fw_statisticalTrackClick()
+            }, for: controlEvents)
+            return true
+        }
+        
         guard let gestureRecognizers = self.gestureRecognizers else { return false }
         for gesture in gestureRecognizers {
             if let tapGesture = gesture as? UITapGestureRecognizer {
@@ -294,32 +306,14 @@ public class StatisticalEvent: NSObject {
     
     /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
     open func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
-        if superview != nil {
-            superview?.fw_statisticalBindExposure()
+        if self == containerView {
+            return true
         }
-        
-        return true
-    }
-    
-}
-
-@_spi(FW) extension UIControl {
-    
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        var controlEvents = UIControl.Event.touchUpInside
-        if self is UIDatePicker ||
-            self is UIPageControl ||
-            self is UISegmentedControl ||
-            self is UISlider ||
-            self is UIStepper ||
-            self is UISwitch ||
-            self is UITextField {
-            controlEvents = .valueChanged
+        if let superview = superview {
+            superview.fw_statisticalBindExposure(containerView)
+            return true
         }
-        self.fw_addBlock({ sender in
-            (sender as? UIControl)?.fw_statisticalTrackClick()
-        }, for: controlEvents)
-        return true
+        return false
     }
     
 }
@@ -380,7 +374,6 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
         guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
-            StatisticalManager.swizzleStatistical()
             return false
         }
         return tableView.fw_statisticalBindClick()
@@ -388,10 +381,9 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
         guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
-            StatisticalManager.swizzleStatistical()
             return false
         }
-        return tableView.fw_statisticalBindExposure()
+        return tableView.fw_statisticalBindExposure(tableView)
     }
     
 }
@@ -400,7 +392,6 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
         guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
-            StatisticalManager.swizzleStatistical()
             return false
         }
         return collectionView.fw_statisticalBindClick()
@@ -408,10 +399,9 @@ public class StatisticalEvent: NSObject {
     
     open override func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
         guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
-            StatisticalManager.swizzleStatistical()
             return false
         }
-        return collectionView.fw_statisticalBindExposure()
+        return collectionView.fw_statisticalBindExposure(collectionView)
     }
     
 }
@@ -451,16 +441,22 @@ public class StatisticalEvent: NSObject {
             
             if StatisticalManager.shared.exposureBecomeActive {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
             }
         }
         
         func removeObserver() {
             if StatisticalManager.shared.exposureBecomeActive {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
             }
         }
         
         @objc func appBecomeActive() {
+            view?.fw_statisticalUpdateExposure()
+        }
+        
+        @objc func appEnterBackground() {
             view?.fw_statisticalUpdateExposure()
         }
         
@@ -508,6 +504,7 @@ public class StatisticalEvent: NSObject {
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalClick")
+            StatisticalManager.swizzleStatistical()
             fw_statisticalBindClick(newValue?.containerView)
         }
     }
@@ -544,6 +541,7 @@ public class StatisticalEvent: NSObject {
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            StatisticalManager.swizzleStatistical()
             fw_statisticalBindExposure(newValue?.containerView)
         }
     }
@@ -596,7 +594,7 @@ public class StatisticalEvent: NSObject {
         
         if fw_statisticalExposure != nil {
             NSObject.cancelPreviousPerformRequests(withTarget: fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureUpdate), object: nil)
-            fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: StatisticalManager.shared.exposureDelay, inModes: [StatisticalManager.shared.runLoopMode])
+            fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
         
         subviews.forEach { subview in
