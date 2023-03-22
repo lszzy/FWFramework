@@ -561,7 +561,7 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.addObserver()
             fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
             
-            if fw_statisticalExposure != nil {
+            if fw_statisticalExposure != nil, window != nil {
                 fw_statisticalUpdateExposure()
             }
         }
