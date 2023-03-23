@@ -217,6 +217,10 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         StatisticalManager.shared.eventHandler = { [weak self] event in
             if event.isExposure {
                 FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", FW.safeString(event.name), FW.safeString(event.object), FW.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
+                
+                #if DEBUG
+                self?.navigationItem.title = "B(\(StatisticalManager.shared.exposureBindCount))-U(\(StatisticalManager.shared.exposureUpdateCount))"
+                #endif
             } else {
                 self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", FW.safeString(event.name), FW.safeString(event.object), FW.safeString(event.userInfo)))
             }
