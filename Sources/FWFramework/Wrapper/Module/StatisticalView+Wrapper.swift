@@ -56,8 +56,8 @@ extension Wrapper where Base: UIView {
     
     /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
     @discardableResult
-    public func statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
-        return base.fw_statisticalTrackExposure(indexPath: indexPath, duration: duration, event: event)
+    public func statisticalTrackExposure(indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
+        return base.fw_statisticalTrackExposure(indexPath: indexPath, isFinished: isFinished, event: event)
     }
     
 }
@@ -79,8 +79,8 @@ extension Wrapper where Base: UIViewController {
     
     /// 触发控制器曝光事件统计，仅绑定statisticalExposure后生效
     @discardableResult
-    public func statisticalTrackExposure(duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
-        return base.fw_statisticalTrackExposure(duration: duration, event: event)
+    public func statisticalTrackExposure(isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
+        return base.fw_statisticalTrackExposure(isFinished: isFinished, event: event)
     }
     
 }
