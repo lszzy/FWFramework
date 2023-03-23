@@ -50,6 +50,13 @@ public class StatisticalManager: NSObject {
     /// 应用回到前台时是否重新计算曝光，默认true
     public var exposureBecomeActive = true
     
+    #if DEBUG
+    /// 调试绑定总次数
+    public var exposureBindCount: Int = 0
+    /// 调试更新总次数
+    public var exposureUpdateCount: Int = 0
+    #endif
+    
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
     // MARK: - Public
@@ -383,7 +390,7 @@ public class StatisticalEvent: NSObject {
         guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
             return false
         }
-        return tableView.fw_statisticalBindExposure(tableView)
+        return tableView.fw_statisticalBindExposure(containerView)
     }
     
 }
@@ -401,7 +408,7 @@ public class StatisticalEvent: NSObject {
         guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
             return false
         }
-        return collectionView.fw_statisticalBindExposure(collectionView)
+        return collectionView.fw_statisticalBindExposure(containerView)
     }
     
 }
@@ -561,6 +568,10 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.addObserver()
             fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
             
+            #if DEBUG
+            StatisticalManager.shared.exposureBindCount += 1
+            #endif
+            
             if fw_statisticalExposure != nil, window != nil {
                 fw_statisticalUpdateExposure()
             }
@@ -603,6 +614,10 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalUpdateState() {
+        #if DEBUG
+        StatisticalManager.shared.exposureUpdateCount += 1
+        #endif
+        
         var indexPath: IndexPath?
         if let cell = self as? UITableViewCell {
             indexPath = cell.fw_indexPath
