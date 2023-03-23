@@ -694,43 +694,42 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate var fw_statisticalExposureState: StatisticalState {
-        var state: StatisticalState = .none
         if !fw_isViewVisible {
-            return state
+            return .none
         }
         
         if let exposureBlock = fw_statisticalExposure?.exposureBlock,
            !exposureBlock(self) {
-            return state
+            return .none
         }
         
         if StatisticalManager.shared.exposureBecomeActive ||
             StatisticalManager.shared.exposureTime {
             if UIApplication.shared.applicationState == .background {
-                return state
+                return .none
             }
             if StatisticalManager.shared.exposureTime,
                fw_statisticalTarget.exposureTerminated {
-                return state
+                return .none
             }
         }
         
         let viewController = fw_viewController
         if let viewController = viewController,
             !viewController.fw_isVisible {
-            return state
+            return .none
         }
         
         var containerView = fw_statisticalExposure?.containerView
         if let containerView = containerView {
             if !containerView.fw_isViewVisible {
-                return state
+                return .none
             }
         } else {
             containerView = viewController?.view ?? self.window
         }
         guard let containerView = containerView else {
-            return state
+            return .none
         }
         
         var superview = self.superview
@@ -743,16 +742,16 @@ public class StatisticalEvent: NSObject {
             superview = superview?.superview
         }
         if superviewHidden {
-            return state
+            return .none
         }
         
         let ratio = fw_statisticalExposureRatio(containerView, viewController: viewController)
         if ratio >= 1.0 {
-            state = .fully
+            return .fully
         } else if ratio > 0 {
-            state = .partly(ratio)
+            return .partly(ratio)
         }
-        return state
+        return .none
     }
     
     fileprivate func fw_statisticalExposureRatio(_ containerView: UIView, viewController: UIViewController?) -> CGFloat {
@@ -959,25 +958,27 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate var fw_statisticalExposureState: UIView.StatisticalState {
-        var state: UIView.StatisticalState = .none
-        if !fw_isVisible || fw_lifecycleState != .didAppear { return state }
-        if let exposureBlock = fw_statisticalExposure?.exposureBlock {
-            if !exposureBlock(self) { return state }
+        if !fw_isVisible || fw_lifecycleState != .didAppear {
+            return .none
+        }
+        
+        if let exposureBlock = fw_statisticalExposure?.exposureBlock,
+           !exposureBlock(self) {
+            return .none
         }
         
         if StatisticalManager.shared.exposureBecomeActive ||
             StatisticalManager.shared.exposureTime {
             if UIApplication.shared.applicationState == .background {
-                return state
+                return .none
             }
             if StatisticalManager.shared.exposureTime,
                fw_statisticalTarget.exposureTerminated {
-                return state
+                return .none
             }
         }
         
-        state = .fully
-        return state
+        return .fully
     }
     
 }
