@@ -871,8 +871,8 @@ public class StatisticalEvent: NSObject {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
             }
             if StatisticalManager.shared.exposureTime {
-                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-                NotificationCenter.default.addObserver(self, selector: #selector(self.appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
