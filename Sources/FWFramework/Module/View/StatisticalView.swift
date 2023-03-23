@@ -344,11 +344,8 @@ public class StatisticalEvent: NSObject {
         if self == containerView {
             return true
         }
-        if let superview = superview {
-            superview.fw_statisticalBindExposure(containerView)
-            return true
-        }
-        return false
+        superview?.fw_statisticalBindExposure(containerView)
+        return true
     }
     
 }
