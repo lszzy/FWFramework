@@ -87,11 +87,10 @@ public class StatisticalManager: NSObject {
         handleEvent(event)
     }
     
-    /// 手工触发视图曝光并统计次数，如果为cell需指定indexPath，duration为单次曝光时长(0表示开始)，可重复触发
-    public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent) {
+    /// 手工触发视图曝光并统计次数，如果为cell需指定indexPath，isFinished为曝光结束，可重复触发
+    public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
-        let isFinished = duration > 0
         let triggerKey = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(event.name)-\(String.fw_safeString(event.object))"
         var triggerCount = (view?.fw_statisticalTarget.exposureCounts[triggerKey] ?? 0)
         if !isFinished {
@@ -103,8 +102,13 @@ public class StatisticalManager: NSObject {
             view?.fw_statisticalTarget.exposureCounts[triggerKey] = triggerCount
         }
         var totalDuration = (view?.fw_statisticalTarget.exposureDurations[triggerKey] ?? 0)
+        var duration: TimeInterval = 0
+        let triggerTimestamp = Date.fw_currentTime
         if isFinished {
-            totalDuration += duration
+            if let exposureBegin = view?.fw_statisticalTarget.exposureBegin {
+                duration = triggerTimestamp - exposureBegin.triggerTimestamp
+                totalDuration += duration
+            }
             view?.fw_statisticalTarget.exposureDurations[triggerKey] = totalDuration
             view?.fw_statisticalTarget.exposureBegin = nil
         } else {
@@ -117,7 +121,7 @@ public class StatisticalManager: NSObject {
         event.viewController = view?.fw_viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
-        event.triggerTimestamp = Date.fw_currentTime
+        event.triggerTimestamp = triggerTimestamp
         event.triggerDuration = duration
         event.totalDuration = totalDuration
         event.isExposure = true
@@ -127,11 +131,10 @@ public class StatisticalManager: NSObject {
         handleEvent(event)
     }
     
-    /// 手工触发控制器曝光并统计次数，duration为单次曝光时长(0表示开始)，可重复触发
-    public func trackExposure(_ viewController: UIViewController?, duration: TimeInterval = 0, event: StatisticalEvent) {
+    /// 手工触发控制器曝光并统计次数，isFinished为曝光结束，可重复触发
+    public func trackExposure(_ viewController: UIViewController?, isFinished: Bool = false, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
-        let isFinished = duration > 0
         var triggerCount = (viewController?.fw_statisticalTarget.exposureCount ?? 0)
         if !isFinished {
             triggerCount += 1
@@ -142,9 +145,13 @@ public class StatisticalManager: NSObject {
             viewController?.fw_statisticalTarget.exposureCount = triggerCount
         }
         var totalDuration = (viewController?.fw_statisticalTarget.exposureDuration ?? 0)
+        var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         if isFinished {
-            totalDuration += duration
+            if let exposureBegin = viewController?.fw_statisticalTarget.exposureBegin, exposureBegin > 0 {
+                duration = triggerTimestamp - exposureBegin
+                totalDuration += duration
+            }
             viewController?.fw_statisticalTarget.exposureDuration = totalDuration
             viewController?.fw_statisticalTarget.exposureBegin = 0
         } else {
@@ -616,11 +623,11 @@ public class StatisticalEvent: NSObject {
     }
     
     /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
-    @objc(__fw_statisticalTrackExposureWithIndexPath:duration:event:)
+    @objc(__fw_statisticalTrackExposureWithIndexPath:isFinished:event:)
     @discardableResult
-    public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+    public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
         guard let event = event ?? fw_statisticalExposure else { return false }
-        StatisticalManager.shared.trackExposure(self, indexPath: indexPath, duration: duration, event: event)
+        StatisticalManager.shared.trackExposure(self, indexPath: indexPath, isFinished: isFinished, event: event)
         return true
     }
     
@@ -697,9 +704,15 @@ public class StatisticalEvent: NSObject {
             return state
         }
         
-        if StatisticalManager.shared.exposureBecomeActive,
-           UIApplication.shared.applicationState == .background {
-            return state
+        if StatisticalManager.shared.exposureBecomeActive ||
+            StatisticalManager.shared.exposureTime {
+            if UIApplication.shared.applicationState == .background {
+                return state
+            }
+            if StatisticalManager.shared.exposureTime,
+               fw_statisticalTarget.exposureTerminated {
+                return state
+            }
         }
         
         let viewController = fw_viewController
@@ -822,6 +835,10 @@ public class StatisticalEvent: NSObject {
     fileprivate class StatisticalTarget: NSObject {
         weak var viewController: UIViewController?
         
+        var exposureFully = false
+        var exposureIdentifier = ""
+        var exposureState: UIView.StatisticalState = .none
+        
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
         var exposureBegin: TimeInterval = 0
@@ -835,20 +852,41 @@ public class StatisticalEvent: NSObject {
             viewController?.fw_observeLifecycleState({ vc, state in
                 if state == .didAppear {
                     vc.fw_statisticalUpdateExposure()
+                } else if StatisticalManager.shared.exposureTime, state == .didDisappear {
+                    vc.fw_statisticalUpdateExposure()
                 }
             })
-            if StatisticalManager.shared.exposureBecomeActive {
+            if StatisticalManager.shared.exposureBecomeActive ||
+                StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+            if StatisticalManager.shared.exposureTime {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
         func removeObserver() {
-            if StatisticalManager.shared.exposureBecomeActive {
+            if StatisticalManager.shared.exposureBecomeActive ||
+                StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+            }
+            if StatisticalManager.shared.exposureTime {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
         @objc func appBecomeActive() {
+            viewController?.fw_statisticalUpdateExposure()
+        }
+        
+        @objc func appEnterBackground() {
+            viewController?.fw_statisticalUpdateExposure()
+        }
+        
+        @objc func appWillTerminate() {
+            exposureTerminated = true
             viewController?.fw_statisticalUpdateExposure()
         }
     }
@@ -873,9 +911,9 @@ public class StatisticalEvent: NSObject {
     
     /// 触发控制器曝光事件统计，仅绑定statisticalExposure后生效
     @discardableResult
-    public func fw_statisticalTrackExposure(duration: TimeInterval = 0, event: StatisticalEvent? = nil) -> Bool {
+    public func fw_statisticalTrackExposure(isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
         guard let event = event ?? fw_statisticalExposure else { return false }
-        StatisticalManager.shared.trackExposure(self, duration: duration, event: event)
+        StatisticalManager.shared.trackExposure(self, isFinished: isFinished, event: event)
         return true
     }
     
@@ -900,12 +938,46 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalUpdateExposure() {
-        if !fw_isVisible || fw_lifecycleState != .didAppear { return }
-        if let exposureBlock = fw_statisticalExposure?.exposureBlock {
-            if !exposureBlock(self) { return }
+        let identifier = "\(String.fw_safeString(fw_statisticalExposure?.name))-\(String.fw_safeString(fw_statisticalExposure?.object))"
+        let oldIdentifier = fw_statisticalTarget.exposureIdentifier
+        let identifierChanged = !oldIdentifier.isEmpty && identifier != oldIdentifier
+        if oldIdentifier.isEmpty || identifierChanged {
+            fw_statisticalTarget.exposureIdentifier = identifier
         }
         
-        fw_statisticalTrackExposure()
+        let oldState = fw_statisticalTarget.exposureState
+        let state = fw_statisticalExposureState
+        if state.isState(oldState), !identifierChanged { return }
+        fw_statisticalTarget.exposureState = state
+        
+        if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
+            fw_statisticalTarget.exposureFully = true
+            fw_statisticalTrackExposure()
+        } else if state == .none || identifierChanged {
+            fw_statisticalTarget.exposureFully = false
+        }
+    }
+    
+    fileprivate var fw_statisticalExposureState: UIView.StatisticalState {
+        var state: UIView.StatisticalState = .none
+        if !fw_isVisible || fw_lifecycleState != .didAppear { return state }
+        if let exposureBlock = fw_statisticalExposure?.exposureBlock {
+            if !exposureBlock(self) { return state }
+        }
+        
+        if StatisticalManager.shared.exposureBecomeActive ||
+            StatisticalManager.shared.exposureTime {
+            if UIApplication.shared.applicationState == .background {
+                return state
+            }
+            if StatisticalManager.shared.exposureTime,
+               fw_statisticalTarget.exposureTerminated {
+                return state
+            }
+        }
+        
+        state = .fully
+        return state
     }
     
 }
