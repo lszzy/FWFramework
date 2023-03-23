@@ -2364,6 +2364,10 @@ public extension JSONModel {
         return deserialize(from: dict as? [String: Any])
     }
     
+    static func deserialize(_ string: String?) -> Self? {
+        return deserialize(from: string)
+    }
+    
     static func deserialize(_ json: JSON) -> Self? {
         return deserialize(from: json.dictionaryObject)
     }
@@ -2372,12 +2376,20 @@ public extension JSONModel {
         return deserialize(from: dict as? [String: Any]) ?? Self()
     }
     
+    static func safeDeserialize(_ string: String?) -> Self {
+        return deserialize(from: string) ?? Self()
+    }
+    
     static func safeDeserialize(_ json: JSON) -> Self {
         return deserialize(from: json.dictionaryObject) ?? Self()
     }
     
     mutating func merge(_ dict: [AnyHashable: Any]?) {
         JSONDeserializer.update(object: &self, from: dict as? [String: Any])
+    }
+    
+    mutating func merge(_ string: String?) {
+        JSONDeserializer.update(object: &self, from: string)
     }
     
     mutating func merge(_ json: JSON) {
