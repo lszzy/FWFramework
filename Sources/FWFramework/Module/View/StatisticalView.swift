@@ -19,7 +19,7 @@ extension Notification.Name {
 ///
 /// 视图从不可见变为可见时曝光开始，触发曝光开始事件(triggerDuration为0)；
 /// 视图从可见到不可见时曝光结束，视为一次曝光，触发曝光结束事件(triggerDuration大于0)并统计曝光时长。
-/// 目前暂未实现曝光时长统计，仅触发开始事件用于统计次数，可自行处理时长统计，注意应用退后台时不计曝光时间。
+/// 默认未开启曝光时长统计，仅触发开始事件用于统计次数；开启曝光时长统计后会触发结束事件并统计时长，应用退后台时不计曝光时间。
 /// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
 public class StatisticalManager: NSObject {
     
@@ -43,6 +43,8 @@ public class StatisticalManager: NSObject {
     /// 设置运行模式，默认default快速滚动时不计算曝光
     public var runLoopMode: RunLoop.Mode = .default
     
+    /// 是否统计曝光时长，开启后会触发曝光结束事件并计算时长，默认false
+    public var exposureTime = false
     /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
     public var exposureThresholds: CGFloat = 1
     /// 计算曝光时是否自动屏蔽控制器的顶部栏和底部栏，默认true
@@ -104,7 +106,12 @@ public class StatisticalManager: NSObject {
         if isFinished {
             totalDuration += duration
             view?.fw_statisticalTarget.exposureDurations[triggerKey] = totalDuration
+            view?.fw_statisticalTarget.exposureBegin = nil
+        } else {
+            view?.fw_statisticalTarget.exposureBegin = event
         }
+        let isBackground = UIApplication.shared.applicationState == .background
+        let isTerminated = view?.fw_statisticalTarget.exposureTerminated ?? false
         
         event.view = view
         event.viewController = view?.fw_viewController
@@ -115,6 +122,8 @@ public class StatisticalManager: NSObject {
         event.totalDuration = totalDuration
         event.isExposure = true
         event.isFinished = isFinished
+        event.isBackground = isBackground
+        event.isTerminated = isTerminated
         handleEvent(event)
     }
     
@@ -133,20 +142,28 @@ public class StatisticalManager: NSObject {
             viewController?.fw_statisticalTarget.exposureCount = triggerCount
         }
         var totalDuration = (viewController?.fw_statisticalTarget.exposureDuration ?? 0)
+        let triggerTimestamp = Date.fw_currentTime
         if isFinished {
             totalDuration += duration
             viewController?.fw_statisticalTarget.exposureDuration = totalDuration
+            viewController?.fw_statisticalTarget.exposureBegin = 0
+        } else {
+            viewController?.fw_statisticalTarget.exposureBegin = triggerTimestamp
         }
+        let isBackground = UIApplication.shared.applicationState == .background
+        let isTerminated = viewController?.fw_statisticalTarget.exposureTerminated ?? false
         
         event.view = nil
         event.viewController = viewController
         event.indexPath = nil
         event.triggerCount = triggerCount
-        event.triggerTimestamp = Date.fw_currentTime
+        event.triggerTimestamp = triggerTimestamp
         event.triggerDuration = duration
         event.totalDuration = totalDuration
         event.isExposure = true
         event.isFinished = isFinished
+        event.isBackground = isBackground
+        event.isTerminated = isTerminated
         handleEvent(event)
     }
     
@@ -255,6 +272,10 @@ public class StatisticalEvent: NSObject {
     public fileprivate(set) var isExposure = false
     /// 曝光事件是否完成，注意曝光会触发两次，第一次为false曝光开始，第二次为true曝光结束
     public fileprivate(set) var isFinished = false
+    /// 曝光事件是否在后台触发，默认false
+    public fileprivate(set) var isBackground = false
+    /// 曝光事件是否在应用结束时触发，默认false
+    public fileprivate(set) var isTerminated = false
     
     /// 创建事件统计对象，指定名称、对象和信息
     public init(name: String, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
@@ -427,6 +448,8 @@ public class StatisticalEvent: NSObject {
         
         var exposureCounts: [String: Int] = [:]
         var exposureDurations: [String: TimeInterval] = [:]
+        var exposureBegin: StatisticalEvent?
+        var exposureTerminated = false
         
         deinit {
             removeObserver()
@@ -446,16 +469,24 @@ public class StatisticalEvent: NSObject {
                 (view as? UIView)?.fw_statisticalUpdateExposure()
             })
             
-            if StatisticalManager.shared.exposureBecomeActive {
+            if StatisticalManager.shared.exposureBecomeActive ||
+                StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+            }
+            if StatisticalManager.shared.exposureTime {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
         func removeObserver() {
-            if StatisticalManager.shared.exposureBecomeActive {
+            if StatisticalManager.shared.exposureBecomeActive ||
+                StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+            }
+            if StatisticalManager.shared.exposureTime {
+                NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
             }
         }
         
@@ -464,6 +495,11 @@ public class StatisticalEvent: NSObject {
         }
         
         @objc func appEnterBackground() {
+            view?.fw_statisticalUpdateExposure()
+        }
+        
+        @objc func appWillTerminate() {
+            exposureTerminated = true
             view?.fw_statisticalUpdateExposure()
         }
         
@@ -788,6 +824,8 @@ public class StatisticalEvent: NSObject {
         
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
+        var exposureBegin: TimeInterval = 0
+        var exposureTerminated = false
         
         deinit {
             removeObserver()
