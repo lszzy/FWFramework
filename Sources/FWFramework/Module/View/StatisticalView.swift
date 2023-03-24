@@ -634,19 +634,23 @@ public class StatisticalEvent: NSObject {
     /// 手工绑定曝光事件统计，可指定容器视图，自动绑定失败时可手工调用
     @discardableResult
     public func fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
-        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return true }
-        let result = statisticalViewWillBindExposure(containerView)
-        if result {
-            fw_statisticalTarget.addObserver()
-            fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
-            
-            #if DEBUG
-            StatisticalManager.shared.exposureBindCount += 1
-            #endif
-            
-            if fw_statisticalExposure != nil, window != nil {
-                fw_statisticalUpdateExposure()
+        var result = fw_propertyBool(forName: "fw_statisticalBindExposure")
+        if !result {
+            result = statisticalViewWillBindExposure(containerView)
+            if result {
+                fw_statisticalTarget.addObserver()
+                fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+                
+                #if DEBUG
+                StatisticalManager.shared.exposureBindCount += 1
+                #endif
             }
+        }
+        guard result else { return false }
+        
+        if (fw_statisticalExposure != nil && window != nil) ||
+            StatisticalManager.shared.exposureTime {
+            fw_statisticalUpdateExposure()
         }
         return result
     }
@@ -970,11 +974,15 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalBindExposure() {
-        guard !fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        fw_statisticalTarget.addObserver()
-        fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+        if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
+            fw_statisticalTarget.addObserver()
+            fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+        }
         
-        fw_statisticalUpdateExposure()
+        if fw_statisticalExposure != nil ||
+            StatisticalManager.shared.exposureTime {
+            fw_statisticalUpdateExposure()
+        }
     }
     
     fileprivate func fw_statisticalUpdateExposure() {
