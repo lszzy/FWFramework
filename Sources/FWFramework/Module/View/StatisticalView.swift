@@ -703,6 +703,11 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
+    /// 检查并更新视图曝光状态，用于自定义场景
+    public func fw_statisticalCheckExposure() {
+        fw_statisticalUpdateExposure()
+    }
+    
     // MARK: - Private
     fileprivate var fw_statisticalTarget: StatisticalTarget {
         if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
@@ -1012,6 +1017,11 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
+    /// 检查并更新控制器曝光状态，用于自定义场景
+    public func fw_statisticalCheckExposure() {
+        fw_statisticalUpdateExposure()
+    }
+    
     // MARK: - Private
     fileprivate var fw_statisticalTarget: StatisticalTarget {
         if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
@@ -1037,6 +1047,8 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalUpdateExposure() {
+        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        
         let identifier = "\(String.fw_safeString(fw_statisticalExposure?.name))-\(String.fw_safeString(fw_statisticalExposure?.object))"
         let oldIdentifier = fw_statisticalTarget.exposureIdentifier
         let identifierChanged = !oldIdentifier.isEmpty && identifier != oldIdentifier

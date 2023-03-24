@@ -60,6 +60,11 @@ extension Wrapper where Base: UIView {
         return base.fw_statisticalTrackExposure(indexPath: indexPath, isFinished: isFinished, event: event)
     }
     
+    /// 检查并更新视图曝光状态，用于自定义场景
+    public func statisticalCheckExposure() {
+        base.fw_statisticalCheckExposure()
+    }
+    
 }
 
 // MARK: - UIViewController+StatisticalExposure
@@ -81,6 +86,11 @@ extension Wrapper where Base: UIViewController {
     @discardableResult
     public func statisticalTrackExposure(isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
         return base.fw_statisticalTrackExposure(isFinished: isFinished, event: event)
+    }
+    
+    /// 检查并更新控制器曝光状态，用于自定义场景
+    public func statisticalCheckExposure() {
+        base.fw_statisticalCheckExposure()
     }
     
 }
