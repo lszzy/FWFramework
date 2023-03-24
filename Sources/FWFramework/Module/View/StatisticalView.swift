@@ -349,6 +349,9 @@ public class StatisticalEvent: NSObject {
     /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
     func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool
     
+    /// 可统计视图Cell容器视图方法，子类可重写
+    func statisticalViewCellContainerView() -> UIView?
+    
 }
 
 @objc extension UIView: StatisticalViewProtocol {
@@ -391,6 +394,11 @@ public class StatisticalEvent: NSObject {
         }
         superview?.fw_statisticalBindExposure(containerView)
         return true
+    }
+    
+    /// 可统计视图Cell容器视图方法，子类可重写
+    open func statisticalViewCellContainerView() -> UIView? {
+        return nil
     }
     
 }
@@ -662,6 +670,13 @@ public class StatisticalEvent: NSObject {
         guard let event = event ?? fw_statisticalExposure else { return false }
         StatisticalManager.shared.trackExposure(self, indexPath: indexPath, isFinished: isFinished, event: event)
         return true
+    }
+    
+    /// 判断当前视图是否实时曝光可见
+    @objc(__fw_isStatisticalExposed)
+    public var fw_isStatisticalExposed: Bool {
+        let state = fw_statisticalExposureState
+        return state.isFully
     }
     
     // MARK: - Private
@@ -964,6 +979,12 @@ public class StatisticalEvent: NSObject {
         guard let event = event ?? fw_statisticalExposure else { return false }
         StatisticalManager.shared.trackExposure(self, isFinished: isFinished, event: event)
         return true
+    }
+    
+    /// 判断当前控制器是否实时曝光可见
+    public var fw_isStatisticalExposed: Bool {
+        let state = fw_statisticalExposureState
+        return state.isFully
     }
     
     // MARK: - Private
