@@ -19,7 +19,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.shieldView.isHidden = true
             self?.shieldView.removeFromSuperview()
             // 手工触发曝光计算
-            self?.view.isHidden = self?.view.isHidden ?? false
+            self?.view.fw.statisticalCheckExposure()
         }
         
         let label = UILabel()
@@ -199,7 +199,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
                         self?.tableView.isHidden = false
                     }
                 } else if index == 2 {
-                    let object = self?.tableObject == "table" ? "table2" : "table"
+                    self?.tableObject = self?.tableObject == "table" ? "table2" : "table"
                     self?.tableView.reloadData()
                 } else {
                     let object = self?.fw.statisticalExposure?.object.safeString == "viewController" ? "viewController2" : "viewController"
