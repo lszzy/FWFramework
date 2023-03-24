@@ -182,10 +182,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     
     func setupLayout() {
         collectionView.isHidden = true
+        StatisticalManager.shared.exposureTime = UserDefaults.fw.object(forKey: "TestExposureTime").safeBool
         fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
             self?.fw.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", "切换collectionView", "表格reloadData"], actionBlock: { [weak self] index in
                 if index == 0 {
                     StatisticalManager.shared.exposureTime = !StatisticalManager.shared.exposureTime
+                    UserDefaults.fw.setObject(StatisticalManager.shared.exposureTime, forKey: "TestExposureTime")
                 } else if index == 1 {
                     if self?.collectionView.isHidden ?? false {
                         self?.collectionView.isHidden = false
