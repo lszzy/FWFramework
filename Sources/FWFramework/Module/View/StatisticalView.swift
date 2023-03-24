@@ -703,13 +703,6 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
-    /// 判断当前视图是否实时曝光可见
-    @objc(__fw_isStatisticalExposed)
-    public var fw_isStatisticalExposed: Bool {
-        let state = fw_statisticalExposureState
-        return state.isFully
-    }
-    
     // MARK: - Private
     fileprivate var fw_statisticalTarget: StatisticalTarget {
         if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
@@ -1017,12 +1010,6 @@ public class StatisticalEvent: NSObject {
         guard let event = event ?? fw_statisticalExposure else { return false }
         StatisticalManager.shared.trackExposure(self, isFinished: isFinished, event: event)
         return true
-    }
-    
-    /// 判断当前控制器是否实时曝光可见
-    public var fw_isStatisticalExposed: Bool {
-        let state = fw_statisticalExposureState
-        return state.isFully
     }
     
     // MARK: - Private
