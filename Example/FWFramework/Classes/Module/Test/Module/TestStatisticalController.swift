@@ -183,7 +183,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         collectionView.isHidden = true
         StatisticalManager.shared.exposureTime = UserDefaults.fw.object(forKey: "TestExposureTime").safeBool
         fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", "切换collectionView", "表格reloadData"], actionBlock: { [weak self] index in
+            self?.fw.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", "切换collectionView", "表格reloadData", "控制器statisticalExposure"], actionBlock: { [weak self] index in
                 if index == 0 {
                     StatisticalManager.shared.exposureTime = !StatisticalManager.shared.exposureTime
                     UserDefaults.fw.setObject(StatisticalManager.shared.exposureTime, forKey: "TestExposureTime")
@@ -195,8 +195,13 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
                         self?.collectionView.isHidden = true
                         self?.tableView.isHidden = false
                     }
-                } else {
+                } else if index == 2 {
+                    let object = self?.tableView.fw.statisticalExposure?.object.safeString == "table" ? "table2" : "table"
+                    self?.tableView.fw.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: object)
                     self?.tableView.reloadData()
+                } else {
+                    let object = self?.fw.statisticalExposure?.object.safeString == "viewController" ? "viewController2" : "viewController"
+                    self?.fw.statisticalExposure = StatisticalEvent(name: "exposure_viewController", object: object)
                 }
             })
         }
