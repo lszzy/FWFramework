@@ -494,8 +494,6 @@ public class StatisticalEvent: NSObject {
         var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
-        private let exposureKeyPaths: [String] = ["alpha", "hidden", "frame", "bounds"]
-        
         deinit {
             removeObservers()
         }
@@ -504,9 +502,10 @@ public class StatisticalEvent: NSObject {
             guard !exposureObserved else { return }
             exposureObserved = true
             
-            for keyPath in exposureKeyPaths {
-                view?.addObserver(self, forKeyPath: keyPath, options: [.new, .old], context: nil)
-            }
+            view?.addObserver(self, forKeyPath: "alpha", options: [.new, .old], context: nil)
+            view?.addObserver(self, forKeyPath: "hidden", options: [.new, .old], context: nil)
+            view?.addObserver(self, forKeyPath: "frame", options: [.new, .old], context: nil)
+            view?.addObserver(self, forKeyPath: "bounds", options: [.new, .old], context: nil)
             
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
@@ -522,9 +521,10 @@ public class StatisticalEvent: NSObject {
             guard exposureObserved else { return }
             exposureObserved = false
             
-            for keyPath in exposureKeyPaths {
-                view?.removeObserver(self, forKeyPath: keyPath)
-            }
+            view?.removeObserver(self, forKeyPath: "alpha")
+            view?.removeObserver(self, forKeyPath: "hidden")
+            view?.removeObserver(self, forKeyPath: "frame")
+            view?.removeObserver(self, forKeyPath: "bounds")
             
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
@@ -537,7 +537,26 @@ public class StatisticalEvent: NSObject {
         }
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-            if let keyPath = keyPath, exposureKeyPaths.contains(keyPath) {
+            var valueChanged = false
+            if keyPath == "alpha" {
+                let oldValue = change?[.oldKey] as? Double
+                let newValue = change?[.newKey] as? Double
+                valueChanged = newValue != oldValue
+            } else if keyPath == "hidden" {
+                let oldValue = change?[.oldKey] as? Bool
+                let newValue = change?[.newKey] as? Bool
+                valueChanged = newValue != oldValue
+            } else if keyPath == "frame" {
+                let oldValue = (change?[.oldKey] as? NSValue)?.cgRectValue
+                let newValue = (change?[.newKey] as? NSValue)?.cgRectValue
+                valueChanged = newValue != oldValue
+            } else if keyPath == "bounds" {
+                let oldValue = (change?[.oldKey] as? NSValue)?.cgRectValue
+                let newValue = (change?[.newKey] as? NSValue)?.cgRectValue
+                valueChanged = newValue != oldValue
+            }
+            
+            if valueChanged {
                 (object as? UIView)?.fw_statisticalUpdateExposure()
             }
         }
