@@ -232,7 +232,7 @@ public class Navigator: NSObject {
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
     public func fw_open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
         var targetController = viewController
-        var isNavigation = targetController.isKind(of: UINavigationController.classForCoder())
+        var isNavigation = targetController is UINavigationController
         if options.contains(.embedInNavigation), !isNavigation {
             targetController = UINavigationController(rootViewController: targetController)
             isNavigation = true
@@ -320,7 +320,7 @@ public class Navigator: NSObject {
                 return workflowName
             }
             
-            let className = NSStringFromClass(self.classForCoder)
+            let className = NSStringFromClass(classForCoder)
                 .components(separatedBy: ".").last ?? ""
             let workflowName = className
                 .replacingOccurrences(of: "ViewController", with: "")

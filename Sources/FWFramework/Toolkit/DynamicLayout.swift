@@ -209,7 +209,7 @@ import UIKit
         style: UITableViewCell.CellStyle = .default,
         reuseIdentifier: String? = nil
     ) -> Self {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Self.classForCoder()).appending("FWDynamicLayoutReuseIdentifier")
+        let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? Self {
             return cell
         }
@@ -240,11 +240,11 @@ public enum HeaderFooterViewType: Int {
         tableView: UITableView,
         reuseIdentifier: String? = nil
     ) -> Self {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Self.classForCoder()).appending("FWDynamicLayoutReuseIdentifier")
+        let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
         if tableView.fw_propertyBool(forName: identifier) {
             return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Self
         }
-        tableView.register(Self.classForCoder(), forHeaderFooterViewReuseIdentifier: identifier)
+        tableView.register(self, forHeaderFooterViewReuseIdentifier: identifier)
         tableView.fw_setPropertyBool(true, forName: identifier)
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Self
     }
@@ -435,11 +435,11 @@ public enum HeaderFooterViewType: Int {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Self {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Self.classForCoder()).appending("FWDynamicLayoutReuseIdentifier")
+        let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
         if collectionView.fw_propertyBool(forName: identifier) {
             return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Self
         }
-        collectionView.register(Self.classForCoder(), forCellWithReuseIdentifier: identifier)
+        collectionView.register(self, forCellWithReuseIdentifier: identifier)
         collectionView.fw_setPropertyBool(true, forName: identifier)
         return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Self
     }
@@ -467,12 +467,12 @@ public enum HeaderFooterViewType: Int {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Self {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Self.classForCoder()).appending("FWDynamicLayoutReuseIdentifier")
+        let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
         let kindIdentifier = identifier + kind
         if collectionView.fw_propertyBool(forName: kindIdentifier) {
             return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Self
         }
-        collectionView.register(Self.classForCoder(), forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
+        collectionView.register(self, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
         collectionView.fw_setPropertyBool(true, forName: kindIdentifier)
         return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Self
     }
