@@ -1002,9 +1002,9 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     return YES;
 }
 
-- (NSArray<UIView *> *)statisticalViewVisibleCells
+- (NSArray<UIView *> *)statisticalViewChildViews
 {
-    return self.mainView.statisticalViewVisibleCells;
+    return self.mainView.subviews;
 }
 
 - (NSIndexPath *)statisticalViewIndexPath
