@@ -8,7 +8,7 @@
 
 import FWFramework
 
-class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol {
+class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol, BannerViewDelegate {
     
     private var tableObject = "table"
     
@@ -34,6 +34,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let result = BannerView()
         result.autoScroll = true
         result.autoScrollTimeInterval = 6
+        result.delegate = self
         result.placeholderImage = UIImage.fw.appIconImage()
         result.itemDidScrollOperationBlock = { index in
             // FW.debug("currentIndex: \(index)")
@@ -276,12 +277,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.thumbTintColor = event.isFinished ? .white : UIColor.fw.randomColor
         }
         configShieldView(testSwitch.fw.statisticalExposure)
-        bannerView.fw.statisticalExposure = StatisticalEvent(name: "exposure_banner", object: "banner")
-        bannerView.fw.statisticalExposureListener = { [weak self] event in
-            let index = "\(event.indexPath?.row ?? -1)"
-            self?.bannerView.titlesGroup = [index, index, index, index, index, index]
-        }
-        configShieldView(bannerView.fw.statisticalExposure)
         segmentedControl.fw.statisticalExposure = StatisticalEvent(name: "exposure_segment", object: "segment")
         segmentedControl.fw.statisticalExposureListener = { [weak self] event in
             self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.fw.randomColor
@@ -330,7 +325,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         cell.fw.statisticalExposureListener = { event in
             cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.fw.randomColor
         }
-        configShieldView(tableView.fw.statisticalExposure)
+        configShieldView(cell.fw.statisticalExposure)
         return cell
     }
     
@@ -357,6 +352,15 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         clickHandler(indexPath.row)
+    }
+    
+    func bannerView(_ bannerView: BannerView, customCell cell: UICollectionViewCell, for index: Int) {
+        cell.fw.statisticalExposure = StatisticalEvent(name: "exposure_banner", object: "banner")
+        cell.fw.statisticalExposureListener = { [weak self] event in
+            let index = "\(event.indexPath?.row ?? -1)"
+            self?.bannerView.titlesGroup = [index, index, index, index, index, index]
+        }
+        configShieldView(cell.fw.statisticalExposure)
     }
     
 }
