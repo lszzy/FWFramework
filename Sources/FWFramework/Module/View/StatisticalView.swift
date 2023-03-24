@@ -352,6 +352,9 @@ public class StatisticalEvent: NSObject {
     /// 可统计视图Cell容器视图方法，子类可重写
     func statisticalViewCellContainerView() -> UIView?
     
+    /// 可统计视图Cell索引位置方法，子类可重写
+    func statisticalViewCellIndexPath() -> IndexPath?
+    
 }
 
 @objc extension UIView: StatisticalViewProtocol {
@@ -401,6 +404,11 @@ public class StatisticalEvent: NSObject {
         return nil
     }
     
+    /// 可统计视图Cell索引位置方法，子类可重写
+    open func statisticalViewCellIndexPath() -> IndexPath? {
+        return nil
+    }
+    
 }
 
 @_spi(FW) extension UITableView {
@@ -420,8 +428,8 @@ public class StatisticalEvent: NSObject {
             
             let cell = tableView.cellForRow(at: indexPath)
             let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
-            if !isTracked {
-                tableView.fw_statisticalTrackClick(indexPath: indexPath)
+            if !isTracked, let containerView = cell?.statisticalViewCellContainerView() {
+                containerView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
         return true
@@ -446,8 +454,8 @@ public class StatisticalEvent: NSObject {
             
             let cell = collectionView.cellForItem(at: indexPath)
             let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
-            if !isTracked {
-                collectionView.fw_statisticalTrackClick(indexPath: indexPath)
+            if !isTracked, let containerView = cell?.statisticalViewCellContainerView() {
+                containerView.fw_statisticalTrackClick(indexPath: indexPath)
             }
         }}
         return true
@@ -458,17 +466,25 @@ public class StatisticalEvent: NSObject {
 @_spi(FW) extension UITableViewCell {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
+        guard let tableView = (containerView as? UITableView) ?? statisticalViewCellContainerView() else {
             return false
         }
         return tableView.fw_statisticalBindClick()
     }
     
     open override func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
-        guard let tableView = (containerView as? UITableView) ?? self.fw_tableView else {
+        guard let tableView = (containerView as? UITableView) ?? statisticalViewCellContainerView() else {
             return false
         }
         return tableView.fw_statisticalBindExposure(containerView)
+    }
+    
+    open override func statisticalViewCellContainerView() -> UIView? {
+        return fw_tableView
+    }
+    
+    open override func statisticalViewCellIndexPath() -> IndexPath? {
+        return fw_indexPath
     }
     
 }
@@ -476,17 +492,25 @@ public class StatisticalEvent: NSObject {
 @_spi(FW) extension UICollectionViewCell {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
+        guard let collectionView = (containerView as? UICollectionView) ?? statisticalViewCellContainerView() else {
             return false
         }
         return collectionView.fw_statisticalBindClick()
     }
     
     open override func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
-        guard let collectionView = (containerView as? UICollectionView) ?? self.fw_collectionView else {
+        guard let collectionView = (containerView as? UICollectionView) ?? statisticalViewCellContainerView() else {
             return false
         }
         return collectionView.fw_statisticalBindExposure(containerView)
+    }
+    
+    open override func statisticalViewCellContainerView() -> UIView? {
+        return fw_collectionView
+    }
+    
+    open override func statisticalViewCellIndexPath() -> IndexPath? {
+        return fw_indexPath
     }
     
 }
@@ -709,16 +733,12 @@ public class StatisticalEvent: NSObject {
         StatisticalManager.shared.exposureUpdateCount += 1
         #endif
         
-        var indexPath: IndexPath?
         var exposure = fw_statisticalExposure
-        if let cell = self as? UITableViewCell {
-            let tableView = cell.fw_tableView
-            indexPath = tableView?.indexPath(for: cell)
-            exposure = exposure ?? tableView?.fw_statisticalExposure
-        } else if let cell = self as? UICollectionViewCell {
-            let collectionView = cell.fw_collectionView
-            indexPath = collectionView?.indexPath(for: cell)
-            exposure = exposure ?? collectionView?.fw_statisticalExposure
+        var indexPath: IndexPath?
+        let containerView = statisticalViewCellContainerView()
+        if let containerView = containerView {
+            exposure = exposure ?? containerView.fw_statisticalExposure
+            indexPath = statisticalViewCellIndexPath()
         }
         let identifier = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(String.fw_safeString(exposure?.name))-\(String.fw_safeString(exposure?.object))"
         
@@ -742,10 +762,8 @@ public class StatisticalEvent: NSObject {
             }
             
             let isTracked = fw_statisticalTrackExposure(indexPath: indexPath)
-            if !isTracked, let cell = self as? UITableViewCell {
-                cell.fw_tableView?.fw_statisticalTrackExposure(indexPath: indexPath)
-            } else if !isTracked, let cell = self as? UICollectionViewCell {
-                cell.fw_collectionView?.fw_statisticalTrackExposure(indexPath: indexPath)
+            if !isTracked, let containerView = containerView {
+                containerView.fw_statisticalTrackExposure(indexPath: indexPath)
             }
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
