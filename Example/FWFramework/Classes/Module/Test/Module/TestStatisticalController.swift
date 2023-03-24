@@ -133,6 +133,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func setupCollectionLayout() {
+        collectionView.backgroundColor = AppTheme.backgroundColor
         collectionView.fw.layoutChain.edges()
     }
     
@@ -147,17 +148,15 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             .size(CGSize(width: 100, height: 100))
         
         testView.fw.addTapGesture { [weak self] _ in
-            self?.testView.backgroundColor = UIColor.fw.randomColor
             self?.bannerView.makeScrollScroll(to: 0)
         }
         
         testButton.fw.addTouch { [weak self] _ in
-            self?.testButton.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
+            self?.bannerView.makeScrollScroll(to: 1)
         }
         
         testSwitch.fw.addBlock({ [weak self] _ in
             self?.testSwitch.thumbTintColor = UIColor.fw.randomColor
-            self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
         }, for: .valueChanged)
         
         self.bannerView.clickItemOperationBlock = { index in
@@ -176,7 +175,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         
         self.segmentedControl.indexChangeBlock = { [weak self] index in
-            self?.segmentedControl.selectionIndicatorBoxColor = UIColor.fw.randomColor
+            self?.bannerView.makeScrollScroll(to: 2)
         }
     }
     
@@ -296,13 +295,10 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default)
         cell.textLabel?.text = "\(indexPath.row)"
-        cell.contentView.backgroundColor = UIColor.fw.randomColor
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.contentView.backgroundColor = UIColor.fw.randomColor
         clickHandler(indexPath.row)
     }
     
@@ -313,7 +309,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestStatisticalCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
         cell.textLabel.text = "\(indexPath.row)"
-        cell.contentView.backgroundColor = UIColor.fw.randomColor
         cell.fw.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.fw.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
         configShieldView(cell.fw.statisticalExposure)
@@ -321,8 +316,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)
-        cell?.contentView.backgroundColor = UIColor.fw.randomColor
         clickHandler(indexPath.row)
     }
     
