@@ -10,6 +10,8 @@ import FWFramework
 
 class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol {
     
+    private var tableObject = "table"
+    
     lazy var shieldView: UIView = {
         let result = UIView()
         result.backgroundColor = AppTheme.tableColor
@@ -197,8 +199,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
                         self?.tableView.isHidden = false
                     }
                 } else if index == 2 {
-                    let object = self?.tableView.fw.statisticalExposure?.object.safeString == "table" ? "table2" : "table"
-                    self?.tableView.fw.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: object)
+                    let object = self?.tableObject == "table" ? "table2" : "table"
                     self?.tableView.reloadData()
                 } else {
                     let object = self?.fw.statisticalExposure?.object.safeString == "viewController" ? "viewController2" : "viewController"
@@ -255,7 +256,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         testView.fw.statisticalClick = StatisticalEvent(name: "click_view", object: "view")
         testButton.fw.statisticalClick = StatisticalEvent(name: "click_button", object: "button")
         testSwitch.fw.statisticalClick = StatisticalEvent(name: "click_switch", object: "switch")
-        tableView.fw.statisticalClick = StatisticalEvent(name: "click_tableView", object: "table")
         bannerView.fw.statisticalClick = StatisticalEvent(name: "click_banner", object: "banner")
         segmentedControl.fw.statisticalClick = StatisticalEvent(name: "click_segment", object: "segment")
         tagCollectionView.fw.statisticalClick = StatisticalEvent(name: "click_tag", object: "tag")
@@ -276,13 +276,6 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.thumbTintColor = event.isFinished ? .white : UIColor.fw.randomColor
         }
         configShieldView(testSwitch.fw.statisticalExposure)
-        tableView.fw.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: "table")
-        tableView.fw.statisticalExposureListener = { [weak self] event in
-            guard let indexPath = event.indexPath else { return }
-            let cell = self?.tableView.cellForRow(at: indexPath)
-            cell?.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.fw.randomColor
-        }
-        configShieldView(tableView.fw.statisticalExposure)
         bannerView.fw.statisticalExposure = StatisticalEvent(name: "exposure_banner", object: "banner")
         bannerView.fw.statisticalExposureListener = { [weak self] event in
             let index = "\(event.indexPath?.row ?? -1)"
@@ -332,6 +325,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default)
         cell.contentView.backgroundColor = AppTheme.cellColor
         cell.textLabel?.text = "\(indexPath.row)"
+        cell.fw.statisticalClick = StatisticalEvent(name: "click_tableView", object: tableObject)
+        cell.fw.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: tableObject)
+        cell.fw.statisticalExposureListener = { event in
+            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.fw.randomColor
+        }
+        configShieldView(tableView.fw.statisticalExposure)
         return cell
     }
     
