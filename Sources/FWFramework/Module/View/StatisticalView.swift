@@ -310,8 +310,8 @@ public class StatisticalEvent: NSObject {
     /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
     func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool
     
-    /// 可统计视图可见cells方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
-    func statisticalViewVisibleCells() -> [UIView]?
+    /// 可统计视图子视图列表方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    func statisticalViewChildViews() -> [UIView]?
     
     /// 可统计视图可见indexPaths方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
     func statisticalViewVisibleIndexPaths() -> [IndexPath]?
@@ -366,8 +366,8 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
-    /// 可统计视图可见cells方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
-    open func statisticalViewVisibleCells() -> [UIView]? {
+    /// 可统计视图子视图列表方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    open func statisticalViewChildViews() -> [UIView]? {
         return nil
     }
     
@@ -412,7 +412,7 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
-    open override func statisticalViewVisibleCells() -> [UIView]? {
+    open override func statisticalViewChildViews() -> [UIView]? {
         return subviews
     }
     
@@ -446,7 +446,7 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
-    open override func statisticalViewVisibleCells() -> [UIView]? {
+    open override func statisticalViewChildViews() -> [UIView]? {
         return subviews
     }
     
@@ -607,9 +607,9 @@ public class StatisticalEvent: NSObject {
         }
         
         @objc func exposureUpdate() {
-            if let visibleCells = view?.statisticalViewVisibleCells() {
-                visibleCells.forEach { cell in
-                    cell.fw_statisticalUpdateState()
+            if let childViews = view?.statisticalViewChildViews() {
+                childViews.forEach { childView in
+                    childView.fw_statisticalUpdateState()
                 }
             } else {
                 view?.fw_statisticalUpdateState()
@@ -771,9 +771,9 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
         
-        let visibleCells = statisticalViewVisibleCells() ?? subviews
-        visibleCells.forEach { subview in
-            subview.fw_statisticalUpdateExposure()
+        let childViews = statisticalViewChildViews() ?? subviews
+        childViews.forEach { childView in
+            childView.fw_statisticalUpdateExposure()
         }
     }
     
