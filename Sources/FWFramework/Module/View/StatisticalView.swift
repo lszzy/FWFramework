@@ -148,14 +148,14 @@ public class StatisticalManager: NSObject {
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         if isFinished {
-            if let exposureBegin = viewController?.fw_statisticalTarget.exposureBegin, exposureBegin > 0 {
-                duration = triggerTimestamp - exposureBegin
+            if let exposureBegin = viewController?.fw_statisticalTarget.exposureBegin {
+                duration = triggerTimestamp - exposureBegin.triggerTimestamp
                 totalDuration += duration
             }
             viewController?.fw_statisticalTarget.exposureDuration = totalDuration
-            viewController?.fw_statisticalTarget.exposureBegin = 0
+            viewController?.fw_statisticalTarget.exposureBegin = nil
         } else {
-            viewController?.fw_statisticalTarget.exposureBegin = triggerTimestamp
+            viewController?.fw_statisticalTarget.exposureBegin = event
         }
         let isBackground = UIApplication.shared.applicationState == .background
         let isTerminated = viewController?.fw_statisticalTarget.exposureTerminated ?? false
@@ -679,6 +679,12 @@ public class StatisticalEvent: NSObject {
         
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
+            
+            if StatisticalManager.shared.exposureTime,
+               let exposureBegin = fw_statisticalTarget.exposureBegin {
+                fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+            }
+            
             let isTracked = fw_statisticalTrackExposure(indexPath: indexPath)
             if !isTracked, let cell = self as? UITableViewCell {
                 cell.fw_tableView?.fw_statisticalTrackExposure(indexPath: indexPath)
@@ -687,6 +693,11 @@ public class StatisticalEvent: NSObject {
             }
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
+            
+            if StatisticalManager.shared.exposureTime,
+               let exposureBegin = fw_statisticalTarget.exposureBegin {
+                fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+            }
         }
     }
     
@@ -837,7 +848,7 @@ public class StatisticalEvent: NSObject {
         
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
-        var exposureBegin: TimeInterval = 0
+        var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
         deinit {
@@ -950,16 +961,17 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.exposureFully = true
             
             if StatisticalManager.shared.exposureTime,
-               fw_statisticalTarget.exposureBegin > 0 {
-                fw_statisticalTrackExposure(isFinished: true)
+               let exposureBegin = fw_statisticalTarget.exposureBegin {
+                fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
             }
+            
             fw_statisticalTrackExposure()
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
             
             if StatisticalManager.shared.exposureTime,
-               fw_statisticalTarget.exposureBegin > 0 {
-                fw_statisticalTrackExposure(isFinished: true)
+               let exposureBegin = fw_statisticalTarget.exposureBegin {
+                fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
             }
         }
     }
