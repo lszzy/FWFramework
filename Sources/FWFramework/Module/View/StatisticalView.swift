@@ -948,9 +948,19 @@ public class StatisticalEvent: NSObject {
         
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
+            
+            if StatisticalManager.shared.exposureTime,
+               fw_statisticalTarget.exposureBegin > 0 {
+                fw_statisticalTrackExposure(isFinished: true)
+            }
             fw_statisticalTrackExposure()
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
+            
+            if StatisticalManager.shared.exposureTime,
+               fw_statisticalTarget.exposureBegin > 0 {
+                fw_statisticalTrackExposure(isFinished: true)
+            }
         }
     }
     
