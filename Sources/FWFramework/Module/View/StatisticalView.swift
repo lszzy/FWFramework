@@ -212,13 +212,18 @@ public class StatisticalManager: NSObject {
             swizzleSignature: (@convention(block) (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            guard selfObject.superview != nil else { return }
             
-            if selfObject.fw_statisticalClick != nil {
-                selfObject.fw_statisticalBindClick()
-            }
-            if selfObject.fw_statisticalExposure != nil {
-                selfObject.fw_statisticalBindExposure()
+            if selfObject.superview == nil {
+                selfObject.fw_statisticalRemoveKvoObserver()
+            } else {
+                if selfObject.fw_statisticalClick != nil {
+                    selfObject.fw_statisticalBindClick()
+                }
+                if selfObject.fw_statisticalExposure != nil {
+                    selfObject.fw_statisticalBindExposure()
+                }
+                
+                selfObject.fw_statisticalAddKvoObserver()
             }
         }}
         
@@ -233,50 +238,6 @@ public class StatisticalManager: NSObject {
             if selfObject.fw_statisticalExposure != nil {
                 selfObject.fw_statisticalUpdateExposure()
             }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.frame),
-            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-        ) { store in { selfObject, frame in
-            store.original(selfObject, store.selector, frame)
-            
-            selfObject.fw_statisticalUpdateExposure()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.bounds),
-            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGRect) -> Void).self
-        ) { store in { selfObject, bounds in
-            store.original(selfObject, store.selector, bounds)
-            
-            selfObject.fw_statisticalUpdateExposure()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.isHidden),
-            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
-        ) { store in { selfObject, hidden in
-            store.original(selfObject, store.selector, hidden)
-            
-            selfObject.fw_statisticalUpdateExposure()
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.alpha),
-            methodSignature: (@convention(c) (UIView, Selector, CGFloat) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, CGFloat) -> Void).self
-        ) { store in { selfObject, alpha in
-            store.original(selfObject, store.selector, alpha)
-            
-            selfObject.fw_statisticalUpdateExposure()
         }}
     }
     
@@ -532,6 +493,9 @@ public class StatisticalEvent: NSObject {
         var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
+        static let exposureKeyPaths: [String] = ["alpha", "hidden", "layer.bounds", "layer.position"]
+        var exposureObserved = false
+        
         deinit {
             removeObserver()
         }
@@ -555,6 +519,12 @@ public class StatisticalEvent: NSObject {
             }
             if StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
+            }
+        }
+        
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+            if let keyPath = keyPath, StatisticalTarget.exposureKeyPaths.contains(keyPath) {
+                (object as? UIView)?.fw_statisticalUpdateExposure()
             }
         }
         
@@ -670,8 +640,9 @@ public class StatisticalEvent: NSObject {
         if !result {
             result = statisticalViewWillBindExposure(containerView)
             if result {
-                fw_statisticalTarget.addObserver()
                 fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+                fw_statisticalTarget.addObserver()
+                fw_statisticalAddKvoObserver()
                 
                 #if DEBUG
                 StatisticalManager.shared.exposureBindCount += 1
@@ -683,6 +654,9 @@ public class StatisticalEvent: NSObject {
         if (fw_statisticalExposure != nil && window != nil) ||
             StatisticalManager.shared.exposureTime {
             fw_statisticalUpdateExposure()
+        }
+        if fw_statisticalExposure == nil {
+            fw_statisticalRemoveKvoObserver()
         }
         return result
     }
@@ -712,6 +686,26 @@ public class StatisticalEvent: NSObject {
             target.view = self
             fw_setProperty(target, forName: "fw_statisticalTarget")
             return target
+        }
+    }
+    
+    fileprivate func fw_statisticalAddKvoObserver() {
+        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard !fw_statisticalTarget.exposureObserved else { return }
+        fw_statisticalTarget.exposureObserved = true
+        
+        for keyPath in StatisticalTarget.exposureKeyPaths {
+            addObserver(fw_statisticalTarget, forKeyPath: keyPath, options: [.new, .old], context: nil)
+        }
+    }
+    
+    fileprivate func fw_statisticalRemoveKvoObserver() {
+        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard fw_statisticalTarget.exposureObserved else { return }
+        fw_statisticalTarget.exposureObserved = false
+        
+        for keyPath in StatisticalTarget.exposureKeyPaths {
+            removeObserver(fw_statisticalTarget, forKeyPath: keyPath)
         }
     }
     
@@ -1019,8 +1013,8 @@ public class StatisticalEvent: NSObject {
     
     fileprivate func fw_statisticalBindExposure() {
         if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
-            fw_statisticalTarget.addObserver()
             fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+            fw_statisticalTarget.addObserver()
         }
         
         if fw_statisticalExposure != nil ||
