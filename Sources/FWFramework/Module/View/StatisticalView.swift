@@ -494,7 +494,7 @@ public class StatisticalEvent: NSObject {
         var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
-        private let exposureKeyPaths: [String] = ["alpha", "hidden", "layer.bounds", "layer.position"]
+        private let exposureKeyPaths: [String] = ["alpha", "hidden", "frame", "bounds"]
         
         deinit {
             removeObservers()
@@ -635,9 +635,13 @@ public class StatisticalEvent: NSObject {
             return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
         }
         set {
+            let oldValue = fw_statisticalExposure
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
             StatisticalManager.swizzleStatistical()
             fw_statisticalBindExposure(newValue?.containerView)
+            if oldValue != nil, newValue == nil {
+                fw_statisticalRemoveObservers()
+            }
         }
     }
     
@@ -667,9 +671,6 @@ public class StatisticalEvent: NSObject {
         if (fw_statisticalExposure != nil && window != nil) ||
             StatisticalManager.shared.exposureTime {
             fw_statisticalUpdateExposure()
-        }
-        if fw_statisticalExposure == nil {
-            fw_statisticalRemoveObservers()
         }
         return result
     }
@@ -984,8 +985,12 @@ public class StatisticalEvent: NSObject {
             return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
         }
         set {
+            let oldValue = fw_statisticalExposure
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
             fw_statisticalBindExposure()
+            if oldValue != nil, newValue == nil {
+                fw_statisticalTarget.removeObservers()
+            }
         }
     }
     
@@ -1030,9 +1035,6 @@ public class StatisticalEvent: NSObject {
         if fw_statisticalExposure != nil ||
             StatisticalManager.shared.exposureTime {
             fw_statisticalUpdateExposure()
-        }
-        if fw_statisticalExposure == nil {
-            fw_statisticalTarget.removeObservers()
         }
     }
     
