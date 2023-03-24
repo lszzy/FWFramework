@@ -695,12 +695,17 @@ public class StatisticalEvent: NSObject {
         #endif
         
         var indexPath: IndexPath?
+        var exposure = fw_statisticalExposure
         if let cell = self as? UITableViewCell {
-            indexPath = cell.fw_indexPath
+            let tableView = cell.fw_tableView
+            indexPath = tableView?.indexPath(for: cell)
+            exposure = exposure ?? tableView?.fw_statisticalExposure
         } else if let cell = self as? UICollectionViewCell {
-            indexPath = cell.fw_indexPath
+            let collectionView = cell.fw_collectionView
+            indexPath = collectionView?.indexPath(for: cell)
+            exposure = exposure ?? collectionView?.fw_statisticalExposure
         }
-        let identifier = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(String.fw_safeString(fw_statisticalExposure?.name))-\(String.fw_safeString(fw_statisticalExposure?.object))"
+        let identifier = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(String.fw_safeString(exposure?.name))-\(String.fw_safeString(exposure?.object))"
         
         let oldIdentifier = fw_statisticalTarget.exposureIdentifier
         let identifierChanged = !oldIdentifier.isEmpty && identifier != oldIdentifier
