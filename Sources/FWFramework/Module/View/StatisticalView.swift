@@ -214,7 +214,7 @@ public class StatisticalManager: NSObject {
             store.original(selfObject, store.selector)
             
             if selfObject.superview == nil {
-                selfObject.fw_statisticalRemoveKvoObserver()
+                selfObject.fw_statisticalRemoveObservers()
             } else {
                 if selfObject.fw_statisticalClick != nil {
                     selfObject.fw_statisticalBindClick()
@@ -223,7 +223,7 @@ public class StatisticalManager: NSObject {
                     selfObject.fw_statisticalBindExposure()
                 }
                 
-                selfObject.fw_statisticalAddKvoObserver()
+                selfObject.fw_statisticalAddObservers()
             }
         }}
         
@@ -487,20 +487,27 @@ public class StatisticalEvent: NSObject {
         var exposureFully = false
         var exposureIdentifier = ""
         var exposureState: StatisticalState = .none
+        var exposureObserved = false
         
         var exposureCounts: [String: Int] = [:]
         var exposureDurations: [String: TimeInterval] = [:]
         var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
-        static let exposureKeyPaths: [String] = ["alpha", "hidden", "layer.bounds", "layer.position"]
-        var exposureObserved = false
+        private let exposureKeyPaths: [String] = ["alpha", "hidden", "layer.bounds", "layer.position"]
         
         deinit {
-            removeObserver()
+            removeObservers()
         }
         
-        func addObserver() {
+        func addObservers() {
+            guard !exposureObserved else { return }
+            exposureObserved = true
+            
+            for keyPath in exposureKeyPaths {
+                view?.addObserver(self, forKeyPath: keyPath, options: [.new, .old], context: nil)
+            }
+            
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -511,7 +518,14 @@ public class StatisticalEvent: NSObject {
             }
         }
         
-        func removeObserver() {
+        func removeObservers() {
+            guard exposureObserved else { return }
+            exposureObserved = false
+            
+            for keyPath in exposureKeyPaths {
+                view?.removeObserver(self, forKeyPath: keyPath)
+            }
+            
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -523,7 +537,7 @@ public class StatisticalEvent: NSObject {
         }
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-            if let keyPath = keyPath, StatisticalTarget.exposureKeyPaths.contains(keyPath) {
+            if let keyPath = keyPath, exposureKeyPaths.contains(keyPath) {
                 (object as? UIView)?.fw_statisticalUpdateExposure()
             }
         }
@@ -641,8 +655,7 @@ public class StatisticalEvent: NSObject {
             result = statisticalViewWillBindExposure(containerView)
             if result {
                 fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
-                fw_statisticalTarget.addObserver()
-                fw_statisticalAddKvoObserver()
+                fw_statisticalAddObservers()
                 
                 #if DEBUG
                 StatisticalManager.shared.exposureBindCount += 1
@@ -656,7 +669,7 @@ public class StatisticalEvent: NSObject {
             fw_statisticalUpdateExposure()
         }
         if fw_statisticalExposure == nil {
-            fw_statisticalRemoveKvoObserver()
+            fw_statisticalRemoveObservers()
         }
         return result
     }
@@ -689,24 +702,14 @@ public class StatisticalEvent: NSObject {
         }
     }
     
-    fileprivate func fw_statisticalAddKvoObserver() {
+    fileprivate func fw_statisticalAddObservers() {
         guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        guard !fw_statisticalTarget.exposureObserved else { return }
-        fw_statisticalTarget.exposureObserved = true
-        
-        for keyPath in StatisticalTarget.exposureKeyPaths {
-            addObserver(fw_statisticalTarget, forKeyPath: keyPath, options: [.new, .old], context: nil)
-        }
+        fw_statisticalTarget.addObservers()
     }
     
-    fileprivate func fw_statisticalRemoveKvoObserver() {
+    fileprivate func fw_statisticalRemoveObservers() {
         guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        guard fw_statisticalTarget.exposureObserved else { return }
-        fw_statisticalTarget.exposureObserved = false
-        
-        for keyPath in StatisticalTarget.exposureKeyPaths {
-            removeObserver(fw_statisticalTarget, forKeyPath: keyPath)
-        }
+        fw_statisticalTarget.removeObservers()
     }
     
     fileprivate func fw_statisticalUpdateExposure() {
@@ -913,6 +916,7 @@ public class StatisticalEvent: NSObject {
         var exposureFully = false
         var exposureIdentifier = ""
         var exposureState: UIView.StatisticalState = .none
+        var exposureObserved = false
         
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
@@ -920,10 +924,13 @@ public class StatisticalEvent: NSObject {
         var exposureTerminated = false
         
         deinit {
-            removeObserver()
+            removeObservers()
         }
         
-        func addObserver() {
+        func addObservers() {
+            guard !exposureObserved else { return }
+            exposureObserved = true
+            
             viewController?.fw_observeLifecycleState({ vc, state in
                 if state == .didAppear {
                     vc.fw_statisticalUpdateExposure()
@@ -942,7 +949,10 @@ public class StatisticalEvent: NSObject {
             }
         }
         
-        func removeObserver() {
+        func removeObservers() {
+            guard exposureObserved else { return }
+            exposureObserved = false
+            
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -1014,12 +1024,15 @@ public class StatisticalEvent: NSObject {
     fileprivate func fw_statisticalBindExposure() {
         if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
             fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
-            fw_statisticalTarget.addObserver()
+            fw_statisticalTarget.addObservers()
         }
         
         if fw_statisticalExposure != nil ||
             StatisticalManager.shared.exposureTime {
             fw_statisticalUpdateExposure()
+        }
+        if fw_statisticalExposure == nil {
+            fw_statisticalTarget.removeObservers()
         }
     }
     
