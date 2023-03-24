@@ -310,10 +310,16 @@ public class StatisticalEvent: NSObject {
     /// 可统计视图绑定曝光事件方法，返回绑定结果，子类可重写，勿直接调用
     func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool
     
-    /// 可统计视图容器视图方法，常用于cell，子类可重写
+    /// 可统计视图可见cells方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    func statisticalViewVisibleCells() -> [UIView]?
+    
+    /// 可统计视图可见indexPaths方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    func statisticalViewVisibleIndexPaths() -> [IndexPath]?
+    
+    /// 可统计视图容器视图方法，返回nil时不处理，一般cell实现，子类可重写
     func statisticalViewContainerView() -> UIView?
     
-    /// 可统计视图索引位置方法，常用于cell，子类可重写
+    /// 可统计视图索引位置方法，返回nil时不处理，一般cell(批量曝光)和container(单曝光)实现，子类可重写
     func statisticalViewIndexPath() -> IndexPath?
     
 }
@@ -360,12 +366,22 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
-    /// 可统计视图Cell容器视图方法，子类可重写
+    /// 可统计视图可见cells方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    open func statisticalViewVisibleCells() -> [UIView]? {
+        return nil
+    }
+    
+    /// 可统计视图可见indexPaths方法，返回nil时不处理，一般container实现(批量曝光)，子类可重写
+    open func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
+        return nil
+    }
+    
+    /// 可统计视图容器视图方法，返回nil时不处理，一般cell实现，子类可重写
     open func statisticalViewContainerView() -> UIView? {
         return nil
     }
     
-    /// 可统计视图Cell索引位置方法，子类可重写
+    /// 可统计视图索引位置方法，返回nil时不处理，一般cell(批量曝光)和container(单曝光)实现，子类可重写
     open func statisticalViewIndexPath() -> IndexPath? {
         return nil
     }
@@ -396,6 +412,14 @@ public class StatisticalEvent: NSObject {
         return true
     }
     
+    open override func statisticalViewVisibleCells() -> [UIView]? {
+        return subviews
+    }
+    
+    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
+        return indexPathsForVisibleRows ?? []
+    }
+    
 }
 
 @_spi(FW) extension UICollectionView {
@@ -420,6 +444,14 @@ public class StatisticalEvent: NSObject {
             }
         }}
         return true
+    }
+    
+    open override func statisticalViewVisibleCells() -> [UIView]? {
+        return subviews
+    }
+    
+    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
+        return indexPathsForVisibleItems
     }
     
 }
@@ -575,8 +607,8 @@ public class StatisticalEvent: NSObject {
         }
         
         @objc func exposureUpdate() {
-            if let view = view, (view is UITableView || view is UICollectionView) {
-                view.subviews.forEach { cell in
+            if let visibleCells = view?.statisticalViewVisibleCells() {
+                visibleCells.forEach { cell in
                     cell.fw_statisticalUpdateState()
                 }
             } else {
@@ -739,7 +771,8 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
         
-        subviews.forEach { subview in
+        let visibleCells = statisticalViewVisibleCells() ?? subviews
+        visibleCells.forEach { subview in
             subview.fw_statisticalUpdateExposure()
         }
     }

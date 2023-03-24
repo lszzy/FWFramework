@@ -1002,6 +1002,11 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     return YES;
 }
 
+- (NSArray<UIView *> *)statisticalViewVisibleCells
+{
+    return self.mainView.statisticalViewVisibleCells;
+}
+
 - (NSIndexPath *)statisticalViewIndexPath
 {
     NSInteger itemIndex = [_flowLayout currentPage];
