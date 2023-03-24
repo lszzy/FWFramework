@@ -250,7 +250,7 @@
 
 NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
-@interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate, __FWStatisticalDelegate>
+@interface __FWBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, weak) UICollectionView *mainView;
 @property (nonatomic, weak) __FWBannerViewFlowLayout *flowLayout;
@@ -259,7 +259,6 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 @property (nonatomic, assign) NSInteger totalItemsCount;
 @property (nonatomic, weak) UIControl *pageControl;
 @property (nonatomic, assign) NSInteger pageControlIndex;
-@property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
 
 @end
 
@@ -958,7 +957,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     if (!self.imagePathsGroup.count) return; // 解决清除timer时偶尔会出现的问题
     NSInteger itemIndex = [_flowLayout currentPage];
     // 快速滚动时不计曝光次数
-    [self statisticalExposureDidChange];
+    [self __fw_statisticalCheckExposure];
     
     if (self.infiniteLoop) {
         if (itemIndex == _totalItemsCount - 1) {
@@ -988,7 +987,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     [self scrollToIndex:currentIndex animated:animated];
     
     if (!animated && currentIndex != previousIndex) {
-        [self statisticalExposureDidChange];
+        [self __fw_statisticalCheckExposure];
     }
     
     if (self.autoScroll) {
@@ -1003,29 +1002,18 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     return YES;
 }
 
-#pragma mark - __FWStatisticalDelegate
-
-- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback
+- (NSIndexPath *)statisticalViewIndexPath
 {
-    self.exposureCallback = callback;
-    
-    [self statisticalExposureDidChange];
-}
-
-- (void)statisticalExposureDidChange
-{
-    if (!self.exposureCallback) return;
-    
     NSInteger itemIndex = [_flowLayout currentPage];
-    UICollectionViewCell *cell = [self.mainView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-    self.exposureCallback(cell, [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0], 0);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self pageControlIndexWithCurrentCellIndex:itemIndex] inSection:0];
+    return indexPath;
 }
 
 @end
 
 #pragma mark - __FWBannerViewCell
 
-@interface __FWBannerViewCell () <__FWStatisticalDelegate>
+@interface __FWBannerViewCell ()
 
 @end
 
@@ -1130,9 +1118,14 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     return YES;
 }
 
-#pragma mark - __FWStatisticalDelegate
+- (BOOL)statisticalViewWillBindExposure:(UIView *)containerView
+{
+    UIView *bannerView = [containerView isKindOfClass:[__FWBannerView class]] ? containerView : [self statisticalViewContainerView];
+    if (!bannerView) return NO;
+    return [bannerView __fw_statisticalBindExposure:containerView];
+}
 
-- (UIView *)statisticalCellProxyView
+- (UIView *)statisticalViewContainerView
 {
     UIView *superview = self.superview;
     while (superview) {
@@ -1142,6 +1135,16 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
         superview = superview.superview;
     }
     return nil;
+}
+
+- (NSIndexPath *)statisticalViewIndexPath
+{
+    __FWBannerView *bannerView = (__FWBannerView *)[self statisticalViewContainerView];
+    if (!bannerView) return nil;
+    NSIndexPath *cellIndexPath = [bannerView.mainView indexPathForCell:self];
+    if (!cellIndexPath) return nil;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[bannerView pageControlIndexWithCurrentCellIndex:cellIndexPath.row] inSection:0];
+    return indexPath;
 }
 
 @end

@@ -445,7 +445,7 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewIndexPath() -> IndexPath? {
-        return fw_indexPath
+        return fw_tableView?.indexPath(for: self)
     }
     
 }
@@ -471,7 +471,7 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewIndexPath() -> IndexPath? {
-        return fw_indexPath
+        return fw_collectionView?.indexPath(for: self)
     }
     
 }
@@ -671,6 +671,7 @@ public class StatisticalEvent: NSObject {
     }
     
     /// 手工绑定曝光事件统计，可指定容器视图，自动绑定失败时可手工调用
+    @objc(__fw_statisticalBindExposure:)
     @discardableResult
     public func fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
         var result = fw_propertyBool(forName: "fw_statisticalBindExposure")
@@ -695,7 +696,6 @@ public class StatisticalEvent: NSObject {
     }
     
     /// 触发视图曝光事件统计，仅绑定statisticalExposure后生效
-    @objc(__fw_statisticalTrackExposureWithIndexPath:isFinished:event:)
     @discardableResult
     public func fw_statisticalTrackExposure(indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent? = nil) -> Bool {
         guard let event = event ?? fw_statisticalExposure else { return false }
@@ -704,6 +704,7 @@ public class StatisticalEvent: NSObject {
     }
     
     /// 检查并更新视图曝光状态，用于自定义场景
+    @objc(__fw_statisticalCheckExposure)
     public func fw_statisticalCheckExposure() {
         fw_statisticalUpdateExposure()
     }
