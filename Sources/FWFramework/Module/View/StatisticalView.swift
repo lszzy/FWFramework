@@ -848,16 +848,16 @@ public class StatisticalEvent: NSObject {
             viewController?.fw_observeLifecycleState({ vc, state in
                 if state == .didAppear {
                     vc.fw_statisticalUpdateExposure()
-                } else if StatisticalManager.shared.exposureTime, state == .didDisappear {
+                } else if state == .didDisappear {
                     vc.fw_statisticalUpdateExposure()
                 }
             })
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
             }
             if StatisticalManager.shared.exposureTime {
-                NotificationCenter.default.addObserver(self, selector: #selector(self.appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
                 NotificationCenter.default.addObserver(self, selector: #selector(self.appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
             }
         }
@@ -866,9 +866,9 @@ public class StatisticalEvent: NSObject {
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
                 NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+                NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
             }
             if StatisticalManager.shared.exposureTime {
-                NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
                 NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
             }
         }
@@ -955,7 +955,12 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate var fw_statisticalExposureState: UIView.StatisticalState {
-        if !fw_isVisible || fw_lifecycleState != .didAppear {
+        if !fw_isVisible {
+            return .none
+        }
+        
+        let lifecycleStates: [ViewControllerLifecycleState] = [.didLayoutSubviews, .didAppear]
+        if !lifecycleStates.contains(fw_lifecycleState) {
             return .none
         }
         
