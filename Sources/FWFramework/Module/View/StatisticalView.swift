@@ -524,13 +524,13 @@ public class StatisticalEvent: NSObject {
         
         var exposureFully = false
         var exposureIdentifier = ""
-        var exposureIndexPaths: [IndexPath] = []
         var exposureState: StatisticalState = .none
         var exposureObserved = false
         
         var exposureCounts: [String: Int] = [:]
         var exposureDurations: [String: TimeInterval] = [:]
         var exposureBegin: StatisticalEvent?
+        var exposureIndexPaths: [String: StatisticalEvent] = [:]
         var exposureTerminated = false
         
         deinit {
