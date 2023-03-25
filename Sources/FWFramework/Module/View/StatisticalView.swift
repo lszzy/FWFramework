@@ -827,9 +827,12 @@ public class StatisticalEvent: NSObject {
             if isVisibleCells {
                 
             } else {
-                if StatisticalManager.shared.exposureTime,
-                   let exposureBegin = fw_statisticalTarget.exposureBegin {
-                    fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                if let exposureBegin = fw_statisticalTarget.exposureBegin {
+                    if StatisticalManager.shared.exposureTime {
+                        fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                    } else {
+                        fw_statisticalTarget.exposureBegin = nil
+                    }
                 }
                 
                 fw_statisticalTrackExposure(indexPath: indexPath, event: event)
@@ -838,11 +841,23 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.exposureFully = false
             
             if isVisibleCells {
-                
+                if !fw_statisticalTarget.exposureBegins.isEmpty {
+                    if StatisticalManager.shared.exposureTime {
+                        let exposureBegins = fw_statisticalTarget.exposureBegins
+                        for (_, exposureBegin) in exposureBegins {
+                            fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                        }
+                    } else {
+                        fw_statisticalTarget.exposureBegins.removeAll()
+                    }
+                }
             } else {
-                if StatisticalManager.shared.exposureTime,
-                   let exposureBegin = fw_statisticalTarget.exposureBegin {
-                    fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                if let exposureBegin = fw_statisticalTarget.exposureBegin {
+                    if StatisticalManager.shared.exposureTime {
+                        fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                    } else {
+                        fw_statisticalTarget.exposureBegin = nil
+                    }
                 }
             }
         }
