@@ -179,6 +179,9 @@ public class StatisticalManager: NSObject {
     // MARK: - Private
     /// 内部方法，处理事件
     private func handleEvent(_ event: StatisticalEvent) {
+        if let eventFormatter = event.eventFormatter {
+            event.userInfo = eventFormatter(event)
+        }
         if event.isExposure {
             if event.view != nil {
                 event.view?.fw_statisticalExposureListener?(event)
@@ -250,11 +253,11 @@ public class StatisticalManager: NSObject {
 public class StatisticalEvent: NSObject {
     
     /// 事件绑定名称
-    public private(set) var name: String = ""
+    public fileprivate(set) var name: String = ""
     /// 事件绑定对象
-    public private(set) var object: Any?
+    public fileprivate(set) var object: Any?
     /// 事件绑定信息
-    public private(set) var userInfo: [AnyHashable: Any]?
+    public fileprivate(set) var userInfo: [AnyHashable: Any]?
     
     /// 自定义曝光容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
@@ -268,6 +271,8 @@ public class StatisticalEvent: NSObject {
     public var shieldView: ((UIView) -> UIView?)?
     /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
     public var exposureBlock: ((Any) -> Bool)?
+    /// 格式化事件句柄，返回新userInfo替换原数据，用于格式化cell数据等，默认nil
+    public var eventFormatter: ((StatisticalEvent) -> [AnyHashable: Any]?)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
