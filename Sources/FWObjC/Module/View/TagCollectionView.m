@@ -6,7 +6,6 @@
 //
 
 #import "TagCollectionView.h"
-#import "Bridge.h"
 
 #if FWMacroSPM
 
@@ -16,13 +15,11 @@
 
 #endif
 
-@interface __FWTagCollectionView () <__FWStatisticalDelegate>
+@interface __FWTagCollectionView ()
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, assign) BOOL needsLayoutTagViews;
 @property (nonatomic, assign) NSUInteger actualNumberOfLines;
-@property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
-@property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 @end
 
 @implementation __FWTagCollectionView
@@ -93,7 +90,7 @@
     [self setNeedsLayoutTagViews];
     [self layoutTagViews];
     
-    [self statisticalExposureDidChange];
+    [self __fw_statisticalCheckExposure];
 }
 
 - (NSInteger)indexOfTagAt:(CGPoint)point {
@@ -510,27 +507,13 @@
     return YES;
 }
 
-#pragma mark - __FWStatisticalDelegate
-
-- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
-    self.exposureCallback = callback;
-    
-    [self statisticalExposureDidChange];
-}
-
-- (void)statisticalExposureDidChange {
-    if (!self.exposureCallback) return;
-    
-    // Calculate current exposure indexes
-    NSMutableArray *exposureIndexes = [NSMutableArray new];
-    NSArray *previousIndexes = self.exposureIndexes;
+- (NSArray<NSIndexPath *> *)statisticalViewVisibleIndexPaths
+{
+    NSMutableArray<NSIndexPath *> *indexPaths = [NSMutableArray new];
     [_containerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView *obj, NSUInteger idx, BOOL *stop) {
-        [exposureIndexes addObject:@(obj.hash)];
-        if (![previousIndexes containsObject:@(obj.hash)]) {
-            self.exposureCallback(nil, [NSIndexPath indexPathForRow:idx inSection:0], 0);
-        }
+        [indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
     }];
-    self.exposureIndexes = [exposureIndexes copy];
+    return indexPaths;
 }
 
 @end
@@ -838,7 +821,7 @@
 
 #pragma mark - __FWTextTagCollectionView
 
-@interface __FWTextTagCollectionView () <__FWTagCollectionViewDataSource, __FWTagCollectionViewDelegate, __FWStatisticalDelegate>
+@interface __FWTextTagCollectionView () <__FWTagCollectionViewDataSource, __FWTagCollectionViewDelegate>
 @property (strong, nonatomic) NSMutableArray <__FWTextTagLabel *> *tagLabels;
 @property (strong, nonatomic) __FWTagCollectionView *tagCollectionView;
 @end
@@ -1311,10 +1294,9 @@
     return YES;
 }
 
-#pragma mark - __FWStatisticalDelegate
-
-- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
-    [self.tagCollectionView statisticalExposureWithCallback:callback];
+- (NSArray<NSIndexPath *> *)statisticalViewVisibleIndexPaths
+{
+    return [self.tagCollectionView statisticalViewVisibleIndexPaths];
 }
 
 @end

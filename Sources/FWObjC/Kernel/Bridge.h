@@ -240,22 +240,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWStatisticalDelegate
-
-/// 统计曝光回调block，参数cell为表格子cell，indexPath为表格子cell所在位置，duration为曝光时长(0表示开始)
-typedef void (^__FWStatisticalExposureCallback)(__kindof UIView * _Nullable cell, NSIndexPath * _Nullable indexPath, NSTimeInterval duration) NS_SWIFT_NAME(StatisticalExposureCallback);
-
-/// 自定义统计实现代理
-NS_SWIFT_NAME(StatisticalDelegate)
-@protocol __FWStatisticalDelegate <NSObject>
-@optional
-
-/// 自定义曝光事件统计方式(多次)，当视图绑定曝光、完全曝光时会调用，曝光触发时必须调用callback。参数cell为表格子cell，indexPath为表格子cell所在位置，duration为曝光时长(0表示开始)
-- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback;
-
-/// 自定义cell事件代理视图，仅cell生效。默认为所在tableView|collectionView，如果不同，实现此方法即可
-- (nullable UIView *)statisticalCellProxyView;
-
-@end
-
 NS_ASSUME_NONNULL_END

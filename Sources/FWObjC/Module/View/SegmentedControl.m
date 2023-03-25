@@ -6,7 +6,6 @@
 //
 
 #import "SegmentedControl.h"
-#import "Bridge.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
 
@@ -32,7 +31,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 @interface __FWSegmentedScrollView : UIScrollView
 @end
 
-@interface __FWSegmentedControl () <UIScrollViewDelegate, __FWAccessibilityDelegate, __FWStatisticalDelegate>
+@interface __FWSegmentedControl () <UIScrollViewDelegate, __FWAccessibilityDelegate>
 
 @property (nonatomic, strong) CALayer *selectionIndicatorStripLayer;
 @property (nonatomic, strong) CALayer *selectionIndicatorBoxLayer;
@@ -42,9 +41,6 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 @property (nonatomic, strong) __FWSegmentedScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *accessibilityElements;
 @property (nonatomic, strong) NSMutableArray *titleBackgroundLayers;
-
-@property (nonatomic, copy) __FWStatisticalExposureCallback exposureCallback;
-@property (nonatomic, copy) NSArray<NSNumber *> *exposureIndexes;
 
 @end
 
@@ -1021,7 +1017,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     [self.scrollView scrollRectToVisible:rectToScrollTo animated:animated];
     
     if (!animated) {
-        [self statisticalExposureDidChange];
+        [self __fw_statisticalCheckExposure];
     }
 }
 
@@ -1166,16 +1162,16 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (!decelerate) {
-        [self statisticalExposureDidChange];
+        [self __fw_statisticalCheckExposure];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    [self statisticalExposureDidChange];
+    [self __fw_statisticalCheckExposure];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self statisticalExposureDidChange];
+    [self __fw_statisticalCheckExposure];
 }
 
 #pragma mark - __FWAccessibilityDelegate
@@ -1216,17 +1212,8 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     return YES;
 }
 
-#pragma mark - __FWStatisticalDelegate
-
-- (void)statisticalExposureWithCallback:(__FWStatisticalExposureCallback)callback {
-    self.exposureCallback = callback;
-    
-    [self statisticalExposureDidChange];
-}
-
-- (void)statisticalExposureDidChange {
-    if (!self.exposureCallback) return;
-    
+- (NSArray<NSIndexPath *> *)statisticalViewVisibleIndexPaths
+{
     CGFloat visibleMin = self.scrollView.contentOffset.x;
     CGFloat visibleMax = visibleMin + self.scrollView.frame.size.width;
     NSInteger sectionCount = 0;
@@ -1240,22 +1227,17 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
         sectionCount = self.sectionImages.count;
     }
     
-    // Calculate current exposure indexes, including segmentEdgeInset
-    NSMutableArray *exposureIndexes = [NSMutableArray new];
-    NSArray *previousIndexes = self.exposureIndexes;
+    NSMutableArray<NSIndexPath *> *indexPaths = [NSMutableArray new];
     CGFloat currentMin = self.contentEdgeInset.left;
     for (NSInteger i = 0; i < sectionCount; i++) {
         CGFloat currentMax = currentMin + (dynamicWidth ? self.segmentWidthsArray[i].floatValue : self.segmentWidth);
         if (currentMin > visibleMax) break;
         if (currentMin >= visibleMin && currentMax <= visibleMax) {
-            [exposureIndexes addObject:@(i)];
-            if (![previousIndexes containsObject:@(i)]) {
-                self.exposureCallback(nil, [NSIndexPath indexPathForRow:i inSection:0], 0);
-            }
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
         currentMin = currentMax;
     }
-    self.exposureIndexes = [exposureIndexes copy];
+    return indexPaths;
 }
 
 @end
