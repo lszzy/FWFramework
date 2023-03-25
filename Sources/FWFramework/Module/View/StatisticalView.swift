@@ -615,7 +615,8 @@ public class StatisticalEvent: NSObject {
         }
         
         @objc func exposureUpdate() {
-            if let childViews = view?.statisticalViewChildViews() {
+            if view?.statisticalViewVisibleIndexPaths() == nil,
+               let childViews = view?.statisticalViewChildViews() {
                 childViews.forEach { childView in
                     childView.fw_statisticalCheckState()
                 }
@@ -753,9 +754,11 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
         }
         
-        let childViews = statisticalViewChildViews() ?? subviews
-        childViews.forEach { childView in
-            childView.fw_statisticalCheckExposure()
+        if statisticalViewVisibleIndexPaths() == nil {
+            let childViews = statisticalViewChildViews() ?? subviews
+            childViews.forEach { childView in
+                childView.fw_statisticalCheckExposure()
+            }
         }
     }
     
