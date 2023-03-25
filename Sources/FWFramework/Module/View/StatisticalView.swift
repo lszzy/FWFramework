@@ -51,6 +51,8 @@ public class StatisticalManager: NSObject {
     public var exposureIgnoredBars = true
     /// 应用回到前台时是否重新计算曝光，默认true
     public var exposureBecomeActive = true
+    /// 计算曝光时是否检测可见cells变化，默认false
+    public var exposureVisibleCells = false
     
     #if DEBUG
     /// 调试绑定总次数
@@ -236,7 +238,7 @@ public class StatisticalManager: NSObject {
             store.original(selfObject, store.selector)
             
             if selfObject.fw_statisticalExposure != nil {
-                selfObject.fw_statisticalUpdateExposure()
+                selfObject.fw_statisticalCheckExposure()
             }
         }}
     }
@@ -417,7 +419,10 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        return indexPathsForVisibleRows ?? []
+        if StatisticalManager.shared.exposureVisibleCells {
+            return indexPathsForVisibleRows ?? []
+        }
+        return nil
     }
     
 }
@@ -451,7 +456,10 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        return indexPathsForVisibleItems
+        if StatisticalManager.shared.exposureVisibleCells {
+            return indexPathsForVisibleItems
+        }
+        return nil
     }
     
 }
@@ -589,30 +597,30 @@ public class StatisticalEvent: NSObject {
             }
             
             if valueChanged {
-                (object as? UIView)?.fw_statisticalUpdateExposure()
+                (object as? UIView)?.fw_statisticalCheckExposure()
             }
         }
         
         @objc func appBecomeActive() {
-            view?.fw_statisticalUpdateExposure()
+            view?.fw_statisticalCheckExposure()
         }
         
         @objc func appEnterBackground() {
-            view?.fw_statisticalUpdateExposure()
+            view?.fw_statisticalCheckExposure()
         }
         
         @objc func appWillTerminate() {
             exposureTerminated = true
-            view?.fw_statisticalUpdateExposure()
+            view?.fw_statisticalCheckExposure()
         }
         
         @objc func exposureUpdate() {
             if let childViews = view?.statisticalViewChildViews() {
                 childViews.forEach { childView in
-                    childView.fw_statisticalUpdateState()
+                    childView.fw_statisticalCheckState()
                 }
             } else {
-                view?.fw_statisticalUpdateState()
+                view?.fw_statisticalCheckState()
             }
         }
     }
@@ -722,7 +730,7 @@ public class StatisticalEvent: NSObject {
         
         if (fw_statisticalExposure != nil && window != nil) ||
             StatisticalManager.shared.exposureTime {
-            fw_statisticalUpdateExposure()
+            fw_statisticalCheckExposure()
         }
         return result
     }
@@ -738,7 +746,17 @@ public class StatisticalEvent: NSObject {
     /// 检查并更新视图曝光状态，用于自定义场景
     @objc(__fw_statisticalCheckExposure)
     public func fw_statisticalCheckExposure() {
-        fw_statisticalUpdateExposure()
+        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        
+        if fw_statisticalExposure != nil {
+            NSObject.cancelPreviousPerformRequests(withTarget: fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureUpdate), object: nil)
+            fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
+        }
+        
+        let childViews = statisticalViewChildViews() ?? subviews
+        childViews.forEach { childView in
+            childView.fw_statisticalCheckExposure()
+        }
     }
     
     // MARK: - Private
@@ -763,21 +781,7 @@ public class StatisticalEvent: NSObject {
         fw_statisticalTarget.removeObservers()
     }
     
-    fileprivate func fw_statisticalUpdateExposure() {
-        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
-        
-        if fw_statisticalExposure != nil {
-            NSObject.cancelPreviousPerformRequests(withTarget: fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureUpdate), object: nil)
-            fw_statisticalTarget.perform(#selector(StatisticalTarget.exposureUpdate), with: nil, afterDelay: 0, inModes: [StatisticalManager.shared.runLoopMode])
-        }
-        
-        let childViews = statisticalViewChildViews() ?? subviews
-        childViews.forEach { childView in
-            childView.fw_statisticalUpdateExposure()
-        }
-    }
-    
-    fileprivate func fw_statisticalUpdateState() {
+    fileprivate func fw_statisticalCheckState() {
         #if DEBUG
         StatisticalManager.shared.exposureUpdateCount += 1
         #endif
@@ -977,9 +981,9 @@ public class StatisticalEvent: NSObject {
             
             viewController?.fw_observeLifecycleState({ vc, state in
                 if state == .didAppear {
-                    vc.fw_statisticalUpdateExposure()
+                    vc.fw_statisticalCheckExposure()
                 } else if state == .didDisappear {
-                    vc.fw_statisticalUpdateExposure()
+                    vc.fw_statisticalCheckExposure()
                 }
             })
             
@@ -1008,16 +1012,16 @@ public class StatisticalEvent: NSObject {
         }
         
         @objc func appBecomeActive() {
-            viewController?.fw_statisticalUpdateExposure()
+            viewController?.fw_statisticalCheckExposure()
         }
         
         @objc func appEnterBackground() {
-            viewController?.fw_statisticalUpdateExposure()
+            viewController?.fw_statisticalCheckExposure()
         }
         
         @objc func appWillTerminate() {
             exposureTerminated = true
-            viewController?.fw_statisticalUpdateExposure()
+            viewController?.fw_statisticalCheckExposure()
         }
     }
     
@@ -1053,34 +1057,6 @@ public class StatisticalEvent: NSObject {
     
     /// 检查并更新控制器曝光状态，用于自定义场景
     public func fw_statisticalCheckExposure() {
-        fw_statisticalUpdateExposure()
-    }
-    
-    // MARK: - Private
-    fileprivate var fw_statisticalTarget: StatisticalTarget {
-        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
-            return target
-        } else {
-            let target = StatisticalTarget()
-            target.viewController = self
-            fw_setProperty(target, forName: "fw_statisticalTarget")
-            return target
-        }
-    }
-    
-    fileprivate func fw_statisticalBindExposure() {
-        if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
-            fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
-            fw_statisticalTarget.addObservers()
-        }
-        
-        if fw_statisticalExposure != nil ||
-            StatisticalManager.shared.exposureTime {
-            fw_statisticalUpdateExposure()
-        }
-    }
-    
-    fileprivate func fw_statisticalUpdateExposure() {
         guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
         
         let identifier = "\(String.fw_safeString(fw_statisticalExposure?.name))-\(String.fw_safeString(fw_statisticalExposure?.object))"
@@ -1111,6 +1087,30 @@ public class StatisticalEvent: NSObject {
                let exposureBegin = fw_statisticalTarget.exposureBegin {
                 fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
             }
+        }
+    }
+    
+    // MARK: - Private
+    fileprivate var fw_statisticalTarget: StatisticalTarget {
+        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+            return target
+        } else {
+            let target = StatisticalTarget()
+            target.viewController = self
+            fw_setProperty(target, forName: "fw_statisticalTarget")
+            return target
+        }
+    }
+    
+    fileprivate func fw_statisticalBindExposure() {
+        if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
+            fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+            fw_statisticalTarget.addObservers()
+        }
+        
+        if fw_statisticalExposure != nil ||
+            StatisticalManager.shared.exposureTime {
+            fw_statisticalCheckExposure()
         }
     }
     
