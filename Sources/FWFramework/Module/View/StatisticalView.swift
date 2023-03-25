@@ -800,8 +800,10 @@ public class StatisticalEvent: NSObject {
         var identifier: String = ""
         if let visibleIndexPaths = statisticalViewVisibleIndexPaths() {
             isVisibleCells = true
-            indexPaths = visibleIndexPaths
-            
+            indexPaths = visibleIndexPaths.sorted(by: { ip1, ip2 in
+                return ip1.section < ip2.section || ip1.row < ip2.row
+            })
+            identifier = StatisticalManager.statisticalIdentifier(event: event, indexPaths: indexPaths)
         } else {
             indexPath = statisticalViewIndexPath()
             event = event ?? statisticalViewContainerView()?.fw_statisticalExposure
