@@ -54,13 +54,6 @@ public class StatisticalManager: NSObject {
     /// 计算曝光时是否检测可见cells变化，默认false
     public var exposureVisibleCells = false
     
-    #if DEBUG
-    /// 调试绑定总次数
-    public var exposureBindCount: Int = 0
-    /// 调试更新总次数
-    public var exposureUpdateCount: Int = 0
-    #endif
-    
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
     // MARK: - Public
@@ -531,6 +524,7 @@ public class StatisticalEvent: NSObject {
         
         var exposureFully = false
         var exposureIdentifier = ""
+        var exposureIndexPaths: [IndexPath] = []
         var exposureState: StatisticalState = .none
         var exposureObserved = false
         
@@ -726,10 +720,6 @@ public class StatisticalEvent: NSObject {
             if result {
                 fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
                 fw_statisticalAddObservers()
-                
-                #if DEBUG
-                StatisticalManager.shared.exposureBindCount += 1
-                #endif
             }
         }
         guard result else { return false }
@@ -790,10 +780,6 @@ public class StatisticalEvent: NSObject {
     }
     
     fileprivate func fw_statisticalCheckState() {
-        #if DEBUG
-        StatisticalManager.shared.exposureUpdateCount += 1
-        #endif
-        
         let indexPath = statisticalViewIndexPath()
         let event = fw_statisticalExposure ?? statisticalViewContainerView()?.fw_statisticalExposure
         let identifier = "\(indexPath?.section ?? -1).\(indexPath?.row ?? -1)-\(String.fw_safeString(event?.name))-\(String.fw_safeString(event?.object))"
