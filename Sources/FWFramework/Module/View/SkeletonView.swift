@@ -34,9 +34,7 @@ public enum SkeletonAnimationDirection: Int {
 }
 
 /// 骨架屏自带动画
-open class SkeletonAnimation: NSObject,
-                              NSCopying, NSMutableCopying,
-                              SkeletonAnimationProtocol {
+open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
     public static let shimmer = SkeletonAnimation(type: .shimmer)
     public static let solid = SkeletonAnimation(type: .solid)
     public static let scale = SkeletonAnimation(type: .scale)
@@ -84,32 +82,6 @@ open class SkeletonAnimation: NSObject,
                 UIColor.fw_themeLight(lightColor, dark: darkColor)
             ]
         }
-    }
-    
-    // MARK: - NSCopying
-    
-    public func copy(with zone: NSZone? = nil) -> Any {
-        let animation = SkeletonAnimation(type: type)
-        animation.fromValue = fromValue
-        animation.toValue = toValue
-        animation.colors = colors
-        animation.duration = duration
-        animation.delay = delay
-        animation.repeatCount = repeatCount
-        animation.direction = direction
-        return animation
-    }
-    
-    public func mutableCopy(with zone: NSZone? = nil) -> Any {
-        let animation = SkeletonAnimation(type: type)
-        animation.fromValue = fromValue
-        animation.toValue = toValue
-        animation.colors = colors
-        animation.duration = duration
-        animation.delay = delay
-        animation.repeatCount = repeatCount
-        animation.direction = direction
-        return animation
     }
     
     // MARK: - SkeletonAnimationProtocol
