@@ -8,7 +8,6 @@
 #import "BannerView.h"
 #import "PageControl.h"
 #import "ImagePlugin.h"
-#import "Bridge.h"
 
 #if FWMacroSPM
 

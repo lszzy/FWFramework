@@ -6,7 +6,6 @@
 //
 
 #import "WebView.h"
-#import "Bridge.h"
 #import <objc/runtime.h>
 
 #if FWMacroSPM
