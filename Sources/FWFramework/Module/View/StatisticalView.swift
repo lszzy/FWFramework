@@ -51,8 +51,6 @@ public class StatisticalManager: NSObject {
     public var exposureIgnoredBars = true
     /// 应用回到前台时是否重新计算曝光，默认true
     public var exposureBecomeActive = true
-    /// 计算曝光时是否检测可见cells变化，默认false
-    public var exposureVisibleCells = false
     
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
@@ -489,17 +487,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     open override func statisticalViewChildViews() -> [UIView]? {
-        if StatisticalManager.shared.exposureVisibleCells {
-            return visibleCells
-        }
         return subviews
-    }
-    
-    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        if StatisticalManager.shared.exposureVisibleCells {
-            return indexPathsForVisibleRows ?? []
-        }
-        return nil
     }
     
 }
@@ -529,17 +517,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     open override func statisticalViewChildViews() -> [UIView]? {
-        if StatisticalManager.shared.exposureVisibleCells {
-            return visibleCells
-        }
         return subviews
-    }
-    
-    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        if StatisticalManager.shared.exposureVisibleCells {
-            return indexPathsForVisibleItems
-        }
-        return nil
     }
     
 }
