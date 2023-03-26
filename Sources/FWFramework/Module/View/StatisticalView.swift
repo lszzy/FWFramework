@@ -867,72 +867,61 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
         if state.isState(oldState), !identifierChanged { return }
         fw_statisticalTarget.exposureState = state
         
+        var isBegin = false
+        var isFinished = false
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
-            
-            if isVisibleCells {
-                var exposureBegins = fw_statisticalTarget.exposureBegins
-                var exposureAdds: [IndexPath] = []
-                for indexPath in indexPaths {
-                    let indexIdentifier = StatisticalManager.statisticalIdentifier(event: event, indexPath: indexPath)
-                    if exposureBegins[indexIdentifier] != nil {
-                        exposureBegins.removeValue(forKey: indexIdentifier)
-                    } else {
-                        exposureAdds.append(indexPath)
-                    }
-                }
-                
-                if !exposureBegins.isEmpty {
-                    if StatisticalManager.shared.exposureTime {
-                        for (_, exposureBegin) in exposureBegins {
-                            fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
-                        }
-                    } else {
-                        for (indexIdentifier, _) in exposureBegins {
-                            fw_statisticalTarget.exposureBegins.removeValue(forKey: indexIdentifier)
-                        }
-                    }
-                }
-                
-                for indexPath in exposureAdds {
-                    fw_statisticalTrackExposure(indexPath: indexPath, event: event)
-                }
-            } else {
-                if let exposureBegin = fw_statisticalTarget.exposureBegin {
-                    if StatisticalManager.shared.exposureTime {
-                        fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
-                    } else {
-                        fw_statisticalTarget.exposureBegin = nil
-                        fw_statisticalTarget.exposureTimestamp = 0
-                    }
-                }
-                
-                fw_statisticalTrackExposure(indexPath: indexPath, event: event)
-            }
+            isFinished = true
+            isBegin = true
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
+            isFinished = true
+        }
+        
+        if isVisibleCells {
+            var finishExposures = fw_statisticalTarget.exposureBegins
+            var beginExposures: [IndexPath] = []
+            if isFinished, isBegin {
+                for indexPath in indexPaths {
+                    let finishKey = StatisticalManager.statisticalIdentifier(event: event, indexPath: indexPath)
+                    if finishExposures[finishKey] != nil {
+                        finishExposures.removeValue(forKey: finishKey)
+                    } else {
+                        beginExposures.append(indexPath)
+                    }
+                }
+            }
             
-            if isVisibleCells {
-                if !fw_statisticalTarget.exposureBegins.isEmpty {
-                    if StatisticalManager.shared.exposureTime {
-                        let exposureBegins = fw_statisticalTarget.exposureBegins
-                        for (_, exposureBegin) in exposureBegins {
-                            fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
-                        }
-                    } else {
-                        fw_statisticalTarget.exposureBegins.removeAll()
-                        fw_statisticalTarget.exposureTimestamps.removeAll()
+            if isFinished, !finishExposures.isEmpty {
+                if StatisticalManager.shared.exposureTime {
+                    for (_, finishExposure) in finishExposures {
+                        fw_statisticalTrackExposure(indexPath: finishExposure.indexPath, isFinished: true, event: finishExposure)
+                    }
+                } else {
+                    for (finishKey, _) in finishExposures {
+                        fw_statisticalTarget.exposureBegins.removeValue(forKey: finishKey)
+                        fw_statisticalTarget.exposureTimestamps.removeValue(forKey: finishKey)
                     }
                 }
-            } else {
-                if let exposureBegin = fw_statisticalTarget.exposureBegin {
-                    if StatisticalManager.shared.exposureTime {
-                        fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
-                    } else {
-                        fw_statisticalTarget.exposureBegin = nil
-                        fw_statisticalTarget.exposureTimestamp = 0
-                    }
+            }
+            
+            if isBegin, !beginExposures.isEmpty {
+                for indexPath in beginExposures {
+                    fw_statisticalTrackExposure(indexPath: indexPath, event: event)
                 }
+            }
+        } else {
+            if isFinished, let finishExposure = fw_statisticalTarget.exposureBegin {
+                if StatisticalManager.shared.exposureTime {
+                    fw_statisticalTrackExposure(indexPath: finishExposure.indexPath, isFinished: true, event: finishExposure)
+                } else {
+                    fw_statisticalTarget.exposureBegin = nil
+                    fw_statisticalTarget.exposureTimestamp = 0
+                }
+            }
+            
+            if isBegin {
+                fw_statisticalTrackExposure(indexPath: indexPath, event: event)
             }
         }
     }
