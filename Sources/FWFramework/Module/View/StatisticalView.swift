@@ -80,6 +80,9 @@ public class StatisticalManager: NSObject {
         event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = false
         event.isFinished = true
+        if let eventFormatter = event.eventFormatter {
+            event.userInfo = eventFormatter(event)
+        }
         handleEvent(event)
     }
     
@@ -121,10 +124,8 @@ public class StatisticalManager: NSObject {
             view?.fw_statisticalTarget.exposureDurations[triggerKey] = totalDuration
         } else {
             if isVisibleCells {
-                view?.fw_statisticalTarget.exposureBegins[triggerKey] = event
                 view?.fw_statisticalTarget.exposureTimestamps[triggerKey] = triggerTimestamp
             } else {
-                view?.fw_statisticalTarget.exposureBegin = event
                 view?.fw_statisticalTarget.exposureTimestamp = triggerTimestamp
             }
         }
@@ -142,6 +143,17 @@ public class StatisticalManager: NSObject {
         event.isFinished = isFinished
         event.isBackground = isBackground
         event.isTerminated = isTerminated
+        if let eventFormatter = event.eventFormatter {
+            event.userInfo = eventFormatter(event)
+        }
+        
+        if !isFinished {
+            if isVisibleCells {
+                view?.fw_statisticalTarget.exposureBegins[triggerKey] = event.copy() as? StatisticalEvent
+            } else {
+                view?.fw_statisticalTarget.exposureBegin = event.copy() as? StatisticalEvent
+            }
+        }
         handleEvent(event)
     }
     
@@ -173,7 +185,6 @@ public class StatisticalManager: NSObject {
             viewController?.fw_statisticalTarget.exposureBegin = nil
             viewController?.fw_statisticalTarget.exposureTimestamp = 0
         } else {
-            viewController?.fw_statisticalTarget.exposureBegin = event
             viewController?.fw_statisticalTarget.exposureTimestamp = triggerTimestamp
         }
         let isBackground = UIApplication.shared.applicationState == .background
@@ -190,15 +201,19 @@ public class StatisticalManager: NSObject {
         event.isFinished = isFinished
         event.isBackground = isBackground
         event.isTerminated = isTerminated
+        if let eventFormatter = event.eventFormatter {
+            event.userInfo = eventFormatter(event)
+        }
+        
+        if !isFinished {
+            viewController?.fw_statisticalTarget.exposureBegin = event.copy() as? StatisticalEvent
+        }
         handleEvent(event)
     }
     
     // MARK: - Private
     /// 内部方法，处理事件
     private func handleEvent(_ event: StatisticalEvent) {
-        if let eventFormatter = event.eventFormatter {
-            event.userInfo = eventFormatter(event)
-        }
         if event.isExposure {
             if event.view != nil {
                 event.view?.fw_statisticalExposureListener?(event)
@@ -279,7 +294,7 @@ public class StatisticalManager: NSObject {
 
 // MARK: - StatisticalEvent
 /// 事件统计对象
-public class StatisticalEvent: NSObject {
+public class StatisticalEvent: NSObject, NSCopying {
     
     /// 事件绑定名称
     public fileprivate(set) var name: String = ""
@@ -332,6 +347,31 @@ public class StatisticalEvent: NSObject {
         self.name = name
         self.object = object
         self.userInfo = userInfo
+    }
+    
+    /// NSCopying协议拷贝方法
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let event = StatisticalEvent(name: name, object: object, userInfo: userInfo)
+        event.containerView = containerView
+        event.containerInset = containerInset
+        event.triggerOnce = triggerOnce
+        event.triggerIgnored = triggerIgnored
+        event.shieldView = shieldView
+        event.exposureBlock = exposureBlock
+        event.eventFormatter = eventFormatter
+        
+        event.view = view
+        event.viewController = viewController
+        event.indexPath = indexPath
+        event.triggerCount = triggerCount
+        event.triggerTimestamp = triggerTimestamp
+        event.triggerDuration = triggerDuration
+        event.totalDuration = totalDuration
+        event.isExposure = isExposure
+        event.isFinished = isFinished
+        event.isBackground = isBackground
+        event.isTerminated = isTerminated
+        return event
     }
     
 }
