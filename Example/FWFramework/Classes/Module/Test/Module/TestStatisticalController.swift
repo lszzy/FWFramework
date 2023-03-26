@@ -278,6 +278,13 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         configShieldView(testSwitch.fw.statisticalExposure)
         segmentedControl.fw.statisticalExposure = StatisticalEvent(name: "exposure_segment", object: "segment")
+        segmentedControl.fw.statisticalExposure?.eventFormatter = { [weak self] event in
+            guard let indexPath = event.indexPath else { return event }
+            event.userInfo = [
+                "title": self?.segmentedControl.sectionTitles?[safe: indexPath.row] ?? ""
+            ]
+            return event
+        }
         segmentedControl.fw.statisticalExposureListener = { [weak self] event in
             self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.fw.randomColor
         }
