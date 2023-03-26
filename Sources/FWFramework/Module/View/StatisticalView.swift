@@ -856,7 +856,32 @@ public class StatisticalEvent: NSObject {
             fw_statisticalTarget.exposureFully = true
             
             if isVisibleCells {
+                var exposureBegins = fw_statisticalTarget.exposureBegins
+                var exposureAdds: [IndexPath] = []
+                for indexPath in indexPaths {
+                    let indexIdentifier = StatisticalManager.statisticalIdentifier(event: event, indexPath: indexPath)
+                    if exposureBegins[indexIdentifier] != nil {
+                        exposureBegins.removeValue(forKey: indexIdentifier)
+                    } else {
+                        exposureAdds.append(indexPath)
+                    }
+                }
                 
+                if !exposureBegins.isEmpty {
+                    if StatisticalManager.shared.exposureTime {
+                        for (_, exposureBegin) in exposureBegins {
+                            fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
+                        }
+                    } else {
+                        for (indexIdentifier, _) in exposureBegins {
+                            fw_statisticalTarget.exposureBegins.removeValue(forKey: indexIdentifier)
+                        }
+                    }
+                }
+                
+                for indexPath in exposureAdds {
+                    fw_statisticalTrackExposure(indexPath: indexPath, event: event)
+                }
             } else {
                 if let exposureBegin = fw_statisticalTarget.exposureBegin {
                     if StatisticalManager.shared.exposureTime {
