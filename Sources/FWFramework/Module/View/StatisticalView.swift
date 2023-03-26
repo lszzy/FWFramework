@@ -855,7 +855,6 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
             event = event ?? statisticalViewContainerView()?.fw_statisticalExposure
             identifier = StatisticalManager.statisticalIdentifier(event: event, indexPath: indexPath)
         }
-        
         let oldIdentifier = fw_statisticalTarget.exposureIdentifier
         let identifierChanged = !oldIdentifier.isEmpty && identifier != oldIdentifier
         if oldIdentifier.isEmpty || identifierChanged {
@@ -1178,30 +1177,28 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
         if state.isState(oldState), !identifierChanged { return }
         fw_statisticalTarget.exposureState = state
         
+        var isBegin = false
+        var isFinished = false
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
-            
-            if let exposureBegin = fw_statisticalTarget.exposureBegin {
-                if StatisticalManager.shared.exposureTime {
-                    fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
-                } else {
-                    fw_statisticalTarget.exposureBegin = nil
-                    fw_statisticalTarget.exposureTimestamp = 0
-                }
-            }
-            
-            fw_statisticalTrackExposure()
+            isFinished = true
+            isBegin = true
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
-            
-            if let exposureBegin = fw_statisticalTarget.exposureBegin {
-                if StatisticalManager.shared.exposureTime {
-                    fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
-                } else {
-                    fw_statisticalTarget.exposureBegin = nil
-                    fw_statisticalTarget.exposureTimestamp = 0
-                }
+            isFinished = true
+        }
+        
+        if isFinished, let finishExposure = fw_statisticalTarget.exposureBegin {
+            if StatisticalManager.shared.exposureTime {
+                fw_statisticalTrackExposure(isFinished: true, event: finishExposure)
+            } else {
+                fw_statisticalTarget.exposureBegin = nil
+                fw_statisticalTarget.exposureTimestamp = 0
             }
+        }
+        
+        if isBegin {
+            fw_statisticalTrackExposure()
         }
     }
     
