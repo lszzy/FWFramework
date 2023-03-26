@@ -78,9 +78,6 @@ public class StatisticalManager: NSObject {
         event.triggerTimestamp = Date.fw_currentTime
         event.isExposure = false
         event.isFinished = true
-        if let eventFormatter = event.eventFormatter {
-            event.userInfo = eventFormatter(event)
-        }
         handleEvent(event)
     }
     
@@ -141,9 +138,6 @@ public class StatisticalManager: NSObject {
         event.isFinished = isFinished
         event.isBackground = isBackground
         event.isTerminated = isTerminated
-        if let eventFormatter = event.eventFormatter {
-            event.userInfo = eventFormatter(event)
-        }
         
         if !isFinished {
             if isVisibleCells {
@@ -199,9 +193,6 @@ public class StatisticalManager: NSObject {
         event.isFinished = isFinished
         event.isBackground = isBackground
         event.isTerminated = isTerminated
-        if let eventFormatter = event.eventFormatter {
-            event.userInfo = eventFormatter(event)
-        }
         
         if !isFinished {
             viewController?.fw_statisticalTarget.exposureBegin = event.copy() as? StatisticalEvent
@@ -212,6 +203,7 @@ public class StatisticalManager: NSObject {
     // MARK: - Private
     /// 内部方法，处理事件
     private func handleEvent(_ event: StatisticalEvent) {
+        let event = event.eventFormatter?(event) ?? event
         if event.isExposure {
             if event.view != nil {
                 event.view?.fw_statisticalExposureListener?(event)
@@ -292,14 +284,14 @@ public class StatisticalManager: NSObject {
 
 // MARK: - StatisticalEvent
 /// 事件统计对象
-public class StatisticalEvent: NSObject, NSCopying {
+public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     
-    /// 事件绑定名称
+    /// 事件绑定名称，只读
     public fileprivate(set) var name: String = ""
-    /// 事件绑定对象
+    /// 事件绑定对象，只读
     public fileprivate(set) var object: Any?
-    /// 事件绑定信息
-    public fileprivate(set) var userInfo: [AnyHashable: Any]?
+    /// 事件绑定信息，可写
+    public var userInfo: [AnyHashable: Any]?
     
     /// 自定义曝光容器视图，默认nil时获取VC视图或window
     public weak var containerView: UIView?
@@ -313,8 +305,8 @@ public class StatisticalEvent: NSObject, NSCopying {
     public var shieldView: ((UIView) -> UIView?)?
     /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
     public var exposureBlock: ((Any) -> Bool)?
-    /// 格式化事件句柄，返回新userInfo替换原数据，用于格式化cell数据等，默认nil
-    public var eventFormatter: ((StatisticalEvent) -> [AnyHashable: Any]?)?
+    /// 格式化事件句柄，用于替换indexPath数据为cell数据，默认nil
+    public var eventFormatter: ((StatisticalEvent) -> StatisticalEvent)?
     
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?
@@ -370,6 +362,11 @@ public class StatisticalEvent: NSObject, NSCopying {
         event.isBackground = isBackground
         event.isTerminated = isTerminated
         return event
+    }
+    
+    /// NSMutableCopying协议拷贝方法
+    public func mutableCopy(with zone: NSZone? = nil) -> Any {
+        return copy(with: zone)
     }
     
 }
