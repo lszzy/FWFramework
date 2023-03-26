@@ -187,15 +187,17 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         collectionView.isHidden = true
         StatisticalManager.shared.exposureTime = UserDefaults.fw.object(forKey: "TestExposureTime").safeBool
         fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", StatisticalManager.shared.exposureBecomeActive ? "回到前台时不重新曝光" : "回到前台时重新曝光", StatisticalManager.shared.exposureThresholds == 1 ? "设置曝光比率为0.5" : "设置曝光比率为1.0", "切换collectionView", "表格reloadData", "切换控制器statisticalExposure"], actionBlock: { [weak self] index in
+            self?.fw.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", StatisticalManager.shared.exposureBecomeActive ? "回到前台时不重新曝光" : "回到前台时重新曝光", StatisticalManager.shared.exposureVisibleCells ? "关闭曝光visibleCells" : "开启曝光visibleCells", StatisticalManager.shared.exposureThresholds == 1 ? "设置曝光比率为0.5" : "设置曝光比率为1.0", "切换collectionView", "表格reloadData", "切换控制器statisticalExposure"], actionBlock: { [weak self] index in
                 if index == 0 {
                     StatisticalManager.shared.exposureTime = !StatisticalManager.shared.exposureTime
                     UserDefaults.fw.setObject(StatisticalManager.shared.exposureTime, forKey: "TestExposureTime")
                 } else if index == 1 {
                     StatisticalManager.shared.exposureBecomeActive = !StatisticalManager.shared.exposureBecomeActive
                 } else if index == 2 {
-                    StatisticalManager.shared.exposureThresholds = StatisticalManager.shared.exposureThresholds == 1 ? 0.5 : 1
+                    StatisticalManager.shared.exposureVisibleCells = !StatisticalManager.shared.exposureVisibleCells
                 } else if index == 3 {
+                    StatisticalManager.shared.exposureThresholds = StatisticalManager.shared.exposureThresholds == 1 ? 0.5 : 1
+                } else if index == 4 {
                     if self?.collectionView.isHidden ?? false {
                         self?.collectionView.isHidden = false
                         self?.tableView.isHidden = true
@@ -203,7 +205,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
                         self?.collectionView.isHidden = true
                         self?.tableView.isHidden = false
                     }
-                } else if index == 4 {
+                } else if index == 5 {
                     self?.tableObject = self?.tableObject == "table" ? "table2" : "table"
                     self?.tableView.reloadData()
                 } else {

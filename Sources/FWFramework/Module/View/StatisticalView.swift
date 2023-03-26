@@ -51,6 +51,8 @@ public class StatisticalManager: NSObject {
     public var exposureIgnoredBars = true
     /// 应用回到前台时是否重新计算曝光，默认true
     public var exposureBecomeActive = true
+    /// 计算曝光时是否检测可见cells变化，默认false
+    public var exposureVisibleCells = false
     
     private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
     
@@ -102,24 +104,28 @@ public class StatisticalManager: NSObject {
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         if isFinished {
-            var exposureBegin: StatisticalEvent?
+            var exposureTimestamp: TimeInterval?
             if isVisibleCells {
-                exposureBegin = view?.fw_statisticalTarget.exposureBegins[triggerKey]
+                exposureTimestamp = view?.fw_statisticalTarget.exposureTimestamps[triggerKey]
                 view?.fw_statisticalTarget.exposureBegins[triggerKey] = nil
+                view?.fw_statisticalTarget.exposureTimestamps[triggerKey] = nil
             } else {
-                exposureBegin = view?.fw_statisticalTarget.exposureBegin
+                exposureTimestamp = view?.fw_statisticalTarget.exposureTimestamp
                 view?.fw_statisticalTarget.exposureBegin = nil
+                view?.fw_statisticalTarget.exposureTimestamp = 0
             }
-            if let exposureBegin = exposureBegin {
-                duration = triggerTimestamp - exposureBegin.triggerTimestamp
+            if let exposureTimestamp = exposureTimestamp, exposureTimestamp > 0 {
+                duration = triggerTimestamp - exposureTimestamp
                 totalDuration += duration
             }
             view?.fw_statisticalTarget.exposureDurations[triggerKey] = totalDuration
         } else {
             if isVisibleCells {
                 view?.fw_statisticalTarget.exposureBegins[triggerKey] = event
+                view?.fw_statisticalTarget.exposureTimestamps[triggerKey] = triggerTimestamp
             } else {
                 view?.fw_statisticalTarget.exposureBegin = event
+                view?.fw_statisticalTarget.exposureTimestamp = triggerTimestamp
             }
         }
         let isBackground = UIApplication.shared.applicationState == .background
@@ -158,14 +164,17 @@ public class StatisticalManager: NSObject {
         var duration: TimeInterval = 0
         let triggerTimestamp = Date.fw_currentTime
         if isFinished {
-            if let exposureBegin = viewController?.fw_statisticalTarget.exposureBegin {
-                duration = triggerTimestamp - exposureBegin.triggerTimestamp
+            let exposureTimestamp = viewController?.fw_statisticalTarget.exposureTimestamp
+            if let exposureTimestamp = exposureTimestamp, exposureTimestamp > 0 {
+                duration = triggerTimestamp - exposureTimestamp
                 totalDuration += duration
             }
             viewController?.fw_statisticalTarget.exposureDuration = totalDuration
             viewController?.fw_statisticalTarget.exposureBegin = nil
+            viewController?.fw_statisticalTarget.exposureTimestamp = 0
         } else {
             viewController?.fw_statisticalTarget.exposureBegin = event
+            viewController?.fw_statisticalTarget.exposureTimestamp = triggerTimestamp
         }
         let isBackground = UIApplication.shared.applicationState == .background
         let isTerminated = viewController?.fw_statisticalTarget.exposureTerminated ?? false
@@ -440,7 +449,17 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewChildViews() -> [UIView]? {
+        if StatisticalManager.shared.exposureVisibleCells {
+            return visibleCells
+        }
         return subviews
+    }
+    
+    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
+        if StatisticalManager.shared.exposureVisibleCells {
+            return indexPathsForVisibleRows ?? []
+        }
+        return nil
     }
     
 }
@@ -470,7 +489,17 @@ public class StatisticalEvent: NSObject {
     }
     
     open override func statisticalViewChildViews() -> [UIView]? {
+        if StatisticalManager.shared.exposureVisibleCells {
+            return visibleCells
+        }
         return subviews
+    }
+    
+    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
+        if StatisticalManager.shared.exposureVisibleCells {
+            return indexPathsForVisibleItems
+        }
+        return nil
     }
     
 }
@@ -542,6 +571,8 @@ public class StatisticalEvent: NSObject {
         
         var exposureCounts: [String: Int] = [:]
         var exposureDurations: [String: TimeInterval] = [:]
+        var exposureTimestamp: TimeInterval = 0
+        var exposureTimestamps: [String: TimeInterval] = [:]
         var exposureBegin: StatisticalEvent?
         var exposureBegins: [String: StatisticalEvent] = [:]
         var exposureTerminated = false
@@ -832,6 +863,7 @@ public class StatisticalEvent: NSObject {
                         fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
                     } else {
                         fw_statisticalTarget.exposureBegin = nil
+                        fw_statisticalTarget.exposureTimestamp = 0
                     }
                 }
                 
@@ -849,6 +881,7 @@ public class StatisticalEvent: NSObject {
                         }
                     } else {
                         fw_statisticalTarget.exposureBegins.removeAll()
+                        fw_statisticalTarget.exposureTimestamps.removeAll()
                     }
                 }
             } else {
@@ -857,6 +890,7 @@ public class StatisticalEvent: NSObject {
                         fw_statisticalTrackExposure(indexPath: exposureBegin.indexPath, isFinished: true, event: exposureBegin)
                     } else {
                         fw_statisticalTarget.exposureBegin = nil
+                        fw_statisticalTarget.exposureTimestamp = 0
                     }
                 }
             }
@@ -1011,6 +1045,7 @@ public class StatisticalEvent: NSObject {
         
         var exposureCount: Int = 0
         var exposureDuration: TimeInterval = 0
+        var exposureTimestamp: TimeInterval = 0
         var exposureBegin: StatisticalEvent?
         var exposureTerminated = false
         
@@ -1117,18 +1152,26 @@ public class StatisticalEvent: NSObject {
         if state.isFully, (!fw_statisticalTarget.exposureFully || identifierChanged) {
             fw_statisticalTarget.exposureFully = true
             
-            if StatisticalManager.shared.exposureTime,
-               let exposureBegin = fw_statisticalTarget.exposureBegin {
-                fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
+            if let exposureBegin = fw_statisticalTarget.exposureBegin {
+                if StatisticalManager.shared.exposureTime {
+                    fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
+                } else {
+                    fw_statisticalTarget.exposureBegin = nil
+                    fw_statisticalTarget.exposureTimestamp = 0
+                }
             }
             
             fw_statisticalTrackExposure()
         } else if state == .none || identifierChanged {
             fw_statisticalTarget.exposureFully = false
             
-            if StatisticalManager.shared.exposureTime,
-               let exposureBegin = fw_statisticalTarget.exposureBegin {
-                fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
+            if let exposureBegin = fw_statisticalTarget.exposureBegin {
+                if StatisticalManager.shared.exposureTime {
+                    fw_statisticalTrackExposure(isFinished: true, event: exposureBegin)
+                } else {
+                    fw_statisticalTarget.exposureBegin = nil
+                    fw_statisticalTarget.exposureTimestamp = 0
+                }
             }
         }
     }
