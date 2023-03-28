@@ -170,12 +170,12 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     
     /// 获取抽屉视图指定索引位置(从小到大)，获取失败返回0
     open func position(at index: Int) -> CGFloat {
-        
+        return .zero
     }
     
     /// 判断当前抽屉效果视图是否在指定索引位置(从小到大)
     open func isPosition(at index: Int) -> Bool {
-        
+        return false
     }
     
     /// 设置抽屉效果视图到指定索引位置(从小到大)，如果位置发生改变，会触发抽屉callback回调
@@ -228,7 +228,24 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     }
     
     private func canScroll(_ scrollView: UIScrollView) -> Bool {
-        
+        if let scrollViewFilter = self.scrollViewFilter { return scrollViewFilter(scrollView) }
+        if !scrollView.fw_isViewVisible || !scrollView.isScrollEnabled { return false }
+        if self.isVertical {
+            if !scrollView.fw_canScrollVertical { return false }
+        } else {
+            if !scrollView.fw_canScrollHorizontal { return false }
+        }
+        return true
+    }
+    
+    private func togglePosition(_ position: CGFloat) {
+        guard let view = self.view else { return }
+        view.frame = CGRect(
+            x: isVertical ? view.frame.origin.x : position,
+            y: isVertical ? position : view.frame.origin.y,
+            width: view.frame.size.width,
+            height: view.frame.size.height
+        )
     }
     
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
@@ -261,7 +278,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
      @return 抽屉拖拽视图
      */
     @discardableResult
-    public func fw_drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [NSNumber], kickbackHeight: CGFloat, positionChanged: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
+    public func fw_drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [CGFloat], kickbackHeight: CGFloat, positionChanged: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
         let drawerView = DrawerView(view: self)
         if direction.rawValue > 0 {
             drawerView.direction = direction

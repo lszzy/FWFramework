@@ -50,7 +50,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             cell.textLabel?.text = "\(indexPath.row + 1)"
         }
         result.fw.tableDelegate.didScroll = { [weak self] scrollView in
-            self?.bottomView.fw.drawerView?.scrollDidScroll(scrollView)
+            self?.bottomView.fw.drawerView?.scrollViewDidScroll(scrollView)
         }
         return result
     }()
@@ -116,8 +116,8 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             drawerView.scrollViewFilter = { _ in true }
             drawerView.scrollViewPositions = { _ in
                 return [
-                    NSNumber(value: drawerView.openPosition),
-                    NSNumber(value: drawerView.middlePosition)
+                    drawerView.openPosition,
+                    drawerView.middlePosition
                 ]
             }
             self?.toggleMenu()
@@ -151,7 +151,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         view.addSubview(bottomView)
         bottomView.fw.drawerView(
             .up,
-            positions: [NSNumber(value: 100), NSNumber(value: view.fw.height / 2.0), NSNumber(value: view.fw.height - 100.0)],
+            positions: [100, view.fw.height / 2.0, view.fw.height - 100.0],
             kickbackHeight: 25
         ) { [weak self] position, finished in
             self?.navigationItem.title = "DrawerView-\(String(format: "%.2f", position))"
@@ -161,7 +161,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         view.addSubview(contentView)
         contentView.fw.drawerView(
             .right,
-            positions: [NSNumber(value: -FW.screenWidth / 2.0), NSNumber(value: 0)],
+            positions: [-FW.screenWidth / 2.0, 0],
             kickbackHeight: 25
         )
     }
@@ -180,9 +180,9 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             // 使用scrollViewInsets占满底部
             drawerView.scrollViewInsets = canScroll ? { _ in
                 return [
-                    NSValue(uiEdgeInsets: .zero),
-                    NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0)),
-                    NSValue(uiEdgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)),
+                    .zero,
+                    UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0),
+                    UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0),
                 ]
             } : nil
         } else {

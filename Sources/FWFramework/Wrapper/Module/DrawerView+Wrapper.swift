@@ -28,7 +28,7 @@ extension Wrapper where Base: UIView {
      @return 抽屉拖拽视图
      */
     @discardableResult
-    public func drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [NSNumber], kickbackHeight: CGFloat, positionChanged: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
+    public func drawerView(_ direction: UISwipeGestureRecognizer.Direction, positions: [CGFloat], kickbackHeight: CGFloat, positionChanged: ((CGFloat, Bool) -> Void)? = nil) -> DrawerView {
         return base.fw_drawerView(direction, positions: positions, kickbackHeight: kickbackHeight, positionChanged: positionChanged)
     }
     
