@@ -25,22 +25,49 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     open weak var delegate: DrawerViewDelegate?
     
     /// 拖拽方向，如向上拖动视图时为Up，向下为Down，向右为Right，向左为Left。默认向上
-    open var direction: UISwipeGestureRecognizer.Direction = .up
+    open var direction: UISwipeGestureRecognizer.Direction = .up {
+        didSet {
+            if let view = self.view {
+                self.position = isVertical ? view.frame.origin.y : view.frame.origin.x
+            }
+        }
+    }
     
     /// 抽屉位置，至少两级，相对于view父视图的originY位置，自动从小到大排序
-    open var positions: [CGFloat] = []
+    open var positions: [CGFloat] {
+        get {
+            return _positions
+        }
+        set {
+            if newValue.count < 2 { return }
+            _positions = newValue.sorted(by: { $0 < $1 })
+        }
+    }
+    private var _positions: [CGFloat] = []
     
     /// 回弹高度，拖拽小于该高度执行回弹，默认为0
     open var kickbackHeight: CGFloat = 0
     
     /// 是否启用拖拽，默认YES。其实就是设置手势的enabled
-    open var enabled: Bool = true
+    open var enabled: Bool {
+        get { return gestureRecognizer.isEnabled }
+        set { gestureRecognizer.isEnabled = newValue }
+    }
     
     /// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
     open var autoDetected: Bool = true
     
     /// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。先尝试设置delegate为自身，尝试失败请手工调用scrollViewDidScroll
-    open weak var scrollView: UIScrollView?
+    open weak var scrollView: UIScrollView? {
+        didSet {
+            if let drawerView = oldValue?.delegate as? DrawerView, drawerView == self {
+                oldValue?.delegate = nil
+            }
+            if let scrollView = scrollView, scrollView.delegate == nil {
+                scrollView.delegate = self
+            }
+        }
+    }
     
     /// 抽屉视图，自动添加pan手势
     open private(set) weak var view: UIView?
@@ -56,13 +83,19 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     open private(set) var position: CGFloat = 0
     
     /// 抽屉视图打开位置
-    open private(set) var openPosition: CGFloat = 0
+    open var openPosition: CGFloat {
+        return (isReverse ? positions.first : positions.last) ?? .zero
+    }
     
     /// 抽屉视图中间位置，建议单数时调用
-    open private(set) var middlePosition: CGFloat = 0
+    open var middlePosition: CGFloat {
+        return position(at: positions.count / 2)
+    }
     
     /// 抽屉视图关闭位置
-    open private(set) var closePosition: CGFloat = 0
+    open var closePosition: CGFloat {
+        return (isReverse ? positions.last : positions.first) ?? .zero
+    }
     
     /// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
     open var positionChanged: ((_ position: CGFloat, _ finished: Bool) -> Void)?
@@ -94,6 +127,21 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     
     private var isReverse: Bool {
         return direction == .up || direction == .left
+    }
+    
+    private var scrollEdge: UIRectEdge {
+        switch direction {
+        case .up:
+            return .top
+        case .down:
+            return .bottom
+        case .left:
+            return .left
+        case .right:
+            return .right
+        default:
+            return []
+        }
     }
     
     // MARK: - Lifecycle
@@ -141,6 +189,48 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     }
     
     // MARK: - Private
+    private func isDirection(_ gestureRecognizer: UIPanGestureRecognizer) -> Bool {
+        let swipeDirection = gestureRecognizer.fw_swipeDirection
+        switch self.direction {
+        case .up:
+            return swipeDirection == .down
+        case .down:
+            return swipeDirection == .up
+        case .left:
+            return swipeDirection == .right
+        case .right:
+            return swipeDirection == .left
+        default:
+            return false
+        }
+    }
+    
+    private var nextPosition: CGFloat {
+        var nextPosition: CGFloat = .zero
+        if self.position > self.originPosition {
+            for obj in self.positions {
+                let maxKickback = (obj == self.positions.last) ? obj : obj + self.kickbackHeight
+                if self.position <= maxKickback {
+                    nextPosition = obj
+                    break
+                }
+            }
+        } else {
+            for obj in self.positions.reversed() {
+                let minKickback = (obj == self.positions.first) ? obj : obj - self.kickbackHeight
+                if self.position >= minKickback {
+                    nextPosition = obj
+                    break
+                }
+            }
+        }
+        return nextPosition
+    }
+    
+    private func canScroll(_ scrollView: UIScrollView) -> Bool {
+        
+    }
+    
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
         
     }
