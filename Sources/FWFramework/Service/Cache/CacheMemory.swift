@@ -15,19 +15,19 @@ open class CacheMemory: CacheEngine {
     
     private var cachePool = [String: Any]()
 
-    open func readCache(forKey key: String) -> Any? {
+    open override func readCache(forKey key: String) -> Any? {
         return cachePool[key]
     }
 
-    open func writeCache(_ object: Any, forKey key: String) {
+    open override func writeCache(_ object: Any, forKey key: String) {
         cachePool[key] = object
     }
 
-    open func clearCache(forKey key: String) {
+    open override func clearCache(forKey key: String) {
         cachePool.removeValue(forKey: key)
     }
 
-    open func clearAllCaches() {
+    open override func clearAllCaches() {
         cachePool.removeAll()
     }
     
