@@ -14,7 +14,7 @@ open class CacheFile: CacheEngine {
     /// 单例模式
     public static let shared = CacheFile()
     
-    private let path: String
+    private var path: String = ""
     
     public override convenience init() {
         self.init(path: nil)
@@ -22,6 +22,7 @@ open class CacheFile: CacheEngine {
     
     /// 指定路径
     public init(path: String?) {
+        super.init()
         // 绝对路径: path
         if let path = path, (path as NSString).isAbsolutePath {
             self.path = path
@@ -31,7 +32,6 @@ open class CacheFile: CacheEngine {
             let fileName = path ?? ""
             self.path = (cachesPath as NSString).appendingPathComponent("FWCache/" + (!fileName.isEmpty ? fileName : "FWCache"))
         }
-        super.init()
     }
     
     private func filePath(_ key: String) -> String {
