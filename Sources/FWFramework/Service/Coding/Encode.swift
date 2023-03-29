@@ -8,8 +8,8 @@
 import Foundation
 import CommonCrypto
 
-// MARK: - FW+SafeValue
-extension FW {
+// MARK: - WrapperGlobal+SafeValue
+extension WrapperGlobal {
     
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
@@ -28,8 +28,8 @@ extension FW {
     
 }
 
-// MARK: - FW+SafeType
-extension FW {
+// MARK: - WrapperGlobal+SafeType
+extension WrapperGlobal {
     /// 获取安全值
     public static func safeValue<T: SafeType>(_ value: T?) -> T {
         return value.safeValue

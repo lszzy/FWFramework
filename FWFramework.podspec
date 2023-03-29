@@ -33,6 +33,13 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWVendor' do |ss|
+    ss.subspec 'SPI' do |sss|
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroSPI'
+      }
+    end
+      
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'

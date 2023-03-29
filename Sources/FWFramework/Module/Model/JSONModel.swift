@@ -2357,7 +2357,7 @@ open class CustomDateFormatTransform: DateFormatterTransform {
     }
 }
 
-// MARK: - FWFramework
+// MARK: - WrapperGlobalFramework
 public extension JSONModel {
     
     static func deserialize(_ dict: [AnyHashable: Any]?) -> Self? {

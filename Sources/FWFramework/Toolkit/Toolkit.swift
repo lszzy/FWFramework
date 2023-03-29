@@ -17,8 +17,8 @@ import StoreKit
 import FWObjC
 #endif
 
-// MARK: - FW+Toolkit
-extension FW {
+// MARK: - WrapperGlobal+Toolkit
+extension WrapperGlobal {
     
     /// 从16进制创建UIColor
     ///

@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: - FW+Adaptive
-extension FW {
+// MARK: - WrapperGlobal+Adaptive
+extension WrapperGlobal {
     
     // MARK: - UIApplication
     /// 是否是调试模式

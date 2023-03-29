@@ -10,8 +10,8 @@ import UIKit
 import FWObjC
 #endif
 
-// MARK: - FW+Foundation
-extension FW {
+// MARK: - WrapperGlobal+Foundation
+extension WrapperGlobal {
 
     /// 通用互斥锁方法
     public static func synchronized(_ object: Any, closure: () -> Void) {

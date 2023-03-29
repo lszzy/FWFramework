@@ -10,8 +10,8 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - FW+Autoloader
-extension FW {
+// MARK: - WrapperGlobal+Autoloader
+extension WrapperGlobal {
     
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
     @discardableResult

@@ -10,7 +10,7 @@ import Foundation
 import FWObjC
 #endif
 
-extension FW {
+extension WrapperGlobal {
     /// 插件快速访问
     public static var plugin = PluginManager.self
 }

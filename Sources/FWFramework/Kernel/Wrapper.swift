@@ -7,14 +7,19 @@
 
 import Foundation
 
-// MARK: - FW
+// MARK: - WrapperGlobal
 /// 全局包装器(因struct只读，只能用class)
-///
+public class WrapperGlobal {}
+
 /// 自定义FW为任意名称(如APP)示例：
-/// public typealias APP = FW
+/// public typealias APP = WrapperGlobal
 /// 使用示例：
 /// APP.safeString(object)
-public class FW {}
+#if FWMacroSPI
+@_spi(FW) public typealias FW = WrapperGlobal
+#else
+public typealias FW = WrapperGlobal
+#endif
 
 // MARK: - Wrapper
 /// 属性包装器(因struct只读，只能用class)
@@ -46,25 +51,47 @@ public protocol WrapperCompatible {
     associatedtype WrapperBase
     
     /// 类包装器属性
+    #if FWMacroSPI
+    @_spi(FW) static var fw: Wrapper<WrapperBase>.Type { get set }
+    #else
     static var fw: Wrapper<WrapperBase>.Type { get set }
+    #endif
     
     /// 对象包装器属性
+    #if FWMacroSPI
+    @_spi(FW) var fw: Wrapper<WrapperBase> { get set }
+    #else
     var fw: Wrapper<WrapperBase> { get set }
+    #endif
     
 }
 
 extension WrapperCompatible {
     
     /// 类包装器属性
+    #if FWMacroSPI
+    @_spi(FW) public static var fw: Wrapper<Self>.Type {
+        get { Wrapper<Self>.self }
+        set {}
+    }
+    #else
     public static var fw: Wrapper<Self>.Type {
         get { Wrapper<Self>.self }
         set {}
     }
+    #endif
     
     /// 对象包装器属性
+    #if FWMacroSPI
+    @_spi(FW) public var fw: Wrapper<Self> {
+        get { Wrapper(self) }
+        set {}
+    }
+    #else
     public var fw: Wrapper<Self> {
         get { Wrapper(self) }
         set {}
     }
+    #endif
     
 }

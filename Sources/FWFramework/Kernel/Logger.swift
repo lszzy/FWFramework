@@ -11,8 +11,8 @@ import os
 import FWObjC
 #endif
 
-// MARK: - FW+Logger
-extension FW {
+// MARK: - WrapperGlobal+Logger
+extension WrapperGlobal {
     
     /// 记录详细日志
     ///

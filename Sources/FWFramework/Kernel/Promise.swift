@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - FW+Promise
-extension FW {
+// MARK: - WrapperGlobal+Promise
+extension WrapperGlobal {
     
     /// 仿协程异步执行方法
     @discardableResult

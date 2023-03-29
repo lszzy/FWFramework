@@ -10,8 +10,8 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - FW+Mediator
-extension FW {
+// MARK: - WrapperGlobal+Mediator
+extension WrapperGlobal {
     /// 中间件快速访问
     public static var mediator = Mediator.self
 }
