@@ -267,7 +267,16 @@ import AdSupport
     
     /// 本地主机名称
     public static var fw_hostName: String? {
-        return __FWBridge.hostName()
+        var hostName = [CChar](repeating: 0, count: 256)
+        let success = gethostname(&hostName, 255)
+        if success != 0 { return nil }
+        hostName[255] = 0
+
+        #if targetEnvironment(simulator)
+        return String(cString: hostName)
+        #else
+        return String(format: "%s.local", hostName)
+        #endif
     }
     
     /// 手机运营商名称

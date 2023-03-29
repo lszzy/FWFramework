@@ -587,19 +587,6 @@
     return ipAddr;
 }
 
-+ (NSString *)hostName {
-    char hostName[256];
-    int success = gethostname(hostName, 255);
-    if (success != 0) return nil;
-    hostName[255] = '\0';
-    
-#if TARGET_OS_SIMULATOR
-    return [NSString stringWithFormat:@"%s", hostName];
-#else
-    return [NSString stringWithFormat:@"%s.local", hostName];
-#endif
-}
-
 + (NSString *)ipAddress:(NSString *)host {
     if ([host hasPrefix:@"http"]) {
         host = [NSURL URLWithString:host].host;
