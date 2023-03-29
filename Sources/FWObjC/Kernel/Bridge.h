@@ -106,8 +106,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSString *)ipAddress;
 
-+ (nullable NSString *)hostName;
-
 + (nullable NSString *)ipAddress:(NSString *)host;
 
 @end
