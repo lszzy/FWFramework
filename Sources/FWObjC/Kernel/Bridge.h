@@ -104,10 +104,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)logMessage:(NSString *)message;
 
-+ (NSTimeInterval)systemUptime;
-
-+ (NSString *)escapeHtml:(NSString *)string;
-
 + (nullable NSString *)ipAddress;
 
 + (nullable NSString *)hostName;

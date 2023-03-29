@@ -157,20 +157,38 @@ extension FW {
                 }
             // 同步过计算当前服务器时间
             } else {
-                let offsetTime = __FWBridge.systemUptime() - fw_staticLocalBaseTime
+                let offsetTime = fw_systemUptime - fw_staticLocalBaseTime
                 return fw_staticCurrentBaseTime + offsetTime
             }
         }
         set {
             fw_staticCurrentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
-            fw_staticLocalBaseTime = __FWBridge.systemUptime()
+            fw_staticLocalBaseTime = fw_systemUptime
             
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
             UserDefaults.standard.set(NSNumber(value: Date().timeIntervalSince1970), forKey: "FWLocalTime")
             UserDefaults.standard.synchronize()
         }
+    }
+    
+    private static var fw_systemUptime: TimeInterval {
+        var bootTime = timeval()
+        var mib = [CTL_KERN, KERN_BOOTTIME]
+        var size = MemoryLayout<timeval>.stride
+        let resctl = sysctl(&mib, 2, &bootTime, &size, nil, 0)
+
+        var now = timeval()
+        var tz = timezone()
+        gettimeofday(&now, &tz)
+
+        var uptime: TimeInterval = 0
+        if resctl != -1 && bootTime.tv_sec != 0 {
+            uptime = Double(now.tv_sec - bootTime.tv_sec)
+            uptime += Double(now.tv_usec - bootTime.tv_usec) / 1e6
+        }
+        return uptime
     }
     
     private static var fw_staticCurrentBaseTime: TimeInterval = 0
@@ -424,7 +442,31 @@ extension FW {
     
     /// 转义Html，如"a<"转义为"a&lt;"
     public var fw_escapeHtml: String {
-        return __FWBridge.escapeHtml(self)
+        let len = (self as NSString).length
+        if len == 0 { return self }
+
+        var buf = [unichar](repeating: 0, count: len)
+        (self as NSString).getCharacters(&buf, range: NSRange(location: 0, length: len))
+
+        let result = NSMutableString()
+        for i in 0 ..< len {
+            var c = buf[i]
+            var esc: String? = nil
+            switch c {
+            case 34: esc = "&quot;"; break;
+            case 38: esc = "&amp;"; break;
+            case 39: esc = "&apos;"; break;
+            case 60: esc = "&lt;"; break;
+            case 62: esc = "&gt;"; break;
+            default: break;
+            }
+            if let esc = esc {
+                result.append(esc)
+            } else {
+                CFStringAppendCharacters(result as CFMutableString, &c, 1)
+            }
+        }
+        return result as String
     }
     
     /// 是否符合验证器

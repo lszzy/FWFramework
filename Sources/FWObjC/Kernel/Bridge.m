@@ -564,54 +564,6 @@
     NSLog(@"%@", message);
 }
 
-+ (NSTimeInterval)systemUptime {
-    struct timeval bootTime;
-    int mib[2] = {CTL_KERN, KERN_BOOTTIME};
-    size_t size = sizeof(bootTime);
-    int resctl = sysctl(mib, 2, &bootTime, &size, NULL, 0);
-
-    struct timeval now;
-    struct timezone tz;
-    gettimeofday(&now, &tz);
-    
-    NSTimeInterval uptime = 0;
-    if (resctl != -1 && bootTime.tv_sec != 0) {
-        uptime = now.tv_sec - bootTime.tv_sec;
-        uptime += (now.tv_usec - bootTime.tv_usec) / 1.e6;
-    }
-    return uptime;
-}
-
-+ (NSString *)escapeHtml:(NSString *)string {
-    NSUInteger len = string.length;
-    if (!len) return string;
-    
-    unichar *buf = malloc(sizeof(unichar) * len);
-    if (!buf) return string;
-    [string getCharacters:buf range:NSMakeRange(0, len)];
-    
-    NSMutableString *result = [NSMutableString string];
-    for (int i = 0; i < len; i++) {
-        unichar c = buf[i];
-        NSString *esc = nil;
-        switch (c) {
-            case 34: esc = @"&quot;"; break;
-            case 38: esc = @"&amp;"; break;
-            case 39: esc = @"&apos;"; break;
-            case 60: esc = @"&lt;"; break;
-            case 62: esc = @"&gt;"; break;
-            default: break;
-        }
-        if (esc) {
-            [result appendString:esc];
-        } else {
-            CFStringAppendCharacters((CFMutableStringRef)result, &c, 1);
-        }
-    }
-    free(buf);
-    return result;
-}
-
 + (NSString *)ipAddress {
     NSString *ipAddr = nil;
     struct ifaddrs *addrs = NULL;
