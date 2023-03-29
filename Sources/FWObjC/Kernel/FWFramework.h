@@ -18,7 +18,6 @@
 #import "BannerView.h"
 #import "BarrageView.h"
 #import "CollectionViewFlowLayout.h"
-#import "DrawerView.h"
 #import "GridView.h"
 #import "MarqueeLabel.h"
 #import "PageControl.h"

@@ -165,27 +165,104 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     // MARK: - Public
     /// 设置抽屉效果视图到指定位置，如果位置发生改变，会触发抽屉callback回调
     open func setPosition(_ position: CGFloat, animated: Bool = true) {
+        guard self.position != position else { return }
         
+        // 不执行动画
+        if !animated {
+            togglePosition(position)
+            self.position = position
+            notifyPosition(true)
+            return
+        }
+        
+        // 使用CADisplayLink监听动画过程中的位置
+        if displayLink != nil {
+            displayLink?.invalidate()
+            displayLink = nil
+        }
+        displayLink = CADisplayLink(target: self, selector: #selector(displayLinkAction))
+        displayLink?.add(to: .current, forMode: .common)
+        
+        // 执行动画移动到指定位置，动画完成标记拖拽位置并回调
+        if let animationBlock = animationBlock {
+            animationBlock({ [weak self] in
+                self?.togglePosition(position)
+            }, { [weak self] finished in
+                self?.animateComplete(position)
+            })
+        } else {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
+                self.togglePosition(position)
+            }, completion: { finished in
+                self.animateComplete(position)
+            })
+        }
     }
     
     /// 获取抽屉视图指定索引位置(从小到大)，获取失败返回0
     open func position(at index: Int) -> CGFloat {
-        return .zero
+        guard index >= 0, index < self.positions.count else { return 0 }
+        return self.positions[index]
     }
     
     /// 判断当前抽屉效果视图是否在指定索引位置(从小到大)
     open func isPosition(at index: Int) -> Bool {
-        return false
+        guard index >= 0, index < self.positions.count else { return false }
+        return self.position == self.positions[index]
     }
     
     /// 设置抽屉效果视图到指定索引位置(从小到大)，如果位置发生改变，会触发抽屉callback回调
     open func setPosition(at index: Int, animated: Bool = true) {
-        
+        guard index >= 0, index < self.positions.count else { return }
+        setPosition(self.positions[index], animated: animated)
     }
     
+    // MARK: - UIScrollViewDelegate
     /// 如果scrollView已自定义delegate，需在scrollViewDidScroll手工调用本方法
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.scrollView, self.gestureRecognizer.isEnabled else { return }
+        guard canScroll(scrollView) else { return }
         
+        let positions = self.scrollViewPositions?(scrollView)
+        if positions?.count ?? 0 > 0 {
+            self.panDisabled = false
+            if self.isOriginScrollable {
+                if self.isOriginDraggable {
+                    scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+                } else {
+                    togglePosition(self.originPosition)
+                    self.position = self.originPosition
+                }
+            } else {
+                scrollView.contentOffset = self.originOffset
+            }
+            return
+        }
+        
+        if scrollView.fw_isScroll(to: self.scrollEdge) {
+            self.panDisabled = false
+        }
+        if !self.panDisabled {
+            scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+        }
+    }
+    
+    // MARK: - UIGestureRecognizerDelegate
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if otherGestureRecognizer is UIPanGestureRecognizer,
+           let otherView = otherGestureRecognizer.view as? UIScrollView {
+            if autoDetected {
+                if canScroll(otherView) {
+                    scrollView = otherView
+                    return true
+                }
+            } else {
+                if let scrollView = scrollView, scrollView == otherView, canScroll(scrollView) {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     // MARK: - Private
@@ -248,8 +325,118 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
         )
     }
     
-    @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
+    private func notifyPosition(_ finished: Bool) {
+        adjustScrollInset()
         
+        positionChanged?(position, finished)
+        delegate?.drawerView(self, positionChanged: position, finished: finished)
+    }
+    
+    private func adjustScrollInset() {
+        guard let scrollView = scrollView, let insets = scrollViewInsets?(scrollView) else { return }
+        if insets.count > 0 && insets.count == positions.count {
+            for (idx, _) in positions.enumerated() {
+                let next = idx < (positions.count - 1) ? positions[idx + 1] : nil
+                if ((next != nil && position < next!) || next == nil) {
+                    let inset = insets[idx]
+                    if scrollView.contentInset != inset {
+                        scrollView.contentInset = inset
+                    }
+                    break
+                }
+            }
+        }
+    }
+    
+    private func animateComplete(_ position: CGFloat) {
+        // 动画完成时需释放displayLink
+        if displayLink != nil {
+            displayLink?.invalidate()
+            displayLink = nil
+        }
+        
+        togglePosition(position)
+        self.position = position
+        notifyPosition(true)
+    }
+    
+    @objc private func displayLinkAction() {
+        // 监听动画过程中的位置，访问view.layer.presentation即可
+        self.position = (isVertical ? view?.layer.presentation()?.frame.origin.y : view?.layer.presentation()?.frame.origin.x) ?? .zero
+        notifyPosition(false)
+    }
+    
+    @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
+        switch gestureRecognizer.state {
+        // 拖动开始时记录起始位置信息
+        case .began:
+            position = (isVertical ? view?.frame.origin.y : view?.frame.origin.x) ?? .zero
+            originPosition = position
+            
+            isOriginScrollView = gestureRecognizer.fw_hitTest(view: scrollView)
+            isOriginDirection = isDirection(gestureRecognizer) || (scrollView != nil && isDirection(scrollView!.panGestureRecognizer))
+            originOffset = scrollView?.contentOffset ?? .zero
+            isOriginDraggable = isOriginDirection && (scrollView?.fw_isScroll(to: scrollEdge) ?? false)
+            let positions = scrollView != nil ? scrollViewPositions?(scrollView!) : nil
+            isOriginScrollable = originPosition == openPosition || positions?.contains(originPosition) == true
+        // 拖动改变时更新视图位置
+        case .changed:
+            // 记录并清空相对父视图的移动距离
+            let transition = gestureRecognizer.translation(in: view?.superview)
+            gestureRecognizer.setTranslation(.zero, in: view?.superview)
+            
+            // 视图跟随拖动移动指定距离，且移动时限制不超过范围
+            var position = isVertical ? ((view?.frame.origin.y ?? 0) + transition.y) : ((view?.frame.origin.x ?? 0) + transition.x)
+            if position < (positions.first ?? 0) {
+                position = (positions.first ?? 0)
+            } else if position > (positions.last ?? 0) {
+                position = (positions.last ?? 0)
+            }
+            
+            // 执行位移并回调
+            togglePosition(position)
+            self.position = position
+            gestureRecognizerDidScroll()
+            notifyPosition(false)
+        // 拖动结束时停留指定位置
+        case .failed, .ended:
+            // 停留位置未发生改变时不执行动画，直接回调
+            if position == originPosition {
+                notifyPosition(true)
+            // 停留位置发生改变时执行动画，动画完成后回调
+            } else {
+                setPosition(nextPosition, animated: true)
+            }
+        default:
+            break
+        }
+    }
+    
+    private func gestureRecognizerDidScroll() {
+        guard let scrollView = self.scrollView, self.gestureRecognizer.isEnabled else { return }
+        guard canScroll(scrollView) else { return }
+        
+        let positions = self.scrollViewPositions?(scrollView)
+        if positions?.count ?? 0 > 0 {
+            self.panDisabled = false
+            if self.isOriginScrollable {
+                if !self.isOriginDraggable && self.isOriginScrollView {
+                    togglePosition(self.originPosition)
+                    self.position = self.originPosition
+                }
+            }
+            return
+        }
+        
+        if self.position == self.openPosition {
+            self.panDisabled = !self.isOriginDraggable && (self.isOriginScrollView || !self.isOriginDirection)
+        }
+        if self.panDisabled {
+            togglePosition(self.openPosition)
+            self.position = self.openPosition
+        } else {
+            scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+        }
     }
     
 }
