@@ -21,14 +21,14 @@ class TestBridgeController: WebController {
     
     override func setupWebView() {
         super.setupWebView()
-        webView.fw.jsBridgeEnabled = true
+        webView.app.jsBridgeEnabled = true
     }
     
     override func setupWebBridge(_ bridge: WebViewJsBridge) {
         WebViewJsBridge.enableLogging()
         
         bridge.setErrorHandler { handlerName, data, responseCallback in
-            UIWindow.fw.showMessage(text: "handler \(handlerName) undefined: \(data)", style: .default) {
+            UIWindow.app.showMessage(text: "handler \(handlerName) undefined: \(data)", style: .default) {
                 responseCallback("Response from errorHandler")
             }
         }
@@ -54,7 +54,7 @@ class TestBridgeController: WebController {
     
     override func setupSubviews() {
         let font = UIFont.systemFont(ofSize: 12)
-        let y = FW.screenHeight - UIScreen.fw.safeAreaInsets.bottom - 45
+        let y = APP.screenHeight - UIScreen.app.safeAreaInsets.bottom - 45
         
         let callbackButton = UIButton(type: .roundedRect)
         callbackButton.setTitle("Call", for: .normal)
@@ -86,7 +86,7 @@ class TestBridgeController: WebController {
         
         let jumpButton = UIButton(type: .roundedRect)
         jumpButton.setTitle("Jump", for: .normal)
-        jumpButton.fw.addTouch { [weak self] _ in
+        jumpButton.app.addTouch { [weak self] _ in
             self?.webRequest = "http://kvm.wuyong.site/jssdk.html"
         }
         view.insertSubview(jumpButton, aboveSubview: webView)
@@ -100,21 +100,21 @@ class TestBridgeController: WebController {
     
     @objc func callHandler(_ sender: Any) {
         let data = ["greetingFromObjC": "Hi there, JS!"]
-        webView.fw.jsBridge?.callHandler("testJavascriptHandler", data: data, responseCallback: { response in
+        webView.app.jsBridge?.callHandler("testJavascriptHandler", data: data, responseCallback: { response in
             print("testJavascriptHandler responded: \(response)")
         })
     }
     
     @objc func errorHandler(_ sender: Any) {
         let data = ["greetingFromObjC": "Hi there, Error!"]
-        webView.fw.jsBridge?.callHandler("notFoundHandler", data: data, responseCallback: { response in
+        webView.app.jsBridge?.callHandler("notFoundHandler", data: data, responseCallback: { response in
             print("notFoundHandler responded: \(response)")
         })
     }
     
     @objc func filterHandler(_ sender: Any) {
         let data = ["greetingFromObjC": "Hi there, Filter!"]
-        webView.fw.jsBridge?.callHandler("testFilterHandler", data: data, responseCallback: { response in
+        webView.app.jsBridge?.callHandler("testFilterHandler", data: data, responseCallback: { response in
             print("testFilterHandler responded: \(response)")
         })
     }

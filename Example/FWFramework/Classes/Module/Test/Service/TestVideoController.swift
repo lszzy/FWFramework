@@ -28,7 +28,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         
         self.addChild(self.player)
         self.view.addSubview(self.player.view)
-        self.player.view.fw.pinEdges()
+        self.player.view.app.pinEdges()
         self.player.didMove(toParent: self)
         
         self.playVideo()
@@ -38,14 +38,14 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         tapGestureRecognizer.numberOfTapsRequired = 1
         self.player.view.addGestureRecognizer(tapGestureRecognizer)
         
-        fw.showLoading()
+        app.showLoading()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if !fw.isLoaded {
-            fw.isLoaded = true
+        if !app.isLoaded {
+            app.isLoaded = true
             self.player.playFromBeginning()
         }
     }
@@ -58,7 +58,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     
     // MARK: - Private
     func setupNavbar() {
-        fw.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
+        app.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
             guard let strongSelf = self else { return }
             strongSelf.cacheEnabled = !strongSelf.cacheEnabled
             strongSelf.playVideo()
@@ -99,7 +99,7 @@ extension TestVideoController: VideoPlayerDelegate, VideoPlayerPlaybackDelegate 
     func playerReady(_ player: VideoPlayer) {
         print("\(#function) ready")
         
-        fw.hideLoading()
+        app.hideLoading()
     }
     
     func playerPlaybackStateDidChange(_ player: VideoPlayer) {
@@ -109,7 +109,7 @@ extension TestVideoController: VideoPlayerDelegate, VideoPlayerPlaybackDelegate 
     func player(_ player: VideoPlayer, didFailWithError error: Error?) {
         print("\(#function) error.description")
         
-        fw.hideLoading()
+        app.hideLoading()
     }
     
 }
@@ -133,16 +133,16 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
     private lazy var closeButton: ToolbarButton = {
         let result = ToolbarButton(image: Icon.closeImage)
         result.tintColor = AppTheme.textColor
-        result.fw.addTouch { sender in
+        result.app.addTouch { sender in
             Navigator.close(animated: true)
         }
         return result
     }()
     
     private lazy var playButton: ToolbarButton = {
-        let result = ToolbarButton(image: FW.iconImage("zdmi-var-play", 24))
+        let result = ToolbarButton(image: APP.iconImage("zdmi-var-play", 24))
         result.tintColor = AppTheme.textColor
-        result.fw.addTouch { [weak self] sender in
+        result.app.addTouch { [weak self] sender in
             guard let player = self?.videoPlayer else { return }
             
             if player.playbackState == .playing {
@@ -162,8 +162,8 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
         
         addSubview(closeButton)
         addSubview(playButton)
-        closeButton.fw.layoutChain.left(toSafeArea: 8).top(toSafeArea: 8)
-        playButton.fw.layoutChain.right(toSafeArea: 8).top(toSafeArea: 8)
+        closeButton.app.layoutChain.left(toSafeArea: 8).top(toSafeArea: 8)
+        playButton.app.layoutChain.right(toSafeArea: 8).top(toSafeArea: 8)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -172,9 +172,9 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
     
     func playerPlaybackStateDidChange(_ player: VideoPlayer) {
         if player.playbackState == .playing {
-            playButton.setImage(FW.iconImage("zdmi-var-pause", 24), for: .normal)
+            playButton.setImage(APP.iconImage("zdmi-var-pause", 24), for: .normal)
         } else {
-            playButton.setImage(FW.iconImage("zdmi-var-play", 24), for: .normal)
+            playButton.setImage(APP.iconImage("zdmi-var-play", 24), for: .normal)
         }
     }
 }

@@ -21,7 +21,7 @@ class TestAudioController: UIViewController {
     private lazy var audioImage: UIImageView = {
         let result = UIImageView()
         result.isUserInteractionEnabled = true
-        result.fw.addTapGesture { [weak self] sender in
+        result.app.addTapGesture { [weak self] sender in
             self?.toggleAudio()
         }
         return result
@@ -47,7 +47,7 @@ class TestAudioController: UIViewController {
 extension TestAudioController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
+        app.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
             guard let strongSelf = self else { return }
             strongSelf.cacheEnabled = !strongSelf.cacheEnabled
             strongSelf.audioPlayer.playItem(from: 0)
@@ -62,9 +62,9 @@ extension TestAudioController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        audioImage.fw.layoutChain.centerX().size(CGSize(width: 100, height: 100))
+        audioImage.app.layoutChain.centerX().size(CGSize(width: 100, height: 100))
             .centerY(toView: view as Any, offset: -58)
-        audioLabel.fw.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
+        audioLabel.app.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
@@ -75,9 +75,9 @@ extension TestAudioController: ViewControllerProtocol {
     
     func renderData() {
         if audioPlayer.isPlaying {
-            audioImage.image = FW.iconImage("zmdi-var-pause", 100)
+            audioImage.image = APP.iconImage("zmdi-var-pause", 100)
         } else {
-            audioImage.image = FW.iconImage("zmdi-var-play", 100)
+            audioImage.image = APP.iconImage("zmdi-var-play", 100)
         }
     }
     
@@ -102,8 +102,8 @@ extension TestAudioController: ViewControllerProtocol {
         
         let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem)?.intValue ?? 0) + 1)
         let totalStr = String(describing: audioPlayerNumberOfItems())
-        let timeStr = Date.fw.formatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
-        let durationStr = Date.fw.formatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
+        let timeStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
+        let durationStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
         audioLabel.text = String(format: "%@/%@\n%@\n%@", indexStr, totalStr, timeStr, durationStr)
     }
     

@@ -19,40 +19,40 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableLayout() {
-        tableView.fw.pinEdges()
+        tableView.app.pinEdges()
     }
     
     func setupNavbar() {
         navigationItem.title = "Router"
         var url = "http://test.com?id=我是中文"
-        FW.debug("urlEncode: %@", String(describing: url.fw.urlEncode))
-        FW.debug("urlDecode: %@", String(describing: url.fw.urlEncode?.fw.urlDecode))
-        FW.debug("urlEncodeComponent: %@", String(describing: url.fw.urlEncodeComponent))
-        FW.debug("urlDecodeComponent: %@", String(describing: url.fw.urlEncodeComponent?.fw.urlDecodeComponent))
+        APP.debug("urlEncode: %@", String(describing: url.app.urlEncode))
+        APP.debug("urlDecode: %@", String(describing: url.app.urlEncode?.app.urlDecode))
+        APP.debug("urlEncodeComponent: %@", String(describing: url.app.urlEncodeComponent))
+        APP.debug("urlDecodeComponent: %@", String(describing: url.app.urlEncodeComponent?.app.urlDecodeComponent))
         
         url = "app://tests/1?value=2&name=name2&title=我是字符串100%&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"
-        FW.debug("string.queryDecode: %@", String(describing: url.fw.queryDecode))
-        FW.debug("string.queryEncode: %@", String(describing: String.fw.queryEncode(url.fw.queryDecode)))
-        let nsurl = URL.fw.url(string: url)
-        FW.debug("query.queryDecode: %@", String(describing: nsurl?.query?.fw.queryDecode))
-        FW.debug("url.queryDictionary: %@", String(describing: nsurl?.fw.queryDictionary))
+        APP.debug("string.queryDecode: %@", String(describing: url.app.queryDecode))
+        APP.debug("string.queryEncode: %@", String(describing: String.app.queryEncode(url.app.queryDecode)))
+        let nsurl = URL.app.url(string: url)
+        APP.debug("query.queryDecode: %@", String(describing: nsurl?.query?.app.queryDecode))
+        APP.debug("url.queryDictionary: %@", String(describing: nsurl?.app.queryDictionary))
     }
     
     func setupSubviews() {
         let str = "http://test.com?id=我是中文"
         var url = URL(string: str)
-        FW.debug("str: %@ =>\nurl: %@", str, String(describing: url))
-        url = URL.fw.url(string: str)
-        FW.debug("str: %@ =>\nurl: %@", str, String(describing: url))
+        APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
+        url = URL.app.url(string: str)
+        APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
         
         var urlStr = Router.generateURL(TestRouter.testUrl, parameters: nil)
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: [1])
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: ["id": 2])
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: 3)
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         
         tableData.append(contentsOf: [
             ["打开Web", "onOpenHttp"],
@@ -97,7 +97,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
@@ -106,7 +106,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
 }
@@ -143,7 +143,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func onOpenCallback() {
         Router.openURL("\(TestRouter.wildcardUrl)?id=2") { result in
-            UIWindow.fw.showMessage(text: result)
+            UIWindow.app.showMessage(text: result)
         }
     }
     
@@ -239,7 +239,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func onOpenUniversalLinks() {
         let url = "https://v.douyin.com/JYmHJ9k/"
-        UIApplication.fw.openUniversalLinks(url) { success in
+        UIApplication.app.openUniversalLinks(url) { success in
             if !success {
                 Router.openURL(url)
             }
@@ -247,12 +247,12 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenUrl() {
-        UIApplication.fw.openURL("http://kvm.wuyong.site/test.php")
+        UIApplication.app.openURL("http://kvm.wuyong.site/test.php")
     }
     
     func onOpenSafari() {
-        UIApplication.fw.openSafariController("http://kvm.wuyong.site/test.php") {
-            FW.debug("SafariController completionHandler")
+        UIApplication.app.openSafariController("http://kvm.wuyong.site/test.php") {
+            APP.debug("SafariController completionHandler")
         }
     }
     
@@ -260,7 +260,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
         vc.context = RouterContext(url: "http://kvm.wuyong.site/test.php?key=value")
-        vc.fw.shouldPopController = { [weak self] in
+        vc.app.shouldPopController = { [weak self] in
             TestRouterController.popCount += 1
             let index = TestRouterController.popCount % 3
             if index == 0 {
@@ -284,7 +284,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
 @objc extension Autoloader {
     
     func loadTestRouter() {
-        FW.autoload(TestRouter.self)
+        APP.autoload(TestRouter.self)
     }
     
 }
@@ -310,7 +310,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     class func homeRouter(_ context: RouterContext) -> Any? {
-        UIWindow.fw.main?.fw.selectTabBarController(index: 0)
+        UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
     
@@ -338,7 +338,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         if context.isOpening {
             return "OBJECT UNMATCH"
         } else {
-            Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
             return nil
         }
     }
@@ -353,14 +353,14 @@ class TestRouter: NSObject, AutoloadProtocol {
         let javascript = "\(callback)('\(result)');"
         
         webVC.webView.evaluateJavaScript(javascript) { value, error in
-            Navigator.topViewController?.fw.showAlert(title: "App", message: "app:2 => js:\(String(describing: value))")
+            Navigator.topViewController?.app.showAlert(title: "App", message: "app:2 => js:\(String(describing: value))")
         }
         return nil
     }
     
     class func closeRouter(_ context: RouterContext) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
-        topVC.fw.close()
+        topVC.app.close()
         return nil
     }
     
@@ -385,9 +385,9 @@ class TestRouter: NSObject, AutoloadProtocol {
         }
         
         Router.routeFilter = { context in
-            let url = FW.safeURL(context.url)
-            if UIApplication.fw.isSystemURL(url) {
-                UIApplication.fw.openURL(url)
+            let url = APP.safeURL(context.url)
+            if UIApplication.app.isSystemURL(url) {
+                UIApplication.app.openURL(url)
                 return false
             }
             
@@ -407,7 +407,7 @@ class TestRouter: NSObject, AutoloadProtocol {
                     let userInfo = RouterParameter.fromDictionary(context.userInfo)
                     Navigator.open(vc, animated: true, options: userInfo.routerOptions)
                 } else {
-                    Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+                    Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
                 }
             }
             
@@ -415,7 +415,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         }
         
         Router.errorHandler = { context in
-            Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
         }
     }
     
@@ -450,11 +450,11 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
         navigationItem.title = context?.url
         
         if context?.completion != nil {
-            fw.setRightBarItem("完成") { [weak self] _ in
+            app.setRightBarItem("完成") { [weak self] _ in
                 guard let context = self?.context else { return }
                 
                 Router.completeURL(context, result: "我是回调数据")
-                self?.fw.close()
+                self?.app.close()
             }
         }
     }
@@ -462,11 +462,11 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "URL: \(FW.safeString(context?.url))\n\nparameters: \(FW.safeString(context?.parameters))"
+        label.text = "URL: \(APP.safeString(context?.url))\n\nparameters: \(APP.safeString(context?.parameters))"
         view.addSubview(label)
-        label.fw.layoutChain
+        label.app.layoutChain
             .center()
-            .width(FW.screenWidth - 40)
+            .width(APP.screenWidth - 40)
     }
     
 }

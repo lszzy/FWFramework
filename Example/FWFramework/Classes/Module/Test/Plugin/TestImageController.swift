@@ -18,7 +18,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        fw.setRightBarItem("Change") { [weak self] _ in
+        app.setRightBarItem("Change") { [weak self] _ in
             guard let self = self else { return }
             self.isSDWebImage = !self.isSDWebImage
             PluginManager.unloadPlugin(ImagePlugin.self)
@@ -80,29 +80,29 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = TestImageCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
+        let cell = TestImageCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
         let fileName = tableData[indexPath.row] as? String ?? ""
-        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.fw.mimeType(from: (fileName as NSString).pathExtension))
-        if !fileName.fw.isValid(.isUrl) {
-            cell.fw.tempObject = fileName
+        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(from: (fileName as NSString).pathExtension))
+        if !fileName.app.isValid(.isUrl) {
+            cell.app.tempObject = fileName
             DispatchQueue.global().async {
                 let image = ModuleBundle.imageNamed(fileName)
-                let decodeImage = UIImage.fw.image(data: UIImage.fw.data(image: image))
+                let decodeImage = UIImage.app.image(data: UIImage.app.data(image: image))
                 DispatchQueue.main.async {
-                    if let tempObject = cell.fw.tempObject as? String, tempObject == fileName {
-                        cell.systemView.fw.setImage(url: nil, placeholderImage: image)
-                        cell.animatedView.fw.setImage(url: nil, placeholderImage: decodeImage)
+                    if let tempObject = cell.app.tempObject as? String, tempObject == fileName {
+                        cell.systemView.app.setImage(url: nil, placeholderImage: image)
+                        cell.animatedView.app.setImage(url: nil, placeholderImage: decodeImage)
                     }
                 }
             }
         } else {
-            cell.fw.tempObject = nil
+            cell.app.tempObject = nil
             var url = fileName
             if url.hasPrefix("http://kvm.wuyong.site") {
-                url = url.appending("?t=\(Date.fw.currentTime)")
+                url = url.appending("?t=\(Date.app.currentTime)")
             }
-            cell.systemView.fw.setImage(url: url)
-            cell.animatedView.fw.setImage(url: url, placeholderImage: UIImage.fw.appIconImage())
+            cell.systemView.app.setImage(url: url)
+            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage())
         }
         return cell
     }
@@ -122,7 +122,7 @@ class TestImageCell: UITableViewCell {
     }()
     
     lazy var animatedView: UIImageView = {
-        let result = UIImageView.fw.animatedImageView()
+        let result = UIImageView.app.animatedImageView()
         return result
     }()
     
@@ -132,18 +132,18 @@ class TestImageCell: UITableViewCell {
         contentView.addSubview(systemView)
         contentView.addSubview(animatedView)
         
-        nameLabel.fw.layoutChain
+        nameLabel.app.layoutChain
             .left(10)
             .top(10)
             .height(20)
         
-        systemView.fw.layoutChain
+        systemView.app.layoutChain
             .left(10)
             .top(toViewBottom: nameLabel, offset: 10)
             .bottom(10)
             .width(100)
         
-        animatedView.fw.layoutChain
+        animatedView.app.layoutChain
             .left(toViewRight: systemView, offset: 60)
             .top(toView: systemView)
             .bottom(toView: systemView)

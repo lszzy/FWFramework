@@ -51,7 +51,7 @@ class TestSocketController: UIViewController {
                 self?.serverLabel.text = "\(String(describing: connection)) is disconnected"
             case .text(let connection, let string):
                 self?.serverLabel.text = "Received text: \(string)"
-                connection.write(data: string.replacingOccurrences(of: "request", with: "response").fw.utf8Data!, opcode: .textFrame)
+                connection.write(data: string.replacingOccurrences(of: "request", with: "response").app.utf8Data!, opcode: .textFrame)
             case .binary(let connection, let data):
                 self?.serverLabel.text = "Received data: \(data.count)"
                 connection.write(data: data, opcode: .binaryFrame)
@@ -108,7 +108,7 @@ class TestSocketController: UIViewController {
     private lazy var serverButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Start Server", for: .normal)
-        button.fw.addTouch(target: self, action: #selector(onServer))
+        button.app.addTouch(target: self, action: #selector(onServer))
         return button
     }()
     
@@ -124,14 +124,14 @@ class TestSocketController: UIViewController {
     private lazy var clientButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Start Client", for: .normal)
-        button.fw.addTouch(target: self, action: #selector(onClient))
+        button.app.addTouch(target: self, action: #selector(onClient))
         return button
     }()
     
     private lazy var requestButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Client Request", for: .normal)
-        button.fw.addTouch(target: self, action: #selector(onRequest))
+        button.app.addTouch(target: self, action: #selector(onRequest))
         return button
     }()
     
@@ -157,23 +157,23 @@ extension TestSocketController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        serverLabel.fw.layoutChain
+        serverLabel.app.layoutChain
             .horizontal()
             .top(toSafeArea: 50)
         
-        serverButton.fw.layoutChain
+        serverButton.app.layoutChain
             .centerX()
             .top(toViewBottom: serverLabel, offset: 20)
         
-        clientLabel.fw.layoutChain
+        clientLabel.app.layoutChain
             .horizontal()
             .top(toViewBottom: serverButton, offset: 100)
         
-        clientButton.fw.layoutChain
+        clientButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clientLabel, offset: 20)
         
-        requestButton.fw.layoutChain
+        requestButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clientButton, offset: 20)
     }
@@ -197,7 +197,7 @@ extension TestSocketController: ViewControllerProtocol {
     
     func onClient() {
         if !clientInited {
-            fw.showPrompt(title: nil, message: "WebSocket Server", cancel: nil, confirm: nil) { [weak self] textField in
+            app.showPrompt(title: nil, message: "WebSocket Server", cancel: nil, confirm: nil) { [weak self] textField in
                 textField.text = self?.clientURL
             } confirmBlock: { [weak self] value in
                 self?.clientInited = true
@@ -214,7 +214,7 @@ extension TestSocketController: ViewControllerProtocol {
     }
     
     func onRequest() {
-        client.write(string: "request \(Date().fw.stringValue)")
+        client.write(string: "request \(Date().app.stringValue)")
     }
     
 }

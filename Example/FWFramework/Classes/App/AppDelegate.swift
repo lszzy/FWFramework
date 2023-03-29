@@ -20,11 +20,11 @@ class AppDelegate: AppResponder {
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
         Mediator.loadModule(AppModuleProtocol.self)?.moduleMethod()
-        FW.debug("appId: %@", AppConfig.shared.appId)
-        FW.debug("apiUrl: %@", AppConfig.shared.network.apiUrl)
+        APP.debug("appId: %@", AppConfig.shared.appId)
+        APP.debug("apiUrl: %@", AppConfig.shared.network.apiUrl)
         
-        if let url = UIApplication.fw.appLaunchURL(options) {
-            FW.debug("launchURL: %@", url.absoluteString)
+        if let url = UIApplication.app.appLaunchURL(options) {
+            APP.debug("launchURL: %@", url.absoluteString)
         }
     }
     

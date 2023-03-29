@@ -1,5 +1,5 @@
 import XCTest
-import FWFramework
+@_spi(FW) import FWFramework
 #if FWMacroSPM
 import FWObjC
 #endif

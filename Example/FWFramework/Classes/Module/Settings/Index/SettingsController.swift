@@ -16,7 +16,7 @@ class SettingsController: UIViewController {
     // MARK: - Accessor
     private lazy var loginButton: UIButton = {
         let button = AppTheme.largeButton()
-        button.fw.addTouch(target: self, action: #selector(onMediator))
+        button.app.addTouch(target: self, action: #selector(onMediator))
         return button
     }()
     
@@ -38,31 +38,31 @@ extension SettingsController: TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: 90))
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: 90))
         tableView.tableFooterView = footerView
         
         footerView.addSubview(loginButton)
-        loginButton.fw.layoutChain.center()
+        loginButton.app.layoutChain.center()
     }
     
     func renderData() {
-        navigationItem.title = FW.localized("settingTitle")
+        navigationItem.title = APP.localized("settingTitle")
         
         #if DEBUG
-        fw.setRightBarItem(FW.localized("debugButton")) { _ in
+        app.setRightBarItem(APP.localized("debugButton")) { _ in
             FWDebugManager.sharedInstance().toggle()
         }
         #endif
 
         if UserService.shared.isLogin() {
-            loginButton.setTitle(FW.localized("mediatorLogout"), for: .normal)
+            loginButton.setTitle(APP.localized("mediatorLogout"), for: .normal)
         } else {
-            loginButton.setTitle(FW.localized("mediatorLogin"), for: .normal)
+            loginButton.setTitle(APP.localized("mediatorLogin"), for: .normal)
         }
 
         tableData.removeAll()
-        tableData.append([FW.localized("languageTitle"), "onLanguage"])
-        tableData.append([FW.localized("themeTitle"), "onTheme"])
+        tableData.append([APP.localized("languageTitle"), "onLanguage"])
+        tableData.append([APP.localized("themeTitle"), "onTheme"])
         tableView.reloadData()
     }
     
@@ -75,28 +75,28 @@ extension SettingsController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .value1)
+        let cell = UITableViewCell.app.cell(tableView: tableView, style: .value1)
         cell.accessoryType = .disclosureIndicator
         
         let rowData = tableData[indexPath.row]
-        let text = FW.safeValue(rowData[0])
-        let action = FW.safeValue(rowData[1])
+        let text = APP.safeValue(rowData[0])
+        let action = APP.safeValue(rowData[1])
         cell.textLabel?.text = text
         
         if "onLanguage" == action {
-            var language = FW.localized("systemTitle")
-            if let localized = Bundle.fw.localizedLanguage, localized.count > 0 {
+            var language = APP.localized("systemTitle")
+            if let localized = Bundle.app.localizedLanguage, localized.count > 0 {
                 language = localized.hasPrefix("zh") ? "中文" : "English"
             } else {
-                language = language.appending("(\(FW.safeString(Bundle.fw.systemLanguage)))")
+                language = language.appending("(\(APP.safeString(Bundle.app.systemLanguage)))")
             }
             cell.detailTextLabel?.text = language
         } else if "onTheme" == action {
-            if UIWindow.fw.main?.fw.hasGrayView ?? false {
-                cell.detailTextLabel?.text = FW.localized("themeGray")
+            if UIWindow.app.main?.app.hasGrayView ?? false {
+                cell.detailTextLabel?.text = APP.localized("themeGray")
             } else {
                 let mode = ThemeManager.shared.mode
-                let theme = mode == .system ? FW.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(FW.localized("themeDark")))" : "(\(FW.localized("themeLight")))") : (mode == .dark ? FW.localized("themeDark") : FW.localized("themeLight"))
+                let theme = mode == .system ? APP.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(APP.localized("themeDark")))" : "(\(APP.localized("themeLight")))") : (mode == .dark ? APP.localized("themeDark") : APP.localized("themeLight"))
                 cell.detailTextLabel?.text = theme
             }
         }
@@ -106,8 +106,8 @@ extension SettingsController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        let action = FW.safeValue(rowData[1])
-        fw.invokeMethod(Selector(action))
+        let action = APP.safeValue(rowData[1])
+        app.invokeMethod(Selector(action))
     }
     
 }
@@ -130,7 +130,7 @@ private extension SettingsController {
     }
     
     @objc func onLogout() {
-        fw.showConfirm(title: FW.localized("logoutConfirm"), message: nil, cancel: nil, confirm: nil) { [weak self] in
+        app.showConfirm(title: APP.localized("logoutConfirm"), message: nil, cancel: nil, confirm: nil) { [weak self] in
             UserService.shared.logout {
                 self?.renderData()
             }
@@ -138,26 +138,26 @@ private extension SettingsController {
     }
     
     @objc func onLanguage() {
-        fw.showSheet(title: FW.localized("languageTitle"), message: nil, cancel: FW.localized("取消"), actions: [FW.localized("systemTitle"), "中文", "English"], currentIndex: -1) { (index) in
+        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), "中文", "English"], currentIndex: -1) { (index) in
             let language: String? = index == 1 ? "zh-Hans" : (index == 2 ? "en" : nil)
-            Bundle.fw.localizedLanguage = language
+            Bundle.app.localizedLanguage = language
             TabController.refreshController()
         }
     }
     
     @objc func onTheme() {
-        var actions = [FW.localized("systemTitle"), FW.localized("themeLight")]
+        var actions = [APP.localized("systemTitle"), APP.localized("themeLight")]
         if #available(iOS 13.0, *) {
-            actions.append(FW.localized("themeDark"))
-            actions.append(FW.localized("themeGray"))
+            actions.append(APP.localized("themeDark"))
+            actions.append(APP.localized("themeGray"))
         }
         
-        fw.showSheet(title: FW.localized("themeTitle"), message: nil, cancel: FW.localized("取消"), actions: actions, currentIndex:-1) { (index) in
+        app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex:-1) { (index) in
             if #available(iOS 13.0, *), index == actions.count - 1 {
-                if UIWindow.fw.main?.fw.hasGrayView ?? false {
-                    UIWindow.fw.main?.fw.hideGrayView()
+                if UIWindow.app.main?.app.hasGrayView ?? false {
+                    UIWindow.app.main?.app.hideGrayView()
                 } else {
-                    UIWindow.fw.main?.fw.showGrayView()
+                    UIWindow.app.main?.app.showGrayView()
                 }
             } else {
                 ThemeManager.shared.mode = ThemeMode(index)

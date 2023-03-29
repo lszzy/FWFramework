@@ -19,21 +19,21 @@ class LoginController: UIViewController {
 extension LoginController: ViewControllerProtocol {
     
     func setupNavbar() {
-        navigationItem.title = FW.localized("mediatorLogin")
-        fw.setLeftBarItem(Icon.closeImage) { [weak self] (sender) in
-            self?.fw.close(animated: true)
+        navigationItem.title = APP.localized("mediatorLogin")
+        app.setLeftBarItem(Icon.closeImage) { [weak self] (sender) in
+            self?.app.close(animated: true)
         }
     }
     
     func setupSubviews() {
         let button = UIButton(type: .system)
-        button.setTitle(FW.localized("mediatorLogin"), for: .normal)
-        button.setImage(FW.iconImage("zmdi-var-account", 25), for: .normal)
-        button.fw.addTouch { [weak self] (sender) in
+        button.setTitle(APP.localized("mediatorLogin"), for: .normal)
+        button.setImage(APP.iconImage("zmdi-var-account", 25), for: .normal)
+        button.app.addTouch { [weak self] (sender) in
             self?.dismiss(animated: true, completion: self?.completion)
         }
         view.addSubview(button)
-        button.fw.layoutChain.center()
+        button.app.layoutChain.center()
     }
     
 }

@@ -12,24 +12,24 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
     
     func didInitialize() {
         hidesBottomBarWhenPushed = false
-        fw.extendedLayoutEdge = .bottom
+        app.extendedLayoutEdge = .bottom
     }
     
     func setupNavbar() {
-        fw.tabBarHidden = false
-        fw.setLeftBarItem(Icon.backImage, target: self, action: #selector(onClose))
+        app.tabBarHidden = false
+        app.setLeftBarItem(Icon.backImage, target: self, action: #selector(onClose))
         var badgeView = BadgeView(badgeStyle: .dot)
-        navigationItem.leftBarButtonItem?.fw.showBadgeView(badgeView)
+        navigationItem.leftBarButtonItem?.app.showBadgeView(badgeView)
         
-        let rightItem = UIBarButtonItem.fw.item(object: Icon.backImage, target: self, action: #selector(onClick(_:)))
+        let rightItem = UIBarButtonItem.app.item(object: Icon.backImage, target: self, action: #selector(onClick(_:)))
         badgeView = BadgeView(badgeStyle: .small)
-        rightItem.fw.showBadgeView(badgeView, badgeValue: "1")
+        rightItem.app.showBadgeView(badgeView, badgeValue: "1")
         
         let customView = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         customView.backgroundColor = AppTheme.textColor
-        let customItem = UIBarButtonItem.fw.item(object: customView, target: self, action: #selector(onClick(_:)))
+        let customItem = UIBarButtonItem.app.item(object: customView, target: self, action: #selector(onClick(_:)))
         badgeView = BadgeView(badgeStyle: .small)
-        customItem.fw.showBadgeView(badgeView, badgeValue: "1")
+        customItem.app.showBadgeView(badgeView, badgeValue: "1")
         navigationItem.rightBarButtonItems = [rightItem, customItem]
     }
     
@@ -37,59 +37,59 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
         super.viewWillAppear(animated)
         
         var badgeView = BadgeView(badgeStyle: .dot)
-        tabBarController?.tabBar.items?[0].fw.showBadgeView(badgeView)
+        tabBarController?.tabBar.items?[0].app.showBadgeView(badgeView)
         badgeView = BadgeView(badgeStyle: .small)
-        tabBarController?.tabBar.items?[1].fw.showBadgeView(badgeView, badgeValue: "99")
+        tabBarController?.tabBar.items?[1].app.showBadgeView(badgeView, badgeValue: "99")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        tabBarController?.tabBar.items?[0].fw.hideBadgeView()
-        tabBarController?.tabBar.items?[1].fw.hideBadgeView()
+        tabBarController?.tabBar.items?[0].app.hideBadgeView()
+        tabBarController?.tabBar.items?[1].app.hideBadgeView()
     }
     
     func setupSubviews() {
         var view = UIView(frame: CGRect(x: 20, y: 20, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         var badgeView = BadgeView(badgeStyle: .dot)
-        view.fw.showBadgeView(badgeView)
+        view.app.showBadgeView(badgeView)
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 20, y: 90, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .small)
-        view.fw.showBadgeView(badgeView, badgeValue: "9")
+        view.app.showBadgeView(badgeView, badgeValue: "9")
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 90, y: 90, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .small)
-        view.fw.showBadgeView(badgeView, badgeValue: "99")
+        view.app.showBadgeView(badgeView, badgeValue: "99")
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 160, y: 90, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .small)
-        view.fw.showBadgeView(badgeView, badgeValue: "99+")
+        view.app.showBadgeView(badgeView, badgeValue: "99+")
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 20, y: 160, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .big)
-        view.fw.showBadgeView(badgeView, badgeValue: "9")
+        view.app.showBadgeView(badgeView, badgeValue: "9")
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 90, y: 160, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .big)
-        view.fw.showBadgeView(badgeView, badgeValue: "99")
+        view.app.showBadgeView(badgeView, badgeValue: "99")
         self.view.addSubview(view)
         
         view = UIView(frame: CGRect(x: 160, y: 160, width: 50, height: 50))
         view.backgroundColor = AppTheme.textColor
         badgeView = BadgeView(badgeStyle: .big)
-        view.fw.showBadgeView(badgeView, badgeValue: "99+")
+        view.app.showBadgeView(badgeView, badgeValue: "99+")
         self.view.addSubview(view)
     }
     
@@ -99,13 +99,13 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
     }
     
     @objc func onClose() {
-        fw.showConfirm(title: nil, message: "是否关闭") { [weak self] in
-            self?.fw.close()
+        app.showConfirm(title: nil, message: "是否关闭") { [weak self] in
+            self?.app.close()
         }
     }
     
     @objc func onClick(_ sender: UIBarButtonItem) {
-        sender.fw.hideBadgeView()
+        sender.app.hideBadgeView()
     }
     
 }

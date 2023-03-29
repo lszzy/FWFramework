@@ -15,12 +15,12 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        fw.setRightBarItem("设置") { _ in
-            UIApplication.fw.openAppSettings()
+        app.setRightBarItem("设置") { _ in
+            UIApplication.app.openAppSettings()
         }
         
         // 手工修改设置返回页面自动刷新权限，释放时自动移除监听
-        fw.observeNotification(UIApplication.didBecomeActiveNotification) { [weak self] _ in
+        app.observeNotification(UIApplication.didBecomeActiveNotification) { [weak self] _ in
             self?.tableView.reloadData()
         }
     }
@@ -46,7 +46,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let rowData = tableData[indexPath.row] as! [Any]
         let type = rowData[1] as! AuthorizeType
         
@@ -80,8 +80,8 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
                 self?.tableView.reloadRows(at: [indexPath], with: .fade)
             })
         } else if type == .notifications {
-            self.fw.showConfirm(title: "跳转通知设置", message: nil, cancel: "取消", confirm: "设置") {
-                UIApplication.fw.openAppNotificationSettings()
+            self.app.showConfirm(title: "跳转通知设置", message: nil, cancel: "取消", confirm: "设置") {
+                UIApplication.app.openAppNotificationSettings()
             }
         }
     }

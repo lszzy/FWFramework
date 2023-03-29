@@ -11,8 +11,8 @@ import FWFramework
 class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDelegate, UITextFieldDelegate {
     
     let titles: [String] = ["修改", "删除", "扫一扫", "付款"]
-    let iconPhone: UIImage = FW.iconImage("zmdi-var-smartphone-iphone", 24)!
-    let icons: [UIImage] = [FW.iconImage("zmdi-var-edit", 24)!, FW.iconImage("zmdi-var-delete", 24)!, FW.iconImage("zmdi-var-smartphone-iphone", 24)!, FW.iconImage("zmdi-var-card", 24)!]
+    let iconPhone: UIImage = APP.iconImage("zmdi-var-smartphone-iphone", 24)!
+    let icons: [UIImage] = [APP.iconImage("zmdi-var-edit", 24)!, APP.iconImage("zmdi-var-delete", 24)!, APP.iconImage("zmdi-var-smartphone-iphone", 24)!, APP.iconImage("zmdi-var-card", 24)!]
     
     var popupMenu: PopupMenu?
     
@@ -20,59 +20,59 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         let result = UITextField()
         result.placeholder = "我是输入框"
         result.textColor = AppTheme.textColor
-        result.fw.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
         result.delegate = self
         return result
     }()
     
     private lazy var customLabel: UILabel = {
-        let result = UILabel.fw.label(font: UIFont.fw.font(ofSize: 16), textColor: AppTheme.textColor, text: "我是自定义标签")
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "我是自定义标签")
         result.backgroundColor = AppTheme.cellColor
         return result
     }()
     
     func setupSubviews() {
-        var button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        var button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .left(10)
             .top(toSafeArea: 10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .right(10)
             .top(toSafeArea: 10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .left(10)
             .bottom(10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .right(10)
             .bottom(10)
             .size(CGSize(width: 44, height: 44))
         
         view.addSubview(textField)
-        textField.fw.layoutChain
+        textField.app.layoutChain
             .left(50)
             .right(50)
             .top(toSafeArea: 200)
             .height(45)
         
         view.addSubview(customLabel)
-        customLabel.fw.layoutChain
+        customLabel.app.layoutChain
             .centerX()
             .top(toViewBottom: textField, offset: 50)
             .size(CGSize(width: 200, height: 50))
@@ -123,7 +123,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     }
     
     func popupMenu(_ popupMenu: PopupMenu, didSelectedAt index: Int) {
-        fw.showMessage(text: "点击了 \(popupMenu.titles?[index] ?? "")")
+        app.showMessage(text: "点击了 \(popupMenu.titles?[index] ?? "")")
     }
     
     func popupMenuBeganDismiss(_ popupMenu: PopupMenu) {
