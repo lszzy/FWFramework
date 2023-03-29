@@ -80,7 +80,7 @@ public class RouterContext: NSObject {
 }
 
 // MARK: - Router
-extension FW {
+extension WrapperGlobal {
     /// 路由快速访问
     public static var router = Router.self
 }

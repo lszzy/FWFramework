@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - FW+Language
-extension FW {
+// MARK: - WrapperGlobal+Language
+extension WrapperGlobal {
     
     /// 读取本地化字符串
     ///
