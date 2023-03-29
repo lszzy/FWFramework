@@ -67,7 +67,7 @@ open class CacheKeychain: CacheEngine {
 
     @discardableResult
     private func setPasswordData(_ passwordData: Data, forService service: String, account: String?) -> Bool {
-        var searchQuery = query(forService: service, account: account)
+        let searchQuery = query(forService: service, account: account)
         var status = SecItemCopyMatching(searchQuery as CFDictionary, nil)
 
         // 更新数据

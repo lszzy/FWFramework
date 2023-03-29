@@ -52,12 +52,6 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework'
     end
       
-    ss.subspec 'SQLCipher' do |sss|
-      sss.dependency 'SQLCipher'
-      sss.dependency 'FWFramework/FWFramework'
-      sss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC -DHAVE_USLEEP=1' }
-    end
-      
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {

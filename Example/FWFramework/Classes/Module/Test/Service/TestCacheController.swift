@@ -79,15 +79,15 @@ extension TestCacheController: ViewControllerProtocol {
         app.setRightBarItem("切换") { [weak self] _ in
             self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
                 if index == 0 {
-                    self?.cache = CacheManager.manager(withType: .memory)
+                    self?.cache = CacheManager.manager(type: .memory)
                 } else if index == 1 {
-                    self?.cache = CacheManager.manager(withType: .userDefaults)
+                    self?.cache = CacheManager.manager(type: .userDefaults)
                 } else if index == 2 {
-                    self?.cache = CacheManager.manager(withType: .keychain)
+                    self?.cache = CacheManager.manager(type: .keychain)
                 } else if index == 3 {
-                    self?.cache = CacheManager.manager(withType: .file)
+                    self?.cache = CacheManager.manager(type: .file)
                 } else if index == 4 {
-                    self?.cache = CacheManager.manager(withType: .sqlite)
+                    self?.cache = CacheManager.manager(type: .sqlite)
                 }
                 self?.refreshCache()
             })
