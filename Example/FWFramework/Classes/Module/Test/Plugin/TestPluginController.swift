@@ -36,7 +36,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         let sectionData = tableData[indexPath.section]
         let rowData = sectionData[indexPath.row]
         if indexPath.section == 0 {
-            let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "cell1")
+            let cell = UITableViewCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: "cell1")
             cell.selectionStyle = .none
             var view = cell.viewWithTag(100) as? ProgressView
             if view == nil {
@@ -45,7 +45,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 progressView.tag = 100
                 progressView.color = AppTheme.textColor
                 cell.contentView.addSubview(progressView)
-                progressView.fw.layoutChain.center()
+                progressView.app.layoutChain.center()
             }
             view?.annular = rowData == 0 ? true : false
             TestController.mockProgress { progress, finished in
@@ -55,7 +55,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         }
         
         if indexPath.section == 2 {
-            let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "cell3")
+            let cell = UITableViewCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: "cell3")
             cell.selectionStyle = .none
             var view = cell.viewWithTag(100) as? LottiePluginView
             if view == nil {
@@ -65,13 +65,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.color = AppTheme.textColor
                 cell.contentView.addSubview(lottieView)
-                lottieView.fw.layoutChain.center()
+                lottieView.app.layoutChain.center()
             }
             view?.startAnimating()
             return cell
         }
         
-        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "cell2")
+        let cell = UITableViewCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: "cell2")
         cell.selectionStyle = .none
         var view = cell.viewWithTag(100) as? IndicatorView
         if view == nil {
@@ -80,7 +80,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             indicatorView.tag = 100
             indicatorView.color = AppTheme.textColor
             cell.contentView.addSubview(indicatorView)
-            indicatorView.fw.layoutChain.center()
+            indicatorView.app.layoutChain.center()
         }
         view?.type = IndicatorViewAnimationType(rawValue: rowData)
         view?.startAnimating()
@@ -93,7 +93,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        fw.showAlert(title: "请选择", message: nil, style: .default, cancel: nil, actions: ["预览", "设置全局样式"]) { [weak self] index in
+        app.showAlert(title: "请选择", message: nil, style: .default, cancel: nil, actions: ["预览", "设置全局样式"]) { [weak self] index in
             if index == 0 {
                 self?.onPreview(indexPath)
             } else {

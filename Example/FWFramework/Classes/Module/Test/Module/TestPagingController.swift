@@ -12,8 +12,8 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     static let headerViewHeight: CGFloat = 150
     static let segmentViewHeight: CGFloat = 50
-    static let navigationViewHeight: CGFloat = FW.topBarHeight
-    static let cartViewHeight: CGFloat = FW.tabBarHeight
+    static let navigationViewHeight: CGFloat = APP.topBarHeight
+    static let cartViewHeight: CGFloat = APP.tabBarHeight
     static let categoryViewWidth: CGFloat = 84
     static let itemViewHeight: CGFloat = 40
     
@@ -24,25 +24,25 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         if refreshList {
             let pagerView = PagingListRefreshView(delegate: self, listContainerType: .scrollView)
             pagerView.listScrollViewPinContentInsetBlock = { scrollView in
-                if let vc = scrollView.fw.viewController as? TestNestChildController {
+                if let vc = scrollView.app.viewController as? TestNestChildController {
                     if vc.refreshList && vc.section && !vc.isInserted {
-                        return FW.screenHeight
+                        return APP.screenHeight
                     }
                 }
                 return 0
             }
-            pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.pinSectionHeaderVerticalOffset = Int(APP.topBarHeight)
             return pagerView
         } else {
             let pagerView = PagingView(delegate: self, listContainerType: .scrollView)
-            pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.pinSectionHeaderVerticalOffset = Int(APP.topBarHeight)
             return pagerView
         }
     }()
     
     lazy var headerView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()
         return result
     }()
     
@@ -65,13 +65,13 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }()
     
     func didInitialize() {
-        fw.extendedLayoutEdge = .top
+        app.extendedLayoutEdge = .top
         
         let appearance = NavigationBarAppearance()
         appearance.foregroundColor = .white
         appearance.backgroundTransparent = true
         appearance.leftBackImage = Icon.backImage
-        fw.navigationBarAppearance = appearance
+        app.navigationBarAppearance = appearance
     }
     
     override func viewDidLoad() {
@@ -79,14 +79,14 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         navigationItem.title = ""
         
         if !refreshList {
-            pagerView.mainTableView.fw.pullRefreshHeight = PullRefreshView.height + UIScreen.fw.safeAreaInsets.top
-            pagerView.mainTableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
-            pagerView.mainTableView.fw.pullRefreshView?.indicatorPadding = UIScreen.fw.safeAreaInsets.top
+            pagerView.mainTableView.app.pullRefreshHeight = PullRefreshView.height + UIScreen.app.safeAreaInsets.top
+            pagerView.mainTableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
+            pagerView.mainTableView.app.pullRefreshView?.indicatorPadding = UIScreen.app.safeAreaInsets.top
             
-            fw.setRightBarItem("测试") { [weak self] _ in
+            app.setRightBarItem("测试") { [weak self] _ in
                 let vc = TestPagingController()
                 vc.refreshList = true
-                self?.fw.open(vc)
+                self?.app.open(vc)
             }
         }
     }
@@ -95,24 +95,24 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
             self.pagerView.reloadData()
-            self.pagerView.mainTableView.fw.endRefreshing()
+            self.pagerView.mainTableView.app.endRefreshing()
         }
     }
     
     func setupSubviews() {
         view.addSubview(self.pagerView)
-        pagerView.fw.pinEdges()
+        pagerView.app.pinEdges()
         
         view.addSubview(cartView)
-        cartView.fw.pinEdges(excludingEdge: .top)
-        cartView.fw.setDimension(.height, size: TestPagingController.cartViewHeight)
+        cartView.app.pinEdges(excludingEdge: .top)
+        cartView.app.setDimension(.height, size: TestPagingController.cartViewHeight)
         
         let cartLabel = UILabel()
-        cartLabel.font = UIFont.fw.font(ofSize: 15)
+        cartLabel.font = UIFont.app.font(ofSize: 15)
         cartLabel.textColor = .black
         cartLabel.text = "我是购物车"
         cartLabel.textAlignment = .center
-        cartLabel.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: TestPagingController.cartViewHeight)
+        cartLabel.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: TestPagingController.cartViewHeight)
         cartView.addSubview(cartLabel)
     }
     
@@ -156,14 +156,14 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     func pagingView(_ pagingView: PagingView, mainTableViewDidScroll scrollView: UIScrollView) {
         let progress = scrollView.contentOffset.y / (TestPagingController.headerViewHeight - TestPagingController.navigationViewHeight)
         if progress >= 1 {
-            navigationController?.navigationBar.fw.backgroundColor = AppTheme.barColor
-            navigationController?.navigationBar.fw.foregroundColor = AppTheme.textColor
+            navigationController?.navigationBar.app.backgroundColor = AppTheme.barColor
+            navigationController?.navigationBar.app.foregroundColor = AppTheme.textColor
         } else if progress >= 0 && progress < 1 {
-            navigationController?.navigationBar.fw.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
+            navigationController?.navigationBar.app.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
             if progress <= 0.5 {
-                navigationController?.navigationBar.fw.foregroundColor = .white.withAlphaComponent(1 - progress)
+                navigationController?.navigationBar.app.foregroundColor = .white.withAlphaComponent(1 - progress)
             } else {
-                navigationController?.navigationBar.fw.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
+                navigationController?.navigationBar.app.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
             }
         }
     }
@@ -179,7 +179,7 @@ class TestNestCollectionCell: UICollectionViewCell {
     
     lazy var textLabel: UILabel = {
         let result = UILabel()
-        result.font = .fw.font(ofSize: 15)
+        result.font = .app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.textAlignment = .center
         return result
@@ -189,7 +189,7 @@ class TestNestCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.addSubview(textLabel)
-        textLabel.fw.layoutChain.edges()
+        textLabel.app.layoutChain.edges()
     }
     
     required init?(coder: NSCoder) {
@@ -217,7 +217,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     var scrollCallback: ((UIScrollView) -> Void)?
     
     func setupTableLayout() {
-        tableView.fw.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
+        tableView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -231,15 +231,15 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     func setupCollectionLayout() {
         collectionView.backgroundColor = AppTheme.backgroundColor
-        collectionView.fw.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
-        collectionView.fw.setDimension(.width, size: self.cart ? TestPagingController.categoryViewWidth : 0)
+        collectionView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
+        collectionView.app.setDimension(.width, size: self.cart ? TestPagingController.categoryViewWidth : 0)
     }
     
     func setupSubviews() {
         if refreshList {
-            tableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
+            tableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
         }
-        tableView.fw.setLoading(target: self, action: #selector(onLoading))
+        tableView.app.setLoading(target: self, action: #selector(onLoading))
     }
     
     func setupLayout() {
@@ -252,7 +252,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
         }
         collectionView.reloadData()
         
-        tableView.fw.reloadData { [weak self] in
+        tableView.app.reloadData { [weak self] in
             guard let self = self else { return }
             self.selectCollectionView(offset: self.tableView.contentOffset.y)
         }
@@ -260,7 +260,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.endRefreshing()
             if self.refreshList && self.section && !self.isInserted {
                 self.isInserted = true
                 for i in 0 ..< 5 {
@@ -272,7 +272,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             }
             self.collectionView.reloadData()
             
-            self.tableView.fw.reloadData { [weak self] in
+            self.tableView.app.reloadData { [weak self] in
                 guard let self = self else { return }
                 self.selectCollectionView(offset: self.tableView.contentOffset.y)
             }
@@ -281,7 +281,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     @objc func onLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.endRefreshing()
             let rows = self.tableData.count
             for i in 0 ..< 5 {
                 if self.isRefreshed {
@@ -292,7 +292,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             }
             self.collectionView.reloadData()
             
-            self.tableView.fw.reloadData { [weak self] in
+            self.tableView.app.reloadData { [weak self] in
                 guard let self = self else { return }
                 self.selectCollectionView(offset: self.tableView.contentOffset.y)
             }
@@ -304,7 +304,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = TestNestCollectionCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = TestNestCollectionCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         cell.textLabel.text = "\(indexPath.row)"
         cell.isSelected = false
         return cell
@@ -324,7 +324,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let index = indexPath.section * 5 + indexPath.row
         cell.textLabel?.text = tableData[index] as? String
         return cell
@@ -339,10 +339,10 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
         view.backgroundColor = AppTheme.cellColor
         
         let headerLabel = UILabel()
-        headerLabel.font = UIFont.fw.font(ofSize: 15)
+        headerLabel.font = UIFont.app.font(ofSize: 15)
         headerLabel.textColor = AppTheme.textColor
         headerLabel.text = "Header\(section)"
-        headerLabel.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: TestPagingController.itemViewHeight)
+        headerLabel.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: TestPagingController.itemViewHeight)
         view.addSubview(headerLabel)
         return view
     }
@@ -352,7 +352,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        fw.showAlert(title: "点击\(indexPath.row)", message: nil)
+        app.showAlert(title: "点击\(indexPath.row)", message: nil)
     }
     
     func selectCollectionView(offset: CGFloat) {

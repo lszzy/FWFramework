@@ -33,14 +33,14 @@ class TestWorkflowController: UIViewController {
 extension TestWorkflowController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.workflowName = "workflow.\(step)"
+        app.workflowName = "workflow.\(step)"
         navigationItem.title = "工作流-\(step)"
         
         if step < 3 {
-            fw.setRightBarItem("下一步", target: self, action: #selector(onNext))
+            app.setRightBarItem("下一步", target: self, action: #selector(onNext))
         } else {
-            fw.addRightBarItem("退出", target: self, action: #selector(onExit))
-            fw.addRightBarItem("重来", target: self, action: #selector(onOpen))
+            app.addRightBarItem("退出", target: self, action: #selector(onExit))
+            app.addRightBarItem("重来", target: self, action: #selector(onOpen))
         }
     }
     
@@ -50,7 +50,7 @@ extension TestWorkflowController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        delegateButton.fw.layoutChain
+        delegateButton.app.layoutChain
             .horizontal()
             .top(toSafeArea: 20)
             .height(30)
@@ -68,17 +68,17 @@ extension TestWorkflowController: ViewControllerProtocol {
     }
     
     func onExit() {
-        navigationController?.fw.popWorkflows(["workflow"], animated: true, completion: nil)
+        navigationController?.app.popWorkflows(["workflow"], animated: true, completion: nil)
     }
     
     func onOpen() {
-        navigationController?.fw.push(TestWorkflowController(), popWorkflows: ["workflow"], animated: true, completion: nil)
+        navigationController?.app.push(TestWorkflowController(), popWorkflows: ["workflow"], animated: true, completion: nil)
     }
     
     func onDelegate() {
         let result1 = delegate?.testMethod1?() != nil
         let result2 = delegate?.testMethod2?() != nil
-        fw.showMessage(text: "testMethod1: \(result1)\ntestMethod2: \(result2)")
+        app.showMessage(text: "testMethod1: \(result1)\ntestMethod2: \(result2)")
     }
     
     func testMethod1() {

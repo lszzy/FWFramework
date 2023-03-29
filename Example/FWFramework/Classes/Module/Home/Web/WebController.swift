@@ -69,19 +69,19 @@ class WebController: UIViewController, WebViewControllerProtocol {
         webView.allowsSchemeURL = true
         
         if navigationItem.leftBarButtonItem != nil {
-            webView.fw.navigationItems = nil
+            webView.app.navigationItems = nil
         } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
-            webView.fw.navigationItems = [backImage, closeImage]
+            webView.app.navigationItems = [backImage, closeImage]
         } else {
-            webView.fw.navigationItems = nil
+            webView.app.navigationItems = nil
         }
     }
     
     func setupWebLayout() {
-        webView.fw.layoutChain
+        webView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
-            .bottom(fw.bottomBarHeight)
+            .bottom(app.bottomBarHeight)
     }
     
     func setupWebBridge(_ bridge: WebViewJsBridge) {}
@@ -92,7 +92,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     static func toggleReuse(enabled: Bool) {
         if enabled {
-            WebView.fw.reuseConfigurationBlock = { configuration, _ in
+            WebView.app.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
             WebView.reusePreloadUrlBlock = { _ in
@@ -107,21 +107,21 @@ class WebController: UIViewController, WebViewControllerProtocol {
     // MARK: - WebViewDelegate
     func webViewFinishLoad() {
         if !webView.isFirstLoad { return }
-        fw.hideLoading()
+        app.hideLoading()
         
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
         
         let loadTime = Benchmark.end("WebView")
-        fw.showMessage(text: String(format: "%.3fms", loadTime * 1000))
+        app.showMessage(text: String(format: "%.3fms", loadTime * 1000))
     }
     
     func webViewFailLoad(_ error: Error) {
         if !webView.isFirstLoad { return }
-        fw.hideLoading()
+        app.hideLoading()
         
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
         
-        fw.showEmptyView(text: error.localizedDescription, detail: nil, image: nil, action: "点击重试") { [weak self] _ in
+        app.showEmptyView(text: error.localizedDescription, detail: nil, image: nil, action: "点击重试") { [weak self] _ in
             self?.loadRequestUrl()
         }
     }
@@ -136,33 +136,33 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     // MARK: - Private
     func setupToolbar() {
-        let backItem = UIBarButtonItem.fw.item(object: Icon.backImage) { [weak self] _ in
+        let backItem = UIBarButtonItem.app.item(object: Icon.backImage) { [weak self] _ in
             guard let self = self else { return }
             if self.webView.canGoBack {
                 self.webView.goBack()
             }
         }
         backItem.isEnabled = false
-        webView.fw.observeProperty("canGoBack") { [weak self] _, _ in
+        webView.app.observeProperty("canGoBack") { [weak self] _, _ in
             guard let self = self else { return }
             backItem.isEnabled = self.webView.canGoBack
             self.reloadToolbar(false)
         }
         
-        let forwardItem = UIBarButtonItem.fw.item(object: Icon.backImage?.fw.image(rotateDegree: 180)) { [weak self] _ in
+        let forwardItem = UIBarButtonItem.app.item(object: Icon.backImage?.app.image(rotateDegree: 180)) { [weak self] _ in
             guard let self = self else { return }
             if self.webView.canGoForward {
                 self.webView.goForward()
             }
         }
         forwardItem.isEnabled = false
-        webView.fw.observeProperty("canGoForward") { [weak self] _, _ in
+        webView.app.observeProperty("canGoForward") { [weak self] _, _ in
             guard let self = self else { return }
             forwardItem.isEnabled = self.webView.canGoForward
             self.reloadToolbar(false)
         }
         
-        webView.fw.observeProperty("isLoading") { [weak self] _, _ in
+        webView.app.observeProperty("isLoading") { [weak self] _, _ in
             self?.reloadToolbar(false)
         }
         
@@ -171,14 +171,14 @@ class WebController: UIViewController, WebViewControllerProtocol {
         spaceItem.width = 79
         toolbarItems = [flexibleItem, backItem, spaceItem, forwardItem, flexibleItem]
         
-        navigationController?.toolbar.fw.shadowImage = UIImage.fw.image(color: AppTheme.borderColor, size: CGSize(width: self.view.bounds.width, height: 0.5))
-        navigationController?.toolbar.fw.backgroundColor = AppTheme.barColor
-        navigationController?.toolbar.fw.foregroundColor = AppTheme.textColor
+        navigationController?.toolbar.app.shadowImage = UIImage.app.image(color: AppTheme.borderColor, size: CGSize(width: self.view.bounds.width, height: 0.5))
+        navigationController?.toolbar.app.backgroundColor = AppTheme.barColor
+        navigationController?.toolbar.app.foregroundColor = AppTheme.textColor
     }
     
     func reloadToolbar(_ animated: Bool) {
         let hidden = !(webView.canGoBack || webView.canGoForward)
-        if fw.toolBarHidden == hidden { return }
+        if app.toolBarHidden == hidden { return }
         
         if animated {
             CATransaction.begin()
@@ -199,32 +199,32 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     @objc func shareRequestUrl() {
         let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
-        fw.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
             if index == 0 {
-                UIApplication.fw.openActivityItems([FW.safeURL(self?.requestUrl)])
+                UIApplication.app.openActivityItems([APP.safeURL(self?.requestUrl)])
             } else if index == 1 {
                 self?.webView.reload()
             } else if index == 2 {
-                self?.webView.load(URLRequest(url: FW.safeURL(self?.requestUrl)))
-                self?.webView.fw.clearBackForwardList()
+                self?.webView.load(URLRequest(url: APP.safeURL(self?.requestUrl)))
+                self?.webView.app.clearBackForwardList()
             } else if index == 3 {
-                self?.webView.load(URLRequest(url: FW.safeURL(nil)))
-                self?.webView.fw.clearBackForwardList()
+                self?.webView.load(URLRequest(url: APP.safeURL(nil)))
+                self?.webView.app.clearBackForwardList()
             } else {
-                WebView.fw.processPool = WKProcessPool()
-                UserDefaults.fw.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
+                WebView.app.processPool = WKProcessPool()
+                UserDefaults.app.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
             }
         }
     }
     
     @objc func loadRequestUrl() {
-        fw.hideEmptyView()
+        app.hideEmptyView()
         if webView.isFirstLoad {
-            fw.showLoading()
+            app.showLoading()
         }
         
-        var urlRequest = URLRequest(url: FW.safeURL(requestUrl))
+        var urlRequest = URLRequest(url: APP.safeURL(requestUrl))
         urlRequest.timeoutInterval = 30
         urlRequest.setValue("test", forHTTPHeaderField: "Test-Token")
         webRequest = urlRequest

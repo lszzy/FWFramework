@@ -15,7 +15,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     private var scanManager: QrcodeScanManager?
     
     private lazy var scanView: QrcodeScanView = {
-        let result = QrcodeScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight))
+        let result = QrcodeScanView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight))
         result.scanImageName = ModuleBundle.imageNamed("qrcodeLine")
         return result
     }()
@@ -25,7 +25,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         let btnW: CGFloat = 30
         let btnH: CGFloat = 30
         let btnX: CGFloat = 0.5 * (view.frame.width - btnW)
-        let btnY: CGFloat = 0.5 * FW.screenHeight + 0.35 * view.frame.width - btnH - 25
+        let btnY: CGFloat = 0.5 * APP.screenHeight + 0.35 * view.frame.width - btnH - 25
         result.frame = CGRect(x: btnX, y: btnY, width: btnW, height: btnH)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightOpen"), for: .normal)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightClose"), for: .selected)
@@ -34,8 +34,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }()
     
     private lazy var promptLabel: UILabel = {
-        let labelY = 0.5 * FW.screenHeight + 0.35 * view.frame.width + 12
-        let result = UILabel(frame: CGRect(x: 0, y: labelY, width: FW.screenWidth, height: 20))
+        let labelY = 0.5 * APP.screenHeight + 0.35 * view.frame.width + 12
+        let result = UILabel(frame: CGRect(x: 0, y: labelY, width: APP.screenWidth, height: 20))
         result.font = UIFont.systemFont(ofSize: 13)
         result.textColor = AppTheme.textColor
         result.textAlignment = .center
@@ -44,8 +44,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }()
     
     func setupNavbar() {
-        fw.navigationBarStyle = .transparent
-        fw.extendedLayoutEdge = .top
+        app.navigationBarStyle = .transparent
+        app.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "相册", style: .done, target: self, action: #selector(TestQrcodeController.onPhotoLibrary))
     }
@@ -53,8 +53,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         let status = AuthorizeManager.manager(type: .camera)?.authorizeStatus() ?? .restricted
         if status == .restricted || status == .denied {
-            self.fw.showConfirm(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil, cancel: "取消", confirm: "设置") {
-                UIApplication.fw.openAppSettings()
+            self.app.showConfirm(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil, cancel: "取消", confirm: "设置") {
+                UIApplication.app.openAppSettings()
             }
         } else {
             self.setupScanManager()
@@ -89,7 +89,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         scanManager.scanResultBlock = { [weak self] result in
             guard let result = result else { return }
             if let sound = ModuleBundle.resourcePath("Qrcode.caf") {
-                UIApplication.fw.playSystemSound(sound)
+                UIApplication.app.playSystemSound(sound)
             }
             self?.stopScanManager()
             self?.onScanResult(result)
@@ -146,9 +146,9 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     @objc func onPhotoLibrary() {
         stopScanManager()
         
-        fw.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
+        app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
             guard let imagePicker = imagePicker as? UIViewController else { return }
-            imagePicker.fw.presentationDidDismiss = {
+            imagePicker.app.presentationDidDismiss = {
                 self?.startScanManager()
             }
         } completion: { [weak self] objects, results, cancel in
@@ -156,8 +156,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 self?.startScanManager()
             } else {
                 var image = objects.first as? UIImage
-                image = image?.fw.compressImage(maxWidth: 1200)
-                image = image?.fw.compressImage(maxLength: 300 * 1024)
+                image = image?.app.compressImage(maxWidth: 1200)
+                image = image?.app.compressImage(maxLength: 300 * 1024)
                 if let image = image,
                    let result = QrcodeScanManager.scanQrcode(with: image) {
                     self?.onScanResult(result)
@@ -167,7 +167,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func onScanResult(_ result: String) {
-        fw.showAlert(title: "扫描结果", message: result, cancel: nil) { [weak self] in
+        app.showAlert(title: "扫描结果", message: result, cancel: nil) { [weak self] in
             self?.startScanManager()
         }
     }

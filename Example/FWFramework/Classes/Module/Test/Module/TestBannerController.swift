@@ -41,7 +41,7 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.delegate = self
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
-        result.placeholderImage = UIImage.fw.appIconImage()
+        result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .custom
         result.pageDotViewClass = DotView.self
         result.pageControlDotSize = CGSize(width: 10, height: 1)
@@ -60,7 +60,7 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.bannerImageViewContentMode = .scaleAspectFill
-        result.placeholderImage = UIImage.fw.appIconImage()
+        result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
@@ -74,7 +74,7 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.bannerImageViewContentMode = .scaleAspectFill
-        result.placeholderImage = UIImage.fw.appIconImage()
+        result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
@@ -90,11 +90,11 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.bannerImageViewContentMode = .scaleAspectFill
-        result.placeholderImage = UIImage.fw.appIconImage()
+        result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
-        result.itemSize = CGSize(width: FW.screenWidth - 30, height: 100)
+        result.itemSize = CGSize(width: APP.screenWidth - 30, height: 100)
         result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
@@ -107,12 +107,12 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.bannerImageViewContentMode = .scaleAspectFill
-        result.placeholderImage = UIImage.fw.appIconImage()
+        result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
         result.itemPagingCenter = true
-        result.itemSize = CGSize(width: FW.screenWidth - 40, height: 100)
+        result.itemSize = CGSize(width: APP.screenWidth - 40, height: 100)
         result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
@@ -128,45 +128,45 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
     }
     
     func setupLayout() {
-        bannerView1.fw.layoutChain
+        bannerView1.app.layoutChain
             .top(toSafeArea: 10)
             .left()
-            .width(FW.screenWidth)
+            .width(APP.screenWidth)
             .height(100)
         
-        bannerView2.fw.layoutChain
+        bannerView2.app.layoutChain
             .top(toViewBottom: bannerView1, offset: 10)
             .left()
             .height(100)
-            .width(FW.screenWidth + 10)
+            .width(APP.screenWidth + 10)
         
-        bannerView3.fw.layoutChain
+        bannerView3.app.layoutChain
             .top(toViewBottom: bannerView2, offset: 10)
             .left()
             .height(100)
-            .width(FW.screenWidth)
+            .width(APP.screenWidth)
         
-        bannerView4.fw.layoutChain
+        bannerView4.app.layoutChain
             .top(toViewBottom: bannerView3, offset: 10)
             .left()
             .height(100)
-            .width(FW.screenWidth)
+            .width(APP.screenWidth)
         
-        bannerView5.fw.layoutChain
+        bannerView5.app.layoutChain
             .top(toViewBottom: bannerView4, offset: 10)
             .left()
             .height(100)
-            .width(FW.screenWidth)
+            .width(APP.screenWidth)
         
-        bannerView6.fw.layoutChain
+        bannerView6.app.layoutChain
             .top(toViewBottom: bannerView5, offset: 10)
             .left()
             .height(100)
-            .width(FW.screenWidth)
+            .width(APP.screenWidth)
     }
     
     func bannerView(_ bannerView: BannerView, didSelectItemAt index: Int) {
-        fw.showMessage(text: "点击了：\(index)")
+        app.showMessage(text: "点击了：\(index)")
     }
     
 }

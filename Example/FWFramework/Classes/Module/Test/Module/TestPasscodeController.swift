@@ -66,8 +66,8 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
     }()
     
     func setupNavbar() {
-        fw.setRightBarItem("Toggle") { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: self?.dataArray, actionBlock: { index in
+        app.setRightBarItem("Toggle") { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: self?.dataArray, actionBlock: { index in
                 self?.type = .init(rawValue: index) ?? .normal
             })
         }
@@ -81,21 +81,21 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupLayout() {
-        valueLabel.fw.layoutChain
+        valueLabel.app.layoutChain
             .centerX()
             .top(toSafeArea: 30)
         
-        boxContainerView.fw.layoutChain
+        boxContainerView.app.layoutChain
             .left(35)
             .right(35)
             .height(52)
             .top(toViewBottom: valueLabel, offset: 30)
         
-        clearButton.fw.layoutChain
+        clearButton.app.layoutChain
             .centerX()
             .top(toViewBottom: boxContainerView, offset: 30)
         
-        securityButton.fw.layoutChain
+        securityButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clearButton, offset: 30)
         
@@ -135,7 +135,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             }
         }
         boxContainerView.addSubview(boxInputView)
-        boxInputView.fw.layoutChain.edges()
+        boxInputView.app.layoutChain.edges()
     }
     
     private func generateBoxInputView_normal() -> PasscodeView {
@@ -210,11 +210,11 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             lineView.underlineColorNormal = AppTheme.textColor.withAlphaComponent(0.3)
             lineView.underlineColorSelected = AppTheme.textColor.withAlphaComponent(0.7)
             lineView.underlineColorFilled = AppTheme.textColor
-            lineView.lineView.fw.layoutChain.remake()
+            lineView.lineView.app.layoutChain.remake()
                 .height(4)
                 .edges(excludingEdge: .top)
             lineView.selectChangeBlock = { lineView, selected in
-                lineView.lineView.fw.layoutChain.height(selected ? 6 : 4)
+                lineView.lineView.app.layoutChain.height(selected ? 6 : 4)
             }
             return lineView
         }
@@ -266,7 +266,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         cellProperty.securityType = .view
         cellProperty.customSecurityViewBlock = {
             let view = PasscodeSecrectImageView()
-            view.image = FW.iconImage("zmdi-var-settings", 24) ?? UIImage()
+            view.image = APP.iconImage("zmdi-var-settings", 24) ?? UIImage()
             view.imageWidth = 23
             view.imageHeight = 23
             return view
@@ -300,7 +300,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             circleView.backgroundColor = AppTheme.textColor
             circleView.layer.cornerRadius = 4
             view.addSubview(circleView)
-            circleView.fw.layoutChain.center()
+            circleView.app.layoutChain.center()
                 .width(20)
                 .height(20)
             return view

@@ -26,7 +26,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.fw.height = FW.screenHeight - FW.topBarHeight
+        view.app.height = APP.screenHeight - APP.topBarHeight
         view.addSubview(barrageManager.renderView)
         barrageManager.renderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         barrageManager.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -117,7 +117,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         descriptor.strokeWidth = -1
         descriptor.fixedSpeed = 50
         descriptor.barrageCellClass = BarrageGradientBackgroundColorCell.self
-        descriptor.gradientColor = UIColor.fw.randomColor
+        descriptor.gradientColor = UIColor.app.randomColor
         
         barrageManager.renderBarrageDescriptor(descriptor)
         
@@ -127,7 +127,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     @objc func addWalkBannerBarrage() {
         let descriptor = BarrageWalkBannerDescriptor()
         descriptor.cellTouchedAction = { [weak self] descriptor, cell in
-            self?.fw.showAlert(title: "弹幕", message: "为你服务")
+            self?.app.showAlert(title: "弹幕", message: "为你服务")
             
             if let cell = cell as? BarrageWalkBannerCell {
                 cell.textLabel.backgroundColor = .red
@@ -163,7 +163,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         descriptor.positionPriority = .veryHigh
         descriptor.animationDuration = 4
         descriptor.barrageCellClass = BarrageBecomeNobleCell.self
-        descriptor.backgroundImage = UIImage.fw.appIconImage()
+        descriptor.backgroundImage = UIImage.app.appIconImage()
         
         barrageManager.renderBarrageDescriptor(descriptor)
         
@@ -259,7 +259,7 @@ class BarrageGradientBackgroundColorCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let contentImage = layer.fw.snapshotImage(size: gradientLayer?.frame.size ?? .zero)
+        let contentImage = layer.app.snapshotImage(size: gradientLayer?.frame.size ?? .zero)
         layer.contents = contentImage?.cgImage
     }
     
@@ -359,9 +359,9 @@ class BarrageWalkBannerCell: BarrageTextCell {
     override func updateSubviewsData() {
         super.updateSubviewsData()
         
-        leftImageView.image = UIImage.fw.appIconImage()
+        leftImageView.image = UIImage.app.appIconImage()
         middleImageView.backgroundColor = UIColor(red: 1, green: 0.83, blue: 0.26, alpha: 1)
-        rightImageView.image = UIImage.fw.appIconImage()
+        rightImageView.image = UIImage.app.appIconImage()
     }
     
     override func layoutContentSubviews() {
@@ -388,7 +388,7 @@ class BarrageWalkBannerCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let contentImage = layer.fw.snapshotImage(size: CGSize(width: CGRectGetMaxX(rightImageView.frame), height: CGRectGetMaxY(rightImageView.frame)))
+        let contentImage = layer.app.snapshotImage(size: CGSize(width: CGRectGetMaxX(rightImageView.frame), height: CGRectGetMaxY(rightImageView.frame)))
         layer.contents = contentImage?.cgImage
     }
     
@@ -455,7 +455,7 @@ class BarrageBecomeNobleCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let image = layer.fw.snapshotImage(size: CGSize(width: nobleDescriptor?.backgroundImage?.size.width ?? 0, height: nobleDescriptor?.backgroundImage?.size.height ?? 0))
+        let image = layer.app.snapshotImage(size: CGSize(width: nobleDescriptor?.backgroundImage?.size.width ?? 0, height: nobleDescriptor?.backgroundImage?.size.height ?? 0))
         layer.contents = image?.cgImage
     }
     

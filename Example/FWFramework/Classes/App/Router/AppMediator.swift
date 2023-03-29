@@ -28,7 +28,7 @@ protocol AppModuleProtocol: ModuleProtocol {
     func setup() {
         #if DEBUG
         FWDebugManager.sharedInstance().openUrl = { (url) in
-            if let scheme = URL.fw.url(string: url)?.scheme, scheme.count > 0 {
+            if let scheme = URL.app.url(string: url)?.scheme, scheme.count > 0 {
                 Router.openURL(url)
                 return true
             }
@@ -42,7 +42,7 @@ protocol AppModuleProtocol: ModuleProtocol {
     }
     
     func moduleMethod() {
-        FW.debug("AppModule.moduleMethod")
+        APP.debug("AppModule.moduleMethod")
     }
     
     // MARK: - UIApplicationDelegate
@@ -62,7 +62,7 @@ protocol AppModuleProtocol: ModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到远程通知：\(title ?? "")\n\(FW.safeString(userInfo))")
+            UIWindow.app.showMessage(text: "收到远程通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
         NotificationManager.shared.localNotificationHandler = { (userInfo, notification) in
             NotificationManager.shared.clearNotificationBadges()
@@ -71,17 +71,17 @@ protocol AppModuleProtocol: ModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到本地通知：\(title ?? "")\n\(FW.safeString(userInfo))")
+            UIWindow.app.showMessage(text: "收到本地通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        UIDevice.fw.setDeviceTokenData(deviceToken)
+        UIDevice.app.setDeviceTokenData(deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        UIDevice.fw.setDeviceTokenData(nil)
+        UIDevice.app.setDeviceTokenData(nil)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

@@ -31,7 +31,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
@@ -41,7 +41,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
         let selector = NSSelectorFromString(rowData[1])
-        fw.invokeMethod(selector)
+        app.invokeMethod(selector)
     }
     
 }

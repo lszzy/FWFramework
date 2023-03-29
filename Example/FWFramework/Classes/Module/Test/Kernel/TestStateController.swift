@@ -19,7 +19,7 @@ class TestStateController: UIViewController {
     
     private lazy var button: UIButton = {
         let result = AppTheme.largeButton()
-        result.fw.addTouch(target: self, action: #selector(onClick(_:)))
+        result.app.addTouch(target: self, action: #selector(onClick(_:)))
         return result
     }()
     
@@ -32,7 +32,7 @@ class TestStateController: UIViewController {
 extension TestStateController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.setRightBarItem("锁定") { [weak self] sender in
+        app.setRightBarItem("锁定") { [weak self] sender in
             guard let this = self else { return }
             
             this.isLocked = !this.isLocked
@@ -46,11 +46,11 @@ extension TestStateController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        label.fw.layoutChain
+        label.app.layoutChain
             .horizontal(10)
             .top(toSafeArea: 10)
         
-        button.fw.layoutChain
+        button.app.layoutChain
             .top(toViewBottom: label, offset: 10)
             .centerX()
         
@@ -86,14 +86,14 @@ extension TestStateController: ViewControllerProtocol {
         // 添加事件
         let viewEvent = StateEvent(name: "view", from: [unread], to: read)
         viewEvent.fireBlock = { [weak self] transition, completion in
-            self?.fw.showLoading(text: "正在请求")
+            self?.app.showLoading(text: "正在请求")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self?.fw.hideLoading()
+                self?.app.hideLoading()
                 
                 if [true, false].randomElement() == true {
                     completion(true)
                 } else {
-                    self?.fw.showMessage(text: "请求失败")
+                    self?.app.showMessage(text: "请求失败")
                     completion(false)
                 }
             }
@@ -102,20 +102,20 @@ extension TestStateController: ViewControllerProtocol {
         let deleteEvent = StateEvent(name: "trash", from: [read, unread], to: delete)
         deleteEvent.shouldFireBlock = { [weak self] transition in
             if self?.isLocked ?? false {
-                self?.fw.showMessage(text: "已锁定，不能删除")
+                self?.app.showMessage(text: "已锁定，不能删除")
                 return false
             }
             return true
         }
         deleteEvent.fireBlock = { [weak self] transition, completion in
-            self?.fw.showLoading(text: "正在请求")
+            self?.app.showLoading(text: "正在请求")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self?.fw.hideLoading()
+                self?.app.hideLoading()
                 
                 if [true, false].randomElement() == true {
                     completion(true)
                 } else {
-                    self?.fw.showMessage(text: "请求失败")
+                    self?.app.showMessage(text: "请求失败")
                     completion(false)
                 }
             }
@@ -124,20 +124,20 @@ extension TestStateController: ViewControllerProtocol {
         let unreadEvent = StateEvent(name: "restore", from: [read, delete], to: unread)
         unreadEvent.shouldFireBlock = { [weak self] transition in
             if self?.isLocked ?? false {
-                self?.fw.showMessage(text: "已锁定，不能恢复")
+                self?.app.showMessage(text: "已锁定，不能恢复")
                 return false
             }
             return true
         }
         unreadEvent.fireBlock = { [weak self] transition, completion in
-            self?.fw.showLoading(text: "正在请求")
+            self?.app.showLoading(text: "正在请求")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self?.fw.hideLoading()
+                self?.app.hideLoading()
                 
                 if [true, false].randomElement() == true {
                     completion(true)
                 } else {
-                    self?.fw.showMessage(text: "请求失败")
+                    self?.app.showMessage(text: "请求失败")
                     completion(false)
                 }
             }

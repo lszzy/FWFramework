@@ -25,7 +25,7 @@ class TestCacheController: UIViewController {
     private lazy var refreshButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("读取缓存", for: .normal)
-        result.fw.addTouch { [weak self] _ in
+        result.app.addTouch { [weak self] _ in
             self?.refreshCache()
         }
         return result
@@ -34,7 +34,7 @@ class TestCacheController: UIViewController {
     private lazy var cacheButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("写入缓存", for: .normal)
-        result.fw.addTouch { [weak self] _ in
+        result.app.addTouch { [weak self] _ in
             self?.cache?.setObject(UUID().uuidString, forKey: TestCacheController.testCacheKey)
             self?.refreshCache()
         }
@@ -44,7 +44,7 @@ class TestCacheController: UIViewController {
     private lazy var expireButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("写入缓存(10s)", for: .normal)
-        result.fw.addTouch { [weak self] _ in
+        result.app.addTouch { [weak self] _ in
             self?.cache?.setObject(UUID().uuidString, forKey: TestCacheController.testCacheKey, withExpire: 10)
             self?.refreshCache()
         }
@@ -54,7 +54,7 @@ class TestCacheController: UIViewController {
     private lazy var deleteButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("删除缓存", for: .normal)
-        result.fw.addTouch { [weak self] _ in
+        result.app.addTouch { [weak self] _ in
             self?.cache?.removeObject(forKey: TestCacheController.testCacheKey)
             self?.refreshCache()
         }
@@ -64,7 +64,7 @@ class TestCacheController: UIViewController {
     private lazy var clearButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("清空缓存", for: .normal)
-        result.fw.addTouch { [weak self] _ in
+        result.app.addTouch { [weak self] _ in
             self?.cache?.removeAllObjects()
             self?.refreshCache()
         }
@@ -76,8 +76,8 @@ class TestCacheController: UIViewController {
 extension TestCacheController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.setRightBarItem("切换") { [weak self] _ in
-            self?.fw.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
+        app.setRightBarItem("切换") { [weak self] _ in
+            self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
                 if index == 0 {
                     self?.cache = CacheManager.manager(withType: .memory)
                 } else if index == 1 {
@@ -104,27 +104,27 @@ extension TestCacheController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        cacheLabel.fw.layoutChain
+        cacheLabel.app.layoutChain
             .horizontal(10)
             .top(toSafeArea: 10)
         
-        refreshButton.fw.layoutChain
+        refreshButton.app.layoutChain
             .top(toViewBottom: cacheLabel, offset: 10)
             .centerX()
         
-        cacheButton.fw.layoutChain
+        cacheButton.app.layoutChain
             .top(toViewBottom: refreshButton, offset: 10)
             .centerX()
         
-        expireButton.fw.layoutChain
+        expireButton.app.layoutChain
             .top(toViewBottom: cacheButton, offset: 10)
             .centerX()
         
-        deleteButton.fw.layoutChain
+        deleteButton.app.layoutChain
             .top(toViewBottom: expireButton, offset: 10)
             .centerX()
         
-        clearButton.fw.layoutChain
+        clearButton.app.layoutChain
             .top(toViewBottom: deleteButton, offset: 10)
             .centerX()
         

@@ -78,35 +78,35 @@ class TestController: UIViewController {
     
     // MARK: - Subviews
     private lazy var searchBar: UISearchBar = {
-        let result = UISearchBar(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.navigationBarHeight))
+        let result = UISearchBar(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.navigationBarHeight))
         result.placeholder = "Search"
         result.delegate = self
         result.showsCancelButton = true
-        result.fw.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
-        result.fw.forceCancelButtonEnabled = true
-        result.fw.backgroundColor = AppTheme.barColor
-        result.fw.textFieldBackgroundColor = AppTheme.tableColor
-        result.fw.contentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 0)
-        result.fw.cancelButtonInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        result.fw.searchIconCenter = true
-        result.fw.searchIconOffset = 10
-        result.fw.searchTextOffset = 4
+        result.app.cancelButton?.setTitle(AppBundle.localizedString("app.cancel"), for: .normal)
+        result.app.forceCancelButtonEnabled = true
+        result.app.backgroundColor = AppTheme.barColor
+        result.app.textFieldBackgroundColor = AppTheme.tableColor
+        result.app.contentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 0)
+        result.app.cancelButtonInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        result.app.searchIconCenter = true
+        result.app.searchIconOffset = 10
+        result.app.searchTextOffset = 4
         
-        if let textField = result.fw.textField {
-            textField.font = FW.font(12)
-            textField.fw.setCornerRadius(16)
-            textField.fw.touchResign = true
+        if let textField = result.app.textField {
+            textField.font = APP.font(12)
+            textField.app.setCornerRadius(16)
+            textField.app.touchResign = true
         }
         return result
     }()
     
     private lazy var titleView: UIView = {
         let titleView = TestExpandedView()
-        titleView.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.navigationBarHeight)
-        titleView.fw.layoutChain.height(FW.navigationBarHeight)
+        titleView.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.navigationBarHeight)
+        titleView.app.layoutChain.height(APP.navigationBarHeight)
         titleView.backgroundColor = UIColor.clear
         titleView.addSubview(searchBar)
-        searchBar.fw.layoutChain.edges()
+        searchBar.app.layoutChain.edges()
         return titleView
     }()
     
@@ -118,7 +118,7 @@ class TestController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        searchBar.fw.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
+        searchBar.app.cancelButton?.setTitle(AppBundle.localizedString("app.cancel"), for: .normal)
     }
     
     // MARK: - Public
@@ -173,7 +173,7 @@ extension TestController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         cell.accessoryType = .disclosureIndicator
         let sectionData = displayData[indexPath.section] as! [Any]
         let sectionList = sectionData[1] as! [Any]
@@ -196,7 +196,7 @@ extension TestController {
         var className = rowData[1] as! String
         var controllerClass: AnyClass? = NSClassFromString(className)
         if controllerClass == nil {
-            className = UIApplication.fw.appExecutable + "." + className
+            className = UIApplication.app.appExecutable + "." + className
             controllerClass = NSClassFromString(className)
         }
         
@@ -212,12 +212,12 @@ extension TestController {
 extension TestController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.fw.searchIconCenter = false
+        searchBar.app.searchIconCenter = false
         return true
     }
     
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.fw.searchIconCenter = true
+        searchBar.app.searchIconCenter = true
         return true
     }
     
@@ -226,7 +226,7 @@ extension TestController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        isSearch = !searchText.fw.trimString.isEmpty
+        isSearch = !searchText.app.trimString.isEmpty
         if !isSearch {
             searchResult.removeAll()
             tableView.reloadData()
@@ -237,8 +237,8 @@ extension TestController: UISearchBarDelegate {
         for sectionData in tableData as! [NSArray] {
             var sectionResult: [Any] = []
             for rowData in sectionData[1] as! [NSArray] {
-                if FW.safeString(rowData[0]).lowercased()
-                    .contains(searchText.fw.trimString.lowercased()) {
+                if APP.safeString(rowData[0]).lowercased()
+                    .contains(searchText.app.trimString.lowercased()) {
                     sectionResult.append(rowData)
                 }
             }

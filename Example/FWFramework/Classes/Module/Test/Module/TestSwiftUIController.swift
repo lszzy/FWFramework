@@ -15,7 +15,7 @@ import FWFramework
 class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
-        fw.navigationBarHidden = [true, false].randomElement()!
+        app.navigationBarHidden = [true, false].randomElement()!
         
         let hostingView = TestSwiftUIContent()
             .viewContext(self, userInfo: [
@@ -24,11 +24,11 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol {
             .navigationBarConfigure(
                 leading: Icon.backImage,
                 title: "TestSwiftUIViewController",
-                background: UIColor.fw.randomColor
+                background: UIColor.app.randomColor
             )
             .wrappedHostingView()
         view.addSubview(hostingView)
-        hostingView.fw.layoutChain
+        hostingView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
             .bottom()
@@ -73,7 +73,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.hidesBackButton = true
         if mode != 2 {
-            fw.navigationBarHidden = [true, false].randomElement()!
+            app.navigationBarHidden = [true, false].randomElement()!
         }
     }
     
@@ -90,12 +90,12 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
                 }, label: {
                     HStack {
                         Spacer()
-                        Image(uiImage: Icon.backImage?.fw.image(tintColor: AppTheme.textColor) ?? UIImage())
+                        Image(uiImage: Icon.backImage?.app.image(tintColor: AppTheme.textColor) ?? UIImage())
                         Spacer()
                     }
                 }),
                 title: Text("SwiftUIViewController - \(mode)"),
-                background: Color(UIColor.fw.randomColor)
+                background: Color(UIColor.app.randomColor)
             )
             .eraseToAnyView()
     }
@@ -179,7 +179,7 @@ struct TestSwiftUIContent: View {
                     
                     HStack(alignment: .center, spacing: 16) {
                         Button {
-                            viewContext.viewController?.fw.close()
+                            viewContext.viewController?.app.close()
                         } label: {
                             HStack {
                                 Spacer()
@@ -188,7 +188,7 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .buttonStyle(BorderlessButtonStyle())
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, cornerRadius: 20)
                         
                         Button {
@@ -201,7 +201,7 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .buttonStyle(BorderlessButtonStyle())
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, cornerRadius: 20)
                         .removable(buttonRemovable)
                         
@@ -214,7 +214,7 @@ struct TestSwiftUIContent: View {
                                 Spacer()
                             }
                         }
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, cornerRadius: 20)
                         .visible(buttonVisible)
                         .buttonStyle(BorderlessButtonStyle())
@@ -225,7 +225,7 @@ struct TestSwiftUIContent: View {
                     Router.openURL("https://www.baidu.com")
                     
                     viewContext.object = "Object"
-                    viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
+                    viewContext.userInfo = ["color": Color(UIColor.app.randomColor)]
                     viewContext.send()
                 } label: {
                     ViewWrapper {
@@ -243,7 +243,7 @@ struct TestSwiftUIContent: View {
                 
                 Button("Push HostingController") {
                     let viewController = TestSwiftUIHostingController()
-                    viewContext.viewController?.fw.open(viewController)
+                    viewContext.viewController?.app.open(viewController)
                 }
                 
                 Button("Present HostingController") {
@@ -296,22 +296,22 @@ struct TestSwiftUIContent: View {
             .listStyle(.plain)
             .captureContentOffset(in: $contentOffset)
             .introspectTableView { tableView in
-                if tableView.fw.tempObject != nil { return }
-                tableView.fw.tempObject = true
+                if tableView.app.tempObject != nil { return }
+                tableView.app.tempObject = true
                 
-                tableView.fw.resetGroupedStyle()
+                tableView.app.resetGroupedStyle()
                 
-                tableView.fw.setRefreshing {
+                tableView.app.setRefreshing {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.fw.endRefreshing()
+                        tableView.app.endRefreshing()
                         moreItems = []
                     }
                 }
                 
-                tableView.fw.setLoading {
+                tableView.app.setLoading {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.fw.endLoading()
-                        tableView.fw.shouldLoading = moreItems.count < 5
+                        tableView.app.endLoading()
+                        tableView.app.shouldLoading = moreItems.count < 5
                         var newItems = moreItems
                         newItems.append("http://www.baidu.com")
                         moreItems = newItems
@@ -321,16 +321,16 @@ struct TestSwiftUIContent: View {
         }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in
-            viewController.fw.showAlert(title: "我是标题", message: "我是内容")
+            viewController.app.showAlert(title: "我是标题", message: "我是内容")
         }
         .showToast($showingToast, customize: { viewController in
-            viewController.fw.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
+            viewController.app.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
         })
         .showEmptyView(showingEmpty, builder: {
             EmptyPluginView()
                 .text("我是标题")
                 .detail("我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
-                .image(UIImage.fw.appIconImage())
+                .image(UIImage.app.appIconImage())
                 .action("刷新") { _ in
                     showingEmpty = false
                 }

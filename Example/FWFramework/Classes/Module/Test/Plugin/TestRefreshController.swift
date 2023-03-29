@@ -15,41 +15,41 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableView.fw.resetGroupedStyle()
+        tableView.app.resetGroupedStyle()
         tableView.alwaysBounceVertical = true
         tableView.register(TestRefreshCell.self, forCellReuseIdentifier: "Cell")
     }
     
     func setupSubviews() {
         InfiniteScrollView.height = 64
-        tableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
-        tableView.fw.setLoading(target: self, action: #selector(onLoading))
+        tableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
+        tableView.app.setLoading(target: self, action: #selector(onLoading))
         
         let pullView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         pullView.image = ModuleBundle.imageNamed("Loading.gif")
-        tableView.fw.pullRefreshView?.shouldChangeAlpha = false
-        tableView.fw.pullRefreshView?.setCustom(pullView, for: .all)
-        tableView.fw.pullRefreshView?.stateBlock = { [weak self] view, state in
+        tableView.app.pullRefreshView?.shouldChangeAlpha = false
+        tableView.app.pullRefreshView?.setCustom(pullView, for: .all)
+        tableView.app.pullRefreshView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "refresh state-\(state.rawValue)"
         }
-        tableView.fw.pullRefreshView?.progressBlock = { [weak self] view, progress in
+        tableView.app.pullRefreshView?.progressBlock = { [weak self] view, progress in
             self?.navigationItem.title = String(format: "refresh progress-%.2f", progress)
         }
         
         let infiniteView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         infiniteView.image = ModuleBundle.imageNamed("Loading.gif")
-        tableView.fw.infiniteScrollView?.setCustom(infiniteView, for: .all)
-        // tableView.fw.infiniteScrollView?.preloadHeight = 200
-        tableView.fw.infiniteScrollView?.stateBlock = { [weak self] view, state in
+        tableView.app.infiniteScrollView?.setCustom(infiniteView, for: .all)
+        // tableView.app.infiniteScrollView?.preloadHeight = 200
+        tableView.app.infiniteScrollView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "load state-\(state.rawValue)"
         }
-        tableView.fw.infiniteScrollView?.progressBlock = { [weak self] view, progress in
+        tableView.app.infiniteScrollView?.progressBlock = { [weak self] view, progress in
             self?.navigationItem.title = String(format: "load progress-%.2f", progress)
         }
     }
     
     func setupLayout() {
-        tableView.fw.beginLoading()
+        tableView.app.beginLoading()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -98,8 +98,8 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
-            self.tableView.fw.shouldRefreshing = self.tableData.count < 20
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.shouldRefreshing = self.tableData.count < 20
+            self.tableView.app.endRefreshing()
         }
     }
     
@@ -112,8 +112,8 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
-            self.tableView.fw.loadingFinished = self.tableData.count >= 20
-            self.tableView.fw.endLoading()
+            self.tableView.app.loadingFinished = self.tableData.count >= 20
+            self.tableView.app.endLoading()
         }
     }
     
@@ -134,14 +134,14 @@ class TestRefreshCell: UITableViewCell {
             myTitleLabel.text = object?.title
             myImageView.image = object?.image
             myTextLabel.text = object?.text
-            myTextLabel.isHidden = FW.safeString(object?.text).isEmpty
+            myTextLabel.isHidden = APP.safeString(object?.text).isEmpty
         }
     }
     
     lazy var myTitleLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         return result
     }()
@@ -149,7 +149,7 @@ class TestRefreshCell: UITableViewCell {
     lazy var myTextLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 13)
+        result.font = UIFont.app.font(ofSize: 13)
         result.textColor = AppTheme.textColor
         return result
     }()
@@ -162,29 +162,29 @@ class TestRefreshCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        fw.separatorInset = .zero
+        app.separatorInset = .zero
         contentView.addSubview(myTitleLabel)
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTitleLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        var constraint = myTitleLabel.fw.pinEdge(toSuperview: .top, inset: 15)
-        myTitleLabel.fw.addCollapseConstraint(constraint)
-        myTitleLabel.fw.autoCollapse = true
+        myTitleLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        var constraint = myTitleLabel.app.pinEdge(toSuperview: .top, inset: 15)
+        myTitleLabel.app.addCollapseConstraint(constraint)
+        myTitleLabel.app.autoCollapse = true
         
-        myTextLabel.fw.hiddenCollapse = true
-        myTextLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTextLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        constraint = myTextLabel.fw.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
-        myTextLabel.fw.addCollapseConstraint(constraint)
+        myTextLabel.app.hiddenCollapse = true
+        myTextLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTextLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        constraint = myTextLabel.app.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
+        myTextLabel.app.addCollapseConstraint(constraint)
         
-        myImageView.fw.pinEdge(toSuperview: .left, inset: 15)
-        myImageView.fw.pinEdge(toSuperview: .right, inset: 15, relation: .greaterThanOrEqual)
-        myImageView.fw.pinEdge(toSuperview: .bottom, inset: 15)
-        constraint = myImageView.fw.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
-        myImageView.fw.addCollapseConstraint(constraint)
-        myImageView.fw.autoCollapse = true
+        myImageView.app.pinEdge(toSuperview: .left, inset: 15)
+        myImageView.app.pinEdge(toSuperview: .right, inset: 15, relation: .greaterThanOrEqual)
+        myImageView.app.pinEdge(toSuperview: .bottom, inset: 15)
+        constraint = myImageView.app.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
+        myImageView.app.addCollapseConstraint(constraint)
+        myImageView.app.autoCollapse = true
     }
     
     required init?(coder: NSCoder) {

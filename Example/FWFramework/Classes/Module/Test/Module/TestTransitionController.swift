@@ -16,20 +16,20 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fw.navigationBarHidden = true
+        app.navigationBarHidden = true
         
-        UIWindow.fw.showMessage(text: "viewWillAppear:\(animated)")
+        UIWindow.app.showMessage(text: "viewWillAppear:\(animated)")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.fw.navigationTransition = nil
+        navigationController?.app.navigationTransition = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIWindow.fw.showMessage(text: "viewWillDisappear:\(animated)")
+        UIWindow.app.showMessage(text: "viewWillDisappear:\(animated)")
     }
     
     func setupTableStyle() -> UITableView.Style {
@@ -62,7 +62,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
@@ -71,7 +71,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
     @objc func onPresent() {
@@ -115,7 +115,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         }
         
         let vc = TestFullScreenViewController()
-        vc.fw.modalTransition = transition
+        vc.app.modalTransition = transition
         present(vc, animated: true)
     }
     
@@ -126,13 +126,13 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         transition.outDirection = .right
         
         let vc = TestFullScreenViewController()
-        vc.fw.modalTransition = transition
+        vc.app.modalTransition = transition
         present(vc, animated: true)
     }
     
     @objc func onPresentEdge() {
         let nav = UINavigationController(rootViewController: TestFullScreenViewController())
-        let transition = nav.fw.setPresentTransition()
+        let transition = nav.app.setPresentTransition()
         transition.interactEnabled = true
         transition.interactScreenEdge = true
         nav.modalPresentationStyle = .fullScreen
@@ -154,12 +154,12 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
             return presentation
         }
         transition.dismissCompletion = { [weak self] in
-            self?.fw.showMessage(text: "dismiss完成")
+            self?.app.showMessage(text: "dismiss完成")
         }
         
         let nav = UINavigationController(rootViewController: TestFullScreenViewController())
         nav.modalPresentationStyle = .custom
-        nav.fw.modalTransition = transition
+        nav.app.modalTransition = transition
         present(nav, animated: true)
     }
     
@@ -187,7 +187,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         let vc = TestFullScreenViewController()
         vc.canScroll = true
         let nav = UINavigationController(rootViewController: vc)
-        nav.fw.modalTransition = transtion
+        nav.app.modalTransition = transtion
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
     }
@@ -217,7 +217,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         }
         transition.interact(with: nav)
         
-        nav.fw.modalTransition = transition
+        nav.app.modalTransition = transition
         present(nav, animated: false)
     }
     
@@ -233,7 +233,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         transition.outDirection = .down
         
         let vc = TestFullScreenViewController()
-        navigationController?.fw.navigationTransition = transition
+        navigationController?.app.navigationTransition = transition
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -243,17 +243,17 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         transition.transitionBlock = { transition in
             if transition.transitionType == .push {
                 transition.start()
-                transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: FW.screenHeight, width: FW.screenWidth, height: FW.screenHeight)
+                transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: APP.screenHeight, width: APP.screenWidth, height: APP.screenHeight)
                 UIView.animate(withDuration: transition.transitionDuration(using: transition.transitionContext)) {
-                    transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight)
+                    transition.transitionContext?.view(forKey: .to)?.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight)
                 } completion: { _ in
                     transition.complete()
                 }
             } else if transition.transitionType == .pop {
                 transition.start()
-                transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight)
+                transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight)
                 UIView.animate(withDuration: transition.transitionDuration(using: transition.transitionContext)) {
-                    transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: FW.screenHeight, width: FW.screenWidth, height: FW.screenHeight)
+                    transition.transitionContext?.view(forKey: .from)?.frame = CGRect(x: 0, y: APP.screenHeight, width: APP.screenWidth, height: APP.screenHeight)
                 } completion: { _ in
                     transition.complete()
                 }
@@ -261,8 +261,8 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         }
         
         let vc = TestFullScreenViewController()
-        vc.fw.viewTransition = transition
-        navigationController?.fw.navigationTransition = AnimatedTransition.system
+        vc.app.viewTransition = transition
+        navigationController?.app.navigationTransition = AnimatedTransition.system
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -273,7 +273,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         
         let vc = TestFullScreenViewController()
         vc.canScroll = true
-        navigationController?.fw.navigationTransition = transition
+        navigationController?.app.navigationTransition = transition
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -295,7 +295,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         }
         transition.interact(with: vc)
         
-        navigationController?.fw.navigationTransition = transition
+        navigationController?.app.navigationTransition = transition
         navigationController?.pushViewController(vc, animated: false)
     }
     
@@ -314,10 +314,10 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
     
     func setupSubviews() {
         if self.canScroll {
-            if let modalRecognizer = navigationController?.fw.modalTransition?.gestureRecognizer as? PanGestureRecognizer {
+            if let modalRecognizer = navigationController?.app.modalTransition?.gestureRecognizer as? PanGestureRecognizer {
                 modalRecognizer.scrollView = self.scrollView
             }
-            if let navRecognizer = navigationController?.fw.navigationTransition?.gestureRecognizer as? PanGestureRecognizer {
+            if let navRecognizer = navigationController?.app.navigationTransition?.gestureRecognizer as? PanGestureRecognizer {
                 navRecognizer.scrollView = self.scrollView
             }
         }
@@ -326,13 +326,13 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         let cycleView = BannerView()
         cycleView.autoScroll = true
         cycleView.autoScrollTimeInterval = 4
-        cycleView.placeholderImage = UIImage.fw.appIconImage()
+        cycleView.placeholderImage = UIImage.app.appIconImage()
         contentView.addSubview(cycleView)
-        cycleView.fw.layoutChain.left().top().width(FW.screenWidth).height(200)
+        cycleView.app.layoutChain.left().top().width(APP.screenWidth).height(200)
         
         let imageUrls = [
             "http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg",
-            UIImage.fw.appIconImage() as Any,
+            UIImage.app.appIconImage() as Any,
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
             "http://littlesvr.ca/apng/images/SteamEngine.webp",
             "not_found.jpg",
@@ -344,35 +344,35 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         let footerView = UIView()
         footerView.backgroundColor = AppTheme.tableColor
         contentView.addSubview(footerView)
-        footerView.fw.layoutChain.left().bottom().top(toViewBottom: cycleView).width(FW.screenWidth).height(1000)
+        footerView.app.layoutChain.left().bottom().top(toViewBottom: cycleView).width(APP.screenWidth).height(1000)
         
         frameLabel.text = NSCoder.string(for: view.frame)
         footerView.addSubview(frameLabel)
-        frameLabel.fw.layoutChain.centerX().top(50)
+        frameLabel.app.layoutChain.centerX().top(50)
         
         let button = UIButton()
         button.backgroundColor = AppTheme.cellColor
-        button.titleLabel?.font = UIFont.fw.font(ofSize: 15)
+        button.titleLabel?.font = UIFont.app.font(ofSize: 15)
         button.setTitleColor(AppTheme.textColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
         footerView.addSubview(button)
-        button.fw.setDimensions(CGSize(width: 200, height: 100))
-        button.fw.alignCenter()
+        button.app.setDimensions(CGSize(width: 200, height: 100))
+        button.app.alignCenter()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = "全屏弹出框"
-        fw.extendedLayoutEdge = []
+        app.extendedLayoutEdge = []
         
-        fw.setLeftBarItem(Icon.closeImage) { [weak self] _ in
-            self?.fw.close(animated: !(self?.noAnimate ?? false))
+        app.setLeftBarItem(Icon.closeImage) { [weak self] _ in
+            self?.app.close(animated: !(self?.noAnimate ?? false))
         }
         
         view.backgroundColor = navigationController != nil ? AppTheme.tableColor : AppTheme.tableColor.withAlphaComponent(0.9)
-        view.fw.addTapGesture { [weak self] _ in
-            self?.fw.close(animated: !(self?.noAnimate ?? false))
+        view.app.addTapGesture { [weak self] _ in
+            self?.app.close(animated: !(self?.noAnimate ?? false))
         }
     }
     
@@ -380,8 +380,8 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         super.viewWillAppear(animated)
         
         frameLabel.text = NSCoder.string(for: view.frame)
-        if !fw.isPresented {
-            fw.navigationBarHidden = true
+        if !app.isPresented {
+            app.navigationBarHidden = true
         }
     }
     
@@ -413,7 +413,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
             presentation.presentedFrame = self?.contentView.frame ?? .zero
             return presentation
         }
-        fw.modalTransition = transition
+        app.modalTransition = transition
     }
     
     override func viewDidLoad() {
@@ -421,23 +421,23 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
         
         // 方式2：不指定presentedFrame，背景手势不生效，自己添加手势和圆角即可
         view.addSubview(contentView)
-        contentView.fw.layoutChain.center()
+        contentView.app.layoutChain.center()
         
         let childView = UIView()
         contentView.addSubview(childView)
-        childView.fw.layoutChain.edges().size(CGSize(width: 300, height: 250))
+        childView.app.layoutChain.edges().size(CGSize(width: 300, height: 250))
         
-        contentView.fw.addTapGesture { [weak self] _ in
+        contentView.app.addTapGesture { [weak self] _ in
             guard let self = self else { return }
             if self.useAnimator {
                 self.configAnimator()
             }
-            self.fw.close()
+            self.app.close()
         }
     }
     
     func configAnimator() {
-        fw.modalTransition = nil
+        app.modalTransition = nil
         
         var radian = Double.pi
         if [true, false].randomElement() == true {
@@ -476,14 +476,14 @@ class TestTransitionCustomViewController: UIViewController, ViewControllerProtoc
         super.viewDidLoad()
         
         view.addSubview(contentView)
-        contentView.fw.layoutChain.center()
+        contentView.app.layoutChain.center()
         
         let childView = UIView()
         contentView.addSubview(childView)
-        childView.fw.layoutChain.edges().size(CGSize(width: 300, height: 250))
+        childView.app.layoutChain.edges().size(CGSize(width: 300, height: 250))
         
         view.backgroundColor = AppTheme.backgroundColor.withAlphaComponent(0.5)
-        view.fw.addTapGesture { [weak self] _ in
+        view.app.addTapGesture { [weak self] _ in
             self?.dismiss()
         }
     }

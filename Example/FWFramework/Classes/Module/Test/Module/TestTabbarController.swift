@@ -26,44 +26,44 @@ class TestTabbarController: UIViewController, ViewControllerProtocol {
     }()
     
     private lazy var homeButton: ToolbarButton = {
-        let result = ToolbarButton(image: FW.iconImage("zmdi-var-home", 26), title: FW.localized("homeTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
+        let result = ToolbarButton(image: APP.iconImage("zmdi-var-home", 26), title: APP.localized("homeTitle"))
+        result.titleLabel?.font = APP.font(10)
+        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
         result.tag = 1
         return result
     }()
     
     private lazy var testButton: ToolbarButton = {
-        let result = ToolbarButton(image: Icon.iconImage("zmdi-var-bug", size: 26), title: FW.localized("testTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
+        let result = ToolbarButton(image: Icon.iconImage("zmdi-var-bug", size: 26), title: APP.localized("testTitle"))
+        result.titleLabel?.font = APP.font(10)
+        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
         result.tag = 2
         return result
     }()
     
     private lazy var settingsButton: ToolbarButton = {
-        let result = ToolbarButton(image: FW.icon("zmdi-var-settings", 26)?.image, title: FW.localized("settingTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
+        let result = ToolbarButton(image: APP.icon("zmdi-var-settings", 26)?.image, title: APP.localized("settingTitle"))
+        result.titleLabel?.font = APP.font(10)
+        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
         result.tag = 3
         return result
     }()
     
     private lazy var homeController: UIViewController = {
         let result = TestTabbarChildController()
-        result.title = FW.localized("homeTitle")
+        result.title = APP.localized("homeTitle")
         return result
     }()
     
     private lazy var testController: UIViewController = {
         let result = TestTabbarChildController()
-        result.title = FW.localized("testTitle")
+        result.title = APP.localized("testTitle")
         return result
     }()
     
     private lazy var settingsController: UIViewController = {
         let result = TestTabbarChildController()
-        result.title = FW.localized("settingTitle")
+        result.title = APP.localized("settingTitle")
         return result
     }()
     
@@ -71,29 +71,29 @@ class TestTabbarController: UIViewController, ViewControllerProtocol {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        homeButton.contentEdgeInsets = UIEdgeInsets(top: FW.isLandscape ? 2 : 8, left: 8, bottom: FW.isLandscape ? 2 : 8, right: 8)
-        homeButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
+        homeButton.contentEdgeInsets = UIEdgeInsets(top: APP.isLandscape ? 2 : 8, left: 8, bottom: APP.isLandscape ? 2 : 8, right: 8)
+        homeButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
         testButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        testButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
+        testButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
         settingsButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        settingsButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
+        settingsButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
     }
     
     func setupSubviews() {
         view.addSubview(childView)
         view.addSubview(tabBarView)
-        childView.fw.layoutChain.left().right().top()
-        tabBarView.fw.layoutChain.left().right().bottom().top(toViewBottom: childView)
+        childView.app.layoutChain.left().right().top()
+        tabBarView.app.layoutChain.left().right().bottom().top(toViewBottom: childView)
     }
     
     func setupLayout() {
-        fw.navigationBarHidden = true
+        app.navigationBarHidden = true
         onButtonClicked(homeButton)
     }
     
     @objc func onButtonClicked(_ sender: UIButton) {
         if let child = childController {
-            fw.removeChild(child)
+            app.removeChild(child)
         }
         
         var child: UIViewController
@@ -116,7 +116,7 @@ class TestTabbarController: UIViewController, ViewControllerProtocol {
             
             child = settingsController
         }
-        fw.addChild(child, in: childView)
+        app.addChild(child, in: childView)
     }
     
 }
@@ -139,14 +139,14 @@ class TestTabbarChildController: UIViewController, ViewControllerProtocol {
     }
     
     func setupSubviews() {
-        fw.navigationBarHidden = true
+        app.navigationBarHidden = true
         
-        view.backgroundColor = UIColor.fw.randomColor
+        view.backgroundColor = UIColor.app.randomColor
         view.addSubview(navigationView)
-        navigationView.fw.layoutChain.left().right().top()
-        view.fw.addTapGesture { [weak self] sender in
+        navigationView.app.layoutChain.left().right().top()
+        view.app.addTapGesture { [weak self] sender in
             let viewController = TestTabbarChildController()
-            var title = FW.safeString(self?.title)
+            var title = APP.safeString(self?.title)
             if let index = title.firstIndex(of: "-") {
                 let count = Int(title.suffix(from: title.index(index, offsetBy: 1))) ?? 0
                 title = "\(title.prefix(upTo: index))-\(count + 1)"
