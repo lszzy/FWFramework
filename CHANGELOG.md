@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.8.0] - 2023-03-30
+
+### Added
+
+* ToolbarView now supports configuring left alignment and spacing.
+* ToolbarTitleView now supports configuring left alignment and spacing.
+
 ## [4.7.4] - 2023-03-18
 
 ### Added

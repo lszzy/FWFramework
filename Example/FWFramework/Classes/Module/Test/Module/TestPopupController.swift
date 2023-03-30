@@ -31,6 +31,24 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         return result
     }()
     
+    private lazy var titleView: ToolbarTitleView = {
+        let result = ToolbarTitleView()
+        result.titleLabel.textAlignment = .left
+        result.alignmentLeft = true
+        result.isExpandedSize = true
+        return result
+    }()
+    
+    func setupNavbar() {
+        navigationItem.titleView = titleView
+        fw.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
+            UIWindow.fw.showMessage(text: "点击了刷新按钮")
+        }
+        fw.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
+            UIWindow.fw.showMessage(text: "点击了动作按钮")
+        }
+    }
+    
     func setupSubviews() {
         var button = UIButton.app.button(image: iconPhone)
         button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
