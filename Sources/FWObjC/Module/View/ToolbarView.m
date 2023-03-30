@@ -351,6 +351,13 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (void)setAlignmentLeft:(BOOL)alignmentLeft
+{
+    if (alignmentLeft == _alignmentLeft) return;
+    _alignmentLeft = alignmentLeft;
+    [self setNeedsUpdateConstraints];
+}
+
 - (__FWToolbarTitleView *)titleView
 {
     if ([self.centerButton isKindOfClass:[__FWToolbarTitleView class]]) {
@@ -463,7 +470,9 @@
         
         UIView *centerButton = self.centerButton;
         if (centerButton) {
-            [subviewContraints addObject:[centerButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterX offset:0]];
+            if (!self.alignmentLeft) {
+                [subviewContraints addObject:[centerButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterX offset:0]];
+            }
             [subviewContraints addObject:[centerButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[centerButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[centerButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
@@ -1025,7 +1034,7 @@
         }
         firstLineMaxX = firstLineMinX + MIN(firstLineWidth, contentSize.width) - (self.showsLoadingPlaceholder ? [self loadingViewSpacingSize].width : 0);
         firstLineMinX += self.showsAccessoryPlaceholder ? accessoryViewSpace : 0;
-        if (self.loadingView) {
+        if (self.loadingView && (self.showsLoadingPlaceholder || !self.loadingViewHidden)) {
             CGRect loadingFrame = self.loadingView.frame;
             loadingFrame.origin.x = firstLineMinX;
             loadingFrame.origin.y = (self.titleLabelSize.height - self.loadingViewSize.height) / 2.0 + titleEdgeInsets.top;
@@ -1077,7 +1086,7 @@
         CGFloat minX = contentOffsetLeft + (self.showsAccessoryPlaceholder ? accessoryViewSpace : 0);
         CGFloat maxX = maxSize.width - contentOffsetRight - (self.showsLoadingPlaceholder ? loadingViewSpace : 0);
         
-        if (self.loadingView) {
+        if (self.loadingView && (self.showsLoadingPlaceholder || !self.loadingViewHidden)) {
             CGRect loadingFrame = self.loadingView.frame;
             loadingFrame.origin.x = minX;
             loadingFrame.origin.y = (maxSize.height - self.loadingViewSize.height) / 2.0;
