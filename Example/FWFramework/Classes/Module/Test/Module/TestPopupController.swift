@@ -41,11 +41,11 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     
     func setupNavbar() {
         navigationItem.titleView = titleView
-        fw.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
-            UIWindow.fw.showMessage(text: "点击了刷新按钮")
+        app.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
+            UIWindow.app.showMessage(text: "点击了刷新按钮")
         }
-        fw.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
-            UIWindow.fw.showMessage(text: "点击了动作按钮")
+        app.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
+            UIWindow.app.showMessage(text: "点击了动作按钮")
         }
     }
     
