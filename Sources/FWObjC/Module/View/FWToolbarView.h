@@ -267,6 +267,12 @@ NS_SWIFT_NAME(ToolbarTitleView)
 /// 同 showsAccessoryPlaceholder，用于 subtitle
 @property(nonatomic, assign) BOOL showsSubAccessoryPlaceholder;
 
+/// 整个titleView是否左对齐，需结合isExpandedSize使用，默认NO居中对齐
+@property (nonatomic, assign) BOOL alignmentLeft;
+
+/// 是否使用扩张尺寸，开启后会自动撑开到最大尺寸，默认NO
+@property (nonatomic, assign) BOOL isExpandedSize;
+
 /// 指定样式初始化
 - (instancetype)initWithStyle:(FWToolbarTitleViewStyle)style;
 

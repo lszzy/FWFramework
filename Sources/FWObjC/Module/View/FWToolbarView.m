@@ -944,12 +944,20 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     CGSize resultSize = [self contentSize];
-    resultSize.width = MIN(resultSize.width, self.maximumWidth);
+    if (self.isExpandedSize) {
+        resultSize.width = MIN(UIScreen.mainScreen.bounds.size.width, self.maximumWidth);
+    } else {
+        resultSize.width = MIN(resultSize.width, self.maximumWidth);
+    }
     return resultSize;
 }
 
 - (CGSize)intrinsicContentSize {
-    return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    if (self.isExpandedSize) {
+        return UILayoutFittingExpandedSize;
+    } else {
+        return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    }
 }
 
 - (void)layoutSubviews {
@@ -963,7 +971,7 @@
     CGSize contentSize = [self contentSize];
     contentSize.width = MIN(maxSize.width, contentSize.width);
     contentSize.height = MIN(maxSize.height, contentSize.height);
-    CGFloat contentOffsetLeft = (maxSize.width - contentSize.width) / 2.0;
+    CGFloat contentOffsetLeft = !self.alignmentLeft ? (maxSize.width - contentSize.width) / 2.0 : 0;
     CGFloat contentOffsetRight = contentOffsetLeft;
     
     CGFloat loadingViewSpace = [self loadingViewSpacingSize].width;
