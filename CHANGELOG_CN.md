@@ -3,7 +3,8 @@
 ## [4.8.0] - 2023-03-30
 
 ### Added
-* ToolbarView支持配置左对齐和配置间距
+* ToolbarView支持配置左对齐和间距
+* ToolbarTitleView支持配置左对齐和间距
 
 ## [4.7.4] - 2023-03-18
 
