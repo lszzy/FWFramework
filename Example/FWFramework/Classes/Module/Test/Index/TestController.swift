@@ -82,7 +82,7 @@ class TestController: UIViewController {
         result.placeholder = "Search"
         result.delegate = self
         result.showsCancelButton = true
-        result.app.cancelButton?.setTitle(AppBundle.localizedString("app.cancel"), for: .normal)
+        result.app.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
         result.app.forceCancelButtonEnabled = true
         result.app.backgroundColor = AppTheme.barColor
         result.app.textFieldBackgroundColor = AppTheme.tableColor
@@ -118,7 +118,7 @@ class TestController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        searchBar.app.cancelButton?.setTitle(AppBundle.localizedString("app.cancel"), for: .normal)
+        searchBar.app.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
     }
     
     // MARK: - Public
