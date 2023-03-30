@@ -109,6 +109,15 @@ NS_SWIFT_NAME(ToolbarMenuView)
 /// 是否等宽布局(类似UITabBar)，不含安全区域；默认NO，左右布局(类似UIToolbar|UINavigationBar)
 @property (nonatomic, assign) BOOL equalWidth;
 
+/// 是否左对齐，仅左右布局时生效，默认NO居中对齐
+@property (nonatomic, assign) BOOL alignmentLeft;
+
+/// 设置左右侧间距，默认为8，同系统一致
+@property (nonatomic, assign) CGFloat horizontalSpacing;
+
+/// 设置按钮间距，默认8，同系统一致
+@property (nonatomic, assign) CGFloat buttonSpacing;
+
 /// 快捷访问FWToolbarTitleView标题视图，同centerButton
 @property (nonatomic, strong, nullable) FWToolbarTitleView *titleView;
 
