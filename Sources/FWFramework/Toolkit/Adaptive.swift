@@ -313,12 +313,13 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         case .inch58:
             return UIDevice.fw_deviceSize.equalTo(CGSize(width: 375, height: 812))
         case .inch61:
-            return UIDevice.fw_deviceResolution.equalTo(CGSize(width: 828, height: 1792)) ||
+            return (UIDevice.fw_deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw_deviceModel == "iPhone11,8" || UIDevice.fw_deviceModel == "iPhone12,1")) ||
                 UIDevice.fw_deviceSize.equalTo(CGSize(width: 390, height: 844))
         case .inch65:
-            return UIDevice.fw_deviceResolution.equalTo(CGSize(width: 1242, height: 2688))
+            return UIDevice.fw_deviceSize.equalTo(CGSize(width: 414, height: 896)) && !fw_isScreenInch(.inch61)
         case .inch67:
-            return UIDevice.fw_deviceSize.equalTo(CGSize(width: 428, height: 926))
+            return UIDevice.fw_deviceSize.equalTo(CGSize(width: 428, height: 926)) ||
+                UIDevice.fw_deviceSize.equalTo(CGSize(width: 430, height: 932))
         default:
             return false
         }
@@ -367,8 +368,10 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         
         if UIDevice.fw_isLandscape { return 0 }
         if !fw_isNotchedScreen { return 20 }
-        if UIDevice.fw_deviceModel == "iPhone12,1" { return 48 }
-        if UIDevice.fw_deviceSize.equalTo(CGSize(width: 390, height: 848)) { return 47 }
+        let deviceModel = UIDevice.fw_deviceModel
+        if deviceModel == "iPhone12,1" { return 48 }
+        if deviceModel == "iPhone15,2" || deviceModel == "iPhone15,3" { return 54 }
+        if UIDevice.fw_deviceSize.equalTo(CGSize(width: 390, height: 844)) { return 47 }
         if fw_isScreenInch(.inch67) { return 47 }
         if fw_isScreenInch(.inch54) && UIDevice.fw_iosVersion >= 15.0 { return 50 }
         return 44
@@ -439,10 +442,8 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         }
         if isZoomedMode { return false }
         
-        if fw_isScreenInch(.inch67) || fw_isScreenInch(.inch65) ||
-            fw_isScreenInch(.inch61) || fw_isScreenInch(.inch55) {
-            return true
-        }
+        if fw_isScreenInch(.inch67) || fw_isScreenInch(.inch65) || fw_isScreenInch(.inch55) { return true }
+        if UIDevice.fw_deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw_deviceModel == "iPhone11,8" || UIDevice.fw_deviceModel == "iPhone12,1") { return true }
         return false
     }
 

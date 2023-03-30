@@ -174,6 +174,9 @@ import AdSupport
 
     /// 获取设备模型，格式："iPhone6,1"
     public static var fw_deviceModel: String? {
+        #if targetEnvironment(simulator)
+        return String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
+        #else
         var systemInfo = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)
@@ -182,6 +185,7 @@ import AdSupport
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
         return deviceModel
+        #endif
     }
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
