@@ -92,6 +92,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
     
     func setupSubviews() {
         tableData.append(contentsOf: [
+            "标题左对齐",
             "显示左边的loading",
             "显示右边的accessoryView",
             "显示副标题",
@@ -124,14 +125,16 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         guard let titleView = titleView else { return cell }
         switch indexPath.row {
         case 0:
-            cell.textLabel?.text = titleView.loadingViewHidden ? "显示左边的loading" : "隐藏左边的loading"
+            cell.textLabel?.text = navigationView.menuView.alignmentLeft ? "标题居中对齐" : "标题左对齐"
         case 1:
-            cell.textLabel?.text = titleView.accessoryImage == nil ? "显示右边的accessoryView" : "去掉右边的accessoryView"
+            cell.textLabel?.text = titleView.loadingViewHidden ? "显示左边的loading" : "隐藏左边的loading"
         case 2:
-            cell.textLabel?.text = titleView.subtitle != nil ? "去掉副标题" : "显示副标题"
+            cell.textLabel?.text = titleView.accessoryImage == nil ? "显示右边的accessoryView" : "去掉右边的accessoryView"
         case 3:
-            cell.textLabel?.text = titleView.style == .horizontal ? "切换为上下两行显示" : "切换为水平一行显示"
+            cell.textLabel?.text = titleView.subtitle != nil ? "去掉副标题" : "显示副标题"
         case 4:
+            cell.textLabel?.text = titleView.style == .horizontal ? "切换为上下两行显示" : "切换为水平一行显示"
+        case 5:
             cell.textLabel?.text = tableData[indexPath.row]
             cell.detailTextLabel?.text = (horizontalAlignment == .left ? "左对齐" : (horizontalAlignment == .right ? "右对齐" : "居中对齐"))
         default:
@@ -147,15 +150,19 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         guard let titleView = titleView else { return }
         switch indexPath.row {
         case 0:
-            titleView.loadingViewHidden = !titleView.loadingViewHidden
+            navigationView.menuView.alignmentLeft = !navigationView.menuView.alignmentLeft
+            titleView.titleLabel.textAlignment = navigationView.menuView.alignmentLeft ? .left : .center
+            titleView.showsLoadingPlaceholder = navigationView.menuView.alignmentLeft ? false : true
         case 1:
-            titleView.accessoryImage = titleView.accessoryImage != nil ? nil : APP.iconImage("zmdi-var-caret-down", 24)
+            titleView.loadingViewHidden = !titleView.loadingViewHidden
         case 2:
-            titleView.subtitle = titleView.subtitle != nil ? nil : "(副标题)"
+            titleView.accessoryImage = titleView.accessoryImage != nil ? nil : APP.iconImage("zmdi-var-caret-down", 24)
         case 3:
+            titleView.subtitle = titleView.subtitle != nil ? nil : "(副标题)"
+        case 4:
             titleView.style = titleView.style == .horizontal ? .vertical : .horizontal
             titleView.subtitle = titleView.style == .vertical ? "(副标题)" : titleView.subtitle
-        case 4:
+        case 5:
             app.showSheet(title: "水平对齐方式", message: nil, cancel: "取消", actions: ["左对齐", "居中对齐", "右对齐"]) { [weak self] index in
                 if index == 0 {
                     titleView.contentHorizontalAlignment = .left
@@ -167,7 +174,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
                 self?.horizontalAlignment = titleView.contentHorizontalAlignment
                 self?.tableView.reloadData()
             }
-        case 5:
+        case 6:
             titleView.loadingViewHidden = false
             titleView.showsLoadingPlaceholder = false
             titleView.title = "加载中..."
@@ -179,26 +186,26 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
                 titleView.loadingViewHidden = true
                 titleView.title = "主标题"
             }
-        case 6:
+        case 7:
             titleView.isUserInteractionEnabled = true
             titleView.title = "点我展开分类"
             titleView.accessoryImage = APP.iconImage("zmdi-var-caret-down", 24)
             titleView.delegate = self
-        case 7:
-            navigationView.setTopHidden(!navigationView.topHidden, animated: true)
         case 8:
-            navigationView.setMenuHidden(!navigationView.menuHidden, animated: true)
+            navigationView.setTopHidden(!navigationView.topHidden, animated: true)
         case 9:
-            navigationView.setBottomHidden(!navigationView.bottomHidden, animated: true)
+            navigationView.setMenuHidden(!navigationView.menuHidden, animated: true)
         case 10:
-            navigationView.setToolbarHidden(!navigationView.toolbarHidden, animated: true)
+            navigationView.setBottomHidden(!navigationView.bottomHidden, animated: true)
         case 11:
-            toolbarView.setTopHidden(!toolbarView.topHidden, animated: true)
+            navigationView.setToolbarHidden(!navigationView.toolbarHidden, animated: true)
         case 12:
-            toolbarView.setMenuHidden(!toolbarView.menuHidden, animated: true)
+            toolbarView.setTopHidden(!toolbarView.topHidden, animated: true)
         case 13:
-            toolbarView.setBottomHidden(!toolbarView.bottomHidden, animated: true)
+            toolbarView.setMenuHidden(!toolbarView.menuHidden, animated: true)
         case 14:
+            toolbarView.setBottomHidden(!toolbarView.bottomHidden, animated: true)
+        case 15:
             toolbarView.setToolbarHidden(!toolbarView.toolbarHidden, animated: true)
         default:
             break
