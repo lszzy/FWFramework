@@ -67,8 +67,6 @@ open class NavigationBarAppearance: NSObject {
     open var backImage: UIImage?
     /// 左侧返回按钮图片，自动配合VC导航栏样式生效，默认nil
     open var leftBackImage: UIImage?
-    /// 左侧返回按钮句柄，自动配合VC导航栏样式生效，默认nil
-    open var leftBackItem: ((UIViewController) -> UIBarButtonItem?)?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
     open var appearanceBlock: ((UINavigationBar) -> Void)?
     
@@ -280,11 +278,10 @@ open class NavigationBarAppearance: NSObject {
         if appearance.backImage != nil {
             self.navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
         }
-        if (appearance.leftBackItem != nil || appearance.leftBackImage != nil) &&
-            fw_property(forName: "fw_updateNavigationBarStyle") == nil {
+        if appearance.leftBackImage != nil && fw_property(forName: "fw_updateNavigationBarStyle") == nil {
             fw_setPropertyBool(true, forName: "fw_updateNavigationBarStyle")
             if navigationController.children.count > 1 && self.navigationItem.leftBarButtonItem == nil {
-                self.fw_leftBarItem = appearance.leftBackItem?(self) ?? appearance.leftBackImage
+                self.fw_leftBarItem = appearance.leftBackImage
             }
         }
         
