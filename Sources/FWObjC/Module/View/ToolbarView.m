@@ -295,6 +295,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.clipsToBounds = YES;
+        self.horizontalSpacing = 8;
+        self.buttonSpacing = 8;
     }
     return self;
 }
@@ -355,6 +357,20 @@
 {
     if (alignmentLeft == _alignmentLeft) return;
     _alignmentLeft = alignmentLeft;
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setHorizontalSpacing:(CGFloat)horizontalSpacing
+{
+    if (horizontalSpacing == _horizontalSpacing) return;
+    _horizontalSpacing = horizontalSpacing;
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setButtonSpacing:(CGFloat)buttonSpacing
+{
+    if (buttonSpacing == _buttonSpacing) return;
+    _buttonSpacing = buttonSpacing;
     [self setNeedsUpdateConstraints];
 }
 
@@ -432,40 +448,40 @@
         UIView *leftButton = self.leftButton ?: self.leftMoreButton;
         UIView *leftMoreButton = self.leftButton && self.leftMoreButton ? self.leftMoreButton : nil;
         if (leftButton) {
-            [subviewContraints addObject:[leftButton __fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.__fw_safeAreaInsets.left + 8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[leftButton __fw_pinEdgeToSuperview:NSLayoutAttributeLeft inset:UIScreen.__fw_safeAreaInsets.left + self.horizontalSpacing relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[leftButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = leftButton.frame.size.width ?: [leftButton sizeThatFits:fitsSize].width;
-            leftWidth += UIScreen.__fw_safeAreaInsets.left + 8 + buttonWidth + 8;
+            leftWidth += UIScreen.__fw_safeAreaInsets.left + self.horizontalSpacing + buttonWidth + self.buttonSpacing;
         }
         if (leftMoreButton) {
-            [subviewContraints addObject:[leftMoreButton __fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton offset:8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[leftMoreButton __fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:leftButton offset:self.buttonSpacing relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftMoreButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[leftMoreButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[leftMoreButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = leftMoreButton.frame.size.width ?: [leftMoreButton sizeThatFits:fitsSize].width;
-            leftWidth += buttonWidth + 8;
+            leftWidth += buttonWidth + self.buttonSpacing;
         }
         
         CGFloat rightWidth = 0;
         UIView *rightButton = self.rightButton ?: self.rightMoreButton;
         UIView *rightMoreButton = self.rightButton && self.rightMoreButton ? self.rightMoreButton : nil;
         if (rightButton) {
-            [subviewContraints addObject:[rightButton __fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:8 + UIScreen.__fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[rightButton __fw_pinEdgeToSuperview:NSLayoutAttributeRight inset:self.horizontalSpacing + UIScreen.__fw_safeAreaInsets.right relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[rightButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = rightButton.frame.size.width ?: [rightButton sizeThatFits:fitsSize].width;
-            rightWidth += 8 + buttonWidth + 8 + UIScreen.__fw_safeAreaInsets.right;
+            rightWidth += self.buttonSpacing + buttonWidth + self.horizontalSpacing + UIScreen.__fw_safeAreaInsets.right;
         }
         if (rightMoreButton) {
-            [subviewContraints addObject:[rightMoreButton __fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton offset:-8 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[rightMoreButton __fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeLeft ofView:rightButton offset:-self.buttonSpacing relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightMoreButton __fw_alignAxisToSuperview:NSLayoutAttributeCenterY offset:0]];
             [subviewContraints addObject:[rightMoreButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[rightMoreButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationGreaterThanOrEqual priority:UILayoutPriorityRequired]];
             CGFloat buttonWidth = rightMoreButton.frame.size.width ?: [rightMoreButton sizeThatFits:fitsSize].width;
-            rightWidth += 8 + buttonWidth;
+            rightWidth += self.buttonSpacing + buttonWidth;
         }
         
         UIView *centerButton = self.centerButton;
