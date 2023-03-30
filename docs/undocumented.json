@@ -9298,14 +9298,14 @@
     },
     {
       "file": "docs/FWFramework/FWToolbarView.h",
-      "line": 158,
+      "line": 167,
       "symbol": "FWToolbarTitleViewStyle.FWToolbarTitleViewStyleHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolbarView.h",
-      "line": 159,
+      "line": 168,
       "symbol": "FWToolbarTitleViewStyle.FWToolbarTitleViewStyleVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
