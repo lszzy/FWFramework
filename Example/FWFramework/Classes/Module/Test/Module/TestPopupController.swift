@@ -33,7 +33,6 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     
     private lazy var titleView: ToolbarTitleView = {
         let result = ToolbarTitleView()
-        result.titleLabel.textAlignment = .left
         result.alignmentLeft = true
         result.isExpandedSize = true
         return result
