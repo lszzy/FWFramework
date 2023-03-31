@@ -258,6 +258,7 @@ open class TabBar: UITabBar {
             for container in containers {
                 if container.point(inside: CGPoint.init(x: point.x - container.frame.origin.x, y: point.y - container.frame.origin.y), with: event) {
                     b = true
+                    break
                 }
             }
         }
@@ -694,6 +695,7 @@ internal class TabBarItemContainer: UIControl {
             for subview in self.subviews {
                 if subview.point(inside: CGPoint.init(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
                     b = true
+                    break
                 }
             }
         }
