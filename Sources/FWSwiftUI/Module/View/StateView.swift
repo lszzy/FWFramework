@@ -20,45 +20,45 @@ public enum ViewState {
 
 /// SwiftUI状态视图
 @available(iOS 13.0, *)
-public struct StateView<Ready: View, Loading: View, Content: View, Failure: View>: View {
+public struct StateView: View {
     
     @State public var state: ViewState = .ready
     
-    @ViewBuilder var ready: (Self) -> Ready
-    @ViewBuilder var loading: (Self) -> Loading
-    @ViewBuilder var content: (Self, Any?) -> Content
-    @ViewBuilder var failure: (Self, Error?) -> Failure
+    @ViewBuilder var ready: (Self) -> AnyView
+    @ViewBuilder var loading: (Self) -> AnyView
+    @ViewBuilder var content: (Self, Any?) -> AnyView
+    @ViewBuilder var failure: (Self, Error?) -> AnyView
     
-    public init(
+    public init<Content: View>(
         @ViewBuilder content: @escaping (Self, Any?) -> Content
-    ) where Ready == AnyView, Loading == AnyView, Failure == AnyView {
+    ) {
         self.ready = { $0.transition(to: .success()) }
         self.loading = { $0.transition(to: .success()) }
-        self.content = content
-        self.failure = { stateView, _ in stateView.transition(to: .success()) }
+        self.content = { content($0, $1).eraseToAnyView() }
+        self.failure = { $0.transition(to: .success($1)) }
     }
     
-    public init(
+    public init<Loading: View, Content: View, Failure: View>(
         @ViewBuilder loading: @escaping (Self) -> Loading,
         @ViewBuilder content: @escaping (Self, Any?) -> Content,
         @ViewBuilder failure: @escaping (Self, Error?) -> Failure
-    ) where Ready == AnyView {
+    ) {
         self.ready = { $0.transition(to: .loading) }
-        self.loading = loading
-        self.content = content
-        self.failure = failure
+        self.loading = { loading($0).eraseToAnyView() }
+        self.content = { content($0, $1).eraseToAnyView() }
+        self.failure = { failure($0, $1).eraseToAnyView() }
     }
     
-    public init(
+    public init<Ready: View, Loading: View, Content: View, Failure: View>(
         @ViewBuilder ready: @escaping (Self) -> Ready,
         @ViewBuilder loading: @escaping (Self) -> Loading,
         @ViewBuilder content: @escaping (Self, Any?) -> Content,
         @ViewBuilder failure: @escaping (Self, Error?) -> Failure
     ) {
-        self.ready = ready
-        self.loading = loading
-        self.content = content
-        self.failure = failure
+        self.ready = { ready($0).eraseToAnyView() }
+        self.loading = { loading($0).eraseToAnyView() }
+        self.content = { content($0, $1).eraseToAnyView() }
+        self.failure = { failure($0, $1).eraseToAnyView() }
     }
     
     private func transition(to newState: ViewState) -> AnyView {

@@ -91693,7 +91693,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWSwiftUI\/Module\/View\/StateView.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 2454,
+    "key.length" : 2629,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -91814,8 +91814,8 @@
             "key.offset" : 339
           }
         ],
-        "key.bodylength" : 1992,
-        "key.bodyoffset" : 452,
+        "key.bodylength" : 2225,
+        "key.bodyoffset" : 394,
         "key.doc.comment" : "SwiftUI状态视图",
         "key.doclength" : 24,
         "key.docoffset" : 315,
@@ -91823,7 +91823,7 @@
           {
             "key.kind" : "source.lang.swift.structure.elem.typeref",
             "key.length" : 4,
-            "key.offset" : 446
+            "key.offset" : 388
           }
         ],
         "key.inheritedtypes" : [
@@ -91832,112 +91832,32 @@
           }
         ],
         "key.kind" : "source.lang.swift.decl.struct",
-        "key.length" : 2075,
+        "key.length" : 2250,
         "key.name" : "StateView",
         "key.namelength" : 9,
         "key.nameoffset" : 377,
         "key.offset" : 370,
         "key.substructure" : [
           {
-            "key.elements" : [
-              {
-                "key.kind" : "source.lang.swift.structure.elem.typeref",
-                "key.length" : 4,
-                "key.offset" : 394
-              }
-            ],
-            "key.inheritedtypes" : [
-              {
-                "key.name" : "View"
-              }
-            ],
-            "key.kind" : "source.lang.swift.decl.generic_type_param",
-            "key.length" : 11,
-            "key.name" : "Ready",
-            "key.namelength" : 5,
-            "key.nameoffset" : 387,
-            "key.offset" : 387
-          },
-          {
-            "key.elements" : [
-              {
-                "key.kind" : "source.lang.swift.structure.elem.typeref",
-                "key.length" : 4,
-                "key.offset" : 409
-              }
-            ],
-            "key.inheritedtypes" : [
-              {
-                "key.name" : "View"
-              }
-            ],
-            "key.kind" : "source.lang.swift.decl.generic_type_param",
-            "key.length" : 13,
-            "key.name" : "Loading",
-            "key.namelength" : 7,
-            "key.nameoffset" : 400,
-            "key.offset" : 400
-          },
-          {
-            "key.elements" : [
-              {
-                "key.kind" : "source.lang.swift.structure.elem.typeref",
-                "key.length" : 4,
-                "key.offset" : 424
-              }
-            ],
-            "key.inheritedtypes" : [
-              {
-                "key.name" : "View"
-              }
-            ],
-            "key.kind" : "source.lang.swift.decl.generic_type_param",
-            "key.length" : 13,
-            "key.name" : "Content",
-            "key.namelength" : 7,
-            "key.nameoffset" : 415,
-            "key.offset" : 415
-          },
-          {
-            "key.elements" : [
-              {
-                "key.kind" : "source.lang.swift.structure.elem.typeref",
-                "key.length" : 4,
-                "key.offset" : 439
-              }
-            ],
-            "key.inheritedtypes" : [
-              {
-                "key.name" : "View"
-              }
-            ],
-            "key.kind" : "source.lang.swift.decl.generic_type_param",
-            "key.length" : 13,
-            "key.name" : "Failure",
-            "key.namelength" : 7,
-            "key.nameoffset" : 430,
-            "key.offset" : 430
-          },
-          {
             "key.accessibility" : "source.lang.swift.accessibility.public",
             "key.attributes" : [
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 469
+                "key.offset" : 411
               },
               {
                 "key.attribute" : "source.decl.attribute._custom",
                 "key.length" : 6,
-                "key.offset" : 462
+                "key.offset" : 404
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 29,
             "key.name" : "state",
             "key.namelength" : 5,
-            "key.nameoffset" : 480,
-            "key.offset" : 476,
+            "key.nameoffset" : 422,
+            "key.offset" : 418,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "ViewState"
           },
@@ -91947,17 +91867,17 @@
               {
                 "key.attribute" : "source.decl.attribute._custom",
                 "key.length" : 12,
-                "key.offset" : 515
+                "key.offset" : 457
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.instance",
-            "key.length" : 26,
+            "key.length" : 28,
             "key.name" : "ready",
             "key.namelength" : 5,
-            "key.nameoffset" : 532,
-            "key.offset" : 528,
+            "key.nameoffset" : 474,
+            "key.offset" : 470,
             "key.setter_accessibility" : "source.lang.swift.accessibility.internal",
-            "key.typename" : "(Self) -> Ready"
+            "key.typename" : "(Self) -> AnyView"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.internal",
@@ -91965,17 +91885,17 @@
               {
                 "key.attribute" : "source.decl.attribute._custom",
                 "key.length" : 12,
-                "key.offset" : 559
+                "key.offset" : 503
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 30,
             "key.name" : "loading",
             "key.namelength" : 7,
-            "key.nameoffset" : 576,
-            "key.offset" : 572,
+            "key.nameoffset" : 520,
+            "key.offset" : 516,
             "key.setter_accessibility" : "source.lang.swift.accessibility.internal",
-            "key.typename" : "(Self) -> Loading"
+            "key.typename" : "(Self) -> AnyView"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.internal",
@@ -91983,17 +91903,17 @@
               {
                 "key.attribute" : "source.decl.attribute._custom",
                 "key.length" : 12,
-                "key.offset" : 607
+                "key.offset" : 551
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 36,
             "key.name" : "content",
             "key.namelength" : 7,
-            "key.nameoffset" : 624,
-            "key.offset" : 620,
+            "key.nameoffset" : 568,
+            "key.offset" : 564,
             "key.setter_accessibility" : "source.lang.swift.accessibility.internal",
-            "key.typename" : "(Self, Any?) -> Content"
+            "key.typename" : "(Self, Any?) -> AnyView"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.internal",
@@ -92001,17 +91921,17 @@
               {
                 "key.attribute" : "source.decl.attribute._custom",
                 "key.length" : 12,
-                "key.offset" : 661
+                "key.offset" : 605
               }
             ],
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 38,
             "key.name" : "failure",
             "key.namelength" : 7,
-            "key.nameoffset" : 678,
-            "key.offset" : 674,
+            "key.nameoffset" : 622,
+            "key.offset" : 618,
             "key.setter_accessibility" : "source.lang.swift.accessibility.internal",
-            "key.typename" : "(Self, Error?) -> Failure"
+            "key.typename" : "(Self, Error?) -> AnyView"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -92019,19 +91939,38 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 722
+                "key.offset" : 666
               }
             ],
-            "key.bodylength" : 228,
-            "key.bodyoffset" : 869,
+            "key.bodylength" : 236,
+            "key.bodyoffset" : 765,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 369,
+            "key.length" : 329,
             "key.name" : "init(content:)",
-            "key.namelength" : 75,
-            "key.nameoffset" : 729,
-            "key.offset" : 729,
+            "key.namelength" : 90,
+            "key.nameoffset" : 673,
+            "key.offset" : 673,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 687
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Content",
+                "key.namelength" : 7,
+                "key.nameoffset" : 678,
+                "key.offset" : 678
+              }
             ]
           },
           {
@@ -92040,19 +91979,78 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1108
+                "key.offset" : 1012
               }
             ],
-            "key.bodylength" : 151,
-            "key.bodyoffset" : 1341,
+            "key.bodylength" : 234,
+            "key.bodyoffset" : 1267,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 378,
+            "key.length" : 483,
             "key.name" : "init(loading:content:failure:)",
-            "key.namelength" : 201,
-            "key.nameoffset" : 1115,
-            "key.offset" : 1115,
+            "key.namelength" : 246,
+            "key.nameoffset" : 1019,
+            "key.offset" : 1019,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1033
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Loading",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1024,
+                "key.offset" : 1024
+              },
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1048
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Content",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1039,
+                "key.offset" : 1039
+              },
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1063
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Failure",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1054,
+                "key.offset" : 1054
+              }
             ]
           },
           {
@@ -92061,19 +92059,98 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1503
+                "key.offset" : 1512
               }
             ],
-            "key.bodylength" : 125,
-            "key.bodyoffset" : 1768,
+            "key.bodylength" : 233,
+            "key.bodyoffset" : 1835,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
-            "key.length" : 384,
+            "key.length" : 550,
             "key.name" : "init(ready:loading:content:failure:)",
-            "key.namelength" : 256,
-            "key.nameoffset" : 1510,
-            "key.offset" : 1510,
+            "key.namelength" : 314,
+            "key.nameoffset" : 1519,
+            "key.offset" : 1519,
             "key.substructure" : [
-
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1531
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 11,
+                "key.name" : "Ready",
+                "key.namelength" : 5,
+                "key.nameoffset" : 1524,
+                "key.offset" : 1524
+              },
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1546
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Loading",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1537,
+                "key.offset" : 1537
+              },
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1561
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Content",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1552,
+                "key.offset" : 1552
+              },
+              {
+                "key.elements" : [
+                  {
+                    "key.kind" : "source.lang.swift.structure.elem.typeref",
+                    "key.length" : 4,
+                    "key.offset" : 1576
+                  }
+                ],
+                "key.inheritedtypes" : [
+                  {
+                    "key.name" : "View"
+                  }
+                ],
+                "key.kind" : "source.lang.swift.decl.generic_type_param",
+                "key.length" : 13,
+                "key.name" : "Failure",
+                "key.namelength" : 7,
+                "key.nameoffset" : 1567,
+                "key.offset" : 1567
+              }
             ]
           },
           {
@@ -92082,17 +92159,17 @@
               {
                 "key.attribute" : "source.decl.attribute.private",
                 "key.length" : 7,
-                "key.offset" : 1904
+                "key.offset" : 2079
               }
             ],
             "key.bodylength" : 102,
-            "key.bodyoffset" : 1964,
+            "key.bodyoffset" : 2139,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 155,
             "key.name" : "transition(to:)",
             "key.namelength" : 34,
-            "key.nameoffset" : 1917,
-            "key.offset" : 1912,
+            "key.nameoffset" : 2092,
+            "key.offset" : 2087,
             "key.substructure" : [
 
             ],
@@ -92104,17 +92181,17 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2077
+                "key.offset" : 2252
               }
             ],
             "key.bodylength" : 332,
-            "key.bodyoffset" : 2105,
+            "key.bodyoffset" : 2280,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 354,
             "key.name" : "body",
             "key.namelength" : 4,
-            "key.nameoffset" : 2088,
-            "key.offset" : 2084,
+            "key.nameoffset" : 2263,
+            "key.offset" : 2259,
             "key.typename" : "some View"
           }
         ]

@@ -273,6 +273,9 @@ NS_SWIFT_NAME(ToolbarTitleView)
 /// 是否使用扩张尺寸，开启后会自动撑开到最大尺寸，默认NO
 @property (nonatomic, assign) BOOL isExpandedSize;
 
+/// 当titleView用于navigationBar且左对齐时，指定titleView离左侧的最小距离，默认为16同系统
+@property (nonatomic, assign) CGFloat minimumLeftMargin;
+
 /// 指定样式初始化
 - (instancetype)initWithStyle:(FWToolbarTitleViewStyle)style;
 
