@@ -224,12 +224,13 @@ static CGFloat fwStaticReferenceHeight = 812;
         case FWScreenInch58:
             return CGSizeEqualToSize(CGSizeMake(375, 812), [UIDevice fw_deviceSize]);
         case FWScreenInch61:
-            return CGSizeEqualToSize(CGSizeMake(828, 1792), [UIDevice fw_deviceResolution])
+            return (CGSizeEqualToSize(CGSizeMake(414, 896), [UIDevice fw_deviceSize]) && ([UIDevice.fw_deviceModel isEqualToString:@"iPhone11,8"] || [UIDevice.fw_deviceModel isEqualToString:@"iPhone12,1"]))
                 || CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fw_deviceSize]);
         case FWScreenInch65:
-            return CGSizeEqualToSize(CGSizeMake(1242, 2688), [UIDevice fw_deviceResolution]);
+            return CGSizeEqualToSize(CGSizeMake(414, 896), [UIDevice fw_deviceSize]) && ![self fw_isScreenInch:FWScreenInch61];
         case FWScreenInch67:
-            return CGSizeEqualToSize(CGSizeMake(428, 926), [UIDevice fw_deviceSize]);
+            return CGSizeEqualToSize(CGSizeMake(428, 926), [UIDevice fw_deviceSize])
+                || CGSizeEqualToSize(CGSizeMake(430, 932), [UIDevice fw_deviceSize]);
         default:
             return NO;
     }
@@ -275,7 +276,9 @@ static CGFloat fwStaticReferenceHeight = 812;
     
     if ([UIDevice fw_isLandscape]) { return 0; }
     if (![self fw_isNotchedScreen]) { return 20; }
-    if ([[UIDevice fw_deviceModel] isEqualToString:@"iPhone12,1"]) { return 48; }
+    NSString *deviceModel = [UIDevice fw_deviceModel];
+    if ([deviceModel isEqualToString:@"iPhone12,1"]) { return 48; }
+    if ([deviceModel isEqualToString:@"iPhone15,2"] || [deviceModel isEqualToString:@"iPhone15,3"]) { return 54; }
     if (CGSizeEqualToSize(CGSizeMake(390, 844), [UIDevice fw_deviceSize])) { return 47; }
     if ([self fw_isScreenInch:FWScreenInch67]) { return 47; }
     if ([self fw_isScreenInch:FWScreenInch54] && [UIDevice fw_iosVersion] >= 15.0) { return 50; }
@@ -344,10 +347,10 @@ static CGFloat fwStaticReferenceHeight = 812;
     }
     if (isZoomedMode) return NO;
     
-    if ([self fw_isScreenInch:FWScreenInch67] ||
-        [self fw_isScreenInch:FWScreenInch65] ||
-        [self fw_isScreenInch:FWScreenInch61] ||
-        [self fw_isScreenInch:FWScreenInch55]) {
+    if ([self fw_isScreenInch:FWScreenInch67] || [self fw_isScreenInch:FWScreenInch65] || [self fw_isScreenInch:FWScreenInch55]) {
+        return YES;
+    }
+    if (CGSizeEqualToSize(CGSizeMake(414, 896), [UIDevice fw_deviceSize]) && ([UIDevice.fw_deviceModel isEqualToString:@"iPhone11,8"] || [UIDevice.fw_deviceModel isEqualToString:@"iPhone12,1"])) {
         return YES;
     }
     return NO;
