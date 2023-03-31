@@ -109,6 +109,9 @@ NS_SWIFT_NAME(ToolbarMenuView)
 /// 是否等宽布局(类似UITabBar)，不含安全区域；默认NO，左右布局(类似UIToolbar|UINavigationBar)
 @property (nonatomic, assign) BOOL equalWidth;
 
+/// 是否支持等宽布局时纵向溢出显示，可用于实现TabBar不规则按钮等，默认NO
+@property (nonatomic, assign) BOOL verticalOverflow;
+
 /// 是否左对齐，仅左右布局时生效，默认NO居中对齐
 @property (nonatomic, assign) BOOL alignmentLeft;
 

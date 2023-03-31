@@ -353,6 +353,14 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (void)setVerticalOverflow:(BOOL)verticalOverflow
+{
+    if (verticalOverflow == _verticalOverflow) return;
+    _verticalOverflow = verticalOverflow;
+    self.clipsToBounds = !verticalOverflow;
+    [self setNeedsUpdateConstraints];
+}
+
 - (void)setAlignmentLeft:(BOOL)alignmentLeft
 {
     if (alignmentLeft == _alignmentLeft) return;
@@ -429,7 +437,7 @@
         NSMutableArray *subviewContraints = [NSMutableArray array];
         UIView *previousButton = nil;
         for (UIView *subviewButton in subviewButtons) {
-            [subviewContraints addObject:[subviewButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
+            [subviewContraints addObject:[subviewButton __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:self.verticalOverflow ? NSLayoutRelationLessThanOrEqual : NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[subviewButton __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             if (previousButton) {
                 [subviewContraints addObject:[subviewButton __fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:previousButton offset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
