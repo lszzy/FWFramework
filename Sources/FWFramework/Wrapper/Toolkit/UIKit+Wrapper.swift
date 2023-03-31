@@ -139,6 +139,12 @@ extension Wrapper where Base: UIView {
         set { base.fw_touchInsets = newValue }
     }
     
+    /// 设置视图是否允许检测子视图pointInside，默认false
+    public var pointInsideSubviews: Bool {
+        get { return base.fw_pointInsideSubviews }
+        set { base.fw_pointInsideSubviews = newValue }
+    }
+    
     /// 设置视图是否可穿透(子视图响应)
     public var isPenetrable: Bool {
         get { return base.fw_isPenetrable }

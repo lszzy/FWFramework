@@ -381,6 +381,12 @@ import AdSupport
         }
     }
     
+    /// 设置视图是否允许检测子视图pointInside，默认false
+    public var fw_pointInsideSubviews: Bool {
+        get { return fw_propertyBool(forName: "fw_pointInsideSubviews") }
+        set { fw_setPropertyBool(newValue, forName: "fw_pointInsideSubviews") }
+    }
+    
     /// 设置视图是否可穿透(子视图响应)
     public var fw_isPenetrable: Bool {
         get { return fw_propertyBool(forName: "fw_isPenetrable") }
@@ -848,7 +854,16 @@ import AdSupport
                 return CGRectContainsPoint(bounds, point)
             }
             
-            return store.original(selfObject, store.selector, point, event)
+            var pointInside = store.original(selfObject, store.selector, point, event)
+            if (!pointInside && selfObject.fw_propertyBool(forName: "fw_pointInsideSubviews")) {
+                for subview in selfObject.subviews {
+                    if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
+                        pointInside = true
+                        break
+                    }
+                }
+            }
+            return pointInside
         }}
         
         NSObject.fw_swizzleInstanceMethod(
