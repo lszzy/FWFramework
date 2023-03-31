@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.8.1] - 2023-03-31
+
+### Added
+* StateView兼容Xcode14.3
+* 兼容iPhone14系列手机
+* ToolbarTitleView支持配置左侧最小距离
+
 ## [4.8.0] - 2023-03-30
 
 ### Added

@@ -1,9 +1,15 @@
 # Changelog
 
+## [4.8.1] - 2023-03-31
+
+### Added
+* StateView is compatible with Xcode14.3
+* Compatible with iPhone14 series mobile phones
+* ToolbarTitleView supports configuring the minimum distance on the left
+
 ## [4.8.0] - 2023-03-30
 
 ### Added
-
 * ToolbarView now supports configuring left alignment and spacing.
 * ToolbarTitleView now supports configuring left alignment and spacing.
 

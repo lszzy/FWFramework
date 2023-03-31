@@ -218,6 +218,9 @@
 
 + (NSString *)fw_deviceModel
 {
+#if TARGET_OS_SIMULATOR
+    return [NSString stringWithFormat:@"%s", getenv("SIMULATOR_MODEL_IDENTIFIER")];
+#else
     static NSString *model;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -229,6 +232,7 @@
         free(machine);
     });
     return model;
+#endif
 }
 
 + (NSString *)fw_deviceIDFV
