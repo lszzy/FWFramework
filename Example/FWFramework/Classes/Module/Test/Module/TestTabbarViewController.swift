@@ -131,8 +131,13 @@ class TestTabbarViewButton: ToolbarButton {
             return super.point(inside: point, with: event)
         }
         
+        if (self.bounds.contains(point) && point.y >= imageView.bounds.size.height / 2.0) {
+            return true
+        }
+        
         let p = CGPoint(x: point.x - imageView.frame.origin.x, y: point.y - imageView.frame.origin.y)
-        return sqrt(pow(imageView.bounds.size.width / 2.0 - p.x, 2) + pow(imageView.bounds.size.height / 2.0 - p.y, 2)) < imageView.bounds.size.width / 2.0
+        let result = sqrt(pow(imageView.bounds.size.width / 2.0 - p.x, 2) + pow(imageView.bounds.size.height / 2.0 - p.y, 2)) < imageView.bounds.size.width / 2.0
+        return result
     }
     
 }

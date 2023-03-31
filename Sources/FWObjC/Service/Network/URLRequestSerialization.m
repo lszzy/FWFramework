@@ -166,7 +166,7 @@ NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 #pragma mark -
 
-static NSArray * __FWHTTPRequestSerializerObservedKeyPaths() {
+static NSArray * __FWHTTPRequestSerializerObservedKeyPaths(void) {
     static NSArray *___FWHTTPRequestSerializerObservedKeyPaths = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -579,7 +579,7 @@ forHTTPHeaderField:(NSString *)field
 
 #pragma mark -
 
-static NSString * __FWCreateMultipartFormBoundary() {
+static NSString * __FWCreateMultipartFormBoundary(void) {
     return [NSString stringWithFormat:@"Boundary+%08X%08X", arc4random(), arc4random()];
 }
 

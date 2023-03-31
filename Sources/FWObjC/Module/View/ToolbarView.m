@@ -179,6 +179,16 @@
     return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    BOOL pointInside = [super pointInside:point withEvent:event];
+    if (!pointInside && self.menuView.verticalOverflow) {
+        if ([self.menuView pointInside:CGPointMake(point.x - self.menuView.frame.origin.x, point.y - self.menuView.frame.origin.y) withEvent:event]) {
+            pointInside = YES;
+        }
+    }
+    return pointInside;
+}
+
 #pragma mark - Accessor
 
 - (UIView *)topView {
@@ -414,6 +424,20 @@
 {
     [super safeAreaInsetsDidChange];
     [self setNeedsUpdateConstraints];
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    BOOL pointInside = [super pointInside:point withEvent:event];
+    if (!pointInside && self.verticalOverflow) {
+        for (UIView *subview in self.subviews) {
+            if ([subview pointInside:CGPointMake(point.x - subview.frame.origin.x, point.y - subview.frame.origin.y) withEvent:event]) {
+                pointInside = YES;
+                break;
+            }
+        }
+    }
+    return pointInside;
 }
 
 - (void)updateConstraints
