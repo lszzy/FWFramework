@@ -605,6 +605,7 @@
     appearance.subAccessoryViewOffset = CGPointMake(3, 0);
     appearance.titleEdgeInsets = UIEdgeInsetsZero;
     appearance.subtitleEdgeInsets = UIEdgeInsetsZero;
+    appearance.minimumLeftMargin = 16;
 }
 
 #pragma mark - Lifecycle
@@ -748,6 +749,23 @@
 
 - (void)setSubtitleEdgeInsets:(UIEdgeInsets)subtitleEdgeInsets {
     _subtitleEdgeInsets = subtitleEdgeInsets;
+    [self refreshLayout];
+}
+
+- (void)setAlignmentLeft:(BOOL)alignmentLeft {
+    _alignmentLeft = alignmentLeft;
+    self.titleLabel.textAlignment = alignmentLeft ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+    self.subtitleLabel.textAlignment = alignmentLeft ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+    [self refreshLayout];
+}
+
+- (void)setIsExpandedSize:(BOOL)isExpandedSize {
+    _isExpandedSize = isExpandedSize;
+    [self refreshLayout];
+}
+
+- (void)setMinimumLeftMargin:(CGFloat)minimumLeftMargin {
+    _minimumLeftMargin = minimumLeftMargin;
     [self refreshLayout];
 }
 
@@ -1033,7 +1051,19 @@
     CGSize contentSize = [self contentSize];
     contentSize.width = MIN(maxSize.width, contentSize.width);
     contentSize.height = MIN(maxSize.height, contentSize.height);
-    CGFloat contentOffsetLeft = !self.alignmentLeft ? (maxSize.width - contentSize.width) / 2.0 : 0;
+    
+    CGFloat contentOffsetLeft = (maxSize.width - contentSize.width) / 2.0;
+    if (self.alignmentLeft) {
+        contentOffsetLeft = 0;
+        // 处理navigationBar左侧按钮和标题视图位置，和系统一致
+        UINavigationBar *navigationBar = [self searchNavigationBar:self];
+        if (navigationBar) {
+            CGRect convertFrame = [self.superview convertRect:self.frame toView:navigationBar];
+            if (CGRectGetMinX(convertFrame) < self.minimumLeftMargin) {
+                contentOffsetLeft = self.minimumLeftMargin - CGRectGetMinX(convertFrame);
+            }
+        }
+    }
     CGFloat contentOffsetRight = contentOffsetLeft;
     
     CGFloat loadingViewSpace = [self loadingViewSpacingSize].width;
@@ -1321,6 +1351,14 @@
     [self setTitleColor:[self.tintColor colorWithAlphaComponent:0.2f] forState:UIControlStateDisabled];
 }
 
+- (UINavigationBar *)searchNavigationBar:(UIView *)subview {
+    if (!subview.superview) return nil;
+    if ([subview.superview isKindOfClass:[UINavigationBar class]]) {
+        return (UINavigationBar *)subview.superview;
+    }
+    return [self searchNavigationBar:subview.superview];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
@@ -1335,15 +1373,7 @@
     }
     
     // 处理navigationBar左侧第一个按钮和右侧第一个按钮位置，和系统一致
-    UIView *navigationBar = nil;
-    UIView *superView = self.superview;
-    while (superView != nil) {
-        if ([superView isKindOfClass:[UINavigationBar class]]) {
-            navigationBar = superView;
-            break;
-        }
-        superView = superView.superview;
-    }
+    UINavigationBar *navigationBar = [self searchNavigationBar:self];
     if (!navigationBar) return;
     
     CGRect convertFrame = [self.superview convertRect:self.frame toView:navigationBar];
