@@ -19,6 +19,7 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
         let result = ToolbarView(type: .tabBar)
         result.backgroundColor = AppTheme.barColor
         result.tintColor = AppTheme.textColor
+        result.menuView.verticalOverflow = true
         result.menuView.leftButton = homeButton
         result.menuView.centerButton = testButton
         result.menuView.rightButton = settingsButton
@@ -33,9 +34,11 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
         return result
     }()
     
-    private lazy var testButton: ToolbarButton = {
-        let result = ToolbarButton(image: Icon.iconImage("zmdi-var-bug", size: 26), title: APP.localized("testTitle"))
+    private lazy var testButton: TestTabbarViewButton = {
+        let result = TestTabbarViewButton(image: Icon.iconImage("zmdi-var-bug", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil), title: APP.localized("testTitle"))
         result.titleLabel?.font = APP.font(10)
+        result.imageView?.backgroundColor = AppTheme.barColor
+        result.imageView?.layer.cornerRadius = 35
         result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
         result.tag = 2
         return result
@@ -117,6 +120,19 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
             child = settingsController
         }
         app.addChild(child, in: childView)
+    }
+    
+}
+
+class TestTabbarViewButton: ToolbarButton {
+    
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        guard let imageView = imageView else {
+            return super.point(inside: point, with: event)
+        }
+        
+        let p = CGPoint(x: point.x - imageView.frame.origin.x, y: point.y - imageView.frame.origin.y)
+        return sqrt(pow(imageView.bounds.size.width / 2.0 - p.x, 2) + pow(imageView.bounds.size.height / 2.0 - p.y, 2)) < imageView.bounds.size.width / 2.0
     }
     
 }
