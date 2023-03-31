@@ -53,6 +53,8 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testController.navigationItem.title = APP.localized("testTitle")
         let testBarItem = TabBarItem()
         testBarItem.contentView = TestTabbarContentView()
+        testBarItem.contentView.highlightTextColor = AppTheme.textColor
+        testBarItem.contentView.highlightIconColor = AppTheme.textColor
         testBarItem.image = Icon.iconImage("zmdi-var-bug", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil)
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
