@@ -636,7 +636,7 @@ static int logMaxLength = 500;
 
 @end
 
-NSString * __FWWebViewJsBridge_js() {
+NSString * __FWWebViewJsBridge_js(void) {
     #define __wvjb_js_func__(x) #x
     
     // BEGIN preprocessorJSCode

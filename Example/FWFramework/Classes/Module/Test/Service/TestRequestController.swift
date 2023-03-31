@@ -118,11 +118,11 @@ extension TestRequestController: ViewControllerProtocol {
         // 测试\udf36|\udd75等字符会导致json解码失败问题
         var jsonString = "{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\\\udf36\\ufe0f\"}"
         var jsonObject = jsonString.app.jsonDecode
-        APP.debug("name: %@\njson: %@", JSON(jsonObject)["name"].stringValue, String.app.jsonEncode(jsonObject ?? [:]) ?? "")
+        APP.debug("name: %@\njson: %@", JSON(jsonObject)["name"].stringValue, String.app.jsonEncode(jsonObject ?? [String: Any]()) ?? "")
         
         jsonString = "{\"name\": \"Test1\\udd75Test2\\ud83dTest3\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\udf36\\ufe0f\"}"
         jsonObject = jsonString.app.jsonDecode
-        APP.debug("name2: %@\njson2: %@", JSON(jsonObject)["name"].stringValue, String.app.jsonEncode(jsonObject ?? [:]) ?? "")
+        APP.debug("name2: %@\njson2: %@", JSON(jsonObject)["name"].stringValue, String.app.jsonEncode(jsonObject ?? [String: Any]()) ?? "")
         
         // 测试%导致stringByRemovingPercentEncoding返回nil问题
         var queryValue = "我是字符串100%测试"
