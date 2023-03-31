@@ -8,153 +8,86 @@
 
 import FWFramework
 
-class TestTabbarController: UIViewController, ViewControllerProtocol {
+class TestTabbarController: TabBarController, UITabBarControllerDelegate {
     
-    private lazy var childView: UIView = {
-        let result = UIView()
-        return result
-    }()
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        hidesBottomBarWhenPushed = true
+    }
     
-    private lazy var tabBarView: ToolbarView = {
-        let result = ToolbarView(type: .tabBar)
-        result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
-        result.menuView.leftButton = homeButton
-        result.menuView.centerButton = testButton
-        result.menuView.rightButton = settingsButton
-        return result
-    }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    private lazy var homeButton: ToolbarButton = {
-        let result = ToolbarButton(image: APP.iconImage("zmdi-var-home", 26), title: APP.localized("homeTitle"))
-        result.titleLabel?.font = APP.font(10)
-        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 1
-        return result
-    }()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        app.leftBarItem = Icon.backImage
+        delegate = self
+        
+        setupSubviews()
+        setupController()
+    }
     
-    private lazy var testButton: ToolbarButton = {
-        let result = ToolbarButton(image: Icon.iconImage("zmdi-var-bug", size: 26), title: APP.localized("testTitle"))
-        result.titleLabel?.font = APP.font(10)
-        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 2
-        return result
-    }()
-    
-    private lazy var settingsButton: ToolbarButton = {
-        let result = ToolbarButton(image: APP.icon("zmdi-var-settings", 26)?.image, title: APP.localized("settingTitle"))
-        result.titleLabel?.font = APP.font(10)
-        result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 3
-        return result
-    }()
-    
-    private lazy var homeController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = APP.localized("homeTitle")
-        return result
-    }()
-    
-    private lazy var testController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = APP.localized("testTitle")
-        return result
-    }()
-    
-    private lazy var settingsController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = APP.localized("settingTitle")
-        return result
-    }()
-    
-    private var childController: UIViewController?
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        homeButton.contentEdgeInsets = UIEdgeInsets(top: APP.isLandscape ? 2 : 8, left: 8, bottom: APP.isLandscape ? 2 : 8, right: 8)
-        homeButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
-        testButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        testButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
-        settingsButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        settingsButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationItem.title = selectedViewController?.navigationItem.title
     }
     
     func setupSubviews() {
-        view.addSubview(childView)
-        view.addSubview(tabBarView)
-        childView.app.layoutChain.left().right().top()
-        tabBarView.app.layoutChain.left().right().bottom().top(toViewBottom: childView)
+        tabBar.app.foregroundColor = AppTheme.textColor
+        tabBar.app.backgroundColor = AppTheme.barColor
+        tabBar.app.shadowColor = nil
+        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
     
-    func setupLayout() {
-        app.navigationBarHidden = true
-        onButtonClicked(homeButton)
-    }
-    
-    @objc func onButtonClicked(_ sender: UIButton) {
-        if let child = childController {
-            app.removeChild(child)
-        }
+    func setupController() {
+        let homeController = TestTabbarChildController()
+        homeController.hidesBottomBarWhenPushed = false
+        homeController.navigationItem.title = APP.localized("homeTitle")
+        homeController.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
+        homeController.tabBarItem.title = APP.localized("homeTitle")
         
-        var child: UIViewController
-        if sender.tag == 1 {
-            homeButton.tintColor = AppTheme.textColor
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            
-            child = homeController
-        } else if sender.tag == 2 {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            
-            child = testController
-        } else {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor
-            
-            child = settingsController
-        }
-        app.addChild(child, in: childView)
+        let testController = TestTabbarChildController()
+        testController.hidesBottomBarWhenPushed = false
+        testController.navigationItem.title = APP.localized("testTitle")
+        testController.tabBarItem.image = Icon.iconImage("zmdi-var-bug", size: 26)
+        testController.tabBarItem.title = APP.localized("testTitle")
+        
+        let settingsControlelr = TestTabbarChildController()
+        settingsControlelr.hidesBottomBarWhenPushed = false
+        settingsControlelr.navigationItem.title = APP.localized("settingTitle")
+        let tabBarItem = TabBarItem()
+        tabBarItem.contentView.highlightTextColor = AppTheme.textColor
+        tabBarItem.contentView.highlightIconColor = AppTheme.textColor
+        settingsControlelr.tabBarItem = tabBarItem
+        settingsControlelr.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
+        settingsControlelr.tabBarItem.title = APP.localized("settingTitle")
+        viewControllers = [homeController, testController, settingsControlelr]
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        navigationItem.title = viewController.navigationItem.title
     }
     
 }
 
 class TestTabbarChildController: UIViewController, ViewControllerProtocol {
-    private lazy var navigationView: ToolbarView = {
-        let result = ToolbarView(type: .navBar)
-        result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
-        result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { sender in
-            Navigator.close(animated: true)
-        })
-        return result
-    }()
-    
-    override var title: String? {
-        didSet {
-            navigationView.menuView.title = title
-        }
-    }
     
     func setupSubviews() {
-        app.navigationBarHidden = true
-        
         view.backgroundColor = UIColor.app.randomColor
-        view.addSubview(navigationView)
-        navigationView.app.layoutChain.left().right().top()
         view.app.addTapGesture { [weak self] sender in
             let viewController = TestTabbarChildController()
-            var title = APP.safeString(self?.title)
+            var title = APP.safeString(self?.navigationItem.title)
             if let index = title.firstIndex(of: "-") {
                 let count = Int(title.suffix(from: title.index(index, offsetBy: 1))) ?? 0
                 title = "\(title.prefix(upTo: index))-\(count + 1)"
             } else {
                 title = "\(title)-1"
             }
-            viewController.title = title
+            viewController.navigationItem.title = title
             Navigator.push(viewController, animated: true)
         }
     }
+    
 }

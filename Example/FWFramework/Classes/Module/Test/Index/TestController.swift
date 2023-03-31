@@ -65,6 +65,7 @@ class TestController: UIViewController {
             ["PopupMenu", "TestPopupController"],
             ["QrcodeScanView", "TestQrcodeController"],
             ["ToolbarView", "TestToolbarController"],
+            ["TabbarView", "TestTabbarViewController"],
             ["TabbarController", "TestTabbarController"],
             ["SegmentedControl", "TestSegmentController"],
             ["Statistical", "TestStatisticalController"],

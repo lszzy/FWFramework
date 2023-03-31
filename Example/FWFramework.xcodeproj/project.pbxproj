@@ -14,6 +14,7 @@
 		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
 		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
+		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
 		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
@@ -104,6 +105,7 @@
 		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
 		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
+		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
 		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
+				2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */,
 				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
 				2F49EE2328FFB7D000F229BB /* TestTransitionController.swift */,
 			);
@@ -804,6 +807,7 @@
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
 				2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */,
+				2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */,
 				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,
 				2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */,
 				2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */,
