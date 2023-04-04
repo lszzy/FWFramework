@@ -302,8 +302,8 @@ extension Wrapper where Base: UIColor {
 // MARK: - UIFont+Toolkit
 extension Wrapper where Base: UIFont {
     
-    /// 全局自定义字体句柄，优先调用
-    public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont)? {
+    /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
+    public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
         get { return Base.fw_fontBlock }
         set { Base.fw_fontBlock = newValue }
     }
