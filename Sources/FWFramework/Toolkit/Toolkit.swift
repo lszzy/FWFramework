@@ -754,37 +754,58 @@ extension WrapperGlobal {
     /// 是否自动等比例缩放字体，默认NO
     public static var fw_autoScale: Bool = false
 
-    /// 返回系统Thin字体
+    /// 返回系统Thin字体，自动等比例缩放
     public static func fw_thinFont(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .thin)
     }
-    /// 返回系统Light字体
+    /// 返回系统Light字体，自动等比例缩放
     public static func fw_lightFont(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .light)
     }
-    /// 返回系统Regular字体
+    /// 返回系统Regular字体，自动等比例缩放
     public static func fw_font(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .regular)
     }
-    /// 返回系统Medium字体
+    /// 返回系统Medium字体，自动等比例缩放
     public static func fw_mediumFont(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .medium)
     }
-    /// 返回系统Semibold字体
+    /// 返回系统Semibold字体，自动等比例缩放
     public static func fw_semiboldFont(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .semibold)
     }
-    /// 返回系统Bold字体
+    /// 返回系统Bold字体，自动等比例缩放
     public static func fw_boldFont(ofSize: CGFloat) -> UIFont {
         return fw_font(ofSize: ofSize, weight: .bold)
     }
 
-    /// 创建指定尺寸和weight的系统字体
+    /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func fw_font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
         let size = fw_autoScale ? UIScreen.fw_relativeValue(ofSize) : ofSize
         if let font = fw_fontBlock?(size, weight) { return font }
         return UIFont.systemFont(ofSize: size, weight: weight)
     }
+    
+    /// 获取指定名称、字重、斜体字体的完整规范名称
+    public static func fw_fontName(_ name: String, weight: UIFont.Weight, italic: Bool = false) -> String {
+        var fontName = name
+        if let weightSuffix = fw_weightSuffixes[weight] {
+            fontName += weightSuffix + (italic ? "Italic" : "")
+        }
+        return fontName
+    }
+    
+    private static let fw_weightSuffixes: [UIFont.Weight: String] = [
+        .ultraLight: "-Ultralight",
+        .thin: "-Thin",
+        .light: "-Light",
+        .regular: "-Regular",
+        .medium: "-Medium",
+        .semibold: "-Semibold",
+        .bold: "-Bold",
+        .heavy: "-Heavy",
+        .black: "-Black",
+    ]
     
     /// 是否是粗体
     public var fw_isBold: Bool {
