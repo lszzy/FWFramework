@@ -347,9 +347,14 @@ extension Wrapper where Base: NSAttributedString {
         return Base.fw_attributedString(image: image, bounds: bounds)
     }
     
-    /// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
+    /// 快速创建NSAttributedString并指定单个高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
     public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
         return Base.fw_attributedString(string: string, attributes: attributes, highlight: highlight, highlightAttributes: highlightAttributes)
+    }
+    
+    /// 快速创建NSAttributedString并指定所有高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
+    public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlights: [String: [NSAttributedString.Key : Any]]) -> NSAttributedString {
+        return Base.fw_attributedString(string: string, attributes: attributes, highlights: highlights)
     }
     
     /// 快速创建NSAttributedString，自定义字体和颜色

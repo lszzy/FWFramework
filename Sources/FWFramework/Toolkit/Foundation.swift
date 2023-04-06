@@ -605,12 +605,24 @@ extension WrapperGlobal {
         return attributedString
     }
     
-    /// 快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
+    /// 快速创建NSAttributedString并指定单个高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
     public static func fw_attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         let range = (string as NSString).range(of: highlight)
         if range.location != NSNotFound, let highlightAttributes = highlightAttributes {
             attributedString.addAttributes(highlightAttributes, range: range)
+        }
+        return attributedString
+    }
+    
+    /// 快速创建NSAttributedString并指定所有高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
+    public static func fw_attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlights: [String: [NSAttributedString.Key : Any]]) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
+        for (highlight, highlightAttributes) in highlights {
+            let range = (string as NSString).range(of: highlight)
+            if range.location != NSNotFound {
+                attributedString.addAttributes(highlightAttributes, range: range)
+            }
         }
         return attributedString
     }
