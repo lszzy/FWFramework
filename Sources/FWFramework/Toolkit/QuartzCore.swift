@@ -166,6 +166,64 @@ import FWObjC
         self.shadowOpacity = 1.0
     }
     
+    /// 移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用
+    @objc(__fw_removeDefaultAnimations)
+    public func fw_removeDefaultAnimations() {
+        var actions: [String: CAAction] = [
+            NSStringFromSelector(#selector(getter: bounds)): NSNull(),
+            NSStringFromSelector(#selector(getter: position)): NSNull(),
+            NSStringFromSelector(#selector(getter: zPosition)): NSNull(),
+            NSStringFromSelector(#selector(getter: anchorPoint)): NSNull(),
+            NSStringFromSelector(#selector(getter: anchorPointZ)): NSNull(),
+            NSStringFromSelector(#selector(getter: transform)): NSNull(),
+            NSStringFromSelector(#selector(getter: isHidden)): NSNull(),
+            NSStringFromSelector(#selector(getter: isDoubleSided)): NSNull(),
+            NSStringFromSelector(#selector(getter: sublayerTransform)): NSNull(),
+            NSStringFromSelector(#selector(getter: masksToBounds)): NSNull(),
+            NSStringFromSelector(#selector(getter: contents)): NSNull(),
+            NSStringFromSelector(#selector(getter: contentsRect)): NSNull(),
+            NSStringFromSelector(#selector(getter: contentsScale)): NSNull(),
+            NSStringFromSelector(#selector(getter: contentsCenter)): NSNull(),
+            NSStringFromSelector(#selector(getter: minificationFilterBias)): NSNull(),
+            NSStringFromSelector(#selector(getter: backgroundColor)): NSNull(),
+            NSStringFromSelector(#selector(getter: cornerRadius)): NSNull(),
+            NSStringFromSelector(#selector(getter: borderWidth)): NSNull(),
+            NSStringFromSelector(#selector(getter: borderColor)): NSNull(),
+            NSStringFromSelector(#selector(getter: opacity)): NSNull(),
+            NSStringFromSelector(#selector(getter: compositingFilter)): NSNull(),
+            NSStringFromSelector(#selector(getter: filters)): NSNull(),
+            NSStringFromSelector(#selector(getter: backgroundFilters)): NSNull(),
+            NSStringFromSelector(#selector(getter: shouldRasterize)): NSNull(),
+            NSStringFromSelector(#selector(getter: rasterizationScale)): NSNull(),
+            NSStringFromSelector(#selector(getter: shadowColor)): NSNull(),
+            NSStringFromSelector(#selector(getter: shadowOpacity)): NSNull(),
+            NSStringFromSelector(#selector(getter: shadowOffset)): NSNull(),
+            NSStringFromSelector(#selector(getter: shadowRadius)): NSNull(),
+            NSStringFromSelector(#selector(getter: shadowPath)): NSNull(),
+            NSStringFromSelector(#selector(getter: maskedCorners)): NSNull(),
+        ]
+        
+        if self is CAShapeLayer {
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.path))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.fillColor))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.strokeColor))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.strokeStart))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.strokeEnd))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.lineWidth))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.miterLimit))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAShapeLayer.lineDashPhase))] = NSNull()
+        }
+        
+        if self is CAGradientLayer {
+            actions[NSStringFromSelector(#selector(getter: CAGradientLayer.colors))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAGradientLayer.locations))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAGradientLayer.startPoint))] = NSNull()
+            actions[NSStringFromSelector(#selector(getter: CAGradientLayer.endPoint))] = NSNull()
+        }
+        
+        self.actions = actions
+    }
+    
     /// 生成图片截图，默认大小为frame.size
     public func fw_snapshotImage(size: CGSize = .zero) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? self.frame.size : size, false, UIScreen.main.scale)
