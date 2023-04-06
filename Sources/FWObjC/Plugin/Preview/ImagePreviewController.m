@@ -872,6 +872,9 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.animationEnteringBlock) {
         self.animationEnteringBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
     }
+    if (self.animationCallbackBlock) {
+        self.animationCallbackBlock(self, isPresenting, NO);
+    }
     
     [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (self.animationBlock) {
@@ -882,6 +885,9 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         if (self.animationCompletionBlock) {
             self.animationCompletionBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
+        }
+        if (self.animationCallbackBlock) {
+            self.animationCallbackBlock(self, isPresenting, YES);
         }
     }];
 }

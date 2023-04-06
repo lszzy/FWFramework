@@ -235,6 +235,15 @@ NS_SWIFT_NAME(ImagePreviewTransitionAnimator)
  */
 @property(nonatomic, copy, nullable) void (^animationCompletionBlock)(__kindof __FWImagePreviewTransitionAnimator *animator, BOOL isPresenting, __FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, __FWZoomImageView *zoomImageView, id<UIViewControllerContextTransitioning> _Nullable transitionContext);
 
+/**
+ 动画回调句柄，动画开始和结束时调用
+ 
+ @param animator 当前的动画器 animator
+ @param isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+ @param isFinished YES 表示动画结束，NO 表示动画开始
+ */
+@property(nonatomic, copy, nullable) void (^animationCallbackBlock)(__kindof __FWImagePreviewTransitionAnimator *animator, BOOL isPresenting, BOOL isFinished);
+
 @end
 
 #pragma mark - __FWCollectionViewPagingLayout
