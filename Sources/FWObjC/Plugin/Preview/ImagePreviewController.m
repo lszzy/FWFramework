@@ -683,6 +683,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
         self.duration = .25;
         
         _cornerRadiusMaskLayer = [CALayer layer];
+        [self.cornerRadiusMaskLayer __fw_removeDefaultAnimations];
         self.cornerRadiusMaskLayer.backgroundColor = [UIColor whiteColor].CGColor;
         
         self.animationEnteringBlock = ^(__kindof __FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, __FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, __FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
