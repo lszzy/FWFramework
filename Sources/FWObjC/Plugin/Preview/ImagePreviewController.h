@@ -152,6 +152,9 @@ NS_SWIFT_NAME(ImagePreviewController)
 /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 __FWImagePreviewCornerRadiusAutomaticDimension，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
 @property(nonatomic, assign) CGFloat sourceImageCornerRadius;
 
+/// 手势拖拽退出预览模式时是否启用缩放效果，默认YES。仅对以 present 方式进入大图预览的场景有效。
+@property(nonatomic, assign) BOOL dismissingScaleEnabled;
+
 /// 是否支持手势拖拽退出预览模式，默认为 YES。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingGestureEnabled;
 

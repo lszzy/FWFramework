@@ -393,6 +393,7 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)didInitialize {
     self.sourceImageCornerRadius = __FWImagePreviewCornerRadiusAutomaticDimension;
+    _dismissingScaleEnabled = YES;
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;
     
@@ -559,8 +560,10 @@ const CGFloat __FWImagePreviewCornerRadiusAutomaticDimension = -1;
             CGFloat ratio = 1.0;
             CGFloat alpha = 1.0;
             if (verticalDistance > 0) {
-                // 往下拉的话，图片缩小，但图片移动距离与手指移动距离保持一致
-                ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
+                // 往下拉的话，当启用图片缩小，但图片移动距离与手指移动距离保持一致
+                if (self.dismissingScaleEnabled) {
+                    ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
+                }
                 
                 // 如果预览大图支持横竖屏而背后的界面只支持竖屏，则在横屏时手势拖拽不要露出背后的界面
                 if (self.dismissingGestureEnabled) {
