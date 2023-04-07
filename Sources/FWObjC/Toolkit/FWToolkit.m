@@ -729,25 +729,51 @@ static BOOL fwStaticAutoScaleFont = NO;
     return [self fw_fontOfSize:size weight:UIFontWeightBold];
 }
 
-+ (UIFont * (^)(CGFloat, UIFontWeight))fw_fontBlock
++ (UIFont * _Nullable (^)(CGFloat, UIFontWeight))fw_fontBlock
 {
     return objc_getAssociatedObject([UIFont class], @selector(fw_fontBlock));
 }
 
-+ (void)setFw_fontBlock:(UIFont * (^)(CGFloat, UIFontWeight))fontBlock
++ (void)setFw_fontBlock:(UIFont * _Nullable (^)(CGFloat, UIFontWeight))fontBlock
 {
     objc_setAssociatedObject([UIFont class], @selector(fw_fontBlock), fontBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 + (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight
 {
-    UIFont * (^fontBlock)(CGFloat, UIFontWeight) = self.fw_fontBlock;
-    if (fontBlock) return fontBlock(size, weight);
-    
-    if (fwStaticAutoScaleFont) {
-        size = [UIScreen fw_relativeValue:size];
+    if (fwStaticAutoScaleFont) size = [UIScreen fw_relativeValue:size];
+    UIFont * _Nullable (^fontBlock)(CGFloat, UIFontWeight) = self.fw_fontBlock;
+    if (fontBlock) {
+        UIFont *font = fontBlock(size, weight);
+        if (font) return font;
     }
     return [UIFont systemFontOfSize:size weight:weight];
+}
+
++ (NSString *)fw_fontName:(NSString *)name weight:(UIFontWeight)weight italic:(BOOL)italic
+{
+    static NSDictionary<NSNumber *, NSString *> *weightSuffixes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        weightSuffixes = @{
+            @(UIFontWeightUltraLight): @"-Ultralight",
+            @(UIFontWeightThin): @"-Thin",
+            @(UIFontWeightLight): @"-Light",
+            @(UIFontWeightRegular): @"-Regular",
+            @(UIFontWeightMedium): @"-Medium",
+            @(UIFontWeightSemibold): @"-Semibold",
+            @(UIFontWeightBold): @"-Bold",
+            @(UIFontWeightHeavy): @"-Heavy",
+            @(UIFontWeightBlack): @"-Black",
+        };
+    });
+    
+    NSString *fontName = name;
+    NSString *weightSuffix = [weightSuffixes objectForKey:@(weight)];
+    if (weightSuffix) {
+        fontName = [fontName stringByAppendingFormat:@"%@%@", weightSuffix, italic ? @"Italic" : @""];
+    }
+    return fontName;
 }
 
 - (BOOL)fw_isBold

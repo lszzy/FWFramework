@@ -348,8 +348,8 @@ extension Wrapper where Base: UIColor {
 // MARK: - UIFont+Toolkit
 extension Wrapper where Base: UIFont {
     
-    /// 全局自定义字体句柄，优先调用
-    public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont)? {
+    /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
+    public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
         get { return Base.__fw_fontBlock }
         set { Base.__fw_fontBlock = newValue }
     }
@@ -360,34 +360,39 @@ extension Wrapper where Base: UIFont {
         set { Base.__fw_autoScale = newValue }
     }
 
-    /// 返回系统Thin字体
+    /// 返回系统Thin字体，自动等比例缩放
     public static func thinFont(ofSize: CGFloat) -> UIFont {
         return Base.__fw_thinFont(ofSize: ofSize)
     }
-    /// 返回系统Light字体
+    /// 返回系统Light字体，自动等比例缩放
     public static func lightFont(ofSize: CGFloat) -> UIFont {
         return Base.__fw_lightFont(ofSize: ofSize)
     }
-    /// 返回系统Regular字体
+    /// 返回系统Regular字体，自动等比例缩放
     public static func font(ofSize: CGFloat) -> UIFont {
         return Base.__fw_font(ofSize: ofSize)
     }
-    /// 返回系统Medium字体
+    /// 返回系统Medium字体，自动等比例缩放
     public static func mediumFont(ofSize: CGFloat) -> UIFont {
         return Base.__fw_mediumFont(ofSize: ofSize)
     }
-    /// 返回系统Semibold字体
+    /// 返回系统Semibold字体，自动等比例缩放
     public static func semiboldFont(ofSize: CGFloat) -> UIFont {
         return Base.__fw_semiboldFont(ofSize: ofSize)
     }
-    /// 返回系统Bold字体
+    /// 返回系统Bold字体，自动等比例缩放
     public static func boldFont(ofSize: CGFloat) -> UIFont {
         return Base.__fw_boldFont(ofSize: ofSize)
     }
 
-    /// 创建指定尺寸和weight的系统字体
+    /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
         return Base.__fw_font(ofSize: ofSize, weight: weight)
+    }
+    
+    /// 获取指定名称、字重、斜体字体的完整规范名称
+    public static func fontName(_ name: String, weight: UIFont.Weight, italic: Bool = false) -> String {
+        return Base.__fw_fontName(name, weight: weight, italic: italic)
     }
     
     /// 是否是粗体
