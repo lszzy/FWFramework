@@ -19,6 +19,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     var refreshList = false
     var isRefreshed = false
+    var hasMerchant = true
     
     lazy var pagerView: PagingView = {
         if refreshList {
@@ -64,14 +65,18 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         return result
     }()
     
+    lazy var barAppearance: NavigationBarAppearance = {
+        let result = NavigationBarAppearance()
+        result.foregroundColor = .white
+        result.backgroundColor = .clear
+        result.leftBackImage = Icon.backImage
+        return result
+    }()
+    
     func didInitialize() {
         app.extendedLayoutEdge = .top
-        
-        let appearance = NavigationBarAppearance()
-        appearance.foregroundColor = .white
-        appearance.backgroundTransparent = true
-        appearance.leftBackImage = Icon.backImage
-        app.navigationBarAppearance = appearance
+        app.navigationBarAppearance = barAppearance
+        app.statusBarStyle = .lightContent
     }
     
     override func viewDidLoad() {
@@ -94,8 +99,9 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
-            self.pagerView.reloadData()
+            self.hasMerchant = !self.hasMerchant
             self.pagerView.mainTableView.app.endRefreshing()
+            self.pagerView.reloadData()
         }
     }
     
@@ -133,7 +139,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func numberOfLists(in pagingView: PagingView) -> Int {
-        return segmentedControl.sectionTitles?.count ?? 0
+        return (segmentedControl.sectionTitles?.count ?? 0) - (hasMerchant ? 0 : 1)
     }
     
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate {
@@ -156,15 +162,19 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     func pagingView(_ pagingView: PagingView, mainTableViewDidScroll scrollView: UIScrollView) {
         let progress = scrollView.contentOffset.y / (TestPagingController.headerViewHeight - TestPagingController.navigationViewHeight)
         if progress >= 1 {
-            navigationController?.navigationBar.app.backgroundColor = AppTheme.barColor
-            navigationController?.navigationBar.app.foregroundColor = AppTheme.textColor
+            barAppearance.backgroundColor = AppTheme.barColor
+            barAppearance.foregroundColor = AppTheme.textColor
+            app.navigationBarAppearance = barAppearance
+            app.statusBarStyle = .default
         } else if progress >= 0 && progress < 1 {
-            navigationController?.navigationBar.app.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
+            barAppearance.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
             if progress <= 0.5 {
-                navigationController?.navigationBar.app.foregroundColor = .white.withAlphaComponent(1 - progress)
+                barAppearance.foregroundColor = .white.withAlphaComponent(1 - progress)
             } else {
-                navigationController?.navigationBar.app.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
+                barAppearance.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
             }
+            app.navigationBarAppearance = barAppearance
+            app.statusBarStyle = progress <= 0.5 ? .lightContent : .default
         }
     }
     
