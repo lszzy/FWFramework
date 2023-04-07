@@ -44,8 +44,8 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if !app.isLoaded {
-            app.isLoaded = true
+        if !app.isDataLoaded {
+            app.isDataLoaded = true
             self.player.playFromBeginning()
         }
     }

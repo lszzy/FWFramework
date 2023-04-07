@@ -2860,10 +2860,10 @@ import AdSupport
         }
     }
 
-    /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-    public var fw_isLoaded: Bool {
-        get { return fw_propertyBool(forName: "fw_isLoaded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isLoaded") }
+    /// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
+    public var fw_isDataLoaded: Bool {
+        get { return fw_propertyBool(forName: "fw_isDataLoaded") }
+        set { fw_setPropertyBool(newValue, forName: "fw_isDataLoaded") }
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
