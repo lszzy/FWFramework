@@ -7,6 +7,7 @@
 
 #import "FWImagePreviewController.h"
 #import "FWAdaptive.h"
+#import "FWQuartzCore.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
 
@@ -664,6 +665,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
         self.duration = .25;
         
         _cornerRadiusMaskLayer = [CALayer layer];
+        [self.cornerRadiusMaskLayer fw_removeDefaultAnimations];
         self.cornerRadiusMaskLayer.backgroundColor = [UIColor whiteColor].CGColor;
         
         self.animationEnteringBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
