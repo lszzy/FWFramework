@@ -229,13 +229,16 @@ open class NavigationBarAppearance: NSObject {
         }
     }
     
-    /// 是否允许child控制器修改导航栏样式，默认false
-    public var fw_allowsChildNavigation: Bool {
+    /// 是否允许修改导航栏样式，默认未设置时child控制器不能修改
+    public var fw_allowsBarAppearance: Bool {
         get {
-            return fw_propertyBool(forName: "fw_allowsChildNavigation")
+            if let number = fw_property(forName: "fw_allowsBarAppearance") as? NSNumber {
+                return number.boolValue
+            }
+            return !fw_isChild
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_allowsChildNavigation")
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_allowsBarAppearance")
         }
     }
     
@@ -263,7 +266,7 @@ open class NavigationBarAppearance: NSObject {
         // 含有导航栏且不是导航栏控制器，如果是child控制器且允许修改时才处理
         guard let navigationController = self.navigationController,
               !(self is UINavigationController) else { return }
-        if self.fw_isChild && !self.fw_allowsChildNavigation { return }
+        if !fw_allowsBarAppearance { return }
         
         // fwNavigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
         if let hidden = fw_property(forName: "fw_navigationBarHidden") as? NSNumber,
