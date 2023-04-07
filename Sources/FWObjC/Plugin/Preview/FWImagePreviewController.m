@@ -489,7 +489,11 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)updatePageLabel {
-    self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.imagePreviewView.currentImageIndex + 1), @(self.imagePreviewView.imageCount)];
+    if (self.pageLabelText) {
+        self.pageLabel.text = self.pageLabelText(self.imagePreviewView.currentImageIndex, self.imagePreviewView.imageCount);
+    } else {
+        self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.imagePreviewView.currentImageIndex + 1), @(self.imagePreviewView.imageCount)];
+    }
     [self.pageLabel sizeToFit];
     
     if (self.pageIndexChanged) {

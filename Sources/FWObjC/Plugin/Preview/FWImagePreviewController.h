@@ -169,6 +169,9 @@ NS_SWIFT_NAME(ImagePreviewController)
 @property(nonatomic, strong, readonly) UILabel *pageLabel;
 /// 页数标签中心句柄，默认nil时离底部安全距离+18
 @property(nonatomic, copy, nullable) CGPoint (^pageLabelCenter)(void);
+/// 页数文本句柄，默认nil时为index / count
+@property(nonatomic, copy, nullable) NSString * (^pageLabelText)(NSInteger index, NSInteger count);
+
 /// 页数标签需要更新，子类可重写
 - (void)updatePageLabel;
 
