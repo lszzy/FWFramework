@@ -19,7 +19,6 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     var refreshList = false
     var isRefreshed = false
-    var hasMerchant = true
     
     lazy var pagerView: PagingView = {
         if refreshList {
@@ -99,9 +98,8 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
-            self.hasMerchant = !self.hasMerchant
             self.pagerView.mainTableView.app.endRefreshing()
-            self.segmentedControl.sectionTitles = self.hasMerchant ? ["下单", "评价", "商家"] : ["下单", "评价"]
+            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles?.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
         }
     }
@@ -140,7 +138,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func numberOfLists(in pagingView: PagingView) -> Int {
-        return (segmentedControl.sectionTitles?.count ?? 0) - (hasMerchant ? 0 : 1)
+        return segmentedControl.sectionTitles?.count ?? 0
     }
     
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate {
@@ -267,6 +265,16 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             guard let self = self else { return }
             self.selectCollectionView(offset: self.tableView.contentOffset.y)
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Logger.debug("TestNestChildController.viewDidLoad")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.debug("TestNestChildController.viewWillAppear")
     }
     
     @objc func onRefreshing() {
