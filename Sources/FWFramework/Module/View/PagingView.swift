@@ -200,6 +200,7 @@ protocol PagingListContainerViewDelegate {
         while next != nil {
             if let vc = next as? UIViewController{
                 vc.addChild(containerVC)
+                containerVC.didMove(toParent: vc)
                 break
             }
             next = next?.next
@@ -259,12 +260,15 @@ protocol PagingListContainerViewDelegate {
 
     public func reloadData() {
         guard let dataSource = dataSource else { return }
+        var resetContentOffset = false
         if currentIndex < 0 || currentIndex >= dataSource.numberOfLists(in: self) {
             defaultSelectedIndex = 0
             currentIndex = 0
+            resetContentOffset = true
         }
         validListDict.values.forEach { (list) in
             if let listVC = list as? UIViewController {
+                listVC.willMove(toParent: nil)
                 listVC.removeFromParent()
             }
             list.listView().removeFromSuperview()
@@ -272,8 +276,14 @@ protocol PagingListContainerViewDelegate {
         validListDict.removeAll()
         if type == .scrollView {
             scrollView.contentSize = CGSize(width: scrollView.bounds.size.width*CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
+            if resetContentOffset {
+                scrollView.contentOffset = CGPoint(x: CGFloat(currentIndex)*scrollView.bounds.size.width, y: 0)
+            }
         }else {
             collectionView.reloadData()
+            if resetContentOffset {
+                collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex)*collectionView.bounds.size.width, y: 0), animated: false)
+            }
         }
         listWillAppear(at: currentIndex)
         listDidAppear(at: currentIndex)
@@ -296,6 +306,7 @@ protocol PagingListContainerViewDelegate {
         }
         if let vc = list as? UIViewController {
             containerVC.addChild(vc)
+            vc.didMove(toParent: containerVC)
         }
         validListDict[index] = list
         switch type {
@@ -333,6 +344,7 @@ protocol PagingListContainerViewDelegate {
             }
             if let vc = list as? UIViewController {
                 containerVC.addChild(vc)
+                vc.didMove(toParent: containerVC)
             }
             validListDict[index] = list
             if type == .scrollView {
