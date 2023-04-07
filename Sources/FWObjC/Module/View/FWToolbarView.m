@@ -129,6 +129,16 @@
     return [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    BOOL pointInside = [super pointInside:point withEvent:event];
+    if (!pointInside && self.menuView.verticalOverflow) {
+        if ([self.menuView pointInside:CGPointMake(point.x - self.menuView.frame.origin.x, point.y - self.menuView.frame.origin.y) withEvent:event]) {
+            pointInside = YES;
+        }
+    }
+    return pointInside;
+}
+
 #pragma mark - Accessor
 
 - (UIView *)topView {
@@ -303,6 +313,14 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (void)setVerticalOverflow:(BOOL)verticalOverflow
+{
+    if (verticalOverflow == _verticalOverflow) return;
+    _verticalOverflow = verticalOverflow;
+    self.clipsToBounds = !verticalOverflow;
+    [self setNeedsUpdateConstraints];
+}
+
 - (void)setAlignmentLeft:(BOOL)alignmentLeft
 {
     if (alignmentLeft == _alignmentLeft) return;
@@ -358,6 +376,20 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    BOOL pointInside = [super pointInside:point withEvent:event];
+    if (!pointInside && self.verticalOverflow) {
+        for (UIView *subview in self.subviews) {
+            if ([subview pointInside:CGPointMake(point.x - subview.frame.origin.x, point.y - subview.frame.origin.y) withEvent:event]) {
+                pointInside = YES;
+                break;
+            }
+        }
+    }
+    return pointInside;
+}
+
 - (void)updateConstraints
 {
     [super updateConstraints];
@@ -379,7 +411,7 @@
         NSMutableArray *subviewContraints = [NSMutableArray array];
         UIView *previousButton = nil;
         for (UIView *subviewButton in subviewButtons) {
-            [subviewContraints addObject:[subviewButton fw_pinEdgeToSuperview:NSLayoutAttributeTop]];
+            [subviewContraints addObject:[subviewButton fw_pinEdgeToSuperview:NSLayoutAttributeTop withInset:0 relation:self.verticalOverflow ? NSLayoutRelationLessThanOrEqual : NSLayoutRelationEqual priority:UILayoutPriorityRequired]];
             [subviewContraints addObject:[subviewButton fw_pinEdgeToSuperview:NSLayoutAttributeBottom]];
             if (previousButton) {
                 [subviewContraints addObject:[subviewButton fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeRight ofView:previousButton]];
