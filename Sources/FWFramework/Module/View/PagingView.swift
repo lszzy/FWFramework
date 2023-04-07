@@ -195,6 +195,7 @@ open class PagingListContainerView: UIView {
         while next != nil {
             if let vc = next as? UIViewController{
                 vc.addChild(containerVC)
+                containerVC.didMove(toParent: vc)
                 break
             }
             next = next?.next
@@ -260,6 +261,7 @@ open class PagingListContainerView: UIView {
         }
         validListDict.values.forEach { (list) in
             if let listVC = list as? UIViewController {
+                listVC.willMove(toParent: nil)
                 listVC.removeFromParent()
             }
             list.listView().removeFromSuperview()
@@ -291,6 +293,7 @@ open class PagingListContainerView: UIView {
         }
         if let vc = list as? UIViewController {
             containerVC.addChild(vc)
+            vc.didMove(toParent: containerVC)
         }
         validListDict[index] = list
         switch type {
@@ -328,6 +331,7 @@ open class PagingListContainerView: UIView {
             }
             if let vc = list as? UIViewController {
                 containerVC.addChild(vc)
+                vc.didMove(toParent: containerVC)
             }
             validListDict[index] = list
             if type == .scrollView {
