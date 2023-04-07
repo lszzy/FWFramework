@@ -89,11 +89,13 @@ public enum VersionStatus: Int {
         return false
     }
     
-    /// 跳转AppStore更新页
-    public func openAppStore() {
+    /// 跳转AppStore更新页，force为是否强制更新
+    public func openAppStore(force: Bool = false) {
         guard let appId = appId, let storeUrl = URL(string: "https://apps.apple.com/app/id\(appId)") else { return }
         DispatchQueue.main.async {
-            UIApplication.shared.open(storeUrl, options: [:], completionHandler: nil)
+            UIApplication.shared.open(storeUrl, options: [:], completionHandler: force ? { success in
+                if success { exit(EXIT_SUCCESS) }
+            } : nil)
         }
     }
     
