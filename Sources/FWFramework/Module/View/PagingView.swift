@@ -117,7 +117,7 @@ protocol PagingListContainerViewDelegate {
         }
     }
     weak var delegate: PagingListContainerViewDelegate?
-    private var currentIndex: Int = 0
+    public private(set) var currentIndex: Int = 0
     private var collectionView: UICollectionView!
     private var containerVC: PagingListContainerViewController!
     private var willAppearIndex: Int = -1
@@ -655,6 +655,12 @@ public protocol PagingViewDelegate {
     ///   - pagingView: pagingView description
     ///   - index: 新生成的列表实例
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate
+    
+    /// 返回对应index的列表唯一标识
+    /// - Parameters:
+    ///   - pagingView: pagingView description
+    ///   - index: 列表的下标
+    @objc optional func pagingView(_ pagingView: PagingView, listIdentifierAtIndex index: Int) -> String
 
     @objc optional func pagingView(_ pagingView: PagingView, mainTableViewDidScroll scrollView: UIScrollView)
     @objc optional func pagingView(_ pagingView: PagingView, mainTableViewWillBeginDragging scrollView: UIScrollView)
@@ -676,7 +682,7 @@ public protocol PagingViewDelegate {
 /**
  FWPagingView
  
- [JXPagingView 2.0.12](https://github.com/pujiaxin33/JXPagingView)
+ [JXPagingView 2.1.0](https://github.com/pujiaxin33/JXPagingView)
  */
 @objc(FWPagingView)
 @objcMembers open class PagingView: UIView {
@@ -699,13 +705,16 @@ public protocol PagingViewDelegate {
     }
     /// 是否允许当前列表自动显示或隐藏列表是垂直滚动指示器。true：悬浮的headerView滚动到顶部开始滚动列表时，就会显示，反之隐藏。false：内部不会处理列表的垂直滚动指示器。默认为：true。
     public var automaticallyDisplayListVerticalScrollIndicator = true
-    public var currentScrollingListView: UIScrollView?
-    public var currentList: PagingViewListViewDelegate?
+    /// 当allowsCacheList为true时，请务必实现代理方法`func pagingView(_ pagingView: PagingView, listIdentifierAtIndex index: Int) -> String`
+    public var allowsCacheList: Bool = false
+    public private(set) var currentScrollingListView: UIScrollView?
+    internal var currentList: PagingViewListViewDelegate?
     private var currentIndex: Int = 0
     private weak var delegate: PagingViewDelegate?
     private var tableHeaderContainerView: UIView!
     private let cellIdentifier = "cell"
     private let listContainerType: PagingListContainerType
+    private var listCache = [String:PagingViewListViewDelegate]()
 
     public init(delegate: PagingViewDelegate, listContainerType: PagingListContainerType = .collectionView) {
         self.delegate = delegate
@@ -723,6 +732,9 @@ public protocol PagingViewDelegate {
         refreshTableHeaderView()
         mainTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         mainTableView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 15.0, *) {
+            mainTableView.sectionHeaderTopPadding = 0
+        }
         addSubview(mainTableView)
     }
 
@@ -744,6 +756,21 @@ public protocol PagingViewDelegate {
         currentList = nil
         currentScrollingListView = nil
         validListDict.removeAll()
+        if allowsCacheList, let listCount = delegate?.numberOfLists(in: self) {
+            //根据新数据删除不需要的list
+            var newListIdentifierArray = [String]()
+            for index in 0..<listCount {
+                if let listIdentifier = delegate?.pagingView?(self, listIdentifierAtIndex: index) {
+                    newListIdentifierArray.append(listIdentifier)
+                }
+            }
+            let existedKeys = Array(listCache.keys)
+            for listIdentifier in existedKeys {
+                if !newListIdentifierArray.contains(listIdentifier) {
+                    listCache.removeValue(forKey: listIdentifier)
+                }
+            }
+        }
         refreshTableHeaderView()
         if pinSectionHeaderVerticalOffset != 0 && mainTableView.contentOffset.y > CGFloat(pinSectionHeaderVerticalOffset) {
             mainTableView.contentOffset = .zero
@@ -987,6 +1014,9 @@ extension PagingView: PagingListContainerViewDataSource {
     public func listContainerView(_ listContainerView: PagingListContainerView, initListAt index: Int) -> PagingViewListViewDelegate {
         guard let delegate = delegate else { fatalError("FWPaingView.delegate must not be nil") }
         var list = validListDict[index]
+        if list == nil, let listIdentifier = delegate.pagingView?(self, listIdentifierAtIndex: index) {
+            list = listCache[listIdentifier]
+        }
         if list == nil {
             list = delegate.pagingView(self, initListAtIndex: index)
             list?.listViewDidScrollCallback {[weak self, weak list] (scrollView) in
@@ -994,6 +1024,9 @@ extension PagingView: PagingListContainerViewDataSource {
                 self?.listViewDidScroll(scrollView: scrollView)
             }
             validListDict[index] = list!
+            if allowsCacheList, let listIdentifier = delegate.pagingView?(self, listIdentifierAtIndex: index) {
+                listCache[listIdentifier] = list
+            }
         }
         return list!
     }
