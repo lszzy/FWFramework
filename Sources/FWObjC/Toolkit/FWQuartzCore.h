@@ -78,6 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
                   offset:(CGSize)offset
                   radius:(CGFloat)radius NS_REFINED_FOR_SWIFT;
 
+/// 移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用
+- (void)fw_removeDefaultAnimations NS_REFINED_FOR_SWIFT;
+
 /// 生成图片截图，默认大小为frame.size
 - (nullable UIImage *)fw_snapshotImageWithSize:(CGSize)size NS_REFINED_FOR_SWIFT;
 
