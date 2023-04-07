@@ -101,6 +101,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
             self.isRefreshed = !self.isRefreshed
             self.hasMerchant = !self.hasMerchant
             self.pagerView.mainTableView.app.endRefreshing()
+            self.segmentedControl.sectionTitles = self.hasMerchant ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
         }
     }
