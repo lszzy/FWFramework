@@ -1060,10 +1060,10 @@ extension Wrapper where Base: UIViewController {
         return base.__fw_ancestorView
     }
 
-    /// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-    public var isLoaded: Bool {
-        get { return base.__fw_isLoaded }
-        set { base.__fw_isLoaded = newValue }
+    /// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
+    public var isDataLoaded: Bool {
+        get { return base.__fw_isDataLoaded }
+        set { base.__fw_isDataLoaded = newValue }
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
