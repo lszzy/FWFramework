@@ -94,8 +94,9 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
+            self.pagerView.mainTableView.app.endRefreshing()
+            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles?.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
-            self.pagerView.mainTableView.fw.endRefreshing()
         }
     }
     
@@ -256,6 +257,16 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             guard let self = self else { return }
             self.selectCollectionView(offset: self.tableView.contentOffset.y)
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Logger.debug("TestNestChildController.viewDidLoad")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.debug("TestNestChildController.viewWillAppear")
     }
     
     @objc func onRefreshing() {
