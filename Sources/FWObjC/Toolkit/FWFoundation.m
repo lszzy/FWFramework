@@ -162,6 +162,18 @@
     return attributedString;
 }
 
++ (NSAttributedString *)fw_attributedStringWithString:(NSString *)string attributes:(NSDictionary<NSAttributedStringKey,id> *)attributes highlights:(NSDictionary<NSString *,NSDictionary<NSAttributedStringKey,id> *> *)highlights
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
+    [highlights enumerateKeysAndObjectsUsingBlock:^(NSString *highlight, NSDictionary<NSAttributedStringKey,id> *highlightAttributes, BOOL *stop) {
+        NSRange range = [string rangeOfString:highlight];
+        if (range.location != NSNotFound) {
+            [attributedString addAttributes:highlightAttributes range:range];
+        }
+    }];
+    return attributedString;
+}
+
 + (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font
 {
     return [self fw_attributedString:string withFont:font textColor:nil];
