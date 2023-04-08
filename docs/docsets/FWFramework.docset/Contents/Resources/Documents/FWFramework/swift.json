@@ -6262,7 +6262,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Module\/Controller\/NavigationController.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 3599,
+    "key.length" : 3827,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -6395,10 +6395,10 @@
         ]
       },
       {
-        "key.bodylength" : 843,
+        "key.bodylength" : 1071,
         "key.bodyoffset" : 1565,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 892,
+        "key.length" : 1120,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
         "key.nameoffset" : 1527,
@@ -6433,20 +6433,44 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1949
+                "key.offset" : 2011
+              }
+            ],
+            "key.bodylength" : 50,
+            "key.bodyoffset" : 2051,
+            "key.doc.comment" : "标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法",
+            "key.doclength" : 123,
+            "key.docoffset" : 1884,
+            "key.kind" : "source.lang.swift.decl.function.method.instance",
+            "key.length" : 84,
+            "key.name" : "barTransitionNeedsUpdate()",
+            "key.namelength" : 26,
+            "key.nameoffset" : 2023,
+            "key.offset" : 2018,
+            "key.substructure" : [
+
+            ]
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 2177
               }
             ],
             "key.bodylength" : 133,
-            "key.bodyoffset" : 1996,
+            "key.bodyoffset" : 2224,
             "key.doc.comment" : "视图控制器是否禁用全屏返回手势，默认NO",
             "key.doclength" : 61,
-            "key.docoffset" : 1884,
+            "key.docoffset" : 2112,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 174,
             "key.name" : "fullscreenPopGestureDisabled",
             "key.namelength" : 28,
-            "key.nameoffset" : 1960,
-            "key.offset" : 1956,
+            "key.nameoffset" : 2188,
+            "key.offset" : 2184,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "Bool"
           },
@@ -6456,20 +6480,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2218
+                "key.offset" : 2446
               }
             ],
             "key.bodylength" : 133,
-            "key.bodyoffset" : 2268,
+            "key.bodyoffset" : 2496,
             "key.doc.comment" : "视图控制器全屏手势距离左侧最大距离，默认0，无限制",
             "key.doclength" : 78,
-            "key.docoffset" : 2136,
+            "key.docoffset" : 2364,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 177,
             "key.name" : "fullscreenPopGestureDistance",
             "key.namelength" : 28,
-            "key.nameoffset" : 2229,
-            "key.offset" : 2225,
+            "key.nameoffset" : 2457,
+            "key.offset" : 2453,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
             "key.typename" : "CGFloat"
           }
@@ -6477,13 +6501,13 @@
       },
       {
         "key.bodylength" : 703,
-        "key.bodyoffset" : 2458,
+        "key.bodyoffset" : 2686,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 751,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 2421,
-        "key.offset" : 2411,
+        "key.nameoffset" : 2649,
+        "key.offset" : 2639,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -6491,20 +6515,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2534
+                "key.offset" : 2762
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 2570,
+            "key.bodyoffset" : 2798,
             "key.doc.comment" : "导航栏背景视图，显示背景色和背景图片等",
             "key.doclength" : 62,
-            "key.docoffset" : 2468,
+            "key.docoffset" : 2696,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 75,
             "key.name" : "backgroundView",
             "key.namelength" : 14,
-            "key.nameoffset" : 2545,
-            "key.offset" : 2541,
+            "key.nameoffset" : 2773,
+            "key.offset" : 2769,
             "key.typename" : "UIView?"
           },
           {
@@ -6513,20 +6537,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2702
+                "key.offset" : 2930
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 2735,
+            "key.bodyoffset" : 2963,
             "key.doc.comment" : "导航栏内容视图，iOS11+才存在，显示item和titleView等",
             "key.doclength" : 72,
-            "key.docoffset" : 2626,
+            "key.docoffset" : 2854,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 69,
             "key.name" : "contentView",
             "key.namelength" : 11,
-            "key.nameoffset" : 2713,
-            "key.offset" : 2709,
+            "key.nameoffset" : 2941,
+            "key.offset" : 2937,
             "key.typename" : "UIView?"
           },
           {
@@ -6535,20 +6559,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 2913
+                "key.offset" : 3141
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 2949,
+            "key.bodyoffset" : 3177,
             "key.doc.comment" : "导航栏大标题视图，显示时才有值。如果要设置背景色，可使用fwBackgroundView.backgroundColor",
             "key.doclength" : 121,
-            "key.docoffset" : 2788,
+            "key.docoffset" : 3016,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 75,
             "key.name" : "largeTitleView",
             "key.namelength" : 14,
-            "key.nameoffset" : 2924,
-            "key.offset" : 2920,
+            "key.nameoffset" : 3152,
+            "key.offset" : 3148,
             "key.typename" : "UIView?"
           },
           {
@@ -6557,33 +6581,33 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3062
+                "key.offset" : 3290
               }
             ],
             "key.bodylength" : 47,
-            "key.bodyoffset" : 3107,
+            "key.bodyoffset" : 3335,
             "key.doc.comment" : "导航栏大标题高度，与是否隐藏无关",
             "key.doclength" : 53,
-            "key.docoffset" : 3005,
+            "key.docoffset" : 3233,
             "key.kind" : "source.lang.swift.decl.var.static",
             "key.length" : 86,
             "key.name" : "largeTitleHeight",
             "key.namelength" : 16,
-            "key.nameoffset" : 3080,
-            "key.offset" : 3069,
+            "key.nameoffset" : 3308,
+            "key.offset" : 3297,
             "key.typename" : "CGFloat"
           }
         ]
       },
       {
         "key.bodylength" : 392,
-        "key.bodyoffset" : 3205,
+        "key.bodyoffset" : 3433,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 434,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 3174,
-        "key.offset" : 3164,
+        "key.nameoffset" : 3402,
+        "key.offset" : 3392,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -6591,20 +6615,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3359
+                "key.offset" : 3587
               }
             ],
             "key.bodylength" : 45,
-            "key.bodyoffset" : 3395,
+            "key.bodyoffset" : 3623,
             "key.doc.comment" : "工具栏背景视图，显示背景色和背景图片等。如果标签栏同时显示，背景视图高度也会包含标签栏高度",
             "key.doclength" : 140,
-            "key.docoffset" : 3215,
+            "key.docoffset" : 3443,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 75,
             "key.name" : "backgroundView",
             "key.namelength" : 14,
-            "key.nameoffset" : 3370,
-            "key.offset" : 3366,
+            "key.nameoffset" : 3598,
+            "key.offset" : 3594,
             "key.typename" : "UIView?"
           },
           {
@@ -6613,20 +6637,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 3515
+                "key.offset" : 3743
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 3548,
+            "key.bodyoffset" : 3776,
             "key.doc.comment" : "工具栏内容视图，iOS11+才存在，显示item等",
             "key.doclength" : 60,
-            "key.docoffset" : 3451,
+            "key.docoffset" : 3679,
             "key.kind" : "source.lang.swift.decl.var.instance",
             "key.length" : 69,
             "key.name" : "contentView",
             "key.namelength" : 11,
-            "key.nameoffset" : 3526,
-            "key.offset" : 3522,
+            "key.nameoffset" : 3754,
+            "key.offset" : 3750,
             "key.typename" : "UIView?"
           }
         ]

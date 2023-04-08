@@ -5574,7 +5574,7 @@
     },
     {
       "file": "docs/FWFramework/FWNavigationController.h",
-      "line": 42,
+      "line": 45,
       "symbol": "UINavigationBar(FWBarTransition)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
