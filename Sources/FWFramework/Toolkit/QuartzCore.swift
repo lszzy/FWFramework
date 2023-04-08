@@ -90,6 +90,11 @@ extension Wrapper where Base: CALayer {
         base.__fw_setShadowColor(color, offset: offset, radius: radius)
     }
     
+    /// 移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用
+    public func removeDefaultAnimations() {
+        base.__fw_removeDefaultAnimations()
+    }
+    
     /// 生成图片截图，默认大小为frame.size
     public func snapshotImage(size: CGSize = .zero) -> UIImage? {
         return base.__fw_snapshotImage(with: size)

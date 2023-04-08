@@ -3086,14 +3086,14 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
-- (BOOL)fw_isLoaded
+- (BOOL)fw_isDataLoaded
 {
-    return [objc_getAssociatedObject(self, @selector(fw_isLoaded)) boolValue];
+    return [objc_getAssociatedObject(self, @selector(fw_isDataLoaded)) boolValue];
 }
 
-- (void)setFw_isLoaded:(BOOL)isLoaded
+- (void)setFw_isDataLoaded:(BOOL)isDataLoaded
 {
-    objc_setAssociatedObject(self, @selector(fw_isLoaded), @(isLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isDataLoaded), @(isDataLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)fw_addChildViewController:(UIViewController *)viewController

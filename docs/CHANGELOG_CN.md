@@ -1,5 +1,14 @@
 # 更新日志
 
+## [4.8.2] - 2023-04-08
+
+### Changed
+* PagingView支持重用，修复reloadData未重置contentOffset问题
+* 控制器新增allowsBarAppearance控制是否修改导航栏样式
+* ImagePreview插件新增dismissingScaleEnabled配置，修复偶现闪烁问题
+* 重构全局fontBlock，自动根据配置取相对尺寸
+* ToolbarView支持不规则形状按钮
+
 ## [4.8.1] - 2023-03-31
 
 ### Added

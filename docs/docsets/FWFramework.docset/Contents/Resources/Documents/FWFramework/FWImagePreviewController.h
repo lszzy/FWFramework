@@ -152,6 +152,9 @@ NS_SWIFT_NAME(ImagePreviewController)
 /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 FWImagePreviewCornerRadiusAutomaticDimension，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
 @property(nonatomic, assign) CGFloat sourceImageCornerRadius;
 
+/// 手势拖拽退出预览模式时是否启用缩放效果，默认YES。仅对以 present 方式进入大图预览的场景有效。
+@property(nonatomic, assign) BOOL dismissingScaleEnabled;
+
 /// 是否支持手势拖拽退出预览模式，默认为 YES。仅对以 present 方式进入大图预览的场景有效。
 @property(nonatomic, assign) BOOL dismissingGestureEnabled;
 
@@ -169,6 +172,9 @@ NS_SWIFT_NAME(ImagePreviewController)
 @property(nonatomic, strong, readonly) UILabel *pageLabel;
 /// 页数标签中心句柄，默认nil时离底部安全距离+18
 @property(nonatomic, copy, nullable) CGPoint (^pageLabelCenter)(void);
+/// 页数文本句柄，默认nil时为index / count
+@property(nonatomic, copy, nullable) NSString * (^pageLabelText)(NSInteger index, NSInteger count);
+
 /// 页数标签需要更新，子类可重写
 - (void)updatePageLabel;
 
@@ -231,6 +237,15 @@ NS_SWIFT_NAME(ImagePreviewTransitionAnimator)
  @param transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息
  */
 @property(nonatomic, copy, nullable) void (^animationCompletionBlock)(__kindof FWImagePreviewTransitionAnimator *animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView *zoomImageView, id<UIViewControllerContextTransitioning> _Nullable transitionContext);
+
+/**
+ 动画回调句柄，动画开始和结束时调用
+ 
+ @param animator 当前的动画器 animator
+ @param isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+ @param isFinished YES 表示动画结束，NO 表示动画开始
+ */
+@property(nonatomic, copy, nullable) void (^animationCallbackBlock)(__kindof FWImagePreviewTransitionAnimator *animator, BOOL isPresenting, BOOL isFinished);
 
 @end
 

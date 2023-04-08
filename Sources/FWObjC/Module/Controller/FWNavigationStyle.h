@@ -94,8 +94,8 @@ NS_SWIFT_NAME(NavigationBarAppearance)
 /// 动态隐藏导航栏，如果当前已经viewWillAppear:时立即执行
 - (void)fw_setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated NS_REFINED_FOR_SWIFT;
 
-/// 是否允许child控制器修改导航栏样式，默认NO
-@property (nonatomic, assign) BOOL fw_allowsChildNavigation NS_REFINED_FOR_SWIFT;
+/// 是否允许修改导航栏样式，默认未设置时child控制器不能修改
+@property (nonatomic, assign) BOOL fw_allowsBarAppearance NS_REFINED_FOR_SWIFT;
 
 /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
 @property (nonatomic, assign) BOOL fw_tabBarHidden NS_REFINED_FOR_SWIFT;
