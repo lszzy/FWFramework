@@ -122,6 +122,14 @@
     objc_setAssociatedObject(self, @selector(fw_barTransitionIdentifier), identifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)fw_barTransitionNeedsUpdate
+{
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    UINavigationBar *transitionNavigationBar = self.fw_transitionNavigationBar;
+    if (!navigationBar || !transitionNavigationBar) return;
+    [transitionNavigationBar fw_replaceStyleWithNavigationBar:navigationBar];
+}
+
 - (UINavigationBar *)fw_transitionNavigationBar
 {
     return objc_getAssociatedObject(self, @selector(fw_transitionNavigationBar));
