@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
 @property (nullable, nonatomic, strong) id fw_barTransitionIdentifier NS_REFINED_FOR_SWIFT;
 
+/// 标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法
+- (void)fw_barTransitionNeedsUpdate NS_REFINED_FOR_SWIFT;
+
 @end
 
 @interface UINavigationBar (FWBarTransition)
