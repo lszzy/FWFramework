@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.8.2] - 2023-04-08
+
+### Changed
+* PagingView supports reuse, fix the problem that reloadData does not reset contentOffset
+* The controller adds allowsBarAppearance to control whether to modify the navigation bar style
+* Added dismissingScaleEnabled configuration to the ImagePreview plug-in to fix the occasional flickering problem
+* Refactor the global fontBlock, automatically take the relative size according to the configuration
+* ToolbarView supports irregular shape buttons
+
 ## [4.8.1] - 2023-03-31
 
 ### Added
