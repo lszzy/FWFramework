@@ -32,10 +32,12 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
                 return 0
             }
             pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.isHidden = true
             return pagerView
         } else {
             let pagerView = PagingView(delegate: self, listContainerType: .scrollView)
             pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.isHidden = true
             return pagerView
         }
     }()
@@ -61,22 +63,25 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     lazy var cartView: UIView = {
         let result = UIView()
         result.backgroundColor = .green
+        result.isHidden = true
+        
+        let cartLabel = UILabel()
+        cartLabel.font = UIFont.app.font(ofSize: 15)
+        cartLabel.textColor = .black
+        cartLabel.text = "我是购物车"
+        cartLabel.textAlignment = .center
+        result.addSubview(cartLabel)
+        cartLabel.app.layoutChain.edges()
         return result
     }()
     
     lazy var barAppearance: NavigationBarAppearance = {
         let result = NavigationBarAppearance()
-        result.foregroundColor = .white
+        result.foregroundColor = AppTheme.textColor
         result.backgroundColor = .clear
         result.leftBackImage = Icon.backImage
         return result
     }()
-    
-    func didInitialize() {
-        app.extendedLayoutEdge = .top
-        app.navigationBarAppearance = barAppearance
-        app.statusBarStyle = .lightContent
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,6 +97,31 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
                 vc.refreshList = true
                 self?.fw.open(vc)
             }
+        }
+        
+        requestData()
+    }
+    
+    func requestData() {
+        app.extendedLayoutEdge = .top
+        app.navigationBarAppearance = barAppearance
+        app.statusBarStyle = .default
+        
+        app.showLoading()
+        let soFast = [true, false].randomElement()!
+        // 模拟启用转场且请求太快的情况时导航栏是否正常
+        if soFast { UINavigationController.app.enableBarTransition() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + (soFast ? 0.2 : 1)) {
+            self.app.hideLoading()
+            
+            self.barAppearance.foregroundColor = .white
+            self.app.navigationBarAppearance = self.barAppearance
+            self.app.statusBarStyle = .lightContent
+            if soFast { self.app.barTransitionNeedsUpdate() }
+            
+            self.pagerView.isHidden = false
+            self.cartView.isHidden = false
+            self.pagerView.reloadData()
         }
     }
     
@@ -111,14 +141,6 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         view.addSubview(cartView)
         cartView.fw.pinEdges(excludingEdge: .top)
         cartView.fw.setDimension(.height, size: TestPagingController.cartViewHeight)
-        
-        let cartLabel = UILabel()
-        cartLabel.font = UIFont.fw.font(ofSize: 15)
-        cartLabel.textColor = .black
-        cartLabel.text = "我是购物车"
-        cartLabel.textAlignment = .center
-        cartLabel.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: TestPagingController.cartViewHeight)
-        cartView.addSubview(cartLabel)
     }
     
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int {
@@ -179,7 +201,9 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     func pagingView(_ pagingView: PagingView, didScrollToIndex index: Int) {
         segmentedControl.selectedSegmentIndex = UInt(index)
-        self.cartView.isHidden = index != 0
+        if !self.pagerView.isHidden {
+            self.cartView.isHidden = index != 0
+        }
     }
     
 }
