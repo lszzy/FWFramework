@@ -108,17 +108,16 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         app.statusBarStyle = .default
         
         app.showLoading()
-        var soFast = [true, false].randomElement()!
-        if soFast {
-            // 模拟启用转场且请求太快的情况时导航栏是否正常
-            UINavigationController.app.enableBarTransition()
-        }
+        let soFast = [true, false].randomElement()!
+        // 模拟启用转场且请求太快的情况时导航栏是否正常
+        if soFast { UINavigationController.app.enableBarTransition() }
         DispatchQueue.main.asyncAfter(deadline: .now() + (soFast ? 0.2 : 1)) {
             self.app.hideLoading()
             
             self.barAppearance.foregroundColor = .white
             self.app.navigationBarAppearance = self.barAppearance
             self.app.statusBarStyle = .lightContent
+            if soFast { self.app.barTransitionNeedsUpdate() }
             
             self.pagerView.isHidden = false
             self.cartView.isHidden = false
