@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.8.3] - 2023-04-08
+
+### Added
+* Added the barTransitionNeedsUpdate method to handle the scene where the transition style of the navigation bar changes
+
 ## [4.8.2] - 2023-04-08
 
 ### Changed
