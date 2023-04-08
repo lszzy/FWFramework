@@ -668,8 +668,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
 @property (nonatomic, strong, readonly) UIView *fw_ancestorView NS_REFINED_FOR_SWIFT;
 
-/// 是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断
-@property (nonatomic, assign) BOOL fw_isLoaded NS_REFINED_FOR_SWIFT;
+/// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
+@property (nonatomic, assign) BOOL fw_isDataLoaded NS_REFINED_FOR_SWIFT;
 
 /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
 - (void)fw_addChildViewController:(UIViewController *)viewController NS_REFINED_FOR_SWIFT;

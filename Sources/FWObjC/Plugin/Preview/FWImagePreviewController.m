@@ -7,6 +7,7 @@
 
 #import "FWImagePreviewController.h"
 #import "FWAdaptive.h"
+#import "FWQuartzCore.h"
 #import "FWUIKit.h"
 #import "FWToolkit.h"
 
@@ -367,6 +368,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 
 - (void)didInitialize {
     self.sourceImageCornerRadius = FWImagePreviewCornerRadiusAutomaticDimension;
+    _dismissingScaleEnabled = YES;
     _dismissingGestureEnabled = YES;
     self.backgroundColor = UIColor.blackColor;
     
@@ -489,7 +491,11 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
 }
 
 - (void)updatePageLabel {
-    self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.imagePreviewView.currentImageIndex + 1), @(self.imagePreviewView.imageCount)];
+    if (self.pageLabelText) {
+        self.pageLabel.text = self.pageLabelText(self.imagePreviewView.currentImageIndex, self.imagePreviewView.imageCount);
+    } else {
+        self.pageLabel.text = [NSString stringWithFormat:@"%@ / %@", @(self.imagePreviewView.currentImageIndex + 1), @(self.imagePreviewView.imageCount)];
+    }
     [self.pageLabel sizeToFit];
     
     if (self.pageIndexChanged) {
@@ -533,8 +539,10 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
             CGFloat ratio = 1.0;
             CGFloat alpha = 1.0;
             if (verticalDistance > 0) {
-                // 往下拉的话，图片缩小，但图片移动距离与手指移动距离保持一致
-                ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
+                // 往下拉的话，当启用图片缩小，但图片移动距离与手指移动距离保持一致
+                if (self.dismissingScaleEnabled) {
+                    ratio = 1.0 - verticalDistance / CGRectGetHeight(self.view.bounds) / 2;
+                }
                 
                 // 如果预览大图支持横竖屏而背后的界面只支持竖屏，则在横屏时手势拖拽不要露出背后的界面
                 if (self.dismissingGestureEnabled) {
@@ -657,6 +665,7 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
         self.duration = .25;
         
         _cornerRadiusMaskLayer = [CALayer layer];
+        [self.cornerRadiusMaskLayer fw_removeDefaultAnimations];
         self.cornerRadiusMaskLayer.backgroundColor = [UIColor whiteColor].CGColor;
         
         self.animationEnteringBlock = ^(__kindof FWImagePreviewTransitionAnimator * _Nonnull animator, BOOL isPresenting, FWImagePreviewTransitioningStyle style, CGRect sourceImageRect, FWZoomImageView * _Nonnull zoomImageView, id<UIViewControllerContextTransitioning>  _Nullable transitionContext) {
@@ -842,6 +851,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
     if (self.animationEnteringBlock) {
         self.animationEnteringBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
     }
+    if (self.animationCallbackBlock) {
+        self.animationCallbackBlock(self, isPresenting, NO);
+    }
     
     [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (self.animationBlock) {
@@ -852,6 +864,9 @@ const CGFloat FWImagePreviewCornerRadiusAutomaticDimension = -1;
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         if (self.animationCompletionBlock) {
             self.animationCompletionBlock(self, isPresenting, style, sourceImageRect, zoomImageView, transitionContext);
+        }
+        if (self.animationCallbackBlock) {
+            self.animationCallbackBlock(self, isPresenting, YES);
         }
     }];
 }

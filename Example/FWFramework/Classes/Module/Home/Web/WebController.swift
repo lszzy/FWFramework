@@ -140,7 +140,7 @@ extension WebController: WebViewControllerProtocol {
     
     @objc func loadRequestUrl() {
         fw.hideEmptyView()
-        if !fw.isLoaded {
+        if !fw.isDataLoaded {
             fw.showLoading()
         }
         
@@ -151,15 +151,15 @@ extension WebController: WebViewControllerProtocol {
     }
     
     func webViewFinishLoad() {
-        if fw.isLoaded { return }
+        if fw.isDataLoaded { return }
         fw.hideLoading()
-        fw.isLoaded = true
+        fw.isDataLoaded = true
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
     }
     
     func webViewFailLoad(_ error: Error) {
-        if fw.isLoaded { return }
+        if fw.isDataLoaded { return }
         fw.hideLoading()
         
         fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))

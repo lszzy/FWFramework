@@ -64,14 +64,18 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         return result
     }()
     
+    lazy var barAppearance: NavigationBarAppearance = {
+        let result = NavigationBarAppearance()
+        result.foregroundColor = .white
+        result.backgroundColor = .clear
+        result.leftBackImage = Icon.backImage
+        return result
+    }()
+    
     func didInitialize() {
-        fw.extendedLayoutEdge = .top
-        
-        let appearance = NavigationBarAppearance()
-        appearance.foregroundColor = .white
-        appearance.backgroundTransparent = true
-        appearance.leftBackImage = Icon.backImage
-        fw.navigationBarAppearance = appearance
+        app.extendedLayoutEdge = .top
+        app.navigationBarAppearance = barAppearance
+        app.statusBarStyle = .lightContent
     }
     
     override func viewDidLoad() {
@@ -94,8 +98,9 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
+            self.pagerView.mainTableView.app.endRefreshing()
+            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles?.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
-            self.pagerView.mainTableView.fw.endRefreshing()
         }
     }
     
@@ -156,15 +161,19 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     func pagingView(_ pagingView: PagingView, mainTableViewDidScroll scrollView: UIScrollView) {
         let progress = scrollView.contentOffset.y / (TestPagingController.headerViewHeight - TestPagingController.navigationViewHeight)
         if progress >= 1 {
-            navigationController?.navigationBar.fw.backgroundColor = AppTheme.barColor
-            navigationController?.navigationBar.fw.foregroundColor = AppTheme.textColor
+            barAppearance.backgroundColor = AppTheme.barColor
+            barAppearance.foregroundColor = AppTheme.textColor
+            app.navigationBarAppearance = barAppearance
+            app.statusBarStyle = .default
         } else if progress >= 0 && progress < 1 {
-            navigationController?.navigationBar.fw.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
+            barAppearance.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
             if progress <= 0.5 {
-                navigationController?.navigationBar.fw.foregroundColor = .white.withAlphaComponent(1 - progress)
+                barAppearance.foregroundColor = .white.withAlphaComponent(1 - progress)
             } else {
-                navigationController?.navigationBar.fw.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
+                barAppearance.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
             }
+            app.navigationBarAppearance = barAppearance
+            app.statusBarStyle = progress <= 0.5 ? .lightContent : .default
         }
     }
     
@@ -256,6 +265,16 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
             guard let self = self else { return }
             self.selectCollectionView(offset: self.tableView.contentOffset.y)
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Logger.debug("TestNestChildController.viewDidLoad")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.debug("TestNestChildController.viewWillAppear")
     }
     
     @objc func onRefreshing() {
