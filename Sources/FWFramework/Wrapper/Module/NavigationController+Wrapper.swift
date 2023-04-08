@@ -46,6 +46,11 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_barTransitionIdentifier = newValue }
     }
     
+    /// 标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法
+    public func barTransitionNeedsUpdate() {
+        base.fw_barTransitionNeedsUpdate()
+    }
+    
     /// 视图控制器是否禁用全屏返回手势，默认NO
     public var fullscreenPopGestureDisabled: Bool {
         get { return base.fw_fullscreenPopGestureDisabled }
