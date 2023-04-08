@@ -17,7 +17,7 @@
     <a title="UIFont(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.8.1 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.8.2 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2655,8 +2655,8 @@
                   
                   <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">UIFont</span> <span class="p">(</span><span class="nl">FWToolkit</span><span class="p">)</span>
 
-<span class="c1">/// 全局自定义字体句柄，优先调用</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="n">fw_fontBlock</span><span class="p">)(</span><span class="n">CGFloat</span> <span class="n">size</span><span class="p">,</span> <span class="n">UIFontWeight</span> <span class="n">weight</span><span class="p">)</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 全局自定义字体句柄，优先调用，返回nil时使用系统字体</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="p">(</span><span class="o">^</span><span class="n">fw_fontBlock</span><span class="p">)(</span><span class="n">CGFloat</span> <span class="n">size</span><span class="p">,</span> <span class="n">UIFontWeight</span> <span class="n">weight</span><span class="p">)</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_autoScale</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -2676,6 +2676,9 @@
 
 <span class="c1">/// 创建指定尺寸和weight的系统字体</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">UIFont</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_fontOfSize</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">size</span> <span class="nf">weight</span><span class="p">:(</span><span class="n">UIFontWeight</span><span class="p">)</span><span class="nv">weight</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 获取指定名称、字重、斜体字体的完整规范名称</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_fontName</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">weight</span><span class="p">:(</span><span class="n">UIFontWeight</span><span class="p">)</span><span class="nv">weight</span> <span class="nf">italic</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">italic</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 是否是粗体</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_isBold</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -2730,14 +2733,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>全局自定义字体句柄，优先调用</p>
+                        <p>全局自定义字体句柄，优先调用，返回nil时使用系统字体</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="p">(</span><span class="o">^</span><span class="p">)</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">,</span> <span class="n">UIFontWeight</span><span class="p">)</span> <span class="n">fw_fontBlock</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="p">(</span><span class="o">^</span><span class="p">)</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">,</span> <span class="n">UIFontWeight</span><span class="p">)</span> <span class="n">fw_fontBlock</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2954,6 +2957,35 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIFont</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_fontOfSize</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">size</span> <span class="nf">weight</span><span class="p">:(</span><span class="n">UIFontWeight</span><span class="p">)</span><span class="nv">weight</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIFont(cm)fw_fontName:weight:italic:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_fontName:weight:italic:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIFont(cm)fw_fontName:weight:italic:">+fw_fontName:<wbr>weight:<wbr>italic:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取指定名称、字重、斜体字体的完整规范名称</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_fontName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                           <span class="nf">weight</span><span class="p">:(</span><span class="n">UIFontWeight</span><span class="p">)</span><span class="nv">weight</span>
+                           <span class="nf">italic</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">italic</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -3235,7 +3267,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-31)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-04-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

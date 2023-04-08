@@ -4286,77 +4286,77 @@
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 76,
+      "line": 79,
       "symbol": "NSAttributedString(FWFoundation).+fw_CSSStringWithColor:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 79,
+      "line": 82,
       "symbol": "NSAttributedString(FWFoundation).+fw_CSSStringWithFont:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 85,
+      "line": 88,
       "symbol": "NSData(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 143,
+      "line": 146,
       "symbol": "NSDate(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 188,
+      "line": 191,
       "symbol": "NSNumber(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 215,
+      "line": 218,
       "symbol": "NSDictionary(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 230,
+      "line": 233,
       "symbol": "NSObject(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 281,
+      "line": 284,
       "symbol": "NSString(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 434,
+      "line": 437,
       "symbol": "NSFileManager(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 470,
+      "line": 473,
       "symbol": "NSURL(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 535,
+      "line": 538,
       "symbol": "NSUserDefaults(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -5371,14 +5371,14 @@
     },
     {
       "file": "docs/FWFramework/FWImagePreviewController.h",
-      "line": 255,
+      "line": 270,
       "symbol": "FWCollectionViewPagingLayout.-initWithStyle:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWImagePreviewController.h",
-      "line": 257,
+      "line": 272,
       "symbol": "FWCollectionViewPagingLayout.style",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
@@ -7443,63 +7443,63 @@
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 88,
+      "line": 91,
       "symbol": "CAGradientLayer(FWQuartzCore)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 113,
+      "line": 116,
       "symbol": "UIView(FWQuartzCore)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 417,
+      "line": 420,
       "symbol": "FWGradientView.gradientLayer",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 419,
+      "line": 422,
       "symbol": "FWGradientView.colors",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 421,
+      "line": 424,
       "symbol": "FWGradientView.locations",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 423,
+      "line": 426,
       "symbol": "FWGradientView.startPoint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 425,
+      "line": 428,
       "symbol": "FWGradientView.endPoint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 427,
+      "line": 430,
       "symbol": "FWGradientView.-initWithColors:locations:startPoint:endPoint:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWQuartzCore.h",
-      "line": 429,
+      "line": 432,
       "symbol": "FWGradientView.-setColors:locations:startPoint:endPoint:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -9298,14 +9298,14 @@
     },
     {
       "file": "docs/FWFramework/FWToolbarView.h",
-      "line": 167,
+      "line": 170,
       "symbol": "FWToolbarTitleViewStyle.FWToolbarTitleViewStyleHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolbarView.h",
-      "line": 168,
+      "line": 171,
       "symbol": "FWToolbarTitleViewStyle.FWToolbarTitleViewStyleVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
       "warning": "undocumented"
@@ -9326,21 +9326,21 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 302,
+      "line": 305,
       "symbol": "UIImage(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 470,
+      "line": 473,
       "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 528,
+      "line": 531,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

@@ -243,8 +243,8 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 @interface UIFont (FWToolkit)
 
-/// 全局自定义字体句柄，优先调用
-@property (class, nonatomic, copy, nullable) UIFont * (^fw_fontBlock)(CGFloat size, UIFontWeight weight) NS_REFINED_FOR_SWIFT;
+/// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
+@property (class, nonatomic, copy, nullable) UIFont * _Nullable (^fw_fontBlock)(CGFloat size, UIFontWeight weight) NS_REFINED_FOR_SWIFT;
 
 /// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
 @property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
@@ -264,6 +264,9 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /// 创建指定尺寸和weight的系统字体
 + (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight NS_REFINED_FOR_SWIFT;
+
+/// 获取指定名称、字重、斜体字体的完整规范名称
++ (NSString *)fw_fontName:(NSString *)name weight:(UIFontWeight)weight italic:(BOOL)italic NS_REFINED_FOR_SWIFT;
 
 /// 是否是粗体
 @property (nonatomic, assign, readonly) BOOL fw_isBold NS_REFINED_FOR_SWIFT;

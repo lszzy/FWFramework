@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.8.1 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.8.2 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -5203,8 +5203,8 @@ NSObject.fw.swizzleInstanceMethod(
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Property/allowsChildNavigation" class="dashAnchor"></a>
-                    <a class="token" href="#/">allowsChildNavigation</a>
+                    <a name="//apple_ref/swift/Property/allowsBarAppearance" class="dashAnchor"></a>
+                    <a class="token" href="#/">allowsBarAppearance</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5212,7 +5212,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否允许child控制器修改导航栏样式，默认false</p>
+                        <p>是否允许修改导航栏样式，默认未设置时child控制器不能修改</p>
 
                       </div>
                     </section>
@@ -16923,7 +16923,26 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建NSAttributedString并指定高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可</p>
+                        <p>快速创建NSAttributedString并指定单个高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/attributedString(string:attributes:highlights:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">attributedString(string:<wbr>attributes:<wbr>highlights:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快速创建NSAttributedString并指定所有高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可</p>
 
                       </div>
                     </section>
@@ -18472,6 +18491,25 @@ NSObject.fw.swizzleInstanceMethod(
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>设置阴影颜色、偏移和半径</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/removeDefaultAnimations()" class="dashAnchor"></a>
+                    <a class="token" href="#/">removeDefaultAnimations()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用</p>
 
                       </div>
                     </section>
@@ -20298,7 +20336,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>全局自定义字体句柄，优先调用</p>
+                        <p>全局自定义字体句柄，优先调用，返回nil时使用系统字体</p>
 
                       </div>
                     </section>
@@ -20317,7 +20355,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Thin字体</p>
+                        <p>返回系统Thin字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20336,7 +20374,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Light字体</p>
+                        <p>返回系统Light字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20355,7 +20393,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Regular字体</p>
+                        <p>返回系统Regular字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20374,7 +20412,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Medium字体</p>
+                        <p>返回系统Medium字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20393,7 +20431,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Semibold字体</p>
+                        <p>返回系统Semibold字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20412,7 +20450,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>返回系统Bold字体</p>
+                        <p>返回系统Bold字体，自动等比例缩放</p>
 
                       </div>
                     </section>
@@ -20431,7 +20469,26 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>创建指定尺寸和weight的系统字体</p>
+                        <p>创建指定尺寸和weight的系统字体，自动等比例缩放</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Method/fontName(_:weight:italic:)" class="dashAnchor"></a>
+                    <a class="token" href="#/">fontName(_:<wbr>weight:<wbr>italic:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取指定名称、字重、斜体字体的完整规范名称</p>
 
                       </div>
                     </section>
@@ -24789,8 +24846,8 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                   <div>
                     <code>
                     <a name="/"></a>
-                    <a name="//apple_ref/swift/Property/isLoaded" class="dashAnchor"></a>
-                    <a class="token" href="#/">isLoaded</a>
+                    <a name="//apple_ref/swift/Property/isDataLoaded" class="dashAnchor"></a>
+                    <a class="token" href="#/">isDataLoaded</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24798,7 +24855,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否已经加载完，默认NO，加载完成后可标记为YES，可用于第一次加载时显示loading等判断</p>
+                        <p>是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断</p>
 
                       </div>
                     </section>
@@ -24866,7 +24923,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-03-31)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-04-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
