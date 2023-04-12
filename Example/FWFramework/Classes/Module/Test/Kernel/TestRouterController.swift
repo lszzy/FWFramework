@@ -24,6 +24,13 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         navigationItem.title = "Router"
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [Autoloader.routerStrictMode ? "关闭严格模式" : "开启严格模式"], actionBlock: { _ in
+                Autoloader.routerStrictMode = !Autoloader.routerStrictMode
+                Router.strictMode = Autoloader.routerStrictMode
+            })
+        }
+        
         var url = "http://test.com?id=我是中文"
         APP.debug("urlEncode: %@", String(describing: url.app.urlEncode))
         APP.debug("urlDecode: %@", String(describing: url.app.urlEncode?.app.urlDecode))
@@ -63,6 +70,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
             ["Url编码", "onOpenEncode"],
             ["Url未编码", "onOpenImage"],
             ["不规范Url", "onOpenSlash"],
+            ["打开App", "onOpenApp"],
             ["打开Url", "onOpen"],
             ["中文Url", "onOpenChinese"],
             ["打开Url，通配符*", "onOpenWild"],
@@ -83,7 +91,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
             ["跳转设置", "onOpenSettings"],
             ["跳转首页", "onOpenHome"],
             ["跳转home/undefined", "onOpenHome2"],
-            ["不支持tabbar/home", "onOpenHome3"],
+            ["不支持tab", "onOpenHome3"],
             ["关闭close", "onOpenClose"],
             ["通用链接douyin", "onOpenUniversalLinks"],
             ["外部safari", "onOpenUrl"],
@@ -112,6 +120,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
 }
 
 @objc extension TestRouterController {
+    
+    func onOpenApp() {
+        Router.openURL("app://")
+    }
     
     func onOpen() {
         Router.openURL("app://tests/1#anchor")
@@ -210,7 +222,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenHome3() {
-        Router.openURL("app://tabbar/home")
+        Router.openURL("app://tab")
     }
     
     func onOpenClose() {
@@ -283,8 +295,12 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
 
 @objc extension Autoloader {
     
+    @StoredValue("routerStrictMode")
+    static var routerStrictMode: Bool = false
+    
     func loadTestRouter() {
         APP.autoload(TestRouter.self)
+        Router.strictMode = Autoloader.routerStrictMode
     }
     
 }
@@ -415,6 +431,10 @@ class TestRouter: NSObject, AutoloadProtocol {
         }
         
         Router.errorHandler = { context in
+            if context.url == "app://" {
+                UIWindow.app.showMessage(text: "打开App，不报错")
+                return
+            }
             Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
         }
     }

@@ -106,6 +106,9 @@ public class Router: NSObject {
     /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
     public static let sharedLoader = Loader<String, Any>()
     
+    /// 是否开启严格模式，开启后不会以上一层为fallback，默认false
+    public static var strictMode = false
+    
     /// 注册路由类或对象，批量注册路由规则
     /// - Parameters:
     ///   - clazz: 路由类或对象，不遍历父类
@@ -538,6 +541,7 @@ public class Router: NSObject {
         let pathComponents = pathComponents(from: url)
         
         var wildcardMatched = false
+        var wildcardRoutes = false
         for pathComponent in pathComponents {
             // 对 key 进行排序，这样可以把 * 放到最后
             let subRoutesKeys = subRoutes.allKeys.compactMap { key in
@@ -549,10 +553,12 @@ public class Router: NSObject {
             for key in subRoutesKeys {
                 if key == pathComponent || key == routeWildcardCharacter {
                     wildcardMatched = true
+                    wildcardRoutes = key == routeWildcardCharacter
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()
                     break
                 } else if key.hasPrefix(":") {
                     wildcardMatched = true
+                    wildcardRoutes = false
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()
                     var newKey = (key as NSString).substring(from: 1)
                     var newPathComponent = pathComponent
@@ -572,9 +578,14 @@ public class Router: NSObject {
                 }
             }
             
-            // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
-            if !wildcardMatched && subRoutes[routeCoreKey] == nil {
-                break
+            // 如果没有找到该 pathComponent 对应的 handler，未开启精准匹配时以上一层的 handler 作为 fallback，否则查找结束
+            if !wildcardMatched {
+                if strictMode {
+                    if !wildcardRoutes { subRoutes = NSMutableDictionary() }
+                    break
+                } else {
+                    if subRoutes[routeCoreKey] == nil { break }
+                }
             }
         }
         
