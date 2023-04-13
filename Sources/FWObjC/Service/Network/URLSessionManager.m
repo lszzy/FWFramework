@@ -764,12 +764,13 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
         [self setRequestTotalCount:retryCount - remainCount + 1 forResponse:response];
         [self setRequestTotalTime:[NSDate date].timeIntervalSince1970 - startTime forResponse:response];
         
-        if (remainCount > 0 && (timeoutInterval <= 0 || ([[NSDate date] timeIntervalSince1970] - startTime) < timeoutInterval)) {
+        BOOL canRetry = (retryCount < 0 || remainCount > 0);
+        NSTimeInterval waitTime = canRetry && retryInterval ? MAX(retryInterval(retryCount - remainCount + 1), 0) : 0;
+        if (canRetry && (timeoutInterval <= 0 || ([[NSDate date] timeIntervalSince1970] - startTime + waitTime) < timeoutInterval)) {
             shouldRetry(response, responseObject, error, ^(BOOL retry){
                 
                 if (retry) {
-                    NSTimeInterval waitTime = retryInterval ? retryInterval(retryCount - remainCount + 1) : 0;
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(waitTime, 0) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(waitTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         
                         NSURLSessionDataTask *dataTask = [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:remainCount - 1 retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
                         

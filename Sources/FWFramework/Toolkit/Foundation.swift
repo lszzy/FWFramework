@@ -958,30 +958,33 @@ extension WrapperGlobal {
         semaphore.wait()
     }
 
-    /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
+    /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func fw_performBlock(
         _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: TimeInterval
+        delayInterval: @escaping (Int) -> TimeInterval
     ) {
         let startTime = Date().timeIntervalSince1970
-        fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
+        fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
     }
     
     private static func fw_performBlock(
         _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: Int,
+        remainCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: TimeInterval,
+        delayInterval: @escaping (Int) -> TimeInterval,
         startTime: TimeInterval
     ) {
         block({ success, obj in
-            if !success && retryCount > 0 && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime) < timeoutInterval) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delayInterval) {
-                    NSObject.fw_performBlock(block, completion: completion, retryCount: retryCount - 1, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
+            let canRetry = !success && (retryCount < 0 || remainCount > 0)
+            let waitTime = canRetry ? delayInterval(retryCount - remainCount + 1) : 0
+            if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+                    NSObject.fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: remainCount - 1, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
                 }
             } else {
                 completion(success, obj)
