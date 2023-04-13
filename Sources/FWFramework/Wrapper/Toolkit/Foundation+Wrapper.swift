@@ -507,13 +507,13 @@ extension Wrapper where Base: NSObject {
         Base.fw_syncPerform(asyncBlock: asyncBlock)
     }
 
-    /// 重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
+    /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func performBlock(
         _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: TimeInterval
+        delayInterval: @escaping (Int) -> TimeInterval
     ) {
         Base.fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval)
     }
