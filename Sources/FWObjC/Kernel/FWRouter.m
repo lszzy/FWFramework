@@ -120,6 +120,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 @property (nonatomic, strong) NSMutableArray *rewriteRules;
 
 @property (nonatomic, strong) FWLoader<NSString *, id> *routeLoader;
+@property (nonatomic, assign) BOOL strictMode;
 
 @end
 
@@ -149,6 +150,16 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
 + (FWLoader<NSString *,id> *)sharedLoader
 {
     return [self sharedInstance].routeLoader;
+}
+
++ (BOOL)strictMode
+{
+    return [self sharedInstance].strictMode;
+}
+
++ (void)setStrictMode:(BOOL)strictMode
+{
+    [self sharedInstance].strictMode = strictMode;
 }
 
 #pragma mark - Class
@@ -576,6 +587,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     NSArray *pathComponents = [self pathComponentsFromURL:url];
     
     BOOL wildcardMatched = NO;
+    BOOL wildcardRoutes = NO;
     for (NSString *pathComponent in pathComponents) {
         
         // 对 key 进行排序，这样可以把 * 放到最后
@@ -587,10 +599,12 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
         for (NSString *key in subRoutesKeys) {
             if ([key isEqualToString:pathComponent] || [key isEqualToString:FWRouterWildcardCharacter]) {
                 wildcardMatched = YES;
+                wildcardRoutes = [key isEqualToString:FWRouterWildcardCharacter];
                 subRoutes = subRoutes[key];
                 break;
             } else if ([key hasPrefix:@":"]) {
                 wildcardMatched = YES;
+                wildcardRoutes = NO;
                 subRoutes = subRoutes[key];
                 NSString *newKey = [key substringFromIndex:1];
                 NSString *newPathComponent = pathComponent;
@@ -613,9 +627,14 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
             }
         }
         
-        // 如果没有找到该 pathComponent 对应的 handler，则以上一层的 handler 作为 fallback
-        if (!wildcardMatched && !subRoutes[FWRouterCoreKey]) {
-            break;
+        // 如果没有找到该 pathComponent 对应的 handler，未开启精准匹配时以上一层的 handler 作为 fallback，否则查找结束
+        if (!wildcardMatched) {
+            if (self.strictMode) {
+                if (!wildcardRoutes) { subRoutes = nil; }
+                break;
+            } else {
+                if (!subRoutes[FWRouterCoreKey]) { break; }
+            }
         }
     }
     
