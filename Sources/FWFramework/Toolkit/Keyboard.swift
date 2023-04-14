@@ -152,7 +152,6 @@ import FWObjC
                         sender.view?.endEditing(true)
                     }
                 })
-                KeyboardConfig.keyboardGesture?.cancelsTouchesInView = false
             }
             if let keyboardGesture = KeyboardConfig.keyboardGesture {
                 viewController.view.addGestureRecognizer(keyboardGesture)

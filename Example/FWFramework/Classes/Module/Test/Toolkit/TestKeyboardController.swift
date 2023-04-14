@@ -287,6 +287,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     }
     
     @objc func onSubmit() {
+        view.endEditing(true)
         app.showMessage(text: "点击了提交")
     }
     
