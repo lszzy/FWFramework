@@ -67,6 +67,9 @@ NS_SWIFT_NAME(Router)
 /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
 @property (class, nonatomic, readonly) FWLoader<NSString *, id> *sharedLoader;
 
+/// 是否开启严格模式，开启后不会以上一层为fallback，默认false
+@property (class, nonatomic, assign) BOOL strictMode;
+
 #pragma mark - Class
 
 /**
