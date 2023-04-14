@@ -15,7 +15,7 @@ import FWFramework
 extension Font {
     
     /// 全局自定义字体句柄，优先调用
-    public static var fontBlock: ((CGFloat, Font.Weight) -> Font)?
+    public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
     
     /// 返回系统Thin字体
     public static func thinFont(size: CGFloat) -> Font {
@@ -44,13 +44,31 @@ extension Font {
 
     /// 创建指定尺寸和weight的系统字体
     public static func font(size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        if let block = fontBlock {
-            return block(size, weight)
-        }
-        
         let fontSize = UIFont.fw.autoScale ? UIScreen.fw.relativeValue(size) : size
+        if let font = fontBlock?(fontSize, weight) { return font }
         return .system(size: fontSize, weight: weight)
     }
+    
+    /// 获取指定名称、字重、斜体字体的完整规范名称
+    public static func fontName(_ name: String, weight: Font.Weight, italic: Bool = false) -> String {
+        var fontName = name
+        if let weightSuffix = weightSuffixes[weight] {
+            fontName += weightSuffix + (italic ? "Italic" : "")
+        }
+        return fontName
+    }
+    
+    private static let weightSuffixes: [Font.Weight: String] = [
+        .ultraLight: "-Ultralight",
+        .thin: "-Thin",
+        .light: "-Light",
+        .regular: "-Regular",
+        .medium: "-Medium",
+        .semibold: "-Semibold",
+        .bold: "-Bold",
+        .heavy: "-Heavy",
+        .black: "-Black",
+    ]
     
 }
 
