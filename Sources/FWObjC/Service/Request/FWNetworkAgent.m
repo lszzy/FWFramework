@@ -542,7 +542,10 @@
         }
         
         return urlRequest;
-    } retryCount:[request requestRetryCount] retryInterval:[request requestRetryInternval] timeoutInterval:[request requestRetryTimeout] shouldRetry:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable _error, void (^ _Nonnull decisionHandler)(BOOL retry)) {
+    } retryCount:[request requestRetryCount] retryInterval:^NSTimeInterval(NSInteger requestCount) {
+        
+        return [request requestRetryInternval];
+    } timeoutInterval:[request requestRetryTimeout] shouldRetry:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable _error, void (^ _Nonnull decisionHandler)(BOOL retry)) {
         
         request.requestTotalCount = [[self manager] requestTotalCountForResponse:response];
         request.requestTotalTime = [[self manager] requestTotalTimeForResponse:response];

@@ -249,20 +249,20 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
 @property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
-/// 返回系统Thin字体
+/// 返回系统Thin字体，自动等比例缩放
 + (UIFont *)fw_thinFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
-/// 返回系统Light字体
+/// 返回系统Light字体，自动等比例缩放
 + (UIFont *)fw_lightFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
-/// 返回系统Regular字体
+/// 返回系统Regular字体，自动等比例缩放
 + (UIFont *)fw_fontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
-/// 返回系统Medium字体
+/// 返回系统Medium字体，自动等比例缩放
 + (UIFont *)fw_mediumFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
-/// 返回系统Semibold字体
+/// 返回系统Semibold字体，自动等比例缩放
 + (UIFont *)fw_semiboldFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
-/// 返回系统Bold字体
+/// 返回系统Bold字体，自动等比例缩放
 + (UIFont *)fw_boldFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;
 
-/// 创建指定尺寸和weight的系统字体
+/// 创建指定尺寸和weight的系统字体，自动等比例缩放
 + (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight NS_REFINED_FOR_SWIFT;
 
 /// 获取指定名称、字重、斜体字体的完整规范名称

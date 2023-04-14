@@ -76911,7 +76911,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWFramework\/Toolkit\/Foundation.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 28859,
+    "key.length" : 28913,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -79156,10 +79156,10 @@
         "key.offset" : 20215
       },
       {
-        "key.bodylength" : 4257,
+        "key.bodylength" : 4311,
         "key.bodyoffset" : 20283,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 4298,
+        "key.length" : 4352,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
         "key.nameoffset" : 20253,
@@ -79495,20 +79495,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 23635
+                "key.offset" : 23671
               }
             ],
             "key.bodylength" : 150,
-            "key.bodyoffset" : 23897,
-            "key.doc.comment" : "重试方式执行异步block，直至成功或者次数为0或者超时，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒",
-            "key.doclength" : 192,
+            "key.bodyoffset" : 23951,
+            "key.doc.comment" : "重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒",
+            "key.doclength" : 228,
             "key.docoffset" : 23439,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 406,
+            "key.length" : 424,
             "key.name" : "performBlock(_:completion:retryCount:timeoutInterval:delayInterval:)",
-            "key.namelength" : 241,
-            "key.nameoffset" : 23654,
-            "key.offset" : 23642,
+            "key.namelength" : 259,
+            "key.nameoffset" : 23690,
+            "key.offset" : 23678,
             "key.substructure" : [
 
             ]
@@ -79519,25 +79519,25 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24135
+                "key.offset" : 24189
               },
               {
                 "key.attribute" : "source.decl.attribute.discardableResult",
                 "key.length" : 18,
-                "key.offset" : 24112
+                "key.offset" : 24166
               }
             ],
             "key.bodylength" : 114,
-            "key.bodyoffset" : 24280,
+            "key.bodyoffset" : 24334,
             "key.doc.comment" : "执行轮询block任务，返回任务Id可取消",
             "key.doclength" : 54,
-            "key.docoffset" : 24054,
+            "key.docoffset" : 24108,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 253,
             "key.name" : "performTask(_:start:interval:repeats:async:)",
             "key.namelength" : 114,
-            "key.nameoffset" : 24154,
-            "key.offset" : 24142,
+            "key.nameoffset" : 24208,
+            "key.offset" : 24196,
             "key.substructure" : [
 
             ],
@@ -79549,20 +79549,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24442
+                "key.offset" : 24496
               }
             ],
             "key.bodylength" : 42,
-            "key.bodyoffset" : 24491,
+            "key.bodyoffset" : 24545,
             "key.doc.comment" : "指定任务Id取消轮询任务",
             "key.doclength" : 37,
-            "key.docoffset" : 24401,
+            "key.docoffset" : 24455,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 85,
             "key.name" : "cancelTask(_:)",
             "key.namelength" : 28,
-            "key.nameoffset" : 24461,
-            "key.offset" : 24449,
+            "key.nameoffset" : 24515,
+            "key.offset" : 24503,
             "key.substructure" : [
 
             ]
@@ -79573,20 +79573,20 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 22,
         "key.name" : "MARK: - URL+Foundation",
-        "key.offset" : 24546
+        "key.offset" : 24600
       },
       {
         "key.bodylength" : 3363,
-        "key.bodyoffset" : 24740,
+        "key.bodyoffset" : 24794,
         "key.doc.comment" : "第三方URL生成器，可先判断canOpenURL，再openURL，需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组",
         "key.doclength" : 134,
-        "key.docoffset" : 24569,
+        "key.docoffset" : 24623,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 3401,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 24713,
-        "key.offset" : 24703,
+        "key.nameoffset" : 24767,
+        "key.offset" : 24757,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -79594,20 +79594,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 24987
+                "key.offset" : 25041
               }
             ],
             "key.bodylength" : 78,
-            "key.bodyoffset" : 25089,
+            "key.bodyoffset" : 25143,
             "key.doc.comment" : "生成苹果地图地址外部URL\n\n@param addr 显示地址，格式latitude,longitude或搜索地址\n@param options 可选附加参数，如@{@\"ll\": @\"latitude,longitude\", @\"z\": @\"14\"}\n@return NSURL",
             "key.doclength" : 236,
-            "key.docoffset" : 24746,
+            "key.docoffset" : 24800,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 174,
             "key.name" : "appleMapsURL(withAddr:options:)",
             "key.namelength" : 73,
-            "key.nameoffset" : 25006,
-            "key.offset" : 24994,
+            "key.nameoffset" : 25060,
+            "key.offset" : 25048,
             "key.substructure" : [
 
             ],
@@ -79619,20 +79619,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25495
+                "key.offset" : 25549
               }
             ],
             "key.bodylength" : 94,
-            "key.bodyoffset" : 25615,
+            "key.bodyoffset" : 25669,
             "key.doc.comment" : "生成苹果地图导航外部URL\n\n@param saddr 导航起始点，格式latitude,longitude或搜索地址\n@param daddr 导航结束点，格式latitude,longitude或搜索地址\n@param options 可选附加参数，如@{@\"ll\": @\"latitude,longitude\", @\"z\": @\"14\"}\n@return NSURL",
             "key.doclength" : 316,
-            "key.docoffset" : 25174,
+            "key.docoffset" : 25228,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 208,
             "key.name" : "appleMapsURL(withSaddr:daddr:options:)",
             "key.namelength" : 91,
-            "key.nameoffset" : 25514,
-            "key.offset" : 25502,
+            "key.nameoffset" : 25568,
+            "key.offset" : 25556,
             "key.substructure" : [
 
             ],
@@ -79644,20 +79644,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 25990
+                "key.offset" : 26044
               }
             ],
             "key.bodylength" : 79,
-            "key.bodyoffset" : 26093,
+            "key.bodyoffset" : 26147,
             "key.doc.comment" : "生成谷歌地图外部URL，URL SCHEME为：comgooglemaps\n\n@param addr 显示地址，格式latitude,longitude或搜索地址\n@param options 可选附加参数，如@{@\"center\": @\"latitude,longitude\", @\"zoom\": @\"14\"}\n@return NSURL",
             "key.doclength" : 269,
-            "key.docoffset" : 25716,
+            "key.docoffset" : 25770,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 176,
             "key.name" : "googleMapsURL(withAddr:options:)",
             "key.namelength" : 74,
-            "key.nameoffset" : 26009,
-            "key.offset" : 25997,
+            "key.nameoffset" : 26063,
+            "key.offset" : 26051,
             "key.substructure" : [
 
             ],
@@ -79669,20 +79669,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 26646
+                "key.offset" : 26700
               }
             ],
             "key.bodylength" : 107,
-            "key.bodyoffset" : 26782,
+            "key.bodyoffset" : 26836,
             "key.doc.comment" : "生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps\n\n@param saddr 导航起始点，格式latitude,longitude或搜索地址\n@param daddr 导航结束点，格式latitude,longitude或搜索地址\n@param mode 导航模式，支持driving|transit|bicycling|walking，默认driving\n@param options 可选附加参数，如@{@\"center\": @\"latitude,longitude\", @\"zoom\": @\"14\", @\"dirflg\": @\"t,h\"}\n@return NSURL",
             "key.doclength" : 462,
-            "key.docoffset" : 26179,
+            "key.docoffset" : 26233,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 237,
             "key.name" : "googleMapsURL(withSaddr:daddr:mode:options:)",
             "key.namelength" : 107,
-            "key.nameoffset" : 26665,
-            "key.offset" : 26653,
+            "key.nameoffset" : 26719,
+            "key.offset" : 26707,
             "key.substructure" : [
 
             ],
@@ -79694,20 +79694,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27191
+                "key.offset" : 27245
               }
             ],
             "key.bodylength" : 78,
-            "key.bodyoffset" : 27293,
+            "key.bodyoffset" : 27347,
             "key.doc.comment" : "生成百度地图外部URL，URL SCHEME为：baidumap\n\n@param addr 显示地址，格式latitude,longitude或搜索地址\n@param options 可选附加参数，如@{@\"src\": @\"app\", @\"zoom\": @\"14\", @\"coord_type\": @\"默认gcj02|wgs84|bd09ll\"}\n@return NSURL",
             "key.doclength" : 290,
-            "key.docoffset" : 26896,
+            "key.docoffset" : 26950,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 174,
             "key.name" : "baiduMapsURL(withAddr:options:)",
             "key.namelength" : 73,
-            "key.nameoffset" : 27210,
-            "key.offset" : 27198,
+            "key.nameoffset" : 27264,
+            "key.offset" : 27252,
             "key.substructure" : [
 
             ],
@@ -79719,20 +79719,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 27855
+                "key.offset" : 27909
               }
             ],
             "key.bodylength" : 106,
-            "key.bodyoffset" : 27990,
+            "key.bodyoffset" : 28044,
             "key.doc.comment" : "生成百度地图导航外部URL，URL SCHEME为：baidumap\n\n@param saddr 导航起始点，格式latitude,longitude或搜索地址\n@param daddr 导航结束点，格式latitude,longitude或搜索地址\n@param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving\n@param options 可选附加参数，如@{@\"src\": @\"app\", @\"zoom\": @\"14\", @\"coord_type\": @\"默认gcj02|wgs84|bd09ll\"}\n@return NSURL",
             "key.doclength" : 472,
-            "key.docoffset" : 27378,
+            "key.docoffset" : 27432,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 235,
             "key.name" : "baiduMapsURL(withSaddr:daddr:mode:options:)",
             "key.namelength" : 106,
-            "key.nameoffset" : 27874,
-            "key.offset" : 27862,
+            "key.nameoffset" : 27928,
+            "key.offset" : 27916,
             "key.substructure" : [
 
             ],
@@ -79744,17 +79744,17 @@
         "key.kind" : "source.lang.swift.syntaxtype.comment.mark",
         "key.length" : 31,
         "key.name" : "MARK: - UserDefaults+Foundation",
-        "key.offset" : 28109
+        "key.offset" : 28163
       },
       {
         "key.bodylength" : 672,
-        "key.bodyoffset" : 28185,
+        "key.bodyoffset" : 28239,
         "key.kind" : "source.lang.swift.decl.extension",
         "key.length" : 717,
         "key.name" : "Wrapper",
         "key.namelength" : 7,
-        "key.nameoffset" : 28151,
-        "key.offset" : 28141,
+        "key.nameoffset" : 28205,
+        "key.offset" : 28195,
         "key.substructure" : [
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -79762,20 +79762,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28251
+                "key.offset" : 28305
               }
             ],
             "key.bodylength" : 53,
-            "key.bodyoffset" : 28302,
+            "key.bodyoffset" : 28356,
             "key.doc.comment" : "从standard读取对象，支持unarchive对象",
             "key.doclength" : 52,
-            "key.docoffset" : 28195,
+            "key.docoffset" : 28249,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 98,
             "key.name" : "object(forKey:)",
             "key.namelength" : 22,
-            "key.nameoffset" : 28270,
-            "key.offset" : 28258,
+            "key.nameoffset" : 28324,
+            "key.offset" : 28312,
             "key.substructure" : [
 
             ],
@@ -79787,20 +79787,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28416
+                "key.offset" : 28470
               }
             ],
             "key.bodylength" : 57,
-            "key.bodyoffset" : 28478,
+            "key.bodyoffset" : 28532,
             "key.doc.comment" : "保存对象到standard，支持archive对象",
             "key.doclength" : 50,
-            "key.docoffset" : 28362,
+            "key.docoffset" : 28416,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 113,
             "key.name" : "setObject(_:forKey:)",
             "key.namelength" : 41,
-            "key.nameoffset" : 28435,
-            "key.offset" : 28423,
+            "key.nameoffset" : 28489,
+            "key.offset" : 28477,
             "key.substructure" : [
 
             ]
@@ -79811,20 +79811,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28591
+                "key.offset" : 28645
               }
             ],
             "key.bodylength" : 53,
-            "key.bodyoffset" : 28635,
+            "key.bodyoffset" : 28689,
             "key.doc.comment" : "读取对象，支持unarchive对象",
             "key.doclength" : 41,
-            "key.docoffset" : 28546,
+            "key.docoffset" : 28600,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 91,
             "key.name" : "object(forKey:)",
             "key.namelength" : 22,
-            "key.nameoffset" : 28603,
-            "key.offset" : 28598,
+            "key.nameoffset" : 28657,
+            "key.offset" : 28652,
             "key.substructure" : [
 
             ],
@@ -79836,20 +79836,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 28738
+                "key.offset" : 28792
               }
             ],
             "key.bodylength" : 57,
-            "key.bodyoffset" : 28793,
+            "key.bodyoffset" : 28847,
             "key.doc.comment" : "保存对象，支持archive对象",
             "key.doclength" : 39,
-            "key.docoffset" : 28695,
+            "key.docoffset" : 28749,
             "key.kind" : "source.lang.swift.decl.function.method.instance",
             "key.length" : 106,
             "key.name" : "setObject(_:forKey:)",
             "key.namelength" : 41,
-            "key.nameoffset" : 28750,
-            "key.offset" : 28745,
+            "key.nameoffset" : 28804,
+            "key.offset" : 28799,
             "key.substructure" : [
 
             ]
@@ -100437,7 +100437,7 @@
 }, {
   "\/Volumes\/Data\/Work\/Github\/lszzy\/FWFramework\/Sources\/FWSwiftUI\/Toolkit\/Font+Toolkit.swift" : {
     "key.diagnostic_stage" : "source.diagnostic.stage.swift.parse",
-    "key.length" : 1470,
+    "key.length" : 2284,
     "key.offset" : 0,
     "key.substructure" : [
       {
@@ -100448,10 +100448,10 @@
             "key.offset" : 165
           }
         ],
-        "key.bodylength" : 1255,
+        "key.bodylength" : 2069,
         "key.bodyoffset" : 205,
         "key.kind" : "source.lang.swift.decl.extension",
-        "key.length" : 1272,
+        "key.length" : 2086,
         "key.name" : "Font",
         "key.namelength" : 4,
         "key.nameoffset" : 199,
@@ -100470,13 +100470,13 @@
             "key.doclength" : 47,
             "key.docoffset" : 215,
             "key.kind" : "source.lang.swift.decl.var.static",
-            "key.length" : 55,
+            "key.length" : 56,
             "key.name" : "fontBlock",
             "key.namelength" : 9,
             "key.nameoffset" : 284,
             "key.offset" : 273,
             "key.setter_accessibility" : "source.lang.swift.accessibility.public",
-            "key.typename" : "((CGFloat, Font.Weight) -> Font)?"
+            "key.typename" : "((CGFloat, Font.Weight) -> Font?)?"
           },
           {
             "key.accessibility" : "source.lang.swift.accessibility.public",
@@ -100484,20 +100484,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 369
+                "key.offset" : 394
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 421,
-            "key.doc.comment" : "返回系统Thin字体",
-            "key.doclength" : 27,
-            "key.docoffset" : 338,
+            "key.bodyoffset" : 446,
+            "key.doc.comment" : "返回系统Thin字体，自动等比例缩放",
+            "key.doclength" : 51,
+            "key.docoffset" : 339,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 98,
             "key.name" : "thinFont(size:)",
             "key.namelength" : 23,
-            "key.nameoffset" : 388,
-            "key.offset" : 376,
+            "key.nameoffset" : 413,
+            "key.offset" : 401,
             "key.substructure" : [
 
             ],
@@ -100509,20 +100509,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 516
+                "key.offset" : 565
               }
             ],
             "key.bodylength" : 53,
-            "key.bodyoffset" : 569,
-            "key.doc.comment" : "返回系统Light字体",
-            "key.doclength" : 28,
-            "key.docoffset" : 484,
+            "key.bodyoffset" : 618,
+            "key.doc.comment" : "返回系统Light字体，自动等比例缩放",
+            "key.doclength" : 52,
+            "key.docoffset" : 509,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 100,
             "key.name" : "lightFont(size:)",
             "key.namelength" : 24,
-            "key.nameoffset" : 535,
-            "key.offset" : 523,
+            "key.nameoffset" : 584,
+            "key.offset" : 572,
             "key.substructure" : [
 
             ],
@@ -100534,20 +100534,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 666
+                "key.offset" : 739
               }
             ],
             "key.bodylength" : 54,
-            "key.bodyoffset" : 720,
-            "key.doc.comment" : "返回系统Medium字体",
-            "key.doclength" : 29,
-            "key.docoffset" : 633,
+            "key.bodyoffset" : 793,
+            "key.doc.comment" : "返回系统Medium字体，自动等比例缩放",
+            "key.doclength" : 53,
+            "key.docoffset" : 682,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 102,
             "key.name" : "mediumFont(size:)",
             "key.namelength" : 25,
-            "key.nameoffset" : 685,
-            "key.offset" : 673,
+            "key.nameoffset" : 758,
+            "key.offset" : 746,
             "key.substructure" : [
 
             ],
@@ -100559,20 +100559,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 820
+                "key.offset" : 917
               }
             ],
             "key.bodylength" : 56,
-            "key.bodyoffset" : 876,
-            "key.doc.comment" : "返回系统Semibold字体",
-            "key.doclength" : 31,
-            "key.docoffset" : 785,
+            "key.bodyoffset" : 973,
+            "key.doc.comment" : "返回系统Semibold字体，自动等比例缩放",
+            "key.doclength" : 55,
+            "key.docoffset" : 858,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 106,
             "key.name" : "semiboldFont(size:)",
             "key.namelength" : 27,
-            "key.nameoffset" : 839,
-            "key.offset" : 827,
+            "key.nameoffset" : 936,
+            "key.offset" : 924,
             "key.substructure" : [
 
             ],
@@ -100584,20 +100584,20 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 974
+                "key.offset" : 1095
               }
             ],
             "key.bodylength" : 52,
-            "key.bodyoffset" : 1026,
-            "key.doc.comment" : "返回系统Bold字体",
-            "key.doclength" : 27,
-            "key.docoffset" : 943,
+            "key.bodyoffset" : 1147,
+            "key.doc.comment" : "返回系统Bold字体，自动等比例缩放",
+            "key.doclength" : 51,
+            "key.docoffset" : 1040,
             "key.kind" : "source.lang.swift.decl.function.method.static",
             "key.length" : 98,
             "key.name" : "boldFont(size:)",
             "key.namelength" : 23,
-            "key.nameoffset" : 993,
-            "key.offset" : 981,
+            "key.nameoffset" : 1114,
+            "key.offset" : 1102,
             "key.substructure" : [
 
             ],
@@ -100609,31 +100609,80 @@
               {
                 "key.attribute" : "source.decl.attribute.public",
                 "key.length" : 6,
-                "key.offset" : 1136
+                "key.offset" : 1281
               }
             ],
-            "key.bodylength" : 237,
-            "key.bodyoffset" : 1216,
-            "key.doc.comment" : "创建指定尺寸和weight的系统字体",
-            "key.doclength" : 47,
-            "key.docoffset" : 1085,
+            "key.bodylength" : 211,
+            "key.bodyoffset" : 1361,
+            "key.doc.comment" : "创建指定尺寸和weight的系统字体，自动等比例缩放",
+            "key.doclength" : 71,
+            "key.docoffset" : 1206,
             "key.kind" : "source.lang.swift.decl.function.method.static",
-            "key.length" : 311,
+            "key.length" : 285,
             "key.name" : "font(size:weight:)",
             "key.namelength" : 51,
-            "key.nameoffset" : 1155,
-            "key.offset" : 1143,
+            "key.nameoffset" : 1300,
+            "key.offset" : 1288,
             "key.substructure" : [
               {
                 "key.kind" : "source.lang.swift.decl.var.local",
                 "key.length" : 75,
                 "key.name" : "fontSize",
                 "key.namelength" : 8,
-                "key.nameoffset" : 1322,
-                "key.offset" : 1318
+                "key.nameoffset" : 1374,
+                "key.offset" : 1370
               }
             ],
             "key.typename" : "Font"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.public",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.public",
+                "key.length" : 6,
+                "key.offset" : 1655
+              }
+            ],
+            "key.bodylength" : 186,
+            "key.bodyoffset" : 1753,
+            "key.doc.comment" : "获取指定名称、字重、斜体字体的完整规范名称",
+            "key.doclength" : 68,
+            "key.docoffset" : 1583,
+            "key.kind" : "source.lang.swift.decl.function.method.static",
+            "key.length" : 278,
+            "key.name" : "fontName(_:weight:italic:)",
+            "key.namelength" : 67,
+            "key.nameoffset" : 1674,
+            "key.offset" : 1662,
+            "key.substructure" : [
+              {
+                "key.kind" : "source.lang.swift.decl.var.local",
+                "key.length" : 19,
+                "key.name" : "fontName",
+                "key.namelength" : 8,
+                "key.nameoffset" : 1766,
+                "key.offset" : 1762
+              }
+            ],
+            "key.typename" : "String"
+          },
+          {
+            "key.accessibility" : "source.lang.swift.accessibility.private",
+            "key.attributes" : [
+              {
+                "key.attribute" : "source.decl.attribute.private",
+                "key.length" : 7,
+                "key.offset" : 1950
+              }
+            ],
+            "key.kind" : "source.lang.swift.decl.var.static",
+            "key.length" : 310,
+            "key.name" : "weightSuffixes",
+            "key.namelength" : 14,
+            "key.nameoffset" : 1969,
+            "key.offset" : 1958,
+            "key.typename" : "[Font.Weight: String]"
           }
         ]
       }

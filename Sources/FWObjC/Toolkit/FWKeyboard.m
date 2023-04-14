@@ -145,7 +145,6 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
                 [sender.view endEditing:YES];
             }
         }];
-        fwStaticKeyboardGesture.cancelsTouchesInView = NO;
     }
     [self.viewController.view addGestureRecognizer:fwStaticKeyboardGesture];
 }
