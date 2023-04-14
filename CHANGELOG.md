@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.8.4] - 2023-04-15
+
+### Changed
+* Routing supports strict mode, it responds only when it matches exactly, and it is disabled by default
+* Optimize the request retry method, support -1 unlimited times
+* Optimize SwiftUI font method, same as UIKit method
+* Fixed keyboard management touchResign need to click twice to trigger the button event problem
+
 ## [4.8.3] - 2023-04-08
 
 ### Added
