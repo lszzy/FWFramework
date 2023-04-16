@@ -511,3 +511,13 @@ extension Wrapper where Base: UIView {
     }
     
 }
+
+// MARK: - Array+LayoutChain
+extension Wrapper where Base == Array<UIView> {
+    
+    /// 批量链式布局闭包
+    public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
+        base.fw_layoutMaker(closure)
+    }
+    
+}
