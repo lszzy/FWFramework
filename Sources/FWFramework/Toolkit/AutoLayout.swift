@@ -229,16 +229,16 @@ import FWObjC
     
     // MARK: - Collapse
     /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
-    public var fw_collapsed: Bool {
+    public var fw_isCollapsed: Bool {
         get {
-            return fw_propertyBool(forName: "fw_collapsed")
+            return fw_propertyBool(forName: "fw_isCollapsed")
         }
         set {
             fw_collapseConstraints.forEach { constraint in
-                constraint.constant = newValue ? 0 : constraint.fw_originalConstant
+                constraint.constant = newValue ? constraint.fw_collapseConstant : constraint.fw_originalConstant
             }
             
-            fw_setPropertyBool(newValue, forName: "fw_collapsed")
+            fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
         }
     }
 
@@ -827,9 +827,9 @@ import FWObjC
                 let contentSize = selfObject.intrinsicContentSize
                 // 如果视图没有固定尺寸，自动设置约束
                 if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
-                    selfObject.fw_collapsed = true
+                    selfObject.fw_isCollapsed = true
                 } else {
-                    selfObject.fw_collapsed = false
+                    selfObject.fw_isCollapsed = false
                 }
             }
         }}
@@ -843,7 +843,7 @@ import FWObjC
             store.original(selfObject, store.selector, hidden)
             
             if selfObject.fw_hiddenCollapse && selfObject.fw_collapseConstraints.count > 0 {
-                selfObject.fw_collapsed = hidden
+                selfObject.fw_isCollapsed = hidden
             }
         }}
     }
@@ -881,7 +881,14 @@ import FWObjC
         }
     }
     
-    fileprivate var fw_originalConstant: CGFloat {
+    /// 可收缩约束的收缩常量值，默认0
+    public var fw_collapseConstant: CGFloat {
+        get { fw_propertyDouble(forName: "fw_collapseConstant") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_collapseConstant") }
+    }
+    
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
+    public var fw_originalConstant: CGFloat {
         get { fw_propertyDouble(forName: "fw_originalConstant") }
         set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
@@ -952,8 +959,8 @@ public class LayoutChain {
     
     // MARK: - Collapse
     @discardableResult
-    public func collapsed(_ collapsed: Bool) -> Self {
-        view?.fw_collapsed = collapsed
+    public func isCollapsed(_ isCollapsed: Bool) -> Self {
+        view?.fw_isCollapsed = isCollapsed
         return self
     }
 
@@ -1393,6 +1400,25 @@ public class LayoutChain {
     public func priority(_ priority: UILayoutPriority) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
             obj.fw_priority = priority
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func collapse(_ constant: CGFloat? = nil) -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            self.view?.fw_addCollapseConstraint(obj)
+            if let constant = constant {
+                obj.fw_collapseConstant = constant
+            }
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func original(_ constant: CGFloat) -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_originalConstant = constant
         })
         return self
     }

@@ -119,10 +119,10 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - Collapse
-    /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
-    public var collapsed: Bool {
-        get { base.fw_collapsed }
-        set { base.fw_collapsed = newValue }
+    /// 设置视图是否收缩，默认NO，YES时常量值为收缩值，NO时常量值为原始值
+    public var isCollapsed: Bool {
+        get { base.fw_isCollapsed }
+        set { base.fw_isCollapsed = newValue }
     }
 
     /// 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
@@ -493,6 +493,18 @@ extension Wrapper where Base: NSLayoutConstraint {
     public var priority: UILayoutPriority {
         get { base.fw_priority }
         set { base.fw_priority = newValue }
+    }
+    
+    /// 可收缩约束的收缩常量值，默认0
+    public var collapseConstant: CGFloat {
+        get { base.fw_collapseConstant }
+        set { base.fw_collapseConstant = newValue }
+    }
+    
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
+    public var originalConstant: CGFloat {
+        get { base.fw_originalConstant }
+        set { base.fw_originalConstant = newValue }
     }
     
 }
