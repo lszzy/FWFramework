@@ -1473,3 +1473,15 @@ public class LayoutChain {
     private static var fw_layoutChainKey = "fw_layoutChain"
     
 }
+
+// MARK: - Array+LayoutChain
+@_spi(FW) extension Array where Element: UIView {
+    
+    /// 批量链式布局闭包
+    public func fw_layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
+        forEach { view in
+            closure(view.fw_layoutChain)
+        }
+    }
+    
+}
