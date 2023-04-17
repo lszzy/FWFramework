@@ -2151,742 +2151,756 @@
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 720,
+      "line": 726,
       "symbol": "FWLayoutChain.view",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 722,
+      "line": 728,
       "symbol": "FWLayoutChain.-initWithView:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 726,
+      "line": 732,
       "symbol": "FWLayoutChain.remake",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 727,
+      "line": 733,
       "symbol": "FWLayoutChain.autoScale",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 731,
+      "line": 737,
       "symbol": "FWLayoutChain.compressionHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 732,
+      "line": 738,
       "symbol": "FWLayoutChain.compressionVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 733,
+      "line": 739,
       "symbol": "FWLayoutChain.huggingHorizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 734,
+      "line": 740,
       "symbol": "FWLayoutChain.huggingVertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 738,
-      "symbol": "FWLayoutChain.collapsed",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 739,
-      "symbol": "FWLayoutChain.autoCollapse",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 740,
-      "symbol": "FWLayoutChain.hiddenCollapse",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 744,
-      "symbol": "FWLayoutChain.center",
+      "symbol": "FWLayoutChain.isCollapsed",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 745,
-      "symbol": "FWLayoutChain.centerX",
+      "symbol": "FWLayoutChain.autoCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 746,
-      "symbol": "FWLayoutChain.centerY",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 747,
-      "symbol": "FWLayoutChain.centerWithOffset",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 748,
-      "symbol": "FWLayoutChain.centerXWithOffset",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 749,
-      "symbol": "FWLayoutChain.centerYWithOffset",
+      "symbol": "FWLayoutChain.hiddenCollapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 750,
-      "symbol": "FWLayoutChain.centerToView",
+      "symbol": "FWLayoutChain.center",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 751,
-      "symbol": "FWLayoutChain.centerXToView",
+      "symbol": "FWLayoutChain.centerX",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 752,
-      "symbol": "FWLayoutChain.centerYToView",
+      "symbol": "FWLayoutChain.centerY",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 753,
-      "symbol": "FWLayoutChain.centerXToViewWithOffset",
+      "symbol": "FWLayoutChain.centerWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 754,
-      "symbol": "FWLayoutChain.centerYToViewWithOffset",
+      "symbol": "FWLayoutChain.centerXWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 755,
-      "symbol": "FWLayoutChain.centerXToViewWithMultiplier",
+      "symbol": "FWLayoutChain.centerYWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 756,
-      "symbol": "FWLayoutChain.centerYToViewWithMultiplier",
+      "symbol": "FWLayoutChain.centerToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 757,
+      "symbol": "FWLayoutChain.centerXToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 758,
+      "symbol": "FWLayoutChain.centerYToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 759,
+      "symbol": "FWLayoutChain.centerXToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 760,
-      "symbol": "FWLayoutChain.edges",
+      "symbol": "FWLayoutChain.centerYToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 761,
-      "symbol": "FWLayoutChain.edgesWithInsets",
+      "symbol": "FWLayoutChain.centerXToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 762,
-      "symbol": "FWLayoutChain.edgesWithInsetsExcludingEdge",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 763,
-      "symbol": "FWLayoutChain.horizontal",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 764,
-      "symbol": "FWLayoutChain.vertical",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 765,
-      "symbol": "FWLayoutChain.top",
+      "symbol": "FWLayoutChain.centerYToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 766,
-      "symbol": "FWLayoutChain.bottom",
+      "symbol": "FWLayoutChain.edges",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 767,
-      "symbol": "FWLayoutChain.left",
+      "symbol": "FWLayoutChain.edgesWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 768,
-      "symbol": "FWLayoutChain.right",
+      "symbol": "FWLayoutChain.edgesWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 769,
-      "symbol": "FWLayoutChain.topWithInset",
+      "symbol": "FWLayoutChain.horizontal",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 770,
-      "symbol": "FWLayoutChain.bottomWithInset",
+      "symbol": "FWLayoutChain.vertical",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 771,
-      "symbol": "FWLayoutChain.leftWithInset",
+      "symbol": "FWLayoutChain.top",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 772,
-      "symbol": "FWLayoutChain.rightWithInset",
+      "symbol": "FWLayoutChain.bottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 773,
-      "symbol": "FWLayoutChain.topToView",
+      "symbol": "FWLayoutChain.left",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 774,
-      "symbol": "FWLayoutChain.bottomToView",
+      "symbol": "FWLayoutChain.right",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 775,
-      "symbol": "FWLayoutChain.leftToView",
+      "symbol": "FWLayoutChain.topWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 776,
-      "symbol": "FWLayoutChain.rightToView",
+      "symbol": "FWLayoutChain.bottomWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 777,
-      "symbol": "FWLayoutChain.topToViewBottom",
+      "symbol": "FWLayoutChain.leftWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 778,
-      "symbol": "FWLayoutChain.bottomToViewTop",
+      "symbol": "FWLayoutChain.rightWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 779,
-      "symbol": "FWLayoutChain.leftToViewRight",
+      "symbol": "FWLayoutChain.topToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 780,
-      "symbol": "FWLayoutChain.rightToViewLeft",
+      "symbol": "FWLayoutChain.bottomToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 781,
-      "symbol": "FWLayoutChain.topToViewWithOffset",
+      "symbol": "FWLayoutChain.leftToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 782,
-      "symbol": "FWLayoutChain.bottomToViewWithOffset",
+      "symbol": "FWLayoutChain.rightToView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 783,
-      "symbol": "FWLayoutChain.leftToViewWithOffset",
+      "symbol": "FWLayoutChain.topToViewBottom",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 784,
-      "symbol": "FWLayoutChain.rightToViewWithOffset",
+      "symbol": "FWLayoutChain.bottomToViewTop",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 785,
-      "symbol": "FWLayoutChain.topToViewBottomWithOffset",
+      "symbol": "FWLayoutChain.leftToViewRight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 786,
-      "symbol": "FWLayoutChain.bottomToViewTopWithOffset",
+      "symbol": "FWLayoutChain.rightToViewLeft",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 787,
-      "symbol": "FWLayoutChain.leftToViewRightWithOffset",
+      "symbol": "FWLayoutChain.topToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 788,
-      "symbol": "FWLayoutChain.rightToViewLeftWithOffset",
+      "symbol": "FWLayoutChain.bottomToViewWithOffset",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 789,
+      "symbol": "FWLayoutChain.leftToViewWithOffset",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 790,
+      "symbol": "FWLayoutChain.rightToViewWithOffset",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 791,
+      "symbol": "FWLayoutChain.topToViewBottomWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 792,
-      "symbol": "FWLayoutChain.centerToSafeArea",
+      "symbol": "FWLayoutChain.bottomToViewTopWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 793,
-      "symbol": "FWLayoutChain.centerXToSafeArea",
+      "symbol": "FWLayoutChain.leftToViewRightWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 794,
-      "symbol": "FWLayoutChain.centerYToSafeArea",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 795,
-      "symbol": "FWLayoutChain.centerToSafeAreaWithOffset",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 796,
-      "symbol": "FWLayoutChain.centerXToSafeAreaWithOffset",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 797,
-      "symbol": "FWLayoutChain.centerYToSafeAreaWithOffset",
+      "symbol": "FWLayoutChain.rightToViewLeftWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 798,
-      "symbol": "FWLayoutChain.edgesToSafeArea",
+      "symbol": "FWLayoutChain.centerToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 799,
-      "symbol": "FWLayoutChain.edgesToSafeAreaWithInsets",
+      "symbol": "FWLayoutChain.centerXToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 800,
-      "symbol": "FWLayoutChain.edgesToSafeAreaWithInsetsExcludingEdge",
+      "symbol": "FWLayoutChain.centerYToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 801,
-      "symbol": "FWLayoutChain.horizontalToSafeArea",
+      "symbol": "FWLayoutChain.centerToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 802,
-      "symbol": "FWLayoutChain.verticalToSafeArea",
+      "symbol": "FWLayoutChain.centerXToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 803,
-      "symbol": "FWLayoutChain.topToSafeArea",
+      "symbol": "FWLayoutChain.centerYToSafeAreaWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 804,
-      "symbol": "FWLayoutChain.bottomToSafeArea",
+      "symbol": "FWLayoutChain.edgesToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 805,
-      "symbol": "FWLayoutChain.leftToSafeArea",
+      "symbol": "FWLayoutChain.edgesToSafeAreaWithInsets",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 806,
-      "symbol": "FWLayoutChain.rightToSafeArea",
+      "symbol": "FWLayoutChain.edgesToSafeAreaWithInsetsExcludingEdge",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 807,
-      "symbol": "FWLayoutChain.topToSafeAreaWithInset",
+      "symbol": "FWLayoutChain.horizontalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 808,
-      "symbol": "FWLayoutChain.bottomToSafeAreaWithInset",
+      "symbol": "FWLayoutChain.verticalToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 809,
-      "symbol": "FWLayoutChain.leftToSafeAreaWithInset",
+      "symbol": "FWLayoutChain.topToSafeArea",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 810,
-      "symbol": "FWLayoutChain.rightToSafeAreaWithInset",
+      "symbol": "FWLayoutChain.bottomToSafeArea",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 811,
+      "symbol": "FWLayoutChain.leftToSafeArea",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 812,
+      "symbol": "FWLayoutChain.rightToSafeArea",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 813,
+      "symbol": "FWLayoutChain.topToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 814,
-      "symbol": "FWLayoutChain.size",
+      "symbol": "FWLayoutChain.bottomToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 815,
-      "symbol": "FWLayoutChain.width",
+      "symbol": "FWLayoutChain.leftToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 816,
-      "symbol": "FWLayoutChain.height",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 817,
-      "symbol": "FWLayoutChain.widthToHeight",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 818,
-      "symbol": "FWLayoutChain.heightToWidth",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 819,
-      "symbol": "FWLayoutChain.sizeToView",
+      "symbol": "FWLayoutChain.rightToSafeAreaWithInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 820,
-      "symbol": "FWLayoutChain.widthToView",
+      "symbol": "FWLayoutChain.size",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 821,
-      "symbol": "FWLayoutChain.heightToView",
+      "symbol": "FWLayoutChain.width",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 822,
-      "symbol": "FWLayoutChain.widthToViewWithOffset",
+      "symbol": "FWLayoutChain.height",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 823,
-      "symbol": "FWLayoutChain.heightToViewWithOffset",
+      "symbol": "FWLayoutChain.widthToHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 824,
-      "symbol": "FWLayoutChain.widthToViewWithMultiplier",
+      "symbol": "FWLayoutChain.heightToWidth",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 825,
-      "symbol": "FWLayoutChain.heightToViewWithMultiplier",
+      "symbol": "FWLayoutChain.sizeToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 826,
+      "symbol": "FWLayoutChain.widthToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 827,
+      "symbol": "FWLayoutChain.heightToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 828,
+      "symbol": "FWLayoutChain.widthToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 829,
-      "symbol": "FWLayoutChain.attribute",
+      "symbol": "FWLayoutChain.heightToViewWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 830,
-      "symbol": "FWLayoutChain.attributeWithOffset",
+      "symbol": "FWLayoutChain.widthToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 831,
-      "symbol": "FWLayoutChain.attributeWithOffsetAndRelation",
+      "symbol": "FWLayoutChain.heightToViewWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 832,
-      "symbol": "FWLayoutChain.attributeWithMultiplier",
+      "line": 835,
+      "symbol": "FWLayoutChain.attribute",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 833,
-      "symbol": "FWLayoutChain.attributeWithMultiplierAndRelation",
+      "line": 836,
+      "symbol": "FWLayoutChain.attributeWithOffset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 837,
-      "symbol": "FWLayoutChain.offset",
+      "symbol": "FWLayoutChain.attributeWithOffsetAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 838,
-      "symbol": "FWLayoutChain.inset",
+      "symbol": "FWLayoutChain.attributeWithMultiplier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 839,
-      "symbol": "FWLayoutChain.priority",
+      "symbol": "FWLayoutChain.attributeWithMultiplierAndRelation",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 840,
-      "symbol": "FWLayoutChain.identifier",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 841,
-      "symbol": "FWLayoutChain.active",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 842,
-      "symbol": "FWLayoutChain.remove",
+      "line": 843,
+      "symbol": "FWLayoutChain.offset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 844,
-      "symbol": "FWLayoutChain.constraints",
+      "symbol": "FWLayoutChain.inset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 845,
-      "symbol": "FWLayoutChain.constraint",
+      "symbol": "FWLayoutChain.priority",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 846,
-      "symbol": "FWLayoutChain.constraintToSuperview",
+      "symbol": "FWLayoutChain.collapse",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 847,
-      "symbol": "FWLayoutChain.constraintToSuperviewWithRelation",
+      "symbol": "FWLayoutChain.original",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 848,
-      "symbol": "FWLayoutChain.constraintToSafeArea",
+      "symbol": "FWLayoutChain.identifier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 849,
-      "symbol": "FWLayoutChain.constraintToSafeAreaWithRelation",
+      "symbol": "FWLayoutChain.active",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 850,
-      "symbol": "FWLayoutChain.constraintToView",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWAutoLayout.h",
-      "line": 851,
-      "symbol": "FWLayoutChain.constraintToViewWithRelation",
+      "symbol": "FWLayoutChain.remove",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 852,
-      "symbol": "FWLayoutChain.constraintToViewWithMultiplier",
+      "symbol": "FWLayoutChain.constraints",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 853,
-      "symbol": "FWLayoutChain.constraintToViewWithMultiplierAndRelation",
+      "symbol": "FWLayoutChain.constraint",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 854,
+      "symbol": "FWLayoutChain.constraintToSuperview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 855,
+      "symbol": "FWLayoutChain.constraintToSuperviewWithRelation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 856,
+      "symbol": "FWLayoutChain.constraintToSafeArea",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 857,
+      "symbol": "FWLayoutChain.constraintToSafeAreaWithRelation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 858,
+      "symbol": "FWLayoutChain.constraintToView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 859,
+      "symbol": "FWLayoutChain.constraintToViewWithRelation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 860,
+      "symbol": "FWLayoutChain.constraintToViewWithMultiplier",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 861,
+      "symbol": "FWLayoutChain.constraintToViewWithMultiplierAndRelation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWAutoLayout.h",
+      "line": 862,
       "symbol": "FWLayoutChain.constraintWithIdentifier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"

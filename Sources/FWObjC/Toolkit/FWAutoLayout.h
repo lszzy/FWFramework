@@ -97,9 +97,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Collapse
 
 /**
- 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
+ 设置视图是否收缩，默认NO，YES时常量值为收缩值，NO时常量值为原始值
  */
-@property (nonatomic, assign) BOOL fw_collapsed NS_REFINED_FOR_SWIFT;
+@property (nonatomic, assign) BOOL fw_isCollapsed NS_REFINED_FOR_SWIFT;
 
 /**
  设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
@@ -705,6 +705,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
 @property (nonatomic, assign) UILayoutPriority fw_priority NS_REFINED_FOR_SWIFT;
 
+/// 可收缩约束的收缩常量值，默认0
+@property (nonatomic, assign) CGFloat fw_collapseConstant NS_REFINED_FOR_SWIFT;
+
+/// 可收缩约束的原始常量值，默认为添加收缩约束时的值
+@property (nonatomic, assign) CGFloat fw_originalConstant NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - FWLayoutChain
@@ -735,7 +741,7 @@ NS_SWIFT_UNAVAILABLE("")
 
 #pragma mark - Collapse
 
-@property (nonatomic, copy, readonly) FWLayoutChain * (^collapsed)(BOOL collapsed);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^isCollapsed)(BOOL isCollapsed);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^autoCollapse)(BOOL autoCollapse);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^hiddenCollapse)(BOOL hiddenCollapse);
 
@@ -837,6 +843,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^collapse)(CGFloat constant);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^original)(CGFloat constant);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^identifier)(NSString * _Nullable identifier);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^active)(BOOL active);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remove)(void);
