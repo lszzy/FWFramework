@@ -123,9 +123,9 @@ extension Wrapper where Base: UIView {
     
     // MARK: - Collapse
     /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
-    public var collapsed: Bool {
-        get { return base.__fw_collapsed }
-        set { base.__fw_collapsed = newValue }
+    public var isCollapsed: Bool {
+        get { return base.__fw_isCollapsed }
+        set { base.__fw_isCollapsed = newValue }
     }
 
     /// 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
@@ -498,6 +498,18 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.__fw_priority = newValue }
     }
     
+    /// 可收缩约束的收缩常量值，默认0
+    public var collapseConstant: CGFloat {
+        get { return base.__fw_collapseConstant }
+        set { base.__fw_collapseConstant = newValue }
+    }
+    
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
+    public var originalConstant: CGFloat {
+        get { return base.__fw_originalConstant }
+        set { base.__fw_originalConstant = newValue }
+    }
+    
 }
 
 // MARK: - LayoutChain
@@ -560,8 +572,8 @@ public class LayoutChain {
     
     // MARK: - Collapse
     @discardableResult
-    public func collapsed(_ collapsed: Bool) -> Self {
-        view?.__fw_collapsed = collapsed
+    public func isCollapsed(_ isCollapsed: Bool) -> Self {
+        view?.__fw_isCollapsed = isCollapsed
         return self
     }
 
@@ -1006,6 +1018,25 @@ public class LayoutChain {
     }
     
     @discardableResult
+    public func collapse(_ constant: CGFloat? = nil) -> Self {
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            self.view?.__fw_addCollapseConstraint(obj)
+            if let constant = constant {
+                obj.__fw_collapseConstant = constant
+            }
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func original(_ constant: CGFloat) -> Self {
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            obj.__fw_originalConstant = constant
+        })
+        return self
+    }
+    
+    @discardableResult
     public func identifier(_ identifier: String?) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
             obj.identifier = identifier
@@ -1075,6 +1106,18 @@ extension Wrapper where Base: UIView {
     /// 链式布局闭包
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         closure(layoutChain)
+    }
+    
+}
+
+// MARK: - Array+LayoutChain
+extension Wrapper where Base == Array<UIView> {
+    
+    /// 批量链式布局闭包
+    public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
+        base.forEach { view in
+            closure(view.fw.layoutChain)
+        }
     }
     
 }
