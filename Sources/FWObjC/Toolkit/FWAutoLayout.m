@@ -15,16 +15,6 @@
 
 @implementation NSLayoutConstraint (FWAutoLayout)
 
-- (CGFloat)fw_originalConstant
-{
-    return [objc_getAssociatedObject(self, _cmd) floatValue];
-}
-
-- (void)setFw_originalConstant:(CGFloat)originalConstant
-{
-    objc_setAssociatedObject(self, @selector(fw_originalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (BOOL)fw_isOpposite
 {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
@@ -59,6 +49,26 @@
     }
 }
 
+- (CGFloat)fw_collapseConstant
+{
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+}
+
+- (void)setFw_collapseConstant:(CGFloat)collapseConstant
+{
+    objc_setAssociatedObject(self, @selector(fw_collapseConstant), @(collapseConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)fw_originalConstant
+{
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+}
+
+- (void)setFw_originalConstant:(CGFloat)originalConstant
+{
+    objc_setAssociatedObject(self, @selector(fw_originalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 #pragma mark - UIView+FWAutoLayout
@@ -88,9 +98,9 @@ static BOOL fwStaticAutoScaleView = NO;
                 // 如果视图没有固定尺寸，自动设置约束
                 if (CGSizeEqualToSize(contentSize, absentIntrinsicContentSize) ||
                     CGSizeEqualToSize(contentSize, CGSizeZero)) {
-                    selfObject.fw_collapsed = YES;
+                    selfObject.fw_isCollapsed = YES;
                 } else {
-                    selfObject.fw_collapsed = NO;
+                    selfObject.fw_isCollapsed = NO;
                 }
             }
         }));
@@ -99,7 +109,7 @@ static BOOL fwStaticAutoScaleView = NO;
             FWSwizzleOriginal(hidden);
             
             if (selfObject.fw_hiddenCollapse && selfObject.fw_innerCollapseConstraints.count > 0) {
-                selfObject.fw_collapsed = hidden;
+                selfObject.fw_isCollapsed = hidden;
             }
         }));
     });
@@ -311,22 +321,22 @@ static BOOL fwStaticAutoScaleView = NO;
 
 #pragma mark - Collapse
 
-- (BOOL)fw_collapsed
+- (BOOL)fw_isCollapsed
 {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setFw_collapsed:(BOOL)collapsed
+- (void)setFw_isCollapsed:(BOOL)isCollapsed
 {
     [self.fw_innerCollapseConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
-        if (collapsed) {
-            constraint.constant = 0;
+        if (isCollapsed) {
+            constraint.constant = constraint.fw_collapseConstant;
         } else {
             constraint.constant = constraint.fw_originalConstant;
         }
     }];
     
-    objc_setAssociatedObject(self, @selector(fw_collapsed), @(collapsed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(fw_isCollapsed), @(isCollapsed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)fw_autoCollapse
@@ -944,10 +954,10 @@ static BOOL fwStaticAutoScaleView = NO;
 
 #pragma mark - Collapse
 
-- (FWLayoutChain * (^)(BOOL))collapsed
+- (FWLayoutChain * (^)(BOOL))isCollapsed
 {
-    return ^id(BOOL collapsed) {
-        self.view.fw_collapsed = collapsed;
+    return ^id(BOOL isCollapsed) {
+        self.view.fw_isCollapsed = isCollapsed;
         return self;
     };
 }
@@ -1631,6 +1641,27 @@ static BOOL fwStaticAutoScaleView = NO;
     return ^id(UILayoutPriority priority) {
         [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
             obj.fw_priority = priority;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(CGFloat))collapse
+{
+    return ^id(CGFloat constant) {
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            [self.view fw_addCollapseConstraint:obj];
+            obj.fw_collapseConstant = constant;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(CGFloat))original
+{
+    return ^id(CGFloat constant) {
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.fw_originalConstant = constant;
         }];
         return self;
     };
