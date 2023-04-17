@@ -75,7 +75,7 @@ extension View {
     public func border<S: ShapeStyle>(_ content: S, width lineWidth: CGFloat = 1, cornerRadius: CGFloat) -> some View {
         self.cornerRadius(cornerRadius)
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .circular)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .circular)
                     .stroke(content, lineWidth: lineWidth)
             )
             .padding(lineWidth / 2)
