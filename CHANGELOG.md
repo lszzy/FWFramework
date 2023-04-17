@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.8.5] - 2023-04-17
+
+### Added
+* Added shortcut processing automatic layout contraction method
+* Added view batch automatic layout method
+
 ## [4.8.4] - 2023-04-15
 
 ### Changed
