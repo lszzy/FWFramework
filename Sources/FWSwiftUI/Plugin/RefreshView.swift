@@ -44,7 +44,7 @@ extension Refresh {
 extension Refresh.Header: View {
     
     public var body: some View {
-        if update.refresh, !refreshing, update.progress > 1 {
+        if update.refresh, !refreshing, update.progress > 1.01 {
             DispatchQueue.main.async {
                 self.refreshing = true
                 self.action()
