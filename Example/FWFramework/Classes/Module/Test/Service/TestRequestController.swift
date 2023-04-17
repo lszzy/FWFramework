@@ -67,6 +67,22 @@ class TestWeatherRequest: BaseRequest {
         temp = responseJSON["weatherinfo"]["temp"].stringValue
     }
     
+    override func requestRetryCount() -> Int {
+        return testFailed ? 2 : 0
+    }
+    
+    override func requestRetryInterval() -> TimeInterval {
+        return testFailed ? 1 : 0
+    }
+    
+    override func requestRetryTimeout() -> TimeInterval {
+        return testFailed ? 30 : 30
+    }
+    
+    override func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+        return true
+    }
+    
 }
 
 class TestRequestController: UIViewController {
