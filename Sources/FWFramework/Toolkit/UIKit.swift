@@ -1487,7 +1487,15 @@ import AdSupport
 // MARK: - UIButton+UIKit
 @_spi(FW) extension UIButton {
     
-    /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+    /// 全局自定义按钮高亮时的alpha配置，默认0.5
+    @objc(__fw_highlightedAlpha)
+    public static var fw_highlightedAlpha: CGFloat = 0.5
+    
+    /// 全局自定义按钮禁用时的alpha配置，默认0.3
+    @objc(__fw_disabledAlpha)
+    public static var fw_disabledAlpha: CGFloat = 0.3
+    
+    /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
     @objc(__fw_disabledAlpha)
     public var fw_disabledAlpha: CGFloat {
         get {

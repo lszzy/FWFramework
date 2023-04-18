@@ -104,7 +104,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             drawerView.scrollViewPositions = nil
             self?.toggleMenu()
         } customize: { gesture in
-            gesture.highlightedAlpha = 0.5
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         
         let middleLabel = UILabel(frame: CGRect(x: 50, y: 250, width: 100, height: 30))
@@ -122,7 +122,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             }
             self?.toggleMenu()
         } customize: { gesture in
-            gesture.highlightedAlpha = 0.5
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         
         let bottomLabel = UILabel(frame: CGRect(x: 50, y: 300, width: 100, height: 30))
@@ -135,7 +135,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             drawerView.scrollViewPositions = nil
             self?.toggleMenu()
         } customize: { gesture in
-            gesture.highlightedAlpha = 0.5
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         
         let closeLabel = UILabel(frame: CGRect(x: 50, y: 400, width: 100, height: 30))
@@ -144,7 +144,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         closeLabel.app.addTapGesture { [weak self] _ in
             self?.app.close()
         } customize: { gesture in
-            gesture.highlightedAlpha = 0.5
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         contentView.addSubview(closeLabel)
         

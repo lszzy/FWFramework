@@ -17,10 +17,10 @@ public struct OpacityButtonStyle: ButtonStyle {
     public var highlightedAlpha: CGFloat
     public var disabledAlpha: CGFloat
     
-    public init(disabled: Bool = false, highlightedAlpha: CGFloat = 0.5, disabledAlpha: CGFloat = 0.5) {
+    public init(disabled: Bool = false, highlightedAlpha: CGFloat? = nil, disabledAlpha: CGFloat? = nil) {
         self.disabled = disabled
-        self.highlightedAlpha = highlightedAlpha
-        self.disabledAlpha = disabledAlpha
+        self.highlightedAlpha = highlightedAlpha ?? UIButton.fw_highlightedAlpha
+        self.disabledAlpha = disabledAlpha ?? UIButton.fw_disabledAlpha
     }
     
     public func makeBody(configuration: ButtonStyleConfiguration) -> some View {
@@ -34,8 +34,8 @@ public struct OpacityButtonStyle: ButtonStyle {
 @available(iOS 13.0, *)
 extension View {
     
-    /// 设置按钮高亮和禁用时的透明度
-    public func opacityButtonStyle(disabled: Bool = false, highlightedAlpha: CGFloat = 0.5, disabledAlpha: CGFloat = 0.5) -> some View {
+    /// 设置按钮高亮和禁用时的透明度，nil时使用默认
+    public func opacityButtonStyle(disabled: Bool = false, highlightedAlpha: CGFloat? = nil, disabledAlpha: CGFloat? = nil) -> some View {
         self.buttonStyle(OpacityButtonStyle(disabled: disabled, highlightedAlpha: highlightedAlpha, disabledAlpha: disabledAlpha))
             .disabled(disabled)
     }
