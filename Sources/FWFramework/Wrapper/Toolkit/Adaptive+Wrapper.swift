@@ -131,6 +131,11 @@ extension Wrapper where Base: UIScreen {
         return Base.fw_pixelOne
     }
     
+    /// 屏幕半个点的大小，解决0.5pt失真问题
+    public static var pointHalf: CGFloat {
+        return Base.fw_pointHalf
+    }
+    
     /// 检查是否含有安全区域，可用来判断iPhoneX
     public static var hasSafeAreaInsets: Bool {
         return Base.fw_hasSafeAreaInsets
