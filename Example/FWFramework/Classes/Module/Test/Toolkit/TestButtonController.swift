@@ -19,7 +19,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         var button = UIButton.app.button(title: "Button重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
         button.frame = CGRect(x: 25, y: 15, width: 150, height: 30)
-        button.app.highlightedAlpha = 0.5
+        button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button.app.addTouch(target: self, action: #selector(onClick1(_:)))
         view.addSubview(button)
         
@@ -28,14 +28,14 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         label.isUserInteractionEnabled = true
         label.frame = CGRect(x: 200, y: 15, width: 150, height: 30)
         label.app.addTapGesture(target: self, action: #selector(onClick2(_:))) { gesture in
-            gesture.highlightedAlpha = 0.5
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         view.addSubview(label)
         
         button = UIButton.app.button(title: "Button不可重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
         button.frame = CGRect(x: 25, y: 60, width: 150, height: 30)
-        button.app.highlightedAlpha = 0.5
-        button.app.disabledAlpha = 0.5
+        button.app.highlightedAlpha = UIButton.app.highlightedAlpha
+        button.app.disabledAlpha = UIButton.app.disabledAlpha
         button.app.addTouch(target: self, action: #selector(onClick3(_:)))
         view.addSubview(button)
         
@@ -44,15 +44,15 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         label.isUserInteractionEnabled = true
         label.frame = CGRect(x: 200, y: 60, width: 150, height: 30)
         label.app.addTapGesture(target: self, action: #selector(onClick4(_:))) { gesture in
-            gesture.disabledAlpha = 0.5
-            gesture.highlightedAlpha = 0.5
+            gesture.disabledAlpha = UIButton.app.disabledAlpha
+            gesture.highlightedAlpha = UIButton.app.highlightedAlpha
         }
         view.addSubview(label)
         
         button = UIButton.app.button(title: "Button1秒内不可重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
         button.app.touchEventInterval = 1
         button.frame = CGRect(x: 25, y: 105, width: 200, height: 30)
-        button.app.highlightedAlpha = 0.5
+        button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button.app.addTouch(target: self, action: #selector(onClick5(_:)))
         view.addSubview(button)
         
@@ -136,7 +136,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button1 = UIButton(type: .system)
         button1.frame = CGRect(x: 25, y: 335, width: 150, height: 50)
         button1.isEnabled = false
-        button1.app.disabledAlpha = 0.5
+        button1.app.disabledAlpha = UIButton.app.disabledAlpha
         button1.setTitle("System不可点2", for: .normal)
         button1.setTitleColor(UIColor.black, for: .normal)
         button1.backgroundColor = APP.color(0xFFDA00)
@@ -145,7 +145,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         
         button2 = UIButton(type: .system)
         button2.frame = CGRect(x: 200, y: 335, width: 150, height: 50)
-        button2.app.highlightedAlpha = 0.5
+        button2.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button2.setTitle("System可点击2", for: .normal)
         button2.setTitleColor(UIColor.black, for: .normal)
         button2.backgroundColor = APP.color(0xFFDA00)
@@ -155,8 +155,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button3 = UIButton(type: .custom)
         button3.frame = CGRect(x: 25, y: 400, width: 150, height: 50)
         button3.isEnabled = false
-        button3.app.disabledAlpha = 0.5
-        button3.app.highlightedAlpha = 0.5
+        button3.app.disabledAlpha = UIButton.app.disabledAlpha
+        button3.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button3.setTitle("Custom不可点2", for: .normal)
         button3.setTitleColor(UIColor.black, for: .normal)
         button3.backgroundColor = APP.color(0xFFDA00)
@@ -165,8 +165,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         
         button4 = UIButton(type: .custom)
         button4.frame = CGRect(x: 200, y: 400, width: 150, height: 50)
-        button4.app.disabledAlpha = 0.5
-        button4.app.highlightedAlpha = 0.5
+        button4.app.disabledAlpha = UIButton.app.disabledAlpha
+        button4.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button4.setTitle("Custom可点击2", for: .normal)
         button4.setTitleColor(UIColor.black, for: .normal)
         button4.backgroundColor = APP.color(0xFFDA00)
@@ -177,8 +177,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button1.frame = CGRect(x: 25, y: 465, width: 150, height: 50)
         button1.backgroundColor = APP.color(0xFFDA00)
         button1.app.setCornerRadius(5)
-        button1.app.disabledAlpha = 0.5
-        button1.app.highlightedAlpha = 0.5
+        button1.app.disabledAlpha = UIButton.app.disabledAlpha
+        button1.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button1.app.setTitle("按钮文字", font: APP.font(10), titleColor: .black)
         button1.app.setImage(UIImage.app.appIconImage()?.app.image(scaleSize: CGSize(width: 24, height: 24)))
         button1.app.setImageEdge(.top, spacing: 4)
@@ -188,8 +188,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button2.frame = CGRect(x: 200, y: 465, width: 150, height: 50)
         button2.backgroundColor = APP.color(0xFFDA00)
         button2.app.setCornerRadius(5)
-        button2.app.disabledAlpha = 0.5
-        button2.app.highlightedAlpha = 0.5
+        button2.app.disabledAlpha = UIButton.app.disabledAlpha
+        button2.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button2.app.setTitle("按钮文字", font: APP.font(10), titleColor: .black)
         button2.app.setImage(UIImage.app.appIconImage()?.app.image(scaleSize: CGSize(width: 24, height: 24)))
         button2.app.setImageEdge(.left, spacing: 4)
@@ -199,8 +199,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button3.frame = CGRect(x: 25, y: 530, width: 150, height: 50)
         button3.backgroundColor = APP.color(0xFFDA00)
         button3.app.setCornerRadius(5)
-        button3.app.disabledAlpha = 0.5
-        button3.app.highlightedAlpha = 0.5
+        button3.app.disabledAlpha = UIButton.app.disabledAlpha
+        button3.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button3.app.setTitle("按钮文字", font: APP.font(10), titleColor: .black)
         button3.app.setImage(UIImage.app.appIconImage()?.app.image(scaleSize: CGSize(width: 24, height: 24)))
         button3.app.setImageEdge(.bottom, spacing: 4)
@@ -210,8 +210,8 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         button4.frame = CGRect(x: 200, y: 530, width: 150, height: 50)
         button4.backgroundColor = APP.color(0xFFDA00)
         button4.app.setCornerRadius(5)
-        button4.app.disabledAlpha = 0.5
-        button4.app.highlightedAlpha = 0.5
+        button4.app.disabledAlpha = UIButton.app.disabledAlpha
+        button4.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button4.app.setTitle("按钮文字", font: APP.font(10), titleColor: .black)
         button4.app.setImage(UIImage.app.appIconImage()?.app.image(scaleSize: CGSize(width: 24, height: 24)))
         button4.app.setImageEdge(.right, spacing: 4)

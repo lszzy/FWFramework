@@ -71,12 +71,12 @@ class AppTheme: NSObject {
         // button.app.setBackgroundColor(AppTheme.buttonColor, for: .normal)
         // button.app.setBackgroundColor(AppTheme.buttonColor, for: .disabled)
         // button.app.setBackgroundColor(AppTheme.buttonColor.app.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
-        // button.app.disabledAlpha = 0.5
+        // button.app.disabledAlpha = UIButton.app.disabledAlpha
         
         // 高亮时内容也透明
         button.backgroundColor = AppTheme.buttonColor
-        button.app.disabledAlpha = 0.5
-        button.app.highlightedAlpha = 0.5
+        button.app.disabledAlpha = UIButton.app.disabledAlpha
+        button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         
         button.app.setDimension(.width, size: APP.screenWidth - 30)
         button.app.setDimension(.height, size: 50)

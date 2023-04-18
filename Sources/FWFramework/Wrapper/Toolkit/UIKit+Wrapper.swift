@@ -470,7 +470,19 @@ extension Wrapper where Base: UIControl {
 // MARK: - UIButton+UIKit
 extension Wrapper where Base: UIButton {
     
-    /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+    /// 全局自定义按钮高亮时的alpha配置，默认0.5
+    public static var highlightedAlpha: CGFloat {
+        get { return Base.fw_highlightedAlpha }
+        set { Base.fw_highlightedAlpha = newValue }
+    }
+    
+    /// 全局自定义按钮禁用时的alpha配置，默认0.3
+    public static var disabledAlpha: CGFloat {
+        get { return Base.fw_disabledAlpha }
+        set { Base.fw_disabledAlpha = newValue }
+    }
+    
+    /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
     public var disabledAlpha: CGFloat {
         get { return base.fw_disabledAlpha }
         set { base.fw_disabledAlpha = newValue }
