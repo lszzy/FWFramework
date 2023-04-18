@@ -851,10 +851,16 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
         if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
             [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
         }
+        if (self.customCellBlock) {
+            self.customCellBlock(cell, itemIndex);
+        }
         return cell;
     }else if ([self.delegate respondsToSelector:@selector(customCellNibForBannerView:)] && [self.delegate customCellNibForBannerView:self]) {
         if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
             [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+        }
+        if (self.customCellBlock) {
+            self.customCellBlock(cell, itemIndex);
         }
         return cell;
     }
@@ -878,6 +884,9 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     
     if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
         [self.delegate bannerView:self customCell:cell forIndex:itemIndex];
+    }
+    if (self.customCellBlock) {
+        self.customCellBlock(cell, itemIndex);
     }
     
     if (!cell.hasConfigured) {
