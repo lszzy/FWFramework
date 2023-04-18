@@ -81,6 +81,17 @@ extension View {
             .padding(lineWidth / 2)
     }
     
+    /// 隐藏List分割线，需cell调用生效
+    public func listSeparatorHidden() -> some View {
+        if #available(iOS 15.0, *) {
+            return listRowSeparator(.hidden)
+        } else {
+            return introspectTableView { tableView in
+                tableView.separatorStyle = .none
+            }
+        }
+    }
+    
     /// 切换视图移除性
     public func removable(_ removable: Bool) -> some View {
         modifier(RemovableModifier(removable: removable))
@@ -144,39 +155,6 @@ extension View {
     /// 转换为AnyView
     public func eraseToAnyView() -> AnyView {
         AnyView(self)
-    }
-    
-}
-
-// MARK: - Divider+Toolkit
-/// 修改分割线颜色使用background方法即可，示例：background(Color.gray)
-@available(iOS 13.0, *)
-extension Divider {
-    
-    /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
-    public static var defaultSize: CGFloat = 1.0 / UIScreen.main.scale
-    
-    /// 分割线默认颜色配置，未自定义时为灰色，仅影响Divider和Rectangle的dividerStyle方法
-    public static var defaultColor: Color = Color(red: 222.0 / 255.0, green: 224.0 / 255.0, blue: 226.0 / 255.0)
-    
-    /// 自定义分割线尺寸，使用scale实现，参数nil时为Divider默认配置
-    public func dividerStyle(size: CGFloat? = nil, color: Color? = nil) -> some View {
-        self.scaleEffect(y: UIScreen.main.scale * (size ?? Divider.defaultSize))
-            .frame(height: size ?? Divider.defaultSize)
-            .background(color ?? Divider.defaultColor)
-    }
-    
-}
-
-// MARK: - Rectangle+Toolkit
-/// 使用Rectangle实现分割线更灵活可控
-@available(iOS 13.0, *)
-extension Rectangle {
-    
-    /// 自定义线条样式，参数nil时为Divider默认配置
-    public func dividerStyle(size: CGFloat? = nil, color: Color? = nil) -> some View {
-        self.frame(height: size ?? Divider.defaultSize)
-            .foregroundColor(color ?? Divider.defaultColor)
     }
     
 }

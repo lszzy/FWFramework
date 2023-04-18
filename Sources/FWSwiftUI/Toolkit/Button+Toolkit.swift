@@ -1,0 +1,45 @@
+//
+//  Button+Toolkit.swift
+//  FWFramework
+//
+//  Created by wuyong on 2022/8/18.
+//
+
+#if canImport(SwiftUI)
+import SwiftUI
+
+// MARK: - OpacityButtonStyle
+/// 透明度按钮样式，支持设置高亮和禁用时的透明度
+@available(iOS 13.0, *)
+public struct OpacityButtonStyle: ButtonStyle {
+    
+    public var disabled: Bool
+    public var highlightedAlpha: CGFloat
+    public var disabledAlpha: CGFloat
+    
+    public init(disabled: Bool = false, highlightedAlpha: CGFloat = 0.5, disabledAlpha: CGFloat = 0.5) {
+        self.disabled = disabled
+        self.highlightedAlpha = highlightedAlpha
+        self.disabledAlpha = disabledAlpha
+    }
+    
+    public func makeBody(configuration: ButtonStyleConfiguration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? highlightedAlpha : (disabled ? disabledAlpha : 1.0))
+    }
+    
+}
+
+// MARK: - View+Toolkit
+@available(iOS 13.0, *)
+extension View {
+    
+    /// 设置按钮高亮和禁用时的透明度
+    public func opacityButtonStyle(disabled: Bool = false, highlightedAlpha: CGFloat = 0.5, disabledAlpha: CGFloat = 0.5) -> some View {
+        self.buttonStyle(OpacityButtonStyle(disabled: disabled, highlightedAlpha: highlightedAlpha, disabledAlpha: disabledAlpha))
+            .disabled(disabled)
+    }
+    
+}
+
+#endif
