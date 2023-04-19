@@ -804,8 +804,8 @@
         [_backButton sizeToFit];
         [_backButton addTarget:self action:@selector(handleCancelButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         _backButton.fw_touchInsets = UIEdgeInsetsMake(30, 20, 50, 80);
-        _backButton.fw_disabledAlpha = 0.3;
-        _backButton.fw_highlightedAlpha = 0.5;
+        _backButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _backButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
     }
     return _backButton;
 }
@@ -820,8 +820,8 @@
         [_checkboxButton sizeToFit];
         [_checkboxButton addTarget:self action:@selector(handleCheckButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         _checkboxButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        _checkboxButton.fw_disabledAlpha = 0.3;
-        _checkboxButton.fw_highlightedAlpha = 0.5;
+        _checkboxButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _checkboxButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
     }
     return _checkboxButton;
 }
@@ -851,8 +851,8 @@
         [_editButton setTitle:FWAppBundle.editButton forState:UIControlStateNormal];
         _editButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_editButton sizeToFit];
-        _editButton.fw_disabledAlpha = 0.3;
-        _editButton.fw_highlightedAlpha = 0.5;
+        _editButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _editButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
         [_editButton addTarget:self action:@selector(handleEditButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _editButton;
@@ -866,8 +866,8 @@
         [_sendButton setTitle:FWAppBundle.doneButton forState:UIControlStateNormal];
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_sendButton sizeToFit];
-        _sendButton.fw_disabledAlpha = 0.3;
-        _sendButton.fw_highlightedAlpha = 0.5;
+        _sendButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _sendButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
         [_sendButton addTarget:self action:@selector(handleSendButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _sendButton;
@@ -887,8 +887,8 @@
         [_originImageCheckboxButton setContentEdgeInsets:UIEdgeInsetsMake(0, 5.0f, 0, 0)];
         [_originImageCheckboxButton sizeToFit];
         _originImageCheckboxButton.fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        _originImageCheckboxButton.fw_disabledAlpha = 0.3;
-        _originImageCheckboxButton.fw_highlightedAlpha = 0.5;
+        _originImageCheckboxButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _originImageCheckboxButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
         [_originImageCheckboxButton addTarget:self action:@selector(handleOriginImageCheckboxButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _originImageCheckboxButton;
@@ -2223,8 +2223,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         [_sendButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
         [_sendButton setTitle:FWAppBundle.doneButton forState:UIControlStateNormal];
         _sendButton.fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
-        _sendButton.fw_disabledAlpha = 0.3;
-        _sendButton.fw_highlightedAlpha = 0.5;
+        _sendButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _sendButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
         [_sendButton sizeToFit];
         [_sendButton addTarget:self action:@selector(handleSendButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -2240,8 +2240,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         [_previewButton setTitleColor:self.toolBarTintColor forState:UIControlStateNormal];
         [_previewButton setTitle:FWAppBundle.previewButton forState:UIControlStateNormal];
         _previewButton.fw_touchInsets = UIEdgeInsetsMake(12, 20, 12, 20);
-        _previewButton.fw_disabledAlpha = 0.3;
-        _previewButton.fw_highlightedAlpha = 0.5;
+        _previewButton.fw_disabledAlpha = UIButton.fw_disabledAlpha;
+        _previewButton.fw_highlightedAlpha = UIButton.fw_highlightedAlpha;
         [_previewButton sizeToFit];
         [_previewButton addTarget:self action:@selector(handlePreviewButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
