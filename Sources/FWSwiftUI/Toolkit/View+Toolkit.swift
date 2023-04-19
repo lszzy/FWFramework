@@ -112,7 +112,7 @@ extension View {
     }
     
     /// 执行闭包并返回新的视图
-    public func then<T: View>(_ body: (Self) -> T) -> T {
+    public func then(_ body: (Self) -> AnyView) -> some View {
         return body(self)
     }
     
@@ -120,15 +120,6 @@ extension View {
     public func then<T: View>(_ condition: Bool, body: (Self) -> T) -> some View {
         if condition {
             return AnyView(body(self))
-        } else {
-            return AnyView(self)
-        }
-    }
-    
-    /// 变量有值时执行闭包并返回新的视图
-    public func then<T: View, V>(_ value: V?, body: (Self, V) -> T) -> some View {
-        if let value = value {
-            return AnyView(body(self, value))
         } else {
             return AnyView(self)
         }
