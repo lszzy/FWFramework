@@ -101,22 +101,6 @@ open class HostingView<Content: View>: UIView {
     
 }
 
-// MARK: - InvisibleView
-/// 不可见视图，当某个场景EmptyView不生效时可使用InvisibleView替代，比如EmptyView不触发onAppear
-@available(iOS 13.0, *)
-public struct InvisibleView: View {
-    
-    public init() {}
-    
-    public var body: some View {
-        Color.clear
-            .frame(width: 0, height: 0)
-            .allowsHitTesting(false)
-            .accessibility(hidden: true)
-    }
-    
-}
-
 // MARK: - View+HostingView
 @available(iOS 13.0, *)
 extension View {
