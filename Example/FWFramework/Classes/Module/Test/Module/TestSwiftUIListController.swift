@@ -96,6 +96,22 @@ struct TestSwiftUIListContent: View {
             return list.eraseToAnyView()
         })
         .resetListStyle(background: Color.randomColor)
+        .listViewConfigure { scrollView in
+            scrollView.app.setRefreshing {
+                print("refresing")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    scrollView.app.endRefreshing()
+                }
+            }
+            
+            scrollView.app.setLoading {
+                print("loading")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    scrollView.app.endLoading()
+                    scrollView.app.shouldLoading = true
+                }
+            }
+        }
     }
     
 }
