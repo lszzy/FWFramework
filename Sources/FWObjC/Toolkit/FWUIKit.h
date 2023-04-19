@@ -279,7 +279,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIButton (FWUIKit)
 
-/// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+/// 全局自定义按钮高亮时的alpha配置，默认0.5
+@property (class, nonatomic, assign) CGFloat fw_highlightedAlpha NS_REFINED_FOR_SWIFT;
+    
+/// 全局自定义按钮禁用时的alpha配置，默认0.3
+@property (class, nonatomic, assign) CGFloat fw_disabledAlpha NS_REFINED_FOR_SWIFT;
+
+/// 自定义按钮禁用时的alpha，如0.3，默认0不生效
 @property (nonatomic, assign) CGFloat fw_disabledAlpha NS_REFINED_FOR_SWIFT;
 
 /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
@@ -560,8 +566,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
 @property (nonatomic, assign) BOOL fw_estimatedLayout UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
 
-/// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-- (void)fw_resetGroupedStyle NS_REFINED_FOR_SWIFT;
+/// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
+- (void)fw_resetTableStyle NS_REFINED_FOR_SWIFT;
 
 /// reloadData完成回调
 - (void)fw_reloadDataWithCompletion:(nullable void (^)(void))completion NS_REFINED_FOR_SWIFT;

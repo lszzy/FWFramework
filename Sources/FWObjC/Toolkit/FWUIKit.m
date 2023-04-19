@@ -1563,6 +1563,28 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UIButton (FWUIKit)
 
++ (CGFloat)fw_highlightedAlpha
+{
+    NSNumber *value = objc_getAssociatedObject([UIButton class], @selector(fw_highlightedAlpha));
+    return value ? value.doubleValue : 0.5;
+}
+
++ (void)setFw_highlightedAlpha:(CGFloat)alpha
+{
+    objc_setAssociatedObject([UIButton class], @selector(fw_highlightedAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (CGFloat)fw_disabledAlpha
+{
+    NSNumber *value = objc_getAssociatedObject([UIButton class], @selector(fw_disabledAlpha));
+    return value ? value.doubleValue : 0.3;
+}
+
++ (void)setFw_disabledAlpha:(CGFloat)alpha
+{
+    objc_setAssociatedObject([UIButton class], @selector(fw_disabledAlpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (CGFloat)fw_disabledAlpha
 {
     return [objc_getAssociatedObject(self, @selector(fw_disabledAlpha)) doubleValue];
@@ -2693,7 +2715,7 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     }
 }
 
-- (void)fw_resetGroupedStyle
+- (void)fw_resetTableStyle
 {
     self.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];
     self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, CGFLOAT_MIN)];

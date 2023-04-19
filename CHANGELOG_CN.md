@@ -1,5 +1,15 @@
 # 更新日志
 
+## [4.9.0] - 2023-04-20
+
+### Added
+* 新增SwiftUI处理List、ScrollView兼容组件
+* 新增SwiftUI处理Divider兼容组件
+* 新增SwiftUI输入框配置句柄组件
+* 新增SwiftUI按钮高亮和禁用样式组件
+* 修改SwiftUI的ViewModel组件为协议
+* 修复SwiftUI刷新组件、边框圆角方法bug
+
 ## [4.8.5] - 2023-04-17
 
 ### Added

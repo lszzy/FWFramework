@@ -107,6 +107,9 @@ NS_SWIFT_NAME(BannerView)
 /** block方式监听滚动，快速滚动时也会回调 */
 @property (nonatomic, copy, nullable) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);
 
+/** 自定义cell句柄 */
+@property (nonatomic, copy, nullable) void (^customCellBlock)(UICollectionViewCell *cell, NSInteger index);
+
 /** 手工滚动到指定index，不使用动画 */
 - (void)makeScrollViewScrollToIndex:(NSInteger)index;
 

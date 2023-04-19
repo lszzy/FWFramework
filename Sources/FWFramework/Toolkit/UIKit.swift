@@ -457,7 +457,19 @@ extension Wrapper where Base: UIControl {
 // MARK: - UIButton+UIKit
 extension Wrapper where Base: UIButton {
     
-    /// 自定义按钮禁用时的alpha，如0.5，默认0不生效
+    /// 全局自定义按钮高亮时的alpha配置，默认0.5
+    public static var highlightedAlpha: CGFloat {
+        get { return Base.__fw_highlightedAlpha }
+        set { Base.__fw_highlightedAlpha = newValue }
+    }
+    
+    /// 全局自定义按钮禁用时的alpha配置，默认0.3
+    public static var disabledAlpha: CGFloat {
+        get { return Base.__fw_disabledAlpha }
+        set { Base.__fw_disabledAlpha = newValue }
+    }
+    
+    /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
     public var disabledAlpha: CGFloat {
         get { return base.__fw_disabledAlpha }
         set { base.__fw_disabledAlpha = newValue }
@@ -896,9 +908,9 @@ extension Wrapper where Base: UITableView {
         set { base.__fw_estimatedLayout = newValue }
     }
     
-    /// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-    public func resetGroupedStyle() {
-        base.__fw_resetGroupedStyle()
+    /// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
+    public func resetTableStyle() {
+        base.__fw_resetTableStyle()
     }
     
     /// reloadData完成回调

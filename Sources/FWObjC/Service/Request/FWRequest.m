@@ -34,7 +34,7 @@
 
 NSString *const FWRequestCacheErrorDomain = @"site.wuyong.error.request.cache";
 
-static dispatch_queue_t fwrequest_cache_writing_queue() {
+static dispatch_queue_t fwrequest_cache_writing_queue(void) {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

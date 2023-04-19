@@ -22,7 +22,7 @@
 #import "FWURLSessionManager.h"
 #import <objc/runtime.h>
 
-static dispatch_queue_t fw_url_session_manager_processing_queue() {
+static dispatch_queue_t fw_url_session_manager_processing_queue(void) {
     static dispatch_queue_t queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -32,7 +32,7 @@ static dispatch_queue_t fw_url_session_manager_processing_queue() {
     return queue;
 }
 
-static dispatch_group_t fw_url_session_manager_completion_group() {
+static dispatch_group_t fw_url_session_manager_completion_group(void) {
     static dispatch_group_t group;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
