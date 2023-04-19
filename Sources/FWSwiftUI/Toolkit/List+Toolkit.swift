@@ -6,7 +6,6 @@
 //
 
 #if canImport(SwiftUI)
-import UIKit
 import SwiftUI
 
 // MARK: - List+Toolkit
