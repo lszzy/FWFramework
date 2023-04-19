@@ -1145,6 +1145,9 @@
         if ([_delegate respondsToSelector:@selector(textTagCollectionView:didTapTag:atIndex:selected:tagConfig:)]) {
             [_delegate textTagCollectionView:self didTapTag:(label.label.text ?: @"") atIndex:index selected:label.selected tagConfig:label.config];
         }
+        if (self.onTapTag) {
+            self.onTapTag(label.label.text ?: @"", index, label.selected);
+        }
     }
 }
 

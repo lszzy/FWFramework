@@ -258,6 +258,8 @@ NS_SWIFT_NAME(TextTagCollectionView)
 @property (nonatomic, copy, nullable) void (^onTapBlankArea)(CGPoint location);
 // Tap all area callback
 @property (nonatomic, copy, nullable) void (^onTapAllArea)(CGPoint location);
+// Tap tag callback
+@property (nonatomic, copy, nullable) void (^onTapTag)(NSString *tagText, NSUInteger index, BOOL selected);
 
 // Reload
 - (void)reload;
