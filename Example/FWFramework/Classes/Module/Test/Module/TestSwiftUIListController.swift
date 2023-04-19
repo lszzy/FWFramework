@@ -14,8 +14,21 @@ import FWFramework
 @available(iOS 13.0, *)
 class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
     
+    private lazy var contentView: TestSwiftUIListContent = {
+        let result = TestSwiftUIListContent()
+        return result
+    }()
+    
+    func setupNavbar() {
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["automatic", "plain", "grouped", "sidebar (14+)", "insetGrouped (14+)", "inset (14+)"], actionBlock: { index in
+                self?.contentView.viewModel.style = index
+            })
+        }
+    }
+    
     func setupSubviews() {
-        let hostingView = TestSwiftUIListContent()
+        let hostingView = contentView
             .navigationBarConfigure(
                 leading: Icon.backImage,
                 title: "TestSwiftUIListController",
@@ -40,15 +53,51 @@ struct TestSwiftUIListContent: View {
     @ObservedObject var viewModel = TestSwiftUIListModel()
     
     var body: some View {
-        List(viewModel.items, id: \.hash) { item in
-            Text(item)
+        List {
+            Section {
+                ForEach(viewModel.items, id: \.hash) { item in
+                    Text(item)
+                        .listSeparatorHidden()
+                }
+            } header: {
+                Text("Header")
+            } footer: {
+                Text("Footer")
+            }
         }
+        .then({ list in
+            switch viewModel.style {
+            case 0:
+                return list.listStyle(.automatic).eraseToAnyView()
+            case 1:
+                return list.listStyle(.plain).eraseToAnyView()
+            case 2:
+                return list.listStyle(.grouped).eraseToAnyView()
+            case 3:
+                if #available(iOS 14.0, *) {
+                    return list.listStyle(.sidebar).eraseToAnyView()
+                }
+            case 4:
+                if #available(iOS 14.0, *) {
+                    return list.listStyle(.insetGrouped).eraseToAnyView()
+                }
+            case 5:
+                if #available(iOS 14.0, *) {
+                    return list.listStyle(.inset).eraseToAnyView()
+                }
+            default:
+                break
+            }
+            return list.eraseToAnyView()
+        })
     }
     
 }
 
 @available(iOS 13.0, *)
 class TestSwiftUIListModel: ViewModel {
+    
+    @Published var style: Int = 0
     
     @Published var items: [String] = {
         var result: [String] = []
