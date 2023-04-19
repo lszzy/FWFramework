@@ -46,6 +46,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.placeholder = "禁止粘贴，最多10个中文"
         result.keyboardType = .default
         result.returnKeyType = .next
+        result.textContentType = .telephoneNumber
         return result
     }()
     
@@ -57,6 +58,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.placeholder = "仅数字和字母转大写，最多20个英文"
         result.keyboardType = .default
         result.returnKeyType = .next
+        result.textContentType = .password
         return result
     }()
     

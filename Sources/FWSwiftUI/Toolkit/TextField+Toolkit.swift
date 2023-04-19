@@ -18,21 +18,20 @@ extension View {
         configuration: @escaping (UITextField) -> Void
     ) -> some View {
         return introspectTextField { textField in
-            if !textField.fw_propertyBool(forName: "textFieldConfigure") {
-                textField.fw_setPropertyBool(true, forName: "textFieldConfigure")
-                
-                if autoFocus, let viewController = textField.fw_viewController {
-                    viewController.fw_observeLifecycleState { [weak textField] vc, state in
-                        if state == .didAppear {
-                            textField?.becomeFirstResponder()
-                        } else if state == .willDisappear {
-                            vc.view.endEditing(true)
-                        }
+            guard !textField.fw_propertyBool(forName: "textFieldConfigure") else { return }
+            textField.fw_setPropertyBool(true, forName: "textFieldConfigure")
+            
+            if autoFocus, let viewController = textField.fw_viewController {
+                viewController.fw_observeLifecycleState { [weak textField] vc, state in
+                    if state == .didAppear {
+                        textField?.becomeFirstResponder()
+                    } else if state == .willDisappear {
+                        vc.view.endEditing(true)
                     }
                 }
-                
-                configuration(textField)
             }
+            
+            configuration(textField)
         }
     }
     
@@ -42,21 +41,20 @@ extension View {
         configuration: @escaping (UITextView) -> Void
     ) -> some View {
         return introspectTextView { textView in
-            if !textView.fw_propertyBool(forName: "textViewConfigure") {
-                textView.fw_setPropertyBool(true, forName: "textViewConfigure")
-                
-                if autoFocus, let viewController = textView.fw_viewController {
-                    viewController.fw_observeLifecycleState { [weak textView] vc, state in
-                        if state == .didAppear {
-                            textView?.becomeFirstResponder()
-                        } else if state == .willDisappear {
-                            vc.view.endEditing(true)
-                        }
+            guard !textView.fw_propertyBool(forName: "textViewConfigure") else { return }
+            textView.fw_setPropertyBool(true, forName: "textViewConfigure")
+            
+            if autoFocus, let viewController = textView.fw_viewController {
+                viewController.fw_observeLifecycleState { [weak textView] vc, state in
+                    if state == .didAppear {
+                        textView?.becomeFirstResponder()
+                    } else if state == .willDisappear {
+                        vc.view.endEditing(true)
                     }
                 }
-                
-                configuration(textView)
             }
+            
+            configuration(textView)
         }
     }
     
