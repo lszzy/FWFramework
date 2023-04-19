@@ -81,17 +81,6 @@ extension View {
             .padding(lineWidth / 2)
     }
     
-    /// 隐藏List分割线，需cell调用生效
-    public func listSeparatorHidden() -> some View {
-        if #available(iOS 15.0, *) {
-            return listRowSeparator(.hidden)
-        } else {
-            return introspectTableView { tableView in
-                tableView.separatorStyle = .none
-            }
-        }
-    }
-    
     /// 切换视图移除性
     public func removable(_ removable: Bool) -> some View {
         modifier(RemovableModifier(removable: removable))

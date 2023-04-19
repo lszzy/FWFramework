@@ -122,8 +122,6 @@ class TestSwiftUIModel: ViewModel {
     }
 }
 
-
-
 @available(iOS 13.0, *)
 struct TestSwiftUIContent: View {
     
@@ -222,14 +220,15 @@ struct TestSwiftUIContent: View {
                 }
                 
                 Button {
-                    Router.openURL("https://www.baidu.com")
+                    let vc = TestSwiftUIListController()
+                    Navigator.open(vc)
                     
                     viewContext.object = "Object"
                     viewContext.userInfo = ["color": Color(UIColor.app.randomColor)]
                     viewContext.send()
                 } label: {
                     ViewWrapper {
-                        Text("Open Router")
+                        Text("Open List")
                             .wrappedHostingView()
                     }
                     .frame(height: 44)
