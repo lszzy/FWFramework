@@ -239,7 +239,7 @@ static force_inline NSDate *FWNSDateFromString(__unsafe_unretained NSString *str
 
 
 /// Get the 'NSBlock' class.
-static force_inline Class FWNSBlockClass() {
+static force_inline Class FWNSBlockClass(void) {
     static Class cls;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -264,7 +264,7 @@ static force_inline Class FWNSBlockClass() {
  
  length: 20/24/25
  */
-static force_inline NSDateFormatter *FWISODateFormatter() {
+static force_inline NSDateFormatter *FWISODateFormatter(void) {
     static NSDateFormatter *formatter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

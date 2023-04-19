@@ -10,8 +10,11 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 extension EdgeInsets {
+    
+    /// 静态zero边距
     public static var zero: Self { .init() }
     
+    /// 自定义指定边长度，默认为0
     public init(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) {
         self.init(top: 0, leading: 0, bottom: 0, trailing: 0)
         guard let length = length else { return }
@@ -21,6 +24,7 @@ extension EdgeInsets {
         if edges.contains(.bottom) { bottom = length }
         if edges.contains(.trailing) { trailing = length }
     }
+    
 }
 
 #endif

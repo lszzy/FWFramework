@@ -93,21 +93,21 @@
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 175,
+      "line": 177,
       "symbol": "UIScreen(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 237,
+      "line": 241,
       "symbol": "UIView(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWAdaptive.h",
-      "line": 246,
+      "line": 250,
       "symbol": "UIViewController(FWAdaptive)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -3019,77 +3019,77 @@
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 197,
+      "line": 200,
       "symbol": "FWBannerViewCell",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 199,
+      "line": 202,
       "symbol": "FWBannerViewCell.imageView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 200,
+      "line": 203,
       "symbol": "FWBannerViewCell.title",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 202,
+      "line": 205,
       "symbol": "FWBannerViewCell.titleLabelTextColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 203,
+      "line": 206,
       "symbol": "FWBannerViewCell.titleLabelTextFont",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 204,
+      "line": 207,
       "symbol": "FWBannerViewCell.titleLabelBackgroundColor",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 205,
+      "line": 208,
       "symbol": "FWBannerViewCell.titleLabelHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 206,
+      "line": 209,
       "symbol": "FWBannerViewCell.titleLabelTextAlignment",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 207,
+      "line": 210,
       "symbol": "FWBannerViewCell.contentViewInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 208,
+      "line": 211,
       "symbol": "FWBannerViewCell.contentViewCornerRadius",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWBannerView.h",
-      "line": 210,
+      "line": 213,
       "symbol": "FWBannerViewCell.hasConfigured",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
@@ -9137,154 +9137,161 @@
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 263,
+      "line": 262,
+      "symbol": "FWTextTagCollectionView.onTapTag",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWTagCollectionView.h",
+      "line": 265,
       "symbol": "FWTextTagCollectionView.-reload",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 266,
+      "line": 268,
       "symbol": "FWTextTagCollectionView.-addTag:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 268,
+      "line": 270,
       "symbol": "FWTextTagCollectionView.-addTags:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 271,
+      "line": 273,
       "symbol": "FWTextTagCollectionView.-addTag:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 273,
+      "line": 275,
       "symbol": "FWTextTagCollectionView.-addTags:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 276,
+      "line": 278,
       "symbol": "FWTextTagCollectionView.-insertTag:atIndex:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 278,
+      "line": 280,
       "symbol": "FWTextTagCollectionView.-insertTags:atIndex:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 281,
+      "line": 283,
       "symbol": "FWTextTagCollectionView.-insertTag:atIndex:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 283,
+      "line": 285,
       "symbol": "FWTextTagCollectionView.-insertTags:atIndex:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 286,
+      "line": 288,
       "symbol": "FWTextTagCollectionView.-removeTag:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 288,
+      "line": 290,
       "symbol": "FWTextTagCollectionView.-removeTagAtIndex:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 290,
+      "line": 292,
       "symbol": "FWTextTagCollectionView.-removeAllTags",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 293,
+      "line": 295,
       "symbol": "FWTextTagCollectionView.-setTagAtIndex:selected:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 296,
+      "line": 298,
       "symbol": "FWTextTagCollectionView.-setTagAtIndex:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 298,
+      "line": 300,
       "symbol": "FWTextTagCollectionView.-setTagsInRange:withConfig:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 301,
+      "line": 303,
       "symbol": "FWTextTagCollectionView.-getTagAtIndex:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 303,
+      "line": 305,
       "symbol": "FWTextTagCollectionView.-getTagsInRange:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 306,
+      "line": 308,
       "symbol": "FWTextTagCollectionView.-getConfigAtIndex:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 308,
+      "line": 310,
       "symbol": "FWTextTagCollectionView.-getConfigsInRange:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 311,
+      "line": 313,
       "symbol": "FWTextTagCollectionView.-allTags",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 313,
+      "line": 315,
       "symbol": "FWTextTagCollectionView.-allSelectedTags",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWTagCollectionView.h",
-      "line": 315,
+      "line": 317,
       "symbol": "FWTextTagCollectionView.-allNotSelectedTags",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -9403,91 +9410,91 @@
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 325,
+      "line": 331,
       "symbol": "UIScrollView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 420,
+      "line": 426,
       "symbol": "UIPanGestureRecognizer(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 435,
+      "line": 441,
       "symbol": "UIPageControl(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 444,
+      "line": 450,
       "symbol": "UISlider(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 456,
+      "line": 462,
       "symbol": "UISwitch(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 465,
+      "line": 471,
       "symbol": "UITextField(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 507,
+      "line": 513,
       "symbol": "UITextView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 555,
+      "line": 561,
       "symbol": "UITableView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 576,
+      "line": 582,
       "symbol": "UITableViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 591,
+      "line": 597,
       "symbol": "UICollectionView(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 603,
+      "line": 609,
       "symbol": "UICollectionViewCell(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 615,
+      "line": 621,
       "symbol": "UISearchBar(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWUIKit.h",
-      "line": 651,
+      "line": 657,
       "symbol": "UIViewController(FWUIKit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

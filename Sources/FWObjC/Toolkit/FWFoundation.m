@@ -1431,17 +1431,17 @@ static dispatch_semaphore_t fwStaticSemaphore;
 
 - (BOOL)fw_isFormatInteger
 {
-    return [self fw_isFormatRegex:@"^\\-?\\d+$"];
+    return [self fw_isFormatRegex:@"^\\-?([1-9]\\d*|0)$"];
 }
 
 - (BOOL)fw_isFormatNumber
 {
-    return [self fw_isFormatRegex:@"^\\-?\\d+\\.?\\d*$"];
+    return [self fw_isFormatRegex:@"^\\-?([1-9]\\d*|0)(\\.\\d+)?$"];
 }
 
 - (BOOL)fw_isFormatMoney
 {
-    return [self fw_isFormatRegex:@"^\\d+\\.?\\d{0,2}$"];
+    return [self fw_isFormatRegex:@"^([1-9]\\d*|0)(\\.\\d{1,2})?$"];
 }
 
 - (BOOL)fw_isFormatIdcard
