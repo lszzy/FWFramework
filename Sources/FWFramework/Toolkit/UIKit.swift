@@ -2472,8 +2472,8 @@ import AdSupport
         }
     }
     
-    /// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-    public func fw_resetGroupedStyle() {
+    /// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
+    public func fw_resetTableStyle() {
         self.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         self.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         self.sectionHeaderHeight = 0

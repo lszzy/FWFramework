@@ -57,12 +57,17 @@ struct TestSwiftUIListContent: View {
             Section {
                 ForEach(viewModel.items, id: \.hash) { item in
                     Text(item)
-                        .listSeparatorHidden()
+                        .padding(.leading, 16)
+                        .resetCellStyle(background: Color.randomColor)
                 }
             } header: {
                 Text("Header")
+                    .padding(.leading, 16)
+                    .resetHeaderStyle(background: Color.randomColor)
             } footer: {
-                Text("Footer")
+                Text("Footer\nFooter 2")
+                    .padding(.leading, 16)
+                    .resetHeaderStyle(background: Color.randomColor)
             }
         }
         .then({ list in
@@ -90,6 +95,7 @@ struct TestSwiftUIListContent: View {
             }
             return list.eraseToAnyView()
         })
+        .resetListStyle(background: Color.randomColor)
     }
     
 }

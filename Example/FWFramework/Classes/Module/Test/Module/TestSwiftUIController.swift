@@ -298,7 +298,7 @@ struct TestSwiftUIContent: View {
                 if tableView.app.tempObject != nil { return }
                 tableView.app.tempObject = true
                 
-                tableView.app.resetGroupedStyle()
+                tableView.app.resetTableStyle()
                 
                 tableView.app.setRefreshing {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
