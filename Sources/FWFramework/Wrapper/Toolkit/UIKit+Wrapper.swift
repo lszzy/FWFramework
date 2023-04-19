@@ -921,9 +921,9 @@ extension Wrapper where Base: UITableView {
         set { base.fw_estimatedLayout = newValue }
     }
     
-    /// 清空Grouped样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-    public func resetGroupedStyle() {
-        base.fw_resetGroupedStyle()
+    /// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
+    public func resetTableStyle() {
+        base.fw_resetTableStyle()
     }
     
     /// reloadData完成回调

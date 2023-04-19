@@ -125,6 +125,15 @@ extension View {
         }
     }
     
+    /// 值不为空时执行闭包并返回新的视图
+    public func then<T: View, Value>(_ value: Value?, body: (Self, Value) -> T) -> some View {
+        if let value = value {
+            return AnyView(body(self, value))
+        } else {
+            return AnyView(self)
+        }
+    }
+    
     /// 配置当前对象
     public func configure(_ body: (inout Self) -> Void) -> Self {
         var result = self

@@ -12,15 +12,58 @@ import SwiftUI
 @available(iOS 13.0, *)
 extension View {
     
-    /// 隐藏List分割线，需cell调用生效
-    public func listSeparatorHidden() -> some View {
-        if #available(iOS 15.0, *) {
-            return listRowSeparator(.hidden)
-        } else {
-            return introspectTableView { tableView in
-                tableView.separatorStyle = .none
+    /// 重置Cell样式，左对齐并隐藏分割线、去除多余间距，可指定背景色
+    public func resetCellStyle(background: Color? = nil) -> some View {
+        self.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .then { view in
+                if #available(iOS 15.0, *) {
+                    return view.listRowInsets(.zero)
+                        .listRowSeparator(.hidden)
+                        .eraseToAnyView()
+                } else {
+                    return view.listRowInsets(EdgeInsets(top: -1, leading: -1, bottom: -1, trailing: -1))
+                        .eraseToAnyView()
+                }
             }
-        }
+            .then(background, body: { view, color in
+                view.background(color)
+            })
+            .eraseToAnyView()
+    }
+    
+    /// 重置Header|Footer样式，左对齐并去除多余间距，可指定背景色
+    public func resetHeaderStyle(background: Color? = nil) -> some View {
+        self.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .listRowInsets(.zero)
+            .then(background, body: { view, color in
+                view.background(color)
+            })
+            .eraseToAnyView()
+    }
+    
+    /// 重置List样式，去除多余间距等，可指定背景色
+    public func resetListStyle(background: Color? = nil) -> some View {
+        self.then(background) { view, color in
+                if #available(iOS 16.0, *) {
+                    return view.scrollContentBackground(.hidden)
+                        .background(color)
+                        .eraseToAnyView()
+                } else {
+                    return view.background(color)
+                        .eraseToAnyView()
+                }
+            }
+            .then(UIDevice.fw_iosVersion < 16) { view in
+                view.introspectTableView { tableView in
+                    tableView.separatorStyle = .none
+                    tableView.separatorColor = .clear
+                    tableView.fw_resetTableStyle()
+                    if let background = background {
+                        tableView.backgroundColor = background.toUIColor()
+                    }
+                }
+            }
+            .eraseToAnyView()
     }
     
 }

@@ -15,7 +15,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableView.app.resetGroupedStyle()
+        tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
         tableView.register(TestRefreshCell.self, forCellReuseIdentifier: "Cell")
     }

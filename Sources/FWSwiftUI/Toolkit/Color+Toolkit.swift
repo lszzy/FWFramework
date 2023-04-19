@@ -43,6 +43,14 @@ extension Color {
         return Color(UIColor.fw.color(hexString: hexString, alpha: alpha))
     }
     
+    /// 获取透明度为1.0的RGB随机颜色
+    public static var randomColor: Color {
+        let red = arc4random() % 255
+        let green = arc4random() % 255
+        let blue = arc4random() % 255
+        return Color(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, opacity: 1.0)
+    }
+    
     // MARK: - UIColor
     /// Color转换为UIColor，失败时返回clear
     /// - Returns: UIColor
