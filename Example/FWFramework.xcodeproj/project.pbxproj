@@ -65,6 +65,7 @@
 		2FCDB4FC28E543820079A56C /* TestBannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FB28E543810079A56C /* TestBannerController.swift */; };
 		2FCDB4FE28E54B160079A56C /* TestPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FD28E54B160079A56C /* TestPopupController.swift */; };
 		2FCDB50028E571820079A56C /* TestSegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FF28E571820079A56C /* TestSegmentController.swift */; };
+		2FD9454129EF8248002C48F2 /* TestSwiftUIListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */; };
 		2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141A28D2D42C00985FBD /* TestThemeController.swift */; };
 		2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141C28D2FC5800985FBD /* TestAlertController.swift */; };
 		2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */; };
@@ -156,6 +157,7 @@
 		2FCDB4FB28E543810079A56C /* TestBannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBannerController.swift; sourceTree = "<group>"; };
 		2FCDB4FD28E54B160079A56C /* TestPopupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPopupController.swift; sourceTree = "<group>"; };
 		2FCDB4FF28E571820079A56C /* TestSegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSegmentController.swift; sourceTree = "<group>"; };
+		2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSwiftUIListController.swift; sourceTree = "<group>"; };
 		2FDA141A28D2D42C00985FBD /* TestThemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestThemeController.swift; sourceTree = "<group>"; };
 		2FDA141C28D2FC5800985FBD /* TestAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAlertController.swift; sourceTree = "<group>"; };
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				2F49EE2128FFA25D00F229BB /* TestStatisticalController.swift */,
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
+				2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
 				2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */,
 				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
@@ -772,6 +775,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */,
+				2FD9454129EF8248002C48F2 /* TestSwiftUIListController.swift in Sources */,
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
 				2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */,
 				2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */,
