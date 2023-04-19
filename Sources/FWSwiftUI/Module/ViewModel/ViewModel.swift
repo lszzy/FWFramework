@@ -8,8 +8,8 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-/// ViewModel基类，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit使用
-/// 注意：iOS13系统使用时不能继承ViewModel，需直接实现ObservableObject协议，否则\@Published监听不会触发View刷新
+/// ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit使用
+/// 注意：iOS13系统使用时不能继承实现ObservableObject协议的ViewModel类，需直接实现ObservableObject协议，否则\@Published监听不会触发View刷新
 ///
 /// \@State: 内部值传递，赋值时会触发View刷新
 /// \@Binding: 外部引用传递，实现向外传递引用
@@ -18,10 +18,6 @@ import SwiftUI
 /// \@EnvironmentObject: 全局环境对象，使用environmentObject方法绑定，View及其子层级可直接读取
 /// \@StateObject: View引用对象，生命周期和View保持一致，刷新时数据会保持直到View被销毁
 @available(iOS 13.0, *)
-open class ViewModel: ObservableObject {
-    
-    public init() {}
-    
-}
+public protocol ViewModel: ObservableObject {}
 
 #endif
