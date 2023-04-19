@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.9.0] - 2023-04-20
+
+### Added
+* Added SwiftUI to handle List and ScrollView compatible components
+* Added SwiftUI to handle Divider compatible components
+* Added SwiftUI input box configuration handle component
+* Added SwiftUI button highlighting and disabling style components
+* Modify SwiftUI's ViewModel component as a protocol
+* Fix SwiftUI refresh component, border rounded method bug
+
 ## [4.8.5] - 2023-04-17
 
 ### Added

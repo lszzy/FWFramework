@@ -18,7 +18,7 @@ UIImage * FWImageNamed(NSString *name) {
     return [UIImage fw_imageNamed:name];
 }
 
-static NSArray *FWInnerBundlePreferredScales() {
+static NSArray *FWInnerBundlePreferredScales(void) {
     static NSArray *scales;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
