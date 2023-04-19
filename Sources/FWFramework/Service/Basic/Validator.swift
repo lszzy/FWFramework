@@ -262,13 +262,13 @@ extension Validator where Value == String {
     public static var isWord: Self { .regex("^[A-Za-z0-9]+$") }
     
     /// 整数验证器
-    public static var isInteger: Self { .regex("^\\-?\\d+$") }
+    public static var isInteger: Self { .regex("^\\-?([1-9]\\d*|0)$") }
     
     /// 数字验证器
-    public static var isNumber: Self { .regex("^\\-?\\d+\\.?\\d*$") }
+    public static var isNumber: Self { .regex("^\\-?([1-9]\\d*|0)(\\.\\d+)?$") }
     
     /// 合法金额验证器，两位小数点
-    public static var isMoney: Self { .regex("^\\d+\\.?\\d{0,2}$") }
+    public static var isMoney: Self { .regex("^([1-9]\\d*|0)(\\.\\d{1,2})?$") }
     
     /// 中文验证器
     public static var isChinese: Self { .regex("^[\\x{4e00}-\\x{9fa5}]+$") }
