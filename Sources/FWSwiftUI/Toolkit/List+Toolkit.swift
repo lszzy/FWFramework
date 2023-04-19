@@ -6,6 +6,7 @@
 //
 
 #if canImport(SwiftUI)
+import UIKit
 import SwiftUI
 
 // MARK: - List+Toolkit
@@ -13,7 +14,11 @@ import SwiftUI
 extension View {
     
     /// 重置List样式，去除多余间距等，可指定背景色
-    public func resetListStyle(background: Color? = nil) -> some View {
+    /// - Parameters:
+    ///   - background: 自定义背景色，默认nil时不处理
+    ///   - isPlainStyle: 是否是plain样式，默认false，如果是则会自动清除iOS16+多余的Header顶部间距
+    /// - Returns: View
+    public func resetListStyle(background: Color? = nil, isPlainStyle: Bool = false) -> some View {
         self.then(background) { view, color in
                 if #available(iOS 16.0, *) {
                     return view.scrollContentBackground(.hidden)
@@ -24,6 +29,21 @@ extension View {
                         .eraseToAnyView()
                 }
             }
+            .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
+                view.introspectCollectionView { collectionView in
+                    guard !collectionView.fw_propertyBool(forName: "resetListStyle") else { return }
+                    collectionView.fw_setPropertyBool(true, forName: "resetListStyle")
+                    
+                    if #available(iOS 16.0, *) {
+                        guard collectionView.collectionViewLayout is UICollectionViewCompositionalLayout else { return }
+                        
+                        var layoutConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+                        layoutConfig.headerMode = .supplementary
+                        layoutConfig.headerTopPadding = 0
+                        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+                    }
+                }
+            })
             .then(UIDevice.fw_iosVersion < 16) { view in
                 view.introspectTableView { tableView in
                     if !tableView.fw_propertyBool(forName: "resetListStyle") {

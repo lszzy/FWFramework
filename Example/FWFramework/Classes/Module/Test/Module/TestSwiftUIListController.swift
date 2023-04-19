@@ -95,20 +95,18 @@ struct TestSwiftUIListContent: View {
             }
             return list.eraseToAnyView()
         })
-        .resetListStyle(background: Color.randomColor)
+        .resetListStyle(background: Color.randomColor, isPlainStyle: viewModel.style == 1)
         .listViewConfigure { scrollView in
             scrollView.app.setRefreshing {
-                print("refresing")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     scrollView.app.endRefreshing()
                 }
             }
             
             scrollView.app.setLoading {
-                print("loading")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     scrollView.app.endLoading()
-                    scrollView.app.shouldLoading = true
+                    scrollView.app.shouldLoading = viewModel.addItems()
                 }
             }
         }
@@ -128,6 +126,15 @@ class TestSwiftUIListModel: ViewModel {
         }
         return result
     }()
+    
+    func addItems() -> Bool {
+        var newItems = items
+        for i in 0 ..< 5 {
+            newItems.append("\(items.count + i + 1)")
+        }
+        items = newItems
+        return items.count < 30
+    }
     
 }
 
