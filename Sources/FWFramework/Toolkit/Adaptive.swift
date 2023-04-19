@@ -69,6 +69,8 @@ extension FW {
     public static var isNotchedScreen: Bool { return UIScreen.__fw_isNotchedScreen }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { return UIScreen.__fw_pixelOne }
+    /// 屏幕半个点的大小，解决0.5pt失真问题
+    public static var pointHalf: CGFloat { return UIScreen.__fw_pointHalf }
     /// 屏幕安全区域距离
     public static var safeAreaInsets: UIEdgeInsets { return UIScreen.__fw_safeAreaInsets }
 
@@ -257,6 +259,11 @@ extension Wrapper where Base: UIScreen {
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
         return Base.__fw_pixelOne
+    }
+    
+    /// 屏幕半个点的大小，解决0.5pt失真问题
+    public static var pointHalf: CGFloat {
+        return Base.__fw_pointHalf
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
