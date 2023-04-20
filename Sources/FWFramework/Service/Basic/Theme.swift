@@ -389,15 +389,12 @@ public class ThemeObject<T>: NSObject {
     // MARK: - Color
     /// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
     public static var fw_themeImageColor: UIColor {
-        get {
-            return UIImage.fw_staticThemeColor ?? UIColor.fw_themeLight(.black, dark: .white)
-        }
-        set {
-            UIImage.fw_staticThemeColor = newValue
-        }
+        return fw_themeImageColorConfiguration?() ??
+            UIColor.fw_themeLight(.black, dark: .white)
     }
     
-    private static var fw_staticThemeColor: UIColor?
+    /// 默认主题图片颜色配置句柄，默认nil
+    public static var fw_themeImageColorConfiguration: (() -> UIColor)?
     
 }
 
