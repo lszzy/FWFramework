@@ -21,8 +21,14 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["automatic", "plain", "grouped", "sidebar (14+)", "insetGrouped (14+)", "inset (14+)"], actionBlock: { index in
-                self?.contentView.viewModel.style = index
+            self?.app.showSheet(title: nil, message: nil, actions: ["automatic", "plain", "grouped", "sidebar (14+)", "insetGrouped (14+)", "inset (14+)", "beginRefreshing", "beginLoading"], actionBlock: { index in
+                if index < 6 {
+                    self?.contentView.viewModel.style = index
+                } else if index == 6 {
+                    self?.contentView.viewModel.beginRefreshing = true
+                } else if index == 7 {
+                    self?.contentView.viewModel.beginLoading = true
+                }
             })
         }
     }
@@ -96,20 +102,20 @@ struct TestSwiftUIListContent: View {
             return list.eraseToAnyView()
         })
         .resetListStyle(background: Color.randomColor, isPlainStyle: viewModel.style == 1)
-        .listViewConfigure { scrollView in
-            scrollView.app.setRefreshing {
+        .listViewRefreshing(
+            shouldBegin: $viewModel.beginRefreshing,
+            action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    scrollView.app.endRefreshing()
+                    completionHandler()
                 }
-            }
-            
-            scrollView.app.setLoading {
+            })
+        .listViewLoading(
+            shouldBegin: $viewModel.beginLoading,
+            action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    scrollView.app.endLoading()
-                    scrollView.app.shouldLoading = viewModel.addItems()
+                    completionHandler(!viewModel.addItems())
                 }
-            }
-        }
+            })
     }
     
 }
@@ -118,6 +124,9 @@ struct TestSwiftUIListContent: View {
 class TestSwiftUIListModel: ViewModel {
     
     @Published var style: Int = 0
+    
+    @Published var beginRefreshing = false
+    @Published var beginLoading = false
     
     @Published var items: [String] = {
         var result: [String] = []

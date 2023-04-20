@@ -331,6 +331,7 @@ import FWObjC
     @objc(__fw_triggerInfiniteScroll)
     public func fw_triggerInfiniteScroll() {
         if self.fw_infiniteScrollView?.isAnimating() ?? false { return }
+        if self.fw_infiniteScrollView?.finished ?? false { return }
         
         self.fw_infiniteScrollView?.state = .triggered
         self.fw_infiniteScrollView?.userTriggered = false

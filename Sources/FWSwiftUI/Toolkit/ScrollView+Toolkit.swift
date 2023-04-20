@@ -24,6 +24,63 @@ extension View {
         }
     }
     
+    /// 绑定ScrollView下拉刷新插件，action必须调用completionHandler
+    public func scrollViewRefreshing(
+        shouldBegin: Binding<Bool>? = nil,
+        action: @escaping (@escaping () -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return introspectScrollView { scrollView in
+            if !scrollView.fw_propertyBool(forName: "scrollViewRefreshing") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewRefreshing")
+                
+                scrollView.fw_setRefreshing { [weak scrollView] in
+                    action({
+                        scrollView?.fw_endRefreshing()
+                    })
+                }
+                customize?(scrollView)
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw_isRefreshing {
+                    scrollView.fw_beginRefreshing()
+                }
+            }
+        }
+    }
+    
+    /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
+    public func scrollViewLoading(
+        shouldBegin: Binding<Bool>? = nil,
+        action: @escaping (@escaping (Bool) -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return introspectScrollView { scrollView in
+            if !scrollView.fw_propertyBool(forName: "scrollViewLoading") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewLoading")
+                
+                scrollView.fw_setLoading { [weak scrollView] in
+                    action({ finished in
+                        scrollView?.fw_endLoading()
+                        scrollView?.fw_loadingFinished = finished
+                    })
+                }
+                customize?(scrollView)
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw_isLoading {
+                    scrollView.fw_beginLoading()
+                }
+            }
+        }
+    }
+    
 }
 
 #endif
