@@ -187,7 +187,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         
                         Button {
                             buttonVisible.toggle()
@@ -200,7 +200,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .removable(buttonRemovable)
                         
                         Button {
@@ -213,7 +213,7 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .visible(buttonVisible)
                         .buttonStyle(BorderlessButtonStyle())
                     }

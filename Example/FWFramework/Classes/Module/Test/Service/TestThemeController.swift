@@ -114,7 +114,7 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
         view.layer.addSublayer(layer)
         
         imageView = UIImageView(frame: CGRect(x: 20, y: 300, width: 50, height: 50))
-        UIImage.app.themeImageColor = AppTheme.textColor
+        UIImage.app.themeImageColorConfiguration = { AppTheme.textColor }
         imageView.app.themeImage = Self.testImage?.app.themeImage
         view.addSubview(imageView)
         

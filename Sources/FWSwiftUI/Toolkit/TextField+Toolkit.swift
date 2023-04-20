@@ -14,14 +14,14 @@ extension View {
     
     /// 配置TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
     public func textFieldConfigure(
-        autoFocus: Bool = false,
-        configuration: @escaping (UITextField) -> Void
+        _ configuration: @escaping (UITextField) -> Void,
+        autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return introspectTextField { textField in
             guard !textField.fw_propertyBool(forName: "textFieldConfigure") else { return }
             textField.fw_setPropertyBool(true, forName: "textFieldConfigure")
             
-            if autoFocus, let viewController = textField.fw_viewController {
+            if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textField] vc, state in
                     if state == .didAppear {
                         textField?.becomeFirstResponder()
@@ -37,14 +37,14 @@ extension View {
     
     /// 配置TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
     public func textViewConfigure(
-        autoFocus: Bool = false,
-        configuration: @escaping (UITextView) -> Void
+        _ configuration: @escaping (UITextView) -> Void,
+        autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return introspectTextView { textView in
             guard !textView.fw_propertyBool(forName: "textViewConfigure") else { return }
             textView.fw_setPropertyBool(true, forName: "textViewConfigure")
             
-            if autoFocus, let viewController = textView.fw_viewController {
+            if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textView] vc, state in
                     if state == .didAppear {
                         textView?.becomeFirstResponder()
