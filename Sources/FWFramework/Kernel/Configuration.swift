@@ -99,10 +99,10 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         // defaultAppearance.shadowColor = nil
         // NavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         
-        // 兼容iOS15 UITableView样式
-        // if #available(iOS 15.0, *) {
-        //     UITableView.appearance().sectionHeaderTopPadding = 0
-        // }
+        // 配置通用样式和兼容性
+        // UITableView.fw_resetTableStyle()
+        // UIButton.fw_highlightedAlpha = 0.5
+        // UIButton.fw_disabledAlpha = 0.3
         
         // 配置弹窗插件及默认文案
         // PluginManager.registerPlugin(AlertPlugin.self, with: AlertControllerImpl.self)
