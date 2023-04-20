@@ -147,7 +147,7 @@ struct TestSwiftUIContent: View {
     
     var body: some View {
         GeometryReader { proxy in
-            List {
+            ScrollView {
                 VStack(alignment: .center, spacing: 16) {
                     ZStack {
                         InvisibleView()
@@ -239,16 +239,19 @@ struct TestSwiftUIContent: View {
                     let viewController = TestSwiftUIController()
                     Navigator.topNavigationController?.pushViewController(viewController, animated: true)
                 }
+                .frame(height: 44)
                 
                 Button("Push HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.app.open(viewController)
                 }
+                .frame(height: 44)
                 
                 Button("Present HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.present(viewController, animated: true)
                 }
+                .frame(height: 44)
                 
                 ForEach(["Show Alert", "Show Toast", "Show Empty"], id: \.self) { title in
                     Button(title) {
@@ -260,6 +263,7 @@ struct TestSwiftUIContent: View {
                             showingEmpty = true
                         }
                     }
+                    .frame(height: 44)
                 }
                 
                 Button("Show Loading") {
@@ -268,6 +272,7 @@ struct TestSwiftUIContent: View {
                         showingLoading = false
                     }
                 }
+                .frame(height: 44)
                 
                 Button("Show Progress") {
                     showingProgress = true
@@ -279,10 +284,12 @@ struct TestSwiftUIContent: View {
                         }
                     }
                 }
+                .frame(height: 44)
                 
                 Button(viewModel.isEnglish ? "Language" : "多语言") {
                     viewModel.isEnglish = !viewModel.isEnglish
                 }
+                .frame(height: 44)
                 
                 ForEach(moreItems, id: \.self) { title in
                     Button {
@@ -290,33 +297,24 @@ struct TestSwiftUIContent: View {
                     } label: {
                         Text(title)
                     }
+                    .frame(height: 44)
                 }
             }
-            .listStyle(.plain)
             .captureContentOffset(in: $contentOffset)
-            .introspectTableView { tableView in
-                if tableView.app.tempObject != nil { return }
-                tableView.app.tempObject = true
-                
-                tableView.app.resetTableStyle()
-                
-                tableView.app.setRefreshing {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.app.endRefreshing()
-                        moreItems = []
-                    }
+            .scrollViewRefreshing(action: { completionHandler in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    moreItems = []
+                    completionHandler()
                 }
-                
-                tableView.app.setLoading {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.app.endLoading()
-                        tableView.app.shouldLoading = moreItems.count < 5
-                        var newItems = moreItems
-                        newItems.append("http://www.baidu.com")
-                        moreItems = newItems
-                    }
+            })
+            .scrollViewLoading(action: { completionHandler in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    var newItems = moreItems
+                    newItems.append("http://www.baidu.com")
+                    moreItems = newItems
+                    completionHandler(moreItems.count >= 5)
                 }
-            }
+            })
         }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in

@@ -612,6 +612,19 @@ extension View {
     public func introspectColorWell(customize: @escaping (UIColorWell) -> ()) -> some View {
         introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
     }
+    
+    /// Finds a `UICollectionView` for iOS16+ or `UITableView` for iOS15-  from a `SwiftUI.List`
+    public func introspectListView(customize: @escaping (UIScrollView) -> ()) -> some View {
+        if #available(iOS 16.0, *) {
+            return introspectCollectionView { collectionView in
+                customize(collectionView)
+            }
+        } else {
+            return introspectTableView { tableView in
+                customize(tableView)
+            }
+        }
+    }
 }
 
 #endif

@@ -96,19 +96,67 @@ extension View {
     public func listViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        if #available(iOS 16.0, *) {
-            return introspectCollectionView { collectionView in
-                guard !collectionView.fw_propertyBool(forName: "listViewConfigure") else { return }
-                collectionView.fw_setPropertyBool(true, forName: "listViewConfigure")
+        return introspectListView { scrollView in
+            guard !scrollView.fw_propertyBool(forName: "listViewConfigure") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "listViewConfigure")
+            
+            configuration(scrollView)
+        }
+    }
+    
+    /// 绑定List下拉刷新插件，action必须调用completionHandler
+    public func listViewRefreshing(
+        shouldBegin: Binding<Bool>? = nil,
+        action: @escaping (@escaping () -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return introspectListView { scrollView in
+            if !scrollView.fw_propertyBool(forName: "listViewRefreshing") {
+                scrollView.fw_setPropertyBool(true, forName: "listViewRefreshing")
                 
-                configuration(collectionView)
+                scrollView.fw_setRefreshing { [weak scrollView] in
+                    action({
+                        scrollView?.fw_endRefreshing()
+                    })
+                }
+                customize?(scrollView)
             }
-        } else {
-            return introspectTableView { tableView in
-                guard !tableView.fw_propertyBool(forName: "listViewConfigure") else { return }
-                tableView.fw_setPropertyBool(true, forName: "listViewConfigure")
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
                 
-                configuration(tableView)
+                if !scrollView.fw_isRefreshing {
+                    scrollView.fw_beginRefreshing()
+                }
+            }
+        }
+    }
+    
+    /// 绑定List上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
+    public func listViewLoading(
+        shouldBegin: Binding<Bool>? = nil,
+        action: @escaping (@escaping (Bool) -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return introspectListView { scrollView in
+            if !scrollView.fw_propertyBool(forName: "listViewLoading") {
+                scrollView.fw_setPropertyBool(true, forName: "listViewLoading")
+                
+                scrollView.fw_setLoading { [weak scrollView] in
+                    action({ finished in
+                        scrollView?.fw_endLoading()
+                        scrollView?.fw_loadingFinished = finished
+                    })
+                }
+                customize?(scrollView)
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw_isLoading {
+                    scrollView.fw_beginLoading()
+                }
             }
         }
     }
