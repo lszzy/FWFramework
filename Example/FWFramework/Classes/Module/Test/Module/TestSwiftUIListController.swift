@@ -64,16 +64,16 @@ struct TestSwiftUIListContent: View {
                 ForEach(viewModel.items, id: \.hash) { item in
                     Text(item)
                         .padding(.leading, 16)
-                        .resetCellStyle(background: Color.randomColor)
+                        .resetCellStyle(background: Color(AppTheme.cellColor))
                 }
             } header: {
                 Text("Header")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color.randomColor)
+                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
             } footer: {
                 Text("Footer\nFooter 2")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color.randomColor)
+                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
             }
         }
         .then({ list in
@@ -101,7 +101,7 @@ struct TestSwiftUIListContent: View {
             }
             return list.eraseToAnyView()
         })
-        .resetListStyle(background: Color.randomColor, isPlainStyle: viewModel.style == 1)
+        .resetListStyle(background: Color(AppTheme.tableColor), isPlainStyle: viewModel.style == 1)
         .listViewRefreshing(
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in
