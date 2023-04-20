@@ -275,6 +275,11 @@ open class WebView: WKWebView {
         navigationDelegate = delegateProxy
         uiDelegate = delegateProxy
         allowsBackForwardNavigationGestures = true
+        #if DEBUG
+        if #available(iOS 16.4, *) {
+            isInspectable = true
+        }
+        #endif
         
         addSubview(progressView)
         progressView.fw_pinEdges(excludingEdge: .bottom)
