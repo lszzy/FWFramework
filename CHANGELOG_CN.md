@@ -1,5 +1,16 @@
 # 更新日志
 
+## [4.10.0] - 2023-04-21
+
+### Added
+* 新增SwiftUI快捷绑定List、ScrollView刷新追加、空界面组件
+* 新增刷新组件showsFinishedView配置是否显示完成视图
+* 修改全局静态颜色配置方式为句柄配置
+* 修改SwiftUI输入框自动聚焦方法参数
+* 统一ViewControllerState和ViewState为ViewState枚举
+* 同步Introspect组件最新代码，兼容iOS16
+* 修复SwiftUI处理List、ScrollView兼容组件bug
+
 ## [4.9.0] - 2023-04-20
 
 ### Added

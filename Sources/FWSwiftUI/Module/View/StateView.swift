@@ -7,6 +7,9 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - StateView
 /// SwiftUI状态视图
