@@ -323,13 +323,20 @@ static NSMutableDictionary<NSString *, UIImage *> *fwStaticThemeImages = nil;
 
 + (UIColor *)fw_themeImageColor
 {
-    UIColor *color = objc_getAssociatedObject([UIImage class], @selector(fw_themeImageColor));
-    return color ?: [UIColor fw_themeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
+    if (self.fw_themeImageColorConfiguration) {
+        return self.fw_themeImageColorConfiguration();
+    }
+    return [UIColor fw_themeLight:[UIColor blackColor] dark:[UIColor whiteColor]];
 }
 
-+ (void)setFw_themeImageColor:(UIColor *)themeImageColor
++ (UIColor * (^)(void))fw_themeImageColorConfiguration
 {
-    objc_setAssociatedObject([UIImage class], @selector(fw_themeImageColor), themeImageColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return objc_getAssociatedObject([UIImage class], @selector(fw_themeImageColorConfiguration));
+}
+
++ (void)setFw_themeImageColorConfiguration:(UIColor * _Nonnull (^)(void))configuration
+{
+    objc_setAssociatedObject([UIImage class], @selector(fw_themeImageColorConfiguration), configuration, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (UIImage *)fw_themeImage

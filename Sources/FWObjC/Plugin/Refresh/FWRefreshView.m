@@ -728,6 +728,7 @@ static char UIScrollViewFWPullRefreshView;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.state = FWInfiniteScrollStateIdle;
         self.enabled = YES;
+        self.showsFinishedView = YES;
         
         self.viewForState = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
     }
@@ -955,7 +956,11 @@ static char UIScrollViewFWPullRefreshView;
 
 - (void)setFinished:(BOOL)finished {
     _finished = finished;
-    self.finishedView.hidden = !finished;
+    if (self.showsFinishedView) {
+        self.finishedView.hidden = !finished;
+    } else {
+        if (finished) [self resetScrollViewContentInset];
+    }
 }
 
 #pragma mark -
@@ -1088,6 +1093,7 @@ static char UIScrollViewFWInfiniteScrollView;
 
 - (void)fw_triggerInfiniteScroll {
     if ([self.fw_infiniteScrollView isAnimating]) return;
+    if (self.fw_infiniteScrollView.finished) return;
     
     self.fw_infiniteScrollView.state = FWInfiniteScrollStateTriggered;
     self.fw_infiniteScrollView.userTriggered = NO;
