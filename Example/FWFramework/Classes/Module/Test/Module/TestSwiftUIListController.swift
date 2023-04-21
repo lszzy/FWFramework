@@ -141,7 +141,7 @@ class TestSwiftUIListModel: ViewModel {
     func refresh() {
         var newItems: [String] = []
         for i in 0 ..< 5 {
-            newItems.append("\(items.count + i + 1)")
+            newItems.append("\(i + 1)")
         }
         items = newItems
     }
