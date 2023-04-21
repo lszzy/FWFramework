@@ -869,11 +869,16 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)setFinished:(BOOL)finished {
+    if (_finished == finished) return;
     _finished = finished;
     if (self.showsFinishedView) {
         self.finishedView.hidden = !finished;
     } else {
-        if (finished) [self resetScrollViewContentInset];
+        if (finished) {
+            [self resetScrollViewContentInset];
+        } else {
+            [self setScrollViewContentInsetForInfiniteScrolling];
+        }
     }
 }
 
