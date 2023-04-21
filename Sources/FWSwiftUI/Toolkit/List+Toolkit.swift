@@ -49,7 +49,9 @@ extension View {
                     if tableView.fw.property(forName: "resetListStyle") == nil {
                         tableView.fw.setProperty(NSNumber(value: true), forName: "resetListStyle")
                         
-                        tableView.fw.resetTableStyle()
+                        if #available(iOS 15.0, *) {
+                            tableView.sectionHeaderTopPadding = 0
+                        }
                     }
                     
                     tableView.separatorStyle = .none
