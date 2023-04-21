@@ -72,6 +72,14 @@ extension View {
                 customize?(scrollView)
             }
             
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                if scrollView.fw_loadingFinished != finished {
+                    scrollView.fw_loadingFinished = finished
+                }
+            }
+            
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
@@ -79,13 +87,20 @@ extension View {
                     scrollView.fw_beginLoading()
                 }
             }
-            
-            if let finished = loadingFinished?.wrappedValue {
-                loadingFinished?.wrappedValue = nil
-                
-                if scrollView.fw_loadingFinished != finished {
-                    scrollView.fw_loadingFinished = finished
+        }
+    }
+    
+    /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
+    public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+        return introspectScrollView { scrollView in
+            if isShowing {
+                if let customize = customize {
+                    customize(scrollView)
+                } else {
+                    scrollView.fw_showEmptyView()
                 }
+            } else {
+                scrollView.fw_hideEmptyView()
             }
         }
     }

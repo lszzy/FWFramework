@@ -40,16 +40,16 @@ public struct LoadingPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
+        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
+        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideLoading()
+        uiView.fw_hideLoading()
     }
 }
 
@@ -90,26 +90,26 @@ public struct ProgressPluginView: UIViewRepresentable {
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
+            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
         }
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
+            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
         } else {
-            uiView.fw.hideProgress()
+            uiView.fw_hideProgress()
         }
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideProgress()
+        uiView.fw_hideProgress()
     }
 }
 
 // MARK: - EmptyPluginView
-/// 空界面插件视图包装器
+/// 空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可
 @available(iOS 13.0, *)
 public struct EmptyPluginView: UIViewRepresentable {
     
@@ -175,16 +175,16 @@ public struct EmptyPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideEmptyView()
+        uiView.fw_hideEmptyView()
     }
 }
 
@@ -220,10 +220,10 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw.showEmptyView()
+                    viewController.fw_showEmptyView()
                 }
             } else {
-                viewController.fw.hideEmptyView()
+                viewController.fw_hideEmptyView()
             }
         }
     }
@@ -235,10 +235,10 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw.showLoading()
+                    viewController.fw_showLoading()
                 }
             } else {
-                viewController.fw.hideLoading()
+                viewController.fw_hideLoading()
             }
         }
     }
@@ -249,7 +249,7 @@ extension View {
             if isShowing {
                 customize(viewController)
             } else {
-                viewController.fw.hideProgress()
+                viewController.fw_hideProgress()
             }
         }
     }
@@ -268,7 +268,7 @@ extension View {
         }
     }
     
-    /// 显示空界面插件视图，需手工切换
+    /// 显示空界面插件视图，需手工切换。如果需要显示空界面时可滚动，放到滚动视图内部即可
     public func showEmptyView(
         _ isShowing: Bool = true,
         builder: (() -> EmptyPluginView)? = nil

@@ -53,7 +53,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.leftBarButtonItem?.customView = HostingView(rootView: leading)
             }
         } else if let leading = leading {
-            viewController.fw.leftBarItem = leading
+            viewController.fw_leftBarItem = leading
         }
         
         if let title = title as? AnyView {
@@ -79,7 +79,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.rightBarButtonItem?.customView = HostingView(rootView: trailing)
             }
         } else if let trailing = trailing {
-            viewController.fw.rightBarItem = trailing
+            viewController.fw_rightBarItem = trailing
         }
         
         viewController.navigationItem.leftBarButtonItem?.customView?.sizeToFit()
@@ -87,9 +87,9 @@ public struct NavigationBarConfiguration {
         viewController.navigationItem.rightBarButtonItem?.customView?.sizeToFit()
         
         if let appearance = appearance {
-            viewController.fw.navigationBarAppearance = appearance()
+            viewController.fw_navigationBarAppearance = appearance()
         } else if let style = style {
-            viewController.fw.navigationBarStyle = style
+            viewController.fw_navigationBarStyle = style
         } else if let background = background {
             let appearance = NavigationBarAppearance()
             if let color = background as? Color {
@@ -101,7 +101,7 @@ public struct NavigationBarConfiguration {
             } else if let transparent = background as? Bool {
                 appearance.backgroundTransparent = transparent
             }
-            viewController.fw.navigationBarAppearance = appearance
+            viewController.fw_navigationBarAppearance = appearance
         }
         
         customize?(viewController)
@@ -194,7 +194,7 @@ extension View {
         return introspect(selector: { introspectView in
             return Introspect.findHostingView(from: introspectView)
         }) { hostingView in
-            guard let hostingController = hostingView.fw.viewController else {
+            guard let hostingController = hostingView.fw_viewController else {
                 return
             }
             

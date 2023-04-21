@@ -40,7 +40,7 @@ extension Color {
     ///   - alpha: 透明度可选，默认1
     /// - Returns: Color
     public static func color(_ hexString: String, _ alpha: Double = 1) -> Color {
-        return Color(UIColor.fw.color(hexString: hexString, alpha: alpha))
+        return Color(UIColor.fw_color(hexString: hexString, alpha: alpha))
     }
     
     /// 几乎透明的颜色，常用于clear不起作用的场景
@@ -150,7 +150,7 @@ extension Color {
             return nil
         }
         
-        return UIColor.fw.color(hexString: hexString.trimmingCharacters(in: .newlines))
+        return UIColor.fw_color(hexString: hexString.trimmingCharacters(in: .newlines))
     }
     
 }
