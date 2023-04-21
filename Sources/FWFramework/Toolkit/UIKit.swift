@@ -2476,8 +2476,6 @@ import AdSupport
     public func fw_resetTableStyle() {
         self.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         self.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        self.sectionHeaderHeight = 0
-        self.sectionFooterHeight = 0
         if #available(iOS 15.0, *) {
             self.sectionHeaderTopPadding = 0
         }
