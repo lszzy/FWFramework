@@ -223,7 +223,9 @@ extension View {
                     viewController.fw_showEmptyView()
                 }
             } else {
-                viewController.fw_hideEmptyView()
+                if viewController.fw_hasEmptyView {
+                    viewController.fw_hideEmptyView()
+                }
             }
         }
     }
@@ -238,7 +240,9 @@ extension View {
                     viewController.fw_showLoading()
                 }
             } else {
-                viewController.fw_hideLoading()
+                if viewController.fw_isShowingLoading {
+                    viewController.fw_hideLoading()
+                }
             }
         }
     }
@@ -249,7 +253,9 @@ extension View {
             if isShowing {
                 customize(viewController)
             } else {
-                viewController.fw_hideProgress()
+                if viewController.fw_isShowingProgress {
+                    viewController.fw_hideProgress()
+                }
             }
         }
     }

@@ -177,7 +177,9 @@ extension View {
                     scrollView.fw_showEmptyView()
                 }
             } else {
-                scrollView.fw_hideEmptyView()
+                if scrollView.fw_hasEmptyView {
+                    scrollView.fw_hideEmptyView()
+                }
             }
         }
     }
