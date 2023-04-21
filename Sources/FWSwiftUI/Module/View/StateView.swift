@@ -65,8 +65,8 @@ public struct StateView: View {
                 ready(self)
             case .loading:
                 loading(self)
-            case .success(let model):
-                content(self, model)
+            case .success(let object):
+                content(self, object)
             case .failure(let error):
                 failure(self, error)
             }
