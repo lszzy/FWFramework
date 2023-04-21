@@ -72,7 +72,7 @@ extension View {
     }
     
     /// 同时设置边框和圆角
-    public func border<S: ShapeStyle>(_ content: S, width lineWidth: CGFloat = 1, cornerRadius: CGFloat) -> some View {
+    public func border<S: ShapeStyle>(_ content: S, width lineWidth: CGFloat, cornerRadius: CGFloat) -> some View {
         self.cornerRadius(cornerRadius)
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .circular)

@@ -147,7 +147,7 @@ NS_SWIFT_NAME(ThemeObject)
 #pragma mark - Color
 
 /// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
-@property (class, nonatomic, strong) UIColor *fw_themeImageColor NS_REFINED_FOR_SWIFT;
+@property (class, nonatomic, strong, readonly) UIColor *fw_themeImageColor NS_REFINED_FOR_SWIFT;
 
 /// 默认主题图片颜色配置句柄，默认nil
 @property (class, nonatomic, copy, nullable) UIColor * (^fw_themeImageColorConfiguration)(void) NS_REFINED_FOR_SWIFT;

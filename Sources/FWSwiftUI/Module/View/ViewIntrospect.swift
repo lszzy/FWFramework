@@ -367,19 +367,30 @@ public struct UIKitIntrospectionViewController<TargetViewControllerType: UIViewC
         let viewController = IntrospectionUIViewController()
         viewController.accessibilityLabel = "IntrospectionUIViewController<\(TargetViewControllerType.self)>"
         viewController.view.accessibilityLabel = "IntrospectionUIView<\(TargetViewControllerType.self)>"
+        (viewController.view as? IntrospectionUIView)?.moveToWindowHandler = { [weak viewController] in
+            guard let viewController = viewController else { return }
+            DispatchQueue.main.async {
+                guard let targetView = self.selector(viewController) else {
+                    return
+                }
+                self.customize(targetView)
+            }
+        }
         return viewController
     }
     
     public func updateUIViewController(
-        _ uiViewController: IntrospectionUIViewController,
+        _ viewController: IntrospectionUIViewController,
         context: UIViewControllerRepresentableContext<UIKitIntrospectionViewController>
     ) {
-        DispatchQueue.main.async {
-            guard let targetView = self.selector(uiViewController) else {
-                return
-            }
-            self.customize(targetView)
+        guard let targetView = self.selector(viewController) else {
+            return
         }
+        self.customize(targetView)
+    }
+    
+    public static func dismantleUIViewController(_ viewController: IntrospectionUIViewController, coordinator: ()) {
+        (viewController.view as? IntrospectionUIView)?.moveToWindowHandler = nil
     }
 }
 
@@ -387,6 +398,8 @@ public struct UIKitIntrospectionViewController<TargetViewControllerType: UIViewC
 /// Introspection UIView that is inserted alongside the target view.
 @available(iOS 13.0, *)
 public class IntrospectionUIView: UIView {
+    
+    var moveToWindowHandler: (() -> Void)?
     
     required init() {
         super.init(frame: .zero)
@@ -397,6 +410,11 @@ public class IntrospectionUIView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func didMoveToWindow() {
+        super.didMoveToWindow()
+        moveToWindowHandler?()
     }
 }
 
@@ -423,6 +441,15 @@ public struct UIKitIntrospectionView<TargetViewType: UIView>: UIViewRepresentabl
     public func makeUIView(context: UIViewRepresentableContext<UIKitIntrospectionView>) -> IntrospectionUIView {
         let view = IntrospectionUIView()
         view.accessibilityLabel = "IntrospectionUIView<\(TargetViewType.self)>"
+        view.moveToWindowHandler = { [weak view] in
+            guard let view = view else { return }
+            DispatchQueue.main.async {
+                guard let targetView = self.selector(view) else {
+                    return
+                }
+                self.customize(targetView)
+            }
+        }
         return view
     }
 
@@ -432,15 +459,17 @@ public struct UIKitIntrospectionView<TargetViewType: UIView>: UIViewRepresentabl
     /// Finding the target view fails silently if the selector yield no result. This happens when `updateUIView`
     /// gets called when the introspection view gets removed from the hierarchy.
     public func updateUIView(
-        _ uiView: IntrospectionUIView,
+        _ view: IntrospectionUIView,
         context: UIViewRepresentableContext<UIKitIntrospectionView>
     ) {
-        DispatchQueue.main.async {
-            guard let targetView = self.selector(uiView) else {
-                return
-            }
-            self.customize(targetView)
+        guard let targetView = self.selector(view) else {
+            return
         }
+        self.customize(targetView)
+    }
+    
+    public static func dismantleUIView(_ view: IntrospectionUIView, coordinator: ()) {
+        view.moveToWindowHandler = nil
     }
 }
 
@@ -522,6 +551,17 @@ extension View {
         ))
     }
     
+    /// Finds a `UISearchController` from a `SwiftUI.View` with a `.searchable` modifier
+    @available(iOS 15, *)
+    public func introspectSearchController(customize: @escaping (UISearchController) -> ()) -> some View {
+        introspectNavigationController { navigationController in
+            let navigationBar = navigationController.navigationBar
+            if let searchController = navigationBar.topItem?.searchController {
+                customize(searchController)
+            }
+        }
+    }
+    
     /// Finds a `UITableView` from a `SwiftUI.List`, or `SwiftUI.List` child.
     public func introspectTableView(customize: @escaping (UITableView) -> ()) -> some View {
         introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: customize)
@@ -554,17 +594,22 @@ extension View {
     /// Finds the horizontal `UIScrollView` from a `SwiftUI.TabBarView` with tab style `SwiftUI.PageTabViewStyle`.
     ///
     /// Customize is called with a `UICollectionView` wrapper, and the horizontal `UIScrollView`.
-    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, *)
-    @available(macOS, unavailable)
+    @available(iOS 14, tvOS 14, *)
     public func introspectPagedTabView(customize: @escaping (UICollectionView, UIScrollView) -> ()) -> some View {
-        return introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: { (collectionView: UICollectionView) in
-            for subview in collectionView.subviews {
-                if NSStringFromClass(type(of: subview)).contains("EmbeddedScrollView"), let scrollView = subview as? UIScrollView {
-                    customize(collectionView, scrollView)
-                    break
+        if #available(iOS 16, *) {
+            return introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: { (collectionView: UICollectionView) in
+                customize(collectionView, collectionView)
+            })
+        } else {
+            return introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: { (collectionView: UICollectionView) in
+                for subview in collectionView.subviews {
+                    if NSStringFromClass(type(of: subview)).contains("EmbeddedScrollView"), let scrollView = subview as? UIScrollView {
+                        customize(collectionView, scrollView)
+                        break
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     /// Finds a `UITextField` from a `SwiftUI.TextField`
@@ -612,6 +657,32 @@ extension View {
     public func introspectColorWell(customize: @escaping (UIColorWell) -> ()) -> some View {
         introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
     }
+    
+    /// Finds a `UICollectionView` for iOS16+ or `UITableView` for iOS15-  from a `SwiftUI.List`
+    public func introspectListView(customize: @escaping (UIScrollView) -> ()) -> some View {
+        if #available(iOS 16.0, *) {
+            return introspectCollectionView { collectionView in
+                customize(collectionView)
+            }
+        } else {
+            return introspectTableView { tableView in
+                customize(tableView)
+            }
+        }
+    }
 }
 
+#endif
+
+#if canImport(MapKit)
+import MapKit
+
+@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
+extension View {
+    /// Finds an `MKMapView` from a `SwiftUI.Map`
+    @available(iOS 14, tvOS 14, macOS 11, *)
+    public func introspectMapView(customize: @escaping (MKMapView) -> ()) -> some View {
+        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
+    }
+}
 #endif

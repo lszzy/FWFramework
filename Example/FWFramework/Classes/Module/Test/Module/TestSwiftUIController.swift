@@ -189,7 +189,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         
                         Button {
                             buttonVisible.toggle()
@@ -202,7 +202,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .removable(buttonRemovable)
                         
                         Button {
@@ -215,21 +215,22 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .visible(buttonVisible)
                         .buttonStyle(BorderlessButtonStyle())
                     }
                 }
                 
                 Button {
-                    Router.openURL("https://www.baidu.com")
-                    
                     viewContext.object = "Object"
                     viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
                     viewContext.send()
+                    
+                    let vc = TestSwiftUIListController()
+                    Navigator.push(vc, animated: true)
                 } label: {
                     ViewWrapper {
-                        Text("Open Router")
+                        Text("Open List")
                             .wrappedHostingView()
                     }
                     .frame(height: 44)
