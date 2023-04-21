@@ -123,11 +123,15 @@ extension Wrapper where Base: UIImage {
     }
 
     // MARK: - Color
-
     /// 默认主题图片颜色，未设置时为浅色=>黑色，深色=>白色
     public static var themeImageColor: UIColor {
-        get { return Base.__fw_themeImageColor }
-        set { Base.__fw_themeImageColor = newValue }
+        return Base.__fw_themeImageColor
+    }
+    
+    /// 默认主题图片颜色配置句柄，默认nil
+    public static var themeImageColorConfiguration: (() -> UIColor)? {
+        get { Base.__fw_themeImageColorConfiguration }
+        set { Base.__fw_themeImageColorConfiguration = newValue }
     }
     
 }

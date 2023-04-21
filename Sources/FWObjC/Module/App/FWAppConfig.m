@@ -6,14 +6,15 @@
 //
 
 #import "FWAppConfig.h"
+#import "FWFramework.h"
 
 @implementation FWAppConfigDefaultTemplate
 
 - (void)applyConfiguration {
     // 启用全局导航栏返回拦截
-    // [UINavigationController.fw enablePopProxy];
+    // [UINavigationController fw_enablePopProxy];
     // 启用全局导航栏转场优化
-    // [UINavigationController.fw enableBarTransition];
+    // [UINavigationController fw_enableBarTransition];
     
     // 设置默认导航栏样式
     // FWNavigationBarAppearance *defaultAppearance = [FWNavigationBarAppearance new];
@@ -25,10 +26,10 @@
     // defaultAppearance.shadowColor = nil;
     // [FWNavigationBarAppearance setAppearance:defaultAppearance forStyle:FWNavigationBarStyleDefault];
     
-    // 兼容iOS15 UITableView样式
-    // if (@available(iOS 15.0, *)) {
-    //    UITableView.appearance.sectionHeaderTopPadding = 0;
-    // }
+    // 配置通用样式和兼容性
+    // [UITableView fw_resetTableStyle];
+    // UIButton.fw_highlightedAlpha = 0.5;
+    // UIButton.fw_disabledAlpha = 0.3;
     
     // 配置弹窗插件及默认文案
     // [FWPluginManager registerPlugin:@protocol(FWAlertPlugin) withObject:[FWAlertControllerPlugin class]];
