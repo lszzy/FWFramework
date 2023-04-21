@@ -13,7 +13,7 @@ import UIKit
 /// 使用方式如下，代码示例详见WebView：
 /// 1. 应用启动完成时配置全局重用初始化句柄并调用enqueueReusableView(with: ReusableViewType.self)预加载第一个视图
 /// 2. 重用视图初始化时调用：let reusableView = ReusableViewPool.shared.dequeueReusableView(with: ReusableViewType.self, viewHolder: self)
-/// 3. 在需要预加载的场景中调用：reusableView.fw.preloadReusableView() 预加载下一个视图
+/// 3. 在需要预加载的场景中调用：reusableView.fw_preloadReusableView() 预加载下一个视图
 /// 4. 在需要回收到缓存池时(一般控制器deinit)调用：ReusableViewPool.shared.enqueueReusableView(reusableView)
 open class ReusableViewPool: NSObject {
     

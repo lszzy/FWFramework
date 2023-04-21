@@ -85,7 +85,7 @@ extension Wrapper where Base: NSObject {
     /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
-    /// NSObject.fw.swizzleMethod(
+    /// NSObject.fw_swizzleMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad)
     /// ) { (store: SwizzleStore
@@ -118,7 +118,7 @@ extension Wrapper where Base: NSObject {
     /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
-    /// NSObject.fw.swizzleInstanceMethod(
+    /// NSObject.fw_swizzleInstanceMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad),
     ///     methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,

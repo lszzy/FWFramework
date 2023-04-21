@@ -91,7 +91,7 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         
         // 设置默认导航栏样式
         // let defaultAppearance = NavigationBarAppearance()
-        // defaultAppearance.foregroundColor = UIColor.fw.color(hex: 0x111111)
+        // defaultAppearance.foregroundColor = UIColor.fw_color(hex: 0x111111)
         // 1. 指定导航栏背景色
         // defaultAppearance.backgroundColor = UIColor.white
         // 2. 设置导航栏样式全透明

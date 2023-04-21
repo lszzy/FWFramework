@@ -89,14 +89,14 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)), arguments: [application, deviceToken])
         /*
-        UIDevice.fw.setDeviceTokenData(deviceToken)
+        UIDevice.fw_setDeviceTokenData(deviceToken)
          */
     }
     
     open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFailToRegisterForRemoteNotificationsWithError:)), arguments: [application, error])
         /*
-        UIDevice.fw.setDeviceTokenData(nil)
+        UIDevice.fw_setDeviceTokenData(nil)
          */
     }
     

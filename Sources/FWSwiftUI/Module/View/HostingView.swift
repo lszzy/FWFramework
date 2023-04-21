@@ -62,7 +62,7 @@ open class HostingView<Content: View>: UIView {
                 
         addSubview(contentHostingController.view)
         contentHostingController.view.backgroundColor = .clear
-        contentHostingController.view.fw.pinEdges()
+        contentHostingController.view.fw_pinEdges()
     }
     
     public required init?(coder: NSCoder) {
@@ -72,14 +72,14 @@ open class HostingView<Content: View>: UIView {
     override open func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: superview)
         
-        let viewController = superview?.fw.viewController
+        let viewController = superview?.fw_viewController
         contentHostingController._navigationController = viewController?.navigationController ?? (viewController as? UINavigationController)
     }
     
     override open func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        let viewController = superview?.fw.viewController
+        let viewController = superview?.fw_viewController
         contentHostingController._navigationController = viewController?.navigationController ?? (viewController as? UINavigationController)
     }
     

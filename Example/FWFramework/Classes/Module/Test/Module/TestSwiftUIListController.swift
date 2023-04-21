@@ -70,10 +70,12 @@ struct TestSwiftUIListContent: View {
                 Text("Header")
                     .padding(.leading, 16)
                     .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .removable(viewModel.items.isEmpty)
             } footer: {
                 Text("Footer\nFooter 2")
                     .padding(.leading, 16)
                     .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .removable(viewModel.items.isEmpty)
             }
         }
         .then({ list in
@@ -106,6 +108,7 @@ struct TestSwiftUIListContent: View {
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    viewModel.refresh()
                     completionHandler()
                 }
             })
@@ -116,6 +119,11 @@ struct TestSwiftUIListContent: View {
                     completionHandler(!viewModel.addItems())
                 }
             })
+        .showListEmpty(viewModel.items.isEmpty) { scrollView in
+            scrollView.app.showEmptyView(text: "暂无数据") { _ in
+                viewModel.beginRefreshing = true
+            }
+        }
     }
     
 }
@@ -128,13 +136,15 @@ class TestSwiftUIListModel: ViewModel {
     @Published var beginRefreshing = false
     @Published var beginLoading = false
     
-    @Published var items: [String] = {
-        var result: [String] = []
-        for i in 0 ..< 20 {
-            result.append("\(i + 1)")
+    @Published var items: [String] = []
+    
+    func refresh() {
+        var newItems: [String] = []
+        for i in 0 ..< 5 {
+            newItems.append("\(items.count + i + 1)")
         }
-        return result
-    }()
+        items = newItems
+    }
     
     func addItems() -> Bool {
         var newItems = items
