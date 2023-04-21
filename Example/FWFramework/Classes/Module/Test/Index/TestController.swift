@@ -11,7 +11,7 @@ import Darwin
 
 @objcMembers class TestController: UIViewController {
     
-    var testData: [Any] = [
+    var testData: [[Any]] = [
         ["Kernel", [
             ["Router", "TestRouterController"],
             ["Navigator", "TestWorkflowController"],

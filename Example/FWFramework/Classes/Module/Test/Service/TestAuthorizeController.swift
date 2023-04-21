@@ -26,7 +26,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
     }
    
     func setupSubviews() {
-        tableData.addObjects(from: [
+        let objects: [[Any]] = [
             ["定位", AuthorizeType.locationWhenInUse],
             ["后台定位", AuthorizeType.locationAlways],
             ["麦克风", AuthorizeType.microphone],
@@ -38,7 +38,8 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
             ["音乐", AuthorizeType.appleMusic],
             ["通知", AuthorizeType.notifications],
             ["广告追踪", AuthorizeType.tracking],
-        ])
+        ]
+        tableData.addObjects(from: objects)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
