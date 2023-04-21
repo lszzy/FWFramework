@@ -37,6 +37,7 @@ extension View {
                         guard collectionView.collectionViewLayout is UICollectionViewCompositionalLayout else { return }
                         
                         var layoutConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+                        layoutConfig.showsSeparators = false
                         layoutConfig.headerMode = .supplementary
                         layoutConfig.headerTopPadding = 0
                         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
