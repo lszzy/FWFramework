@@ -114,6 +114,7 @@ struct TestSwiftUIListContent: View {
             })
         .listViewLoading(
             shouldBegin: $viewModel.beginLoading,
+            shouldLoading: !viewModel.items.isEmpty,
             action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completionHandler(!viewModel.addItems())
