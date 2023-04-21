@@ -14,8 +14,11 @@ import FWFramework
 @available(iOS 13.0, *)
 class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
     
+    var style: Int = 0
+    
     private lazy var contentView: TestSwiftUIListContent = {
         let result = TestSwiftUIListContent()
+        result.viewModel.style = style
         return result
     }()
     
@@ -23,7 +26,9 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["automatic", "plain", "grouped", "sidebar (14+)", "insetGrouped (14+)", "inset (14+)", "beginRefreshing", "beginLoading"], actionBlock: { index in
                 if index < 6 {
-                    self?.contentView.viewModel.style = index
+                    let vc = TestSwiftUIListController()
+                    vc.style = index
+                    Navigator.push(vc, pop: 1, animated: false)
                 } else if index == 6 {
                     self?.contentView.viewModel.beginRefreshing = true
                 } else if index == 7 {
@@ -72,7 +77,7 @@ struct TestSwiftUIListContent: View {
                     .resetHeaderStyle(background: Color(AppTheme.cellColor))
                     .removable(viewModel.items.isEmpty)
             } footer: {
-                Text("Footer\nFooter 2")
+                Text("Footer")
                     .padding(.leading, 16)
                     .resetHeaderStyle(background: Color(AppTheme.cellColor))
                     .removable(viewModel.items.isEmpty)
@@ -132,7 +137,7 @@ struct TestSwiftUIListContent: View {
 @available(iOS 13.0, *)
 class TestSwiftUIListModel: ViewModel {
     
-    @Published var style: Int = 0
+    var style: Int = 0
     
     @Published var beginRefreshing = false
     @Published var beginLoading = false
