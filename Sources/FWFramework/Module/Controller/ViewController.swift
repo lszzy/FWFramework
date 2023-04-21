@@ -10,14 +10,6 @@ import UIKit
 import FWObjC
 #endif
 
-/// 视图控制器状态枚举
-public enum ViewControllerState {
-    case ready
-    case loading
-    case success(Any? = nil)
-    case failure(Error? = nil)
-}
-
 extension CollectionViewControllerProtocol where Self: UIViewController {
     /// 集合视图，默认不显示滚动条
     @nonobjc public var collectionView: UICollectionView {

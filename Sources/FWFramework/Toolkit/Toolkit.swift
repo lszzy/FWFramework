@@ -680,6 +680,47 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - UIView+Toolkit
+/// 视图状态枚举，兼容UIKit和SwiftUI
+public enum ViewState: Equatable {
+    
+    case ready
+    case loading
+    case success(Any? = nil)
+    case failure(Error? = nil)
+    
+    /// 获取成功状态的对象，其他状态返回nil
+    public var object: Any? {
+        if case .success(let object) = self {
+            return object
+        }
+        return nil
+    }
+    
+    /// 获取失败状态的错误，其他状态返回nil
+    public var error: Error? {
+        if case .failure(let error) = self {
+            return error
+        }
+        return nil
+    }
+    
+    /// 实现Equatable协议方法，仅比较状态，不比较值
+    public static func == (lhs: ViewState, rhs: ViewState) -> Bool {
+        switch lhs {
+        case .ready:
+            if case .ready = rhs { return true }
+        case .loading:
+            if case .loading = rhs { return true }
+        case .success(_):
+            if case .success(_) = rhs { return true }
+        case .failure(_):
+            if case .failure(_) = rhs { return true }
+        }
+        return false
+    }
+    
+}
+
 extension Wrapper where Base: UIView {
     
     /// 顶部纵坐标，frame.origin.y

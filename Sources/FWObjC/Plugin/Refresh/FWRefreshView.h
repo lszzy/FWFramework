@@ -97,6 +97,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 @property (nonatomic, assign) CGFloat indicatorPadding;
 @property (nonatomic, assign) BOOL finished;
+@property (nonatomic, assign) BOOL showsFinishedView;
 @property (nonatomic, strong, readonly) UILabel *finishedLabel;
 @property (nonatomic, strong) UIView *finishedView;
 @property (nonatomic, assign) CGFloat finishedPadding;

@@ -242,6 +242,11 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.navigationDelegate = self.delegateProxy;
     self.UIDelegate = self.delegateProxy;
     self.allowsBackForwardNavigationGestures = YES;
+    #ifdef DEBUG
+    if (@available(iOS 16.4, *)) {
+        self.inspectable = YES;
+    }
+    #endif
     
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
     self.progressView.trackTintColor = [UIColor clearColor];
