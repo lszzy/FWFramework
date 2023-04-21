@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.10.0] - 2023-04-21
+
+### Added
+* Added SwiftUI shortcut binding List, ScrollView refresh and append, empty interface components
+* New refresh component showsFinishedView configures whether to display the finished view
+* Modify the global static color configuration method to handle configuration
+* Modify the parameters of the SwiftUI input box auto-focus method
+* Unify ViewControllerState and ViewState as ViewState enumeration
+* Synchronize the latest code of the Introspect component, compatible with iOS16
+* Fix SwiftUI processing List, ScrollView compatible components bug
+
 ## [4.9.0] - 2023-04-20
 
 ### Added
