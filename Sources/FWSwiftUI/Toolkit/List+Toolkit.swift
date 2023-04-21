@@ -65,6 +65,14 @@ extension View {
     public func resetHeaderStyle(background: Color? = nil) -> some View {
         self.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .listRowInsets(.zero)
+            .then({ view in
+                if #available(iOS 15.0, *) {
+                    return view.listSectionSeparator(.hidden)
+                        .eraseToAnyView()
+                } else {
+                    return view.eraseToAnyView()
+                }
+            })
             .then(background, body: { view, color in
                 view.background(color)
             })
