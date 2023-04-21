@@ -55,6 +55,7 @@ extension View {
     /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
     public func scrollViewLoading(
         shouldBegin: Binding<Bool>? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
         action: @escaping (@escaping (Bool) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
@@ -76,6 +77,14 @@ extension View {
                 
                 if !scrollView.fw_isLoading {
                     scrollView.fw_beginLoading()
+                }
+            }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                if scrollView.fw_loadingFinished != finished {
+                    scrollView.fw_loadingFinished = finished
                 }
             }
         }
