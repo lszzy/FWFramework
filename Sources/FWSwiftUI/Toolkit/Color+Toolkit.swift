@@ -43,6 +43,11 @@ extension Color {
         return Color(UIColor.fw.color(hexString: hexString, alpha: alpha))
     }
     
+    /// 几乎透明的颜色，常用于clear不起作用的场景
+    public static var almostClear: Color {
+        return Color.black.opacity(0.0001)
+    }
+    
     /// 获取透明度为1.0的RGB随机颜色
     public static var randomColor: Color {
         let red = arc4random() % 255

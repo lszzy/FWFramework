@@ -37,6 +37,7 @@ extension View {
                         guard collectionView.collectionViewLayout is UICollectionViewCompositionalLayout else { return }
                         
                         var layoutConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+                        layoutConfig.showsSeparators = false
                         layoutConfig.headerMode = .supplementary
                         layoutConfig.headerTopPadding = 0
                         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
@@ -48,7 +49,9 @@ extension View {
                     if tableView.fw.property(forName: "resetListStyle") == nil {
                         tableView.fw.setProperty(NSNumber(value: true), forName: "resetListStyle")
                         
-                        tableView.fw.resetTableStyle()
+                        if #available(iOS 15.0, *) {
+                            tableView.sectionHeaderTopPadding = 0
+                        }
                     }
                     
                     tableView.separatorStyle = .none
@@ -65,6 +68,14 @@ extension View {
     public func resetHeaderStyle(background: Color? = nil) -> some View {
         self.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .listRowInsets(.zero)
+            .then({ view in
+                if #available(iOS 15.0, *) {
+                    return view.listSectionSeparator(.hidden)
+                        .eraseToAnyView()
+                } else {
+                    return view.eraseToAnyView()
+                }
+            })
             .then(background, body: { view, color in
                 view.background(color)
             })
@@ -96,32 +107,91 @@ extension View {
     public func listViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        if #available(iOS 16.0, *) {
-            return introspectCollectionView { collectionView in
-                guard collectionView.fw.property(forName: "listViewConfigure") == nil else { return }
-                collectionView.fw.setProperty(NSNumber(value: true), forName: "listViewConfigure")
+        return introspectListView { scrollView in
+            guard scrollView.fw.property(forName: "listViewConfigure") == nil else { return }
+            scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewConfigure")
+            
+            configuration(scrollView)
+        }
+    }
+    
+    /// 绑定List下拉刷新插件，action必须调用completionHandler
+    public func listViewRefreshing(
+        shouldBegin: Binding<Bool>? = nil,
+        action: @escaping (@escaping () -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return introspectListView { scrollView in
+            if scrollView.fw.property(forName: "listViewRefreshing") == nil {
+                scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewRefreshing")
                 
-                configuration(collectionView)
+                scrollView.fw.setRefreshing { [weak scrollView] in
+                    action({
+                        scrollView?.fw.endRefreshing()
+                    })
+                }
+                customize?(scrollView)
             }
-        } else {
-            return introspectTableView { tableView in
-                guard tableView.fw.property(forName: "listViewConfigure") == nil else { return }
-                tableView.fw.setProperty(NSNumber(value: true), forName: "listViewConfigure")
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
                 
-                configuration(tableView)
+                if !scrollView.fw.isRefreshing {
+                    scrollView.fw.beginRefreshing()
+                }
             }
         }
     }
     
-    /// 配置ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
-    public func scrollViewConfigure(
-        _ configuration: @escaping (UIScrollView) -> Void
+    /// 绑定List上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
+    public func listViewLoading(
+        shouldBegin: Binding<Bool>? = nil,
+        shouldLoading: Bool? = nil,
+        action: @escaping (@escaping (Bool) -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectScrollView { scrollView in
-            guard scrollView.fw.property(forName: "scrollViewConfigure") == nil else { return }
-            scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewConfigure")
+        return introspectListView { scrollView in
+            if scrollView.fw.property(forName: "listViewLoading") == nil {
+                scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewLoading")
+                
+                scrollView.fw.setLoading { [weak scrollView] in
+                    action({ finished in
+                        scrollView?.fw.endLoading()
+                        scrollView?.fw.loadingFinished = finished
+                    })
+                }
+                customize?(scrollView)
+            }
             
-            configuration(scrollView)
+            if let shouldLoading = shouldLoading,
+               scrollView.fw.shouldLoading != shouldLoading {
+                scrollView.fw.shouldLoading = shouldLoading
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw.isLoading {
+                    scrollView.fw.beginLoading()
+                }
+            }
+        }
+    }
+    
+    /// 显示List空界面插件，需手工切换，空界面显示时也可滚动
+    public func showListEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+        return introspectListView { scrollView in
+            if isShowing {
+                if let customize = customize {
+                    customize(scrollView)
+                } else {
+                    scrollView.fw.showEmptyView()
+                }
+            } else {
+                if scrollView.fw.hasEmptyView {
+                    scrollView.fw.hideEmptyView()
+                }
+            }
         }
     }
     

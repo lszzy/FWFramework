@@ -109,7 +109,7 @@ public struct ProgressPluginView: UIViewRepresentable {
 }
 
 // MARK: - EmptyPluginView
-/// 空界面插件视图包装器
+/// 空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可
 @available(iOS 13.0, *)
 public struct EmptyPluginView: UIViewRepresentable {
     
@@ -223,7 +223,9 @@ extension View {
                     viewController.fw.showEmptyView()
                 }
             } else {
-                viewController.fw.hideEmptyView()
+                if viewController.fw.hasEmptyView {
+                    viewController.fw.hideEmptyView()
+                }
             }
         }
     }
@@ -238,7 +240,9 @@ extension View {
                     viewController.fw.showLoading()
                 }
             } else {
-                viewController.fw.hideLoading()
+                if viewController.fw.isShowingLoading {
+                    viewController.fw.hideLoading()
+                }
             }
         }
     }
@@ -249,7 +253,9 @@ extension View {
             if isShowing {
                 customize(viewController)
             } else {
-                viewController.fw.hideProgress()
+                if viewController.fw.isShowingProgress {
+                    viewController.fw.hideProgress()
+                }
             }
         }
     }
@@ -268,7 +274,7 @@ extension View {
         }
     }
     
-    /// 显示空界面插件视图，需手工切换
+    /// 显示空界面插件视图，需手工切换。如果需要显示空界面时可滚动，放到滚动视图内部即可
     public func showEmptyView(
         _ isShowing: Bool = true,
         builder: (() -> EmptyPluginView)? = nil

@@ -149,7 +149,7 @@ struct TestSwiftUIContent: View {
     
     var body: some View {
         GeometryReader { proxy in
-            List {
+            ScrollView {
                 VStack(alignment: .center, spacing: 16) {
                     ZStack {
                         InvisibleView()
@@ -189,7 +189,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         
                         Button {
                             buttonVisible.toggle()
@@ -202,7 +202,7 @@ struct TestSwiftUIContent: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .removable(buttonRemovable)
                         
                         Button {
@@ -215,21 +215,22 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .frame(width: (FW.screenWidth - 64) / 3, height: 40)
-                        .border(Color.gray, cornerRadius: 20)
+                        .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .visible(buttonVisible)
                         .buttonStyle(BorderlessButtonStyle())
                     }
                 }
                 
                 Button {
-                    Router.openURL("https://www.baidu.com")
-                    
                     viewContext.object = "Object"
                     viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
                     viewContext.send()
+                    
+                    let vc = TestSwiftUIListController()
+                    Navigator.push(vc, animated: true)
                 } label: {
                     ViewWrapper {
-                        Text("Open Router")
+                        Text("Open List")
                             .wrappedHostingView()
                     }
                     .frame(height: 44)
@@ -240,16 +241,19 @@ struct TestSwiftUIContent: View {
                     let viewController = TestSwiftUIController()
                     Navigator.topNavigationController?.pushViewController(viewController, animated: true)
                 }
+                .frame(height: 44)
                 
                 Button("Push HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.fw.open(viewController)
                 }
+                .frame(height: 44)
                 
                 Button("Present HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.present(viewController, animated: true)
                 }
+                .frame(height: 44)
                 
                 ForEach(["Show Alert", "Show Toast", "Show Empty"], id: \.self) { title in
                     Button(title) {
@@ -261,6 +265,7 @@ struct TestSwiftUIContent: View {
                             showingEmpty = true
                         }
                     }
+                    .frame(height: 44)
                 }
                 
                 Button("Show Loading") {
@@ -269,6 +274,7 @@ struct TestSwiftUIContent: View {
                         showingLoading = false
                     }
                 }
+                .frame(height: 44)
                 
                 Button("Show Progress") {
                     showingProgress = true
@@ -280,10 +286,12 @@ struct TestSwiftUIContent: View {
                         }
                     }
                 }
+                .frame(height: 44)
                 
                 Button(viewModel.isEnglish ? "Language" : "多语言") {
                     viewModel.isEnglish = !viewModel.isEnglish
                 }
+                .frame(height: 44)
                 
                 ForEach(moreItems, id: \.self) { title in
                     Button {
@@ -291,33 +299,24 @@ struct TestSwiftUIContent: View {
                     } label: {
                         Text(title)
                     }
+                    .frame(height: 44)
                 }
             }
-            .listStyle(.plain)
             .captureContentOffset(in: $contentOffset)
-            .introspectTableView { tableView in
-                if tableView.fw.tempObject != nil { return }
-                tableView.fw.tempObject = true
-                
-                tableView.fw.resetTableStyle()
-                
-                tableView.fw.setRefreshing {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.fw.endRefreshing()
-                        moreItems = []
-                    }
+            .scrollViewRefreshing(action: { completionHandler in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    moreItems = []
+                    completionHandler()
                 }
-                
-                tableView.fw.setLoading {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        tableView.fw.endLoading()
-                        tableView.fw.shouldLoading = moreItems.count < 5
-                        var newItems = moreItems
-                        newItems.append("http://www.baidu.com")
-                        moreItems = newItems
-                    }
+            })
+            .scrollViewLoading(action: { completionHandler in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    var newItems = moreItems
+                    newItems.append("http://www.baidu.com")
+                    moreItems = newItems
+                    completionHandler(moreItems.count >= 5)
                 }
-            }
+            })
         }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in

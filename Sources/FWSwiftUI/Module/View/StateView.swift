@@ -7,17 +7,11 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+import FWFramework
+#endif
 
 // MARK: - StateView
-/// SwiftUI视图状态枚举
-@available(iOS 13.0, *)
-public enum ViewState {
-    case ready
-    case loading
-    case success(Any? = nil)
-    case failure(Error? = nil)
-}
-
 /// SwiftUI状态视图
 @available(iOS 13.0, *)
 public struct StateView: View {
@@ -74,8 +68,8 @@ public struct StateView: View {
                 ready(self)
             case .loading:
                 loading(self)
-            case .success(let model):
-                content(self, model)
+            case .success(let object):
+                content(self, object)
             case .failure(let error):
                 failure(self, error)
             }
