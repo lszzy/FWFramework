@@ -560,6 +560,9 @@
             
             decisionHandler(success);
         }];
+    } isCancelled:^BOOL(void){
+        
+        return request.isCancelled;
     } taskHandler:^(NSURLSessionDataTask *retryTask) {
         
         request.requestTask = retryTask;
