@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.10.1] - 2023-04-23
+
+### Fixed
+* Fixed the problem that the polling request was not completely canceled when it was stopped
+* A new isCancelled handle is added to the network request to handle the scene where the request is cancelled.
+
 ## [4.10.0] - 2023-04-21
 
 ### Added

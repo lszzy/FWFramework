@@ -39,6 +39,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 @property (nonatomic, strong, readwrite) NSError *error;
 @property (nonatomic, readwrite) NSInteger requestTotalCount;
 @property (nonatomic, readwrite) NSTimeInterval requestTotalTime;
+@property (nonatomic, assign) BOOL cancelled;
 
 @end
 
@@ -91,7 +92,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
     if (!self.requestTask) {
         return NO;
     }
-    return self.requestTask.state == NSURLSessionTaskStateCanceling;
+    return self.requestTask.state == NSURLSessionTaskStateCanceling || _cancelled;
 }
 
 - (BOOL)isExecuting {
@@ -152,6 +153,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
     [self toggleAccessoriesWillStopCallBack];
     self.delegate = nil;
     [[FWNetworkAgent sharedAgent] cancelRequest:self];
+    self.cancelled = YES;
     [self toggleAccessoriesDidStopCallBack];
 }
 

@@ -1211,23 +1211,25 @@ static dispatch_semaphore_t fwStaticSemaphore;
     }
 }
 
-+ (void)fw_performBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval (^)(NSInteger))delayInterval
++ (void)fw_performBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSInteger)retryCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval (^)(NSInteger))delayInterval isCancelled:(nullable BOOL (^)(void))isCancelled
 {
     NSParameterAssert(block != nil);
     NSParameterAssert(completion != nil);
     
     NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
-    [self fw_performBlock:block completion:completion retryCount:retryCount remainCount:retryCount timeoutInterval:timeoutInterval delayInterval:delayInterval startTime:startTime];
+    [self fw_performBlock:block completion:completion retryCount:retryCount remainCount:retryCount timeoutInterval:timeoutInterval delayInterval:delayInterval isCancelled:isCancelled startTime:startTime];
 }
 
-+ (void)fw_performBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSInteger)retryCount remainCount:(NSInteger)remainCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval (^)(NSInteger))delayInterval startTime:(NSTimeInterval)startTime
++ (void)fw_performBlock:(void (^)(void (^completionHandler)(BOOL success, id _Nullable obj)))block completion:(void (^)(BOOL success, id _Nullable obj))completion retryCount:(NSInteger)retryCount remainCount:(NSInteger)remainCount timeoutInterval:(NSTimeInterval)timeoutInterval delayInterval:(NSTimeInterval (^)(NSInteger))delayInterval isCancelled:(nullable BOOL (^)(void))isCancelled startTime:(NSTimeInterval)startTime
 {
+    if (isCancelled && isCancelled()) return;
     block(^(BOOL success, id _Nullable obj) {
+        if (isCancelled && isCancelled()) return;
         BOOL canRetry = !success && (retryCount < 0 || remainCount > 0);
         NSTimeInterval waitTime = canRetry && delayInterval ? delayInterval(retryCount - remainCount + 1) : 0;
         if (canRetry && (timeoutInterval <= 0 || ([[NSDate date] timeIntervalSince1970] - startTime + waitTime) < timeoutInterval)) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(waitTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [NSObject fw_performBlock:block completion:completion retryCount:retryCount remainCount:remainCount - 1 timeoutInterval:timeoutInterval delayInterval:delayInterval startTime:startTime];
+                [NSObject fw_performBlock:block completion:completion retryCount:retryCount remainCount:remainCount - 1 timeoutInterval:timeoutInterval delayInterval:delayInterval isCancelled:isCancelled startTime:startTime];
             });
         } else {
             completion(success, obj);
