@@ -964,10 +964,11 @@ extension WrapperGlobal {
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: @escaping (Int) -> TimeInterval
+        delayInterval: @escaping (Int) -> TimeInterval,
+        isCancelled: (() -> Bool)? = nil
     ) {
         let startTime = Date().timeIntervalSince1970
-        fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
+        fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled, startTime: startTime)
     }
     
     private static func fw_performBlock(
@@ -977,14 +978,17 @@ extension WrapperGlobal {
         remainCount: Int,
         timeoutInterval: TimeInterval,
         delayInterval: @escaping (Int) -> TimeInterval,
+        isCancelled: (() -> Bool)?,
         startTime: TimeInterval
     ) {
+        if isCancelled?() ?? false { return }
         block({ success, obj in
+            if isCancelled?() ?? false { return }
             let canRetry = !success && (retryCount < 0 || remainCount > 0)
             let waitTime = canRetry ? delayInterval(retryCount - remainCount + 1) : 0
             if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-                    NSObject.fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: remainCount - 1, timeoutInterval: timeoutInterval, delayInterval: delayInterval, startTime: startTime)
+                    NSObject.fw_performBlock(block, completion: completion, retryCount: retryCount, remainCount: remainCount - 1, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled, startTime: startTime)
                 }
             } else {
                 completion(success, obj)

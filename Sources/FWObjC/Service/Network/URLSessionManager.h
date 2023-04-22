@@ -207,6 +207,7 @@ NS_SWIFT_NAME(URLSessionManager)
  @param retryInterval The retry interval block, default nil means 0.
  @param timeoutInterval The retry timeout, less than or equal to 0 means no timeout.
  @param shouldRetry Whether the retry should start, must call decisionHandler, default to check statusCode and error.
+ @param isCancelled Whether the request is cancelled block, default to nil.
  @param taskHandler A block object to be executed when the retry task is created.
  @param uploadProgress A block object to be executed when the upload progress is updated. Note this block is called on the session queue, not the main queue.
  @param downloadProgress A block object to be executed when the download progress is updated. Note this block is called on the session queue, not the main queue.
@@ -219,6 +220,7 @@ NS_SWIFT_NAME(URLSessionManager)
                                        retryInterval:(nullable NSTimeInterval (^)(NSInteger requestCount))retryInterval
                                      timeoutInterval:(NSTimeInterval)timeoutInterval
                                          shouldRetry:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject, NSError * _Nullable error, void (^decisionHandler)(BOOL retry)))shouldRetry
+                                         isCancelled:(nullable BOOL (^)(void))isCancelled
                                          taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
                                       uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
                                     downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
