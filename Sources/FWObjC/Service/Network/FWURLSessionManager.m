@@ -734,6 +734,7 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                        retryInterval:(NSTimeInterval (^)(NSInteger))retryInterval
                                      timeoutInterval:(NSTimeInterval)timeoutInterval
                                          shouldRetry:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
+                                         isCancelled:(nullable BOOL (^)(void))isCancelled
                                          taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
                                       uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
                                     downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
@@ -744,7 +745,7 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
         
         NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
         decisionHandler(error != nil || statusCode < 200 || statusCode > 299);
-    } taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
+    } isCancelled:isCancelled taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
 }
 
 - (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
@@ -754,12 +755,14 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
                                      timeoutInterval:(NSTimeInterval)timeoutInterval
                                            startTime:(NSTimeInterval)startTime
                                          shouldRetry:(void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
+                                         isCancelled:(nullable BOOL (^)(void))isCancelled
                                          taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
                                       uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
                                     downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
                                    completionHandler:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable))completionHandler
 {
     return [self dataTaskWithRequest:requestBuilder() uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (isCancelled && isCancelled()) return;
         
         [self setRequestTotalCount:retryCount - remainCount + 1 forResponse:response];
         [self setRequestTotalTime:[NSDate date].timeIntervalSince1970 - startTime forResponse:response];
@@ -768,11 +771,13 @@ static NSString * const FWNSURLSessionTaskDidSuspendNotification = @"site.wuyong
         NSTimeInterval waitTime = canRetry && retryInterval ? MAX(retryInterval(retryCount - remainCount + 1), 0) : 0;
         if (canRetry && (timeoutInterval <= 0 || ([[NSDate date] timeIntervalSince1970] - startTime + waitTime) < timeoutInterval)) {
             shouldRetry(response, responseObject, error, ^(BOOL retry){
+                if (isCancelled && isCancelled()) return;
                 
                 if (retry) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(waitTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if (isCancelled && isCancelled()) return;
                         
-                        NSURLSessionDataTask *dataTask = [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:remainCount - 1 retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
+                        NSURLSessionDataTask *dataTask = [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:remainCount - 1 retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry isCancelled:isCancelled taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
                         
                         if (taskHandler) taskHandler(dataTask);
                         [dataTask resume];
