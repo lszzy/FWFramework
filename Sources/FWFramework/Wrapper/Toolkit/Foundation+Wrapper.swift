@@ -513,9 +513,10 @@ extension Wrapper where Base: NSObject {
         completion: @escaping (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: @escaping (Int) -> TimeInterval
+        delayInterval: @escaping (Int) -> TimeInterval,
+        isCancelled: (() -> Bool)? = nil
     ) {
-        Base.fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval)
+        Base.fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled)
     }
 
     /// 执行轮询block任务，返回任务Id可取消
