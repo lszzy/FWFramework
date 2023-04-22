@@ -142,6 +142,8 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
 @property (nonatomic, strong) __FWCacheMetadata *cacheMetadata;
 @property (nonatomic, assign) BOOL dataFromCache;
 
+@property (nonatomic, assign) BOOL cancelled;
+
 @end
 
 @implementation __FWBaseRequest
@@ -193,7 +195,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
     if (!self.requestTask) {
         return NO;
     }
-    return self.requestTask.state == NSURLSessionTaskStateCanceling;
+    return self.requestTask.state == NSURLSessionTaskStateCanceling || _cancelled;
 }
 
 - (BOOL)isExecuting {
@@ -286,6 +288,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
     [self toggleAccessoriesWillStopCallBack];
     self.delegate = nil;
     [[__FWRequestManager sharedManager] cancelRequest:self];
+    self.cancelled = YES;
     [self toggleAccessoriesDidStopCallBack];
 }
 

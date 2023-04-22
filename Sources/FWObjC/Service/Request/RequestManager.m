@@ -607,6 +607,7 @@
         return [request requestRetryInterval];
     } timeoutInterval:[request requestRetryTimeout] shouldRetry:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable _error, void (^ _Nonnull decisionHandler)(BOOL retry)) {
         
+        if (request.isCancelled) return;
         request.requestTotalCount = [[self manager] requestTotalCountForResponse:response];
         request.requestTotalTime = [[self manager] requestTotalTimeForResponse:response];
         
