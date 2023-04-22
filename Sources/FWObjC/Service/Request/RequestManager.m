@@ -606,7 +606,6 @@
         
         return [request requestRetryInterval];
     } timeoutInterval:[request requestRetryTimeout] shouldRetry:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable _error, void (^ _Nonnull decisionHandler)(BOOL retry)) {
-        if (request.isCancelled) return;
         
         request.requestTotalCount = [[self manager] requestTotalCountForResponse:response];
         request.requestTotalTime = [[self manager] requestTotalTimeForResponse:response];
@@ -618,7 +617,6 @@
         }
         
         [request requestRetryProcessor:(NSHTTPURLResponse *)response responseObject:responseObject error:_error completionHandler:^(BOOL success) {
-            if (request.isCancelled) return;
             
             decisionHandler(success);
         }];
@@ -629,7 +627,6 @@
         
         request.requestTask = retryTask;
     } uploadProgress:[request uploadProgressBlock] downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable _error) {
-        if (request.isCancelled) return;
         
         [self handleRequestResult:request.requestIdentifier response:response responseObject:responseObject error:_error];
     }];
