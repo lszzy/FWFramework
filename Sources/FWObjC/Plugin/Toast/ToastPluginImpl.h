@@ -21,8 +21,10 @@ NS_SWIFT_NAME(ToastPluginImpl)
 
 /// 显示吐司时是否执行淡入动画，默认YES
 @property (nonatomic, assign) BOOL fadeAnimated;
-/// 吐司自动隐藏时间，默认2.0
-@property (nonatomic, assign) NSTimeInterval delayTime;
+/// 消息吐司自动隐藏时间，默认2.0
+@property (nonatomic, assign) NSTimeInterval autoHideTime;
+/// 加载吐司延迟隐藏时间，默认0.1
+@property (nonatomic, assign) NSTimeInterval delayHideTime;
 /// 吐司自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(__FWToastView *toastView);
 /// 吐司重用句柄，show方法重用时自动调用

@@ -56,15 +56,15 @@ import FWObjC
         plugin.showLoading?(withAttributedText: attributedText, cancel: cancelBlock, in: self)
     }
 
-    /// 隐藏加载吐司
-    public func fw_hideLoading() {
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    public func fw_hideLoading(delayed: Bool = false) {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideLoading(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideLoading(_:in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.hideLoading?(self)
+        plugin.hideLoading?(delayed, in: self)
     }
     
     /// 是否正在显示加载吐司
@@ -191,10 +191,10 @@ import FWObjC
         fw_toastContainerView?.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
-    /// 隐藏加载吐司
-    @objc(__fw_hideLoading)
-    public func fw_hideLoading() {
-        fw_toastContainerView?.fw_hideLoading()
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    @objc(__fw_hideLoading:)
+    public func fw_hideLoading(delayed: Bool = false) {
+        fw_toastContainerView?.fw_hideLoading(delayed: delayed)
     }
     
     /// 是否正在显示加载吐司
@@ -252,9 +252,9 @@ import FWObjC
         UIWindow.fw_mainWindow?.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
-    /// 隐藏加载吐司
-    public static func fw_hideLoading() {
-        UIWindow.fw_mainWindow?.fw_hideLoading()
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    public static func fw_hideLoading(delayed: Bool = false) {
+        UIWindow.fw_mainWindow?.fw_hideLoading(delayed: delayed)
     }
     
     /// 是否正在显示加载吐司

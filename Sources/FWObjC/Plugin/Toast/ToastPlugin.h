@@ -29,8 +29,8 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
 - (void)showLoadingWithAttributedText:(nullable NSAttributedString *)attributedText cancelBlock:(nullable void (^)(void))cancelBlock inView:(UIView *)view;
 
-/// 隐藏加载吐司
-- (void)hideLoading:(UIView *)view;
+/// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+- (void)hideLoading:(BOOL)delayed inView:(UIView *)view;
 
 /// 是否正在显示加载吐司
 - (BOOL)isShowingLoading:(UIView *)view;
