@@ -369,7 +369,7 @@
     if ([self.albumControllerDelegate respondsToSelector:@selector(albumControllerDidFinishLoading:)]) {
         [self.albumControllerDelegate albumControllerDidFinishLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self __fw_hideLoading];
+        [self __fw_hideLoading:NO];
     }
     
     if (self.maximumTableViewHeight > 0) {
@@ -1393,7 +1393,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerDidFinishLoading:)]) {
                 [self.delegate imagePickerPreviewControllerDidFinishLoading:self];
             } else if (self.showsDefaultLoading) {
-                [self __fw_hideLoading];
+                [self __fw_hideLoading:NO];
             }
             
             [self dismissViewControllerAnimated:YES completion:^(void) {
@@ -2079,7 +2079,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidFinishLoading:)]) {
         [self.imagePickerControllerDelegate imagePickerControllerDidFinishLoading:self];
     } else if (self.showsDefaultLoading) {
-        [self __fw_hideLoading];
+        [self __fw_hideLoading:NO];
     }
     self.isImagesAssetLoading = NO;
     if (self.imagesAssetArray.count > 0) {
@@ -2456,7 +2456,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             if ([self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerControllerDidFinishLoading:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerDidFinishLoading:self];
             } else if (self.showsDefaultLoading) {
-                [self __fw_hideLoading];
+                [self __fw_hideLoading:NO];
             }
             
             [self dismissViewControllerAnimated:YES completion:^{

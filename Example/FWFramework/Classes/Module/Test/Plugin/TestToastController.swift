@@ -25,6 +25,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
             ["有文本(可取消)", "onIndicator2"],
             ["文本太长", "onIndicator3"],
             ["加载动画", "onLoading"],
+            ["加载动画(连续)", "onContinuous"],
             ["进度动画(可取消)", "onProgress"],
             ["加载动画(window)", "onLoadingWindow"],
             ["加载进度动画(window)", "onProgressWindow"],
@@ -84,6 +85,18 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
         app.showLoading(text: "加载中\n请耐心等待")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             self?.app.hideLoading()
+        }
+    }
+    
+    func onContinuous() {
+        app.showLoading(text: "加载1中")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.app.hideLoading(delayed: true)
+            
+            self?.app.showLoading(text: "加载2中")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                self?.app.hideLoading()
+            }
         }
     }
     

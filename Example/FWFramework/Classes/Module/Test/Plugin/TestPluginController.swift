@@ -125,7 +125,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Authenticating..."), cancel: nil, in: self.view)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                toastPlugin.hideLoading(self.view)
+                toastPlugin.hideLoading(false, in: self.view)
                 self.tableView.isHidden = false
             }
             return
@@ -144,7 +144,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Authenticating..."), cancel: nil, in: self.view)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            toastPlugin.hideLoading(self.view)
+            toastPlugin.hideLoading(false, in: self.view)
             self.tableView.isHidden = false
         }
     }

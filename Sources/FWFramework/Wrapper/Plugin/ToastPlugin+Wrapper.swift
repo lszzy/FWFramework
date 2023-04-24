@@ -29,9 +29,9 @@ extension Wrapper where Base: UIView {
         base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
-    /// 隐藏加载吐司
-    public func hideLoading() {
-        base.fw_hideLoading()
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    public func hideLoading(delayed: Bool = false) {
+        base.fw_hideLoading(delayed: delayed)
     }
     
     /// 是否正在显示加载吐司
@@ -101,9 +101,9 @@ extension Wrapper where Base: UIViewController {
         base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
-    /// 隐藏加载吐司
-    public func hideLoading() {
-        base.fw_hideLoading()
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    public func hideLoading(delayed: Bool = false) {
+        base.fw_hideLoading(delayed: delayed)
     }
     
     public var isShowingLoading: Bool {
@@ -160,9 +160,9 @@ extension Wrapper where Base: UIWindow {
         Base.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
-    /// 隐藏加载吐司
-    public static func hideLoading() {
-        Base.fw_hideLoading()
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    public static func hideLoading(delayed: Bool = false) {
+        Base.fw_hideLoading(delayed: delayed)
     }
     
     public static var isShowingLoading: Bool {

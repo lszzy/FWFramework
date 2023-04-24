@@ -42,7 +42,8 @@
     self = [super init];
     if (self) {
         _fadeAnimated = YES;
-        _delayTime = 2.0;
+        _autoHideTime = 2.0;
+        _delayHideTime = 0.1;
     }
     return self;
 }
@@ -80,10 +81,14 @@
     [toastView showAnimated:self.fadeAnimated];
 }
 
-- (void)hideLoading:(UIView *)view
+- (void)hideLoading:(BOOL)delayed inView:(UIView *)view
 {
     __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2011];
-    if (toastView) [toastView hide];
+    if (toastView && delayed) {
+        [toastView hideAfterDelay:self.delayHideTime completion:nil];
+    } else if (toastView) {
+        [toastView hide];
+    }
 }
 
 - (BOOL)isShowingLoading:(UIView *)view
@@ -164,7 +169,7 @@
     [toastView showAnimated:fadeAnimated];
     
     if (autoHide) {
-        [toastView hideAfterDelay:self.delayTime completion:completion];
+        [toastView hideAfterDelay:self.autoHideTime completion:completion];
     }
 }
 
