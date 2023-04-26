@@ -2479,7 +2479,12 @@ import AdSupport
         if #available(iOS 15.0, *) {
             self.sectionHeaderTopPadding = 0
         }
+        
+        UITableView.fw_resetTableConfiguration?(self)
     }
+    
+    /// 配置全局resetTableStyle钩子句柄，默认nil
+    public static var fw_resetTableConfiguration: ((UITableView) -> Void)?
     
     /// reloadData完成回调
     public func fw_reloadData(completion: (() -> Void)?) {

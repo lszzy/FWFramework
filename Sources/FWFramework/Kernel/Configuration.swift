@@ -101,6 +101,7 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         
         // 配置通用样式和兼容性
         // UITableView.fw_resetTableStyle()
+        // UITableView.fw_resetTableConfiguration = nil
         // UIButton.fw_highlightedAlpha = 0.5
         // UIButton.fw_disabledAlpha = 0.3
         

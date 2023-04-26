@@ -926,6 +926,12 @@ extension Wrapper where Base: UITableView {
         base.fw_resetTableStyle()
     }
     
+    /// 配置全局resetTableStyle钩子句柄，默认nil
+    public static var resetTableConfiguration: ((UITableView) -> Void)? {
+        get { Base.fw_resetTableConfiguration }
+        set { Base.fw_resetTableConfiguration = newValue }
+    }
+    
     /// reloadData完成回调
     public func reloadData(completion: (() -> Void)?) {
         base.fw_reloadData(completion: completion)
