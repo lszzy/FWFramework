@@ -1037,6 +1037,12 @@ extension Wrapper where Base: UISearchBar {
         get { return base.fw_searchIconOffset }
         set { base.fw_searchIconOffset = newValue }
     }
+    
+    /// 设置清空图标离右侧的偏移位置
+    public var clearIconOffset: CGFloat {
+        get { return base.fw_clearIconOffset }
+        set { base.fw_clearIconOffset = newValue }
+    }
 
     /// 设置搜索文本离左侧图标的偏移位置
     public var searchTextOffset: CGFloat {
@@ -1054,6 +1060,11 @@ extension Wrapper where Base: UISearchBar {
     public var forceCancelButtonEnabled: Bool {
         get { return base.fw_forceCancelButtonEnabled }
         set { base.fw_forceCancelButtonEnabled = newValue }
+    }
+    
+    /// 包装为适用于titleView的视图，需设置为navigationItem.titleView即可
+    public func wrappedTitleView() -> UIView {
+        return base.fw_wrappedTitleView()
     }
     
 }

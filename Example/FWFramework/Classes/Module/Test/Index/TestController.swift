@@ -82,16 +82,13 @@ class TestController: UIViewController {
         let result = UISearchBar(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.navigationBarHeight))
         result.placeholder = "Search"
         result.delegate = self
-        result.showsCancelButton = true
-        result.app.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
-        result.app.forceCancelButtonEnabled = true
         result.app.backgroundColor = AppTheme.barColor
         result.app.textFieldBackgroundColor = AppTheme.tableColor
-        result.app.contentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 0)
-        result.app.cancelButtonInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        result.app.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
         result.app.searchIconCenter = true
         result.app.searchIconOffset = 10
         result.app.searchTextOffset = 4
+        result.app.clearIconOffset = -10
         
         if let textField = result.app.textField {
             textField.font = APP.font(12)
@@ -101,25 +98,8 @@ class TestController: UIViewController {
         return result
     }()
     
-    private lazy var titleView: UIView = {
-        let titleView = TestExpandedView()
-        titleView.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.navigationBarHeight)
-        titleView.app.layoutChain.height(APP.navigationBarHeight)
-        titleView.backgroundColor = UIColor.clear
-        titleView.addSubview(searchBar)
-        searchBar.app.layoutChain.edges()
-        return titleView
-    }()
-    
     private var displayData: [Any] {
         return isSearch ? searchResult : tableData
-    }
-    
-    // MARK: - Lifecycle
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        searchBar.app.cancelButton?.setTitle(AppBundle.localizedString("fw.cancel"), for: .normal)
     }
     
     // MARK: - Public
@@ -151,7 +131,7 @@ extension TestController: TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        navigationItem.titleView = titleView
+        navigationItem.titleView = searchBar.app.wrappedTitleView()
     }
     
     func setupSubviews() {
@@ -249,14 +229,6 @@ extension TestController: UISearchBarDelegate {
         }
         searchResult = resultData
         tableView.reloadData()
-    }
-    
-}
-
-class TestExpandedView: UIView {
-    
-    override var intrinsicContentSize: CGSize {
-        return UIView.layoutFittingExpandedSize
     }
     
 }
