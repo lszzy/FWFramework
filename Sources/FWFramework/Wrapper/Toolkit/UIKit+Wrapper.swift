@@ -999,6 +999,8 @@ extension Wrapper where Base: UICollectionViewCell {
 extension Wrapper where Base: UISearchBar {
     
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
+    ///
+    /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
     public var contentInset: UIEdgeInsets {
         get { return base.fw_contentInset }
         set { base.fw_contentInset = newValue }
@@ -1060,11 +1062,6 @@ extension Wrapper where Base: UISearchBar {
     public var forceCancelButtonEnabled: Bool {
         get { return base.fw_forceCancelButtonEnabled }
         set { base.fw_forceCancelButtonEnabled = newValue }
-    }
-    
-    /// 包装为适用于titleView的视图，需设置为navigationItem.titleView即可
-    public func wrappedTitleView() -> UIView {
-        return base.fw_wrappedTitleView()
     }
     
 }
