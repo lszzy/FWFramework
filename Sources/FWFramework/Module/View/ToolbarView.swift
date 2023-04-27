@@ -8,6 +8,10 @@
 import UIKit
 
 /// 扩展titleView，可继承，用于navigationItem.titleView需要撑开的场景
+///
+/// 组件自动兼容各版本系统titleView左右间距(默认16)，具体差异如下：
+/// iOS16+：系统titleView左右最小间距为16，组件默认处理为16
+/// iOS15-：系统titleView左右最小间距为8，组件默认处理为16
 open class ExpandedTitleView: UIView {
     
     /// 指定内容视图并快速创建titleView
@@ -16,6 +20,11 @@ open class ExpandedTitleView: UIView {
         titleView.addSubview(contentView)
         contentView.fw_pinEdges()
         return titleView
+    }
+    
+    /// 最小水平方向的间距，默认16，兼容各版本系统
+    open var minimumHorizontalSpacing: CGFloat = 16 {
+        didSet { setNeedsLayout() }
     }
     
     /// 初始化，默认导航栏尺寸
@@ -36,6 +45,19 @@ open class ExpandedTitleView: UIView {
     
     open override var intrinsicContentSize: CGSize {
         return UIView.layoutFittingExpandedSize
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let navigationBar = searchNavigationBar(self) else { return }
+        
+        
+    }
+    
+    private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
+        guard let parent = child.superview else { return nil }
+        if let navigationBar = parent as? UINavigationBar { return navigationBar }
+        return searchNavigationBar(parent)
     }
     
 }
