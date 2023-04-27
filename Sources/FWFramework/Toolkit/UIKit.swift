@@ -2585,6 +2585,14 @@ import AdSupport
 // MARK: - UISearchBar+UIKit
 @_spi(FW) extension UISearchBar {
     
+    private class ExpandedView: UIView {
+        
+        override var intrinsicContentSize: CGSize {
+            return UIView.layoutFittingExpandedSize
+        }
+        
+    }
+    
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
     public var fw_contentInset: UIEdgeInsets {
         get {
@@ -2653,6 +2661,20 @@ import AdSupport
             self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
         }
     }
+    
+    /// 设置清空图标离右侧的偏移位置
+    public var fw_clearIconOffset: CGFloat {
+        get {
+            if let value = fw_property(forName: "fw_clearIconOffset") as? NSNumber {
+                return value.doubleValue
+            }
+            return self.positionAdjustment(for: .clear).horizontal
+        }
+        set {
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_clearIconOffset")
+            self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .clear)
+        }
+    }
 
     /// 设置搜索文本离左侧图标的偏移位置
     public var fw_searchTextOffset: CGFloat {
@@ -2690,6 +2712,15 @@ import AdSupport
                 cancelButton?.fw_unobserveProperty("enabled")
             }
         }
+    }
+    
+    /// 包装为适用于titleView的视图，需设置为navigationItem.titleView即可
+    public func fw_wrappedTitleView() -> UIView {
+        let titleView = ExpandedView()
+        titleView.frame = bounds
+        titleView.addSubview(self)
+        self.fw_pinEdges()
+        return titleView
     }
     
     fileprivate static func fw_swizzleUIKitSearchBar() {
