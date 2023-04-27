@@ -79,7 +79,7 @@ class TestController: UIViewController {
     
     // MARK: - Subviews
     private lazy var searchBar: UISearchBar = {
-        let result = UISearchBar(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.navigationBarHeight))
+        let result = UISearchBar()
         result.placeholder = "Search"
         result.delegate = self
         result.app.backgroundColor = AppTheme.barColor
@@ -131,7 +131,7 @@ extension TestController: TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        navigationItem.titleView = searchBar.app.wrappedTitleView()
+        navigationItem.titleView = ExpandedTitleView.titleView(searchBar)
     }
     
     func setupSubviews() {

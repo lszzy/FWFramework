@@ -2585,15 +2585,9 @@ import AdSupport
 // MARK: - UISearchBar+UIKit
 @_spi(FW) extension UISearchBar {
     
-    private class ExpandedView: UIView {
-        
-        override var intrinsicContentSize: CGSize {
-            return UIView.layoutFittingExpandedSize
-        }
-        
-    }
-    
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
+    ///
+    /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
     public var fw_contentInset: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_contentInset") as? NSValue {
@@ -2712,15 +2706,6 @@ import AdSupport
                 cancelButton?.fw_unobserveProperty("enabled")
             }
         }
-    }
-    
-    /// 包装为适用于titleView的视图，需设置为navigationItem.titleView即可
-    public func fw_wrappedTitleView() -> UIView {
-        let titleView = ExpandedView()
-        titleView.frame = bounds
-        titleView.addSubview(self)
-        self.fw_pinEdges()
-        return titleView
     }
     
     fileprivate static func fw_swizzleUIKitSearchBar() {
