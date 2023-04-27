@@ -257,6 +257,101 @@ open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelega
     
 }
 
+// MARK: - SearchBarDelegate
+/// 常用SearchBar事件代理，可继承
+open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDelegate {
+    
+    /// 是否应该开始编辑，默认nil
+    open var shouldBeginEditing: ((UISearchBar) -> Bool)?
+    /// 已开始编辑，默认nil
+    open var didBeginEditing: ((UISearchBar) -> Void)?
+    /// 是否应该结束编辑，默认nil
+    open var shouldEndEditing: ((UISearchBar) -> Bool)?
+    /// 已结束编辑，默认nil
+    open var didEndEditing: ((UISearchBar) -> Void)?
+    /// 文字已改变，默认nil
+    open var textDidChange: ((UISearchBar, String) -> Void)?
+    /// 是否应该改变文字，默认nil
+    open var shouldChangeText: ((UISearchBar, NSRange, String) -> Bool)?
+    /// 点击搜索按钮，默认nil
+    open var searchButtonClicked: ((UISearchBar) -> Void)?
+    /// 点击取消按钮，默认nil
+    open var cancelButtonClicked: ((UISearchBar) -> Void)?
+    
+    // MARK: - Lifecycle
+    /// 初始化并绑定searchBar
+    public convenience init(searchBar: UISearchBar) {
+        self.init()
+        searchBar.delegate = self
+    }
+    
+    // MARK: - UISearchBarDelegate
+    open func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        if let shouldBegin = delegate?.searchBarShouldBeginEditing?(searchBar) {
+            return shouldBegin
+        }
+        
+        return shouldBeginEditing?(searchBar) ?? true
+    }
+    
+    open func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        if delegate?.searchBarTextDidBeginEditing?(searchBar) != nil {
+            return
+        }
+        
+        didBeginEditing?(searchBar)
+    }
+    
+    open func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        if let shouldEnd = delegate?.searchBarShouldEndEditing?(searchBar) {
+            return shouldEnd
+        }
+        
+        return shouldEndEditing?(searchBar) ?? true
+    }
+    
+    open func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        if delegate?.searchBarTextDidEndEditing?(searchBar) != nil {
+            return
+        }
+        
+        didEndEditing?(searchBar)
+    }
+    
+    open func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if delegate?.searchBar?(searchBar, textDidChange: searchText) != nil {
+            return
+        }
+        
+        textDidChange?(searchBar, searchText)
+    }
+    
+    open func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if let shouldChange = delegate?.searchBar?(searchBar, shouldChangeTextIn: range, replacementText: text) {
+            return shouldChange
+        }
+        
+        return shouldChangeText?(searchBar, range, text) ?? true
+    }
+    
+    open func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if delegate?.searchBarSearchButtonClicked?(searchBar) != nil {
+            return
+        }
+        
+        searchButtonClicked?(searchBar)
+    }
+    
+    open func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        if delegate?.searchBarCancelButtonClicked?(searchBar) != nil {
+            return
+        }
+        
+        cancelButtonClicked?(searchBar)
+    }
+    
+}
+
 // MARK: - UIScrollView+ScrollViewDelegate
 @_spi(FW) extension UIScrollView {
     
@@ -315,6 +410,27 @@ open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelega
         }
         set {
             fw_setProperty(newValue, forName: "fw_textDelegate")
+        }
+    }
+    
+}
+
+// MARK: - UISearchBar+SearchBarDelegate
+@_spi(FW) extension UISearchBar {
+    
+    /// 搜索栏事件代理，需手工设置delegate生效
+    public var fw_searchDelegate: SearchBarDelegate {
+        get {
+            if let result = fw_property(forName: "fw_searchDelegate") as? SearchBarDelegate {
+                return result
+            } else {
+                let result = SearchBarDelegate()
+                fw_setProperty(result, forName: "fw_searchDelegate")
+                return result
+            }
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_searchDelegate")
         }
     }
     
