@@ -36,3 +36,13 @@ extension Wrapper where Base: UITextView {
     }
     
 }
+
+extension Wrapper where Base: UISearchBar {
+    
+    /// 搜索栏事件代理，需手工设置delegate生效
+    public var searchDelegate: SearchBarDelegate {
+        get { base.fw_searchDelegate }
+        set { base.fw_searchDelegate = newValue }
+    }
+    
+}
