@@ -84,7 +84,7 @@ class TestController: UIViewController {
         result.delegate = self
         result.app.backgroundColor = AppTheme.barColor
         result.app.textFieldBackgroundColor = AppTheme.tableColor
-        result.app.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
+        result.app.contentInset = UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8)
         result.app.searchIconCenter = true
         result.app.searchIconOffset = 10
         result.app.searchTextOffset = 4
@@ -131,7 +131,12 @@ extension TestController: TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        navigationItem.titleView = ExpandedTitleView.titleView(searchBar)
+        let titleView = ExpandedTitleView.titleView(searchBar)
+        titleView.minimumHorizontalSpacing = 8
+        titleView.app.addTapGesture { [weak self] _ in
+            self?.app.showMessage(text: "点击了titleView")
+        }
+        navigationItem.titleView = titleView
     }
     
     func setupSubviews() {
