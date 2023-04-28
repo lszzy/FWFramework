@@ -78,14 +78,14 @@ open class ExpandedTitleView: UIView {
         
         let leftSpacing = contentFrame.minX
         let rightSpacing = navigationBar.frame.width - contentFrame.maxX
-        var contentInset = self.contentInset
+        var inset = UIEdgeInsets(top: contentInset.top, left: 0, bottom: contentInset.bottom, right: 0)
         if leftSpacing >= 0 && leftSpacing <= maximumFittingSpacing {
-            contentInset.left -= leftSpacing
+            inset.left = contentInset.left - leftSpacing
         }
         if rightSpacing >= 0 && rightSpacing <= maximumFittingSpacing {
-            contentInset.right -= rightSpacing
+            inset.right = contentInset.right - rightSpacing
         }
-        contentView?.fw_pinEdges(toSuperview: contentInset)
+        contentView?.fw_pinEdges(toSuperview: inset)
     }
     
     private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
