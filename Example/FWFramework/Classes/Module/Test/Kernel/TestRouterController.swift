@@ -56,6 +56,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         let result = UISearchController(searchResultsController: nil)
         result.searchResultsUpdater = self
         result.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
         
         let searchBar = result.searchBar
         searchBar.placeholder = "Search"
@@ -158,10 +159,6 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if searchController.isActive {
-            searchController.isActive = false
-        }
-        
         let rowData = tableData[indexPath.row]
         app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
