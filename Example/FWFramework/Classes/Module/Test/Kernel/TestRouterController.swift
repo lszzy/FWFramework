@@ -8,14 +8,94 @@
 
 import FWFramework
 
-class TestRouterController: UIViewController, TableViewControllerProtocol {
+class TestRouterController: UIViewController, TableViewControllerProtocol, UISearchResultsUpdating {
     
     typealias TableElement = [String]
     
     static var popCount: Int = 0
     
+    var testData: [TableElement] = [
+        ["打开Web", "onOpenHttp"],
+        ["打开完整Web", "onOpenHttp2"],
+        ["打开异常Web", "onOpenHttp3"],
+        ["打开预缓存Web，需开启重用", "onOpenPreload"],
+        ["测试Cookie", "onOpenCookie"],
+        ["Url编码", "onOpenEncode"],
+        ["Url未编码", "onOpenImage"],
+        ["不规范Url", "onOpenSlash"],
+        ["打开App", "onOpenApp"],
+        ["打开Url", "onOpen"],
+        ["中文Url", "onOpenChinese"],
+        ["打开Url，通配符*", "onOpenWild"],
+        ["打开Url，协议", "onOpenController"],
+        ["打开Url，支持回调", "onOpenCallback"],
+        ["解析Url，获取Object", "onOpenObject"],
+        ["过滤Url", "onOpenFilter"],
+        ["不支持的Url", "onOpenFailed"],
+        ["RewriteUrl", "onRewrite1"],
+        ["RewriteUrl URLEncode", "onRewrite2"],
+        ["RewriteUrl URLDecode", "onRewrite3"],
+        ["RewriteFilter", "onRewriteFilter"],
+        ["不匹配的openUrl", "onOpenUnmatch"],
+        ["不匹配的objectUrl", "onOpenUnmatch2"],
+        ["打开objectUrl", "onOpenUnmatch3"],
+        ["自动注册的Url", "onOpenLoader"],
+        ["跳转telprompt", "onOpenTel"],
+        ["跳转设置", "onOpenSettings"],
+        ["跳转首页", "onOpenHome"],
+        ["跳转home/undefined", "onOpenHome2"],
+        ["不支持tab", "onOpenHome3"],
+        ["关闭close", "onOpenClose"],
+        ["通用链接douyin", "onOpenUniversalLinks"],
+        ["外部safari", "onOpenUrl"],
+        ["内部safari", "onOpenSafari"],
+        ["iOS14bug", "onOpen14"],
+    ]
+    
+    private lazy var searchController: UISearchController = {
+        let result = UISearchController(searchResultsController: nil)
+        result.searchResultsUpdater = self
+        result.obscuresBackgroundDuringPresentation = false
+        
+        let searchBar = result.searchBar
+        searchBar.placeholder = "Search"
+        searchBar.app.backgroundColor = AppTheme.barColor
+        searchBar.app.textFieldBackgroundColor = AppTheme.tableColor
+        searchBar.app.searchIconOffset = 10
+        searchBar.app.searchTextOffset = 4
+        searchBar.app.clearIconOffset = -6
+        if let textField = searchBar.app.textField {
+            textField.font = APP.font(12)
+            textField.app.setCornerRadius(18)
+        }
+        return result
+    }()
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text?.app.trimString ?? ""
+        if searchText.isEmpty {
+            tableData = testData
+            tableView.reloadData()
+            return
+        }
+        
+        var resultData: [TableElement] = []
+        for rowData in testData {
+            if APP.safeString(rowData[0]).lowercased()
+                .contains(searchText.lowercased()) {
+                resultData.append(rowData)
+            }
+        }
+        tableData = resultData
+        tableView.reloadData()
+    }
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
+    }
+    
+    func setupTableView() {
+        tableView.tableHeaderView = searchController.searchBar
     }
     
     func setupTableLayout() {
@@ -61,43 +141,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: 3)
         APP.debug("url: %@", urlStr)
         
-        tableData.append(contentsOf: [
-            ["打开Web", "onOpenHttp"],
-            ["打开完整Web", "onOpenHttp2"],
-            ["打开异常Web", "onOpenHttp3"],
-            ["打开预缓存Web，需开启重用", "onOpenPreload"],
-            ["测试Cookie", "onOpenCookie"],
-            ["Url编码", "onOpenEncode"],
-            ["Url未编码", "onOpenImage"],
-            ["不规范Url", "onOpenSlash"],
-            ["打开App", "onOpenApp"],
-            ["打开Url", "onOpen"],
-            ["中文Url", "onOpenChinese"],
-            ["打开Url，通配符*", "onOpenWild"],
-            ["打开Url，协议", "onOpenController"],
-            ["打开Url，支持回调", "onOpenCallback"],
-            ["解析Url，获取Object", "onOpenObject"],
-            ["过滤Url", "onOpenFilter"],
-            ["不支持的Url", "onOpenFailed"],
-            ["RewriteUrl", "onRewrite1"],
-            ["RewriteUrl URLEncode", "onRewrite2"],
-            ["RewriteUrl URLDecode", "onRewrite3"],
-            ["RewriteFilter", "onRewriteFilter"],
-            ["不匹配的openUrl", "onOpenUnmatch"],
-            ["不匹配的objectUrl", "onOpenUnmatch2"],
-            ["打开objectUrl", "onOpenUnmatch3"],
-            ["自动注册的Url", "onOpenLoader"],
-            ["跳转telprompt", "onOpenTel"],
-            ["跳转设置", "onOpenSettings"],
-            ["跳转首页", "onOpenHome"],
-            ["跳转home/undefined", "onOpenHome2"],
-            ["不支持tab", "onOpenHome3"],
-            ["关闭close", "onOpenClose"],
-            ["通用链接douyin", "onOpenUniversalLinks"],
-            ["外部safari", "onOpenUrl"],
-            ["内部safari", "onOpenSafari"],
-            ["iOS14bug", "onOpen14"],
-        ])
+        tableData.append(contentsOf: testData)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -113,6 +157,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if searchController.isActive {
+            searchController.isActive = false
+        }
+        
         let rowData = tableData[indexPath.row]
         app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
