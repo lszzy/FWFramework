@@ -22,11 +22,6 @@ open class ExpandedTitleView: UIView {
         return titleView
     }
     
-    /// 设置离导航栏最小间距，默认16，超出区域不可点击
-    open var navigationBarSpacing: CGFloat = 16 {
-        didSet { setNeedsLayout() }
-    }
-    
     /// 指定并添加内容视图
     open weak var contentView: UIView? {
         didSet {
@@ -36,12 +31,13 @@ open class ExpandedTitleView: UIView {
                contentView.superview == nil {
                 addSubview(contentView)
                 contentView.fw_pinEdges(toSuperview: contentInset)
+                setNeedsLayout()
             }
         }
     }
     
-    /// 内容视图间距，默认zero
-    open var contentInset: UIEdgeInsets = .zero {
+    /// 导航栏内容间距，默认{0,16,0,16}，超出区域不可点击
+    open var contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) {
         didSet {
             if let contentView = contentView {
                 contentView.fw_pinEdges(toSuperview: contentInset)
@@ -50,7 +46,7 @@ open class ExpandedTitleView: UIView {
         }
     }
     
-    /// 最大适配间距，大于该间距无需处理，iOS16+系统默认16，iOS15-系统默认8，取较大值
+    /// 内部最大适配间距，大于该间距无需处理，iOS16+系统默认16，iOS15-系统默认8，取较大值
     private var maximumFittingSpacing: CGFloat = 16
     
     /// 初始化，默认导航栏尺寸
@@ -77,21 +73,19 @@ open class ExpandedTitleView: UIView {
         super.layoutSubviews()
         
         guard let navigationBar = searchNavigationBar(self) else { return }
-        var convertFrame = convert(bounds, to: navigationBar)
-        if convertFrame.width > navigationBar.frame.width { return }
+        let contentFrame = convert(bounds, to: navigationBar)
+        if contentFrame.width > navigationBar.frame.width { return }
         
-        let leftSpacing = convertFrame.minX
-        let rightSpacing = navigationBar.frame.width - convertFrame.maxX
+        let leftSpacing = contentFrame.minX
+        let rightSpacing = navigationBar.frame.width - contentFrame.maxX
+        var contentInset = self.contentInset
         if leftSpacing >= 0 && leftSpacing <= maximumFittingSpacing {
-            convertFrame.origin.x = navigationBarSpacing - leftSpacing
-            convertFrame.size.width -= navigationBarSpacing - leftSpacing
+            contentInset.left -= leftSpacing
         }
         if rightSpacing >= 0 && rightSpacing <= maximumFittingSpacing {
-            convertFrame.origin.x -= navigationBarSpacing - rightSpacing
-            convertFrame.size.width -= navigationBarSpacing - rightSpacing
+            contentInset.right -= rightSpacing
         }
-        self.frame = convertFrame
-        contentView?.frame = self.bounds.inset(by: contentInset)
+        contentView?.fw_pinEdges(toSuperview: contentInset)
     }
     
     private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
