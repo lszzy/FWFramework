@@ -10,6 +10,8 @@ import FWFramework
 
 class TestRefreshController: UIViewController, TableViewControllerProtocol {
     
+    static var showsFinishedView = true
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -18,6 +20,17 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
         tableView.register(TestRefreshCell.self, forCellReuseIdentifier: "Cell")
+    }
+    
+    func setupNavbar() {
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [TestRefreshController.showsFinishedView ? "隐藏FinishedView" : "显示FinishedView"], actionBlock: { _ in
+                TestRefreshController.showsFinishedView = !TestRefreshController.showsFinishedView
+                RefreshPluginImpl.shared.infiniteScrollBlock = { view in
+                    view.showsFinishedView = TestRefreshController.showsFinishedView
+                }
+            })
+        }
     }
     
     func setupSubviews() {
@@ -94,11 +107,12 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
             NSLog("刷新完成")
             
             self.tableData.removeAll()
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             self.tableView.app.shouldRefreshing = self.tableData.count < 20
+            self.tableView.app.loadingFinished = false
             self.tableView.app.endRefreshing()
         }
     }
@@ -108,7 +122,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("加载完成")
             
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
