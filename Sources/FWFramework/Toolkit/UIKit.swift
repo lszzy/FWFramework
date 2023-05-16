@@ -1208,7 +1208,8 @@ import AdSupport
             return .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
+            let insets = UIEdgeInsets(top: UIScreen.fw_flatValue(newValue.top), left: UIScreen.fw_flatValue(newValue.left), bottom: UIScreen.fw_flatValue(newValue.bottom), right: UIScreen.fw_flatValue(newValue.right))
+            fw_setProperty(NSValue(uiEdgeInsets: insets), forName: "fw_contentInset")
             self.setNeedsDisplay()
         }
     }
