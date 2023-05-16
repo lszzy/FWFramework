@@ -881,6 +881,9 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
             [self setScrollViewContentInsetForInfiniteScrolling];
         }
     }
+    if (self.finishedBlock) {
+        self.finishedBlock(self, finished);
+    }
 }
 
 #pragma mark -

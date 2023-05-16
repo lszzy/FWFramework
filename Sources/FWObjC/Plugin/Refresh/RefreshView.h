@@ -101,6 +101,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nonatomic, assign) BOOL userTriggered;
 @property (nullable, nonatomic, copy) void (^stateBlock)(__FWInfiniteScrollView *view, __FWInfiniteScrollState state);
 @property (nullable, nonatomic, copy) void (^progressBlock)(__FWInfiniteScrollView *view, CGFloat progress);
+@property (nullable, nonatomic, copy) void (^finishedBlock)(__FWInfiniteScrollView *view, BOOL finished);
 
 @property (nonatomic, copy, nullable) void (^infiniteScrollBlock)(void);
 @property (nonatomic, weak, nullable) id target;
