@@ -61,8 +61,6 @@ extension WrapperGlobal {
     public static var isNotchedScreen: Bool { UIScreen.fw_isNotchedScreen }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { UIScreen.fw_pixelOne }
-    /// 屏幕半个点的大小，解决0.5pt失真问题
-    public static var pointHalf: CGFloat { UIScreen.fw_pointHalf }
     /// 屏幕安全区域距离
     public static var safeAreaInsets: UIEdgeInsets { UIScreen.fw_safeAreaInsets }
 
@@ -355,11 +353,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     /// 屏幕一像素的大小
     public static var fw_pixelOne: CGFloat {
         return 1.0 / UIScreen.main.scale
-    }
-    
-    /// 屏幕半个点的大小，解决0.5pt失真问题
-    public static var fw_pointHalf: CGFloat {
-        return UIScreen.main.scale > 2 ? 0.75 : 0.5
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
