@@ -277,18 +277,18 @@ extension WrapperGlobal {
 
     /// 打开系统邮件App
     public static func fw_openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("mailto://" + email, completionHandler: completionHandler)
+        fw_openURL("mailto:" + email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
     public static func fw_openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("sms://" + phone, completionHandler: completionHandler)
+        fw_openURL("sms:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
     public static func fw_openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
         // tel:为直接拨打电话
-        fw_openURL("telprompt://" + phone, completionHandler: completionHandler)
+        fw_openURL("telprompt:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
