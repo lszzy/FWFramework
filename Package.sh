@@ -6,7 +6,6 @@ mkdir FWObjC
 cd FWObjC
 
 ln -s ../../FWObjC/Kernel/*.h ./
-ln -s ../../FWObjC/Service/Cache/*.h ./
 ln -s ../../FWObjC/Service/Network/*.h ./
 ln -s ../../FWObjC/Service/Request/*.h ./
 ln -s ../../FWObjC/Service/Media/*.h ./

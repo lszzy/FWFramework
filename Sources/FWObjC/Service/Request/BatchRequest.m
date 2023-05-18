@@ -24,6 +24,7 @@
 #import "BatchRequest.h"
 #import "BaseRequest.h"
 #import "RequestConfig.h"
+#import "RequestManager.h"
 
 #if FWMacroSPM
 

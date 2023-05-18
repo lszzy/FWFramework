@@ -7,6 +7,9 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - OpacityButtonStyle
 /// 透明度按钮样式，支持设置高亮和禁用时的透明度

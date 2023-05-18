@@ -7,6 +7,9 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ScrollView+Toolkit
 @available(iOS 13.0, *)
