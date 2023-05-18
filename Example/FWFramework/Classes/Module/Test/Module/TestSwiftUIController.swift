@@ -316,6 +316,12 @@ struct TestSwiftUIContent: View {
                 }
             })
         }
+        .hoverContentOffset(visible: contentOffset.y >= 44) {
+            Text("Hover Header")
+                .frame(width: APP.screenWidth, height: 44)
+                .background(Color.white)
+                .shadow(color: Color.color(0x000000, 0.1), radius: 5, x: 0, y: 2)
+        }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in
             viewController.app.showAlert(title: "我是标题", message: "我是内容")
