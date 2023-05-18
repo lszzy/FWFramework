@@ -24,6 +24,7 @@
 #import "ChainRequest.h"
 #import "RequestConfig.h"
 #import "BaseRequest.h"
+#import "RequestManager.h"
 
 #if FWMacroSPM
 

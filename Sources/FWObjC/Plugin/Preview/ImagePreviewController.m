@@ -15,6 +15,12 @@
 
 @end
 
+@interface CALayer ()
+
+- (void)__fw_removeDefaultAnimations;
+
+@end
+
 @interface UIScreen ()
 
 @property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;

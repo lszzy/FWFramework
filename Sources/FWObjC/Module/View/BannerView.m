@@ -30,6 +30,14 @@
 
 @end
 
+@interface UIView ()
+
+- (void)__fw_statisticalCheckExposure;
+- (BOOL)__fw_statisticalTrackClickWithIndexPath:(nullable NSIndexPath *)indexPath event:(nullable id)event;
+- (BOOL)__fw_statisticalBindExposure:(nullable UIView *)containerView;
+
+@end
+
 #else
 
 #import <FWFramework/FWFramework-Swift.h>

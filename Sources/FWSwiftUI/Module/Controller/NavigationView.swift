@@ -9,7 +9,7 @@
 import SwiftUI
 #if FWMacroSPM
 import FWObjC
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 /// 导航栏配置，兼容AnyView和UIKit对象
