@@ -22,19 +22,47 @@ public protocol PageControlDelegate: NSObjectProtocol {
 open class PageControl: UIControl {
     
     /// 点视图类
-    open var dotViewClass: AnyClass? = DotView.self
+    open var dotViewClass: AnyClass? = DotView.self {
+        didSet {
+            dotSize = .zero
+            resetDotViews()
+        }
+    }
     
     /// 点视图句柄
     open var customDotView: ((UIView) -> Void)?
     
     /// 点图片
-    open var dotImage: UIImage?
+    open var dotImage: UIImage? {
+        didSet {
+            resetDotViews()
+            dotViewClass = nil
+        }
+    }
     
     /// 当前点图片
-    open var currentDotImage: UIImage?
+    open var currentDotImage: UIImage? {
+        didSet {
+            resetDotViews()
+            dotViewClass = nil
+        }
+    }
     
     /// 点大小
-    open var dotSize: CGSize = CGSize(width: 8, height: 8)
+    open var dotSize: CGSize {
+        get {
+            if let dotImage = dotImage, _dotSize.equalTo(.zero) {
+                _dotSize = dotImage.size
+            } else if dotViewClass != nil, _dotSize.equalTo(.zero) {
+                _dotSize = CGSize(width: 8, height: 8)
+            }
+            return _dotSize
+        }
+        set {
+            _dotSize = newValue
+        }
+    }
+    private var _dotSize: CGSize = CGSize(width: 8, height: 8)
     
     /// 点颜色
     open var dotColor: UIColor?
@@ -43,16 +71,40 @@ open class PageControl: UIControl {
     open var currentDotColor: UIColor?
     
     /// 点间距
-    open var spacingBetweenDots: CGFloat = 8
+    open var spacingBetweenDots: CGFloat = 8 {
+        didSet { resetDotViews() }
+    }
     
     /// 事件代理
     open weak var delegate: PageControlDelegate?
     
     /// 总页数，默认0
-    open var numberOfPages: Int = 0
+    open var numberOfPages: Int = 0 {
+        didSet { resetDotViews() }
+    }
     
     /// 当前页数，默认0
-    open var currentPage: Int = 0
+    open var currentPage: Int {
+        get {
+            return _currentPage
+        }
+        set {
+            var page = newValue
+            if numberOfPages == 0 || page == _currentPage {
+                _currentPage = page
+                return
+            }
+            
+            if page > numberOfPages - 1 {
+                page = numberOfPages - 1
+            }
+            
+            changeActivity(false, at: _currentPage)
+            _currentPage = page
+            changeActivity(true, at: _currentPage)
+        }
+    }
+    private var _currentPage: Int = 0
     
     /// 单页时是否隐藏，默认false
     open var hidesForSinglePage: Bool = false
@@ -94,6 +146,35 @@ open class PageControl: UIControl {
     
     private func updateFrame(_ overrideExistingFrame: Bool) {
         
+    }
+    
+    private func updateDotFrame(_ dot: UIView, at index: Int) {
+        
+    }
+    
+    private func generateDotView() -> UIView {
+        return UIView()
+    }
+    
+    private func changeActivity(_ active: Bool, at index: Int) {
+        
+    }
+    
+    private func resetDotViews() {
+        for dotView in dots {
+            dotView.removeFromSuperview()
+        }
+        
+        dots.removeAll()
+        updateDots()
+    }
+    
+    private func hideForSinglePage() {
+        if dots.count == 1 && hidesForSinglePage {
+            isHidden = true
+        } else {
+            isHidden = false
+        }
     }
     
 }
