@@ -211,14 +211,231 @@ open class BannerView: UIView {
 open class BannerViewFlowLayout: UICollectionViewFlowLayout {
     
     /// 是否启用分页，默认false
-    open var pagingEnabled: Bool = false
+    open var isPagingEnabled: Bool = false
     
     /// 是否分页居中，默认false
-    open var pagingCenter: Bool = false
+    open var isPagingCenter: Bool = false
     
     private var lastCollectionViewSize: CGSize = .zero
     private var lastScrollDirection: UICollectionView.ScrollDirection = .horizontal
     private var lastItemSize: CGSize = .zero
+    
+    // MARK: - Lifecycle
+    public override init() {
+        super.init()
+        
+        scrollDirection = .horizontal
+        lastScrollDirection = scrollDirection
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        scrollDirection = .horizontal
+        lastScrollDirection = scrollDirection
+    }
+    
+    // MARK: - Public
+    /// 获取每页宽度，必须设置itemSize
+    open var pageWidth: CGFloat {
+        switch scrollDirection {
+        case .horizontal:
+            return itemSize.width + minimumLineSpacing
+        case .vertical:
+            return itemSize.height + minimumLineSpacing
+        default:
+            return 0
+        }
+    }
+    
+    /// 获取当前页数，即居中cell的item
+    open var currentPage: Int? {
+        guard let collectionView = collectionView else { return nil }
+        if collectionView.frame.width == 0 || collectionView.frame.height == 0 { return nil }
+        
+        if !isPagingEnabled {
+            var currentPage: Int = 0
+            if scrollDirection == .horizontal {
+                currentPage = Int((collectionView.contentOffset.x + itemSize.width * 0.5) / itemSize.width)
+            } else {
+                currentPage = Int((collectionView.contentOffset.y + itemSize.height * 0.5) / itemSize.height)
+            }
+            return max(0, currentPage)
+        }
+        
+        let centerPoint = CGPoint(x: collectionView.contentOffset.x + collectionView.bounds.width / 2, y: collectionView.contentOffset.y + collectionView.bounds.height / 2)
+        return collectionView.indexPathForItem(at: centerPoint)?.item
+    }
+    
+    /// 滚动到指定页数
+    open func scrollToPage(_ index: Int, animated: Bool = true) {
+        guard let collectionView = collectionView else { return }
+        
+        if !isPagingEnabled {
+            collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [], animated: animated)
+            return
+        }
+        
+        let proposedContentOffset: CGPoint
+        let shouldAnimate: Bool
+        switch scrollDirection {
+        case .horizontal:
+            let pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.left
+            proposedContentOffset = CGPoint(x: pageOffset, y: collectionView.contentOffset.y)
+            shouldAnimate = abs(collectionView.contentOffset.x - pageOffset) > 1 ? animated : false
+        case .vertical:
+            let pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
+            proposedContentOffset = CGPoint(x: collectionView.contentOffset.x, y: pageOffset)
+            shouldAnimate = abs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false
+        default:
+            proposedContentOffset = .zero
+            shouldAnimate = false
+        }
+        collectionView.setContentOffset(proposedContentOffset, animated: shouldAnimate)
+    }
+    
+    // MARK: - Override
+    override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        super.invalidateLayout(with: context)
+        guard isPagingEnabled, let collectionView = collectionView else { return }
+        
+        let currentCollectionViewSize = collectionView.bounds.size
+        if (!currentCollectionViewSize.equalTo(lastCollectionViewSize) || lastScrollDirection != scrollDirection || lastItemSize != itemSize) {
+            switch scrollDirection {
+            case .horizontal:
+                let inset = isPagingCenter ? (currentCollectionViewSize.width - itemSize.width) / 2 : minimumLineSpacing
+                collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+                collectionView.contentOffset = CGPoint(x: -inset, y: 0)
+            case .vertical:
+                let inset = isPagingCenter ? (currentCollectionViewSize.height - itemSize.height) / 2 : minimumLineSpacing
+                collectionView.contentInset = UIEdgeInsets(top: inset, left: 0, bottom: inset, right: 0)
+                collectionView.contentOffset = CGPoint(x: 0, y: -inset)
+            default:
+                collectionView.contentInset = .zero
+                collectionView.contentOffset = .zero
+            }
+            
+            lastCollectionViewSize = currentCollectionViewSize
+            lastScrollDirection = scrollDirection
+            lastItemSize = itemSize
+        }
+    }
+    
+    override open func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        guard isPagingEnabled else {
+            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+        }
+        
+        guard let collectionView = collectionView else {
+            return proposedContentOffset
+        }
+        let proposedRect = determineProposedRect(collectionView: collectionView, proposedContentOffset: proposedContentOffset)
+        guard let layoutAttributes = layoutAttributesForElements(in: proposedRect),
+              let candidateAttributesForRect = attributesForRect(collectionView: collectionView, layoutAttributes: layoutAttributes, proposedContentOffset: proposedContentOffset) else {
+            return proposedContentOffset
+        }
+        
+        var newOffset: CGFloat
+        let offset: CGFloat
+        switch scrollDirection {
+        case .horizontal:
+            if isPagingCenter {
+                newOffset = candidateAttributesForRect.center.x - collectionView.bounds.size.width / 2
+            } else {
+                newOffset = candidateAttributesForRect.frame.origin.x - minimumLineSpacing
+            }
+            offset = newOffset - collectionView.contentOffset.x
+            
+            if (velocity.x < 0 && offset > 0) || (velocity.x > 0 && offset < 0) {
+                newOffset += velocity.x > 0 ? pageWidth : -pageWidth
+            }
+            return CGPoint(x: newOffset, y: proposedContentOffset.y)
+        case .vertical:
+            if isPagingCenter {
+                newOffset = candidateAttributesForRect.center.y - collectionView.bounds.size.height / 2
+            } else {
+                newOffset = candidateAttributesForRect.frame.origin.y - minimumLineSpacing
+            }
+            offset = newOffset - collectionView.contentOffset.y
+            
+            if (velocity.y < 0 && offset > 0) || (velocity.y > 0 && offset < 0) {
+                newOffset += velocity.y > 0 ? pageWidth : -pageWidth
+            }
+            return CGPoint(x: proposedContentOffset.x, y: newOffset)
+        default:
+            return .zero
+        }
+    }
+    
+    func determineProposedRect(collectionView: UICollectionView, proposedContentOffset: CGPoint) -> CGRect {
+        let size = collectionView.bounds.size
+        let origin: CGPoint
+        switch scrollDirection {
+        case .horizontal:
+            origin = CGPoint(x: proposedContentOffset.x, y: collectionView.contentOffset.y)
+        case .vertical:
+            origin = CGPoint(x: collectionView.contentOffset.x, y: proposedContentOffset.y)
+        default:
+            origin = .zero
+        }
+        return CGRect(origin: origin, size: size)
+    }
+    
+    func attributesForRect(collectionView: UICollectionView, layoutAttributes: [UICollectionViewLayoutAttributes], proposedContentOffset: CGPoint) -> UICollectionViewLayoutAttributes? {
+        var candidateAttributes: UICollectionViewLayoutAttributes?
+        let proposedCenterOffset: CGFloat
+        
+        switch scrollDirection {
+        case .horizontal:
+            if isPagingCenter {
+                proposedCenterOffset = proposedContentOffset.x + collectionView.bounds.size.width / 2
+            } else {
+                proposedCenterOffset = proposedContentOffset.x + minimumLineSpacing
+            }
+        case .vertical:
+            if isPagingCenter {
+                proposedCenterOffset = proposedContentOffset.y + collectionView.bounds.size.height / 2
+            } else {
+                proposedCenterOffset = proposedContentOffset.y + minimumLineSpacing
+            }
+        default:
+            proposedCenterOffset = .zero
+        }
+        
+        for attributes in layoutAttributes {
+            guard attributes.representedElementCategory == .cell else { continue }
+            guard candidateAttributes != nil else {
+                candidateAttributes = attributes
+                continue
+            }
+            
+            switch scrollDirection {
+            case .horizontal:
+                if isPagingCenter {
+                    if abs(attributes.center.x - proposedCenterOffset) < abs(candidateAttributes!.center.x - proposedCenterOffset) {
+                        candidateAttributes = attributes
+                    }
+                } else {
+                    if abs(attributes.frame.origin.x - proposedCenterOffset) < abs(candidateAttributes!.frame.origin.x - proposedCenterOffset) {
+                        candidateAttributes = attributes
+                    }
+                }
+            case .vertical:
+                if isPagingCenter {
+                    if abs(attributes.center.y - proposedCenterOffset) < abs(candidateAttributes!.center.y - proposedCenterOffset) {
+                        candidateAttributes = attributes
+                    }
+                } else {
+                    if abs(attributes.frame.origin.y - proposedCenterOffset) < abs(candidateAttributes!.frame.origin.y - proposedCenterOffset) {
+                        candidateAttributes = attributes
+                    }
+                }
+            default:
+                continue
+            }
+        }
+        return candidateAttributes
+    }
     
 }
 
