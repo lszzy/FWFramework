@@ -22,7 +22,7 @@ public protocol PageControlDelegate: NSObjectProtocol {
 open class PageControl: UIControl {
     
     /// 点视图类
-    open var dotViewClass: AnyClass? = DotView.self {
+    open var dotViewClass: (UIView & DotViewProtocol).Type? = DotView.self {
         didSet {
             dotSize = .zero
             resetDotViews()
@@ -141,23 +141,70 @@ open class PageControl: UIControl {
     private func updateDots() {
         guard numberOfPages > 0 else { return }
         
+        for i in 0 ..< numberOfPages {
+            let dot = i < dots.count ? dots[i] : generateDotView()
+            updateDotFrame(dot, at: i)
+            changeActivity(false, at: i)
+        }
+        changeActivity(true, at: currentPage)
         
+        hideForSinglePage()
     }
     
     private func updateFrame(_ overrideExistingFrame: Bool) {
+        let center = self.center
+        let requiredSize = sizeForNumberOfPages(numberOfPages)
         
+        if overrideExistingFrame || ((CGRectGetWidth(self.frame) < requiredSize.width || CGRectGetHeight(self.frame) < requiredSize.height) && !overrideExistingFrame) {
+            self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame), requiredSize.width, requiredSize.height)
+            if shouldResizeFromCenter {
+                self.center = center
+            }
+        }
+        
+        resetDotViews()
     }
     
     private func updateDotFrame(_ dot: UIView, at index: Int) {
-        
+        let x = (self.dotSize.width + self.spacingBetweenDots) * CGFloat(index) + ((CGRectGetWidth(self.frame) - sizeForNumberOfPages(self.numberOfPages).width) / 2)
+        let y = (CGRectGetHeight(self.frame) - self.dotSize.height) / 2
+        dot.frame = CGRectMake(x, y, self.dotSize.width, self.dotSize.height)
     }
     
     private func generateDotView() -> UIView {
-        return UIView()
+        var dotView: UIView
+        if let dotViewClass = dotViewClass {
+            dotView = dotViewClass.init(frame: CGRectMake(0, 0, self.dotSize.width, self.dotSize.height))
+            if let dotView = dotView as? DotView {
+                if let dotColor = dotColor {
+                    dotView.dotColor = dotColor
+                }
+                if let currentDotColor = currentDotColor {
+                    dotView.currentDotColor = currentDotColor
+                }
+            }
+        } else {
+            dotView = UIImageView(image: dotImage)
+            dotView.frame = CGRectMake(0, 0, self.dotSize.width, self.dotSize.height)
+        }
+        customDotView?(dotView)
+        
+        self.addSubview(dotView)
+        dots.append(dotView)
+        dotView.isUserInteractionEnabled = true
+        return dotView
     }
     
     private func changeActivity(_ active: Bool, at index: Int) {
-        
+        if dotViewClass != nil {
+            if let dotView = dots[index] as? DotViewProtocol {
+                dotView.changeActivityState(active)
+            }
+        } else if dotImage != nil && currentDotImage != nil {
+            if let dotView = dots[index] as? UIImageView {
+                dotView.image = active ? currentDotImage : dotImage
+            }
+        }
     }
     
     private func resetDotViews() {
