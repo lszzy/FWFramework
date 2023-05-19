@@ -36,7 +36,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         result.autoScrollTimeInterval = 6
         result.delegate = self
         result.placeholderImage = UIImage.app.appIconImage()
-        result.itemDidScrollOperationBlock = { index in
+        result.didScrollToItemBlock = { index in
             // APP.debug("currentIndex: \(index)")
         }
         return result
@@ -152,18 +152,18 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             .size(CGSize(width: 100, height: 100))
         
         testView.app.addTapGesture { [weak self] _ in
-            self?.bannerView.makeScrollScroll(to: 0)
+            self?.bannerView.scrollToIndex(0)
         }
         
         testButton.app.addTouch { [weak self] _ in
-            self?.bannerView.makeScrollScroll(to: 1)
+            self?.bannerView.scrollToIndex(1)
         }
         
         testSwitch.app.addBlock({ [weak self] _ in
             self?.testSwitch.thumbTintColor = UIColor.app.randomColor
         }, for: .valueChanged)
         
-        self.bannerView.clickItemOperationBlock = { index in
+        self.bannerView.didSelectItemBlock = { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 Router.openURL("https://www.baidu.com", userInfo: [
                     RouterParameter.routerOptionsKey: NavigatorOptions.embedInNavigation
@@ -179,7 +179,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         
         self.segmentedControl.indexChangeBlock = { [weak self] index in
-            self?.bannerView.makeScrollScroll(to: 2)
+            self?.bannerView.scrollToIndex(2)
         }
     }
     
@@ -221,7 +221,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             "not_found.jpg",
             "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"
         ]
-        bannerView.imageURLStringsGroup = imageUrls
+        bannerView.imagesGroup = imageUrls
         
         let sectionTitles = ["Section0", "Section1", "Section2", "Section3", "Section4", "Section5", "Section6", "Section7", "Section8"]
         segmentedControl.sectionTitles = sectionTitles
