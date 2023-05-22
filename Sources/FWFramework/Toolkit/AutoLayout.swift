@@ -1146,6 +1146,20 @@ public class LayoutChain {
         self.view?.fw_pinEdge(.right, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
+    
+    @discardableResult
+    public func horizontal(toView view: Any) -> Self {
+        self.view?.fw_pinEdge(.left, toEdge: .left, ofView: view)
+        self.view?.fw_pinEdge(.right, toEdge: .right, ofView: view)
+        return self
+    }
+    
+    @discardableResult
+    public func vertical(toView view: Any) -> Self {
+        self.view?.fw_pinEdge(.top, toEdge: .top, ofView: view)
+        self.view?.fw_pinEdge(.bottom, toEdge: .bottom, ofView: view)
+        return self
+    }
 
     @discardableResult
     public func top(toViewBottom view: Any, offset: CGFloat = 0) -> Self {
