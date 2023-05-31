@@ -218,18 +218,18 @@
 
 + (void)fw_openMailApp:(NSString *)email completionHandler:(void (^)(BOOL))completion
 {
-    [self fw_openURL:[NSString stringWithFormat:@"mailto://%@", email] completionHandler:completion];
+    [self fw_openURL:[NSString stringWithFormat:@"mailto:%@", email] completionHandler:completion];
 }
 
 + (void)fw_openMessageApp:(NSString *)phone completionHandler:(void (^)(BOOL))completion
 {
-    [self fw_openURL:[NSString stringWithFormat:@"sms://%@", phone] completionHandler:completion];
+    [self fw_openURL:[NSString stringWithFormat:@"sms:%@", phone] completionHandler:completion];
 }
 
 + (void)fw_openPhoneApp:(NSString *)phone completionHandler:(void (^)(BOOL))completion
 {
     // tel:为直接拨打电话
-    [self fw_openURL:[NSString stringWithFormat:@"telprompt://%@", phone] completionHandler:completion];
+    [self fw_openURL:[NSString stringWithFormat:@"telprompt:%@", phone] completionHandler:completion];
 }
 
 + (void)fw_openActivityItems:(NSArray *)activityItems excludedTypes:(NSArray<UIActivityType> *)excludedTypes customBlock:(void (^)(UIActivityViewController *))customBlock

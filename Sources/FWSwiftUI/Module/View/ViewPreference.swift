@@ -108,6 +108,34 @@ extension View {
         }
     }
     
+    /// 监听当前滚动视图内容偏移实现悬停效果，需GeometryReader调用
+    ///
+    /// 使用示例：
+    /// GeometryReader { proxy in
+    ///     List {
+    ///       Cell
+    ///       .captureContentOffset(proxy: proxy)
+    ///
+    ///       ...
+    ///     }
+    ///     .captureContentOffset(in: $contentOffsets)
+    /// }
+    /// .hoverContentOffset(visible: contentOffset.y >= offset) {
+    ///     ...
+    /// }
+    public func hoverContentOffset<Content: View>(
+        alignment: Alignment = .top,
+        visible: Bool = true,
+        @ViewBuilder builder: @escaping () -> Content
+    ) -> some View {
+        ZStack(alignment: alignment) {
+            self
+            
+            builder()
+                .hidden(!visible)
+        }
+    }
+    
 }
 
 #endif

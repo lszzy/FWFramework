@@ -662,6 +662,16 @@ extension Wrapper where Base: NSObject {
 // MARK: - URL+Foundation
 /// 第三方URL生成器，可先判断canOpenURL，再openURL，需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组
 extension Wrapper where Base == URL {
+    
+    /**
+     生成App Store外部URL
+     
+     @param appId 应用Id
+     @return NSURL
+     */
+    public static func appStoreURL(_ appId: String) -> URL {
+        return NSURL.__fw_appStore(appId)
+    }
 
     /**
      生成苹果地图地址外部URL

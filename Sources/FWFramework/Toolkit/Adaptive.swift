@@ -69,8 +69,6 @@ extension FW {
     public static var isNotchedScreen: Bool { return UIScreen.__fw_isNotchedScreen }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { return UIScreen.__fw_pixelOne }
-    /// 屏幕半个点的大小，解决0.5pt失真问题
-    public static var pointHalf: CGFloat { return UIScreen.__fw_pointHalf }
     /// 屏幕安全区域距离
     public static var safeAreaInsets: UIEdgeInsets { return UIScreen.__fw_safeAreaInsets }
 
@@ -131,6 +129,27 @@ extension FW {
     public static func flat(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         return UIScreen.__fw_flatValue(value, scale: scale)
     }
+    
+    /// 基于指定的倍数(0取当前设备)，对传进来的size进行像素取整
+    public static func flat(_ size: CGSize, scale: CGFloat = 0) -> CGSize {
+        return CGSize(width: flat(size.width, scale: scale), height: flat(size.height, scale: scale))
+    }
+    
+    /// 基于指定的倍数(0取当前设备)，对传进来的point进行像素取整
+    public static func flat(_ point: CGPoint, scale: CGFloat = 0) -> CGPoint {
+        return CGPoint(x: flat(point.x, scale: scale), y: flat(point.y, scale: scale))
+    }
+    
+    /// 基于指定的倍数(0取当前设备)，对传进来的rect进行像素取整
+    public static func flat(_ rect: CGRect, scale: CGFloat = 0) -> CGRect {
+        return CGRect(origin: flat(rect.origin, scale: scale), size: flat(rect.size, scale: scale))
+    }
+    
+    /// 基于指定的倍数(0取当前设备)，对传进来的insets进行像素取整
+    public static func flat(_ insets: UIEdgeInsets, scale: CGFloat = 0) -> UIEdgeInsets {
+        return UIEdgeInsets(top: flat(insets.top, scale: scale), left: flat(insets.left, scale: scale), bottom: flat(insets.bottom, scale: scale), right: flat(insets.right, scale: scale))
+    }
+    
 }
 
 // MARK: - UIApplication+Adaptive
@@ -259,11 +278,6 @@ extension Wrapper where Base: UIScreen {
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
         return Base.__fw_pixelOne
-    }
-    
-    /// 屏幕半个点的大小，解决0.5pt失真问题
-    public static var pointHalf: CGFloat {
-        return Base.__fw_pointHalf
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
