@@ -787,6 +787,7 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)setScrollViewContentInset:(UIEdgeInsets)contentInset {
+    if (UIEdgeInsetsEqualToEdgeInsets(contentInset, self.scrollView.contentInset)) return;
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
@@ -965,6 +966,9 @@ static char UIScrollViewFWPullRefreshView;
         } else {
             [self setScrollViewContentInsetForInfiniteScrolling];
         }
+    }
+    if (self.finishedBlock) {
+        self.finishedBlock(self, finished);
     }
 }
 
