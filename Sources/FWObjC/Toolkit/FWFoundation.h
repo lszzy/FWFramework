@@ -473,6 +473,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (FWFoundation)
 
 /**
+ 生成App Store外部URL
+ 
+ @param appId 应用Id
+ @return NSURL
+ */
++ (NSURL *)fw_appStoreURL:(NSString *)appId NS_REFINED_FOR_SWIFT;
+
+/**
  生成苹果地图地址外部URL
  
  @param addr 显示地址，格式latitude,longitude或搜索地址
