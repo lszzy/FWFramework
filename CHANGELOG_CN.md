@@ -1,5 +1,15 @@
 # 更新日志
 
+## [4.11.0] - 2023-05-31
+
+### Added
+* SegmentedControl组件新增背景色等配置
+* 上拉追加视图新增finishedBlock属性
+* 新增全局flat快捷方法、移除pointHalf常量
+* LayoutChain支持同时collapse多个约束
+* 修复iOS14偶现DynamicLayout崩溃问题
+* 修复打开mailto、sms跳转链接问题
+
 ## [4.10.1] - 2023-04-23
 
 ### Fixed
