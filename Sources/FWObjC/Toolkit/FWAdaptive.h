@@ -127,8 +127,6 @@ static const FWScreenInch FWScreenInch67 = 67;
 #define FWIsNotchedScreen [UIScreen fw_isNotchedScreen]
 /// 屏幕一像素的大小
 #define FWPixelOne [UIScreen fw_pixelOne]
-/// 屏幕半个点的大小，解决0.5pt失真问题
-#define FWPointHalf [UIScreen fw_pointHalf]
 /// 屏幕安全区域距离
 #define FWSafeAreaInsets [UIScreen fw_safeAreaInsets]
 
@@ -191,8 +189,6 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 
 /// 获取一像素的大小
 @property (class, nonatomic, assign, readonly) CGFloat fw_pixelOne NS_REFINED_FOR_SWIFT;
-/// 屏幕半个点的大小，解决0.5pt失真问题
-@property (class, nonatomic, assign, readonly) CGFloat fw_pointHalf NS_REFINED_FOR_SWIFT;
 /// 检查是否含有安全区域，可用来判断iPhoneX
 @property (class, nonatomic, assign, readonly) BOOL fw_hasSafeAreaInsets NS_REFINED_FOR_SWIFT;
 /// 获取安全区域距离

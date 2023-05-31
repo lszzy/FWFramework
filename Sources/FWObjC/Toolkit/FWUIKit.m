@@ -6,6 +6,7 @@
 //
 
 #import "FWUIKit.h"
+#import "FWAdaptive.h"
 #import "FWAutoLayout.h"
 #import "FWBlock.h"
 #import "FWFoundation.h"
@@ -1401,7 +1402,8 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 - (void)setFw_contentInset:(UIEdgeInsets)contentInset
 {
-    objc_setAssociatedObject(self, @selector(fw_contentInset), [NSValue valueWithUIEdgeInsets:contentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    UIEdgeInsets insets = UIEdgeInsetsMake([UIScreen fw_flatValue:contentInset.top], [UIScreen fw_flatValue:contentInset.left], [UIScreen fw_flatValue:contentInset.bottom], [UIScreen fw_flatValue:contentInset.right]);
+    objc_setAssociatedObject(self, @selector(fw_contentInset), [NSValue valueWithUIEdgeInsets:insets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setNeedsDisplay];
 }
 

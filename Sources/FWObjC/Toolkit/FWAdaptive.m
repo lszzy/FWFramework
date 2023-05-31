@@ -246,11 +246,6 @@ static CGFloat fwStaticReferenceHeight = 812;
     return 1 / UIScreen.mainScreen.scale;
 }
 
-+ (CGFloat)fw_pointHalf
-{
-    return UIScreen.mainScreen.scale > 2 ? 0.75 : 0.5;
-}
-
 + (BOOL)fw_hasSafeAreaInsets
 {
     return [self fw_safeAreaInsets].bottom > 0;
