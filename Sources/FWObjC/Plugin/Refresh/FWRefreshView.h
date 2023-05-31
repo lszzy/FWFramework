@@ -106,6 +106,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nonatomic, assign, readonly) BOOL userTriggered;
 @property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
 @property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
+@property (nullable, nonatomic, copy) void (^finishedBlock)(FWInfiniteScrollView *view, BOOL finished);
 
 - (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
 - (void)setAnimationView:(nullable UIView<FWProgressViewPlugin, FWIndicatorViewPlugin> *)animationView;
