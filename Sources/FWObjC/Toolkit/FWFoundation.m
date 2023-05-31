@@ -1784,6 +1784,12 @@ static dispatch_semaphore_t fwStaticSemaphore;
 
 @implementation NSURL (FWFoundation)
 
++ (NSURL *)fw_appStoreURL:(NSString *)appId
+{
+    NSString *urlString = [NSString stringWithFormat:@"https://apps.apple.com/app/id%@", appId];
+    return [NSURL URLWithString:urlString] ?: [NSURL new];
+}
+
 + (NSURL *)fw_mapsURLWithString:(NSString *)string params:(NSDictionary *)params
 {
     NSMutableString *urlString = [[NSMutableString alloc] initWithString:string];
