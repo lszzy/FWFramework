@@ -34,6 +34,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
 @property (nonatomic, strong) FWSegmentedScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *accessibilityElements;
 @property (nonatomic, strong) NSMutableArray *titleBackgroundLayers;
+@property (nonatomic, strong) NSMutableArray *segmentBackgroundLayers;
 
 @property (nonatomic, copy) FWStatisticalClickCallback clickCallback;
 @property (nonatomic, copy) FWStatisticalExposureCallback exposureCallback;
@@ -173,6 +174,9 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     _verticalDividerColor = [UIColor blackColor];
     self.borderColor = [UIColor blackColor];
     self.borderWidth = 1.0f;
+    self.segmentBackgroundOpacity = 1.0;
+    self.segmentBackgroundEdgeInset = UIEdgeInsetsZero;
+    self.segmentBackgroundCornerRadius = 0;
     
     self.shouldAnimateUserSelection = YES;
     
@@ -260,6 +264,14 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     }
     _titleBackgroundLayers = @[].mutableCopy;
     return _titleBackgroundLayers;
+}
+
+- (NSMutableArray *)segmentBackgroundLayers {
+    if (_segmentBackgroundLayers) {
+        return _segmentBackgroundLayers;
+    }
+    _segmentBackgroundLayers = @[].mutableCopy;
+    return _segmentBackgroundLayers;
 }
 
 #pragma mark - Drawing
@@ -636,18 +648,35 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
 }
 
 - (void)removeTitleBackgroundLayers {
+    if (self.segmentBackgroundLayers.count > 0) {
+        [self.segmentBackgroundLayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+        [self.segmentBackgroundLayers removeAllObjects];
+    }
+    
     [self.titleBackgroundLayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [self.titleBackgroundLayers removeAllObjects];
 }
 
 - (void)addBackgroundAndBorderLayerWithRect:(CGRect)fullRect {
-    // Background layer
+    // Segment Background layer
+    if (self.segmentBackgroundColor) {
+        CALayer *backgroundLayer = [CALayer layer];
+        backgroundLayer.zPosition = -1;
+        backgroundLayer.backgroundColor = self.segmentBackgroundColor.CGColor;
+        backgroundLayer.opacity = self.segmentBackgroundOpacity;
+        backgroundLayer.cornerRadius = self.segmentBackgroundCornerRadius;
+        backgroundLayer.frame = CGRectMake(fullRect.origin.x + self.segmentBackgroundEdgeInset.left, fullRect.origin.y + self.segmentBackgroundEdgeInset.top, fullRect.size.width - self.segmentBackgroundEdgeInset.left - self.segmentBackgroundEdgeInset.right, fullRect.size.height - self.segmentBackgroundEdgeInset.top - self.segmentBackgroundEdgeInset.bottom);
+        [self.scrollView.layer insertSublayer:backgroundLayer atIndex:0];
+        [self.segmentBackgroundLayers addObject:backgroundLayer];
+    }
+    
+    // Title Background layer
     CALayer *backgroundLayer = [CALayer layer];
     backgroundLayer.frame = fullRect;
     [self.layer insertSublayer:backgroundLayer atIndex:0];
     [self.titleBackgroundLayers addObject:backgroundLayer];
     
-    // Border layer
+    // Title Border layer
     if (self.borderType & FWSegmentedControlBorderTypeTop) {
         CALayer *borderLayer = [CALayer layer];
         borderLayer.frame = CGRectMake(0, 0, fullRect.size.width, self.borderWidth);
