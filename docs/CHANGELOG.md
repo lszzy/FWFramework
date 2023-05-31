@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.11.0] - 2023-05-31
+
+### Added
+* Add background color and other configurations for the SegmentedControl component
+* Added finishedBlock property in the pull-up view
+* Add global flat shortcut method, remove pointHalf constant
+* LayoutChain supports to collapse multiple constraints at the same time
+* Fixed the occasional DynamicLayout crash in iOS14
+* Fix open mailto, sms jump link problem
+
 ## [4.10.1] - 2023-04-23
 
 ### Fixed

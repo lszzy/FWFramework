@@ -676,7 +676,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  最近一批添加或更新的布局约束
  */
-@property (nonatomic, copy, readonly) NSArray<NSLayoutConstraint *> *fw_lastConstraints NS_REFINED_FOR_SWIFT;
+@property (nonatomic, copy, readwrite) NSArray<NSLayoutConstraint *> *fw_lastConstraints NS_REFINED_FOR_SWIFT;
 
 /**
  获取当前所有约束
@@ -780,6 +780,8 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^leftToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^rightToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^horizontalToView)(id view);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^verticalToView)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^topToViewBottom)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^bottomToViewTop)(id view);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^leftToViewRight)(id view);

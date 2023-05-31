@@ -295,6 +295,14 @@
 
 #pragma mark - Cell
 
+- (void)fw_dynamicViewLayoutSuperview:(UIView *)superview {
+    if (objc_getAssociatedObject(superview, _cmd) != nil) return;
+    objc_setAssociatedObject(superview, _cmd, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [superview setNeedsLayout];
+    [superview layoutIfNeeded];
+}
+
 - (UIView *)fw_dynamicViewWithCellClass:(Class)clazz {
     NSString *className = NSStringFromClass(clazz);
     NSMutableDictionary *dict = objc_getAssociatedObject(self, _cmd);
@@ -320,8 +328,7 @@
     CGFloat width = CGRectGetWidth(self.frame);
     if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        [self.superview setNeedsLayout];
-        [self.superview layoutIfNeeded];
+        [self fw_dynamicViewLayoutSuperview:self.superview];
         width = CGRectGetWidth(self.frame);
     }
     if (shouldCache) *shouldCache = width > 0;
@@ -426,8 +433,7 @@
     CGFloat width = CGRectGetWidth(self.frame);
     if (width <= 0 && self.superview) {
         // 获取 TableView 宽度
-        [self.superview setNeedsLayout];
-        [self.superview layoutIfNeeded];
+        [self fw_dynamicViewLayoutSuperview:self.superview];
         width = CGRectGetWidth(self.frame);
     }
     if (shouldCache) *shouldCache = width > 0;
@@ -838,6 +844,14 @@
 
 #pragma mark - Cell
 
+- (void)fw_dynamicViewLayoutSuperview:(UIView *)superview {
+    if (objc_getAssociatedObject(superview, _cmd) != nil) return;
+    objc_setAssociatedObject(superview, _cmd, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    [superview setNeedsLayout];
+    [superview layoutIfNeeded];
+}
+
 - (UIView *)fw_dynamicViewWithCellClass:(Class)clazz
                           identifier:(NSString *)identifier {
     NSString *classIdentifier = [NSStringFromClass(clazz) stringByAppendingString:identifier];
@@ -869,8 +883,7 @@
         width = CGRectGetWidth(self.frame);
         if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            [self.superview setNeedsLayout];
-            [self.superview layoutIfNeeded];
+            [self fw_dynamicViewLayoutSuperview:self.superview];
             width = CGRectGetWidth(self.frame);
         }
     }
@@ -1039,8 +1052,7 @@
         width = CGRectGetWidth(self.frame);
         if (width <= 0 && self.superview) {
             // 获取 CollectionView 宽度
-            [self.superview setNeedsLayout];
-            [self.superview layoutIfNeeded];
+            [self fw_dynamicViewLayoutSuperview:self.superview];
             width = CGRectGetWidth(self.frame);
         }
     }
