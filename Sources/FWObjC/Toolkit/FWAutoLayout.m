@@ -792,6 +792,11 @@ static BOOL fwStaticAutoScaleView = NO;
     return self.fw_innerLastConstraints.copy;
 }
 
+- (void)setFw_lastConstraints:(NSArray<NSLayoutConstraint *> *)constraints
+{
+    [self.fw_innerLastConstraints setArray:constraints];
+}
+
 - (NSArray<NSLayoutConstraint *> *)fw_allConstraints
 {
     return self.fw_innerLayoutConstraints.copy;
@@ -1031,8 +1036,12 @@ static BOOL fwStaticAutoScaleView = NO;
 - (FWLayoutChain * (^)(id))centerToView
 {
     return ^id(id view) {
-        [self.view fw_alignAxis:NSLayoutAttributeCenterX toView:view];
-        [self.view fw_alignAxis:NSLayoutAttributeCenterY toView:view];
+        NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+        NSLayoutConstraint *constraint = [self.view fw_alignAxis:NSLayoutAttributeCenterX toView:view];
+        if (constraint) [constraints addObject:constraint];
+        constraint = [self.view fw_alignAxis:NSLayoutAttributeCenterY toView:view];
+        if (constraint) [constraints addObject:constraint];
+        self.view.fw_lastConstraints = constraints;
         return self;
     };
 }
@@ -1219,6 +1228,32 @@ static BOOL fwStaticAutoScaleView = NO;
 {
     return ^id(id view) {
         [self.view fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:view];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(id))horizontalToView
+{
+    return ^id(id view) {
+        NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+        NSLayoutConstraint *constraint = [self.view fw_pinEdge:NSLayoutAttributeLeft toEdge:NSLayoutAttributeLeft ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        constraint = [self.view fw_pinEdge:NSLayoutAttributeRight toEdge:NSLayoutAttributeRight ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        self.view.fw_lastConstraints = constraints;
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(id))verticalToView
+{
+    return ^id(id view) {
+        NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+        NSLayoutConstraint *constraint = [self.view fw_pinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeTop ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        constraint = [self.view fw_pinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeBottom ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        self.view.fw_lastConstraints = constraints;
         return self;
     };
 }
@@ -1518,8 +1553,12 @@ static BOOL fwStaticAutoScaleView = NO;
 - (FWLayoutChain * (^)(id))sizeToView
 {
     return ^id(id view) {
-        [self.view fw_matchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view];
-        [self.view fw_matchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:view];
+        NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray new];
+        NSLayoutConstraint *constraint = [self.view fw_matchDimension:NSLayoutAttributeWidth toDimension:NSLayoutAttributeWidth ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        constraint = [self.view fw_matchDimension:NSLayoutAttributeHeight toDimension:NSLayoutAttributeHeight ofView:view];
+        if (constraint) [constraints addObject:constraint];
+        self.view.fw_lastConstraints = constraints;
         return self;
     };
 }

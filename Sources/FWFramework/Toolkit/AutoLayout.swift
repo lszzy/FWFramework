@@ -461,7 +461,8 @@ extension Wrapper where Base: UIView {
     
     /// 最近一批添加或更新的布局约束
     public var lastConstraints: [NSLayoutConstraint] {
-        return base.__fw_lastConstraints
+        get { return base.__fw_lastConstraints }
+        set { base.__fw_lastConstraints = newValue }
     }
     
     /// 获取当前所有约束
@@ -610,8 +611,14 @@ public class LayoutChain {
 
     @discardableResult
     public func center(toView view: Any) -> Self {
-        self.view?.__fw_alignAxis(.centerX, toView: view)
-        self.view?.__fw_alignAxis(.centerY, toView: view)
+        var constraints: [NSLayoutConstraint] = []
+        if let constraint = self.view?.__fw_alignAxis(.centerX, toView: view) {
+            constraints.append(constraint)
+        }
+        if let constraint = self.view?.__fw_alignAxis(.centerY, toView: view) {
+            constraints.append(constraint)
+        }
+        self.view?.__fw_lastConstraints = constraints
         return self
     }
 
@@ -762,15 +769,27 @@ public class LayoutChain {
     
     @discardableResult
     public func horizontal(toView view: Any) -> Self {
-        self.view?.__fw_pinEdge(.left, toEdge: .left, ofView: view)
-        self.view?.__fw_pinEdge(.right, toEdge: .right, ofView: view)
+        var constraints: [NSLayoutConstraint] = []
+        if let constraint = self.view?.__fw_pinEdge(.left, toEdge: .left, ofView: view) {
+            constraints.append(constraint)
+        }
+        if let constraint = self.view?.__fw_pinEdge(.right, toEdge: .right, ofView: view) {
+            constraints.append(constraint)
+        }
+        self.view?.__fw_lastConstraints = constraints
         return self
     }
     
     @discardableResult
     public func vertical(toView view: Any) -> Self {
-        self.view?.__fw_pinEdge(.top, toEdge: .top, ofView: view)
-        self.view?.__fw_pinEdge(.bottom, toEdge: .bottom, ofView: view)
+        var constraints: [NSLayoutConstraint] = []
+        if let constraint = self.view?.__fw_pinEdge(.top, toEdge: .top, ofView: view) {
+            constraints.append(constraint)
+        }
+        if let constraint = self.view?.__fw_pinEdge(.bottom, toEdge: .bottom, ofView: view) {
+            constraints.append(constraint)
+        }
+        self.view?.__fw_lastConstraints = constraints
         return self
     }
 
@@ -946,8 +965,14 @@ public class LayoutChain {
 
     @discardableResult
     public func size(toView view: Any) -> Self {
-        self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view)
-        self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view)
+        var constraints: [NSLayoutConstraint] = []
+        if let constraint = self.view?.__fw_matchDimension(.width, toDimension: .width, ofView: view) {
+            constraints.append(constraint)
+        }
+        if let constraint = self.view?.__fw_matchDimension(.height, toDimension: .height, ofView: view) {
+            constraints.append(constraint)
+        }
+        self.view?.__fw_lastConstraints = constraints
         return self
     }
 
