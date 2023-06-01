@@ -141,9 +141,13 @@ import UIKit
         var height = fixedHeight
         if width <= 0 && height <= 0 {
             width = CGRectGetWidth(frame)
-            if width <= 0 && superview != nil {
-                superview?.setNeedsLayout()
-                superview?.layoutIfNeeded()
+            if width <= 0, let superview = superview {
+                if !superview.fw_propertyBool(forName: "fw_dynamicSizeLayouted") {
+                    superview.fw_setPropertyBool(true, forName: "fw_dynamicSizeLayouted")
+                    
+                    superview.setNeedsLayout()
+                    superview.layoutIfNeeded()
+                }
                 width = CGRectGetWidth(frame)
             }
         }
