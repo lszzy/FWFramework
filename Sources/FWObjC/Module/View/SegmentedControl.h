@@ -284,6 +284,34 @@ NS_SWIFT_NAME(SegmentedControl)
  */
 @property (nonatomic, readwrite) UIEdgeInsets segmentEdgeInset;
 
+/**
+ Background color of segments.
+ 
+ Defaults is nil
+ */
+@property (nonatomic, readwrite, nullable) UIColor *segmentBackgroundColor;
+
+/**
+ Background opacity of segments.
+ 
+ Defaults is 1.0
+ */
+@property (nonatomic, readwrite) CGFloat segmentBackgroundOpacity;
+
+/**
+ Background corner radius of segments.
+ 
+ Defaults is 0
+ */
+@property (nonatomic, readwrite) CGFloat segmentBackgroundCornerRadius;
+
+/**
+ Background edge inset of segments.
+ 
+ Defaults is UIEdgeInsetsZero
+ */
+@property (nonatomic, readwrite) UIEdgeInsets segmentBackgroundEdgeInset;
+
 @property (nonatomic, readwrite) UIEdgeInsets enlargeEdgeInset;
 
 /**
