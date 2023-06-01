@@ -458,7 +458,8 @@ extension Wrapper where Base: UIView {
     
     /// 最近一批添加或更新的布局约束
     public var lastConstraints: [NSLayoutConstraint] {
-        return base.fw_lastConstraints
+        get { base.fw_lastConstraints }
+        set { base.fw_lastConstraints = newValue }
     }
     
     /// 获取当前所有约束
