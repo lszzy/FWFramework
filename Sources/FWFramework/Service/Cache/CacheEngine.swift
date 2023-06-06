@@ -21,6 +21,8 @@ public protocol CacheProtocol {
     func removeObject(forKey key: String)
     /// 清空所有缓存
     func removeAllObjects()
+    /// 读取所有缓存Key
+    func allObjectKeys() -> [String]
     
 }
 
@@ -36,6 +38,8 @@ public protocol CacheEngineProtocol {
     func clearCache(forKey key: String)
     /// 从引擎清空所有缓存，内部方法，必须实现
     func clearAllCaches()
+    /// 从引擎读取所有缓存Key，内部方法，必须实现
+    func readCacheKeys() -> [String]
     
 }
 
@@ -44,13 +48,14 @@ public protocol CacheEngineProtocol {
 open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     
     private var semaphore = DispatchSemaphore(value: 1)
+    private var expireSuffix = ".__EXPIRE__"
     
     override public init() {
         super.init()
     }
     
     private func expireKey(_ key: String) -> String {
-        return key + ".__EXPIRE__"
+        return key + expireSuffix
     }
     
     // MARK: - Public
@@ -118,6 +123,13 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         semaphore.signal()
     }
     
+    public func allObjectKeys() -> [String] {
+        semaphore.wait()
+        let keys = readCacheKeys().filter { !$0.hasSuffix(expireSuffix) }
+        semaphore.signal()
+        return keys
+    }
+    
     // MARK: - CacheEngineProtocol
     open func readCache(forKey key: String) -> Any? {
         // 子类重写
@@ -134,6 +146,11 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     
     open func clearAllCaches() {
         // 子类重写
+    }
+    
+    public func readCacheKeys() -> [String] {
+        // 子类重写
+        return []
     }
     
 }
