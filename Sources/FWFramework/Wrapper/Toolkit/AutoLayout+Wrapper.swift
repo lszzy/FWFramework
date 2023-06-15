@@ -144,6 +144,18 @@ extension Wrapper where Base: UIView {
         base.fw_addCollapseConstraint(constraint)
     }
     
+    // MARK: - Toggle
+    /// 设置视图布局是否切换，默认NO，YES时为相反状态，NO时为原始状态
+    public var isToggled: Bool {
+        get { base.fw_isToggled }
+        set { base.fw_isToggled = newValue }
+    }
+
+    /// 添加视图的切换常量，必须先添加才能生效
+    public func addToggleConstraint(_ constraint: NSLayoutConstraint) {
+        base.fw_addToggleConstraint(constraint)
+    }
+    
     // MARK: - Axis
     /// 父视图居中，可指定偏移距离
     /// - Parameter offset: 偏移距离，默认zero
@@ -506,6 +518,12 @@ extension Wrapper where Base: NSLayoutConstraint {
     public var originalConstant: CGFloat {
         get { base.fw_originalConstant }
         set { base.fw_originalConstant = newValue }
+    }
+    
+    /// 可切换约束的原始激活状态，默认为添加切换约束时的状态
+    public var originalActive: Bool {
+        get { base.fw_originalActive }
+        set { base.fw_originalActive = newValue }
     }
     
 }
