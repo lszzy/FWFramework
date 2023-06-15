@@ -228,7 +228,7 @@ import FWObjC
     }
     
     // MARK: - Collapse
-    /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
+    /// 设置视图是否收缩，默认NO为原始值，YES时为收缩值
     public var fw_isCollapsed: Bool {
         get {
             return fw_propertyBool(forName: "fw_isCollapsed")
@@ -269,32 +269,32 @@ import FWObjC
         set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
     }
     
-    // MARK: - Toggle
-    /// 设置视图布局是否切换，默认NO，YES时为相反状态，NO时为原始状态
-    public var fw_isToggled: Bool {
+    // MARK: - Inactive
+    /// 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
+    public var fw_isInactive: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isToggled")
+            return fw_propertyBool(forName: "fw_isInactive")
         }
         set {
-            fw_toggleConstraints.forEach { constraint in
+            fw_inactiveConstraints.forEach { constraint in
                 constraint.isActive = newValue ? !constraint.fw_originalActive : constraint.fw_originalActive
             }
             
-            fw_setPropertyBool(newValue, forName: "fw_isToggled")
+            fw_setPropertyBool(newValue, forName: "fw_isInactive")
         }
     }
 
-    /// 添加视图的切换常量，必须先添加才能生效
-    public func fw_addToggleConstraint(_ constraint: NSLayoutConstraint) {
+    /// 添加视图的可禁用布局，必须先添加才能生效
+    public func fw_addInactiveConstraint(_ constraint: NSLayoutConstraint) {
         constraint.fw_originalActive = constraint.isActive
-        if !fw_toggleConstraints.contains(constraint) {
-            fw_toggleConstraints.append(constraint)
+        if !fw_inactiveConstraints.contains(constraint) {
+            fw_inactiveConstraints.append(constraint)
         }
     }
     
-    fileprivate var fw_toggleConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_toggleConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_toggleConstraints") }
+    fileprivate var fw_inactiveConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_inactiveConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_inactiveConstraints") }
     }
     
     // MARK: - Axis
@@ -921,7 +921,7 @@ import FWObjC
         set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
     
-    /// 可切换约束的原始激活状态，默认为添加切换约束时的状态
+    /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
     public var fw_originalActive: Bool {
         get { fw_propertyBool(forName: "fw_originalActive") }
         set { fw_setPropertyBool(newValue, forName: "fw_originalActive") }
@@ -1010,10 +1010,10 @@ public class LayoutChain {
         return self
     }
     
-    // MARK: - Toggle
+    // MARK: - Inactive
     @discardableResult
-    public func isToggled(_ isToggled: Bool) -> Self {
-        view?.fw_isToggled = isToggled
+    public func isInactive(_ isInactive: Bool) -> Self {
+        view?.fw_isInactive = isInactive
         return self
     }
 
@@ -1508,7 +1508,7 @@ public class LayoutChain {
             if let active = active {
                 obj.isActive = active
             }
-            self.view?.fw_addToggleConstraint(obj)
+            self.view?.fw_addInactiveConstraint(obj)
         })
         return self
     }

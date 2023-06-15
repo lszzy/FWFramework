@@ -119,7 +119,7 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - Collapse
-    /// 设置视图是否收缩，默认NO，YES时常量值为收缩值，NO时常量值为原始值
+    /// 设置视图是否收缩，默认NO为原始值，YES时为收缩值
     public var isCollapsed: Bool {
         get { base.fw_isCollapsed }
         set { base.fw_isCollapsed = newValue }
@@ -144,16 +144,16 @@ extension Wrapper where Base: UIView {
         base.fw_addCollapseConstraint(constraint)
     }
     
-    // MARK: - Toggle
-    /// 设置视图布局是否切换，默认NO，YES时为相反状态，NO时为原始状态
-    public var isToggled: Bool {
-        get { base.fw_isToggled }
-        set { base.fw_isToggled = newValue }
+    // MARK: - Inactive
+    /// 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
+    public var isInactive: Bool {
+        get { base.fw_isInactive }
+        set { base.fw_isInactive = newValue }
     }
 
-    /// 添加视图的切换常量，必须先添加才能生效
-    public func addToggleConstraint(_ constraint: NSLayoutConstraint) {
-        base.fw_addToggleConstraint(constraint)
+    /// 添加视图的可禁用布局，必须先添加才能生效
+    public func addInactiveConstraint(_ constraint: NSLayoutConstraint) {
+        base.fw_addInactiveConstraint(constraint)
     }
     
     // MARK: - Axis
@@ -520,7 +520,7 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.fw_originalConstant = newValue }
     }
     
-    /// 可切换约束的原始激活状态，默认为添加切换约束时的状态
+    /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
     public var originalActive: Bool {
         get { base.fw_originalActive }
         set { base.fw_originalActive = newValue }
