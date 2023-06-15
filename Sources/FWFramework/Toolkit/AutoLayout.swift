@@ -269,6 +269,34 @@ import FWObjC
         set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
     }
     
+    // MARK: - Toggle
+    /// 设置视图布局是否切换，默认NO，YES时为相反状态，NO时为原始状态
+    public var fw_isToggled: Bool {
+        get {
+            return fw_propertyBool(forName: "fw_isToggled")
+        }
+        set {
+            fw_toggleConstraints.forEach { constraint in
+                constraint.isActive = newValue ? !constraint.fw_originalActive : constraint.fw_originalActive
+            }
+            
+            fw_setPropertyBool(newValue, forName: "fw_isToggled")
+        }
+    }
+
+    /// 添加视图的切换常量，必须先添加才能生效
+    public func fw_addToggleConstraint(_ constraint: NSLayoutConstraint) {
+        constraint.fw_originalActive = constraint.isActive
+        if !fw_toggleConstraints.contains(constraint) {
+            fw_toggleConstraints.append(constraint)
+        }
+    }
+    
+    fileprivate var fw_toggleConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_toggleConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_toggleConstraints") }
+    }
+    
     // MARK: - Axis
     /// 父视图居中，可指定偏移距离
     /// - Parameter offset: 偏移距离，默认zero
@@ -893,6 +921,12 @@ import FWObjC
         set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
     
+    /// 可切换约束的原始激活状态，默认为添加切换约束时的状态
+    public var fw_originalActive: Bool {
+        get { fw_propertyBool(forName: "fw_originalActive") }
+        set { fw_setPropertyBool(newValue, forName: "fw_originalActive") }
+    }
+    
 }
 
 // MARK: - AutoLayoutAutoloader
@@ -973,6 +1007,13 @@ public class LayoutChain {
     @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
         view?.fw_hiddenCollapse = hiddenCollapse
+        return self
+    }
+    
+    // MARK: - Toggle
+    @discardableResult
+    public func isToggled(_ isToggled: Bool) -> Self {
+        view?.fw_isToggled = isToggled
         return self
     }
 
@@ -1457,6 +1498,17 @@ public class LayoutChain {
     public func original(_ constant: CGFloat) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
             obj.fw_originalConstant = constant
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func toggle(_ active: Bool? = nil) -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            if let active = active {
+                obj.isActive = active
+            }
+            self.view?.fw_addToggleConstraint(obj)
         })
         return self
     }
