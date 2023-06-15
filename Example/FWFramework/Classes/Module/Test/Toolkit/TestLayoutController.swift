@@ -71,7 +71,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         image.image = UIImage.app.appIconImage()
         image.isUserInteractionEnabled = true
         image.app.addTapGesture { _ in
-            image.app.isToggled = !image.app.isToggled
+            image.app.isInactive = !image.app.isInactive
         }
         view.addSubview(image)
         image.app.layoutChain
