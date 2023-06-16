@@ -325,7 +325,7 @@ extension Wrapper where Base: UIScreen {
         set { Base.__fw_referenceSize = newValue }
     }
     
-    /// 配置是否全局自动对相对值像素取整(仅影响relative|fixed相关方法)，默认NO
+    /// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO
     public static var autoFlat: Bool {
         get { return Base.__fw_autoFlat }
         set { Base.__fw_autoFlat = newValue }
@@ -341,12 +341,12 @@ extension Wrapper where Base: UIScreen {
         return Base.__fw_relativeHeightScale
     }
 
-    /// 获取相对设计图宽度等比例缩放值
+    /// 获取相对设计图宽度等比例缩放值，受autoFlat开关影响
     public static func relativeValue(_ value: CGFloat) -> CGFloat {
         return Base.__fw_relativeValue(value)
     }
 
-    /// 获取相对设计图高度等比例缩放值
+    /// 获取相对设计图高度等比例缩放值，受autoFlat开关影响
     public static func relativeHeight(_ value: CGFloat) -> CGFloat {
         return Base.__fw_relativeHeight(value)
     }

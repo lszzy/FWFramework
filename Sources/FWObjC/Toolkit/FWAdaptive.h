@@ -207,17 +207,17 @@ FOUNDATION_EXPORT CGFloat FWFlatScale(CGFloat value, CGFloat scale) NS_SWIFT_UNA
 
 /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
 @property (class, nonatomic, assign) CGSize fw_referenceSize NS_REFINED_FOR_SWIFT;
-/// 配置是否全局自动对相对值像素取整(仅影响relative|fixed相关方法)，默认NO
+/// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO
 @property (class, nonatomic, assign) BOOL fw_autoFlat NS_REFINED_FOR_SWIFT;
 /// 获取当前屏幕宽度缩放比例，宽度常用
 @property (class, nonatomic, assign, readonly) CGFloat fw_relativeScale NS_REFINED_FOR_SWIFT;
 /// 获取当前屏幕高度缩放比例，高度不常用
 @property (class, nonatomic, assign, readonly) CGFloat fw_relativeHeightScale NS_REFINED_FOR_SWIFT;
 
-/// 获取相对设计图宽度等比例缩放值
+/// 获取相对设计图宽度等比例缩放值，受autoFlat开关影响
 + (CGFloat)fw_relativeValue:(CGFloat)value NS_REFINED_FOR_SWIFT;
 
-/// 获取相对设计图高度等比例缩放值
+/// 获取相对设计图高度等比例缩放值，受autoFlat开关影响
 + (CGFloat)fw_relativeHeight:(CGFloat)value NS_REFINED_FOR_SWIFT;
 
 /// 获取相对设计图宽度等比例缩放时的固定宽度值

@@ -398,27 +398,24 @@ static BOOL fwStaticAutoFlat = NO;
 
 + (CGFloat)fw_relativeValue:(CGFloat)value
 {
-    return [self fw_autoFlatValue:value * [self fw_relativeScale]];
+    CGFloat result = value * [self fw_relativeScale];
+    return fwStaticAutoFlat ? [self fw_flatValue:result] : result;
 }
 
 + (CGFloat)fw_relativeHeight:(CGFloat)value
 {
-    return [self fw_autoFlatValue:value * [self fw_relativeHeightScale]];
+    CGFloat result = value * [self fw_relativeHeightScale];
+    return fwStaticAutoFlat ? [self fw_flatValue:result] : result;
 }
 
 + (CGFloat)fw_fixedValue:(CGFloat)value
 {
-    return [self fw_autoFlatValue:value / [self fw_relativeScale]];
+    return value / [self fw_relativeScale];
 }
 
 + (CGFloat)fw_fixedHeight:(CGFloat)value
 {
-    return [self fw_autoFlatValue:value / [self fw_relativeHeightScale]];
-}
-
-+ (CGFloat)fw_autoFlatValue:(CGFloat)value
-{
-    return fwStaticAutoFlat ? [self fw_flatValue:value] : value;
+    return value / [self fw_relativeHeightScale];
 }
 
 + (CGFloat)fw_flatValue:(CGFloat)value
