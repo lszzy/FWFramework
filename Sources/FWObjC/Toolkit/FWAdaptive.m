@@ -185,6 +185,7 @@ CGFloat FWFlatScale(CGFloat value, CGFloat scale) {
 
 static CGFloat fwStaticReferenceWidth = 375;
 static CGFloat fwStaticReferenceHeight = 812;
+static BOOL fwStaticAutoFlat = NO;
 
 @implementation UIScreen (FWAdaptive)
 
@@ -367,6 +368,16 @@ static CGFloat fwStaticReferenceHeight = 812;
     fwStaticReferenceHeight = size.height;
 }
 
++ (BOOL)fw_autoFlat
+{
+    return fwStaticAutoFlat;
+}
+
++ (void)setFw_autoFlat:(BOOL)autoFlat
+{
+    fwStaticAutoFlat = autoFlat;
+}
+
 + (CGFloat)fw_relativeScale
 {
     if ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) {
@@ -387,12 +398,14 @@ static CGFloat fwStaticReferenceHeight = 812;
 
 + (CGFloat)fw_relativeValue:(CGFloat)value
 {
-    return value * [self fw_relativeScale];
+    CGFloat result = value * [self fw_relativeScale];
+    return fwStaticAutoFlat ? [self fw_flatValue:result] : result;
 }
 
 + (CGFloat)fw_relativeHeight:(CGFloat)value
 {
-    return value * [self fw_relativeHeightScale];
+    CGFloat result = value * [self fw_relativeHeightScale];
+    return fwStaticAutoFlat ? [self fw_flatValue:result] : result;
 }
 
 + (CGFloat)fw_fixedValue:(CGFloat)value

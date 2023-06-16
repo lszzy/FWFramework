@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Collapse
 
 /**
- 设置视图是否收缩，默认NO，YES时常量值为收缩值，NO时常量值为原始值
+ 设置视图是否收缩，默认NO为原始值，YES时为收缩值
  */
 @property (nonatomic, assign) BOOL fw_isCollapsed NS_REFINED_FOR_SWIFT;
 
@@ -117,6 +117,18 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://github.com/forkingdog/UIView-FDCollapsibleConstraints
  */
 - (void)fw_addCollapseConstraint:(NSLayoutConstraint *)constraint NS_REFINED_FOR_SWIFT;
+
+#pragma mark - Inactive
+
+/**
+ 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
+ */
+@property (nonatomic, assign) BOOL fw_isInactive NS_REFINED_FOR_SWIFT;
+
+/**
+ 添加视图的可禁用布局，必须先添加才能生效
+ */
+- (void)fw_addInactiveConstraint:(NSLayoutConstraint *)constraint NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Axis
 
@@ -711,6 +723,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
 @property (nonatomic, assign) CGFloat fw_originalConstant NS_REFINED_FOR_SWIFT;
 
+/// 可禁用约束的原始状态，默认为添加禁用约束时的状态
+@property (nonatomic, assign) BOOL fw_originalActive NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - FWLayoutChain
@@ -744,6 +759,10 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^isCollapsed)(BOOL isCollapsed);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^autoCollapse)(BOOL autoCollapse);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^hiddenCollapse)(BOOL hiddenCollapse);
+
+#pragma mark - Inactive
+
+@property (nonatomic, copy, readonly) FWLayoutChain * (^isInactive)(BOOL isInactive);
 
 #pragma mark - Axis
 
@@ -847,6 +866,7 @@ NS_SWIFT_UNAVAILABLE("")
 @property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^collapse)(CGFloat constant);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^original)(CGFloat constant);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^toggle)(BOOL active);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^identifier)(NSString * _Nullable identifier);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^active)(BOOL active);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^remove)(void);
