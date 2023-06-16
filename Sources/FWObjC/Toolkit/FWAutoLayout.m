@@ -396,12 +396,12 @@ static BOOL fwStaticAutoScaleView = NO;
 
 - (void)setFw_isInactive:(BOOL)isInactive
 {
-    [self.fw_innerInactiveConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
-        if (isInactive) {
-            constraint.active = !constraint.fw_originalActive;
-        } else {
-            constraint.active = constraint.fw_originalActive;
-        }
+    NSArray *inactiveConstraints = [self.fw_innerInactiveConstraints sortedArrayUsingComparator:^NSComparisonResult(NSLayoutConstraint *obj1, NSLayoutConstraint *obj2) {
+        BOOL active1 = isInactive ? !obj1.fw_originalActive : obj1.fw_originalActive;
+        return !active1 ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    [inactiveConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
+        constraint.active = isInactive ? !constraint.fw_originalActive : constraint.fw_originalActive;
     }];
     
     objc_setAssociatedObject(self, @selector(fw_isInactive), @(isInactive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
