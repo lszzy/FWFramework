@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.11.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.12.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2531,6 +2531,9 @@
                 <a href="../Extensions/Font.html">Font</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/HStack.html">HStack</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions.html#/c:objc(cs)NSISO8601DateFormatter">ISO8601DateFormatter</a>
               </li>
               <li class="nav-group-task">
@@ -2553,6 +2556,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions.html#/s:10Foundation11JSONEncoderC">JSONEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/LazyHGrid.html">LazyHGrid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/LazyHStack.html">LazyHStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/LazyVGrid.html">LazyVGrid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/LazyVStack.html">LazyVStack</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/List.html">List</a>
@@ -2580,6 +2595,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Spacer.html">Spacer</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/String.html">String</a>
@@ -2610,6 +2628,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/URL.html">URL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/VStack.html">VStack</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/View.html">View</a>
@@ -23761,6 +23782,33 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE8autoFlatSbvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/autoFlat" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE8autoFlatSbvpZ">autoFlat</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">autoFlat</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE13relativeScale14CoreFoundation7CGFloatVvpZ"></a>
                     <a name="//apple_ref/swift/Variable/relativeScale" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE13relativeScale14CoreFoundation7CGFloatVvpZ">relativeScale</a>
@@ -24736,7 +24784,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值</p>
+                        <p>设置视图是否收缩，默认NO为原始值，YES时为收缩值</p>
 
                       </div>
                       <div class="declaration">
@@ -24830,6 +24878,73 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCollapseConstraint</span><span class="p">(</span><span class="n">_</span> <span class="nv">constraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Inactive"></a>
+                <a name="//apple_ref/swift/Section/Inactive" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Inactive"></a>
+                  <h3 class="section-name"><span>Inactive</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10isInactiveSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isInactive" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE10isInactiveSbvp">isInactive</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isInactive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE21addInactiveConstraintyySo08NSLayoutF0CF"></a>
+                    <a name="//apple_ref/swift/Method/addInactiveConstraint(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE21addInactiveConstraintyySo08NSLayoutF0CF">addInactiveConstraint(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>添加视图的可禁用布局，必须先添加才能生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addInactiveConstraint</span><span class="p">(</span><span class="n">_</span> <span class="nv">constraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -27290,6 +27405,33 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">originalConstant</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14originalActiveSbvp"></a>
+                    <a name="//apple_ref/swift/Property/originalActive" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14originalActiveSbvp">originalActive</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>可禁用约束的原始状态，默认为添加禁用约束时的状态</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">originalActive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -48325,7 +48467,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-05-31)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-16)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

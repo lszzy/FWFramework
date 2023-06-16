@@ -17,7 +17,7 @@
     <a title="Categories  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.11.0 Docs</a> (69% documented)</p>
+        <p><a href="index.html">FWFramework 4.12.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2531,6 +2531,9 @@
                 <a href="Extensions/Font.html">Font</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/HStack.html">HStack</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/c:objc(cs)NSISO8601DateFormatter">ISO8601DateFormatter</a>
               </li>
               <li class="nav-group-task">
@@ -2553,6 +2556,18 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation11JSONEncoderC">JSONEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/LazyHGrid.html">LazyHGrid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/LazyHStack.html">LazyHStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/LazyVGrid.html">LazyVGrid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/LazyVStack.html">LazyVStack</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/List.html">List</a>
@@ -2580,6 +2595,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/Spacer.html">Spacer</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/String.html">String</a>
@@ -2610,6 +2628,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/URL.html">URL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions/VStack.html">VStack</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/View.html">View</a>
@@ -4008,6 +4029,8 @@
 
 <span class="c1">/// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGSize</span> <span class="n">fw_referenceSize</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_autoFlat</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 <span class="c1">/// 获取当前屏幕宽度缩放比例，宽度常用</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_relativeScale</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 <span class="c1">/// 获取当前屏幕高度缩放比例，高度不常用</span>
@@ -4383,6 +4406,9 @@
 
 <span class="c1">/// 可收缩约束的原始常量值，默认为添加收缩约束时的值</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_originalConstant</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 可禁用约束的原始状态，默认为添加禁用约束时的状态</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_originalActive</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -8987,7 +9013,7 @@ shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其�
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-05-31)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-16)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
