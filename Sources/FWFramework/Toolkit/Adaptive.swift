@@ -325,6 +325,12 @@ extension Wrapper where Base: UIScreen {
         set { Base.__fw_referenceSize = newValue }
     }
     
+    /// 配置是否全局自动对相对值像素取整(仅影响relative|fixed相关方法)，默认NO
+    public static var autoFlat: Bool {
+        get { return Base.__fw_autoFlat }
+        set { Base.__fw_autoFlat = newValue }
+    }
+    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
         return Base.__fw_relativeScale
