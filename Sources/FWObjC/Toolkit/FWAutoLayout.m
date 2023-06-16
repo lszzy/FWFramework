@@ -69,6 +69,16 @@
     objc_setAssociatedObject(self, @selector(fw_originalConstant), @(originalConstant), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)fw_originalActive
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFw_originalActive:(BOOL)originalActive
+{
+    objc_setAssociatedObject(self, @selector(fw_originalActive), @(originalActive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 #pragma mark - UIView+FWAutoLayout
@@ -368,6 +378,44 @@ static BOOL fwStaticAutoScaleView = NO;
 }
 
 - (NSMutableArray *)fw_innerCollapseConstraints
+{
+    NSMutableArray *constraints = objc_getAssociatedObject(self, _cmd);
+    if (!constraints) {
+        constraints = [NSMutableArray array];
+        objc_setAssociatedObject(self, _cmd, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return constraints;
+}
+
+#pragma mark - Inactive
+
+- (BOOL)fw_isInactive
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setFw_isInactive:(BOOL)isInactive
+{
+    [self.fw_innerInactiveConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
+        if (isInactive) {
+            constraint.active = !constraint.fw_originalActive;
+        } else {
+            constraint.active = constraint.fw_originalActive;
+        }
+    }];
+    
+    objc_setAssociatedObject(self, @selector(fw_isInactive), @(isInactive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)fw_addInactiveConstraint:(NSLayoutConstraint *)constraint
+{
+    constraint.fw_originalActive = constraint.isActive;
+    if (![self.fw_innerInactiveConstraints containsObject:constraint]) {
+        [self.fw_innerInactiveConstraints addObject:constraint];
+    }
+}
+
+- (NSMutableArray *)fw_innerInactiveConstraints
 {
     NSMutableArray *constraints = objc_getAssociatedObject(self, _cmd);
     if (!constraints) {
@@ -979,6 +1027,16 @@ static BOOL fwStaticAutoScaleView = NO;
 {
     return ^id(BOOL hiddenCollapse) {
         self.view.fw_hiddenCollapse = hiddenCollapse;
+        return self;
+    };
+}
+
+#pragma mark - Inactive
+
+- (FWLayoutChain * (^)(BOOL))isInactive
+{
+    return ^id(BOOL isInactive) {
+        self.view.fw_isInactive = isInactive;
         return self;
     };
 }
@@ -1701,6 +1759,17 @@ static BOOL fwStaticAutoScaleView = NO;
     return ^id(CGFloat constant) {
         [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
             obj.fw_originalConstant = constant;
+        }];
+        return self;
+    };
+}
+
+- (FWLayoutChain * (^)(BOOL))toggle
+{
+    return ^id(BOOL active) {
+        [self.view.fw_lastConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
+            obj.active = active;
+            [self.view fw_addInactiveConstraint:obj];
         }];
         return self;
     };

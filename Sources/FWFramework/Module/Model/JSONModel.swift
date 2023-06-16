@@ -244,14 +244,6 @@ extension FloatPropertyProtocol {
 extension Float: FloatPropertyProtocol {}
 extension Double: FloatPropertyProtocol {}
 
-fileprivate let formatter: NumberFormatter = {
-    let formatter = NumberFormatter()
-    formatter.usesGroupingSeparator = false
-    formatter.numberStyle = .decimal
-    formatter.maximumFractionDigits = 16
-    return formatter
-}()
-
 extension String: _BuiltInBasicType {
 
     static func _transform(from object: Any) -> String? {
@@ -267,7 +259,7 @@ extension String: _BuiltInBasicType {
                     return "false"
                 }
             }
-            return formatter.string(from: num)
+            return num.stringValue
         case _ as NSNull:
             return nil
         default:
@@ -518,11 +510,19 @@ extension _ExtendCustomModelType {
 }
 
 fileprivate func convertKeyIfNeeded(dict: [String: Any]) -> [String: Any] {
-    if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+    if !JSONModelConfiguration.deserializeOptions.isEmpty {
         var newDict = [String: Any]()
         dict.forEach({ (kvPair) in
-            let (key, value) = kvPair
-            newDict[key.lowercased()] = value
+            var newKey = kvPair.key
+            if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                newKey = newKey.fw.camelString
+            } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                newKey = newKey.fw.underlineString
+            }
+            if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+                newKey = newKey.lowercased()
+            }
+            newDict[newKey] = kvPair.value
         })
         return newDict
     }
@@ -592,8 +592,20 @@ fileprivate func merge(children: [(String, Any)], propertyInfos: [PropertyInfo])
     }
 
     var result = [String: (Any, PropertyInfo?)]()
-    children.forEach { (child) in
-        result[child.0] = (child.1, infoDict[child.0])
+    if JSONModelConfiguration.deserializeOptions.contains(.serializeReverse) {
+        children.forEach { (child) in
+            var key = child.0
+            if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                key = key.fw.underlineString
+            } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                key = key.fw.camelString
+            }
+            result[key] = (child.1, infoDict[child.0])
+        }
+    } else {
+        children.forEach { (child) in
+            result[child.0] = (child.1, infoDict[child.0])
+        }
     }
     return result
 }
@@ -1233,7 +1245,13 @@ public struct DeserializeOptions: OptionSet {
     public let rawValue: Int
 
     public static let caseInsensitive = DeserializeOptions(rawValue: 1 << 0)
-
+    
+    public static let snakeToCamel = DeserializeOptions(rawValue: 1 << 1)
+    
+    public static let camelToSnake = DeserializeOptions(rawValue: 1 << 2)
+    
+    public static let serializeReverse = DeserializeOptions(rawValue: 1 << 3)
+    
     public static let defaultOptions: DeserializeOptions = []
 
     public init(rawValue: Int) {
