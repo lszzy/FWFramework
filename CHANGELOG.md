@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.12.0] - 2023-06-16
+
+### Added
+* SwiftUI adds commonly used relative layout methods
+* AutoLayout supports switching to disable multiple layout constraints
+* JSONModel supports underscore and camel case conversion
+* Fix the loss of precision of JSONModel large number conversion to string on iOS15 and above
+
 ## [4.11.0] - 2023-05-31
 
 ### Added
