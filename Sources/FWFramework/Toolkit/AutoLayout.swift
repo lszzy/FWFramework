@@ -122,7 +122,7 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - Collapse
-    /// 设置视图是否收缩，默认NO，YES时常量值为0，NO时常量值为原始值
+    /// 设置视图是否收缩，默认NO为原始值，YES时为收缩值
     public var isCollapsed: Bool {
         get { return base.__fw_isCollapsed }
         set { base.__fw_isCollapsed = newValue }
@@ -145,6 +145,18 @@ extension Wrapper where Base: UIView {
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
     public func addCollapseConstraint(_ constraint: NSLayoutConstraint) {
         base.__fw_addCollapseConstraint(constraint)
+    }
+    
+    // MARK: - Inactive
+    /// 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
+    public var isInactive: Bool {
+        get { base.__fw_isInactive }
+        set { base.__fw_isInactive = newValue }
+    }
+
+    /// 添加视图的可禁用布局，必须先添加才能生效
+    public func addInactiveConstraint(_ constraint: NSLayoutConstraint) {
+        base.__fw_addInactiveConstraint(constraint)
     }
     
     // MARK: - Axis
@@ -511,6 +523,12 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.__fw_originalConstant = newValue }
     }
     
+    /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
+    public var originalActive: Bool {
+        get { base.__fw_originalActive }
+        set { base.__fw_originalActive = newValue }
+    }
+    
 }
 
 // MARK: - LayoutChain
@@ -587,6 +605,13 @@ public class LayoutChain {
     @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
         view?.__fw_hiddenCollapse = hiddenCollapse
+        return self
+    }
+    
+    // MARK: - Inactive
+    @discardableResult
+    public func isInactive(_ isInactive: Bool) -> Self {
+        view?.__fw_isInactive = isInactive
         return self
     }
 
@@ -1071,6 +1096,17 @@ public class LayoutChain {
     public func original(_ constant: CGFloat) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
             obj.__fw_originalConstant = constant
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func toggle(_ active: Bool? = nil) -> Self {
+        self.view?.__fw_lastConstraints.forEach({ obj in
+            if let active = active {
+                obj.isActive = active
+            }
+            self.view?.__fw_addInactiveConstraint(obj)
         })
         return self
     }

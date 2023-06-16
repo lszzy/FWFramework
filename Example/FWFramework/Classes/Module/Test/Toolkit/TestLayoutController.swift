@@ -29,11 +29,14 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let subview = UIView()
         subview.backgroundColor = AppTheme.textColor
         view.addSubview(subview)
+        subview.fw.addTapGesture { _ in
+            subview.fw.isCollapsed = !subview.fw.isCollapsed
+        }
         subview.fw.layoutChain.remake()
             .top(toSafeArea: 20)
-            .left(20)
+            .left(20).collapse()
             .size(CGSize(width: 100, height: 100))
-            .width(50)
+            .width(50).collapse()
             .height(50)
         
         let label = UILabel()
@@ -43,9 +46,13 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         label.backgroundColor = AppTheme.backgroundColor
         label.fw.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         label.fw.setCornerRadius(5)
+        label.isUserInteractionEnabled = true
+        label.fw.addTapGesture { _ in
+            subview.fw.isCollapsed = !subview.fw.isCollapsed
+        }
         view.addSubview(label)
         label.fw.layoutMaker { make in
-            make.width(toView: subview)
+            make.width(50)
                 .centerY(toView: subview)
                 .left(toViewRight: subview, offset: 20)
         }
@@ -55,19 +62,24 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         button.setTitle("btn", for: .normal)
         view.addSubview(button)
         button.fw.layoutChain
-            .width(toView: subview)
+            .width(50)
             .height(toView: subview)
             .left(toViewRight: label, offset: 20)
             .top(toView: subview, offset: 0)
         
         let image = UIImageView()
         image.image = UIImage.fw.appIconImage()
+        image.isUserInteractionEnabled = true
+        image.fw.addTapGesture { _ in
+            image.fw.isInactive = !image.fw.isInactive
+        }
         view.addSubview(image)
         image.fw.layoutChain
-            .attribute(.width, toAttribute: .width, ofView: subview)
+            .width(50)
             .height(toWidth: 1.0)
             .centerY(toView: subview)
-            .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh)
+            .right(20).toggle(false)
+            .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh).toggle()
         
         let lineHeight = ceil(FW.font(16).lineHeight)
         let moreText = "点击展开"
