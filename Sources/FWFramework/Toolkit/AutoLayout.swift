@@ -276,7 +276,9 @@ import FWObjC
             return fw_propertyBool(forName: "fw_isInactive")
         }
         set {
-            fw_inactiveConstraints.forEach { constraint in
+            fw_inactiveConstraints.sorted { constraint, _ in
+                return newValue ? constraint.fw_originalActive : !constraint.fw_originalActive
+            }.forEach { constraint in
                 constraint.isActive = newValue ? !constraint.fw_originalActive : constraint.fw_originalActive
             }
             
