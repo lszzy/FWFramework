@@ -470,6 +470,9 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var fw_referenceSize: CGSize = CGSize(width: 375, height: 812)
     
+    /// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO
+    public static var fw_autoFlat: Bool = false
+    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var fw_relativeScale: CGFloat {
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
@@ -488,14 +491,16 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         }
     }
 
-    /// 获取相对设计图宽度等比例缩放值
+    /// 获取相对设计图宽度等比例缩放值，受autoFlat开关影响
     public static func fw_relativeValue(_ value: CGFloat) -> CGFloat {
-        return value * fw_relativeScale
+        let result = value * fw_relativeScale
+        return UIScreen.fw_autoFlat ? UIScreen.fw_flatValue(result) : result
     }
 
-    /// 获取相对设计图高度等比例缩放值
+    /// 获取相对设计图高度等比例缩放值，受autoFlat开关影响
     public static func fw_relativeHeight(_ value: CGFloat) -> CGFloat {
-        return value * fw_relativeHeightScale
+        let result = value * fw_relativeHeightScale
+        return UIScreen.fw_autoFlat ? UIScreen.fw_flatValue(result) : result
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
