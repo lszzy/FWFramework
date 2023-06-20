@@ -471,7 +471,7 @@ import FWObjC
     }
     
     /// 标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法
-    public func fw_barTransitionNeedsUpdate() {
+    internal func fw_barTransitionNeedsUpdate() {
         guard let navigationBar = navigationController?.navigationBar,
               let transitionNavigationBar = fw_transitionNavigationBar else { return }
         transitionNavigationBar.fw_replaceStyle(navigationBar: navigationBar)
