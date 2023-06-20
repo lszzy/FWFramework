@@ -155,7 +155,7 @@ open class NavigationBarAppearance: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            selfObject.fw_updateNavigationBarStyle(animated)
+            selfObject.fw_updateNavigationBarStyle(animated, isAppeared: false)
         }}
     }
     
@@ -190,7 +190,7 @@ open class NavigationBarAppearance: NSObject {
         set {
             fw_setProperty(newValue, forName: "fw_navigationBarAppearance")
             if self.isViewLoaded && self.view.window != nil {
-                self.fw_updateNavigationBarStyle(false)
+                self.fw_updateNavigationBarStyle(false, isAppeared: true)
             }
         }
     }
@@ -204,7 +204,7 @@ open class NavigationBarAppearance: NSObject {
         set {
             fw_setPropertyInt(newValue.rawValue, forName: "fw_navigationBarStyle")
             if self.isViewLoaded && self.view.window != nil {
-                self.fw_updateNavigationBarStyle(false)
+                self.fw_updateNavigationBarStyle(false, isAppeared: true)
             }
         }
     }
@@ -225,7 +225,7 @@ open class NavigationBarAppearance: NSObject {
     public func fw_setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
         fw_setPropertyBool(hidden, forName: "fw_navigationBarHidden")
         if self.isViewLoaded && self.view.window != nil {
-            self.fw_updateNavigationBarStyle(false)
+            self.fw_updateNavigationBarStyle(false, isAppeared: true)
         }
     }
     
@@ -262,7 +262,7 @@ open class NavigationBarAppearance: NSObject {
         return nil
     }
     
-    private func fw_updateNavigationBarStyle(_ animated: Bool) {
+    private func fw_updateNavigationBarStyle(_ animated: Bool, isAppeared: Bool) {
         // 含有导航栏且不是导航栏控制器，如果是child控制器且允许修改时才处理
         guard let navigationController = self.navigationController,
               !(self is UINavigationController) else { return }
@@ -290,6 +290,11 @@ open class NavigationBarAppearance: NSObject {
         
         // 应用当前导航栏appearance
         navigationController.navigationBar.fw_applyBarAppearance(appearance)
+        
+        // 标记转场导航栏样式需要刷新
+        if isAppeared {
+            fw_barTransitionNeedsUpdate()
+        }
     }
 
     /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar

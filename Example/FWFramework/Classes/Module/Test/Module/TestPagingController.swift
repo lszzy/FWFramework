@@ -117,7 +117,6 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
             self.barAppearance.foregroundColor = .white
             self.app.navigationBarAppearance = self.barAppearance
             self.app.statusBarStyle = .lightContent
-            if soFast { self.app.barTransitionNeedsUpdate() }
             
             self.pagerView.isHidden = false
             self.cartView.isHidden = false
