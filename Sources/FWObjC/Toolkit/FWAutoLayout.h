@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
+/// 是否自动等比例缩放后像素取整，默认NO
+@property (class, nonatomic, assign) BOOL fw_autoFlat NS_REFINED_FOR_SWIFT;
+
 /// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
 @property (nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
