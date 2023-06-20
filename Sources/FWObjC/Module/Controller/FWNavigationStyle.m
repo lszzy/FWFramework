@@ -6,6 +6,7 @@
 //
 
 #import "FWNavigationStyle.h"
+#import "FWNavigationController.h"
 #import "FWBarAppearance.h"
 #import "FWSwizzle.h"
 #import "FWUIKit.h"
@@ -108,7 +109,7 @@
         
         FWSwizzleClass(UIViewController, @selector(viewWillAppear:), FWSwizzleReturn(void), FWSwizzleArgs(BOOL animated), FWSwizzleCode({
             FWSwizzleOriginal(animated);
-            [selfObject fw_updateNavigationBarStyle:animated];
+            [selfObject fw_updateNavigationBarStyle:animated isAppeared:NO];
         }));
     });
 }
@@ -145,7 +146,7 @@
     objc_setAssociatedObject(self, @selector(fw_navigationBarAppearance), navigationBarAppearance, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded && self.view.window) {
-        [self fw_updateNavigationBarStyle:NO];
+        [self fw_updateNavigationBarStyle:NO isAppeared:YES];
     }
 }
 
@@ -159,7 +160,7 @@
     objc_setAssociatedObject(self, @selector(fw_navigationBarStyle), @(navigationBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded && self.view.window) {
-        [self fw_updateNavigationBarStyle:NO];
+        [self fw_updateNavigationBarStyle:NO isAppeared:YES];
     }
 }
 
@@ -180,7 +181,7 @@
     objc_setAssociatedObject(self, @selector(fw_navigationBarHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.isViewLoaded && self.view.window) {
-        [self fw_updateNavigationBarStyle:animated];
+        [self fw_updateNavigationBarStyle:animated isAppeared:YES];
     }
 }
 
@@ -218,7 +219,7 @@
     return appearance;
 }
 
-- (void)fw_updateNavigationBarStyle:(BOOL)animated
+- (void)fw_updateNavigationBarStyle:(BOOL)animated isAppeared:(BOOL)isAppeared
 {
     // 含有导航栏且不是导航栏控制器，如果是child控制器且允许修改时才处理
     if (!self.navigationController || [self isKindOfClass:[UINavigationController class]]) return;
@@ -246,6 +247,11 @@
     
     // 应用当前导航栏appearance
     [self.navigationController.navigationBar fw_applyBarAppearance:appearance];
+    
+    // 标记转场导航栏样式需要刷新
+    if (isAppeared) {
+        [self fw_barTransitionNeedsUpdate];
+    }
 }
 
 - (BOOL)fw_tabBarHidden
