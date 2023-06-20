@@ -313,6 +313,12 @@ extension Wrapper where Base: UIFont {
         get { return Base.fw_autoScale }
         set { Base.fw_autoScale = newValue }
     }
+    
+    /// 是否自动等比例缩放后像素取整，默认NO
+    public static var autoFlat: Bool {
+        get { return Base.fw_autoFlat }
+        set { Base.fw_autoFlat = newValue }
+    }
 
     /// 返回系统Thin字体，自动等比例缩放
     public static func thinFont(ofSize: CGFloat) -> UIFont {

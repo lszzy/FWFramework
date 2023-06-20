@@ -172,12 +172,6 @@ extension Wrapper where Base: UIScreen {
         set { Base.fw_referenceSize = newValue }
     }
     
-    /// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO
-    public static var autoFlat: Bool {
-        get { return Base.fw_autoFlat }
-        set { Base.fw_autoFlat = newValue }
-    }
-    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
         return Base.fw_relativeScale
@@ -188,24 +182,24 @@ extension Wrapper where Base: UIScreen {
         return Base.fw_relativeHeightScale
     }
 
-    /// 获取相对设计图宽度等比例缩放值，受autoFlat开关影响
-    public static func relativeValue(_ value: CGFloat) -> CGFloat {
-        return Base.fw_relativeValue(value)
+    /// 获取相对设计图宽度等比例缩放值
+    public static func relativeValue(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return Base.fw_relativeValue(value, flat: flat)
     }
 
-    /// 获取相对设计图高度等比例缩放值，受autoFlat开关影响
-    public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return Base.fw_relativeHeight(value)
+    /// 获取相对设计图高度等比例缩放值
+    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return Base.fw_relativeHeight(value, flat: flat)
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public static func fixedValue(_ value: CGFloat) -> CGFloat {
-        return Base.fw_fixedValue(value)
+    public static func fixedValue(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return Base.fw_fixedValue(value, flat: flat)
     }
 
     /// 获取相对设计图高度等比例缩放时的固定高度值
-    public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return Base.fw_fixedHeight(value)
+    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return Base.fw_fixedHeight(value, flat: flat)
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整

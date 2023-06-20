@@ -753,6 +753,9 @@ extension WrapperGlobal {
     
     /// 是否自动等比例缩放字体，默认NO
     public static var fw_autoScale: Bool = false
+    
+    /// 是否自动等比例缩放后像素取整，默认NO
+    public static var fw_autoFlat: Bool = false
 
     /// 返回系统Thin字体，自动等比例缩放
     public static func fw_thinFont(ofSize: CGFloat) -> UIFont {
@@ -781,7 +784,7 @@ extension WrapperGlobal {
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func fw_font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
-        let size = fw_autoScale ? UIScreen.fw_relativeValue(ofSize) : ofSize
+        let size = fw_autoScale ? UIScreen.fw_relativeValue(ofSize, flat: fw_autoFlat) : ofSize
         if let font = fw_fontBlock?(size, weight) { return font }
         return UIFont.systemFont(ofSize: size, weight: weight)
     }
