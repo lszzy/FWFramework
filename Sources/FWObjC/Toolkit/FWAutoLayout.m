@@ -86,6 +86,7 @@
 static BOOL fwStaticAutoLayoutRTL = NO;
 static BOOL fwStaticAutoScaleLayout = NO;
 static BOOL fwStaticAutoScaleView = NO;
+static BOOL fwStaticAutoFlatLayout = NO;
 
 @implementation UIView (FWAutoLayout)
 
@@ -143,6 +144,16 @@ static BOOL fwStaticAutoScaleView = NO;
 + (void)setFw_autoScale:(BOOL)autoScale
 {
     fwStaticAutoScaleLayout = autoScale;
+}
+
++ (BOOL)fw_autoFlat
+{
+    return fwStaticAutoFlatLayout;
+}
+
++ (void)setFw_autoFlat:(BOOL)autoFlat
+{
+    fwStaticAutoFlatLayout = autoFlat;
 }
 
 - (BOOL)fw_autoScale
@@ -882,6 +893,7 @@ static BOOL fwStaticAutoScaleView = NO;
 {
     if (self.fw_autoScale) {
         offset = [UIScreen fw_relativeValue:offset];
+        if (fwStaticAutoFlatLayout) offset = [UIScreen fw_flatValue:offset];
     }
     
     if (fwStaticAutoLayoutRTL) {

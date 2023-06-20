@@ -248,6 +248,8 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /// 是否自动等比例缩放字体，默认NO。启用后所有fw字体size都会自动*relativeScale
 @property (class, nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
+/// 是否自动等比例缩放后像素取整，默认NO
+@property (class, nonatomic, assign) BOOL fw_autoFlat NS_REFINED_FOR_SWIFT;
 
 /// 返回系统Thin字体，自动等比例缩放
 + (UIFont *)fw_thinFontOfSize:(CGFloat)size NS_REFINED_FOR_SWIFT;

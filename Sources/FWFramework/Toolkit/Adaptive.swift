@@ -93,36 +93,40 @@ extension FW {
     public static var relativeHeightScale: CGFloat { return UIScreen.__fw_relativeHeightScale }
 
     /// 获取相对设计图宽度等比例缩放值
-    public static func relative(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw_relativeValue(value)
+    public static func relative(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = UIScreen.__fw_relativeValue(value)
+        return flat ? UIScreen.__fw_flatValue(result) : result
     }
     /// 获取相对设计图高度等比例缩放值
-    public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw_relativeHeight(value)
+    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = UIScreen.__fw_relativeHeight(value)
+        return flat ? UIScreen.__fw_flatValue(result) : result
     }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public static func fixed(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw_fixedValue(value)
+    public static func fixed(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = UIScreen.__fw_fixedValue(value)
+        return flat ? UIScreen.__fw_flatValue(result) : result
     }
     /// 获取相对设计图高度等比例缩放时的固定高度值
-    public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return UIScreen.__fw_fixedHeight(value)
+    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = UIScreen.__fw_fixedHeight(value)
+        return flat ? UIScreen.__fw_flatValue(result) : result
     }
     /// 获取相对设计图等比例缩放size
-    public static func relative(_ size: CGSize) -> CGSize {
-        return CGSize(width: relative(size.width), height: relative(size.height))
+    public static func relative(_ size: CGSize, flat: Bool = false) -> CGSize {
+        return CGSize(width: relative(size.width, flat: flat), height: relative(size.height, flat: flat))
     }
     /// 获取相对设计图等比例缩放point
-    public static func relative(_ point: CGPoint) -> CGPoint {
-        return CGPoint(x: relative(point.x), y: relative(point.y))
+    public static func relative(_ point: CGPoint, flat: Bool = false) -> CGPoint {
+        return CGPoint(x: relative(point.x, flat: flat), y: relative(point.y, flat: flat))
     }
     /// 获取相对设计图等比例缩放rect
-    public static func relative(_ rect: CGRect) -> CGRect {
-        return CGRect(origin: relative(rect.origin), size: relative(rect.size))
+    public static func relative(_ rect: CGRect, flat: Bool = false) -> CGRect {
+        return CGRect(origin: relative(rect.origin, flat: flat), size: relative(rect.size, flat: flat))
     }
     /// 获取相对设计图等比例缩放insets
-    public static func relative(_ insets: UIEdgeInsets) -> UIEdgeInsets {
-        return UIEdgeInsets(top: relative(insets.top), left: relative(insets.left), bottom: relative(insets.bottom), right: relative(insets.right))
+    public static func relative(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
+        return UIEdgeInsets(top: relative(insets.top, flat: flat), left: relative(insets.left, flat: flat), bottom: relative(insets.bottom, flat: flat), right: relative(insets.right, flat: flat))
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
@@ -325,12 +329,6 @@ extension Wrapper where Base: UIScreen {
         set { Base.__fw_referenceSize = newValue }
     }
     
-    /// 配置是否全局自动对相对值像素取整(仅影响relative相关方法)，默认NO
-    public static var autoFlat: Bool {
-        get { return Base.__fw_autoFlat }
-        set { Base.__fw_autoFlat = newValue }
-    }
-    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
         return Base.__fw_relativeScale
@@ -341,24 +339,28 @@ extension Wrapper where Base: UIScreen {
         return Base.__fw_relativeHeightScale
     }
 
-    /// 获取相对设计图宽度等比例缩放值，受autoFlat开关影响
-    public static func relativeValue(_ value: CGFloat) -> CGFloat {
-        return Base.__fw_relativeValue(value)
+    /// 获取相对设计图宽度等比例缩放值
+    public static func relativeValue(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = Base.__fw_relativeValue(value)
+        return flat ? Base.__fw_flatValue(result) : result
     }
 
-    /// 获取相对设计图高度等比例缩放值，受autoFlat开关影响
-    public static func relativeHeight(_ value: CGFloat) -> CGFloat {
-        return Base.__fw_relativeHeight(value)
+    /// 获取相对设计图高度等比例缩放值
+    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = Base.__fw_relativeHeight(value)
+        return flat ? Base.__fw_flatValue(result) : result
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public static func fixedValue(_ value: CGFloat) -> CGFloat {
-        return Base.__fw_fixedValue(value)
+    public static func fixedValue(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = Base.__fw_fixedValue(value)
+        return flat ? Base.__fw_flatValue(result) : result
     }
 
     /// 获取相对设计图高度等比例缩放时的固定高度值
-    public static func fixedHeight(_ value: CGFloat) -> CGFloat {
-        return Base.__fw_fixedHeight(value)
+    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = Base.__fw_fixedHeight(value)
+        return flat ? Base.__fw_flatValue(result) : result
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
