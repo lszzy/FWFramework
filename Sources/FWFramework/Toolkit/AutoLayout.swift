@@ -32,6 +32,9 @@ import FWObjC
     /// 3. 如需特殊处理，可以指定某个视图关闭该功能
     public static var fw_autoScale = false
     
+    /// 是否自动等比例缩放后像素取整，默认NO
+    public static var fw_autoFlat: Bool = false
+    
     /// 视图是否自动等比例缩放布局全局开关
     private static var fw_autoScaleView = false
     
@@ -779,7 +782,7 @@ import FWObjC
     }
     
     private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
-        let targetOffset = fw_autoScale ? UIScreen.fw_relativeValue(offset) : offset
+        let targetOffset = fw_autoScale ? UIScreen.fw_relativeValue(offset, flat: UIView.fw_autoFlat) : offset
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
         if UIView.fw_autoLayoutRTL {

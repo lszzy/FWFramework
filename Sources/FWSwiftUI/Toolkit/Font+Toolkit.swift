@@ -44,7 +44,7 @@ extension Font {
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func font(size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        let fontSize = UIFont.fw_autoScale ? UIScreen.fw_relativeValue(size) : size
+        let fontSize = UIFont.fw_autoScale ? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlat) : size
         if let font = fontBlock?(fontSize, weight) { return font }
         return .system(size: fontSize, weight: weight)
     }
