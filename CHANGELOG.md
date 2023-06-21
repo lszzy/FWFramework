@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.12.1] - 2023-06-21
+
+### Changed
+* Remove the barTransitionNeedsUpdate method, the framework handles it automatically
+* Remove global autoFlat switch, migrate to UIFont and UIView configuration
+* Fix the problem that the SegmentedControl text is not centered in some cases
+
 ## [4.12.0] - 2023-06-16
 
 ### Added
