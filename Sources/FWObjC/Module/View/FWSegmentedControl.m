@@ -287,7 +287,7 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     if ([title isKindOfClass:[NSString class]] && !self.titleFormatter) {
         NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:(NSString *)title attributes:titleAttrs];
-        return [attributedString size];
+        size = [attributedString size];
     } else if ([title isKindOfClass:[NSString class]] && self.titleFormatter) {
         size = [self.titleFormatter(self, title, index, selected) size];
     } else if ([title isKindOfClass:[NSAttributedString class]]) {
