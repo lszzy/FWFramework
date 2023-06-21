@@ -686,6 +686,7 @@ UIFont * FWFontSemibold(CGFloat size) { return [UIFont fw_semiboldFontOfSize:siz
 UIFont * FWFontBold(CGFloat size) { return [UIFont fw_boldFontOfSize:size]; }
 
 static BOOL fwStaticAutoScaleFont = NO;
+static BOOL fwStaticAutoFlatFont = NO;
 
 @implementation UIFont (FWToolkit)
 
@@ -697,6 +698,16 @@ static BOOL fwStaticAutoScaleFont = NO;
 + (void)setFw_autoScale:(BOOL)autoScale
 {
     fwStaticAutoScaleFont = autoScale;
+}
+
++ (BOOL)fw_autoFlat
+{
+    return fwStaticAutoFlatFont;
+}
+
++ (void)setFw_autoFlat:(BOOL)autoFlat
+{
+    fwStaticAutoFlatFont = autoFlat;
 }
 
 + (UIFont *)fw_thinFontOfSize:(CGFloat)size
@@ -741,7 +752,10 @@ static BOOL fwStaticAutoScaleFont = NO;
 
 + (UIFont *)fw_fontOfSize:(CGFloat)size weight:(UIFontWeight)weight
 {
-    if (fwStaticAutoScaleFont) size = [UIScreen fw_relativeValue:size];
+    if (fwStaticAutoScaleFont) {
+        size = [UIScreen fw_relativeValue:size];
+        if (fwStaticAutoFlatFont) size = [UIScreen fw_flatValue:size];
+    }
     UIFont * _Nullable (^fontBlock)(CGFloat, UIFontWeight) = self.fw_fontBlock;
     if (fontBlock) {
         UIFont *font = fontBlock(size, weight);
