@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.12.1] - 2023-06-21
+
+### Changed
+* 移除barTransitionNeedsUpdate方法，框架自动处理
+* 移除全局autoFlat开关，迁移到UIFont和UIView配置
+* 修复部分情况下SegmentedControl文字未居中问题
+
 ## [4.12.0] - 2023-06-16
 
 ### Added
