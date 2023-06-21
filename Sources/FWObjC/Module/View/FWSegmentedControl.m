@@ -286,9 +286,8 @@ NSUInteger FWSegmentedControlNoSegment = (NSUInteger)-1;
     BOOL selected = (index == self.selectedSegmentIndex) ? YES : NO;
     if ([title isKindOfClass:[NSString class]] && !self.titleFormatter) {
         NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
-        size = [(NSString *)title sizeWithAttributes:titleAttrs];
-        UIFont *font = titleAttrs[@"NSFont"];
-        size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:(NSString *)title attributes:titleAttrs];
+        return [attributedString size];
     } else if ([title isKindOfClass:[NSString class]] && self.titleFormatter) {
         size = [self.titleFormatter(self, title, index, selected) size];
     } else if ([title isKindOfClass:[NSAttributedString class]]) {
