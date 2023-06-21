@@ -860,6 +860,16 @@ extension WrapperGlobal {
     public func fw_lineHeight(multiplier: CGFloat) -> CGFloat {
         return pointSize * multiplier
     }
+    
+    /// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值
+    public func fw_lineHeight(expected: CGFloat) -> CGFloat {
+        return max(lineHeight, expected)
+    }
+    
+    /// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值
+    public func fw_pointHeight(expected: CGFloat) -> CGFloat {
+        return max(pointSize, expected)
+    }
 
     /// 计算当前字体与指定字体居中对齐的偏移值
     public func fw_baselineOffset(_ font: UIFont) -> CGFloat {
