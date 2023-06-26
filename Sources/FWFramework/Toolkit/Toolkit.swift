@@ -461,6 +461,11 @@ extension Wrapper where Base: UIFont {
         return base.__fw_baselineOffset(font)
     }
     
+    /// 计算当前字体与指定行高居中对齐的偏移值
+    public func baselineOffset(lineHeight: CGFloat) -> CGFloat {
+        return base.__fw_baselineOffset(withLineHeight: lineHeight)
+    }
+    
 }
 
 // MARK: - UIImage+Toolkit

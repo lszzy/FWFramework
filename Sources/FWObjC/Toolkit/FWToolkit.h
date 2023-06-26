@@ -306,6 +306,9 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 计算当前字体与指定字体居中对齐的偏移值
 - (CGFloat)fw_baselineOffset:(UIFont *)font NS_REFINED_FOR_SWIFT;
 
+/// 计算当前字体与指定行高居中对齐的偏移值
+- (CGFloat)fw_baselineOffsetWithLineHeight:(CGFloat)lineHeight NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIImage+FWToolkit
