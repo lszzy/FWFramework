@@ -52,13 +52,13 @@
     return self;
 }
 
-- (void)showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray<NSString *> *)actions block:(void (^)(NSInteger, id))block inView:(UIView *)view
+- (void)showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray *)actions block:(void (^)(NSInteger, id))block inView:(UIView *)view
 {
-    NSString *emptyText = text;
+    id emptyText = text;
     if (!loading && !emptyText && self.defaultText) {
         emptyText = self.defaultText();
     }
-    NSString *emptyDetail = detail;
+    id emptyDetail = detail;
     if (!loading && !emptyDetail && self.defaultDetail) {
         emptyDetail = self.defaultDetail();
     }
@@ -66,11 +66,11 @@
     if (!loading && !emptyImage && self.defaultImage) {
         emptyImage = self.defaultImage();
     }
-    NSString *emptyAction = actions.count > 0 ? actions.firstObject : nil;
+    id emptyAction = actions.count > 0 ? actions.firstObject : nil;
     if (!loading && !emptyAction && block && self.defaultAction) {
         emptyAction = self.defaultAction();
     }
-    NSString *emptyMoreAction = actions.count > 1 ? [actions objectAtIndex:1] : nil;
+    id emptyMoreAction = actions.count > 1 ? [actions objectAtIndex:1] : nil;
     
     __FWEmptyView *emptyView = (__FWEmptyView *)[view __fw_subviewWithTag:2021];
     BOOL fadeAnimated = self.fadeAnimated && !emptyView;
