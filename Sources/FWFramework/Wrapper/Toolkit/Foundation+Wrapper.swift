@@ -362,6 +362,11 @@ extension Wrapper where Base: NSAttributedString {
         return Base.fw_attributedString(string, font: font, textColor: textColor)
     }
     
+    /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
+    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> Base {
+        return Base.fw_attributedString(string, font: font, textColor: textColor, lineHeight: lineHeight, textAlignment: textAlignment, lineBreakMode: lineBreakMode)
+    }
+    
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
     public static func attributedString(htmlString: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Base? {
         return Base.fw_attributedString(htmlString: htmlString, defaultAttributes: defaultAttributes)

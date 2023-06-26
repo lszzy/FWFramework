@@ -639,6 +639,30 @@ extension WrapperGlobal {
         return Self(string: string, attributes: attributes)
     }
     
+    /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
+    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> Self {
+        let paragraphStyle = NSMutableParagraphStyle()
+        if lineHeight > 0 {
+            paragraphStyle.minimumLineHeight = lineHeight
+            paragraphStyle.maximumLineHeight = lineHeight
+        }
+        paragraphStyle.lineBreakMode = lineBreakMode
+        paragraphStyle.alignment = textAlignment
+        
+        var attributes: [NSAttributedString.Key: Any] = [:]
+        attributes[.paragraphStyle] = paragraphStyle
+        if let font = font {
+            attributes[.font] = font
+            if lineHeight > 0 {
+                attributes[.baselineOffset] = NSNumber(value: (lineHeight - font.lineHeight) / 4.0)
+            }
+        }
+        if let textColor = textColor {
+            attributes[.foregroundColor] = textColor
+        }
+        return Self(string: string, attributes: attributes)
+    }
+    
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
     public static func fw_attributedString(htmlString string: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Self? {
         guard !string.isEmpty else { return nil }
