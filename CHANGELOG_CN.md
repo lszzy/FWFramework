@@ -1,5 +1,12 @@
 # 更新日志
 
+## [4.13.0] - 2023-06-26
+
+### Added
+* EmptyPlugin支持NSAttributedString参数
+* 新增快捷创建NSAttributedString方法
+* 新增计算字体高度、计算baselineOffset方法
+
 ## [4.12.1] - 2023-06-21
 
 ### Changed
