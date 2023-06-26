@@ -839,9 +839,24 @@ static BOOL fwStaticAutoFlatFont = NO;
     return self.pointSize * multiplier;
 }
 
+- (CGFloat)fw_lineHeightWithExpected:(CGFloat)expected
+{
+    return MAX(self.lineHeight, expected);
+}
+
+- (CGFloat)fw_pointHeightWithExpected:(CGFloat)expected
+{
+    return MAX(self.pointSize, expected);
+}
+
 - (CGFloat)fw_baselineOffset:(UIFont *)font
 {
     return (self.lineHeight - font.lineHeight) / 2 + (self.descender - font.descender);
+}
+
+- (CGFloat)fw_baselineOffsetWithLineHeight:(CGFloat)lineHeight
+{
+    return (lineHeight - self.lineHeight) / 4;
 }
 
 @end

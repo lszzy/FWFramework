@@ -17,7 +17,7 @@
     <a title="UIFont(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.12.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.13.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2841,8 +2841,17 @@
 <span class="c1">/// 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_lineHeightWithMultiplier</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">multiplier</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
+<span class="c1">/// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_lineHeightWithExpected</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">expected</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+    
+<span class="c1">/// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_pointHeightWithExpected</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">expected</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
 <span class="c1">/// 计算当前字体与指定字体居中对齐的偏移值</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_baselineOffset</span><span class="p">:(</span><span class="n">UIFont</span> <span class="o">*</span><span class="p">)</span><span class="nv">font</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 计算当前字体与指定行高居中对齐的偏移值</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_baselineOffsetWithLineHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">lineHeight</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -3399,6 +3408,60 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)UIFont(im)fw_lineHeightWithExpected:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_lineHeightWithExpected:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIFont(im)fw_lineHeightWithExpected:">-fw_lineHeightWithExpected:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_lineHeightWithExpected</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">expected</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIFont(im)fw_pointHeightWithExpected:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_pointHeightWithExpected:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIFont(im)fw_pointHeightWithExpected:">-fw_pointHeightWithExpected:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_pointHeightWithExpected</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">expected</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)UIFont(im)fw_baselineOffset:"></a>
                     <a name="//apple_ref/swift/Method/-fw_baselineOffset:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UIFont(im)fw_baselineOffset:">-fw_baselineOffset:<wbr></a>
@@ -3423,12 +3486,39 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIFont(im)fw_baselineOffsetWithLineHeight:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_baselineOffsetWithLineHeight:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIFont(im)fw_baselineOffsetWithLineHeight:">-fw_baselineOffsetWithLineHeight:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>计算当前字体与指定行高居中对齐的偏移值</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fw_baselineOffsetWithLineHeight</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">lineHeight</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-21)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
