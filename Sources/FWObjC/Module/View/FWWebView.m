@@ -7,7 +7,9 @@
 
 #import "FWWebView.h"
 #import "FWProxy.h"
+#import "FWNavigator.h"
 #import "FWToolkit.h"
+#import "FWUIKit.h"
 #import "FWAlertPlugin.h"
 #import "FWAutoLayout.h"
 #import "FWRuntime.h"
@@ -182,6 +184,18 @@
     return nil;
 }
 
+- (void)webViewDidClose:(WKWebView *)webView
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidClose:)]) {
+        [self.delegate webViewDidClose:webView];
+        return;
+    }
+    
+    if ([webView isKindOfClass:[FWWebView class]] && ((FWWebView *)webView).allowsWindowClose) {
+        [webView.fw_viewController fw_closeViewControllerAnimated:YES];
+    }
+}
+
 @end
 
 static WKProcessPool *fwStaticProcessPool = nil;
@@ -242,6 +256,7 @@ static WKProcessPool *fwStaticProcessPool = nil;
     self.navigationDelegate = self.delegateProxy;
     self.UIDelegate = self.delegateProxy;
     self.allowsBackForwardNavigationGestures = YES;
+    self.allowsWindowClose = YES;
     #ifdef DEBUG
     if (@available(iOS 16.4, *)) {
         self.inspectable = YES;
