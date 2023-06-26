@@ -445,6 +445,16 @@ extension Wrapper where Base: UIFont {
     public func lineHeight(multiplier: CGFloat) -> CGFloat {
         return base.__fw_lineHeight(withMultiplier: multiplier)
     }
+    
+    /// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值
+    public func lineHeight(expected: CGFloat) -> CGFloat {
+        return base.__fw_lineHeight(withExpected: expected)
+    }
+    
+    /// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值
+    public func pointHeight(expected: CGFloat) -> CGFloat {
+        return base.__fw_pointHeight(withExpected: expected)
+    }
 
     /// 计算当前字体与指定字体居中对齐的偏移值
     public func baselineOffset(_ font: UIFont) -> CGFloat {
