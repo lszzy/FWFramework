@@ -187,6 +187,26 @@
     return [[self alloc] initWithString:string attributes:attr];
 }
 
++ (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor lineHeight:(CGFloat)lineHeight textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+    if (lineHeight > 0) {
+        paraStyle.minimumLineHeight = lineHeight;
+        paraStyle.maximumLineHeight = lineHeight;
+    }
+    paraStyle.lineBreakMode = lineBreakMode;
+    paraStyle.alignment = textAlignment;
+    
+    NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+    attr[NSParagraphStyleAttributeName] = paraStyle;
+    if (font) attr[NSFontAttributeName] = font;
+    if (textColor) attr[NSForegroundColorAttributeName] = textColor;
+    if (lineHeight > 0 && font) {
+        attr[NSBaselineOffsetAttributeName] = @((lineHeight - font.lineHeight) / 4);
+    }
+    return [[self alloc] initWithString:string attributes:attr];
+}
+
 + (instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     if (!htmlString || htmlString.length < 1) return nil;
