@@ -213,6 +213,16 @@ open class WebView: WKWebView {
             return nil
         }
         
+        func webViewDidClose(_ webView: WKWebView) {
+            if self.delegate?.webViewDidClose?(webView) != nil {
+                return
+            }
+            
+            if let webView = webView as? WebView, webView.allowsWindowClose {
+                webView.fw_viewController?.fw_close()
+            }
+        }
+        
     }
     
     /// 事件代理，包含navigationDelegate和UIDelegate
@@ -237,6 +247,9 @@ open class WebView: WKWebView {
 
     /// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
     open var allowsSchemeURL = false
+    
+    /// 是否允许window.close关闭当前控制器，默认YES
+    open var allowsWindowClose = true
 
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     open var webRequest: Any? {
