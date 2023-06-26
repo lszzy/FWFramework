@@ -18,7 +18,7 @@ NS_SWIFT_NAME(EmptyPlugin)
 @optional
 
 /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-- (void)showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image loading:(BOOL)loading actions:(nullable NSArray<NSString *> *)actions block:(nullable void (^)(NSInteger index, id sender))block inView:(UIView *)view;
+- (void)showEmptyViewWithText:(nullable id)text detail:(nullable id)detail image:(nullable UIImage *)image loading:(BOOL)loading actions:(nullable NSArray *)actions block:(nullable void (^)(NSInteger index, id sender))block inView:(UIView *)view;
 
 /// 隐藏空界面
 - (void)hideEmptyView:(UIView *)view;

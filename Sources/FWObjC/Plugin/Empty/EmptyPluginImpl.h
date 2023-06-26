@@ -25,13 +25,13 @@ NS_SWIFT_NAME(EmptyPluginImpl)
 @property (nonatomic, copy, nullable) void (^customBlock)(__FWEmptyView *emptyView);
 
 /// 默认空界面文本句柄，非loading时才触发
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultText)(void);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultText)(void);
 /// 默认空界面详细文本句柄，非loading时才触发
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultDetail)(void);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultDetail)(void);
 /// 默认空界面图片句柄，非loading时才触发
 @property (nonatomic, copy, nullable) UIImage * _Nullable (^defaultImage)(void);
 /// 默认空界面动作按钮句柄，非loading时才触发
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultAction)(void);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultAction)(void);
 
 @end
 

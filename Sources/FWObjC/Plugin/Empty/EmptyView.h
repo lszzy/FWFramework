@@ -86,25 +86,25 @@ NS_SWIFT_NAME(PlaceholderView)
  * 设置提示语
  * @param text 提示语文本，若为nil则隐藏textLabel
  */
-- (void)setTextLabelText:(nullable NSString *)text;
+- (void)setTextLabelText:(nullable id)text;
 
 /**
  * 设置详细提示语的文本
  * @param text 详细提示语文本，若为nil则隐藏detailTextLabel
  */
-- (void)setDetailTextLabelText:(nullable NSString *)text;
+- (void)setDetailTextLabelText:(nullable id)text;
 
 /**
  * 设置操作按钮的文本
  * @param title 操作按钮的文本，若为nil则隐藏actionButton
  */
-- (void)setActionButtonTitle:(nullable NSString *)title;
+- (void)setActionButtonTitle:(nullable id)title;
 
 /**
  * 设置更多操作按钮的文本
  * @param title 操作按钮的文本，若为nil则隐藏moreActionButton
  */
-- (void)setMoreActionButtonTitle:(nullable NSString *)title;
+- (void)setMoreActionButtonTitle:(nullable id)title;
 
 /**
  *  如果要继承QMUIEmptyView并添加新的子 view，则必须：

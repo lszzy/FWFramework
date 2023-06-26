@@ -71,17 +71,17 @@ import FWObjC
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
+    public func fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
         fw_showEmptyView(text: text, detail: detail, image: image, loading: false, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: String?, detail: String?, image: UIImage?, loading: Bool, action: String?, block: ((Any) -> Void)?) {
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
         fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { _, sender in block?(sender) } : nil)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: String?, detail: String?, image: UIImage?, loading: Bool, actions: [String]?, block: ((Int, Any) -> Void)?) {
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
         var plugin: EmptyPlugin
         if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.showEmptyView(withText:detail:image:loading:actions:block:in:))) {
             plugin = emptyPlugin
@@ -136,17 +136,17 @@ import FWObjC
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
     @objc(__fw_showEmptyViewWithText:detail:image:action:block:)
-    public func fw_showEmptyView(text: String? = nil, detail: String? = nil, image: UIImage? = nil, action: String? = nil, block: ((Any) -> Void)? = nil) {
+    public func fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
         self.view.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: String?, detail: String?, image: UIImage?, loading: Bool, action: String?, block: ((Any) -> Void)?) {
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
         self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: String?, detail: String?, image: UIImage?, loading: Bool, actions: [String]?, block: ((Int, Any) -> Void)?) {
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
         self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
     }
 
