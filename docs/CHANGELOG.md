@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.13.0] - 2023-06-26
+
+### Added
+* EmptyPlugin supports NSAttributedString parameters
+* Added shortcut to create NSAttributedString method
+* Added methods for calculating font height and calculating baselineOffset
+
 ## [4.12.1] - 2023-06-21
 
 ### Changed
