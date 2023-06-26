@@ -876,6 +876,11 @@ extension WrapperGlobal {
         return (lineHeight - font.lineHeight) / 2.0 + (descender - font.descender)
     }
     
+    /// 计算当前字体与指定行高居中对齐的偏移值
+    public func fw_baselineOffset(lineHeight: CGFloat) -> CGFloat {
+        return (lineHeight - self.lineHeight) / 4.0
+    }
+    
 }
 
 // MARK: - UIImage+Toolkit
