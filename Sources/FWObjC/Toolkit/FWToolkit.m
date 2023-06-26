@@ -854,6 +854,11 @@ static BOOL fwStaticAutoFlatFont = NO;
     return (self.lineHeight - font.lineHeight) / 2 + (self.descender - font.descender);
 }
 
+- (CGFloat)fw_baselineOffsetWithLineHeight:(CGFloat)lineHeight
+{
+    return (lineHeight - self.lineHeight) / 4;
+}
+
 @end
 
 #pragma mark - UIImage+FWToolkit
