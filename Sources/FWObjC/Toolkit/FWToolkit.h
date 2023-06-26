@@ -297,8 +297,17 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度
 - (CGFloat)fw_lineHeightWithMultiplier:(CGFloat)multiplier NS_REFINED_FOR_SWIFT;
 
+/// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值
+- (CGFloat)fw_lineHeightWithExpected:(CGFloat)expected NS_REFINED_FOR_SWIFT;
+    
+/// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值
+- (CGFloat)fw_pointHeightWithExpected:(CGFloat)expected NS_REFINED_FOR_SWIFT;
+
 /// 计算当前字体与指定字体居中对齐的偏移值
 - (CGFloat)fw_baselineOffset:(UIFont *)font NS_REFINED_FOR_SWIFT;
+
+/// 计算当前字体与指定行高居中对齐的偏移值
+- (CGFloat)fw_baselineOffsetWithLineHeight:(CGFloat)lineHeight NS_REFINED_FOR_SWIFT;
 
 @end
 
