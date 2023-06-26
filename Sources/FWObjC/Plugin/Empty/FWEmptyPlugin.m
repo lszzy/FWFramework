@@ -58,32 +58,32 @@
     [self fw_showEmptyViewWithText:nil detail:nil image:nil loading:YES action:nil block:nil];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text
+- (void)fw_showEmptyViewWithText:(id)text
 {
     [self fw_showEmptyViewWithText:text detail:nil];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail
 {
     [self fw_showEmptyViewWithText:text detail:detail image:nil];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image
 {
     [self fw_showEmptyViewWithText:text detail:detail image:image action:nil block:nil];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image action:(id)action block:(void (^)(id _Nonnull))block
 {
     [self fw_showEmptyViewWithText:text detail:detail image:image loading:NO action:action block:block];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image loading:(BOOL)loading action:(id)action block:(void (^)(id _Nonnull))block
 {
     [self fw_showEmptyViewWithText:text detail:detail image:image loading:loading actions:action ? @[action] : nil block:block ? ^(NSInteger index, id  _Nonnull sender) { if (block) block(sender); } : nil];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray<NSString *> *)actions block:(void (^)(NSInteger, id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray *)actions block:(void (^)(NSInteger, id _Nonnull))block
 {
     id<FWEmptyPlugin> plugin = self.fw_emptyPlugin;
     if (!plugin || ![plugin respondsToSelector:@selector(showEmptyViewWithText:detail:image:loading:actions:block:inView:)]) {
@@ -156,32 +156,32 @@
     [self.view fw_showEmptyViewLoading];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text
+- (void)fw_showEmptyViewWithText:(id)text
 {
     [self.view fw_showEmptyViewWithText:text];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail
 {
     [self.view fw_showEmptyViewWithText:text detail:detail];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image
 {
     [self.view fw_showEmptyViewWithText:text detail:detail image:image];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image action:(NSString *)action block:(void (^)(id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image action:(id)action block:(void (^)(id _Nonnull))block
 {
     [self.view fw_showEmptyViewWithText:text detail:detail image:image action:action block:block];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading action:(NSString *)action block:(void (^)(id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image loading:(BOOL)loading action:(id)action block:(void (^)(id _Nonnull))block
 {
     [self.view fw_showEmptyViewWithText:text detail:detail image:image loading:loading action:action block:block];
 }
 
-- (void)fw_showEmptyViewWithText:(NSString *)text detail:(NSString *)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray<NSString *> *)actions block:(void (^)(NSInteger, id _Nonnull))block
+- (void)fw_showEmptyViewWithText:(id)text detail:(id)detail image:(UIImage *)image loading:(BOOL)loading actions:(NSArray *)actions block:(void (^)(NSInteger, id _Nonnull))block
 {
     [self.view fw_showEmptyViewWithText:text detail:detail image:image loading:loading actions:actions block:block];
 }

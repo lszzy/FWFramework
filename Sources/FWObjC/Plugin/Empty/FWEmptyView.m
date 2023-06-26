@@ -209,8 +209,10 @@
     return CGSizeMake(resultWidth, resultHeight);
 }
 
-- (void)updateDetailTextLabelWithText:(NSString *)text {
-    if (self.detailTextLabelFont && self.detailTextLabelTextColor && text) {
+- (void)updateDetailTextLabelWithText:(id)text {
+    if (text && [text isKindOfClass:[NSAttributedString class]]) {
+        self.detailTextLabel.attributedText = (NSAttributedString *)text;
+    } else if (self.detailTextLabelFont && self.detailTextLabelTextColor && text) {
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.minimumLineHeight = self.detailTextLabelFont.lineHeight;
         paragraphStyle.maximumLineHeight = self.detailTextLabelFont.lineHeight;
@@ -251,24 +253,36 @@
     [self setNeedsLayout];
 }
 
-- (void)setTextLabelText:(NSString *)text {
-    self.textLabel.text = text;
+- (void)setTextLabelText:(id)text {
+    if (text && [text isKindOfClass:[NSAttributedString class]]) {
+        self.textLabel.attributedText = (NSAttributedString *)text;
+    } else {
+        self.textLabel.text = text;
+    }
     self.textLabel.hidden = !text;
     [self setNeedsLayout];
 }
 
-- (void)setDetailTextLabelText:(NSString *)text {
+- (void)setDetailTextLabelText:(id)text {
     [self updateDetailTextLabelWithText:text];
 }
 
-- (void)setActionButtonTitle:(NSString *)title {
-    [self.actionButton setTitle:title forState:UIControlStateNormal];
+- (void)setActionButtonTitle:(id)title {
+    if (title && [title isKindOfClass:[NSAttributedString class]]) {
+        [self.actionButton setAttributedTitle:(NSAttributedString *)title forState:UIControlStateNormal];
+    } else {
+        [self.actionButton setTitle:title forState:UIControlStateNormal];
+    }
     self.actionButton.hidden = !title;
     [self setNeedsLayout];
 }
 
-- (void)setMoreActionButtonTitle:(NSString *)title {
-    [self.moreActionButton setTitle:title forState:UIControlStateNormal];
+- (void)setMoreActionButtonTitle:(id)title {
+    if (title && [title isKindOfClass:[NSAttributedString class]]) {
+        [self.moreActionButton setAttributedTitle:(NSAttributedString *)title forState:UIControlStateNormal];
+    } else {
+        [self.moreActionButton setTitle:title forState:UIControlStateNormal];
+    }
     self.moreActionButton.hidden = !title;
     [self setNeedsLayout];
 }
@@ -325,6 +339,7 @@
 
 - (void)setDetailTextLabelFont:(UIFont *)detailTextLabelFont {
     _detailTextLabelFont = detailTextLabelFont;
+    self.detailTextLabel.font = detailTextLabelFont;
     [self updateDetailTextLabelWithText:self.detailTextLabel.text];
 }
 
@@ -352,6 +367,7 @@
 
 - (void)setDetailTextLabelTextColor:(UIColor *)detailTextLabelTextColor {
     _detailTextLabelTextColor = detailTextLabelTextColor;
+    self.detailTextLabel.textColor = detailTextLabelTextColor;
     [self updateDetailTextLabelWithText:self.detailTextLabel.text];
 }
 
