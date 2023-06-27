@@ -940,6 +940,18 @@ import FWObjC
     
 }
 
+// MARK: - AutoLayoutAutoloader
+internal class AutoLayoutAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        UIView.fw_swizzleAutoLayoutView()
+        if UIView.fw_autoLayoutDebug {
+            UIView.fw_swizzleAutoLayoutDebug()
+        }
+    }
+    
+}
+
 // MARK: - LayoutChain
 /// 视图链式布局类。如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过autoLayoutRTL统一启用
@@ -1609,15 +1621,107 @@ public class LayoutChain {
         }
     }
     
-}
-
-// MARK: - AutoLayoutAutoloader
-internal class AutoLayoutAutoloader: AutoloadProtocol {
+    /// 批量对齐布局，适用于间距固定场景，尺寸未设置，若只有一个则间距不生效
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false, layoutMaker: ((_ make: LayoutChain) -> Void)? = nil) {
+        guard self.count > 0 else { return }
+        
+        if axis == .horizontal {
+            var prev: UIView?
+            for (index, view) in self.enumerated() {
+                if let prev = prev {
+                    view.fw_pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing)
+                    if equalLength {
+                        view.fw_matchDimension(.width, toDimension: .width, ofView: prev)
+                    }
+                } else if let leadSpacing = leadSpacing {
+                    view.fw_pinEdge(toSuperview: .left, inset: leadSpacing)
+                }
+                if index == self.count - 1, let tailSpacing = tailSpacing {
+                    view.fw_pinEdge(toSuperview: .right, inset: tailSpacing)
+                }
+                
+                if let layoutMaker = layoutMaker {
+                    layoutMaker(view.fw_layoutChain)
+                }
+                prev = view
+            }
+        } else {
+            var prev: UIView?
+            for (index, view) in self.enumerated() {
+                if let prev = prev {
+                    view.fw_pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing)
+                    if equalLength {
+                        view.fw_matchDimension(.height, toDimension: .height, ofView: prev)
+                    }
+                } else if let leadSpacing = leadSpacing {
+                    view.fw_pinEdge(toSuperview: .top, inset: leadSpacing)
+                }
+                if index == self.count - 1, let tailSpacing = tailSpacing {
+                    view.fw_pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                }
+                
+                if let layoutMaker = layoutMaker {
+                    layoutMaker(view.fw_layoutChain)
+                }
+                prev = view
+            }
+        }
+    }
     
-    static func autoload() {
-        UIView.fw_swizzleAutoLayoutView()
-        if UIView.fw_autoLayoutDebug {
-            UIView.fw_swizzleAutoLayoutDebug()
+    /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat, layoutMaker: ((_ make: LayoutChain) -> Void)? = nil) {
+        guard self.count > 0 else { return }
+        
+        if axis == .horizontal {
+            var prev: UIView?
+            for (index, view) in self.enumerated() {
+                if self.count > 1 {
+                    view.fw_setDimension(.width, size: itemLength)
+                }
+                if prev != nil {
+                    if index < self.count - 1 {
+                        let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
+                            (itemLength + leadSpacing) -
+                            CGFloat(index) * tailSpacing / CGFloat(self.count - 1)
+                        view.fw_constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1)).constant = offset
+                    }
+                } else {
+                    view.fw_pinEdge(toSuperview: .left, inset: leadSpacing)
+                }
+                if index == self.count - 1 {
+                    view.fw_pinEdge(toSuperview: .right, inset: tailSpacing)
+                }
+                
+                if let layoutMaker = layoutMaker {
+                    layoutMaker(view.fw_layoutChain)
+                }
+                prev = view
+            }
+        } else {
+            var prev: UIView?
+            for (index, view) in self.enumerated() {
+                if self.count > 1 {
+                    view.fw_setDimension(.height, size: itemLength)
+                }
+                if prev != nil {
+                    if index < self.count - 1 {
+                        let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
+                            (itemLength + leadSpacing) -
+                            CGFloat(index) * tailSpacing / CGFloat(self.count - 1)
+                        view.fw_constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1)).constant = offset
+                    }
+                } else {
+                    view.fw_pinEdge(toSuperview: .top, inset: leadSpacing)
+                }
+                if index == self.count - 1 {
+                    view.fw_pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                }
+                
+                if let layoutMaker = layoutMaker {
+                    layoutMaker(view.fw_layoutChain)
+                }
+                prev = view
+            }
         }
     }
     
