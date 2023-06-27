@@ -735,7 +735,7 @@ import FWObjC
     public func fw_constraint(identifier: String?) -> NSLayoutConstraint? {
         guard let identifier = identifier, !identifier.isEmpty else { return nil }
         return fw_allConstraints.first { obj in
-            return obj.identifier == identifier
+            return identifier == obj.fw_layoutIdentifier || identifier == obj.identifier
         }
     }
     
@@ -823,6 +823,7 @@ import FWObjC
             }
         } else {
             targetConstraint = NSLayoutConstraint(item: self, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: targetOffset)
+            targetConstraint.fw_layoutIdentifier = constraintIdentifier
             targetConstraint.identifier = constraintIdentifier
             fw_allConstraints.append(targetConstraint)
         }
@@ -932,13 +933,9 @@ import FWObjC
         set { fw_setPropertyBool(newValue, forName: "fw_originalActive") }
     }
     
-}
-
-// MARK: - AutoLayoutAutoloader
-internal class AutoLayoutAutoloader: AutoloadProtocol {
-    
-    static func autoload() {
-        UIView.fw_swizzleAutoLayoutView()
+    fileprivate var fw_layoutIdentifier: String? {
+        get { fw_property(forName: "fw_layoutIdentifier") as? String }
+        set { fw_setPropertyCopy(newValue, forName: "fw_layoutIdentifier") }
     }
     
 }
@@ -1569,6 +1566,13 @@ public class LayoutChain {
         return self.view?.fw_constraint(identifier: identifier)
     }
     
+    // MARK: - Debug
+    @discardableResult
+    public func layoutKey(_ layoutKey: String?) -> Self {
+        view?.fw_layoutKey = layoutKey
+        return self
+    }
+    
 }
 
 // MARK: - UIView+LayoutChain
@@ -1604,5 +1608,153 @@ public class LayoutChain {
             closure(view.fw_layoutChain)
         }
     }
+    
+}
+
+// MARK: - AutoLayoutAutoloader
+internal class AutoLayoutAutoloader: AutoloadProtocol {
+    
+    static func autoload() {
+        UIView.fw_swizzleAutoLayoutView()
+        if UIView.fw_autoLayoutDebug {
+            UIView.fw_swizzleAutoLayoutDebug()
+        }
+    }
+    
+}
+
+// MARK: - AutoLayout+Debug
+@_spi(FW) extension UIView {
+    
+    /// 自动布局调试开关，默认调试打开，正式关闭
+    public static var fw_autoLayoutDebug: Bool = {
+        #if DEBUG
+        true
+        #else
+        false
+        #endif
+    }() {
+        didSet {
+            if fw_autoLayoutDebug {
+                fw_swizzleAutoLayoutDebug()
+            }
+        }
+    }
+    
+    /// 布局调试Key
+    public var fw_layoutKey: String? {
+        get { fw_property(forName: "fw_layoutKey") as? String }
+        set { fw_setPropertyCopy(newValue, forName: "fw_layoutKey") }
+    }
+    
+    private static var fw_staticAutoLayoutDebugSwizzled = false
+    
+    fileprivate static func fw_swizzleAutoLayoutDebug() {
+        guard !fw_staticAutoLayoutDebugSwizzled else { return }
+        fw_staticAutoLayoutDebugSwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSLayoutConstraint.self,
+            selector: #selector(NSLayoutConstraint.description),
+            methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
+            swizzleSignature: (@convention(block) (NSLayoutConstraint) -> String).self
+        ) { store in { selfObject in
+            guard UIView.fw_autoLayoutDebug else {
+                return store.original(selfObject, store.selector)
+            }
+            
+            return selfObject.fw_layoutDescription
+        }}
+    }
+    
+}
+
+@_spi(FW) extension NSLayoutConstraint {
+    
+    /// 布局调试描述，参考：[Masonry](https://github.com/SnapKit/Masonry)
+    fileprivate var fw_layoutDescription: String {
+        var description = "<"
+        description += Self.fw_layoutDescription(self)
+        if let firstItem = firstItem {
+            description += String(format: " %@", Self.fw_layoutDescription(firstItem))
+        }
+        if firstAttribute != .notAnAttribute {
+            description += String(format: ".%@", (Self.fw_attributeDescriptions[firstAttribute] ?? NSNumber(value: firstAttribute.rawValue)))
+        }
+        description += String(format: " %@", (Self.fw_relationDescriptions[relation] ?? NSNumber(value: relation.rawValue)))
+        if let secondItem = secondItem {
+            description += String(format: " %@", Self.fw_layoutDescription(secondItem))
+        }
+        if secondAttribute != .notAnAttribute {
+            description += String(format: ".%@", (Self.fw_attributeDescriptions[secondAttribute] ?? NSNumber(value: secondAttribute.rawValue)))
+        }
+        if multiplier != 1 {
+            description += String(format: " * %g", multiplier)
+        }
+        if secondAttribute == .notAnAttribute {
+            description += String(format: " %g", constant)
+        } else {
+            if constant != 0 {
+                description += String(format: " %@ %g", (constant < 0 ? "-" : "+"), abs(constant))
+            }
+        }
+        if priority != .required {
+            description += String(format: " ^%@", Self.fw_priorityDescriptions[priority] ?? NSNumber(value: priority.rawValue))
+        }
+        description += ">"
+        return description
+    }
+    
+    private static func fw_layoutDescription(_ object: AnyObject) -> String {
+        var objectDesc = ""
+        if let constraint = object as? NSLayoutConstraint, let identifier = constraint.identifier {
+            objectDesc = " '\(identifier)'"
+        } else if let guide = object as? UILayoutGuide, let layoutKey = guide.owningView?.fw_layoutKey {
+            objectDesc = " '\(layoutKey)'"
+        } else if let view = object as? UIView, let layoutKey = view.fw_layoutKey {
+            objectDesc = " '\(layoutKey)'"
+        }
+        return String(format: "%@:%p%@", String(describing: type(of: object)), object as! CVarArg, objectDesc)
+    }
+    
+    private static var fw_relationDescriptions: [NSLayoutConstraint.Relation: String] = [
+        .equal              : "==",
+        .greaterThanOrEqual : ">=",
+        .lessThanOrEqual    : "<=",
+    ]
+    
+    private static var fw_attributeDescriptions: [NSLayoutConstraint.Attribute: String] = [
+        .top                  : "top",
+        .left                 : "left",
+        .bottom               : "bottom",
+        .right                : "right",
+        .leading              : "leading",
+        .trailing             : "trailing",
+        .width                : "width",
+        .height               : "height",
+        .centerX              : "centerX",
+        .centerY              : "centerY",
+        .firstBaseline        : "firstBaseline",
+        .lastBaseline         : "lastBaseline",
+        .leftMargin           : "leftMargin",
+        .rightMargin          : "rightMargin",
+        .topMargin            : "topMargin",
+        .bottomMargin         : "bottomMargin",
+        .leadingMargin        : "leadingMargin",
+        .trailingMargin       : "trailingMargin",
+        .centerXWithinMargins : "centerXWithinMargins",
+        .centerYWithinMargins : "centerYWithinMargins",
+        .notAnAttribute       : "notAnAttribute",
+    ]
+    
+    private static var fw_priorityDescriptions: [UILayoutPriority: String] = [
+        .required                  : "required",
+        .defaultHigh               : "defaultHigh",
+        .defaultLow                : "defaultLow",
+        .dragThatCanResizeScene    : "dragThatCanResizeScene",
+        .dragThatCannotResizeScene : "dragThatCannotResizeScene",
+        .sceneSizeStayPut          : "sceneSizeStayPut",
+        .fittingSizeLevel          : "fittingSizeLevel",
+    ]
     
 }

@@ -491,6 +491,19 @@ extension Wrapper where Base: UIView {
         base.fw_removeConstraints(constraints)
     }
     
+    // MARK: - Debug
+    /// 自动布局调试开关，默认调试打开，正式关闭
+    public static var autoLayoutDebug: Bool {
+        get { return UIView.fw_autoLayoutDebug }
+        set { UIView.fw_autoLayoutDebug = newValue }
+    }
+    
+    /// 布局调试Key
+    public var layoutKey: String? {
+        get { base.fw_layoutKey }
+        set { base.fw_layoutKey = newValue }
+    }
+    
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
