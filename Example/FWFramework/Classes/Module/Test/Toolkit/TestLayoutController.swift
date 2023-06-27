@@ -25,18 +25,34 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         return result
     }()
     
+    lazy var debugView: UIView = {
+        let result = UIView()
+        result.backgroundColor = AppTheme.textColor
+        return result
+    }()
+    
+    func setupNavbar() {
+        view.app.layoutKey = "view"
+        app.setRightBarItem("Debug") { [weak self] _ in
+            self?.debugView.app.layoutChain
+                .layoutKey("debugView")
+                .width(49, relation: .lessThanOrEqual).identifier("debugView.widthLess")
+                .left(19, relation: .lessThanOrEqual).identifier("debugView.leftLess")
+                .top(toSafeArea: 19, relation: .lessThanOrEqual).identifier("debugView.topLess")
+        }
+    }
+    
     func setupSubviews() {
-        let subview = UIView()
-        subview.backgroundColor = AppTheme.textColor
+        let subview = debugView
         view.addSubview(subview)
         subview.app.addTapGesture { _ in
             subview.app.isCollapsed = !subview.app.isCollapsed
         }
         subview.app.layoutChain.remake()
-            .top(toSafeArea: 20)
-            .left(20).collapse()
-            .size(CGSize(width: 100, height: 100))
-            .width(50).collapse()
+            .top(toSafeArea: 20).identifier("debugView.top")
+            .left(20).collapse().identifier("debugView.left")
+            .size(CGSize(width: 100, height: 100)).identifier("debugView.size")
+            .width(50).collapse().identifier("debugView.width")
             .height(50)
         
         let label = UILabel()
