@@ -1708,13 +1708,13 @@ internal class AutoLayoutAutoloader: AutoloadProtocol {
     private static func fw_layoutDescription(_ object: AnyObject) -> String {
         var objectDesc = ""
         if let constraint = object as? NSLayoutConstraint, let identifier = constraint.identifier {
-            objectDesc = " '\(identifier)'"
+            objectDesc = identifier
         } else if let guide = object as? UILayoutGuide, let layoutKey = guide.owningView?.fw_layoutKey {
-            objectDesc = " '\(layoutKey)'"
+            objectDesc = layoutKey
         } else if let view = object as? UIView, let layoutKey = view.fw_layoutKey {
-            objectDesc = " '\(layoutKey)'"
+            objectDesc = layoutKey
         }
-        return String(format: "%@:%p%@", String(describing: type(of: object)), object as! CVarArg, objectDesc)
+        return String(format: "%@:%p%@", String(describing: type(of: object)), object as! CVarArg, !objectDesc.isEmpty ? " '\(objectDesc)'" : objectDesc)
     }
     
     private static var fw_relationDescriptions: [NSLayoutConstraint.Relation: String] = [
