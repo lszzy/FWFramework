@@ -61,7 +61,7 @@ class TestEmptyController: UIViewController, TableViewControllerProtocol {
         } else if row == 4 {
             app.showEmptyLoading()
         } else if row == 5 {
-            app.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: UIImage.app.appIconImage(), loading: true, actions: ["取消", "重试"]) { [weak self] index, _ in
+            app.showEmptyView(text: NSAttributedString(string: "请求失败", attributes: [.font: UIFont.app.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red]), detail: "请检查网络连接", image: UIImage.app.appIconImage(), loading: true, actions: ["取消", NSAttributedString(string: "重试", attributes: [.font: UIFont.app.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red])]) { [weak self] index, _ in
                 if index == 0 {
                     self?.app.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: UIImage.app.appIconImage(), loading: true, actions: nil, block: nil)
                 } else {
