@@ -118,10 +118,10 @@ extension View {
         }
     }
     
-    /// 绑定List下拉刷新插件，action必须调用completionHandler
+    /// 绑定List下拉刷新插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
     public func listViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
-        action: @escaping (@escaping () -> Void) -> Void,
+        action: @escaping (@escaping (_ finished: Bool) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return introspectListView { scrollView in
@@ -129,8 +129,9 @@ extension View {
                 scrollView.fw_setPropertyBool(true, forName: "listViewRefreshing")
                 
                 scrollView.fw_setRefreshing { [weak scrollView] in
-                    action({
+                    action({ finished in
                         scrollView?.fw_endRefreshing()
+                        scrollView?.fw_loadingFinished = finished
                     })
                 }
                 customize?(scrollView)
@@ -150,7 +151,7 @@ extension View {
     public func listViewLoading(
         shouldBegin: Binding<Bool>? = nil,
         shouldLoading: Bool? = nil,
-        action: @escaping (@escaping (Bool) -> Void) -> Void,
+        action: @escaping (@escaping (_ finished: Bool) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return introspectListView { scrollView in

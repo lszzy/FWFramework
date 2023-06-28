@@ -304,7 +304,7 @@ struct TestSwiftUIContent: View {
             .scrollViewRefreshing(action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     moreItems = []
-                    completionHandler()
+                    completionHandler(false)
                 }
             })
             .scrollViewLoading(action: { completionHandler in
