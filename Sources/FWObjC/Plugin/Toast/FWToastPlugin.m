@@ -69,13 +69,18 @@
     [plugin hideLoading:self];
 }
 
-- (BOOL)fw_isShowingLoading
+- (UIView *)fw_showingLoadingView
 {
     id<FWToastPlugin> plugin = self.fw_toastPlugin;
-    if (!plugin || ![plugin respondsToSelector:@selector(isShowingLoading:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(showingLoadingView:)]) {
         plugin = FWToastPluginImpl.sharedInstance;
     }
-    return [plugin isShowingLoading:self];
+    return [plugin showingLoadingView:self];
+}
+
+- (BOOL)fw_isShowingLoading
+{
+    return self.fw_showingLoadingView != nil;
 }
 
 - (void)fw_showProgressWithText:(id)text progress:(CGFloat)progress
@@ -102,13 +107,18 @@
     [plugin hideProgress:self];
 }
 
-- (BOOL)fw_isShowingProgress
+- (UIView *)fw_showingProgressView
 {
     id<FWToastPlugin> plugin = self.fw_toastPlugin;
-    if (!plugin || ![plugin respondsToSelector:@selector(isShowingProgress:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(showingProgressView:)]) {
         plugin = FWToastPluginImpl.sharedInstance;
     }
-    return [plugin isShowingProgress:self];
+    return [plugin showingProgressView:self];
+}
+
+- (BOOL)fw_isShowingProgress
+{
+    return self.fw_showingProgressView != nil;
 }
 
 - (void)fw_showMessageWithText:(id)text
@@ -145,13 +155,18 @@
     [plugin hideMessage:self];
 }
 
-- (BOOL)fw_isShowingMessage
+- (UIView *)fw_showingMessageView
 {
     id<FWToastPlugin> plugin = self.fw_toastPlugin;
-    if (!plugin || ![plugin respondsToSelector:@selector(isShowingMessage:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(showingMessageView:)]) {
         plugin = FWToastPluginImpl.sharedInstance;
     }
-    return [plugin isShowingMessage:self];
+    return [plugin showingMessageView:self];
+}
+
+- (BOOL)fw_isShowingMessage
+{
+    return self.fw_showingMessageView != nil;
 }
 
 @end
@@ -215,6 +230,11 @@
     [self.fw_toastContainerView fw_hideLoading];
 }
 
+- (UIView *)fw_showingLoadingView
+{
+    return [self.fw_toastContainerView fw_showingLoadingView];
+}
+
 - (BOOL)fw_isShowingLoading
 {
     return [self.fw_toastContainerView fw_isShowingLoading];
@@ -233,6 +253,11 @@
 - (void)fw_hideProgress
 {
     [self.fw_toastContainerView fw_hideProgress];
+}
+
+- (UIView *)fw_showingProgressView
+{
+    return [self.fw_toastContainerView fw_showingProgressView];
 }
 
 - (BOOL)fw_isShowingProgress
@@ -263,6 +288,11 @@
 - (void)fw_hideMessage
 {
     [self.fw_toastContainerView fw_hideMessage];
+}
+
+- (UIView *)fw_showingMessageView
+{
+    return [self.fw_toastContainerView fw_showingMessageView];
 }
 
 - (BOOL)fw_isShowingMessage
@@ -304,6 +334,11 @@
     [UIWindow.fw_mainWindow fw_hideLoading];
 }
 
++ (UIView *)fw_showingLoadingView
+{
+    return [UIWindow.fw_mainWindow fw_showingLoadingView];
+}
+
 + (BOOL)fw_isShowingLoading
 {
     return [UIWindow.fw_mainWindow fw_isShowingLoading];
@@ -322,6 +357,11 @@
 + (void)fw_hideProgress
 {
     [UIWindow.fw_mainWindow fw_hideProgress];
+}
+
++ (UIView *)fw_showingProgressView
+{
+    return [UIWindow.fw_mainWindow fw_showingProgressView];
 }
 
 + (BOOL)fw_isShowingProgress
@@ -352,6 +392,11 @@
 + (void)fw_hideMessage
 {
     [UIWindow.fw_mainWindow fw_hideMessage];
+}
+
++ (UIView *)fw_showingMessageView
+{
+    return [UIWindow.fw_mainWindow fw_showingMessageView];
 }
 
 + (BOOL)fw_isShowingMessage
