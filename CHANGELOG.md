@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.14.0] - 2023-06-28
+
+### Added
+* Added AutoLayout batch layout method, layout conflict debugging and optimization
+* EmptyPlugin adds a method to get the view being displayed
+* ToastPlugin adds a method to get the view being displayed
+* Little red dot BadgeView supports custom size and offset
+* WebView supports window.close to close the interface by default
+* Optimize whether the SwiftUI control can continue to append
+* Fix the problem that the occasional style does not take effect after customizing the customBlock on the empty interface
+
 ## [4.13.0] - 2023-06-26
 
 ### Added
