@@ -27,10 +27,10 @@ extension View {
         }
     }
     
-    /// 绑定ScrollView下拉刷新插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
+    /// 绑定ScrollView下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func scrollViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
-        action: @escaping (@escaping (_ finished: Bool) -> Void) -> Void,
+        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return introspectScrollView { scrollView in
@@ -40,7 +40,9 @@ extension View {
                 scrollView.fw_setRefreshing { [weak scrollView] in
                     action({ finished in
                         scrollView?.fw_endRefreshing()
-                        scrollView?.fw_loadingFinished = finished
+                        if let finished = finished {
+                            scrollView?.fw_loadingFinished = finished
+                        }
                     })
                 }
                 customize?(scrollView)
@@ -56,11 +58,11 @@ extension View {
         }
     }
     
-    /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加
+    /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func scrollViewLoading(
         shouldBegin: Binding<Bool>? = nil,
         shouldLoading: Bool? = nil,
-        action: @escaping (@escaping (_ finished: Bool) -> Void) -> Void,
+        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return introspectScrollView { scrollView in
@@ -70,7 +72,9 @@ extension View {
                 scrollView.fw_setLoading { [weak scrollView] in
                     action({ finished in
                         scrollView?.fw_endLoading()
-                        scrollView?.fw_loadingFinished = finished
+                        if let finished = finished {
+                            scrollView?.fw_loadingFinished = finished
+                        }
                     })
                 }
                 customize?(scrollView)

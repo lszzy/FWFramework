@@ -112,23 +112,21 @@ struct TestSwiftUIListContent: View {
         .listViewRefreshing(
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    viewModel.refresh()
-                    completionHandler(false)
-                }
+                viewModel.refreshData(completionHandler: completionHandler)
             })
         .listViewLoading(
             shouldBegin: $viewModel.beginLoading,
             shouldLoading: !viewModel.items.isEmpty,
             action: { completionHandler in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    completionHandler(!viewModel.addItems())
-                }
+                viewModel.loadData(completionHandler: completionHandler)
             })
-        .showListEmpty(viewModel.items.isEmpty) { scrollView in
-            scrollView.app.showEmptyView(text: "暂无数据") { _ in
+        .showListEmpty(viewModel.error != nil) { scrollView in
+            scrollView.app.showEmptyView(text: viewModel.error?.localizedDescription) { _ in
                 viewModel.beginRefreshing = true
             }
+        }
+        .onAppear {
+            viewModel.beginRefreshing = true
         }
     }
     
@@ -143,22 +141,42 @@ class TestSwiftUIListModel: ViewModel {
     @Published var beginLoading = false
     
     @Published var items: [String] = []
+    @Published var error: Error?
     
-    func refresh() {
-        var newItems: [String] = []
-        for i in 0 ..< 5 {
-            newItems.append("\(i + 1)")
+    func refreshData(completionHandler: @escaping (Bool?) -> Void) {
+        self.error = nil
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self = self else { return }
+            
+            let isSuccess = [true, false].randomElement()!
+            if isSuccess {
+                var newItems: [String] = []
+                for i in 0 ..< 5 {
+                    newItems.append("\(i + 1)")
+                }
+                
+                self.items = newItems
+                completionHandler(self.items.count >= 30)
+            } else {
+                self.error = NSError(domain: "Test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                self.items = []
+                completionHandler(true)
+            }
         }
-        items = newItems
     }
     
-    func addItems() -> Bool {
-        var newItems = items
-        for i in 0 ..< 5 {
-            newItems.append("\(items.count + i + 1)")
+    func loadData(completionHandler: @escaping (Bool?) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self = self else { return }
+            
+            var newItems = self.items
+            for i in 0 ..< 5 {
+                newItems.append("\(self.items.count + i + 1)")
+            }
+            self.items = newItems
+            completionHandler(self.items.count >= 30)
         }
-        items = newItems
-        return items.count < 30
     }
     
 }
