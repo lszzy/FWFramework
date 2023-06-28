@@ -1379,6 +1379,12 @@ public class LayoutChain {
         view?.fw_setDimensions(size)
         return self
     }
+    
+    @discardableResult
+    public func size(width: CGFloat, height: CGFloat) -> Self {
+        view?.fw_setDimensions(CGSize(width: width, height: height))
+        return self
+    }
 
     @discardableResult
     public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
@@ -1469,6 +1475,31 @@ public class LayoutChain {
     @discardableResult
     public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
+        return self
+    }
+    
+    // MARK: - Subviews
+    @discardableResult
+    public func subviews(_ closure: (_ make: LayoutChain) -> Void) -> Self {
+        self.view?.subviews.fw_layoutMaker(closure)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) -> Self {
+        self.view?.subviews.fw_layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, equalLength: equalLength)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) -> Self {
+        self.view?.subviews.fw_layoutAlong(axis, itemLength: itemLength, leadSpacing: leadSpacing, tailSpacing: tailSpacing)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) -> Self {
+        self.view?.subviews.fw_layoutAlong(axis, alignCenter: alignCenter, itemWidth: itemWidth, leftSpacing: leftSpacing, rightSpacing: rightSpacing)
         return self
     }
     
@@ -1622,7 +1653,7 @@ public class LayoutChain {
     }
     
     /// 批量对齐布局，适用于间距固定场景，尺寸未设置，若只有一个则间距不生效
-    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false, layoutMaker: ((_ make: LayoutChain) -> Void)? = nil) {
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) {
         guard self.count > 0 else { return }
         
         if axis == .horizontal {
@@ -1638,10 +1669,6 @@ public class LayoutChain {
                 }
                 if index == self.count - 1, let tailSpacing = tailSpacing {
                     view.fw_pinEdge(toSuperview: .right, inset: tailSpacing)
-                }
-                
-                if let layoutMaker = layoutMaker {
-                    layoutMaker(view.fw_layoutChain)
                 }
                 prev = view
             }
@@ -1659,17 +1686,13 @@ public class LayoutChain {
                 if index == self.count - 1, let tailSpacing = tailSpacing {
                     view.fw_pinEdge(toSuperview: .bottom, inset: tailSpacing)
                 }
-                
-                if let layoutMaker = layoutMaker {
-                    layoutMaker(view.fw_layoutChain)
-                }
                 prev = view
             }
         }
     }
     
     /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
-    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat, layoutMaker: ((_ make: LayoutChain) -> Void)? = nil) {
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) {
         guard self.count > 0 else { return }
         
         if axis == .horizontal {
@@ -1690,10 +1713,6 @@ public class LayoutChain {
                 }
                 if index == self.count - 1 {
                     view.fw_pinEdge(toSuperview: .right, inset: tailSpacing)
-                }
-                
-                if let layoutMaker = layoutMaker {
-                    layoutMaker(view.fw_layoutChain)
                 }
                 prev = view
             }
@@ -1716,11 +1735,44 @@ public class LayoutChain {
                 if index == self.count - 1 {
                     view.fw_pinEdge(toSuperview: .bottom, inset: tailSpacing)
                 }
-                
-                if let layoutMaker = layoutMaker {
-                    layoutMaker(view.fw_layoutChain)
-                }
                 prev = view
+            }
+        }
+    }
+    
+    /// 批量对齐布局，用于补齐Along之后该方向上的其他约束
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) {
+        guard self.count > 0 else { return }
+        
+        if axis == .horizontal {
+            for view in self {
+                if alignCenter {
+                    view.fw_alignAxis(toSuperview: .centerY)
+                }
+                if let itemWidth = itemWidth {
+                    view.fw_setDimension(.height, size: itemWidth)
+                }
+                if let leftSpacing = leftSpacing {
+                    view.fw_pinEdge(toSuperview: .bottom, inset: leftSpacing)
+                }
+                if let rightSpacing = rightSpacing {
+                    view.fw_pinEdge(toSuperview: .top, inset: rightSpacing)
+                }
+            }
+        } else {
+            for view in self {
+                if alignCenter {
+                    view.fw_alignAxis(toSuperview: .centerX)
+                }
+                if let itemWidth = itemWidth {
+                    view.fw_setDimension(.width, size: itemWidth)
+                }
+                if let leftSpacing = leftSpacing {
+                    view.fw_pinEdge(toSuperview: .left, inset: leftSpacing)
+                }
+                if let rightSpacing = rightSpacing {
+                    view.fw_pinEdge(toSuperview: .right, inset: rightSpacing)
+                }
             }
         }
     }
