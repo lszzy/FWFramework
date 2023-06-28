@@ -91,10 +91,10 @@
     }
 }
 
-- (BOOL)isShowingLoading:(UIView *)view
+- (UIView *)showingLoadingView:(UIView *)view
 {
     __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2011];
-    return toastView ? YES : NO;
+    return toastView;
 }
 
 - (void)showProgressWithAttributedText:(NSAttributedString *)attributedText progress:(CGFloat)progress cancelBlock:(void (^)(void))cancelBlock inView:(UIView *)view
@@ -138,10 +138,10 @@
     if (toastView) [toastView hide];
 }
 
-- (BOOL)isShowingProgress:(UIView *)view
+- (UIView *)showingProgressView:(UIView *)view
 {
     __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2012];
-    return toastView ? YES : NO;
+    return toastView;
 }
 
 - (void)showMessageWithAttributedText:(NSAttributedString *)attributedText style:(__FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(void (^)(void))completion inView:(UIView *)view
@@ -179,10 +179,10 @@
     if (toastView) [toastView hide];
 }
 
-- (BOOL)isShowingMessage:(UIView *)view
+- (UIView *)showingMessageView:(UIView *)view
 {
     __FWToastView *toastView = (__FWToastView *)[view __fw_subviewWithTag:2013];
-    return toastView ? YES : NO;
+    return toastView;
 }
 
 @end

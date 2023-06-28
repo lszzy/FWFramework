@@ -67,15 +67,20 @@ import FWObjC
         plugin.hideLoading?(delayed, in: self)
     }
     
-    /// 是否正在显示加载吐司
-    public var fw_isShowingLoading: Bool {
+    /// 获取正在显示的加载吐司视图
+    public var fw_showingLoadingView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.isShowingLoading(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingLoading(_:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.isShowingLoading!(self)
+        return plugin.showingLoading!(self)
+    }
+    
+    /// 是否正在显示加载吐司
+    public var fw_isShowingLoading: Bool {
+        return fw_showingLoadingView != nil
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
@@ -104,15 +109,20 @@ import FWObjC
         plugin.hideProgress?(self)
     }
     
-    /// 是否正在显示进度条吐司
-    public var fw_isShowingProgress: Bool {
+    /// 获取正在显示的进度条吐司视图
+    public var fw_showingProgressView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.isShowingProgress(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingProgressView(_:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.isShowingProgress!(self)
+        return plugin.showingProgressView!(self)
+    }
+    
+    /// 是否正在显示进度条吐司
+    public var fw_isShowingProgress: Bool {
+        return fw_showingProgressView != nil
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
@@ -146,15 +156,20 @@ import FWObjC
         plugin.hideMessage?(self)
     }
     
-    /// 是否正在显示消息吐司
-    public var fw_isShowingMessage: Bool {
+    /// 获取正在显示的消息吐司视图
+    public var fw_showingMessageView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.isShowingMessage(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingMessageView(_:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.isShowingMessage!(self)
+        return plugin.showingMessageView!(self)
+    }
+    
+    /// 是否正在显示消息吐司
+    public var fw_isShowingMessage: Bool {
+        return fw_showingMessageView != nil
     }
     
 }
@@ -197,6 +212,11 @@ import FWObjC
         fw_toastContainerView?.fw_hideLoading(delayed: delayed)
     }
     
+    /// 获取正在显示的加载吐司视图
+    public var fw_showingLoadingView: UIView? {
+        return fw_toastContainerView?.fw_showingLoadingView
+    }
+    
     /// 是否正在显示加载吐司
     public var fw_isShowingLoading: Bool {
         return fw_toastContainerView?.fw_isShowingLoading ?? false
@@ -210,6 +230,11 @@ import FWObjC
     /// 隐藏进度条吐司
     public func fw_hideProgress() {
         fw_toastContainerView?.fw_hideProgress()
+    }
+    
+    /// 获取正在显示的进度条吐司视图
+    public var fw_showingProgressView: UIView? {
+        return fw_toastContainerView?.fw_showingProgressView
     }
     
     /// 是否正在显示进度条吐司
@@ -230,6 +255,11 @@ import FWObjC
     /// 隐藏消息吐司
     public func fw_hideMessage() {
         fw_toastContainerView?.fw_hideMessage()
+    }
+    
+    /// 获取正在显示的消息吐司视图
+    public var fw_showingMessageView: UIView? {
+        return fw_toastContainerView?.fw_showingMessageView
     }
     
     /// 是否正在显示消息吐司
@@ -257,6 +287,11 @@ import FWObjC
         UIWindow.fw_mainWindow?.fw_hideLoading(delayed: delayed)
     }
     
+    /// 获取正在显示的加载吐司视图
+    public static var fw_showingLoadingView: UIView? {
+        return UIWindow.fw_mainWindow?.fw_showingLoadingView
+    }
+    
     /// 是否正在显示加载吐司
     public static var fw_isShowingLoading: Bool {
         return UIWindow.fw_mainWindow?.fw_isShowingLoading ?? false
@@ -270,6 +305,11 @@ import FWObjC
     /// 隐藏进度条吐司
     public static func fw_hideProgress() {
         UIWindow.fw_mainWindow?.fw_hideProgress()
+    }
+    
+    /// 获取正在显示的进度条吐司视图
+    public static var fw_showingProgressView: UIView? {
+        return UIWindow.fw_mainWindow?.fw_showingProgressView
     }
     
     /// 是否正在显示进度条吐司
@@ -290,6 +330,11 @@ import FWObjC
     /// 隐藏消息吐司
     public static func fw_hideMessage() {
         UIWindow.fw_mainWindow?.fw_hideMessage()
+    }
+    
+    /// 获取正在显示的消息吐司视图
+    public static var fw_showingMessageView: UIView? {
+        return UIWindow.fw_mainWindow?.fw_showingMessageView
     }
     
     /// 是否正在显示消息吐司
