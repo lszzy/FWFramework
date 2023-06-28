@@ -34,6 +34,11 @@ extension Wrapper where Base: UIView {
         base.__fw_hideLoading()
     }
     
+    /// 获取正在显示的加载吐司视图
+    public var showingLoadingView: UIView? {
+        return base.__fw_showingLoading
+    }
+    
     /// 是否正在显示加载吐司
     public var isShowingLoading: Bool {
         return base.__fw_isShowingLoading
@@ -47,6 +52,11 @@ extension Wrapper where Base: UIView {
     /// 隐藏进度条吐司
     public func hideProgress() {
         base.__fw_hideProgress()
+    }
+    
+    /// 获取正在显示的进度条吐司视图
+    public var showingProgressView: UIView? {
+        return base.__fw_showingProgress
     }
     
     /// 是否正在显示进度条吐司
@@ -67,6 +77,11 @@ extension Wrapper where Base: UIView {
     /// 隐藏消息吐司
     public func hideMessage() {
         base.__fw_hideMessage()
+    }
+    
+    /// 获取正在显示的消息吐司视图
+    public var showingMessageView: UIView? {
+        return base.__fw_showingMessage
     }
     
     /// 是否正在显示消息吐司
@@ -106,6 +121,11 @@ extension Wrapper where Base: UIViewController {
         base.__fw_hideLoading()
     }
     
+    /// 获取正在显示的加载吐司视图
+    public var showingLoadingView: UIView? {
+        return base.__fw_showingLoadingView
+    }
+    
     public var isShowingLoading: Bool {
         return base.__fw_isShowingLoading
     }
@@ -118,6 +138,11 @@ extension Wrapper where Base: UIViewController {
     /// 隐藏进度条吐司
     public func hideProgress() {
         base.__fw_hideProgress()
+    }
+    
+    /// 获取正在显示的进度条吐司视图
+    public var showingProgressView: UIView? {
+        return base.__fw_showingProgressView
     }
     
     /// 是否正在显示进度条吐司
@@ -138,6 +163,11 @@ extension Wrapper where Base: UIViewController {
     /// 隐藏消息吐司
     public func hideMessage() {
         base.__fw_hideMessage()
+    }
+    
+    /// 获取正在显示的消息吐司视图
+    public var showingMessageView: UIView? {
+        return base.__fw_showingMessageView
     }
     
     /// 是否正在显示消息吐司
@@ -165,6 +195,11 @@ extension Wrapper where Base: UIWindow {
         Base.__fw_hideLoading()
     }
     
+    /// 获取正在显示的加载吐司视图
+    public static var showingLoadingView: UIView? {
+        return Base.__fw_showingLoadingView
+    }
+    
     public static var isShowingLoading: Bool {
         return Base.__fw_isShowingLoading
     }
@@ -177,6 +212,11 @@ extension Wrapper where Base: UIWindow {
     /// 隐藏进度条吐司
     public static func hideProgress() {
         Base.__fw_hideProgress()
+    }
+    
+    /// 获取正在显示的进度条吐司视图
+    public static var showingProgressView: UIView? {
+        return Base.__fw_showingProgressView
     }
     
     /// 是否正在显示进度条吐司
@@ -197,6 +237,11 @@ extension Wrapper where Base: UIWindow {
     /// 隐藏消息吐司
     public static func hideMessage() {
         Base.__fw_hideMessage()
+    }
+    
+    /// 获取正在显示的消息吐司视图
+    public static var showingMessageView: UIView? {
+        return Base.__fw_showingMessageView
     }
     
     /// 是否正在显示消息吐司

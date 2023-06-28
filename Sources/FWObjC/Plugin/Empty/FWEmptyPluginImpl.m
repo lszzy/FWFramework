@@ -61,6 +61,11 @@
     emptyView.tag = 2021;
     [view addSubview:emptyView];
     [emptyView fw_pinEdgesToSuperviewWithInsets:view.fw_emptyInsets];
+    
+    if (self.customBlock) {
+        self.customBlock(emptyView);
+    }
+    
     [emptyView setLoadingViewHidden:!loading];
     [emptyView setImage:emptyImage];
     [emptyView setTextLabelText:emptyText];
@@ -69,10 +74,6 @@
     [emptyView setMoreActionButtonTitle:emptyMoreAction];
     if (block) [emptyView.actionButton fw_addTouchBlock:^(id sender) { if (block) block(0, sender); }];
     if (block && emptyMoreAction) [emptyView.moreActionButton fw_addTouchBlock:^(id sender) { if (block) block(1, sender); }];
-
-    if (self.customBlock) {
-        self.customBlock(emptyView);
-    }
     
     if (fadeAnimated) {
         emptyView.alpha = 0;
@@ -96,10 +97,10 @@
     }
 }
 
-- (BOOL)hasEmptyView:(UIView *)view
+- (UIView *)showingEmptyView:(UIView *)view
 {
     UIView *emptyView = [view fw_subviewWithTag:2021];
-    return emptyView != nil ? YES : NO;
+    return emptyView;
 }
 
 @end

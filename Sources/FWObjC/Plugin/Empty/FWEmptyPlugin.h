@@ -23,8 +23,8 @@ NS_SWIFT_NAME(EmptyPlugin)
 /// 隐藏空界面
 - (void)hideEmptyView:(UIView *)view;
 
-/// 是否显示空界面
-- (BOOL)hasEmptyView:(UIView *)view;
+/// 获取正在显示的空界面视图
+- (nullable UIView *)showingEmptyView:(UIView *)view;
 
 @end
 
@@ -38,6 +38,9 @@ NS_SWIFT_NAME(EmptyPlugin)
 
 /// 设置空界面外间距，默认zero
 @property (nonatomic, assign) UIEdgeInsets fw_emptyInsets NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的空界面视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingEmptyView NS_REFINED_FOR_SWIFT;
 
 /// 是否显示空界面
 @property (nonatomic, assign, readonly) BOOL fw_hasEmptyView NS_REFINED_FOR_SWIFT;
@@ -78,6 +81,9 @@ NS_SWIFT_NAME(EmptyPlugin)
 
 /// 设置空界面外间距，默认zero
 @property (nonatomic, assign) UIEdgeInsets fw_emptyInsets NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的空界面视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingEmptyView NS_REFINED_FOR_SWIFT;
 
 /// 是否显示空界面
 @property (nonatomic, assign, readonly) BOOL fw_hasEmptyView NS_REFINED_FOR_SWIFT;

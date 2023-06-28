@@ -33,16 +33,19 @@
             }
             case FWBadgeStyleDot:
             default: {
-                CGFloat badgeHeight = 10.f;
-                _badgeOffset = CGPointMake(3.f, 3.f);
-                
-                self.userInteractionEnabled = NO;
-                self.backgroundColor = [UIColor redColor];
-                self.layer.cornerRadius = badgeHeight / 2.0;
-                [self fw_setDimensionsToSize:CGSizeMake(badgeHeight, badgeHeight)];
+                [self setupWithBadgeDot:10.f badgeOffset:CGPointMake(3.f, 3.f)];
                 break;
             }
         }
+    }
+    return self;
+}
+
+- (instancetype)initWithBadgeDot:(CGFloat)badgeHeight badgeOffset:(CGPoint)badgeOffset
+{
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        [self setupWithBadgeDot:badgeHeight badgeOffset:badgeOffset];
     }
     return self;
 }
@@ -54,6 +57,16 @@
         [self setupWithBadgeHeight:badgeHeight badgeOffset:badgeOffset textInset:textInset fontSize:fontSize];
     }
     return self;
+}
+
+- (void)setupWithBadgeDot:(CGFloat)badgeHeight badgeOffset:(CGPoint)badgeOffset
+{
+    _badgeOffset = badgeOffset;
+    
+    self.userInteractionEnabled = NO;
+    self.backgroundColor = [UIColor redColor];
+    self.layer.cornerRadius = badgeHeight / 2.0;
+    [self fw_setDimensionsToSize:CGSizeMake(badgeHeight, badgeHeight)];
 }
 
 - (void)setupWithBadgeHeight:(CGFloat)badgeHeight badgeOffset:(CGPoint)badgeOffset textInset:(CGFloat)textInset fontSize:(CGFloat)fontSize

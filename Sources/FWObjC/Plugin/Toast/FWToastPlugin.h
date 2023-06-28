@@ -32,8 +32,8 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏加载吐司
 - (void)hideLoading:(UIView *)view;
 
-/// 是否正在显示加载吐司
-- (BOOL)isShowingLoading:(UIView *)view;
+/// 获取正在显示的加载吐司视图
+- (nullable UIView *)showingLoadingView:(UIView *)view;
 
 /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
 - (void)showProgressWithAttributedText:(nullable NSAttributedString *)attributedText progress:(CGFloat)progress cancelBlock:(nullable void (^)(void))cancelBlock inView:(UIView *)view;
@@ -41,8 +41,8 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏进度条吐司
 - (void)hideProgress:(UIView *)view;
 
-/// 是否正在显示进度条吐司
-- (BOOL)isShowingProgress:(UIView *)view;
+/// 获取正在显示的进度条吐司视图
+- (nullable UIView *)showingProgressView:(UIView *)view;
 
 /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
 - (void)showMessageWithAttributedText:(nullable NSAttributedString *)attributedText style:(FWToastStyle)style autoHide:(BOOL)autoHide interactive:(BOOL)interactive completion:(nullable void (^)(void))completion inView:(UIView *)view;
@@ -50,8 +50,8 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏消息吐司
 - (void)hideMessage:(UIView *)view;
 
-/// 是否正在显示消息吐司
-- (BOOL)isShowingMessage:(UIView *)view;
+/// 获取正在显示的消息吐司视图
+- (nullable UIView *)showingMessageView:(UIView *)view;
 
 @end
 
@@ -76,6 +76,9 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏加载吐司
 - (void)fw_hideLoading NS_REFINED_FOR_SWIFT;
 
+/// 获取正在显示的加载吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingLoadingView NS_REFINED_FOR_SWIFT;
+
 /// 是否正在显示加载吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingLoading NS_REFINED_FOR_SWIFT;
 
@@ -87,6 +90,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏进度条吐司
 - (void)fw_hideProgress NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的进度条吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingProgressView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示进度条吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingProgress NS_REFINED_FOR_SWIFT;
@@ -105,6 +111,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏消息吐司
 - (void)fw_hideMessage NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的消息吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingMessageView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示消息吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingMessage NS_REFINED_FOR_SWIFT;
@@ -135,6 +144,9 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏加载吐司
 - (void)fw_hideLoading NS_REFINED_FOR_SWIFT;
 
+/// 获取正在显示的加载吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingLoadingView NS_REFINED_FOR_SWIFT;
+
 /// 是否正在显示加载吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingLoading NS_REFINED_FOR_SWIFT;
 
@@ -146,6 +158,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏进度条吐司
 - (void)fw_hideProgress NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的进度条吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingProgressView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示进度条吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingProgress NS_REFINED_FOR_SWIFT;
@@ -164,6 +179,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏消息吐司
 - (void)fw_hideMessage NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的消息吐司视图
+@property (nonatomic, weak, readonly, nullable) UIView *fw_showingMessageView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示消息吐司
 @property (nonatomic, assign, readonly) BOOL fw_isShowingMessage NS_REFINED_FOR_SWIFT;
@@ -188,6 +206,9 @@ NS_SWIFT_NAME(ToastPlugin)
 /// 隐藏加载吐司
 + (void)fw_hideLoading NS_REFINED_FOR_SWIFT;
 
+/// 获取正在显示的加载吐司视图
+@property (class, nonatomic, weak, readonly, nullable) UIView *fw_showingLoadingView NS_REFINED_FOR_SWIFT;
+
 /// 是否正在显示加载吐司
 @property (class, nonatomic, assign, readonly) BOOL fw_isShowingLoading NS_REFINED_FOR_SWIFT;
 
@@ -199,6 +220,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏进度条吐司
 + (void)fw_hideProgress NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的进度条吐司视图
+@property (class, nonatomic, weak, readonly, nullable) UIView *fw_showingProgressView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示进度条吐司
 @property (class, nonatomic, assign, readonly) BOOL fw_isShowingProgress NS_REFINED_FOR_SWIFT;
@@ -217,6 +241,9 @@ NS_SWIFT_NAME(ToastPlugin)
 
 /// 隐藏消息吐司
 + (void)fw_hideMessage NS_REFINED_FOR_SWIFT;
+
+/// 获取正在显示的消息吐司视图
+@property (class, nonatomic, weak, readonly, nullable) UIView *fw_showingMessageView NS_REFINED_FOR_SWIFT;
 
 /// 是否正在显示消息吐司
 @property (class, nonatomic, assign, readonly) BOOL fw_isShowingMessage NS_REFINED_FOR_SWIFT;

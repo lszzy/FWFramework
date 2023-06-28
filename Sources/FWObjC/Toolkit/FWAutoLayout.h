@@ -705,6 +705,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)fw_removeConstraints:(nullable NSArray<NSLayoutConstraint *> *)constraints NS_REFINED_FOR_SWIFT;
 
+#pragma mark - Debug
+/// 自动布局调试开关，默认打开，仅调试生效
+@property (class, nonatomic, assign) BOOL fw_autoLayoutDebug NS_REFINED_FOR_SWIFT;
+
+/// 布局调试Key
+@property (nonatomic, copy, nullable) NSString *fw_layoutKey NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - NSLayoutConstraint+FWAutoLayout
