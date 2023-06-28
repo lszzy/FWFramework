@@ -48,21 +48,29 @@ import FWObjC
             view.fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_emptyInsets")
         }
     }
-
-    /// 是否显示空界面
-    public var fw_hasEmptyView: Bool {
+    
+    /// 获取正在显示的空界面视图
+    public var fw_showingEmptyView: UIView? {
         var plugin: EmptyPlugin
-        if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.hasEmpty(_:))) {
+        if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.showingEmpty(_:))) {
             plugin = emptyPlugin
         } else {
             plugin = EmptyPluginImpl.shared
         }
         
         if let scrollView = self as? UIScrollView {
-            return scrollView.fw_hasOverlayView && plugin.hasEmpty!(scrollView.fw_overlayView)
+            if scrollView.fw_hasOverlayView {
+                return plugin.showingEmpty!(scrollView.fw_overlayView)
+            }
+            return nil
         } else {
-            return plugin.hasEmpty!(self)
+            return plugin.showingEmpty!(self)
         }
+    }
+
+    /// 是否显示空界面
+    public var fw_hasEmptyView: Bool {
+        return fw_showingEmptyView != nil
     }
 
     /// 显示空界面加载视图
@@ -122,6 +130,11 @@ import FWObjC
     public var fw_emptyInsets: UIEdgeInsets {
         get { return self.view.fw_emptyInsets }
         set { self.view.fw_emptyInsets = newValue }
+    }
+    
+    /// 获取正在显示的空界面视图
+    public var fw_showingEmptyView: UIView? {
+        return self.view.fw_showingEmptyView
     }
 
     /// 是否显示空界面
