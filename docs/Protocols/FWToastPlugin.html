@@ -17,7 +17,7 @@
     <a title="FWToastPlugin Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.13.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.14.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2870,9 +2870,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)FWToastPlugin(im)isShowingLoading:"></a>
-                    <a name="//apple_ref/swift/Method/-isShowingLoading:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)isShowingLoading:">-isShowingLoading:<wbr></a>
+                    <a name="/c:objc(pl)FWToastPlugin(im)showingLoadingView:"></a>
+                    <a name="//apple_ref/swift/Method/-showingLoadingView:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)showingLoadingView:">-showingLoadingView:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2880,19 +2880,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否正在显示加载吐司</p>
+                        <p>获取正在显示的加载吐司视图</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isShowingLoading</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">showingLoadingView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">isShowingLoading</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">showingLoading</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2970,9 +2970,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)FWToastPlugin(im)isShowingProgress:"></a>
-                    <a name="//apple_ref/swift/Method/-isShowingProgress:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)isShowingProgress:">-isShowingProgress:<wbr></a>
+                    <a name="/c:objc(pl)FWToastPlugin(im)showingProgressView:"></a>
+                    <a name="//apple_ref/swift/Method/-showingProgressView:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)showingProgressView:">-showingProgressView:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2980,19 +2980,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否正在显示进度条吐司</p>
+                        <p>获取正在显示的进度条吐司视图</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isShowingProgress</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">showingProgressView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">isShowingProgress</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">showingProgressView</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3072,9 +3072,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)FWToastPlugin(im)isShowingMessage:"></a>
-                    <a name="//apple_ref/swift/Method/-isShowingMessage:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)isShowingMessage:">-isShowingMessage:<wbr></a>
+                    <a name="/c:objc(pl)FWToastPlugin(im)showingMessageView:"></a>
+                    <a name="//apple_ref/swift/Method/-showingMessageView:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)FWToastPlugin(im)showingMessageView:">-showingMessageView:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3082,19 +3082,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否正在显示消息吐司</p>
+                        <p>获取正在显示的消息吐司视图</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isShowingMessage</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">showingMessageView</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nv">view</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">isShowingMessage</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">showingMessageView</span><span class="p">(</span><span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3106,7 +3106,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-26)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

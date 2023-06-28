@@ -494,6 +494,19 @@ extension Wrapper where Base: UIView {
         base.__fw_removeConstraints(constraints)
     }
     
+    // MARK: - Debug
+    /// 自动布局调试开关，默认打开，仅调试生效
+    public static var autoLayoutDebug: Bool {
+        get { return UIView.__fw_autoLayoutDebug }
+        set { UIView.__fw_autoLayoutDebug = newValue }
+    }
+    
+    /// 布局调试Key
+    public var layoutKey: String? {
+        get { base.__fw_layoutKey }
+        set { base.__fw_layoutKey = newValue }
+    }
+    
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
@@ -969,6 +982,12 @@ public class LayoutChain {
         view?.__fw_setDimensions(to: size)
         return self
     }
+    
+    @discardableResult
+    public func size(width: CGFloat, height: CGFloat) -> Self {
+        view?.__fw_setDimensions(to: CGSize(width: width, height: height))
+        return self
+    }
 
     @discardableResult
     public func width(_ width: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
@@ -1059,6 +1078,31 @@ public class LayoutChain {
     @discardableResult
     public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.__fw_constrainAttribute(attribute, to: toAttribute, ofView: view, withMultiplier: multiplier, relation: relation, priority: priority)
+        return self
+    }
+    
+    // MARK: - Subviews
+    @discardableResult
+    public func subviews(_ closure: (_ make: LayoutChain) -> Void) -> Self {
+        self.view?.subviews.fw.layoutMaker(closure)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) -> Self {
+        self.view?.subviews.fw.layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, equalLength: equalLength)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) -> Self {
+        self.view?.subviews.fw.layoutAlong(axis, itemLength: itemLength, leadSpacing: leadSpacing, tailSpacing: tailSpacing)
+        return self
+    }
+    
+    @discardableResult
+    public func subviews(along axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) -> Self {
+        self.view?.subviews.fw.layoutAlong(axis, alignCenter: alignCenter, itemWidth: itemWidth, leftSpacing: leftSpacing, rightSpacing: rightSpacing)
         return self
     }
     
@@ -1168,6 +1212,13 @@ public class LayoutChain {
         return self.view?.__fw_constraint(withIdentifier: identifier)
     }
     
+    // MARK: - Debug
+    @discardableResult
+    public func layoutKey(_ layoutKey: String?) -> Self {
+        self.view?.__fw_layoutKey = layoutKey
+        return self
+    }
+    
 }
 
 // MARK: - UIView+LayoutChain
@@ -1198,6 +1249,131 @@ extension Wrapper where Base == Array<UIView> {
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         base.forEach { view in
             closure(view.fw.layoutChain)
+        }
+    }
+    
+    /// 批量对齐布局，适用于间距固定场景，尺寸未设置，若只有一个则间距不生效
+    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) {
+        guard base.count > 0 else { return }
+        
+        if axis == .horizontal {
+            var prev: UIView?
+            for (index, view) in base.enumerated() {
+                if let prev = prev {
+                    view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing)
+                    if equalLength {
+                        view.fw.matchDimension(.width, toDimension: .width, ofView: prev)
+                    }
+                } else if let leadSpacing = leadSpacing {
+                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                }
+                if index == base.count - 1, let tailSpacing = tailSpacing {
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                }
+                prev = view
+            }
+        } else {
+            var prev: UIView?
+            for (index, view) in base.enumerated() {
+                if let prev = prev {
+                    view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing)
+                    if equalLength {
+                        view.fw.matchDimension(.height, toDimension: .height, ofView: prev)
+                    }
+                } else if let leadSpacing = leadSpacing {
+                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                }
+                if index == base.count - 1, let tailSpacing = tailSpacing {
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                }
+                prev = view
+            }
+        }
+    }
+    
+    /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
+    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) {
+        guard base.count > 0 else { return }
+        
+        if axis == .horizontal {
+            var prev: UIView?
+            for (index, view) in base.enumerated() {
+                if base.count > 1 {
+                    view.fw.setDimension(.width, size: itemLength)
+                }
+                if prev != nil {
+                    if index < base.count - 1 {
+                        let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
+                            (itemLength + leadSpacing) -
+                            CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
+                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).constant = offset
+                    }
+                } else {
+                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                }
+                if index == base.count - 1 {
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                }
+                prev = view
+            }
+        } else {
+            var prev: UIView?
+            for (index, view) in base.enumerated() {
+                if base.count > 1 {
+                    view.fw.setDimension(.height, size: itemLength)
+                }
+                if prev != nil {
+                    if index < base.count - 1 {
+                        let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
+                            (itemLength + leadSpacing) -
+                            CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
+                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).constant = offset
+                    }
+                } else {
+                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                }
+                if index == base.count - 1 {
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                }
+                prev = view
+            }
+        }
+    }
+    
+    /// 批量对齐布局，用于补齐Along之后该方向上的其他约束
+    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) {
+        guard base.count > 0 else { return }
+        
+        if axis == .horizontal {
+            for view in base {
+                if alignCenter {
+                    view.fw.alignAxis(toSuperview: .centerY)
+                }
+                if let itemWidth = itemWidth {
+                    view.fw.setDimension(.height, size: itemWidth)
+                }
+                if let leftSpacing = leftSpacing {
+                    view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing)
+                }
+                if let rightSpacing = rightSpacing {
+                    view.fw.pinEdge(toSuperview: .top, inset: rightSpacing)
+                }
+            }
+        } else {
+            for view in base {
+                if alignCenter {
+                    view.fw.alignAxis(toSuperview: .centerX)
+                }
+                if let itemWidth = itemWidth {
+                    view.fw.setDimension(.width, size: itemWidth)
+                }
+                if let leftSpacing = leftSpacing {
+                    view.fw.pinEdge(toSuperview: .left, inset: leftSpacing)
+                }
+                if let rightSpacing = rightSpacing {
+                    view.fw.pinEdge(toSuperview: .right, inset: rightSpacing)
+                }
+            }
         }
     }
     

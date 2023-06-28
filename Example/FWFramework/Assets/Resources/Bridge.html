@@ -95,6 +95,20 @@
                 log('JS got response', response)
             })
         }
+        
+        var openButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+        openButton.innerHTML = 'testOpen'
+        openButton.onclick = function(e) {
+            e.preventDefault()
+            window.open('https://www.baidu.com')
+        }
+        
+        var closeButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+        closeButton.innerHTML = 'testClose'
+        closeButton.onclick = function(e) {
+            e.preventDefault()
+            window.close()
+        }
 	})
 	</script>
 	<div id='buttons'></div> <div id='log'></div>

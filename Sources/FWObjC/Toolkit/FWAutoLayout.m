@@ -13,6 +13,12 @@
 
 #pragma mark - NSLayoutConstraint+FWAutoLayout
 
+#ifdef DEBUG
+static BOOL fwStaticAutoLayoutDebug = YES;
+#else
+static BOOL fwStaticAutoLayoutDebug = NO;
+#endif
+
 @implementation NSLayoutConstraint (FWAutoLayout)
 
 - (BOOL)fw_isOpposite
@@ -79,6 +85,154 @@
     objc_setAssociatedObject(self, @selector(fw_originalActive), @(originalActive), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (NSString *)fw_layoutIdentifier
+{
+    return (NSString *)objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setFw_layoutIdentifier:(NSString *)layoutIdentifier
+{
+    objc_setAssociatedObject(self, @selector(fw_layoutIdentifier), layoutIdentifier, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+// MARK: - Debug
+
+#ifdef DEBUG
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(NSLayoutConstraint, @selector(description), FWSwizzleReturn(NSString *), FWSwizzleArgs(), FWSwizzleCode({
+            if (!fwStaticAutoLayoutDebug) {
+                return FWSwizzleOriginal();
+            }
+            
+            return selfObject.fw_layoutDescription;
+        }));
+    });
+}
+
++ (NSDictionary *)fw_relationDescriptions
+{
+    static dispatch_once_t once;
+    static NSDictionary *descriptionMap;
+    dispatch_once(&once, ^{
+        descriptionMap = @{
+            @(NSLayoutRelationEqual)              : @"==",
+            @(NSLayoutRelationGreaterThanOrEqual) : @">=",
+            @(NSLayoutRelationLessThanOrEqual)    : @"<=",
+        };
+    });
+    return descriptionMap;
+}
+
++ (NSDictionary *)fw_attributeDescriptions
+{
+    static dispatch_once_t once;
+    static NSDictionary *descriptionMap;
+    dispatch_once(&once, ^{
+        descriptionMap = @{
+            @(NSLayoutAttributeTop)                  : @"top",
+            @(NSLayoutAttributeLeft)                 : @"left",
+            @(NSLayoutAttributeBottom)               : @"bottom",
+            @(NSLayoutAttributeRight)                : @"right",
+            @(NSLayoutAttributeLeading)              : @"leading",
+            @(NSLayoutAttributeTrailing)             : @"trailing",
+            @(NSLayoutAttributeWidth)                : @"width",
+            @(NSLayoutAttributeHeight)               : @"height",
+            @(NSLayoutAttributeCenterX)              : @"centerX",
+            @(NSLayoutAttributeCenterY)              : @"centerY",
+            @(NSLayoutAttributeFirstBaseline)        : @"firstBaseline",
+            @(NSLayoutAttributeLastBaseline)         : @"lastBaseline",
+            @(NSLayoutAttributeLeftMargin)           : @"leftMargin",
+            @(NSLayoutAttributeRightMargin)          : @"rightMargin",
+            @(NSLayoutAttributeTopMargin)            : @"topMargin",
+            @(NSLayoutAttributeBottomMargin)         : @"bottomMargin",
+            @(NSLayoutAttributeLeadingMargin)        : @"leadingMargin",
+            @(NSLayoutAttributeTrailingMargin)       : @"trailingMargin",
+            @(NSLayoutAttributeCenterXWithinMargins) : @"centerXWithinMargins",
+            @(NSLayoutAttributeCenterYWithinMargins) : @"centerYWithinMargins",
+        };
+    });
+    return descriptionMap;
+}
+
+
++ (NSDictionary *)fw_priorityDescriptions
+{
+    static dispatch_once_t once;
+    static NSDictionary *descriptionMap;
+    dispatch_once(&once, ^{
+        descriptionMap = @{
+            @(UILayoutPriorityDefaultHigh)               : @"defaultHigh",
+            @(UILayoutPriorityDefaultLow)                : @"defaultLow",
+            @(UILayoutPriorityRequired)                  : @"required",
+            @(UILayoutPriorityFittingSizeLevel)          : @"fittingSizeLevel",
+            @(UILayoutPriorityDragThatCanResizeScene)    : @"dragThatCanResizeScene",
+            @(UILayoutPrioritySceneSizeStayPut)          : @"sceneSizeStayPut",
+            @(UILayoutPriorityDragThatCannotResizeScene) : @"dragThatCannotResizeScene",
+        };
+    });
+    return descriptionMap;
+}
+
++ (NSString *)fw_layoutDescription:(id)object
+{
+    NSString *objectDesc = @"";
+    if ([object isKindOfClass:[NSLayoutConstraint class]] && ((NSLayoutConstraint *)object).identifier.length > 0) {
+        objectDesc = [NSString stringWithFormat:@" '%@'", ((NSLayoutConstraint *)object).identifier];
+    } else if ([object isKindOfClass:[UILayoutGuide class]] && ((UILayoutGuide *)object).owningView.fw_layoutKey.length > 0) {
+        objectDesc = [NSString stringWithFormat:@" '%@'", ((UILayoutGuide *)object).owningView.fw_layoutKey];
+    } else if ([object isKindOfClass:[UIView class]] && ((UIView *)object).fw_layoutKey.length > 0) {
+        objectDesc = [NSString stringWithFormat:@" '%@'", ((UIView *)object).fw_layoutKey];
+    }
+    return [NSString stringWithFormat:@"%@:%p%@", [object class], object, objectDesc];
+}
+
+/// 布局调试描述，参考：[Masonry](https://github.com/SnapKit/Masonry)
+- (NSString *)fw_layoutDescription
+{
+    NSMutableString *description = [[NSMutableString alloc] initWithString:@"<"];
+
+    [description appendString:[self.class fw_layoutDescription:self]];
+
+    [description appendFormat:@" %@", [self.class fw_layoutDescription:self.firstItem]];
+    if (self.firstAttribute != NSLayoutAttributeNotAnAttribute) {
+        [description appendFormat:@".%@", self.class.fw_attributeDescriptions[@(self.firstAttribute)]];
+    }
+
+    [description appendFormat:@" %@", self.class.fw_relationDescriptions[@(self.relation)]];
+
+    if (self.secondItem) {
+        [description appendFormat:@" %@", [self.class fw_layoutDescription:self.secondItem]];
+    }
+    if (self.secondAttribute != NSLayoutAttributeNotAnAttribute) {
+        [description appendFormat:@".%@", self.class.fw_attributeDescriptions[@(self.secondAttribute)]];
+    }
+    
+    if (self.multiplier != 1) {
+        [description appendFormat:@" * %g", self.multiplier];
+    }
+    
+    if (self.secondAttribute == NSLayoutAttributeNotAnAttribute) {
+        [description appendFormat:@" %g", self.constant];
+    } else {
+        if (self.constant) {
+            [description appendFormat:@" %@ %g", (self.constant < 0 ? @"-" : @"+"), ABS(self.constant)];
+        }
+    }
+
+    if (self.priority != UILayoutPriorityRequired) {
+        [description appendFormat:@" ^%@", self.class.fw_priorityDescriptions[@(self.priority)] ?: [NSNumber numberWithDouble:self.priority]];
+    }
+
+    [description appendString:@">"];
+    return description;
+}
+
+#endif
+
 @end
 
 #pragma mark - UIView+FWAutoLayout
@@ -89,6 +243,28 @@ static BOOL fwStaticAutoScaleView = NO;
 static BOOL fwStaticAutoFlatLayout = NO;
 
 @implementation UIView (FWAutoLayout)
+
+#pragma mark - Debug
+
++ (BOOL)fw_autoLayoutDebug
+{
+    return fwStaticAutoLayoutDebug;
+}
+
++ (void)setFw_autoLayoutDebug:(BOOL)debug
+{
+    fwStaticAutoLayoutDebug = debug;
+}
+
+- (NSString *)fw_layoutKey
+{
+    return (NSString *)objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setFw_layoutKey:(NSString *)layoutKey
+{
+    objc_setAssociatedObject(self, @selector(fw_layoutKey), layoutKey, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 
 #pragma mark - AutoLayout
 
@@ -838,7 +1014,8 @@ static BOOL fwStaticAutoFlatLayout = NO;
     if (identifier.length < 1) return nil;
     __block NSLayoutConstraint *constraint = nil;
     [self.fw_innerLayoutConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *obj, NSUInteger idx, BOOL *stop) {
-        if (obj.identifier && [obj.identifier isEqualToString:identifier]) {
+        if ((obj.identifier && [identifier isEqualToString:obj.identifier]) ||
+            (obj.fw_layoutIdentifier && [identifier isEqualToString:obj.fw_layoutIdentifier])) {
             constraint = obj;
             *stop = YES;
         }
@@ -921,6 +1098,7 @@ static BOOL fwStaticAutoFlatLayout = NO;
         if (constraint.constant != offset) constraint.constant = offset;
     } else {
         constraint = [NSLayoutConstraint constraintWithItem:self attribute:attribute relatedBy:relation toItem:otherView attribute:toAttribute multiplier:multiplier constant:offset];
+        constraint.fw_layoutIdentifier = layoutIdentifier;
         constraint.identifier = layoutIdentifier;
         [self.fw_innerLayoutConstraints addObject:constraint];
     }

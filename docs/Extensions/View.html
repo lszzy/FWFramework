@@ -17,7 +17,7 @@
     <a title="View Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.13.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.14.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -4752,9 +4752,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yyyccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yySbSgccySo08UIScrollC0CcSgtF"></a>
                     <a name="//apple_ref/swift/Method/listViewRefreshing(shouldBegin:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yyyccySo08UIScrollC0CcSgtF">listViewRefreshing(shouldBegin:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yySbSgccySo08UIScrollC0CcSgtF">listViewRefreshing(shouldBegin:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4762,7 +4762,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>绑定List下拉刷新插件，action必须调用completionHandler</p>
+                        <p>绑定List下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加</p>
 
                       </div>
                       <div class="declaration">
@@ -4771,7 +4771,7 @@ GeometryReader { proxy in
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewRefreshing</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -4783,9 +4783,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyySbccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyyANccySo08UIScrollC0CcSgtF"></a>
                     <a name="//apple_ref/swift/Method/listViewLoading(shouldBegin:shouldLoading:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyySbccySo08UIScrollC0CcSgtF">listViewLoading(shouldBegin:<wbr>shouldLoading:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyyANccySo08UIScrollC0CcSgtF">listViewLoading(shouldBegin:<wbr>shouldLoading:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4793,7 +4793,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>绑定List上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加</p>
+                        <p>绑定List上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加</p>
 
                       </div>
                       <div class="declaration">
@@ -4803,7 +4803,7 @@ GeometryReader { proxy in
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewLoading</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">shouldLoading</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -4884,9 +4884,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yyyccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yySbSgccySo08UIScrollC0CcSgtF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewRefreshing(shouldBegin:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yyyccySo08UIScrollC0CcSgtF">scrollViewRefreshing(shouldBegin:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin6action9customizeQrAA7BindingVySbGSg_yySbSgccySo08UIScrollC0CcSgtF">scrollViewRefreshing(shouldBegin:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4894,7 +4894,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>绑定ScrollView下拉刷新插件，action必须调用completionHandler</p>
+                        <p>绑定ScrollView下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加</p>
 
                       </div>
                       <div class="declaration">
@@ -4903,7 +4903,7 @@ GeometryReader { proxy in
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewRefreshing</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -4915,9 +4915,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyySbccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyyANccySo08UIScrollC0CcSgtF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewLoading(shouldBegin:shouldLoading:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyySbccySo08UIScrollC0CcSgtF">scrollViewLoading(shouldBegin:<wbr>shouldLoading:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin0gF06action9customizeQrAA7BindingVySbGSg_SbSgyyANccySo08UIScrollC0CcSgtF">scrollViewLoading(shouldBegin:<wbr>shouldLoading:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4925,7 +4925,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>绑定ScrollView上拉追加插件，action必须调用completionHandler，并指定是否已加载完成不能继续追加</p>
+                        <p>绑定ScrollView上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加</p>
 
                       </div>
                       <div class="declaration">
@@ -4935,7 +4935,7 @@ GeometryReader { proxy in
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewLoading</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">shouldLoading</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -5359,7 +5359,7 @@ GeometryReader { proxy in
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-26)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
