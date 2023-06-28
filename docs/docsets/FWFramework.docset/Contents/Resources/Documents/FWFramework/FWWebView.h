@@ -51,6 +51,9 @@ NS_SWIFT_NAME(WebView)
 /// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
 @property (nonatomic, assign) BOOL allowsSchemeURL;
 
+/// 是否允许window.close关闭当前控制器，默认YES
+@property (nonatomic, assign) BOOL allowsWindowClose;
+
 /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
 @property (nonatomic, strong, nullable) id webRequest;
 
