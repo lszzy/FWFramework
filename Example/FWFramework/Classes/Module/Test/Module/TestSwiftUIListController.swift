@@ -114,7 +114,7 @@ struct TestSwiftUIListContent: View {
             action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     viewModel.refresh()
-                    completionHandler()
+                    completionHandler(false)
                 }
             })
         .listViewLoading(
