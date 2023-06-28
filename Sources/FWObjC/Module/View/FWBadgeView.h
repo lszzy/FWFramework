@@ -35,6 +35,10 @@ NS_SWIFT_NAME(BadgeView)
 /// 初始化自带样式提醒灯。宽高自动布局，其它手工布局
 - (instancetype)initWithBadgeStyle:(FWBadgeStyle)badgeStyle;
 
+/// 初始化小红点提醒灯。宽高自动布局，其它手工布局
+- (instancetype)initWithBadgeDot:(CGFloat)badgeHeight
+                     badgeOffset:(CGPoint)badgeOffset;
+
 /// 初始化自定义提醒灯。宽高自动布局，其它手工布局
 - (instancetype)initWithBadgeHeight:(CGFloat)badgeHeight
                         badgeOffset:(CGPoint)badgeOffset
