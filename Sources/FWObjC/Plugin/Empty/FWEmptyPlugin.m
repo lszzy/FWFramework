@@ -115,19 +115,27 @@
     }
 }
 
-- (BOOL)fw_hasEmptyView
+- (UIView *)fw_showingEmptyView
 {
     id<FWEmptyPlugin> plugin = self.fw_emptyPlugin;
-    if (!plugin || ![plugin respondsToSelector:@selector(hasEmptyView:)]) {
+    if (!plugin || ![plugin respondsToSelector:@selector(showingEmptyView:)]) {
         plugin = FWEmptyPluginImpl.sharedInstance;
     }
     
     if ([self isKindOfClass:[UIScrollView class]]) {
         UIScrollView *scrollView = (UIScrollView *)self;
-        return scrollView.fw_hasOverlayView && [plugin hasEmptyView:scrollView.fw_overlayView];;
+        if (scrollView.fw_hasOverlayView) {
+            return [plugin showingEmptyView:scrollView.fw_overlayView];
+        }
+        return nil;
     } else {
-        return [plugin hasEmptyView:self];
+        return [plugin showingEmptyView:self];
     }
+}
+
+- (BOOL)fw_hasEmptyView
+{
+    return self.fw_showingEmptyView != nil;
 }
 
 @end
@@ -189,6 +197,11 @@
 - (void)fw_hideEmptyView
 {
     [self.view fw_hideEmptyView];
+}
+
+- (UIView *)fw_showingEmptyView
+{
+    return [self.view fw_showingEmptyView];
 }
 
 - (BOOL)fw_hasEmptyView

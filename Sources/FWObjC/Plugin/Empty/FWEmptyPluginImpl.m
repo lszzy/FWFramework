@@ -97,10 +97,10 @@
     }
 }
 
-- (BOOL)hasEmptyView:(UIView *)view
+- (UIView *)showingEmptyView:(UIView *)view
 {
     UIView *emptyView = [view fw_subviewWithTag:2021];
-    return emptyView != nil ? YES : NO;
+    return emptyView;
 }
 
 @end
