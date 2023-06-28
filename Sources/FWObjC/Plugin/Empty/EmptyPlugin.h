@@ -23,8 +23,8 @@ NS_SWIFT_NAME(EmptyPlugin)
 /// 隐藏空界面
 - (void)hideEmptyView:(UIView *)view;
 
-/// 是否显示空界面
-- (BOOL)hasEmptyView:(UIView *)view;
+/// 获取正在显示的空界面视图
+- (nullable UIView *)showingEmptyView:(UIView *)view;
 
 @end
 

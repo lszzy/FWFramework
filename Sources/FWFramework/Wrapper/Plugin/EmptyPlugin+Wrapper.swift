@@ -23,6 +23,11 @@ extension Wrapper where Base: UIView {
         get { return base.fw_emptyInsets }
         set { base.fw_emptyInsets = newValue }
     }
+    
+    /// 获取正在显示的空界面视图
+    public var showingEmptyView: UIView? {
+        return base.fw_showingEmptyView
+    }
 
     /// 是否显示空界面
     public var hasEmptyView: Bool {
@@ -62,6 +67,11 @@ extension Wrapper where Base: UIViewController {
     public var emptyInsets: UIEdgeInsets {
         get { return base.fw_emptyInsets }
         set { base.fw_emptyInsets = newValue }
+    }
+    
+    /// 获取正在显示的空界面视图
+    public var showingEmptyView: UIView? {
+        return base.fw_showingEmptyView
     }
 
     /// 是否显示空界面
