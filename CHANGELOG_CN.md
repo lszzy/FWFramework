@@ -1,5 +1,16 @@
 # 更新日志
 
+## [4.14.0] - 2023-06-28
+
+### Added
+* 新增AutoLayout批量布局方法、布局冲突调试优化
+* EmptyPlugin新增获取正在显示的视图方法
+* ToastPlugin新增获取正在显示的视图方法
+* 小红点BadgeView支持自定义大小和偏移
+* WebView默认支持window.close关闭界面
+* 优化SwiftUI控制是否能继续追加处理
+* 修复空界面自定义customBlock后偶现样式不生效问题
+
 ## [4.13.0] - 2023-06-26
 
 ### Added
