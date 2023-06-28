@@ -494,6 +494,19 @@ extension Wrapper where Base: UIView {
         base.__fw_removeConstraints(constraints)
     }
     
+    // MARK: - Debug
+    /// 自动布局调试开关，默认打开，仅调试生效
+    public static var autoLayoutDebug: Bool {
+        get { return UIView.__fw_autoLayoutDebug }
+        set { UIView.__fw_autoLayoutDebug = newValue }
+    }
+    
+    /// 布局调试Key
+    public var layoutKey: String? {
+        get { base.__fw_layoutKey }
+        set { base.__fw_layoutKey = newValue }
+    }
+    
 }
 
 // MARK: - NSLayoutConstraint+AutoLayout
@@ -1197,6 +1210,13 @@ public class LayoutChain {
     
     public func constraint(identifier: String?) -> NSLayoutConstraint? {
         return self.view?.__fw_constraint(withIdentifier: identifier)
+    }
+    
+    // MARK: - Debug
+    @discardableResult
+    public func layoutKey(_ layoutKey: String?) -> Self {
+        self.view?.__fw_layoutKey = layoutKey
+        return self
     }
     
 }
