@@ -175,6 +175,11 @@ struct TestSwiftUIContent: View {
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
                     
+                    Toggle(isOn: $buttonRemovable) {
+                        EmptyView()
+                    }
+                    .toggleStyle(TestSwiftUIToggleStyle())
+                    
                     HStack(alignment: .center, spacing: 16) {
                         Button {
                             viewContext.viewController?.app.close()
@@ -351,6 +356,31 @@ struct TestSwiftUIContent: View {
         }
         .onReceive(viewContext.$object) { object in
             print("object: \(String(describing: object))")
+        }
+    }
+    
+}
+
+@available(iOS 13.0, *)
+struct TestSwiftUIToggleStyle: ToggleStyle {
+    
+    func makeBody(configuration: ToggleStyleConfiguration) -> some View {
+        HStack {
+            configuration.label
+            
+            RoundedRectangle(cornerRadius: 25.5)
+                .frame(width: 51, height: 31, alignment: .center)
+                .overlay((
+                    Circle()
+                        .foregroundColor(Color(.systemBackground))
+                        .padding(3)
+                        .offset(x: configuration.isOn ? 10 : -10, y: 0)
+                        .animation(.linear(duration: 0.2))
+                ))
+                .foregroundColor(Color(.label))
+                .onTapGesture(perform: {
+                    configuration.isOn.toggle()
+                })
         }
     }
     
