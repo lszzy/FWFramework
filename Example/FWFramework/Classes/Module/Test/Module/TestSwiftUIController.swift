@@ -329,24 +329,14 @@ struct TestSwiftUIContent: View {
         .showToast($showingToast, customize: { viewController in
             viewController.app.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
         })
-        .showEmptyView(showingEmpty, builder: {
-            EmptyPluginView()
-                .text("我是标题")
-                .detail("我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
-                .image(UIImage.app.appIconImage())
-                .action("刷新") { _ in
-                    showingEmpty = false
-                }
+        .showEmpty($showingEmpty, customize: { viewController in
+            viewController.app.showEmptyView(text: "我是标题", detail: "我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息", image: UIImage.app.appIconImage(), action: "刷新") { _ in
+                showingEmpty = false
+            }
         })
-        .showLoadingView(showingLoading, builder: {
-            LoadingPluginView()
-                .onCancel {
-                    showingLoading = false
-                }
-        })
-        .showProgressView(showingProgress, builder: {
-            ProgressPluginView(progressValue)
-                .text("上传中(\(Int(progressValue * 100))%)")
+        .showLoading($showingLoading)
+        .showProgress($showingProgress, customize: { viewController in
+            viewController.app.showProgress(progressValue, text: "上传中(\(Int(progressValue * 100))%)")
         })
         .transformViewContext(transform: { viewContext in
             DispatchQueue.main.async {
