@@ -168,10 +168,10 @@ extension Wrapper where Base: UIApplication {
         return Base.fw_openAudioPlayer(url)
     }
     
-    /// 播放内置声音文件
+    /// 播放内置声音文件，完成后回调
     @discardableResult
-    public static func playSystemSound(_ file: String) -> SystemSoundID {
-        return Base.fw_playSystemSound(file)
+    public static func playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
+        return Base.fw_playSystemSound(file, completionHandler: completionHandler)
     }
 
     /// 停止播放内置声音文件
@@ -179,9 +179,9 @@ extension Wrapper where Base: UIApplication {
         Base.fw_stopSystemSound(soundId)
     }
 
-    /// 播放内置震动
-    public static func playSystemVibrate() {
-        Base.fw_playSystemVibrate()
+    /// 播放内置震动，完成后回调
+    public static func playSystemVibrate(completionHandler: (() -> Void)? = nil) {
+        Base.fw_playSystemVibrate(completionHandler: completionHandler)
     }
     
     /// 播放触控反馈

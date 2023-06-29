@@ -414,7 +414,7 @@ extension WrapperGlobal {
     
     /// 播放内置声音文件
     @discardableResult
-    public static func fw_playSystemSound(_ file: String) -> SystemSoundID {
+    public static func fw_playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
         guard !file.isEmpty else { return 0 }
         
         var soundFile = file
@@ -429,7 +429,7 @@ extension WrapperGlobal {
         let soundUrl = NSURL.fileURL(withPath: soundFile)
         var soundId: SystemSoundID = 0
         AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
-        AudioServicesPlaySystemSound(soundId)
+        AudioServicesPlaySystemSoundWithCompletion(soundId, completionHandler)
         return soundId
     }
 
@@ -442,8 +442,8 @@ extension WrapperGlobal {
     }
 
     /// 播放内置震动
-    public static func fw_playSystemVibrate() {
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    public static func fw_playSystemVibrate(completionHandler: (() -> Void)? = nil) {
+        AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
     
     /// 播放触控反馈
