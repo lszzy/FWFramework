@@ -120,7 +120,7 @@ struct TestSwiftUIListContent: View {
             action: { completionHandler in
                 viewModel.loadData(completionHandler: completionHandler)
             })
-        .showListEmpty(viewModel.error != nil) { scrollView in
+        .showListEmpty($viewModel.showsEmpty) { scrollView in
             scrollView.app.showEmptyView(text: viewModel.error?.localizedDescription) { _ in
                 viewModel.beginRefreshing = true
             }
@@ -136,12 +136,17 @@ struct TestSwiftUIListContent: View {
 class TestSwiftUIListModel: ViewModel {
     
     var style: Int = 0
+    var error: Error? {
+        didSet {
+            showsEmpty = error != nil
+        }
+    }
     
     @Published var beginRefreshing = false
     @Published var beginLoading = false
+    @Published var showsEmpty = false
     
     @Published var items: [String] = []
-    @Published var error: Error?
     
     func refreshData(completionHandler: @escaping (Bool?) -> Void) {
         self.error = nil

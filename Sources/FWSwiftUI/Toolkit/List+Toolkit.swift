@@ -32,7 +32,7 @@ extension View {
                 }
             }
             .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
-                view.introspectCollectionView { collectionView in
+                view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
                     guard !collectionView.fw_propertyBool(forName: "resetListStyle") else { return }
                     collectionView.fw_setPropertyBool(true, forName: "resetListStyle")
                     
@@ -48,7 +48,7 @@ extension View {
                 }
             })
             .then(UIDevice.fw_iosVersion < 16) { view in
-                view.introspectTableView { tableView in
+                view.introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
                     if !tableView.fw_propertyBool(forName: "resetListStyle") {
                         tableView.fw_setPropertyBool(true, forName: "resetListStyle")
                         
@@ -104,18 +104,33 @@ extension View {
             .eraseToAnyView()
     }
     
-    /// 配置List视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    /// 初始化List视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    ///
+    /// 注意：iOS16以上scrollView为UICollectionView，iOS16以下为UITableView
+    public func listViewInitialize(
+        _ initialization: @escaping (UIScrollView) -> Void
+    ) -> some View {
+        return listViewConfigure { scrollView in
+            guard !scrollView.fw_propertyBool(forName: "listViewInitialize") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "listViewInitialize")
+            
+            initialization(scrollView)
+        }
+    }
+    
+    /// 配置List视图，可调用多次
     ///
     /// 注意：iOS16以上scrollView为UICollectionView，iOS16以下为UITableView
     public func listViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        return introspectListView { scrollView in
-            guard !scrollView.fw_propertyBool(forName: "listViewConfigure") else { return }
-            scrollView.fw_setPropertyBool(true, forName: "listViewConfigure")
-            
-            configuration(scrollView)
-        }
+        return self
+            .introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
+                configuration(tableView)
+            }
+            .introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
+                configuration(collectionView)
+            }
     }
     
     /// 绑定List下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
@@ -124,7 +139,7 @@ extension View {
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectListView { scrollView in
+        return listViewConfigure { scrollView in
             if !scrollView.fw_propertyBool(forName: "listViewRefreshing") {
                 scrollView.fw_setPropertyBool(true, forName: "listViewRefreshing")
                 
@@ -156,7 +171,7 @@ extension View {
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectListView { scrollView in
+        return listViewConfigure { scrollView in
             if !scrollView.fw_propertyBool(forName: "listViewLoading") {
                 scrollView.fw_setPropertyBool(true, forName: "listViewLoading")
                 
@@ -187,9 +202,9 @@ extension View {
     }
     
     /// 显示List空界面插件，需手工切换，空界面显示时也可滚动
-    public func showListEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
-        return introspectListView { scrollView in
-            if isShowing {
+    public func showListEmpty(_ isShowing: Binding<Bool>, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+        return listViewConfigure { scrollView in
+            if isShowing.wrappedValue {
                 if let customize = customize {
                     customize(scrollView)
                 } else {

@@ -171,6 +171,9 @@ struct TestSwiftUIContent: View {
                         }
                         
                         Text("width: \(Int(topSize.width)) height: \(Int(topSize.height))")
+                            .hostingViewInitialize { hostingView in
+                                hostingView.backgroundColor = UIColor.app.randomColor
+                            }
                     }
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
