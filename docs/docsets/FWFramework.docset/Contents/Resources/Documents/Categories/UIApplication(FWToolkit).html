@@ -17,7 +17,7 @@
     <a title="UIApplication(FWToolkit) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.14.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.14.1 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -3653,9 +3653,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_playSystemSound:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_playSystemSound:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_playSystemSound:">+fw_playSystemSound:<wbr></a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_playSystemSound:completionHandler:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_playSystemSound:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_playSystemSound:completionHandler:">+fw_playSystemSound:<wbr>completionHandler:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3663,14 +3663,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>播放内置声音文件</p>
+                        <p>播放内置声音文件，完成后回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">SystemSoundID</span><span class="p">)</span><span class="nf">fw_playSystemSound</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">file</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">SystemSoundID</span><span class="p">)</span><span class="nf">fw_playSystemSound</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">file</span>
+                  <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completionHandler</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -3707,9 +3708,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)UIApplication(cm)fw_playSystemVibrate"></a>
-                    <a name="//apple_ref/swift/Method/+fw_playSystemVibrate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_playSystemVibrate">+fw_playSystemVibrate</a>
+                    <a name="/c:objc(cs)UIApplication(cm)fw_playSystemVibrate:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_playSystemVibrate:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIApplication(cm)fw_playSystemVibrate:">+fw_playSystemVibrate:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3717,14 +3718,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>播放内置震动</p>
+                        <p>播放内置震动，完成后回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">fw_playSystemVibrate</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_playSystemVibrate</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completionHandler</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -3845,7 +3846,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
