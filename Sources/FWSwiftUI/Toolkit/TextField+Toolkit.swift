@@ -42,7 +42,7 @@ extension View {
     public func textFieldConfigure(
         _ configuration: @escaping (UITextField) -> Void
     ) -> some View {
-        return introspect(.textField, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { textField in
+        return introspect(.textField, on: .iOS(.all)) { textField in
             configuration(textField)
         }
     }
