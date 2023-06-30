@@ -206,7 +206,7 @@ extension View {
         _ configuration: @escaping (UIViewController) -> (),
         viewContext: ViewContext? = nil
     ) -> some View {
-        return introspect(.view, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { view in
+        return introspect(.view, on: .iOS(.all)) { view in
             if let viewController = viewContext?.viewController {
                 configuration(viewController)
                 return
@@ -261,7 +261,7 @@ extension View {
     public func hostingViewConfigure(
         _ configuration: @escaping (UIView) -> ()
     ) -> some View {
-        return introspect(.view, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { hostingView in
+        return introspect(.view, on: .iOS(.all)) { hostingView in
             configuration(hostingView)
         }
     }

@@ -593,6 +593,10 @@ extension iOSVersion {
         }
         return false
     }
+    
+    public static let all = iOSVersion {
+        return true
+    }
 }
 
 // MARK: - PlatformView
@@ -737,6 +741,7 @@ extension iOSViewVersion<ViewType, UIView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - ColorPicker
@@ -770,6 +775,8 @@ extension iOSViewVersion<ColorPickerType, UIColorWell> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "ColorPicker isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - DatePicker
@@ -802,6 +809,7 @@ extension iOSViewVersion<DatePickerType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - DatePickerWithCompactStyle
@@ -840,6 +848,8 @@ extension iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".datePickerStyle(.compact) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - DatePickerWithGraphicalStyle
@@ -878,6 +888,8 @@ extension iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".datePickerStyle(.graphical) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - DatePickerWithWheelStyle
@@ -915,6 +927,7 @@ extension iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Form
@@ -956,6 +969,8 @@ extension iOSViewVersion<FormType, UITableView> {
 extension iOSViewVersion<FormType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".form isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - FormWithGroupedStyle
@@ -1002,6 +1017,8 @@ extension iOSViewVersion<FormWithGroupedStyleType, UITableView> {
 extension iOSViewVersion<FormWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".formStyle(.grouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - FullScreenCover
@@ -1040,6 +1057,8 @@ extension iOSViewVersion<FullScreenCoverType, UIPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: ".fullScreenCover isn't available on all iOS")
+    public static let all = Self.unavailable()
 
     private static var selector: IntrospectionSelector<UIPresentationController> {
         .from(UIViewController.self, selector: \.presentationController)
@@ -1090,6 +1109,8 @@ extension iOSViewVersion<ListType, UITableView> {
 extension iOSViewVersion<ListType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".list isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ListWithGroupedStyle
@@ -1136,6 +1157,8 @@ extension iOSViewVersion<ListWithGroupedStyleType, UITableView> {
 extension iOSViewVersion<ListWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".list(.grouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ListWithInsetGroupedStyleType
@@ -1183,6 +1206,8 @@ extension iOSViewVersion<ListWithInsetGroupedStyleType, UITableView> {
 extension iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ListWithInsetStyle
@@ -1230,6 +1255,8 @@ extension iOSViewVersion<ListWithInsetStyleType, UITableView> {
 extension iOSViewVersion<ListWithInsetStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.inset) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ListWithSidebarStyle
@@ -1277,6 +1304,8 @@ extension iOSViewVersion<ListWithSidebarStyleType, UITableView> {
 extension iOSViewVersion<ListWithSidebarStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ListCell
@@ -1320,6 +1349,8 @@ extension iOSViewVersion<ListCellType, UITableViewCell> {
 extension iOSViewVersion<ListCellType, UICollectionViewCell> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listCell isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - NavigationSplitView
@@ -1358,6 +1389,8 @@ extension iOSViewVersion<NavigationSplitViewType, UISplitViewController> {
 
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: "NavigationSplitView isn't available on all iOS")
+    public static let all = Self.unavailable()
 
     private static var selector: IntrospectionSelector<UISplitViewController> {
         .default.withAncestorSelector(\.splitViewController)
@@ -1398,6 +1431,8 @@ extension iOSViewVersion<NavigationStackType, UINavigationController> {
 
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: "NavigationStack isn't available on all iOS")
+    public static let all = Self.unavailable()
 
     private static var selector: IntrospectionSelector<UINavigationController> {
         .default.withAncestorSelector(\.navigationController)
@@ -1439,6 +1474,7 @@ extension iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewControll
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UISplitViewController> {
         .default.withAncestorSelector(\.splitViewController)
@@ -1480,6 +1516,7 @@ extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationControlle
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UINavigationController> {
         .default.withAncestorSelector(\.navigationController)
@@ -1525,6 +1562,7 @@ extension iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - PickerWithWheelStyle
@@ -1566,6 +1604,7 @@ extension iOSViewVersion<PickerWithWheelStyleType, UIPickerView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Popover
@@ -1603,6 +1642,7 @@ extension iOSViewVersion<PopoverType, UIPopoverPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIPopoverPresentationController> {
         .from(UIViewController.self, selector: \.popoverPresentationController)
@@ -1643,6 +1683,8 @@ extension iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorV
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".progressViewStyle(.circular) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ProgressViewWithLinearStyle
@@ -1679,6 +1721,8 @@ extension iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".progressViewStyle(.linear) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - ScrollView
@@ -1711,6 +1755,7 @@ extension iOSViewVersion<ScrollViewType, UIScrollView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - SearchField
@@ -1749,6 +1794,8 @@ extension iOSViewVersion<SearchFieldType, UISearchBar> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: ".searchable isn't available on all iOS")
+    public static let all = Self.unavailable()
 
     private static var selector: IntrospectionSelector<UISearchBar> {
         .from(UINavigationController.self) {
@@ -1792,6 +1839,7 @@ extension iOSViewVersion<SheetType, UIPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIPresentationController> {
         .from(UIViewController.self, selector: \.presentationController)
@@ -1842,6 +1890,7 @@ extension iOSViewVersion<SliderType, UISlider> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Stepper
@@ -1876,6 +1925,7 @@ extension iOSViewVersion<StepperType, UIStepper> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Table
@@ -1928,6 +1978,8 @@ extension iOSViewVersion<TableType, UICollectionView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "Table isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - TabView
@@ -1961,6 +2013,7 @@ extension iOSViewVersion<TabViewType, UITabBarController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UITabBarController> {
         .default.withAncestorSelector(\.tabBarController)
@@ -2004,6 +2057,8 @@ extension iOSViewVersion<TabViewWithPageStyleType, UICollectionView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TabView {}.tabViewStyle(.page) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - TextEditor
@@ -2037,6 +2092,8 @@ extension iOSViewVersion<TextEditorType, UITextView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TextEditor isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - TextField
@@ -2069,6 +2126,7 @@ extension iOSViewVersion<TextFieldType, UITextField> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - TextFieldWithVerticalAxis
@@ -2109,6 +2167,8 @@ extension iOSViewVersion<TextFieldWithVerticalAxisType, UITextView> {
 
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on all iOS")
+    public static let all = Self.unavailable()
 }
 
 // MARK: - Toggle
@@ -2141,6 +2201,7 @@ extension iOSViewVersion<ToggleType, UISwitch> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - ToggleWithSwitchStyle
@@ -2178,6 +2239,7 @@ extension iOSViewVersion<ToggleWithSwitchStyleType, UISwitch> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Window
@@ -2208,6 +2270,7 @@ extension iOSViewVersion<WindowType, UIWindow> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIWindow> {
         .from(UIView.self, selector: \.window)

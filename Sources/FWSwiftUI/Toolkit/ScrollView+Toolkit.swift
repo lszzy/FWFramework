@@ -31,7 +31,7 @@ extension View {
     public func scrollViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        return introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
+        return introspect(.scrollView, on: .iOS(.all)) { scrollView in
             configuration(scrollView)
         }
     }
