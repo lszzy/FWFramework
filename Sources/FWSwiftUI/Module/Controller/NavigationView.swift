@@ -180,30 +180,38 @@ extension View {
     
     /// 配置当前导航栏
     public func navigationBarConfigure(
-        _ configuration: NavigationBarConfiguration
+        _ configuration: NavigationBarConfiguration,
+        viewContext: ViewContext? = nil
     ) -> some View {
-        return viewControllerConfigure { viewController in
+        return viewControllerConfigure ({ viewController in
             configuration.configure(viewController: viewController)
-        }
+        }, viewContext: viewContext)
     }
     
     /// 初始化当前顶部视图控制器，仅调用一次
     public func viewControllerInitialize(
-        _ initialization: @escaping (UIViewController) -> Void
+        _ initialization: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
     ) -> some View {
-        return viewControllerConfigure { viewController in
+        return viewControllerConfigure ({ viewController in
             guard !viewController.fw_propertyBool(forName: "viewControllerInitialize") else { return }
             viewController.fw_setPropertyBool(true, forName: "viewControllerInitialize")
             
             initialization(viewController)
-        }
+        }, viewContext: viewContext)
     }
     
     /// 配置当前顶部视图控制器，可调用多次
     public func viewControllerConfigure(
-        _ configuration: @escaping (UIViewController) -> ()
+        _ configuration: @escaping (UIViewController) -> (),
+        viewContext: ViewContext? = nil
     ) -> some View {
         return introspect(.view, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { view in
+            if let viewController = viewContext?.viewController {
+                configuration(viewController)
+                return
+            }
+            
             var hostingView: UIView?
             var superview = view.superview
             while let s = superview {

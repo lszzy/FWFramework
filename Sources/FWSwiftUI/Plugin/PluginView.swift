@@ -194,28 +194,44 @@ extension View {
     
     // MARK: - Plugin
     /// 显示通用控制器插件，自动切换
-    public func showPlugin(_ isShowing: Binding<Bool>, customize: @escaping (UIViewController) -> Void) -> some View {
+    public func showPlugin(
+        _ isShowing: Binding<Bool>,
+        customize: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
+    ) -> some View {
         return then(isShowing.wrappedValue) { view in
-            view.viewControllerConfigure { viewController in
+            view.viewControllerConfigure ({ viewController in
                 isShowing.wrappedValue = false
                 customize(viewController)
-            }
+            }, viewContext: viewContext)
         }
     }
     
     /// 显示控制器弹窗插件，自动切换
-    public func showAlert(_ isShowing: Binding<Bool>, customize: @escaping (UIViewController) -> Void) -> some View {
-        return showPlugin(isShowing, customize: customize)
+    public func showAlert(
+        _ isShowing: Binding<Bool>,
+        customize: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return showPlugin(isShowing, customize: customize, viewContext: viewContext)
     }
     
     /// 显示控制器消息吐司插件，自动切换
-    public func showToast(_ isShowing: Binding<Bool>, customize: @escaping (UIViewController) -> Void) -> some View {
-        return showPlugin(isShowing, customize: customize)
+    public func showToast(
+        _ isShowing: Binding<Bool>,
+        customize: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return showPlugin(isShowing, customize: customize, viewContext: viewContext)
     }
     
     /// 显示控制器空界面插件，需手工切换
-    public func showEmpty(_ isShowing: Binding<Bool>, customize: ((UIViewController) -> Void)? = nil) -> some View {
-        return viewControllerConfigure { viewController in
+    public func showEmpty(
+        _ isShowing: Binding<Bool>,
+        customize: ((UIViewController) -> Void)? = nil,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return viewControllerConfigure ({ viewController in
             if isShowing.wrappedValue {
                 if let customize = customize {
                     customize(viewController)
@@ -227,12 +243,16 @@ extension View {
                     viewController.fw_hideEmptyView()
                 }
             }
-        }
+        }, viewContext: viewContext)
     }
     
     /// 显示控制器加载吐司插件，需手工切换
-    public func showLoading(_ isShowing: Binding<Bool>, customize: ((UIViewController) -> Void)? = nil) -> some View {
-        return viewControllerConfigure { viewController in
+    public func showLoading(
+        _ isShowing: Binding<Bool>,
+        customize: ((UIViewController) -> Void)? = nil,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return viewControllerConfigure ({ viewController in
             if isShowing.wrappedValue {
                 if let customize = customize {
                     customize(viewController)
@@ -244,12 +264,16 @@ extension View {
                     viewController.fw_hideLoading()
                 }
             }
-        }
+        }, viewContext: viewContext)
     }
     
     /// 显示控制器进度吐司插件，需手工切换
-    public func showProgress(_ isShowing: Binding<Bool>, customize: @escaping (UIViewController) -> Void) -> some View {
-        return viewControllerConfigure { viewController in
+    public func showProgress(
+        _ isShowing: Binding<Bool>,
+        customize: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return viewControllerConfigure ({ viewController in
             if isShowing.wrappedValue {
                 customize(viewController)
             } else {
@@ -257,7 +281,7 @@ extension View {
                     viewController.fw_hideProgress()
                 }
             }
-        }
+        }, viewContext: viewContext)
     }
     
     // MARK: - PluginView
