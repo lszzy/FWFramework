@@ -7136,41 +7136,48 @@
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
       "line": 319,
+      "symbol": "TargetViewSelector.siblingOrAncestorOrSiblingContainingOrAncestorChild(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
+      "line": 329,
       "symbol": "TargetViewSelector.ancestorOrSiblingContaining(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
-      "line": 326,
+      "line": 336,
       "symbol": "TargetViewSelector.ancestorOrSiblingOfType(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
-      "line": 356,
+      "line": 366,
       "symbol": "UIKitIntrospectionViewController.init(selector:customize:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
-      "line": 415,
+      "line": 425,
       "symbol": "IntrospectionUIView.didMoveToWindow()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
-      "line": 433,
+      "line": 443,
       "symbol": "UIKitIntrospectionView.init(selector:customize:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/View/ViewIntrospect.swift",
-      "line": 480,
+      "line": 490,
       "symbol": "View.inject(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

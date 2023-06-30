@@ -113,14 +113,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 打开音频播放器，支持NSURL|NSString
 + (nullable AVAudioPlayer *)fw_openAudioPlayer:(id)url NS_REFINED_FOR_SWIFT;
 
-/// 播放内置声音文件
-+ (SystemSoundID)fw_playSystemSound:(NSString *)file NS_REFINED_FOR_SWIFT;
+/// 播放内置声音文件，完成后回调
++ (SystemSoundID)fw_playSystemSound:(NSString *)file completionHandler:(nullable void (^)(void))completionHandler NS_REFINED_FOR_SWIFT;
 
 /// 停止播放内置声音文件
 + (void)fw_stopSystemSound:(SystemSoundID)soundId NS_REFINED_FOR_SWIFT;
 
-/// 播放内置震动
-+ (void)fw_playSystemVibrate NS_REFINED_FOR_SWIFT;
+/// 播放内置震动，完成后回调
++ (void)fw_playSystemVibrate:(nullable void (^)(void))completionHandler NS_REFINED_FOR_SWIFT;
 
 /// 播放触控反馈
 + (void)fw_playImpactFeedback:(UIImpactFeedbackStyle)style NS_REFINED_FOR_SWIFT;
