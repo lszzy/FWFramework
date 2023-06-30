@@ -202,9 +202,9 @@ extension View {
     }
     
     /// 显示List空界面插件，需手工切换，空界面显示时也可滚动
-    public func showListEmpty(_ isShowing: Binding<Bool>, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+    public func showListEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
         return listViewConfigure { scrollView in
-            if isShowing.wrappedValue {
+            if isShowing {
                 if let customize = customize {
                     customize(scrollView)
                 } else {

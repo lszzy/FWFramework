@@ -227,12 +227,12 @@ extension View {
     
     /// 显示控制器空界面插件，需手工切换
     public func showEmpty(
-        _ isShowing: Binding<Bool>,
+        _ isShowing: Bool,
         customize: ((UIViewController) -> Void)? = nil,
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
-            if isShowing.wrappedValue {
+            if isShowing {
                 if let customize = customize {
                     customize(viewController)
                 } else {
@@ -248,12 +248,12 @@ extension View {
     
     /// 显示控制器加载吐司插件，需手工切换
     public func showLoading(
-        _ isShowing: Binding<Bool>,
+        _ isShowing: Bool,
         customize: ((UIViewController) -> Void)? = nil,
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
-            if isShowing.wrappedValue {
+            if isShowing {
                 if let customize = customize {
                     customize(viewController)
                 } else {
@@ -269,12 +269,12 @@ extension View {
     
     /// 显示控制器进度吐司插件，需手工切换
     public func showProgress(
-        _ isShowing: Binding<Bool>,
+        _ isShowing: Bool,
         customize: @escaping (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
-            if isShowing.wrappedValue {
+            if isShowing {
                 customize(viewController)
             } else {
                 if viewController.fw_isShowingProgress {

@@ -120,7 +120,7 @@ struct TestSwiftUIListContent: View {
             action: { completionHandler in
                 viewModel.loadData(completionHandler: completionHandler)
             })
-        .showListEmpty($viewModel.showsEmpty) { scrollView in
+        .showListEmpty(viewModel.showsEmpty) { scrollView in
             scrollView.app.showEmptyView(text: viewModel.error?.localizedDescription) { _ in
                 viewModel.beginRefreshing = true
             }
