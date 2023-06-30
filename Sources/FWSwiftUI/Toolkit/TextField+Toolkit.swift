@@ -15,14 +15,14 @@ import SwiftUI
 @available(iOS 13.0, *)
 extension View {
     
-    /// 配置TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
-    public func textFieldConfigure(
-        _ configuration: @escaping (UITextField) -> Void,
+    /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textFieldInitialize(
+        _ initialization: @escaping (UITextField) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
-        return introspectTextField { textField in
-            guard !textField.fw_propertyBool(forName: "textFieldConfigure") else { return }
-            textField.fw_setPropertyBool(true, forName: "textFieldConfigure")
+        return textFieldConfigure { textField in
+            guard !textField.fw_propertyBool(forName: "textFieldInitialize") else { return }
+            textField.fw_setPropertyBool(true, forName: "textFieldInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textField] vc, state in
@@ -34,18 +34,27 @@ extension View {
                 }
             }
             
+            initialization(textField)
+        }
+    }
+    
+    /// 配置TextField视图，可调用多次
+    public func textFieldConfigure(
+        _ configuration: @escaping (UITextField) -> Void
+    ) -> some View {
+        return introspect(.textField, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { textField in
             configuration(textField)
         }
     }
     
-    /// 配置TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
-    public func textViewConfigure(
-        _ configuration: @escaping (UITextView) -> Void,
+    /// 初始化TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textViewInitialize(
+        _ initialization: @escaping (UITextView) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
-        return introspectTextView { textView in
-            guard !textView.fw_propertyBool(forName: "textViewConfigure") else { return }
-            textView.fw_setPropertyBool(true, forName: "textViewConfigure")
+        return textViewConfigure { textView in
+            guard !textView.fw_propertyBool(forName: "textViewInitialize") else { return }
+            textView.fw_setPropertyBool(true, forName: "textViewInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textView] vc, state in
@@ -57,6 +66,15 @@ extension View {
                 }
             }
             
+            initialization(textView)
+        }
+    }
+    
+    /// 配置TextView视图，可调用多次
+    public func textViewConfigure(
+        _ configuration: @escaping (UITextView) -> Void
+    ) -> some View {
+        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17)) { textView in
             configuration(textView)
         }
     }

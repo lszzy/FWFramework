@@ -15,14 +15,23 @@ import SwiftUI
 @available(iOS 13.0, *)
 extension View {
     
-    /// 配置ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    public func scrollViewInitialize(
+        _ initialization: @escaping (UIScrollView) -> Void
+    ) -> some View {
+        return scrollViewConfigure { scrollView in
+            guard !scrollView.fw_propertyBool(forName: "scrollViewInitialize") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "scrollViewInitialize")
+            
+            initialization(scrollView)
+        }
+    }
+    
+    /// 配置ScrollView视图，可调用多次
     public func scrollViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        return introspectScrollView { scrollView in
-            guard !scrollView.fw_propertyBool(forName: "scrollViewConfigure") else { return }
-            scrollView.fw_setPropertyBool(true, forName: "scrollViewConfigure")
-            
+        return introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
             configuration(scrollView)
         }
     }
@@ -33,7 +42,7 @@ extension View {
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectScrollView { scrollView in
+        return scrollViewConfigure { scrollView in
             if !scrollView.fw_propertyBool(forName: "scrollViewRefreshing") {
                 scrollView.fw_setPropertyBool(true, forName: "scrollViewRefreshing")
                 
@@ -65,7 +74,7 @@ extension View {
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectScrollView { scrollView in
+        return scrollViewConfigure { scrollView in
             if !scrollView.fw_propertyBool(forName: "scrollViewLoading") {
                 scrollView.fw_setPropertyBool(true, forName: "scrollViewLoading")
                 
@@ -96,9 +105,9 @@ extension View {
     }
     
     /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
-    public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
-        return introspectScrollView { scrollView in
-            if isShowing {
+    public func showScrollEmpty(_ isShowing: Binding<Bool>, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+        return scrollViewConfigure { scrollView in
+            if isShowing.wrappedValue {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
