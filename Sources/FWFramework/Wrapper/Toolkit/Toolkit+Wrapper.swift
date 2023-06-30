@@ -180,8 +180,8 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 播放内置震动，完成后回调
-    public static func playSystemVibrate(completionHandler: (() -> Void)? = nil) {
-        Base.fw_playSystemVibrate(completionHandler: completionHandler)
+    public static func playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
+        Base.fw_playSystemVibrate(completionHandler)
     }
     
     /// 播放触控反馈
