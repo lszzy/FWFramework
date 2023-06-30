@@ -442,7 +442,7 @@ extension WrapperGlobal {
     }
 
     /// 播放内置震动
-    public static func fw_playSystemVibrate(completionHandler: (() -> Void)? = nil) {
+    public static func fw_playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
         AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
     
