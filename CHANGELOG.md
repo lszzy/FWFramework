@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.14.1] - 2023-06-30
+
+### Changed
+* The method of playing system sound files supports completion callback
+* Optimize SwiftUI display ToastPlugin related methods
+* Fix SwiftUI occasional ToastPlugin re-display problem when returning to the interface
+
 ## [4.14.0] - 2023-06-28
 
 ### Added
