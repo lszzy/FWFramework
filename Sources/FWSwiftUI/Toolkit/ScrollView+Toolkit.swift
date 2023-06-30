@@ -105,9 +105,9 @@ extension View {
     }
     
     /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
-    public func showScrollEmpty(_ isShowing: Binding<Bool>, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+    public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
         return scrollViewConfigure { scrollView in
-            if isShowing.wrappedValue {
+            if isShowing {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
