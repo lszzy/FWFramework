@@ -363,7 +363,7 @@
     return nsurl;
 }
 
-+ (SystemSoundID)fw_playSystemSound:(NSString *)file
++ (SystemSoundID)fw_playSystemSound:(NSString *)file completionHandler:(void (^)(void))completionHandler
 {
     if (file.length < 1) return 0;
     
@@ -378,7 +378,7 @@
     NSURL *soundUrl = [NSURL fileURLWithPath:soundFile];
     SystemSoundID soundId = 0;
     AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundUrl, &soundId);
-    AudioServicesPlaySystemSound(soundId);
+    AudioServicesPlaySystemSoundWithCompletion(soundId, completionHandler);
     return soundId;
 }
 
@@ -390,9 +390,9 @@
     AudioServicesDisposeSystemSoundID(soundId);
 }
 
-+ (void)fw_playSystemVibrate
++ (void)fw_playSystemVibrate:(void (^)(void))completionHandler
 {
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler);
 }
 
 + (void)fw_playImpactFeedback:(UIImpactFeedbackStyle)style

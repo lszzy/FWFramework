@@ -315,6 +315,16 @@ public enum TargetViewSelector {
         }
         return Introspect.findAncestor(ofType: TargetView.self, from: entry)
     }
+    
+    public static func siblingOrAncestorOrSiblingContainingOrAncestorChild<TargetView: UIView>(from entry: UIView) -> TargetView? {
+        if let sibling: TargetView = siblingOfType(from: entry) {
+            return sibling
+        }
+        if let ancestor: TargetView = Introspect.findAncestor(ofType: TargetView.self, from: entry) {
+            return ancestor
+        }
+        return siblingContainingOrAncestorOrAncestorChild(from: entry)
+    }
 
     public static func ancestorOrSiblingContaining<TargetView: UIView>(from entry: UIView) -> TargetView? {
         if let tableView = Introspect.findAncestor(ofType: TargetView.self, from: entry) {
@@ -585,7 +595,7 @@ extension View {
     /// Finds a `UIScrollView` from a `SwiftUI.ScrollView`, or `SwiftUI.ScrollView` child.
     public func introspectScrollView(customize: @escaping (UIScrollView) -> ()) -> some View {
         if #available(iOS 14.0, tvOS 14.0, macOS 11.0, *) {
-            return introspect(selector: TargetViewSelector.siblingOfTypeOrAncestor, customize: customize)
+            return introspect(selector: TargetViewSelector.siblingOrAncestorOrSiblingContainingOrAncestorChild, customize: customize)
         } else {
             return introspect(selector: TargetViewSelector.siblingContainingOrAncestor, customize: customize)
         }
