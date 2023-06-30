@@ -177,6 +177,11 @@ struct TestSwiftUIContent: View {
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
                     
+                    Toggle(isOn: $buttonRemovable) {
+                        EmptyView()
+                    }
+                    .toggleStyle(TestSwiftUIToggleStyle())
+                    
                     HStack(alignment: .center, spacing: 16) {
                         Button {
                             viewContext.viewController?.fw.close()
@@ -325,24 +330,14 @@ struct TestSwiftUIContent: View {
         .showToast($showingToast, customize: { viewController in
             viewController.fw.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
         })
-        .showEmptyView(showingEmpty, builder: {
-            EmptyPluginView()
-                .text("我是标题")
-                .detail("我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
-                .image(UIImage.fw.appIconImage())
-                .action("刷新") { _ in
-                    showingEmpty = false
-                }
+        .showEmpty($showingEmpty, customize: { viewController in
+            viewController.app.showEmptyView(text: "我是标题", detail: "我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息", image: UIImage.app.appIconImage(), action: "刷新") { _ in
+                showingEmpty = false
+            }
         })
-        .showLoadingView(showingLoading, builder: {
-            LoadingPluginView()
-                .onCancel {
-                    showingLoading = false
-                }
-        })
-        .showProgressView(showingProgress, builder: {
-            ProgressPluginView(progressValue)
-                .text("上传中(\(Int(progressValue * 100))%)")
+        .showLoading($showingLoading)
+        .showProgress($showingProgress, customize: { viewController in
+            viewController.app.showProgress(progressValue, text: "上传中(\(Int(progressValue * 100))%)")
         })
         .transformViewContext(transform: { viewContext in
             DispatchQueue.main.async {
@@ -357,6 +352,31 @@ struct TestSwiftUIContent: View {
         }
         .onReceive(viewContext.$object) { object in
             print("object: \(String(describing: object))")
+        }
+    }
+    
+}
+
+@available(iOS 13.0, *)
+struct TestSwiftUIToggleStyle: ToggleStyle {
+    
+    func makeBody(configuration: ToggleStyleConfiguration) -> some View {
+        HStack {
+            configuration.label
+            
+            RoundedRectangle(cornerRadius: 25.5)
+                .frame(width: 51, height: 31, alignment: .center)
+                .overlay((
+                    Circle()
+                        .foregroundColor(Color(.systemBackground))
+                        .padding(3)
+                        .offset(x: configuration.isOn ? 10 : -10, y: 0)
+                        .animation(.linear(duration: 0.2))
+                ))
+                .foregroundColor(Color(.label))
+                .onTapGesture(perform: {
+                    configuration.isOn.toggle()
+                })
         }
     }
     
