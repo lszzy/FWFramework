@@ -7,7 +7,6 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
-import AVKit
 
 // MARK: - Introspect
 /// The scope of introspection i.e. where introspect should look to find
