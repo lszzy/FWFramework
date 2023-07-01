@@ -74,7 +74,7 @@ extension View {
     public func textViewConfigure(
         _ configuration: @escaping (UITextView) -> Void
     ) -> some View {
-        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17)) { textView in
+        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16)) { textView in
             configuration(textView)
         }
     }
