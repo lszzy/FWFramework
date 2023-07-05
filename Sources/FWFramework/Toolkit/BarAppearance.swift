@@ -272,7 +272,7 @@ import FWObjC
         }
     }
 
-    /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
+    /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效。注意iOS13、14切换阴影图片时需保持图片高度一致，否则不生效
     @objc(__fw_shadowColor)
     public var fw_shadowColor: UIColor? {
         get {
@@ -295,7 +295,7 @@ import FWObjC
         }
     }
 
-    /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
+    /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效。注意iOS13、14切换阴影图片时需保持图片高度一致，否则不生效
     @objc(__fw_shadowImage)
     public var fw_shadowImage: UIImage? {
         get {
