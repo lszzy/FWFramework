@@ -184,14 +184,13 @@ struct TestSwiftUIContent: View {
                     .toggleStyle(TestSwiftUIToggleStyle())
                     
                     HStack(alignment: .center, spacing: 16) {
-                        Button {
+                        HStack {
+                            Spacer()
+                            Text("Close")
+                            Spacer()
+                        }
+                        .wrappedButton {
                             viewContext.viewController?.app.close()
-                        } label: {
-                            HStack {
-                                Spacer()
-                                Text("Close")
-                                Spacer()
-                            }
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)

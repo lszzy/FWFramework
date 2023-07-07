@@ -43,6 +43,13 @@ extension View {
             .disabled(disabled)
     }
     
+    /// 包装到Button并指定点击事件
+    public func wrappedButton(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            self
+        }
+    }
+    
 }
 
 #endif
