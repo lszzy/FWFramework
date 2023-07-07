@@ -124,6 +124,15 @@ import FWObjC
     public var fw_isShowingProgress: Bool {
         return fw_showingProgressView != nil
     }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public func fw_showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        fw_showMessage(
+            text: ToastPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
+            style: ToastPluginImpl.shared.errorStyleFormatter?(error) ?? .default,
+            completion: completion
+        )
+    }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
     public func fw_showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
@@ -241,6 +250,11 @@ import FWObjC
     public var fw_isShowingProgress: Bool {
         return fw_toastContainerView?.fw_isShowingProgress ?? false
     }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public func fw_showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        fw_toastContainerView?.fw_showMessage(error: error, completion: completion)
+    }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
     public func fw_showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
@@ -315,6 +329,11 @@ import FWObjC
     /// 是否正在显示进度条吐司
     public static var fw_isShowingProgress: Bool {
         return UIWindow.fw_mainWindow?.fw_isShowingProgress ?? false
+    }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public static func fw_showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        UIWindow.fw_mainWindow?.fw_showMessage(error: error, completion: completion)
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString

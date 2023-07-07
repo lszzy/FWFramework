@@ -72,11 +72,20 @@ NS_SWIFT_NAME(AlertPluginImpl)
 @property (nonatomic, copy, nullable) void (^customBlock)(UIAlertController *alertController);
 
 /// 默认close按钮文本句柄，alert单按钮或sheet单取消生效。未设置时为关闭
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultCloseButton)(UIAlertControllerStyle style);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultCloseButton)(UIAlertControllerStyle style);
 /// 默认cancel按钮文本句柄，alert多按钮或sheet生效。未设置时为取消
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultCancelButton)(UIAlertControllerStyle style);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultCancelButton)(UIAlertControllerStyle style);
 /// 默认confirm按钮文本句柄，alert多按钮生效。未设置时为确定
-@property (nonatomic, copy, nullable) NSString * _Nullable (^defaultConfirmButton)(void);
+@property (nonatomic, copy, nullable) id _Nullable (^defaultConfirmButton)(void);
+
+/// 错误标题格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorTitleFormatter)(NSError * _Nullable error);
+/// 错误消息格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorMessageFormatter)(NSError * _Nullable error);
+/// 错误样式格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) __FWAlertStyle (^errorStyleFormatter)(NSError * _Nullable error);
+/// 错误按钮格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorButtonFormatter)(NSError * _Nullable error);
 
 @end
 

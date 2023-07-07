@@ -57,7 +57,7 @@
 - (void)__fw_showLoadingWithText:(nullable id)text cancel:(nullable void (^)(void))cancel;
 - (void)__fw_hideLoading:(BOOL)delayed;
 - (void)__fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id))block;
-- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
+- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message style:(__FWAlertStyle)style cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
 
 @end
 
@@ -1311,7 +1311,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.delegate imagePickerPreviewControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }
@@ -2403,7 +2403,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
         } else {
-            [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+            [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
         }
         return;
     }
@@ -2540,7 +2540,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }

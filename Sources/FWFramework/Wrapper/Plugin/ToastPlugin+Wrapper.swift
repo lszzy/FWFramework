@@ -63,6 +63,11 @@ extension Wrapper where Base: UIView {
     public var isShowingProgress: Bool {
         return base.fw_isShowingProgress
     }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public func showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        base.fw_showMessage(error: error, completion: completion)
+    }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
     public func showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
@@ -150,6 +155,11 @@ extension Wrapper where Base: UIViewController {
     public var isShowingProgress: Bool {
         return base.fw_isShowingProgress
     }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public func showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        base.fw_showMessage(error: error, completion: completion)
+    }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
     public func showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
@@ -224,6 +234,11 @@ extension Wrapper where Base: UIWindow {
     /// 是否正在显示进度条吐司
     public static var isShowingProgress: Bool {
         return Base.fw_isShowingProgress
+    }
+    
+    /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
+    public static func showMessage(error: Error?, completion: (() -> Void)? = nil) {
+        Base.fw_showMessage(error: error, completion: completion)
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString

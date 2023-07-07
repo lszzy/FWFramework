@@ -38,6 +38,11 @@ extension Wrapper where Base: UIView {
     public func showEmptyLoading() {
         base.fw_showEmptyLoading()
     }
+    
+    /// 显示错误空界面
+    public func showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(error: error, action: action, block: block)
+    }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
     public func showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
@@ -82,6 +87,11 @@ extension Wrapper where Base: UIViewController {
     /// 显示空界面加载视图
     public func showEmptyLoading() {
         base.fw_showEmptyLoading()
+    }
+    
+    /// 显示错误空界面
+    public func showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(error: error, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮

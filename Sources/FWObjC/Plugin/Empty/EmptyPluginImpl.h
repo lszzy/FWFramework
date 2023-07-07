@@ -33,6 +33,15 @@ NS_SWIFT_NAME(EmptyPluginImpl)
 /// 默认空界面动作按钮句柄，非loading时才触发
 @property (nonatomic, copy, nullable) id _Nullable (^defaultAction)(void);
 
+/// 错误空界面文本格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorTextFormatter)(NSError * _Nullable error);
+/// 错误空界面详细文本格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorDetailFormatter)(NSError * _Nullable error);
+/// 错误空界面图片格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) UIImage * _Nullable (^errorImageFormatter)(NSError * _Nullable error);
+/// 错误空界面动作按钮格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorActionFormatter)(NSError * _Nullable error);
+
 @end
 
 NS_ASSUME_NONNULL_END
