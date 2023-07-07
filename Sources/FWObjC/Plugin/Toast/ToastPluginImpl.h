@@ -37,6 +37,11 @@ NS_SWIFT_NAME(ToastPluginImpl)
 /// 默认消息吐司文本句柄
 @property (nonatomic, copy, nullable) NSAttributedString * _Nullable (^defaultMessageText)(__FWToastStyle style);
 
+/// 错误消息吐司文本格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) id _Nullable (^errorTextFormatter)(NSError * _Nullable error);
+/// 错误消息吐司样式格式化句柄，error生效，默认nil
+@property (nonatomic, copy, nullable) __FWToastStyle (^errorStyleFormatter)(NSError * _Nullable error);
+
 @end
 
 NS_ASSUME_NONNULL_END

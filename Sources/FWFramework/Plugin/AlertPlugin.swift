@@ -26,21 +26,42 @@ import FWObjC
             fw_setProperty(newValue, forName: "fw_alertPlugin")
         }
     }
+    
+    /// 显示错误警告框
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - cancel: 取消按钮标题，默认关闭
+    ///   - cancelBlock: 取消按钮事件
+    public func fw_showAlert(
+        error: Error?,
+        cancel: Any? = nil,
+        cancelBlock: (() -> Void)? = nil
+    ) {
+        fw_showAlert(
+            title: AlertPluginImpl.shared.errorTitleFormatter?(error),
+            message: AlertPluginImpl.shared.errorMessageFormatter?(error) ?? error?.localizedDescription,
+            style: AlertPluginImpl.shared.errorStyleFormatter?(error) ?? .default,
+            cancel: cancel ?? AlertPluginImpl.shared.errorButtonFormatter?(error),
+            cancelBlock: cancelBlock
+        )
+    }
 
     /// 显示警告框(简单版)
     /// - Parameters:
     ///   - title: 警告框标题
     ///   - message:  警告框消息
+    ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showAlertWithTitle:message:cancel:cancelBlock:)
+    @objc(__fw_showAlertWithTitle:message:style:cancel:cancelBlock:)
     public func fw_showAlert(
         title: Any?,
         message: Any?,
+        style: AlertStyle = .default,
         cancel: Any? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        fw_showAlert(title: title, message: message, style: .default, cancel: cancel, actions: nil, actionBlock: nil, cancelBlock: cancelBlock)
+        fw_showAlert(title: title, message: message, style: style, cancel: cancel, actions: nil, actionBlock: nil, cancelBlock: cancelBlock)
     }
 
     /// 显示警告框(详细版)
@@ -316,16 +337,13 @@ import FWObjC
 
 @_spi(FW) extension UIView {
     
-    /// 显示警告框(简单版)
+    /// 显示错误警告框
     /// - Parameters:
-    ///   - title: 警告框标题
-    ///   - message:  警告框消息
+    ///   - error: 错误对象
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showAlertWithTitle:message:cancel:cancelBlock:)
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        error: Error?,
         cancel: Any? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -333,7 +351,29 @@ import FWObjC
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
         }
-        ctrl?.fw_showAlert(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
+        ctrl?.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
+    }
+    
+    /// 显示警告框(简单版)
+    /// - Parameters:
+    ///   - title: 警告框标题
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
+    ///   - cancel: 取消按钮标题，默认关闭
+    ///   - cancelBlock: 取消按钮事件
+    @objc(__fw_showAlertWithTitle:message:style:cancel:cancelBlock:)
+    public func fw_showAlert(
+        title: Any?,
+        message: Any?,
+        style: AlertStyle = .default,
+        cancel: Any? = nil,
+        cancelBlock: (() -> Void)? = nil
+    ) {
+        var ctrl = self.fw_viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+        }
+        ctrl?.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
     }
 
     /// 显示警告框(详细版)

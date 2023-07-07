@@ -17,20 +17,35 @@ extension Wrapper where Base: UIViewController {
         get { return base.fw_alertPlugin }
         set { base.fw_alertPlugin = newValue }
     }
+    
+    /// 显示错误警告框
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - cancel: 取消按钮标题，默认关闭
+    ///   - cancelBlock: 取消按钮事件
+    public func showAlert(
+        error: Error?,
+        cancel: Any? = nil,
+        cancelBlock: (() -> Void)? = nil
+    ) {
+        base.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
+    }
 
     /// 显示警告框(简单版)
     /// - Parameters:
     ///   - title: 警告框标题
-    ///   - message:  警告框消息
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
         title: Any?,
         message: Any?,
+        style: AlertStyle = .default,
         cancel: Any? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        base.fw_showAlert(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
+        base.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
     }
 
     /// 显示警告框(详细版)
@@ -255,19 +270,34 @@ extension Wrapper where Base: UIViewController {
 
 extension Wrapper where Base: UIView {
     
+    /// 显示错误警告框
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - cancel: 取消按钮标题，默认关闭
+    ///   - cancelBlock: 取消按钮事件
+    public func showAlert(
+        error: Error?,
+        cancel: Any? = nil,
+        cancelBlock: (() -> Void)? = nil
+    ) {
+        base.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
+    }
+    
     /// 显示警告框(简单版)
     /// - Parameters:
     ///   - title: 警告框标题
-    ///   - message:  警告框消息
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
         title: Any?,
         message: Any?,
+        style: AlertStyle = .default,
         cancel: Any? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        base.fw_showAlert(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
+        base.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
     }
 
     /// 显示警告框(详细版)

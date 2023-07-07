@@ -77,6 +77,17 @@ import FWObjC
     public func fw_showEmptyLoading() {
         fw_showEmptyView(text: nil, detail: nil, image: nil, loading: true, action: nil, block: nil)
     }
+    
+    /// 显示错误空界面
+    public func fw_showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+        fw_showEmptyView(
+            text: EmptyPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
+            detail: EmptyPluginImpl.shared.errorDetailFormatter?(error),
+            image: EmptyPluginImpl.shared.errorImageFormatter?(error),
+            action: action ?? EmptyPluginImpl.shared.errorActionFormatter?(error),
+            block: block
+        )
+    }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
     public func fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
@@ -145,6 +156,11 @@ import FWObjC
     /// 显示空界面加载视图
     public func fw_showEmptyLoading() {
         self.view.fw_showEmptyLoading()
+    }
+    
+    /// 显示错误空界面
+    public func fw_showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+        self.view.fw_showEmptyView(error: error, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
