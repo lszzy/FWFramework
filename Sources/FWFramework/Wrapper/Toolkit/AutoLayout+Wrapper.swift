@@ -570,9 +570,9 @@ extension Wrapper where Base == Array<UIView> {
         base.fw_layoutMaker(closure)
     }
     
-    /// 批量对齐布局，适用于间距固定场景，尺寸未设置，若只有一个则间距不生效
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) {
-        base.fw_layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, equalLength: equalLength)
+    /// 批量对齐布局，适用于间距固定场景，尺寸未设置(可手工指定)，若只有一个则间距不生效
+    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) {
+        base.fw_layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, itemLength: itemLength, equalLength: equalLength)
     }
     
     /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效

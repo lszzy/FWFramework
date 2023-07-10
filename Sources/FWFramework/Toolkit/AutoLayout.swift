@@ -1486,8 +1486,8 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func subviews(along axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) -> Self {
-        self.view?.subviews.fw_layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, equalLength: equalLength)
+    public func subviews(along axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) -> Self {
+        self.view?.subviews.fw_layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, itemLength: itemLength, equalLength: equalLength)
         return self
     }
     
@@ -1652,8 +1652,8 @@ public class LayoutChain {
         }
     }
     
-    /// 批量对齐布局，适用于间距固定场景，尺寸未设置，若只有一个则间距不生效
-    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, equalLength: Bool = false) {
+    /// 批量对齐布局，适用于间距固定场景，尺寸未设置(可手工指定)，若只有一个则间距不生效
+    public func fw_layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) {
         guard self.count > 0 else { return }
         
         if axis == .horizontal {
@@ -1661,7 +1661,9 @@ public class LayoutChain {
             for (index, view) in self.enumerated() {
                 if let prev = prev {
                     view.fw_pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing)
-                    if equalLength {
+                    if let itemLength = itemLength {
+                        view.fw_setDimension(.width, size: itemLength)
+                    } else if equalLength {
                         view.fw_matchDimension(.width, toDimension: .width, ofView: prev)
                     }
                 } else if let leadSpacing = leadSpacing {
@@ -1677,7 +1679,9 @@ public class LayoutChain {
             for (index, view) in self.enumerated() {
                 if let prev = prev {
                     view.fw_pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing)
-                    if equalLength {
+                    if let itemLength = itemLength {
+                        view.fw_setDimension(.height, size: itemLength)
+                    } else if equalLength {
                         view.fw_matchDimension(.height, toDimension: .height, ofView: prev)
                     }
                 } else if let leadSpacing = leadSpacing {
@@ -1701,7 +1705,7 @@ public class LayoutChain {
                 if self.count > 1 {
                     view.fw_setDimension(.width, size: itemLength)
                 }
-                if prev != nil {
+                if let prev = prev {
                     if index < self.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -
@@ -1722,7 +1726,7 @@ public class LayoutChain {
                 if self.count > 1 {
                     view.fw_setDimension(.height, size: itemLength)
                 }
-                if prev != nil {
+                if let prev = prev {
                     if index < self.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -
