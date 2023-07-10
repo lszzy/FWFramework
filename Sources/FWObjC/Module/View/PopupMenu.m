@@ -6,27 +6,7 @@
 //
 
 #import "PopupMenu.h"
-
-#if FWMacroSPM
-
-@interface UIWindow ()
-
-@property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
-
-@end
-
-@interface UIScreen ()
-
-@property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWPopupMenuPath
 

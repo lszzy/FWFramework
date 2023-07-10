@@ -8,59 +8,7 @@
 #import "ZoomImageView.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (nullable UIImage *)__fw_bundleImage:(NSString *)name;
-
-@end
-
-@interface UIView ()
-
-@property (nonatomic, weak, readonly, nullable) UIViewController *__fw_viewController;
-@property (nonatomic, assign) CGRect __fw_frameApplyTransform;
-@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
-+ (UIView<__FWProgressViewPlugin> *)__fw_progressViewWithStyle:(__FWProgressViewStyle)style;
-- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
-
-@end
-
-@interface UIScreen ()
-
-@property (class, nonatomic, assign, readonly) CGFloat __fw_statusBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_navigationBarHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
-
-@end
-
-@interface UISlider ()
-
-@property (nonatomic, assign) CGSize __fw_thumbSize;
-@property (nonatomic, strong, nullable) UIColor *__fw_thumbColor;
-
-@end
-
-@interface UIImageView ()
-
-+ (UIImageView *)__fw_animatedImageView;
-- (void)__fw_setImageWithUrl:(nullable id)url placeholderImage:(nullable UIImage *)placeholderImage options:(__FWWebImageOptions)options context:(nullable NSDictionary *)context completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion progress:(nullable void (^)(double))progress;
-- (void)__fw_cancelImageRequest;
-
-@end
-
-@interface UIViewController ()
-
-@property (nonatomic, assign, readonly) BOOL __fw_isPresented;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWZoomImageVideoPlayerView
 

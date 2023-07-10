@@ -6,22 +6,9 @@
 //
 
 #import "WebImage.h"
+#import "Bridge.h"
 #import "HTTPSessionManager.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface UIImage ()
-
-@property (nonatomic, assign) __FWImageFormat __fw_imageFormat;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWAutoPurgingImageCache
 

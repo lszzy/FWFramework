@@ -7,22 +7,8 @@
 
 #import "CollectionViewFlowLayout.h"
 #import "tgmath.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface UICollectionViewFlowLayout ()
-
-- (void)__fw_sectionConfigPrepareLayout;
-- (NSArray *)__fw_sectionConfigLayoutAttributesForElementsIn:(CGRect)rect;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWCollectionViewSectionConfig
 

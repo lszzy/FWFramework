@@ -6,21 +6,7 @@
 //
 
 #import "TagCollectionView.h"
-
-#if FWMacroSPM
-
-@interface UIView ()
-
-- (void)__fw_statisticalCheckExposure;
-- (BOOL)__fw_statisticalTrackClickWithIndexPath:(nullable NSIndexPath *)indexPath event:(nullable id)event;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 @interface __FWTagCollectionView ()
 @property (nonatomic, strong) UIScrollView *scrollView;

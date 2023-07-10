@@ -14,79 +14,9 @@
 #import "AlertPlugin.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (NSString *)__fw_bundleString:(NSString *)key;
-+ (nullable UIImage *)__fw_bundleImage:(NSString *)name;
-- (void)__fw_applyAppearance;
-
-@end
-
-@interface UINavigationBar ()
-
-@property (nonatomic, strong, nullable) UIColor *__fw_backgroundColor;
-@property (nonatomic, strong, nullable) UIColor *__fw_foregroundColor;
-@property (nonatomic, strong, nullable) UIImage *__fw_backImage;
-@property (nonatomic, assign) BOOL __fw_isTranslucent;
-@property (nonatomic, strong, nullable) UIColor *__fw_shadowColor;
-
-@end
-
-@interface UIScreen ()
-
-@property (class, nonatomic, assign, readonly) CGFloat __fw_topBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_toolBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
-
-@end
-
-@interface UIImage ()
-
-+ (nullable UIImage *)__fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
-- (nullable UIImage *)__fw_imageWithScaleSize:(CGSize)size;
-
-@end
-
-@interface UIViewController ()
-
-- (void)__fw_showLoadingWithText:(nullable id)text cancel:(nullable void (^)(void))cancel;
-- (void)__fw_hideLoading:(BOOL)delayed;
-- (void)__fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id))block;
-- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message style:(__FWAlertStyle)style cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
-
-@end
-
-@interface UIView ()
-
-@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
-
-@end
-
-@interface UIButton ()
-
-@property (class, nonatomic, assign) CGFloat __fw_disabledAlpha;
-@property (class, nonatomic, assign) CGFloat __fw_highlightedAlpha;
-@property (nonatomic, assign) CGFloat __fw_disabledAlpha;
-@property (nonatomic, assign) CGFloat __fw_highlightedAlpha;
-
-@end
-
-@interface PHPhotoLibrary ()
-
-@property (class, nonatomic, copy, readonly) NSString *__fw_pickerControllerVideoCachePath;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWImageAlbumTableCell
 

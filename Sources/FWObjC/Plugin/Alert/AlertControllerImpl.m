@@ -6,21 +6,8 @@
 //
 
 #import "AlertControllerImpl.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-- (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWAlertControllerPlugin
 

@@ -6,31 +6,8 @@
 //
 
 #import "AssetManager.h"
+#import "Bridge.h"
 #import <CoreServices/UTCoreTypes.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-- (nullable id)__fw_invokeGetter:(NSString *)name;
-
-@end
-
-@interface PHPhotoLibrary ()
-
-+ (NSArray *)__fw_fetchAllAlbumsWithAlbumContentType:(__FWAlbumContentType)albumContentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbum:(BOOL)showSmartAlbum;
-+ (PHFetchOptions *)__fw_createFetchOptionsWithAlbumContentType:(__FWAlbumContentType)albumContentType;
-- (void)__fw_addImageToAlbum:(CGImageRef)imageRef assetCollection:(PHAssetCollection *)assetCollection orientation:(UIImageOrientation)orientation completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
-- (void)__fw_addImageToAlbum:(NSURL *)imagePathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
-- (void)__fw_addVideoToAlbum:(NSURL *)videoPathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWAsset
 

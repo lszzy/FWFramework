@@ -7,28 +7,7 @@
 
 #import "ImagePickerPluginImpl.h"
 #import "ImageCropController.h"
-
-#if FWMacroSPM
-
-@interface UIImagePickerController ()
-
-+ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType filterType:(__FWImagePickerFilterType)filterType allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIImagePickerController * _Nullable, id _Nullable, NSDictionary * _Nullable, BOOL))completion;
-+ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, NSDictionary * _Nullable, BOOL))completion;
-
-@end
-
-@interface PHPhotoLibrary ()
-
-+ (nullable UIViewController *)__fw_pickerControllerWithFilterType:(__FWImagePickerFilterType)filterType selectionLimit:(NSInteger)selectionLimit allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIViewController * _Nullable, NSArray *, NSArray *, BOOL))completion;
-+ (nullable UIViewController *)__fw_pickerControllerWithCropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, id _Nullable, BOOL))completion;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWImagePickerPluginImpl
 

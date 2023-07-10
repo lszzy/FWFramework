@@ -174,7 +174,6 @@ import FWObjC
     ///   - objects: 传递的参数数组
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    @objc(__fw_invokeMethod:objects:)
     public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
         return __FWRuntime.invokeMethod(self, selector: selector, objects: objects)
     }
@@ -236,7 +235,6 @@ import FWObjC
     ///   - objects: 传递的参数数组
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    @objc(__fw_invokeMethod:objects:)
     public class func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
         return __FWRuntime.invokeMethod(classForCoder(), selector: selector, objects: objects)
     }

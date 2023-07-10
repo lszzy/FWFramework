@@ -7,28 +7,8 @@
 
 #import "EmptyView.h"
 #import "ViewPlugin.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-- (void)__fw_applyAppearance;
-
-@end
-
-@interface UIView ()
-
-@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
-+ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWEmptyView
 

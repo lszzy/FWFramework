@@ -6,26 +6,11 @@
 //
 
 #import "AnimatedImage.h"
+#import "Bridge.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 #import <dlfcn.h>
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface UIImage ()
-
-@property (nonatomic, assign, readonly) BOOL __fw_hasAlpha;
-@property (nonatomic, assign) __FWImageFormat __fw_imageFormat;
-@property (nonatomic, assign) NSUInteger __fw_imageLoopCount;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWImageFrame
 

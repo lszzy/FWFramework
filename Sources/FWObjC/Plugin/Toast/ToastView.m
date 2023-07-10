@@ -7,28 +7,7 @@
 
 #import "ToastView.h"
 #import "ViewPlugin.h"
-
-#if FWMacroSPM
-
-@interface UIView ()
-
-+ (UIView<__FWProgressViewPlugin> *)__fw_progressViewWithStyle:(__FWProgressViewStyle)style;
-+ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
-- (NSString *)__fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(__kindof UITapGestureRecognizer *gesture))customize;
-
-@end
-
-@interface NSTimer ()
-
-+ (NSTimer *)__fw_commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWToastView
 

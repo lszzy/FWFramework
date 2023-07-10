@@ -6,30 +6,13 @@
 //
 
 #import "Exception.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (BOOL)__fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
-+ (void)__fw_logDebug:(NSString *)message;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
 
 #define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static NSArray<Class> *fwStaticCaptureClasses = nil;
 

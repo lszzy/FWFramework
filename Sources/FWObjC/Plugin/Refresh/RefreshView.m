@@ -7,40 +7,8 @@
 
 #import "RefreshView.h"
 #import "ViewPlugin.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (NSString *)__fw_bundleString:(NSString *)key;
-- (NSString *)__fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
-- (void)__fw_unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
-
-@end
-
-@interface UIView ()
-
-+ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
-
-@end
-
-@interface UIScrollView ()
-
-@property (nonatomic, assign) BOOL __fw_showPullRefresh;
-@property (nonatomic, assign) CGFloat __fw_pullRefreshHeight;
-@property (nonatomic, strong, nullable) __FWPullRefreshView *__fw_pullRefreshView;
-@property (nonatomic, assign) BOOL __fw_showInfiniteScroll;
-@property (nonatomic, assign) CGFloat __fw_infiniteScrollHeight;
-@property (nonatomic, strong, nullable) __FWInfiniteScrollView *__fw_infiniteScrollView;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWPullRefreshArrowView
 

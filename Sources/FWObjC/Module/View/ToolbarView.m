@@ -7,63 +7,8 @@
 
 #import "ToolbarView.h"
 #import "ViewPluginImpl.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (BOOL)__fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
-- (void)__fw_applyAppearance;
-
-@end
-
-@interface UIView ()
-
-- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
-- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)__fw_pinHorizontalToSuperview:(CGFloat)inset;
-- (NSLayoutConstraint *)__fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_alignAxisToSuperview:(NSLayoutAttribute)axis offset:(CGFloat)offset;
-
-@end
-
-@interface UIControl ()
-
-- (NSString *)__fw_addTouchWithBlock:(void (^)(id sender))block;
-
-@end
-
-@interface UIScreen ()
-
-@property (class, nonatomic, assign, readonly) CGFloat __fw_statusBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_navigationBarHeight;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_tabBarHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_toolBarHeight;
-+ (CGFloat)__fw_flatValue:(CGFloat)value scale:(CGFloat)scale;
-
-@end
-
-@interface UIImage ()
-
-- (nullable UIImage *)__fw_imageWithAlpha:(CGFloat)alpha;
-
-@end
-
-@interface UIActivityIndicatorView ()
-
-+ (UIActivityIndicatorView *)__fw_indicatorViewWithColor:(nullable UIColor *)color;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWToolbarView
 
