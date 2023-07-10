@@ -31,7 +31,7 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.placeholderImage = ModuleBundle.imageNamed("Loading.gif")
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()
@@ -47,7 +47,7 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.pageControlDotSize = CGSize(width: 10, height: 1)
         result.pageControlDotSpacing = 4
         result.contentViewInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()
@@ -59,10 +59,10 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.delegate = self
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
-        result.imageViewContentMode = .scaleAspectFill
+        result.bannerImageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()
@@ -73,12 +73,12 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.delegate = self
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
-        result.imageViewContentMode = .scaleAspectFill
+        result.bannerImageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()
@@ -89,13 +89,13 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.delegate = self
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
-        result.imageViewContentMode = .scaleAspectFill
+        result.bannerImageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
         result.itemSize = CGSize(width: APP.screenWidth - 30, height: 100)
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()
@@ -106,14 +106,14 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.delegate = self
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
-        result.imageViewContentMode = .scaleAspectFill
+        result.bannerImageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .none
         result.itemPagingEnabled = true
         result.itemSpacing = 10
         result.itemPagingCenter = true
         result.itemSize = CGSize(width: APP.screenWidth - 40, height: 100)
-        result.imagesGroup = imageUrls
+        result.imageURLStringsGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
     }()

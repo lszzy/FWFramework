@@ -35,7 +35,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.placeholderImage = ModuleBundle.imageNamed("Loading.gif")
-        result.imagesGroup = [
+        result.imageURLStringsGroup = [
             "http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg",
             ModuleBundle.imageNamed("Loading.gif") as Any,
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
