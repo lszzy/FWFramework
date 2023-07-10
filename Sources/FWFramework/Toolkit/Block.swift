@@ -307,8 +307,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         self.fireDate = Date(timeIntervalSinceNow: delay)
     }
     
-    @objc(__fw_timerAction:)
-    private class func fw_timerAction(_ timer: Timer) {
+    @objc private class func fw_timerAction(_ timer: Timer) {
         let block = timer.userInfo as? (Timer) -> Void
         block?(timer)
     }
@@ -518,7 +517,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 @_spi(FW) extension UIBarButtonItem {
     
     /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    @objc(__fw_itemWithObject:target:action:)
     public static func fw_item(object: Any?, target: Any?, action: Selector?) -> Self {
         var barItem: Self
         if let title = object as? String {
@@ -548,7 +546,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    @objc(__fw_itemWithObject:block:)
     public static func fw_item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Self {
         let barItem = fw_item(object: object, target: nil, action: nil)
         barItem.fw_setBlock(block)
@@ -602,8 +599,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         }
     }
     
-    @objc(__fw_invokeTargetAction:)
-    private func fw_invokeTargetAction(_ sender: Any) {
+    @objc private func fw_invokeTargetAction(_ sender: Any) {
         if let target = target, let action = action,
             target.responds(to: action) {
             // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象

@@ -73,7 +73,6 @@ extension Notification.Name {
     
     // MARK: - Bundle
     /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
-    @objc(__fw_localizedBundle)
     public func fw_localizedBundle() -> Bundle {
         if self.isKind(of: TargetBundle.self) { return self }
         fw_synchronized {
@@ -97,8 +96,7 @@ extension Notification.Name {
         return Bundle(path: path)
     }
     
-    @objc(__fw_languageChanged:)
-    private func fw_languageChanged(_ notification: Notification) {
+    @objc private func fw_languageChanged(_ notification: Notification) {
         let language = notification.object as? String
         let bundle = fw_localizedBundle(language: language)
         fw_setProperty(bundle, forName: "fw_localizedBundle")
@@ -106,7 +104,6 @@ extension Notification.Name {
     
     // MARK: - Main
     /// 读取应用当前语言，如果localizedLanguage存在则返回，否则返回systemLanguage
-    @objc(__fw_currentLanguage)
     public static var fw_currentLanguage: String? {
         return fw_localizedLanguage ?? fw_systemLanguage
     }
@@ -162,7 +159,6 @@ extension Notification.Name {
     
     // MARK: - Bundle
     /// 加载指定名称bundle对象，bundle文件需位于mainBundle
-    @objc(__fw_bundleWithName:)
     public static func fw_bundle(name: String) -> Bundle? {
         guard let path = Bundle.main.path(forResource: name, ofType: name.hasSuffix(".bundle") ? nil : "bundle") else { return nil }
         return Bundle(path: path)
