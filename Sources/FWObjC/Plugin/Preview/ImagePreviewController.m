@@ -6,41 +6,7 @@
 //
 
 #import "ImagePreviewController.h"
-
-#if FWMacroSPM
-
-@interface UIView ()
-
-@property (nonatomic, assign) CGRect __fw_frameApplyTransform;
-
-@end
-
-@interface CALayer ()
-
-- (void)__fw_removeDefaultAnimations;
-
-@end
-
-@interface UIScreen ()
-
-@property (class, nonatomic, assign, readonly) CGFloat __fw_screenWidth;
-@property (class, nonatomic, assign, readonly) CGFloat __fw_screenHeight;
-@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
-
-@end
-
-@interface UIViewController ()
-
-@property (nonatomic, assign, readonly) BOOL __fw_isPresented;
-- (BOOL)__fw_isInvisibleState;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWImagePreviewView
 

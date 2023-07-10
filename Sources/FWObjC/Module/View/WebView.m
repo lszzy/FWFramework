@@ -6,26 +6,8 @@
 //
 
 #import "WebView.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (void)__fw_logDebug:(NSString *)message;
-+ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz;
-- (nullable id)__fw_invokeMethod:(SEL)aSelector objects:(NSArray *)objects;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark - __FWWebViewCookieManager
 
@@ -437,7 +419,7 @@ static int logMaxLength = 500;
     [bridges enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSString *name = package.length > 0 ? [package stringByAppendingString:key] : key;
         [self registerHandler:name handler:^(id  _Nonnull data, __FWJsBridgeResponseCallback  _Nonnull responseCallback) {
-            if (context) [clazz __fw_invokeMethod:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
+            if (context) [__FWRuntime invokeMethod:clazz selector:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
         }];
     }];
 #pragma clang diagnostic pop

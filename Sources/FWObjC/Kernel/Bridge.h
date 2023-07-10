@@ -7,6 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import "ImagePlugin.h"
+#import "ViewPlugin.h"
+#import "AlertController.h"
+#import "RefreshView.h"
+#import "ImagePickerPluginImpl.h"
+#import "AnimatedImage.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -231,6 +237,245 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)textChangedAction;
 
 - (NSString *)filterText:(NSString *)text;
+
+@end
+
+// MARK: - __FWSwift
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+
+@interface NSObject ()
+
++ (BOOL)__fw_swizzleMethod:(nullable id)target selector:(SEL)originalSelector identifier:(nullable NSString *)identifier block:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
+
++ (NSArray<NSString *> *)__fw_classMethods:(Class)clazz;
+- (nullable id)__fw_invokeGetter:(NSString *)name;
+
+- (NSString *)__fw_observeProperty:(NSString *)property block:(void (^)(id object, NSDictionary<NSKeyValueChangeKey, id> *change))block;
+- (NSString *)__fw_observeProperty:(NSString *)property target:(nullable id)target action:(SEL)action;
+- (void)__fw_unobserveProperty:(NSString *)property target:(nullable id)target action:(nullable SEL)action;
+
++ (void)__fw_logDebug:(NSString *)message;
+
++ (NSString *)__fw_bundleString:(NSString *)key;
++ (nullable UIImage *)__fw_bundleImage:(NSString *)name;
+
+- (void)__fw_applyAppearance;
+
+@end
+
+@interface NSTimer ()
+
++ (NSTimer *)__fw_commonTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
+
+@end
+
+@interface UIPageControl ()
+
+@property (nonatomic, assign) CGSize __fw_preferredSize;
+
+@end
+
+@interface UIImageView ()
+
++ (UIImageView *)__fw_animatedImageView;
+- (void)__fw_setImageWithUrl:(nullable id)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
+- (void)__fw_setImageWithUrl:(nullable id)url placeholderImage:(nullable UIImage *)placeholderImage options:(__FWWebImageOptions)options context:(nullable NSDictionary *)context completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion progress:(nullable void (^)(double))progress;
+- (void)__fw_cancelImageRequest;
+
+@end
+
+@interface UIImage ()
+
+@property (nonatomic, assign, readonly) BOOL __fw_hasAlpha;
+@property (nonatomic, assign) __FWImageFormat __fw_imageFormat;
+@property (nonatomic, assign) NSUInteger __fw_imageLoopCount;
+
++ (nullable UIImage *)__fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary *)options;
+- (nullable UIImage *)__fw_imageWithAlpha:(CGFloat)alpha;
+- (nullable UIImage *)__fw_croppedImageWithFrame:(CGRect)frame angle:(NSInteger)angle circular:(BOOL)circular;
++ (nullable UIImage *)__fw_imageWithData:(nullable NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
+- (nullable UIImage *)__fw_imageWithScaleSize:(CGSize)size;
+
+@end
+
+@interface CALayer ()
+
+- (void)__fw_removeDefaultAnimations;
+
+@end
+
+@interface UIView ()
+
+@property (nonatomic, assign) UIEdgeInsets __fw_emptyInsets;
+@property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
+@property (nonatomic, assign) UIEdgeInsets __fw_toastInsets;
+
+@property (nonatomic, weak, readonly, nullable) UIViewController *__fw_viewController;
+
+@property (nonatomic, assign) CGRect __fw_frameApplyTransform;
+
+- (nullable UIView *)__fw_subviewWithTag:(NSInteger)tag;
+
+- (NSString *)__fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(__kindof UITapGestureRecognizer *gesture))customize;
+
++ (UIView<__FWIndicatorViewPlugin> *)__fw_indicatorViewWithStyle:(__FWIndicatorViewStyle)style;
++ (UIView<__FWProgressViewPlugin> *)__fw_progressViewWithStyle:(__FWProgressViewStyle)style;
+
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
+- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
+- (NSArray<NSLayoutConstraint *> *)__fw_setDimensions:(CGSize)size;
+- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
+- (NSLayoutConstraint *)__fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSArray<NSLayoutConstraint *> *)__fw_pinHorizontalToSuperview:(CGFloat)inset;
+- (NSLayoutConstraint *)__fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
+- (NSLayoutConstraint *)__fw_alignAxisToSuperview:(NSLayoutAttribute)axis offset:(CGFloat)offset;
+
+- (void)__fw_statisticalCheckExposure;
+- (BOOL)__fw_statisticalTrackClickWithIndexPath:(nullable NSIndexPath *)indexPath event:(nullable id)event;
+- (BOOL)__fw_statisticalBindExposure:(nullable UIView *)containerView;
+
+@end
+
+@interface UICollectionViewFlowLayout ()
+
+- (void)__fw_sectionConfigPrepareLayout;
+- (NSArray *)__fw_sectionConfigLayoutAttributesForElementsIn:(CGRect)rect;
+
+@end
+
+@interface UITextField ()
+
+@property (nonatomic, assign) BOOL __fw_menuDisabled;
+
+@end
+
+@interface UIWindow ()
+
+@property (class, nonatomic, readwrite, nullable) UIWindow *__fw_mainWindow;
+
+@end
+
+@interface UIControl ()
+
+- (NSString *)__fw_addTouchWithBlock:(void (^)(id sender))block;
+
+@end
+
+@interface UIButton ()
+
+@property (class, nonatomic, assign) CGFloat __fw_disabledAlpha;
+@property (class, nonatomic, assign) CGFloat __fw_highlightedAlpha;
+@property (nonatomic, assign) CGFloat __fw_disabledAlpha;
+@property (nonatomic, assign) CGFloat __fw_highlightedAlpha;
+
+@end
+
+@interface UIScreen ()
+
+@property (class, nonatomic, assign, readonly) CGFloat __fw_statusBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_navigationBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_tabBarHeight;
+@property (class, nonatomic, assign, readonly) UIEdgeInsets __fw_safeAreaInsets;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_toolBarHeight;
+@property (class, nonatomic, assign, readonly) CGFloat __fw_topBarHeight;
+
++ (CGFloat)__fw_flatValue:(CGFloat)value scale:(CGFloat)scale;
+
+@end
+
+@interface UISlider ()
+
+@property (nonatomic, assign) CGSize __fw_thumbSize;
+@property (nonatomic, strong, nullable) UIColor *__fw_thumbColor;
+
+@end
+
+@interface UIActivityIndicatorView ()
+
++ (UIActivityIndicatorView *)__fw_indicatorViewWithColor:(nullable UIColor *)color;
+
+@end
+
+@interface UIAlertAction ()
+
++ (UIAlertAction *)__fw_actionWithObject:(nullable id)object style:(UIAlertActionStyle)style appearance:(nullable __FWAlertAppearance *)appearance handler:(nullable void (^)(UIAlertAction *))handler;
+
+@end
+
+@interface UIAlertController ()
+
+@property (nonatomic, strong, null_resettable) __FWAlertAppearance *__fw_alertAppearance;
+@property (nonatomic, assign) __FWAlertStyle __fw_alertStyle;
++ (UIAlertController *)__fw_alertControllerWithTitle:(nullable id)title message:(nullable id)message preferredStyle:(UIAlertControllerStyle)preferredStyle appearance:(nullable __FWAlertAppearance *)appearance;
+
+@end
+
+@interface UIViewController ()
+
+@property (nonatomic, strong, readonly) UIView *__fw_ancestorView;
+@property (nonatomic, assign, readonly) BOOL __fw_isPresented;
+
+- (BOOL)__fw_isInvisibleState;
+
+- (void)__fw_showLoadingWithText:(nullable id)text cancel:(nullable void (^)(void))cancel;
+- (void)__fw_hideLoading:(BOOL)delayed;
+- (void)__fw_showEmptyViewWithText:(nullable NSString *)text detail:(nullable NSString *)detail image:(nullable UIImage *)image action:(nullable NSString *)action block:(nullable void (^)(id))block;
+- (void)__fw_showAlertWithTitle:(nullable id)title message:(nullable id)message style:(__FWAlertStyle)style cancel:(nullable id)cancel cancelBlock:(nullable void (^)(void))cancelBlock;
+- (void)__fw_showSheetWithTitle:(nullable id)title message:(nullable id)message cancel:(nullable id)cancel actions:(nullable NSArray *)actions currentIndex:(NSInteger)currentIndex actionBlock:(nullable void (^)(NSInteger))actionBlock cancelBlock:(nullable void (^)(void))cancelBlock;
+
+@end
+
+@interface UINavigationBar ()
+
+@property (nonatomic, strong, nullable) UIColor *__fw_backgroundColor;
+@property (nonatomic, strong, nullable) UIColor *__fw_foregroundColor;
+@property (nonatomic, strong, nullable) UIImage *__fw_backImage;
+@property (nonatomic, assign) BOOL __fw_isTranslucent;
+@property (nonatomic, strong, nullable) UIColor *__fw_shadowColor;
+
+@end
+
+@interface UIScrollView ()
+
+@property (nonatomic, strong, nullable) __FWPullRefreshView *__fw_pullRefreshView;
+@property (nonatomic, assign) BOOL __fw_showPullRefresh;
+@property (nonatomic, assign) CGFloat __fw_pullRefreshHeight;
+@property (nonatomic, strong, nullable) __FWInfiniteScrollView *__fw_infiniteScrollView;
+@property (nonatomic, assign) BOOL __fw_showInfiniteScroll;
+@property (nonatomic, assign) CGFloat __fw_infiniteScrollHeight;
+@property (nonatomic, assign) BOOL __fw_infiniteScrollFinished;
+- (void)__fw_addPullRefreshWithBlock:(void (^)(void))block;
+- (void)__fw_addPullRefreshWithTarget:(id)target action:(SEL)action;
+- (void)__fw_triggerPullRefresh;
+- (void)__fw_addInfiniteScrollWithBlock:(void (^)(void))block;
+- (void)__fw_addInfiniteScrollWithTarget:(id)target action:(SEL)action;
+- (void)__fw_triggerInfiniteScroll;
+
+@end
+
+@interface UIImagePickerController ()
+
++ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType filterType:(__FWImagePickerFilterType)filterType allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIImagePickerController * _Nullable, id _Nullable, NSDictionary * _Nullable, BOOL))completion;
++ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, NSDictionary * _Nullable, BOOL))completion;
+
+@end
+
+@interface PHPhotoLibrary ()
+
+@property (class, nonatomic, copy, readonly) NSString *__fw_pickerControllerVideoCachePath;
+
++ (NSArray *)__fw_fetchAllAlbumsWithAlbumContentType:(__FWAlbumContentType)albumContentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbum:(BOOL)showSmartAlbum;
++ (PHFetchOptions *)__fw_createFetchOptionsWithAlbumContentType:(__FWAlbumContentType)albumContentType;
+- (void)__fw_addImageToAlbum:(CGImageRef)imageRef assetCollection:(PHAssetCollection *)assetCollection orientation:(UIImageOrientation)orientation completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
+- (void)__fw_addImageToAlbum:(NSURL *)imagePathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
+- (void)__fw_addVideoToAlbum:(NSURL *)videoPathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
+
++ (nullable UIViewController *)__fw_pickerControllerWithFilterType:(__FWImagePickerFilterType)filterType selectionLimit:(NSInteger)selectionLimit allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIViewController * _Nullable, NSArray *, NSArray *, BOOL))completion;
++ (nullable UIViewController *)__fw_pickerControllerWithCropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, id _Nullable, BOOL))completion;
 
 @end
 

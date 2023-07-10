@@ -1705,7 +1705,7 @@ public class LayoutChain {
                 if self.count > 1 {
                     view.fw_setDimension(.width, size: itemLength)
                 }
-                if let prev = prev {
+                if prev != nil {
                     if index < self.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -
@@ -1726,7 +1726,7 @@ public class LayoutChain {
                 if self.count > 1 {
                     view.fw_setDimension(.height, size: itemLength)
                 }
-                if let prev = prev {
+                if prev != nil {
                     if index < self.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -

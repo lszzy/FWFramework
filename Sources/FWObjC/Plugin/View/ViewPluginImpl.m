@@ -6,21 +6,8 @@
 //
 
 #import "ViewPluginImpl.h"
+#import "Bridge.h"
 #import <objc/runtime.h>
-
-#if FWMacroSPM
-
-@interface UIActivityIndicatorView ()
-
-+ (UIActivityIndicatorView *)__fw_indicatorViewWithColor:(nullable UIColor *)color;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - UIActivityIndicatorView+__FWViewPlugin
 

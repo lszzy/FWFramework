@@ -6,23 +6,7 @@
 //
 
 #import "PageControl.h"
-
-#if FWMacroSPM
-
-@interface NSObject ()
-
-+ (void)__fw_logDebug:(NSString *)message;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+#import "Bridge.h"
 
 #pragma mark - __FWPageControl
 

@@ -6,43 +6,9 @@
 //
 
 #import "BannerView.h"
+#import "Bridge.h"
 #import "PageControl.h"
 #import "ImagePlugin.h"
-
-#if FWMacroSPM
-
-@interface UIPageControl ()
-
-@property (nonatomic, assign) CGSize __fw_preferredSize;
-
-@end
-
-@interface UIImageView ()
-
-+ (UIImageView *)__fw_animatedImageView;
-- (void)__fw_setImageWithUrl:(nullable id)url placeholderImage:(nullable UIImage *)placeholderImage completion:(nullable void (^)(UIImage * _Nullable, NSError * _Nullable))completion;
-
-@end
-
-@interface UIImage ()
-
-+ (nullable UIImage *)__fw_imageNamed:(NSString *)name bundle:(nullable NSBundle *)bundle options:(nullable NSDictionary *)options;
-
-@end
-
-@interface UIView ()
-
-- (void)__fw_statisticalCheckExposure;
-- (BOOL)__fw_statisticalTrackClickWithIndexPath:(nullable NSIndexPath *)indexPath event:(nullable id)event;
-- (BOOL)__fw_statisticalBindExposure:(nullable UIView *)containerView;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
 
 #pragma mark - __FWBannerViewFlowLayout
 

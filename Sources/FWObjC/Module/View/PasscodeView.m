@@ -6,31 +6,7 @@
 //
 
 #import "PasscodeView.h"
-
-#if FWMacroSPM
-
-@interface UIView ()
-
-- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
-- (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
-- (NSArray<NSLayoutConstraint *> *)__fw_setDimensions:(CGSize)size;
-- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
-
-@end
-
-@interface UITextField ()
-
-@property (nonatomic, assign) BOOL __fw_menuDisabled;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 @implementation __FWPasscodeFlowLayout
 

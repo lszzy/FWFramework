@@ -6,22 +6,7 @@
 //
 
 #import "ToastPluginImpl.h"
-
-#if FWMacroSPM
-
-@interface UIView ()
-
-@property (nonatomic, assign) UIEdgeInsets __fw_toastInsets;
-- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
-- (nullable UIView *)__fw_subviewWithTag:(NSInteger)tag;
-
-@end
-
-#else
-
-#import <FWFramework/FWFramework-Swift.h>
-
-#endif
+#import "Bridge.h"
 
 #pragma mark - __FWToastPluginImpl
 
