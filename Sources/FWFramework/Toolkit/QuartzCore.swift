@@ -48,8 +48,7 @@ import FWObjC
     
     private static var fw_displayLinkActionKey = "fw_displayLinkAction"
     
-    @objc(__fw_displayLinkAction:)
-    private class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
+    @objc private class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
         let block = objc_getAssociatedObject(displayLink, &CADisplayLink.fw_displayLinkActionKey) as? (CADisplayLink) -> Void
         block?(displayLink)
     }
@@ -511,8 +510,7 @@ import FWObjC
         UIView.commitAnimations()
     }
     
-    @objc(__fw_animationDidStop:finished:context:)
-    private func fw_animationDidStop(
+    @objc private func fw_animationDidStop(
         _ animationId: String?,
         finished: NSNumber,
         context: UnsafeMutableRawPointer?
@@ -1069,8 +1067,7 @@ import FWObjC
         set { fw_setPropertyCopy(newValue, forName: "fw_dragEndedBlock") }
     }
     
-    @objc(__fw_dragHandler:)
-    private func fw_dragHandler(_ sender: UIPanGestureRecognizer) {
+    @objc private func fw_dragHandler(_ sender: UIPanGestureRecognizer) {
         // 检查是否能够在拖动区域拖动
         let locationInView = sender.location(in: self)
         if !self.fw_dragArea.contains(locationInView) &&

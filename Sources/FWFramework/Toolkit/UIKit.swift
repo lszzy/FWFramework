@@ -347,7 +347,6 @@ import AdSupport
     }
     
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
-    @objc(__fw_isViewVisible)
     public var fw_isViewVisible: Bool {
         if isHidden || alpha <= 0.01 || self.window == nil { return false }
         if bounds.width == 0 || bounds.height == 0 { return false }
@@ -526,7 +525,6 @@ import AdSupport
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    @objc(__fw_setCornerLayer:radius:)
     public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
         let cornerLayer = CAShapeLayer()
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
@@ -1325,8 +1323,7 @@ import AdSupport
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
-    @objc(__fw_swizzleSetText:)
-    func fw_swizzleSetText(_ text: String?) {
+    @objc func fw_swizzleSetText(_ text: String?) {
         guard let text = text else {
             fw_swizzleSetText(text)
             return
@@ -1339,8 +1336,7 @@ import AdSupport
         self.fw_swizzleSetAttributedText(fw_adjustedAttributedString(attributedString))
     }
     
-    @objc(__fw_swizzleSetAttributedText:)
-    func fw_swizzleSetAttributedText(_ text: NSAttributedString?) {
+    @objc func fw_swizzleSetAttributedText(_ text: NSAttributedString?) {
         guard let text = text else {
             self.fw_swizzleSetAttributedText(text)
             return
@@ -1357,8 +1353,7 @@ import AdSupport
         self.fw_swizzleSetAttributedText(attributedString)
     }
     
-    @objc(__fw_swizzleSetLineBreakMode:)
-    func fw_swizzleSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
+    @objc func fw_swizzleSetLineBreakMode(_ lineBreakMode: NSLineBreakMode) {
         self.fw_swizzleSetLineBreakMode(lineBreakMode)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1369,8 +1364,7 @@ import AdSupport
         }
     }
     
-    @objc(__fw_swizzleSetTextAlignment:)
-    func fw_swizzleSetTextAlignment(_ textAlignment: NSTextAlignment) {
+    @objc func fw_swizzleSetTextAlignment(_ textAlignment: NSTextAlignment) {
         self.fw_swizzleSetTextAlignment(textAlignment)
         guard var textAttributes = self.fw_textAttributes else { return }
         if let paragraphStyle = textAttributes[.paragraphStyle] as? NSParagraphStyle,
@@ -1684,28 +1678,24 @@ import AdSupport
     }
 
     /// 判断当前的scrollView内容是否足够水平滚动
-    @objc(__fw_canScrollHorizontal)
     public var fw_canScrollHorizontal: Bool {
         if self.bounds.size.width <= 0 { return false }
         return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)
     }
 
     /// 判断当前的scrollView内容是否足够纵向滚动
-    @objc(__fw_canScrollVertical)
     public var fw_canScrollVertical: Bool {
         if self.bounds.size.height <= 0 { return false }
         return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds)
     }
 
     /// 当前scrollView滚动到指定边
-    @objc(__fw_scrollTo:animated:)
     public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
         let contentOffset = fw_contentOffset(of: edge)
         self.setContentOffset(contentOffset, animated: animated)
     }
 
     /// 是否已滚动到指定边
-    @objc(__fw_isScrollTo:)
     public func fw_isScroll(to edge: UIRectEdge) -> Bool {
         let contentOffset = fw_contentOffset(of: edge)
         switch edge {
@@ -1723,7 +1713,6 @@ import AdSupport
     }
 
     /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-    @objc(__fw_contentOffsetOf:)
     public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
         var contentOffset = self.contentOffset
         switch edge {
@@ -1887,8 +1876,7 @@ import AdSupport
         }
     }
     
-    @objc(__fw_swizzleGestureRecognizerShouldBegin:)
-    private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
@@ -1896,7 +1884,7 @@ import AdSupport
         return fw_swizzleGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    @objc(__fw_swizzleGestureRecognizer:shouldRecognizeSimultaneouslyWith:) private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1904,8 +1892,7 @@ import AdSupport
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    @objc(__fw_swizzleGestureRecognizer:shouldRequireFailureOf:)
-    private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1913,8 +1900,7 @@ import AdSupport
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    @objc(__fw_swizzleGestureRecognizer:shouldBeRequiredToFailBy:)
-    private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -1959,7 +1945,6 @@ import AdSupport
     }
     
     /// 判断手势是否正作用于指定视图
-    @objc(__fw_hitTestWithView:)
     public func fw_hitTest(view: UIView?) -> Bool {
         return view?.hitTest(location(in: view), with: nil) != nil
     }
@@ -1970,7 +1955,6 @@ import AdSupport
 @_spi(FW) extension UIPanGestureRecognizer {
     
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
-    @objc(__fw_swipeDirection)
     public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
         let transition = self.translation(in: self.view)
         if abs(transition.x) > abs(transition.y) {
@@ -2455,7 +2439,6 @@ import AdSupport
     }
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
-    @objc(__fw_estimatedLayout)
     public var fw_estimatedLayout: Bool {
         get {
             return self.estimatedRowHeight == UITableView.automaticDimension

@@ -21,7 +21,6 @@ import FWObjC
     ///   - swizzleMethod: 交换方法
     /// - Returns: 是否成功
     @discardableResult
-    @objc(__fw_exchangeInstanceMethod:swizzleMethod:)
     public static func fw_exchangeInstanceMethod(
         _ originalSelector: Selector,
         swizzleMethod: Selector

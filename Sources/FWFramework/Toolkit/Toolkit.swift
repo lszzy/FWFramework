@@ -1284,15 +1284,13 @@ extension WrapperGlobal {
         }
     }
     
-    @objc(__fw_saveImage:didFinishSavingWithError:contextInfo:)
-    private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
         fw_setPropertyCopy(nil, forName: "fw_saveImage")
         block?(error)
     }
     
-    @objc(__fw_saveVideo:didFinishSavingWithError:contextInfo:)
-    private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = __FWRuntime.getProperty(UIImage.classForCoder(), forName: "fw_saveVideo") as? (Error?) -> Void
         __FWRuntime.setPropertyPolicy(UIImage.classForCoder(), with: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: "fw_saveVideo")
         block?(error)
@@ -1844,7 +1842,6 @@ public enum ViewControllerLifecycleState: Int {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    @objc(__fw_allowsPopGesture)
     public var fw_allowsPopGesture: (() -> Bool)? {
         get { fw_property(forName: "fw_allowsPopGesture") as? () -> Bool }
         set { fw_setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }

@@ -108,7 +108,6 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showConfirmWithTitle:message:cancel:confirm:confirmBlock:cancelBlock:)
     public func fw_showConfirm(
         title: Any?,
         message: Any?,
@@ -131,7 +130,6 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showPromptWithTitle:message:cancel:confirm:promptBlock:confirmBlock:cancelBlock:)
     public func fw_showPrompt(
         title: Any?,
         message: Any?,
@@ -361,7 +359,6 @@ import FWObjC
     ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showAlertWithTitle:message:style:cancel:cancelBlock:)
     public func fw_showAlert(
         title: Any?,
         message: Any?,
@@ -428,7 +425,6 @@ import FWObjC
     ///   - confirm: 确认按钮文字，默认确定
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showConfirmWithTitle:message:cancel:confirm:confirmBlock:cancelBlock:)
     public func fw_showConfirm(
         title: Any?,
         message: Any?,
@@ -453,7 +449,6 @@ import FWObjC
     ///   - promptBlock: 输入框初始化事件，参数为输入框
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showPromptWithTitle:message:cancel:confirm:promptBlock:confirmBlock:cancelBlock:)
     public func fw_showPrompt(
         title: Any?,
         message: Any?,

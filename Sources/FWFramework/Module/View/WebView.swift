@@ -484,7 +484,6 @@ open class WebView: WKWebView {
     }
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    @objc(__fw_jsBridge)
     public var fw_jsBridge: WebViewJsBridge? {
         get { fw_property(forName: "fw_jsBridge") as? WebViewJsBridge }
         set { fw_setProperty(newValue, forName: "fw_jsBridge") }
@@ -586,7 +585,6 @@ open class WebView: WKWebView {
 @_spi(FW) extension UIProgressView {
     
     /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-    @objc(__fw_webProgress)
     public var fw_webProgress: Float {
         get {
             return self.progress
