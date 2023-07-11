@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, __FWToolbarViewType) {
 @class __FWToolbarMenuView;
 
 /**
- * 自定义工具栏视图，高度自动布局(总高度toolbarHeight)，可设置toolbarHidden隐藏(总高度0)
+ * 自定义工具栏视图，使用非等比例缩放布局，高度自动布局(总高度toolbarHeight)，可设置toolbarHidden隐藏(总高度0)
  *
  * 根据toolbarPosition自动设置默认高度，可自定义，如下：
  * 顶部：topView，高度为topHeight，可设置topHidden隐藏
@@ -84,7 +84,7 @@ NS_SWIFT_NAME(ToolbarView)
 @class __FWToolbarTitleView;
 
 /**
- * 自定义工具栏菜单视图，支持完全自定义，默认最多只支持左右各两个按钮，如需更多按钮，请自行添加。
+ * 自定义工具栏菜单视图，使用非等比例缩放布局，支持完全自定义，默认最多只支持左右各两个按钮，如需更多按钮，请自行添加。
  *
  * 水平分割时，按钮水平等分；非水平分割时，左右侧间距为8，同系统一致
  */
@@ -174,7 +174,7 @@ typedef NS_ENUM(NSInteger, __FWToolbarTitleViewStyle) {
 @protocol __FWIndicatorViewPlugin;
 
 /**
- *  可作为导航栏标题控件，通过 navigationItem.titleView 来设置。也可当成单独的标题组件，脱离 UIViewController 使用
+ *  可作为导航栏标题控件，使用非等比例缩放布局，通过 navigationItem.titleView 来设置。也可当成单独的标题组件，脱离 UIViewController 使用
  *
  *  默认情况下 titleView 是不支持点击的，如需点击，请把 `userInteractionEnabled` 设为 `YES`
  *
@@ -287,7 +287,7 @@ NS_SWIFT_NAME(ToolbarTitleView)
 #pragma mark - __FWToolbarButton
 
 /**
- * 自定义工具栏按钮，兼容系统customView方式和自定义方式
+ * 自定义工具栏按钮，使用非等比例缩放布局，兼容系统customView方式和自定义方式
  *
  * UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8；
  * __FWToolbarButton作为customView使用时，会自动调整按钮内间距，和系统表现一致；

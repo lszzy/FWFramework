@@ -130,6 +130,14 @@ import UIKit
     
 }
 
+@_spi(FW) @objc extension UIControl {
+    
+    public func __fw_addTouch(block: @escaping (Any) -> Void) -> String {
+        fw_addTouch(block: block)
+    }
+    
+}
+
 @_spi(FW) @objc extension UIScrollView {
     
     public var __fw_pullRefreshView: PullRefreshView? {
