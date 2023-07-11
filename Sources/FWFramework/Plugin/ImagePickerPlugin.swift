@@ -248,7 +248,6 @@ import FWObjC
      @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组(UIImage|PHLivePhoto|NSURL)，3位结果数组，4为是否取消
      @return 照片选择器
      */
-    @objc(__fw_pickerControllerWithFilterType:selectionLimit:allowsEditing:shouldDismiss:completion:)
     public static func fw_pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping (UIViewController?, [Any], [Any], Bool) -> Void) -> UIViewController? {
         if #available(iOS 14.0, *) {
             return PHPickerViewController.fw_pickerController(filterType: filterType, selectionLimit: selectionLimit, shouldDismiss: shouldDismiss) { picker, objects, results, cancel in
@@ -268,7 +267,6 @@ import FWObjC
      @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
      @return 照片选择器
      */
-    @objc(__fw_pickerControllerWithCropController:completion:)
     public static func fw_pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, Any?, Bool) -> Void) -> UIViewController? {
         if #available(iOS 14.0, *) {
             return PHPickerViewController.fw_pickerController(cropController: cropController, completion: completion)
@@ -500,7 +498,6 @@ import FWObjC
      @param completion 完成回调。参数1为照片选择器，2为对象(UIImage|PHLivePhoto|NSURL)，3为信息字典，4为是否取消
      @return 照片选择器，不支持的返回nil
      */
-    @objc(__fw_pickerControllerWithSourceType:filterType:allowsEditing:shouldDismiss:completion:)
     public static func fw_pickerController(sourceType: UIImagePickerController.SourceType, filterType: ImagePickerFilterType, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping (UIImagePickerController?, Any?, [AnyHashable : Any]?, Bool) -> Void) -> UIImagePickerController? {
         if !UIImagePickerController.isSourceTypeAvailable(sourceType) {
             return nil
@@ -545,7 +542,6 @@ import FWObjC
      @param completion 完成回调。参数1为图片，2为信息字典，3为是否取消
      @return 照片选择器，不支持的返回nil
      */
-    @objc(__fw_pickerControllerWithSourceType:cropController:completion:)
     public static func fw_pickerController(sourceType: UIImagePickerController.SourceType, cropController cropControllerBlock: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, [AnyHashable : Any]?, Bool) -> Void) -> UIImagePickerController? {
         let pickerController = UIImagePickerController.fw_pickerController(sourceType: sourceType, filterType: .image, allowsEditing: false, shouldDismiss: false) { picker, object, info, cancel in
             let originalImage = cancel ? nil : (object as? UIImage)

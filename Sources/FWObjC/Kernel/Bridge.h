@@ -11,7 +11,7 @@
 #import "ViewPlugin.h"
 #import "AlertController.h"
 #import "RefreshView.h"
-#import "ImagePickerPluginImpl.h"
+#import "ImagePickerController.h"
 #import "AnimatedImage.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -450,13 +450,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface UIImagePickerController ()
-
-+ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType filterType:(__FWImagePickerFilterType)filterType allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIImagePickerController * _Nullable, id _Nullable, NSDictionary * _Nullable, BOOL))completion;
-+ (nullable UIImagePickerController *)__fw_pickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType cropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, NSDictionary * _Nullable, BOOL))completion;
-
-@end
-
 @interface PHPhotoLibrary ()
 
 @property (class, nonatomic, copy, readonly) NSString *__fw_pickerControllerVideoCachePath;
@@ -466,9 +459,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)__fw_addImageToAlbum:(CGImageRef)imageRef assetCollection:(PHAssetCollection *)assetCollection orientation:(UIImageOrientation)orientation completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
 - (void)__fw_addImageToAlbum:(NSURL *)imagePathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
 - (void)__fw_addVideoToAlbum:(NSURL *)videoPathURL assetCollection:(PHAssetCollection *)assetCollection completionHandler:(nullable void (^)(BOOL, NSDate * _Nullable, NSError * _Nullable))completionHandler;
-
-+ (nullable UIViewController *)__fw_pickerControllerWithFilterType:(__FWImagePickerFilterType)filterType selectionLimit:(NSInteger)selectionLimit allowsEditing:(BOOL)allowsEditing shouldDismiss:(BOOL)shouldDismiss completion:(void (^)(UIViewController * _Nullable, NSArray *, NSArray *, BOOL))completion;
-+ (nullable UIViewController *)__fw_pickerControllerWithCropController:(nullable __FWImageCropController * (^)(UIImage *))cropController completion:(void (^)(UIImage * _Nullable, id _Nullable, BOOL))completion;
 
 @end
 

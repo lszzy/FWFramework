@@ -33,5 +33,5 @@
 #import "ToastView.h"
 #import "ImagePlugin.h"
 #import "AlertControllerImpl.h"
-#import "ImagePickerPluginImpl.h"
+#import "ImagePickerController.h"
 #import "ImagePreviewController.h"
