@@ -178,7 +178,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             }
         }
         
-        self.segmentedControl.indexChangeBlock = { [weak self] index in
+        self.segmentedControl.indexChangedBlock = { [weak self] index in
             self?.bannerView.scroll(to: 2)
         }
     }

@@ -11,9 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^__FWIndexChangeBlock)(NSUInteger index) NS_SWIFT_NAME(IndexChangeBlock);
-typedef NSAttributedString *_Nonnull(^__FWTitleFormatterBlock)(__FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) NS_SWIFT_NAME(TitleFormatterBlock);
-
 typedef NS_ENUM(NSInteger, __FWSegmentedControlSelectionStyle) {
     __FWSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
     __FWSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
@@ -75,14 +72,14 @@ NS_SWIFT_NAME(SegmentedControl)
  
  Alternativly, you could use `addTarget:action:forControlEvents:`
  */
-@property (nonatomic, copy, nullable) __FWIndexChangeBlock indexChangeBlock;
+@property (nonatomic, copy, nullable) void (^indexChangedBlock)(NSUInteger index);
 
 /**
  Used to apply custom text styling to titles when set.
  
  When this block is set, no additional styling is applied to the `NSAttributedString` object returned from this block.
  */
-@property (nonatomic, copy, nullable) __FWTitleFormatterBlock titleFormatter;
+@property (nonatomic, copy, nullable) NSAttributedString * _Nonnull (^titleFormatter)(__FWSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected);
 
 /**
  Text attributes to apply to item title text.
@@ -324,8 +321,6 @@ NS_SWIFT_NAME(SegmentedControl)
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated;
-- (void)setIndexChangeBlock:(__FWIndexChangeBlock)indexChangeBlock;
-- (void)setTitleFormatter:(__FWTitleFormatterBlock)titleFormatter;
 
 @end
 

@@ -227,7 +227,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .height(40)
         segmentedControl.sectionTitles = sectionTitles
         segmentedControl.selectedSegmentIndex = 5
-        segmentedControl.indexChangeBlock = { [weak self] index in
+        segmentedControl.indexChangedBlock = { [weak self] index in
             self?.scrollView.scrollRectToVisible(CGRect(x: APP.screenWidth * CGFloat(index), y: 0, width: APP.screenWidth, height: 100), animated: true)
         }
         

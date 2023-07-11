@@ -54,7 +54,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         result.titleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         result.selectedTitleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         result.sectionTitles = ["下单", "评价", "商家"]
-        result.indexChangeBlock = { [weak self] index in
+        result.indexChangedBlock = { [weak self] index in
             self?.pagerView.scrollToIndex(Int(index))
         }
         return result
