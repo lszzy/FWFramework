@@ -738,7 +738,6 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     }
     
     /// 触发视图点击事件统计，仅绑定statisticalClick后生效
-    @objc(__fw_statisticalTrackClickWithIndexPath:event:)
     @discardableResult
     public func fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
         guard let event = event ?? fw_statisticalClick else { return false }
@@ -770,7 +769,6 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     }
     
     /// 手工绑定曝光事件统计，可指定容器视图，自动绑定失败时可手工调用
-    @objc(__fw_statisticalBindExposure:)
     @discardableResult
     public func fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
         var result = fw_propertyBool(forName: "fw_statisticalBindExposure")
@@ -799,7 +797,6 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     }
     
     /// 检查并更新视图曝光状态，用于自定义场景
-    @objc(__fw_statisticalCheckExposure)
     public func fw_statisticalCheckExposure() {
         guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
         

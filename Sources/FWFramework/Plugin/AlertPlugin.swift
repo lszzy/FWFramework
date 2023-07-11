@@ -53,7 +53,6 @@ import FWObjC
     ///   - style: 警告框样式
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showAlertWithTitle:message:style:cancel:cancelBlock:)
     public func fw_showAlert(
         title: Any?,
         message: Any?,
@@ -251,7 +250,6 @@ import FWObjC
     ///   - currentIndex: 当前选中动作索引，默认-1
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
-    @objc(__fw_showSheetWithTitle:message:cancel:actions:currentIndex:actionBlock:cancelBlock:)
     public func fw_showSheet(
         title: Any?,
         message: Any?,
