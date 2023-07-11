@@ -35,29 +35,17 @@ import FWObjC
     /// 是否自动等比例缩放后像素取整，默认NO
     public static var fw_autoFlat: Bool = false
     
-    /// 视图是否自动等比例缩放布局全局开关
-    private static var fw_autoScaleView = false
-    
     // MARK: - AutoLayout
-    /// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
+    /// 视图是否自动等比例缩放布局，默认未设置时返回全局开关
     public var fw_autoScale: Bool {
         get {
-            var autoScale = UIView.fw_autoScale
-            if !UIView.fw_autoScaleView { return autoScale }
-            
-            var targetView: UIView? = self
-            while targetView != nil {
-                if let number = targetView?.fw_property(forName: "fw_autoScale") as? NSNumber {
-                    autoScale = number.boolValue
-                    break
-                }
-                targetView = targetView?.superview
+            if let number = fw_property(forName: "fw_autoScale") as? NSNumber {
+                return number.boolValue
             }
-            return autoScale
+            return UIView.fw_autoScale
         }
         set {
             fw_setProperty(NSNumber(value: newValue), forName: "fw_autoScale")
-            if !UIView.fw_autoScaleView { UIView.fw_autoScaleView = true }
         }
     }
 
