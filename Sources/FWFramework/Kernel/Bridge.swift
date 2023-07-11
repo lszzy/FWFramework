@@ -102,6 +102,26 @@ import UIKit
     
 }
 
+@_spi(FW) @objc extension UIImageView {
+    
+    public func __fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, completion: completion)
+    }
+
+    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
+    }
+
+    public func __fw_cancelImageRequest() {
+        fw_cancelImageRequest()
+    }
+    
+    public static func __fw_animatedImageView() -> UIImageView {
+        return fw_animatedImageView()
+    }
+    
+}
+
 @_spi(FW) @objc extension UIActivityIndicatorView {
     
     public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
@@ -157,6 +177,14 @@ import UIKit
     
     public func __fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         return fw_croppedImage(frame: frame, angle: angle, circular: circular)
+    }
+    
+    public static func __fw_imageNamed(_ name: String, bundle: Bundle? = nil, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
+        return fw_imageNamed(name, bundle: bundle, options: options)
+    }
+    
+    public static func __fw_image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
+        return fw_image(data: data, scale: scale, options: options)
     }
     
 }
