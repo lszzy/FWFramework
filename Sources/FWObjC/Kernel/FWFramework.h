@@ -28,7 +28,7 @@
 
 #import "ViewPluginImpl.h"
 #import "EmptyPluginImpl.h"
-#import "RefreshPluginImpl.h"
+#import "RefreshView.h"
 #import "ToastPluginImpl.h"
 #import "ImagePlugin.h"
 #import "AlertControllerImpl.h"
