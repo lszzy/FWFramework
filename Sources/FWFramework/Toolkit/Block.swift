@@ -236,7 +236,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    @objc(__fw_commonTimerWithTimeInterval:block:repeats:)
     public static func fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
         let timer = fw_timer(timeInterval: timeInterval, block: block, repeats: repeats)
         RunLoop.current.add(timer, forMode: .common)
@@ -328,7 +327,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     /// 从事件句柄初始化
-    @objc(__fw_gestureRecognizerWithBlock:)
     public static func fw_gestureRecognizer(block: @escaping (Any) -> Void) -> Self {
         let gestureRecognizer = Self()
         gestureRecognizer.fw_addBlock(block)
@@ -384,7 +382,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     /// 添加点击手势事件，可自定义点击高亮句柄等
-    @objc(__fw_addTapGestureWithTarget:action:customize:)
     public func fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer(target: target, action: action) : UITapGestureRecognizer(target: target, action: action)
         self.addGestureRecognizer(gesture)
@@ -395,7 +392,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    @objc(__fw_addTapGestureWithBlock:customize:)
     public func fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer() : UITapGestureRecognizer()
         let identifier = gesture.fw_addBlock(block)
@@ -489,7 +485,6 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
 
     /// 添加点击句柄，返回监听唯一标志
     @discardableResult
-    @objc(__fw_addTouchWithBlock:)
     public func fw_addTouch(block: @escaping (Any) -> Void) -> String {
         return fw_addBlock(block, for: .touchUpInside)
     }
