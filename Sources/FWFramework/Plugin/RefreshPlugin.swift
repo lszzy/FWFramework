@@ -242,7 +242,6 @@ import FWObjC
         self.fw_pullRefreshView?.startAnimating()
     }
 
-    @objc(__fw_pullRefreshView)
     public var fw_pullRefreshView: PullRefreshView? {
         get {
             return fw_property(forName: "fw_pullRefreshView") as? PullRefreshView
@@ -252,7 +251,6 @@ import FWObjC
         }
     }
     
-    @objc(__fw_pullRefreshHeight)
     public var fw_pullRefreshHeight: CGFloat {
         get {
             let height = fw_propertyDouble(forName: "fw_pullRefreshHeight")
@@ -263,7 +261,6 @@ import FWObjC
         }
     }
     
-    @objc(__fw_showPullRefresh)
     public var fw_showPullRefresh: Bool {
         get {
             if let pullRefreshView = self.fw_pullRefreshView {
@@ -332,7 +329,6 @@ import FWObjC
         self.fw_infiniteScrollView?.startAnimating()
     }
 
-    @objc(__fw_infiniteScrollView)
     public var fw_infiniteScrollView: InfiniteScrollView? {
         get {
             return fw_property(forName: "fw_infiniteScrollView") as? InfiniteScrollView
@@ -342,7 +338,6 @@ import FWObjC
         }
     }
     
-    @objc(__fw_infiniteScrollHeight)
     public var fw_infiniteScrollHeight: CGFloat {
         get {
             let height = fw_propertyDouble(forName: "fw_infiniteScrollHeight")
@@ -353,7 +348,6 @@ import FWObjC
         }
     }
     
-    @objc(__fw_showInfiniteScroll)
     public var fw_showInfiniteScroll: Bool {
         get {
             if let infiniteScrollView = self.fw_infiniteScrollView {
