@@ -115,6 +115,26 @@ import UIKit
         set { fw_imageFormat = newValue }
     }
     
+    public var __fw_hasAlpha: Bool {
+        return fw_hasAlpha
+    }
+    
+    public func __fw_image(alpha: CGFloat) -> UIImage? {
+        return fw_image(alpha: alpha)
+    }
+    
+    public func __fw_image(scaleSize size: CGSize) -> UIImage? {
+        return fw_image(scaleSize: size)
+    }
+    
+    public static func __fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
+        return fw_image(size: size, block: block)
+    }
+    
+    public func __fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+        return fw_croppedImage(frame: frame, angle: angle, circular: circular)
+    }
+    
 }
 
 @_spi(FW) @objc extension UICollectionViewFlowLayout {

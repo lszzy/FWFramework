@@ -887,7 +887,6 @@ extension WrapperGlobal {
 @_spi(FW) extension UIImage {
     
     /// 从当前图片创建指定透明度的图片
-    @objc(__fw_imageWithAlpha:)
     public func fw_image(alpha: CGFloat) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
         self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height), blendMode: .normal, alpha: alpha)
@@ -909,7 +908,6 @@ extension WrapperGlobal {
     }
 
     /// 缩放图片到指定大小
-    @objc(__fw_imageWithScaleSize:)
     public func fw_image(scaleSize size: CGSize) -> UIImage? {
         guard size.width > 0, size.height > 0 else { return nil }
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -1208,7 +1206,6 @@ extension WrapperGlobal {
     }
 
     /// 判断图片是否有透明通道
-    @objc(__fw_hasAlpha)
     public var fw_hasAlpha: Bool {
         guard let cgImage = self.cgImage else { return false }
         let alpha = cgImage.alphaInfo
@@ -1260,7 +1257,6 @@ extension WrapperGlobal {
     }
 
     /// 从block创建UIImage，指定尺寸
-    @objc(__fw_imageWithSize:block:)
     public static func fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
@@ -1397,7 +1393,6 @@ extension WrapperGlobal {
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等
-    @objc(__fw_croppedImageWithFrame:angle:circular:)
     public func fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, !self.fw_hasAlpha && !circular, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
