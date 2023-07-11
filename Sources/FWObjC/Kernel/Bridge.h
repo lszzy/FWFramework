@@ -447,13 +447,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) __FWInfiniteScrollView *__fw_infiniteScrollView;
 @property (nonatomic, assign) BOOL __fw_showInfiniteScroll;
 @property (nonatomic, assign) CGFloat __fw_infiniteScrollHeight;
-@property (nonatomic, assign) BOOL __fw_infiniteScrollFinished;
-- (void)__fw_addPullRefreshWithBlock:(void (^)(void))block;
-- (void)__fw_addPullRefreshWithTarget:(id)target action:(SEL)action;
-- (void)__fw_triggerPullRefresh;
-- (void)__fw_addInfiniteScrollWithBlock:(void (^)(void))block;
-- (void)__fw_addInfiniteScrollWithTarget:(id)target action:(SEL)action;
-- (void)__fw_triggerInfiniteScroll;
 
 @end
 
