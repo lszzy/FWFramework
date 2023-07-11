@@ -1,12 +1,11 @@
 //
-//  ViewPluginImpl.m
+//  ViewPlugin.m
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "ViewPluginImpl.h"
-#import "Bridge.h"
+#import "ViewPlugin.h"
 #import <objc/runtime.h>
 
 #pragma mark - UIActivityIndicatorView+__FWViewPlugin
@@ -42,39 +41,6 @@
     } else {
         if (self.isAnimating) [self stopAnimating];
     }
-}
-
-@end
-
-#pragma mark - __FWViewPluginImpl
-
-@implementation __FWViewPluginImpl
-
-+ (__FWViewPluginImpl *)sharedInstance {
-    static __FWViewPluginImpl *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[__FWViewPluginImpl alloc] init];
-    });
-    return instance;
-}
-
-- (UIView<__FWProgressViewPlugin> *)progressViewWithStyle:(__FWProgressViewStyle)style {
-    if (self.customProgressView) {
-        return self.customProgressView(style);
-    }
-    
-    __FWProgressView *progressView = [[__FWProgressView alloc] init];
-    return progressView;
-}
-
-- (UIView<__FWIndicatorViewPlugin> *)indicatorViewWithStyle:(__FWIndicatorViewStyle)style {
-    if (self.customIndicatorView) {
-        return self.customIndicatorView(style);
-    }
-    
-    UIActivityIndicatorView *indicatorView = [UIActivityIndicatorView __fw_indicatorViewWithColor:nil];
-    return indicatorView;
 }
 
 @end

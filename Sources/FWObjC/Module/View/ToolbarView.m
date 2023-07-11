@@ -6,7 +6,7 @@
 //
 
 #import "ToolbarView.h"
-#import "ViewPluginImpl.h"
+#import "ViewPlugin.h"
 #import "Bridge.h"
 #import <objc/runtime.h>
 

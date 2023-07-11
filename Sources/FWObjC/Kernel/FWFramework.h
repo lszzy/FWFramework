@@ -26,7 +26,8 @@
 #import "ToolbarView.h"
 #import "WebView.h"
 
-#import "ViewPluginImpl.h"
+#import "IndicatorView.h"
+#import "ProgressView.h"
 #import "EmptyPluginImpl.h"
 #import "RefreshView.h"
 #import "ToastPluginImpl.h"
