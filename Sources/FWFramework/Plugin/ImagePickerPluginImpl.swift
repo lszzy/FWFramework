@@ -94,7 +94,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
 }
 
 // MARK: - ImagePickerControllerImpl
-/// 默认图片选取插件
+/// 自定义图片选取插件
 open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
     
     // MARK: - Accessor
@@ -143,7 +143,8 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
         }
     }
     
-    open func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) -> ImagePickerController {
+    // MARK: - Private
+    private func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) -> ImagePickerController {
         var pickerController: ImagePickerController
         if let pickerControllerBlock = pickerControllerBlock {
             pickerController = pickerControllerBlock()
@@ -177,7 +178,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
         return pickerController
     }
     
-    open func albumController(filterType: ImagePickerFilterType) -> ImageAlbumController {
+    private func albumController(filterType: ImagePickerFilterType) -> ImageAlbumController {
         var albumController: ImageAlbumController
         if let albumControllerBlock = albumControllerBlock {
             albumController = albumControllerBlock()
@@ -189,7 +190,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
         return albumController
     }
     
-    open func previewController(allowsEditing: Bool) -> ImagePickerPreviewController {
+    private func previewController(allowsEditing: Bool) -> ImagePickerPreviewController {
         var previewController: ImagePickerPreviewController
         if let previewControllerBlock = previewControllerBlock {
             previewController = previewControllerBlock()

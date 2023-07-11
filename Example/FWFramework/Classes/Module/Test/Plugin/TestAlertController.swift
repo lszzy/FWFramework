@@ -186,9 +186,9 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
         headerView.backgroundColor = .white
         
-        AlertControllerImpl.shared.viewController(self, showAlertWith: .alert, headerView: headerView, cancel: "取消", actions: ["确定"]) { index in
+        AlertControllerImpl.shared.viewController(self, showAlertWithStyle: .alert, headerView: headerView, cancel: "取消", actions: ["确定"]) { index in
             UIWindow.app.showMessage(text: "点击了确定按钮")
-        } cancel: {
+        } cancelBlock: {
             UIWindow.app.showMessage(text: "点击了取消按钮")
         }
     }
@@ -200,7 +200,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
             self?.presentedViewController?.dismiss(animated: true)
         }
         
-        AlertControllerImpl.shared.viewController(self, showAlertWith: .alert, headerView: alertView, cancel: nil, actions: nil, actionBlock: nil, cancel: nil) { param in
+        AlertControllerImpl.shared.viewController(self, showAlertWithStyle: .alert, headerView: alertView, cancel: nil, actions: nil, actionBlock: nil, cancelBlock: nil) { param in
             if let alert = param as? AlertController {
                 alert.tapBackgroundViewDismiss = true
             }

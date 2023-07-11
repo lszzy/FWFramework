@@ -699,7 +699,6 @@ import FWObjC
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
-    @objc(__fw_actionWithObject:style:appearance:handler:)
     public static func fw_action(object: Any?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         let attributedTitle = object as? NSAttributedString
         let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : (object as? String), style: style, handler: handler)
@@ -715,7 +714,6 @@ import FWObjC
 @_spi(FW) extension UIAlertController {
     
     /// 自定义样式，默认为样式单例
-    @objc(__fw_alertAppearance)
     public var fw_alertAppearance: AlertAppearance! {
         get {
             let appearance = fw_property(forName: "fw_alertAppearance") as? AlertAppearance
@@ -727,7 +725,6 @@ import FWObjC
     }
     
     /// 弹出框样式，默认为Default
-    @objc(__fw_alertStyle)
     public var fw_alertStyle: AlertStyle {
         get {
             return .init(rawValue: fw_propertyInt(forName: "fw_alertStyle"))
@@ -765,7 +762,6 @@ import FWObjC
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-    @objc(__fw_alertControllerWithTitle:message:preferredStyle:appearance:)
     public static func fw_alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
         let attributedTitle = title as? NSAttributedString
         let attributedMessage = message as? NSAttributedString

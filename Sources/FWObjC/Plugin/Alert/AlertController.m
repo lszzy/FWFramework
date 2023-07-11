@@ -232,6 +232,25 @@
     }
 }
 
+- (void)setIsPreferred:(BOOL)isPreferred {
+    _isPreferred = isPreferred;
+    if (self.attributedTitle || self.title.length < 1 || !self.alertAppearance.actionEnabled) return;
+    
+    UIColor *titleColor = nil;
+    if (!self.enabled) {
+        titleColor = self.alertAppearance.disabledActionColor;
+    } else if (isPreferred) {
+        titleColor = self.alertAppearance.preferredActionColor;
+    } else if (self.style == UIAlertActionStyleDestructive) {
+        titleColor = self.alertAppearance.destructiveActionColor;
+    } else if (self.style == UIAlertActionStyleCancel) {
+        titleColor = self.alertAppearance.cancelActionColor;
+    } else {
+        titleColor = self.alertAppearance.actionColor;
+    }
+    if (titleColor) self.titleColor = titleColor;
+}
+
 @end
 
 #pragma mark ---------------------------- __FWAlertAction end ----------------------------
