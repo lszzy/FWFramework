@@ -314,6 +314,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGRect __fw_frameApplyTransform;
 
+@property (nonatomic, assign) BOOL __fw_autoScale;
+
 - (nullable UIView *)__fw_subviewWithTag:(NSInteger)tag;
 
 - (NSString *)__fw_addTapGestureWithBlock:(void (^)(id sender))block customize:(nullable void (^)(__kindof UITapGestureRecognizer *gesture))customize;

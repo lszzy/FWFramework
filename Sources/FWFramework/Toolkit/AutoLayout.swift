@@ -37,6 +37,7 @@ import FWObjC
     
     // MARK: - AutoLayout
     /// 视图是否自动等比例缩放布局，默认未设置时返回全局开关
+    @objc(__fw_autoScale)
     public var fw_autoScale: Bool {
         get {
             if let number = fw_property(forName: "fw_autoScale") as? NSNumber {
