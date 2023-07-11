@@ -122,6 +122,8 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (nullable NSURL *)imageURLForObject:(id)object;
 
+- (nullable NSString *)imageOperationKeyForObject:(id)object;
+
 - (void)downloadImageForObject:(id)object
                       imageURL:(nullable id)imageURL
                        options:(__FWWebImageOptions)options
@@ -131,23 +133,6 @@ NS_SWIFT_NAME(ImageDownloader)
                       progress:(nullable void (^)(double progress))progress;
 
 - (void)cancelImageDownloadTask:(id)object;
-
-@end
-
-#pragma mark - ____FWImagePluginImpl
-
-/// 默认图片插件
-NS_SWIFT_NAME(ImagePluginImpl)
-@interface ____FWImagePluginImpl : NSObject <__FWImagePlugin>
-
-/// 单例模式
-@property (class, nonatomic, readonly) ____FWImagePluginImpl *sharedInstance NS_SWIFT_NAME(shared);
-
-/// 图片加载完成是否显示渐变动画，默认NO
-@property (nonatomic, assign) BOOL fadeAnimated;
-
-/// 图片自定义句柄，setImageURL开始时调用
-@property (nonatomic, copy, nullable) void (^customBlock)(UIImageView *imageView);
 
 @end
 
