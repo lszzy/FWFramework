@@ -21,13 +21,11 @@ import FWObjC
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    @objc(__fw_addImageToAlbum:assetCollection:orientation:completionHandler:)
     public func fw_addImage(toAlbum imageRef: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         let targetImage = UIImage(cgImage: imageRef, scale: UIScreen.main.scale, orientation: orientation)
         fw_addImage(toAlbum: targetImage, imagePathURL: nil, assetCollection: assetCollection, completionHandler: completionHandler)
     }
 
-    @objc(__fw_addImageToAlbum:assetCollection:completionHandler:)
     public func fw_addImage(toAlbum imagePathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         fw_addImage(toAlbum: nil, imagePathURL: imagePathURL, assetCollection: assetCollection, completionHandler: completionHandler)
     }
@@ -74,7 +72,6 @@ import FWObjC
         }
     }
 
-    @objc(__fw_addVideoToAlbum:assetCollection:completionHandler:)
     public func fw_addVideo(toAlbum videoPathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         var creationDate: Date?
         self.performChanges {
@@ -115,7 +112,6 @@ import FWObjC
      *
      *  @return 返回一个合适的 PHFetchOptions
      */
-    @objc(__fw_createFetchOptionsWithAlbumContentType:)
     public static func fw_createFetchOptions(albumContentType: AlbumContentType) -> PHFetchOptions {
         let fetchOptions = PHFetchOptions()
         // 根据输入的内容类型过滤相册内的资源
@@ -141,7 +137,6 @@ import FWObjC
      *
      *  @return 返回包含所有合适相册的数组
      */
-    @objc(__fw_fetchAllAlbumsWithAlbumContentType:showEmptyAlbum:showSmartAlbum:)
     public static func fw_fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
         var albumsArray: [PHAssetCollection] = []
         // 创建一个 PHFetchOptions，用于创建 AssetGroup 对资源的排序和类型进行控制
@@ -218,7 +213,6 @@ import FWObjC
     /**
      图片选择器选择视频时临时文件存放目录，使用完成后需自行删除
      */
-    @objc(__fw_pickerControllerVideoCachePath)
     public static var fw_pickerControllerVideoCachePath: String {
         let videoPath = (NSTemporaryDirectory() as NSString).appendingPathComponent("FWImagePicker")
         return videoPath
