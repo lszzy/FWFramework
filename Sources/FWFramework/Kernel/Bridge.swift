@@ -54,6 +54,14 @@ import UIKit
     
 }
 
+@_spi(FW) @objc extension Timer {
+    
+    public static func __fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
+        return fw_commonTimer(timeInterval: timeInterval, block: block, repeats: repeats)
+    }
+    
+}
+
 @_spi(FW) @objc extension CALayer {
     
     public func __fw_removeDefaultAnimations() {
@@ -70,6 +78,14 @@ import UIKit
 
     public static func __fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         return fw_indicatorView(style: style)
+    }
+    
+    public func __fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
+        fw_addTapGesture(target: target, action: action, customize: customize)
+    }
+
+    public func __fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+        return fw_addTapGesture(block: block, customize: customize)
     }
     
     public func __fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
@@ -90,6 +106,14 @@ import UIKit
     
     public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         return fw_indicatorView(color: color)
+    }
+    
+}
+
+@_spi(FW) @objc extension UIGestureRecognizer {
+    
+    public static func __fw_gestureRecognizer(block: @escaping (Any) -> Void) -> Self {
+        return fw_gestureRecognizer(block: block)
     }
     
 }
