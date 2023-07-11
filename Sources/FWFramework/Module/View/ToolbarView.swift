@@ -22,14 +22,14 @@ open class ExpandedTitleView: UIView {
         return titleView
     }
     
-    /// 指定并添加内容视图
+    /// 指定并添加内容视图，使用非等比例缩放布局
     open weak var contentView: UIView? {
         didSet {
             guard contentView != oldValue else { return }
             oldValue?.removeFromSuperview()
-            if let contentView = contentView,
-               contentView.superview == nil {
+            if let contentView = contentView, contentView.superview == nil {
                 addSubview(contentView)
+                contentView.fw_autoScale = false
                 contentView.fw_pinEdges(toSuperview: contentInset)
                 setNeedsLayout()
             }
