@@ -34,4 +34,4 @@
 #import "ImagePlugin.h"
 #import "AlertControllerImpl.h"
 #import "ImagePickerPluginImpl.h"
-#import "ImagePreviewPluginImpl.h"
+#import "ImagePreviewController.h"
