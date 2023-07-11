@@ -275,31 +275,24 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     _hidesForSinglePage = YES;
     _currentPageDotColor = [UIColor whiteColor];
     _pageDotColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-    _bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    _imageViewContentMode = UIViewContentModeScaleAspectFill;
     _pageControlIndex = -1;
     
     self.backgroundColor = [UIColor clearColor];
 }
 
-+ (instancetype)bannerViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup
++ (instancetype)bannerViewWithFrame:(CGRect)frame imagesGroup:(NSArray *)imagesGroup
 {
     __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
-    bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
+    bannerView.imagesGroup = [NSMutableArray arrayWithArray:imagesGroup];
     return bannerView;
 }
 
-+ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup
++ (instancetype)bannerViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imagesGroup:(NSArray *)imagesGroup
 {
     __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
     bannerView.infiniteLoop = infiniteLoop;
-    bannerView.localizationImageNamesGroup = [NSMutableArray arrayWithArray:imageNamesGroup];
-    return bannerView;
-}
-
-+ (instancetype)bannerViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup
-{
-    __FWBannerView *bannerView = [[self alloc] initWithFrame:frame];
-    bannerView.imageURLStringsGroup = [NSMutableArray arrayWithArray:imageURLStringsGroup];
+    bannerView.imagesGroup = [NSMutableArray arrayWithArray:imagesGroup];
     return bannerView;
 }
 
@@ -550,12 +543,12 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     [self.mainView reloadData];
 }
 
-- (void)setImageURLStringsGroup:(NSArray *)imageURLStringsGroup
+- (void)setImagesGroup:(NSArray *)imagesGroup
 {
-    _imageURLStringsGroup = imageURLStringsGroup;
+    _imagesGroup = imagesGroup;
     
     NSMutableArray *imagePaths = [NSMutableArray new];
-    [_imageURLStringsGroup enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * stop) {
+    [_imagesGroup enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * stop) {
         if ([obj isKindOfClass:[NSString class]]) {
             [imagePaths addObject:obj];
         } else if ([obj isKindOfClass:[NSURL class]]) {
@@ -570,12 +563,6 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     self.imagePathsGroup = [imagePaths copy];
 }
 
-- (void)setLocalizationImageNamesGroup:(NSArray *)localizationImageNamesGroup
-{
-    _localizationImageNamesGroup = localizationImageNamesGroup;
-    self.imagePathsGroup = [localizationImageNamesGroup copy];
-}
-
 - (void)setTitlesGroup:(NSArray *)titlesGroup
 {
     _titlesGroup = titlesGroup;
@@ -585,7 +572,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
             [temp addObject:@""];
         }
         self.backgroundColor = [UIColor clearColor];
-        self.imageURLStringsGroup = [temp copy];
+        self.imagesGroup = [temp copy];
     }
 }
 
@@ -687,8 +674,8 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     if ([self.delegate respondsToSelector:@selector(bannerView:didScrollToIndex:)]) {
         [self.delegate bannerView:self didScrollToIndex:indexOnPageControl];
     }
-    if (self.itemDidScrollOperationBlock) {
-        self.itemDidScrollOperationBlock(indexOnPageControl);
+    if (self.didScrollToItemBlock) {
+        self.didScrollToItemBlock(indexOnPageControl);
     }
 }
 
@@ -696,10 +683,10 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 {
     if (0 == _totalItemsCount) return;
     NSInteger targetIndex = [_flowLayout currentPage] + 1;;
-    [self scrollToIndex:targetIndex animated:YES];
+    [self scrollToPageControlIndex:targetIndex animated:YES];
 }
 
-- (void)scrollToIndex:(NSInteger)targetIndex animated:(BOOL)animated
+- (void)scrollToPageControlIndex:(NSInteger)targetIndex animated:(BOOL)animated
 {
     if (targetIndex >= _totalItemsCount) {
         if (self.infiniteLoop) {
@@ -800,7 +787,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
 
 #pragma mark - public actions
 
-- (void)adjustWhenControllerViewWillAppear
+- (void)adjustWhenViewWillAppear
 {
     NSInteger targetIndex = [_flowLayout currentPage];
     if (targetIndex < _totalItemsCount) {
@@ -872,7 +859,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
         cell.contentViewInset = self.contentViewInset;
         cell.contentViewCornerRadius = self.contentViewCornerRadius;
         cell.hasConfigured = YES;
-        cell.imageView.contentMode = self.bannerImageViewContentMode;
+        cell.imageView.contentMode = self.imageViewContentMode;
         cell.onlyDisplayText = self.onlyDisplayText;
     }
     
@@ -885,8 +872,8 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     if ([self.delegate respondsToSelector:@selector(bannerView:didSelectItemAtIndex:)]) {
         [self.delegate bannerView:self didSelectItemAtIndex:index];
     }
-    if (self.clickItemOperationBlock) {
-        self.clickItemOperationBlock(index);
+    if (self.didSelectItemBlock) {
+        self.didSelectItemBlock(index);
     }
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
@@ -952,12 +939,12 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
-- (void)makeScrollViewScrollToIndex:(NSInteger)index
+- (void)scrollToIndex:(NSInteger)index
 {
-    [self makeScrollViewScrollToIndex:index animated:NO];
+    [self scrollToIndex:index animated:NO];
 }
 
-- (void)makeScrollViewScrollToIndex:(NSInteger)index animated:(BOOL)animated
+- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated
 {
     if (self.autoScroll) {
         [self invalidateTimer];
@@ -966,7 +953,7 @@ NSString * const __FWBannerViewCellID = @"FWBannerViewCell";
     
     NSInteger previousIndex = [_flowLayout currentPage];
     NSInteger currentIndex = (NSInteger)(_totalItemsCount * 0.5 + index);
-    [self scrollToIndex:currentIndex animated:animated];
+    [self scrollToPageControlIndex:currentIndex animated:animated];
     
     if (!animated && currentIndex != previousIndex) {
         [self __fw_statisticalCheckExposure];

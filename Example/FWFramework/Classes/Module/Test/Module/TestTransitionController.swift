@@ -338,7 +338,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
             "not_found.jpg",
             "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"
         ]
-        cycleView.imageURLStringsGroup = imageUrls
+        cycleView.imagesGroup = imageUrls
         cycleView.titlesGroup = ["1", "2", "3", "4"]
         
         let footerView = UIView()
