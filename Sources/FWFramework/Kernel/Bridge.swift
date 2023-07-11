@@ -64,6 +64,14 @@ import UIKit
 
 @_spi(FW) @objc extension UIView {
     
+    public static func __fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
+        return fw_progressView(style: style)
+    }
+
+    public static func __fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
+        return fw_indicatorView(style: style)
+    }
+    
     public func __fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
         return fw_statisticalTrackClick(indexPath: indexPath, event: event)
     }
@@ -78,11 +86,33 @@ import UIKit
     
 }
 
+@_spi(FW) @objc extension UIActivityIndicatorView {
+    
+    public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
+        return fw_indicatorView(color: color)
+    }
+    
+}
+
 @_spi(FW) @objc extension UIWindow {
     
     public static var __fw_mainWindow: UIWindow? {
         get { fw_mainWindow }
         set { fw_mainWindow = newValue }
+    }
+    
+}
+
+@_spi(FW) @objc extension UIImage {
+    
+    public var __fw_imageLoopCount: UInt {
+        get { fw_imageLoopCount }
+        set { fw_imageLoopCount = newValue }
+    }
+    
+    public var __fw_imageFormat: ImageFormat {
+        get { fw_imageFormat }
+        set { fw_imageFormat = newValue }
     }
     
 }
@@ -133,6 +163,14 @@ import UIKit
     
     public func __fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
         fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
+    }
+    
+    public func __fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
+        fw_showLoading(text: text, cancelBlock: cancelBlock)
+    }
+
+    public func __fw_hideLoading(delayed: Bool = false) {
+        fw_hideLoading(delayed: delayed)
     }
     
 }
