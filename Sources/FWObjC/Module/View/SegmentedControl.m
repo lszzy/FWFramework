@@ -1134,8 +1134,8 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     if (self.superview)
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     
-    if (self.indexChangeBlock)
-        self.indexChangeBlock(index);
+    if (self.indexChangedBlock)
+        self.indexChangedBlock(index);
     
     [self __fw_statisticalTrackClickWithIndexPath:[NSIndexPath indexPathForRow:index inSection:0] event:nil];
 }
