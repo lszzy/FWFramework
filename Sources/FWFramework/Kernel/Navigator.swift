@@ -108,7 +108,6 @@ public class Navigator: NSObject {
     
     // MARK: - Static
     /// 获取当前主window，可自定义
-    @objc(__fw_mainWindow)
     public static var fw_mainWindow: UIWindow? {
         get {
             var mainWindow = UIWindow.fw_staticWindow

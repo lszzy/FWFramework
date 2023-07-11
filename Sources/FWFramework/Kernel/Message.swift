@@ -347,7 +347,6 @@ import FWObjC
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听者
     @discardableResult
-    @objc(__fw_observeProperty:block:)
     public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
         let dict = fw_kvoTargets(true)
         var array = dict?[property] as? NSMutableArray
@@ -395,7 +394,6 @@ import FWObjC
     ///   - property: 属性名称
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    @objc(__fw_unobserveProperty:target:action:)
     public func fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
         guard let dict = fw_kvoTargets(false) else { return }
         

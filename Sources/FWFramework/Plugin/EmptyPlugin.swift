@@ -28,7 +28,6 @@ import FWObjC
     }
     
     /// 设置空界面外间距，默认zero
-    @objc(__fw_emptyInsets)
     public var fw_emptyInsets: UIEdgeInsets {
         get {
             var view = self
@@ -164,7 +163,6 @@ import FWObjC
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    @objc(__fw_showEmptyViewWithText:detail:image:action:block:)
     public func fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
         self.view.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }

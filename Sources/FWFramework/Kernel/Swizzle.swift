@@ -107,7 +107,6 @@ import FWObjC
     ///   - block: 实现句柄
     /// - Returns: 是否成功
     @discardableResult
-    @objc(__fw_swizzleMethod:selector:identifier:block:)
     public static func fw_swizzleMethod(
         _ target: Any?,
         selector: Selector,

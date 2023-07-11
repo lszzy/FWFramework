@@ -166,7 +166,6 @@ import FWObjC
     }
     
     /// 移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用
-    @objc(__fw_removeDefaultAnimations)
     public func fw_removeDefaultAnimations() {
         var actions: [String: CAAction] = [
             NSStringFromSelector(#selector(getter: bounds)): NSNull(),

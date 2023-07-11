@@ -24,7 +24,6 @@ import FWObjC
     /// - Parameters:
     ///   - clazz: 指定类
     /// - Returns: 方法列表
-    @objc(__fw_classMethods:)
     public static func fw_classMethods(_ clazz: AnyClass) -> [String] {
         let cacheKey = fw_classCacheKey(clazz, type: "M")
         if let cacheNames = NSObject.fw_classCaches[cacheKey] {
@@ -183,7 +182,6 @@ import FWObjC
     /// 如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
-    @objc(__fw_invokeGetter:)
     public func fw_invokeGetter(_ name: String) -> Any? {
         return __FWRuntime.invokeGetter(self, name: name)
     }
