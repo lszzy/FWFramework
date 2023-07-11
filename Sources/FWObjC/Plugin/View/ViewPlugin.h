@@ -74,4 +74,20 @@ NS_SWIFT_NAME(ViewPlugin)
 
 @end
 
+#pragma mark - UIActivityIndicatorView+__FWViewPlugin
+
+/// 系统指示器默认实现指示器视图协议
+@interface UIActivityIndicatorView (__FWViewPlugin) <__FWIndicatorViewPlugin, __FWProgressViewPlugin>
+
+/// 设置或获取指示器大小，默认中{20,20}，大{37,37}
+@property (nonatomic, assign) CGSize size;
+
+/// 指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:animated:
+@property (nonatomic, assign) CGFloat progress;
+
+/// 设置指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated;
+
+@end
+
 NS_ASSUME_NONNULL_END
