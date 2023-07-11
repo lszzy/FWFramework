@@ -30,7 +30,7 @@
 #import "ProgressView.h"
 #import "EmptyPluginImpl.h"
 #import "RefreshView.h"
-#import "ToastPluginImpl.h"
+#import "ToastView.h"
 #import "ImagePlugin.h"
 #import "AlertControllerImpl.h"
 #import "ImagePickerPluginImpl.h"
