@@ -50,7 +50,6 @@ import FWObjC
     }
     
     /// 统一进度视图工厂方法
-    @objc(__fw_progressViewWithStyle:)
     public static func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
         var plugin: ViewPlugin
         if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self),
@@ -63,7 +62,6 @@ import FWObjC
     }
 
     /// 统一指示器视图工厂方法
-    @objc(__fw_indicatorViewWithStyle:)
     public static func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         var plugin: ViewPlugin
         if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self),
@@ -80,7 +78,6 @@ import FWObjC
 @_spi(FW) extension UIActivityIndicatorView {
     
     /// 快速创建指示器，可指定颜色，默认白色
-    @objc(__fw_indicatorViewWithColor:)
     public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         var indicatorStyle: UIActivityIndicatorView.Style
         if #available(iOS 13.0, *) {

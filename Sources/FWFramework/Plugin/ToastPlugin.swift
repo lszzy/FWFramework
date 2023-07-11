@@ -28,7 +28,6 @@ import FWObjC
     }
     
     /// 设置吐司外间距，默认zero
-    @objc(__fw_toastInsets)
     public var fw_toastInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_toastInsets") as? NSValue {
@@ -210,13 +209,11 @@ import FWObjC
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    @objc(__fw_showLoadingWithText:cancel:)
     public func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
         fw_toastContainerView?.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
-    @objc(__fw_hideLoading:)
     public func fw_hideLoading(delayed: Bool = false) {
         fw_toastContainerView?.fw_hideLoading(delayed: delayed)
     }

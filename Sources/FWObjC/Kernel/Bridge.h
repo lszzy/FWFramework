@@ -309,7 +309,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIView ()
 
 @property (nonatomic, assign) UIEdgeInsets __fw_touchInsets;
-@property (nonatomic, assign) UIEdgeInsets __fw_toastInsets;
 
 @property (nonatomic, weak, readonly, nullable) UIViewController *__fw_viewController;
 
