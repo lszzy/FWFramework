@@ -52,7 +52,9 @@
 
     [self addSubview:self.backgroundView];
     [self addSubview:self.menuView];
+    self.backgroundView.__fw_autoScale = NO;
     [self.backgroundView __fw_pinEdgesToSuperview:UIEdgeInsetsZero];
+    self.menuView.__fw_autoScale = NO;
     [self.menuView __fw_pinHorizontalToSuperview:0];
     [self.menuView __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:self.topHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
     [self.menuView __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:self.bottomHeight relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
@@ -141,6 +143,7 @@
         _topView = [[UIView alloc] init];
         _topView.clipsToBounds = YES;
         [self addSubview:_topView];
+        _topView.__fw_autoScale = NO;
         [_topView __fw_pinHorizontalToSuperview:0];
         [_topView __fw_pinEdgeToSuperview:NSLayoutAttributeTop inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         [_topView __fw_pinEdge:NSLayoutAttributeBottom toEdge:NSLayoutAttributeTop ofView:self.menuView offset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
@@ -153,6 +156,7 @@
         _bottomView = [[UIView alloc] init];
         _bottomView.clipsToBounds = YES;
         [self addSubview:_bottomView];
+        _bottomView.__fw_autoScale = NO;
         [_bottomView __fw_pinHorizontalToSuperview:0];
         [_bottomView __fw_pinEdgeToSuperview:NSLayoutAttributeBottom inset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
         [_bottomView __fw_pinEdge:NSLayoutAttributeTop toEdge:NSLayoutAttributeBottom ofView:self.menuView offset:0 relation:NSLayoutRelationEqual priority:UILayoutPriorityRequired];
@@ -252,6 +256,7 @@
         self.clipsToBounds = YES;
         self.horizontalSpacing = 8;
         self.buttonSpacing = 8;
+        self.__fw_autoScale = NO;
     }
     return self;
 }
@@ -262,6 +267,7 @@
     if (_leftButton) [_leftButton removeFromSuperview];
     _leftButton = leftButton;
     if (leftButton) [self addSubview:leftButton];
+    leftButton.__fw_autoScale = NO;
     [self setNeedsUpdateConstraints];
 }
 
@@ -271,6 +277,7 @@
     if (_leftMoreButton) [_leftMoreButton removeFromSuperview];
     _leftMoreButton = leftMoreButton;
     if (leftMoreButton) [self addSubview:leftMoreButton];
+    leftMoreButton.__fw_autoScale = NO;
     [self setNeedsUpdateConstraints];
 }
 
@@ -280,6 +287,7 @@
     if (_centerButton) [_centerButton removeFromSuperview];
     _centerButton = centerButton;
     if (centerButton) [self addSubview:centerButton];
+    centerButton.__fw_autoScale = NO;
     [self setNeedsUpdateConstraints];
 }
 
@@ -289,6 +297,7 @@
     if (_rightMoreButton) [_rightMoreButton removeFromSuperview];
     _rightMoreButton = rightMoreButton;
     if (rightMoreButton) [self addSubview:rightMoreButton];
+    rightMoreButton.__fw_autoScale = NO;
     [self setNeedsUpdateConstraints];
 }
 
@@ -298,6 +307,7 @@
     if (_rightButton) [_rightButton removeFromSuperview];
     _rightButton = rightButton;
     if (rightButton) [self addSubview:rightButton];
+    rightButton.__fw_autoScale = NO;
     [self setNeedsUpdateConstraints];
 }
 
