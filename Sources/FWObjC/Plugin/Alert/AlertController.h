@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AlertPluginImpl.h"
+#import "AlertPlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -94,6 +94,8 @@ NS_SWIFT_NAME(AlertAction)
 @property (nonatomic, strong) UIColor *tintColor;
 /** 是否能点击,默认为YES */
 @property(nonatomic, getter=isEnabled) BOOL enabled;
+/** 是否是首选动作,默认为NO */
+@property(nonatomic, assign) BOOL isPreferred;
 /** action的标题颜色,这个颜色只是普通文本的颜色，富文本颜色需要用NSForegroundColorAttributeName */
 @property(nonatomic, strong) UIColor *titleColor;
 /** action的标题字体,如果文字太长显示不全，会自动改变字体自适应按钮宽度，最多压缩文字为原来的0.5倍封顶 */

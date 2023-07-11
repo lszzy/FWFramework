@@ -6,7 +6,6 @@
 //
 
 #import "ImagePickerController.h"
-#import "ImagePickerPluginImpl.h"
 #import "ImageCropController.h"
 #import "ToolbarView.h"
 #import "EmptyPlugin.h"
