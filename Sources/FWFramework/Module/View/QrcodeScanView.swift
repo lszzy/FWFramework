@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 
+// MARK: - QrcodeScanManager
 /// 扫码管理器
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
@@ -273,6 +274,302 @@ open class QrcodeScanManager: NSObject, AVCaptureMetadataOutputObjectsDelegate, 
         if let exifMetadata = metadata[kCGImagePropertyExifDictionary as String] as? NSDictionary,
            let brightnessValue = exifMetadata[kCGImagePropertyExifBrightnessValue as String] as? NSNumber {
             scanBrightnessBlock?(brightnessValue.doubleValue)
+        }
+    }
+    
+}
+
+// MARK: - QrcodeScanView
+/// 扫码边角位置枚举
+public enum QrcodeCornerLocation: Int {
+    /// 默认与边框线同中心点
+    case `default` = 0
+    /// 在边框线内部
+    case inside
+    /// 在边框线外部
+    case outside
+}
+
+/// 扫码动画样式枚举
+public enum QrcodeScanAnimationStyle: Int {
+    /// 单线扫描样式
+    case `default` = 0
+    /// 网格扫描样式
+    case grid
+}
+
+/// 扫码视图
+open class QrcodeScanView: UIView {
+    
+    // MARK: - Accessor
+    /// 扫描样式，默认 default
+    open var scanAnimationStyle: QrcodeScanAnimationStyle = .default
+    /// 扫描线名，支持NSString和UIImage，默认无
+    open var scanImage: Any?
+    /// 边框颜色，默认白色
+    open var borderColor: UIColor = .white
+    /// 边框frame，默认视图宽度*0.7，居中
+    open var borderFrame: CGRect = .zero
+    /// 边框宽度，默认0.2f
+    open var borderWidth: CGFloat = 0.2
+    /// 边角位置，默认 default
+    open var cornerLocation: QrcodeCornerLocation = .default
+    /// 边角颜色，默认微信颜色
+    open var cornerColor: UIColor = UIColor(red: 85.0 / 255.0, green: 183.0 / 255.0, blue: 55.0 / 255.0, alpha: 1.0)
+    /// 边角宽度，默认 2.f
+    open var cornerWidth: CGFloat = 2.0
+    /// 边角长度，默认20.f
+    open var cornerLength: CGFloat = 20
+    /// 扫描区周边颜色的 alpha 值，默认 0.5f
+    open var backgroundAlpha: CGFloat = 0.5
+    /// 扫描线动画时间，默认 0.02s
+    open var animationTimeInterval: CGFloat = 0.02
+    
+    private var timer: Timer?
+    private static var animationFlag: Bool = true
+    
+    // MARK: - Subviews
+    private lazy var contentView: UIView = {
+        let result = UIView()
+        result.frame = borderFrame
+        result.clipsToBounds = true
+        result.backgroundColor = .clear
+        return result
+    }()
+    
+    private lazy var scanningLine: UIImageView = {
+        let result = UIImageView()
+        if let image = scanImage as? UIImage {
+            result.image = image
+        } else if let imageName = scanImage as? String {
+            result.image = UIImage(named: imageName)
+        } else {
+            result.image = nil
+        }
+        return result
+    }()
+    
+    // MARK: - Lifecycle
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        backgroundColor = .clear
+        borderFrame = CGRect(x: 0.15 * frame.size.width, y: 0.5 * (frame.size.height - 0.7 * frame.size.width), width: 0.7 * frame.size.width, height: 0.7 * frame.size.width)
+    }
+    
+    open override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        /// 边框 frame
+        let borderW = borderFrame.size.width
+        let borderH = borderFrame.size.height
+        let borderX = borderFrame.origin.x
+        let borderY = borderFrame.origin.y
+        
+        /// 空白区域设置
+        UIColor.black.withAlphaComponent(backgroundAlpha).setFill()
+        UIRectFill(rect)
+        // 获取上下文，并设置混合模式 -> kCGBlendModeDestinationOut
+        let context = UIGraphicsGetCurrentContext()
+        context?.setBlendMode(.destinationOut)
+        // 设置空白区
+        let bezierPath = UIBezierPath(rect: CGRect(x: borderX + 0.5 * borderWidth, y: borderY + 0.5 * borderWidth, width: borderW - borderWidth, height: borderH - borderWidth))
+        bezierPath.fill()
+        // 执行混合模式
+        context?.setBlendMode(.normal)
+        
+        /// 边框设置
+        let borderPath = UIBezierPath(rect: CGRect(x: borderX, y: borderY, width: borderW, height: borderH))
+        borderPath.lineCapStyle = .butt
+        borderPath.lineWidth = borderWidth
+        borderColor.set()
+        borderPath.stroke()
+        
+        /// 左上角小图标
+        let leftTopPath = UIBezierPath()
+        leftTopPath.lineWidth = cornerWidth
+        cornerColor.set()
+        
+        let insideExcess = abs(0.5 * (cornerWidth - borderWidth))
+        let outsideExcess = 0.5 * (borderWidth + cornerWidth)
+        if (cornerLocation == .inside) {
+            leftTopPath.move(to: CGPoint(x: borderX + insideExcess, y: borderY + cornerLength + insideExcess))
+            leftTopPath.addLine(to: CGPoint(x: borderX + insideExcess, y: borderY + insideExcess))
+            leftTopPath.addLine(to: CGPoint(x: borderX + cornerLength + insideExcess, y: borderY + insideExcess))
+        } else if (cornerLocation == .outside) {
+            leftTopPath.move(to: CGPoint(x: borderX - outsideExcess, y: borderY + cornerLength - outsideExcess))
+            leftTopPath.addLine(to: CGPoint(x: borderX - outsideExcess, y: borderY - outsideExcess))
+            leftTopPath.addLine(to: CGPoint(x: borderX + cornerLength - outsideExcess, y: borderY - outsideExcess))
+        } else {
+            leftTopPath.move(to: CGPoint(x: borderX, y: borderY + cornerLength))
+            leftTopPath.addLine(to: CGPoint(x: borderX, y: borderY))
+            leftTopPath.addLine(to: CGPoint(x: borderX + cornerLength, y: borderY))
+        }
+        leftTopPath.stroke()
+        
+        /// 左下角小图标
+        let leftBottomPath = UIBezierPath()
+        leftBottomPath.lineWidth = cornerWidth
+        cornerColor.set()
+        
+        if (cornerLocation == .inside) {
+            leftBottomPath.move(to: CGPoint(x: borderX + cornerLength + insideExcess, y: borderY + borderH - insideExcess))
+            leftBottomPath.addLine(to: CGPoint(x: borderX + insideExcess, y: borderY + borderH - insideExcess))
+            leftBottomPath.addLine(to: CGPoint(x: borderX + insideExcess, y: borderY + borderH - cornerLength - insideExcess))
+        } else if (cornerLocation == .outside) {
+            leftBottomPath.move(to: CGPoint(x: borderX + cornerLength - outsideExcess, y: borderY + borderH + outsideExcess))
+            leftBottomPath.addLine(to: CGPoint(x: borderX - outsideExcess, y: borderY + borderH + outsideExcess))
+            leftBottomPath.addLine(to: CGPoint(x: borderX - outsideExcess, y: borderY + borderH - cornerLength + outsideExcess))
+        } else {
+            leftBottomPath.move(to: CGPoint(x: borderX + cornerLength, y: borderY + borderH))
+            leftBottomPath.addLine(to: CGPoint(x: borderX, y: borderY + borderH))
+            leftBottomPath.addLine(to: CGPoint(x: borderX, y: borderY + borderH - cornerLength))
+        }
+        leftBottomPath.stroke()
+        
+        /// 右上角小图标
+        let rightTopPath = UIBezierPath()
+        rightTopPath.lineWidth = cornerWidth
+        cornerColor.set()
+        
+        if (cornerLocation == .inside) {
+            rightTopPath.move(to: CGPoint(x: borderX + borderW - cornerLength - insideExcess, y: borderY + insideExcess))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW - insideExcess, y: borderY + insideExcess))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW - insideExcess, y: borderY + cornerLength + insideExcess))
+        } else if (cornerLocation == .outside) {
+            rightTopPath.move(to: CGPoint(x: borderX + borderW - cornerLength + outsideExcess, y: borderY - outsideExcess))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW + outsideExcess, y: borderY - outsideExcess))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW + outsideExcess, y: borderY + cornerLength - outsideExcess))
+        } else {
+            rightTopPath.move(to: CGPoint(x: borderX + borderW - cornerLength, y: borderY))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW, y: borderY))
+            rightTopPath.addLine(to: CGPoint(x: borderX + borderW, y: borderY + cornerLength))
+        }
+        rightTopPath.stroke()
+        
+        /// 右下角小图标
+        let rightBottomPath = UIBezierPath()
+        rightBottomPath.lineWidth = cornerWidth
+        cornerColor.set()
+        
+        if (cornerLocation == .inside) {
+            rightBottomPath.move(to: CGPoint(x: borderX + borderW - insideExcess, y: borderY + borderH - cornerLength - insideExcess))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW - insideExcess, y: borderY + borderH - insideExcess))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW - cornerLength - insideExcess, y: borderY + borderH - insideExcess))
+        } else if (cornerLocation == .outside) {
+            rightBottomPath.move(to: CGPoint(x: borderX + borderW + outsideExcess, y: borderY + borderH - cornerLength + outsideExcess))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW + outsideExcess, y: borderY + borderH + outsideExcess))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW - cornerLength + outsideExcess, y: borderY + borderH + outsideExcess))
+        } else {
+            rightBottomPath.move(to: CGPoint(x: borderX + borderW, y: borderY + borderH - cornerLength))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW, y: borderY + borderH))
+            rightBottomPath.addLine(to: CGPoint(x: borderX + borderW - cornerLength, y: borderY + borderH))
+        }
+        rightBottomPath.stroke()
+    }
+    
+    // MARK: - Public
+    /// 添加定时器
+    open func addTimer() {
+        removeTimer()
+        
+        var scanningLineX: CGFloat = 0
+        var scanningLineY: CGFloat = 0
+        var scanningLineW: CGFloat = 0
+        var scanningLineH: CGFloat = 0
+        if (scanAnimationStyle == .grid) {
+            addSubview(contentView)
+            contentView.addSubview(scanningLine)
+            scanningLineW = borderFrame.size.width
+            scanningLineH = borderFrame.size.height
+            scanningLineX = 0
+            scanningLineY = -borderFrame.size.height
+            scanningLine.frame = CGRectMake(scanningLineX, scanningLineY, scanningLineW, scanningLineH)
+        } else {
+            addSubview(scanningLine)
+            scanningLineW = borderFrame.size.width
+            scanningLineH = scanningLine.image?.size.height ?? 0
+            scanningLineX = borderFrame.origin.x
+            scanningLineY = borderFrame.origin.y
+            scanningLine.frame = CGRectMake(scanningLineX, scanningLineY, scanningLineW, scanningLineH)
+        }
+        
+        let timer = Timer(timeInterval: animationTimeInterval, target: self, selector: #selector(beginRefreshUI), userInfo: nil, repeats: true)
+        self.timer = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+    
+    /// 移除定时器
+    open func removeTimer() {
+        timer?.invalidate()
+        timer = nil
+        scanningLine.removeFromSuperview()
+    }
+    
+    // MARK: - Private
+    @objc private func beginRefreshUI() {
+        var frame: CGRect = scanningLine.frame
+        
+        if scanAnimationStyle == .grid {
+            if QrcodeScanView.animationFlag {
+                frame.origin.y = -borderFrame.size.height
+                QrcodeScanView.animationFlag = false
+                UIView.animate(withDuration: animationTimeInterval) { [weak self] in
+                    frame.origin.y += 2
+                    self?.scanningLine.frame = frame
+                }
+            } else {
+                if scanningLine.frame.origin.y >= -borderFrame.size.height {
+                    let scanMaxY: CGFloat = 0
+                    if scanningLine.frame.origin.y >= scanMaxY {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                            frame.origin.y = -(self?.borderFrame.size.height ?? 0)
+                            self?.scanningLine.frame = frame
+                            QrcodeScanView.animationFlag = true
+                        }
+                    } else {
+                        UIView.animate(withDuration: animationTimeInterval) { [weak self] in
+                            frame.origin.y += 2
+                            self?.scanningLine.frame = frame
+                        }
+                    }
+                } else {
+                    QrcodeScanView.animationFlag = !QrcodeScanView.animationFlag
+                }
+            }
+        } else {
+            if QrcodeScanView.animationFlag {
+                frame.origin.y = borderFrame.origin.y
+                QrcodeScanView.animationFlag = false
+                UIView.animate(withDuration: animationTimeInterval) { [weak self] in
+                    frame.origin.y += 2
+                    self?.scanningLine.frame = frame
+                }
+            } else {
+                if scanningLine.frame.origin.y >= borderFrame.origin.y {
+                    let scanMaxY: CGFloat = borderFrame.origin.y + borderFrame.size.height - (scanningLine.image?.size.height ?? 0)
+                    if scanningLine.frame.origin.y >= scanMaxY {
+                        frame.origin.y = borderFrame.origin.y
+                        scanningLine.frame = frame
+                        QrcodeScanView.animationFlag = true
+                    } else {
+                        UIView.animate(withDuration: animationTimeInterval) { [weak self] in
+                            frame.origin.y += 2
+                            self?.scanningLine.frame = frame
+                        }
+                    }
+                } else {
+                    QrcodeScanView.animationFlag = !QrcodeScanView.animationFlag
+                }
+            }
         }
     }
     
