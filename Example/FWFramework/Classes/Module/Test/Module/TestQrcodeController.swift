@@ -16,7 +16,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
     private lazy var scanView: QrcodeScanView = {
         let result = QrcodeScanView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight))
-        result.scanImageName = ModuleBundle.imageNamed("qrcodeLine")
+        result.scanImage = ModuleBundle.imageNamed("qrcodeLine")
         return result
     }()
     
@@ -37,43 +37,41 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         let labelY = 0.5 * APP.screenHeight + 0.35 * view.frame.width + 12
         let result = UILabel(frame: CGRect(x: 0, y: labelY, width: APP.screenWidth, height: 20))
         result.font = UIFont.systemFont(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = .white
         result.textAlignment = .center
         result.text = "将二维码/条码放入框内, 即可自动扫描"
         return result
     }()
     
     func setupNavbar() {
-        app.navigationBarStyle = .transparent
+        let appearance = NavigationBarAppearance()
+        appearance.foregroundColor = .white
+        appearance.backgroundTransparent = true
+        appearance.leftBackImage = Icon.backImage
+        app.navigationBarAppearance = appearance
         app.extendedLayoutEdge = .top
+        
         navigationItem.title = "扫一扫"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "相册", style: .done, target: self, action: #selector(TestQrcodeController.onPhotoLibrary))
     }
     
     func setupSubviews() {
-        let status = AuthorizeManager.manager(type: .camera)?.authorizeStatus() ?? .restricted
-        if status == .restricted || status == .denied {
-            self.app.showConfirm(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil, cancel: "取消", confirm: "设置") {
-                UIApplication.app.openAppSettings()
-            }
-        } else {
-            self.setupScanManager()
-            self.view.addSubview(self.scanView)
-            self.view.addSubview(self.promptLabel)
-            
-            // 由于异步授权，viewWillAppear时可能未完成，此处调用start
-            self.startScanManager()
-        }
+        #if !targetEnvironment(simulator)
+        setupScanManager()
+        #endif
+        view.backgroundColor = .black
+        view.addSubview(scanView)
+        view.addSubview(promptLabel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.startScanManager()
+        startScanManager()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.stopScanManager()
+        stopScanManager()
     }
     
     deinit {

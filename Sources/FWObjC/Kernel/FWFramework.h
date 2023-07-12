@@ -20,7 +20,6 @@
 #import "PageControl.h"
 #import "PasscodeView.h"
 #import "PopupMenu.h"
-#import "QrcodeScanView.h"
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
