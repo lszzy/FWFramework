@@ -84,7 +84,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         let scanManager = QrcodeScanManager()
         self.scanManager = scanManager
         scanManager.sampleBufferDelegate = true
-        scanManager.scanQrcode(with: view)
+        scanManager.scanQrcode(view: view)
         
         scanManager.scanResultBlock = { [weak self] result in
             guard let result = result else { return }
@@ -159,7 +159,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 image = image?.app.compressImage(maxWidth: 1200)
                 image = image?.app.compressImage(maxLength: 300 * 1024)
                 if let image = image,
-                   let result = QrcodeScanManager.scanQrcode(with: image) {
+                   let result = QrcodeScanManager.scanQrcode(image: image) {
                     self?.onScanResult(result)
                 }
             }
