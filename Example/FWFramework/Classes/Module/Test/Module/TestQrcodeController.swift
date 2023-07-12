@@ -153,15 +153,23 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
             if cancel {
                 self?.startScanManager()
             } else {
-                var image = objects.first as? UIImage
-                image = image?.app.compressImage(maxWidth: 1200)
-                image = image?.app.compressImage(maxLength: 300 * 1024)
-                if let image = image,
-                   let result = QrcodeScanManager.scanQrcode(image: image) {
-                    self?.onScanResult(result)
-                } else {
-                    self?.app.showMessage(text: "识别失败")
-                    self?.startScanManager()
+                self?.app.showLoading(text: "识别中...")
+                DispatchQueue.global().async {
+                    var image = objects.first as? UIImage
+                    image = image?.app.compressImage(maxWidth: 1200)
+                    image = image?.app.compressImage(maxLength: 300 * 1024)
+                    let result = image != nil ? QrcodeScanManager.scanQrcode(image: image!) : nil
+                    
+                    DispatchQueue.main.async {
+                        self?.app.hideLoading()
+                        
+                        if let result = result {
+                            self?.onScanResult(result)
+                        } else {
+                            self?.app.showMessage(text: "识别失败")
+                            self?.startScanManager()
+                        }
+                    }
                 }
             }
         }
