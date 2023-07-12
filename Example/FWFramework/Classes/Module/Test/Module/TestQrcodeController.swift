@@ -159,6 +159,9 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 if let image = image,
                    let result = QrcodeScanManager.scanQrcode(image: image) {
                     self?.onScanResult(result)
+                } else {
+                    self?.app.showMessage(text: "识别失败")
+                    self?.startScanManager()
                 }
             }
         }
