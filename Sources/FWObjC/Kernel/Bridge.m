@@ -391,21 +391,21 @@
 
 + (void)applyAppearance:(NSObject *)object {
     Class class = [object class];
-    if ([class respondsToSelector:@selector(appearance)]) {
-        SEL appearanceGuideClassSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@%@", @"_a", @"ppearanceG", @"uideClass"]);
-        if (!class_respondsToSelector(class, appearanceGuideClassSelector)) {
-            const char * typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.class, appearanceGuideClassSelector));
-            class_addMethod(class, appearanceGuideClassSelector, imp_implementationWithBlock(^Class(void) {
-                return nil;
-            }), typeEncoding);
-        }
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        SEL selector = NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:", @"applyInvocationsTo", @"window"]);
-        [NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"_U", @"IAppea", @"rance"]) performSelector:selector withObject:object withObject:nil];
-#pragma clang diagnostic pop
+    if (![class respondsToSelector:@selector(appearance)]) return;
+    
+    SEL appearanceGuideClassSelector = NSSelectorFromString([NSString stringWithFormat:@"%@%@%@", @"_a", @"ppearanceG", @"uideClass"]);
+    if (!class_respondsToSelector(class, appearanceGuideClassSelector)) {
+        const char * typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.class, appearanceGuideClassSelector));
+        class_addMethod(class, appearanceGuideClassSelector, imp_implementationWithBlock(^Class(void) {
+            return nil;
+        }), typeEncoding);
     }
+    
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:", @"applyInvocationsTo", @"window"]);
+    [NSClassFromString([NSString stringWithFormat:@"%@%@%@", @"_U", @"IAppea", @"rance"]) performSelector:selector withObject:object withObject:nil];
+    #pragma clang diagnostic pop
 }
 
 + (NSArray<Class> *)getClasses:(Class)superClass {

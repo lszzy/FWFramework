@@ -10,7 +10,7 @@ import UIKit
 // MARK: - NSObject+Appearance
 extension Wrapper where Base: NSObject {
     
-    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
+    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用，自动触发setDefaultAppearance
     public func applyAppearance() {
         base.fw_applyAppearance()
     }
