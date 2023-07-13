@@ -12,6 +12,7 @@ import SDWebImage
 class TestImageController: UIViewController, TableViewControllerProtocol {
     
     var isSDWebImage: Bool = false
+    var timeString = "?t=\(Date.app.currentTime)"
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -84,23 +85,16 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
         let fileName = tableData[indexPath.row] as? String ?? ""
         cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(from: (fileName as NSString).pathExtension))
         if !fileName.app.isValid(.isUrl) {
-            cell.app.tempObject = fileName
             DispatchQueue.global().async {
                 let image = ModuleBundle.imageNamed(fileName)
                 let decodeImage = UIImage.app.image(data: UIImage.app.data(image: image))
                 DispatchQueue.main.async {
-                    if let tempObject = cell.app.tempObject as? String, tempObject == fileName {
-                        cell.systemView.app.setImage(url: nil, placeholderImage: image)
-                        cell.animatedView.app.setImage(url: nil, placeholderImage: decodeImage)
-                    }
+                    cell.systemView.app.setImage(url: nil, placeholderImage: image)
+                    cell.animatedView.app.setImage(url: nil, placeholderImage: decodeImage)
                 }
             }
         } else {
-            cell.app.tempObject = nil
-            var url = fileName
-            if url.hasPrefix("http://kvm.wuyong.site") {
-                url = url.appending("?t=\(Date.app.currentTime)")
-            }
+            let url = fileName.appending(timeString)
             cell.systemView.app.setImage(url: url)
             cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage())
         }
