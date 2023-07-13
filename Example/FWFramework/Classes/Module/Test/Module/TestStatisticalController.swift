@@ -152,11 +152,11 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             .size(CGSize(width: 100, height: 100))
         
         testView.app.addTapGesture { [weak self] _ in
-            self?.bannerView.scroll(to: 0)
+            self?.bannerView.scrollToIndex(0)
         }
         
         testButton.app.addTouch { [weak self] _ in
-            self?.bannerView.scroll(to: 1)
+            self?.bannerView.scrollToIndex(1)
         }
         
         testSwitch.app.addBlock({ [weak self] _ in
@@ -179,7 +179,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         
         self.segmentedControl.indexChangedBlock = { [weak self] index in
-            self?.bannerView.scroll(to: 2)
+            self?.bannerView.scrollToIndex(2)
         }
     }
     
