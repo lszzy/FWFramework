@@ -119,15 +119,4 @@ NS_SWIFT_NAME(PlaceholderView)
 
 @end
 
-#pragma mark - __FWScrollOverlayView
-
-/// 滚动视图自定义浮层视图
-NS_SWIFT_NAME(ScrollOverlayView)
-@interface __FWScrollOverlayView : UIView
-
-/// 添加到父视图时是否执行动画，默认NO
-@property (nonatomic, assign) BOOL fadeAnimated;
-
-@end
-
 NS_ASSUME_NONNULL_END

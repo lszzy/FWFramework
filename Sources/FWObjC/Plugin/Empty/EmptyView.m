@@ -385,25 +385,3 @@
 }
 
 @end
-
-#pragma mark - __FWScrollOverlayView
-
-@implementation __FWScrollOverlayView
-
-- (void)didMoveToSuperview
-{
-    [super didMoveToSuperview];
-    
-    if (self.fadeAnimated) {
-        self.fadeAnimated = NO;
-        self.alpha = 0;
-        self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height);
-        [UIView animateWithDuration:0.25 animations:^{
-            self.alpha = 1.0;
-        } completion:NULL];
-    } else {
-        self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height);
-    }
-}
-
-@end
