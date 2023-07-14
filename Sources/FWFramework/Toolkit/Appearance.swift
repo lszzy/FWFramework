@@ -11,16 +11,6 @@ import FWObjC
 #endif
 
 // MARK: - Appearance
-/// UIAppearance扩展协议，配合applyAppearance使用
-///
-/// 注意：属性必须标记为\@objc和dynamic才生效
-public protocol AppearanceProtocol {
-    
-    /// 初始化默认UIAppearance，调用applyAppearance时自动触发
-    static func setDefaultAppearance()
-    
-}
-
 /// UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力
 ///
 /// 系统默认时机是在didMoveToWindow处理UIAppearance
@@ -46,23 +36,13 @@ public class Appearance: NSObject {
         return __FWRuntime.class(forAppearance: appearance)
     }
     
-    /// 初始化 appearance 类默认样式，需实现AppearanceProtocol协议，会自动调用一次setDefaultAppearance
-    public static func setup(for aClass: AnyClass) {
-        guard let appearance = aClass as? AppearanceProtocol.Type else { return }
-        guard __FWRuntime.getProperty(aClass, forName: "setDefaultAppearance") == nil else { return }
-        __FWRuntime.setPropertyPolicy(aClass, with: NSNumber(value: true), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: "setDefaultAppearance")
-        
-        appearance.setDefaultAppearance()
-    }
-    
 }
 
 // MARK: - NSObject+Appearance
 @_spi(FW) extension NSObject {
     
-    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用，自动触发setDefaultAppearance
+    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
     public func fw_applyAppearance() {
-        Appearance.setup(for: classForCoder)
         __FWRuntime.applyAppearance(self)
     }
     
