@@ -36,8 +36,8 @@ open class PlaceholderView: UIView {
     open var textLabelInsets: UIEdgeInsets = .init(top: 0, left: 0, bottom: 10, right: 0) {
         didSet { setNeedsLayout() }
     }
-    /// 详细文本视图间距，默认为(0, 0, 16, 0)
-    open var detailTextLabelInsets: UIEdgeInsets = .init(top: 0, left: 0, bottom: 16, right: 0) {
+    /// 详细文本视图间距，默认为(0, 0, 14, 0)
+    open var detailTextLabelInsets: UIEdgeInsets = .init(top: 0, left: 0, bottom: 14, right: 0) {
         didSet { setNeedsLayout() }
     }
     /// 动作按钮间距，默认为(0, 0, 0, 0)
