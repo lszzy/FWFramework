@@ -46,6 +46,15 @@ public class Appearance: NSObject {
         return __FWRuntime.class(forAppearance: appearance)
     }
     
+    /// 初始化 appearance 类默认样式，需实现AppearanceProtocol协议，会自动调用一次setDefaultAppearance
+    public static func setup(for aClass: AnyClass) {
+        guard let appearance = aClass as? AppearanceProtocol.Type else { return }
+        guard __FWRuntime.getProperty(aClass, forName: "setDefaultAppearance") == nil else { return }
+        __FWRuntime.setPropertyPolicy(aClass, with: NSNumber(value: true), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: "setDefaultAppearance")
+        
+        appearance.setDefaultAppearance()
+    }
+    
 }
 
 // MARK: - NSObject+Appearance
@@ -53,13 +62,7 @@ public class Appearance: NSObject {
     
     /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用，自动触发setDefaultAppearance
     public func fw_applyAppearance() {
-        if let appearanceClass = classForCoder as? AppearanceProtocol.Type,
-           __FWRuntime.getProperty(classForCoder, forName: "fw_applyAppearance") == nil {
-            __FWRuntime.setPropertyPolicy(classForCoder, with: NSNumber(value: true), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: "fw_applyAppearance")
-            
-            appearanceClass.setDefaultAppearance()
-        }
-        
+        Appearance.setup(for: classForCoder)
         __FWRuntime.applyAppearance(self)
     }
     
