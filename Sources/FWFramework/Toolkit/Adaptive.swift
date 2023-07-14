@@ -88,18 +88,6 @@ extension WrapperGlobal {
     public static func relative(_ value: CGFloat, flat: Bool = false) -> CGFloat {
         return UIScreen.fw_relativeValue(value, flat: flat)
     }
-    /// 获取相对设计图高度等比例缩放值
-    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
-        return UIScreen.fw_relativeHeight(value, flat: flat)
-    }
-    /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public static func fixed(_ value: CGFloat, flat: Bool = false) -> CGFloat {
-        return UIScreen.fw_fixedValue(value, flat: flat)
-    }
-    /// 获取相对设计图高度等比例缩放时的固定高度值
-    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
-        return UIScreen.fw_fixedHeight(value, flat: flat)
-    }
     /// 获取相对设计图等比例缩放size
     public static func relative(_ size: CGSize, flat: Bool = false) -> CGSize {
         return CGSize(width: relative(size.width, flat: flat), height: relative(size.height, flat: flat))
@@ -116,27 +104,53 @@ extension WrapperGlobal {
     public static func relative(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
         return UIEdgeInsets(top: relative(insets.top, flat: flat), left: relative(insets.left, flat: flat), bottom: relative(insets.bottom, flat: flat), right: relative(insets.right, flat: flat))
     }
+    
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public static func fixed(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return UIScreen.fw_fixedValue(value, flat: flat)
+    }
+    /// 获取相对设计图等比例缩放时的固定size
+    public static func fixed(_ size: CGSize, flat: Bool = false) -> CGSize {
+        return CGSize(width: fixed(size.width, flat: flat), height: fixed(size.height, flat: flat))
+    }
+    /// 获取相对设计图等比例缩放时的固定point
+    public static func fixed(_ point: CGPoint, flat: Bool = false) -> CGPoint {
+        return CGPoint(x: fixed(point.x, flat: flat), y: fixed(point.y, flat: flat))
+    }
+    /// 获取相对设计图等比例缩放时的固定rect
+    public static func fixed(_ rect: CGRect, flat: Bool = false) -> CGRect {
+        return CGRect(origin: fixed(rect.origin, flat: flat), size: fixed(rect.size, flat: flat))
+    }
+    /// 获取相对设计图等比例缩放时的固定insets
+    public static func fixed(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
+        return UIEdgeInsets(top: fixed(insets.top, flat: flat), left: fixed(insets.left, flat: flat), bottom: fixed(insets.bottom, flat: flat), right: fixed(insets.right, flat: flat))
+    }
+    
+    /// 获取相对设计图高度等比例缩放值
+    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return UIScreen.fw_relativeHeight(value, flat: flat)
+    }
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        return UIScreen.fw_fixedHeight(value, flat: flat)
+    }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flat(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         return UIScreen.fw_flatValue(value, scale: scale)
     }
-    
     /// 基于指定的倍数(0取当前设备)，对传进来的size进行像素取整
     public static func flat(_ size: CGSize, scale: CGFloat = 0) -> CGSize {
         return CGSize(width: flat(size.width, scale: scale), height: flat(size.height, scale: scale))
     }
-    
     /// 基于指定的倍数(0取当前设备)，对传进来的point进行像素取整
     public static func flat(_ point: CGPoint, scale: CGFloat = 0) -> CGPoint {
         return CGPoint(x: flat(point.x, scale: scale), y: flat(point.y, scale: scale))
     }
-    
     /// 基于指定的倍数(0取当前设备)，对传进来的rect进行像素取整
     public static func flat(_ rect: CGRect, scale: CGFloat = 0) -> CGRect {
         return CGRect(origin: flat(rect.origin, scale: scale), size: flat(rect.size, scale: scale))
     }
-    
     /// 基于指定的倍数(0取当前设备)，对传进来的insets进行像素取整
     public static func flat(_ insets: UIEdgeInsets, scale: CGFloat = 0) -> UIEdgeInsets {
         return UIEdgeInsets(top: flat(insets.top, scale: scale), left: flat(insets.left, scale: scale), bottom: flat(insets.bottom, scale: scale), right: flat(insets.right, scale: scale))

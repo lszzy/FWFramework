@@ -19,12 +19,6 @@ extension WrapperCompatible {
     
 }
 
-extension UIView {
-    
-    public var chain: LayoutChain { fw_layoutChain }
-    
-}
-
 // MARK: - AppTheme
 extension NavigationBarStyle {
     
