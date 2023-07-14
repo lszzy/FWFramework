@@ -43,7 +43,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     private var emptyViewTag: Int = 2021
     
     // MARK: - EmptyPlugin
-    open func showEmptyView(withText text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView) {
+    open func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView) {
         var emptyText = text
         if !loading, emptyText == nil, defaultText != nil {
             emptyText = defaultText?()
@@ -98,7 +98,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
     }
     
-    open func hideEmpty(_ view: UIView) {
+    open func hideEmptyView(_ view: UIView) {
         guard let emptyView = view.fw_subview(tag: emptyViewTag) else { return }
         
         if let overlayView = emptyView.superview as? ScrollOverlayView {
@@ -109,7 +109,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
     }
     
-    open func showingEmpty(_ view: UIView) -> UIView? {
+    open func showingEmptyView(_ view: UIView) -> UIView? {
         let emptyView = view.fw_subview(tag: emptyViewTag)
         return emptyView
     }

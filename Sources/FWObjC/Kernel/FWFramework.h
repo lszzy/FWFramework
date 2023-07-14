@@ -25,7 +25,6 @@
 
 #import "IndicatorView.h"
 #import "ProgressView.h"
-#import "EmptyView.h"
 #import "RefreshView.h"
 #import "ToastView.h"
 #import "ImagePlugin.h"
