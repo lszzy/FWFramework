@@ -19,7 +19,7 @@ extension CGFloat {
     /// 获取相对设计图高度等比例缩放时的固定高度值
     public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(self) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { return UIScreen.fw_flatValue(self) }
+    public var flat: CGFloat { UIScreen.fw_flatValue(self) }
     
 }
 
@@ -64,6 +64,51 @@ extension UIEdgeInsets {
     public var fixed: UIEdgeInsets { UIEdgeInsets(top: top.fixed, left: left.fixed, bottom: bottom.fixed, right: right.fixed) }
     /// 获取基于当前设备的倍数像素取整insets
     public var flat: UIEdgeInsets { UIEdgeInsets(top: top.flat, left: left.flat, bottom: bottom.flat, right: right.flat) }
+    
+}
+
+extension Int {
+    
+    /// 获取相对设计图宽度等比例缩放值
+    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放值
+    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
+    /// 获取基于当前设备的倍数像素取整值
+    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
+    
+}
+
+extension Float {
+    
+    /// 获取相对设计图宽度等比例缩放值
+    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放值
+    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
+    /// 获取基于当前设备的倍数像素取整值
+    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
+    
+}
+
+extension Double {
+    
+    /// 获取相对设计图宽度等比例缩放值
+    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放值
+    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
+    /// 获取相对设计图高度等比例缩放时的固定高度值
+    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
+    /// 获取基于当前设备的倍数像素取整值
+    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
     
 }
 
