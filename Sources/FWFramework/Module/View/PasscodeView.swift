@@ -149,36 +149,28 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     // MARK: - Lifecycle
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
     public init(codeLength: Int) {
         super.init(frame: .zero)
         self.codeLength = codeLength
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
     deinit {
         removeNotificationObserver()
-    }
-    
-    private func didInitialize() {
-        backgroundColor = .clear
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.reloadAllCells(animated: false)
-        }
     }
 
     // MARK: - Public
@@ -208,6 +200,8 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
             textField.text = cellProperty.originValue
             textDidChange(textField)
         }
+        
+        reloadAllCells()
         
         if beginEdit {
             self.beginEdit()
@@ -425,14 +419,14 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    private func reloadAllCells(animated: Bool = true) {
+    private func reloadAllCells() {
         collectionView.reloadData()
         
         let focusIndex = valueArray.count
         if focusIndex == codeLength {
-            collectionView.scrollToItem(at: IndexPath(row: focusIndex - 1, section: 0), at: .right, animated: animated)
+            collectionView.scrollToItem(at: IndexPath(row: focusIndex - 1, section: 0), at: .right, animated: true)
         } else {
-            collectionView.scrollToItem(at: IndexPath(row: focusIndex, section: 0), at: .centeredHorizontally, animated: animated)
+            collectionView.scrollToItem(at: IndexPath(row: focusIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     
