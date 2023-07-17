@@ -129,7 +129,6 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     private lazy var textField: UITextField = {
         let result = UITextField()
         result.fw_menuDisabled = true
-        result.keyboardType = keyboardType
         result.delegate = self
         result.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
         return result
@@ -162,10 +161,10 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     public init(codeLength: Int) {
         super.init(frame: .zero)
+        self.codeLength = codeLength
         
         didInitialize()
         addNotificationObserver()
-        self.codeLength = codeLength
     }
     
     deinit {
@@ -176,6 +175,11 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     /// 你可以在继承的子类中调用父类方法
     open func didInitialize() {
         backgroundColor = .clear
+        textField.keyboardType = keyboardType
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadAllCells()
+        }
     }
 
     /// 你可以在继承的子类中重写父类方法
