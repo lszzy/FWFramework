@@ -177,7 +177,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         backgroundColor = .clear
         
         DispatchQueue.main.async { [weak self] in
-            self?.reloadAllCells()
+            self?.reloadAllCells(animated: false)
         }
     }
 
@@ -425,14 +425,14 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    private func reloadAllCells() {
+    private func reloadAllCells(animated: Bool = true) {
         collectionView.reloadData()
         
         let focusIndex = valueArray.count
         if focusIndex == codeLength {
-            collectionView.scrollToItem(at: IndexPath(row: focusIndex - 1, section: 0), at: .right, animated: true)
+            collectionView.scrollToItem(at: IndexPath(row: focusIndex - 1, section: 0), at: .right, animated: animated)
         } else {
-            collectionView.scrollToItem(at: IndexPath(row: focusIndex, section: 0), at: .centeredHorizontally, animated: true)
+            collectionView.scrollToItem(at: IndexPath(row: focusIndex, section: 0), at: .centeredHorizontally, animated: animated)
         }
     }
     
