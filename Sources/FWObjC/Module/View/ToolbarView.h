@@ -9,57 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWToolbarMenuView
+#pragma mark - __FWToolbarTitleView
 
 @class __FWToolbarTitleView;
-
-/**
- * 自定义工具栏菜单视图，使用非等比例缩放布局，支持完全自定义，默认最多只支持左右各两个按钮，如需更多按钮，请自行添加。
- *
- * 水平分割时，按钮水平等分；非水平分割时，左右侧间距为8，同系统一致
- */
-NS_SWIFT_NAME(ToolbarMenuView)
-@interface __FWToolbarMenuView : UIView
-
-/// 自定义左侧按钮，设置后才显示，非等分时左侧间距为8。建议使用__FWToolbarButton
-@property (nonatomic, strong, nullable) __kindof UIView *leftButton;
-
-/// 自定义左侧更多按钮，设置后才显示，非等分时左侧间距为8。建议使用__FWToolbarButton
-@property (nonatomic, strong, nullable) __kindof UIView *leftMoreButton;
-
-/// 自定义居中按钮，设置后才显示，非等分时左右最大间距为0。建议使用__FWToolbarTitleView或__FWToolbarButton
-@property (nonatomic, strong, nullable) __kindof UIView *centerButton;
-
-/// 自定义右侧更多按钮，设置后才显示，非等分时右侧间距为8。建议使用__FWToolbarButton
-@property (nonatomic, strong, nullable) __kindof UIView *rightMoreButton;
-
-/// 自定义右侧按钮，设置后才显示，非等分时右侧间距为8。建议使用__FWToolbarButton
-@property (nonatomic, strong, nullable) __kindof UIView *rightButton;
-
-/// 是否等宽布局(类似UITabBar)，不含安全区域；默认NO，左右布局(类似UIToolbar|UINavigationBar)
-@property (nonatomic, assign) BOOL equalWidth;
-
-/// 是否支持等宽布局时纵向溢出显示，可用于实现TabBar不规则按钮等，默认NO
-@property (nonatomic, assign) BOOL verticalOverflow;
-
-/// 是否左对齐，仅左右布局时生效，默认NO居中对齐
-@property (nonatomic, assign) BOOL alignmentLeft;
-
-/// 设置左右侧间距，默认为8，同系统一致
-@property (nonatomic, assign) CGFloat horizontalSpacing;
-
-/// 设置按钮间距，默认8，同系统一致
-@property (nonatomic, assign) CGFloat buttonSpacing;
-
-/// 快捷访问__FWToolbarTitleView标题视图，同centerButton
-@property (nonatomic, strong, nullable) __FWToolbarTitleView *titleView;
-
-/// 快捷访问标题，titleView类型为__FWToolbarTitleViewProtocol时才生效
-@property (nonatomic, copy, nullable) NSString *title;
-
-@end
-
-#pragma mark - __FWToolbarTitleView
 
 /// 自定义titleView协议
 NS_SWIFT_NAME(TitleViewProtocol)
