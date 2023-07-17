@@ -16,7 +16,6 @@
 #import "AttributedLabel.h"
 #import "BarrageView.h"
 #import "CollectionViewFlowLayout.h"
-#import "PasscodeView.h"
 #import "PopupMenu.h"
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
