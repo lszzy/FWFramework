@@ -149,28 +149,36 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     // MARK: - Lifecycle
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .clear
         
+        didInitialize()
         addNotificationObserver()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        backgroundColor = .clear
         
+        didInitialize()
         addNotificationObserver()
     }
     
     public init(codeLength: Int) {
         super.init(frame: .zero)
         self.codeLength = codeLength
-        backgroundColor = .clear
         
+        didInitialize()
         addNotificationObserver()
     }
     
     deinit {
         removeNotificationObserver()
+    }
+    
+    private func didInitialize() {
+        backgroundColor = .clear
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadAllCells()
+        }
     }
 
     // MARK: - Public
@@ -203,8 +211,6 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         if beginEdit {
             self.beginEdit()
-        } else {
-            reloadAllCells()
         }
     }
 
