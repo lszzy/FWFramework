@@ -202,10 +202,10 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
             textDidChange(textField)
         }
         
-        reloadAllCells()
-        
         if beginEdit {
             self.beginEdit()
+        } else {
+            reloadAllCells()
         }
     }
 
