@@ -64,9 +64,10 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     open var securityDelay: TimeInterval = 0
 
     /// 键盘类型，默认: UIKeyboardTypeNumberPad
-    open var keyboardType: UIKeyboardType {
-        get { textField.keyboardType }
-        set { textField.keyboardType = newValue }
+    open var keyboardType: UIKeyboardType = .numberPad {
+        didSet {
+            textField.keyboardType = keyboardType
+        }
     }
 
     /// 输入样式，默认: PasscodeInputTypeNumber
@@ -77,8 +78,9 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
 
     /// textContentType，描述: 你可以设置为 'nil' 或者 'UITextContentTypeOneTimeCode' 来自动获取短信验证码，默认: nil
     open var textContentType: UITextContentType? {
-        get { textField.textContentType }
-        set { textField.textContentType = newValue }
+        didSet {
+            textField.textContentType = textContentType
+        }
     }
 
     /// 占位字符填充值，在对应的输入框没有内容时，会显示该值。默认：nil
@@ -113,24 +115,25 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         return result
     }()
     
-    private lazy var textField: UITextField = {
-        let result = UITextField()
-        result.fw_menuDisabled = true
-        result.delegate = self
-        result.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
-        return result
-    }()
-    
     open var cellProperty: PasscodeCellProperty = .init()
     
     open var textValue: String {
         return textField.text ?? ""
     }
     
-    open override var inputAccessoryView: UIView? {
+    open var textAccessoryView: UIView? {
         get { textField.inputAccessoryView }
         set { textField.inputAccessoryView = newValue }
     }
+    
+    private lazy var textField: UITextField = {
+        let result = UITextField()
+        result.fw_menuDisabled = true
+        result.keyboardType = keyboardType
+        result.delegate = self
+        result.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
+        return result
+    }()
     
     private lazy var tapGesture: UITapGestureRecognizer = {
         let result = UITapGestureRecognizer(target: self, action: #selector(textFieldBeginEdit))
@@ -159,10 +162,10 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     public init(codeLength: Int) {
         super.init(frame: .zero)
-        self.codeLength = codeLength
         
         didInitialize()
         addNotificationObserver()
+        self.codeLength = codeLength
     }
     
     deinit {
@@ -173,7 +176,6 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     /// 你可以在继承的子类中调用父类方法
     open func didInitialize() {
         backgroundColor = .clear
-        textField.keyboardType = .numberPad
     }
 
     /// 你可以在继承的子类中重写父类方法
