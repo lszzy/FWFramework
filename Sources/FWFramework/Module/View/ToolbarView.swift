@@ -284,6 +284,284 @@ open class ToolbarView: UIView {
     
 }
 
+// MARK: - ToolbarMenuView
+/// 自定义工具栏菜单视图，使用非等比例缩放布局，支持完全自定义，默认最多只支持左右各两个按钮，如需更多按钮，请自行添加。
+///
+/// 水平分割时，按钮水平等分；非水平分割时，左右侧间距为8，同系统一致
+open class ToolbarMenuView: UIView {
+    
+    // MARK: - Accessor
+    /// 自定义左侧按钮，设置后才显示，非等分时左侧间距为8。建议使用ToolbarButton
+    open var leftButton: UIView? {
+        didSet {
+            guard leftButton != oldValue else { return }
+            
+            oldValue?.removeFromSuperview()
+            if let leftButton = leftButton {
+                addSubview(leftButton)
+                leftButton.fw_autoScale = false
+            }
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 自定义左侧更多按钮，设置后才显示，非等分时左侧间距为8。建议使用ToolbarButton
+    open var leftMoreButton: UIView? {
+        didSet {
+            guard leftMoreButton != oldValue else { return }
+            
+            oldValue?.removeFromSuperview()
+            if let leftMoreButton = leftMoreButton {
+                addSubview(leftMoreButton)
+                leftMoreButton.fw_autoScale = false
+            }
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 自定义居中按钮，设置后才显示，非等分时左右最大间距为0。建议使用ToolbarTitleView或ToolbarButton
+    open var centerButton: UIView? {
+        didSet {
+            guard centerButton != oldValue else { return }
+            
+            oldValue?.removeFromSuperview()
+            if let centerButton = centerButton {
+                addSubview(centerButton)
+                centerButton.fw_autoScale = false
+            }
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 自定义右侧更多按钮，设置后才显示，非等分时右侧间距为8。建议使用ToolbarButton
+    open var rightMoreButton: UIView? {
+        didSet {
+            guard rightMoreButton != oldValue else { return }
+            
+            oldValue?.removeFromSuperview()
+            if let rightMoreButton = rightMoreButton {
+                addSubview(rightMoreButton)
+                rightMoreButton.fw_autoScale = false
+            }
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 自定义右侧按钮，设置后才显示，非等分时右侧间距为8。建议使用ToolbarButton
+    open var rightButton: UIView? {
+        didSet {
+            guard rightButton != oldValue else { return }
+            
+            oldValue?.removeFromSuperview()
+            if let rightButton = rightButton {
+                addSubview(rightButton)
+                rightButton.fw_autoScale = false
+            }
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 是否等宽布局(类似UITabBar)，不含安全区域；默认NO，左右布局(类似UIToolbar|UINavigationBar)
+    open var equalWidth: Bool = false {
+        didSet {
+            guard equalWidth != oldValue else { return }
+            
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 是否支持等宽布局时纵向溢出显示，可用于实现TabBar不规则按钮等，默认NO
+    open var verticalOverflow: Bool = false {
+        didSet {
+            guard verticalOverflow != oldValue else { return }
+            
+            clipsToBounds = !verticalOverflow
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 是否左对齐，仅左右布局时生效，默认NO居中对齐
+    open var alignmentLeft: Bool = false {
+        didSet {
+            guard alignmentLeft != oldValue else { return }
+            
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 设置左右侧间距，默认为8，同系统一致
+    open var horizontalSpacing: CGFloat = 8 {
+        didSet {
+            guard horizontalSpacing != oldValue else { return }
+            
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 设置按钮间距，默认8，同系统一致
+    open var buttonSpacing: CGFloat = 8 {
+        didSet {
+            guard buttonSpacing != oldValue else { return }
+            
+            setNeedsUpdateConstraints()
+        }
+    }
+
+    /// 快捷访问ToolbarTitleView标题视图，同centerButton
+    open var titleView: ToolbarTitleView? {
+        get {
+            return centerButton as? ToolbarTitleView
+        }
+        set {
+            centerButton = newValue
+        }
+    }
+
+    /// 快捷访问标题，titleView类型为ToolbarTitleViewProtocol时才生效
+    open var title: String? {
+        get {
+            if let titleView = centerButton as? TitleViewProtocol {
+                return titleView.title
+            }
+            return nil
+        }
+        set {
+            if let titleView = centerButton as? TitleViewProtocol {
+                titleView.title = newValue
+            }
+        }
+    }
+    
+    private var subviewConstraints: [NSLayoutConstraint] = []
+    
+    // MARK: - Lifecycle
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        clipsToBounds = true
+        fw_autoScale = false
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        clipsToBounds = true
+        fw_autoScale = false
+    }
+    
+    open override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        
+        setNeedsUpdateConstraints()
+    }
+    
+    open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        var pointInside = super.point(inside: point, with: event)
+        if !pointInside && verticalOverflow {
+            for subview in subviews {
+                if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
+                    pointInside = true
+                    break
+                }
+            }
+        }
+        return pointInside
+    }
+    
+    open override func updateConstraints() {
+        super.updateConstraints()
+        
+        if subviewConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(subviewConstraints)
+            subviewConstraints.removeAll()
+        }
+        
+        if equalWidth {
+            var subviewButtons: [UIView] = []
+            if let leftButton = leftButton { subviewButtons.append(leftButton) }
+            if let leftMoreButton = leftMoreButton { subviewButtons.append(leftMoreButton) }
+            if let centerButton = centerButton { subviewButtons.append(centerButton) }
+            if let rightMoreButton = rightMoreButton { subviewButtons.append(rightMoreButton) }
+            if let rightButton = rightButton { subviewButtons.append(rightButton) }
+            if subviewButtons.count < 1 { return }
+            
+            var constraints: [NSLayoutConstraint] = []
+            var previousButton: UIView?
+            for subviewButton in subviewButtons {
+                constraints.append(subviewButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: verticalOverflow ? .lessThanOrEqual : .equal))
+                constraints.append(subviewButton.fw_pinEdge(toSuperview: .bottom))
+                if let previousButton = previousButton {
+                    constraints.append(subviewButton.fw_pinEdge(.left, toEdge: .right, ofView: previousButton))
+                    constraints.append(subviewButton.fw_matchDimension(.width, toDimension: .width, ofView: previousButton))
+                } else {
+                    constraints.append(subviewButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left))
+                }
+                previousButton = subviewButton
+            }
+            if let previousButton = previousButton {
+                constraints.append(previousButton.fw_pinEdge(toSuperview: .right, inset: UIScreen.fw_safeAreaInsets.right))
+            }
+            subviewConstraints = constraints
+            return
+        }
+        
+        var constraints: [NSLayoutConstraint] = []
+        let fitsSize = CGSize(width: bounds.size.width > 0 ? bounds.size.width : UIScreen.main.bounds.size.width, height: .greatestFiniteMagnitude)
+        var leftWidth: CGFloat = 0
+        let leftButton = self.leftButton ?? self.leftMoreButton
+        let leftMoreButton = self.leftButton != nil && self.leftMoreButton != nil ? self.leftMoreButton : nil
+        if let leftButton = leftButton {
+            constraints.append(leftButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left + horizontalSpacing))
+            constraints.append(leftButton.fw_alignAxis(toSuperview: .centerY))
+            constraints.append(leftButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            let buttonWidth = leftButton.frame.size.width > 0 ? leftButton.frame.size.width : leftButton.sizeThatFits(fitsSize).width
+            leftWidth += UIScreen.fw_safeAreaInsets.left + horizontalSpacing + buttonWidth + buttonSpacing
+        }
+        if let leftButton = leftButton, let leftMoreButton = leftMoreButton {
+            constraints.append(leftMoreButton.fw_pinEdge(.left, toEdge: .right, ofView: leftButton, offset: buttonSpacing))
+            constraints.append(leftMoreButton.fw_alignAxis(toSuperview: .centerY))
+            constraints.append(leftMoreButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftMoreButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            let buttonWidth = leftMoreButton.frame.size.width > 0 ? leftMoreButton.frame.size.width : leftMoreButton.sizeThatFits(fitsSize).width
+            leftWidth += buttonWidth + buttonSpacing
+        }
+        
+        var rightWidth: CGFloat = 0
+        let rightButton = self.rightButton ?? self.rightMoreButton
+        let rightMoreButton = self.rightButton != nil && self.rightMoreButton != nil ? self.rightMoreButton : nil
+        if let rightButton = rightButton {
+            constraints.append(rightButton.fw_pinEdge(toSuperview: .right, inset: horizontalSpacing + UIScreen.fw_safeAreaInsets.right))
+            constraints.append(rightButton.fw_alignAxis(toSuperview: .centerY))
+            constraints.append(rightButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            let buttonWidth = rightButton.frame.size.width > 0 ? rightButton.frame.size.width : rightButton.sizeThatFits(fitsSize).width
+            rightWidth += buttonSpacing + buttonWidth + horizontalSpacing + UIScreen.fw_safeAreaInsets.right
+        }
+        if let rightButton = rightButton, let rightMoreButton = rightMoreButton {
+            constraints.append(rightMoreButton.fw_pinEdge(.right, toEdge: .left, ofView: rightButton, offset: -buttonSpacing))
+            constraints.append(rightMoreButton.fw_alignAxis(toSuperview: .centerY))
+            constraints.append(rightMoreButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightMoreButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            let buttonWidth = rightMoreButton.frame.size.width > 0 ? rightMoreButton.frame.size.width : rightMoreButton.sizeThatFits(fitsSize).width
+            rightWidth += buttonSpacing + buttonWidth
+        }
+        
+        if let centerButton = self.centerButton {
+            if !alignmentLeft {
+                constraints.append(centerButton.fw_alignAxis(toSuperview: .centerX))
+            }
+            constraints.append(centerButton.fw_alignAxis(toSuperview: .centerY))
+            constraints.append(centerButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw_pinEdge(toSuperview: .left, inset: leftWidth, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw_pinEdge(toSuperview: .right, inset: rightWidth, relation: .greaterThanOrEqual))
+        }
+        subviewConstraints = constraints
+    }
+    
+}
+
 // MARK: - ExpandedTitleView
 /// 扩展titleView，可继承，用于navigationItem.titleView需要撑开的场景
 ///
