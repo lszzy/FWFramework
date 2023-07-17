@@ -105,7 +105,6 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         result.dataSource = self
         result.delegate = self
         result.layer.masksToBounds = true
-        result.clipsToBounds = true
         result.register(PasscodeCell.self, forCellWithReuseIdentifier: "FWPasscodeCellID")
         return result
     }()
@@ -665,7 +664,11 @@ open class PasscodeCell: UICollectionViewCell {
     }()
     
     open override var isSelected: Bool {
-        didSet {
+        get {
+            return super.isSelected
+        }
+        set {
+            let isSelected = newValue
             if isSelected {
                 layer.borderColor = cellProperty.cellBorderColorSelected?.cgColor
                 backgroundColor = cellProperty.cellBgColorSelected
