@@ -128,7 +128,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         self.boxInputView = boxInputView
         
         boxInputView.textDidChangeBlock = { [weak self] text, isFinished in
-            if let text = text, !text.isEmpty {
+            if !text.isEmpty {
                 self?.valueLabel.text = text
             } else {
                 self?.valueLabel.text = "Empty"
@@ -140,9 +140,9 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
     
     private func generateBoxInputView_normal() -> PasscodeView {
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        result.collectionView()?.contentOffset = CGPoint(x: -40, y: 0)
-        result.prepare(withBeginEdit: true)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        result.collectionView.contentOffset = CGPoint(x: -40, y: 0)
+        result.prepareView()
         result.inputType = .regex
         result.customInputRegex = "[^0-9]"
         if #available(iOS 12, *) {
@@ -159,12 +159,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         cellProperty.cellPlaceholderFont = UIFont.systemFont(ofSize: 20)
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        result.collectionView()?.contentOffset = CGPoint(x: -40, y: 0)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        result.collectionView.contentOffset = CGPoint(x: -40, y: 0)
         result.showCursor = false
         result.placeholderText = "露可娜娜"
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: true)
+        result.prepareView()
         return result
     }
     
@@ -187,11 +187,11 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         }
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        result.collectionView()?.contentOffset = CGPoint(x: -20, y: 0)
-        result.flowLayout?.itemSize = CGSize(width: 52, height: 52)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
+        result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: true)
+        result.prepareView()
         return result
     }
     
@@ -220,11 +220,11 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         }
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        result.collectionView()?.contentOffset = CGPoint(x: -20, y: 0)
-        result.flowLayout?.itemSize = CGSize(width: 52, height: 52)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
+        result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: true)
+        result.prepareView()
         return result
     }
     
@@ -241,12 +241,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         cellProperty.securitySymbol = "*"
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        result.collectionView()?.contentOffset = CGPoint(x: -20, y: 0)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
         result.needSecurity = true
-        result.flowLayout?.itemSize = CGSize(width: 52, height: 52)
+        result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: false)
+        result.prepareView()
         
         result.clearAllWhenEditingBegin = true
         result.reloadInputString("5678")
@@ -273,12 +273,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         }
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        result.collectionView()?.contentOffset = CGPoint(x: -20, y: 0)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
         result.needSecurity = true
-        result.flowLayout?.itemSize = CGSize(width: 52, height: 52)
+        result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: true)
+        result.prepareView()
         return result
     }
     
@@ -307,12 +307,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         }
         
         let result = PasscodeView(codeLength: 4)
-        result.collectionView()?.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        result.collectionView()?.contentOffset = CGPoint(x: -20, y: 0)
+        result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
         result.needSecurity = true
-        result.flowLayout?.itemSize = CGSize(width: 52, height: 52)
+        result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
-        result.prepare(withBeginEdit: true)
+        result.prepareView()
         return result
     }
     
