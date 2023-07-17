@@ -96,6 +96,8 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     open var editStatusChangeBlock: ((PasscodeEditStatus) -> Void)?
     
+    open var customCellBlock: ((PasscodeView, IndexPath) -> UICollectionViewCell)?
+    
     open lazy var collectionView: UICollectionView = {
         let result = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         result.showsHorizontalScrollIndicator = false
@@ -129,6 +131,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     private lazy var textField: UITextField = {
         let result = UITextField()
         result.fw_menuDisabled = true
+        result.keyboardType = keyboardType
         result.delegate = self
         result.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
         return result
@@ -147,23 +150,23 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     // MARK: - Lifecycle
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
     public init(codeLength: Int) {
         super.init(frame: .zero)
         self.codeLength = codeLength
+        backgroundColor = .clear
         
-        didInitialize()
         addNotificationObserver()
     }
     
@@ -172,25 +175,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     }
 
     // MARK: - Public
-    /// 你可以在继承的子类中调用父类方法
-    open func didInitialize() {
-        backgroundColor = .clear
-        textField.keyboardType = keyboardType
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.reloadAllCells()
-        }
-    }
-
-    /// 你可以在继承的子类中重写父类方法
-    open func customCell(forItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FWPasscodeCellID", for: indexPath)
-        return cell
-    }
-
-    /**
-     装载数据和准备界面，beginEdit: 自动开启编辑模式。默认: YES
-     */
+    /// 装载数据和准备界面，beginEdit: 自动开启编辑模式。默认: YES
     open func prepareView(beginEdit: Bool = true) {
         guard codeLength > 0 else { return }
         
@@ -216,6 +201,8 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
             textField.text = cellProperty.originValue
             textDidChange(textField)
         }
+        
+        reloadAllCells()
         
         if beginEdit {
             self.beginEdit()
@@ -278,7 +265,12 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = customCell(forItemAt: indexPath)
+        var cell: UICollectionViewCell
+        if let customCellBlock = customCellBlock {
+            cell = customCellBlock(self, indexPath)
+        } else {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FWPasscodeCellID", for: indexPath)
+        }
         guard let cell = cell as? PasscodeCell,
               indexPath.row < cellPropertyArray.count else {
             return cell
