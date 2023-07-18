@@ -893,7 +893,7 @@ import AdSupport
 // MARK: - UIImageView+UIKit
 @_spi(FW) extension UIImageView {
     
-    /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏。可通过appearance统一设置
+    /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏
     public func fw_setContentModeAspectFill() {
         self.contentMode = .scaleAspectFill
         self.layer.masksToBounds = true
@@ -1448,8 +1448,7 @@ import AdSupport
 @_spi(FW) extension UIControl {
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
-    @objc(__fw_touchEventInterval)
-    public var fw_touchEventInterval: TimeInterval {
+    @objc dynamic public var fw_touchEventInterval: TimeInterval {
         get { fw_propertyDouble(forName: "fw_touchEventInterval") }
         set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
