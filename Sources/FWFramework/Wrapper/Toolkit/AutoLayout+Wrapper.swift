@@ -32,14 +32,20 @@ extension Wrapper where Base: UIView {
     /// 2. 只会对offset值生效，其他属性不受影响
     /// 3. 某个视图如需固定offset值，可指定autoScale为false关闭该功能
     public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
-        get { return UIView.fw_autoScaleBlock }
+        get { UIView.fw_autoScaleBlock }
         set { UIView.fw_autoScaleBlock = newValue }
     }
     
+    /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
+    public static var autoScaleLayout: Bool {
+        get { UIView.fw_autoScaleLayout }
+        set { UIView.fw_autoScaleLayout = newValue }
+    }
+    
     /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
-    public var autoScale: Bool {
-        get { base.fw_autoScale }
-        set { base.fw_autoScale = newValue }
+    public var autoScaleLayout: Bool {
+        get { base.fw_autoScaleLayout }
+        set { base.fw_autoScaleLayout = newValue }
     }
 
     /// 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)

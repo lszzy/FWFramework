@@ -308,6 +308,12 @@ extension Wrapper where Base: UIFont {
         set { Base.fw_autoScaleBlock = newValue }
     }
     
+    /// 快捷启用全局自动等比例缩放适配，自动设置默认autoScaleBlock
+    public static var autoScaleFont: Bool {
+        get { Base.fw_autoScaleFont }
+        set { Base.fw_autoScaleFont = newValue }
+    }
+    
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
         get { return Base.fw_fontBlock }

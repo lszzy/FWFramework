@@ -113,7 +113,7 @@ open class ToolbarView: UIView {
     open lazy var backgroundView: UIImageView = {
         let result = UIImageView()
         result.clipsToBounds = true
-        result.fw_autoScale = false
+        result.fw_autoScaleLayout = false
         return result
     }()
     
@@ -121,7 +121,7 @@ open class ToolbarView: UIView {
     open lazy var topView: UIView = {
         let result = UIView()
         result.clipsToBounds = true
-        result.fw_autoScale = false
+        result.fw_autoScaleLayout = false
         addSubview(result)
         
         result.fw_pinHorizontal()
@@ -135,7 +135,7 @@ open class ToolbarView: UIView {
         let result = ToolbarMenuView()
         result.equalWidth = (type == .tabBar)
         result.titleView = (type == .navBar) ? ToolbarTitleView() : nil
-        result.fw_autoScale = false
+        result.fw_autoScaleLayout = false
         return result
     }()
     
@@ -143,7 +143,7 @@ open class ToolbarView: UIView {
     open lazy var bottomView: UIView = {
         let result = UIView()
         result.clipsToBounds = true
-        result.fw_autoScale = false
+        result.fw_autoScaleLayout = false
         addSubview(result)
         
         result.fw_pinHorizontal()
@@ -299,7 +299,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let leftButton = leftButton {
                 addSubview(leftButton)
-                leftButton.fw_autoScale = false
+                leftButton.fw_autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -313,7 +313,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let leftMoreButton = leftMoreButton {
                 addSubview(leftMoreButton)
-                leftMoreButton.fw_autoScale = false
+                leftMoreButton.fw_autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -327,7 +327,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let centerButton = centerButton {
                 addSubview(centerButton)
-                centerButton.fw_autoScale = false
+                centerButton.fw_autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -341,7 +341,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let rightMoreButton = rightMoreButton {
                 addSubview(rightMoreButton)
-                rightMoreButton.fw_autoScale = false
+                rightMoreButton.fw_autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -355,7 +355,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let rightButton = rightButton {
                 addSubview(rightButton)
-                rightButton.fw_autoScale = false
+                rightButton.fw_autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -439,14 +439,14 @@ open class ToolbarMenuView: UIView {
         super.init(frame: frame)
         
         clipsToBounds = true
-        fw_autoScale = false
+        fw_autoScaleLayout = false
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         clipsToBounds = true
-        fw_autoScale = false
+        fw_autoScaleLayout = false
     }
     
     open override func safeAreaInsetsDidChange() {
@@ -585,7 +585,7 @@ open class ExpandedTitleView: UIView {
             oldValue?.removeFromSuperview()
             if let contentView = contentView, contentView.superview == nil {
                 addSubview(contentView)
-                contentView.fw_autoScale = false
+                contentView.fw_autoScaleLayout = false
                 contentView.fw_pinEdges(toSuperview: contentInset)
                 setNeedsLayout()
             }

@@ -751,6 +751,12 @@ extension WrapperGlobal {
     /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
     public static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
     
+    /// 快捷启用全局自动等比例缩放字体，自动设置默认autoScaleBlock
+    public static var fw_autoScaleFont: Bool {
+        get { fw_autoScaleBlock != nil }
+        set { fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil }
+    }
+    
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
 

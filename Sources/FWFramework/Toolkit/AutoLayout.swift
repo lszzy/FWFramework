@@ -33,16 +33,22 @@ import FWObjC
     /// 3. 某个视图如需固定offset值，可指定autoScale为false关闭该功能
     public static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
     
+    /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
+    public static var fw_autoScaleLayout: Bool {
+        get { fw_autoScaleBlock != nil }
+        set { fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil }
+    }
+    
     /// 视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
-    public var fw_autoScale: Bool {
+    public var fw_autoScaleLayout: Bool {
         get {
-            if let number = fw_property(forName: "fw_autoScale") as? NSNumber {
+            if let number = fw_property(forName: "fw_autoScaleLayout") as? NSNumber {
                 return number.boolValue
             }
             return UIView.fw_autoScaleBlock != nil
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_autoScale")
+            fw_setProperty(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
         }
     }
 
@@ -759,7 +765,7 @@ import FWObjC
     }
     
     private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
-        let targetOffset = fw_autoScale ? (UIView.fw_autoScaleBlock?(offset) ?? offset) : offset
+        let targetOffset = fw_autoScaleLayout ? (UIView.fw_autoScaleBlock?(offset) ?? offset) : offset
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
         if UIView.fw_autoLayoutRTL {
@@ -953,7 +959,7 @@ public class LayoutChain {
     
     @discardableResult
     public func autoScale(_ autoScale: Bool) -> Self {
-        view?.fw_autoScale = autoScale
+        view?.fw_autoScaleLayout = autoScale
         return self
     }
 
