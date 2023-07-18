@@ -14,6 +14,7 @@ import FWObjC
 /// UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力
 ///
 /// 系统默认时机是在didMoveToWindow处理UIAppearance
+/// 注意：Swift只有标记\@objc dynamic的属性才支持UIAppearance
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
 public class Appearance: NSObject {
     
@@ -41,7 +42,7 @@ public class Appearance: NSObject {
 // MARK: - NSObject+Appearance
 @_spi(FW) extension NSObject {
     
-    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用
+    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
     public func fw_applyAppearance() {
         __FWRuntime.applyAppearance(self)
     }

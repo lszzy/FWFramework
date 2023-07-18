@@ -408,31 +408,31 @@ import FWObjC
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    public var fw_keyboardManager: Bool {
+    @objc dynamic public var fw_keyboardManager: Bool {
         get { return self.fw_keyboardTarget.keyboardManager }
         set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
-    public var fw_keyboardDistance: CGFloat {
+    @objc dynamic public var fw_keyboardDistance: CGFloat {
         get { return self.fw_keyboardTarget.keyboardDistance }
         set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
-    public var fw_reboundDistance: CGFloat {
+    @objc dynamic public var fw_reboundDistance: CGFloat {
         get { return self.fw_keyboardTarget.reboundDistance }
         set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-    public var fw_keyboardResign: Bool {
+    @objc dynamic public var fw_keyboardResign: Bool {
         get { return self.fw_keyboardTarget.keyboardResign }
         set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-    public var fw_touchResign: Bool {
+    @objc dynamic public var fw_touchResign: Bool {
         get { return self.fw_keyboardTarget.touchResign }
         set { self.fw_keyboardTarget.touchResign = newValue }
     }
@@ -445,7 +445,7 @@ import FWObjC
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
-    public var fw_returnResign: Bool {
+    @objc dynamic public var fw_returnResign: Bool {
         get {
             return self.fw_keyboardTarget.returnResign
         }
@@ -632,31 +632,31 @@ import FWObjC
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    public var fw_keyboardManager: Bool {
+    @objc dynamic public var fw_keyboardManager: Bool {
         get { return self.fw_keyboardTarget.keyboardManager }
         set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
-    public var fw_keyboardDistance: CGFloat {
+    @objc dynamic public var fw_keyboardDistance: CGFloat {
         get { return self.fw_keyboardTarget.keyboardDistance }
         set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
-    public var fw_reboundDistance: CGFloat {
+    @objc dynamic public var fw_reboundDistance: CGFloat {
         get { return self.fw_keyboardTarget.reboundDistance }
         set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-    public var fw_keyboardResign: Bool {
+    @objc dynamic public var fw_keyboardResign: Bool {
         get { return self.fw_keyboardTarget.keyboardResign }
         set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-    public var fw_touchResign: Bool {
+    @objc dynamic public var fw_touchResign: Bool {
         get { return self.fw_keyboardTarget.touchResign }
         set { self.fw_keyboardTarget.touchResign = newValue }
     }
@@ -669,7 +669,7 @@ import FWObjC
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var fw_returnResign: Bool {
+    @objc dynamic public var fw_returnResign: Bool {
         get {
             return self.fw_keyboardTarget.returnResign
         }
