@@ -23,6 +23,7 @@ import UIKit
         return AppBundle.localizedString(key)
     }
     
+    @discardableResult
     public func __fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
         return fw_observeProperty(property, block: block)
     }
@@ -39,6 +40,7 @@ import UIKit
         return fw_invokeGetter(name)
     }
     
+    @discardableResult
     public static func __fw_swizzleMethod(
         _ target: Any?,
         selector: Selector,
@@ -112,14 +114,17 @@ import UIKit
         fw_addTapGesture(target: target, action: action, customize: customize)
     }
 
+    @discardableResult
     public func __fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
         return fw_addTapGesture(block: block, customize: customize)
     }
     
+    @discardableResult
     public func __fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
         return fw_statisticalTrackClick(indexPath: indexPath, event: event)
     }
     
+    @discardableResult
     public func __fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
         return fw_statisticalBindExposure(containerView)
     }
@@ -132,6 +137,7 @@ import UIKit
 
 @_spi(FW) @objc extension UIControl {
     
+    @discardableResult
     public func __fw_addTouch(block: @escaping (Any) -> Void) -> String {
         fw_addTouch(block: block)
     }

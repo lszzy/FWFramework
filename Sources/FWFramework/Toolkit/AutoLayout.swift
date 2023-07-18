@@ -263,34 +263,34 @@ import FWObjC
         set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
     }
     
-    // MARK: - Inactive
-    /// 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
-    public var fw_isInactive: Bool {
+    // MARK: - Invalidate
+    /// 设置是否使可失效约束失效(相反状态)， 默认NO不失效，YES时为失效
+    public var fw_isInvalid: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isInactive")
+            return fw_propertyBool(forName: "fw_isInvalid")
         }
         set {
-            fw_inactiveConstraints.sorted { constraint, _ in
-                return newValue ? constraint.fw_originalActive : !constraint.fw_originalActive
+            fw_invalidateConstraints.sorted { constraint, _ in
+                return newValue ? !constraint.fw_originalInvalid : constraint.fw_originalInvalid
             }.forEach { constraint in
-                constraint.isActive = newValue ? !constraint.fw_originalActive : constraint.fw_originalActive
+                constraint.isActive = newValue ? constraint.fw_originalInvalid : !constraint.fw_originalInvalid
             }
             
-            fw_setPropertyBool(newValue, forName: "fw_isInactive")
+            fw_setPropertyBool(newValue, forName: "fw_isInvalid")
         }
     }
 
-    /// 添加视图的可禁用布局，必须先添加才能生效
-    public func fw_addInactiveConstraint(_ constraint: NSLayoutConstraint) {
-        constraint.fw_originalActive = constraint.isActive
-        if !fw_inactiveConstraints.contains(constraint) {
-            fw_inactiveConstraints.append(constraint)
+    /// 添加视图的可失效约束，必须先添加才能生效
+    public func fw_addInvalidateConstraint(_ constraint: NSLayoutConstraint) {
+        constraint.fw_originalInvalid = !constraint.isActive
+        if !fw_invalidateConstraints.contains(constraint) {
+            fw_invalidateConstraints.append(constraint)
         }
     }
     
-    fileprivate var fw_inactiveConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_inactiveConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_inactiveConstraints") }
+    fileprivate var fw_invalidateConstraints: [NSLayoutConstraint] {
+        get { return fw_property(forName: "fw_invalidateConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_invalidateConstraints") }
     }
     
     // MARK: - Axis
@@ -910,10 +910,10 @@ import FWObjC
         set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
     
-    /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
-    public var fw_originalActive: Bool {
-        get { fw_propertyBool(forName: "fw_originalActive") }
-        set { fw_setPropertyBool(newValue, forName: "fw_originalActive") }
+    /// 可失效约束的原始状态，默认为添加失效约束时的状态
+    public var fw_originalInvalid: Bool {
+        get { fw_propertyBool(forName: "fw_originalInvalid") }
+        set { fw_setPropertyBool(newValue, forName: "fw_originalInvalid") }
     }
     
     fileprivate var fw_layoutIdentifier: String? {
@@ -1009,8 +1009,8 @@ public class LayoutChain {
     
     // MARK: - Inactive
     @discardableResult
-    public func isInactive(_ isInactive: Bool) -> Self {
-        view?.fw_isInactive = isInactive
+    public func isInvalid(_ isInvalid: Bool) -> Self {
+        view?.fw_isInvalid = isInvalid
         return self
     }
 
@@ -1531,12 +1531,12 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func toggle(_ active: Bool? = nil) -> Self {
+    public func invalidate(_ invalid: Bool? = nil) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            if let active = active {
-                obj.isActive = active
+            if let invalid = invalid {
+                obj.isActive = !invalid
             }
-            self.view?.fw_addInactiveConstraint(obj)
+            self.view?.fw_addInvalidateConstraint(obj)
         })
         return self
     }
