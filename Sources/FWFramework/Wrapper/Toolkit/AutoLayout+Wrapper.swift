@@ -151,15 +151,15 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - Inactive
-    /// 设置可禁用布局是否禁用，默认NO为原始状态，YES时为相反状态
-    public var isInactive: Bool {
-        get { base.fw_isInactive }
-        set { base.fw_isInactive = newValue }
+    /// 设置是否使可失效约束失效(相反状态)， 默认NO不失效，YES时为失效
+    public var isInvalid: Bool {
+        get { base.fw_isInvalid }
+        set { base.fw_isInvalid = newValue }
     }
 
-    /// 添加视图的可禁用布局，必须先添加才能生效
-    public func addInactiveConstraint(_ constraint: NSLayoutConstraint) {
-        base.fw_addInactiveConstraint(constraint)
+    /// 添加视图的可失效约束，必须先添加才能生效
+    public func addInvalidateConstraint(_ constraint: NSLayoutConstraint) {
+        base.fw_addInvalidateConstraint(constraint)
     }
     
     // MARK: - Axis
@@ -539,10 +539,10 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.fw_originalConstant = newValue }
     }
     
-    /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
-    public var originalActive: Bool {
-        get { base.fw_originalActive }
-        set { base.fw_originalActive = newValue }
+    /// 可失效约束的原始状态，默认为添加失效约束时的状态
+    public var originalInvalid: Bool {
+        get { base.fw_originalInvalid }
+        set { base.fw_originalInvalid = newValue }
     }
     
 }
