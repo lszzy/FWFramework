@@ -302,22 +302,16 @@ extension Wrapper where Base: UIColor {
 // MARK: - UIFont+Toolkit
 extension Wrapper where Base: UIFont {
     
+    /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
+    public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
+        get { return Base.fw_autoScaleBlock }
+        set { Base.fw_autoScaleBlock = newValue }
+    }
+    
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
         get { return Base.fw_fontBlock }
         set { Base.fw_fontBlock = newValue }
-    }
-    
-    /// 是否自动等比例缩放字体，默认NO
-    public static var autoScale: Bool {
-        get { return Base.fw_autoScale }
-        set { Base.fw_autoScale = newValue }
-    }
-    
-    /// 是否自动等比例缩放后像素取整，默认NO
-    public static var autoFlat: Bool {
-        get { return Base.fw_autoFlat }
-        set { Base.fw_autoFlat = newValue }
     }
 
     /// 返回系统Thin字体，自动等比例缩放

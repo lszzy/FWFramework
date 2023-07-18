@@ -13,6 +13,7 @@ import UIKit
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
 extension Wrapper where Base: UIView {
     
+    // MARK: - AutoLayout
     /// 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
     ///
     /// 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
@@ -22,27 +23,20 @@ extension Wrapper where Base: UIView {
         set { UIView.fw_autoLayoutRTL = newValue }
     }
     
-    /// 是否全局自动等比例缩放布局，默认NO
+    /// 自定义全局自动等比例缩放适配句柄，默认nil
     ///
-    /// 启用后所有offset值都会自动*relativeScale，注意可能产生的影响。
-    /// 启用后注意事项：
+    /// 启用全局等比例缩放后，所有offset值都会调用该句柄，需注意可能产生的影响。
+    /// 启用后注意事项如下：
     /// 1. 屏幕宽度约束不能使用screenWidth约束，需要使用375设计标准
     /// 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
     /// 2. 只会对offset值生效，其他属性不受影响
-    /// 3. 如需特殊处理，可以指定某个视图关闭该功能
-    public static var autoScale: Bool {
-        get { return UIView.fw_autoScale }
-        set { UIView.fw_autoScale = newValue }
+    /// 3. 某个视图如需固定offset值，可指定autoScale为false关闭该功能
+    public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
+        get { return UIView.fw_autoScaleBlock }
+        set { UIView.fw_autoScaleBlock = newValue }
     }
     
-    /// 是否自动等比例缩放后像素取整，默认NO
-    public static var autoFlat: Bool {
-        get { return UIView.fw_autoFlat }
-        set { UIView.fw_autoFlat = newValue }
-    }
-    
-    // MARK: - AutoLayout
-    /// 当前视图是否自动等比例缩放布局，默认未设置时返回全局开关
+    /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
     public var autoScale: Bool {
         get { base.fw_autoScale }
         set { base.fw_autoScale = newValue }

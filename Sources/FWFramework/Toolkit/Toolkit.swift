@@ -748,14 +748,11 @@ extension WrapperGlobal {
 // MARK: - UIFont+Toolkit
 @_spi(FW) extension UIFont {
     
+    /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
+    public static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
+    
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
-    
-    /// 是否自动等比例缩放字体，默认NO
-    public static var fw_autoScale: Bool = false
-    
-    /// 是否自动等比例缩放后像素取整，默认NO
-    public static var fw_autoFlat: Bool = false
 
     /// 返回系统Thin字体，自动等比例缩放
     public static func fw_thinFont(ofSize: CGFloat) -> UIFont {
@@ -784,7 +781,7 @@ extension WrapperGlobal {
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func fw_font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
-        let size = fw_autoScale ? UIScreen.fw_relativeValue(ofSize, flat: fw_autoFlat) : ofSize
+        let size = UIFont.fw_autoScaleBlock?(ofSize) ?? ofSize
         if let font = fw_fontBlock?(size, weight) { return font }
         return UIFont.systemFont(ofSize: size, weight: weight)
     }
