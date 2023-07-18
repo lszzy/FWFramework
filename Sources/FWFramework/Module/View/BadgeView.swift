@@ -94,7 +94,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw_autoScale = false
+        fw_autoScaleLayout = false
         fw_setDimensions(CGSize(width: badgeHeight, height: badgeHeight))
     }
     
@@ -104,7 +104,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw_autoScale = false
+        fw_autoScaleLayout = false
         fw_setDimension(.height, size: badgeHeight)
         fw_setDimension(.width, size: badgeHeight, relation: .greaterThanOrEqual)
         
@@ -114,7 +114,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         badgeLabel.font = UIFont.systemFont(ofSize: fontSize)
         badgeLabel.textAlignment = .center
         addSubview(badgeLabel)
-        badgeLabel.fw_autoScale = false
+        badgeLabel.fw_autoScaleLayout = false
         badgeLabel.fw_alignCenter()
         badgeLabel.fw_pinEdge(toSuperview: .right, inset: textInset, relation: .greaterThanOrEqual)
         badgeLabel.fw_pinEdge(toSuperview: .left, inset: textInset, relation: .greaterThanOrEqual)
