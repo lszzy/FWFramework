@@ -6,10 +6,13 @@
 //
 
 #import "Exception.h"
-#import "Bridge.h"
 #import <objc/runtime.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 NSNotificationName const __FWExceptionCapturedNotification = @"FWExceptionCapturedNotification";
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #define __FWExceptionRemark(clazz, selector) \
     [NSString stringWithFormat:@"%@[%@ %@]", class_isMetaClass(clazz) ? @"+" : @"-", NSStringFromClass(clazz), NSStringFromSelector(selector)]

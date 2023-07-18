@@ -7,7 +7,7 @@
 
 #import "ToastView.h"
 #import "ViewPlugin.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWToastView
 

@@ -6,9 +6,9 @@
 //
 
 #import "WebImage.h"
-#import "Bridge.h"
 #import "HTTPSessionManager.h"
 #import <objc/runtime.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWAutoPurgingImageCache
 

@@ -6,7 +6,10 @@
 //
 
 #import "BarrageView.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 NSString *const __FWBarrageAnimation = @"FWBarrageAnimation";
 

@@ -7,8 +7,8 @@
 
 #import "RefreshView.h"
 #import "ViewPlugin.h"
-#import "Bridge.h"
 #import <objc/runtime.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWPullRefreshArrowView
 

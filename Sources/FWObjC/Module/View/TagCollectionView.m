@@ -6,7 +6,7 @@
 //
 
 #import "TagCollectionView.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 @interface __FWTagCollectionView ()
 @property (nonatomic, strong) UIScrollView *scrollView;

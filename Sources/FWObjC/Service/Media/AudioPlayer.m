@@ -6,10 +6,13 @@
 //
 
 #import "AudioPlayer.h"
-#import "Bridge.h"
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioSession.h>
+#import <FWFramework/FWFramework-Swift.h>
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 typedef NS_ENUM(NSInteger, __FWAudioPauseReason) {
     __FWAudioPauseReasonNone,

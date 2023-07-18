@@ -8,7 +8,7 @@
 #import "ZoomImageView.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWZoomImageVideoPlayerView
 

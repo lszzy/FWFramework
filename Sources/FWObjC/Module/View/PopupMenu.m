@@ -6,7 +6,7 @@
 //
 
 #import "PopupMenu.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWPopupMenuPath
 
