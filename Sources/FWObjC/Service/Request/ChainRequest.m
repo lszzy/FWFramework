@@ -25,7 +25,7 @@
 #import "RequestConfig.h"
 #import "BaseRequest.h"
 #import "RequestManager.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #define __FWRequestLog( aFormat, ... ) \
     if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];

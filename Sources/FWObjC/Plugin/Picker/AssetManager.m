@@ -6,8 +6,8 @@
 //
 
 #import "AssetManager.h"
-#import "Bridge.h"
 #import <CoreServices/UTCoreTypes.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWAsset
 

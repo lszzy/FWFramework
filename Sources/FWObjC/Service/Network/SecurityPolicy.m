@@ -20,8 +20,11 @@
 // THE SOFTWARE.
 
 #import "SecurityPolicy.h"
-#import "Bridge.h"
 #import <AssertMacros.h>
+#import <FWFramework/FWFramework-Swift.h>
+
+#define __FWLogDebug( aFormat, ... ) \
+    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static BOOL __FWSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     return [(__bridge id)key1 isEqual:(__bridge id)key2];

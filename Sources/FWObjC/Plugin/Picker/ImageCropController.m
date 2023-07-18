@@ -7,7 +7,7 @@
 
 #import "ImageCropController.h"
 #import "AlertPlugin.h"
-#import "Bridge.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 @interface __FWImageCropController () <__FWImageCropViewDelegate>
 

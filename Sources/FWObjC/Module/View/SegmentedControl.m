@@ -6,9 +6,9 @@
 //
 
 #import "SegmentedControl.h"
-#import "Bridge.h"
 #import <QuartzCore/QuartzCore.h>
 #import <math.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 
