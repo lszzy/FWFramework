@@ -323,14 +323,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets;
 - (NSArray<NSLayoutConstraint *> *)__fw_alignCenterToSuperview:(CGPoint)offset;
-- (NSArray<NSLayoutConstraint *> *)__fw_setDimensions:(CGSize)size;
-- (NSLayoutConstraint *)__fw_setDimension:(NSLayoutAttribute)dimension size:(CGFloat)size relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_pinEdgeToSuperview:(NSLayoutAttribute)edge inset:(CGFloat)inset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)__fw_pinEdgesToSuperview:(UIEdgeInsets)insets excludingEdge:(NSLayoutAttribute)edge;
-- (NSLayoutConstraint *)__fw_pinEdge:(NSLayoutAttribute)edge toEdge:(NSLayoutAttribute)toEdge ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSArray<NSLayoutConstraint *> *)__fw_pinHorizontalToSuperview:(CGFloat)inset;
-- (NSLayoutConstraint *)__fw_matchDimension:(NSLayoutAttribute)dimension toDimension:(NSLayoutAttribute)toDimension ofView:(id)otherView offset:(CGFloat)offset relation:(NSLayoutRelation)relation priority:(UILayoutPriority)priority;
-- (NSLayoutConstraint *)__fw_alignAxisToSuperview:(NSLayoutAttribute)axis offset:(CGFloat)offset;
 
 - (void)__fw_statisticalCheckExposure;
 - (BOOL)__fw_statisticalTrackClickWithIndexPath:(nullable NSIndexPath *)indexPath event:(nullable id)event;
