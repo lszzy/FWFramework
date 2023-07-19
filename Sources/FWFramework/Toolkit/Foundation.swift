@@ -291,54 +291,90 @@ extension WrapperGlobal {
 
 // MARK: - NSNumber+Foundation
 @_spi(FW) extension NSNumber {
-
-    /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func fw_roundString(_ digit: Int) -> String {
-        return fw_formatString(digit, roundingMode: .halfUp)
-    }
-
-    /// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func fw_ceilString(_ digit: Int) -> String {
-        return fw_formatString(digit, roundingMode: .ceiling)
-    }
-
-    /// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
-    public func fw_floorString(_ digit: Int) -> String {
-        return fw_formatString(digit, roundingMode: .floor)
-    }
     
-    private func fw_formatString(_ digit: Int, roundingMode: NumberFormatter.RoundingMode) -> String {
+    /// 快捷创建NumberFormatter对象，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - roundingMode: 取整模式，默认四舍五入，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.5012 => 1234.50)，默认false去掉末尾0(示例：1234.5012 => 1234.5)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: NumberFormatter对象
+    public static func fw_numberFormatter(
+        _ digit: Int = 2,
+        roundingMode: NumberFormatter.RoundingMode = .halfUp,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.numberStyle = .none
+        if !currencySymbol.isEmpty {
+            formatter.numberStyle = .currency
+            formatter.currencySymbol = currencySymbol
+        } else {
+            formatter.numberStyle = .decimal
+        }
         formatter.roundingMode = roundingMode
         formatter.minimumIntegerDigits = 1
         formatter.maximumFractionDigits = digit
+        formatter.minimumFractionDigits = fractionZero ? digit : 0
         formatter.decimalSeparator = "."
-        formatter.groupingSeparator = ""
-        formatter.usesGroupingSeparator = false
         formatter.currencyDecimalSeparator = "."
-        formatter.currencyGroupingSeparator = ""
+        formatter.usesGroupingSeparator = !groupingSeparator.isEmpty
+        formatter.groupingSeparator = groupingSeparator
+        formatter.currencyGroupingSeparator = groupingSeparator
+        return formatter
+    }
+
+    /// 快捷四舍五入格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.5012 => 1234.50)，默认false去掉末尾0(示例：1234.5012 => 1234.5)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: 格式化字符串
+    public func fw_roundString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        let formatter = NSNumber.fw_numberFormatter(digit, roundingMode: .halfUp, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
         return formatter.string(from: self) ?? ""
     }
 
-    /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func fw_roundNumber(_ digit: Int) -> NSNumber {
-        return fw_formatNumber(digit, roundingMode: .halfUp)
+    /// 快捷取上整格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.8912 => 1234.90)，默认false去掉末尾0(示例：1234.8912 => 1234.9)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: 格式化字符串
+    public func fw_ceilString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        let formatter = NSNumber.fw_numberFormatter(digit, roundingMode: .ceiling, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
+        return formatter.string(from: self) ?? ""
     }
 
-    /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func fw_ceilNumber(_ digit: Int) -> NSNumber {
-        return fw_formatNumber(digit, roundingMode: .ceiling)
-    }
-
-    /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-    public func fw_floorNumber(_ digit: Int) -> NSNumber {
-        return fw_formatNumber(digit, roundingMode: .floor)
-    }
-    
-    private func fw_formatNumber(_ digit: Int, roundingMode: NumberFormatter.RoundingMode) -> NSNumber {
-        let string = fw_formatString(digit, roundingMode: roundingMode) as NSString
-        return NSNumber(value: string.doubleValue)
+    /// 快捷取下整格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.56
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.9012 => 1234.90)，默认false去掉末尾0(示例：1234.9012 => 1234.9)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.56
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.56
+    /// - Returns: 格式化字符串
+    public func fw_floorString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        let formatter = NSNumber.fw_numberFormatter(digit, roundingMode: .floor, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
+        return formatter.string(from: self) ?? ""
     }
     
 }
@@ -346,7 +382,11 @@ extension WrapperGlobal {
 // MARK: - String+Foundation
 @_spi(FW) extension String {
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
-    public func fw_size(font: UIFont, drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), attributes: [NSAttributedString.Key: Any]? = nil) -> CGSize {
+    public func fw_size(
+        font: UIFont,
+        drawSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+        attributes: [NSAttributedString.Key: Any]? = nil
+    ) -> CGSize {
         var attr: [NSAttributedString.Key: Any] = [:]
         attr[.font] = font
         if let attributes = attributes {
