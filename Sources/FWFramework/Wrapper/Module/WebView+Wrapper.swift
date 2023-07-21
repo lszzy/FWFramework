@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import JavaScriptCore
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -58,6 +59,11 @@ extension Wrapper where Base: WKWebView {
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
     public static func clearCache(_ completion: (() -> Void)? = nil) {
         Base.fw_clearCache(completion)
+    }
+    
+    /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
+    public static func evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
+        return Base.fw_evaluateScript(script, variables: variables)
     }
     
     /// 清空WebView后退和前进的网页栈
