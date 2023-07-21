@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import JavaScriptCore
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -481,6 +482,20 @@ open class WebView: WKWebView {
         if backForwardList.responds(to: selector) {
             backForwardList.perform(selector)
         }
+    }
+    
+    /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
+    public static func fw_evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
+        var javascript = script
+        if !variables.isEmpty {
+            for (key, value) in variables {
+                javascript = javascript.replacingOccurrences(of: key, with: value)
+            }
+        }
+        
+        let context = JSContext()
+        let value = context?.evaluateScript(javascript)
+        return value
     }
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
