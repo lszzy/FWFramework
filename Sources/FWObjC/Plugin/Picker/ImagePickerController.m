@@ -8,7 +8,6 @@
 #import "ImagePickerController.h"
 #import "ImageCropController.h"
 #import "ToolbarView.h"
-#import "ToastPlugin.h"
 #import "AlertPlugin.h"
 #import "ViewPlugin.h"
 #import "ImagePlugin.h"

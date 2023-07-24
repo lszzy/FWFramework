@@ -120,12 +120,12 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 toastView.indicatorView = lottieView
             }
             tableView.isHidden = true
-            toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Loading..."), cancel: nil, in: self.view)
+            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, in: self.view)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Authenticating..."), cancel: nil, in: self.view)
+                toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, in: self.view)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                toastPlugin.hideLoading(false, in: self.view)
+                toastPlugin.hideLoading(delayed: false, in: self.view)
                 self.tableView.isHidden = false
             }
             return
@@ -139,12 +139,12 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             toastView.indicatorView = IndicatorView(type: type)
         }
         tableView.isHidden = true
-        toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Loading..."), cancel: nil, in: self.view)
+        toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, in: self.view)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            toastPlugin.showLoading(withAttributedText: NSAttributedString(string: "Authenticating..."), cancel: nil, in: self.view)
+            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, in: self.view)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            toastPlugin.hideLoading(false, in: self.view)
+            toastPlugin.hideLoading(delayed: false, in: self.view)
             self.tableView.isHidden = false
         }
     }
