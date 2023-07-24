@@ -45,7 +45,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     private var messageViewTag: Int = 2013
     
     // MARK: - ToastPlugin
-    open func showLoading(withAttributedText attributedText: NSAttributedString?, cancel cancelBlock: (() -> Void)?, in view: UIView) {
+    open func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, in view: UIView) {
         var loadingText = attributedText
         if loadingText == nil, defaultLoadingText != nil {
             loadingText = defaultLoadingText?()
@@ -72,7 +72,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.show(animated: fadeAnimated)
     }
     
-    open func hideLoading(_ delayed: Bool, in view: UIView) {
+    open func hideLoading(delayed: Bool, in view: UIView) {
         guard let toastView = view.fw_subview(tag: loadingViewTag) as? ToastView else { return }
         
         if delayed {
@@ -82,12 +82,12 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         }
     }
     
-    open func showingLoading(_ view: UIView) -> UIView? {
+    open func showingLoadingView(in view: UIView) -> UIView? {
         let toastView = view.fw_subview(tag: loadingViewTag) as? ToastView
         return toastView
     }
     
-    open func showProgress(withAttributedText attributedText: NSAttributedString?, progress: CGFloat, cancel cancelBlock: (() -> Void)?, in view: UIView) {
+    open func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, in view: UIView) {
         var progressText = attributedText
         if progressText == nil, defaultProgressText != nil {
             progressText = defaultProgressText?()
@@ -116,17 +116,17 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.show(animated: fadeAnimated)
     }
     
-    open func hideProgress(_ view: UIView) {
+    open func hideProgress(in view: UIView) {
         let toastView = view.fw_subview(tag: progressViewTag) as? ToastView
         toastView?.hide()
     }
     
-    open func showingProgressView(_ view: UIView) -> UIView? {
+    open func showingProgressView(in view: UIView) -> UIView? {
         let toastView = view.fw_subview(tag: progressViewTag) as? ToastView
         return toastView
     }
     
-    open func showMessage(withAttributedText attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, in view: UIView) {
+    open func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, in view: UIView) {
         var messageText = attributedText
         if messageText == nil, defaultMessageText != nil {
             messageText = defaultMessageText?(style)
@@ -151,12 +151,12 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         }
     }
     
-    open func hideMessage(_ view: UIView) {
+    open func hideMessage(in view: UIView) {
         let toastView = view.fw_subview(tag: messageViewTag) as? ToastView
         toastView?.hide()
     }
     
-    open func showingMessageView(_ view: UIView) -> UIView? {
+    open func showingMessageView(in view: UIView) -> UIView? {
         let toastView = view.fw_subview(tag: messageViewTag) as? ToastView
         return toastView
     }

@@ -10,6 +10,52 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - ToastPlugin
+/// 消息吐司样式枚举
+@objc public enum ToastStyle: Int {
+    /// 默认消息样式
+    case `default` = 0
+    /// 成功消息样式
+    case success = 1
+    /// 失败消息样式
+    case failure = 2
+    /// 警告消息样式
+    case warning = 3
+}
+
+/// 吐司插件协议，应用可自定义吐司插件实现
+@objc public protocol ToastPlugin: NSObjectProtocol {
+    
+    /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
+    @objc optional func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, in view: UIView)
+
+    /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
+    @objc optional func hideLoading(delayed: Bool, in view: UIView)
+
+    /// 获取正在显示的加载吐司视图
+    @objc optional func showingLoadingView(in view: UIView) -> UIView?
+
+    /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
+    @objc optional func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, in view: UIView)
+
+    /// 隐藏进度条吐司
+    @objc optional func hideProgress(in view: UIView)
+
+    /// 获取正在显示的进度条吐司视图
+    @objc optional func showingProgressView(in view: UIView) -> UIView?
+
+    /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
+    @objc optional func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, in view: UIView)
+
+    /// 隐藏消息吐司
+    @objc optional func hideMessage(in view: UIView)
+
+    /// 获取正在显示的消息吐司视图
+    @objc optional func showingMessageView(in view: UIView) -> UIView?
+    
+}
+
+// MARK: - UIView+ToastPlugin
 @_spi(FW) extension UIView {
     
     /// 自定义吐司插件，未设置时自动从插件池加载
@@ -47,34 +93,34 @@ import FWObjC
             attributedText = NSAttributedString(string: string)
         }
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showLoading(withAttributedText:cancel:in:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showLoading(attributedText:cancelBlock:in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.showLoading?(withAttributedText: attributedText, cancel: cancelBlock, in: self)
+        plugin.showLoading?(attributedText: attributedText, cancelBlock: cancelBlock, in: self)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
     public func fw_hideLoading(delayed: Bool = false) {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideLoading(_:in:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideLoading(delayed:in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.hideLoading?(delayed, in: self)
+        plugin.hideLoading?(delayed: delayed, in: self)
     }
     
     /// 获取正在显示的加载吐司视图
     public var fw_showingLoadingView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingLoading(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingLoadingView(in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.showingLoading!(self)
+        return plugin.showingLoadingView?(in: self)
     }
     
     /// 是否正在显示加载吐司
@@ -89,34 +135,34 @@ import FWObjC
             attributedText = NSAttributedString(string: string)
         }
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showProgress(withAttributedText:progress:cancel:in:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showProgress(attributedText:progress:cancelBlock:in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.showProgress?(withAttributedText: attributedText, progress: progress, cancel: cancelBlock, in: self)
+        plugin.showProgress?(attributedText: attributedText, progress: progress, cancelBlock: cancelBlock, in: self)
     }
 
     /// 隐藏进度条吐司
     public func fw_hideProgress() {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideProgress(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideProgress(in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.hideProgress?(self)
+        plugin.hideProgress?(in: self)
     }
     
     /// 获取正在显示的进度条吐司视图
     public var fw_showingProgressView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingProgressView(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingProgressView(in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.showingProgressView!(self)
+        return plugin.showingProgressView?(in: self)
     }
     
     /// 是否正在显示进度条吐司
@@ -145,34 +191,34 @@ import FWObjC
             attributedText = NSAttributedString(string: string)
         }
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showMessage(withAttributedText:style:autoHide:interactive:completion:in:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showMessage(attributedText:style:autoHide:interactive:completion:in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.showMessage?(withAttributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, in: self)
+        plugin.showMessage?(attributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, in: self)
     }
 
     /// 隐藏消息吐司
     public func fw_hideMessage() {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideMessage(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.hideMessage(in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        plugin.hideMessage?(self)
+        plugin.hideMessage?(in: self)
     }
     
     /// 获取正在显示的消息吐司视图
     public var fw_showingMessageView: UIView? {
         var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingMessageView(_:))) {
+        if let toastPlugin = self.fw_toastPlugin, toastPlugin.responds(to: #selector(ToastPlugin.showingMessageView(in:))) {
             plugin = toastPlugin
         } else {
             plugin = ToastPluginImpl.shared
         }
-        return plugin.showingMessageView!(self)
+        return plugin.showingMessageView?(in: self)
     }
     
     /// 是否正在显示消息吐司
@@ -182,6 +228,7 @@ import FWObjC
     
 }
 
+// MARK: - UIViewController+ToastPlugin
 @_spi(FW) extension UIViewController {
     
     /// 设置吐司是否显示在window上，默认NO，显示到view上
@@ -280,6 +327,7 @@ import FWObjC
     
 }
 
+// MARK: - UIWindow+ToastPlugin
 @_spi(FW) extension UIWindow {
     
     /// 设置吐司外间距，默认zero
