@@ -11,63 +11,56 @@ import UIKit
 open class ProgressView: UIView, ProgressViewPlugin {
 
     /// 是否是环形，默认为true，false为扇形
-    open var annular: Bool {
-        get { progressLayer.annular }
-        set { progressLayer.annular = newValue }
+    open var annular: Bool = true {
+        didSet { progressLayer.annular = annular }
     }
 
     /// 进度颜色，默认为白色
-    open var color: UIColor {
-        get { progressLayer.color }
-        set { progressLayer.color = newValue }
-    }
-
-    /// 设置或获取进度条大小，默认为{37, 37}
-    open var size: CGSize {
-        get { bounds.size }
-        set { frame = CGRect(origin: frame.origin, size: newValue) }
+    open var color: UIColor = .white {
+        didSet { progressLayer.color = color }
     }
 
     /// 自定义线条颜色，默认为nil自动处理。环形时为color透明度0.1，扇形时为color
     open var lineColor: UIColor? {
-        get { progressLayer.lineColor }
-        set { progressLayer.lineColor = newValue }
+        didSet { progressLayer.lineColor = lineColor }
     }
 
     /// 自定义线条宽度，默认为0自动处理。环形时为3，扇形时为1
-    open var lineWidth: CGFloat {
-        get { progressLayer.lineWidth }
-        set { progressLayer.lineWidth = newValue }
+    open var lineWidth: CGFloat = 0 {
+        didSet { progressLayer.lineWidth = lineWidth }
     }
 
     /// 自定义线条样式，仅环形生效，默认为.kCGLineCapRound
-    open var lineCap: CGLineCap {
-        get { progressLayer.lineCap }
-        set { progressLayer.lineCap = newValue }
+    open var lineCap: CGLineCap = .round {
+        didSet { progressLayer.lineCap = lineCap }
     }
 
     /// 自定义填充颜色，默认为nil
     open var fillColor: UIColor? {
-        get { progressLayer.fillColor }
-        set { progressLayer.fillColor = newValue }
+        didSet { progressLayer.fillColor = fillColor }
     }
 
     /// 自定义填充内边距，默认为0
-    open var fillInset: CGFloat {
-        get { progressLayer.fillInset }
-        set { progressLayer.fillInset = newValue }
+    open var fillInset: CGFloat = 0 {
+        didSet { progressLayer.fillInset = fillInset }
     }
 
     /// 进度动画时长，默认为0.5
-    open var animationDuration: CFTimeInterval {
-        get { progressLayer.animationDuration }
-        set { progressLayer.animationDuration = newValue }
+    open var animationDuration: CFTimeInterval = 0.5 {
+        didSet { progressLayer.animationDuration = animationDuration }
     }
 
     /// 当前进度，取值范围为0.0到1.0，默认为0
     open var progress: CGFloat {
-        get { progressLayer.progress }
+        get { return _progress }
         set { setProgress(newValue, animated: false) }
+    }
+    private var _progress: CGFloat = 0
+    
+    /// 设置或获取进度条大小，默认为{37, 37}
+    open var size: CGSize {
+        get { bounds.size }
+        set { frame = CGRect(origin: frame.origin, size: newValue) }
     }
 
     public override init(frame: CGRect) {
@@ -86,6 +79,15 @@ open class ProgressView: UIView, ProgressViewPlugin {
         if frame.size.equalTo(.zero) {
             frame = CGRect(origin: frame.origin, size: CGSize(width: 37.0, height: 37.0))
         }
+        
+        progressLayer.annular = annular
+        progressLayer.color = color
+        progressLayer.lineColor = lineColor
+        progressLayer.lineWidth = lineWidth
+        progressLayer.lineCap = lineCap
+        progressLayer.fillColor = fillColor
+        progressLayer.fillInset = fillInset
+        progressLayer.progress = progress
 
         backgroundColor = .clear
         layer.contentsScale = UIScreen.main.scale
@@ -130,32 +132,33 @@ open class ProgressView: UIView, ProgressViewPlugin {
 
     /// 设置当前进度，支持动画
     open func setProgress(_ progress: CGFloat, animated: Bool) {
-        let clampedProgress = max(0.0, min(progress, 1.0))
+        _progress = max(0.0, min(progress, 1.0))
         progressLayer.animated = animated
-        progressLayer.progress = clampedProgress
+        progressLayer.progress = _progress
     }
     
 }
 
-open class ProgressLayer: CALayer {
+class ProgressLayer: CALayer {
     
-    @objc dynamic open var annular: Bool = true
-    @objc dynamic open var color: UIColor = .white
-    @objc dynamic open var lineColor: UIColor?
-    @objc dynamic open var lineWidth: CGFloat = 0
-    @objc dynamic open var lineCap: CGLineCap = .round
-    @objc dynamic open var fillColor: UIColor?
-    @objc dynamic open var fillInset: CGFloat = 0
-    @objc dynamic open var animationDuration: CFTimeInterval = 0.5
-    @objc dynamic open var progress: CGFloat = 0
-    @objc dynamic open var animated: Bool = false
+    @NSManaged var annular: Bool
+    @NSManaged var color: UIColor
+    @NSManaged var lineColor: UIColor?
+    @NSManaged var lineWidth: CGFloat
+    @NSManaged var lineCap: CGLineCap
+    @NSManaged var fillColor: UIColor?
+    @NSManaged var fillInset: CGFloat
+    @NSManaged var progress: CGFloat
     
-    open override class func needsDisplay(forKey key: String) -> Bool {
-        return key == "progress" || super.needsDisplay(forKey: key)
+    var animationDuration: CFTimeInterval = 0.5
+    var animated: Bool = false
+    
+    override class func needsDisplay(forKey key: String) -> Bool {
+        return key == #keyPath(ProgressLayer.progress) || super.needsDisplay(forKey: key)
     }
     
-    open override func action(forKey event: String) -> CAAction? {
-        if event == "progress" && animated {
+    override func action(forKey event: String) -> CAAction? {
+        if event == #keyPath(progress) && animated {
             let animation = CABasicAnimation(keyPath: event)
             animation.fromValue = presentation()?.value(forKey: event)
             animation.duration = animationDuration
@@ -164,7 +167,7 @@ open class ProgressLayer: CALayer {
         return super.action(forKey: event)
     }
     
-    open override func draw(in context: CGContext) {
+    override func draw(in context: CGContext) {
         guard !CGRectIsEmpty(bounds) else { return }
         
         if annular {
@@ -223,7 +226,7 @@ open class ProgressLayer: CALayer {
         super.draw(in: context)
     }
     
-    open override func layoutSublayers() {
+    override func layoutSublayers() {
         super.layoutSublayers()
         cornerRadius = bounds.height / 2
     }
