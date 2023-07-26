@@ -23,7 +23,6 @@
 #import "WebView.h"
 
 #import "IndicatorView.h"
-#import "ProgressView.h"
 #import "RefreshView.h"
 #import "ImagePlugin.h"
 #import "AlertController.h"
