@@ -179,13 +179,9 @@ import UIKit
 }
 
 @_spi(FW) @objc extension UIImageView {
-    
-    public func __fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, completion: completion)
-    }
 
-    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
+    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: progress)
     }
 
     public func __fw_cancelImageRequest() {
