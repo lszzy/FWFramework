@@ -136,7 +136,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         let type = IndicatorViewAnimationType(rawValue: rowData)
         let toastPlugin = ToastPluginImpl()
         toastPlugin.customBlock = { toastView in
-            toastView.indicatorView = IndicatorView(type: type)
+            toastView.indicatorView = IndicatorView(type: type) as! any UIView & IndicatorViewPlugin
         }
         tableView.isHidden = true
         toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, in: self.view)
@@ -196,13 +196,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         let rowData = sectionData[indexPath.row]
         let type = IndicatorViewAnimationType(rawValue: rowData)
         ViewPluginImpl.shared.customIndicatorView = { style in
-            return IndicatorView(type: type)
+            return IndicatorView(type: type) as! any UIView & IndicatorViewPlugin
         }
         // IndicatorView也支持进度显示
         ViewPluginImpl.shared.customProgressView = { style in
             let indicatorView = IndicatorView(type: type)
             indicatorView.hidesWhenStopped = false
-            return indicatorView
+            return indicatorView as! any UIView & ProgressViewPlugin
         }
         RefreshPluginImpl.shared.pullRefreshBlock = nil
         RefreshPluginImpl.shared.infiniteScrollBlock = nil

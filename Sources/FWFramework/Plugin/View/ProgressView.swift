@@ -62,6 +62,12 @@ open class ProgressView: UIView, ProgressViewPlugin {
         get { bounds.size }
         set { frame = CGRect(origin: frame.origin, size: newValue) }
     }
+    
+    public init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
+        
+        didInitialize()
+    }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,10 +82,6 @@ open class ProgressView: UIView, ProgressViewPlugin {
     }
     
     private func didInitialize() {
-        if frame.size.equalTo(.zero) {
-            frame = CGRect(origin: frame.origin, size: CGSize(width: 37.0, height: 37.0))
-        }
-        
         progressLayer.annular = annular
         progressLayer.color = color
         progressLayer.lineColor = lineColor

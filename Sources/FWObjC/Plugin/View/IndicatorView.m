@@ -6,6 +6,7 @@
 //
 
 #import "IndicatorView.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWIndicatorViewAnimation
 
@@ -374,7 +375,7 @@
 
 #pragma mark - __FWIndicatorView
 
-@interface __FWIndicatorView ()
+@interface __FWIndicatorView () <__FWIndicatorViewPlugin, __FWProgressViewPlugin>
 
 @property (nonatomic, strong) CALayer *animationLayer;
 
