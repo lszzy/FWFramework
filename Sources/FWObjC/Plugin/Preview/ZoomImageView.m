@@ -6,7 +6,6 @@
 //
 
 #import "ZoomImageView.h"
-#import "ViewPlugin.h"
 #import "ImagePlugin.h"
 #import <FWFramework/FWFramework-Swift.h>
 

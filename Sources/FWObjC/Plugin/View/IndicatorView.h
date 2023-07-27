@@ -5,7 +5,7 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-#import "ViewPlugin.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,7 +44,7 @@ static const __FWIndicatorViewAnimationType __FWIndicatorViewAnimationTypeTriple
  * @see https://github.com/gontovnik/DGActivityIndicatorView
  */
 NS_SWIFT_NAME(IndicatorView)
-@interface __FWIndicatorView : UIView <__FWIndicatorViewPlugin, __FWProgressViewPlugin>
+@interface __FWIndicatorView : UIView
 
 /// 指定动画类型初始化
 - (instancetype)initWithType:(__FWIndicatorViewAnimationType)type;

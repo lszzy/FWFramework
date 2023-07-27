@@ -6,7 +6,6 @@
 //
 
 #import "ToolbarView.h"
-#import "ViewPlugin.h"
 #import <objc/runtime.h>
 #import <FWFramework/FWFramework-Swift.h>
 
