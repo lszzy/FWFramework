@@ -38,7 +38,7 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 吐司插件协议，应用可自定义吐司插件实现
-public protocol ToastPlugin {
+public protocol ToastPlugin: AnyObject {
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
     func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, in view: UIView)

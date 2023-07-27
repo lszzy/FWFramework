@@ -24,7 +24,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     open var customIndicatorView: ((IndicatorViewStyle) -> UIView & IndicatorViewPlugin)?
     
     // MARK: - ViewPlugin
-    open func progressView(withStyle style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
+    open func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
         if let customProgressView = customProgressView {
             return customProgressView(style)
         }
@@ -33,7 +33,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
         return progressView
     }
     
-    open func indicatorView(withStyle style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
+    open func indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         if let customIndicatorView = customIndicatorView {
             return customIndicatorView(style)
         }

@@ -22,7 +22,7 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     }
     
     /// 进度条当前颜色，暂不支持
-    open var color: UIColor = .white
+    open var color: UIColor? = .white
     
     /// 设置内容边距，默认zero
     open var contentInset: UIEdgeInsets = .zero {
