@@ -12,7 +12,7 @@ import FWObjC
 
 // MARK: - EmptyPlugin
 /// 空界面插件协议，应用可自定义空界面插件实现
-public protocol EmptyPlugin {
+public protocol EmptyPlugin: AnyObject {
     
     /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
     func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView)

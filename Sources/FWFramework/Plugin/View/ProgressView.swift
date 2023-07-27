@@ -16,7 +16,7 @@ open class ProgressView: UIView, ProgressViewPlugin {
     }
 
     /// 进度颜色，默认为白色
-    open var color: UIColor = .white {
+    open var color: UIColor? = .white {
         didSet { progressLayer.color = color }
     }
 
@@ -142,7 +142,7 @@ open class ProgressView: UIView, ProgressViewPlugin {
 class ProgressLayer: CALayer {
     
     @NSManaged var annular: Bool
-    @NSManaged var color: UIColor
+    @NSManaged var color: UIColor?
     @NSManaged var lineColor: UIColor?
     @NSManaged var lineWidth: CGFloat
     @NSManaged var lineCap: CGLineCap
@@ -171,7 +171,7 @@ class ProgressLayer: CALayer {
         guard !CGRectIsEmpty(bounds) else { return }
         
         if annular {
-            let lineColor = self.lineColor ?? color.withAlphaComponent(0.1)
+            let lineColor = self.lineColor ?? color?.withAlphaComponent(0.1)
             let lineWidth = self.lineWidth > 0 ? self.lineWidth : 3
             context.setLineWidth(lineWidth)
             context.setLineCap(.round)
@@ -180,7 +180,7 @@ class ProgressLayer: CALayer {
             let startAngle = -CGFloat.pi / 2
             var endAngle = 2 * CGFloat.pi + startAngle
             context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-            context.setStrokeColor(lineColor.cgColor)
+            context.setStrokeColor(lineColor?.cgColor ?? UIColor.clear.cgColor)
             context.strokePath()
             
             if let fillColor = self.fillColor {
@@ -195,7 +195,7 @@ class ProgressLayer: CALayer {
             bezierPath.lineCapStyle = lineCap
             endAngle = progress * 2 * CGFloat.pi + startAngle
             bezierPath.addArc(withCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-            context.setStrokeColor(color.cgColor)
+            context.setStrokeColor(color?.cgColor ?? UIColor.clear.cgColor)
             context.addPath(bezierPath.cgPath)
             context.strokePath()
         } else {
@@ -203,7 +203,7 @@ class ProgressLayer: CALayer {
             let lineWidth = self.lineWidth > 0 ? self.lineWidth : 1
             let allRect = bounds
             let circleInset = lineWidth + fillInset
-            context.setStrokeColor(lineColor.cgColor)
+            context.setStrokeColor(lineColor?.cgColor ?? UIColor.clear.cgColor)
             context.setLineWidth(lineWidth)
             context.strokeEllipse(in: allRect.insetBy(dx: lineWidth / 2.0, dy: lineWidth / 2.0))
             
@@ -216,7 +216,7 @@ class ProgressLayer: CALayer {
             let radius = (min(allRect.size.width, allRect.size.height) - circleInset * 2) / 2
             let startAngle = -CGFloat.pi / 2
             let endAngle = progress * 2 * CGFloat.pi + startAngle
-            context.setFillColor(color.cgColor)
+            context.setFillColor(color?.cgColor ?? UIColor.clear.cgColor)
             context.move(to: center)
             context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
             context.closePath()
