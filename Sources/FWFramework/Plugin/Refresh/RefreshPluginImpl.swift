@@ -15,7 +15,6 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     // MARK: - Accessor
     /// 单例模式
-    @objc(sharedInstance)
     public static let shared = RefreshPluginImpl()
     
     /// 下拉刷新自定义句柄，开启时自动调用
@@ -25,11 +24,11 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     open var infiniteScrollBlock: ((InfiniteScrollView) -> Void)?
     
     // MARK: - RefreshPlugin
-    open func isRefreshing(_ scrollView: UIScrollView) -> Bool {
+    open func isRefreshing(scrollView: UIScrollView) -> Bool {
         return scrollView.fw_pullRefreshView?.state == .loading
     }
     
-    open func shouldRefreshing(_ scrollView: UIScrollView) -> Bool {
+    open func shouldRefreshing(scrollView: UIScrollView) -> Bool {
         return scrollView.fw_showPullRefresh
     }
     
@@ -37,33 +36,33 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         scrollView.fw_showPullRefresh = shouldRefreshing
     }
     
-    open func setRefreshingBlock(_ block: @escaping () -> Void, scrollView: UIScrollView) {
+    open func setRefreshing(block: @escaping () -> Void, scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(block: block)
         if let pullRefreshView = scrollView.fw_pullRefreshView {
             pullRefreshBlock?(pullRefreshView)
         }
     }
     
-    open func setRefreshingTarget(_ target: Any, action: Selector, scrollView: UIScrollView) {
+    open func setRefreshing(target: Any, action: Selector, scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(target: target, action: action)
         if let pullRefreshView = scrollView.fw_pullRefreshView {
             pullRefreshBlock?(pullRefreshView)
         }
     }
     
-    open func beginRefreshing(_ scrollView: UIScrollView) {
+    open func beginRefreshing(scrollView: UIScrollView) {
         scrollView.fw_triggerPullRefresh()
     }
     
-    open func endRefreshing(_ scrollView: UIScrollView) {
+    open func endRefreshing(scrollView: UIScrollView) {
         scrollView.fw_pullRefreshView?.stopAnimating()
     }
     
-    open func isLoading(_ scrollView: UIScrollView) -> Bool {
+    open func isLoading(scrollView: UIScrollView) -> Bool {
         return scrollView.fw_infiniteScrollView?.state == .loading
     }
     
-    open func shouldLoading(_ scrollView: UIScrollView) -> Bool {
+    open func shouldLoading(scrollView: UIScrollView) -> Bool {
         return scrollView.fw_showInfiniteScroll
     }
     
@@ -71,7 +70,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         scrollView.fw_showInfiniteScroll = shouldLoading
     }
     
-    open func loadingFinished(_ scrollView: UIScrollView) -> Bool {
+    open func loadingFinished(scrollView: UIScrollView) -> Bool {
         return scrollView.fw_infiniteScrollFinished
     }
     
@@ -79,25 +78,25 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         scrollView.fw_infiniteScrollFinished = loadingFinished
     }
     
-    open func setLoading(_ block: @escaping () -> Void, scrollView: UIScrollView) {
+    open func setLoading(block: @escaping () -> Void, scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(block: block)
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
             infiniteScrollBlock?(infiniteScrollView)
         }
     }
     
-    open func setLoadingTarget(_ target: Any, action: Selector, scrollView: UIScrollView) {
+    open func setLoading(target: Any, action: Selector, scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(target: target, action: action)
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
             infiniteScrollBlock?(infiniteScrollView)
         }
     }
     
-    open func beginLoading(_ scrollView: UIScrollView) {
+    open func beginLoading(scrollView: UIScrollView) {
         scrollView.fw_triggerInfiniteScroll()
     }
     
-    open func endLoading(_ scrollView: UIScrollView) {
+    open func endLoading(scrollView: UIScrollView) {
         scrollView.fw_infiniteScrollView?.stopAnimating()
     }
     
