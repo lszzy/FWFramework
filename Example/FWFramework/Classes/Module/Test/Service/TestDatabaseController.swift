@@ -18,7 +18,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     @objc var tag: String = ""
     
     static func databaseVersion() -> String? {
-        return isLatest ? "2" : "1"
+        return isLatest ? "2.0" : nil
     }
     
     static func tablePrimaryKey() -> String? {
@@ -35,7 +35,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = TestDatabaseModel
     
     func didInitialize() {
-        let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeInt
+        let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeDouble
         TestDatabaseModel.isLatest = version > 1
     }
     
@@ -110,7 +110,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             
             let model = TestDatabaseModel()
             model.content = content
-            model.tag = "标签"
+            model.tag = "新"
             DatabaseManager.insert(model)
             
             self?.setupSubviews()
@@ -133,14 +133,17 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             return
         }
         
-        let version = Int(versionString) ?? 0
+        let version = Double(versionString) ?? 0
         if version > 1 {
-            app.showAlert(title: "数据库已是最新版本，无需更新", message: nil)
+            app.showAlert(title: "数据库无需更新", message: nil)
             return
         }
         
         TestDatabaseModel.isLatest = true
-        app.showAlert(title: "数据库已更新至最新版本", message: nil)
+        DatabaseManager.update(TestDatabaseModel.self, value: "tag = '旧'", where: nil)
+        app.showAlert(title: "数据库更新完成", message: nil)
+        
+        setupSubviews()
     }
     
     func onClear() {
@@ -151,6 +154,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
     func onDelete() {
         DatabaseManager.removeModel(TestDatabaseModel.self)
+        TestDatabaseModel.isLatest = false
         
         setupSubviews()
     }
