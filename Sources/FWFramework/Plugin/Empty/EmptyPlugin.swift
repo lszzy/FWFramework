@@ -46,22 +46,51 @@ extension EmptyPlugin {
 
 // MARK: - EmptyViewDelegate
 /// 空界面代理协议
-@objc public protocol EmptyViewDelegate: NSObjectProtocol {
+public protocol EmptyViewDelegate: AnyObject {
     
     /// 显示空界面，默认调用UIScrollView.showEmptyView
-    @objc optional func showEmptyView(_ scrollView: UIScrollView)
+    func showEmptyView(_ scrollView: UIScrollView)
 
     /// 隐藏空界面，默认调用UIScrollView.hideEmptyView
-    @objc optional func hideEmptyView(_ scrollView: UIScrollView)
+    func hideEmptyView(_ scrollView: UIScrollView)
 
     /// 显示空界面时是否允许滚动，默认NO
-    @objc optional func emptyViewShouldScroll(_ scrollView: UIScrollView) -> Bool
+    func emptyViewShouldScroll(_ scrollView: UIScrollView) -> Bool
 
     /// 无数据时是否显示空界面，默认YES
-    @objc optional func emptyViewShouldDisplay(_ scrollView: UIScrollView) -> Bool
+    func emptyViewShouldDisplay(_ scrollView: UIScrollView) -> Bool
 
     /// 有数据时是否强制显示空界面，默认NO
-    @objc optional func emptyViewForceDisplay(_ scrollView: UIScrollView) -> Bool
+    func emptyViewForceDisplay(_ scrollView: UIScrollView) -> Bool
+    
+}
+
+extension EmptyViewDelegate {
+    
+    /// 默认实现，显示空界面，默认调用UIScrollView.showEmptyView
+    public func showEmptyView(_ scrollView: UIScrollView) {
+        scrollView.fw_showEmptyView()
+    }
+
+    /// 默认实现，隐藏空界面，默认调用UIScrollView.hideEmptyView
+    public func hideEmptyView(_ scrollView: UIScrollView) {
+        scrollView.fw_hideEmptyView()
+    }
+
+    /// 默认实现，显示空界面时是否允许滚动，默认NO
+    public func emptyViewShouldScroll(_ scrollView: UIScrollView) -> Bool {
+        return false
+    }
+
+    /// 默认实现，无数据时是否显示空界面，默认YES
+    public func emptyViewShouldDisplay(_ scrollView: UIScrollView) -> Bool {
+        return true
+    }
+
+    /// 默认实现，有数据时是否强制显示空界面，默认NO
+    public func emptyViewForceDisplay(_ scrollView: UIScrollView) -> Bool {
+        return false
+    }
     
 }
 
@@ -242,35 +271,20 @@ extension EmptyPlugin {
     public func fw_reloadEmptyView() {
         guard let emptyViewDelegate = self.fw_emptyViewDelegate else { return }
         
-        var shouldDisplay = false
-        if emptyViewDelegate.responds(to: #selector(EmptyViewDelegate.emptyViewForceDisplay(_:))) {
-            shouldDisplay = emptyViewDelegate.emptyViewForceDisplay!(self)
-        }
+        var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(self)
         if !shouldDisplay {
-            if emptyViewDelegate.responds(to: #selector(EmptyViewDelegate.emptyViewShouldDisplay(_:))) {
-                shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay!(self) && self.fw_emptyItemsCount() == 0
-            } else {
-                shouldDisplay = self.fw_emptyItemsCount() == 0
-            }
+            shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay(self) && self.fw_emptyItemsCount() == 0
         }
         
         let hideSuccess = self.fw_invalidateEmptyView()
         if shouldDisplay {
             fw_setPropertyBool(true, forName: "fw_invalidateEmptyView")
             
-            if emptyViewDelegate.responds(to: #selector(EmptyViewDelegate.emptyViewShouldScroll(_:))) {
-                self.isScrollEnabled = emptyViewDelegate.emptyViewShouldScroll!(self)
-            } else {
-                self.isScrollEnabled = false
-            }
+            self.isScrollEnabled = emptyViewDelegate.emptyViewShouldScroll(self)
             
             let fadeAnimated = EmptyPluginImpl.shared.fadeAnimated
             EmptyPluginImpl.shared.fadeAnimated = hideSuccess ? false : fadeAnimated
-            if emptyViewDelegate.responds(to: #selector(EmptyViewDelegate.showEmptyView(_:))) {
-                emptyViewDelegate.showEmptyView?(self)
-            } else {
-                self.fw_showEmptyView()
-            }
+            emptyViewDelegate.showEmptyView(self)
             EmptyPluginImpl.shared.fadeAnimated = fadeAnimated
         }
     }
@@ -282,8 +296,8 @@ extension EmptyPlugin {
         
         self.isScrollEnabled = true
         
-        if self.fw_emptyViewDelegate?.responds(to: #selector(EmptyViewDelegate.hideEmptyView(_:))) ?? false {
-            self.fw_emptyViewDelegate?.hideEmptyView?(self)
+        if let emptyViewDelegate = self.fw_emptyViewDelegate {
+            emptyViewDelegate.hideEmptyView(self)
         } else {
             self.fw_hideEmptyView()
         }
