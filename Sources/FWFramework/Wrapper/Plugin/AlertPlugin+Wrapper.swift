@@ -115,8 +115,8 @@ extension Wrapper where Base: UIViewController {
     public func showPrompt(
         title: Any?,
         message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        cancel: Any? = nil,
+        confirm: Any? = nil,
         promptBlock: ((UITextField) -> Void)? = nil,
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -137,8 +137,8 @@ extension Wrapper where Base: UIViewController {
     public func showPrompt(
         title: Any?,
         message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        cancel: Any? = nil,
+        confirm: Any? = nil,
         promptCount: Int,
         promptBlock: ((UITextField, Int) -> Void)?,
         confirmBlock: (([String]) -> Void)?,
