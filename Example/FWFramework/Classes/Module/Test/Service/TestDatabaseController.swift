@@ -9,19 +9,35 @@
 import FWFramework
 
 class TestDatabaseModel: NSObject, DatabaseModel {
+    // 用于模拟数据库结构更新
+    static var isLatest: Bool = false
+    
     @objc var id: Int = 0
     @objc var content: String = ""
     @objc var time: TimeInterval = Date.app.currentTime
-    // var tag: String = ""
+    @objc var tag: String = ""
+    
+    static func databaseVersion() -> String? {
+        return isLatest ? "2" : "1"
+    }
     
     static func tablePrimaryKey() -> String? {
         return "id"
+    }
+    
+    static func tablePropertyBlacklist() -> [String]? {
+        return isLatest ? nil : ["tag"]
     }
 }
 
 class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = TestDatabaseModel
+    
+    func didInitialize() {
+        let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeInt
+        TestDatabaseModel.isLatest = version > 1
+    }
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
@@ -64,7 +80,8 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .subtitle)
         let model = tableData[indexPath.row]
         cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.text = "\(model.id)\n" + model.content
+        let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
+        cell.textLabel?.text = "\(model.id)\(tag)\n" + model.content
         cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
     }
@@ -93,6 +110,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             
             let model = TestDatabaseModel()
             model.content = content
+            model.tag = "标签"
             DatabaseManager.insert(model)
             
             self?.setupSubviews()
@@ -117,9 +135,12 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         
         let version = Int(versionString) ?? 0
         if version > 1 {
-            app.showAlert(title: "数据库无需更新", message: nil)
+            app.showAlert(title: "数据库已是最新版本，无需更新", message: nil)
             return
         }
+        
+        TestDatabaseModel.isLatest = true
+        app.showAlert(title: "数据库已更新至最新版本", message: nil)
     }
     
     func onClear() {
