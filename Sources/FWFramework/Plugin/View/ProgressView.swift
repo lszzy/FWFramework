@@ -16,8 +16,14 @@ open class ProgressView: UIView, ProgressViewPlugin {
     }
 
     /// 进度颜色，默认为白色
-    open var color: UIColor? = .white {
-        didSet { progressLayer.color = color }
+    open var indicatorColor: UIColor? = .white {
+        didSet { progressLayer.color = indicatorColor }
+    }
+    
+    /// 设置或获取进度条大小，默认为{37, 37}
+    open var indicatorSize: CGSize {
+        get { bounds.size }
+        set { frame = CGRect(origin: frame.origin, size: newValue) }
     }
 
     /// 自定义线条颜色，默认为nil自动处理。环形时为color透明度0.1，扇形时为color
@@ -57,12 +63,6 @@ open class ProgressView: UIView, ProgressViewPlugin {
     }
     private var _progress: CGFloat = 0
     
-    /// 设置或获取进度条大小，默认为{37, 37}
-    open var size: CGSize {
-        get { bounds.size }
-        set { frame = CGRect(origin: frame.origin, size: newValue) }
-    }
-    
     public init() {
         super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
         
@@ -83,7 +83,7 @@ open class ProgressView: UIView, ProgressViewPlugin {
     
     private func didInitialize() {
         progressLayer.annular = annular
-        progressLayer.color = color
+        progressLayer.color = indicatorColor
         progressLayer.lineColor = lineColor
         progressLayer.lineWidth = lineWidth
         progressLayer.lineCap = lineCap

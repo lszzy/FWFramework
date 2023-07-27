@@ -53,10 +53,10 @@ NS_SWIFT_NAME(IndicatorView)
 @property (nonatomic, assign) __FWIndicatorViewAnimationType type;
 
 /// 指示器颜色，默认白色
-@property (nonatomic, strong) UIColor *color;
+@property (nonatomic, strong, nullable) UIColor *indicatorColor;
 
 /// 设置或获取指示器大小，默认{37,37}
-@property (nonatomic, assign) CGSize size;
+@property (nonatomic, assign) CGSize indicatorSize;
 
 /// 停止动画时是否自动隐藏，默认YES
 @property (nonatomic, assign) BOOL hidesWhenStopped;

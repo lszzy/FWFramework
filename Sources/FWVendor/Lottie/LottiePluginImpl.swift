@@ -16,13 +16,13 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     
     // MARK: - Accessor
     /// 设置或获取进度条大小，默认{37,37}
-    open var size: CGSize {
+    open var indicatorSize: CGSize {
         get { return bounds.size }
         set { frame = CGRect(x: frame.minX, y: frame.minY, width: newValue.width, height: newValue.height) }
     }
     
     /// 进度条当前颜色，暂不支持
-    open var color: UIColor? = .white
+    open var indicatorColor: UIColor? = .white
     
     /// 设置内容边距，默认zero
     open var contentInset: UIEdgeInsets = .zero {

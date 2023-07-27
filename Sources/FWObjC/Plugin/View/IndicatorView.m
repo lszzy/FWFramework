@@ -415,7 +415,7 @@
 }
 
 - (void)setupLayer {
-    _color = [UIColor whiteColor];
+    _indicatorColor = [UIColor whiteColor];
     _hidesWhenStopped = YES;
     self.userInteractionEnabled = NO;
     self.hidden = YES;
@@ -431,7 +431,7 @@
     
     id<__FWIndicatorViewAnimationProtocol> animation = [self animation];
     if ([animation respondsToSelector:@selector(setupAnimation:size:color:)]) {
-        [animation setupAnimation:_animationLayer size:self.bounds.size color:_color];
+        [animation setupAnimation:_animationLayer size:self.bounds.size color:_indicatorColor];
         _animationLayer.speed = 0.0f;
     }
 }
@@ -443,9 +443,9 @@
     }
 }
 
-- (void)setColor:(UIColor *)color {
-    if (![_color isEqual:color]) {
-        _color = color;
+- (void)setIndicatorColor:(UIColor *)color {
+    if (![_indicatorColor isEqual:color]) {
+        _indicatorColor = color;
         [self setupAnimation];
     }
 }
@@ -463,11 +463,11 @@
     }
 }
 
-- (CGSize)size {
+- (CGSize)indicatorSize {
     return self.bounds.size;
 }
 
-- (void)setSize:(CGSize)size {
+- (void)setIndicatorSize:(CGSize)size {
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, size.width, size.height);
 }
 
