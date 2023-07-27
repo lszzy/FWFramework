@@ -12,19 +12,39 @@ import FWObjC
 
 // MARK: - EmptyPlugin
 /// 空界面插件协议，应用可自定义空界面插件实现
-@objc public protocol EmptyPlugin: NSObjectProtocol {
+public protocol EmptyPlugin {
     
     /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-    @objc optional func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView)
+    func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView)
 
     /// 隐藏空界面
-    @objc optional func hideEmptyView(_ view: UIView)
+    func hideEmptyView(_ view: UIView)
 
     /// 获取正在显示的空界面视图
-    @objc optional func showingEmptyView(_ view: UIView) -> UIView?
+    func showingEmptyView(_ view: UIView) -> UIView?
     
 }
 
+extension EmptyPlugin {
+    
+    /// 默认实现，显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView) {
+        EmptyPluginImpl.shared.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: view)
+    }
+
+    /// 默认实现，隐藏空界面
+    public func hideEmptyView(_ view: UIView) {
+        EmptyPluginImpl.shared.hideEmptyView(view)
+    }
+
+    /// 默认实现，获取正在显示的空界面视图
+    public func showingEmptyView(_ view: UIView) -> UIView? {
+        return EmptyPluginImpl.shared.showingEmptyView(view)
+    }
+    
+}
+
+// MARK: - EmptyViewDelegate
 /// 空界面代理协议
 @objc public protocol EmptyViewDelegate: NSObjectProtocol {
     
@@ -86,20 +106,14 @@ import FWObjC
     
     /// 获取正在显示的空界面视图
     public var fw_showingEmptyView: UIView? {
-        var plugin: EmptyPlugin
-        if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.showingEmptyView(_:))) {
-            plugin = emptyPlugin
-        } else {
-            plugin = EmptyPluginImpl.shared
-        }
-        
+        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
             if scrollView.fw_hasOverlayView {
-                return plugin.showingEmptyView!(scrollView.fw_overlayView)
+                return plugin.showingEmptyView(scrollView.fw_overlayView)
             }
             return nil
         } else {
-            return plugin.showingEmptyView!(self)
+            return plugin.showingEmptyView(self)
         }
     }
 
@@ -136,35 +150,23 @@ import FWObjC
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
     public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
-        var plugin: EmptyPlugin
-        if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.showEmptyView(text:detail:image:loading:actions:block:in:))) {
-            plugin = emptyPlugin
-        } else {
-            plugin = EmptyPluginImpl.shared
-        }
-        
+        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
             scrollView.fw_showOverlayView()
-            plugin.showEmptyView?(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: scrollView.fw_overlayView)
+            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: scrollView.fw_overlayView)
         } else {
-            plugin.showEmptyView?(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: self)
+            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: self)
         }
     }
 
     /// 隐藏空界面
     public func fw_hideEmptyView() {
-        var plugin: EmptyPlugin
-        if let emptyPlugin = self.fw_emptyPlugin, emptyPlugin.responds(to: #selector(EmptyPlugin.hideEmptyView(_:))) {
-            plugin = emptyPlugin
-        } else {
-            plugin = EmptyPluginImpl.shared
-        }
-        
+        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
-            plugin.hideEmptyView?(scrollView.fw_overlayView)
+            plugin.hideEmptyView(scrollView.fw_overlayView)
             scrollView.fw_hideOverlayView()
         } else {
-            plugin.hideEmptyView?(self)
+            plugin.hideEmptyView(self)
         }
     }
     
@@ -220,6 +222,7 @@ import FWObjC
     
 }
 
+// MARK: - UIView+EmptyViewDelegate
 @_spi(FW) extension UIScrollView {
     
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)

@@ -155,34 +155,19 @@ extension ToastPlugin {
         if let string = text as? String {
             attributedText = NSAttributedString(string: string)
         }
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showLoading(attributedText: attributedText, cancelBlock: cancelBlock, in: self)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
     public func fw_hideLoading(delayed: Bool = false) {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.hideLoading(delayed: delayed, in: self)
     }
     
     /// 获取正在显示的加载吐司视图
     public var fw_showingLoadingView: UIView? {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingLoadingView(in: self)
     }
     
@@ -197,34 +182,19 @@ extension ToastPlugin {
         if let string = text as? String {
             attributedText = NSAttributedString(string: string)
         }
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showProgress(attributedText: attributedText, progress: progress, cancelBlock: cancelBlock, in: self)
     }
 
     /// 隐藏进度条吐司
     public func fw_hideProgress() {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.hideProgress(in: self)
     }
     
     /// 获取正在显示的进度条吐司视图
     public var fw_showingProgressView: UIView? {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingProgressView(in: self)
     }
     
@@ -253,34 +223,19 @@ extension ToastPlugin {
         if let string = text as? String {
             attributedText = NSAttributedString(string: string)
         }
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showMessage(attributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, in: self)
     }
 
     /// 隐藏消息吐司
     public func fw_hideMessage() {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.hideMessage(in: self)
     }
     
     /// 获取正在显示的消息吐司视图
     public var fw_showingMessageView: UIView? {
-        var plugin: ToastPlugin
-        if let toastPlugin = self.fw_toastPlugin {
-            plugin = toastPlugin
-        } else {
-            plugin = ToastPluginImpl.shared
-        }
+        let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingMessageView(in: self)
     }
     
