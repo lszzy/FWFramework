@@ -105,23 +105,11 @@ open class ProgressView: UIView, ProgressViewPlugin {
     }
     
     open override var frame: CGRect {
-        get {
-            return super.frame
-        }
-        set {
-            super.frame = newValue
-            invalidateIntrinsicContentSize()
-        }
+        didSet { invalidateIntrinsicContentSize() }
     }
     
     open override var bounds: CGRect {
-        get {
-            return super.bounds
-        }
-        set {
-            super.bounds = newValue
-            invalidateIntrinsicContentSize()
-        }
+        didSet { invalidateIntrinsicContentSize() }
     }
     
     open override var intrinsicContentSize: CGSize {
