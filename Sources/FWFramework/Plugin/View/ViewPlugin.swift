@@ -36,10 +36,10 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
 public protocol ProgressViewPlugin {
     
     /// 设置或获取进度条当前颜色
-    var color: UIColor? { get set }
+    var indicatorColor: UIColor? { get set }
     
     /// 设置或获取进度条大小
-    var size: CGSize { get set }
+    var indicatorSize: CGSize { get set }
     
     /// 设置或获取进度条当前进度
     var progress: CGFloat { get set }
@@ -77,10 +77,10 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
 public protocol IndicatorViewPlugin {
     
     /// 设置或获取指示器当前颜色
-    var color: UIColor? { get set }
+    var indicatorColor: UIColor? { get set }
     
     /// 设置或获取指示器大小
-    var size: CGSize { get set }
+    var indicatorSize: CGSize { get set }
     
     /// 当前是否正在执行动画
     var isAnimating: Bool { get }
@@ -184,8 +184,14 @@ extension ViewPlugin {
 /// 系统指示器默认实现指示器视图协议
 @objc extension UIActivityIndicatorView: IndicatorViewPlugin, ProgressViewPlugin {
     
+    /// 设置或获取指示器颜色
+    open var indicatorColor: UIColor? {
+        get { color }
+        set { color = newValue }
+    }
+    
     /// 设置或获取指示器大小，默认中{20,20}，大{37,37}
-    open var size: CGSize {
+    open var indicatorSize: CGSize {
         get {
             return bounds.size
         }

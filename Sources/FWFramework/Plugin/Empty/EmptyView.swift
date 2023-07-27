@@ -96,7 +96,7 @@ open class PlaceholderView: UIView {
     /// loadingView颜色，默认灰色
     open var loadingViewColor: UIColor = .gray {
         didSet {
-            loadingView.color = loadingViewColor
+            loadingView.indicatorColor = loadingViewColor
         }
     }
     /// textLabel文本颜色，默认为(93, 100, 110)
@@ -142,7 +142,7 @@ open class PlaceholderView: UIView {
     /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
     open lazy var loadingView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw_indicatorView(style: .default)
-        result.color = loadingViewColor
+        result.indicatorColor = loadingViewColor
         return result
     }() {
         didSet {

@@ -355,8 +355,8 @@
     }
     if (loadingView) {
         _loadingView = loadingView;
-        _loadingView.size = self.loadingViewSize;
-        _loadingView.color = self.tintColor;
+        _loadingView.indicatorSize = self.loadingViewSize;
+        _loadingView.indicatorColor = self.tintColor;
         [_loadingView stopAnimating];
         [self.contentView addSubview:_loadingView];
     }
@@ -704,7 +704,7 @@
         UIColor *color = self.tintColor;
         self.titleLabel.textColor = color;
         self.subtitleLabel.textColor = color;
-        self.loadingView.color = color;
+        self.loadingView.indicatorColor = color;
     }
 }
 

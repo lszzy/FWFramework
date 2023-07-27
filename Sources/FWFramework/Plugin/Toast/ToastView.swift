@@ -212,10 +212,10 @@ open class ToastView: UIControl {
             imageView.image = indicatorImage
         case .indicator:
             firstView = indicatorView
-            indicatorView.color = indicatorColor
+            indicatorView.indicatorColor = indicatorColor
         case .progress:
             firstView = progressView
-            progressView.color = indicatorColor
+            progressView.indicatorColor = indicatorColor
         default:
             break
         }

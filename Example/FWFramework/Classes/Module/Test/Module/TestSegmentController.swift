@@ -85,7 +85,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .height(100)
         
         let progressView = ProgressView()
-        progressView.color = AppTheme.textColor
+        progressView.indicatorColor = AppTheme.textColor
         gifImageView.addSubview(progressView)
         progressView.app.layoutChain.center().size(CGSize(width: 40, height: 40))
         
@@ -103,8 +103,8 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         
         let activitySize = CGSize(width: 30, height: 30)
         let activityView = UIActivityIndicatorView(style: .gray)
-        activityView.color = AppTheme.textColor
-        activityView.size = activitySize
+        activityView.indicatorColor = AppTheme.textColor
+        activityView.indicatorSize = activitySize
         activityView.startAnimating()
         view.addSubview(activityView)
         activityView.app.layoutChain

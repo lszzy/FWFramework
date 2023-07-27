@@ -357,7 +357,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 - (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
         _indicatorView = [UIView __fw_indicatorViewWithRefresh];
-        _indicatorView.color = UIColor.grayColor;
+        _indicatorView.indicatorColor = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
     return _indicatorView;
@@ -394,7 +394,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (UIColor *)indicatorColor {
-    return self.indicatorView.color;
+    return self.indicatorView.indicatorColor;
 }
 
 #pragma mark - Setters
@@ -481,10 +481,10 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)setIndicatorView:(UIView<__FWIndicatorViewPlugin> *)indicatorView {
-    UIColor *indicatorColor = self.indicatorView.color;
+    UIColor *indicatorColor = self.indicatorView.indicatorColor;
     [_indicatorView removeFromSuperview];
     _indicatorView = indicatorView;
-    _indicatorView.color = indicatorColor;
+    _indicatorView.indicatorColor = indicatorColor;
     [self addSubview:_indicatorView];
     
     if (![_indicatorView isKindOfClass:[UIActivityIndicatorView class]]) {
@@ -497,7 +497,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
-    self.indicatorView.color = indicatorColor;
+    self.indicatorView.indicatorColor = indicatorColor;
 }
 
 - (void)setIndicatorPadding:(CGFloat)indicatorPadding {
@@ -739,14 +739,14 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 - (UIView<__FWIndicatorViewPlugin> *)indicatorView {
     if(!_indicatorView) {
         _indicatorView = [UIView __fw_indicatorViewWithRefresh];
-        _indicatorView.color = UIColor.grayColor;
+        _indicatorView.indicatorColor = UIColor.grayColor;
         [self addSubview:_indicatorView];
     }
     return _indicatorView;
 }
 
 - (UIColor *)indicatorColor {
-    return self.indicatorView.color;
+    return self.indicatorView.indicatorColor;
 }
 
 - (UILabel *)finishedLabel {
@@ -802,10 +802,10 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)setIndicatorView:(UIView<__FWIndicatorViewPlugin> *)indicatorView {
-    UIColor *indicatorColor = self.indicatorView.color;
+    UIColor *indicatorColor = self.indicatorView.indicatorColor;
     [_indicatorView removeFromSuperview];
     _indicatorView = indicatorView;
-    _indicatorView.color = indicatorColor;
+    _indicatorView.indicatorColor = indicatorColor;
     [self addSubview:_indicatorView];
     
     [self setNeedsLayout];
@@ -813,7 +813,7 @@ static CGFloat __FWInfiniteScrollViewHeight = 60;
 }
 
 - (void)setIndicatorColor:(UIColor *)indicatorColor {
-    self.indicatorView.color = indicatorColor;
+    self.indicatorView.indicatorColor = indicatorColor;
 }
 
 - (void)setIndicatorPadding:(CGFloat)indicatorPadding {
