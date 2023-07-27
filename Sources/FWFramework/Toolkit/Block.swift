@@ -48,10 +48,8 @@ public class MulticastBlock: NSObject {
     /// 是否在主线程执行，会阻碍UI渲染，默认false
     open var onMainThread = false
     
-    /// 是否已经触发过，只要调用过invoke就会标记为true
-    public private(set) var isInvoked = false
-    
     private var blocks: [() -> Void] = []
+    private var isInvoked = false
     private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
     
     private static var instances: [AnyHashable: MulticastBlock] = [:]
