@@ -46,7 +46,7 @@ public class MulticastBlock: NSObject {
     public var invokeOnce = false
     
     /// 是否在主线程执行，会阻碍UI渲染，默认false
-    open var onMainThread = false
+    public var onMainThread = false
     
     private var blocks: [() -> Void] = []
     private var isInvoked = false
