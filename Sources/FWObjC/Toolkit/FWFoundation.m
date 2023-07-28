@@ -986,58 +986,43 @@ static NSTimeInterval fwStaticLocalBaseTime = 0;
 #endif
 }
 
-- (NSString *)fw_roundString:(NSInteger)digit
-{
-    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundHalfUp];
-}
-
-- (NSString *)fw_ceilString:(NSInteger)digit
-{
-    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundCeiling];
-}
-
-- (NSString *)fw_floorString:(NSInteger)digit
-{
-    return [self fw_formatString:digit roundingMode:NSNumberFormatterRoundFloor];
-}
-
-- (NSString *)fw_formatString:(NSInteger)digit
-              roundingMode:(NSNumberFormatterRoundingMode)roundingMode
++ (NSNumberFormatter *)fw_numberFormatter:(NSInteger)digit roundingMode:(NSNumberFormatterRoundingMode)roundingMode fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol
 {
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.numberStyle = NSNumberFormatterNoStyle;
+    if (currencySymbol.length > 0) {
+        formatter.numberStyle = NSNumberFormatterCurrencyStyle;
+        formatter.currencySymbol = currencySymbol;
+    } else {
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    }
     formatter.roundingMode = roundingMode;
     formatter.minimumIntegerDigits = 1;
     formatter.maximumFractionDigits = digit;
+    formatter.minimumFractionDigits = fractionZero ? digit : 0;
     formatter.decimalSeparator = @".";
-    formatter.groupingSeparator = @"";
-    formatter.usesGroupingSeparator = NO;
     formatter.currencyDecimalSeparator = @".";
-    formatter.currencyGroupingSeparator = @"";
-    NSString *result = [formatter stringFromNumber:self];
-    return result ?: @"";
+    formatter.usesGroupingSeparator = groupingSeparator.length > 0;
+    formatter.groupingSeparator = groupingSeparator;
+    formatter.currencyGroupingSeparator = groupingSeparator;
+    return formatter;
 }
 
-- (NSNumber *)fw_roundNumber:(NSUInteger)digit
+- (NSString *)fw_roundString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol
 {
-    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundHalfUp];
+    NSNumberFormatter *formatter = [NSNumber fw_numberFormatter:digit roundingMode:NSNumberFormatterRoundHalfUp fractionZero:fractionZero groupingSeparator:groupingSeparator currencySymbol:currencySymbol];
+    return [formatter stringFromNumber:self] ?: @"";
 }
 
-- (NSNumber *)fw_ceilNumber:(NSUInteger)digit
+- (NSString *)fw_ceilString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol
 {
-    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundCeiling];
+    NSNumberFormatter *formatter = [NSNumber fw_numberFormatter:digit roundingMode:NSNumberFormatterRoundCeiling fractionZero:fractionZero groupingSeparator:groupingSeparator currencySymbol:currencySymbol];
+    return [formatter stringFromNumber:self] ?: @"";
 }
 
-- (NSNumber *)fw_floorNumber:(NSUInteger)digit
+- (NSString *)fw_floorString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol
 {
-    return [self fw_formatNumber:digit roundingMode:NSNumberFormatterRoundFloor];
-}
-
-- (NSNumber *)fw_formatNumber:(NSUInteger)digit
-              roundingMode:(NSNumberFormatterRoundingMode)roundingMode
-{
-    NSString *string = [self fw_formatString:digit roundingMode:roundingMode];
-    return [NSNumber numberWithDouble:[string doubleValue]];
+    NSNumberFormatter *formatter = [NSNumber fw_numberFormatter:digit roundingMode:NSNumberFormatterRoundFloor fractionZero:fractionZero groupingSeparator:groupingSeparator currencySymbol:currencySymbol];
+    return [formatter stringFromNumber:self] ?: @"";
 }
 
 @end

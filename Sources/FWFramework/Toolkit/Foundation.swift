@@ -193,34 +193,70 @@ extension Wrapper where Base: NSNumber {
         return base.__fw_CGFloatValue
     }
 
-    /// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func roundString(_ digit: Int) -> String {
-        return base.__fw_roundString(digit)
+    /// 快捷创建NumberFormatter对象，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - roundingMode: 取整模式，默认四舍五入，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.5012 => 1234.50)，默认false去掉末尾0(示例：1234.5012 => 1234.5)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: NumberFormatter对象
+    public static func numberFormatter(
+        _ digit: Int = 2,
+        roundingMode: NumberFormatter.RoundingMode = .halfUp,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> NumberFormatter {
+        return NSNumber.__fw_numberFormatter(digit, roundingMode: roundingMode, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
     }
 
-    /// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-    public func ceilString(_ digit: Int) -> String {
-        return base.__fw_ceilString(digit)
+    /// 快捷四舍五入格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.5012 => 1234.50)，默认false去掉末尾0(示例：1234.5012 => 1234.5)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: 格式化字符串
+    public func roundString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        return base.__fw_roundString(digit, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
     }
 
-    /// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
-    public func floorString(_ digit: Int) -> String {
-        return base.__fw_floorString(digit)
+    /// 快捷取上整格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.57
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.8912 => 1234.90)，默认false去掉末尾0(示例：1234.8912 => 1234.9)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.57
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.57
+    /// - Returns: 格式化字符串
+    public func ceilString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        return base.__fw_ceilString(digit, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
     }
 
-    /// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func roundNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_roundNumber(digit)
-    }
-
-    /// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-    public func ceilNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_ceilNumber(digit)
-    }
-
-    /// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-    public func floorNumber(_ digit: UInt) -> NSNumber {
-        return base.__fw_floorNumber(digit)
+    /// 快捷取下整格式化为字符串，默认numberStyle为decimal
+    /// - Parameters:
+    ///   - digit: 保留小数位数，默认2，示例：1234.5678 => 1234.56
+    ///   - fractionZero: 是否保留小数末尾0(示例：1234.9012 => 1234.90)，默认false去掉末尾0(示例：1234.9012 => 1234.9)
+    ///   - groupingSeparator: 分组分隔符，默认为空，示例：1234.5678 => 1,234.56
+    ///   - currencySymbol: 货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 => $1234.56
+    /// - Returns: 格式化字符串
+    public func floorString(
+        _ digit: Int = 2,
+        fractionZero: Bool = false,
+        groupingSeparator: String = "",
+        currencySymbol: String = ""
+    ) -> String {
+        return base.__fw_floorString(digit, fractionZero: fractionZero, groupingSeparator: groupingSeparator, currencySymbol: currencySymbol)
     }
     
 }
