@@ -43,6 +43,12 @@ NS_SWIFT_NAME(DatabaseModel)
  */
 + (nullable NSString *)databaseVendorPath;
 
+/// 自定义数据库迁移处理方法，数据库版本发生变化时自动调用
+/** 注意：
+ ***数据库结构会一次性升级到最新版本，只需要处理数据迁移或清理即可。当升级多个版本时，可依次比较version进行处理**
+ */
++ (void)databaseMigration:(NSString *)version;
+
 /**
  指定自定义表名，默认类名
 

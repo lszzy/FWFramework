@@ -187,28 +187,28 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     }
     
     func numberString() -> String {
-        let number = NSNumber(value: 45.6789)
+        let number = NSNumber(value: 2345.6789)
         let string = NSMutableString()
         string.appendFormat("number: %@\n\n", number)
-        string.appendFormat("round: %@\n", number.fw.roundString(2))
-        string.appendFormat("ceil: %@\n", number.fw.ceilString(2))
-        string.appendFormat("floor: %@\n", number.fw.floorString(2))
-        string.appendFormat("round: %@\n", number.fw.roundNumber(2))
-        string.appendFormat("ceil: %@\n", number.fw.ceilNumber(2))
-        string.appendFormat("floor: %@\n", number.fw.floorNumber(2))
+        string.appendFormat("round: %@\n", number.fw.roundString())
+        string.appendFormat("ceil: %@\n", number.fw.ceilString())
+        string.appendFormat("floor: %@\n", number.fw.floorString())
+        string.appendFormat("roundd: %@\n", number.fw.roundString(2, groupingSeparator: ","))
+        string.appendFormat("ceild: %@\n", number.fw.ceilString(2, groupingSeparator: ","))
+        string.appendFormat("floord: %@\n", number.fw.floorString(2, groupingSeparator: ","))
         return string as String
     }
     
     func number2String() -> String {
-        let number = NSNumber(value: 0.6049)
+        let number = NSNumber(value: -2345.6049)
         let string = NSMutableString()
         string.appendFormat("number: %@\n\n", number)
-        string.appendFormat("round: %@\n", number.fw.roundString(2))
-        string.appendFormat("ceil: %@\n", number.fw.ceilString(2))
-        string.appendFormat("floor: %@\n", number.fw.floorString(2))
-        string.appendFormat("round: %@\n", number.fw.roundNumber(2))
-        string.appendFormat("ceil: %@\n", number.fw.ceilNumber(2))
-        string.appendFormat("floor: %@\n", number.fw.floorNumber(2))
+        string.appendFormat("round: %@\n", number.fw.roundString())
+        string.appendFormat("ceil: %@\n", number.fw.ceilString())
+        string.appendFormat("floor: %@\n", number.fw.floorString())
+        string.appendFormat("roundc: %@\n", number.fw.roundString(2, groupingSeparator: ",", currencySymbol: "$"))
+        string.appendFormat("ceilc: %@\n", number.fw.ceilString(2, groupingSeparator: ",", currencySymbol: "$"))
+        string.appendFormat("floorc: %@\n", number.fw.floorString(2, groupingSeparator: ",", currencySymbol: "$"))
         return string as String
     }
     

@@ -87,7 +87,7 @@
 
 - (CGSize)sizeForNumberOfPages:(NSInteger)pageCount
 {
-    return CGSizeMake((self.dotSize.width + self.spacingBetweenDots) * pageCount - self.spacingBetweenDots , self.dotSize.height);
+    return CGSizeMake((self.dotSize.width + self.spacingBetweenDots) * pageCount - self.spacingBetweenDots + (self.currentDotSize.width - self.dotSize.width), MAX(self.dotSize.height, self.currentDotSize.height));
 }
 
 /**
@@ -106,7 +106,7 @@
         } else {
             dot = [self generateDotView];
         }
-        [self updateDotFrame:dot atIndex:i];
+        [self updateDotFrame:dot atIndex:i active:NO];
         [self changeActivity:NO atIndex:i];
     }
     [self changeActivity:YES atIndex:self.currentPage];
@@ -140,14 +140,15 @@
  *
  *  @param dot   Dot view
  *  @param index Page index of dot
+ *  @param active Whether active
  */
-- (void)updateDotFrame:(UIView *)dot atIndex:(NSInteger)index
+- (void)updateDotFrame:(UIView *)dot atIndex:(NSInteger)index active:(BOOL)active
 {
     // Dots are always centered within view
-    CGFloat x = (self.dotSize.width + self.spacingBetweenDots) * index + ( (CGRectGetWidth(self.frame) - [self sizeForNumberOfPages:self.numberOfPages].width) / 2);
-    CGFloat y = (CGRectGetHeight(self.frame) - self.dotSize.height) / 2;
-    
-    dot.frame = CGRectMake(x, y, self.dotSize.width, self.dotSize.height);
+    CGSize size = (active && index == self.currentPage) ? self.currentDotSize : self.dotSize;
+    CGFloat x = (self.dotSize.width + self.spacingBetweenDots) * index + ( (CGRectGetWidth(self.frame) - [self sizeForNumberOfPages:self.numberOfPages].width) / 2) + ((active && index > self.currentPage) ? (self.currentDotSize.width - self.dotSize.width) : 0);
+    CGFloat y = (CGRectGetHeight(self.frame) - size.height) / 2;
+    dot.frame = CGRectMake(x, y, size.width, size.height);
 }
 
 #pragma mark - Utils
@@ -196,6 +197,13 @@
  */
 - (void)changeActivity:(BOOL)active atIndex:(NSInteger)index
 {
+    if (active && !CGSizeEqualToSize(self.currentDotSize, self.dotSize)) {
+        for (NSInteger i = 0; i < self.dots.count; i++) {
+            UIView *dot = [self.dots objectAtIndex:i];
+            [self updateDotFrame:dot atIndex:i active:YES];
+        }
+    }
+    
     if (self.dotViewClass) {
         id<FWDotViewProtocol> dotView = (id<FWDotViewProtocol>)[self.dots objectAtIndex:index];
         if ([dotView respondsToSelector:@selector(changeActivityState:)]) {
@@ -306,6 +314,16 @@
         return _dotSize;
     }
     return _dotSize;
+}
+
+- (CGSize)currentDotSize
+{
+    if (self.currentDotImage && CGSizeEqualToSize(_currentDotSize, CGSizeZero)) {
+        _currentDotSize = self.currentDotImage.size;
+    } else if (CGSizeEqualToSize(_currentDotSize, CGSizeZero)) {
+        _currentDotSize = self.dotSize;
+    }
+    return _currentDotSize;
 }
 
 @end

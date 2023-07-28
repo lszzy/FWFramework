@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.14.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -34566,9 +34566,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundStringySSSiF"></a>
-                    <a name="//apple_ref/swift/Method/roundString(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundStringySSSiF">roundString(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE15numberFormatter_12roundingMode12fractionZero17groupingSeparator14currencySymbolSo0cE0CSi_So0ce8RoundingG0VSbS2StFZ"></a>
+                    <a name="//apple_ref/swift/Method/numberFormatter(_:roundingMode:fractionZero:groupingSeparator:currencySymbol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE15numberFormatter_12roundingMode12fractionZero17groupingSeparator14currencySymbolSo0cE0CSi_So0ce8RoundingG0VSbS2StFZ">numberFormatter(_:<wbr>roundingMode:<wbr>fractionZero:<wbr>groupingSeparator:<wbr>currencySymbol:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -34576,16 +34576,93 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 =&gt; 12345.68</p>
+                        <p>快捷创建NumberFormatter对象，默认numberStyle为decimal</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">roundString</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">numberFormatter</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nv">roundingMode</span><span class="p">:</span> <span class="kt">NumberFormatter</span><span class="o">.</span><span class="kt">RoundingMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">halfUp</span><span class="p">,</span>
+    <span class="nv">fractionZero</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">groupingSeparator</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">currencySymbol</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NumberFormatter</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>digit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保留小数位数，默认2，示例：1234.5678 =&gt; 1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>roundingMode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>取整模式，默认四舍五入，示例：1234.5678 =&gt; 1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fractionZero</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否保留小数末尾0(示例：1234.5012 =&gt; 1234.50)，默认false去掉末尾0(示例：1234.5012 =&gt; 1234.5)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupingSeparator</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>分组分隔符，默认为空，示例：1234.5678 =&gt; 1,234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencySymbol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 =&gt; $1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>NumberFormatter对象</p>
                       </div>
                     </section>
                   </div>
@@ -34593,9 +34670,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilStringySSSiF"></a>
-                    <a name="//apple_ref/swift/Method/ceilString(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilStringySSSiF">ceilString(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF"></a>
+                    <a name="//apple_ref/swift/Method/roundString(_:fractionZero:groupingSeparator:currencySymbol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF">roundString(_:<wbr>fractionZero:<wbr>groupingSeparator:<wbr>currencySymbol:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -34603,16 +34680,80 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 =&gt; 12345.68</p>
+                        <p>快捷四舍五入格式化为字符串，默认numberStyle为decimal</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ceilString</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">roundString</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nv">fractionZero</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">groupingSeparator</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">currencySymbol</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>digit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保留小数位数，默认2，示例：1234.5678 =&gt; 1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fractionZero</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否保留小数末尾0(示例：1234.5012 =&gt; 1234.50)，默认false去掉末尾0(示例：1234.5012 =&gt; 1234.5)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupingSeparator</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>分组分隔符，默认为空，示例：1234.5678 =&gt; 1,234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencySymbol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 =&gt; $1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>格式化字符串</p>
                       </div>
                     </section>
                   </div>
@@ -34620,9 +34761,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorStringySSSiF"></a>
-                    <a name="//apple_ref/swift/Method/floorString(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorStringySSSiF">floorString(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF"></a>
+                    <a name="//apple_ref/swift/Method/ceilString(_:fractionZero:groupingSeparator:currencySymbol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF">ceilString(_:<wbr>fractionZero:<wbr>groupingSeparator:<wbr>currencySymbol:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -34630,16 +34771,80 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 =&gt; 12345.67</p>
+                        <p>快捷取上整格式化为字符串，默认numberStyle为decimal</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">floorString</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ceilString</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nv">fractionZero</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">groupingSeparator</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">currencySymbol</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>digit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保留小数位数，默认2，示例：1234.5678 =&gt; 1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fractionZero</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否保留小数末尾0(示例：1234.8912 =&gt; 1234.90)，默认false去掉末尾0(示例：1234.8912 =&gt; 1234.9)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupingSeparator</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>分组分隔符，默认为空，示例：1234.5678 =&gt; 1,234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencySymbol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 =&gt; $1234.57</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>格式化字符串</p>
                       </div>
                     </section>
                   </div>
@@ -34647,9 +34852,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundNumberyAESuF"></a>
-                    <a name="//apple_ref/swift/Method/roundNumber(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11roundNumberyAESuF">roundNumber(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF"></a>
+                    <a name="//apple_ref/swift/Method/floorString(_:fractionZero:groupingSeparator:currencySymbol:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorString_12fractionZero17groupingSeparator14currencySymbolSSSi_SbS2StF">floorString(_:<wbr>fractionZero:<wbr>groupingSeparator:<wbr>currencySymbol:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -34657,70 +34862,80 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>四舍五入，去掉末尾0，最多digit位，示例：12345.6789 =&gt; 12345.68</p>
+                        <p>快捷取下整格式化为字符串，默认numberStyle为decimal</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">roundNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSNumber</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">floorString</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nv">fractionZero</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">groupingSeparator</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">currencySymbol</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilNumberyAESuF"></a>
-                    <a name="//apple_ref/swift/Method/ceilNumber(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE10ceilNumberyAESuF">ceilNumber(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>取上整，去掉末尾0，最多digit位，示例：12345.6789 =&gt; 12345.68</p>
-
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>digit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>保留小数位数，默认2，示例：1234.5678 =&gt; 1234.56</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fractionZero</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否保留小数末尾0(示例：1234.9012 =&gt; 1234.90)，默认false去掉末尾0(示例：1234.9012 =&gt; 1234.9)</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupingSeparator</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>分组分隔符，默认为空，示例：1234.5678 =&gt; 1,234.56</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencySymbol</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>货币符号，默认为空，指定后numberStyle为currency，示例：1234.5678 =&gt; $1234.56</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ceilNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSNumber</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorNumberyAESuF"></a>
-                    <a name="//apple_ref/swift/Method/floorNumber(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSNumberCRbzlE11floorNumberyAESuF">floorNumber(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>取下整，去掉末尾0，最多digit位，示例：12345.6789 =&gt; 12345.67</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">floorNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">digit</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSNumber</span></code></pre>
-
-                        </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>格式化字符串</p>
                       </div>
                     </section>
                   </div>
@@ -49020,7 +49235,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-06-30)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

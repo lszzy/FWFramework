@@ -65,6 +65,9 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     /// 是否只能invoke一次，开启时invoke后再append会立即执行而不是添加，默认false
     public var invokeOnce = false
     
+    /// 是否在主线程执行，会阻碍UI渲染，默认false
+    public var onMainThread = false
+    
     private var blocks: [() -> Void] = []
     private var isInvoked = false
     private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
@@ -86,13 +89,23 @@ public typealias BlockIntParam = (Int, Any?) -> ()
     
     /// 添加句柄，invokeOnce开启且调用了invoke后会立即执行而不是添加
     public func append(_ block: @escaping () -> Void) {
+        let targetBlock = !onMainThread ? block : {
+            if Thread.isMainThread {
+                block()
+            } else {
+                DispatchQueue.main.async {
+                    block()
+                }
+            }
+        }
+        
         queue.sync {
             if invokeOnce && isInvoked {
-                block()
+                targetBlock()
                 return
             }
             
-            blocks.append(block)
+            blocks.append(targetBlock)
         }
     }
     

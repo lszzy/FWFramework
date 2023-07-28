@@ -196,23 +196,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 转换为CGFloat
 @property (nonatomic, assign, readonly) CGFloat fw_CGFloatValue NS_REFINED_FOR_SWIFT;
 
-/// 四舍五入，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-- (NSString *)fw_roundString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+/// 快捷创建NumberFormatter对象，默认numberStyle为decimal
++ (NSNumberFormatter *)fw_numberFormatter:(NSInteger)digit roundingMode:(NSNumberFormatterRoundingMode)roundingMode fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol NS_REFINED_FOR_SWIFT;
 
-/// 取上整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.68
-- (NSString *)fw_ceilString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+/// 快捷四舍五入格式化为字符串，默认numberStyle为decimal
+- (NSString *)fw_roundString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol NS_REFINED_FOR_SWIFT;
 
-/// 取下整，去掉末尾0，最多digit位，小数分隔符为.，分组分隔符为空，示例：12345.6789 => 12345.67
-- (NSString *)fw_floorString:(NSInteger)digit NS_REFINED_FOR_SWIFT;
+/// 快捷取上整格式化为字符串，默认numberStyle为decimal
+- (NSString *)fw_ceilString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol NS_REFINED_FOR_SWIFT;
 
-/// 四舍五入，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-- (NSNumber *)fw_roundNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取上整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.68
-- (NSNumber *)fw_ceilNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
-
-/// 取下整，去掉末尾0，最多digit位，示例：12345.6789 => 12345.67
-- (NSNumber *)fw_floorNumber:(NSUInteger)digit NS_REFINED_FOR_SWIFT;
+/// 快捷取下整格式化为字符串，默认numberStyle为decimal
+- (NSString *)fw_floorString:(NSInteger)digit fractionZero:(BOOL)fractionZero groupingSeparator:(NSString *)groupingSeparator currencySymbol:(NSString *)currencySymbol NS_REFINED_FOR_SWIFT;
 
 @end
 
