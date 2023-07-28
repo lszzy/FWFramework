@@ -219,6 +219,15 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         }
     }
     
+    /// 分页控件当前小圆标大小，默认zero同pageControlDotSize
+    open var pageControlCurrentDotSize: CGSize = .zero {
+        didSet {
+            if let pageControl = pageControl as? PageControl {
+                pageControl.currentDotSize = pageControlCurrentDotSize
+            }
+        }
+    }
+    
     /// 分页控件小圆标间隔
     open var pageControlDotSpacing: CGFloat = -1 {
         didSet {
@@ -407,6 +416,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         if let pageControl = pageControl as? PageControl {
             if !(pageDotImage != nil && currentPageDotImage != nil && pageControlDotSize.equalTo(CGSize(width: 10, height: 10))) {
                 pageControl.dotSize = pageControlDotSize
+                pageControl.currentDotSize = pageControlCurrentDotSize
             }
             size = pageControl.sizeForNumberOfPages(imagePathsGroup.count)
         } else {
@@ -633,6 +643,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             pageControl.isUserInteractionEnabled = false
             pageControl.currentPage = indexOnPageControl
             pageControl.dotSize = pageControlDotSize
+            pageControl.currentDotSize = pageControlCurrentDotSize
             if let dotViewClass = pageDotViewClass {
                 pageControl.dotViewClass = dotViewClass
             }
