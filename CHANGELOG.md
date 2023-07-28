@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.15.0] - 2023-07-28
+
+### Added
+* Added database migration protocol method
+* Added currentDotSize setting to PageControl
+* MulticastBlock adds the main thread call attribute
+* Added Button packaging method in SwiftUI
+* Refactor the NumberFormatter constructor
+
 ## [4.14.1] - 2023-06-30
 
 ### Changed
