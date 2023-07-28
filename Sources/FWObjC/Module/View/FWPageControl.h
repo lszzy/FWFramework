@@ -56,6 +56,11 @@ NS_SWIFT_NAME(PageControl)
 @property (nonatomic) CGSize dotSize;
 
 /**
+ *  Current dot size for dot views. Default is zero which means same as dotSize.
+ */
+@property (nonatomic) CGSize currentDotSize;
+
+/**
  *  UIColor to represent a dot.
  */
 @property (nonatomic, strong, nullable) UIColor *dotColor;
