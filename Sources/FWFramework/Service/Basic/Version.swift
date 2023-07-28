@@ -52,7 +52,7 @@ public class VersionManager: NSObject {
     
     private var checkDate: Date?
     private var hasResult: Bool = false
-    private var dataMigrators: [String: () -> Void] = [:]
+    private var dataMigrations: [String: () -> Void] = [:]
     
     // MARK: - Lifecycle
     public override init() {
@@ -98,10 +98,10 @@ public class VersionManager: NSObject {
     
     /// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
     @discardableResult
-    public func checkDataVersion(_ version: String, migrator: @escaping () -> Void) -> Bool {
+    public func checkDataVersion(_ version: String, migration: @escaping () -> Void) -> Bool {
         // 需要执行时才放到队列中
         if checkDataVersion(version) {
-            dataMigrators[version] = migrator
+            dataMigrations[version] = migration
             return true
         }
         return false
@@ -111,7 +111,7 @@ public class VersionManager: NSObject {
     @discardableResult
     public func migrateData(_ completion: (() -> Void)?) -> Bool {
         // 版本号从低到高排序
-        let versions = dataMigrators.keys.sorted { str1, str2 in
+        let versions = dataMigrations.keys.sorted { str1, str2 in
             return str1.compare(str2, options: .numeric) == .orderedAscending
         }
         
@@ -119,10 +119,10 @@ public class VersionManager: NSObject {
         var result = false
         for version in versions {
             if !checkDataVersion(version) { continue }
-            guard let migrator = dataMigrators[version] else { continue }
+            guard let migration = dataMigrations[version] else { continue }
             // 执行并从队列移除
-            migrator()
-            dataMigrators.removeValue(forKey: version)
+            migration()
+            dataMigrations.removeValue(forKey: version)
             result = true
             
             // 保存当前数据版本

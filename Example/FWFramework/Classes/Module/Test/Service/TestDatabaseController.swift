@@ -21,6 +21,14 @@ class TestDatabaseModel: NSObject, DatabaseModel {
         return isLatest ? "2.0" : nil
     }
     
+    static func databaseMigration(_ versionString: String) {
+        let version = versionString.app.safeDouble
+        if version < 2.0 {
+            DatabaseManager.update(TestDatabaseModel.self, value: "tag = '旧'", where: nil)
+        }
+        // if version < 3.0 { ... }
+    }
+    
     static func tablePrimaryKey() -> String? {
         return "id"
     }
@@ -139,8 +147,8 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             return
         }
         
+        // 数据库下次操作时会自动更新，无需手工调用
         TestDatabaseModel.isLatest = true
-        DatabaseManager.update(TestDatabaseModel.self, value: "tag = '旧'", where: nil)
         app.showAlert(title: "数据库更新完成", message: nil)
         
         setupSubviews()
