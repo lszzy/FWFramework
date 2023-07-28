@@ -1,5 +1,14 @@
 # 更新日志
 
+## [4.15.0] - 2023-07-28
+
+### Added
+* 新增数据库迁移协议方法
+* PageControl新增currentDotSize设置
+* MulticastBlock新增主线程调用属性
+* SwiftUI新增Button包装方法
+* 重构NumberFormatter构造方法
+
 ## [4.14.1] - 2023-06-30
 
 ### Changed

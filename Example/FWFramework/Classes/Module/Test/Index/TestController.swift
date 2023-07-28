@@ -23,6 +23,7 @@ import Darwin
             ["Authorize", "TestAuthorizeController"],
             ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
+            ["Database", "TestDatabaseController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
             ["VideoPlayer", "TestVideoController"],

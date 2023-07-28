@@ -152,6 +152,9 @@ NS_SWIFT_NAME(BannerView)
 /** 分页控件小圆标大小 */
 @property (nonatomic, assign) CGSize pageControlDotSize;
 
+/** 分页控件当前小圆标大小，默认zero同pageControlDotSize */
+@property (nonatomic, assign) CGSize pageControlCurrentDotSize;
+
 /** 分页空间小圆标间隔 */
 @property (nonatomic, assign) CGFloat pageControlDotSpacing;
 

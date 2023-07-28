@@ -78,7 +78,6 @@ extension View {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .circular)
                     .stroke(content, lineWidth: lineWidth)
             )
-            .padding(lineWidth / 2)
     }
     
     /// 切换视图移除性

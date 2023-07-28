@@ -364,6 +364,16 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
 }
 
+- (void)setPageControlCurrentDotSize:(CGSize)pageControlCurrentDotSize
+{
+    _pageControlCurrentDotSize = pageControlCurrentDotSize;
+    
+    if ([self.pageControl isKindOfClass:[FWPageControl class]]) {
+        FWPageControl *pageContol = (FWPageControl *)_pageControl;
+        pageContol.currentDotSize = pageControlCurrentDotSize;
+    }
+}
+
 - (void)setPageControlDotSpacing:(CGFloat)pageControlDotSpacing
 {
     _pageControlDotSpacing = pageControlDotSpacing;
@@ -638,6 +648,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
             pageControl.userInteractionEnabled = NO;
             pageControl.currentPage = indexOnPageControl;
             pageControl.dotSize = self.pageControlDotSize;
+            pageControl.currentDotSize = self.pageControlCurrentDotSize;
             if (self.pageDotViewClass != NULL) {
                 pageControl.dotViewClass = self.pageDotViewClass;
             }
@@ -757,6 +768,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         FWPageControl *pageControl = (FWPageControl *)_pageControl;
         if (!(self.pageDotImage && self.currentPageDotImage && CGSizeEqualToSize(CGSizeMake(10, 10), self.pageControlDotSize))) {
             pageControl.dotSize = self.pageControlDotSize;
+            pageControl.currentDotSize = self.pageControlCurrentDotSize;
         }
         size = [pageControl sizeForNumberOfPages:self.imagePathsGroup.count];
     } else {
