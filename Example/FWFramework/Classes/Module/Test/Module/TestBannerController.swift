@@ -43,7 +43,6 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScrollTimeInterval = 4
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .custom
-        result.pageDotViewClass = DotView.self
         result.pageControlDotSize = CGSize(width: 10, height: 1)
         result.pageControlDotSpacing = 4
         result.contentViewInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
@@ -62,12 +61,9 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.imageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
         result.pageControlStyle = .custom
-        result.pageDotViewClass = DotView.self
         result.pageControlDotSize = CGSize(width: 3, height: 3)
         result.pageControlCurrentDotSize = CGSize(width: 9, height: 3)
         result.pageControlDotSpacing = 3
-        result.pageDotColor = UIColor.white
-        result.currentPageDotColor = UIColor.white
         result.imagesGroup = imageUrls
         result.titlesGroup = titlesGroup
         return result
@@ -81,6 +77,10 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
         result.autoScrollTimeInterval = 4
         result.imageViewContentMode = .scaleAspectFill
         result.placeholderImage = UIImage.app.appIconImage()
+        result.pageControlStyle = .custom
+        result.pageControlDotSize = CGSize(width: 3, height: 3)
+        result.pageControlCurrentDotSize = CGSize(width: 3, height: 9)
+        result.pageControlDotSpacing = 3
         result.itemPagingEnabled = true
         result.itemSpacing = 10
         result.imagesGroup = imageUrls

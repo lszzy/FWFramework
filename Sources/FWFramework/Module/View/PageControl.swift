@@ -151,7 +151,7 @@ open class PageControl: UIControl {
     
     /// 计算指定页数时的显示尺寸
     open func sizeForNumberOfPages(_ pageCount: Int) -> CGSize {
-        return CGSize(width: (dotSize.width + spacingBetweenDots) * CGFloat(pageCount) - spacingBetweenDots + (currentDotSize.width - dotSize.width), height: dotSize.height)
+        return CGSize(width: (dotSize.width + spacingBetweenDots) * CGFloat(pageCount) - spacingBetweenDots + (currentDotSize.width - dotSize.width), height: max(dotSize.height, currentDotSize.height))
     }
     
     private func updateDots() {
@@ -182,13 +182,10 @@ open class PageControl: UIControl {
     }
     
     private func updateDotFrame(_ dot: UIView, at index: Int, active: Bool) {
-        var x = ((CGRectGetWidth(self.frame) - sizeForNumberOfPages(self.numberOfPages).width) / 2) + (self.dotSize.width + self.spacingBetweenDots) * CGFloat(index)
-        if active && index > currentPage {
-            x += self.currentDotSize.width - self.dotSize.width
-        }
-        let y = (CGRectGetHeight(self.frame) - self.dotSize.height) / 2
-        let width = active && index == currentPage ? self.currentDotSize.width : self.dotSize.width
-        dot.frame = CGRectMake(x, y, width, self.dotSize.height)
+        let size = (active && index == currentPage) ? self.currentDotSize : self.dotSize
+        let x = ((CGRectGetWidth(self.frame) - sizeForNumberOfPages(self.numberOfPages).width) / 2) + (self.dotSize.width + self.spacingBetweenDots) * CGFloat(index) + ((active && index > currentPage) ? (self.currentDotSize.width - self.dotSize.width) : 0)
+        let y = (CGRectGetHeight(self.frame) - size.height) / 2
+        dot.frame = CGRectMake(x, y, size.width, size.height)
     }
     
     private func generateDotView() -> UIView {
