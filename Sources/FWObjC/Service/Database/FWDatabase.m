@@ -95,6 +95,7 @@ static sqlite3 * _fw_database;
 
 @property (nonatomic, strong) dispatch_semaphore_t dsema;
 @property (nonatomic, assign) BOOL check_update;
+@property (nonatomic, assign) BOOL is_migration;
 @property (nonatomic, copy) NSString *version;
 
 @end
@@ -635,6 +636,16 @@ static sqlite3 * _fw_database;
             [self updateTableFieldWithModel:model_class
                                  newVersion:version
                              localModelName:local_model_name];
+            
+            NSString *oldVersion = [self versionWithModelName:local_model_name];
+            SEL selector = @selector(databaseMigration:);
+            if (oldVersion.length > 0 && [model_class respondsToSelector:selector]) {
+                [self shareInstance].is_migration = YES;
+                IMP sqlite_info_func = [model_class methodForSelector:selector];
+                void (*func)(id, SEL, NSString *) = (void *)sqlite_info_func;
+                func(model_class, selector, oldVersion);
+                [self shareInstance].is_migration = NO;
+            }
         }
     }
     [self shareInstance].check_update = YES;
@@ -902,7 +913,9 @@ static sqlite3 * _fw_database;
 + (BOOL)insert:(id)model_object isReplace:(BOOL)isReplace {
     if (!model_object) return NO;
     __block BOOL result = NO;
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     @autoreleasepool {
         if ([self openTable:[model_object class]]) {
             result = [self commonInsert:model_object isReplace:isReplace];
@@ -917,7 +930,9 @@ static sqlite3 * _fw_database;
             [self close];
         }
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
     return result;
 }
 
@@ -927,7 +942,9 @@ static sqlite3 * _fw_database;
 
 + (BOOL)inserts:(NSArray *)model_array {
     __block BOOL result = YES;
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     @autoreleasepool {
         if (model_array != nil && model_array.count > 0) {
             if ([self openTable:[model_array.firstObject class]]) {
@@ -941,7 +958,9 @@ static sqlite3 * _fw_database;
             }
         }
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
     return result;
 }
 
@@ -1262,9 +1281,13 @@ static sqlite3 * _fw_database;
 
 + (NSArray *)queryModel:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
     if (![self localNameWithModel:model_class]) {return @[];}
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     NSArray * model_array = [self startQuery:model_class conditions:conditions queryType:query_type];
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
     return model_array;
 }
 
@@ -1315,11 +1338,15 @@ static sqlite3 * _fw_database;
 + (NSArray *)query:(Class)model_class sql:(NSString *)sql {
     if (sql && sql.length > 0) {
         if (![self localNameWithModel:model_class]) {return @[];}
-        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        }
         if (![self openTable:model_class]) return @[];
         NSArray * model_object_array = [self startSqlQuery:model_class sql:sql];
         [self close];
-        dispatch_semaphore_signal([self shareInstance].dsema);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_signal([self shareInstance].dsema);
+        }
         return model_object_array;
     }
     [self log:@"sql 查询语句不能为空"];
@@ -1337,7 +1364,9 @@ static sqlite3 * _fw_database;
 
 + (id)query:(Class)model_class func:(NSString *)func condition:(NSString *)condition {
     if (![self localNameWithModel:model_class]) {return nil;}
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     if (![self openTable:model_class]) return @[];
     NSMutableArray * result_array = [NSMutableArray array];
     @autoreleasepool {
@@ -1426,7 +1455,9 @@ static sqlite3 * _fw_database;
             }
         }
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
     if (result_array.count == 1) {
         NSArray * element = result_array.firstObject;
         if (element.count > 1){
@@ -1581,11 +1612,15 @@ static sqlite3 * _fw_database;
 + (BOOL)update:(id)model_object where:(NSString *)where {
     BOOL result = YES;
     if (model_object && [self localNameWithModel:[model_object class]]) {
-        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        }
         @autoreleasepool {
             result = [self updateModel:model_object where:where];
         }
-        dispatch_semaphore_signal([self shareInstance].dsema);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_signal([self shareInstance].dsema);
+        }
     }else {
         result = NO;
     }
@@ -1596,7 +1631,9 @@ static sqlite3 * _fw_database;
     if (model_class == nil) return NO;
     BOOL result = YES;
     if ([self localNameWithModel:model_class]) {
-        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+        }
         @autoreleasepool {
             if (value != nil && value.length > 0) {
                 if ([self openTable:model_class]) {
@@ -1614,7 +1651,9 @@ static sqlite3 * _fw_database;
                 result = NO;
             }
         }
-        dispatch_semaphore_signal([self shareInstance].dsema);
+        if (![self shareInstance].is_migration) {
+            dispatch_semaphore_signal([self shareInstance].dsema);
+        }
     }else {
         result = NO;
     }
@@ -1658,11 +1697,15 @@ static sqlite3 * _fw_database;
 
 + (BOOL)delete:(Class)model_class where:(NSString *)where {
     BOOL result = YES;
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     @autoreleasepool {
         result = [self commonDeleteModel:model_class where:where];
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
     return result;
 }
 
@@ -1674,7 +1717,9 @@ static sqlite3 * _fw_database;
 }
 
 + (void)removeAllModel {
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     @autoreleasepool {
         NSFileManager * file_manager = [NSFileManager defaultManager];
         NSString * cache_path = [self databaseCacheDirectory: nil];
@@ -1690,11 +1735,15 @@ static sqlite3 * _fw_database;
             }];
         }
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
 }
 
 + (void)removeModel:(Class)model_class {
-    dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
+    }
     @autoreleasepool {
         NSFileManager * file_manager = [NSFileManager defaultManager];
         NSString * file_path = [self localPathWithModel:model_class];
@@ -1702,7 +1751,9 @@ static sqlite3 * _fw_database;
             [file_manager removeItemAtPath:file_path error:nil];
         }
     }
-    dispatch_semaphore_signal([self shareInstance].dsema);
+    if (![self shareInstance].is_migration) {
+        dispatch_semaphore_signal([self shareInstance].dsema);
+    }
 }
 
 + (NSString *)commonLocalPathWithModel:(Class)model_class isPath:(BOOL)isPath {
@@ -1738,8 +1789,12 @@ static sqlite3 * _fw_database;
 }
 
 + (NSString *)versionWithModel:(Class)model_class {
-    NSString * model_version = nil;
     NSString * model_name = [self localNameWithModel:model_class];
+    return [self versionWithModelName:model_name];
+}
+
++ (NSString *)versionWithModelName:(NSString *)model_name {
+    NSString * model_version = nil;
     if (model_name) {
         NSRange end_range = [model_name rangeOfString:@"." options:NSBackwardsSearch];
         NSRange start_range = [model_name rangeOfString:@"v" options:NSBackwardsSearch];
