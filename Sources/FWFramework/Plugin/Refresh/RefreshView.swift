@@ -28,7 +28,6 @@ open class PullRefreshView: UIView {
         get { arrowView.arrowColor }
         set {
             arrowView.arrowColor = newValue
-            arrowView.setNeedsDisplay()
         }
     }
     open var textColor: UIColor? {
@@ -155,8 +154,8 @@ open class PullRefreshView: UIView {
         AppBundle.localizedString("fw.refreshTriggered"),
         AppBundle.localizedString("fw.refreshLoading"),
     ]
-    private var subtitles: [String] = ["", "", "", ""]
-    private var viewForState: [Any] = ["", "", "", ""]
+    private var subtitles: [String] = ["", "", ""]
+    private var viewForState: [Any] = ["", "", ""]
     private weak var currentCustomView: UIView?
     private var animationStateBlock: ((PullRefreshView, PullRefreshState) -> Void)?
     private var animationProgressBlock: ((PullRefreshView, CGFloat) -> Void)?
@@ -267,15 +266,17 @@ open class PullRefreshView: UIView {
             let subtitle = self.showsTitleLabel ? self.subtitles[self.state.rawValue] : nil
             self.subtitleLabel.text = subtitle?.count ?? 0 > 0 ? subtitle : nil
             
-            let titleSize = self.titleLabel.text?.boundingRect(with: CGSize(width: labelMaxWidth, height: self.titleLabel.font.lineHeight),
-                                                               options: [.usesFontLeading, .usesLineFragmentOrigin],
-                                                               attributes: [NSAttributedString.Key.font: self.titleLabel.font],
-                                                               context: nil).size ?? .zero
+            let titleSize = self.titleLabel.text?.boundingRect(
+                with: CGSize(width: labelMaxWidth, height: self.titleLabel.font.lineHeight),
+                options: [.usesFontLeading, .usesLineFragmentOrigin],
+                attributes: [.font: self.titleLabel.font],
+                context: nil).size ?? .zero
             
-            let subtitleSize = self.subtitleLabel.text?.boundingRect(with: CGSize(width: labelMaxWidth, height: self.subtitleLabel.font.lineHeight),
-                                                                     options: [.usesFontLeading, .usesLineFragmentOrigin],
-                                                                     attributes: [NSAttributedString.Key.font: self.subtitleLabel.font],
-                                                                     context: nil).size ?? .zero
+            let subtitleSize = self.subtitleLabel.text?.boundingRect(
+                with: CGSize(width: labelMaxWidth, height: self.subtitleLabel.font.lineHeight),
+                options: [.usesFontLeading, .usesLineFragmentOrigin],
+                attributes: [.font: self.subtitleLabel.font],
+                context: nil).size ?? .zero
             
             let maxLabelWidth = max(titleSize.width, subtitleSize.width)
             
@@ -402,12 +403,7 @@ open class PullRefreshView: UIView {
         layoutIfNeeded()
     }
     open func setCustomView(_ view: UIView?, for state: PullRefreshState) {
-        var viewPlaceholder: Any? = view
-
-        if viewPlaceholder == nil {
-            viewPlaceholder = ""
-        }
-
+        let viewPlaceholder: Any = view ?? ""
         if state == .all {
             viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
         } else {
@@ -776,37 +772,30 @@ open class InfiniteScrollView: UIView {
     }
     
     open func setCustomView(_ view: UIView?, for state: InfiniteScrollState) {
-        var viewPlaceholder: Any? = view
-
-        if viewPlaceholder == nil {
-            viewPlaceholder = ""
-        }
-
+        let viewPlaceholder: Any = view ?? ""
         if state == .all {
             viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
         } else {
             viewForState[state.rawValue] = viewPlaceholder
         }
 
-        let newState = self.state
-        self.state = newState
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     open func setAnimationView(_ animationView: UIView & ProgressViewPlugin & IndicatorViewPlugin) {
         self.setCustomView(animationView, for: .all)
 
-        self.animationProgressBlock = { [weak animationView] (view, progress) in
-            guard let animationView = animationView, view.state != .loading else { return }
-            animationView.progress = progress
+        self.animationProgressBlock = { [weak animationView] view, progress in
+            guard view.state != .loading else { return }
+            animationView?.progress = progress
         }
 
-        self.animationStateBlock = { [weak animationView] (view, state) in
-            guard let animationView = animationView else { return }
-
+        self.animationStateBlock = { [weak animationView] view, state in
             if state == .idle {
-                animationView.stopAnimating()
+                animationView?.stopAnimating()
             } else if state == .loading {
-                animationView.startAnimating()
+                animationView?.startAnimating()
             }
         }
     }
@@ -814,9 +803,11 @@ open class InfiniteScrollView: UIView {
     open func startAnimating() {
         state = .loading
     }
+    
     open func stopAnimating() {
         state = .idle
     }
+    
     open var isAnimating: Bool {
         return state != .idle
     }
@@ -834,12 +825,15 @@ open class InfiniteScrollView: UIView {
 // MARK: - PullRefreshArrowView
 class PullRefreshArrowView: UIView {
     
-    var arrowColor: UIColor? = .gray
+    var arrowColor: UIColor? = .gray {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     override func draw(_ rect: CGRect) {
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        context.saveGState()
-
+        
         context.move(to: CGPoint(x: 7.5, y: 8.5))
         context.addLine(to: CGPoint(x: 7.5, y: 31.5))
         context.move(to: CGPoint(x: 0, y: 24))
@@ -848,8 +842,6 @@ class PullRefreshArrowView: UIView {
         context.setLineWidth(1.5)
         arrowColor?.setStroke()
         context.strokePath()
-
-        context.restoreGState()
     }
     
 }
