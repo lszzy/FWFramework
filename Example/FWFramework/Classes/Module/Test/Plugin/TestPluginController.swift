@@ -181,13 +181,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 lottieView.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
-                view.setAnimation(lottieView)
+                view.setAnimationView(lottieView)
             }
             RefreshPluginImpl.shared.infiniteScrollBlock = { view in
                 let lottieView = LottiePluginView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
-                view.setAnimation(lottieView)
+                view.setAnimationView(lottieView)
             }
             return
         }

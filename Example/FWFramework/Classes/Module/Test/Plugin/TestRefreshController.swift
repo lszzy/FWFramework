@@ -41,7 +41,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         let pullView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         pullView.image = ModuleBundle.imageNamed("Loading.gif")
         tableView.app.pullRefreshView?.shouldChangeAlpha = false
-        tableView.app.pullRefreshView?.setCustom(pullView, for: .all)
+        tableView.app.pullRefreshView?.setCustomView(pullView, for: .all)
         tableView.app.pullRefreshView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "refresh state-\(state.rawValue)"
         }
@@ -51,7 +51,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         
         let infiniteView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         infiniteView.image = ModuleBundle.imageNamed("Loading.gif")
-        tableView.app.infiniteScrollView?.setCustom(infiniteView, for: .all)
+        tableView.app.infiniteScrollView?.setCustomView(infiniteView, for: .all)
         // tableView.app.infiniteScrollView?.preloadHeight = 200
         tableView.app.infiniteScrollView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "load state-\(state.rawValue)"

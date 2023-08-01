@@ -22,7 +22,6 @@
 #import "ToolbarView.h"
 #import "WebView.h"
 
-#import "RefreshView.h"
 #import "ImagePlugin.h"
 #import "AlertController.h"
 #import "ImagePickerController.h"

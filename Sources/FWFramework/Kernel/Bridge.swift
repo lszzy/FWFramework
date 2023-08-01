@@ -144,40 +144,6 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension UIScrollView {
-    
-    public var __fw_pullRefreshView: PullRefreshView? {
-        get { fw_pullRefreshView }
-        set { fw_pullRefreshView = newValue }
-    }
-    
-    public var __fw_pullRefreshHeight: CGFloat {
-        get { fw_pullRefreshHeight }
-        set { fw_pullRefreshHeight = newValue }
-    }
-    
-    public var __fw_showPullRefresh: Bool {
-        get { fw_showPullRefresh }
-        set { fw_showPullRefresh = newValue }
-    }
-    
-    public var __fw_infiniteScrollView: InfiniteScrollView? {
-        get { fw_infiniteScrollView }
-        set { fw_infiniteScrollView = newValue }
-    }
-    
-    public var __fw_infiniteScrollHeight: CGFloat {
-        get { fw_infiniteScrollHeight }
-        set { fw_infiniteScrollHeight = newValue }
-    }
-    
-    public var __fw_showInfiniteScroll: Bool {
-        get { fw_showInfiniteScroll }
-        set { fw_showInfiniteScroll = newValue }
-    }
-    
-}
-
 @_spi(FW) @objc extension UIImageView {
 
     public func __fw_setImage(url: Any?, placeholderImage: UIImage?, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
