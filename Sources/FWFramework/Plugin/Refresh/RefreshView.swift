@@ -21,6 +21,7 @@ public enum PullRefreshState: Int {
 /// [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh)
 open class PullRefreshView: UIView {
     
+    // MARK: - Accessor
     public static var height: CGFloat = 60
 
     open var originalInset: UIEdgeInsets = .zero
@@ -102,6 +103,7 @@ open class PullRefreshView: UIView {
     open weak var scrollView: UIScrollView?
     open var isObserving = false
     
+    // MARK: - Subviews
     open lazy var titleLabel: UILabel = {
         let result = UILabel(frame: CGRect(x: 0, y: 0, width: 210, height: 20))
         result.font = UIFont.boldSystemFont(ofSize: 14)
@@ -175,6 +177,7 @@ open class PullRefreshView: UIView {
     }
     var isActive = false
     
+    // MARK: - Lifecycle
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -269,13 +272,13 @@ open class PullRefreshView: UIView {
             let titleSize = self.titleLabel.text?.boundingRect(
                 with: CGSize(width: labelMaxWidth, height: self.titleLabel.font.lineHeight),
                 options: [.usesFontLeading, .usesLineFragmentOrigin],
-                attributes: [.font: self.titleLabel.font],
+                attributes: [.font: self.titleLabel.font as Any],
                 context: nil).size ?? .zero
             
             let subtitleSize = self.subtitleLabel.text?.boundingRect(
                 with: CGSize(width: labelMaxWidth, height: self.subtitleLabel.font.lineHeight),
                 options: [.usesFontLeading, .usesLineFragmentOrigin],
-                attributes: [.font: self.subtitleLabel.font],
+                attributes: [.font: self.subtitleLabel.font as Any],
                 context: nil).size ?? .zero
             
             let maxLabelWidth = max(titleSize.width, subtitleSize.width)
@@ -344,6 +347,7 @@ open class PullRefreshView: UIView {
         }
     }
 
+    // MARK: - Public
     @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
         let state = change[NSKeyValueChangeKey.newKey] as? Int ?? 0
         if state == UIGestureRecognizer.State.began.rawValue {
@@ -448,6 +452,7 @@ open class PullRefreshView: UIView {
         return state != .idle
     }
     
+    // MARK: - Private
     private func setScrollViewContentInsetForLoading() {
         var currentInsets = self.scrollView?.contentInset ?? .zero
         currentInsets.top = self.originalInset.top + self.bounds.size.height
@@ -485,6 +490,7 @@ public enum InfiniteScrollState: Int {
 /// [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh)
 open class InfiniteScrollView: UIView {
     
+    // MARK: - Accessor
     public static var height: CGFloat = 60
     
     open var enabled = true
@@ -598,6 +604,7 @@ open class InfiniteScrollView: UIView {
     open weak var scrollView: UIScrollView?
     open var isObserving = false
     
+    // MARK: - Subviews
     open lazy var finishedView: UIView = {
         let result = finishedLabel
         result.isHidden = true
@@ -647,6 +654,7 @@ open class InfiniteScrollView: UIView {
     private var animationProgressBlock: ((InfiniteScrollView, CGFloat) -> Void)?
     var isActive = false
     
+    // MARK: - Lifecycle
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -712,6 +720,7 @@ open class InfiniteScrollView: UIView {
         }
     }
     
+    // MARK: - Public
     @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
         if self.finished {
             return
@@ -812,6 +821,7 @@ open class InfiniteScrollView: UIView {
         return state != .idle
     }
     
+    // MARK: - Private
     private func setScrollViewContentInset(_ contentInset: UIEdgeInsets) {
         guard contentInset != (scrollView?.contentInset ?? .zero) else { return }
 
@@ -823,7 +833,7 @@ open class InfiniteScrollView: UIView {
 }
 
 // MARK: - PullRefreshArrowView
-class PullRefreshArrowView: UIView {
+fileprivate class PullRefreshArrowView: UIView {
     
     var arrowColor: UIColor? = .gray {
         didSet {
