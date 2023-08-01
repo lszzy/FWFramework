@@ -296,7 +296,7 @@ extension RefreshPlugin {
     }
     
     public func fw_triggerPullRefresh() {
-        if self.fw_pullRefreshView?.isAnimating() ?? false { return }
+        if self.fw_pullRefreshView?.isAnimating ?? false { return }
         
         self.fw_pullRefreshView?.state = .triggered
         self.fw_pullRefreshView?.userTriggered = false
@@ -339,7 +339,7 @@ extension RefreshPlugin {
                     self.removeObserver(pullRefreshView, forKeyPath: "contentSize")
                     self.removeObserver(pullRefreshView, forKeyPath: "frame")
                     self.panGestureRecognizer.fw_unobserveProperty("state", target: pullRefreshView, action: #selector(PullRefreshView.gestureRecognizer(_:stateChanged:)))
-                    pullRefreshView.resetScrollContentInset()
+                    pullRefreshView.resetScrollViewContentInset()
                     pullRefreshView.isObserving = false
                 }
             } else {
@@ -382,7 +382,7 @@ extension RefreshPlugin {
     }
     
     public func fw_triggerInfiniteScroll() {
-        if self.fw_infiniteScrollView?.isAnimating() ?? false { return }
+        if self.fw_infiniteScrollView?.isAnimating ?? false { return }
         if self.fw_infiniteScrollView?.finished ?? false { return }
         
         self.fw_infiniteScrollView?.state = .triggered
