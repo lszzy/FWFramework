@@ -192,10 +192,11 @@ import UIKit
         set { fw_imageLoopCount = newValue }
     }
     
+    /*
     public var __fw_imageFormat: ImageFormat {
         get { fw_imageFormat }
         set { fw_imageFormat = newValue }
-    }
+    }*/
     
     public var __fw_hasAlpha: Bool {
         return fw_hasAlpha
