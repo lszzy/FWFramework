@@ -51,7 +51,7 @@ open class PullRefreshView: UIView {
         set { indicatorView.indicatorColor = newValue }
     }
     
-    /// 指示器边距
+    /// 指示器偏移
     open var indicatorPadding: CGFloat = 0 {
         didSet {
             setNeedsLayout()
@@ -120,7 +120,7 @@ open class PullRefreshView: UIView {
                 if oldValue == .triggered {
                     if let pullRefreshBlock = pullRefreshBlock {
                         pullRefreshBlock()
-                    } else if let target = self.target, let action = self.action, target.responds(to: action) {
+                    } else if let target = target, let action = action, target.responds(to: action) {
                         _ = target.perform(action)
                     }
                 }
@@ -360,8 +360,8 @@ open class PullRefreshView: UIView {
     // MARK: - Public
     /// 拖动手势状态监听回调方法
     @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
-        let state = change[NSKeyValueChangeKey.newKey] as? Int ?? 0
-        if state == UIGestureRecognizer.State.began.rawValue {
+        let gestureState = change[NSKeyValueChangeKey.newKey] as? Int ?? 0
+        if gestureState == UIGestureRecognizer.State.began.rawValue {
             isActive = false
             scrollView?.fw_infiniteScrollView?.isActive = false
         }
@@ -453,7 +453,7 @@ open class PullRefreshView: UIView {
         }
     }
     
-    /// 是否正在动画
+    /// 是否正在执行动画
     open var isAnimating: Bool {
         return state != .idle
     }
@@ -506,6 +506,29 @@ open class PullRefreshView: UIView {
     
 }
 
+fileprivate class PullRefreshArrowView: UIView {
+    
+    var arrowColor: UIColor? = .gray {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        context.move(to: CGPoint(x: 7.5, y: 8.5))
+        context.addLine(to: CGPoint(x: 7.5, y: 31.5))
+        context.move(to: CGPoint(x: 0, y: 24))
+        context.addLine(to: CGPoint(x: 7.5, y: 31.5))
+        context.addLine(to: CGPoint(x: 15, y: 24))
+        context.setLineWidth(1.5)
+        arrowColor?.setStroke()
+        context.strokePath()
+    }
+    
+}
+
 // MARK: - InfiniteScrollView
 /// 上拉追加状态枚举
 public enum InfiniteScrollState: Int {
@@ -521,25 +544,66 @@ public enum InfiniteScrollState: Int {
 open class InfiniteScrollView: UIView {
     
     // MARK: - Accessor
+    /// 全局高度设置
     public static var height: CGFloat = 60
     
+    /// 是否启用，默认true
     open var enabled = true
+    
+    /// 原始边距
     open var originalInset: UIEdgeInsets = .zero
+    
+    /// 预加载高度，默认0
     open var preloadHeight: CGFloat = 0
+    
+    /// 指示器颜色
     open var indicatorColor: UIColor? {
         get { indicatorView.indicatorColor }
-        set {
-            indicatorView.indicatorColor = newValue
-        }
+        set { indicatorView.indicatorColor = newValue }
     }
+    
+    /// 指示器偏移
     open var indicatorPadding: CGFloat = 0 {
         didSet {
             setNeedsLayout()
         }
     }
+    
+    /// 是否显示完成视图，默认true
+    open var showsFinishedView = true
+    
+    /// 自定义完成视图偏移
+    open var finishedPadding: CGFloat = 0
+    
+    /// 是否是用户触发
+    open var userTriggered = false
+    
+    /// 自定义状态改变句柄
+    open var stateBlock: ((_ view: InfiniteScrollView, _ state: InfiniteScrollState) -> Void)?
+    
+    /// 自定义进度句柄
+    open var progressBlock: ((_ view: InfiniteScrollView, _ progress: CGFloat) -> Void)?
+    
+    /// 自定义完成句柄
+    open var finishedBlock: ((_ view: InfiniteScrollView, _ finished: Bool) -> Void)?
+    
+    /// 自定义上拉追加句柄
+    open var infiniteScrollBlock: (() -> Void)?
+    
+    /// 自定义上拉追加目标和动作
+    open weak var target: AnyObject?
+    open var action: Selector?
+    
+    /// 绑定滚动视图
+    open weak var scrollView: UIScrollView?
+    
+    /// 是否已监听
+    open var isObserving = false
+    
+    /// 是否已完成追加
     open var finished = false {
         didSet {
-            if finished == oldValue { return }
+            guard finished != oldValue else { return }
             
             if showsFinishedView {
                 finishedView.isHidden = !finished
@@ -553,32 +617,29 @@ open class InfiniteScrollView: UIView {
             finishedBlock?(self, finished)
         }
     }
-    open var showsFinishedView = true
-    open var finishedPadding: CGFloat = 0
     
+    /// 上拉追加状态
     open var state: InfiniteScrollState = .idle {
         didSet {
             guard state != oldValue else { return }
 
-            let customView = self.viewForState[state.rawValue] as? UIView
-            let hasCustomView = customView != nil
+            let customView = viewForState[state.rawValue] as? UIView
             let customViewChanged = customView != currentCustomView
-
-            if customViewChanged || !hasCustomView {
+            if customViewChanged || customView == nil {
                 currentCustomView?.removeFromSuperview()
                 currentCustomView = nil
             }
 
-            if hasCustomView {
+            if let customView = customView {
                 if customViewChanged {
                     currentCustomView = customView
-                    addSubview(customView!)
+                    addSubview(customView)
                 }
 
-                let viewBounds = customView!.bounds
+                let viewBounds = customView.bounds
                 let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
                 let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((bounds.size.height - viewBounds.size.height) / 2))
-                customView!.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
+                customView.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
 
                 switch state {
                 case .idle:
@@ -613,9 +674,9 @@ open class InfiniteScrollView: UIView {
             }
 
             if oldValue == .triggered && state == .loading && enabled {
-                if let infiniteScrollBlock = self.infiniteScrollBlock {
+                if let infiniteScrollBlock = infiniteScrollBlock {
                     infiniteScrollBlock()
-                } else if let target = self.target, let action = self.action, target.responds(to: action) {
+                } else if let target = target, let action = action, target.responds(to: action) {
                     _ = target.perform(action)
                 }
             }
@@ -624,17 +685,9 @@ open class InfiniteScrollView: UIView {
             stateBlock?(self, state)
         }
     }
-    open var userTriggered = false
-    open var stateBlock: ((_ view: InfiniteScrollView, _ state: InfiniteScrollState) -> Void)?
-    open var progressBlock: ((_ view: InfiniteScrollView, _ progress: CGFloat) -> Void)?
-    open var finishedBlock: ((_ view: InfiniteScrollView, _ finished: Bool) -> Void)?
-    open var infiniteScrollBlock: (() -> Void)?
-    open weak var target: AnyObject?
-    open var action: Selector?
-    open weak var scrollView: UIScrollView?
-    open var isObserving = false
     
     // MARK: - Subviews
+    /// 完成视图
     open lazy var finishedView: UIView = {
         let result = finishedLabel
         result.isHidden = true
@@ -651,6 +704,7 @@ open class InfiniteScrollView: UIView {
         }
     }
     
+    /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw_indicatorView(style: .refresh)
         result.indicatorColor = .gray
@@ -668,6 +722,7 @@ open class InfiniteScrollView: UIView {
         }
     }
     
+    /// 完成文本标签
     open lazy var finishedLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.systemFont(ofSize: 14)
@@ -678,10 +733,12 @@ open class InfiniteScrollView: UIView {
         return result
     }()
     
-    private var viewForState: [Any] = ["", "", "", ""]
+    private var viewForState: [Any] = ["", "", ""]
+    
     private weak var currentCustomView: UIView?
     private var animationStateBlock: ((InfiniteScrollView, InfiniteScrollState) -> Void)?
     private var animationProgressBlock: ((InfiniteScrollView, CGFloat) -> Void)?
+    
     var isActive = false
     
     // MARK: - Lifecycle
@@ -704,14 +761,13 @@ open class InfiniteScrollView: UIView {
     open override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
         
-        if let scrollView = self.superview as? UIScrollView {
-            if scrollView.fw_showInfiniteScroll {
-                if self.isObserving {
-                    scrollView.removeObserver(self, forKeyPath: "contentOffset")
-                    scrollView.removeObserver(self, forKeyPath: "contentSize")
-                    scrollView.panGestureRecognizer.fw_unobserveProperty("state", target: self, action: #selector(gestureRecognizer(_:stateChanged:)))
-                    self.isObserving = false
-                }
+        if let scrollView = superview as? UIScrollView, newSuperview == nil,
+           scrollView.fw_showInfiniteScroll {
+            if isObserving {
+                scrollView.removeObserver(self, forKeyPath: "contentOffset")
+                scrollView.removeObserver(self, forKeyPath: "contentSize")
+                scrollView.panGestureRecognizer.fw_unobserveProperty("state", target: self, action: #selector(gestureRecognizer(_:stateChanged:)))
+                isObserving = false
             }
         }
     }
@@ -719,21 +775,20 @@ open class InfiniteScrollView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
 
-        let paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0
-        let indicatorOrigin = CGPoint(x: self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, y: paddingY + (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2))
-        self.indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: self.indicatorView.bounds.size.width, height: self.indicatorView.bounds.size.height)
+        let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+        let indicatorOrigin = CGPoint(x: bounds.size.width / 2 - indicatorView.bounds.size.width / 2, y: paddingY + (bounds.size.height / 2 - indicatorView.bounds.size.height / 2))
+        indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: indicatorView.bounds.size.width, height: indicatorView.bounds.size.height)
 
-        let finishedPaddingY = self.finishedPadding > 0 ? (self.finishedPadding / 2) : 0
-        let finishedOrigin = CGPoint(x: self.bounds.size.width / 2 - self.finishedView.bounds.size.width / 2, y: finishedPaddingY + (self.bounds.size.height / 2 - self.finishedView.bounds.size.height / 2))
-        self.finishedView.frame = CGRect(x: finishedOrigin.x, y: finishedOrigin.y, width: self.finishedView.bounds.size.width, height: self.finishedView.bounds.size.height)
+        let finishedPaddingY = finishedPadding > 0 ? (finishedPadding / 2) : 0
+        let finishedOrigin = CGPoint(x: bounds.size.width / 2 - finishedView.bounds.size.width / 2, y: finishedPaddingY + (bounds.size.height / 2 - finishedView.bounds.size.height / 2))
+        finishedView.frame = CGRect(x: finishedOrigin.x, y: finishedOrigin.y, width: finishedView.bounds.size.width, height: finishedView.bounds.size.height)
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let keyPath = keyPath, let scrollView = scrollView else { return }
+        guard let scrollView = scrollView else { return }
 
         if keyPath == "contentOffset" {
             if finished { return }
-
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
             if (scrollView.fw_pullRefreshView?.isActive ?? false) ||
@@ -751,37 +806,97 @@ open class InfiniteScrollView: UIView {
     }
     
     // MARK: - Public
+    /// 拖动手势状态监听回调方法
     @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
-        if self.finished {
-            return
-        }
+        if finished { return }
 
-        let state = (change[NSKeyValueChangeKey.newKey] as? Int) ?? 0
-        if state == UIGestureRecognizer.State.began.rawValue {
-            self.isActive = false
-            self.scrollView?.fw_pullRefreshView?.isActive = false
-        } else if state == UIGestureRecognizer.State.ended.rawValue && self.state == .triggered {
+        let gestureState = (change[NSKeyValueChangeKey.newKey] as? Int) ?? 0
+        if gestureState == UIGestureRecognizer.State.began.rawValue {
+            isActive = false
+            scrollView?.fw_pullRefreshView?.isActive = false
+        } else if gestureState == UIGestureRecognizer.State.ended.rawValue && state == .triggered {
             if let scrollView = scrollView, (scrollView.contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) >= 0 {
-                self.state = .loading
+                state = .loading
             } else {
-                self.state = .idle
+                state = .idle
             }
         }
     }
     
-    func scrollViewDidScroll(_ contentOffset: CGPoint) {
+    /// 重置滚动视图contentInset
+    open func resetScrollViewContentInset() {
+        guard let scrollView = scrollView else { return }
+        
+        var currentInsets = scrollView.contentInset
+        currentInsets.bottom = originalInset.bottom
+        setScrollViewContentInset(currentInsets)
+    }
+    
+    /// 设置滚动视图contentInset到追加位置
+    open func setScrollViewContentInsetForInfiniteScrolling() {
+        guard let scrollView = scrollView else { return }
+        
+        var currentInsets = scrollView.contentInset
+        currentInsets.bottom = originalInset.bottom + scrollView.fw_infiniteScrollHeight
+        setScrollViewContentInset(currentInsets)
+    }
+    
+    /// 自定义各状态的视图
+    open func setCustomView(_ view: UIView?, for state: InfiniteScrollState) {
+        let viewPlaceholder: Any = view ?? ""
+        if state == .all {
+            viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
+        } else {
+            viewForState[state.rawValue] = viewPlaceholder
+        }
+
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    /// 自定义动画视图，自动绑定上拉追加动画
+    open func setAnimationView(_ animationView: UIView & ProgressViewPlugin & IndicatorViewPlugin) {
+        setCustomView(animationView, for: .all)
+
+        animationProgressBlock = { [weak animationView] view, progress in
+            guard view.state != .loading else { return }
+            animationView?.progress = progress
+        }
+
+        animationStateBlock = { [weak animationView] view, state in
+            if state == .idle {
+                animationView?.stopAnimating()
+            } else if state == .loading {
+                animationView?.startAnimating()
+            }
+        }
+    }
+    
+    /// 开始追加动画
+    open func startAnimating() {
+        state = .loading
+    }
+    
+    /// 停止动画
+    open func stopAnimating() {
+        state = .idle
+    }
+    
+    /// 是否正在执行动画
+    open var isAnimating: Bool {
+        return state != .idle
+    }
+    
+    // MARK: - Private
+    private func scrollViewDidScroll(_ contentOffset: CGPoint) {
         guard let scrollView = scrollView else { return }
         
         let adjustedContentOffsetY = contentOffset.y + (scrollView.adjustedContentInset.top - scrollView.contentInset.top)
         if animationProgressBlock != nil || progressBlock != nil {
             let scrollHeight = max(scrollView.contentSize.height - scrollView.bounds.size.height + (scrollView.adjustedContentInset.top - scrollView.contentInset.top) + scrollView.contentInset.bottom, scrollView.fw_infiniteScrollHeight)
             let progress = (scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / scrollView.fw_infiniteScrollHeight
-            if let animationProgressBlock = animationProgressBlock {
-                animationProgressBlock(self, max(min(progress, 1.0), 0.0))
-            }
-            if let progressBlock = progressBlock {
-                progressBlock(self, max(min(progress, 1.0), 0.0))
-            }
+            animationProgressBlock?(self, max(min(progress, 1.0), 0.0))
+            progressBlock?(self, max(min(progress, 1.0), 0.0))
         }
 
         let scrollOffsetThreshold = max(scrollView.contentSize.height - scrollView.bounds.size.height + (scrollView.adjustedContentInset.top - scrollView.contentInset.top) - preloadHeight, 0)
@@ -795,93 +910,12 @@ open class InfiniteScrollView: UIView {
         }
     }
     
-    open func resetScrollViewContentInset() {
-        guard let scrollView = scrollView else { return }
-        
-        var currentInsets = scrollView.contentInset
-        currentInsets.bottom = originalInset.bottom
-        setScrollViewContentInset(currentInsets)
-    }
-    open func setScrollViewContentInsetForInfiniteScrolling() {
-        guard let scrollView = scrollView else { return }
-        
-        var currentInsets = scrollView.contentInset
-        currentInsets.bottom = originalInset.bottom + scrollView.fw_infiniteScrollHeight
-        setScrollViewContentInset(currentInsets)
-    }
-    
-    open func setCustomView(_ view: UIView?, for state: InfiniteScrollState) {
-        let viewPlaceholder: Any = view ?? ""
-        if state == .all {
-            viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
-        } else {
-            viewForState[state.rawValue] = viewPlaceholder
-        }
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-    
-    open func setAnimationView(_ animationView: UIView & ProgressViewPlugin & IndicatorViewPlugin) {
-        self.setCustomView(animationView, for: .all)
-
-        self.animationProgressBlock = { [weak animationView] view, progress in
-            guard view.state != .loading else { return }
-            animationView?.progress = progress
-        }
-
-        self.animationStateBlock = { [weak animationView] view, state in
-            if state == .idle {
-                animationView?.stopAnimating()
-            } else if state == .loading {
-                animationView?.startAnimating()
-            }
-        }
-    }
-    
-    open func startAnimating() {
-        state = .loading
-    }
-    
-    open func stopAnimating() {
-        state = .idle
-    }
-    
-    open var isAnimating: Bool {
-        return state != .idle
-    }
-    
-    // MARK: - Private
     private func setScrollViewContentInset(_ contentInset: UIEdgeInsets) {
-        guard contentInset != (scrollView?.contentInset ?? .zero) else { return }
+        guard let scrollView = scrollView, contentInset != scrollView.contentInset else { return }
 
         UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
-            self.scrollView?.contentInset = contentInset
+            scrollView.contentInset = contentInset
         }, completion: nil)
-    }
-    
-}
-
-// MARK: - PullRefreshArrowView
-fileprivate class PullRefreshArrowView: UIView {
-    
-    var arrowColor: UIColor? = .gray {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    override func draw(_ rect: CGRect) {
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        context.move(to: CGPoint(x: 7.5, y: 8.5))
-        context.addLine(to: CGPoint(x: 7.5, y: 31.5))
-        context.move(to: CGPoint(x: 0, y: 24))
-        context.addLine(to: CGPoint(x: 7.5, y: 31.5))
-        context.addLine(to: CGPoint(x: 15, y: 24))
-        context.setLineWidth(1.5)
-        arrowColor?.setStroke()
-        context.strokePath()
     }
     
 }
