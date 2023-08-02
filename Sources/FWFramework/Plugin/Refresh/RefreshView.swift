@@ -296,7 +296,8 @@ open class PullRefreshView: UIView {
             let labelMaxWidth = bounds.size.width - margin - leftViewWidth
             
             titleLabel.text = showsTitleLabel ? titles[state.rawValue] : nil
-            subtitleLabel.text = showsTitleLabel ? subtitles[state.rawValue] : nil
+            let subtitle = showsTitleLabel ? subtitles[state.rawValue] : nil
+            subtitleLabel.text = (subtitle?.count ?? 0) > 0 ? subtitle : nil
             let titleSize = titleLabel.text?.boundingRect(
                 with: CGSize(width: labelMaxWidth, height: titleLabel.font.lineHeight),
                 options: [.usesFontLeading, .usesLineFragmentOrigin],
@@ -309,7 +310,7 @@ open class PullRefreshView: UIView {
                 context: nil).size ?? .zero
             
             let maxLabelWidth = max(titleSize.width, subtitleSize.width)
-            let totalMaxWidth = leftViewWidth + maxLabelWidth + (maxLabelWidth > 0 ? margin : 0)
+            let totalMaxWidth = leftViewWidth + maxLabelWidth + (maxLabelWidth != 0 ? margin : 0)
             let labelX = (bounds.size.width / 2) - (totalMaxWidth / 2) + leftViewWidth + margin
             let totalHeight = subtitleSize.height > 0 ? (titleSize.height + subtitleSize.height + marginY) : titleSize.height
             let minY = (bounds.size.height / 2) - (totalHeight / 2)
