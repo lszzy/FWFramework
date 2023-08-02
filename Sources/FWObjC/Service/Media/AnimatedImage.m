@@ -209,7 +209,8 @@ static SEL __FWCGSVGDocumentSEL = NULL;
         animatedImage.__fw_imageLoopCount = loopCount;
     }
     
-    animatedImage.__fw_imageFormat = format;
+    // TODO: Swift实现
+    // animatedImage.__fw_imageFormat = format;
     CFRelease(source);
     return animatedImage;
 }
