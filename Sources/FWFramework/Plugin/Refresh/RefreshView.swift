@@ -22,47 +22,84 @@ public enum PullRefreshState: Int {
 open class PullRefreshView: UIView {
     
     // MARK: - Accessor
+    /// 全局高度设置
     public static var height: CGFloat = 60
 
+    /// 原始边距
     open var originalInset: UIEdgeInsets = .zero
+    
+    /// 箭头颜色
     open var arrowColor: UIColor? {
         get { arrowView.arrowColor }
-        set {
-            arrowView.arrowColor = newValue
-        }
+        set { arrowView.arrowColor = newValue }
     }
+    
+    /// 文本颜色
     open var textColor: UIColor? {
-        get { titleLabel.textColor }
+        get {
+            titleLabel.textColor
+        }
         set {
             titleLabel.textColor = newValue
             subtitleLabel.textColor = newValue
         }
     }
+    
+    /// 指示器颜色
     open var indicatorColor: UIColor? {
         get { indicatorView.indicatorColor }
-        set {
-            indicatorView.indicatorColor = newValue
-        }
+        set { indicatorView.indicatorColor = newValue }
     }
+    
+    /// 指示器边距
     open var indicatorPadding: CGFloat = 0 {
         didSet {
             setNeedsLayout()
         }
     }
+    
+    /// 是否显示标题文本
     open var showsTitleLabel = false {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
         }
     }
+    
+    /// 是否显示箭头视图
     open var showsArrowView = false {
         didSet {
             setNeedsLayout()
             layoutIfNeeded()
         }
     }
+    
+    /// 是否改变透明度，默认true
     open var shouldChangeAlpha = true
+    
+    /// 是否是用户触发
+    open var userTriggered = false
+    
+    /// 自定义状态改变句柄
+    open var stateBlock: ((_ view: PullRefreshView, _ state: PullRefreshState) -> Void)?
+    
+    /// 自定义进度句柄
+    open var progressBlock: ((_ view: PullRefreshView, _ progress: CGFloat) -> Void)?
 
+    /// 自定义下拉刷新句柄
+    open var pullRefreshBlock: (() -> Void)?
+    
+    /// 自定义下拉刷新目标和动作
+    open weak var target: AnyObject?
+    open var action: Selector?
+    
+    /// 绑定滚动视图
+    open weak var scrollView: UIScrollView?
+    
+    /// 是否已监听
+    open var isObserving = false
+    
+    /// 下拉刷新状态
     open var state: PullRefreshState = .idle {
         didSet {
             if state == oldValue {
@@ -93,17 +130,9 @@ open class PullRefreshView: UIView {
             stateBlock?(self, state)
         }
     }
-    open var userTriggered = false
-    open var stateBlock: ((_ view: PullRefreshView, _ state: PullRefreshState) -> Void)?
-    open var progressBlock: ((_ view: PullRefreshView, _ progress: CGFloat) -> Void)?
-
-    open var pullRefreshBlock: (() -> Void)?
-    open weak var target: AnyObject?
-    open var action: Selector?
-    open weak var scrollView: UIScrollView?
-    open var isObserving = false
     
     // MARK: - Subviews
+    /// 标题文本
     open lazy var titleLabel: UILabel = {
         let result = UILabel(frame: CGRect(x: 0, y: 0, width: 210, height: 20))
         result.font = UIFont.boldSystemFont(ofSize: 14)
@@ -113,6 +142,7 @@ open class PullRefreshView: UIView {
         return result
     }()
     
+    /// 副标题文本
     open lazy var subtitleLabel: UILabel = {
         let result = UILabel(frame: CGRect(x: 0, y: 0, width: 210, height: 20))
         result.font = UIFont.systemFont(ofSize: 12)
@@ -122,6 +152,7 @@ open class PullRefreshView: UIView {
         return result
     }()
     
+    /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw_indicatorView(style: .refresh)
         result.indicatorColor = .gray
@@ -158,23 +189,25 @@ open class PullRefreshView: UIView {
     ]
     private var subtitles: [String] = ["", "", ""]
     private var viewForState: [Any] = ["", "", ""]
+    
     private weak var currentCustomView: UIView?
     private var animationStateBlock: ((PullRefreshView, PullRefreshState) -> Void)?
     private var animationProgressBlock: ((PullRefreshView, CGFloat) -> Void)?
     
     private var pullingPercent: CGFloat = 0 {
         didSet {
-            self.alpha = self.shouldChangeAlpha ? pullingPercent : 1
+            alpha = shouldChangeAlpha ? pullingPercent : 1
 
-            if pullingPercent > 0 && !self.showsArrowView {
-                let customView = self.viewForState[self.state.rawValue] as? UIView
+            if pullingPercent > 0 && !showsArrowView {
+                let customView = viewForState[state.rawValue] as? UIView
                 let hasCustomView = customView != nil
-                if !hasCustomView && !self.indicatorView.isAnimating {
-                    self.indicatorView.startAnimating()
+                if !hasCustomView && !indicatorView.isAnimating {
+                    indicatorView.startAnimating()
                 }
             }
         }
     }
+    
     var isActive = false
     
     // MARK: - Lifecycle
@@ -201,12 +234,12 @@ open class PullRefreshView: UIView {
         
         if let scrollView = superview as? UIScrollView, newSuperview == nil,
            scrollView.fw_showPullRefresh {
-            if self.isObserving {
+            if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
                 scrollView.removeObserver(self, forKeyPath: "frame")
                 scrollView.panGestureRecognizer.fw_unobserveProperty("state", target: self, action: #selector(gestureRecognizer(_:stateChanged:)))
-                self.isObserving = false
+                isObserving = false
             }
         }
     }
@@ -214,148 +247,218 @@ open class PullRefreshView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        let customView = self.viewForState[self.state.rawValue] as? UIView
-        let hasCustomView = customView != nil
-        let customViewChanged = customView != self.currentCustomView
-        if customViewChanged || !hasCustomView {
-            self.currentCustomView?.removeFromSuperview()
-            self.currentCustomView = nil
+        let customView = viewForState[state.rawValue] as? UIView
+        let customViewChanged = customView != currentCustomView
+        if customViewChanged || customView == nil {
+            currentCustomView?.removeFromSuperview()
+            currentCustomView = nil
         }
         
-        self.titleLabel.isHidden = hasCustomView || !self.showsTitleLabel
-        self.subtitleLabel.isHidden = hasCustomView || !self.showsTitleLabel
-        self.arrowView.isHidden = hasCustomView || !self.showsArrowView
+        titleLabel.isHidden = customView != nil || !showsTitleLabel
+        subtitleLabel.isHidden = customView != nil || !showsTitleLabel
+        arrowView.isHidden = customView != nil || !showsArrowView
         
-        if hasCustomView {
+        if let customView = customView {
             if customViewChanged {
-                self.currentCustomView = customView
-                self.addSubview(customView!)
+                currentCustomView = customView
+                addSubview(customView)
             }
-            let viewBounds = customView!.bounds
-            let paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0
-            let origin = CGPoint(x: round((self.bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((self.bounds.size.height - viewBounds.size.height) / 2))
-            customView?.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
+            let viewBounds = customView.bounds
+            let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+            let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((bounds.size.height - viewBounds.size.height) / 2))
+            customView.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
         } else {
-            switch self.state {
+            switch state {
             case .all, .idle:
-                self.indicatorView.stopAnimating()
-                if self.showsArrowView {
-                    self.rotateArrow(0, hide: false)
+                indicatorView.stopAnimating()
+                if showsArrowView {
+                    rotateArrow(0, hide: false)
                 }
             case .triggered:
-                if self.showsArrowView {
-                    self.rotateArrow(CGFloat.pi, hide: false)
+                if showsArrowView {
+                    rotateArrow(CGFloat.pi, hide: false)
                 } else {
-                    if !self.indicatorView.isAnimating {
-                        self.indicatorView.startAnimating()
+                    if !indicatorView.isAnimating {
+                        indicatorView.startAnimating()
                     }
                 }
             case .loading:
-                self.indicatorView.startAnimating()
-                if self.showsArrowView {
-                    self.rotateArrow(0, hide: true)
+                indicatorView.startAnimating()
+                if showsArrowView {
+                    rotateArrow(0, hide: true)
                 }
             }
             
-            let leftViewWidth = max(self.arrowView.bounds.size.width, self.indicatorView.bounds.size.width)
-            
+            let leftViewWidth = max(arrowView.bounds.size.width, indicatorView.bounds.size.width)
             let margin: CGFloat = 10
             let marginY: CGFloat = 2
-            let paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0
-            let labelMaxWidth = self.bounds.size.width - margin - leftViewWidth
+            let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+            let labelMaxWidth = bounds.size.width - margin - leftViewWidth
             
-            self.titleLabel.text = self.showsTitleLabel ? self.titles[self.state.rawValue] : nil
-            
-            let subtitle = self.showsTitleLabel ? self.subtitles[self.state.rawValue] : nil
-            self.subtitleLabel.text = subtitle?.count ?? 0 > 0 ? subtitle : nil
-            
-            let titleSize = self.titleLabel.text?.boundingRect(
-                with: CGSize(width: labelMaxWidth, height: self.titleLabel.font.lineHeight),
+            titleLabel.text = showsTitleLabel ? titles[state.rawValue] : nil
+            subtitleLabel.text = showsTitleLabel ? subtitles[state.rawValue] : nil
+            let titleSize = titleLabel.text?.boundingRect(
+                with: CGSize(width: labelMaxWidth, height: titleLabel.font.lineHeight),
                 options: [.usesFontLeading, .usesLineFragmentOrigin],
-                attributes: [.font: self.titleLabel.font as Any],
+                attributes: [.font: titleLabel.font as Any],
                 context: nil).size ?? .zero
-            
-            let subtitleSize = self.subtitleLabel.text?.boundingRect(
-                with: CGSize(width: labelMaxWidth, height: self.subtitleLabel.font.lineHeight),
+            let subtitleSize = subtitleLabel.text?.boundingRect(
+                with: CGSize(width: labelMaxWidth, height: subtitleLabel.font.lineHeight),
                 options: [.usesFontLeading, .usesLineFragmentOrigin],
-                attributes: [.font: self.subtitleLabel.font as Any],
+                attributes: [.font: subtitleLabel.font as Any],
                 context: nil).size ?? .zero
             
             let maxLabelWidth = max(titleSize.width, subtitleSize.width)
+            let totalMaxWidth = leftViewWidth + maxLabelWidth + (maxLabelWidth > 0 ? margin : 0)
+            let labelX = (bounds.size.width / 2) - (totalMaxWidth / 2) + leftViewWidth + margin
+            let totalHeight = subtitleSize.height > 0 ? (titleSize.height + subtitleSize.height + marginY) : titleSize.height
+            let minY = (bounds.size.height / 2) - (totalHeight / 2)
+            let titleY = minY
             
-            let totalMaxWidth: CGFloat
-            if maxLabelWidth != 0 {
-                totalMaxWidth = leftViewWidth + margin + maxLabelWidth
+            titleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY, width: titleSize.width, height: titleSize.height))
+            subtitleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY + titleSize.height + marginY, width: subtitleSize.width, height: subtitleSize.height))
+            
+            let arrowX = (bounds.size.width / 2) - (totalMaxWidth / 2) + (leftViewWidth - arrowView.bounds.size.width) / 2
+            arrowView.frame = CGRect(x: arrowX, y: paddingY + (bounds.size.height / 2) - (arrowView.bounds.size.height / 2), width: arrowView.bounds.size.width, height: arrowView.bounds.size.height)
+            
+            if showsArrowView {
+                indicatorView.center = arrowView.center
             } else {
-                totalMaxWidth = leftViewWidth + maxLabelWidth
-            }
-            
-            let labelX = (self.bounds.size.width / 2) - (totalMaxWidth / 2) + leftViewWidth + margin
-            
-            if subtitleSize.height > 0 {
-                let totalHeight = titleSize.height + subtitleSize.height + marginY
-                let minY = (self.bounds.size.height / 2) - (totalHeight / 2)
-                
-                let titleY = minY
-                self.titleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY, width: titleSize.width, height: titleSize.height))
-                self.subtitleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY + titleSize.height + marginY, width: subtitleSize.width, height: subtitleSize.height))
-            } else {
-                let totalHeight = titleSize.height
-                let minY = (self.bounds.size.height / 2) - (totalHeight / 2)
-                
-                let titleY = minY
-                self.titleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY, width: titleSize.width, height: titleSize.height))
-                self.subtitleLabel.frame = CGRectIntegral(CGRect(x: labelX, y: paddingY + titleY + titleSize.height + marginY, width: subtitleSize.width, height: subtitleSize.height))
-            }
-            
-            let arrowX = (self.bounds.size.width / 2) - (totalMaxWidth / 2) + (leftViewWidth - self.arrowView.bounds.size.width) / 2
-            self.arrowView.frame = CGRect(x: arrowX, y: paddingY + (self.bounds.size.height / 2) - (self.arrowView.bounds.size.height / 2), width: self.arrowView.bounds.size.width, height: self.arrowView.bounds.size.height)
-            
-            if self.showsArrowView {
-                self.indicatorView.center = self.arrowView.center
-            } else {
-                let indicatorOrigin = CGPoint(x: self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, y: paddingY + (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2))
-                self.indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: self.indicatorView.bounds.size.width, height: self.indicatorView.bounds.size.height)
+                let indicatorOrigin = CGPoint(x: bounds.size.width / 2 - indicatorView.bounds.size.width / 2, y: paddingY + (bounds.size.height / 2 - indicatorView.bounds.size.height / 2))
+                indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: indicatorView.bounds.size.width, height: indicatorView.bounds.size.height)
             }
         }
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let keyPath = keyPath, let scrollView = scrollView else { return }
+        guard let scrollView = scrollView else { return }
 
         if keyPath == "contentOffset" {
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
             if (scrollView.fw_infiniteScrollView?.isActive ?? false) ||
                 (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
-                if self.pullingPercent > 0 { self.pullingPercent = 0 }
-                if self.state != .idle {
-                    self.state = .idle
+                if pullingPercent > 0 { pullingPercent = 0 }
+                if state != .idle {
+                    state = .idle
                 }
-            } else if self.state != .loading {
-                self.scrollViewDidScroll(contentOffset)
+            } else if state != .loading {
+                scrollViewDidScroll(contentOffset)
             } else {
                 var currentInset = scrollView.contentInset
-                currentInset.top = self.originalInset.top + self.bounds.size.height
+                currentInset.top = originalInset.top + bounds.size.height
                 scrollView.contentInset = currentInset
             }
         } else if keyPath == "contentSize" {
-            self.layoutSubviews()
-            self.frame = CGRect(x: 0, y: -scrollView.fw_pullRefreshHeight, width: self.bounds.size.width, height: scrollView.fw_pullRefreshHeight)
+            layoutSubviews()
+            frame = CGRect(x: 0, y: -scrollView.fw_pullRefreshHeight, width: bounds.size.width, height: scrollView.fw_pullRefreshHeight)
         } else if keyPath == "frame" {
-            self.layoutSubviews()
+            layoutSubviews()
         }
     }
 
     // MARK: - Public
+    /// 拖动手势状态监听回调方法
     @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
         let state = change[NSKeyValueChangeKey.newKey] as? Int ?? 0
         if state == UIGestureRecognizer.State.began.rawValue {
-            self.isActive = false
-            self.scrollView?.fw_infiniteScrollView?.isActive = false
+            isActive = false
+            scrollView?.fw_infiniteScrollView?.isActive = false
         }
     }
     
+    /// 重置滚动视图contentInset
+    open func resetScrollViewContentInset() {
+        guard let scrollView = scrollView else { return }
+        
+        var currentInsets = scrollView.contentInset
+        currentInsets.top = originalInset.top
+        setScrollViewContentInset(currentInsets, pullingPercent: 0)
+    }
+
+    /// 自定义各状态的标题
+    open func setTitle(_ title: String?, for state: PullRefreshState) {
+        let title = title ?? ""
+        if state == .all {
+            titles = [title, title, title]
+        } else {
+            titles[state.rawValue] = title
+        }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    /// 自定义各状态的副标题
+    open func setSubtitle(_ subtitle: String?, for state: PullRefreshState) {
+        let subtitle = subtitle ?? ""
+        if state == .all {
+            subtitles = [subtitle, subtitle, subtitle]
+        } else {
+            subtitles[state.rawValue] = subtitle
+        }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    /// 自定义各状态的视图
+    open func setCustomView(_ view: UIView?, for state: PullRefreshState) {
+        let viewPlaceholder: Any = view ?? ""
+        if state == .all {
+            viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
+        } else {
+            viewForState[state.rawValue] = viewPlaceholder
+        }
+
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    /// 自定义动画视图，自动绑定下拉刷新动画
+    open func setAnimationView(_ animationView: UIView & ProgressViewPlugin & IndicatorViewPlugin) {
+        setCustomView(animationView, for: .all)
+
+        animationProgressBlock = { [weak animationView] (view, progress) in
+            guard view.state != .loading else { return }
+            animationView?.progress = progress
+        }
+
+        animationStateBlock = { [weak animationView] (view, state) in
+            if state == .idle {
+                animationView?.stopAnimating()
+            } else if state == .loading {
+                animationView?.startAnimating()
+            }
+        }
+    }
+
+    /// 开始加载动画
+    open func startAnimating() {
+        if let scrollView = scrollView {
+            scrollView.setContentOffset(CGPoint(x: scrollView.contentOffset.x, y: -(frame.size.height + originalInset.top)), animated: true)
+        }
+        
+        state = .loading
+    }
+    
+    /// 停止加载动画
+    open func stopAnimating() {
+        guard isAnimating else { return }
+
+        state = .idle
+
+        if let scrollView = scrollView {
+            scrollView.setContentOffset(CGPoint(x: scrollView.contentOffset.x, y: -originalInset.top), animated: true)
+        }
+    }
+    
+    /// 是否正在动画
+    open var isAnimating: Bool {
+        return state != .idle
+    }
+    
+    // MARK: - Private
     private func scrollViewDidScroll(_ contentOffset: CGPoint) {
         guard let scrollView = scrollView else { return }
         
@@ -378,84 +481,11 @@ open class PullRefreshView: UIView {
         }
     }
     
-    open func resetScrollViewContentInset() {
-        var currentInsets = self.scrollView?.contentInset ?? .zero
-        currentInsets.top = self.originalInset.top
-        setScrollViewContentInset(currentInsets, pullingPercent: 0)
-    }
-
-    open func setTitle(_ title: String?, for state: PullRefreshState) {
-        let title = title ?? ""
-        if state == .all {
-            titles = [title, title, title]
-        } else {
-            titles[state.rawValue] = title
-        }
-        
-        setNeedsLayout()
-        layoutIfNeeded()
-    }
-    open func setSubtitle(_ subtitle: String?, for state: PullRefreshState) {
-        let subtitle = subtitle ?? ""
-        if state == .all {
-            subtitles = [subtitle, subtitle, subtitle]
-        } else {
-            subtitles[state.rawValue] = subtitle
-        }
-        
-        setNeedsLayout()
-        layoutIfNeeded()
-    }
-    open func setCustomView(_ view: UIView?, for state: PullRefreshState) {
-        let viewPlaceholder: Any = view ?? ""
-        if state == .all {
-            viewForState = [viewPlaceholder, viewPlaceholder, viewPlaceholder]
-        } else {
-            viewForState[state.rawValue] = viewPlaceholder
-        }
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-    
-    open func setAnimationView(_ animationView: UIView & ProgressViewPlugin & IndicatorViewPlugin) {
-        self.setCustomView(animationView, for: .all)
-
-        self.animationProgressBlock = { [weak animationView] (view, progress) in
-            guard let animationView = animationView, view.state != .loading else { return }
-            animationView.progress = progress
-        }
-
-        self.animationStateBlock = { [weak animationView] (view, state) in
-            guard let animationView = animationView else { return }
-
-            if state == .idle {
-                animationView.stopAnimating()
-            } else if state == .loading {
-                animationView.startAnimating()
-            }
-        }
-    }
-
-    open func startAnimating() {
-        scrollView?.setContentOffset(CGPoint(x: scrollView?.contentOffset.x ?? .zero, y: -(frame.size.height + originalInset.top)), animated: true)
-        state = .loading
-    }
-    open func stopAnimating() {
-        guard isAnimating else { return }
-
-        state = .idle
-
-        scrollView?.setContentOffset(CGPoint(x: scrollView?.contentOffset.x ?? .zero, y: -originalInset.top), animated: true)
-    }
-    open var isAnimating: Bool {
-        return state != .idle
-    }
-    
-    // MARK: - Private
     private func setScrollViewContentInsetForLoading() {
-        var currentInsets = self.scrollView?.contentInset ?? .zero
-        currentInsets.top = self.originalInset.top + self.bounds.size.height
+        guard let scrollView = scrollView else { return }
+        
+        var currentInsets = scrollView.contentInset
+        currentInsets.top = originalInset.top + bounds.size.height
         setScrollViewContentInset(currentInsets, pullingPercent: 1)
     }
     
@@ -482,7 +512,7 @@ public enum InfiniteScrollState: Int {
     case idle = 0
     case triggered
     case loading
-    case all = 10
+    case all
 }
 
 /// 上拉追加视图，默认高度60
