@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AnimatedImage.h"
+#import "ImagePlugin.h"
 #import "AudioPlayer.h"
 #import "PlayerCache.h"
 
