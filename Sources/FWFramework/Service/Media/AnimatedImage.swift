@@ -158,64 +158,517 @@ open class ImageCoder: NSObject {
     
     /// 单例模式
     public static let shared = ImageCoder()
+    
+    /// 扩展系统UTType
+    public static let kUTTypeHEIC = "public.heic" as CFString
+    public static let kUTTypeHEIF = "public.heif" as CFString
+    public static let kUTTypeHEICS = "public.heics" as CFString
+    public static let kUTTypeWEBP = "org.webmproject.webp" as CFString
 
     /// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
     open var heicsEnabled: Bool = false
+    
+    private lazy var decodeUTTypes: Set<String> = {
+        let result = CGImageSourceCopyTypeIdentifiers() as? [String]
+        return Set(result ?? [])
+    }()
+    
+    private lazy var encodeUTTypes: Set<String> = {
+        let result = CGImageDestinationCopyTypeIdentifiers() as? [String]
+        return Set(result ?? [])
+    }()
 
     /// 解析图片数据到Image，可指定scale
     open func decodedImage(with data: Data?, scale: CGFloat, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
-        // Implementation goes here
-        return nil
+        guard let data = data, data.count > 0,
+              let source = CGImageSourceCreateWithData(data as CFData, nil) else {
+            return nil
+        }
+        
+        var scale = scale
+        if let scaleFactor = options?[.optionScaleFactor] as? NSNumber {
+            scale = max(scaleFactor.doubleValue, 1)
+        }
+
+        var animatedImage: UIImage?
+        let count = CGImageSourceGetCount(source)
+        let format = ImageCoder.imageFormat(for: data)
+        if format == .svg {
+            if #available(iOS 13.0, *) {
+                animatedImage = __FWBridge.svgDecode(data)
+            }
+        } else if !isAnimated(format, forDecode: true) || count <= 1 {
+            animatedImage = createFrame(at: 0, source: source, scale: scale)
+        } else {
+            var frames = [ImageFrame]()
+            for i in 0 ..< count {
+                guard let image = createFrame(at: i, source: source, scale: scale) else { continue }
+                
+                let duration = frameDuration(at: i, source: source, format: format)
+                let frame = ImageFrame(image: image, duration: duration)
+                frames.append(frame)
+            }
+
+            let loopCount = imageLoopCount(source: source, format: format)
+            animatedImage = ImageFrame.animatedImage(frames: frames)
+            animatedImage?.fw_imageLoopCount = loopCount
+        }
+        
+        animatedImage?.fw_imageFormat = format
+        return animatedImage
     }
 
     /// 编码UIImage到图片数据，可指定格式
     open func encodedData(with image: UIImage?, format: ImageFormat, options: [ImageCoderOptions: Any]? = nil) -> Data? {
-        // Implementation goes here
-        return nil
+        guard let image = image else {
+            return nil
+        }
+        
+        var format = format
+        if format == .undefined {
+            format = image.fw_hasAlpha ? .png : .jpeg
+        }
+        if format == .svg {
+            if #available(iOS 13.0, *) {
+                return __FWBridge.svgEncode(image)
+            }
+            return nil
+        }
+        
+        guard let imageRef = image.cgImage else {
+            return nil
+        }
+
+        let imageData = NSMutableData()
+        let imageUTType = ImageCoder.utType(from: format)
+        let isAnimated = isAnimated(format, forDecode: false)
+        let frames = isAnimated ? ImageFrame.frames(animatedImage: image) : nil
+        let count = max(1, frames?.count ?? 0)
+        guard let imageDestination = CGImageDestinationCreateWithData(imageData, imageUTType, count, nil) else {
+            return nil
+        }
+
+        var properties: [String: Any] = [:]
+        properties[kCGImageDestinationLossyCompressionQuality as String] = 1
+        properties[kCGImageDestinationEmbedThumbnail as String] = false
+
+        if !isAnimated || count <= 1 {
+            properties[kCGImagePropertyOrientation as String] = exifOrientation(image.imageOrientation)
+            CGImageDestinationAddImage(imageDestination, imageRef, properties as CFDictionary)
+        } else {
+            var dictionaryProperties: [String: Any] = [:]
+            if let loopCountProperty = loopCountProperty(format) {
+                dictionaryProperties[loopCountProperty] = image.fw_imageLoopCount
+            }
+            var containerProperties: [String: Any] = [:]
+            if let dictionaryProperty = dictionaryProperty(format) {
+                containerProperties[dictionaryProperty] = dictionaryProperties
+            }
+            CGImageDestinationSetProperties(imageDestination, containerProperties as CFDictionary)
+
+            for i in 0..<count {
+                guard let frame = frames?[i], let frameImageRef = frame.image.cgImage else { continue }
+                
+                var frameProperties: [String: Any] = [:]
+                if let delayTimeProperty = delayTimeProperty(format) {
+                    frameProperties[delayTimeProperty] = frame.duration
+                }
+                if let dictionaryProperty = dictionaryProperty(format) {
+                    properties[dictionaryProperty] = frameProperties
+                }
+                CGImageDestinationAddImage(imageDestination, frameImageRef, properties as CFDictionary)
+            }
+        }
+
+        if !CGImageDestinationFinalize(imageDestination) {
+            return nil
+        }
+        return imageData.copy() as? Data
     }
 
     /// 获取图片数据的格式，未知格式返回undefined
     open class func imageFormat(for imageData: Data?) -> ImageFormat {
-        // Implementation goes here
+        guard let data = imageData, data.count > 0 else {
+            return .undefined
+        }
+
+        // File signatures table: http://www.garykessler.net/library/file_sigs.html
+        let c = data[0]
+        switch c {
+        case 0xFF:
+            return .jpeg
+        case 0x89:
+            return .png
+        case 0x47:
+            return .gif
+        case 0x49, 0x4D:
+            return .tiff
+        case 0x52:
+            if data.count >= 12 {
+                if let testString = String(data: data[0..<12], encoding: .ascii),
+                   testString.hasPrefix("RIFF"),
+                   testString.hasSuffix("WEBP") {
+                    return .webp
+                }
+            }
+        case 0x00:
+            if data.count >= 12 {
+                let testString = String(data: data[4..<12], encoding: .ascii)
+                if testString == "ftypheic" || testString == "ftypheix" || testString == "ftyphevc" || testString == "ftyphevx" {
+                    return .heic
+                }
+                if testString == "ftypmif1" || testString == "ftypmsf1" {
+                    return .heif
+                }
+            }
+        case 0x25:
+            if data.count >= 4 {
+                let testString = String(data: data[1..<4], encoding: .ascii)
+                if testString == "PDF" {
+                    return .pdf
+                }
+            }
+        case 0x3C:
+            let range = (data.count - min(100, data.count))..<data.count
+            if let svgTagEndData = "</svg>".data(using: .utf8),
+               data.range(of: svgTagEndData, options: .backwards, in: range) != nil {
+                return .svg
+            }
+        default:
+            break
+        }
+        
         return .undefined
     }
 
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
     open class func utType(from imageFormat: ImageFormat) -> CFString {
-        // Implementation goes here
-        return kUTTypeImage
+        var uttype: CFString
+        switch imageFormat {
+        case .jpeg:
+            uttype = kUTTypeJPEG
+        case .png:
+            uttype = kUTTypePNG
+        case .gif:
+            uttype = kUTTypeGIF
+        case .tiff:
+            uttype = kUTTypeTIFF
+        case .webp:
+            uttype = ImageCoder.kUTTypeWEBP
+        case .heic:
+            uttype = ImageCoder.kUTTypeHEIC
+        case .heif:
+            uttype = ImageCoder.kUTTypeHEIF
+        case .pdf:
+            uttype = kUTTypePDF
+        case .svg:
+            uttype = kUTTypeScalableVectorGraphics
+        default:
+            uttype = kUTTypeImage
+        }
+        return uttype
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormat.undefined
-    open class func imageFormat(from utType: CFString?) -> ImageFormat {
-        // Implementation goes here
-        return .undefined
+    open class func imageFormat(from uttype: CFString?) -> ImageFormat {
+        guard let uttype = uttype else {
+            return .undefined
+        }
+        var imageFormat: ImageFormat
+        if CFStringCompare(uttype, kUTTypeJPEG, []) == .compareEqualTo {
+            imageFormat = .jpeg
+        } else if CFStringCompare(uttype, kUTTypePNG, []) == .compareEqualTo {
+            imageFormat = .png
+        } else if CFStringCompare(uttype, kUTTypeGIF, []) == .compareEqualTo {
+            imageFormat = .gif
+        } else if CFStringCompare(uttype, kUTTypeTIFF, []) == .compareEqualTo {
+            imageFormat = .tiff
+        } else if CFStringCompare(uttype, ImageCoder.kUTTypeWEBP, []) == .compareEqualTo {
+            imageFormat = .webp
+        } else if CFStringCompare(uttype, ImageCoder.kUTTypeHEIC, []) == .compareEqualTo {
+            imageFormat = .heic
+        } else if CFStringCompare(uttype, ImageCoder.kUTTypeHEIF, []) == .compareEqualTo {
+            imageFormat = .heif
+        } else if CFStringCompare(uttype, kUTTypePDF, []) == .compareEqualTo {
+            imageFormat = .pdf
+        } else if CFStringCompare(uttype, kUTTypeScalableVectorGraphics, []) == .compareEqualTo {
+            imageFormat = .svg
+        } else {
+            imageFormat = .undefined
+        }
+        return imageFormat
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
     open class func mimeType(from imageFormat: ImageFormat) -> String {
-        // Implementation goes here
-        return "application/octet-stream"
+        var mimeType: String
+        switch imageFormat {
+        case .jpeg:
+            mimeType = "image/jpeg"
+        case .png:
+            mimeType = "image/png"
+        case .gif:
+            mimeType = "image/gif"
+        case .tiff:
+            mimeType = "image/tiff"
+        case .webp:
+            mimeType = "image/webp"
+        case .heic:
+            mimeType = "image/heic"
+        case .heif:
+            mimeType = "image/heif"
+        case .pdf:
+            mimeType = "application/pdf"
+        case .svg:
+            mimeType = "image/svg+xml"
+        default:
+            mimeType = "application/octet-stream"
+        }
+        return mimeType
     }
 
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    open class func mimeType(from extension: String) -> String {
-        // Implementation goes here
+    open class func mimeType(from ext: String) -> String {
+        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeUnretainedValue(),
+           let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue() as String? {
+            return mimeType
+        }
         return "application/octet-stream"
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式
     open class func base64String(for imageData: Data?) -> String? {
-        // Implementation goes here
-        return nil
+        guard let data = imageData, data.count > 0 else {
+            return nil
+        }
+        let base64String = data.base64EncodedString(options: .lineLength64Characters)
+        let mimeType = ImageCoder.mimeType(from: ImageCoder.imageFormat(for: data))
+        let base64Prefix = "data:\(mimeType);base64,"
+        return base64Prefix + base64String
     }
 
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
     open class func isVectorImage(_ image: UIImage?) -> Bool {
-        // Implementation goes here
+        guard let image = image else {
+            return false
+        }
+        if #available(iOS 13.0, *) {
+            if image.isSymbolImage {
+                return true
+            }
+            let svgSelector = NSSelectorFromString(String(format: "_%@", "CGSVGDocument"))
+            if image.responds(to: svgSelector) && image.perform(svgSelector)?.takeUnretainedValue() != nil {
+                return true
+            }
+        }
+        let pdfSelector = NSSelectorFromString(String(format: "_%@", "CGPDFPage"))
+        if image.responds(to: pdfSelector) && image.perform(pdfSelector)?.takeUnretainedValue() != nil {
+            return true
+        }
         return false
     }
     
+    private func isAnimated(_ format: ImageFormat, forDecode: Bool) -> Bool {
+        var isAnimated = false
+        switch format {
+        case .png, .gif:
+            isAnimated = true
+        case .heic, .heif:
+            if #available(iOS 13.0, *) {
+                isAnimated = heicsEnabled
+            }
+        case .webp:
+            if #available(iOS 14.0, *) {
+                isAnimated = true
+            }
+        default:
+            break
+        }
+        if !isAnimated {
+            return false
+        }
+
+        let imageUTType = ImageCoder.utType(from: format)
+        let imageUTTypes = forDecode ? decodeUTTypes : encodeUTTypes
+        return imageUTTypes.contains(imageUTType as String)
+    }
+    
+    private func exifOrientation(_ imageOrientation: UIImage.Orientation) -> CGImagePropertyOrientation {
+        var exifOrientation: CGImagePropertyOrientation = .up
+        switch imageOrientation {
+        case .up:
+            exifOrientation = .up
+        case .down:
+            exifOrientation = .down
+        case .left:
+            exifOrientation = .left
+        case .right:
+            exifOrientation = .right
+        case .upMirrored:
+            exifOrientation = .upMirrored
+        case .downMirrored:
+            exifOrientation = .downMirrored
+        case .leftMirrored:
+            exifOrientation = .leftMirrored
+        case .rightMirrored:
+            exifOrientation = .rightMirrored
+        @unknown default:
+            break
+        }
+        return exifOrientation
+    }
+    
+    private func dictionaryProperty(_ format: ImageFormat) -> String? {
+        switch format {
+        case .gif:
+            return kCGImagePropertyGIFDictionary as String
+        case .png:
+            return kCGImagePropertyPNGDictionary as String
+        case .heic, .heif:
+            if #available(iOS 13.0, *) {
+                return kCGImagePropertyHEICSDictionary as String
+            } else {
+                return "{HEICS}"
+            }
+        case .webp:
+            if #available(iOS 14.0, *) {
+                return kCGImagePropertyWebPDictionary as String
+            }
+            return "{WebP}"
+        default:
+            return nil
+        }
+    }
+
+    private func unclampedDelayTimeProperty(_ format: ImageFormat) -> String? {
+        switch format {
+        case .gif:
+            return kCGImagePropertyGIFUnclampedDelayTime as String
+        case .png:
+            return kCGImagePropertyAPNGUnclampedDelayTime as String
+        case .heic, .heif:
+            if #available(iOS 13.0, *) {
+                return kCGImagePropertyHEICSUnclampedDelayTime as String
+            } else {
+                return "UnclampedDelayTime"
+            }
+        case .webp:
+            if #available(iOS 14.0, *) {
+                return kCGImagePropertyWebPUnclampedDelayTime as String
+            }
+            return "UnclampedDelayTime"
+        default:
+            return nil
+        }
+    }
+    
+    private func delayTimeProperty(_ format: ImageFormat) -> String? {
+        switch format {
+        case .gif:
+            return kCGImagePropertyGIFDelayTime as String
+        case .png:
+            return kCGImagePropertyAPNGDelayTime as String
+        case .heic, .heif:
+            if #available(iOS 13.0, *) {
+                return kCGImagePropertyHEICSDelayTime as String
+            } else {
+                return "DelayTime"
+            }
+        case .webp:
+            if #available(iOS 14.0, *) {
+                return kCGImagePropertyWebPDelayTime as String
+            }
+            return "DelayTime"
+        default:
+            return nil
+        }
+    }
+    
+    private func loopCountProperty(_ format: ImageFormat) -> String? {
+        switch format {
+            case .gif:
+                return kCGImagePropertyGIFLoopCount as String
+            case .png:
+                return kCGImagePropertyAPNGLoopCount as String
+            case .heic, .heif:
+                if #available(iOS 13.0, *) {
+                    return kCGImagePropertyHEICSLoopCount as String
+                } else {
+                    return "LoopCount"
+                }
+            case .webp:
+                if #available(iOS 14.0, *) {
+                    return kCGImagePropertyWebPLoopCount as String
+                }
+                return "LoopCount"
+            default:
+                return nil
+        }
+    }
+
+    private func defaultLoopCount(_ format: ImageFormat) -> UInt {
+        switch format {
+            case .gif:
+                return 1
+            default:
+                return 0
+        }
+    }
+    
+    private func imageLoopCount(source: CGImageSource, format: ImageFormat) -> UInt {
+        var loopCount = defaultLoopCount(format)
+        if let dictionaryProperty = dictionaryProperty(format),
+           let loopCountProperty = loopCountProperty(format),
+           let imageProperties = CGImageSourceCopyProperties(source, nil) as NSDictionary?,
+           let containerProperties = imageProperties[dictionaryProperty] as? NSDictionary,
+           let containerLoopCount = containerProperties[loopCountProperty] as? NSNumber {
+            loopCount = containerLoopCount.uintValue
+        }
+        return loopCount
+    }
+    
+    private func frameDuration(at index: Int, source: CGImageSource, format: ImageFormat) -> TimeInterval {
+        var options: [String: Any] = [:]
+        options[kCGImageSourceShouldCacheImmediately as String] = true
+        options[kCGImageSourceShouldCache as String] = true
+        var frameDuration: TimeInterval = 0.1
+        guard let frameProperties = CGImageSourceCopyPropertiesAtIndex(source, index, options as CFDictionary) as NSDictionary?,
+              let dictionaryProperty = dictionaryProperty(format),
+              let containerProperties = frameProperties[dictionaryProperty] as? NSDictionary else {
+            return frameDuration
+        }
+
+        if let unclampedDelayTimeProperty = unclampedDelayTimeProperty(format),
+           let unclampedDelayTime = containerProperties[unclampedDelayTimeProperty] as? NSNumber {
+            frameDuration = unclampedDelayTime.doubleValue
+        } else if let delayTimeProperty = delayTimeProperty(format),
+                  let delayTime = containerProperties[delayTimeProperty] as? NSNumber {
+            frameDuration = delayTime.doubleValue
+        }
+        if frameDuration < 0.011 {
+            frameDuration = 0.1
+        }
+        return frameDuration
+    }
+    
+    private func createFrame(at index: Int, source: CGImageSource, scale: CGFloat) -> UIImage? {
+        let uttype = CGImageSourceGetType(source)
+        let isVector = ImageCoder.imageFormat(from: uttype) == .pdf
+
+        var decodingOptions: [AnyHashable: Any] = [:]
+        if isVector {
+            let thumbnailSize = UIScreen.main.bounds.size
+            let rasterizationDPI = max(thumbnailSize.width, thumbnailSize.height) * 2
+            decodingOptions["kCGImageSourceRasterizationDPI"] = rasterizationDPI
+        }
+        guard let imageRef = CGImageSourceCreateImageAtIndex(source, index, decodingOptions as CFDictionary) else {
+            return nil
+        }
+
+        let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
+        return image
+    }
+
 }
 
 // MARK: - UIImage+AnimatedImage

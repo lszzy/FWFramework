@@ -108,6 +108,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSString *)ipAddress:(NSString *)host;
 
++ (nullable UIImage *)svgDecode:(NSData *)data;
+
++ (nullable NSData *)svgEncode:(UIImage *)image;
+
 @end
 
 #pragma mark - __FWEncrypt
