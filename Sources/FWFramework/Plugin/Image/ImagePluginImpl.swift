@@ -29,16 +29,16 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func imageDecode(_ data: Data, scale: CGFloat, options: [ImageCoderOptions : Any]? = nil) -> UIImage? {
-        return ImageCoder.shared.decodedImage(with: data, scale: scale, options: options)
+        return ImageCoder.shared.decodedImage(data: data, scale: scale, options: options)
     }
     
     open func imageEncode(_ image: UIImage, options: [ImageCoderOptions : Any]? = nil) -> Data? {
         let imageFormat = image.fw_imageFormat
-        let imageData = ImageCoder.shared.encodedData(with: image, format: imageFormat, options: options)
+        let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
         if imageData != nil || imageFormat == .undefined {
             return imageData
         }
-        return ImageCoder.shared.encodedData(with: image, format: .undefined, options: options)
+        return ImageCoder.shared.encodedData(image: image, format: .undefined, options: options)
     }
     
     open func imageURL(_ imageView: UIImageView) -> URL? {
