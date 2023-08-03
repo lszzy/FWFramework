@@ -12,6 +12,7 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <net/if.h>
+#import <dlfcn.h>
 
 #pragma mark - __FWAutoloader
 
@@ -558,6 +559,13 @@
 
 #pragma mark - __FWBridge
 
+typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
+static void (*__FWCGSVGDocumentRelease)(CGSVGDocumentRef);
+static CGSVGDocumentRef (*__FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
+static void (*__FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
+static SEL __FWImageWithCGSVGDocumentSEL = NULL;
+static SEL __FWCGSVGDocumentSEL = NULL;
+
 @implementation __FWBridge
 
 + (void)logMessage:(NSString *)message {
@@ -620,6 +628,57 @@
     }
     if (ipsArr.count) {
         return ipsArr[0];
+    }
+    return nil;
+}
+
++ (NSString *)base64Decode:(NSString *)base64String {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if (!data) return nil;
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
++ (void)svgInitialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (@available(iOS 13.0, *)) {
+            __FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
+            __FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
+            __FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
+            __FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
+            __FWCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X0NHU1ZHRG9jdW1lbnQ="]);
+        }
+    });
+}
+
++ (UIImage *)svgDecode:(NSData *)data {
+    if (@available(iOS 13.0, *)) {
+        [self svgInitialize];
+        
+        if ([UIImage respondsToSelector:__FWImageWithCGSVGDocumentSEL]) {
+            CGSVGDocumentRef document = __FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
+            if (document) {
+                UIImage *animatedImage = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:__FWImageWithCGSVGDocumentSEL])(UIImage.class, __FWImageWithCGSVGDocumentSEL, document);
+                __FWCGSVGDocumentRelease(document);
+                return animatedImage;
+            }
+        }
+    }
+    return nil;
+}
+
++ (NSData *)svgEncode:(UIImage *)image {
+    if (@available(iOS 13.0, *)) {
+        [self svgInitialize];
+        
+        if ([UIImage respondsToSelector:__FWImageWithCGSVGDocumentSEL]) {
+            NSMutableData *data = [NSMutableData data];
+            CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:__FWCGSVGDocumentSEL])(image, __FWCGSVGDocumentSEL);
+            if (document) {
+                __FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
+                return [data copy];
+            }
+        }
     }
     return nil;
 }
