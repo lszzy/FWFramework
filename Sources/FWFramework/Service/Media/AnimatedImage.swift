@@ -197,6 +197,8 @@ open class ImageCoder: NSObject {
             if #available(iOS 13.0, *) {
                 animatedImage = __FWBridge.svgDecode(data)
             }
+        } else if format == .pdf {
+            animatedImage = createBitmapPDF(data: data)
         } else if !isAnimated(format, forDecode: true) || count <= 1 {
             animatedImage = createFrame(at: 0, source: source, scale: scale)
         } else {
@@ -652,20 +654,53 @@ open class ImageCoder: NSObject {
     }
     
     private func createFrame(at index: Int, source: CGImageSource, scale: CGFloat) -> UIImage? {
-        let utType = CGImageSourceGetType(source)
-        let isVector = ImageCoder.imageFormat(utType: utType) == .pdf
-
         var decodingOptions: [AnyHashable: Any] = [:]
-        if isVector {
-            let thumbnailSize = UIScreen.main.bounds.size
-            let rasterizationDPI = max(thumbnailSize.width, thumbnailSize.height) * 2
-            decodingOptions["kCGImageSourceRasterizationDPI"] = rasterizationDPI
-        }
         guard let imageRef = CGImageSourceCreateImageAtIndex(source, index, decodingOptions as CFDictionary) else {
             return nil
         }
 
         let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
+        return image
+    }
+    
+    private func createBitmapPDF(data: Data, targetSize: CGSize = .zero) -> UIImage? {
+        let pageNumber: Int = 0
+        guard let provider = CGDataProvider(data: data as CFData),
+            let document = CGPDFDocument(provider),
+            let page = document.page(at: pageNumber + 1)
+        else {
+            return nil
+        }
+
+        let box = CGPDFBox.mediaBox
+        let rect = page.getBoxRect(box)
+        var targetRect = rect
+        if !targetSize.equalTo(CGSize.zero) {
+            targetRect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
+        }
+
+        let xRatio = targetRect.size.width / rect.size.width
+        let yRatio = targetRect.size.height / rect.size.height
+        let xScale = min(xRatio, yRatio)
+        let yScale = min(xRatio, yRatio)
+
+        let drawRect = CGRect(x: 0, y: 0, width: targetRect.size.width / xScale, height: targetRect.size.height / yScale)
+        let scaleTransform = CGAffineTransform(scaleX: xScale, y: yScale)
+        let transform = page.getDrawingTransform(box, rect: drawRect, rotate: 0, preserveAspectRatio: true)
+
+        UIGraphicsBeginImageContextWithOptions(targetRect.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        
+        context.translateBy(x: 0, y: targetRect.size.height)
+        context.scaleBy(x: 1, y: -1)
+        context.concatenate(scaleTransform)
+        context.concatenate(transform)
+        context.drawPDFPage(page)
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         return image
     }
 
