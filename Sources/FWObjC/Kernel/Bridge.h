@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSString *)ipAddress:(NSString *)host;
 
-+ (nullable UIImage *)svgDecode:(NSData *)data;
++ (nullable UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize;
 
 + (nullable NSData *)svgEncode:(UIImage *)image;
 

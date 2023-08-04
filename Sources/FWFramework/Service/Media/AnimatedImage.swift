@@ -185,26 +185,28 @@ open class ImageCoder: NSObject {
             return nil
         }
         
-        var scale = scale
+        var scale = max(scale, 1)
         if let scaleFactor = options?[.optionScaleFactor] as? NSNumber {
             scale = max(scaleFactor.doubleValue, 1)
+        }
+        var thumbnailSize = CGSize.zero
+        if let thumbnailSizeValue = options?[.optionThumbnailPixelSize] as? NSValue {
+            thumbnailSize = thumbnailSizeValue.cgSizeValue
         }
 
         var animatedImage: UIImage?
         let count = CGImageSourceGetCount(source)
         let format = ImageCoder.imageFormat(imageData: data)
         if format == .svg {
-            if #available(iOS 13.0, *) {
-                animatedImage = __FWBridge.svgDecode(data)
-            }
+            animatedImage = __FWBridge.svgDecode(data, thumbnailSize: thumbnailSize)
         } else if format == .pdf {
-            animatedImage = createBitmapPDF(data: data)
+            animatedImage = createBitmapPDF(data: data, thumbnailSize: thumbnailSize)
         } else if !isAnimated(format, forDecode: true) || count <= 1 {
-            animatedImage = createFrame(at: 0, source: source, scale: scale)
+            animatedImage = createFrame(at: 0, source: source, scale: scale, thumbnailSize: thumbnailSize)
         } else {
             var frames = [ImageFrame]()
             for i in 0 ..< count {
-                guard let image = createFrame(at: i, source: source, scale: scale) else { continue }
+                guard let image = createFrame(at: i, source: source, scale: scale, thumbnailSize: thumbnailSize) else { continue }
                 
                 let duration = frameDuration(at: i, source: source, format: format)
                 let frame = ImageFrame(image: image, duration: duration)
@@ -231,10 +233,7 @@ open class ImageCoder: NSObject {
             format = image.fw_hasAlpha ? .png : .jpeg
         }
         if format == .svg {
-            if #available(iOS 13.0, *) {
-                return __FWBridge.svgEncode(image)
-            }
-            return nil
+            return __FWBridge.svgEncode(image)
         }
         
         guard let imageRef = image.cgImage else {
@@ -653,9 +652,31 @@ open class ImageCoder: NSObject {
         return frameDuration
     }
     
-    private func createFrame(at index: Int, source: CGImageSource, scale: CGFloat) -> UIImage? {
+    private func createFrame(at index: Int, source: CGImageSource, scale: CGFloat, thumbnailSize: CGSize) -> UIImage? {
+        let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as NSDictionary?
+        let pixelWidth = properties?[kCGImagePropertyPixelWidth] as? Double ?? .zero
+        let pixelHeight = properties?[kCGImagePropertyPixelHeight] as? Double ?? .zero
+        
         var decodingOptions: [AnyHashable: Any] = [:]
-        guard let imageRef = CGImageSourceCreateImageAtIndex(source, index, decodingOptions as CFDictionary) else {
+        var imageRef: CGImage?
+        let createFullImage = thumbnailSize.width == 0 || thumbnailSize.height == 0 || pixelWidth == 0 || pixelHeight == 0 || (pixelWidth <= thumbnailSize.width && pixelHeight <= thumbnailSize.height)
+        if createFullImage {
+            imageRef = CGImageSourceCreateImageAtIndex(source, index, decodingOptions as CFDictionary)
+        } else {
+            decodingOptions[kCGImageSourceCreateThumbnailWithTransform] = true
+            var maxPixelSize: CGFloat
+            let pixelRatio = pixelWidth / pixelHeight
+            let thumbnailRatio = thumbnailSize.width / thumbnailSize.height
+            if pixelRatio > thumbnailRatio {
+                maxPixelSize = max(thumbnailSize.width, thumbnailSize.width / pixelRatio)
+            } else {
+                maxPixelSize = max(thumbnailSize.height, thumbnailSize.height * pixelRatio)
+            }
+            decodingOptions[kCGImageSourceThumbnailMaxPixelSize] = maxPixelSize
+            decodingOptions[kCGImageSourceCreateThumbnailFromImageAlways] = true
+            imageRef = CGImageSourceCreateThumbnailAtIndex(source, index, decodingOptions as CFDictionary)
+        }
+        guard let imageRef = imageRef else {
             return nil
         }
 
@@ -663,7 +684,7 @@ open class ImageCoder: NSObject {
         return image
     }
     
-    private func createBitmapPDF(data: Data, targetSize: CGSize = .zero) -> UIImage? {
+    private func createBitmapPDF(data: Data, thumbnailSize: CGSize) -> UIImage? {
         let pageNumber: Int = 0
         guard let provider = CGDataProvider(data: data as CFData),
             let document = CGPDFDocument(provider),
@@ -675,8 +696,8 @@ open class ImageCoder: NSObject {
         let box = CGPDFBox.mediaBox
         let rect = page.getBoxRect(box)
         var targetRect = rect
-        if !targetSize.equalTo(CGSize.zero) {
-            targetRect = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
+        if !thumbnailSize.equalTo(CGSize.zero) {
+            targetRect = CGRect(x: 0, y: 0, width: thumbnailSize.width, height: thumbnailSize.height)
         }
 
         let xRatio = targetRect.size.width / rect.size.width
