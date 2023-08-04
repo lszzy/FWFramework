@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSString * __FWImageCoderOptions NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(ImageCoderOptions);
 /// 图片解码scale选项，默认未指定时为1
 FOUNDATION_EXPORT __FWImageCoderOptions const __FWImageCoderOptionScaleFactor;
-/// 图片解码缩略图尺寸选项，默认未指定时为zero
+/// 图片解码缩略图像素尺寸选项，默认未指定时为zero
 FOUNDATION_EXPORT __FWImageCoderOptions const __FWImageCoderOptionThumbnailPixelSize;
 
 /// 网络图片加载选项，默认兼容SDWebImage

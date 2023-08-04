@@ -95,8 +95,9 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             }
         } else {
             let url = fileName.appending(timeString)
-            cell.systemView.app.setImage(url: url, placeholderImage: nil, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: CGSize(width: 100, height: 100))])
-            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage(), options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: CGSize(width: 100, height: 100))])
+            let pixelSize = CGSize(width: 100.0 * UIScreen.main.scale, height: 100.0 * UIScreen.main.scale)
+            cell.systemView.app.setImage(url: url, placeholderImage: nil, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
+            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage(), options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
         }
         return cell
     }

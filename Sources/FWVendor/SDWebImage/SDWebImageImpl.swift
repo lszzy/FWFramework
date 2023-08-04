@@ -95,7 +95,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if let context = context {
             targetContext = [:]
             for (key, value) in context {
-                targetContext?[.init(rawValue: key.rawValue)] = value
+                if key == .optionThumbnailPixelSize {
+                    targetContext?[.imageThumbnailPixelSize] = value
+                } else {
+                    targetContext?[.init(rawValue: key.rawValue)] = value
+                }
             }
         }
         
@@ -136,7 +140,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if let context = context {
             targetContext = [:]
             for (key, value) in context {
-                targetContext?[.init(rawValue: key.rawValue)] = value
+                if key == .optionThumbnailPixelSize {
+                    targetContext?[.imageThumbnailPixelSize] = value
+                } else {
+                    targetContext?[.init(rawValue: key.rawValue)] = value
+                }
             }
         }
         
