@@ -2595,6 +2595,9 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         } else {
             contentType = __FWAlbumContentTypeOnlyVideo;
         }
+    } else if (filterType & __FWImagePickerFilterTypeLivePhoto &&
+               !(filterType & __FWImagePickerFilterTypeImage)) {
+        contentType = __FWAlbumContentTypeOnlyLivePhoto;
     }
     return contentType;
 }

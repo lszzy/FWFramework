@@ -185,7 +185,8 @@ typedef NS_ENUM(NSUInteger, __FWAlbumContentType) {
     __FWAlbumContentTypeAll,                                  // 展示所有资源
     __FWAlbumContentTypeOnlyPhoto,                            // 只展示照片
     __FWAlbumContentTypeOnlyVideo,                            // 只展示视频
-    __FWAlbumContentTypeOnlyAudio                             // 只展示音频
+    __FWAlbumContentTypeOnlyAudio,                            // 只展示音频
+    __FWAlbumContentTypeOnlyLivePhoto                         // 只展示LivePhoto
 } NS_SWIFT_NAME(AlbumContentType);
 
 /// 相册展示内容按日期排序的方式
