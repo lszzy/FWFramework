@@ -32,17 +32,16 @@ public class LivePhoto {
     }
     
     /// 保存LivePhoto资源到相册
-    public class func saveToLibrary(_ resources: LivePhotoResources, completion: @escaping (Bool) -> Void) {
+    public class func saveToLibrary(_ resources: LivePhotoResources, completion: @escaping (Bool, Error?) -> Void) {
         PHPhotoLibrary.shared().performChanges({
             let creationRequest = PHAssetCreationRequest.forAsset()
             let options = PHAssetResourceCreationOptions()
             creationRequest.addResource(with: PHAssetResourceType.pairedVideo, fileURL: resources.pairedVideo, options: options)
             creationRequest.addResource(with: PHAssetResourceType.photo, fileURL: resources.pairedImage, options: options)
-        }, completionHandler: { (success, error) in
-            if error != nil {
-                print(error as Any)
+        }, completionHandler: { success, error in
+            DispatchQueue.main.async {
+                completion(success, error)
             }
-            completion(success)
         })
     }
     
@@ -50,34 +49,15 @@ public class LivePhoto {
     
     private static let queue = DispatchQueue(label: "site.wuyong.queue.asset.async", attributes: .concurrent)
     
-    lazy private var cacheDirectory: URL? = {
-        if let cacheDirectoryURL = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
-            let fullDirectory = cacheDirectoryURL.appendingPathComponent("FWAssetManager", isDirectory: true)
-            if !FileManager.default.fileExists(atPath: fullDirectory.absoluteString) {
-                try? FileManager.default.createDirectory(at: fullDirectory, withIntermediateDirectories: true, attributes: nil)
-            }
-            return fullDirectory
+    private lazy var cacheDirectory: URL = {
+        let fullDirectory = URL(fileURLWithPath: AssetManager.cachePath, isDirectory: true)
+        if !FileManager.default.fileExists(atPath: fullDirectory.absoluteString) {
+            try? FileManager.default.createDirectory(at: fullDirectory, withIntermediateDirectories: true, attributes: nil)
         }
-        return nil
+        return fullDirectory
     }()
     
-    deinit {
-        clearCache()
-    }
-    
-    private func clearCache() {
-        if let cacheDirectory = cacheDirectory {
-            try? FileManager.default.removeItem(at: cacheDirectory)
-        }
-    }
-    
     private func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, LivePhotoResources?) -> Void) {
-        guard let cacheDirectory = cacheDirectory else {
-            DispatchQueue.main.async {
-                completion(nil, nil)
-            }
-            return
-        }
         let assetIdentifier = UUID().uuidString
         guard let pairedImageURL = addAssetID(assetIdentifier, toImage: imageURL, saveTo: cacheDirectory.appendingPathComponent(assetIdentifier).appendingPathExtension("jpg")) else {
             DispatchQueue.main.async {
@@ -138,9 +118,7 @@ public class LivePhoto {
     }
     
     private func extractResources(from livePhoto: PHLivePhoto, completion: @escaping (LivePhotoResources?) -> Void) {
-        if let cacheDirectory = cacheDirectory {
-            extractResources(from: livePhoto, to: cacheDirectory, completion: completion)
-        }
+        extractResources(from: livePhoto, to: cacheDirectory, completion: completion)
     }
     
     private func saveAssetResource(_ resource: PHAssetResource, to directory: URL, resourceData: Data) -> URL? {
@@ -251,7 +229,9 @@ public class LivePhoto {
                         if let sampleBuffer = videoReaderOutput.copyNextSampleBuffer()  {
                             currentFrameCount += 1
                             let percent:CGFloat = CGFloat(currentFrameCount)/CGFloat(frameCount)
-                            progress(percent)
+                            DispatchQueue.main.async {
+                                progress(percent)
+                            }
                             if !videoWriterInput.append(sampleBuffer) {
                                 print("Cannot write: \(String(describing: self.assetWriter?.error?.localizedDescription))")
                                 self.videoReader?.cancelReading()

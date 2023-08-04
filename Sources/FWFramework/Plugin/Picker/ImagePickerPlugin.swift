@@ -209,14 +209,6 @@ import FWObjC
         let latestAsset = fetchResult.lastObject
         return latestAsset
     }
-    
-    /**
-     图片选择器选择视频时临时文件存放目录，使用完成后需自行删除
-     */
-    public static var fw_pickerControllerVideoCachePath: String {
-        let videoPath = (NSTemporaryDirectory() as NSString).appendingPathComponent("FWImagePicker")
-        return videoPath
-    }
 
     /**
      快速创建照片选择器(仅图片)
@@ -639,7 +631,7 @@ import FWObjC
                 result.itemProvider.loadFileRepresentation(forTypeIdentifier: kUTTypeMovie as String) { url, error in
                     var fileURL: URL?
                     if let url = url {
-                        let filePath = PHPhotoLibrary.fw_pickerControllerVideoCachePath
+                        let filePath = AssetManager.cachePath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                         if let fullPath = ((filePath as NSString).appendingPathComponent(url.absoluteString.fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                             let tempFileURL = NSURL.fileURL(withPath: fullPath)

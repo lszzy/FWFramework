@@ -141,9 +141,8 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 return
             }
             
-            self.app.showProgress(0)
             LivePhoto.generate(from: resources.pairedImage, videoURL: resources.pairedVideo) { [weak self] progress in
-                self?.app.showProgress(progress)
+                self?.app.showProgress(progress, text: "合成中...")
             } completion: { [weak self] livePhoto, _ in
                 self?.app.hideProgress()
                 guard let livePhoto = livePhoto else {
@@ -159,7 +158,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 return
             }
             
-            LivePhoto.saveToLibrary(resources) { [weak self] success in
+            LivePhoto.saveToLibrary(resources) { [weak self] success, _ in
                 self?.app.showMessage(text: success ? "保存成功" : "保存失败")
             }
         }

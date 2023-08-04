@@ -2624,7 +2624,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     BOOL checkVideo = (filterType & __FWImagePickerFilterTypeVideo) || filterType < 1;
     [imagesAssetArray enumerateObjectsUsingBlock:^(__FWAsset *asset, NSUInteger index, BOOL *stop) {
         if (checkVideo && asset.assetType == __FWAssetTypeVideo) {
-            NSString *filePath = [PHPhotoLibrary __fw_pickerControllerVideoCachePath];
+            NSString *filePath = [__FWAssetManager cachePath];
             [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
             filePath = [[filePath stringByAppendingPathComponent:[self md5EncodeString:[NSUUID UUID].UUIDString]] stringByAppendingPathExtension:@"mp4"];
             NSURL *fileURL = [NSURL fileURLWithPath:filePath];

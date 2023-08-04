@@ -31,7 +31,7 @@ open class CacheSqlite: CacheEngine {
             dbPath = path
         // 相对路径: Libray/Caches/FWCache/path[FWCache.sqlite]
         } else {
-            let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+            let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
             let fileName = path ?? ""
             dbPath = (cachesPath as NSString).appendingPathComponent("FWCache/" + (!fileName.isEmpty ? fileName : "FWCache.sqlite"))
         }
