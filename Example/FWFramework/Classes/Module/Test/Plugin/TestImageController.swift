@@ -95,8 +95,8 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             }
         } else {
             let url = fileName.appending(timeString)
-            cell.systemView.app.setImage(url: url)
-            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage())
+            cell.systemView.app.setImage(url: url, placeholderImage: nil, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: CGSize(width: 100, height: 100))])
+            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage(), options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: CGSize(width: 100, height: 100))])
         }
         return cell
     }
