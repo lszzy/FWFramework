@@ -196,7 +196,7 @@ open class ImageCoder: NSObject {
 
         var animatedImage: UIImage?
         let count = CGImageSourceGetCount(source)
-        let format = ImageCoder.imageFormat(imageData: data)
+        let format = ImageCoder.imageFormat(for: data)
         if format == .svg {
             animatedImage = __FWBridge.svgDecode(data, thumbnailSize: thumbnailSize)
         } else if format == .pdf {
@@ -241,7 +241,7 @@ open class ImageCoder: NSObject {
         }
 
         let imageData = NSMutableData()
-        let imageUTType = ImageCoder.utType(imageFormat: format)
+        let imageUTType = ImageCoder.utType(from: format)
         let isAnimated = isAnimated(format, forDecode: false)
         let frames = isAnimated ? ImageFrame.frames(animatedImage: image) : nil
         let count = max(1, frames?.count ?? 0)
@@ -288,7 +288,7 @@ open class ImageCoder: NSObject {
     }
 
     /// 获取图片数据的格式，未知格式返回undefined
-    open class func imageFormat(imageData: Data?) -> ImageFormat {
+    open class func imageFormat(for imageData: Data?) -> ImageFormat {
         guard let data = imageData, data.count > 0 else {
             return .undefined
         }
@@ -343,7 +343,7 @@ open class ImageCoder: NSObject {
     }
 
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
-    open class func utType(imageFormat: ImageFormat) -> CFString {
+    open class func utType(from imageFormat: ImageFormat) -> CFString {
         var utType: CFString
         switch imageFormat {
         case .jpeg:
@@ -371,7 +371,7 @@ open class ImageCoder: NSObject {
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormat.undefined
-    open class func imageFormat(utType: CFString?) -> ImageFormat {
+    open class func imageFormat(from utType: CFString?) -> ImageFormat {
         guard let utType = utType else {
             return .undefined
         }
@@ -401,7 +401,7 @@ open class ImageCoder: NSObject {
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
-    open class func mimeType(imageFormat: ImageFormat) -> String {
+    open class func mimeType(from imageFormat: ImageFormat) -> String {
         var mimeType: String
         switch imageFormat {
         case .jpeg:
@@ -429,7 +429,7 @@ open class ImageCoder: NSObject {
     }
 
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    open class func mimeType(fileExtension: String) -> String {
+    open class func mimeType(from fileExtension: String) -> String {
         if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeUnretainedValue(),
            let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue() as String? {
             return mimeType
@@ -438,12 +438,12 @@ open class ImageCoder: NSObject {
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式
-    open class func base64String(imageData: Data?) -> String? {
+    open class func base64String(for imageData: Data?) -> String? {
         guard let data = imageData, data.count > 0 else {
             return nil
         }
         let base64String = data.base64EncodedString(options: .lineLength64Characters)
-        let mimeType = ImageCoder.mimeType(imageFormat: ImageCoder.imageFormat(imageData: data))
+        let mimeType = ImageCoder.mimeType(from: ImageCoder.imageFormat(for: data))
         let base64Prefix = "data:\(mimeType);base64,"
         return base64Prefix + base64String
     }
@@ -489,7 +489,7 @@ open class ImageCoder: NSObject {
             return false
         }
 
-        let imageUTType = ImageCoder.utType(imageFormat: format)
+        let imageUTType = ImageCoder.utType(from: format)
         let imageUTTypes = forDecode ? decodeUTTypes : encodeUTTypes
         return imageUTTypes.contains(imageUTType as String)
     }
@@ -759,7 +759,7 @@ open class ImageCoder: NSObject {
             if let value = fw_property(forName: "fw_imageFormat") as? NSNumber {
                 return .init(value.intValue)
             }
-            return ImageCoder.imageFormat(utType: self.cgImage?.utType)
+            return ImageCoder.imageFormat(from: self.cgImage?.utType)
         }
         set {
             fw_setProperty(NSNumber(value: newValue.rawValue), forName: "fw_imageFormat")
@@ -772,33 +772,33 @@ open class ImageCoder: NSObject {
 @_spi(FW) extension Data {
     
     /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
-    public static func fw_imageFormat(imageData: Data?) -> ImageFormat {
-        return ImageCoder.imageFormat(imageData: imageData)
+    public static func fw_imageFormat(for imageData: Data?) -> ImageFormat {
+        return ImageCoder.imageFormat(for: imageData)
     }
     
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
-    public static func fw_utType(imageFormat: ImageFormat) -> CFString {
-        return ImageCoder.utType(imageFormat: imageFormat)
+    public static func fw_utType(from imageFormat: ImageFormat) -> CFString {
+        return ImageCoder.utType(from: imageFormat)
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
-    public static func fw_imageFormat(utType: CFString) -> ImageFormat {
-        return ImageCoder.imageFormat(utType: utType)
+    public static func fw_imageFormat(from utType: CFString) -> ImageFormat {
+        return ImageCoder.imageFormat(from: utType)
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
-    public static func fw_mimeType(imageFormat: ImageFormat) -> String {
-        return ImageCoder.mimeType(imageFormat: imageFormat)
+    public static func fw_mimeType(from imageFormat: ImageFormat) -> String {
+        return ImageCoder.mimeType(from: imageFormat)
     }
     
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    public static func fw_mimeType(fileExtension: String) -> String {
-        return ImageCoder.mimeType(fileExtension: fileExtension)
+    public static func fw_mimeType(from fileExtension: String) -> String {
+        return ImageCoder.mimeType(from: fileExtension)
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
-    public static func fw_base64String(imageData: Data?) -> String? {
-        return ImageCoder.base64String(imageData: imageData)
+    public static func fw_base64String(for imageData: Data?) -> String? {
+        return ImageCoder.base64String(for: imageData)
     }
     
 }
