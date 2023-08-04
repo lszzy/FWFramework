@@ -524,7 +524,7 @@ extension WrapperGlobal {
     /// - Parameter directory: 搜索目录
     /// - Returns: 目标路径
     public static func fw_pathSearch(_ directory: FileManager.SearchPathDirectory) -> String {
-        return NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true)[0]
+        return NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true).first ?? ""
     }
 
     /// 沙盒路径，常量

@@ -94,10 +94,6 @@ import UIKit
         return fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
     }
     
-    public static var __fw_pickerControllerVideoCachePath: String {
-        return fw_pickerControllerVideoCachePath
-    }
-    
 }
 
 @_spi(FW) @objc extension UIView {

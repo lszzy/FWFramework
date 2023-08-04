@@ -59,13 +59,6 @@ extension Wrapper where Base: PHPhotoLibrary {
     public static func fetchLatestAsset(assetCollection: PHAssetCollection) -> PHAsset? {
         return Base.fw_fetchLatestAsset(assetCollection: assetCollection)
     }
-    
-    /**
-     图片选择器选择视频时临时文件存放目录，使用完成后需自行删除
-     */
-    public static var pickerControllerVideoCachePath: String {
-        return Base.fw_pickerControllerVideoCachePath
-    }
 
     /**
      快速创建照片选择器(仅图片)

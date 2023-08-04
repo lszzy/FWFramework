@@ -276,6 +276,9 @@ NS_SWIFT_NAME(AssetManager)
 /// 获取 __FWAssetManager 的单例
 @property (class, nonatomic, readonly) __FWAssetManager *sharedInstance NS_SWIFT_NAME(shared);
 
+/// 资源管理器临时文件存放目录，使用完成后需自行删除
+@property (class, nonatomic, copy, readonly) NSString *cachePath;
+
 /// 获取当前应用的“照片”访问授权状态
 + (__FWAssetAuthorizationStatus)authorizationStatus;
 

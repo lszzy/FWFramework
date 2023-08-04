@@ -478,8 +478,6 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
     [[__FWAssetManager sharedInstance] saveVideoWithVideoPathURL:[NSURL fileURLWithPath:videoPath] albumAssetsGroup:albumAssetsGroup completionBlock:completionBlock];
 }
 
-
-
 @implementation __FWAssetManager {
     PHCachingImageManager *_phCachingImageManager;
 }
@@ -535,6 +533,11 @@ void __FWSaveVideoAtPathToSavedPhotosAlbumWithAlbumAssetsGroup(NSString *videoPa
             handler(status);
         }
     }];
+}
+
++ (NSString *)cachePath {
+    NSString *cachesPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    return [cachesPath stringByAppendingPathComponent:@"FWAssetManager"];
 }
 
 - (void)enumerateAllAlbumsWithAlbumContentType:(__FWAlbumContentType)contentType showEmptyAlbum:(BOOL)showEmptyAlbum showSmartAlbumIfSupported:(BOOL)showSmartAlbumIfSupported usingBlock:(void (^)(__FWAssetGroup *resultAssetsGroup))enumerationBlock {
