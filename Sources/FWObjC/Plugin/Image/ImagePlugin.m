@@ -8,3 +8,4 @@
 #import "ImagePlugin.h"
 
 __FWImageCoderOptions const __FWImageCoderOptionScaleFactor = @"imageScaleFactor";
+__FWImageCoderOptions const __FWImageCoderOptionThumbnailPixelSize = @"decodeThumbnailPixelSize";
