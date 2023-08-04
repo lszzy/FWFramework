@@ -122,6 +122,8 @@ import FWObjC
             fetchOptions.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.video.rawValue)
         case .onlyAudio:
             fetchOptions.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.audio.rawValue)
+        case .onlyLivePhoto:
+            fetchOptions.predicate = NSPredicate(format: "(mediaType = %i) AND ((mediaSubtype & %d) == %d)", PHAssetMediaType.image.rawValue, PHAssetMediaSubtype.photoLive.rawValue, PHAssetMediaSubtype.photoLive.rawValue)
         default:
             break
         }
