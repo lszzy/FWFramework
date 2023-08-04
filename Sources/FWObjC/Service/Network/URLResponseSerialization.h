@@ -242,6 +242,7 @@ NS_SWIFT_NAME(PropertyListResponseSerializer)
  By default, `__FWImageResponseSerializer` accepts the following MIME types, which correspond to the image formats supported by UIImage or NSImage:
 
  - `application/octet-stream`
+ - `application/pdf`
  - `image/tiff`
  - `image/jpeg`
  - `image/gif`
