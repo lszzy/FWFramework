@@ -65,7 +65,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换选取插件", "切换选取样式"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换选取插件", "切换选取样式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     if PluginManager.loadPlugin(ImagePickerPlugin.self) != nil {
                         PluginManager.unloadPlugin(ImagePickerPlugin.self)
@@ -73,12 +73,15 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     } else {
                         self?.setupPlugin()
                     }
-                } else {
+                } else if index == 1 {
                     if PluginManager.loadPlugin(ImagePickerPlugin.self) != nil {
                         ImagePickerControllerImpl.shared.showsAlbumController = !ImagePickerControllerImpl.shared.showsAlbumController
                     } else {
                         ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled
                     }
+                } else {
+                    try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
+                    self?.app.showMessage(text: "清理完成")
                 }
             })
         }
