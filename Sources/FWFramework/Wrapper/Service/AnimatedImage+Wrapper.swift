@@ -39,33 +39,33 @@ extension Wrapper where Base: UIImage {
 extension Wrapper where Base == Data {
     
     /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
-    public static func imageFormat(imageData: Data?) -> ImageFormat {
-        return Base.fw_imageFormat(imageData: imageData)
+    public static func imageFormat(for imageData: Data?) -> ImageFormat {
+        return Base.fw_imageFormat(for: imageData)
     }
     
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
-    public static func utType(imageFormat: ImageFormat) -> CFString {
-        return Base.fw_utType(imageFormat: imageFormat)
+    public static func utType(from imageFormat: ImageFormat) -> CFString {
+        return Base.fw_utType(from: imageFormat)
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
-    public static func imageFormat(utType: CFString) -> ImageFormat {
-        return Base.fw_imageFormat(utType: utType)
+    public static func imageFormat(from utType: CFString) -> ImageFormat {
+        return Base.fw_imageFormat(from: utType)
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
-    public static func mimeType(imageFormat: ImageFormat) -> String {
-        return Base.fw_mimeType(imageFormat: imageFormat)
+    public static func mimeType(from imageFormat: ImageFormat) -> String {
+        return Base.fw_mimeType(from: imageFormat)
     }
     
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    public static func mimeType(fileExtension: String) -> String {
-        return Base.fw_mimeType(fileExtension: fileExtension)
+    public static func mimeType(from fileExtension: String) -> String {
+        return Base.fw_mimeType(from: fileExtension)
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
-    public static func base64String(imageData: Data?) -> String? {
-        return Base.fw_base64String(imageData: imageData)
+    public static func base64String(for imageData: Data?) -> String? {
+        return Base.fw_base64String(for: imageData)
     }
     
 }

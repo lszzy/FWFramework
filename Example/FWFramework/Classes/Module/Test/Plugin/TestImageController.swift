@@ -83,7 +83,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TestImageCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
         let fileName = tableData[indexPath.row] as? String ?? ""
-        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(fileExtension: (fileName as NSString).pathExtension))
+        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(from: (fileName as NSString).pathExtension))
         if !fileName.app.isValid(.isUrl) {
             DispatchQueue.global().async {
                 let image = ModuleBundle.imageNamed(fileName)
