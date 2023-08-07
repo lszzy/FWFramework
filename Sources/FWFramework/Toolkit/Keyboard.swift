@@ -721,7 +721,7 @@ import FWObjC
     
     private var fw_delegateProxyEnabled: Bool {
         get {
-            return __FWRuntime.isEqual(self.delegate, with: self.fw_delegateProxy)
+            return self.delegate === self.fw_delegateProxy
         }
         set {
             if newValue != self.fw_delegateProxyEnabled {

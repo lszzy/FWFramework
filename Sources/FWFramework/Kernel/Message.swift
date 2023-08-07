@@ -172,6 +172,40 @@ import FWObjC
 // MARK: - Notification
 @_spi(FW) extension NSObject {
     
+    private class NotificationTarget {
+        let identifier = UUID().uuidString
+        var broadcast: Bool = false
+        weak var object: AnyObject?
+        weak var target: AnyObject?
+        var action: Selector?
+        var block: ((Notification) -> Void)?
+        
+        deinit {
+            if broadcast {
+                NotificationCenter.default.removeObserver(self)
+            }
+        }
+        
+        @objc func handle(_ notification: Notification) {
+            if block != nil {
+                block?(notification)
+                return
+            }
+            
+            if let target = target, let action = action, target.responds(to: action) {
+                _ = target.perform(action, with: notification)
+            }
+        }
+        
+        func equalsObject(_ object: AnyObject?) -> Bool {
+            return object === self.object
+        }
+        
+        func equalsObject(_ object: AnyObject?, target: AnyObject?, action: Selector?) -> Bool {
+            return object === self.object && target === self.object && (action == nil || action == self.action)
+        }
+    }
+    
     // MARK: - Observer
     /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
