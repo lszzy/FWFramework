@@ -230,20 +230,10 @@ import FWObjC
         set {
             // 为了防止修改active时约束冲突，始终将已激活的约束放到前面修改
             fw_collapseConstraints.sorted { constraint, _ in
-                guard let originalActive = constraint.fw_originalActive else {
-                    return false
-                }
-                return newValue ? originalActive : !originalActive
+                guard constraint.fw_shouldCollapseActive else { return false }
+                return newValue ? constraint.fw_originalActive : !constraint.fw_originalActive
             }.forEach { constraint in
-                if let originalActive = constraint.fw_originalActive {
-                    constraint.isActive = newValue ? !originalActive : originalActive
-                }
-                if let originalPriority = constraint.fw_originalPriority {
-                    constraint.priority = newValue ? constraint.fw_collapsePriority : originalPriority
-                }
-                if let originalConstant = constraint.fw_originalConstant {
-                    constraint.constant = newValue ? constraint.fw_collapseConstant : originalConstant
-                }
+                constraint.fw_isCollapsed = newValue
             }
             
             fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
@@ -266,10 +256,10 @@ import FWObjC
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
     public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint, constant: CGFloat? = nil) {
-        constraint.fw_originalConstant = constraint.constant
         if let constant = constant {
             constraint.fw_collapseConstant = constant
         }
+        constraint.fw_shouldCollapseConstant = true
         if !fw_collapseConstraints.contains(constraint) {
             fw_collapseConstraints.append(constraint)
         }
@@ -280,7 +270,7 @@ import FWObjC
         if let active = active {
             constraint.isActive = active
         }
-        constraint.fw_originalActive = constraint.isActive
+        constraint.fw_shouldCollapseActive = true
         if !fw_collapseConstraints.contains(constraint) {
             fw_collapseConstraints.append(constraint)
         }
@@ -288,10 +278,10 @@ import FWObjC
     
     /// 添加视图的优先级收缩常量，必须先添加才能生效
     public func fw_addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
-        constraint.fw_originalPriority = constraint.priority
         if let priority = priority {
             constraint.fw_collapsePriority = priority
         }
+        constraint.fw_shouldCollapsePriority = true
         if !fw_collapseConstraints.contains(constraint) {
             fw_collapseConstraints.append(constraint)
         }
@@ -897,67 +887,104 @@ import FWObjC
         set { fw_setPropertyDouble(newValue, forName: "fw_collapseConstant") }
     }
     
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，nil时表示不可收缩
-    public var fw_originalConstant: CGFloat? {
-        get {
-            if let number = fw_propertyNumber(forName: "fw_originalConstant") {
-                return number.doubleValue
-            }
-            return nil
-        }
-        set {
-            if let constant = newValue {
-                fw_setPropertyNumber(NSNumber(value: constant), forName: "fw_originalConstant")
-            } else {
-                fw_setPropertyNumber(nil, forName: "fw_originalConstant")
-            }
-        }
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，未添加时为0
+    public var fw_originalConstant: CGFloat {
+        get { fw_propertyDouble(forName: "fw_originalConstant") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
     }
     
-    /// 可收缩约束的收缩优先级，默认0。注意Required不能修改，否则iOS13以下崩溃
+    /// 可收缩约束的收缩优先级，默认defaultLow。注意Required不能修改，否则iOS13以下崩溃
     public var fw_collapsePriority: UILayoutPriority {
         get {
             if let number = fw_propertyNumber(forName: "fw_collapsePriority") {
                 return .init(number.floatValue)
             }
-            return .init(0)
+            return .defaultLow
         }
         set {
             fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_collapsePriority")
         }
     }
     
-    /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，nil表示不可收缩。注意Required不能修改，否则iOS13以下崩溃
-    public var fw_originalPriority: UILayoutPriority? {
+    /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，未添加时为defaultHigh。注意Required不能修改，否则iOS13以下崩溃
+    public var fw_originalPriority: UILayoutPriority {
         get {
             if let number = fw_propertyNumber(forName: "fw_originalPriority") {
                 return .init(number.floatValue)
             }
-            return nil
+            return .defaultHigh
         }
         set {
-            if let priority = newValue {
-                fw_setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
-            } else {
-                fw_setPropertyNumber(nil, forName: "fw_originalPriority")
-            }
+            fw_setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
         }
     }
     
-    /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，nil表示不可收缩
-    public var fw_originalActive: Bool? {
+    /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，未添加时为false
+    public var fw_originalActive: Bool {
         get {
             if let number = fw_propertyNumber(forName: "fw_originalActive") {
                 return number.boolValue
             }
-            return nil
+            return false
         }
         set {
-            if let active = newValue {
-                fw_setPropertyNumber(NSNumber(value: active), forName: "fw_originalActive")
-            } else {
-                fw_setPropertyNumber(nil, forName: "fw_originalActive")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_originalActive")
+        }
+    }
+    
+    /// 约束常量是否可收缩，默认false，开启时自动初始化originalConstant
+    public var fw_shouldCollapseConstant: Bool {
+        get {
+            fw_propertyBool(forName: "fw_shouldCollapseConstant")
+        }
+        set {
+            guard newValue != fw_shouldCollapseConstant else { return }
+            if newValue { fw_originalConstant = self.constant }
+            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseConstant")
+        }
+    }
+    
+    /// 约束有效性是否可收缩，默认false，开启时自动初始化originalActive
+    public var fw_shouldCollapseActive: Bool {
+        get {
+            fw_propertyBool(forName: "fw_shouldCollapseActive")
+        }
+        set {
+            guard newValue != fw_shouldCollapseActive else { return }
+            if newValue { fw_originalActive = self.isActive }
+            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseActive")
+        }
+    }
+    
+    /// 约束优先级是否可收缩，默认false，开启时自动初始化originalPriority
+    public var fw_shouldCollapsePriority: Bool {
+        get {
+            fw_propertyBool(forName: "fw_shouldCollapsePriority")
+        }
+        set {
+            guard newValue != fw_shouldCollapsePriority else { return }
+            if newValue { fw_originalPriority = self.priority }
+            fw_setPropertyBool(newValue, forName: "fw_shouldCollapsePriority")
+        }
+    }
+    
+    /// 自动布局是否收缩，启用收缩后生效，默认NO为原始值，YES时为收缩值
+    public var fw_isCollapsed: Bool {
+        get {
+            return fw_propertyBool(forName: "fw_isCollapsed")
+        }
+        set {
+            if fw_shouldCollapseActive {
+                self.isActive = newValue ? !fw_originalActive : fw_originalActive
             }
+            if fw_shouldCollapsePriority {
+                self.priority = newValue ? fw_collapsePriority : fw_originalPriority
+            }
+            if fw_shouldCollapseConstant {
+                self.constant = newValue ? fw_collapseConstant : fw_originalConstant
+            }
+            
+            fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
         }
     }
     
