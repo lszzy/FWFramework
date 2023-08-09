@@ -42,13 +42,13 @@ import FWObjC
     /// 视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
     public var fw_autoScaleLayout: Bool {
         get {
-            if let number = fw_property(forName: "fw_autoScaleLayout") as? NSNumber {
+            if let number = fw_propertyNumber(forName: "fw_autoScaleLayout") {
                 return number.boolValue
             }
             return UIView.fw_autoScaleBlock != nil
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
         }
     }
 
@@ -228,8 +228,22 @@ import FWObjC
             return fw_propertyBool(forName: "fw_isCollapsed")
         }
         set {
-            fw_collapseConstraints.forEach { constraint in
-                constraint.constant = newValue ? constraint.fw_collapseConstant : constraint.fw_originalConstant
+            // 为了防止修改active时约束冲突，始终将已激活的约束放到前面修改
+            fw_collapseConstraints.sorted { constraint, _ in
+                guard let originalActive = constraint.fw_originalActive else {
+                    return false
+                }
+                return newValue ? originalActive : !originalActive
+            }.forEach { constraint in
+                if let originalActive = constraint.fw_originalActive {
+                    constraint.isActive = newValue ? !originalActive : originalActive
+                }
+                if let originalPriority = constraint.fw_originalPriority {
+                    constraint.priority = newValue ? constraint.fw_collapsePriority : originalPriority
+                }
+                if let originalConstant = constraint.fw_originalConstant {
+                    constraint.constant = newValue ? constraint.fw_collapseConstant : originalConstant
+                }
             }
             
             fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
@@ -251,8 +265,33 @@ import FWObjC
     /// 添加视图的收缩常量，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint) {
+    public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint, constant: CGFloat? = nil) {
         constraint.fw_originalConstant = constraint.constant
+        if let constant = constant {
+            constraint.fw_collapseConstant = constant
+        }
+        if !fw_collapseConstraints.contains(constraint) {
+            fw_collapseConstraints.append(constraint)
+        }
+    }
+    
+    /// 添加视图的有效性收缩常量，必须先添加才能生效
+    public func fw_addCollapseActiveConstraint(_ constraint: NSLayoutConstraint, active: Bool? = nil) {
+        if let active = active {
+            constraint.isActive = active
+        }
+        constraint.fw_originalActive = constraint.isActive
+        if !fw_collapseConstraints.contains(constraint) {
+            fw_collapseConstraints.append(constraint)
+        }
+    }
+    
+    /// 添加视图的优先级收缩常量，必须先添加才能生效
+    public func fw_addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
+        constraint.fw_originalPriority = constraint.priority
+        if let priority = priority {
+            constraint.fw_collapsePriority = priority
+        }
         if !fw_collapseConstraints.contains(constraint) {
             fw_collapseConstraints.append(constraint)
         }
@@ -261,36 +300,6 @@ import FWObjC
     fileprivate var fw_collapseConstraints: [NSLayoutConstraint] {
         get { return fw_property(forName: "fw_collapseConstraints") as? [NSLayoutConstraint] ?? [] }
         set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
-    }
-    
-    // MARK: - Invalidate
-    /// 设置是否使可失效约束失效(相反状态)， 默认NO不失效，YES时为失效
-    public var fw_isInvalid: Bool {
-        get {
-            return fw_propertyBool(forName: "fw_isInvalid")
-        }
-        set {
-            fw_invalidateConstraints.sorted { constraint, _ in
-                return newValue ? !constraint.fw_originalInvalid : constraint.fw_originalInvalid
-            }.forEach { constraint in
-                constraint.isActive = newValue ? constraint.fw_originalInvalid : !constraint.fw_originalInvalid
-            }
-            
-            fw_setPropertyBool(newValue, forName: "fw_isInvalid")
-        }
-    }
-
-    /// 添加视图的可失效约束，必须先添加才能生效
-    public func fw_addInvalidateConstraint(_ constraint: NSLayoutConstraint) {
-        constraint.fw_originalInvalid = !constraint.isActive
-        if !fw_invalidateConstraints.contains(constraint) {
-            fw_invalidateConstraints.append(constraint)
-        }
-    }
-    
-    fileprivate var fw_invalidateConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_invalidateConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_invalidateConstraints") }
     }
     
     // MARK: - Axis
@@ -888,50 +897,68 @@ import FWObjC
         set { fw_setPropertyDouble(newValue, forName: "fw_collapseConstant") }
     }
     
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
-    public var fw_originalConstant: CGFloat {
-        get { fw_propertyDouble(forName: "fw_originalConstant") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
-    }
-    
-    /// 可收缩约束的收缩优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
-    public var fw_collapsePriority: UILayoutPriority? {
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，nil时表示不可收缩
+    public var fw_originalConstant: CGFloat? {
         get {
-            if let number = fw_property(forName: "fw_collapsePriority") as? NSNumber {
-                return UILayoutPriority(number.floatValue)
+            if let number = fw_propertyNumber(forName: "fw_originalConstant") {
+                return number.doubleValue
             }
             return nil
         }
         set {
-            if let priority = newValue {
-                fw_setProperty(NSNumber(value: priority.rawValue), forName: "fw_collapsePriority")
+            if let constant = newValue {
+                fw_setPropertyNumber(NSNumber(value: constant), forName: "fw_originalConstant")
             } else {
-                fw_setProperty(nil, forName: "fw_collapsePriority")
+                fw_setPropertyNumber(nil, forName: "fw_originalConstant")
             }
         }
     }
     
-    /// 可收缩约束的原始优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
+    /// 可收缩约束的收缩优先级，默认0。注意Required不能修改，否则iOS13以下崩溃
+    public var fw_collapsePriority: UILayoutPriority {
+        get {
+            if let number = fw_propertyNumber(forName: "fw_collapsePriority") {
+                return .init(number.floatValue)
+            }
+            return .init(0)
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_collapsePriority")
+        }
+    }
+    
+    /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，nil表示不可收缩。注意Required不能修改，否则iOS13以下崩溃
     public var fw_originalPriority: UILayoutPriority? {
         get {
-            if let number = fw_property(forName: "fw_originalPriority") as? NSNumber {
-                return UILayoutPriority(number.floatValue)
+            if let number = fw_propertyNumber(forName: "fw_originalPriority") {
+                return .init(number.floatValue)
             }
             return nil
         }
         set {
             if let priority = newValue {
-                fw_setProperty(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
+                fw_setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
             } else {
-                fw_setProperty(nil, forName: "fw_originalPriority")
+                fw_setPropertyNumber(nil, forName: "fw_originalPriority")
             }
         }
     }
     
-    /// 可失效约束的原始状态，默认为添加失效约束时的状态
-    public var fw_originalInvalid: Bool {
-        get { fw_propertyBool(forName: "fw_originalInvalid") }
-        set { fw_setPropertyBool(newValue, forName: "fw_originalInvalid") }
+    /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，nil表示不可收缩
+    public var fw_originalActive: Bool? {
+        get {
+            if let number = fw_propertyNumber(forName: "fw_originalActive") {
+                return number.boolValue
+            }
+            return nil
+        }
+        set {
+            if let active = newValue {
+                fw_setPropertyNumber(NSNumber(value: active), forName: "fw_originalActive")
+            } else {
+                fw_setPropertyNumber(nil, forName: "fw_originalActive")
+            }
+        }
     }
     
     fileprivate var fw_layoutIdentifier: String? {
@@ -1022,13 +1049,6 @@ public class LayoutChain {
     @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
         view?.fw_hiddenCollapse = hiddenCollapse
-        return self
-    }
-    
-    // MARK: - Inactive
-    @discardableResult
-    public func isInvalid(_ isInvalid: Bool) -> Self {
-        view?.fw_isInvalid = isInvalid
         return self
     }
 
@@ -1418,10 +1438,7 @@ public class LayoutChain {
     @discardableResult
     public func collapse(_ constant: CGFloat? = nil) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            self.view?.fw_addCollapseConstraint(obj)
-            if let constant = constant {
-                obj.fw_collapseConstant = constant
-            }
+            self.view?.fw_addCollapseConstraint(obj, constant: constant)
         })
         return self
     }
@@ -1435,12 +1452,25 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func invalidate(_ invalid: Bool? = nil) -> Self {
+    public func collapseActive(_ active: Bool? = nil) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            if let invalid = invalid {
-                obj.isActive = !invalid
-            }
-            self.view?.fw_addInvalidateConstraint(obj)
+            self.view?.fw_addCollapseActiveConstraint(obj, active: active)
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func collapsePriority(_ priority: UILayoutPriority? = nil) -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            self.view?.fw_addCollapsePriorityConstraint(obj, priority: priority)
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func originalPriority(_ priority: UILayoutPriority) -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_originalPriority = priority
         })
         return self
     }

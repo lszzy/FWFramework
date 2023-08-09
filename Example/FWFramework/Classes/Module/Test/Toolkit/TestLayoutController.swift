@@ -87,15 +87,15 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         image.image = UIImage.app.appIconImage()
         image.isUserInteractionEnabled = true
         image.app.addTapGesture { _ in
-            image.app.isInvalid = !image.app.isInvalid
+            image.app.isCollapsed = !image.app.isCollapsed
         }
         view.addSubview(image)
         image.app.layoutChain
             .width(50)
             .height(toWidth: 1.0)
             .centerY(toView: subview)
-            .right(20).invalidate(true)
-            .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh).invalidate()
+            .right(20).collapseActive(false)
+            .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         
         let lineHeight = ceil(APP.font(16).lineHeight)
         let moreText = "点击展开"

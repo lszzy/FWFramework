@@ -142,24 +142,22 @@ extension Wrapper where Base: UIView {
         get { base.fw_hiddenCollapse }
         set { base.fw_hiddenCollapse = newValue }
     }
-
+    
     /// 添加视图的收缩常量，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func addCollapseConstraint(_ constraint: NSLayoutConstraint) {
-        base.fw_addCollapseConstraint(constraint)
+    public func addCollapseConstraint(_ constraint: NSLayoutConstraint, constant: CGFloat? = nil) {
+        base.fw_addCollapseConstraint(constraint, constant: constant)
     }
     
-    // MARK: - Inactive
-    /// 设置是否使可失效约束失效(相反状态)， 默认NO不失效，YES时为失效
-    public var isInvalid: Bool {
-        get { base.fw_isInvalid }
-        set { base.fw_isInvalid = newValue }
+    /// 添加视图的有效性收缩常量，必须先添加才能生效
+    public func addCollapseActiveConstraint(_ constraint: NSLayoutConstraint, active: Bool? = nil) {
+        base.fw_addCollapseActiveConstraint(constraint, active: active)
     }
-
-    /// 添加视图的可失效约束，必须先添加才能生效
-    public func addInvalidateConstraint(_ constraint: NSLayoutConstraint) {
-        base.fw_addInvalidateConstraint(constraint)
+    
+    /// 添加视图的优先级收缩常量，必须先添加才能生效
+    public func addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
+        base.fw_addCollapsePriorityConstraint(constraint, priority: priority)
     }
     
     // MARK: - Axis
@@ -527,28 +525,28 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.fw_collapseConstant = newValue }
     }
     
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
-    public var originalConstant: CGFloat {
+    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，nil时表示不可收缩
+    public var originalConstant: CGFloat? {
         get { base.fw_originalConstant }
         set { base.fw_originalConstant = newValue }
     }
     
-    /// 可收缩约束的收缩优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
-    public var collapsePriority: UILayoutPriority? {
+    /// 可收缩约束的收缩优先级，默认0。注意Required不能修改，否则iOS13以下崩溃
+    public var collapsePriority: UILayoutPriority {
         get { base.fw_collapsePriority }
         set { base.fw_collapsePriority = newValue }
     }
     
-    /// 可收缩约束的原始优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
+    /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，nil表示不可收缩。注意Required不能修改，否则iOS13以下崩溃
     public var originalPriority: UILayoutPriority? {
         get { base.fw_originalPriority }
         set { base.fw_originalPriority = newValue }
     }
     
-    /// 可失效约束的原始状态，默认为添加失效约束时的状态
-    public var originalInvalid: Bool {
-        get { base.fw_originalInvalid }
-        set { base.fw_originalInvalid = newValue }
+    /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，nil表示不可收缩
+    public var originalActive: Bool? {
+        get { base.fw_originalActive }
+        set { base.fw_originalActive = newValue }
     }
     
 }
