@@ -1025,26 +1025,26 @@ import FWObjC
     /// 是否允许横向拖动(X)，默认true
     public var fw_dragHorizontal: Bool {
         get {
-            if let number = fw_property(forName: "fw_dragHorizontal") as? NSNumber {
+            if let number = fw_propertyNumber(forName: "fw_dragHorizontal") {
                 return number.boolValue
             }
             return true
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_dragHorizontal")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragHorizontal")
         }
     }
 
     /// 是否允许纵向拖动(Y)，默认true
     public var fw_dragVertical: Bool {
         get {
-            if let number = fw_property(forName: "fw_dragVertical") as? NSNumber {
+            if let number = fw_propertyNumber(forName: "fw_dragVertical") {
                 return number.boolValue
             }
             return true
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_dragVertical")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragVertical")
         }
     }
 

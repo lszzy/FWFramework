@@ -42,13 +42,13 @@ import UIKit
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
     public var fw_maxYViewPadding: CGFloat {
         get {
-            if let number = fw_property(forName: "fw_maxYViewPadding") as? NSNumber {
+            if let number = fw_propertyNumber(forName: "fw_maxYViewPadding") {
                 return number.doubleValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
         }
     }
 
