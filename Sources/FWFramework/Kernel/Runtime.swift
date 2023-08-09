@@ -255,30 +255,34 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_propertyBool(forName: String) -> Bool {
-        if let number = fw_property(forName: forName) as? NSNumber {
-            return number.boolValue
-        }
-        return false
+        let number = fw_propertyNumber(forName: forName)
+        return number?.boolValue ?? false
     }
     
     /// 读取Int关联属性，默认0
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_propertyInt(forName: String) -> Int {
-        if let number = fw_property(forName: forName) as? NSNumber {
-            return number.intValue
-        }
-        return .zero
+        let number = fw_propertyNumber(forName: forName)
+        return number?.intValue ?? .zero
     }
     
     /// 读取Double关联属性，默认0
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_propertyDouble(forName: String) -> Double {
+        let number = fw_propertyNumber(forName: forName)
+        return number?.doubleValue ?? .zero
+    }
+    
+    /// 读取NSNumber关联属性，默认nil
+    /// - Parameter forName: 属性名称
+    /// - Returns: 属性值
+    public func fw_propertyNumber(forName: String) -> NSNumber? {
         if let number = fw_property(forName: forName) as? NSNumber {
-            return number.doubleValue
+            return number
         }
-        return .zero
+        return nil
     }
     
     /// 设置关联属性，可指定关联策略，支持KVO
@@ -311,7 +315,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyBool(_ value: Bool, forName: String) {
-        fw_setProperty(NSNumber(value: value), forName: forName)
+        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
     }
     
     /// 设置Int关联属性
@@ -319,7 +323,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyInt(_ value: Int, forName: String) {
-        fw_setProperty(NSNumber(value: value), forName: forName)
+        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
     }
     
     /// 设置Double关联属性
@@ -327,7 +331,15 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyDouble(_ value: Double, forName: String) {
-        fw_setProperty(NSNumber(value: value), forName: forName)
+        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
+    }
+    
+    /// 设置NSNumber关联属性
+    /// - Parameters:
+    ///   - value: 属性值
+    ///   - forName: 属性名称
+    public func fw_setPropertyNumber(_ value: NSNumber?, forName: String) {
+        fw_setProperty(value, forName: forName)
     }
     
     /// 读取类关联属性
@@ -403,17 +415,15 @@ import FWObjC
     ///   - value: double值
     ///   - forKey: 键名
     public func fw_bindDouble(_ value: Double, forKey: String) {
-        fw_bindObject(NSNumber(value: value), forKey: forKey)
+        fw_bindNumber(NSNumber(value: value), forKey: forKey)
     }
     
     /// 取出之前用 bindDouble:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func fw_boundDouble(forKey: String) -> Double {
-        if let number = fw_boundObject(forKey: forKey) as? NSNumber {
-            return number.doubleValue
-        }
-        return .zero
+        let number = fw_boundNumber(forKey: forKey)
+        return number?.doubleValue ?? .zero
     }
 
     /// 给对象绑定上一个 BOOL 值以供后续取出使用
@@ -421,17 +431,15 @@ import FWObjC
     ///   - value: 布尔值
     ///   - forKey: 键名
     public func fw_bindBool(_ value: Bool, forKey: String) {
-        fw_bindObject(NSNumber(value: value), forKey: forKey)
+        fw_bindNumber(NSNumber(value: value), forKey: forKey)
     }
     
     /// 取出之前用 bindBool:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func fw_boundBool(forKey: String) -> Bool {
-        if let number = fw_boundObject(forKey: forKey) as? NSNumber {
-            return number.boolValue
-        }
-        return false
+        let number = fw_boundNumber(forKey: forKey)
+        return number?.boolValue ?? false
     }
 
     /// 给对象绑定上一个 NSInteger 值以供后续取出使用
@@ -439,17 +447,33 @@ import FWObjC
     ///   - value: 整数值
     ///   - forKey: 键名
     public func fw_bindInt(_ value: Int, forKey: String) {
-        fw_bindObject(NSNumber(value: value), forKey: forKey)
+        fw_bindNumber(NSNumber(value: value), forKey: forKey)
     }
     
     /// 取出之前用 bindInt:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
     public func fw_boundInt(forKey: String) -> Int {
+        let number = fw_boundNumber(forKey: forKey)
+        return number?.intValue ?? .zero
+    }
+    
+    /// 给对象绑定上一个 NSNumber 值以供后续取出使用
+    /// - Parameters:
+    ///   - value: NSNumber值
+    ///   - forKey: 键名
+    public func fw_bindNumber(_ value: NSNumber?, forKey: String) {
+        fw_bindObject(value, forKey: forKey)
+    }
+    
+    /// 取出之前用 bindNumber:forKey: 绑定的值
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的值
+    public func fw_boundNumber(forKey: String) -> NSNumber? {
         if let number = fw_boundObject(forKey: forKey) as? NSNumber {
-            return number.intValue
+            return number
         }
-        return .zero
+        return nil
     }
     
     /// 移除之前使用 bind 方法绑定的对象

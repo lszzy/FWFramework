@@ -176,6 +176,13 @@ extension Wrapper where Base: NSObject {
         return base.fw_propertyDouble(forName: forName)
     }
     
+    /// 读取NSNumber关联属性，默认nil
+    /// - Parameter forName: 属性名称
+    /// - Returns: 属性值
+    public func propertyNumber(forName: String) -> NSNumber? {
+        return base.fw_propertyNumber(forName: forName)
+    }
+    
     /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
     ///   - object: 属性值
@@ -223,6 +230,14 @@ extension Wrapper where Base: NSObject {
     ///   - forName: 属性名称
     public func setPropertyDouble(_ value: Double, forName: String) {
         base.fw_setPropertyDouble(value, forName: forName)
+    }
+    
+    /// 设置NSNumber关联属性
+    /// - Parameters:
+    ///   - value: 属性值
+    ///   - forName: 属性名称
+    public func setPropertyNumber(_ value: NSNumber?, forName: String) {
+        base.fw_setPropertyNumber(value, forName: forName)
     }
     
     /// 读取类关联属性
@@ -324,6 +339,21 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 绑定的值
     public func boundInt(forKey: String) -> Int {
         return base.fw_boundInt(forKey: forKey)
+    }
+    
+    /// 给对象绑定上一个 NSNumber 值以供后续取出使用
+    /// - Parameters:
+    ///   - value: 整数值
+    ///   - forKey: 键名
+    public func bindNumber(_ value: NSNumber?, forKey: String) {
+        base.fw_bindNumber(value, forKey: forKey)
+    }
+    
+    /// 取出之前用 bindNumber:forKey: 绑定的值
+    /// - Parameter forKey: 键名
+    /// - Returns: 绑定的值
+    public func boundNumber(forKey: String) -> NSNumber? {
+        return base.fw_boundNumber(forKey: forKey)
     }
     
     /// 移除之前使用 bind 方法绑定的对象
