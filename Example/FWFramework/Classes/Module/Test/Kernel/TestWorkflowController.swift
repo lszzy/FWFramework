@@ -13,14 +13,6 @@ import FWFramework
     @objc optional func testMethod2()
 }
 
-struct TestWeakObject<T: AnyObject> {
-   weak var value: T?
-
-   init(_ value: T?) {
-      self.value = value
-   }
-}
-
 class TestWorkflowController: UIViewController {
     
     // MARK: - Accessor
@@ -29,11 +21,11 @@ class TestWorkflowController: UIViewController {
     
     private static let testNotification = Notification.Name("TestWorkflowNotifiation")
     private static var notificationCount: Int = 0
-    private static var notificationTargets: [TestWeakObject<NSObjectProtocol>] = []
+    private static var notificationTargets: [WeakObject] = []
     
     private static var kvoCount: Int = 0
     @objc dynamic private var kvoValue: Int = 0
-    private static var kvoTargets: [TestWeakObject<NSObjectProtocol>] = []
+    private static var kvoTargets: [WeakObject] = []
     
     // MARK: - Subviews
     private lazy var delegateButton: UIButton = {
@@ -75,17 +67,17 @@ extension TestWorkflowController: ViewControllerProtocol {
         
         let notificationTarget = app.observeNotification(Self.testNotification) { notification in
             TestWorkflowController.notificationCount += 1
-            let targetCount = TestWorkflowController.notificationTargets.filter { $0.value != nil }.count
+            let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
             UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.notificationTargets.append(TestWeakObject(notificationTarget))
+        TestWorkflowController.notificationTargets.append(WeakObject(object: notificationTarget))
         
         let kvoTarget = app.observeProperty("kvoValue") { vc, _ in
             TestWorkflowController.kvoCount += 1
-            let targetCount = TestWorkflowController.kvoTargets.filter { $0.value != nil }.count
+            let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
             UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.kvoTargets.append(TestWeakObject(kvoTarget))
+        TestWorkflowController.kvoTargets.append(WeakObject(object: kvoTarget))
     }
     
     func setupSubviews() {
