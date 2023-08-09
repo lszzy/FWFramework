@@ -128,7 +128,7 @@ open class NavigationBarAppearance: NSObject {
             methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
             swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
         ) { store in { selfObject in
-            if let hiddenValue = selfObject.fw_property(forName: "fw_statusBarHidden") as? NSNumber {
+            if let hiddenValue = selfObject.fw_propertyNumber(forName: "fw_statusBarHidden") {
                 return hiddenValue.boolValue
             } else {
                 return store.original(selfObject, store.selector)
@@ -141,7 +141,7 @@ open class NavigationBarAppearance: NSObject {
             methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
             swizzleSignature: (@convention(block) (UIViewController) -> UIStatusBarStyle).self
         ) { store in { selfObject in
-            if let styleValue = selfObject.fw_property(forName: "fw_statusBarStyle") as? NSNumber {
+            if let styleValue = selfObject.fw_propertyNumber(forName: "fw_statusBarStyle") {
                 return .init(rawValue: styleValue.intValue) ?? .default
             } else {
                 return store.original(selfObject, store.selector)
@@ -232,13 +232,13 @@ open class NavigationBarAppearance: NSObject {
     /// 是否允许修改导航栏样式，默认未设置时child控制器不能修改
     public var fw_allowsBarAppearance: Bool {
         get {
-            if let number = fw_property(forName: "fw_allowsBarAppearance") as? NSNumber {
+            if let number = fw_propertyNumber(forName: "fw_allowsBarAppearance") {
                 return number.boolValue
             }
             return !fw_isChild
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_allowsBarAppearance")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_allowsBarAppearance")
         }
     }
     
@@ -248,7 +248,7 @@ open class NavigationBarAppearance: NSObject {
             return appearance
         }
         // 2. 检查VC是否自定义style
-        if let style = fw_property(forName: "fw_navigationBarStyle") as? NSNumber {
+        if let style = fw_propertyNumber(forName: "fw_navigationBarStyle") {
             return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
         }
         // 3. 检查NAV是否自定义appearance
@@ -256,7 +256,7 @@ open class NavigationBarAppearance: NSObject {
             return appearance
         }
         // 4. 检查NAV是否自定义style
-        if let style = self.navigationController?.fw_property(forName: "fw_navigationBarStyle") as? NSNumber {
+        if let style = self.navigationController?.fw_propertyNumber(forName: "fw_navigationBarStyle") {
             return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
         }
         return nil
@@ -269,7 +269,7 @@ open class NavigationBarAppearance: NSObject {
         if !fw_allowsBarAppearance { return }
         
         // fwNavigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
-        if let hidden = fw_property(forName: "fw_navigationBarHidden") as? NSNumber,
+        if let hidden = fw_propertyNumber(forName: "fw_navigationBarHidden"),
            navigationController.isNavigationBarHidden != hidden.boolValue {
             navigationController.setNavigationBarHidden(hidden.boolValue, animated: animated)
         }

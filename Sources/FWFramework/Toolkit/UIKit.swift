@@ -2628,13 +2628,13 @@ import AdSupport
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
     public var fw_searchIconOffset: CGFloat {
         get {
-            if let value = fw_property(forName: "fw_searchIconOffset") as? NSNumber {
+            if let value = fw_propertyNumber(forName: "fw_searchIconOffset") {
                 return value.doubleValue
             }
             return self.positionAdjustment(for: .search).horizontal
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_searchIconOffset")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_searchIconOffset")
             self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
         }
     }
@@ -2642,13 +2642,13 @@ import AdSupport
     /// 设置清空图标离右侧的偏移位置
     public var fw_clearIconOffset: CGFloat {
         get {
-            if let value = fw_property(forName: "fw_clearIconOffset") as? NSNumber {
+            if let value = fw_propertyNumber(forName: "fw_clearIconOffset") {
                 return value.doubleValue
             }
             return self.positionAdjustment(for: .clear).horizontal
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_clearIconOffset")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_clearIconOffset")
             self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .clear)
         }
     }
@@ -2721,9 +2721,9 @@ import AdSupport
                 }
             }
             
-            if let isCenterValue = selfObject.fw_property(forName: "fw_searchIconCenter") as? NSNumber {
+            if let isCenterValue = selfObject.fw_propertyNumber(forName: "fw_searchIconCenter") {
                 if !isCenterValue.boolValue {
-                    let offset = selfObject.fw_property(forName: "fw_searchIconOffset") as? NSNumber
+                    let offset = selfObject.fw_propertyNumber(forName: "fw_searchIconOffset")
                     selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
                 } else {
                     let textField = selfObject.fw_textField

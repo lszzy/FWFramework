@@ -478,10 +478,10 @@ import FWObjC
     }
     
     private func fw_addReturnEvent() {
-        let value = fw_property(forName: "fw_addReturnEvent") as? NSNumber
+        let value = fw_propertyNumber(forName: "fw_addReturnEvent")
         if value == nil {
             self.addTarget(self.fw_keyboardTarget, action: #selector(KeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
-            fw_setProperty(NSNumber(value: true), forName: "fw_addReturnEvent")
+            fw_setPropertyNumber(NSNumber(value: true), forName: "fw_addReturnEvent")
         }
     }
     
@@ -1004,13 +1004,13 @@ import FWObjC
     /// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
     public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
         get {
-            if let value = fw_property(forName: "fw_verticalAlignment") as? NSNumber {
+            if let value = fw_propertyNumber(forName: "fw_verticalAlignment") {
                 return .init(rawValue: value.intValue) ?? .top
             }
             return .top
         }
         set {
-            fw_setProperty(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
+            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
             self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
@@ -1072,13 +1072,13 @@ import FWObjC
     /// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
     public var fw_maxHeight: CGFloat {
         get {
-            if let value = fw_property(forName: "fw_maxHeight") as? NSNumber {
+            if let value = fw_propertyNumber(forName: "fw_maxHeight") {
                 return value.doubleValue
             }
             return .greatestFiniteMagnitude
         }
         set {
-            fw_setProperty(NSNumber(value: newValue), forName: "fw_maxHeight")
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxHeight")
             self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
