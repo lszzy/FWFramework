@@ -429,14 +429,6 @@
     return resultClasses;
 }
 
-+ (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
-    @try {
-        if (block) block();
-    } @catch (NSException *exception) {
-        if (exceptionHandler) exceptionHandler(exception);
-    }
-}
-
 + (BOOL)isEqual:(id)obj1 with:(id)obj2 {
     return obj1 == obj2;
 }

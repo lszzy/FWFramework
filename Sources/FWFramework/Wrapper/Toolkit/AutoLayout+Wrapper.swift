@@ -521,12 +521,6 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.fw_inset = newValue }
     }
     
-    /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
-    public var priority: UILayoutPriority {
-        get { base.fw_priority }
-        set { base.fw_priority = newValue }
-    }
-    
     /// 可收缩约束的收缩常量值，默认0
     public var collapseConstant: CGFloat {
         get { base.fw_collapseConstant }
@@ -537,6 +531,18 @@ extension Wrapper where Base: NSLayoutConstraint {
     public var originalConstant: CGFloat {
         get { base.fw_originalConstant }
         set { base.fw_originalConstant = newValue }
+    }
+    
+    /// 可收缩约束的收缩优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
+    public var collapsePriority: UILayoutPriority? {
+        get { base.fw_collapsePriority }
+        set { base.fw_collapsePriority = newValue }
+    }
+    
+    /// 可收缩约束的原始优先级，默认nil。注意Required不能修改，否则iOS13以下崩溃
+    public var originalPriority: UILayoutPriority? {
+        get { base.fw_originalPriority }
+        set { base.fw_originalPriority = newValue }
     }
     
     /// 可失效约束的原始状态，默认为添加失效约束时的状态

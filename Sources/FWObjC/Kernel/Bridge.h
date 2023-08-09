@@ -76,8 +76,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray<Class> *)getClasses:(Class)superClass;
 
-+ (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
-
 + (BOOL)isEqual:(nullable id)obj1 with:(nullable id)obj2;
 
 @end
