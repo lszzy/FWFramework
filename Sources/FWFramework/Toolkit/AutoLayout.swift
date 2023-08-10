@@ -491,12 +491,13 @@ import FWObjC
     ///   - toAttribute: 目标视图属性
     ///   - ofView: 目标视图
     ///   - multiplier: 指定比例
+    ///   - offset: 偏移距离
     ///   - relation: 约束关系
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: 0, relation: relation, priority: priority)
+    public func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority, isOpposite: false)
     }
     
     // MARK: - Constraint
@@ -634,7 +635,7 @@ import FWObjC
         return fw_constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: offset, relation: targetRelation, priority: priority, isOpposite: isOpposite)
     }
     
-    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool = false) -> NSLayoutConstraint {
+    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool) -> NSLayoutConstraint {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
         if UIView.fw_autoLayoutRTL {
@@ -1286,8 +1287,8 @@ public class LayoutChain {
     }
 
     @discardableResult
-    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
-        self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation, priority: priority)
+    public func attribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
+        self.view?.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, offset: offset, relation: relation, priority: priority)
         return self
     }
     
@@ -1533,7 +1534,7 @@ public class LayoutChain {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(self.count - 1)
-                        view.fw_constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1)).constant = offset
+                        view.fw_constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1), offset: offset)
                     }
                 } else {
                     view.fw_pinEdge(toSuperview: .left, inset: leadSpacing)
@@ -1554,7 +1555,7 @@ public class LayoutChain {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(self.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(self.count - 1)
-                        view.fw_constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1)).constant = offset
+                        view.fw_constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(self.count - 1), offset: offset)
                     }
                 } else {
                     view.fw_pinEdge(toSuperview: .top, inset: leadSpacing)
