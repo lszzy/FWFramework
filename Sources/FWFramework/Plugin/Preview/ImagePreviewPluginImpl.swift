@@ -15,6 +15,7 @@ open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ImagePreviewPluginImpl()
 
     /// 自定义图片预览控制器句柄，默认nil时使用自带控制器，显示分页，点击图片|视频时关闭，present样式为zoom

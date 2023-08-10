@@ -15,6 +15,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ToastPluginImpl()
 
     /// 显示吐司时是否执行淡入动画，默认YES

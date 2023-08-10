@@ -16,6 +16,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ImagePickerPluginImpl()
 
     /// 是否禁用iOS14+PHPickerViewController(支持多选)，默认NO；设为YES后始终使用UIImagePickerController(仅支持单选)
@@ -99,6 +100,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ImagePickerControllerImpl()
 
     /// 是否显示相册列表控制器，默认为NO，点击titleView切换相册

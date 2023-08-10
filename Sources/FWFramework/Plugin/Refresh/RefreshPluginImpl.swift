@@ -15,6 +15,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = RefreshPluginImpl()
     
     /// 下拉刷新自定义句柄，开启时自动调用
