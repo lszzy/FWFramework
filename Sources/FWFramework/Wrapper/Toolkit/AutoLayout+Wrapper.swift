@@ -30,7 +30,7 @@ extension Wrapper where Base: UIView {
     /// 1. 屏幕宽度约束不能使用screenWidth约束，需要使用375设计标准
     /// 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
     /// 2. 只会对offset值生效，其他属性不受影响
-    /// 3. 某个视图如需固定offset值，可指定autoScale为false关闭该功能
+    /// 3. 某个视图如需固定offset值，可指定autoScaleLayout为false关闭该功能
     public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
         get { UIView.fw_autoScaleBlock }
         set { UIView.fw_autoScaleBlock = newValue }
@@ -51,52 +51,6 @@ extension Wrapper where Base: UIView {
     /// 执行子视图自动布局，自动计算子视图尺寸。需先将视图添加到界面(如设置为tableHeaderView)，再调用即可(iOS8+)
     public func autoLayoutSubviews() {
         base.fw_autoLayoutSubviews()
-    }
-
-    /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutHeight(width: CGFloat) -> CGFloat {
-        return base.fw_layoutHeight(width: width)
-    }
-
-    /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func layoutWidth(height: CGFloat) -> CGFloat {
-        return base.fw_layoutWidth(height: height)
-    }
-    
-    /// 计算动态AutoLayout布局视图指定宽度时的高度。
-    ///
-    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
-    /// - Parameters:
-    ///   - width: 指定宽度
-    ///   - maxYViewExpanded: 最大Y视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
-    ///   - maxYViewPadding: 最大Y视图的底部内边距，maxYViewExpanded为true时不起作用，默认0
-    ///   - maxYView: 指定最大Y视图，默认nil
-    /// - Returns: 高度
-    public func dynamicHeight(
-        width: CGFloat,
-        maxYViewExpanded: Bool = false,
-        maxYViewPadding: CGFloat = 0,
-        maxYView: UIView? = nil
-    ) -> CGFloat {
-        return base.fw_dynamicHeight(width: width, maxYViewExpanded: maxYViewExpanded, maxYViewPadding: maxYViewPadding, maxYView: maxYView)
-    }
-    
-    /// 计算动态AutoLayout布局视图指定高度时的宽度。
-    ///
-    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
-    /// - Parameters:
-    ///   - height: 指定高度
-    ///   - maxYViewExpanded: 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认false，无需撑开布局
-    ///   - maxYViewPadding: 最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为true时不起作用，默认0
-    ///   - maxYView: 指定最大Y视图(横向时为X)，默认nil
-    /// - Returns: 宽度
-    public func dynamicWidth(
-        height: CGFloat,
-        maxYViewExpanded: Bool = false,
-        maxYViewPadding: CGFloat = 0,
-        maxYView: UIView? = nil
-    ) -> CGFloat {
-        return base.fw_dynamicWidth(height: height, maxYViewExpanded: maxYViewExpanded, maxYViewPadding: maxYViewPadding, maxYView: maxYView)
     }
     
     // MARK: - Compression
@@ -143,19 +97,19 @@ extension Wrapper where Base: UIView {
         set { base.fw_hiddenCollapse = newValue }
     }
     
-    /// 添加视图的收缩常量，必须先添加才能生效
+    /// 添加视图的偏移收缩约束，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func addCollapseConstraint(_ constraint: NSLayoutConstraint, constant: CGFloat? = nil) {
-        base.fw_addCollapseConstraint(constraint, constant: constant)
+    public func addCollapseConstraint(_ constraint: NSLayoutConstraint, offset: CGFloat? = nil) {
+        base.fw_addCollapseConstraint(constraint, offset: offset)
     }
     
-    /// 添加视图的有效性收缩常量，必须先添加才能生效
+    /// 添加视图的有效性收缩约束，必须先添加才能生效
     public func addCollapseActiveConstraint(_ constraint: NSLayoutConstraint, active: Bool? = nil) {
         base.fw_addCollapseActiveConstraint(constraint, active: active)
     }
     
-    /// 添加视图的优先级收缩常量，必须先添加才能生效
+    /// 添加视图的优先级收缩约束，必须先添加才能生效
     public func addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
         base.fw_addCollapsePriorityConstraint(constraint, priority: priority)
     }
@@ -507,28 +461,28 @@ extension Wrapper where Base: UIView {
 // MARK: - NSLayoutConstraint+AutoLayout
 extension Wrapper where Base: NSLayoutConstraint {
     
+    /// 设置偏移值，根据配置自动等比例缩放和取反
+    public var offset: CGFloat {
+        get { base.fw_offset }
+        set { base.fw_offset = newValue }
+    }
+    
     /// 标记是否是相反的约束，一般相对于父视图
     public var isOpposite: Bool {
         get { base.fw_isOpposite }
         set { base.fw_isOpposite = newValue }
     }
     
-    /// 设置内间距值，如果是相反的约束，会自动取反
-    public var inset: CGFloat {
-        get { base.fw_inset }
-        set { base.fw_inset = newValue }
+    /// 可收缩约束的收缩偏移值，默认0
+    public var collapseOffset: CGFloat {
+        get { base.fw_collapseOffset }
+        set { base.fw_collapseOffset = newValue }
     }
     
-    /// 可收缩约束的收缩常量值，默认0
-    public var collapseConstant: CGFloat {
-        get { base.fw_collapseConstant }
-        set { base.fw_collapseConstant = newValue }
-    }
-    
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，未添加时为0
-    public var originalConstant: CGFloat {
-        get { base.fw_originalConstant }
-        set { base.fw_originalConstant = newValue }
+    /// 可收缩约束的原始偏移值，默认为添加收缩约束时的值，未添加时为0
+    public var originalOffset: CGFloat {
+        get { base.fw_originalOffset }
+        set { base.fw_originalOffset = newValue }
     }
     
     /// 可收缩约束的收缩优先级，默认defaultLow。注意Required不能修改，否则iOS13以下崩溃
@@ -549,10 +503,10 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.fw_originalActive = newValue }
     }
     
-    /// 约束常量是否可收缩，默认false，开启时自动初始化originalConstant
-    public var shouldCollapseConstant: Bool {
-        get { base.fw_shouldCollapseConstant }
-        set { base.fw_shouldCollapseConstant = newValue }
+    /// 约束偏移是否可收缩，默认false，开启时自动初始化originalOffset
+    public var shouldCollapseOffset: Bool {
+        get { base.fw_shouldCollapseOffset }
+        set { base.fw_shouldCollapseOffset = newValue }
     }
     
     /// 约束有效性是否可收缩，默认false，开启时自动初始化originalActive
