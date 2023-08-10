@@ -97,6 +97,24 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20).collapseActive(false)
             .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         
+        let iconsView = UIView()
+        view.addSubview(iconsView)
+        iconsView.chain
+            .top(toViewBottom: subview, offset: 20)
+            .horizontal(20)
+            .height(50)
+        
+        UIView.app.autoScaleLayout = true
+        for _ in 0..<4 {
+            let iconView = UIImageView()
+            iconView.image = UIImage.app.appIconImage()
+            iconsView.addSubview(iconView)
+        }
+        iconsView.chain
+            .subviews(along: .horizontal, itemLength: APP.fixed(50), leadSpacing: 0, tailSpacing: 0)
+            .subviews(along: .horizontal, leftSpacing: 0, rightSpacing: 0)
+        UIView.app.autoScaleLayout = false
+        
         let lineHeight = ceil(APP.font(16).lineHeight)
         let moreText = "点击展开"
         buttonWidth = moreText.app.size(font: APP.font(16)).width + 20
@@ -104,7 +122,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         attributedLabel.app.layoutChain
             .left(20)
             .right(20)
-            .top(toViewBottom: subview, offset: 20)
+            .top(toViewBottom: iconsView, offset: 20)
         
         attributedLabel.text = "我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我又要换行了"
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")

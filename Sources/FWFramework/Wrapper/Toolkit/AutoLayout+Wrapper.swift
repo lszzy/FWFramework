@@ -368,12 +368,13 @@ extension Wrapper where Base: UIView {
     ///   - toAttribute: 目标视图属性
     ///   - ofView: 目标视图
     ///   - multiplier: 指定比例
+    ///   - offset: 偏移距离
     ///   - relation: 约束关系
     ///   - priority: 约束优先级，默认required
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return base.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority)
+    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
+        return base.fw_constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority)
     }
     
     // MARK: - Constraint
