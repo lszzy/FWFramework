@@ -15,6 +15,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = EmptyPluginImpl()
 
     /// 显示空界面时是否执行淡入动画，默认YES

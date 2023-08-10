@@ -17,13 +17,19 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        app.setRightBarItem("切换插件") { _ in
-            if PluginManager.loadPlugin(AlertPlugin.self) != nil {
-                PluginManager.unloadPlugin(AlertPlugin.self)
-                PluginManager.unregisterPlugin(AlertPlugin.self)
-            } else {
-                PluginManager.registerPlugin(AlertPlugin.self, object: AlertControllerImpl.self)
-            }
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换插件", "切换取消(仅自定义Sheet支持)"], actionBlock: { index in
+                if index == 0 {
+                    if PluginManager.loadPlugin(AlertPlugin.self) != nil {
+                        PluginManager.unloadPlugin(AlertPlugin.self)
+                        PluginManager.unregisterPlugin(AlertPlugin.self)
+                    } else {
+                        PluginManager.registerPlugin(AlertPlugin.self, object: AlertControllerImpl.self)
+                    }
+                } else {
+                    AlertControllerImpl.shared.hidesSheetCancel = !AlertControllerImpl.shared.hidesSheetCancel
+                }
+            })
         }
     }
     

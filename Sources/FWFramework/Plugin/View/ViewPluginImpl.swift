@@ -15,6 +15,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ViewPluginImpl()
     
     /// 自定义进度视图生产句柄，默认ProgressView

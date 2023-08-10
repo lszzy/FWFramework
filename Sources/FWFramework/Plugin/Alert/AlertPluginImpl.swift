@@ -16,6 +16,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = AlertPluginImpl()
 
     /// 自定义Alert弹窗样式，nil时使用单例
@@ -187,6 +188,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = AlertControllerImpl()
 
     /// 自定义Alert弹窗样式，nil时使用单例
@@ -197,6 +199,9 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
 
     /// 点击暗色背景关闭时是否触发cancelBlock，默认NO
     open var dimmingTriggerCancel: Bool = false
+    
+    /// 是否隐藏ActionSheet取消按钮，取消后可点击背景关闭并触发cancelBlock
+    open var hidesSheetCancel: Bool = false
 
     /// 弹窗自定义句柄，show方法自动调用
     open var customBlock: ((AlertController) -> Void)?
@@ -271,7 +276,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         }
         
         // 添加取消按钮
-        if cancel != nil {
+        if cancel != nil && !hidesSheetCancel {
             let cancelAction = action(object: cancel, style: .cancel, appearance: customAppearance) { action in
                 cancelBlock?()
             }
@@ -279,7 +284,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         }
         
         // 点击背景
-        if dimmingTriggerCancel {
+        if dimmingTriggerCancel || hidesSheetCancel {
             alertController.dismissCompletion = cancelBlock
         }
         

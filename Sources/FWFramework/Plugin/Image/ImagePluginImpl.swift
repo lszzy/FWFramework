@@ -15,6 +15,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     
     // MARK: - Accessor
     /// 单例模式
+    @objc(sharedInstance)
     public static let shared = ImagePluginImpl()
 
     /// 图片加载完成是否显示渐变动画，默认NO
