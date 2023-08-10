@@ -103,6 +103,136 @@ import UIKit
 // MARK: - UIView+DynamicLayout
 @_spi(FW) extension UIView {
     
+    /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。注意UILabel可使用preferredMaxLayoutWidth限制多行文本自动布局时的最大宽度
+    public func fw_layoutHeight(width: CGFloat) -> CGFloat {
+        var fittingHeight: CGFloat = 0
+        // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
+        let widthFenceConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: width)
+        self.addConstraint(widthFenceConstraint)
+        // 自动布局引擎计算
+        fittingHeight = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        self.removeConstraint(widthFenceConstraint)
+        
+        if (fittingHeight == 0) {
+            // 尝试frame布局，调用sizeThatFits:
+            fittingHeight = self.sizeThatFits(CGSize(width: width, height: 0)).height
+        }
+        return fittingHeight
+    }
+
+    /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
+    public func fw_layoutWidth(height: CGFloat) -> CGFloat {
+        var fittingWidth: CGFloat = 0
+        // 添加固定的height约束，从而使动态视图(如UILabel)横向扩张。而不是纵向增长，flow-layout的方式
+        let heightFenceConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: height)
+        self.addConstraint(heightFenceConstraint)
+        // 自动布局引擎计算
+        fittingWidth = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
+        self.removeConstraint(heightFenceConstraint)
+        
+        if (fittingWidth == 0) {
+            // 尝试frame布局，调用sizeThatFits:
+            fittingWidth = self.sizeThatFits(CGSize(width: 0, height: height)).width
+        }
+        return fittingWidth
+    }
+    
+    /// 计算动态AutoLayout布局视图指定宽度时的高度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - width: 指定宽度
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图，默认nil
+    /// - Returns: 高度
+    public func fw_dynamicHeight(
+        width: CGFloat,
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
+    ) -> CGFloat {
+        let view = UIView()
+        view.addSubview(self)
+        view.frame = CGRect(x: 0, y: 0, width: width, height: 0)
+        frame = CGRect(x: 0, y: 0, width: width, height: 0)
+        
+        var dynamicHeight: CGFloat = 0
+        // 自动撑开方式
+        if maxYViewExpanded {
+            dynamicHeight = fw_layoutHeight(width: width)
+        // 无需撑开
+        } else {
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            
+            var maxY: CGFloat = 0
+            if let maxYView = maxYView {
+                maxY = CGRectGetMaxY(maxYView.frame)
+            } else {
+                for tempView in subviews.reversed() {
+                    let tempY = CGRectGetMaxY(tempView.frame)
+                    if tempY > maxY {
+                        maxY = tempY
+                    }
+                }
+            }
+            dynamicHeight = maxY + maxYViewPadding
+        }
+        
+        removeFromSuperview()
+        frame = CGRect(x: 0, y: 0, width: width, height: dynamicHeight)
+        return dynamicHeight
+    }
+    
+    /// 计算动态AutoLayout布局视图指定高度时的宽度。
+    ///
+    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
+    /// - Parameters:
+    ///   - height: 指定高度
+    ///   - maxYViewExpanded: 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认false，无需撑开布局
+    ///   - maxYViewPadding: 最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为true时不起作用，默认0
+    ///   - maxYView: 指定最大Y视图(横向时为X)，默认nil
+    /// - Returns: 宽度
+    public func fw_dynamicWidth(
+        height: CGFloat,
+        maxYViewExpanded: Bool = false,
+        maxYViewPadding: CGFloat = 0,
+        maxYView: UIView? = nil
+    ) -> CGFloat {
+        let view = UIView()
+        view.addSubview(self)
+        view.frame = CGRect(x: 0, y: 0, width: 0, height: height)
+        frame = CGRect(x: 0, y: 0, width: 0, height: height)
+        
+        var dynamicWidth: CGFloat = 0
+        // 自动撑开方式
+        if maxYViewExpanded {
+            dynamicWidth = fw_layoutWidth(height: height)
+        // 无需撑开
+        } else {
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            
+            var maxY: CGFloat = 0
+            if let maxYView = maxYView {
+                maxY = CGRectGetMaxX(maxYView.frame)
+            } else {
+                for tempView in subviews.reversed() {
+                    let tempY = CGRectGetMaxX(tempView.frame)
+                    if tempY > maxY {
+                        maxY = tempY
+                    }
+                }
+            }
+            dynamicWidth = maxY + maxYViewPadding
+        }
+        
+        removeFromSuperview()
+        frame = CGRect(x: 0, y: 0, width: dynamicWidth, height: height)
+        return dynamicWidth
+    }
+    
     /// 获取动态布局视图类的尺寸，可固定宽度或高度
     /// - Parameters:
     ///   - viewClass: 视图类

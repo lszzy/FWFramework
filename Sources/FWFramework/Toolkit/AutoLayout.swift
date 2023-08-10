@@ -30,13 +30,18 @@ import FWObjC
     /// 1. 屏幕宽度约束不能使用screenWidth约束，需要使用375设计标准
     /// 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
     /// 2. 只会对offset值生效，其他属性不受影响
-    /// 3. 某个视图如需固定offset值，可指定autoScale为false关闭该功能
+    /// 3. 某个视图如需固定offset值，可指定autoScaleLayout为false关闭该功能
     public static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
     
     /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
     public static var fw_autoScaleLayout: Bool {
-        get { fw_autoScaleBlock != nil }
-        set { fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil }
+        get {
+            fw_autoScaleBlock != nil
+        }
+        set {
+            guard newValue != fw_autoScaleLayout else { return }
+            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil
+        }
     }
     
     /// 视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
@@ -64,136 +69,6 @@ import FWObjC
         
         // 还原自动布局设置
         self.translatesAutoresizingMaskIntoConstraints = translateConstraint
-    }
-
-    /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法。注意UILabel可使用preferredMaxLayoutWidth限制多行文本自动布局时的最大宽度
-    public func fw_layoutHeight(width: CGFloat) -> CGFloat {
-        var fittingHeight: CGFloat = 0
-        // 添加固定的width约束，从而使动态视图(如UILabel)纵向扩张。而不是水平增长，flow-layout的方式
-        let widthFenceConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: width)
-        self.addConstraint(widthFenceConstraint)
-        // 自动布局引擎计算
-        fittingHeight = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        self.removeConstraint(widthFenceConstraint)
-        
-        if (fittingHeight == 0) {
-            // 尝试frame布局，调用sizeThatFits:
-            fittingHeight = self.sizeThatFits(CGSize(width: width, height: 0)).height
-        }
-        return fittingHeight
-    }
-
-    /// 计算动态布局视图指定高度时的宽度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
-    public func fw_layoutWidth(height: CGFloat) -> CGFloat {
-        var fittingWidth: CGFloat = 0
-        // 添加固定的height约束，从而使动态视图(如UILabel)横向扩张。而不是纵向增长，flow-layout的方式
-        let heightFenceConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: height)
-        self.addConstraint(heightFenceConstraint)
-        // 自动布局引擎计算
-        fittingWidth = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
-        self.removeConstraint(heightFenceConstraint)
-        
-        if (fittingWidth == 0) {
-            // 尝试frame布局，调用sizeThatFits:
-            fittingWidth = self.sizeThatFits(CGSize(width: 0, height: height)).width
-        }
-        return fittingWidth
-    }
-    
-    /// 计算动态AutoLayout布局视图指定宽度时的高度。
-    ///
-    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
-    /// - Parameters:
-    ///   - width: 指定宽度
-    ///   - maxYViewExpanded: 最大Y视图是否撑开布局，需布局约束完整。默认false，无需撑开布局
-    ///   - maxYViewPadding: 最大Y视图的底部内边距，maxYViewExpanded为true时不起作用，默认0
-    ///   - maxYView: 指定最大Y视图，默认nil
-    /// - Returns: 高度
-    public func fw_dynamicHeight(
-        width: CGFloat,
-        maxYViewExpanded: Bool = false,
-        maxYViewPadding: CGFloat = 0,
-        maxYView: UIView? = nil
-    ) -> CGFloat {
-        let view = UIView()
-        view.addSubview(self)
-        view.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        
-        var dynamicHeight: CGFloat = 0
-        // 自动撑开方式
-        if maxYViewExpanded {
-            dynamicHeight = fw_layoutHeight(width: width)
-        // 无需撑开
-        } else {
-            view.setNeedsLayout()
-            view.layoutIfNeeded()
-            
-            var maxY: CGFloat = 0
-            if let maxYView = maxYView {
-                maxY = CGRectGetMaxY(maxYView.frame)
-            } else {
-                for tempView in subviews.reversed() {
-                    let tempY = CGRectGetMaxY(tempView.frame)
-                    if tempY > maxY {
-                        maxY = tempY
-                    }
-                }
-            }
-            dynamicHeight = maxY + maxYViewPadding
-        }
-        
-        removeFromSuperview()
-        frame = CGRect(x: 0, y: 0, width: width, height: dynamicHeight)
-        return dynamicHeight
-    }
-    
-    /// 计算动态AutoLayout布局视图指定高度时的宽度。
-    ///
-    /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
-    /// - Parameters:
-    ///   - height: 指定高度
-    ///   - maxYViewExpanded: 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认false，无需撑开布局
-    ///   - maxYViewPadding: 最大Y视图的底部内边距(横向时为X)，maxYViewExpanded为true时不起作用，默认0
-    ///   - maxYView: 指定最大Y视图(横向时为X)，默认nil
-    /// - Returns: 宽度
-    public func fw_dynamicWidth(
-        height: CGFloat,
-        maxYViewExpanded: Bool = false,
-        maxYViewPadding: CGFloat = 0,
-        maxYView: UIView? = nil
-    ) -> CGFloat {
-        let view = UIView()
-        view.addSubview(self)
-        view.frame = CGRect(x: 0, y: 0, width: 0, height: height)
-        frame = CGRect(x: 0, y: 0, width: 0, height: height)
-        
-        var dynamicWidth: CGFloat = 0
-        // 自动撑开方式
-        if maxYViewExpanded {
-            dynamicWidth = fw_layoutWidth(height: height)
-        // 无需撑开
-        } else {
-            view.setNeedsLayout()
-            view.layoutIfNeeded()
-            
-            var maxY: CGFloat = 0
-            if let maxYView = maxYView {
-                maxY = CGRectGetMaxX(maxYView.frame)
-            } else {
-                for tempView in subviews.reversed() {
-                    let tempY = CGRectGetMaxX(tempView.frame)
-                    if tempY > maxY {
-                        maxY = tempY
-                    }
-                }
-            }
-            dynamicWidth = maxY + maxYViewPadding
-        }
-        
-        removeFromSuperview()
-        frame = CGRect(x: 0, y: 0, width: dynamicWidth, height: height)
-        return dynamicWidth
     }
     
     // MARK: - Compression
@@ -252,20 +127,20 @@ import FWObjC
         set { fw_setPropertyBool(newValue, forName: "fw_hiddenCollapse") }
     }
 
-    /// 添加视图的收缩常量，必须先添加才能生效
+    /// 添加视图的偏移收缩约束，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
-    public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint, constant: CGFloat? = nil) {
-        if let constant = constant {
-            constraint.fw_collapseConstant = constant
+    public func fw_addCollapseConstraint(_ constraint: NSLayoutConstraint, offset: CGFloat? = nil) {
+        if let offset = offset {
+            constraint.fw_collapseOffset = offset
         }
-        constraint.fw_shouldCollapseConstant = true
+        constraint.fw_shouldCollapseOffset = true
         if !fw_collapseConstraints.contains(constraint) {
             fw_collapseConstraints.append(constraint)
         }
     }
     
-    /// 添加视图的有效性收缩常量，必须先添加才能生效
+    /// 添加视图的有效性收缩约束，必须先添加才能生效
     public func fw_addCollapseActiveConstraint(_ constraint: NSLayoutConstraint, active: Bool? = nil) {
         if let active = active {
             constraint.isActive = active
@@ -276,7 +151,7 @@ import FWObjC
         }
     }
     
-    /// 添加视图的优先级收缩常量，必须先添加才能生效
+    /// 添加视图的优先级收缩约束，必须先添加才能生效
     public func fw_addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
         if let priority = priority {
             constraint.fw_collapsePriority = priority
@@ -746,11 +621,9 @@ import FWObjC
     private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
         assert(self.superview != nil, "View's superview must not be nil.\nView: \(self)")
         var isOpposite = false
-        var targetOffset = offset
         var targetRelation = relation
         if attribute == .bottom || attribute == .right || attribute == .trailing {
             isOpposite = true
-            targetOffset = -offset
             if relation == .lessThanOrEqual {
                 targetRelation = .greaterThanOrEqual
             } else if relation == .greaterThanOrEqual {
@@ -758,13 +631,10 @@ import FWObjC
             }
         }
         
-        let constraint = fw_constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: targetOffset, relation: targetRelation, priority: priority)
-        constraint.fw_isOpposite = isOpposite
-        return constraint
+        return fw_constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: offset, relation: targetRelation, priority: priority, isOpposite: isOpposite)
     }
     
-    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
-        let targetOffset = fw_autoScaleLayout ? (UIView.fw_autoScaleBlock?(offset) ?? offset) : offset
+    private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool = false) -> NSLayoutConstraint {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
         if UIView.fw_autoLayoutRTL {
@@ -800,20 +670,21 @@ import FWObjC
         var targetConstraint: NSLayoutConstraint
         if let constraint = fw_constraint(identifier: constraintIdentifier) {
             targetConstraint = constraint
-            if targetConstraint.constant != targetOffset {
-                targetConstraint.constant = targetOffset
-            }
         } else {
-            targetConstraint = NSLayoutConstraint(item: self, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: targetOffset)
+            targetConstraint = NSLayoutConstraint(item: self, attribute: targetAttribute, relatedBy: relation, toItem: ofView, attribute: targetToAttribute, multiplier: multiplier, constant: 0)
+            targetConstraint.fw_isOpposite = isOpposite
             targetConstraint.fw_layoutIdentifier = constraintIdentifier
             targetConstraint.identifier = constraintIdentifier
             fw_allConstraints.append(targetConstraint)
         }
         fw_lastConstraints = [targetConstraint]
+        targetConstraint.fw_offset = offset
         if targetConstraint.priority != priority {
             targetConstraint.priority = priority
         }
-        targetConstraint.isActive = true
+        if !targetConstraint.isActive {
+            targetConstraint.isActive = true
+        }
         return targetConstraint
     }
     
@@ -869,28 +740,36 @@ import FWObjC
 // MARK: - NSLayoutConstraint+AutoLayout
 @_spi(FW) extension NSLayoutConstraint {
     
+    /// 设置偏移值，根据配置自动等比例缩放和取反
+    public var fw_offset: CGFloat {
+        get {
+            fw_propertyDouble(forName: "fw_offset")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_offset")
+            
+            let autoScaleLayout = (firstItem as? UIView)?.fw_autoScaleLayout ?? UIView.fw_autoScaleLayout
+            let offset = autoScaleLayout ? (UIView.fw_autoScaleBlock?(newValue) ?? newValue) : newValue
+            self.constant = fw_isOpposite ? -offset : offset
+        }
+    }
+    
     /// 标记是否是相反的约束，一般相对于父视图
     public var fw_isOpposite: Bool {
         get { fw_propertyBool(forName: "fw_isOpposite") }
         set { fw_setPropertyBool(newValue, forName: "fw_isOpposite") }
     }
     
-    /// 设置内间距值，如果是相反的约束，会自动取反
-    public var fw_inset: CGFloat {
-        get { fw_isOpposite ? -self.constant : self.constant }
-        set { self.constant = fw_isOpposite ? -newValue : newValue }
+    /// 可收缩约束的收缩偏移值，默认0
+    public var fw_collapseOffset: CGFloat {
+        get { fw_propertyDouble(forName: "fw_collapseOffset") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_collapseOffset") }
     }
     
-    /// 可收缩约束的收缩常量值，默认0
-    public var fw_collapseConstant: CGFloat {
-        get { fw_propertyDouble(forName: "fw_collapseConstant") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_collapseConstant") }
-    }
-    
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值，未添加时为0
-    public var fw_originalConstant: CGFloat {
-        get { fw_propertyDouble(forName: "fw_originalConstant") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_originalConstant") }
+    /// 可收缩约束的原始偏移值，默认为添加收缩约束时的值，未添加时为0
+    public var fw_originalOffset: CGFloat {
+        get { fw_propertyDouble(forName: "fw_originalOffset") }
+        set { fw_setPropertyDouble(newValue, forName: "fw_originalOffset") }
     }
     
     /// 可收缩约束的收缩优先级，默认defaultLow。注意Required不能修改，否则iOS13以下崩溃
@@ -932,15 +811,15 @@ import FWObjC
         }
     }
     
-    /// 约束常量是否可收缩，默认false，开启时自动初始化originalConstant
-    public var fw_shouldCollapseConstant: Bool {
+    /// 约束偏移是否可收缩，默认false，开启时自动初始化originalOffset
+    public var fw_shouldCollapseOffset: Bool {
         get {
-            fw_propertyBool(forName: "fw_shouldCollapseConstant")
+            fw_propertyBool(forName: "fw_shouldCollapseOffset")
         }
         set {
-            guard newValue != fw_shouldCollapseConstant else { return }
-            if newValue { fw_originalConstant = self.constant }
-            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseConstant")
+            guard newValue != fw_shouldCollapseOffset else { return }
+            if newValue { fw_originalOffset = self.fw_offset }
+            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseOffset")
         }
     }
     
@@ -980,8 +859,8 @@ import FWObjC
             if fw_shouldCollapsePriority {
                 self.priority = newValue ? fw_collapsePriority : fw_originalPriority
             }
-            if fw_shouldCollapseConstant {
-                self.constant = newValue ? fw_collapseConstant : fw_originalConstant
+            if fw_shouldCollapseOffset {
+                self.fw_offset = newValue ? fw_collapseOffset : fw_originalOffset
             }
             
             fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
@@ -1441,15 +1320,15 @@ public class LayoutChain {
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            obj.constant = offset
+            obj.fw_offset = offset
         })
         return self
     }
     
     @discardableResult
-    public func inset(_ inset: CGFloat) -> Self {
+    public func constant(_ constant: CGFloat) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            obj.fw_inset = inset
+            obj.constant = constant
         })
         return self
     }
@@ -1463,17 +1342,17 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func collapse(_ constant: CGFloat? = nil) -> Self {
+    public func collapse(_ offset: CGFloat? = nil) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            self.view?.fw_addCollapseConstraint(obj, constant: constant)
+            self.view?.fw_addCollapseConstraint(obj, offset: offset)
         })
         return self
     }
     
     @discardableResult
-    public func original(_ constant: CGFloat) -> Self {
+    public func original(_ offset: CGFloat) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
-            obj.fw_originalConstant = constant
+            obj.fw_originalOffset = offset
         })
         return self
     }
