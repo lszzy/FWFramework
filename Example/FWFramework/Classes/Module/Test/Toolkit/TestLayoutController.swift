@@ -184,6 +184,30 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .width((APP.screenWidth - 60) / 2.0)
                 .top(toViewBottom: attributedLabel, offset: 50)
         }
+        
+        let bottomLeftImage = UIImageView()
+        bottomLeftImage.image = UIImage.app.appIconImage()
+        bottomLeftImage.isUserInteractionEnabled = true
+        bottomLeftImage.app.addTapGesture { _ in
+            bottomLeftImage.app.isCollapsed = !bottomLeftImage.app.isCollapsed
+        }
+        view.addSubview(bottomLeftImage)
+        bottomLeftImage.app.layoutChain
+            .size(width: 50, height: 50)
+            .left(20).collapse()
+            .bottom(20 + APP.safeAreaInsets.bottom).collapse(APP.safeAreaInsets.bottom)
+        
+        let bottomRightImage = UIImageView()
+        bottomRightImage.image = UIImage.app.appIconImage()
+        bottomRightImage.isUserInteractionEnabled = true
+        bottomRightImage.app.addTapGesture { _ in
+            bottomRightImage.app.isCollapsed = !bottomRightImage.app.isCollapsed
+        }
+        view.addSubview(bottomRightImage)
+        bottomRightImage.app.layoutChain
+            .size(width: 50, height: 50)
+            .right(20).collapse()
+            .bottom(20 + APP.safeAreaInsets.bottom).collapse(APP.safeAreaInsets.bottom)
     }
     
     func numberString() -> String {
