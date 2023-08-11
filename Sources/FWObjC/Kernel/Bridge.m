@@ -14,42 +14,9 @@
 #import <net/if.h>
 #import <dlfcn.h>
 
-#pragma mark - __FWWeakObject
-
-@implementation __FWWeakObject
-
-- (instancetype)initWithObject:(id)object {
-    self = [super init];
-    if (self) {
-        _object = object;
-    }
-    return self;
-}
-
-@end
-
 #pragma mark - __FWRuntime
 
 @implementation __FWRuntime
-
-+ (id)getProperty:(id)target forName:(NSString *)name {
-    if (!target) return nil;
-    id object = objc_getAssociatedObject(target, NSSelectorFromString(name));
-    if ([object isKindOfClass:[__FWWeakObject class]]) {
-        object = [(__FWWeakObject *)object object];
-    }
-    return object;
-}
-
-+ (void)setPropertyPolicy:(id)target withObject:(id)object policy:(objc_AssociationPolicy)policy forName:(NSString *)name {
-    if (!target || [self getProperty:target forName:name] == object) return;
-    objc_setAssociatedObject(target, NSSelectorFromString(name), object, policy);
-}
-
-+ (void)setPropertyWeak:(id)target withObject:(id)object forName:(NSString *)name {
-    if (!target || [self getProperty:target forName:name] == object) return;
-    objc_setAssociatedObject(target, NSSelectorFromString(name), [[__FWWeakObject alloc] initWithObject:object], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
 
 + (id)invokeMethod:(id)target selector:(SEL)aSelector {
 #pragma clang diagnostic push

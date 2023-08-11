@@ -120,7 +120,7 @@ import FWObjC
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
-            __FWRuntime.setPropertyPolicy(target, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
+            __FWObjC.setAssociatedObject(target, value: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
             return __FWSwizzle.swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", with: block)
         }
     }
@@ -186,7 +186,7 @@ import FWObjC
     ) -> Bool {
         guard let objectClass = object_getClass(self) else { return false }
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        __FWRuntime.setPropertyPolicy(self, with: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
+        fw_setProperty(true, forName: swizzleIdentifier)
         return __FWSwizzle.swizzleInstanceMethod(
             objectClass,
             selector: originalSelector,
@@ -207,7 +207,7 @@ import FWObjC
         identifier: String = ""
     ) -> Bool {
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        return __FWRuntime.getProperty(self, forName: swizzleIdentifier) != nil
+        return fw_property(forName: swizzleIdentifier) != nil
     }
     
     private static func fw_swizzleIdentifier(_ object: Any, selector: Selector, identifier: String) -> String {

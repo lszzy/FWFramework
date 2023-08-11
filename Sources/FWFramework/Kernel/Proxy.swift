@@ -14,10 +14,6 @@ import FWObjC
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
 public class WeakProxy: __FWWeakProxy {}
 
-// MARK: - WeakObject
-/// 弱引用对象容器类，用于解决关联对象weak引用等
-public class WeakObject: __FWWeakObject {}
-
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
 open class DelegateProxy<T>: __FWDelegateProxy {
@@ -26,6 +22,19 @@ open class DelegateProxy<T>: __FWDelegateProxy {
     open var delegate: T? {
         get { return target as? T }
         set { target = newValue as? AnyObject }
+    }
+    
+}
+
+// MARK: - WeakObject
+/// 弱引用对象容器类，用于解决关联对象weak引用等
+public class WeakObject: NSObject {
+    
+    public private(set) weak var object: AnyObject?
+    
+    public init(object: AnyObject?) {
+        super.init()
+        self.object = object
     }
     
 }
