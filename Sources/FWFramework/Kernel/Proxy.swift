@@ -26,6 +26,10 @@ open class DelegateProxy<T>: __FWDelegateProxy {
     
 }
 
+// MARK: - UnsafeObject
+/// 非安全对象类，不同于weak和deinit，自动释放时仍可访问target，可用于自动解绑、释放监听等场景
+open class UnsafeObject: __FWUnsafeObject {}
+
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等
 public class WeakObject: NSObject {

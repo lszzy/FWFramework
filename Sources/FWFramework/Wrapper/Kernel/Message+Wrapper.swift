@@ -201,7 +201,7 @@ extension Wrapper where Base: NSObject {
     ///   - property: 属性名称
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func unobserveProperty(_ property: String, target: Any?, action: Selector?) {
+    public func unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
         base.fw_unobserveProperty(property, target: target, action: action)
     }
     
