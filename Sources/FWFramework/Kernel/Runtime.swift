@@ -248,7 +248,11 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_property(forName: String) -> Any? {
-        return __FWRuntime.getProperty(self, forName: forName)
+        let value = __FWObjC.getAssociatedObject(self, forName: forName)
+        if let weakObject = value as? WeakObject {
+            return weakObject.object
+        }
+        return value
     }
     
     /// 读取Bool关联属性，默认false
@@ -287,27 +291,27 @@ import FWObjC
     
     /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public func fw_setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        __FWRuntime.setPropertyPolicy(self, with: object, policy: policy, forName: forName)
+    public func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        __FWObjC.setAssociatedObject(self, value: value, policy: policy, forName: forName)
     }
     
     /// 设置拷贝关联属性，支持KVO
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
-    public func fw_setPropertyCopy(_ object: Any?, forName: String) {
-        __FWRuntime.setPropertyPolicy(self, with: object, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+    public func fw_setPropertyCopy(_ value: Any?, forName: String) {
+        __FWObjC.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
-    public func fw_setPropertyWeak(_ object: Any?, forName: String) {
-        __FWRuntime.setPropertyWeak(self, with: object, forName: forName)
+    public func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
+        __FWObjC.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     /// 设置Bool关联属性
@@ -346,32 +350,36 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public class func fw_property(forName: String) -> Any? {
-        return __FWRuntime.getProperty(classForCoder(), forName: forName)
+        let value = __FWObjC.getAssociatedObject(classForCoder(), forName: forName)
+        if let weakObject = value as? WeakObject {
+            return weakObject.object
+        }
+        return value
     }
     
     /// 设置类关联属性，可指定关联策略
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public class func fw_setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        __FWRuntime.setPropertyPolicy(classForCoder(), with: object, policy: policy, forName: forName)
+    public class func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        __FWObjC.setAssociatedObject(classForCoder(), value: value, policy: policy, forName: forName)
     }
     
     /// 设置类拷贝关联属性
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
-    public class func fw_setPropertyCopy(_ object: Any?, forName: String) {
-        __FWRuntime.setPropertyPolicy(classForCoder(), with: object, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+    public class func fw_setPropertyCopy(_ value: Any?, forName: String) {
+        __FWObjC.setAssociatedObject(classForCoder(), value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
     /// - Parameters:
-    ///   - object: 属性值
+    ///   - value: 属性值
     ///   - forName: 属性名称
-    public class func fw_setPropertyWeak(_ object: Any?, forName: String) {
-        __FWRuntime.setPropertyWeak(classForCoder(), with: object, forName: forName)
+    public class func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
+        __FWObjC.setAssociatedObject(classForCoder(), value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     // MARK: - Bind
@@ -391,9 +399,9 @@ import FWObjC
     /// - Parameters:
     ///   - object: 对象，不会被 strong 强引用
     ///   - forKey: 键名
-    public func fw_bindObjectWeak(_ object: Any?, forKey: String) {
+    public func fw_bindObjectWeak(_ object: AnyObject?, forKey: String) {
         if let object = object {
-            fw_allBoundObjects.setObject(__FWWeakObject(object: object), forKey: forKey as NSString)
+            fw_allBoundObjects.setObject(WeakObject(object: object), forKey: forKey as NSString)
         } else {
             fw_allBoundObjects.removeObject(forKey: forKey)
         }
@@ -404,7 +412,7 @@ import FWObjC
     /// - Returns: 绑定的对象
     public func fw_boundObject(forKey: String) -> Any? {
         let object = fw_allBoundObjects.object(forKey: forKey)
-        if let weakObject = object as? __FWWeakObject {
+        if let weakObject = object as? WeakObject {
             return weakObject.object
         }
         return object

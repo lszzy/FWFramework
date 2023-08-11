@@ -204,7 +204,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - object: 属性值
     ///   - forName: 属性名称
-    public func setPropertyWeak(_ object: Any?, forName: String) {
+    public func setPropertyWeak(_ object: AnyObject?, forName: String) {
         base.fw_setPropertyWeak(object, forName: forName)
     }
     
@@ -268,7 +268,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - object: 属性值
     ///   - forName: 属性名称
-    public static func setPropertyWeak(_ object: Any?, forName: String) {
+    public static func setPropertyWeak(_ object: AnyObject?, forName: String) {
         Base.fw_setPropertyWeak(object, forName: forName)
     }
     
@@ -285,7 +285,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - object: 对象，不会被 strong 强引用
     ///   - forKey: 键名
-    public func bindObjectWeak(_ object: Any?, forKey: String) {
+    public func bindObjectWeak(_ object: AnyObject?, forKey: String) {
         base.fw_bindObjectWeak(object, forKey: forKey)
     }
     

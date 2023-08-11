@@ -29,25 +29,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWWeakObject
-
-@interface __FWWeakObject : NSObject
-
-@property (nonatomic, weak, readonly, nullable) id object;
-
-- (instancetype)initWithObject:(nullable id)object;
-
-@end
-
 #pragma mark - __FWRuntime
 
 @interface __FWRuntime : NSObject
-
-+ (nullable id)getProperty:(id)target forName:(NSString *)name;
-
-+ (void)setPropertyPolicy:(id)target withObject:(nullable id)object policy:(objc_AssociationPolicy)policy forName:(NSString *)name;
-
-+ (void)setPropertyWeak:(id)target withObject:(nullable id)object forName:(NSString *)name;
 
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector;
 

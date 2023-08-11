@@ -142,4 +142,12 @@
 
 @implementation __FWObjC
 
++ (id)getAssociatedObject:(id)object forName:(NSString *)name {
+    return objc_getAssociatedObject(object, NSSelectorFromString(name));
+}
+
++ (void)setAssociatedObject:(id)object value:(id)value policy:(objc_AssociationPolicy)policy forName:(NSString *)name {
+    objc_setAssociatedObject(object, NSSelectorFromString(name), value, policy);
+}
+
 @end

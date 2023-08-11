@@ -53,6 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// ObjC桥接类，用于桥接Swift不支持的ObjC特性方法
 @interface __FWObjC : NSObject
 
++ (nullable id)getAssociatedObject:(id)object forName:(NSString *)name;
+
++ (void)setAssociatedObject:(id)object value:(nullable id)value policy:(objc_AssociationPolicy)policy forName:(NSString *)name;
+
 @end
 
 NS_ASSUME_NONNULL_END
