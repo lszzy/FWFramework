@@ -120,8 +120,8 @@ public class Autoloader: NSObject, AutoloadProtocol {
     
 }
 
-// MARK: - __FWAutoloader
-@objc extension __FWAutoloader: AutoloadProtocol {
+// MARK: - ObjCBridge+Autoloader
+@objc extension ObjCBridge: ObjCBridgeProtocol {
     
     /// 自动加载Autoloader
     public static func autoload() {

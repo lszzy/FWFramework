@@ -10,17 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWAutoloader
-
-/// Swift自动加载器，扩展实现objc静态autoload方法即可自动调用
-@interface __FWAutoloader : NSObject
-
-@end
-
-#pragma mark - __FWWeakProxy
+#pragma mark - WeakProxyBridge
 
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-@interface __FWWeakProxy : NSProxy
+NS_SWIFT_NAME(WeakProxyBridge)
+@interface FWWeakProxyBridge : NSProxy
 
 @property (nonatomic, weak, readonly, nullable) id target;
 
@@ -28,19 +22,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWDelegateProxy
+#pragma mark - DelegateProxyBridge
 
 /// 事件协议代理基类，可继承重写事件代理方法
-@interface __FWDelegateProxy : NSObject
+NS_SWIFT_NAME(DelegateProxyBridge)
+@interface FWDelegateProxyBridge : NSObject
 
 @property (nonatomic, weak, nullable) id target;
 
 @end
 
-#pragma mark - __FWUnsafeObject
+#pragma mark - UnsafeObjectBridge
 
 /// 非安全对象类，不同于weak和deinit，自动释放时仍可访问object，可用于自动解绑、释放监听等场景
-@interface __FWUnsafeObject : NSObject
+NS_SWIFT_NAME(UnsafeObjectBridge)
+@interface FWUnsafeObjectBridge : NSObject
 
 @property (nonatomic, unsafe_unretained, nullable) id object;
 
@@ -48,10 +44,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWObjC
+#pragma mark - ObjCBridge
 
-/// ObjC桥接类，用于桥接Swift不支持的ObjC特性方法
-@interface __FWObjC : NSObject
+/// ObjC桥接协议，Swift扩展实现桥接协议即可
+NS_SWIFT_NAME(ObjCBridgeProtocol)
+@protocol FWObjCBridgeProtocol <NSObject>
+@optional
+
++ (void)autoload;
+
+@end
+
+/// ObjC桥接类，用于桥接Swift不支持的ObjC特性
+NS_SWIFT_NAME(ObjCBridge)
+@interface FWObjCBridge : NSObject
 
 + (nullable id)getAssociatedObject:(id)object forName:(NSString *)name;
 

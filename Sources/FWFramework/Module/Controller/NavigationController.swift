@@ -517,7 +517,7 @@ import FWObjC
         let fromIdentifier = from.fw_barTransitionIdentifier
         let toIdentifier = to.fw_barTransitionIdentifier
         if fromIdentifier != nil || toIdentifier != nil {
-            return !__FWObjC.isEqual(fromIdentifier, with: toIdentifier)
+            return !ObjCBridge.isEqual(fromIdentifier, with: toIdentifier)
         }
         return true
     }
