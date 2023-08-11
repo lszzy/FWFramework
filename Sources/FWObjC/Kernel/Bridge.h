@@ -141,30 +141,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWKvoTarget
-
-@interface __FWKvoTarget : NSObject
-
-@property (nonatomic, unsafe_unretained, nullable) id object;
-
-@property (nonatomic, copy, nullable) NSString *keyPath;
-
-@property (nonatomic, weak, nullable) id target;
-
-@property (nonatomic) SEL action;
-
-@property (nonatomic, copy, nullable) void (^block)(__weak id object, NSDictionary<NSKeyValueChangeKey, id> *change);
-
-@property (nonatomic, assign, readonly) BOOL isObserving;
-
-- (void)addObserver;
-
-- (void)removeObserver;
-
-- (BOOL)equalsTarget:(nullable id)target action:(nullable SEL)action;
-
-@end
-
 #pragma mark - __FWInputTarget
 
 @interface __FWInputTarget : NSObject

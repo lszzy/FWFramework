@@ -366,6 +366,53 @@ import FWObjC
 // MARK: - KVO
 @_spi(FW) extension NSObject {
     
+    private class KvoTarget: UnsafeObject {
+        var keyPath: String?
+        weak var target: AnyObject?
+        var action: Selector?
+        var block: ((Any, [NSKeyValueChangeKey: Any]) -> Void)?
+        private var isObserving = false
+        
+        override func deallocObject() {
+            removeObserver()
+        }
+        
+        func addObserver() {
+            guard !isObserving, let object = object as? NSObject, let keyPath = keyPath else { return }
+            
+            isObserving = true
+            object.addObserver(self, forKeyPath: keyPath, options: [.old, .new], context: nil)
+        }
+        
+        func removeObserver() {
+            guard isObserving, let object = object as? NSObject, let keyPath = keyPath else { return }
+            
+            isObserving = false
+            object.removeObserver(self, forKeyPath: keyPath)
+        }
+        
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+            guard let object = object else { return }
+            
+            var newChange = change ?? [:]
+            if newChange[.oldKey] is NSNull {
+                newChange.removeValue(forKey: .oldKey)
+            }
+            if newChange[.newKey] is NSNull {
+                newChange.removeValue(forKey: .newKey)
+            }
+            
+            if block != nil {
+                block?(object, newChange)
+                return
+            }
+            
+            if let target = target, let action = action, target.responds(to: action) {
+                _ = target.perform(action, with: object, with: newChange)
+            }
+        }
+    }
+    
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - property: 属性名称
@@ -380,7 +427,7 @@ import FWObjC
             dict?[property] = array
         }
         
-        let kvoTarget = __FWKvoTarget()
+        let kvoTarget = KvoTarget()
         kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.block = block
@@ -404,7 +451,7 @@ import FWObjC
             dict?[property] = array
         }
         
-        let kvoTarget = __FWKvoTarget()
+        let kvoTarget = KvoTarget()
         kvoTarget.object = self
         kvoTarget.keyPath = property
         kvoTarget.target = target
@@ -419,14 +466,14 @@ import FWObjC
     ///   - property: 属性名称
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
+    public func fw_unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
         guard let dict = fw_kvoTargets(false) else { return }
         
         // target为nil始终移除
         if target == nil {
             if let array = dict[property] as? NSMutableArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? __FWKvoTarget {
+                    if let obj = elem as? KvoTarget {
                         obj.removeObserver()
                     }
                 }
@@ -438,8 +485,8 @@ import FWObjC
         guard let array = dict[property] as? NSMutableArray else { return }
         // target相同且action为NULL或者action相同才移除
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWKvoTarget,
-               obj.equalsTarget(target, action: action) {
+            if let obj = elem as? KvoTarget,
+               target === obj.target && (action == nil || action == obj.action) {
                 obj.removeObserver()
                 array.remove(obj)
             }
@@ -452,13 +499,13 @@ import FWObjC
     ///   - observer: 监听者
     @discardableResult
     public func fw_unobserveProperty(_ property: String, observer: Any) -> Bool {
-        guard let observer = observer as? __FWKvoTarget,
+        guard let observer = observer as? KvoTarget,
               let dict = fw_kvoTargets(false),
               let array = dict[property] as? NSMutableArray else { return false }
         
         var result = false
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWKvoTarget, obj == observer {
+            if let obj = elem as? KvoTarget, obj == observer {
                 obj.removeObserver()
                 array.remove(obj)
                 result = true
@@ -480,7 +527,7 @@ import FWObjC
         for (_, value) in dict {
             if let array = value as? NSArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? __FWKvoTarget {
+                    if let obj = elem as? KvoTarget {
                         obj.removeObserver()
                     }
                 }

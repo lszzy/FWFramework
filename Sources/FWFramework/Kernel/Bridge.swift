@@ -28,7 +28,7 @@ import UIKit
         return fw_observeProperty(property, block: block)
     }
     
-    public func __fw_unobserveProperty(_ property: String, target: Any?, action: Selector?) {
+    public func __fw_unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
         fw_unobserveProperty(property, target: target, action: action)
     }
     

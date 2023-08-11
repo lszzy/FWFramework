@@ -138,6 +138,19 @@
 
 @end
 
+#pragma mark - __FWUnsafeObject
+
+@implementation __FWUnsafeObject
+
+- (void)dealloc {
+    [self deallocObject];
+}
+
+- (void)deallocObject {
+}
+
+@end
+
 #pragma mark - __FWObjC
 
 @implementation __FWObjC

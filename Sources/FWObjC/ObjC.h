@@ -37,14 +37,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWUnsafeProxy
+#pragma mark - __FWUnsafeObject
 
-/// 非安全对象代理类，不同于weak，自动释放时仍可访问target，可用于自动解绑、释放监听等场景
-@interface __FWUnsafeProxy : NSObject
+/// 非安全对象类，不同于weak和deinit，自动释放时仍可访问object，可用于自动解绑、释放监听等场景
+@interface __FWUnsafeObject : NSObject
 
-@property (nonatomic, unsafe_unretained, nullable) id target;
+@property (nonatomic, unsafe_unretained, nullable) id object;
 
-- (void)proxyDealloc;
+- (void)deallocObject;
 
 @end
 
