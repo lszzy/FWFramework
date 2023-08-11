@@ -12,11 +12,11 @@ import FWObjC
 
 // MARK: - WeakProxy
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-public class WeakProxy: __FWWeakProxy {}
+public class WeakProxy: WeakProxyBridge {}
 
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
-open class DelegateProxy<T>: __FWDelegateProxy {
+open class DelegateProxy<T>: DelegateProxyBridge {
     
     /// 泛型事件代理对象
     open var delegate: T? {
@@ -28,7 +28,7 @@ open class DelegateProxy<T>: __FWDelegateProxy {
 
 // MARK: - UnsafeObject
 /// 非安全对象类，不同于weak和deinit，自动释放时仍可访问target，可用于自动解绑、释放监听等场景
-open class UnsafeObject: __FWUnsafeObject {}
+open class UnsafeObject: UnsafeObjectBridge {}
 
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等

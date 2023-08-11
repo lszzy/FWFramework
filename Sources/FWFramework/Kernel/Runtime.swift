@@ -143,7 +143,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return __FWObjC.invokeMethod(self, selector: selector)
+        return ObjCBridge.invokeMethod(self, selector: selector)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -153,7 +153,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return __FWObjC.invokeMethod(self, selector: selector, object: object)
+        return ObjCBridge.invokeMethod(self, selector: selector, object: object)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -164,7 +164,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return __FWObjC.invokeMethod(self, selector: selector, object: object1, object: object2)
+        return ObjCBridge.invokeMethod(self, selector: selector, object: object1, object: object2)
     }
     
     /// 安全调用方法，支持多个参数
@@ -174,7 +174,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return __FWObjC.invokeMethod(self, selector: selector, objects: objects)
+        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -183,7 +183,7 @@ import FWObjC
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func fw_invokeGetter(_ name: String) -> Any? {
-        return __FWObjC.invokeGetter(self, name: name)
+        return ObjCBridge.invokeGetter(self, name: name)
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -195,7 +195,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func fw_invokeSetter(_ name: String, object: Any?) -> Any? {
-        return __FWObjC.invokeSetter(self, name: name, object: object)
+        return ObjCBridge.invokeSetter(self, name: name, object: object)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -203,7 +203,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return __FWObjC.invokeMethod(classForCoder(), selector: selector)
+        return ObjCBridge.invokeMethod(classForCoder(), selector: selector)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -213,7 +213,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return __FWObjC.invokeMethod(classForCoder(), selector: selector, object: object)
+        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, object: object)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -224,7 +224,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return __FWObjC.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
+        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
     }
     
     /// 安全调用类方法，支持多个参数
@@ -234,7 +234,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return __FWObjC.invokeMethod(classForCoder(), selector: selector, objects: objects)
+        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, objects: objects)
     }
     
     // MARK: - Property
@@ -248,7 +248,7 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_property(forName: String) -> Any? {
-        let value = __FWObjC.getAssociatedObject(self, forName: forName)
+        let value = ObjCBridge.getAssociatedObject(self, forName: forName)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -295,7 +295,7 @@ import FWObjC
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
     public func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        __FWObjC.setAssociatedObject(self, value: value, policy: policy, forName: forName)
+        ObjCBridge.setAssociatedObject(self, value: value, policy: policy, forName: forName)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -303,7 +303,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        __FWObjC.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+        ObjCBridge.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -311,7 +311,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        __FWObjC.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+        ObjCBridge.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     /// 设置Bool关联属性
@@ -350,7 +350,7 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public class func fw_property(forName: String) -> Any? {
-        let value = __FWObjC.getAssociatedObject(classForCoder(), forName: forName)
+        let value = ObjCBridge.getAssociatedObject(classForCoder(), forName: forName)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -363,7 +363,7 @@ import FWObjC
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
     public class func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        __FWObjC.setAssociatedObject(classForCoder(), value: value, policy: policy, forName: forName)
+        ObjCBridge.setAssociatedObject(classForCoder(), value: value, policy: policy, forName: forName)
     }
     
     /// 设置类拷贝关联属性
@@ -371,7 +371,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public class func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        __FWObjC.setAssociatedObject(classForCoder(), value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+        ObjCBridge.setAssociatedObject(classForCoder(), value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
@@ -379,7 +379,7 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public class func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        __FWObjC.setAssociatedObject(classForCoder(), value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+        ObjCBridge.setAssociatedObject(classForCoder(), value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     // MARK: - Bind

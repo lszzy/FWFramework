@@ -220,7 +220,7 @@ public class Mediator: NSObject {
             }
             
             var returnValue = false
-            __FWObjC.invokeMethod(moduleInstance, selector: selector, arguments: arguments, returnValue: &returnValue)
+            ObjCBridge.invokeMethod(moduleInstance, selector: selector, arguments: arguments, returnValue: &returnValue)
             if !result {
                 result = returnValue
             }

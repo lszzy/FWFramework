@@ -7,35 +7,9 @@
 
 #import "ObjC.h"
 
-#pragma mark - __FWAutoloader
+#pragma mark - WeakProxyBridge
 
-@protocol __FWAutoloadProtocol <NSObject>
-@optional
-
-+ (void)autoload;
-
-@end
-
-@interface __FWAutoloader () <__FWAutoloadProtocol>
-
-@end
-
-@implementation __FWAutoloader
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if ([__FWAutoloader respondsToSelector:@selector(autoload)]) {
-            [__FWAutoloader autoload];
-        }
-    });
-}
-
-@end
-
-#pragma mark - __FWWeakProxy
-
-@implementation __FWWeakProxy
+@implementation FWWeakProxyBridge
 
 - (instancetype)initWithTarget:(id)target {
     _target = target;
@@ -101,9 +75,9 @@
 
 @end
 
-#pragma mark - __FWDelegateProxy
+#pragma mark - DelegateProxyBridge
 
-@implementation __FWDelegateProxy
+@implementation FWDelegateProxyBridge
 
 - (BOOL)isProxy {
     return YES;
@@ -138,9 +112,9 @@
 
 @end
 
-#pragma mark - __FWUnsafeObject
+#pragma mark - UnsafeObjectBridge
 
-@implementation __FWUnsafeObject
+@implementation FWUnsafeObjectBridge
 
 - (void)dealloc {
     [self deallocObject];
@@ -151,9 +125,18 @@
 
 @end
 
-#pragma mark - __FWObjC
+#pragma mark - ObjCBridge
 
-@implementation __FWObjC
+@implementation FWObjCBridge
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if ([FWObjCBridge respondsToSelector:@selector(autoload)]) {
+            [FWObjCBridge performSelector:@selector(autoload)];
+        }
+    });
+}
 
 + (id)getAssociatedObject:(id)object forName:(NSString *)name {
     return objc_getAssociatedObject(object, NSSelectorFromString(name));

@@ -422,7 +422,7 @@ static int logMaxLength = 500;
     [bridges enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
         NSString *name = package.length > 0 ? [package stringByAppendingString:key] : key;
         [self registerHandler:name handler:^(id  _Nonnull data, __FWJsBridgeResponseCallback  _Nonnull responseCallback) {
-            if (context) [__FWObjC invokeMethod:clazz selector:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
+            if (context) [FWObjCBridge invokeMethod:clazz selector:NSSelectorFromString(obj) objects:[NSArray arrayWithObjects:context, data, responseCallback, nil]];
         }];
     }];
 #pragma clang diagnostic pop

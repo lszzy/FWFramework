@@ -100,7 +100,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
     }
     
     private class func testSuite() -> [AnyClass] {
-        let testCases = __FWObjC.getClasses(TestCase.classForCoder())
+        let testCases = ObjCBridge.getClasses(TestCase.classForCoder())
             .sorted { obj1, obj2 in
                 return NSStringFromClass(obj1) < NSStringFromClass(obj2)
             }
