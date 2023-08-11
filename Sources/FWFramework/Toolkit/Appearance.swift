@@ -27,14 +27,14 @@ public class Appearance: NSObject {
             return appearance
         }
         
-        let appearance = __FWRuntime.appearance(for: aClass)
+        let appearance = __FWObjC.appearance(for: aClass)
         appearances[className] = appearance
         return appearance
     }
 
     /// 获取指定 appearance 对象的关联 Class，通过解析_UIAppearance对象获取
     public static func `class`(for appearance: Any) -> AnyClass {
-        return __FWRuntime.class(forAppearance: appearance)
+        return __FWObjC.class(forAppearance: appearance)
     }
     
 }
@@ -44,7 +44,7 @@ public class Appearance: NSObject {
     
     /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
     public func fw_applyAppearance() {
-        __FWRuntime.applyAppearance(self)
+        __FWObjC.applyAppearance(self)
     }
     
 }
