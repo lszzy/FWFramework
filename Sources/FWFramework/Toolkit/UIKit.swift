@@ -1103,7 +1103,7 @@ import AdSupport
                     }
                     if !NSEqualRanges(range, fullRange) { return }
                     for (attr, value) in attrs {
-                        if __FWRuntime.isEqual(prevTextAttributes[attr], with: value) {
+                        if __FWObjC.isEqual(prevTextAttributes[attr], with: value) {
                             removeAttributes.append(attr)
                         }
                     }

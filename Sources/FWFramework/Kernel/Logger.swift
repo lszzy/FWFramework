@@ -366,15 +366,15 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin {
     public func log(_ type: LogType, group: String, message: String) {
         switch type {
         case .error:
-            __FWBridge.logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWObjC.logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
         case .warn:
-            __FWBridge.logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWObjC.logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
         case .info:
-            __FWBridge.logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWObjC.logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
         case .debug:
-            __FWBridge.logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWObjC.logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
         default:
-            __FWBridge.logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
+            __FWObjC.logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
         }
     }
     

@@ -143,7 +143,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return __FWRuntime.invokeMethod(self, selector: selector)
+        return __FWObjC.invokeMethod(self, selector: selector)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -153,7 +153,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return __FWRuntime.invokeMethod(self, selector: selector, object: object)
+        return __FWObjC.invokeMethod(self, selector: selector, object: object)
     }
     
     /// 安全调用方法，如果不能响应，则忽略之
@@ -164,7 +164,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return __FWRuntime.invokeMethod(self, selector: selector, object: object1, object: object2)
+        return __FWObjC.invokeMethod(self, selector: selector, object: object1, object: object2)
     }
     
     /// 安全调用方法，支持多个参数
@@ -174,7 +174,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return __FWRuntime.invokeMethod(self, selector: selector, objects: objects)
+        return __FWObjC.invokeMethod(self, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -183,7 +183,7 @@ import FWObjC
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func fw_invokeGetter(_ name: String) -> Any? {
-        return __FWRuntime.invokeGetter(self, name: name)
+        return __FWObjC.invokeGetter(self, name: name)
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -195,7 +195,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值
     @discardableResult
     public func fw_invokeSetter(_ name: String, object: Any?) -> Any? {
-        return __FWRuntime.invokeSetter(self, name: name, object: object)
+        return __FWObjC.invokeSetter(self, name: name, object: object)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -203,7 +203,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return __FWRuntime.invokeMethod(classForCoder(), selector: selector)
+        return __FWObjC.invokeMethod(classForCoder(), selector: selector)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -213,7 +213,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, object: object)
+        return __FWObjC.invokeMethod(classForCoder(), selector: selector, object: object)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -224,7 +224,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
+        return __FWObjC.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
     }
     
     /// 安全调用类方法，支持多个参数
@@ -234,7 +234,7 @@ import FWObjC
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public class func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return __FWRuntime.invokeMethod(classForCoder(), selector: selector, objects: objects)
+        return __FWObjC.invokeMethod(classForCoder(), selector: selector, objects: objects)
     }
     
     // MARK: - Property
