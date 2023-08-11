@@ -749,7 +749,12 @@ import FWObjC
         set {
             fw_setPropertyDouble(newValue, forName: "fw_offset")
             
-            let autoScaleLayout = (firstItem as? UIView)?.fw_autoScaleLayout ?? UIView.fw_autoScaleLayout
+            var autoScaleLayout = UIView.fw_autoScaleLayout
+            if let view = firstItem as? UIView {
+                autoScaleLayout = view.fw_autoScaleLayout
+            } else if let view = (firstItem as? UILayoutGuide)?.owningView {
+                autoScaleLayout = view.fw_autoScaleLayout
+            }
             let offset = autoScaleLayout ? (UIView.fw_autoScaleBlock?(newValue) ?? newValue) : newValue
             self.constant = fw_isOpposite ? -offset : offset
         }
@@ -1693,9 +1698,9 @@ public class LayoutChain {
         var objectDesc = ""
         if let constraint = object as? NSLayoutConstraint, let identifier = constraint.identifier {
             objectDesc = identifier
-        } else if let guide = object as? UILayoutGuide, let layoutKey = guide.owningView?.fw_layoutKey {
-            objectDesc = layoutKey
         } else if let view = object as? UIView, let layoutKey = view.fw_layoutKey {
+            objectDesc = layoutKey
+        } else if let guide = object as? UILayoutGuide, let layoutKey = guide.owningView?.fw_layoutKey {
             objectDesc = layoutKey
         }
         return String(format: "%@:%p%@", String(describing: type(of: object)), object as! CVarArg, !objectDesc.isEmpty ? " '\(objectDesc)'" : objectDesc)
