@@ -1952,7 +1952,7 @@ public enum ViewControllerLifecycleState: Int {
             // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
             if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
                 if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
-                   let shouldReceive = self.proxyDelegate?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
+                   let shouldReceive = self.target?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
                     if !shouldReceive && shouldForceReceive() {
                         return true
                     }

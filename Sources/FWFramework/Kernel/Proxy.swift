@@ -24,8 +24,8 @@ open class DelegateProxy<T>: __FWDelegateProxy {
     
     /// 泛型事件代理对象
     open var delegate: T? {
-        get { return proxyDelegate as? T }
-        set { proxyDelegate = newValue as? AnyObject }
+        get { return target as? T }
+        set { target = newValue as? AnyObject }
     }
     
 }
