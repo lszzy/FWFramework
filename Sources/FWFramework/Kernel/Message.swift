@@ -82,7 +82,7 @@ import FWObjC
         if target == nil {
             for (_, elem) in array.enumerated() {
                 if let obj = elem as? NotificationTarget,
-                   obj.equalsObject(object) {
+                   obj.object === object {
                     array.remove(obj)
                 }
             }
@@ -90,7 +90,7 @@ import FWObjC
         } else {
             for (_, elem) in array.enumerated() {
                 if let obj = elem as? NotificationTarget,
-                   obj.equalsObject(object, target: target, action: action) {
+                   object === obj.object && target === obj.target && (action == nil || action == obj.action) {
                     array.remove(obj)
                 }
             }
@@ -161,7 +161,7 @@ import FWObjC
         for (_, elem) in array.enumerated() {
             // obj.object为nil或者obj.object和object相同才触发
             if let obj = elem as? NotificationTarget,
-               (obj.object == nil || obj.equalsObject(object)) {
+               (obj.object == nil || obj.object === object) {
                 obj.handle(notification)
             }
         }
@@ -194,14 +194,6 @@ import FWObjC
             if let target = target, let action = action, target.responds(to: action) {
                 _ = target.perform(action, with: notification)
             }
-        }
-        
-        func equalsObject(_ object: AnyObject?) -> Bool {
-            return object === self.object
-        }
-        
-        func equalsObject(_ object: AnyObject?, target: AnyObject?, action: Selector?) -> Bool {
-            return object === self.object && target === self.object && (action == nil || action == self.action)
         }
     }
     
@@ -281,7 +273,7 @@ import FWObjC
         if target == nil {
             for (_, elem) in array.enumerated() {
                 if let obj = elem as? NotificationTarget,
-                   obj.equalsObject(object) {
+                   obj.object === object {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
                 }
@@ -290,7 +282,7 @@ import FWObjC
         } else {
             for (_, elem) in array.enumerated() {
                 if let obj = elem as? NotificationTarget,
-                   obj.equalsObject(object, target: target, action: action) {
+                   object === obj.object && target === obj.target && (action == nil || action == obj.action) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
                 }
