@@ -40,7 +40,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: Any?, action: Selector?) {
+    public func unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector?) {
         base.fw_unobserveMessage(name, object: object, target: target, action: action)
     }
     
@@ -73,7 +73,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public func sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
+    public func sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         base.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
@@ -83,7 +83,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public static func sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
+    public static func sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         Base.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
@@ -122,7 +122,7 @@ extension Wrapper where Base: NSObject {
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func unobserveNotification(_ name: Notification.Name, object: Any? = nil, target: Any?, action: Selector?) {
+    public func unobserveNotification(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector?) {
         base.fw_unobserveNotification(name, object: object, target: target, action: action)
     }
     
@@ -139,7 +139,7 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
-    public func unobserveNotification(_ name: Notification.Name, object: Any? = nil) {
+    public func unobserveNotification(_ name: Notification.Name, object: AnyObject? = nil) {
         base.fw_unobserveNotification(name, object: object)
     }
     
