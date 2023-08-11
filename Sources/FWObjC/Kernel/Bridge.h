@@ -157,28 +157,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWNotificationTarget
-
-@interface __FWNotificationTarget : NSObject
-
-@property (nonatomic, assign) BOOL broadcast;
-
-@property (nonatomic, weak, nullable) id object;
-
-@property (nonatomic, weak, nullable) id target;
-
-@property (nonatomic) SEL action;
-
-@property (nonatomic, copy, nullable) void (^block)(NSNotification *notification);
-
-- (void)handleNotification:(NSNotification *)notification;
-
-- (BOOL)equalsObject:(nullable id)object;
-
-- (BOOL)equalsObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
-
-@end
-
 #pragma mark - __FWKvoTarget
 
 @interface __FWKvoTarget : NSObject

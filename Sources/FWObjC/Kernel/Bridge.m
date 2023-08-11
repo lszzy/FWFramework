@@ -1320,40 +1320,6 @@ static SEL __FWCGSVGDocumentSEL = NULL;
 
 @end
 
-#pragma mark - __FWNotificationTarget
-
-@implementation __FWNotificationTarget
-
-- (void)dealloc {
-    if (self.broadcast) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
-}
-
-- (void)handleNotification:(NSNotification *)notification {
-    if (self.block) {
-        self.block(notification);
-        return;
-    }
-    
-    if (self.target && self.action && [self.target respondsToSelector:self.action]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [self.target performSelector:self.action withObject:notification];
-#pragma clang diagnostic pop
-    }
-}
-
-- (BOOL)equalsObject:(id)object {
-    return object == self.object;
-}
-
-- (BOOL)equalsObject:(id)object target:(id)target action:(SEL)action {
-    return object == self.object && target == self.target && (!action || action == self.action);
-}
-
-@end
-
 #pragma mark - __FWKvoTarget
 
 @implementation __FWKvoTarget

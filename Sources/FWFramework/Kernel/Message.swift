@@ -29,7 +29,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = __FWNotificationTarget()
+        let messageTarget = NotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.block = block
@@ -53,7 +53,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = __FWNotificationTarget()
+        let messageTarget = NotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.target = target
@@ -68,7 +68,7 @@ import FWObjC
     ///   - object: 消息对象，值为nil时表示所有
     ///   - target: 消息目标
     ///   - action: 目标动作
-    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: Any?, action: Selector?) {
+    public func fw_unobserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector?) {
         guard let dict = fw_messageTargets(false) else { return }
         
         // object为nil且target为nil始终移除
@@ -81,7 +81,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __FWNotificationTarget,
+                if let obj = elem as? NotificationTarget,
                    obj.equalsObject(object) {
                     array.remove(obj)
                 }
@@ -89,7 +89,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __FWNotificationTarget,
+                if let obj = elem as? NotificationTarget,
                    obj.equalsObject(object, target: target, action: action) {
                     array.remove(obj)
                 }
@@ -103,7 +103,7 @@ import FWObjC
     ///   - observer: 监听者
     @discardableResult
     public func fw_unobserveMessage(_ name: Notification.Name, observer: Any) -> Bool {
-        guard let observer = observer as? __FWNotificationTarget,
+        guard let observer = observer as? NotificationTarget,
               let dict = fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return false }
         
@@ -142,7 +142,7 @@ import FWObjC
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public func fw_sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
+    public func fw_sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         NSObject.fw_sendMessage(name, object: object, userInfo: userInfo, toReceiver: toReceiver)
     }
     
@@ -152,7 +152,7 @@ import FWObjC
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
-    public static func fw_sendMessage(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
+    public static func fw_sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
         guard let receiver = toReceiver as? NSObject,
               let dict = receiver.fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
@@ -160,7 +160,7 @@ import FWObjC
         let notification = Notification(name: name, object: object, userInfo: userInfo)
         for (_, elem) in array.enumerated() {
             // obj.object为nil或者obj.object和object相同才触发
-            if let obj = elem as? __FWNotificationTarget,
+            if let obj = elem as? NotificationTarget,
                (obj.object == nil || obj.equalsObject(object)) {
                 obj.handle(notification)
             }
@@ -172,8 +172,7 @@ import FWObjC
 // MARK: - Notification
 @_spi(FW) extension NSObject {
     
-    private class NotificationTarget {
-        let identifier = UUID().uuidString
+    private class NotificationTarget: NSObject {
         var broadcast: Bool = false
         weak var object: AnyObject?
         weak var target: AnyObject?
@@ -222,12 +221,12 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = __FWNotificationTarget()
+        let notificationTarget = NotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.block = block
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
     }
     
@@ -247,13 +246,13 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = __FWNotificationTarget()
+        let notificationTarget = NotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.target = target
         notificationTarget.action = action
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(__FWNotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
     }
     
@@ -263,7 +262,7 @@ import FWObjC
     ///   - object: 通知对象，值为nil时表示所有
     ///   - target: 通知目标
     ///   - action: 目标动作
-    public func fw_unobserveNotification(_ name: Notification.Name, object: Any? = nil, target: Any?, action: Selector?) {
+    public func fw_unobserveNotification(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector?) {
         guard let dict = fw_notificationTargets(false) else { return }
         
         // object为nil且target为nil始终移除
@@ -281,7 +280,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __FWNotificationTarget,
+                if let obj = elem as? NotificationTarget,
                    obj.equalsObject(object) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -290,7 +289,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? __FWNotificationTarget,
+                if let obj = elem as? NotificationTarget,
                    obj.equalsObject(object, target: target, action: action) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -305,13 +304,13 @@ import FWObjC
     ///   - observer: 监听者
     @discardableResult
     public func fw_unobserveNotification(_ name: Notification.Name, observer: Any) -> Bool {
-        guard let observer = observer as? __FWNotificationTarget,
+        guard let observer = observer as? NotificationTarget,
               let dict = fw_notificationTargets(false),
               let array = dict[name] as? NSMutableArray else { return false }
         
         var result = false
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? __FWNotificationTarget, obj == observer {
+            if let obj = elem as? NotificationTarget, obj == observer {
                 NotificationCenter.default.removeObserver(obj)
                 array.remove(obj)
                 result = true
@@ -324,7 +323,7 @@ import FWObjC
     /// - Parameters:
     ///   - name: 通知名称
     ///   - object: 通知对象，值为nil时表示所有
-    public func fw_unobserveNotification(_ name: Notification.Name, object: Any? = nil) {
+    public func fw_unobserveNotification(_ name: Notification.Name, object: AnyObject? = nil) {
         fw_unobserveNotification(name, object: object, target: nil, action: nil)
     }
     
