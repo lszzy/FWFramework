@@ -519,7 +519,7 @@
     }
 }
 
-+ (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(void (^)(NSException * _Nonnull, Class  _Nonnull __unsafe_unretained, SEL _Nonnull))exceptionHandler {
++ (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException * _Nonnull, Class  _Nonnull __unsafe_unretained, SEL _Nonnull, NSString * _Nonnull, NSInteger))exceptionHandler {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [self swizzleInstanceMethod:[NSObject class] selector:@selector(methodSignatureForSelector:) withBlock:^id(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)) {
@@ -553,7 +553,7 @@
                     @try {
                         originalMSG(selfObject, originalCMD, invocation);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, selfObject.class, invocation.selector);
+                        if (exceptionHandler) exceptionHandler(exception, selfObject.class, invocation.selector, @(__FILE__), __LINE__);
                     }
                 } else {
                     originalMSG(selfObject, originalCMD, invocation);
@@ -567,7 +567,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, value, key);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forKey:));
+                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forKey:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -578,7 +578,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, value, keyPath);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forKeyPath:));
+                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forKeyPath:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -589,7 +589,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, value, key);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forUndefinedKey:));
+                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValue:forUndefinedKey:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -600,7 +600,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, keyValues);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValuesForKeysWithDictionary:));
+                    if (exceptionHandler) exceptionHandler(exception, selfObject.class, @selector(setValuesForKeysWithDictionary:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -618,7 +618,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, from);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringFromIndex:));
+                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringFromIndex:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -632,7 +632,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, to);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringToIndex:));
+                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringToIndex:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -646,7 +646,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, range);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringWithRange:));
+                        if (exceptionHandler) exceptionHandler(exception, NSString.class, @selector(substringWithRange:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -661,7 +661,7 @@
                 @try {
                     result = originalMSG(selfObject, originalCMD, objects, cnt);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:));
+                    if (exceptionHandler) exceptionHandler(exception, object_getClass((id)NSArray.class), @selector(arrayWithObjects:count:), @(__FILE__), __LINE__);
                     
                     NSInteger newCnt = 0;
                     id _Nonnull __unsafe_unretained newObjects[cnt];
@@ -692,7 +692,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, index);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(objectAtIndex:));
+                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(objectAtIndex:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -706,7 +706,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, index);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(objectAtIndexedSubscript:));
+                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(objectAtIndexedSubscript:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -720,7 +720,7 @@
                     @try {
                         result = originalMSG(selfObject, originalCMD, range);
                     } @catch (NSException *exception) {
-                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(subarrayWithRange:));
+                        if (exceptionHandler) exceptionHandler(exception, [NSArray class], @selector(subarrayWithRange:), @(__FILE__), __LINE__);
                     } @finally {
                         return result;
                     }
@@ -734,7 +734,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(addObject:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(addObject:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -745,7 +745,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object, index);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(insertObject:atIndex:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(insertObject:atIndex:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -756,7 +756,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, index);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(removeObjectAtIndex:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(removeObjectAtIndex:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -767,7 +767,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, index, object);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(replaceObjectAtIndex:withObject:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(replaceObjectAtIndex:withObject:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -778,7 +778,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object, index);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(setObject:atIndexedSubscript:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(setObject:atIndexedSubscript:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -789,7 +789,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, range);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(removeObjectsInRange:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableArray class], @selector(removeObjectsInRange:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -800,7 +800,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableSet class], @selector(addObject:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableSet class], @selector(addObject:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -811,7 +811,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableSet class], @selector(removeObject:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableSet class], @selector(removeObject:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -823,7 +823,7 @@
                 @try {
                     result = originalMSG(selfObject, originalCMD, objects, keys, cnt);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:));
+                    if (exceptionHandler) exceptionHandler(exception, object_getClass((id)NSDictionary.class), @selector(dictionaryWithObjects:forKeys:count:), @(__FILE__), __LINE__);
                     
                     NSInteger newCnt = 0;
                     id _Nonnull __unsafe_unretained newObjects[cnt];
@@ -848,7 +848,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object, key);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(setObject:forKey:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(setObject:forKey:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -859,7 +859,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, key);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(removeObjectForKey:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(removeObjectForKey:), @(__FILE__), __LINE__);
                 }
             };
         }];
@@ -870,7 +870,7 @@
                 @try {
                     originalMSG(selfObject, originalCMD, object, key);
                 } @catch (NSException *exception) {
-                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(setObject:forKeyedSubscript:));
+                    if (exceptionHandler) exceptionHandler(exception, [NSMutableDictionary class], @selector(setObject:forKeyedSubscript:), @(__FILE__), __LINE__);
                 }
             };
         }];
