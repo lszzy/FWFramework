@@ -29,23 +29,37 @@ class TestWorkflowController: UIViewController {
     
     // MARK: - Subviews
     private lazy var delegateButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = AppTheme.largeButton()
         button.setTitle("Optional delegate method", for: .normal)
         button.addTarget(self, action: #selector(onDelegate), for: .touchUpInside)
         return button
     }()
     
     private lazy var notificationButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = AppTheme.largeButton()
         button.setTitle("Test notification", for: .normal)
         button.addTarget(self, action: #selector(onNotification), for: .touchUpInside)
         return button
     }()
     
     private lazy var kvoButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = AppTheme.largeButton()
         button.setTitle("Test kvo", for: .normal)
         button.addTarget(self, action: #selector(onKvo), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var exceptionButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Capture exception", for: .normal)
+        button.addTarget(self, action: #selector(onException), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var errorButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Capture error", for: .normal)
+        button.addTarget(self, action: #selector(onError), for: .touchUpInside)
         return button
     }()
     
@@ -85,23 +99,30 @@ extension TestWorkflowController: ViewControllerProtocol {
         view.addSubview(delegateButton)
         view.addSubview(notificationButton)
         view.addSubview(kvoButton)
+        view.addSubview(exceptionButton)
+        view.addSubview(errorButton)
     }
     
     func setupLayout() {
         delegateButton.app.layoutChain
-            .horizontal()
+            .centerX()
             .top(toSafeArea: 20)
-            .height(30)
         
         notificationButton.app.layoutChain
-            .horizontal()
+            .centerX()
             .top(toViewBottom: delegateButton, offset: 20)
-            .height(30)
         
         kvoButton.app.layoutChain
-            .horizontal()
+            .centerX()
             .top(toViewBottom: notificationButton, offset: 20)
-            .height(30)
+        
+        exceptionButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: kvoButton, offset: 20)
+        
+        errorButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: exceptionButton, offset: 20)
     }
     
 }
@@ -139,6 +160,15 @@ extension TestWorkflowController: ViewControllerProtocol {
     
     func onKvo() {
         kvoValue = [0, 1].randomElement()!
+    }
+    
+    func onException() {
+        ExceptionManager.startCaptureExceptions()
+        NSNull().perform(NSSelectorFromString("onException"))
+    }
+    
+    func onError() {
+        ExceptionManager.captureError(PromiseError.failed, remark: "Test error")
     }
     
 }

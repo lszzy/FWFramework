@@ -27,8 +27,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.verbose) { return }
@@ -48,8 +48,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.debug) { return }
@@ -69,8 +69,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.info) { return }
@@ -90,8 +90,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.warn) { return }
@@ -111,8 +111,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.error) { return }
@@ -134,8 +134,8 @@ extension WrapperGlobal {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(type) { return }
@@ -249,8 +249,8 @@ public class Logger: NSObject {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !check(.verbose) { return }
@@ -270,8 +270,8 @@ public class Logger: NSObject {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !check(.debug) { return }
@@ -291,8 +291,8 @@ public class Logger: NSObject {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !check(.info) { return }
@@ -312,8 +312,8 @@ public class Logger: NSObject {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !check(.warn) { return }
@@ -333,8 +333,8 @@ public class Logger: NSObject {
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
-        file: String = #file,
         function: String = #function,
+        file: String = #file,
         line: Int = #line
     ) {
         if !check(.error) { return }
