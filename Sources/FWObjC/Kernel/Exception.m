@@ -76,7 +76,7 @@ static NSArray<Class> *fwStaticCaptureClasses = nil;
     }];
     
 #ifdef DEBUG
-    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, exception.reason ?: @"-", callStackMethod ?: @"-", remark ?: @"-"];
+    NSString *errorMessage = [NSString stringWithFormat:@"\n========== EXCEPTION ==========\n  name: %@\nreason: %@\nmethod: %@\nremark: %@\n========== EXCEPTION ==========", exception.name, (exception.reason ?: @"-"), (callStackMethod ?: @"-"), (remark ?: @"-")];
     __FWLogDebug(@"%@", errorMessage);
 #endif
     

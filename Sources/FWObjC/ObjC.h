@@ -99,6 +99,8 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (BOOL)isEqual:(nullable id)obj1 withObject:(nullable id)obj2;
 
++ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END
