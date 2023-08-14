@@ -83,48 +83,48 @@ extension WrapperGlobal {
         return String(data: self, encoding: .utf8)
     }
     
-    /// 使用NSKeyedArchiver归档对象
-    public static func fw_archiveObject(_ object: Any?) -> Data? {
+    /// 将对象归档为data数据
+    public static func fw_archivedData(_ object: Any?) -> Data? {
         guard let object = object else { return nil }
         let data = try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
         return data
     }
     
-    /// 使用NSKeyedUnarchiver解档指定类型数据，推荐使用
-    public func fw_unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
+    /// 将数据解档为指定类型对象，推荐使用
+    public func fw_unarchivedObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
         let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: self)
         return object
     }
     
-    /// 使用NSKeyedUnarchiver解档数据
-    public func fw_unarchiveObject() -> Any? {
-        let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: self)
-        unarchiver?.requiresSecureCoding = false
-        let object = unarchiver?.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+    /// 将数据解档为对象
+    public func fw_unarchivedObject() -> Any? {
+        guard let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: self) else { return nil }
+        unarchiver.requiresSecureCoding = false
+        let object = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
         return object
     }
     
-    /// 保存对象归档到文件
-    public static func fw_archiveObject(_ object: Any, file: String) -> Bool {
-        guard let data = fw_archiveObject(object) else { return false }
+    /// 将对象归档保存到文件
+    public static func fw_archiveObject(_ object: Any, toFile path: String) -> Bool {
+        guard let data = fw_archivedData(object) else { return false }
         do {
-            try data.write(to: URL(fileURLWithPath: file))
+            try data.write(to: URL(fileURLWithPath: path))
             return true
         } catch {
             return false
         }
     }
     
-    /// 从文件读取指定类型对象归档，推荐使用
-    public static func fw_unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return nil }
-        return data.fw_unarchiveObject(clazz)
+    /// 从文件解档指定类型对象，推荐使用
+    public static func fw_unarchivedObject<T>(_ clazz: T.Type, withFile path: String) -> T? where T : NSObject, T : NSCoding {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
+        return data.fw_unarchivedObject(clazz)
     }
     
-    /// 从文件读取对象归档
-    public static func fw_unarchiveObject(file: String) -> Any? {
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return nil }
-        return data.fw_unarchiveObject()
+    /// 从文件解档对象
+    public static func fw_unarchivedObject(withFile path: String) -> Any? {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
+        return data.fw_unarchivedObject()
     }
 }
 
