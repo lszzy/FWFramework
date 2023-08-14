@@ -205,10 +205,12 @@ class WebController: UIViewController, WebViewControllerProtocol {
             } else if index == 1 {
                 self?.webView.reload()
             } else if index == 2 {
-                self?.webView.load(URLRequest(url: APP.safeURL(self?.requestUrl)))
+                let urlRequest = self?.createUrlRequest(self?.requestUrl)
+                self?.webView.load(urlRequest!)
                 self?.webView.app.clearBackForwardList()
             } else if index == 3 {
-                self?.webView.load(URLRequest(url: APP.safeURL(nil)))
+                let urlRequest = self?.createUrlRequest(nil)
+                self?.webView.load(urlRequest!)
                 self?.webView.app.clearBackForwardList()
             } else {
                 WebView.app.processPool = WKProcessPool()
@@ -224,10 +226,14 @@ class WebController: UIViewController, WebViewControllerProtocol {
             app.showLoading()
         }
         
-        var urlRequest = URLRequest(url: APP.safeURL(requestUrl))
+        webRequest = createUrlRequest(requestUrl)
+    }
+    
+    private func createUrlRequest(_ url: String?) -> URLRequest {
+        var urlRequest = URLRequest(url: APP.safeURL(url))
         urlRequest.timeoutInterval = 30
-        urlRequest.setValue("test", forHTTPHeaderField: "Test-Token")
-        webRequest = urlRequest
+        urlRequest.setValue("testToken-\(Date.app.currentTime)", forHTTPHeaderField: "Test-Token")
+        return urlRequest
     }
     
 }
