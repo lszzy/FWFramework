@@ -8,7 +8,7 @@
 import Foundation
 import SQLite3
 
-/// Sqlite缓存
+/// Sqlite缓存。复杂对象需遵循NSCoding协议
 open class CacheSqlite: CacheEngine {
     
     /// 单例模式
@@ -77,9 +77,9 @@ open class CacheSqlite: CacheEngine {
                     while sqlite3_step(stmt) == SQLITE_ROW {
                         let dataBuffer = sqlite3_column_blob(stmt, 0)
                         let dataSize = sqlite3_column_bytes(stmt, 0)
-                        if dataBuffer != nil {
-                            let data = Data(bytes: dataBuffer!, count: Int(dataSize))
-                            object = NSKeyedUnarchiver.unarchiveObject(with: data)
+                        if let dataBuffer = dataBuffer {
+                            let data = Data(bytes: dataBuffer, count: Int(dataSize))
+                            object = decodeData(data)
                         }
                     }
                 }
@@ -92,9 +92,10 @@ open class CacheSqlite: CacheEngine {
     }
     
     open override func writeCache(_ object: Any, forKey key: String) {
+        guard let data = encodeObject(object) as? NSData else { return }
+        
         autoreleasepool {
             if open() {
-                let data = NSKeyedArchiver.archivedData(withRootObject: object) as NSData
                 let sql = "REPLACE INTO FWCache (key, object) VALUES (?, ?)"
                 var stmt: OpaquePointer?
                 if sqlite3_prepare_v2(database, sql, -1, &stmt, nil) == SQLITE_OK {

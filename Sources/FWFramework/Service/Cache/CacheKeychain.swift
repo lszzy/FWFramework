@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Keychain缓存
+/// Keychain缓存。复杂对象需遵循NSCoding协议
 open class CacheKeychain: CacheEngine {
 
     /// 单例模式
@@ -61,7 +61,7 @@ open class CacheKeychain: CacheEngine {
             return nil
         }
 
-        let object = NSKeyedUnarchiver.unarchiveObject(with: passwordData)
+        let object = decodeData(passwordData)
         return object
     }
 
@@ -86,7 +86,7 @@ open class CacheKeychain: CacheEngine {
 
     @discardableResult
     private func setPasswordObject(_ passwordObject: Any, forService service: String, account: String?) -> Bool {
-        let passwordData = NSKeyedArchiver.archivedData(withRootObject: passwordObject)
+        guard let passwordData = encodeObject(passwordObject) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }
 

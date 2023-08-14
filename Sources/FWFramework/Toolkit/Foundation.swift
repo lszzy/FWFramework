@@ -45,35 +45,6 @@ extension WrapperGlobal {
 
 // MARK: - Data+Foundation
 @_spi(FW) extension Data {
-    /// 使用NSKeyedArchiver压缩对象
-    public static func fw_archiveObject(_ object: Any) -> Data? {
-        let data = try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
-        return data
-    }
-    
-    /// 使用NSKeyedUnarchiver解压数据
-    public func fw_unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
-        let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: self)
-        return object
-    }
-    
-    /// 保存对象归档
-    public static func fw_archiveObject(_ object: Any, file: String) -> Bool {
-        guard let data = fw_archiveObject(object) else { return false }
-        do {
-            try data.write(to: URL(fileURLWithPath: file))
-            return true
-        } catch {
-            return false
-        }
-    }
-    
-    /// 读取对象归档
-    public static func fw_unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return nil }
-        return data.fw_unarchiveObject(clazz)
-    }
-    
     // MARK: - Encrypt
     /// 利用AES加密数据
     public func fw_aesEncrypt(key: String, iv: Data) -> Data? {

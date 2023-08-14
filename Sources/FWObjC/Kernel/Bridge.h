@@ -46,8 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (__FWEncrypt)
 
-- (nullable id)__fw_unarchiveObject:(Class)clazz;
-
 - (nullable NSData *)__fw_AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
 
 - (nullable NSData *)__fw_AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
