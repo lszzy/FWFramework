@@ -55,7 +55,7 @@ open class CacheFile: CacheEngine {
         let filePath = filePath(key)
         if FileManager.default.fileExists(atPath: filePath) {
             guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
-            return decodeData(data)
+            return unarchivedObject(data)
         }
         return nil
     }
@@ -67,7 +67,7 @@ open class CacheFile: CacheEngine {
         if !FileManager.default.fileExists(atPath: fileDir) {
             try? FileManager.default.createDirectory(atPath: fileDir, withIntermediateDirectories: true, attributes: nil)
         }
-        guard let data = encodeObject(object) else { return }
+        guard let data = archivedData(object) else { return }
         try? data.write(to: URL(fileURLWithPath: filePath))
     }
     
