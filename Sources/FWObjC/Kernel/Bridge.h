@@ -9,7 +9,6 @@
 #import <objc/runtime.h>
 
 #import "ObjC.h"
-#import "Exception.h"
 #import "HTTPSessionManager.h"
 #import "RequestManager.h"
 #import "Database.h"

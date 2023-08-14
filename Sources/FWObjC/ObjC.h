@@ -101,6 +101,8 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
 
++ (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector))exceptionHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END
