@@ -209,14 +209,6 @@ static SEL __FWCGSVGDocumentSEL = NULL;
 
 @implementation NSData (__FWEncrypt)
 
-- (id)__fw_unarchiveObject:(Class)clazz {
-    id object = nil;
-    @try {
-        object = [NSKeyedUnarchiver unarchivedObjectOfClass:clazz fromData:self error:NULL];
-    } @catch (NSException *exception) { }
-    return object;
-}
-
 - (NSData *)__fw_AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv {
     NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
     

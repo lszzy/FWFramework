@@ -45,6 +45,36 @@ extension Wrapper where Base == Data {
     public var utf8String: String? {
         return base.fw_utf8String
     }
+    
+    /// 使用NSKeyedArchiver归档对象
+    public static func archiveObject(_ object: Any?) -> Data? {
+        return Base.fw_archiveObject(object)
+    }
+    
+    /// 使用NSKeyedUnarchiver解档指定类型数据，推荐使用
+    public func unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
+        return base.fw_unarchiveObject(clazz)
+    }
+    
+    /// 使用NSKeyedUnarchiver解档数据
+    public func unarchiveObject() -> Any? {
+        return base.fw_unarchiveObject()
+    }
+    
+    /// 保存对象归档到文件
+    public static func archiveObject(_ object: Any, file: String) -> Bool {
+        return Base.fw_archiveObject(object, file: file)
+    }
+    
+    /// 从文件读取指定类型对象归档，推荐使用
+    public static func unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
+        return Base.fw_unarchiveObject(clazz, file: file)
+    }
+    
+    /// 从文件读取对象归档
+    public static func unarchiveObject(file: String) -> Any? {
+        return Base.fw_unarchiveObject(file: file)
+    }
 }
 
 extension Wrapper where Base == String {

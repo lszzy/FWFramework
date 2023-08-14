@@ -12,26 +12,6 @@ import FWObjC
 
 // MARK: - Data+Foundation
 extension Wrapper where Base == Data {
-    /// 使用NSKeyedArchiver压缩对象
-    public static func archiveObject(_ object: Any) -> Data? {
-        return Base.fw_archiveObject(object)
-    }
-    
-    /// 使用NSKeyedUnarchiver解压数据
-    public func unarchiveObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
-        return base.fw_unarchiveObject(clazz)
-    }
-    
-    /// 保存对象归档
-    public static func archiveObject(_ object: Any, file: String) -> Bool {
-        return Base.fw_archiveObject(object, file: file)
-    }
-    
-    /// 读取对象归档
-    public static func unarchiveObject<T>(_ clazz: T.Type, file: String) -> T? where T : NSObject, T : NSCoding {
-        return Base.fw_unarchiveObject(clazz, file: file)
-    }
-    
     // MARK: - Encrypt
     /// 利用AES加密数据
     public func aesEncrypt(key: String, iv: Data) -> Data? {

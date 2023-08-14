@@ -8,7 +8,7 @@
 import Foundation
 import CommonCrypto
 
-/// 文件缓存
+/// 文件缓存。复杂对象需遵循NSCoding协议
 open class CacheFile: CacheEngine {
     
     /// 单例模式
@@ -54,7 +54,8 @@ open class CacheFile: CacheEngine {
     open override func readCache(forKey key: String) -> Any? {
         let filePath = filePath(key)
         if FileManager.default.fileExists(atPath: filePath) {
-            return NSKeyedUnarchiver.unarchiveObject(withFile: filePath)
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
+            return decodeData(data)
         }
         return nil
     }
@@ -66,7 +67,8 @@ open class CacheFile: CacheEngine {
         if !FileManager.default.fileExists(atPath: fileDir) {
             try? FileManager.default.createDirectory(atPath: fileDir, withIntermediateDirectories: true, attributes: nil)
         }
-        NSKeyedArchiver.archiveRootObject(object, toFile: filePath)
+        guard let data = encodeObject(object) else { return }
+        try? data.write(to: URL(fileURLWithPath: filePath))
     }
     
     open override func clearCache(forKey key: String) {
