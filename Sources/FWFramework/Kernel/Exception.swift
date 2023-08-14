@@ -38,9 +38,9 @@ public class ExceptionManager: NSObject {
     
     /// 开启框架自带异常捕获功能，默认关闭
     public static func startCaptureExceptions() {
-        ObjCBridge.captureExceptions(captureClasses) { exception, clazz, selector in
+        ObjCBridge.captureExceptions(captureClasses) { exception, clazz, selector, file, line in
             let function = String(format: "%@[%@ %@]", class_isMetaClass(clazz) ? "+" : "-", NSStringFromClass(clazz), NSStringFromSelector(selector))
-            captureException(exception, function: function)
+            captureException(exception, remark: nil, function: function, file: file, line: line)
         }
     }
     
