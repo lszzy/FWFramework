@@ -42,6 +42,8 @@ extension WebViewDelegate {
 }
 
 /// WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
+///
+/// 备注：如需实现加载离线资源等场景，请使用configuration.setURLSchemeHandler
 open class WebView: WKWebView {
     
     private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate {
