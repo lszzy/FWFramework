@@ -298,14 +298,20 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
             if object.imageUrl.app.isValid(.isUrl) {
                 myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
                     self?.myImageView.image = image
-                    self?.myImageView.app.faceAware()
+                    if TestTableController.faceAware {
+                        self?.myImageView.app.faceAware()
+                    }
                 }
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
-                myImageView.app.faceAware()
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             } else {
                 myImageView.image = nil
-                myImageView.app.faceAware()
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             }
             myTextLabel.text = object.text
             myImageView.app.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
