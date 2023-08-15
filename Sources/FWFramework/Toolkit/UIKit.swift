@@ -901,7 +901,105 @@ import AdSupport
     
     /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
     public func fw_faceAware() {
-        __fw_faceAware()
+        guard let image = self.image else { return }
+        
+        DispatchQueue.global(qos: .default).async { [weak self] in
+            var ciImage = image.ciImage
+            if ciImage == nil, let cgImage = image.cgImage {
+                ciImage = CIImage(cgImage: cgImage)
+            }
+            
+            if UIImageView.fw_faceDetector == nil {
+                UIImageView.fw_faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+            }
+            if let ciImage = ciImage,
+               let cgImage = image.cgImage,
+               let features = UIImageView.fw_faceDetector?.features(in: ciImage),
+               !features.isEmpty {
+                DispatchQueue.main.async {
+                    self?.fw_faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height), cgImage: cgImage)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self?.fw_faceLayer(false)?.removeFromSuperlayer()
+                }
+            }
+        }
+    }
+    
+    private static var fw_faceDetector: CIDetector?
+    
+    private func fw_faceMark(_ features: [CIFeature], size: CGSize, cgImage: CGImage) {
+        var rect = features[0].bounds
+        rect.origin.y = size.height - rect.minY - rect.height
+        var rightBorder = Double(rect.minX + rect.width)
+        var bottomBorder = Double(rect.minY + rect.height)
+
+        for feature in features.dropFirst() {
+            var oneRect = feature.bounds
+            oneRect.origin.y = size.height - oneRect.minY - oneRect.height
+            rect.origin.x = min(oneRect.minX, rect.minX)
+            rect.origin.y = min(oneRect.minY, rect.minY)
+
+            rightBorder = max(Double(oneRect.minX + oneRect.width), Double(rightBorder))
+            bottomBorder = max(Double(oneRect.minY + oneRect.height), Double(bottomBorder))
+        }
+
+        rect.size.width = CGFloat(rightBorder) - rect.minX
+        rect.size.height = CGFloat(bottomBorder) - rect.minY
+        
+        var offset = CGPoint.zero
+        var finalSize = size
+        if size.width / size.height > self.bounds.width / self.bounds.height {
+            var centerX = rect.minX + rect.width / 2.0
+
+            finalSize.height = self.bounds.height
+            finalSize.width = size.width / size.height * finalSize.height
+            centerX = finalSize.width / size.width * centerX
+
+            offset.x = centerX - self.bounds.width * 0.5
+            if offset.x < 0 {
+                offset.x = 0
+            } else if offset.x + self.bounds.width > finalSize.width {
+                offset.x = finalSize.width - self.bounds.width
+            }
+            offset.x = -offset.x
+        } else {
+            var centerY = rect.minY + rect.height / 2.0
+
+            finalSize.width = self.bounds.width
+            finalSize.height = size.height / size.width * finalSize.width
+            centerY = finalSize.width / size.width * centerY
+
+            offset.y = centerY - self.bounds.height * CGFloat(1-0.618)
+            if offset.y < 0 {
+                offset.y = 0
+            } else if offset.y + self.bounds.height > finalSize.height {
+                finalSize.height = self.bounds.height
+                offset.y = finalSize.height
+            }
+            offset.y = -offset.y
+        }
+        
+        let sublayer = fw_faceLayer(true)
+        sublayer?.frame = CGRect(origin: offset, size: finalSize)
+        sublayer?.contents = cgImage
+    }
+    
+    private func fw_faceLayer(_ lazyload: Bool) -> CALayer? {
+        if let sublayer = layer.sublayers?.first(where: { $0.name == "FWFaceLayer" }) {
+            return sublayer
+        }
+        
+        if lazyload {
+            let sublayer = CALayer()
+            sublayer.name = "FWFaceLayer"
+            sublayer.actions = ["contents": NSNull(), "bounds": NSNull(), "position": NSNull()]
+            layer.addSublayer(sublayer)
+            return layer
+        }
+        
+        return nil
     }
 
     /// 倒影效果
