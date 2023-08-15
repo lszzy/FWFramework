@@ -296,11 +296,16 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
             guard let object = object else { return }
             myTitleLabel.text = object.title
             if object.imageUrl.app.isValid(.isUrl) {
-                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage())
+                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
+                    self?.myImageView.image = image
+                    self?.myImageView.app.faceAware()
+                }
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
+                myImageView.app.faceAware()
             } else {
                 myImageView.image = nil
+                myImageView.app.faceAware()
             }
             myTextLabel.text = object.text
             myImageView.app.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
