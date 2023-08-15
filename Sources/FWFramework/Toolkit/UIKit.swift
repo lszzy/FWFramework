@@ -930,53 +930,53 @@ import AdSupport
     }()
     
     private func fw_faceMark(_ features: [CIFeature], size: CGSize) {
-        var rect = features[0].bounds
-        rect.origin.y = size.height - rect.minY - rect.height
-        var rightBorder = Double(rect.minX + rect.width)
-        var bottomBorder = Double(rect.minY + rect.height)
+        var fixedRect = CGRect(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude, width: 0, height: 0)
+        var rightBorder: CGFloat = 0
+        var bottomBorder: CGFloat = 0
 
-        for feature in features.dropFirst() {
+        for feature in features {
             var oneRect = feature.bounds
-            oneRect.origin.y = size.height - oneRect.minY - oneRect.height
-            rect.origin.x = min(oneRect.minX, rect.minX)
-            rect.origin.y = min(oneRect.minY, rect.minY)
+            oneRect.origin.y = size.height - oneRect.origin.y - oneRect.size.height
 
-            rightBorder = max(Double(oneRect.minX + oneRect.width), Double(rightBorder))
-            bottomBorder = max(Double(oneRect.minY + oneRect.height), Double(bottomBorder))
+            fixedRect.origin.x = min(oneRect.origin.x, fixedRect.origin.x)
+            fixedRect.origin.y = min(oneRect.origin.y, fixedRect.origin.y)
+
+            rightBorder = max(oneRect.origin.x + oneRect.size.width, rightBorder)
+            bottomBorder = max(oneRect.origin.y + oneRect.size.height, bottomBorder)
         }
 
-        rect.size.width = CGFloat(rightBorder) - rect.minX
-        rect.size.height = CGFloat(bottomBorder) - rect.minY
-        
+        fixedRect.size.width = rightBorder - fixedRect.origin.x
+        fixedRect.size.height = bottomBorder - fixedRect.origin.y
+
+        var fixedCenter = CGPoint(x: fixedRect.origin.x + fixedRect.size.width / 2.0,
+                                  y: fixedRect.origin.y + fixedRect.size.height / 2.0)
         var offset = CGPoint.zero
         var finalSize = size
-        if size.width / size.height > self.bounds.width / self.bounds.height {
-            var centerX = rect.minX + rect.width / 2.0
 
-            finalSize.height = self.bounds.height
+        if size.width / size.height > bounds.size.width / bounds.size.height {
+            finalSize.height = bounds.size.height
             finalSize.width = size.width / size.height * finalSize.height
-            centerX = finalSize.width / size.width * centerX
+            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
+            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
 
-            offset.x = centerX - self.bounds.width * 0.5
+            offset.x = fixedCenter.x - bounds.size.width * 0.5
             if offset.x < 0 {
                 offset.x = 0
-            } else if offset.x + self.bounds.width > finalSize.width {
-                offset.x = finalSize.width - self.bounds.width
+            } else if offset.x + bounds.size.width > finalSize.width {
+                offset.x = finalSize.width - bounds.size.width
             }
             offset.x = -offset.x
         } else {
-            var centerY = rect.minY + rect.height / 2.0
-
-            finalSize.width = self.bounds.width
+            finalSize.width = bounds.size.width
             finalSize.height = size.height / size.width * finalSize.width
-            centerY = finalSize.width / size.width * centerY
+            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
+            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
 
-            offset.y = centerY - self.bounds.height * CGFloat(1-0.618)
+            offset.y = fixedCenter.y - bounds.size.height * (1 - 0.618)
             if offset.y < 0 {
                 offset.y = 0
-            } else if offset.y + self.bounds.height > finalSize.height {
-                finalSize.height = self.bounds.height
-                offset.y = finalSize.height
+            } else if offset.y + bounds.size.height > finalSize.height {
+                offset.y = finalSize.height - bounds.size.height
             }
             offset.y = -offset.y
         }
