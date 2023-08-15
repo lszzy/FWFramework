@@ -82,14 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIImageView+__FWBridge
-
-@interface UIImageView (__FWBridge)
-
-- (void)__fw_faceAware;
-
-@end
-
 #pragma mark - __FWInputTarget
 
 @interface __FWInputTarget : NSObject
