@@ -170,14 +170,20 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
             "http://littlesvr.ca/apng/images/SteamEngine.webp",
             "Loading.gif",
-            "http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
-            "http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-            "https://pic3.zhimg.com/b471eb23a_im.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-            "http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+            "https://img2.baidu.com/it/u=1624963289,2527746346&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
+            "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg",
+            "https://up.enterdesk.com/edpic_source/eb/34/40/eb34405739ad0e41ec34cd8e16711f30.jpg",
+            "https://up.enterdesk.com/edpic_source/05/85/a7/0585a766f5d7702e82f3caf317e6491b.jpg",
+            "https://up.enterdesk.com/edpic_source/b4/4a/a7/b44aa778ac9f784ebcee27961d81759f.jpg",
+            "https://up.enterdesk.com/edpic_source/3d/42/3e/3d423e3cb05d7edc35c38e3173af2a0d.jpg",
+            "https://up.enterdesk.com/edpic_source/84/f7/fc/84f7fcc08f21419a860dbedde45fe233.jpg",
+            "https://lmg.jj20.com/up/allimg/1114/042421135351/210424135351-1-1200.jpg",
+            "https://img2.baidu.com/it/u=673329217,4275796533&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://up.enterdesk.com/edpic_source/59/fc/06/59fc069244210ceb384c3fb88ec88121.jpg",
+            "https://img1.baidu.com/it/u=2468098533,3730291157&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=800",
+            "https://img2.baidu.com/it/u=4228499675,3913167569&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://m.ixiunv.com/uploadfile/ixiunv-pic/2019/0916/20190916094832595.jpg",
+            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
         ].randomElement() ?? ""
         return object
     }
@@ -188,13 +194,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             guard let self = self else { return }
             NSLog("刷新完成")
             self.tableData.removeAll()
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.app.clearHeightCache()
             self.tableView.reloadData()
             
-            self.tableView.app.shouldRefreshing = self.tableData.count < 20
+            self.tableView.app.shouldRefreshing = self.tableData.count < 50
             self.tableView.app.endRefreshing()
             if !self.tableView.app.shouldRefreshing {
                 self.navigationItem.rightBarButtonItem = nil
@@ -207,12 +213,12 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("加载完成")
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             
-            self.tableView.app.loadingFinished = self.tableData.count >= 20
+            self.tableView.app.loadingFinished = self.tableData.count >= 50
             self.tableView.app.endLoading()
         }
     }
