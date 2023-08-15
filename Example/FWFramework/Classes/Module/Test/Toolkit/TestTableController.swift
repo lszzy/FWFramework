@@ -13,6 +13,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = TestTableDynamicLayoutObject
     
     static var isExpanded = false
+    static var faceAware = true
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -53,11 +54,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupNavbar() {
         Self.isExpanded = false
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.tableView.contentInsetAdjustmentBehavior = self?.tableView.contentInsetAdjustmentBehavior == .never ? .automatic : .never
-                } else {
+                } else if index == 1 {
                     Self.isExpanded = !Self.isExpanded
+                } else {
+                    Self.faceAware = !Self.faceAware
                 }
                 self?.setupSubviews()
             })
@@ -262,14 +265,20 @@ class TestTableDynamicLayoutCell: UITableViewCell {
             if object.imageUrl.app.isValid(.isUrl) {
                 myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
                     self?.myImageView.image = image
-                    self?.myImageView.app.faceAware()
+                    if TestTableController.faceAware {
+                        self?.myImageView.app.faceAware()
+                    }
                 }
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
-                myImageView.app.faceAware()
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             } else {
                 myImageView.image = nil
-                myImageView.app.faceAware()
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             }
             myTextLabel.text = object.text
             myImageView.app.constraint(toSuperview: .bottom)?.isActive = TestTableController.isExpanded
