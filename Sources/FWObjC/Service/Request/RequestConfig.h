@@ -137,6 +137,12 @@ NS_SWIFT_NAME(NetworkUtils)
 
 + (BOOL)isRequestError:(nullable NSError *)error;
 
++ (void)markRequestError:(nullable NSError *)error;
+
++ (BOOL)isCancelledError:(nullable NSError *)error;
+
++ (BOOL)isConnectionError:(nullable NSError *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END
