@@ -139,9 +139,7 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
 
 - (void)setError:(NSError *)error {
     _error = error;
-    if (error != nil) {
-        objc_setAssociatedObject(error, @selector(isRequestError:), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
+    if (error != nil) [__FWNetworkUtils markRequestError:error];
 }
 
 - (NSHTTPURLResponse *)response {

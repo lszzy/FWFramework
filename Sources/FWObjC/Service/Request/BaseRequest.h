@@ -159,19 +159,19 @@ NS_SWIFT_NAME(BaseRequest)
 ///  The underlying NSURLSessionTask.
 ///
 ///  @warning This value is actually nil and should not be accessed before the request starts.
-@property (nonatomic, strong, readwrite) NSURLSessionTask *requestTask;
+@property (nonatomic, strong, readwrite, nullable) NSURLSessionTask *requestTask;
 
 ///  The request identifier, always equals the first requestTask.taskIdentifier.
 @property (nonatomic, assign, readwrite) NSUInteger requestIdentifier;
 
 ///  Shortcut for `requestTask.currentRequest`.
-@property (nonatomic, strong, readonly) NSURLRequest *currentRequest;
+@property (nonatomic, strong, readonly, nullable) NSURLRequest *currentRequest;
 
 ///  Shortcut for `requestTask.originalRequest`.
-@property (nonatomic, strong, readonly) NSURLRequest *originalRequest;
+@property (nonatomic, strong, readonly, nullable) NSURLRequest *originalRequest;
 
 ///  Shortcut for `requestTask.response`.
-@property (nonatomic, strong, readonly) NSHTTPURLResponse *response;
+@property (nonatomic, strong, readonly, nullable) NSHTTPURLResponse *response;
 
 ///  The response status code.
 @property (nonatomic, readonly) NSInteger responseStatusCode;

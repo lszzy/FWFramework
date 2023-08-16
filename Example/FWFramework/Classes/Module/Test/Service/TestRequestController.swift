@@ -220,7 +220,7 @@ private extension TestRequestController {
             self.app.showMessage(text: "json请求成功: \n\(request.responseName)")
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "json请求失败: \n\(request.error?.localizedDescription ?? "")")
+            self.app.showMessage(text: "json请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
@@ -232,7 +232,7 @@ private extension TestRequestController {
             self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "天气请求失败: \n\(request.error?.localizedDescription ?? "")")
+            self.app.showMessage(text: "天气请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
@@ -245,7 +245,7 @@ private extension TestRequestController {
             self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "天气请求失败: \n\(request.error?.localizedDescription ?? "")")
+            self.app.showMessage(text: "天气请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
