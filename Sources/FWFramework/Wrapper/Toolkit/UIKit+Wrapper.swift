@@ -942,6 +942,11 @@ extension Wrapper where Base: UITableView {
         base.fw_reloadDataWithoutAnimation()
     }
     
+    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func willDisplay<T>(_ cell: UITableViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
+        base.fw_willDisplay(cell, at: indexPath, object: object, exposure: exposure)
+    }
+    
 }
 
 // MARK: - UITableViewCell+UIKit
@@ -976,6 +981,11 @@ extension Wrapper where Base: UICollectionView {
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
         base.fw_reloadDataWithoutAnimation()
+    }
+    
+    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func willDisplay<T>(_ cell: UICollectionViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
+        base.fw_willDisplay(cell, at: indexPath, object: object, exposure: exposure)
     }
     
 }

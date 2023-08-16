@@ -240,7 +240,7 @@ open class AppBundle: ModuleBundle {
         addStrings("en", strings: [
             "fw.done": "Done",
             "fw.close": "OK",
-            "fw.confirm": "Yes",
+            "fw.confirm": "Confirm",
             "fw.cancel": "Cancel",
             "fw.more": "More",
             "fw.original": "Original",
@@ -249,7 +249,7 @@ open class AppBundle: ModuleBundle {
             "fw.pickerAlbum": "Album",
             "fw.pickerEmpty": "No Photo",
             "fw.pickerDenied": "Please allow %@ to access your album in \"Settings\"->\"Privacy\"->\"Photos\"",
-            "fw.pickerExceed": "Max count for selection: %",
+            "fw.pickerExceed": "Max count for selection: %@",
             "fw.refreshIdle": "Pull down to refresh",
             "fw.refreshTriggered": "Release to refresh",
             "fw.refreshLoading": "Loading...",
