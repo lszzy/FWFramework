@@ -54,15 +54,19 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupNavbar() {
         Self.isExpanded = false
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别", "reloadData"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.tableView.contentInsetAdjustmentBehavior = self?.tableView.contentInsetAdjustmentBehavior == .never ? .automatic : .never
+                    self?.setupSubviews()
                 } else if index == 1 {
                     Self.isExpanded = !Self.isExpanded
-                } else {
+                    self?.setupSubviews()
+                } else if index == 2 {
                     Self.faceAware = !Self.faceAware
+                    self?.setupSubviews()
+                } else {
+                    self?.tableView.reloadData()
                 }
-                self?.setupSubviews()
             })
         }
     }
