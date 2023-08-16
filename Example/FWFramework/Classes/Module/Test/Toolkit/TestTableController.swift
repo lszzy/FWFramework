@@ -99,6 +99,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let object = tableData[indexPath.row]
+        tableView.app.willDisplay(cell, at: indexPath, object: object) { indexPath, object in
+            NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
+        }
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -192,6 +199,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             "https://m.ixiunv.com/uploadfile/ixiunv-pic/2019/0916/20190916094832595.jpg",
             "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
         ].randomElement() ?? ""
+        object.index = self.tableData.count
         return object
     }
     
@@ -257,6 +265,7 @@ class TestTableDynamicLayoutObject: NSObject {
     var title = ""
     var text = ""
     var imageUrl = ""
+    var index: Int = 0
     
 }
 

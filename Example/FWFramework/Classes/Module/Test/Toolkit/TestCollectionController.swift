@@ -130,6 +130,15 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.section == 0 { return }
+        
+        let object = collectionData[indexPath.row]
+        collectionView.app.willDisplay(cell, at: indexPath, object: object) { indexPath, object in
+            NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let reusableView = TestCollectionDynamicLayoutHeaderView.app.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
@@ -247,6 +256,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
             "https://m.ixiunv.com/uploadfile/ixiunv-pic/2019/0916/20190916094832595.jpg",
             "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
         ].randomElement() ?? ""
+        object.index = self.collectionData.count
         return object
     }
     
@@ -292,6 +302,7 @@ class TestCollectionDynamicLayoutObject: NSObject {
     var title = ""
     var text = ""
     var imageUrl = ""
+    var index: Int = 0
     
 }
 

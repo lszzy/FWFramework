@@ -2525,7 +2525,8 @@ import AdSupport
 }
 
 // MARK: - UITableView+UIKit
-/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效;
+/// 启用高度估算：设置rowHeight为automaticDimension并撑开布局即可，再设置estimatedRowHeight可提升性能
 @_spi(FW) extension UITableView {
     
     /// 全局清空TableView默认多余边距
@@ -2583,6 +2584,29 @@ import AdSupport
         }
     }
     
+    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func fw_willDisplay<T>(_ cell: UITableViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(object))"
+        let block: (UITableViewCell) -> Void = { [weak self] cell in
+            let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
+            guard self?.visibleCells.contains(cell) ?? false,
+                  self?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure(indexPath, object)
+            cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+        }
+        cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
+        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
+    }
+    
+    @objc private func fw_willDisplay(_ cell: UITableViewCell) {
+        let block = cell.fw_property(forName: "fw_willDisplay") as? (UITableViewCell) -> Void
+        block?(cell)
+    }
+    
 }
 
 // MARK: - UITableViewCell+UIKit
@@ -2637,6 +2661,29 @@ import AdSupport
         CATransaction.setDisableActions(true)
         self.reloadData()
         CATransaction.commit()
+    }
+    
+    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func fw_willDisplay<T>(_ cell: UICollectionViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(object))"
+        let block: (UICollectionViewCell) -> Void = { [weak self] cell in
+            let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
+            guard self?.visibleCells.contains(cell) ?? false,
+                  self?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure(indexPath, object)
+            cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+        }
+        cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
+        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
+    }
+    
+    @objc private func fw_willDisplay(_ cell: UICollectionViewCell) {
+        let block = cell.fw_property(forName: "fw_willDisplay") as? (UICollectionViewCell) -> Void
+        block?(cell)
     }
     
 }
