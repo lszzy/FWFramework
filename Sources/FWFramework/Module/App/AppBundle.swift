@@ -34,7 +34,7 @@ open class AppBundle: ModuleBundle {
     public static var cancelButton: String { localizedString("fw.cancel") }
     /// 多语言，确定，fw.confirm
     public static var confirmButton: String { localizedString("fw.confirm") }
-    /// 多语言，关闭，fw.close
+    /// 多语言，好的，fw.close
     public static var closeButton: String { localizedString("fw.close") }
     /// 多语言，完成，fw.done
     public static var doneButton: String { localizedString("fw.done") }
@@ -201,7 +201,7 @@ open class AppBundle: ModuleBundle {
         
         addStrings("zh-Hans", strings: [
             "fw.done": "完成",
-            "fw.close": "关闭",
+            "fw.close": "好的",
             "fw.confirm": "确定",
             "fw.cancel": "取消",
             "fw.more": "更多",
@@ -220,7 +220,7 @@ open class AppBundle: ModuleBundle {
         
         addStrings("zh-Hant", strings: [
             "fw.done": "完成",
-            "fw.close": "關閉",
+            "fw.close": "好的",
             "fw.confirm": "確定",
             "fw.cancel": "取消",
             "fw.more": "更多",
