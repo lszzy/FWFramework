@@ -60,14 +60,18 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         Self.isExpanded = false
         if isWaterfall {
             app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停"], currentIndex: -1, actionBlock: { index in
-                    self?.pinHeader = !(self?.pinHeader ?? false)
-                    self?.setupSubviews()
+                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
+                    if index == 0 {
+                        self?.pinHeader = !(self?.pinHeader ?? false)
+                        self?.setupSubviews()
+                    } else {
+                        self?.collectionView.reloadData()
+                    }
                 })
             }
         } else {
             app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停"], currentIndex: -1, actionBlock: { index in
+                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
                     if index < 3 {
                         self?.mode = index
                         self?.setupSubviews()
@@ -78,9 +82,11 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
                         let vc = TestCollectionController()
                         vc.isWaterfall = !(self?.isWaterfall ?? false)
                         self?.navigationController?.pushViewController(vc, animated: true)
-                    } else {
+                    } else if index < 7 {
                         self?.pinHeader = !(self?.pinHeader ?? false)
                         self?.setupSubviews()
+                    } else {
+                        self?.collectionView.reloadData()
                     }
                 })
             }
