@@ -398,6 +398,8 @@ public enum HeaderFooterViewType: Int {
 // MARK: - UITableView+DynamicLayout
 /// 表格自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 ///
+/// 通常使用rowHeight为automaticDimension自动撑开布局即可，无需计算高度；
+/// 适用于需要计算高度或automaticDimension不满足需求的场景；
 /// 如果使用系统自动高度，建议设置estimatedRowHeight提高性能
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
 @_spi(FW) extension UITableView {
