@@ -82,32 +82,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - __FWInputTarget
-
-@interface __FWInputTarget : NSObject
-
-@property (nonatomic, weak, nullable, readonly) UIView<UITextInput> *textInput;
-
-@property (nonatomic, assign) NSInteger maxLength;
-
-@property (nonatomic, assign) NSInteger maxUnicodeLength;
-
-@property (nonatomic, copy, nullable) void (^textChangedBlock)(NSString *text);
-
-@property (nonatomic, assign) NSTimeInterval autoCompleteInterval;
-
-@property (nonatomic, assign) NSTimeInterval autoCompleteTimestamp;
-
-@property (nonatomic, copy, nullable) void (^autoCompleteBlock)(NSString *text);
-
-- (instancetype)initWithTextInput:(nullable UIView<UITextInput> *)textInput;
-
-- (void)textLengthChanged;
-
-- (void)textChangedAction;
-
-- (NSString *)filterText:(NSString *)text;
-
-@end
-
 NS_ASSUME_NONNULL_END

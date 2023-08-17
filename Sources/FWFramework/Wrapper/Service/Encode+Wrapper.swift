@@ -104,12 +104,12 @@ extension Wrapper where Base == String {
     }
     
     /// 计算长度，中文为1，英文为0.5，表情为2
-    public var unicodeLength: UInt {
+    public var unicodeLength: Int {
         return base.fw_unicodeLength
     }
     
     /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func unicodeSubstring(_ length: UInt) -> String {
+    public func unicodeSubstring(_ length: Int) -> String {
         return base.fw_unicodeSubstring(length)
     }
     
