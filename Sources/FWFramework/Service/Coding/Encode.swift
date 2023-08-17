@@ -174,17 +174,17 @@ extension WrapperGlobal {
     }
     
     /// 计算长度，中文为1，英文为0.5，表情为2
-    public var fw_unicodeLength: UInt {
-        var length: UInt = 0
+    public var fw_unicodeLength: Int {
+        var length: Int = 0
         let str = self as NSString
         for i in 0 ..< str.length {
             length += str.character(at: i) > 0xff ? 2 : 1
         }
-        return UInt(ceil(Double(length) / 2.0))
+        return Int(ceil(Double(length) / 2.0))
     }
     
     /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func fw_unicodeSubstring(_ length: UInt) -> String {
+    public func fw_unicodeSubstring(_ length: Int) -> String {
         let length = length * 2
         let str = self as NSString
         

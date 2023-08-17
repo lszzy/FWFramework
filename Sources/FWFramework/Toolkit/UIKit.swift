@@ -2201,6 +2201,99 @@ import AdSupport
 // MARK: - UITextField+UIKit
 @_spi(FW) extension UITextField {
     
+    fileprivate class InputTarget {
+        weak var textInput: (UIView & UITextInput)?
+        var maxLength: Int = 0
+        var maxUnicodeLength: Int = 0
+        var textChangedBlock: ((String) -> Void)?
+        var autoCompleteInterval: TimeInterval = 0.5
+        var autoCompleteTimestamp: TimeInterval = 0
+        var autoCompleteBlock: ((String) -> Void)?
+        
+        private var shouldCheckLength: Bool {
+            if let markedTextRange = textInput?.markedTextRange,
+               textInput?.position(from: markedTextRange.start, offset: 0) != nil {
+                return false
+            }
+            return true
+        }
+        private var textValue: String? {
+            get {
+                if let textField = textInput as? UITextField {
+                    return textField.text
+                } else if let textView = textInput as? UITextView {
+                    return textView.text
+                }
+                return nil
+            }
+            set {
+                if let textField = textInput as? UITextField {
+                    textField.text = newValue
+                } else if let textView = textInput as? UITextView {
+                    textView.text = newValue
+                }
+            }
+        }
+
+        init(textInput: (UIView & UITextInput)?) {
+            self.textInput = textInput
+        }
+
+        func textLengthChanged() {
+            if maxLength > 0, shouldCheckLength {
+                if (textValue?.count ?? 0) > maxLength {
+                    textValue = textValue?.fw_substring(to: maxLength)
+                }
+            }
+
+            if maxUnicodeLength > 0, shouldCheckLength {
+                if (textValue?.fw_unicodeLength ?? 0) > maxUnicodeLength {
+                    textValue = textValue?.fw_unicodeSubstring(maxUnicodeLength)
+                }
+            }
+        }
+        
+        func filterText(_ text: String) -> String {
+            var filterText = text
+            if maxLength > 0, shouldCheckLength {
+                if filterText.count > maxLength {
+                    filterText = filterText.fw_substring(to: maxLength)
+                }
+            }
+
+            if maxUnicodeLength > 0, shouldCheckLength {
+                if filterText.fw_unicodeLength > maxUnicodeLength {
+                    filterText = filterText.fw_unicodeSubstring(maxUnicodeLength)
+                }
+            }
+            return filterText
+        }
+
+        @objc func textChangedAction() {
+            textLengthChanged()
+            
+            if textChangedBlock != nil {
+                let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                textChangedBlock?(inputText)
+            }
+
+            if autoCompleteBlock != nil {
+                autoCompleteTimestamp = Date().timeIntervalSince1970
+                let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                if inputText.isEmpty {
+                    autoCompleteBlock?("")
+                } else {
+                    let currentTimestamp = autoCompleteTimestamp
+                    DispatchQueue.main.asyncAfter(deadline: .now() + autoCompleteInterval) { [weak self] in
+                        if currentTimestamp == self?.autoCompleteTimestamp {
+                            self?.autoCompleteBlock?(inputText)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     /// 最大字数限制，0为无限制，二选一
     public var fw_maxLength: Int {
         get { return fw_inputTarget(false)?.maxLength ?? 0 }
@@ -2235,7 +2328,7 @@ import AdSupport
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
         get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_inputTarget(true)?.autoCompleteInterval = newValue }
+        set { fw_inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
@@ -2244,12 +2337,12 @@ import AdSupport
         set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_inputTarget(_ lazyload: Bool) -> __FWInputTarget? {
-        if let target = fw_property(forName: "fw_inputTarget") as? __FWInputTarget {
+    private func fw_inputTarget(_ lazyload: Bool) -> InputTarget? {
+        if let target = fw_property(forName: "fw_inputTarget") as? InputTarget {
             return target
         } else if lazyload {
-            let target = __FWInputTarget(textInput: self)
-            self.addTarget(target, action: #selector(__FWInputTarget.textChangedAction), for: .editingChanged)
+            let target = InputTarget(textInput: self)
+            self.addTarget(target, action: #selector(InputTarget.textChangedAction), for: .editingChanged)
             fw_setProperty(target, forName: "fw_inputTarget")
             return target
         }
@@ -2385,7 +2478,7 @@ import AdSupport
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var fw_autoCompleteInterval: TimeInterval {
         get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_inputTarget(true)?.autoCompleteInterval = newValue }
+        set { fw_inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
@@ -2394,12 +2487,12 @@ import AdSupport
         set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
     }
     
-    private func fw_inputTarget(_ lazyload: Bool) -> __FWInputTarget? {
-        if let target = fw_property(forName: "fw_inputTarget") as? __FWInputTarget {
+    private func fw_inputTarget(_ lazyload: Bool) -> UITextField.InputTarget? {
+        if let target = fw_property(forName: "fw_inputTarget") as? UITextField.InputTarget {
             return target
         } else if lazyload {
-            let target = __FWInputTarget(textInput: self)
-            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(__FWInputTarget.textChangedAction))
+            let target = UITextField.InputTarget(textInput: self)
+            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
             fw_setProperty(target, forName: "fw_inputTarget")
             return target
         }
