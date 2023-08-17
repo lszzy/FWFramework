@@ -217,10 +217,24 @@ private extension TestRequestController {
         let request = TestModelRequest()
         request.start { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "json请求成功: \n\(request.responseName)")
+            
+            var message = "json请求成功: \n\(request.responseName)"
+            let serverTime = request.responseServerTime
+            if serverTime > 0 {
+                Date.app.currentTime = serverTime
+                message += "\n当前服务器时间：\(serverTime)"
+            }
+            self.app.showMessage(text: message)
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "json请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
+            
+            var message = "json请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")"
+            let serverTime = request.responseServerTime
+            if serverTime > 0 {
+                Date.app.currentTime = serverTime
+                message += "\n当前服务器时间：\(serverTime)"
+            }
+            self.app.showMessage(text: message)
         }
     }
     

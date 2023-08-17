@@ -150,6 +150,11 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
     return self.response.statusCode;
 }
 
+- (NSTimeInterval)responseServerTime {
+    NSString *serverDate = self.response.allHeaderFields[@"Date"];
+    return [NSDate __fw_formatServerDate:serverDate ?: @""];
+}
+
 - (NSDictionary *)responseHeaders {
     return self.response.allHeaderFields;
 }

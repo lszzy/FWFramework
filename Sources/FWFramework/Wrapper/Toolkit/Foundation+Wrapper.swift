@@ -114,6 +114,11 @@ extension Wrapper where Base == Date {
         return Base.fw_formatTimestamp(timestamp)
     }
     
+    /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
+    public static func formatServerDate(_ dateString: String) -> TimeInterval {
+        return Base.fw_formatServerDate(dateString)
+    }
+    
     /// 是否是闰年
     public var isLeapYear: Bool {
         return base.fw_isLeapYear
