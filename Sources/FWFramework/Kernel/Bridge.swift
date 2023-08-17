@@ -56,6 +56,14 @@ import UIKit
     
 }
 
+@_spi(FW) @objc extension NSDate {
+    
+    public static func __fw_formatServerDate(_ dateString: String) -> TimeInterval {
+        return Date.fw_formatServerDate(dateString)
+    }
+    
+}
+
 @_spi(FW) @objc extension Timer {
     
     public static func __fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {

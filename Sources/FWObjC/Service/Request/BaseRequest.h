@@ -176,6 +176,9 @@ NS_SWIFT_NAME(BaseRequest)
 ///  The response status code.
 @property (nonatomic, readonly) NSInteger responseStatusCode;
 
+///  The response server time, default 0.
+@property (nonatomic, readonly) NSTimeInterval responseServerTime;
+
 ///  The response header fields.
 @property (nonatomic, strong, readonly, nullable) NSDictionary *responseHeaders;
 
