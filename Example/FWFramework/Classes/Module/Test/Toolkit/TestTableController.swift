@@ -101,7 +101,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let object = tableData[indexPath.row]
-        tableView.app.willDisplay(cell, at: indexPath, object: object) { indexPath, object in
+        tableView.app.willDisplay(cell, at: indexPath, key: object.hash) {
             NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
         }
     }

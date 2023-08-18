@@ -134,7 +134,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         if indexPath.section == 0 { return }
         
         let object = collectionData[indexPath.row]
-        collectionView.app.willDisplay(cell, at: indexPath, object: object) { indexPath, object in
+        collectionView.app.willDisplay(cell, at: indexPath, key: object.hash) {
             NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
         }
     }

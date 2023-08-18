@@ -2678,15 +2678,15 @@ import AdSupport
     }
     
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func fw_willDisplay<T>(_ cell: UITableViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(object))"
+    public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
         let block: (UITableViewCell) -> Void = { [weak self] cell in
             let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,
                   self?.indexPath(for: cell) != nil,
                   identifier != previousIdentifier else { return }
             
-            exposure(indexPath, object)
+            exposure()
             cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
         }
         cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
@@ -2757,15 +2757,15 @@ import AdSupport
     }
     
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func fw_willDisplay<T>(_ cell: UICollectionViewCell, at indexPath: IndexPath, object: T, exposure: @escaping (IndexPath, T) -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(object))"
+    public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
         let block: (UICollectionViewCell) -> Void = { [weak self] cell in
             let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,
                   self?.indexPath(for: cell) != nil,
                   identifier != previousIdentifier else { return }
             
-            exposure(indexPath, object)
+            exposure()
             cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
         }
         cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
