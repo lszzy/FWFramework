@@ -11,6 +11,9 @@ import FWFramework
 @UIApplicationMain
 class AppDelegate: AppResponder {
     
+    var backgroundTask: ((@escaping () -> Void) -> Void)?
+    var expirationHandler: (() -> Void)?
+    
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.backgroundColor
@@ -45,6 +48,12 @@ class AppDelegate: AppResponder {
             return true
         }
         return false
+    }
+    
+    override func applicationDidEnterBackground(_ application: UIApplication) {
+        if let backgroundTask = backgroundTask {
+            application.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
+        }
     }
 
 }
