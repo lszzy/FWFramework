@@ -23,6 +23,7 @@ class TestController: UIViewController {
             ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
             ["Database", "TestDatabaseController"],
+            ["Encode", "TestEncodeController"],
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
