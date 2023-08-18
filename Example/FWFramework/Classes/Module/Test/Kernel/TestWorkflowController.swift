@@ -63,6 +63,20 @@ class TestWorkflowController: UIViewController {
         return button
     }()
     
+    private lazy var taskButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Background task", for: .normal)
+        button.addTarget(self, action: #selector(onBackground), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var requestButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Background request", for: .normal)
+        button.addTarget(self, action: #selector(onRequest), for: .touchUpInside)
+        return button
+    }()
+    
 }
 
 // MARK: - Setup
@@ -101,6 +115,8 @@ extension TestWorkflowController: ViewControllerProtocol {
         view.addSubview(kvoButton)
         view.addSubview(exceptionButton)
         view.addSubview(errorButton)
+        view.addSubview(taskButton)
+        view.addSubview(requestButton)
     }
     
     func setupLayout() {
@@ -123,6 +139,14 @@ extension TestWorkflowController: ViewControllerProtocol {
         errorButton.app.layoutChain
             .centerX()
             .top(toViewBottom: exceptionButton, offset: 20)
+        
+        taskButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: errorButton, offset: 20)
+        
+        requestButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: taskButton, offset: 20)
     }
     
 }
@@ -169,6 +193,72 @@ extension TestWorkflowController: ViewControllerProtocol {
     
     func onError() {
         ExceptionManager.captureError(PromiseError.failed, remark: "Test error")
+    }
+    
+    func onBackground() {
+        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
+        if !string.isEmpty {
+            app.showAlert(title: "上次后台结果", message: string)
+        } else {
+            app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
+        }
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.backgroundTask = { completionHandler in
+            CacheFile.shared.setObject("后台任务开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            
+            DispatchQueue.global().async {
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行1秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行2秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行3秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行4秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行5秒，已完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                completionHandler()
+            }
+        }
+        appDelegate.expirationHandler = {
+            CacheFile.shared.setObject("后台任务已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        }
+    }
+    
+    func onRequest() {
+        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
+        if !string.isEmpty {
+            app.showAlert(title: "上次后台结果", message: string)
+        } else {
+            app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
+        }
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.backgroundTask = { completionHandler in
+            CacheFile.shared.setObject("后台请求开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            
+            let request = TestModelRequest()
+            request.start { _ in
+                let string = "后台请求成功：\(request.responseName)\n时间：\(request.responseServerTime)"
+                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                
+                completionHandler()
+            } failure: { _ in
+                let string = "后台请求失败：\(request.error?.localizedDescription ?? "")\n时间：\(request.responseServerTime)"
+                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                
+                completionHandler()
+            }
+        }
+        appDelegate.expirationHandler = {
+            CacheFile.shared.setObject("后台请求已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        }
     }
     
 }
