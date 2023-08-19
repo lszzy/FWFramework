@@ -12,6 +12,8 @@ public struct CacheType: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
     
+    /// 默认缓存，同文件
+    public static let `default`: CacheType = .init(0)
     /// 内存缓存
     public static let memory: CacheType = .init(1)
     /// UserDefaults缓存
@@ -38,9 +40,18 @@ public struct CacheType: RawRepresentable, Equatable, Hashable {
 /// 缓存管理器
 public class CacheManager: NSObject {
     
+    /// 自定义缓存创建句柄，默认nil
+    public static var factoryBlock: ((CacheType) -> CacheProtocol?)?
+    
     /// 获取指定类型的缓存单例对象
-    open class func manager(type: CacheType) -> CacheProtocol? {
+    public static func manager(type: CacheType) -> CacheProtocol? {
+        if let cache = factoryBlock?(type) {
+            return cache
+        }
+        
         switch type {
+        case .default:
+            return CacheFile.shared
         case .memory:
             return CacheMemory.shared
         case .userDefaults:
