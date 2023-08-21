@@ -31,7 +31,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
 @property (nonatomic, strong) CALayer *selectionIndicatorShapeLayer;
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray<NSNumber *> *segmentWidthsArray;
-@property (nonatomic, strong) __FWSegmentedScrollView *scrollView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *accessibilityElements;
 @property (nonatomic, strong) NSMutableArray *titleBackgroundLayers;
 @property (nonatomic, strong) NSMutableArray *segmentBackgroundLayers;
@@ -424,7 +424,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
                     element.accessibilityTraits = UIAccessibilityTraitButton;
             }
         
-            [self addBackgroundAndBorderLayerWithRect:fullRect];
+            [self addBackgroundAndBorderLayerWithRect:fullRect index:idx];
         }];
     } else if (self.type == __FWSegmentedControlTypeImages) {
         [self removeTitleBackgroundLayers];
@@ -485,7 +485,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
                     element.accessibilityTraits = UIAccessibilityTraitButton;
             }
             
-            [self addBackgroundAndBorderLayerWithRect:rect];
+            [self addBackgroundAndBorderLayerWithRect:rect index:idx];
         }];
     } else if (self.type == __FWSegmentedControlTypeTextImages){
         [self removeTitleBackgroundLayers];
@@ -616,7 +616,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
                     element.accessibilityTraits = UIAccessibilityTraitButton;
             }
             
-            [self addBackgroundAndBorderLayerWithRect:imageRect];
+            [self addBackgroundAndBorderLayerWithRect:imageRect index:idx];
         }];
     }
     
@@ -652,7 +652,7 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
     [self.titleBackgroundLayers removeAllObjects];
 }
 
-- (void)addBackgroundAndBorderLayerWithRect:(CGRect)fullRect {
+- (void)addBackgroundAndBorderLayerWithRect:(CGRect)fullRect index:(NSUInteger)index {
     // Segment Background layer
     if (self.segmentBackgroundColor) {
         CALayer *backgroundLayer = [CALayer layer];
@@ -695,6 +695,10 @@ NSUInteger __FWSegmentedControlNoSegment = (NSUInteger)-1;
         borderLayer.frame = CGRectMake(fullRect.size.width - self.borderWidth, 0, self.borderWidth, fullRect.size.height);
         borderLayer.backgroundColor = self.borderColor.CGColor;
         [backgroundLayer addSublayer: borderLayer];
+    }
+    
+    if (self.segmentCustomBlock) {
+        self.segmentCustomBlock(self, index, fullRect);
     }
 }
 

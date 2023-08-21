@@ -61,6 +61,25 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             NSAttributedString.Key.font: UIFont.app.font(ofSize: 14, weight: .bold),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
+        result.segmentCustomBlock = { segmentedControl, index, rect in
+            let dotIndex = 1
+            let layerName = "dotLayer-\(dotIndex)"
+            let dotLayer = segmentedControl.scrollView.layer.sublayers?.first(where: { layer in
+                return layer.name == layerName
+            })
+            
+            if segmentedControl.selectedSegmentIndex == dotIndex {
+                dotLayer?.removeFromSuperlayer()
+            } else if dotLayer == nil, index == dotIndex {
+                let layer = CAShapeLayer()
+                layer.name = layerName
+                let path = UIBezierPath()
+                path.addArc(withCenter: CGPoint(x: rect.maxX - 8, y: rect.minY + 8 + 4), radius: 4, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false)
+                layer.fillColor = UIColor.red.cgColor
+                layer.path = path.cgPath
+                segmentedControl.scrollView.layer.addSublayer(layer)
+            }
+        }
         return result
     }()
     
