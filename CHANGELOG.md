@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.16.0] - 2023-08-22
+
+### Added
+* Added Swift version CachedValue annotation
+* Added Swift version table and collection Cell simple exposure scheme
+* Added Swift version parsing server response time method
+* Added shortcut method to start background task
+* Refactor and synchronize QR code scanning component ScanView
+* Added maskViewColor property to PopupMenu
+* SegmentedControl adds a custom layer handle
+* Added a tool method for judging network request error types
+* The custom Sheet component supports hiding the cancel button
+
 ## [4.15.0] - 2023-07-28
 
 ### Added
