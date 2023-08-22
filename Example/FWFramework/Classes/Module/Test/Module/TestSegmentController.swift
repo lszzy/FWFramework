@@ -61,6 +61,16 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             NSAttributedString.Key.font: UIFont.fw.font(ofSize: 14, weight: .bold),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
+        result.segmentCustomBlock = { segmentedControl, index, rect in
+            if index == 1, segmentedControl.selectedSegmentIndex != 1 {
+                let layer = CAShapeLayer()
+                let path = UIBezierPath()
+                path.addArc(withCenter: CGPoint(x: rect.maxX - 8, y: rect.minY + 8 + 4), radius: 4, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false)
+                layer.fillColor = UIColor.red.cgColor
+                layer.path = path.cgPath
+                segmentedControl.scrollView.layer.addSublayer(layer)
+            }
+        }
         return result
     }()
     
