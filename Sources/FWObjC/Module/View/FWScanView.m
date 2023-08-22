@@ -146,48 +146,26 @@
 
 - (void)setDelegate:(id<FWScanCodeDelegate>)delegate {
     _delegate = delegate;
-    if (_metadataOutput) return;
     
-    /// 将元数据输出对象添加到会话对象中
-    if ([_session canAddOutput:self.metadataOutput]) {
-        [_session addOutput:self.metadataOutput];
-    }
-    
-    /// 元数据输出对象的二维码识数据别类型
-    _metadataOutput.metadataObjectTypes = self.metadataObjectTypes;
+    [self setupMetadataOutput];
 }
 
 - (void)setSampleBufferDelegate:(id<FWScanCodeSampleBufferDelegate>)sampleBufferDelegate {
     _sampleBufferDelegate = sampleBufferDelegate;
-    if (_videoDataOutput) return;
     
-    /// 添加捕获输出流到会话对象；构成识了别光线强弱
-    if ([_session canAddOutput:self.videoDataOutput]) {
-        [_session addOutput:self.videoDataOutput];
-    }
+    [self setupVideoDataOutput];
 }
 
 - (void)setScanResultBlock:(void (^)(NSString * _Nullable))scanResultBlock {
     _scanResultBlock = scanResultBlock;
-    if (_metadataOutput) return;
     
-    /// 将元数据输出对象添加到会话对象中
-    if ([_session canAddOutput:self.metadataOutput]) {
-        [_session addOutput:self.metadataOutput];
-    }
-    
-    /// 元数据输出对象的二维码识数据别类型
-    _metadataOutput.metadataObjectTypes = self.metadataObjectTypes;
+    [self setupMetadataOutput];
 }
 
 - (void)setScanBrightnessBlock:(void (^)(CGFloat))scanBrightnessBlock {
     _scanBrightnessBlock = scanBrightnessBlock;
-    if (_videoDataOutput) return;
-    
-    /// 添加捕获输出流到会话对象；构成识了别光线强弱
-    if ([_session canAddOutput:self.videoDataOutput]) {
-        [_session addOutput:self.videoDataOutput];
-    }
+
+    [self setupVideoDataOutput];
 }
 
 - (void)setRectOfInterest:(CGRect)rectOfInterest {
@@ -210,18 +188,55 @@
     }
 }
 
-#pragma mark - Public
+#pragma mark - Private
 
-- (void)startRunning {
-    if (![self.session isRunning]) {
-        [self.session startRunning];
+- (void)setupMetadataOutput {
+    if (_metadataOutput) return;
+    
+    /// 将元数据输出对象添加到会话对象中
+    if ([_session canAddOutput:self.metadataOutput]) {
+        [_session addOutput:self.metadataOutput];
+    }
+    
+    /// 元数据输出对象的二维码识数据别类型
+    NSMutableArray *objectTypes = [NSMutableArray array];
+    for (AVMetadataObjectType objectType in self.metadataObjectTypes) {
+        if ([_metadataOutput.availableMetadataObjectTypes containsObject:objectType]) {
+            [objectTypes addObject:objectType];
+        }
+    }
+    _metadataOutput.metadataObjectTypes = [objectTypes copy];
+}
+
+- (void)setupVideoDataOutput {
+    if (_videoDataOutput) return;
+    
+    /// 添加捕获输出流到会话对象；构成识了别光线强弱
+    if ([_session canAddOutput:self.videoDataOutput]) {
+        [_session addOutput:self.videoDataOutput];
     }
 }
 
+#pragma mark - Public
+
+- (void)startRunning {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        #if TARGET_OS_SIMULATOR
+        #else
+        if (![self.session isRunning]) {
+            [self.session startRunning];
+        }
+        #endif
+    });
+}
+
 - (void)stopRunning {
+    #if TARGET_OS_SIMULATOR
+    #else
     if ([self.session isRunning]) {
         [self.session stopRunning];
     }
+    #endif
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
@@ -262,6 +277,14 @@
 }
 
 #pragma mark - Util
+
++ (BOOL)isTorchActive {
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if ([device hasTorch]) {
+        return device.isTorchActive;
+    }
+    return NO;
+}
 
 + (void)turnOnTorch {
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -394,10 +417,6 @@
     return self;
 }
 
-+ (instancetype)configure {
-    return [[self alloc] init];
-}
-
 - (CGFloat)scanlineStep {
     if (!_scanlineStep) {
         return 3.5;
@@ -485,10 +504,6 @@
         [self didInitialization];
     }
     return self;
-}
-
-+ (instancetype)scanViewWithFrame:(CGRect)frame configure:(FWScanViewConfigure *)configure {
-    return [[FWScanView alloc] initWithFrame:frame configure:configure];
 }
 
 - (void)didInitialization {

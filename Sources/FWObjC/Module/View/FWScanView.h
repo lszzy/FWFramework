@@ -72,6 +72,9 @@ NS_SWIFT_NAME(ScanCode)
 
 #pragma mark - Util
 
+/// 手电筒是否已激活
++ (BOOL)isTorchActive;
+
 /// 打开手电筒
 + (void)turnOnTorch;
 
