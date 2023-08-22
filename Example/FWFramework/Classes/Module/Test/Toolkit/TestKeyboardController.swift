@@ -158,7 +158,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             } else {
                 self.popupMenu?.dismiss()
                 self.popupMenu = PopupMenu.showRely(on: self.mobileField, titles: [text], icons: nil, menuWidth: self.mobileField.app.width, otherSettings: { popupMenu in
-                    popupMenu.showMaskView = false
+                    popupMenu.showsMaskView = false
                 })
             }
         }
@@ -170,7 +170,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             } else {
                 self.popupMenu?.dismiss()
                 self.popupMenu = PopupMenu.showRely(on: self.descView, titles: [text], icons: nil, menuWidth: self.descView.app.width, otherSettings: { popupMenu in
-                    popupMenu.showMaskView = false
+                    popupMenu.showsMaskView = false
                 })
             }
         }

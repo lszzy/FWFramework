@@ -205,12 +205,17 @@ NS_SWIFT_NAME(PopupMenu)
 /**
  是否显示阴影 Default is YES
  */
-@property (nonatomic, assign , getter=isShadowShowing) BOOL isShowShadow;
+@property (nonatomic, assign) BOOL showsShadow;
 
 /**
  是否显示灰色覆盖层 Default is YES
  */
-@property (nonatomic, assign) BOOL showMaskView;
+@property (nonatomic, assign) BOOL showsMaskView;
+
+/**
+ 自定义灰色覆盖层颜色，默认黑色、透明度0.1
+ */
+@property (nonatomic, strong, nullable) UIColor *maskViewColor;
 
 /**
  选择菜单项后消失 Default is YES
