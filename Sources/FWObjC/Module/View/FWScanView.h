@@ -145,8 +145,8 @@ typedef NS_ENUM(NSUInteger, FWScanCornerLoaction) {
     FWScanCornerLoactionOutside
 } NS_SWIFT_NAME(ScanCornerLoaction);
 
-NS_SWIFT_NAME(ScanViewConfigure)
-@interface FWScanViewConfigure : NSObject
+NS_SWIFT_NAME(ScanViewConfiguration)
+@interface FWScanViewConfiguration : NSObject
 
 /// 扫描线，默认为：nil
 @property (nonatomic, copy, nullable) NSString *scanline;
@@ -195,11 +195,11 @@ NS_SWIFT_NAME(ScanView)
 /// 对象方法创建 FWScanView
 ///
 /// @param frame           FWScanView 的 frame
-/// @param configure       FWScanView 的配置类 FWScanViewConfigure
-- (instancetype)initWithFrame:(CGRect)frame configure:(FWScanViewConfigure *)configure;
+/// @param configuration       FWScanView 的配置类 FWScanViewConfiguration
+- (instancetype)initWithFrame:(CGRect)frame configuration:(FWScanViewConfiguration *)configuration;
 
 /// 当前配置
-@property (nonatomic, strong, readonly) FWScanViewConfigure *configure;
+@property (nonatomic, strong, readonly) FWScanViewConfiguration *configuration;
 
 /// 辅助扫描边框区域的frame
 ///

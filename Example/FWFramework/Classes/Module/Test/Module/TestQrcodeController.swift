@@ -16,10 +16,10 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }()
     
     private lazy var scanView: ScanView = {
-        let configure = ScanViewConfigure()
-        configure.scanlineImage = ModuleBundle.imageNamed("qrcodeLine")
+        let configuration = ScanViewConfiguration()
+        configuration.scanlineImage = ModuleBundle.imageNamed("qrcodeLine")
         
-        let result = ScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight), configure: configure)
+        let result = ScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight), configuration: configuration)
         result.scanFrame = CGRect(x: 0, y: 0.18 * self.view.frame.size.height, width: self.view.frame.size.width - 2 * (0), height: self.view.frame.size.height - 2.55 * (0.18 * self.view.frame.size.height))
         result.doubleTapBlock = { [weak self] selected in
             self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
