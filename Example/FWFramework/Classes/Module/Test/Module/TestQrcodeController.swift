@@ -10,8 +10,6 @@ import FWFramework
 
 class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
-    private var flashlightSelected = false
-    
     private lazy var scanCode: ScanCode = {
         let result = ScanCode()
         return result
@@ -22,6 +20,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         configure.scanlineImage = ModuleBundle.imageNamed("qrcodeLine")
         
         let result = ScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight), configure: configure)
+        result.scanFrame = CGRect(x: 0, y: 0.18 * self.view.frame.size.height, width: self.view.frame.size.width - 2 * (0), height: self.view.frame.size.height - 2.55 * (0.18 * self.view.frame.size.height))
         result.doubleTapBlock = { [weak self] selected in
             self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
         }
@@ -33,7 +32,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         let btnW: CGFloat = 30
         let btnH: CGFloat = 30
         let btnX: CGFloat = 0.5 * (view.frame.width - btnW)
-        let btnY: CGFloat = 0.5 * FW.screenHeight + 0.35 * view.frame.width - btnH - 25
+        let btnY: CGFloat = scanView.scanFrame.maxY + 30
         result.frame = CGRect(x: btnX, y: btnY, width: btnW, height: btnH)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightOpen"), for: .normal)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightClose"), for: .selected)
@@ -41,18 +40,13 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         return result
     }()
     
-    private lazy var promptLabel: UILabel = {
-        let labelY = 0.5 * FW.screenHeight + 0.35 * view.frame.width + 12
-        let result = UILabel(frame: CGRect(x: 0, y: labelY, width: FW.screenWidth, height: 20))
-        result.font = UIFont.systemFont(ofSize: 13)
-        result.textColor = AppTheme.textColor
-        result.textAlignment = .center
-        result.text = "将二维码/条码放入框内, 即可自动扫描"
-        return result
-    }()
-    
     func setupNavbar() {
-        fw.navigationBarStyle = .transparent
+        let appearance = NavigationBarAppearance()
+        appearance.foregroundColor = .white
+        appearance.backgroundTransparent = true
+        appearance.leftBackImage = Icon.backImage
+        fw.navigationBarAppearance = appearance
+        
         fw.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "相册", style: .done, target: self, action: #selector(TestQrcodeController.onPhotoLibrary))
@@ -61,7 +55,6 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.backgroundColor = .black
         view.addSubview(scanView)
-        view.addSubview(promptLabel)
         
         setupScanManager()
     }
@@ -81,8 +74,6 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupScanManager() {
-        guard ScanCode.isCameraRearAvailable() else { return }
-        
         scanCode.scanResultBlock = { [weak self] result in
             if result != nil,
                let sound = ModuleBundle.resourcePath("Qrcode.caf") {
@@ -97,7 +88,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
             if brightness < -1 {
                 self.view.addSubview(self.flashlightBtn)
             } else {
-                if !self.flashlightSelected {
+                if !ScanCode.isTorchActive() {
                     self.removeFlashlightBtn()
                 }
             }
@@ -120,7 +111,6 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         if !button.isSelected {
             ScanCode.turnOnTorch()
             
-            flashlightSelected = true
             button.isSelected = true
         } else {
             removeFlashlightBtn()
@@ -130,7 +120,6 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     @objc func removeFlashlightBtn() {
         ScanCode.turnOffTorch()
         
-        flashlightSelected = false
         flashlightBtn.isSelected = false
         flashlightBtn.removeFromSuperview()
     }
