@@ -418,7 +418,7 @@
 
 #pragma mark - FWScanView
 
-@implementation FWScanViewConfigure
+@implementation FWScanViewConfiguration
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -487,7 +487,7 @@
 
 @interface FWScanView ()
 
-@property (nonatomic, strong) FWScanViewConfigure *configure;
+@property (nonatomic, strong) FWScanViewConfiguration *configuration;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIImageView *scanlineImgView;
 @property (nonatomic, strong) CADisplayLink *link;
@@ -500,16 +500,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.configure = [[FWScanViewConfigure alloc] init];
+        self.configuration = [[FWScanViewConfiguration alloc] init];
         
         [self didInitialization];
     }
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame configure:(FWScanViewConfigure *)configure {
+- (instancetype)initWithFrame:(CGRect)frame configuration:(FWScanViewConfiguration *)configuration {
     if (self = [super initWithFrame:frame]) {
-        self.configure = configure;
+        self.configuration = configuration;
         
         [self didInitialization];
     }
@@ -551,10 +551,10 @@
         _scanlineImgView = [[UIImageView alloc] init];
         
         UIImage *image = nil;
-        if (self.configure.scanlineImage) {
-            image = self.configure.scanlineImage;
-        } else if (self.configure.scanline) {
-            image = [UIImage imageNamed:self.configure.scanline];
+        if (self.configuration.scanlineImage) {
+            image = self.configuration.scanlineImage;
+        } else if (self.configuration.scanline) {
+            image = [UIImage imageNamed:self.configuration.scanline];
         }
         _scanlineImgView.image = image;
         
@@ -576,7 +576,7 @@
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
-    if (self.configure.isShowBorder == NO) {
+    if (self.configuration.isShowBorder == NO) {
         return;
     }
     
@@ -585,10 +585,10 @@
     CGFloat borderH = self.borderFrame.size.height;
     CGFloat borderX = self.borderFrame.origin.x;
     CGFloat borderY = self.borderFrame.origin.y;
-    CGFloat borderLineW = self.configure.borderWidth;
+    CGFloat borderLineW = self.configuration.borderWidth;
 
     /// 空白区域设置
-    [self.configure.color setFill];
+    [self.configuration.color setFill];
     UIRectFill(rect);
     // 获取上下文，并设置混合模式 -> kCGBlendModeDestinationOut
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -603,12 +603,12 @@
     UIBezierPath *borderPath = [UIBezierPath bezierPathWithRect:CGRectMake(borderX, borderY, borderW, borderH)];
     borderPath.lineCapStyle = kCGLineCapButt;
     borderPath.lineWidth = borderLineW;
-    [self.configure.borderColor set];
+    [self.configuration.borderColor set];
     [borderPath stroke];
     
-    CGFloat cornerLength = self.configure.cornerLength;
-    CGFloat insideExcess = fabs(0.5 * (self.configure.cornerWidth - borderLineW));
-    CGFloat outsideExcess = 0.5 * (borderLineW + self.configure.cornerWidth);
+    CGFloat cornerLength = self.configuration.cornerLength;
+    CGFloat insideExcess = fabs(0.5 * (self.configuration.cornerWidth - borderLineW));
+    CGFloat outsideExcess = 0.5 * (borderLineW + self.configuration.cornerWidth);
     
     /// 左上角小图标
     [self leftTop:borderX borderY:borderY cornerLength:cornerLength insideExcess:insideExcess outsideExcess:outsideExcess];
@@ -625,14 +625,14 @@
 
 - (void)leftTop:(CGFloat)borderX borderY:(CGFloat)borderY cornerLength:(CGFloat)cornerLength insideExcess:(CGFloat) insideExcess outsideExcess:(CGFloat)outsideExcess {
     UIBezierPath *leftTopPath = [UIBezierPath bezierPath];
-    leftTopPath.lineWidth = self.configure.cornerWidth;
-    [self.configure.cornerColor set];
+    leftTopPath.lineWidth = self.configuration.cornerWidth;
+    [self.configuration.cornerColor set];
 
-    if (self.configure.cornerLocation == FWScanCornerLoactionInside) {
+    if (self.configuration.cornerLocation == FWScanCornerLoactionInside) {
         [leftTopPath moveToPoint:CGPointMake(borderX + insideExcess, borderY + cornerLength + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + insideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + insideExcess)];
-    } else if (self.configure.cornerLocation == FWScanCornerLoactionOutside) {
+    } else if (self.configuration.cornerLocation == FWScanCornerLoactionOutside) {
         [leftTopPath moveToPoint:CGPointMake(borderX - outsideExcess, borderY + cornerLength - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY - outsideExcess)];
         [leftTopPath addLineToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY - outsideExcess)];
@@ -647,14 +647,14 @@
 
 - (void)rightTop:(CGFloat)borderX borderY:(CGFloat)borderY borderW:(CGFloat)borderW cornerLength:(CGFloat)cornerLength insideExcess:(CGFloat) insideExcess outsideExcess:(CGFloat)outsideExcess {
     UIBezierPath *rightTopPath = [UIBezierPath bezierPath];
-    rightTopPath.lineWidth = self.configure.cornerWidth;
-    [self.configure.cornerColor set];
+    rightTopPath.lineWidth = self.configuration.cornerWidth;
+    [self.configuration.cornerColor set];
     
-    if (self.configure.cornerLocation == FWScanCornerLoactionInside) {
+    if (self.configuration.cornerLocation == FWScanCornerLoactionInside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + insideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + cornerLength + insideExcess)];
-    } else if (self.configure.cornerLocation == FWScanCornerLoactionOutside) {
+    } else if (self.configuration.cornerLocation == FWScanCornerLoactionOutside) {
         [rightTopPath moveToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY - outsideExcess)];
         [rightTopPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + cornerLength - outsideExcess)];
@@ -669,14 +669,14 @@
 
 - (void)leftBottom:(CGFloat)borderX borderY:(CGFloat)borderY borderH:(CGFloat)borderH cornerLength:(CGFloat)cornerLength insideExcess:(CGFloat) insideExcess outsideExcess:(CGFloat)outsideExcess {
     UIBezierPath *leftBottomPath = [UIBezierPath bezierPath];
-    leftBottomPath.lineWidth = self.configure.cornerWidth;
-    [self.configure.cornerColor set];
+    leftBottomPath.lineWidth = self.configuration.cornerWidth;
+    [self.configuration.cornerColor set];
     
-    if (self.configure.cornerLocation == FWScanCornerLoactionInside) {
+    if (self.configuration.cornerLocation == FWScanCornerLoactionInside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - insideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX + insideExcess, borderY + borderH - cornerLength - insideExcess)];
-    } else if (self.configure.cornerLocation == FWScanCornerLoactionOutside) {
+    } else if (self.configuration.cornerLocation == FWScanCornerLoactionOutside) {
         [leftBottomPath moveToPoint:CGPointMake(borderX + cornerLength - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH + outsideExcess)];
         [leftBottomPath addLineToPoint:CGPointMake(borderX - outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
@@ -691,14 +691,14 @@
 
 - (void)rightBottom:(CGFloat)borderX borderY:(CGFloat)borderY borderW:(CGFloat)borderW borderH:(CGFloat)borderH cornerLength:(CGFloat)cornerLength insideExcess:(CGFloat) insideExcess outsideExcess:(CGFloat)outsideExcess {
     UIBezierPath *rightBottomPath = [UIBezierPath bezierPath];
-    rightBottomPath.lineWidth = self.configure.cornerWidth;
-    [self.configure.cornerColor set];
+    rightBottomPath.lineWidth = self.configuration.cornerWidth;
+    [self.configuration.cornerColor set];
     
-    if (self.configure.cornerLocation == FWScanCornerLoactionInside) {
+    if (self.configuration.cornerLocation == FWScanCornerLoactionInside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - cornerLength - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - insideExcess, borderY + borderH - insideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength - insideExcess, borderY + borderH - insideExcess)];
-    } else if (self.configure.cornerLocation == FWScanCornerLoactionOutside) {
+    } else if (self.configuration.cornerLocation == FWScanCornerLoactionOutside) {
         [rightBottomPath moveToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH - cornerLength + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW + outsideExcess, borderY + borderH + outsideExcess)];
         [rightBottomPath addLineToPoint:CGPointMake(borderX + borderW - cornerLength + outsideExcess, borderY + borderH + outsideExcess)];
@@ -729,7 +729,7 @@
     CGFloat w = _contentView.frame.size.width;
     CGFloat h = (w * self.scanlineImgView.image.size.height) / self.scanlineImgView.image.size.width;
     CGFloat x = 0;
-    CGFloat y = self.configure.isFromTop ? -h : 0;
+    CGFloat y = self.configuration.isFromTop ? -h : 0;
     self.scanlineImgView.frame = CGRectMake(x, y, w, h);
 }
 
@@ -767,18 +767,18 @@
     CGRect frame = self.scanlineImgView.frame;
     CGFloat contentViewHeight = CGRectGetHeight(self.contentView.frame);
     
-    CGFloat scanlineY = self.scanlineImgView.frame.origin.y + (self.configure.isFromTop ? 0 : self.scanlineImgView.frame.size.height);
+    CGFloat scanlineY = self.scanlineImgView.frame.origin.y + (self.configuration.isFromTop ? 0 : self.scanlineImgView.frame.size.height);
     
-    if (self.configure.autoreverses) {
+    if (self.configuration.autoreverses) {
         if (self.isTop) {
-            frame.origin.y += self.configure.scanlineStep;
+            frame.origin.y += self.configuration.scanlineStep;
             self.scanlineImgView.frame = frame;
             
             if (contentViewHeight <= scanlineY) {
                 self.isTop = NO;
             }
         } else {
-            frame.origin.y -= self.configure.scanlineStep;
+            frame.origin.y -= self.configuration.scanlineStep;
             self.scanlineImgView.frame = frame;
             
             if (scanlineY <= self.scanlineImgView.frame.size.height) {
@@ -788,10 +788,10 @@
     } else {
         if (contentViewHeight <= scanlineY) {
             CGFloat scanlineH = self.scanlineImgView.frame.size.height;
-            frame.origin.y = -scanlineH + (self.configure.isFromTop ? 0 : scanlineH);
+            frame.origin.y = -scanlineH + (self.configuration.isFromTop ? 0 : scanlineH);
             self.scanlineImgView.frame = frame;
         } else {
-            frame.origin.y += self.configure.scanlineStep;
+            frame.origin.y += self.configuration.scanlineStep;
             self.scanlineImgView.frame = frame;
         }
     }
