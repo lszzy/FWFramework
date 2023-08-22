@@ -628,6 +628,7 @@ UITableViewDataSource
     _itemHeight = 44;
     _isCornerChanged = NO;
     _showMaskView = YES;
+    _maskViewColor = [[UIColor blackColor] colorWithAlphaComponent:0.1];
     _orientationManager = [FWPopupMenuDeviceOrientationManager manager];
     _animationManager = [FWPopupMenuAnimationManager manager];
     _animationManager.animationView = self;
@@ -710,7 +711,13 @@ UITableViewDataSource
 - (void)setShowMaskView:(BOOL)showMaskView
 {
     _showMaskView = showMaskView;
-    _menuBackView.backgroundColor = showMaskView ? [[UIColor blackColor] colorWithAlphaComponent:0.1] : [UIColor clearColor];
+    _menuBackView.backgroundColor = showMaskView ? self.maskViewColor : [UIColor clearColor];
+}
+
+- (void)setMaskViewColor:(UIColor *)maskViewColor
+{
+    _maskViewColor = maskViewColor;
+    _menuBackView.backgroundColor = self.showMaskView ? maskViewColor : [UIColor clearColor];
 }
 
 - (void)setType:(FWPopupMenuType)type
