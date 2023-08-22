@@ -75,8 +75,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
     func setupScanManager() {
         scanCode.scanResultBlock = { [weak self] result in
-            if result != nil,
-               let sound = ModuleBundle.resourcePath("Qrcode.caf") {
+            if result != nil, let sound = ModuleBundle.resourcePath("Qrcode.caf") {
                 ScanCode.playSoundEffect(sound)
             }
             
@@ -141,15 +140,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
             if cancel {
                 self?.startScanManager()
             } else {
-                var image = objects.first as? UIImage
-                image = image?.fw.compressImage(maxWidth: 1200)
-                image = image?.fw.compressImage(maxLength: 300 * 1024)
-                if let image = image {
-                    ScanCode.readQRCode(image) { result in
-                        self?.onScanResult(result)
-                    }
-                } else {
-                    self?.startScanManager()
+                ScanCode.readQRCode(objects.first as? UIImage, compress: true) { result in
+                    self?.onScanResult(result)
                 }
             }
         }

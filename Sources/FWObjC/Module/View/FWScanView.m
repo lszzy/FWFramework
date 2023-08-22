@@ -135,7 +135,6 @@
     if ([self.device supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]) {
         return AVCaptureSessionPresetMedium;
     }
-    
     return AVCaptureSessionPresetLow;
 }
 
@@ -188,8 +187,6 @@
     }
 }
 
-#pragma mark - Private
-
 - (void)setupMetadataOutput {
     if (_metadataOutput) return;
     
@@ -218,6 +215,14 @@
 }
 
 #pragma mark - Public
+
+- (void)configCaptureDevice:(void (^)(AVCaptureDevice *))block
+{
+    if ([self.device lockForConfiguration:nil]) {
+        if (block) block(self.device);
+        [self.device unlockForConfiguration];
+    }
+}
 
 - (void)startRunning {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -276,7 +281,7 @@
     });
 }
 
-#pragma mark - Util
+#pragma mark - Torch
 
 + (BOOL)isTorchActive {
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -306,16 +311,6 @@
     }
 }
 
-+ (void)configCaptureDevice:(void (^)(AVCaptureDevice *))block
-{
-    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    if (captureDevice) {
-        [captureDevice lockForConfiguration:nil];
-        if (block) block(captureDevice);
-        [captureDevice unlockForConfiguration];
-    }
-}
-
 + (BOOL)isCameraRearAvailable {
     BOOL isAvailable = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
     return isAvailable;
@@ -327,20 +322,35 @@
 
 #pragma mark - Read
 
-+ (void)readQRCode:(UIImage *)image completion:(void (^)(NSString *result))completion {
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
-    // 获取识别结果
-    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
-    
-    NSString *messageString = nil;
-    if (features.count > 0) {
-        CIQRCodeFeature *feature = features[0];
-        messageString = feature.messageString;
-    }
-    
-    if (completion) {
-        completion(messageString);
-    }
++ (void)readQRCode:(UIImage *)image compress:(BOOL)compress completion:(void (^)(NSString * _Nullable))completion {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        UIImage *compressImage = image;
+        if (compress && compressImage) {
+            compressImage = [compressImage fw_compressImageWithMaxWidth:1080];
+            compressImage = [compressImage fw_compressImageWithMaxLength:512 * 1024];
+        }
+        
+        CIImage *ciImage = compressImage.CIImage ?: [CIImage imageWithCGImage:compressImage.CGImage];
+        if (!ciImage) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(nil);
+            });
+            return;
+        }
+        
+        CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
+        NSArray *features = [detector featuresInImage:ciImage];
+        
+        NSString *messageString = nil;
+        if (features.count > 0) {
+            CIQRCodeFeature *feature = features[0];
+            messageString = feature.messageString;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) completion(messageString);
+        });
+    });
 }
 
 #pragma mark - Generate
