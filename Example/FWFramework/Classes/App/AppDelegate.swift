@@ -52,7 +52,7 @@ class AppDelegate: AppResponder {
     
     override func applicationDidEnterBackground(_ application: UIApplication) {
         if let backgroundTask = backgroundTask {
-            application.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
+            UIApplication.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
         }
     }
 
