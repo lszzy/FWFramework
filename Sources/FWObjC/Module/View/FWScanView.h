@@ -65,12 +65,16 @@ NS_SWIFT_NAME(ScanCode)
 /// 扫描二维码光线强弱回调句柄
 @property (nonatomic, copy, nullable) void(^scanBrightnessBlock)(CGFloat brightness);
 
+/// 配置扫描设备，比如自动聚焦等
+- (void)configCaptureDevice:(void (^)(AVCaptureDevice *device))block;
+
 /// 开启扫描
 - (void)startRunning;
+
 /// 停止扫描
 - (void)stopRunning;
 
-#pragma mark - Util
+#pragma mark - Torch
 
 /// 手电筒是否已激活
 + (BOOL)isTorchActive;
@@ -81,9 +85,6 @@ NS_SWIFT_NAME(ScanCode)
 /// 关闭手电筒
 + (void)turnOffTorch;
 
-/// 配置扫描设备，比如自动聚焦等
-+ (void)configCaptureDevice:(void (^)(AVCaptureDevice *device))block;
-
 /// 检测后置摄像头是否可用
 + (BOOL)isCameraRearAvailable;
 
@@ -92,11 +93,12 @@ NS_SWIFT_NAME(ScanCode)
 
 #pragma mark - Read
 
-/// 读取图片中的二维码。图片过大可能导致闪退，建议先压缩再识别
+/// 读取图片中的二维码，主线程回调
 ///
 /// @param image            图片
+/// @param compress      是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
 /// @param completion       回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
-+ (void)readQRCode:(UIImage *)image completion:(void (^)(NSString * _Nullable result))completion;
++ (void)readQRCode:(nullable UIImage *)image compress:(BOOL)compress completion:(void (^)(NSString * _Nullable result))completion;
 
 #pragma mark - Generate
 
