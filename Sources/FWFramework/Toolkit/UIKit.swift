@@ -923,6 +923,39 @@ extension Wrapper where Base: UITableView {
         base.__fw_reloadDataWithoutAnimation()
     }
     
+    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
+    }
+    
+}
+
+extension UITableView {
+    
+    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    fileprivate func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        let keyString = key != nil ? "\(key!)" : ""
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(keyString)"
+        let block: (UITableViewCell) -> Void = { [weak self] cell in
+            let previousIdentifier = cell.__fw_property(forName: "fw_willDisplayIdentifier") as? String
+            guard self?.visibleCells.contains(cell) ?? false,
+                  self?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure()
+            cell.__fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+        }
+        cell.__fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
+        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
+    }
+    
+    @objc private func fw_willDisplay(_ cell: UITableViewCell) {
+        let block = cell.__fw_property(forName: "fw_willDisplay") as? (UITableViewCell) -> Void
+        block?(cell)
+    }
+    
 }
 
 // MARK: - UITableViewCell+UIKit
@@ -957,6 +990,39 @@ extension Wrapper where Base: UICollectionView {
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
         base.__fw_reloadDataWithoutAnimation()
+    }
+    
+    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    public func willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
+    }
+    
+}
+
+extension UICollectionView {
+    
+    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
+    fileprivate func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+        let keyString = key != nil ? "\(key!)" : ""
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(keyString)"
+        let block: (UICollectionViewCell) -> Void = { [weak self] cell in
+            let previousIdentifier = cell.__fw_property(forName: "fw_willDisplayIdentifier") as? String
+            guard self?.visibleCells.contains(cell) ?? false,
+                  self?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure()
+            cell.__fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+        }
+        cell.__fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
+        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
+    }
+    
+    @objc private func fw_willDisplay(_ cell: UICollectionViewCell) {
+        let block = cell.__fw_property(forName: "fw_willDisplay") as? (UICollectionViewCell) -> Void
+        block?(cell)
     }
     
 }
