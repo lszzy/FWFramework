@@ -932,7 +932,6 @@ extension Wrapper where Base: UITableView {
 
 extension UITableView {
     
-    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     fileprivate func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let keyString = key != nil ? "\(key!)" : ""
         let identifier = "\(indexPath.section).\(indexPath.row)-\(keyString)"
@@ -1001,7 +1000,6 @@ extension Wrapper where Base: UICollectionView {
 
 extension UICollectionView {
     
-    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     fileprivate func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let keyString = key != nil ? "\(key!)" : ""
         let identifier = "\(indexPath.section).\(indexPath.row)-\(keyString)"
