@@ -205,8 +205,8 @@ extension Wrapper where Base: UIApplication {
     }
     
     /// 开始后台任务，task必须调用completionHandler
-    public func beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
-        base.fw_beginBackgroundTask(task, expirationHandler: expirationHandler)
+    public static func beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
+        Base.fw_beginBackgroundTask(task, expirationHandler: expirationHandler)
     }
     
 }

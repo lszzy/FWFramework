@@ -496,16 +496,16 @@ extension WrapperGlobal {
     }
     
     /// 开始后台任务，task必须调用completionHandler
-    public func fw_beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
+    public static func fw_beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
         var bgTask: UIBackgroundTaskIdentifier = .invalid
-        bgTask = self.beginBackgroundTask(expirationHandler: { [weak self] in
+        bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             expirationHandler?()
-            self?.endBackgroundTask(bgTask)
+            UIApplication.shared.endBackgroundTask(bgTask)
             bgTask = .invalid
         })
         
-        task({ [weak self] in
-            self?.endBackgroundTask(bgTask)
+        task({
+            UIApplication.shared.endBackgroundTask(bgTask)
             bgTask = .invalid
         })
     }
