@@ -143,7 +143,57 @@ void FWRequestLog(NSString *format, ...) {
 + (BOOL)isRequestError:(NSError *)error
 {
     if (!error) return NO;
+    if ([error.domain isEqualToString:NSURLErrorDomain]) return YES;
     return [objc_getAssociatedObject(error, @selector(isRequestError:)) boolValue];
+}
+
++ (void)markRequestError:(NSError *)error
+{
+    if (!error) return;
+    objc_setAssociatedObject(error, @selector(isRequestError:), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (BOOL)isCancelledError:(NSError *)error
+{
+    if (!error) return NO;
+    if (error.code == NSURLErrorCancelled ||
+        error.code == NSURLErrorUserCancelledAuthentication ||
+        error.code == NSUserCancelledError) {
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)isConnectionError:(NSError *)error
+{
+    if (!error) return NO;
+    if (error.code == NSURLErrorCancelled ||
+        error.code == NSURLErrorBadURL ||
+        error.code == NSURLErrorTimedOut ||
+        error.code == NSURLErrorUnsupportedURL ||
+        error.code == NSURLErrorCannotFindHost ||
+        error.code == NSURLErrorCannotConnectToHost ||
+        error.code == NSURLErrorNetworkConnectionLost ||
+        error.code == NSURLErrorDNSLookupFailed ||
+        error.code == NSURLErrorNotConnectedToInternet ||
+        error.code == NSURLErrorUserCancelledAuthentication ||
+        error.code == NSURLErrorUserAuthenticationRequired ||
+        error.code == NSURLErrorAppTransportSecurityRequiresSecureConnection ||
+        error.code == NSURLErrorSecureConnectionFailed ||
+        error.code == NSURLErrorServerCertificateHasBadDate ||
+        error.code == NSURLErrorServerCertificateUntrusted ||
+        error.code == NSURLErrorServerCertificateHasUnknownRoot ||
+        error.code == NSURLErrorServerCertificateNotYetValid ||
+        error.code == NSURLErrorClientCertificateRejected ||
+        error.code == NSURLErrorClientCertificateRequired ||
+        error.code == NSURLErrorCannotLoadFromNetwork ||
+        error.code == NSURLErrorInternationalRoamingOff ||
+        error.code == NSURLErrorCallIsActive ||
+        error.code == NSURLErrorDataNotAllowed ||
+        error.code == NSURLErrorRequestBodyStreamExhausted) {
+        return YES;
+    }
+    return NO;
 }
 
 @end

@@ -155,7 +155,7 @@
     }
     
     // 添加取消按钮
-    if (cancel != nil) {
+    if (cancel != nil && !self.hidesSheetCancel) {
         FWAlertAction *cancelAction = [self actionWithObject:cancel style:FWAlertActionStyleCancel appearance:customAppearance handler:^(FWAlertAction *action) {
             if (cancelBlock) cancelBlock();
         }];
@@ -163,7 +163,7 @@
     }
     
     // 点击背景
-    if (self.dimmingTriggerCancel) {
+    if (self.dimmingTriggerCancel || self.hidesSheetCancel) {
         alertController.dismissCompletion = cancelBlock;
     }
     

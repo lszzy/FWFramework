@@ -213,6 +213,11 @@ NS_SWIFT_NAME(PopupMenu)
 @property (nonatomic, assign) BOOL showMaskView;
 
 /**
+ 自定义灰色覆盖层颜色，默认黑色、透明度0.1
+ */
+@property (nonatomic, strong, nullable) UIColor *maskViewColor;
+
+/**
  选择菜单项后消失 Default is YES
  */
 @property (nonatomic, assign) BOOL dismissOnSelected;
