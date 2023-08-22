@@ -161,7 +161,7 @@
         localizedStrings = @{
             @"zh-Hans": @{
                 @"fw.done": @"完成",
-                @"fw.close": @"关闭",
+                @"fw.close": @"好的",
                 @"fw.confirm": @"确定",
                 @"fw.cancel": @"取消",
                 @"fw.more": @"更多",
@@ -179,7 +179,7 @@
             },
             @"zh-Hant": @{
                 @"fw.done": @"完成",
-                @"fw.close": @"關閉",
+                @"fw.close": @"好的",
                 @"fw.confirm": @"確定",
                 @"fw.cancel": @"取消",
                 @"fw.more": @"更多",
@@ -198,7 +198,7 @@
             @"en": @{
                 @"fw.done": @"Done",
                 @"fw.close": @"OK",
-                @"fw.confirm": @"Yes",
+                @"fw.confirm": @"Confirm",
                 @"fw.cancel": @"Cancel",
                 @"fw.more": @"More",
                 @"fw.original": @"Original",
