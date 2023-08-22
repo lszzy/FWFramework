@@ -250,6 +250,11 @@ extension Wrapper where Base: UIApplication {
         return Base.__fw_isTestflight
     }
     
+    /// 开始后台任务，task必须调用completionHandler
+    public static func beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
+        Base.__fw_beginBackgroundTask(task, expirationHandler: expirationHandler)
+    }
+    
 }
 
 // MARK: - UIColor+Toolkit
