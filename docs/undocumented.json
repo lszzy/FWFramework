@@ -6120,70 +6120,91 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 71,
+      "line": 70,
+      "symbol": "CachedValue.init(wrappedValue:_:defaultValue:type:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
+      "line": 81,
+      "symbol": "CachedValue.init(wrappedValue:_:defaultValue:type:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
+      "line": 92,
+      "symbol": "CachedValue.wrappedValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
+      "line": 120,
       "symbol": "ValidatedValue.init(wrappedValue:_:defaultValue:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 82,
+      "line": 131,
       "symbol": "ValidatedValue.init(wrappedValue:_:defaultValue:defaultValid:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 95,
+      "line": 144,
       "symbol": "ValidatedValue.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 117,
+      "line": 166,
       "symbol": "ModuleValue.init(_:module:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 127,
+      "line": 176,
       "symbol": "ModuleValue.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 152,
+      "line": 201,
       "symbol": "PluginValue.init(_:object:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 162,
+      "line": 211,
       "symbol": "PluginValue.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 187,
+      "line": 236,
       "symbol": "RouterValue.init(wrappedValue:parameters:_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 199,
+      "line": 248,
       "symbol": "RouterValue.init(_:parameters:handler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Annotation.swift",
-      "line": 211,
+      "line": 260,
       "symbol": "RouterValue.wrappedValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -6890,28 +6911,28 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 707,
+      "line": 712,
       "symbol": "ViewState.ready",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 708,
+      "line": 713,
       "symbol": "ViewState.loading",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 709,
+      "line": 714,
       "symbol": "ViewState.success(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 710,
+      "line": 715,
       "symbol": "ViewState.failure(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -13540,224 +13561,245 @@
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
+      "line": 59,
+      "symbol": "FWNetworkUtils.+markRequestError:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNetworkPrivate.h",
       "line": 61,
+      "symbol": "FWNetworkUtils.+isCancelledError:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNetworkPrivate.h",
+      "line": 63,
+      "symbol": "FWNetworkUtils.+isConnectionError:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWNetworkPrivate.h",
+      "line": 67,
       "symbol": "FWRequest(Getter)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 63,
+      "line": 69,
       "symbol": "FWRequest.-cacheBasePath",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 67,
+      "line": 73,
       "symbol": "FWBaseRequest(Setter)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 69,
+      "line": 75,
       "symbol": "FWBaseRequest(Setter).requestTask",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 70,
+      "line": 76,
       "symbol": "FWBaseRequest(Setter).requestIdentifier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 71,
+      "line": 77,
       "symbol": "FWBaseRequest(Setter).responseData",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 72,
+      "line": 78,
       "symbol": "FWBaseRequest(Setter).responseJSONObject",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 73,
+      "line": 79,
       "symbol": "FWBaseRequest(Setter).responseObject",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 74,
+      "line": 80,
       "symbol": "FWBaseRequest(Setter).responseString",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 75,
+      "line": 81,
       "symbol": "FWBaseRequest(Setter).error",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 76,
+      "line": 82,
       "symbol": "FWBaseRequest(Setter).requestTotalCount",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 77,
+      "line": 83,
       "symbol": "FWBaseRequest(Setter).requestTotalTime",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 81,
+      "line": 87,
       "symbol": "FWBaseRequest(RequestAccessory)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 83,
+      "line": 89,
       "symbol": "FWBaseRequest.-toggleAccessoriesWillStartCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 84,
+      "line": 90,
       "symbol": "FWBaseRequest.-toggleAccessoriesWillStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 85,
+      "line": 91,
       "symbol": "FWBaseRequest.-toggleAccessoriesDidStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 89,
+      "line": 95,
       "symbol": "FWBatchRequest(RequestAccessory)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 91,
+      "line": 97,
       "symbol": "FWBatchRequest.-toggleAccessoriesWillStartCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 92,
+      "line": 98,
       "symbol": "FWBatchRequest.-toggleAccessoriesWillStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 93,
+      "line": 99,
       "symbol": "FWBatchRequest.-toggleAccessoriesDidStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 97,
+      "line": 103,
       "symbol": "FWChainRequest(RequestAccessory)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 99,
+      "line": 105,
       "symbol": "FWChainRequest.-toggleAccessoriesWillStartCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 100,
+      "line": 106,
       "symbol": "FWChainRequest.-toggleAccessoriesWillStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 101,
+      "line": 107,
       "symbol": "FWChainRequest.-toggleAccessoriesDidStopCallBack",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 105,
+      "line": 111,
       "symbol": "FWNetworkAgent(Private)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 107,
+      "line": 113,
       "symbol": "FWNetworkAgent.-manager",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 108,
+      "line": 114,
       "symbol": "FWNetworkAgent.-resetURLSessionManager",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 109,
+      "line": 115,
       "symbol": "FWNetworkAgent.-resetURLSessionManagerWithConfiguration:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 111,
+      "line": 117,
       "symbol": "FWNetworkAgent.-incompleteDownloadTempCacheFolder",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 113,
+      "line": 119,
       "symbol": "FWNetworkAgent.-httpResponseSerializer",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 114,
+      "line": 120,
       "symbol": "FWNetworkAgent.-jsonResponseSerializer",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWNetworkPrivate.h",
-      "line": 115,
+      "line": 121,
       "symbol": "FWNetworkAgent.-xmlParserResponseSerialzier",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -15121,41 +15163,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "docs/FWFramework/FWQrcodeScanView.h",
-      "line": 57,
-      "symbol": "FWQrcodeScanManager.+scanQrcodeWithImage:",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWQrcodeScanView.h",
-      "line": 117,
-      "symbol": "FWQrcodeCornerLocation",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWQrcodeScanView.h",
-      "line": 117,
-      "symbol": "FWQrcodeCornerLocation",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWQrcodeScanView.h",
-      "line": 126,
-      "symbol": "FWQrcodeScanAnimationStyle",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWQrcodeScanView.h",
-      "line": 126,
-      "symbol": "FWQrcodeScanAnimationStyle",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
-      "warning": "undocumented"
-    },
-    {
       "file": "docs/FWFramework/FWQuartzCore.h",
       "line": 50,
       "symbol": "CAAnimation(FWQuartzCore)",
@@ -15884,6 +15891,48 @@
       "warning": "undocumented"
     },
     {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 18,
+      "symbol": "FWScanCodeDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 29,
+      "symbol": "FWScanCodeSampleBufferDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 139,
+      "symbol": "FWScanCornerLoaction",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 139,
+      "symbol": "FWScanCornerLoaction",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 149,
+      "symbol": "FWScanViewConfiguration",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWScanView.h",
+      "line": 193,
+      "symbol": "FWScanView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
       "file": "docs/FWFramework/FWSecurityPolicy.h",
       "line": 25,
       "symbol": "FWSSLPinningMode",
@@ -16180,76 +16229,83 @@
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
       "line": 69,
-      "symbol": "FWSegmentedControl.sectionTitles",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 70,
-      "symbol": "FWSegmentedControl.sectionImages",
+      "symbol": "FWSegmentedControl.scrollView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
       "line": 71,
+      "symbol": "FWSegmentedControl.sectionTitles",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWSegmentedControl.h",
+      "line": 72,
+      "symbol": "FWSegmentedControl.sectionImages",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWSegmentedControl.h",
+      "line": 73,
       "symbol": "FWSegmentedControl.sectionSelectedImages",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 97,
+      "line": 99,
       "symbol": "FWSegmentedControl.selectedTitleTextAttributes",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 174,
+      "line": 176,
       "symbol": "FWSegmentedControl.borderType",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 219,
+      "line": 221,
       "symbol": "FWSegmentedControl.stretchSegmentsToScreenSize",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 315,
+      "line": 324,
       "symbol": "FWSegmentedControl.enlargeEdgeInset",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 322,
+      "line": 331,
       "symbol": "FWSegmentedControl.-initWithSectionTitles:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 323,
+      "line": 332,
       "symbol": "FWSegmentedControl.-initWithSectionImages:sectionSelectedImages:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 324,
+      "line": 333,
       "symbol": "FWSegmentedControl.-initWithSectionImages:sectionSelectedImages:titlesForSections:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWSegmentedControl.h",
-      "line": 326,
+      "line": 335,
       "symbol": "FWSegmentedControl.-setSelectedSegmentIndex:animated:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
@@ -17061,35 +17117,35 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 149,
+      "line": 152,
       "symbol": "UIColor(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 244,
+      "line": 247,
       "symbol": "UIFont(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 316,
+      "line": 319,
       "symbol": "UIImage(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 484,
+      "line": 487,
       "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 542,
+      "line": 545,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

@@ -26,6 +26,9 @@ NS_SWIFT_NAME(AlertControllerImpl)
 /// 点击暗色背景关闭时是否触发cancelBlock，默认NO
 @property (nonatomic, assign) BOOL dimmingTriggerCancel;
 
+/// 是否隐藏ActionSheet取消按钮，取消后可点击背景关闭并触发cancelBlock
+@property (nonatomic, assign) BOOL hidesSheetCancel;
+
 /// 弹窗自定义句柄，show方法自动调用
 @property (nonatomic, copy, nullable) void (^customBlock)(FWAlertController *alertController);
 

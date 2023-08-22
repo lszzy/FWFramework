@@ -17,7 +17,7 @@
     <a title="FWImagePreviewTransitionAnimator Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.16.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -803,12 +803,6 @@
                 <a href="../Classes/FWPullRefreshView.html">FWPullRefreshView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanManager.html">FWQrcodeScanManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanView.html">FWQrcodeScanView</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/FWRefreshPluginImpl.html">FWRefreshPluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -828,6 +822,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSDWebImageImpl.html">FWSDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanCode.html">FWScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanView.html">FWScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSceneDelegate.html">FWSceneDelegate</a>
@@ -1584,12 +1587,6 @@
                 <a href="../Enums/FWPullRefreshState.html">FWPullRefreshState</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Enums/FWRequestCacheErrorCode.html">FWRequestCacheErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -1609,6 +1606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSSLPinningMode.html">FWSSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSegmentedControlBorderType.html">FWSegmentedControlBorderType</a>
@@ -1935,6 +1935,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWRequestDelegate.html">FWRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeDelegate.html">FWScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeSampleBufferDelegate.html">FWScanCodeSampleBufferDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWScrollViewController.html">FWScrollViewController</a>
@@ -2644,6 +2650,9 @@
             <a href="../Structs.html">Structures</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="../Structs/CachedValue.html">CachedValue</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/DeserializeOptions.html">DeserializeOptions</a>
               </li>
               <li class="nav-group-task">
@@ -2913,6 +2922,13 @@
                       <div class="abstract">
                         <p>动画开始前的准备工作可以在这里做</p>
 
+<p>animator 当前的动画器 animator
+isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+style 当前动画的样式
+sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
+zoomImageView 当前图片
+transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -2926,85 +2942,6 @@
                           <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">animationEnteringBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">ImagePreviewTransitionAnimator</span><span class="p">,</span> <span class="kt">Bool</span><span class="p">,</span> <span class="kt">ImagePreviewTransitioningStyle</span><span class="p">,</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="kt">ZoomImageView</span><span class="p">,</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animator</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前的动画器 animator</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPresenting</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>YES 表示当前正在 present，NO 表示正在 dismiss</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>style</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前动画的样式</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>sourceImageRect</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>zoomImageView</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前图片</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>transitionContext</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -3024,6 +2961,13 @@
                       <div class="abstract">
                         <p>转场时的实际动画内容，整个 block 会在一个 UIView animation block 里被调用，因此直接写动画内容即可，无需包裹一个 animation block</p>
 
+<p>animator 当前的动画器 animator
+isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+style 当前动画的样式
+sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
+zoomImageView 当前图片
+transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -3037,85 +2981,6 @@
                           <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">animationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">ImagePreviewTransitionAnimator</span><span class="p">,</span> <span class="kt">Bool</span><span class="p">,</span> <span class="kt">ImagePreviewTransitioningStyle</span><span class="p">,</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="kt">ZoomImageView</span><span class="p">,</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animator</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前的动画器 animator</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPresenting</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>YES 表示当前正在 present，NO 表示正在 dismiss</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>style</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前动画的样式</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>sourceImageRect</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>zoomImageView</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前图片</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>transitionContext</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -3135,6 +3000,13 @@
                       <div class="abstract">
                         <p>动画结束后的事情，在执行完这个 block 后才会调用 [transitionContext completeTransition:]</p>
 
+<p>animator 当前的动画器 animator
+isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+style 当前动画的样式
+sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
+zoomImageView 当前图片
+transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -3148,85 +3020,6 @@
                           <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">animationCompletionBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">ImagePreviewTransitionAnimator</span><span class="p">,</span> <span class="kt">Bool</span><span class="p">,</span> <span class="kt">ImagePreviewTransitioningStyle</span><span class="p">,</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="kt">ZoomImageView</span><span class="p">,</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animator</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前的动画器 animator</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPresenting</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>YES 表示当前正在 present，NO 表示正在 dismiss</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>style</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前动画的样式</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>sourceImageRect</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>zoomImageView</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前图片</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>transitionContext</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>转场动画的上下文，可通过它获取前后界面、动画容器等信息</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -3246,6 +3039,10 @@
                       <div class="abstract">
                         <p>动画回调句柄，动画开始和结束时调用</p>
 
+<p>animator 当前的动画器 animator
+isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
+isFinished YES 表示动画结束，NO 表示动画开始</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -3260,49 +3057,6 @@
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>animator</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>当前的动画器 animator</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPresenting</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>YES 表示当前正在 present，NO 表示正在 dismiss</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isFinished</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>YES 表示动画结束，NO 表示动画开始</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
                     </section>
                   </div>
                 </li>
@@ -3311,7 +3065,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

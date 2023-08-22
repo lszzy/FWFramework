@@ -40,7 +40,7 @@ NS_SWIFT_NAME(AppBundle)
 @property (class, nonatomic, copy, readonly) NSString *cancelButton;
 /// 多语言，确定，fw.confirm
 @property (class, nonatomic, copy, readonly) NSString *confirmButton;
-/// 多语言，关闭，fw.close
+/// 多语言，好的，fw.close
 @property (class, nonatomic, copy, readonly) NSString *closeButton;
 /// 多语言，完成，fw.done
 @property (class, nonatomic, copy, readonly) NSString *doneButton;

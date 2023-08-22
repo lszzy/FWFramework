@@ -17,7 +17,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
+        <p><a href="index.html">FWFramework 4.16.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -803,12 +803,6 @@
                 <a href="Classes/FWPullRefreshView.html">FWPullRefreshView</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/FWQrcodeScanManager.html">FWQrcodeScanManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/FWQrcodeScanView.html">FWQrcodeScanView</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Classes/FWRefreshPluginImpl.html">FWRefreshPluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -828,6 +822,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/FWSDWebImageImpl.html">FWSDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanCode.html">FWScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanView.html">FWScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/FWSceneDelegate.html">FWSceneDelegate</a>
@@ -1584,12 +1587,6 @@
                 <a href="Enums/FWPullRefreshState.html">FWPullRefreshState</a>
               </li>
               <li class="nav-group-task">
-                <a href="Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Enums/FWRequestCacheErrorCode.html">FWRequestCacheErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -1609,6 +1606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Enums/FWSSLPinningMode.html">FWSSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a>
               </li>
               <li class="nav-group-task">
                 <a href="Enums/FWSegmentedControlBorderType.html">FWSegmentedControlBorderType</a>
@@ -1935,6 +1935,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/FWRequestDelegate.html">FWRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FWScanCodeDelegate.html">FWScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FWScanCodeSampleBufferDelegate.html">FWScanCodeSampleBufferDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/FWScrollViewController.html">FWScrollViewController</a>
@@ -2644,6 +2650,9 @@
             <a href="Structs.html">Structures</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="Structs/CachedValue.html">CachedValue</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Structs/DeserializeOptions.html">DeserializeOptions</a>
               </li>
               <li class="nav-group-task">
@@ -3233,6 +3242,9 @@
 
 <span class="c1">/// 点击暗色背景关闭时是否触发cancelBlock，默认NO</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">dimmingTriggerCancel</span><span class="p">;</span>
+
+<span class="c1">/// 是否隐藏ActionSheet取消按钮，取消后可点击背景关闭并触发cancelBlock</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">hidesSheetCancel</span><span class="p">;</span>
 
 <span class="c1">/// 弹窗自定义句柄，show方法自动调用</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">customBlock</span><span class="p">)(</span><span class="n"><a href="Classes/FWAlertController.html">FWAlertController</a></span> <span class="o">*</span><span class="n">alertController</span><span class="p">);</span>
@@ -7661,6 +7673,12 @@ to form and filter requests, as well as caching response.</p>
 
 <span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isRequestError</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
 
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">markRequestError</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isCancelledError</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isConnectionError</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
+
 <span class="k">@end</span></code></pre>
 
                         </div>
@@ -9526,79 +9544,6 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanManager"></a>
-                    <a name="//apple_ref/swift/Class/FWQrcodeScanManager" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanManager">FWQrcodeScanManager</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>FWQrcodeScanManager</p>
-<div class="aside aside-see">
-    <p class="aside-title">See</p>
-    <a href="https://github.com/kingsic/SGQRCode">https://github.com/kingsic/SGQRCode</a>
-
-</div>
-
-                        <a href="Classes/FWQrcodeScanManager.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code>
-<span class="k">@interface</span> <span class="nc">FWQrcodeScanManager</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">QrcodeScanManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView"></a>
-                    <a name="//apple_ref/swift/Class/FWQrcodeScanView" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView">FWQrcodeScanView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>FWQrcodeScanView</p>
-
-                        <a href="Classes/FWQrcodeScanView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code>
-<span class="k">@interface</span> <span class="nc">FWQrcodeScanView</span> <span class="p">:</span> <span class="nc">UIView</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">QrcodeScanView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -9907,6 +9852,208 @@ the batch requests.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">RouterContext</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/FWScanCode"></a>
+                <a name="//apple_ref/swift/Section/FWScanCode" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/FWScanCode"></a>
+                  <h3 class="section-name"><span>FWScanCode</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanCode"></a>
+                    <a name="//apple_ref/swift/Class/FWScanCode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanCode">FWScanCode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>二维码、条形码扫描</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/kingsic/SGQRCode">https://github.com/kingsic/SGQRCode</a>
+
+</div>
+
+                        <a href="Classes/FWScanCode.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code>
+<span class="k">@interface</span> <span class="nc">FWScanCode</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ScanCode</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/FWScanView"></a>
+                <a name="//apple_ref/swift/Section/FWScanView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/FWScanView"></a>
+                  <h3 class="section-name"><span>FWScanView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration"></a>
+                    <a name="//apple_ref/swift/Class/FWScanViewConfiguration" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration">FWScanViewConfiguration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Classes/FWScanViewConfiguration.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">FWScanViewConfiguration</span> <span class="p">:</span> <span class="nc">NSObject</span>
+
+<span class="c1">/// 扫描线，默认为：nil</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">scanline</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线图片，默认为：nil</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">scanlineImage</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线每次移动的步长，默认为：3.5f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scanlineStep</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线是否执行逆动画，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">autoreverses</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线是否从扫描框顶部开始扫描，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isFromTop</span><span class="p">;</span>
+
+<span class="c1">/// FWScanView 背景色，默认为：[[UIColor blackColor] colorWithAlphaComponent:0.5]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">color</span><span class="p">;</span>
+
+<span class="c1">/// 是否需要辅助扫描框，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isShowBorder</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描框的颜色，默认为：[UIColor whiteColor]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">borderColor</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描框的宽度，默认为：0.2f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">borderWidth</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角位置，默认为：FWScanCornerLoactionDefault</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n"><a href="Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a></span> <span class="n">cornerLocation</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角颜色，默认为：[UIColor greenColor]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">cornerColor</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角宽度，默认为：2.0f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">cornerWidth</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角长度，默认为：20.0f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">cornerLength</span><span class="p">;</span>
+
+<span class="k">@end</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ScanViewConfiguration</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanView"></a>
+                    <a name="//apple_ref/swift/Class/FWScanView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanView">FWScanView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Classes/FWScanView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">FWScanView</span> <span class="p">:</span> <span class="nc">UIView</span>
+
+<span class="c1">/// 对象方法创建 FWScanView</span>
+<span class="c1">///</span>
+<span class="c1">/// @param frame           FWScanView 的 frame</span>
+<span class="c1">/// @param configuration       FWScanView 的配置类 FWScanViewConfiguration</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithFrame</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span> <span class="nf">configuration</span><span class="p">:(</span><span class="n"><a href="Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span><span class="p">;</span>
+
+<span class="c1">/// 当前配置</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n"><a href="Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a></span> <span class="o">*</span><span class="n">configuration</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边框区域的frame</span>
+<span class="c1">///</span>
+<span class="c1">/// 默认x为：0.5 * (self.frame.size.width - w)</span>
+<span class="c1">/// 默认y为：0.5 * (self.frame.size.height - w)</span>
+<span class="c1">/// 默认width和height为：0.7 * self.frame.size.width</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">borderFrame</span><span class="p">;</span>
+
+<span class="c1">/// 扫描区域的frame</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">scanFrame</span><span class="p">;</span>
+
+<span class="c1">/// 双击回调方法</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">doubleTapBlock</span><span class="p">)(</span><span class="n">BOOL</span> <span class="n">selected</span><span class="p">);</span>
+
+<span class="c1">/// 开始扫描</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">startScanning</span><span class="p">;</span>
+
+<span class="c1">/// 停止扫描</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">stopScanning</span><span class="p">;</span>
+
+<span class="k">@end</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ScanView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                         </div>
                       </div>
@@ -15235,7 +15382,7 @@ pod &lsquo;FWFramework&rsquo;, :subspecs =&gt; [&lsquo;Contacts&rsquo;]</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

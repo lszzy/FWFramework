@@ -164,6 +164,11 @@ extension Wrapper where Base == Date {
         return NSDate.__fw_formatTimestamp(timestamp)
     }
     
+    /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
+    public static func formatServerDate(_ dateString: String) -> TimeInterval {
+        return Base.fw_formatServerDate(dateString)
+    }
+    
     /// 是否是闰年
     public var isLeapYear: Bool {
         return (base as NSDate).__fw_isLeapYear
@@ -183,6 +188,24 @@ extension Wrapper where Base == Date {
     public func days(from date: Date) -> Int {
         return (base as NSDate).__fw_days(from: date)
     }
+}
+
+extension Date {
+    
+    fileprivate static func fw_formatServerDate(_ dateString: String) -> TimeInterval {
+        let dateFormatter = fw_serverDateFormatter
+        let date = dateFormatter.date(from: dateString)
+        return date?.timeIntervalSince1970 ?? 0
+    }
+    
+    private static var fw_serverDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "GMT")
+        formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+    
 }
 
 // MARK: - NSNumber+Foundation

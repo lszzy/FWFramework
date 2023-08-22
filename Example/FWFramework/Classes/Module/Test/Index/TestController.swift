@@ -64,7 +64,7 @@ import Darwin
             ["PagingView", "TestPagingController"],
             ["PasscodeView", "TestPasscodeController"],
             ["PopupMenu", "TestPopupController"],
-            ["QrcodeScanView", "TestQrcodeController"],
+            ["ScanView", "TestQrcodeController"],
             ["ToolbarView", "TestToolbarController"],
             ["TabbarController", "TestTabbarController"],
             ["SegmentedControl", "TestSegmentController"],

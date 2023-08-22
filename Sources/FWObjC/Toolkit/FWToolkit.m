@@ -444,6 +444,21 @@
     return [[NSBundle mainBundle].appStoreReceiptURL.path containsString:@"sandboxReceipt"];
 }
 
++ (void)fw_beginBackgroundTask:(void (NS_NOESCAPE ^)(void (^ _Nonnull)(void)))task expirationHandler:(void (^)(void))expirationHandler
+{
+    UIApplication *application = UIApplication.sharedApplication;
+    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        if (expirationHandler) expirationHandler();
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+
+    task(^{
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    });
+}
+
 @end
 
 #pragma mark - UIColor+FWToolkit

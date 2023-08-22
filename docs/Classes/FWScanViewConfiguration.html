@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>FWQrcodeScanView Class Reference</title>
+    <title>FWScanViewConfiguration Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/FWQrcodeScanView" class="dashAnchor"></a>
-    <a title="FWQrcodeScanView Class Reference"></a>
+    <a name="//apple_ref/swift/Class/FWScanViewConfiguration" class="dashAnchor"></a>
+    <a title="FWScanViewConfiguration Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.16.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">FWFramework Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        FWQrcodeScanView Class Reference
+        FWScanViewConfiguration Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -803,12 +803,6 @@
                 <a href="../Classes/FWPullRefreshView.html">FWPullRefreshView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanManager.html">FWQrcodeScanManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanView.html">FWQrcodeScanView</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/FWRefreshPluginImpl.html">FWRefreshPluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -828,6 +822,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSDWebImageImpl.html">FWSDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanCode.html">FWScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanView.html">FWScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSceneDelegate.html">FWSceneDelegate</a>
@@ -1584,12 +1587,6 @@
                 <a href="../Enums/FWPullRefreshState.html">FWPullRefreshState</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Enums/FWRequestCacheErrorCode.html">FWRequestCacheErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -1609,6 +1606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSSLPinningMode.html">FWSSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSegmentedControlBorderType.html">FWSegmentedControlBorderType</a>
@@ -1935,6 +1935,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWRequestDelegate.html">FWRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeDelegate.html">FWScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeSampleBufferDelegate.html">FWScanCodeSampleBufferDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWScrollViewController.html">FWScrollViewController</a>
@@ -2644,6 +2650,9 @@
             <a href="../Structs.html">Structures</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="../Structs/CachedValue.html">CachedValue</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/DeserializeOptions.html">DeserializeOptions</a>
               </li>
               <li class="nav-group-task">
@@ -2781,21 +2790,61 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>FWQrcodeScanView</h1>
+            <h1>FWScanViewConfiguration</h1>
               <div class="declaration">
                 <div class="language">
                   <p class="aside-title">Objective-C</p>
-                  <pre class="highlight objective_c"><code>
-<span class="k">@interface</span> <span class="nc">FWQrcodeScanView</span> <span class="p">:</span> <span class="nc">UIView</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">FWScanViewConfiguration</span> <span class="p">:</span> <span class="nc">NSObject</span>
+
+<span class="c1">/// 扫描线，默认为：nil</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">scanline</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线图片，默认为：nil</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">scanlineImage</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线每次移动的步长，默认为：3.5f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scanlineStep</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线是否执行逆动画，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">autoreverses</span><span class="p">;</span>
+
+<span class="c1">/// 扫描线是否从扫描框顶部开始扫描，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isFromTop</span><span class="p">;</span>
+
+<span class="c1">/// FWScanView 背景色，默认为：[[UIColor blackColor] colorWithAlphaComponent:0.5]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">color</span><span class="p">;</span>
+
+<span class="c1">/// 是否需要辅助扫描框，默认为：NO</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isShowBorder</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描框的颜色，默认为：[UIColor whiteColor]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">borderColor</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描框的宽度，默认为：0.2f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">borderWidth</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角位置，默认为：FWScanCornerLoactionDefault</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n"><a href="../Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a></span> <span class="n">cornerLocation</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角颜色，默认为：[UIColor greenColor]</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">cornerColor</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角宽度，默认为：2.0f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">cornerWidth</span><span class="p">;</span>
+
+<span class="c1">/// 辅助扫描边角长度，默认为：20.0f</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">cornerLength</span><span class="p">;</span>
+
+<span class="k">@end</span></code></pre>
 
                 </div>
                 <div class="language">
                   <p class="aside-title">Swift</p>
-                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">QrcodeScanView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">ScanViewConfiguration</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                 </div>
               </div>
-            <p>FWQrcodeScanView</p>
+            <p>Undocumented</p>
 
           </section>
           <section class="section task-group-section">
@@ -2804,9 +2853,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)scanAnimationStyle"></a>
-                    <a name="//apple_ref/swift/Property/scanAnimationStyle" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)scanAnimationStyle">scanAnimationStyle</a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)scanline"></a>
+                    <a name="//apple_ref/swift/Property/scanline" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)scanline">scanline</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2814,19 +2863,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>扫描样式，默认 ScanAnimationStyleDefault</p>
+                        <p>扫描线，默认为：nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a></span> <span class="n">scanAnimationStyle</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">scanline</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">scanAnimationStyle</span><span class="p">:</span> <span class="kt">QrcodeScanAnimationStyle</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">scanline</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2836,9 +2885,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)scanImageName"></a>
-                    <a name="//apple_ref/swift/Property/scanImageName" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)scanImageName">scanImageName</a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)scanlineImage"></a>
+                    <a name="//apple_ref/swift/Property/scanlineImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)scanlineImage">scanlineImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2846,19 +2895,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>扫描线名，支持NSString和UIImage，默认无</p>
+                        <p>扫描线图片，默认为：nil</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span> <span class="n">scanImageName</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">scanlineImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">scanImageName</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">scanlineImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2868,9 +2917,169 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)borderColor"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)scanlineStep"></a>
+                    <a name="//apple_ref/swift/Property/scanlineStep" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)scanlineStep">scanlineStep</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>扫描线每次移动的步长，默认为：3.5f</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scanlineStep</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">scanlineStep</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)autoreverses"></a>
+                    <a name="//apple_ref/swift/Property/autoreverses" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)autoreverses">autoreverses</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>扫描线是否执行逆动画，默认为：NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">autoreverses</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">autoreverses</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)isFromTop"></a>
+                    <a name="//apple_ref/swift/Property/isFromTop" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)isFromTop">isFromTop</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>扫描线是否从扫描框顶部开始扫描，默认为：NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isFromTop</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isFromTop</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)color"></a>
+                    <a name="//apple_ref/swift/Property/color" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)color">color</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>FWScanView 背景色，默认为：[[UIColor blackColor] colorWithAlphaComponent:0.5]</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">color</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">color</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)isShowBorder"></a>
+                    <a name="//apple_ref/swift/Property/isShowBorder" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)isShowBorder">isShowBorder</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>是否需要辅助扫描框，默认为：NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isShowBorder</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isShowBorder</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)borderColor"></a>
                     <a name="//apple_ref/swift/Property/borderColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)borderColor">borderColor</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)borderColor">borderColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2878,7 +3087,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边框颜色，默认白色</p>
+                        <p>辅助扫描框的颜色，默认为：[UIColor whiteColor]</p>
 
                       </div>
                       <div class="declaration">
@@ -2900,41 +3109,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)borderFrame"></a>
-                    <a name="//apple_ref/swift/Property/borderFrame" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)borderFrame">borderFrame</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>边框frame，默认视图宽度*0.7，居中</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">borderFrame</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">borderFrame</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)borderWidth"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)borderWidth"></a>
                     <a name="//apple_ref/swift/Property/borderWidth" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)borderWidth">borderWidth</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)borderWidth">borderWidth</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2942,7 +3119,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边框宽度，默认0.2f</p>
+                        <p>辅助扫描框的宽度，默认为：0.2f</p>
 
                       </div>
                       <div class="declaration">
@@ -2964,9 +3141,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)cornerLocation"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)cornerLocation"></a>
                     <a name="//apple_ref/swift/Property/cornerLocation" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)cornerLocation">cornerLocation</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)cornerLocation">cornerLocation</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2974,19 +3151,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边角位置，默认 CornerLocationDefault</p>
+                        <p>辅助扫描边角位置，默认为：FWScanCornerLoactionDefault</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a></span> <span class="n">cornerLocation</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a></span> <span class="n">cornerLocation</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cornerLocation</span><span class="p">:</span> <span class="kt">QrcodeCornerLocation</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cornerLocation</span><span class="p">:</span> <span class="kt">ScanCornerLoaction</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2996,9 +3173,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)cornerColor"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)cornerColor"></a>
                     <a name="//apple_ref/swift/Property/cornerColor" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)cornerColor">cornerColor</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)cornerColor">cornerColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3006,7 +3183,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边角颜色，默认微信颜色</p>
+                        <p>辅助扫描边角颜色，默认为：[UIColor greenColor]</p>
 
                       </div>
                       <div class="declaration">
@@ -3028,9 +3205,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)cornerWidth"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)cornerWidth"></a>
                     <a name="//apple_ref/swift/Property/cornerWidth" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)cornerWidth">cornerWidth</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)cornerWidth">cornerWidth</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3038,7 +3215,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边角宽度，默认 2.f</p>
+                        <p>辅助扫描边角宽度，默认为：2.0f</p>
 
                       </div>
                       <div class="declaration">
@@ -3060,9 +3237,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)cornerLength"></a>
+                    <a name="/c:objc(cs)FWScanViewConfiguration(py)cornerLength"></a>
                     <a name="//apple_ref/swift/Property/cornerLength" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)cornerLength">cornerLength</a>
+                    <a class="token" href="#/c:objc(cs)FWScanViewConfiguration(py)cornerLength">cornerLength</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3070,7 +3247,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>边角长度，默认20.f</p>
+                        <p>辅助扫描边角长度，默认为：20.0f</p>
 
                       </div>
                       <div class="declaration">
@@ -3089,140 +3266,12 @@
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)backgroundAlpha"></a>
-                    <a name="//apple_ref/swift/Property/backgroundAlpha" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)backgroundAlpha">backgroundAlpha</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>扫描区周边颜色的 alpha 值，默认 0.2f</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">backgroundAlpha</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">backgroundAlpha</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(py)animationTimeInterval"></a>
-                    <a name="//apple_ref/swift/Property/animationTimeInterval" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(py)animationTimeInterval">animationTimeInterval</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>扫描线动画时间，默认 0.02s</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSTimeInterval</span> <span class="n">animationTimeInterval</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">animationTimeInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(im)addTimer"></a>
-                    <a name="//apple_ref/swift/Method/-addTimer" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(im)addTimer">-addTimer</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>添加定时器</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">addTimer</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">addTimer</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)FWQrcodeScanView(im)removeTimer"></a>
-                    <a name="//apple_ref/swift/Method/-removeTimer" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWQrcodeScanView(im)removeTimer">-removeTimer</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>移除定时器</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">removeTimer</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">removeTimer</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

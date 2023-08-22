@@ -134,6 +134,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否是Testflight版本
 @property (class, nonatomic, assign, readonly) BOOL fw_isTestflight NS_REFINED_FOR_SWIFT;
 
+/// 开始后台任务，task必须调用completionHandler
++ (void)fw_beginBackgroundTask:(void (NS_NOESCAPE ^)(void (^completionHandler)(void)))task expirationHandler:(nullable void (^)(void))expirationHandler NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UIColor+FWToolkit

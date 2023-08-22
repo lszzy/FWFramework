@@ -17,7 +17,7 @@
     <a title="Enumerations  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
+        <p><a href="index.html">FWFramework 4.16.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -803,12 +803,6 @@
                 <a href="Classes/FWPullRefreshView.html">FWPullRefreshView</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/FWQrcodeScanManager.html">FWQrcodeScanManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/FWQrcodeScanView.html">FWQrcodeScanView</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Classes/FWRefreshPluginImpl.html">FWRefreshPluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -828,6 +822,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/FWSDWebImageImpl.html">FWSDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanCode.html">FWScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanView.html">FWScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/FWSceneDelegate.html">FWSceneDelegate</a>
@@ -1584,12 +1587,6 @@
                 <a href="Enums/FWPullRefreshState.html">FWPullRefreshState</a>
               </li>
               <li class="nav-group-task">
-                <a href="Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Enums/FWRequestCacheErrorCode.html">FWRequestCacheErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -1609,6 +1606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Enums/FWSSLPinningMode.html">FWSSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a>
               </li>
               <li class="nav-group-task">
                 <a href="Enums/FWSegmentedControlBorderType.html">FWSegmentedControlBorderType</a>
@@ -1935,6 +1935,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/FWRequestDelegate.html">FWRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FWScanCodeDelegate.html">FWScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/FWScanCodeSampleBufferDelegate.html">FWScanCodeSampleBufferDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/FWScrollViewController.html">FWScrollViewController</a>
@@ -2643,6 +2649,9 @@
           <li class="nav-group-name">
             <a href="Structs.html">Structures</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/CachedValue.html">CachedValue</a>
+              </li>
               <li class="nav-group-task">
                 <a href="Structs/DeserializeOptions.html">DeserializeOptions</a>
               </li>
@@ -4870,84 +4879,6 @@ the type of <code>responseObject</code>.</p>
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@E@FWQrcodeCornerLocation"></a>
-                    <a name="//apple_ref/swift/Enum/FWQrcodeCornerLocation" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWQrcodeCornerLocation">FWQrcodeCornerLocation</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Enums/FWQrcodeCornerLocation.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">NS_ENUM</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">,</span> <span class="n">FWQrcodeCornerLocation</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">/// 默认与边框线同中心点</span>
-    <span class="n">FWQrcodeCornerLocationDefault</span><span class="p">,</span>
-    <span class="c1">/// 在边框线内部</span>
-    <span class="n">FWQrcodeCornerLocationInside</span><span class="p">,</span>
-    <span class="c1">/// 在边框线外部</span>
-    <span class="n">FWQrcodeCornerLocationOutside</span>
-<span class="p">}</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">QrcodeCornerLocation</span> <span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@E@FWQrcodeScanAnimationStyle"></a>
-                    <a name="//apple_ref/swift/Enum/FWQrcodeScanAnimationStyle" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@FWQrcodeScanAnimationStyle">FWQrcodeScanAnimationStyle</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Enums/FWQrcodeScanAnimationStyle.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">NS_ENUM</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">,</span> <span class="n">FWQrcodeScanAnimationStyle</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">/// 单线扫描样式</span>
-    <span class="n">FWQrcodeScanAnimationStyleDefault</span><span class="p">,</span>
-    <span class="c1">/// 网格扫描样式</span>
-    <span class="n">FWQrcodeScanAnimationStyleGrid</span>
-<span class="p">}</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">QrcodeScanAnimationStyle</span> <span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -5085,6 +5016,59 @@ the type of <code>responseObject</code>.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">RequestCacheErrorCode</span> <span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/FWScanView"></a>
+                <a name="//apple_ref/swift/Section/FWScanView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/FWScanView"></a>
+                  <h3 class="section-name"><span>FWScanView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@FWScanCornerLoaction"></a>
+                    <a name="//apple_ref/swift/Enum/FWScanCornerLoaction" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@FWScanCornerLoaction">FWScanCornerLoaction</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Enums/FWScanCornerLoaction.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">NS_ENUM</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">,</span> <span class="n">FWScanCornerLoaction</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">/// 默认与边框线同中心点</span>
+    <span class="n">FWScanCornerLoactionDefault</span><span class="p">,</span>
+    <span class="c1">/// 在边框线内部</span>
+    <span class="n">FWScanCornerLoactionInside</span><span class="p">,</span>
+    <span class="c1">/// 在边框线外部</span>
+    <span class="n">FWScanCornerLoactionOutside</span>
+<span class="p">}</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">ScanCornerLoaction</span> <span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7056,7 +7040,7 @@ the type of <code>responseObject</code>.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
