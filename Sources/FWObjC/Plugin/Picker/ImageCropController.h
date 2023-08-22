@@ -298,8 +298,8 @@ NS_SWIFT_NAME(ImageCropController)
  Called when the user has committed the crop action, and provides
  just the cropping rectangle.
  
- @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
- @param angle The angle of the image when it was cropped
+ cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ angle The angle of the image when it was cropped
  */
 @property (nullable, nonatomic, strong) void (^onDidCropImageToRect)(CGRect cropRect, NSInteger angle);
 
@@ -307,9 +307,9 @@ NS_SWIFT_NAME(ImageCropController)
  Called when the user has committed the crop action, and provides
  both the cropped image with crop co-ordinates.
  
- @param image The newly cropped image.
- @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
- @param angle The angle of the image when it was cropped
+ image The newly cropped image.
+ cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ angle The angle of the image when it was cropped
  */
 @property (nullable, nonatomic, strong) void (^onDidCropToRect)(UIImage* _Nonnull image, CGRect cropRect, NSInteger angle);
 
@@ -317,9 +317,9 @@ NS_SWIFT_NAME(ImageCropController)
  If the cropping style is set to circular, this block will return a circle-cropped version of the selected
  image, as well as it's cropping co-ordinates
  
- @param image The newly cropped image, clipped to a circle shape
- @param cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
- @param angle The angle of the image when it was cropped
+ image The newly cropped image, clipped to a circle shape
+ cropRect A rectangle indicating the crop region of the image the user chose (In the original image's local co-ordinate space)
+ angle The angle of the image when it was cropped
  */
 @property (nullable, nonatomic, strong) void (^onDidCropToCircleImage)(UIImage* _Nonnull image, CGRect cropRect, NSInteger angle);
 
