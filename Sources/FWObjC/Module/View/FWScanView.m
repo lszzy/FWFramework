@@ -26,13 +26,10 @@
 
 @implementation FWScanCode
 
-+ (instancetype)scanCode {
-    return [[self alloc] init];
-}
-
 - (instancetype)init {
     if ([super init]) {
         self.captureQueue = dispatch_queue_create("site.wuyong.queue.scan.capture", DISPATCH_QUEUE_CONCURRENT);
+        _videoZoomFactor = 1;
         
         /// 将设备输入对象添加到会话对象中
         if ([self.session canAddInput:self.deviceInput]) {
@@ -149,6 +146,7 @@
 
 - (void)setDelegate:(id<FWScanCodeDelegate>)delegate {
     _delegate = delegate;
+    if (_metadataOutput) return;
     
     /// 将元数据输出对象添加到会话对象中
     if ([_session canAddOutput:self.metadataOutput]) {
@@ -161,6 +159,30 @@
 
 - (void)setSampleBufferDelegate:(id<FWScanCodeSampleBufferDelegate>)sampleBufferDelegate {
     _sampleBufferDelegate = sampleBufferDelegate;
+    if (_videoDataOutput) return;
+    
+    /// 添加捕获输出流到会话对象；构成识了别光线强弱
+    if ([_session canAddOutput:self.videoDataOutput]) {
+        [_session addOutput:self.videoDataOutput];
+    }
+}
+
+- (void)setScanResultBlock:(void (^)(NSString * _Nullable))scanResultBlock {
+    _scanResultBlock = scanResultBlock;
+    if (_metadataOutput) return;
+    
+    /// 将元数据输出对象添加到会话对象中
+    if ([_session canAddOutput:self.metadataOutput]) {
+        [_session addOutput:self.metadataOutput];
+    }
+    
+    /// 元数据输出对象的二维码识数据别类型
+    _metadataOutput.metadataObjectTypes = self.metadataObjectTypes;
+}
+
+- (void)setScanBrightnessBlock:(void (^)(CGFloat))scanBrightnessBlock {
+    _scanBrightnessBlock = scanBrightnessBlock;
+    if (_videoDataOutput) return;
     
     /// 添加捕获输出流到会话对象；构成识了别光线强弱
     if ([_session canAddOutput:self.videoDataOutput]) {
@@ -173,14 +195,14 @@
     _metadataOutput.rectOfInterest = rectOfInterest;
 }
 
-#pragma mark - Public
-
 - (void)setVideoZoomFactor:(CGFloat)factor {
     if (factor > self.device.maxAvailableVideoZoomFactor) {
         factor = self.device.maxAvailableVideoZoomFactor;
     } else if (factor < 1) {
         factor = 1;
     }
+    _videoZoomFactor = factor;
+    
     // 设置焦距大小
     if ([self.device lockForConfiguration:nil]) {
         [self.device rampToVideoZoomFactor:factor withRate:10];
@@ -188,10 +210,7 @@
     }
 }
 
-- (BOOL)checkCameraDeviceRearAvailable {
-    BOOL isRearCamera = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
-    return isRearCamera;
-}
+#pragma mark - Public
 
 - (void)startRunning {
     if (![self.session isRunning]) {
@@ -205,11 +224,8 @@
     }
 }
 
-- (void)playSoundEffect:(NSString *)file {
-    [UIApplication fw_playSystemSound:file completionHandler:nil];
-}
-
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
+
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
     if (metadataObjects != nil && metadataObjects.count > 0) {
         AVMetadataMachineReadableCodeObject *obj = metadataObjects[0];
@@ -227,6 +243,7 @@
 }
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
+
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
     NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
@@ -244,6 +261,47 @@
     });
 }
 
+#pragma mark - Util
+
++ (void)turnOnTorch {
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if ([device hasTorch]) {
+        BOOL locked = [device lockForConfiguration:nil];
+        if (locked) {
+            [device setTorchMode:AVCaptureTorchModeOn];
+            [device unlockForConfiguration];
+        }
+    }
+}
+
++ (void)turnOffTorch {
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if ([device hasTorch]) {
+        [device lockForConfiguration:nil];
+        [device setTorchMode:AVCaptureTorchModeOff];
+        [device unlockForConfiguration];
+    }
+}
+
++ (void)configCaptureDevice:(void (^)(AVCaptureDevice *))block
+{
+    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (captureDevice) {
+        [captureDevice lockForConfiguration:nil];
+        if (block) block(captureDevice);
+        [captureDevice unlockForConfiguration];
+    }
+}
+
++ (BOOL)isCameraRearAvailable {
+    BOOL isAvailable = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
+    return isAvailable;
+}
+
++ (void)playSoundEffect:(NSString *)file {
+    [UIApplication fw_playSystemSound:file completionHandler:nil];
+}
+
 #pragma mark - Read
 
 + (void)readQRCode:(UIImage *)image completion:(void (^)(NSString *result))completion {
@@ -259,29 +317,6 @@
     
     if (completion) {
         completion(messageString);
-    }
-}
-
-#pragma mark - Torch
-
-+ (void)turnOnTorch {
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    if ([device hasTorch]) {
-        BOOL locked = [device lockForConfiguration:nil];
-        if (locked) {
-            [device setTorchMode:AVCaptureTorchModeOn];
-            [device unlockForConfiguration];
-        }
-    }
-}
-
-+ (void)turnOffTorch {
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-
-    if ([device hasTorch]) {
-        [device lockForConfiguration:nil];
-        [device setTorchMode:AVCaptureTorchModeOff];
-        [device unlockForConfiguration];
     }
 }
 
@@ -506,11 +541,7 @@
 }
 
 - (void)doubleTapAction {
-    if (self.isSelected) {
-        self.isSelected = NO;
-    } else {
-        self.isSelected = YES;
-    }
+    self.isSelected = !self.isSelected;
     
     if (self.doubleTapBlock) {
         self.doubleTapBlock(self.isSelected);

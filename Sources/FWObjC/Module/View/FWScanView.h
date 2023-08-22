@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ScanCodeDelegate)
 @protocol FWScanCodeDelegate <NSObject>
+
 /// 扫描二维码结果函数
 ///
 /// @param scanCode     FWScanCode 对象
@@ -26,6 +27,7 @@ NS_SWIFT_NAME(ScanCodeDelegate)
 
 NS_SWIFT_NAME(ScanCodeSampleBufferDelegate)
 @protocol FWScanCodeSampleBufferDelegate <NSObject>
+
 /// 扫描时捕获外界光线强弱函数
 ///
 /// @param scanCode     FWScanCode 对象
@@ -42,14 +44,14 @@ NS_SWIFT_NAME(ScanCodeSampleBufferDelegate)
 NS_SWIFT_NAME(ScanCode)
 @interface FWScanCode : NSObject
 
-/// 类方法创建
-+ (instancetype)scanCode;
-
 /// 预览视图，必须设置（传外界控制器视图）
 @property (nonatomic, strong, nullable) UIView *preview;
 
 /// 扫描区域，以屏幕右上角为坐标原点，取值范围：0～1，默认为整个屏幕
 @property (nonatomic, assign) CGRect rectOfInterest;
+
+/// 视频缩放因子，默认1（捕获内容）
+@property (nonatomic, assign) CGFloat videoZoomFactor;
 
 /// 扫描二维码数据代理
 @property (nonatomic, weak, nullable) id<FWScanCodeDelegate> delegate;
@@ -63,35 +65,35 @@ NS_SWIFT_NAME(ScanCode)
 /// 扫描二维码光线强弱回调句柄
 @property (nonatomic, copy, nullable) void(^scanBrightnessBlock)(CGFloat brightness);
 
-/// 设置视频缩放因子（捕获内容）
-- (void)setVideoZoomFactor:(CGFloat)factor;
-
-/// 检测后置摄像头是否可用
-- (BOOL)checkCameraDeviceRearAvailable;
-
 /// 开启扫描
 - (void)startRunning;
 /// 停止扫描
 - (void)stopRunning;
 
-/// 播放音效
-- (void)playSoundEffect:(NSString *)file;
-
-#pragma mark - Read
-
-/// 读取图片中的二维码
-///
-/// @param image            图片
-/// @param completion       回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
-+ (void)readQRCode:(UIImage *)image completion:(void (^)(NSString * _Nullable result))completion;
-
-#pragma mark - Torch
+#pragma mark - Util
 
 /// 打开手电筒
 + (void)turnOnTorch;
 
 /// 关闭手电筒
 + (void)turnOffTorch;
+
+/// 配置扫描设备，比如自动聚焦等
++ (void)configCaptureDevice:(void (^)(AVCaptureDevice *device))block;
+
+/// 检测后置摄像头是否可用
++ (BOOL)isCameraRearAvailable;
+
+/// 播放音效
++ (void)playSoundEffect:(NSString *)file;
+
+#pragma mark - Read
+
+/// 读取图片中的二维码。图片过大可能导致闪退，建议先压缩再识别
+///
+/// @param image            图片
+/// @param completion       回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
++ (void)readQRCode:(UIImage *)image completion:(void (^)(NSString * _Nullable result))completion;
 
 #pragma mark - Generate
 
@@ -140,9 +142,6 @@ typedef NS_ENUM(NSUInteger, FWScanCornerLoaction) {
 
 NS_SWIFT_NAME(ScanViewConfigure)
 @interface FWScanViewConfigure : NSObject
-
-/// 类方法创建
-+ (instancetype)configure;
 
 /// 扫描线，默认为：nil
 @property (nonatomic, copy, nullable) NSString *scanline;
@@ -193,12 +192,6 @@ NS_SWIFT_NAME(ScanView)
 /// @param frame           FWScanView 的 frame
 /// @param configure       FWScanView 的配置类 FWScanViewConfigure
 - (instancetype)initWithFrame:(CGRect)frame configure:(FWScanViewConfigure *)configure;
-
-/// 类方法创建 FWScanView
-///
-/// @param frame           FWScanView 的 frame
-/// @param configure       FWScanView 的配置类 FWScanViewConfigure
-+ (instancetype)scanViewWithFrame:(CGRect)frame configure:(FWScanViewConfigure *)configure;
 
 /// 当前配置
 @property (nonatomic, strong, readonly) FWScanViewConfigure *configure;

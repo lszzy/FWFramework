@@ -23,7 +23,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         
         let result = ScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight), configure: configure)
         result.doubleTapBlock = { [weak self] selected in
-            self?.scanCode.setVideoZoomFactor(selected ? 4.0 : 1.0)
+            self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
         }
         return result
     }()
@@ -59,29 +59,21 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupSubviews() {
-        let status = AuthorizeManager.manager(type: .camera)?.authorizeStatus() ?? .restricted
-        if status == .restricted || status == .denied {
-            self.fw.showConfirm(title: status == .restricted ? "未检测到您的摄像头" : "未打开摄像头权限", message: nil, cancel: "取消", confirm: "设置") {
-                UIApplication.fw.openAppSettings()
-            }
-        } else {
-            self.setupScanManager()
-            self.view.addSubview(self.scanView)
-            self.view.addSubview(self.promptLabel)
-            
-            // 由于异步授权，viewWillAppear时可能未完成，此处调用start
-            self.startScanManager()
-        }
+        view.backgroundColor = .black
+        view.addSubview(scanView)
+        view.addSubview(promptLabel)
+        
+        setupScanManager()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.startScanManager()
+        startScanManager()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.stopScanManager()
+        stopScanManager()
     }
     
     deinit {
@@ -89,27 +81,28 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     func setupScanManager() {
-        if scanCode.checkCameraDeviceRearAvailable() {
-            scanCode.scanResultBlock = { [weak self] result in
-                guard let result = result else { return }
-                if let sound = ModuleBundle.resourcePath("Qrcode.caf") {
-                    self?.scanCode.playSoundEffect(sound)
-                }
-                self?.stopScanManager()
-                self?.onScanResult(result)
+        guard ScanCode.isCameraRearAvailable() else { return }
+        
+        scanCode.scanResultBlock = { [weak self] result in
+            if result != nil,
+               let sound = ModuleBundle.resourcePath("Qrcode.caf") {
+                ScanCode.playSoundEffect(sound)
             }
-            scanCode.scanBrightnessBlock = { [weak self] brightness in
-                guard let self = self else { return }
-                if brightness < -1.5 {
-                    self.view.addSubview(self.flashlightBtn)
-                } else if brightness > 0 {
-                    if !self.flashlightSelected {
-                        self.removeFlashlightBtn()
-                    }
-                }
-            }
-            scanCode.preview = view
+            
+            self?.stopScanManager()
+            self?.onScanResult(result)
         }
+        scanCode.scanBrightnessBlock = { [weak self] brightness in
+            guard let self = self else { return }
+            if brightness < -1 {
+                self.view.addSubview(self.flashlightBtn)
+            } else {
+                if !self.flashlightSelected {
+                    self.removeFlashlightBtn()
+                }
+            }
+        }
+        scanCode.preview = view
     }
     
     func startScanManager() {
@@ -164,17 +157,17 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 image = image?.fw.compressImage(maxLength: 300 * 1024)
                 if let image = image {
                     ScanCode.readQRCode(image) { result in
-                        if let result = result {
-                            self?.onScanResult(result)
-                        }
+                        self?.onScanResult(result)
                     }
+                } else {
+                    self?.startScanManager()
                 }
             }
         }
     }
     
-    func onScanResult(_ result: String) {
-        fw.showAlert(title: "扫描结果", message: result, cancel: nil) { [weak self] in
+    func onScanResult(_ result: String?) {
+        fw.showAlert(title: "扫描结果", message: result ?? "失败", cancel: nil) { [weak self] in
             self?.startScanManager()
         }
     }
