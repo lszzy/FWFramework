@@ -49,9 +49,7 @@ NSString *const FWRequestValidationErrorDomain = @"site.wuyong.error.request.val
 
 - (void)setError:(NSError *)error {
     _error = error;
-    if (error != nil) {
-        objc_setAssociatedObject(error, @selector(isRequestError:), @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
+    if (error != nil) [FWNetworkUtils markRequestError:error];
 }
 
 - (NSHTTPURLResponse *)response {
