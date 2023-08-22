@@ -55,6 +55,55 @@ public struct StoredValue<T> {
     }
 }
 
+// MARK: - CachedValue
+/// 缓存属性包装器注解，默认为手工指定或初始值
+///
+/// 使用示例：
+/// @CachedValue("cacheKey")
+/// static var cacheValue: String = ""
+@propertyWrapper
+public struct CachedValue<T> {
+    private let key: String
+    private let defaultValue: T
+    private let type: CacheType
+    
+    public init(
+        wrappedValue: T,
+        _ key: String,
+        defaultValue: T? = nil,
+        type: CacheType = .file
+    ) {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.type = type
+    }
+    
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: T? = nil,
+        type: CacheType = .file
+    ) where WrappedValue? == T {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.type = type
+    }
+    
+    public var wrappedValue: T {
+        get {
+            let value = CacheManager.manager(withType: type)?.object(forKey: key) as? T
+            return !Optional<Any>.isNone(value) ? (value ?? defaultValue) : defaultValue
+        }
+        set {
+            if !Optional<Any>.isNone(newValue) {
+                CacheManager.manager(withType: type)?.setObject(newValue, forKey: key)
+            } else {
+                CacheManager.manager(withType: type)?.removeObject(forKey: key)
+            }
+        }
+    }
+}
+
 // MARK: - ValidatedValue
 /// ValidatedValue属性包装器注解，默认为手工指定或初始值
 ///
