@@ -1,5 +1,18 @@
 # 更新日志
 
+## [4.16.0] - 2023-08-22
+
+### Added
+* 新增Swift版本CachedValue注解
+* 新增Swift版本表格和集合Cell简单曝光方案
+* 新增Swift版本解析服务器响应时间方法
+* 新增开始后台任务快捷方法
+* 重构和同步二维码扫描组件ScanView
+* PopupMenu新增maskViewColor属性
+* SegmentedControl新增自定义layer句柄
+* 新增判断网络请求错误类型工具方法
+* 自定义Sheet组件支持隐藏取消按钮
+
 ## [4.15.0] - 2023-07-28
 
 ### Added

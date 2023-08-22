@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.15.0 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.16.0 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -803,12 +803,6 @@
                 <a href="../Classes/FWPullRefreshView.html">FWPullRefreshView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanManager.html">FWQrcodeScanManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/FWQrcodeScanView.html">FWQrcodeScanView</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/FWRefreshPluginImpl.html">FWRefreshPluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -828,6 +822,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSDWebImageImpl.html">FWSDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanCode.html">FWScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanView.html">FWScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FWScanViewConfiguration.html">FWScanViewConfiguration</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/FWSceneDelegate.html">FWSceneDelegate</a>
@@ -1584,12 +1587,6 @@
                 <a href="../Enums/FWPullRefreshState.html">FWPullRefreshState</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeCornerLocation.html">FWQrcodeCornerLocation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/FWQrcodeScanAnimationStyle.html">FWQrcodeScanAnimationStyle</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Enums/FWRequestCacheErrorCode.html">FWRequestCacheErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -1609,6 +1606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSSLPinningMode.html">FWSSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FWScanCornerLoaction.html">FWScanCornerLoaction</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWSegmentedControlBorderType.html">FWSegmentedControlBorderType</a>
@@ -1935,6 +1935,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWRequestDelegate.html">FWRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeDelegate.html">FWScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/FWScanCodeSampleBufferDelegate.html">FWScanCodeSampleBufferDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/FWScrollViewController.html">FWScrollViewController</a>
@@ -2643,6 +2649,9 @@
           <li class="nav-group-name">
             <a href="../Structs.html">Structures</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/CachedValue.html">CachedValue</a>
+              </li>
               <li class="nav-group-task">
                 <a href="../Structs/DeserializeOptions.html">DeserializeOptions</a>
               </li>
@@ -34418,6 +34427,33 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DateVRszlE012formatServerD0ySdSSFZ"></a>
+                    <a name="//apple_ref/swift/Method/formatServerDate(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DateVRszlE012formatServerD0ySdSSFZ">formatServerDate(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">formatServerDate</span><span class="p">(</span><span class="n">_</span> <span class="nv">dateString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAA10Foundation4DateVRszlE10isLeapYearSbvp"></a>
                     <a name="//apple_ref/swift/Property/isLeapYear" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DateVRszlE10isLeapYearSbvp">isLeapYear</a>
@@ -41480,6 +41516,33 @@ NSObject.fw.swizzleInstanceMethod(
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE19beginBackgroundTask_17expirationHandleryyyycXE_yycSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/beginBackgroundTask(_:expirationHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE19beginBackgroundTask_17expirationHandleryyyycXE_yycSgtFZ">beginBackgroundTask(_:<wbr>expirationHandler:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>开始后台任务，task必须调用completionHandler</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">beginBackgroundTask</span><span class="p">(</span><span class="n">_</span> <span class="nv">task</span><span class="p">:</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">expirationHandler</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -48436,6 +48499,33 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE11willDisplay_2at3key8exposureySo0cD4CellC_10Foundation9IndexPathVs11AnyHashableVSgyyctF"></a>
+                    <a name="//apple_ref/swift/Method/willDisplay(_:at:key:exposure:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE11willDisplay_2at3key8exposureySo0cD4CellC_10Foundation9IndexPathVs11AnyHashableVSgyyctF">willDisplay(_:<wbr>at:<wbr>key:<wbr>exposure:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">willDisplay</span><span class="p">(</span><span class="n">_</span> <span class="nv">cell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">AnyHashable</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">exposure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -48591,6 +48681,33 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">reloadDataWithoutAnimation</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE11willDisplay_2at3key8exposureySo0cD4CellC_10Foundation9IndexPathVs11AnyHashableVSgyyctF"></a>
+                    <a name="//apple_ref/swift/Method/willDisplay(_:at:key:exposure:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE11willDisplay_2at3key8exposureySo0cD4CellC_10Foundation9IndexPathVs11AnyHashableVSgyyctF">willDisplay(_:<wbr>at:<wbr>key:<wbr>exposure:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">willDisplay</span><span class="p">(</span><span class="n">_</span> <span class="nv">cell</span><span class="p">:</span> <span class="kt">UICollectionViewCell</span><span class="p">,</span> <span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">AnyHashable</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">exposure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -49235,7 +49352,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-07-28)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

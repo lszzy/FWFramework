@@ -52,7 +52,7 @@
 #import "FWPageControl.h"
 #import "FWPasscodeView.h"
 #import "FWPopupMenu.h"
-#import "FWQrcodeScanView.h"
+#import "FWScanView.h"
 #import "FWSegmentedControl.h"
 #import "FWStatisticalManager.h"
 #import "FWTagCollectionView.h"

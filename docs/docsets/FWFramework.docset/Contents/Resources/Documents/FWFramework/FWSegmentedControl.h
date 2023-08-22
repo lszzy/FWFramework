@@ -66,6 +66,8 @@ typedef NS_ENUM(NSInteger, FWSegmentedControlImagePosition) {
 NS_SWIFT_NAME(SegmentedControl)
 @interface FWSegmentedControl : UIControl
 
+@property (nonatomic, strong, readonly) UIScrollView *scrollView;
+
 @property (nonatomic, strong, nullable) NSArray<NSString *> *sectionTitles;
 @property (nonatomic, strong, nullable) NSArray<UIImage *> *sectionImages;
 @property (nonatomic, strong, nullable) NSArray<UIImage *> *sectionSelectedImages;
@@ -311,6 +313,13 @@ NS_SWIFT_NAME(SegmentedControl)
  Defaults is UIEdgeInsetsZero
  */
 @property (nonatomic, readwrite) UIEdgeInsets segmentBackgroundEdgeInset;
+
+/**
+ Custom block for segments.
+ 
+ Defaults is nil
+ */
+@property (nonatomic, copy, nullable) void (^segmentCustomBlock)(FWSegmentedControl *segmentedControl, NSUInteger index, CGRect rect);
 
 @property (nonatomic, readwrite) UIEdgeInsets enlargeEdgeInset;
 
