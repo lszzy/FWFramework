@@ -367,8 +367,8 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 #pragma mark - __FWPopupMenu
 
 @interface __FWPopupMenuCell : UITableViewCell
-@property (nonatomic, assign) BOOL isShowSeparator;
-@property (nonatomic, strong) UIColor * separatorColor;
+@property (nonatomic, assign) BOOL showsSeparator;
+@property (nonatomic, strong) UIColor *separatorColor;
 @end
 
 @implementation __FWPopupMenuCell
@@ -377,16 +377,16 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _isShowSeparator = YES;
+        _showsSeparator = YES;
         _separatorColor = [UIColor lightGrayColor];
         [self setNeedsDisplay];
     }
     return self;
 }
 
-- (void)setIsShowSeparator:(BOOL)isShowSeparator
+- (void)setShowsSeparator:(BOOL)showsSeparator
 {
-    _isShowSeparator = isShowSeparator;
+    _showsSeparator = showsSeparator;
     [self setNeedsDisplay];
 }
 
@@ -405,7 +405,7 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 
 - (void)drawRect:(CGRect)rect
 {
-    if (!_isShowSeparator) return;
+    if (!_showsSeparator) return;
     UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, rect.size.height - 0.5, rect.size.width, 0.5)];
     [_separatorColor setFill];
     [bezierPath fillWithBlendMode:kCGBlendModeNormal alpha:1];
@@ -556,7 +556,7 @@ UITableViewDataSource
 {
     if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
         __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.isShowSeparator = YES;
+        cell.showsSeparator = YES;
     }
 }
 
@@ -564,7 +564,7 @@ UITableViewDataSource
 {
     if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
         __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.isShowSeparator = NO;
+        cell.showsSeparator = NO;
     }
 }
 
@@ -590,7 +590,7 @@ UITableViewDataSource
     }
     if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
         __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.isShowSeparator = NO;
+        cell.showsSeparator = NO;
     }
     __weak typeof(self) weakSelf = self;
     [self.animationManager displayShowAnimationCompletion:^{
@@ -606,7 +606,7 @@ UITableViewDataSource
 {
     _cornerRadius = 5.0;
     _rectCorner = UIRectCornerAllCorners;
-    self.isShowShadow = YES;
+    self.showsShadow = YES;
     _dismissOnSelected = YES;
     _dismissOnTouchOutside = YES;
     _fontSize = 15;
@@ -626,7 +626,8 @@ UITableViewDataSource
     _maxVisibleCount = 5;
     _itemHeight = 44;
     _isCornerChanged = NO;
-    _showMaskView = YES;
+    _showsMaskView = YES;
+    _maskViewColor = [[UIColor blackColor] colorWithAlphaComponent:0.1];
     _orientationManager = [__FWPopupMenuDeviceOrientationManager manager];
     _animationManager = [__FWPopupMenuAnimationManager manager];
     _animationManager.animationView = self;
@@ -684,12 +685,12 @@ UITableViewDataSource
     }
 }
 
-- (void)setIsShowShadow:(BOOL)isShowShadow
+- (void)setShowsShadow:(BOOL)showsShadow
 {
-    _isShowShadow = isShowShadow;
-    self.layer.shadowOpacity = isShowShadow ? 0.5 : 0;
+    _showsShadow = showsShadow;
+    self.layer.shadowOpacity = showsShadow ? 0.5 : 0;
     self.layer.shadowOffset = CGSizeMake(0, 0);
-    self.layer.shadowRadius = isShowShadow ? 2.0 : 0;
+    self.layer.shadowRadius = showsShadow ? 2.0 : 0;
 }
 
 - (void)setRelyView:(UIView *)relyView
@@ -706,10 +707,16 @@ UITableViewDataSource
     self.point = relyPoint;
 }
 
-- (void)setShowMaskView:(BOOL)showMaskView
+- (void)setShowsMaskView:(BOOL)showsMaskView
 {
-    _showMaskView = showMaskView;
-    _menuBackView.backgroundColor = showMaskView ? [[UIColor blackColor] colorWithAlphaComponent:0.1] : [UIColor clearColor];
+    _showsMaskView = showsMaskView;
+    _menuBackView.backgroundColor = showsMaskView ? self.maskViewColor : [UIColor clearColor];
+}
+
+- (void)setMaskViewColor:(UIColor *)maskViewColor
+{
+    _maskViewColor = maskViewColor;
+    _menuBackView.backgroundColor = self.showsMaskView ? maskViewColor : [UIColor clearColor];
 }
 
 - (void)setType:(__FWPopupMenuType)type

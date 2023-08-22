@@ -118,7 +118,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     private func showCustomPopupMenu(_ point: CGPoint) {
         PopupMenu.show(at: point, titles: titles, icons: nil, menuWidth: 110) { popupMenu in
             popupMenu.dismissOnSelected = true
-            popupMenu.isShadowShowing = true
+            popupMenu.showsShadow = true
             popupMenu.delegate = self
             popupMenu.cornerRadius = 8
             popupMenu.type = .default
@@ -131,7 +131,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     private func showDarkPopupMenu(_ point: CGPoint) {
         PopupMenu.show(at: point, titles: titles, icons: nil, menuWidth: 110) { popupMenu in
             popupMenu.dismissOnSelected = false
-            popupMenu.isShadowShowing = true
+            popupMenu.showsShadow = true
             popupMenu.delegate = self
             popupMenu.offset = 10
             popupMenu.type = .dark
@@ -164,7 +164,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         popupMenu = PopupMenu.showRely(on: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, otherSettings: { popupMenu in
             popupMenu.delegate = self
-            popupMenu.showMaskView = false
+            popupMenu.showsMaskView = false
             popupMenu.priorityDirection = .bottom
             popupMenu.maxVisibleCount = 1
             popupMenu.itemHeight = 60
