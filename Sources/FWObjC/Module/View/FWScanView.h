@@ -37,12 +37,22 @@ NS_SWIFT_NAME(ScanCodeSampleBufferDelegate)
 @end
 
 /**
- 二维码、条形码扫描
+ 二维码、条形码扫描，默认仅开启二维码
+ 
+ 不建议同时开启二维码和条形码，因为开启后条形码很难识别且只有中心位置可识别。
+ 默认二维码类型示例：[.qr]
+ 默认条形码类型示例：[.code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5]
  
  @see https://github.com/kingsic/SGQRCode
  */
 NS_SWIFT_NAME(ScanCode)
 @interface FWScanCode : NSObject
+
+/// 默认二维码类型，可自定义
+@property (class, nonatomic, copy) NSArray<AVMetadataObjectType> *metadataObjectTypesQRCode;
+    
+/// 默认条形码类型，可自定义
+@property (class, nonatomic, copy) NSArray<AVMetadataObjectType> *metadataObjectTypesBarcode;
 
 /// 预览视图，必须设置（传外界控制器视图）
 @property (nonatomic, strong, nullable) UIView *preview;
@@ -50,8 +60,11 @@ NS_SWIFT_NAME(ScanCode)
 /// 扫描区域，以屏幕右上角为坐标原点，取值范围：0～1，默认为整个屏幕
 @property (nonatomic, assign) CGRect rectOfInterest;
 
-/// 视频缩放因子，默认1（捕获内容）
+/// 视频缩放因子，默认同系统（捕获内容）
 @property (nonatomic, assign) CGFloat videoZoomFactor;
+
+/// 元对象类型，默认仅开启二维码
+@property (nonatomic, copy) NSArray<AVMetadataObjectType> *metadataObjectTypes;
 
 /// 扫描二维码数据代理
 @property (nonatomic, weak, nullable) id<FWScanCodeDelegate> delegate;
@@ -103,7 +116,7 @@ NS_SWIFT_NAME(ScanCode)
 #pragma mark - Generate
 
 /// 生成二维码
-+ (UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size;
++ (nullable UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size;
 
 /// 生成二维码（自定义颜色）
 ///
@@ -111,7 +124,7 @@ NS_SWIFT_NAME(ScanCode)
 /// @param size     二维码大小
 /// @param color    二维码颜色
 /// @param backgroundColor    二维码背景颜色
-+ (UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size color:(UIColor *)color backgroundColor:(UIColor *)backgroundColor;
++ (nullable UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size color:(UIColor *)color backgroundColor:(UIColor *)backgroundColor;
 
 /// 生成带 logo 的二维码（推荐使用）
 ///
@@ -119,7 +132,7 @@ NS_SWIFT_NAME(ScanCode)
 /// @param size     二维码大小
 /// @param logoImage    logo
 /// @param ratio        logo 相对二维码的比例（取值范围 0.0 ～ 0.5f）
-+ (UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size logoImage:(nullable UIImage *)logoImage ratio:(CGFloat)ratio;
++ (nullable UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size logoImage:(nullable UIImage *)logoImage ratio:(CGFloat)ratio;
 
 /// 生成带 logo 的二维码（拓展）
 ///
@@ -130,7 +143,7 @@ NS_SWIFT_NAME(ScanCode)
 /// @param logoImageCornerRadius    logo 外边框圆角（取值范围 0.0 ～ 10.0f）
 /// @param logoImageBorderWidth     logo 外边框宽度（取值范围 0.0 ～ 10.0f）
 /// @param logoImageBorderColor     logo 外边框颜色
-+ (UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size logoImage:(nullable UIImage *)logoImage ratio:(CGFloat)ratio logoImageCornerRadius:(CGFloat)logoImageCornerRadius logoImageBorderWidth:(CGFloat)logoImageBorderWidth logoImageBorderColor:(nullable UIColor *)logoImageBorderColor;
++ (nullable UIImage *)generateQRCodeWithData:(NSString *)data size:(CGFloat)size logoImage:(nullable UIImage *)logoImage ratio:(CGFloat)ratio logoImageCornerRadius:(CGFloat)logoImageCornerRadius logoImageBorderWidth:(CGFloat)logoImageBorderWidth logoImageBorderColor:(nullable UIColor *)logoImageBorderColor;
 
 @end
 
@@ -213,6 +226,9 @@ NS_SWIFT_NAME(ScanView)
 
 /// 双击回调方法
 @property (nonatomic, copy, nullable) void (^doubleTapBlock)(BOOL selected);
+
+/// 缩放回调方法，0表示开始
+@property (nonatomic, copy, nullable) void (^pinchScaleBlock)(CGFloat scale);
 
 /// 开始扫描
 - (void)startScanning;
