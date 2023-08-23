@@ -24,8 +24,19 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         result.doubleTapBlock = { [weak self] selected in
             self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
         }
+        result.pinchScaleBlock = { [weak self] scale in
+            guard let self = self else { return }
+            
+            if scale <= 0 {
+                self.currentZoomFactor = self.scanCode.videoZoomFactor
+            } else {
+                self.scanCode.videoZoomFactor = self.currentZoomFactor * scale
+            }
+        }
         return result
     }()
+    
+    private var currentZoomFactor: CGFloat = 1.0
     
     private lazy var flashlightBtn: UIButton = {
         let result = UIButton(type: .custom)
@@ -49,7 +60,21 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         
         fw.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "相册", style: .done, target: self, action: #selector(TestQrcodeController.onPhotoLibrary))
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "扫描二维码", "扫描条形码", "同时扫描", "生成二维码"], actionBlock: { index in
+                if index == 0 {
+                    self?.onPhotoLibrary()
+                } else if index == 1 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode
+                } else if index == 2 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesBarcode
+                } else if index == 3 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode + ScanCode.metadataObjectTypesBarcode
+                } else if index == 4 {
+                    self?.onGenerateCode()
+                }
+            })
+        }
     }
     
     func setupSubviews() {
@@ -140,16 +165,45 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
             if cancel {
                 self?.startScanManager()
             } else {
+                self?.app.showLoading(text: "识别中...")
                 ScanCode.readQRCode(objects.first as? UIImage, compress: true) { result in
+                    self?.app.hideLoading()
+                    
                     self?.onScanResult(result)
                 }
             }
         }
     }
     
-    func onScanResult(_ result: String?) {
-        fw.showAlert(title: "扫描结果", message: result ?? "失败", cancel: nil) { [weak self] in
+    @objc func onGenerateCode() {
+        stopScanManager()
+        
+        app.showPrompt(title: nil, message: "Please input code", cancel: nil, confirm: nil, promptBlock: nil) { [weak self] value in
+            guard !value.isEmpty else {
+                self?.startScanManager()
+                return
+            }
+            
+            var image = ScanCode.generateQRCode(withData: value, size: 375)
+            guard let image = image else {
+                self?.startScanManager()
+                return
+            }
+            
+            self?.app.showImagePreview(imageURLs: [image], imageInfos: nil, currentIndex: 0, sourceView: nil)
+        } cancelBlock: { [weak self] in
             self?.startScanManager()
+        }
+    }
+    
+    func onScanResult(_ result: String?) {
+        if let result = result {
+            app.showAlert(title: "扫描结果", message: result, cancel: nil) { [weak self] in
+                self?.startScanManager()
+            }
+        } else {
+            app.showMessage(text: "识别失败")
+            startScanManager()
         }
     }
     
