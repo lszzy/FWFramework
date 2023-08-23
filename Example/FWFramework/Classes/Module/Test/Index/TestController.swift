@@ -65,7 +65,7 @@ class TestController: UIViewController {
             ["PagingView", "TestPagingController"],
             ["PasscodeView", "TestPasscodeController"],
             ["PopupMenu", "TestPopupController"],
-            ["QrcodeScanView", "TestQrcodeController"],
+            ["ScanView", "TestQrcodeController"],
             ["ToolbarView", "TestToolbarController"],
             ["TabbarView", "TestTabbarViewController"],
             ["TabbarController", "TestTabbarController"],
