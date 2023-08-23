@@ -44,13 +44,11 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // MARK: - Accessor
-    /// 默认二维码类型
-    public static let metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [
-        .qr
-    ]
+    /// 默认二维码类型，可自定义
+    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
     
-    /// 默认条形码类型
-    public static let metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+    /// 默认条形码类型，可自定义
+    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
         .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
     ]
     
@@ -68,26 +66,22 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
 
-    /// 视频缩放因子，默认1（捕获内容）
+    /// 视频缩放因子，默认同系统（捕获内容）
     open var videoZoomFactor: CGFloat {
         get {
-            return _videoZoomFactor
+            return device?.videoZoomFactor ?? 0
         }
         set {
-            guard let device = device else {
-                _videoZoomFactor = newValue
-                return
-            }
+            guard let device = device else { return }
             
-            _videoZoomFactor = min(max(1, newValue), device.maxAvailableVideoZoomFactor)
+            let factor = min(max(device.minAvailableVideoZoomFactor, newValue), device.maxAvailableVideoZoomFactor)
             do {
                 try device.lockForConfiguration()
-                device.ramp(toVideoZoomFactor: _videoZoomFactor, withRate: 10)
+                device.videoZoomFactor = factor
                 device.unlockForConfiguration()
             } catch { }
         }
     }
-    private var _videoZoomFactor: CGFloat = 1.0
 
     /// 扫描二维码数据代理
     open weak var delegate: ScanCodeDelegate? {
@@ -455,7 +449,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         // 3、生成处理
         guard var outImage = colorFilter?.outputImage else { return nil }
         let outWidth = outImage.extent.size.width
-        let scale: CGFloat = outWidth > 0 ? (size / outWidth) : 0
+        let scale: CGFloat = outWidth > 0 ? (size / outWidth) : 1
         outImage = outImage.transformed(by: .init(scaleX: scale, y: scale))
         return UIImage(ciImage: outImage)
     }
@@ -503,6 +497,40 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         let qrcodeImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return qrcodeImage
+    }
+    
+    /// 生成code128条形码，无空白区域
+    ///
+    /// - Parameters:
+    ///   - data: 二维码数据
+    ///   - size: 二维码大小
+    ///   - color: 二维码颜色，默认黑色
+    ///   - backgroundColor: 二维码背景颜色，默认白色
+    /// - Returns: 条形码图片
+    open class func generateBarcode(
+        data: String,
+        size: CGSize,
+        color: UIColor = .black,
+        backgroundColor: UIColor = .white
+    ) -> UIImage? {
+        let stringData = data.data(using: .utf8)
+        // 1、二维码滤镜
+        let filter = CIFilter(name: "CICode128BarcodeGenerator")
+        filter?.setValue(stringData, forKey: "inputMessage")
+        filter?.setValue(NSNumber(value: 0), forKey: "inputQuietSpace")
+        let ciImage = filter?.outputImage
+        // 2、颜色滤镜
+        let colorFilter = CIFilter(name: "CIFalseColor")
+        colorFilter?.setValue(ciImage, forKey: "inputImage")
+        colorFilter?.setValue(CIColor(cgColor: color.cgColor), forKey: "inputColor0")
+        colorFilter?.setValue(CIColor(cgColor: backgroundColor.cgColor), forKey: "inputColor1")
+        // 3、生成处理
+        guard var outImage = colorFilter?.outputImage else { return nil }
+        let outSize = outImage.extent.size
+        let scaleX: CGFloat = outSize.width > 0 ? (size.width / outSize.width) : 1
+        let scaleY: CGFloat = outSize.height > 0 ? (size.height / outSize.height) : 1
+        outImage = outImage.transformed(by: .init(scaleX: scaleX, y: scaleY))
+        return UIImage(ciImage: outImage)
     }
     
 }
@@ -585,7 +613,18 @@ open class ScanView: UIView {
     }
 
     /// 双击回调方法
-    open var doubleTapBlock: ((Bool) -> Void)?
+    open var doubleTapBlock: ((Bool) -> Void)? {
+        didSet {
+            tapGesture.isEnabled = doubleTapBlock != nil
+        }
+    }
+    
+    /// 缩放回调方法，0表示开始
+    open var pinchScaleBlock: ((CGFloat) -> Void)? {
+        didSet {
+            pinchGesture.isEnabled = pinchScaleBlock != nil
+        }
+    }
     
     private lazy var contentView: UIView = {
         let result = UIView(frame: scanFrame)
@@ -621,6 +660,19 @@ open class ScanView: UIView {
         }
     }
     private var _scanlineImgView: UIImageView?
+    
+    private lazy var tapGesture: UITapGestureRecognizer = {
+        let result = UITapGestureRecognizer(target: self, action: #selector(doubleTapAction))
+        result.numberOfTapsRequired = 2
+        result.isEnabled = false
+        return result
+    }()
+    
+    private lazy var pinchGesture: UIPinchGestureRecognizer = {
+        let result = UIPinchGestureRecognizer(target: self, action: #selector(pinchAction(_:)))
+        result.isEnabled = false
+        return result
+    }()
     
     private var displayLink: CADisplayLink?
     private var isTop = true
@@ -659,9 +711,8 @@ open class ScanView: UIView {
         backgroundColor = .clear
         addSubview(contentView)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapAction))
-        tapGesture.numberOfTapsRequired = 2
         addGestureRecognizer(tapGesture)
+        addGestureRecognizer(pinchGesture)
     }
     
     open override func draw(_ rect: CGRect) {
@@ -867,6 +918,14 @@ open class ScanView: UIView {
     @objc private func doubleTapAction() {
         isSelected = !isSelected
         doubleTapBlock?(isSelected)
+    }
+    
+    @objc private func pinchAction(_ gesture: UIPinchGestureRecognizer) {
+        if gesture.state == .began {
+            pinchScaleBlock?(0)
+        } else if gesture.state == .changed {
+            pinchScaleBlock?(gesture.scale)
+        }
     }
     
 }
