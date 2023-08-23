@@ -264,8 +264,7 @@ open class PullRefreshView: UIView {
                 addSubview(customView)
             }
             let viewBounds = customView.bounds
-            let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
-            let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((bounds.size.height - viewBounds.size.height) / 2))
+            let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: (indicatorPadding / 2) + round((bounds.size.height - viewBounds.size.height) / 2))
             customView.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
         } else {
             switch state {
@@ -292,7 +291,7 @@ open class PullRefreshView: UIView {
             let leftViewWidth = max(arrowView.bounds.size.width, indicatorView.bounds.size.width)
             let margin: CGFloat = 10
             let marginY: CGFloat = 2
-            let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+            let paddingY = indicatorPadding / 2
             let labelMaxWidth = bounds.size.width - margin - leftViewWidth
             
             titleLabel.text = showsTitleLabel ? titles[state.rawValue] : nil
@@ -780,8 +779,7 @@ open class InfiniteScrollView: UIView {
         let indicatorOrigin = CGPoint(x: bounds.size.width / 2 - indicatorView.bounds.size.width / 2, y: paddingY + (bounds.size.height / 2 - indicatorView.bounds.size.height / 2))
         indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: indicatorView.bounds.size.width, height: indicatorView.bounds.size.height)
 
-        let finishedPaddingY = finishedPadding > 0 ? (finishedPadding / 2) : 0
-        let finishedOrigin = CGPoint(x: bounds.size.width / 2 - finishedView.bounds.size.width / 2, y: finishedPaddingY + (bounds.size.height / 2 - finishedView.bounds.size.height / 2))
+        let finishedOrigin = CGPoint(x: bounds.size.width / 2 - finishedView.bounds.size.width / 2, y: (finishedPadding / 2) + (bounds.size.height / 2 - finishedView.bounds.size.height / 2))
         finishedView.frame = CGRect(x: finishedOrigin.x, y: finishedOrigin.y, width: finishedView.bounds.size.width, height: finishedView.bounds.size.height)
     }
     
