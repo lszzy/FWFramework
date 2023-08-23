@@ -24,8 +24,19 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         result.doubleTapBlock = { [weak self] selected in
             self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
         }
+        result.pinchScaleBlock = { [weak self] scale in
+            guard let self = self else { return }
+            
+            if scale <= 0 {
+                self.currentZoomFactor = self.scanCode.videoZoomFactor
+            } else {
+                self.scanCode.videoZoomFactor = self.currentZoomFactor * scale
+            }
+        }
         return result
     }()
+    
+    private var currentZoomFactor: CGFloat = 1.0
     
     private lazy var flashlightBtn: UIButton = {
         let result = UIButton(type: .custom)
@@ -46,7 +57,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         app.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "相册条形码", "扫描二维码", "扫描条形码", "同时扫描"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "相册条形码", "扫描二维码", "扫描条形码", "同时扫描", "生成二维码", "生成条形码"], actionBlock: { index in
                 if index == 0 {
                     self?.onPhotoLibrary(false)
                 } else if index == 1 {
@@ -57,6 +68,10 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                     self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesBarcode
                 } else if index == 4 {
                     self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode + ScanCode.metadataObjectTypesBarcode
+                } else if index == 5 {
+                    self?.onGenerateCode(false)
+                } else if index == 6 {
+                    self?.onGenerateCode(true)
                 }
             })
         }
@@ -170,6 +185,33 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                     }
                 }
             }
+        }
+    }
+    
+    @objc func onGenerateCode(_ isBarcode: Bool = false) {
+        stopScanManager()
+        
+        app.showPrompt(title: nil, message: "Please input code", cancel: nil, confirm: nil, promptBlock: nil) { [weak self] value in
+            guard !value.isEmpty else {
+                self?.startScanManager()
+                return
+            }
+            
+            var image: UIImage?
+            if isBarcode {
+                image = ScanCode.generateBarcode(data: value, size: CGSize(width: 355, height: 105))
+                image = image?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: UIColor.white)
+            } else {
+                image = ScanCode.generateQrcode(data: value, size: 375)
+            }
+            guard let image = image else {
+                self?.startScanManager()
+                return
+            }
+            
+            self?.app.showImagePreview(imageURLs: [image], imageInfos: nil, currentIndex: 0, sourceView: nil)
+        } cancelBlock: { [weak self] in
+            self?.startScanManager()
         }
     }
     
