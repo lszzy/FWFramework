@@ -62,6 +62,7 @@ extension Wrapper where Base == Data {
     }
     
     /// 将对象归档保存到文件
+    @discardableResult
     public static func archiveObject(_ object: Any, toFile path: String) -> Bool {
         return Base.fw_archiveObject(object, toFile: path)
     }

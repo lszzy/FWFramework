@@ -105,6 +105,7 @@ extension WrapperGlobal {
     }
     
     /// 将对象归档保存到文件
+    @discardableResult
     public static func fw_archiveObject(_ object: Any, toFile path: String) -> Bool {
         guard let data = fw_archivedData(object) else { return false }
         do {
