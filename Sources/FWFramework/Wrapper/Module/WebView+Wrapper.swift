@@ -19,6 +19,12 @@ extension Wrapper where Base: WKWebView {
         set { Base.fw_reuseConfigurationBlock = newValue }
     }
     
+    /// 是否持久化processPool，默认false，开启后会自动加载持久化processPool
+    public static var processPoolPersisted: Bool {
+        get { return Base.fw_processPoolPersisted }
+        set { Base.fw_processPoolPersisted = newValue }
+    }
+    
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
     public static var processPool: WKProcessPool {
         get { return Base.fw_processPool }

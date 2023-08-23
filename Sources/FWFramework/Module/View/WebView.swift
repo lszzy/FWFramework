@@ -404,8 +404,41 @@ open class WebView: WKWebView {
     }
     
     // MARK: - WebView
+    /// 是否持久化processPool，默认false，开启后会自动加载持久化processPool
+    public static var fw_processPoolPersisted = false
+    
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
-    public static var fw_processPool = WKProcessPool()
+    public static var fw_processPool: WKProcessPool = {
+        guard fw_processPoolPersisted else {
+            return WKProcessPool()
+        }
+        
+        let cacheFile = fw_processCacheFile()
+        if let processPool = Data.fw_unarchivedObject(WKProcessPool.self, withFile: cacheFile) {
+            return processPool
+        } else {
+            let processPool = WKProcessPool()
+            Data.fw_archiveObject(processPool, toFile: cacheFile)
+            return processPool
+        }
+    }() {
+        didSet {
+            guard fw_processPoolPersisted else { return }
+            
+            let cacheFile = fw_processCacheFile()
+            Data.fw_archiveObject(fw_processPool, toFile: cacheFile)
+        }
+    }
+    
+    private static func fw_processCacheFile() -> String {
+        var cacheFile = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+        cacheFile = (cacheFile as NSString).appendingPathComponent("FWCache/WKProcessPool.plist")
+        let cacheDir = (cacheFile as NSString).deletingLastPathComponent
+        if !FileManager.default.fileExists(atPath: cacheDir) {
+            try? FileManager.default.createDirectory(atPath: cacheDir, withIntermediateDirectories: true, attributes: nil)
+        }
+        return cacheFile
+    }
     
     /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
     public static func fw_defaultConfiguration() -> WKWebViewConfiguration {
