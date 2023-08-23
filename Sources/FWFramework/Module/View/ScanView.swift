@@ -7,6 +7,9 @@
 
 import UIKit
 import AVFoundation
+#if canImport(Vision)
+import Vision
+#endif
 
 // MARK: - ScanCode
 public protocol ScanCodeDelegate: AnyObject {
@@ -31,12 +34,26 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
     
 }
 
-/// 二维码、条形码扫描
+/// 二维码、条形码扫描，默认仅开启二维码
+///
+/// 不建议同时开启二维码和条形码，因为开启后条形码很难识别且只有中心位置可识别。
+/// 默认二维码类型示例：[.qr]
+/// 默认条形码类型示例：[.code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5]
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // MARK: - Accessor
+    /// 默认二维码类型
+    public static let metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [
+        .qr
+    ]
+    
+    /// 默认条形码类型
+    public static let metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
+    ]
+    
     /// 预览视图，必须设置（传外界控制器视图）
     open var preview: UIView? {
         didSet {
@@ -100,13 +117,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
     
-    /// 元对象类型，默认支持二维码和条形码
+    /// 元对象类型，默认仅开启二维码
     open lazy var metadataObjectTypes: [AVMetadataObject.ObjectType] = {
-        return [
-            .upce, .code39, .code39Mod43, .ean8, .ean13,
-            .code93, .code128, .pdf417, .qr, .aztec,
-            .interleaved2of5, .itf14, .dataMatrix,
-        ]
+        return ScanCode.metadataObjectTypesQRCode
     }() {
         didSet {
             setupMetadataObjectTypes()
@@ -210,6 +223,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     }
     
     private func setupMetadataObjectTypes() {
+        guard issetMetadataOutput else { return }
+        
         var objectTypes: [AVMetadataObject.ObjectType] = []
         for objectType in metadataObjectTypes {
             if metadataOutput.availableMetadataObjectTypes.contains(objectType) {
@@ -358,6 +373,55 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
             
             DispatchQueue.main.async {
                 completion(messageString)
+            }
+        }
+    }
+    
+    /// 读取图片中的条形码/二维码，主线程回调
+    ///
+    /// - Parameters:
+    ///   - image: 图片
+    ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
+    ///   - completion: 回调方法，读取成功时，回调参数 result 等于条形码/二维码数据，否则等于 nil
+    @available(iOS 13.0, *)
+    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @escaping (String?) -> Void) {
+        DispatchQueue.global().async {
+            var compressImage = image
+            if compress, compressImage != nil {
+                compressImage = compressImage?.fw_compressImage(maxWidth: 1080)
+                compressImage = compressImage?.fw_compressImage(maxLength: 512 * 1024)
+            }
+            
+            guard let cgImage = compressImage?.cgImage else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+            
+            let request = VNDetectBarcodesRequest() { request, error in
+                var messageString: String?
+                let results = request.results ?? []
+                for result in results {
+                    if let barcode = result as? VNBarcodeObservation,
+                       let value = barcode.payloadStringValue {
+                        messageString = value
+                        break
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    completion(messageString)
+                }
+            }
+           
+            let handler = VNImageRequestHandler(cgImage: cgImage)
+            do {
+                try handler.perform([request])
+            } catch {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
             }
         }
     }
