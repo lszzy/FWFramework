@@ -45,7 +45,21 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         
         app.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "相册", style: .done, target: self, action: #selector(TestQrcodeController.onPhotoLibrary))
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "相册条形码", "扫描二维码", "扫描条形码", "同时扫描"], actionBlock: { index in
+                if index == 0 {
+                    self?.onPhotoLibrary(false)
+                } else if index == 1 {
+                    self?.onPhotoLibrary(true)
+                } else if index == 2 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode
+                } else if index == 3 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesBarcode
+                } else if index == 4 {
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode + ScanCode.metadataObjectTypesBarcode
+                }
+            })
+        }
     }
     
     func setupSubviews() {
@@ -123,7 +137,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         flashlightBtn.removeFromSuperview()
     }
     
-    @objc func onPhotoLibrary() {
+    @objc func onPhotoLibrary(_ isBarcode: Bool = false) {
         stopScanManager()
         
         app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
@@ -135,11 +149,25 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
             if cancel {
                 self?.startScanManager()
             } else {
-                self?.app.showLoading(text: "识别中...")
-                ScanCode.readQRCode(objects.first as? UIImage) { result in
-                    self?.app.hideLoading()
-                    
-                    self?.onScanResult(result)
+                if !isBarcode {
+                    self?.app.showLoading(text: "识别中...")
+                    ScanCode.readQRCode(objects.first as? UIImage) { result in
+                        self?.app.hideLoading()
+                        
+                        self?.onScanResult(result)
+                    }
+                } else {
+                    if #available(iOS 13.0, *) {
+                        self?.app.showLoading(text: "识别中...")
+                        ScanCode.readBarcode(objects.first as? UIImage) { result in
+                            self?.app.hideLoading()
+                            
+                            self?.onScanResult(result)
+                        }
+                    } else {
+                        self?.app.showMessage(text: "暂不支持")
+                        self?.startScanManager()
+                    }
                 }
             }
         }
