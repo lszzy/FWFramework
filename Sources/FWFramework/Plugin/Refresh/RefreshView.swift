@@ -587,6 +587,9 @@ open class InfiniteScrollView: UIView {
     /// 自定义完成句柄
     open var finishedBlock: ((_ view: InfiniteScrollView, _ finished: Bool) -> Void)?
     
+    /// 自定义数据是否为空句柄，返回true时不显示finishedView
+    open var emptyDataBlock: ((_ scrollView: UIScrollView) -> Bool)?
+    
     /// 自定义上拉追加句柄
     open var infiniteScrollBlock: (() -> Void)?
     
@@ -606,7 +609,7 @@ open class InfiniteScrollView: UIView {
             guard finished != oldValue else { return }
             
             if showsFinishedView {
-                finishedView.isHidden = !finished
+                finishedView.isHidden = !finished || isDataEmpty
             } else {
                 if finished {
                     resetScrollViewContentInset()
@@ -616,6 +619,17 @@ open class InfiniteScrollView: UIView {
             }
             finishedBlock?(self, finished)
         }
+    }
+    
+    /// 数据是否为空，为空时始终隐藏finishedView。默认自动判断totalDataCount，可自定义
+    open var isDataEmpty: Bool {
+        guard let scrollView = scrollView else { return true }
+        
+        if let emptyDataBlock = emptyDataBlock {
+            return emptyDataBlock(scrollView)
+        }
+        
+        return scrollView.fw_totalDataCount <= 0
     }
     
     /// 上拉追加状态
