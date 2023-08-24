@@ -153,7 +153,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("加载完成")
             
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.add(self.randomObject())
             }
             self.tableView.reloadData()
