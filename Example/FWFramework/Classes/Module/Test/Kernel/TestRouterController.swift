@@ -18,6 +18,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["打开Web", "onOpenHttp"],
         ["打开完整Web", "onOpenHttp2"],
         ["打开异常Web", "onOpenHttp3"],
+        ["打开重定向Web", "onOpenHttp4"],
         ["打开预缓存Web，需开启重用", "onOpenPreload"],
         ["测试Cookie", "onOpenCookie"],
         ["Url编码", "onOpenEncode"],
@@ -285,6 +286,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func onOpenHttp3() {
         Router.openURL("http://username:password@localhost:8000/test:8001/directory%202/index.html?param=value#anchor")
+    }
+    
+    func onOpenHttp4() {
+        Router.openURL("http://www.wuyong.site/redirect.php?param=value#anchor")
     }
     
     func onOpenPreload() {
