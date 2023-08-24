@@ -125,7 +125,6 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("刷新完成")
             
-            self.tableView.app.endRefreshing()
             self.tableData.removeAll()
             if self.emptyViewMode == 0 {
                 for _ in 0 ..< 5 {
@@ -134,17 +133,17 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
                 self.view.app.hideEmptyView()
                 self.tableView.app.emptyViewDelegate = nil
                 self.tableView.reloadData()
-                self.tableView.app.loadingFinished = self.tableData.count >= 10
+                self.tableView.app.endRefreshing(finished: self.tableData.count >= 10)
             } else if self.emptyViewMode == 1 {
                 self.view.app.showEmptyView()
                 self.tableView.app.emptyViewDelegate = nil
                 self.tableView.reloadData()
-                self.tableView.app.loadingFinished = true
+                self.tableView.app.endRefreshing(finished: true)
             } else {
                 self.view.app.hideEmptyView()
                 self.tableView.app.emptyViewDelegate = self
                 self.tableView.reloadData()
-                self.tableView.app.loadingFinished = true
+                self.tableView.app.endRefreshing(finished: true)
             }
         }
     }
@@ -158,8 +157,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
                 self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
-            self.tableView.app.loadingFinished = self.tableData.count >= 10
-            self.tableView.app.endLoading()
+            self.tableView.app.endLoading(finished: self.tableData.count >= 10)
         }
     }
     

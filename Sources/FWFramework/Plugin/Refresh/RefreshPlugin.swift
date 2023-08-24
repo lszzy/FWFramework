@@ -152,7 +152,7 @@ extension RefreshPlugin {
     
 }
 
-// MARK: - UIView+RefreshPlugin
+// MARK: - UIScrollView+RefreshPlugin
 @_spi(FW) extension UIScrollView {
     
     /// 自定义刷新插件，未设置时自动从插件池加载
@@ -212,6 +212,12 @@ extension RefreshPlugin {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
         plugin.endRefreshing(scrollView: self)
     }
+    
+    /// 结束下拉刷新并标记是否加载完成
+    public func fw_endRefreshing(finished: Bool) {
+        self.fw_endRefreshing()
+        self.fw_loadingFinished = finished
+    }
 
     // MARK: - Loading
     /// 是否正在追加中
@@ -266,6 +272,12 @@ extension RefreshPlugin {
     public func fw_endLoading() {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
         plugin.endLoading(scrollView: self)
+    }
+    
+    /// 结束上拉追加并标记是否加载完成
+    public func fw_endLoading(finished: Bool) {
+        self.fw_endLoading()
+        self.fw_loadingFinished = finished
     }
     
 }
