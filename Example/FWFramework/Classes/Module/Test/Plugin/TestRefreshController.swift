@@ -8,7 +8,10 @@
 
 import FWFramework
 
-class TestRefreshController: UIViewController, TableViewControllerProtocol {
+class TestRefreshController: UIViewController, TableViewControllerProtocol, EmptyViewDelegate {
+    
+    static var showsFinishedView = true
+    var emptyViewMode: Int = 0
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -16,8 +19,33 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
     
     func setupTableView() {
         tableView.fw.resetTableStyle()
+        tableView.contentInsetAdjustmentBehavior = .never
         tableView.alwaysBounceVertical = true
         tableView.register(TestRefreshCell.self, forCellReuseIdentifier: "Cell")
+    }
+    
+    func setupNavbar() {
+        app.extendedLayoutEdge = []
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [TestRefreshController.showsFinishedView ? "隐藏FinishedView" : "显示FinishedView", self?.emptyViewMode == 1 ? "显示view空界面" : "显示view空界面", self?.emptyViewMode == 2 ? "隐藏tableView空界面" : "显示tableView空界面"], actionBlock: { index in
+                if index == 0 {
+                    TestRefreshController.showsFinishedView = !TestRefreshController.showsFinishedView
+                    RefreshPluginImpl.shared.infiniteScrollBlock = { view in
+                        view.showsFinishedView = TestRefreshController.showsFinishedView
+                    }
+                    let vc = TestRefreshController()
+                    vc.emptyViewMode = self?.emptyViewMode ?? 0
+                    self?.navigationController?.app.push(vc, popTopWorkflowAnimated: false)
+                } else {
+                    if index == 1 {
+                        self?.emptyViewMode = self?.emptyViewMode == 1 ? 0 : 1
+                    } else {
+                        self?.emptyViewMode = self?.emptyViewMode == 2 ? 0 : 2
+                    }
+                    self?.tableView.app.beginRefreshing()
+                }
+            })
+        }
     }
     
     func setupSubviews() {
@@ -49,7 +77,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupLayout() {
-        tableView.fw.beginLoading()
+        tableView.fw.beginRefreshing()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -60,6 +88,10 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TestRefreshCell
         cell.object = tableData[indexPath.row] as? TestRefreshObject
         return cell
+    }
+    
+    func emptyViewShouldScroll(_ scrollView: UIScrollView) -> Bool {
+        return true
     }
     
     func randomObject() -> TestRefreshObject {
@@ -89,17 +121,30 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onRefreshing() {
+        self.view.app.hideEmptyView()
+        
         NSLog("开始刷新")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("刷新完成")
             
             self.tableData.removeAllObjects()
-            for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+            if self.emptyViewMode == 0 {
+                for _ in 0 ..< 5 {
+                    self.tableData.add(self.randomObject())
+                }
+                self.tableView.app.emptyViewDelegate = nil
+                self.tableView.reloadData()
+                self.tableView.app.endRefreshing(finished: self.tableData.count >= 10)
+            } else if self.emptyViewMode == 1 {
+                self.view.app.showEmptyView()
+                self.tableView.app.emptyViewDelegate = nil
+                self.tableView.reloadData()
+                self.tableView.app.endRefreshing(finished: true)
+            } else {
+                self.tableView.app.emptyViewDelegate = self
+                self.tableView.reloadData()
+                self.tableView.app.endRefreshing(finished: true)
             }
-            self.tableView.reloadData()
-            self.tableView.fw.shouldRefreshing = self.tableData.count < 20
-            self.tableView.fw.endRefreshing()
         }
     }
     
@@ -108,12 +153,11 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("加载完成")
             
-            for _ in 0 ..< 1 {
+            for _ in 0 ..< 5 {
                 self.tableData.add(self.randomObject())
             }
             self.tableView.reloadData()
-            self.tableView.fw.loadingFinished = self.tableData.count >= 20
-            self.tableView.fw.endLoading()
+            self.tableView.app.endLoading(finished: self.tableData.count >= 10)
         }
     }
     

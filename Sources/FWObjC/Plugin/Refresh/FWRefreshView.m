@@ -6,6 +6,7 @@
 //
 
 #import "FWRefreshView.h"
+#import "FWEmptyPlugin.h"
 #import "FWViewPlugin.h"
 #import "FWAppBundle.h"
 #import "FWMessage.h"
@@ -184,7 +185,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
             [self addSubview:customView];
         }
         CGRect viewBounds = [customView bounds];
-        CGFloat paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0;
+        CGFloat paddingY = self.indicatorPadding / 2;
         CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), paddingY + roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
     }
@@ -221,7 +222,7 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
         
         CGFloat margin = 10;
         CGFloat marginY = 2;
-        CGFloat paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0;
+        CGFloat paddingY = self.indicatorPadding / 2;
         CGFloat labelMaxWidth = self.bounds.size.width - margin - leftViewWidth;
         
         self.titleLabel.text = self.showsTitleLabel ? [self.titles objectAtIndex:self.state] : nil;
@@ -753,11 +754,11 @@ static char UIScrollViewFWPullRefreshView;
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    CGFloat paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0;
+    CGFloat paddingY = self.indicatorPadding / 2;
     CGPoint indicatorOrigin = CGPointMake(self.bounds.size.width / 2 - self.indicatorView.bounds.size.width / 2, paddingY + (self.bounds.size.height / 2 - self.indicatorView.bounds.size.height / 2));
     self.indicatorView.frame = CGRectMake(indicatorOrigin.x, indicatorOrigin.y, self.indicatorView.bounds.size.width, self.indicatorView.bounds.size.height);
     
-    CGFloat finishedPaddingY = self.finishedPadding > 0 ? (self.finishedPadding / 2) : 0;
+    CGFloat finishedPaddingY = self.finishedPadding / 2;
     CGPoint finishedOrigin = CGPointMake(self.bounds.size.width / 2 - self.finishedView.bounds.size.width / 2, finishedPaddingY + (self.bounds.size.height / 2 - self.finishedView.bounds.size.height / 2));
     self.finishedView.frame = CGRectMake(finishedOrigin.x, finishedOrigin.y, self.finishedView.bounds.size.width, self.finishedView.bounds.size.height);
 }
@@ -959,7 +960,7 @@ static char UIScrollViewFWPullRefreshView;
     if (_finished == finished) return;
     _finished = finished;
     if (self.showsFinishedView) {
-        self.finishedView.hidden = !finished;
+        self.finishedView.hidden = !finished || self.isDataEmpty;
     } else {
         if (finished) {
             [self resetScrollViewContentInset];
@@ -970,6 +971,14 @@ static char UIScrollViewFWPullRefreshView;
     if (self.finishedBlock) {
         self.finishedBlock(self, finished);
     }
+}
+
+- (BOOL)isDataEmpty {
+    if (!self.scrollView) return YES;
+    if (self.emptyDataBlock) {
+        return self.emptyDataBlock(self.scrollView);
+    }
+    return self.scrollView.fw_totalDataCount <= 0;
 }
 
 #pragma mark -
@@ -1008,7 +1017,7 @@ static char UIScrollViewFWPullRefreshView;
             [self addSubview:customView];
         }
         CGRect viewBounds = [customView bounds];
-        CGFloat paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0;
+        CGFloat paddingY = self.indicatorPadding / 2;
         CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), paddingY + roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [customView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         
@@ -1030,7 +1039,7 @@ static char UIScrollViewFWPullRefreshView;
     }
     else {
         CGRect viewBounds = [self.indicatorView bounds];
-        CGFloat paddingY = self.indicatorPadding > 0 ? (self.indicatorPadding / 2) : 0;
+        CGFloat paddingY = self.indicatorPadding / 2;
         CGPoint origin = CGPointMake(roundf((self.bounds.size.width-viewBounds.size.width)/2), paddingY + roundf((self.bounds.size.height-viewBounds.size.height)/2));
         [self.indicatorView setFrame:CGRectMake(origin.x, origin.y, viewBounds.size.width, viewBounds.size.height)];
         
