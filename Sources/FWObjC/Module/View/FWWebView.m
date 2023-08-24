@@ -931,7 +931,7 @@ static int logMaxLength = 500;
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
-        [_webViewDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+        [strongDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }

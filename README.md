@@ -22,11 +22,11 @@ This framework supports CocoaPods, Podfile example:
 	use_frameworks!
 
 	target 'Example' do
-	  # Import the default subspecs
-	  pod 'FWFramework'
+	  # Import the default subspecs, less than version 5.0
+	  pod 'FWFramework', '~> 4.0'
 	  
-	  # Import the specified subspecs, see the podspec file for the list of subspecs
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
+	  # Import the specified subspecs, less than version 5.0, see the podspec file for the list of subspecs
+	  # pod 'FWFramework', '~> 4.0', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
 
 ### Swift Package Manager

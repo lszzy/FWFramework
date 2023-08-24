@@ -22,11 +22,11 @@ iOS开发框架，方便iOS开发，兼容OC和Swift。
 	use_frameworks!
 
 	target 'Example' do
-	  # 引入默认子模块
-	  pod 'FWFramework'
+	  # 引入默认子模块，小于5.0版本
+	  pod 'FWFramework', '~> 4.0'
 	  
-	  # 引入指定子模块，子模块列表详见podspec文件
-	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
+	  # 引入指定子模块，小于5.0版本，子模块列表详见podspec文件
+	  # pod 'FWFramework', '~> 4.0', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
 
 ### Swift Package Manager
