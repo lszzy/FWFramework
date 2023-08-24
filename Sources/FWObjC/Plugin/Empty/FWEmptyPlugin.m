@@ -260,9 +260,9 @@
     }
     if (!shouldDisplay) {
         if ([self.fw_emptyViewDelegate respondsToSelector:@selector(emptyViewShouldDisplay:)]) {
-            shouldDisplay = [self.fw_emptyViewDelegate emptyViewShouldDisplay:self] && [self fw_emptyItemsCount] == 0;
+            shouldDisplay = [self.fw_emptyViewDelegate emptyViewShouldDisplay:self] && [self fw_totalDataCount] == 0;
         } else {
-            shouldDisplay = [self fw_emptyItemsCount] == 0;
+            shouldDisplay = [self fw_totalDataCount] == 0;
         }
     }
     
@@ -287,26 +287,16 @@
     }
 }
 
-- (BOOL)fw_invalidateEmptyView
+- (NSInteger)fw_totalDataCount
 {
-    if (![objc_getAssociatedObject(self, @selector(fw_invalidateEmptyView)) boolValue]) return NO;
-    objc_setAssociatedObject(self, @selector(fw_invalidateEmptyView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
-    self.scrollEnabled = YES;
-    
-    if ([self.fw_emptyViewDelegate respondsToSelector:@selector(hideEmptyView:)]) {
-        [self.fw_emptyViewDelegate hideEmptyView:self];
-    } else {
-        [self fw_hideEmptyView];
+    NSNumber *totalNumber = objc_getAssociatedObject(self, @selector(fw_totalDataCount));
+    if (totalNumber && totalNumber.integerValue >= 0) {
+        return totalNumber.integerValue;
     }
-    return YES;
-}
-
-- (NSInteger)fw_emptyItemsCount
-{
-    NSInteger items = 0;
+    
+    NSInteger totalCount = 0;
     if (![self respondsToSelector:@selector(dataSource)]) {
-        return items;
+        return totalCount;
     }
     
     if ([self isKindOfClass:[UITableView class]]) {
@@ -320,7 +310,7 @@
         
         if (dataSource && [dataSource respondsToSelector:@selector(tableView:numberOfRowsInSection:)]) {
             for (NSInteger section = 0; section < sections; section++) {
-                items += [dataSource tableView:tableView numberOfRowsInSection:section];
+                totalCount += [dataSource tableView:tableView numberOfRowsInSection:section];
             }
         }
     } else if ([self isKindOfClass:[UICollectionView class]]) {
@@ -334,11 +324,31 @@
         
         if (dataSource && [dataSource respondsToSelector:@selector(collectionView:numberOfItemsInSection:)]) {
             for (NSInteger section = 0; section < sections; section++) {
-                items += [dataSource collectionView:collectionView numberOfItemsInSection:section];
+                totalCount += [dataSource collectionView:collectionView numberOfItemsInSection:section];
             }
         }
     }
-    return items;
+    return totalCount;
+}
+
+- (void)setFw_totalDataCount:(NSInteger)totalDataCount
+{
+    objc_setAssociatedObject(self, @selector(fw_totalDataCount), [NSNumber numberWithInteger:totalDataCount], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)fw_invalidateEmptyView
+{
+    if (![objc_getAssociatedObject(self, @selector(fw_invalidateEmptyView)) boolValue]) return NO;
+    objc_setAssociatedObject(self, @selector(fw_invalidateEmptyView), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.scrollEnabled = YES;
+    
+    if ([self.fw_emptyViewDelegate respondsToSelector:@selector(hideEmptyView:)]) {
+        [self.fw_emptyViewDelegate hideEmptyView:self];
+    } else {
+        [self fw_hideEmptyView];
+    }
+    return YES;
 }
 
 @end

@@ -50,6 +50,11 @@ extension Wrapper where Base: UIScrollView {
     public func endRefreshing() {
         base.__fw_endRefreshing()
     }
+    
+    /// 结束下拉刷新并标记是否加载完成
+    public func endRefreshing(finished: Bool) {
+        base.__fw_endRefreshing(withFinished: finished)
+    }
 
     // MARK: - Loading
 
@@ -88,6 +93,11 @@ extension Wrapper where Base: UIScrollView {
     /// 结束上拉追加
     public func endLoading() {
         base.__fw_endLoading()
+    }
+    
+    /// 结束上拉追加并标记是否加载完成
+    public func endLoading(finished: Bool) {
+        base.__fw_endLoading(withFinished: finished)
     }
     
 }

@@ -85,6 +85,11 @@
     [refreshPlugin endRefreshing:self];
 }
 
+- (void)fw_endRefreshingWithFinished:(BOOL)finished {
+    [self fw_endRefreshing];
+    self.fw_loadingFinished = finished;
+}
+
 #pragma mark - Loading
 
 - (BOOL)fw_isLoading {
@@ -157,6 +162,11 @@
         refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
     [refreshPlugin endLoading:self];
+}
+
+- (void)fw_endLoadingWithFinished:(BOOL)finished {
+    [self fw_endLoading];
+    self.fw_loadingFinished = finished;
 }
 
 @end
