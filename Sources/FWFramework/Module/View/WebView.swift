@@ -361,6 +361,468 @@ open class WebView: WKWebView {
     
 }
 
+// MARK: - WebViewJsBridge
+/// WKWebView实现Javascript桥接器
+///
+/// [WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)
+public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMessageHandler {
+    public typealias Callback = (_ responseData: Any?) -> Void
+    public typealias Handler = (_ parameters: [String: Any], _ callback: @escaping Callback) -> Void
+    public typealias ErrorHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Void
+    public typealias FilterHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Bool
+    public typealias Message = [String: Any]
+    
+    public var isLogEnable: Bool {
+        get { return base.isLogEnable }
+        set { base.isLogEnable = newValue }
+    }
+
+    private let iOS_Native_InjectJavascript = "iOS_Native_InjectJavascript"
+    private let iOS_Native_FlushMessageQueue = "iOS_Native_FlushMessageQueue"
+    
+    private weak var webView: WKWebView?
+    private var base: WebViewJsBridgeBase!
+    
+    public init(webView: WKWebView) {
+        super.init()
+        self.webView = webView
+        base = WebViewJsBridgeBase()
+        base.delegate = self
+        addScriptMessageHandlers()
+    }
+    
+    deinit {
+        removeScriptMessageHandlers()
+    }
+    
+    // MARK: - Public
+    public func reset() {
+        base.reset()
+    }
+    
+    public func registerClass(_ clazz: Any, package: String? = nil, context: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
+        weak var weakContext = context ?? webView
+        let bridges = getClassBridges(clazz, mapper: mapper)
+        for (key, obj) in bridges {
+            let name = (package ?? "") + key
+            registerHandler(name) { parameters, callback in
+                guard let context = weakContext else { return }
+                
+                ObjCBridge.invokeMethod(clazz, selector: NSSelectorFromString(obj), objects: [context, parameters, callback])
+            }
+        }
+    }
+    
+    public func unregisterClass(_ clazz: Any, package: String? = nil, mapper: (([String]) -> [String: String])? = nil) {
+        let bridges = getClassBridges(clazz, mapper: mapper)
+        for (key, _) in bridges {
+            let name = (package ?? "") + key
+            removeHandler(name)
+        }
+    }
+    
+    public func registerHandler(_ handlerName: String, handler: @escaping Handler) {
+        base.messageHandlers[handlerName] = handler
+    }
+    
+    public func removeHandler(_ handlerName: String) {
+        base.messageHandlers.removeValue(forKey: handlerName)
+    }
+    
+    public func getRegisteredHandlers() -> [String] {
+        return Array(base.messageHandlers.keys)
+    }
+    
+    public func setErrorHandler(_ handler: ErrorHandler?) {
+        base.errorHandler = handler
+    }
+    
+    public func setFilterHandler(_ handler: FilterHandler?) {
+        base.filterHandler = handler
+    }
+    
+    public func callHandler(_ handlerName: String, data: Any? = nil, callback: Callback? = nil) {
+        base.send(handlerName: handlerName, data: data, callback: callback)
+    }
+    
+    // MARK: - Private
+    private func getClassBridges(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
+        var targetClass: AnyClass?
+        if let clazz = clazz as? AnyClass {
+            if let className = (NSStringFromClass(clazz) as NSString).utf8String {
+                targetClass = objc_getMetaClass(className) as? AnyClass
+            }
+        } else {
+            targetClass = object_getClass(clazz)
+        }
+        guard let targetClass = targetClass else { return [:] }
+        
+        let methods = NSObject.fw_classMethods(targetClass)
+        if let mapper = mapper {
+            return mapper(methods)
+        }
+        
+        var bridges: [String: String] = [:]
+        for method in methods {
+            guard method.hasSuffix(":data:callback:"),
+                  method.components(separatedBy: ":").count == 4 else {
+                continue
+            }
+            
+            let name = method.replacingOccurrences(of: ":data:callback:", with: "")
+            bridges[name] = method
+        }
+        return bridges
+    }
+    
+    private func flushMessageQueue() {
+        webView?.evaluateJavaScript("WKWebViewJavascriptBridge._fetchQueue();") { (result, error) in
+            if error != nil {
+                self.base.log("WARNING: Error when trying to fetch data from WKWebView: \(String(describing: error))")
+            }
+            
+            guard let resultStr = result as? String else { return }
+            self.base.flush(messageQueueString: resultStr)
+        }
+    }
+    
+    private func addScriptMessageHandlers() {
+        webView?.configuration.userContentController.add(WebViewLeakAvoider(delegate: self), name: iOS_Native_InjectJavascript)
+        webView?.configuration.userContentController.add(WebViewLeakAvoider(delegate: self), name: iOS_Native_FlushMessageQueue)
+    }
+    
+    private func removeScriptMessageHandlers() {
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: iOS_Native_InjectJavascript)
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: iOS_Native_FlushMessageQueue)
+    }
+    
+    // MARK: - WebViewJsBridgeBaseDelegate
+    func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)?) {
+        webView?.evaluateJavaScript(javascript, completionHandler: completion)
+    }
+    
+    // MARK: - WKScriptMessageHandler
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == iOS_Native_InjectJavascript {
+            base.injectJavascriptFile()
+        }
+        
+        if message.name == iOS_Native_FlushMessageQueue {
+            flushMessageQueue()
+        }
+    }
+}
+
+class WebViewLeakAvoider: NSObject, WKScriptMessageHandler {
+    weak var delegate: WKScriptMessageHandler?
+    
+    init(delegate: WKScriptMessageHandler) {
+        super.init()
+        self.delegate = delegate
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        delegate?.userContentController(userContentController, didReceive: message)
+    }
+}
+
+// MARK: - WebViewJsBridgeBase
+protocol WebViewJsBridgeBaseDelegate: AnyObject {
+    func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)?)
+}
+
+public class WebViewJsBridgeBase: NSObject {
+    var isLogEnable = false
+    
+    weak var delegate: WebViewJsBridgeBaseDelegate?
+    var startupMessageQueue: [WebViewJsBridge.Message]? = []
+    var responseCallbacks = [String: WebViewJsBridge.Callback]()
+    var messageHandlers = [String: WebViewJsBridge.Handler]()
+    var errorHandler: WebViewJsBridge.ErrorHandler?
+    var filterHandler: WebViewJsBridge.FilterHandler?
+    var uniqueId = 0
+    
+    func reset() {
+        startupMessageQueue = nil
+        responseCallbacks = [String: WebViewJsBridge.Callback]()
+        uniqueId = 0
+    }
+    
+    func send(handlerName: String, data: Any?, callback: WebViewJsBridge.Callback?) {
+        var message = [String: Any]()
+        message["handlerName"] = handlerName
+        
+        if data != nil {
+            message["data"] = data
+        }
+        
+        if callback != nil {
+            uniqueId += 1
+            let callbackID = "native_iOS_cb_\(uniqueId)"
+            responseCallbacks[callbackID] = callback
+            message["callbackID"] = callbackID
+        }
+        
+        queue(message: message)
+    }
+    
+    func flush(messageQueueString: String) {
+        guard let messages = deserialize(messageJSON: messageQueueString) else {
+            log("WARNING: " + messageQueueString)
+            return
+        }
+        
+        for message in messages {
+            log("RCVD: \(message)")
+            
+            if let responseID = message["responseID"] as? String {
+                guard let callback = responseCallbacks[responseID] else { continue }
+                callback(message["responseData"])
+                responseCallbacks.removeValue(forKey: responseID)
+            } else {
+                var callback: WebViewJsBridge.Callback
+                if let callbackID = message["callbackID"] {
+                    callback = { (_ responseData: Any?) -> Void in
+                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as WebViewJsBridge.Message
+                        self.queue(message: msg)
+                    }
+                } else {
+                    callback = { (_ responseData: Any?) -> Void in
+                        // Do nothing
+                    }
+                }
+                
+                guard let handlerName = message["handlerName"] as? String else { continue }
+                
+                if let filterHandler = filterHandler {
+                    let filterResult = filterHandler(handlerName, message["data"] as? [String : Any] ?? [:], callback)
+                    if !filterResult { continue }
+                }
+                
+                guard let handler = messageHandlers[handlerName] else {
+                    log("WARNING: NoHandlerException, No handler for message from JS: \(message)")
+                    if let errorHandler = errorHandler {
+                        errorHandler(handlerName, message["data"] as? [String : Any] ?? [:], callback)
+                    }
+                    continue
+                }
+                
+                handler(message["data"] as? [String : Any] ?? [:], callback)
+            }
+        }
+    }
+    
+    func injectJavascriptFile() {
+        let js = javascriptBridgeJS
+        delegate?.evaluateJavascript(javascript: js, completion: { [weak self] (_, error) in
+            guard let self = self else { return }
+            if let error = error {
+                self.log("ERROR: \(error)")
+                return
+            }
+            self.startupMessageQueue?.forEach({ (message) in
+                self.dispatch(message: message)
+            })
+            self.startupMessageQueue = nil
+        })
+    }
+    
+    // MARK: - Private
+    private func queue(message: WebViewJsBridge.Message) {
+        if startupMessageQueue == nil {
+            dispatch(message: message)
+        } else {
+            startupMessageQueue?.append(message)
+        }
+    }
+    
+    private func dispatch(message: WebViewJsBridge.Message) {
+        guard var messageJSON = serialize(message: message, pretty: false) else { return }
+        log("SEND: \(messageJSON)")
+        
+        messageJSON = messageJSON.replacingOccurrences(of: "\\", with: "\\\\")
+        messageJSON = messageJSON.replacingOccurrences(of: "\"", with: "\\\"")
+        messageJSON = messageJSON.replacingOccurrences(of: "\'", with: "\\\'")
+        messageJSON = messageJSON.replacingOccurrences(of: "\n", with: "\\n")
+        messageJSON = messageJSON.replacingOccurrences(of: "\r", with: "\\r")
+        messageJSON = messageJSON.replacingOccurrences(of: "\u{000C}", with: "\\f")
+        messageJSON = messageJSON.replacingOccurrences(of: "\u{2028}", with: "\\u2028")
+        messageJSON = messageJSON.replacingOccurrences(of: "\u{2029}", with: "\\u2029")
+        
+        let javascriptCommand = "WKWebViewJavascriptBridge._handleMessageFromiOS('\(messageJSON)');"
+        if Thread.current.isMainThread {
+            delegate?.evaluateJavascript(javascript: javascriptCommand, completion: nil)
+        } else {
+            DispatchQueue.main.async {
+                self.delegate?.evaluateJavascript(javascript: javascriptCommand, completion: nil)
+            }
+        }
+    }
+    
+    // MARK: - JSON
+    private func serialize(message: WebViewJsBridge.Message, pretty: Bool) -> String? {
+        var result: String?
+        do {
+            let data = try JSONSerialization.data(withJSONObject: message, options: pretty ? .prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0))
+            result = String(data: data, encoding: .utf8)
+        } catch let error {
+            log("ERROR: \(error)")
+        }
+        return result
+    }
+    
+    private func deserialize(messageJSON: String) -> [WebViewJsBridge.Message]? {
+        var result: [WebViewJsBridge.Message]?
+        guard let data = messageJSON.data(using: .utf8) else { return nil }
+        do {
+            result = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [WebViewJsBridge.Message]
+        } catch let error {
+            log("ERROR: \(error)")
+        }
+        return result
+    }
+    
+    // MARK: - Log
+    fileprivate func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        #if DEBUG
+        guard isLogEnable else { return }
+        Logger.debug(group: Logger.fw_moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
+        #endif
+    }
+    
+    // MARK: - JS
+    private let javascriptBridgeJS = """
+;(function() {
+    if (window.WKWebViewJavascriptBridge) {
+        return;
+    }
+
+    if (!window.onerror) {
+        window.onerror = function(msg, url, line) {
+            console.log("WKWebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+        }
+    }
+    window.WKWebViewJavascriptBridge = {
+        registerHandler: registerHandler,
+        removeHandler: removeHandler,
+        getRegisteredHandlers: getRegisteredHandlers,
+        setErrorHandler: setErrorHandler,
+        setFilterHandler: setFilterHandler,
+        callHandler: callHandler,
+        _fetchQueue: _fetchQueue,
+        _handleMessageFromiOS: _handleMessageFromiOS
+    };
+
+    var sendMessageQueue = [];
+    var messageHandlers = {};
+    var errorHandler = null;
+    var filterHandler = null;
+
+    var responseCallbacks = {};
+    var uniqueId = 1;
+
+    function registerHandler(handlerName, handler) {
+        messageHandlers[handlerName] = handler;
+    }
+
+    function removeHandler(handlerName) {
+        delete messageHandlers[handlerName];
+    }
+    
+    function getRegisteredHandlers() {
+        var registeredHandlers = [];
+        for (handlerName in messageHandlers) {
+            registeredHandlers.push(handlerName);
+        }
+        return registeredHandlers;
+    }
+    
+    function setErrorHandler(handler) {
+        errorHandler = handler;
+    }
+    
+    function setFilterHandler(handler) {
+        filterHandler = handler;
+    }
+
+    function callHandler(handlerName, data, responseCallback) {
+        if (arguments.length == 2 && typeof data == 'function') {
+            responseCallback = data;
+            data = null;
+        }
+        _doSend({ handlerName:handlerName, data:data }, responseCallback);
+    }
+
+    function _doSend(message, responseCallback) {
+        if (responseCallback) {
+            var callbackID = 'cb_'+(uniqueId++)+'_'+new Date().getTime();
+            responseCallbacks[callbackID] = responseCallback;
+            message['callbackID'] = callbackID;
+        }
+        sendMessageQueue.push(message);
+        window.webkit.messageHandlers.iOS_Native_FlushMessageQueue.postMessage(null)
+    }
+
+    function _fetchQueue() {
+        var messageQueueString = JSON.stringify(sendMessageQueue);
+        sendMessageQueue = [];
+        return messageQueueString;
+    }
+
+    function _dispatchMessageFromiOS(messageJSON) {
+        var message = JSON.parse(messageJSON);
+        var responseCallback;
+
+        if (message.responseID) {
+            responseCallback = responseCallbacks[message.responseID];
+            if (!responseCallback) {
+                return;
+            }
+            responseCallback(message.responseData);
+            delete responseCallbacks[message.responseID];
+        } else {
+            if (message.callbackID) {
+                var callbackResponseId = message.callbackID;
+                responseCallback = function(responseData) {
+                    _doSend({ handlerName:message.handlerName, responseID:callbackResponseId, responseData:responseData });
+                };
+            } else {
+                responseCallback = function(ignoreResponseData) {};
+            }
+
+            if (filterHandler) {
+                var filterResult = filterHandler(message.handlerName, message.data, responseCallback);
+                if (!filterResult) { return; }
+            }
+
+            var handler = messageHandlers[message.handlerName];
+            if (!handler) {
+                console.log("WKWebViewJavascriptBridge: WARNING: no handler for message from iOS:", message);
+                if (errorHandler) {
+                    errorHandler(message.handlerName, message.data, responseCallback);
+                }
+            } else {
+                handler(message.data, responseCallback);
+            }
+        }
+    }
+
+    function _handleMessageFromiOS(messageJSON) {
+        _dispatchMessageFromiOS(messageJSON);
+    }
+
+    setTimeout(_callWVJBCallbacks, 0);
+    function _callWVJBCallbacks() {
+        var callbacks = window.WKWVJBCallbacks;
+        delete window.WKWVJBCallbacks;
+        for (var i = 0; i < callbacks.length; i++) {
+            callbacks[i](WKWebViewJavascriptBridge);
+        }
+    }
+})();
+"""
+}
+
 // MARK: - WKWebView+WebView
 @_spi(FW) extension WKWebView {
     
@@ -549,9 +1011,7 @@ open class WebView: WKWebView {
     @discardableResult
     public func fw_setupJsBridge() -> WebViewJsBridge? {
         guard fw_jsBridgeEnabled else { return nil }
-        let delegate = self.navigationDelegate
-        let jsBridge = WebViewJsBridge(for: self)
-        jsBridge.setWebViewDelegate(delegate)
+        let jsBridge = WebViewJsBridge(webView: self)
         self.fw_jsBridge = jsBridge
         return jsBridge
     }

@@ -15,6 +15,14 @@
 	}
 
     function setupWebViewJavascriptBridge(callback) {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.iOS_Native_InjectJavascript) {
+            if (window.WKWebViewJavascriptBridge) { return callback(WKWebViewJavascriptBridge); }
+            if (window.WKWVJBCallbacks) { return window.WKWVJBCallbacks.push(callback); }
+            window.WKWVJBCallbacks = [callback];
+            window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null);
+            return;
+        }
+        
         if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
         if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
         window.WVJBCallbacks = [callback];
