@@ -651,7 +651,7 @@ open class InfiniteScrollView: UIView {
                 }
 
                 let viewBounds = customView.bounds
-                let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+                let paddingY = indicatorPadding / 2
                 let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((bounds.size.height - viewBounds.size.height) / 2))
                 customView.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
 
@@ -670,7 +670,7 @@ open class InfiniteScrollView: UIView {
                 }
             } else {
                 let viewBounds = indicatorView.bounds
-                let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+                let paddingY = indicatorPadding / 2
                 let origin = CGPoint(x: round((bounds.size.width - viewBounds.size.width) / 2), y: paddingY + round((bounds.size.height - viewBounds.size.height) / 2))
                 indicatorView.frame = CGRect(x: origin.x, y: origin.y, width: viewBounds.size.width, height: viewBounds.size.height)
 
@@ -789,7 +789,7 @@ open class InfiniteScrollView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
 
-        let paddingY = indicatorPadding > 0 ? (indicatorPadding / 2) : 0
+        let paddingY = indicatorPadding / 2
         let indicatorOrigin = CGPoint(x: bounds.size.width / 2 - indicatorView.bounds.size.width / 2, y: paddingY + (bounds.size.height / 2 - indicatorView.bounds.size.height / 2))
         indicatorView.frame = CGRect(x: indicatorOrigin.x, y: indicatorOrigin.y, width: indicatorView.bounds.size.width, height: indicatorView.bounds.size.height)
 
