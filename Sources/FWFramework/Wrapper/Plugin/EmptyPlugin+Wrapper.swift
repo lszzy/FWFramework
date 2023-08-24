@@ -129,6 +129,12 @@ extension Wrapper where Base: UIScrollView {
         base.fw_reloadEmptyView()
     }
     
+    /// 当前数据总条数，默认自动获取tableView和collectionView，支持自定义覆盖(优先级高，小于0还原)
+    public var totalDataCount: Int {
+        get { return base.fw_totalDataCount }
+        set { base.fw_totalDataCount = newValue }
+    }
+    
     /// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
     public var overlayView: UIView {
         return base.fw_overlayView

@@ -251,7 +251,7 @@ extension EmptyViewDelegate {
     
 }
 
-// MARK: - UIView+EmptyViewDelegate
+// MARK: - UIScrollView+EmptyViewDelegate
 @_spi(FW) extension UIScrollView {
     
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
@@ -273,7 +273,7 @@ extension EmptyViewDelegate {
         
         var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(self)
         if !shouldDisplay {
-            shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay(self) && self.fw_emptyItemsCount() == 0
+            shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay(self) && self.fw_totalDataCount == 0
         }
         
         let hideSuccess = self.fw_invalidateEmptyView()
@@ -286,6 +286,49 @@ extension EmptyViewDelegate {
             EmptyPluginImpl.shared.fadeAnimated = hideSuccess ? false : fadeAnimated
             emptyViewDelegate.showEmptyView(self)
             EmptyPluginImpl.shared.fadeAnimated = fadeAnimated
+        }
+    }
+    
+    /// 当前数据总条数，默认自动获取tableView和collectionView，支持自定义覆盖(优先级高，小于0还原)
+    public var fw_totalDataCount: Int {
+        get {
+            if let totalCount = fw_propertyNumber(forName: "fw_totalDataCount")?.intValue,
+               totalCount >= 0 {
+                return totalCount
+            }
+            
+            var totalCount: Int = 0
+            if let tableView = self as? UITableView {
+                let dataSource = tableView.dataSource
+                
+                var sections: Int = 1
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.numberOfSections(in:))) {
+                    sections = dataSource.numberOfSections!(in: tableView)
+                }
+                
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) {
+                    for section in 0 ..< sections {
+                        totalCount += dataSource.tableView(tableView, numberOfRowsInSection: section)
+                    }
+                }
+            } else if let collectionView = self as? UICollectionView {
+                let dataSource = collectionView.dataSource
+                
+                var sections: Int = 1
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.numberOfSections(in:))) {
+                    sections = dataSource.numberOfSections!(in: collectionView)
+                }
+                
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) {
+                    for section in 0 ..< sections {
+                        totalCount += dataSource.collectionView(collectionView, numberOfItemsInSection: section)
+                    }
+                }
+            }
+            return totalCount
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_totalDataCount")
         }
     }
     
@@ -302,38 +345,6 @@ extension EmptyViewDelegate {
             self.fw_hideEmptyView()
         }
         return true
-    }
-    
-    private func fw_emptyItemsCount() -> Int {
-        var items: Int = 0
-        if let tableView = self as? UITableView {
-            let dataSource = tableView.dataSource
-            
-            var sections: Int = 1
-            if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.numberOfSections(in:))) {
-                sections = dataSource.numberOfSections!(in: tableView)
-            }
-            
-            if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) {
-                for section in 0 ..< sections {
-                    items += dataSource.tableView(tableView, numberOfRowsInSection: section)
-                }
-            }
-        } else if let collectionView = self as? UICollectionView {
-            let dataSource = collectionView.dataSource
-            
-            var sections: Int = 1
-            if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.numberOfSections(in:))) {
-                sections = dataSource.numberOfSections!(in: collectionView)
-            }
-            
-            if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) {
-                for section in 0 ..< sections {
-                    items += dataSource.collectionView(collectionView, numberOfItemsInSection: section)
-                }
-            }
-        }
-        return items
     }
     
     private static func fw_enableEmptyPlugin() {

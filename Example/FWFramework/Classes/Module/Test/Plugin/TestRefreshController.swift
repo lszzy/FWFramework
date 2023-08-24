@@ -121,6 +121,8 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
     }
     
     @objc func onRefreshing() {
+        self.view.app.hideEmptyView()
+        
         NSLog("开始刷新")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("刷新完成")
@@ -130,7 +132,6 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
                 for _ in 0 ..< 5 {
                     self.tableData.append(self.randomObject())
                 }
-                self.view.app.hideEmptyView()
                 self.tableView.app.emptyViewDelegate = nil
                 self.tableView.reloadData()
                 self.tableView.app.endRefreshing(finished: self.tableData.count >= 10)
@@ -140,7 +141,6 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
                 self.tableView.reloadData()
                 self.tableView.app.endRefreshing(finished: true)
             } else {
-                self.view.app.hideEmptyView()
                 self.tableView.app.emptyViewDelegate = self
                 self.tableView.reloadData()
                 self.tableView.app.endRefreshing(finished: true)
