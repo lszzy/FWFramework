@@ -97,6 +97,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nullable, nonatomic, strong) UIColor *indicatorColor;
 @property (nonatomic, assign) CGFloat indicatorPadding;
 @property (nonatomic, assign) BOOL finished;
+@property (nonatomic, assign, readonly) BOOL isDataEmpty;
 @property (nonatomic, assign) BOOL showsFinishedView;
 @property (nonatomic, strong, readonly) UILabel *finishedLabel;
 @property (nonatomic, strong) UIView *finishedView;
@@ -107,6 +108,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @property (nullable, nonatomic, copy) void (^stateBlock)(FWInfiniteScrollView *view, FWInfiniteScrollState state);
 @property (nullable, nonatomic, copy) void (^progressBlock)(FWInfiniteScrollView *view, CGFloat progress);
 @property (nullable, nonatomic, copy) void (^finishedBlock)(FWInfiniteScrollView *view, BOOL finished);
+@property (nullable, nonatomic, copy) BOOL (^emptyDataBlock)(UIScrollView *scrollView);
 
 - (void)setCustomView:(nullable UIView *)view forState:(FWInfiniteScrollState)state;
 - (void)setAnimationView:(nullable UIView<FWProgressViewPlugin, FWIndicatorViewPlugin> *)animationView;

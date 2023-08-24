@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.16.1] - 2023-08-24
+
+### Changed
+* By default, only the QR code is enabled for scanning the code, and you can specify the bar code, etc.
+* Scan code to add zoom gesture handle
+* The pull-up add-on does not display finishedView if the data is empty
+* The pull-up append plugin padding supports negative numbers
+
 ## [4.16.0] - 2023-08-22
 
 ### Added
