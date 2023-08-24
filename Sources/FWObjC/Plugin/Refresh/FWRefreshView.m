@@ -6,6 +6,7 @@
 //
 
 #import "FWRefreshView.h"
+#import "FWEmptyPlugin.h"
 #import "FWViewPlugin.h"
 #import "FWAppBundle.h"
 #import "FWMessage.h"
@@ -959,7 +960,7 @@ static char UIScrollViewFWPullRefreshView;
     if (_finished == finished) return;
     _finished = finished;
     if (self.showsFinishedView) {
-        self.finishedView.hidden = !finished;
+        self.finishedView.hidden = !finished || self.isDataEmpty;
     } else {
         if (finished) {
             [self resetScrollViewContentInset];
@@ -970,6 +971,14 @@ static char UIScrollViewFWPullRefreshView;
     if (self.finishedBlock) {
         self.finishedBlock(self, finished);
     }
+}
+
+- (BOOL)isDataEmpty {
+    if (!self.scrollView) return YES;
+    if (self.emptyDataBlock) {
+        return self.emptyDataBlock(self.scrollView);
+    }
+    return self.scrollView.fw_totalDataCount <= 0;
 }
 
 #pragma mark -

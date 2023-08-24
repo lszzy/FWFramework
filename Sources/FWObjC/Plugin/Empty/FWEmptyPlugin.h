@@ -154,6 +154,9 @@ NS_SWIFT_NAME(EmptyViewDelegate)
 /// 刷新空界面
 - (void)fw_reloadEmptyView NS_REFINED_FOR_SWIFT;
 
+/// 当前数据总条数，默认自动获取tableView和collectionView，支持自定义覆盖(优先级高，小于0还原)
+@property (nonatomic, assign) NSInteger fw_totalDataCount NS_REFINED_FOR_SWIFT;
+
 @end
 
 NS_ASSUME_NONNULL_END
