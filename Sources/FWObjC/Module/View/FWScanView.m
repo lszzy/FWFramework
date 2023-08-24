@@ -11,14 +11,18 @@
 
 #pragma mark - FWScanCode
 
+static NSArray<AVMetadataObjectType> *fwStaticObjectTypesQRCode = nil;
+static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
+
 @interface FWScanCode () <AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (nonatomic, strong) AVCaptureDevice *device;
 @property (nonatomic, strong) AVCaptureDeviceInput *deviceInput;
 @property (nonatomic, strong) AVCaptureMetadataOutput *metadataOutput;
 @property (nonatomic, strong) AVCaptureVideoDataOutput *videoDataOutput;
+@property (nonatomic, assign) BOOL issetMetadataOutput;
+@property (nonatomic, assign) BOOL issetVideoDataOutput;
 @property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) NSArray *metadataObjectTypes;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic, strong) dispatch_queue_t captureQueue;
 
@@ -26,10 +30,43 @@
 
 @implementation FWScanCode
 
++ (NSArray<AVMetadataObjectType> *)metadataObjectTypesQRCode {
+    if (!fwStaticObjectTypesQRCode) {
+        fwStaticObjectTypesQRCode = @[
+            AVMetadataObjectTypeQRCode,
+        ];
+    }
+    return fwStaticObjectTypesQRCode;
+}
+
++ (void)setMetadataObjectTypesQRCode:(NSArray<AVMetadataObjectType> *)objectTypes {
+    fwStaticObjectTypesQRCode = objectTypes;
+}
+
++ (NSArray<AVMetadataObjectType> *)metadataObjectTypesBarcode {
+    if (!fwStaticObjectTypesBarcode) {
+        fwStaticObjectTypesBarcode = @[
+            AVMetadataObjectTypeCode39Code,
+            AVMetadataObjectTypeCode39Mod43Code,
+            AVMetadataObjectTypeCode93Code,
+            AVMetadataObjectTypeCode128Code,
+            AVMetadataObjectTypeEAN8Code,
+            AVMetadataObjectTypeEAN13Code,
+            AVMetadataObjectTypeUPCECode,
+            AVMetadataObjectTypeInterleaved2of5Code,
+        ];
+    }
+    return fwStaticObjectTypesBarcode;
+}
+
++ (void)setMetadataObjectTypesBarcode:(NSArray<AVMetadataObjectType> *)objectTypes {
+    fwStaticObjectTypesBarcode = objectTypes;
+}
+
 - (instancetype)init {
     if ([super init]) {
         self.captureQueue = dispatch_queue_create("site.wuyong.queue.scan.capture", DISPATCH_QUEUE_CONCURRENT);
-        _videoZoomFactor = 1;
+        _metadataObjectTypes = [FWScanCode metadataObjectTypesQRCode];
         
         /// 将设备输入对象添加到会话对象中
         if ([self.session canAddInput:self.deviceInput]) {
@@ -92,27 +129,6 @@
     return _videoPreviewLayer;
 }
 
-- (NSArray *)metadataObjectTypes {
-    if (!_metadataObjectTypes) {
-        _metadataObjectTypes = @[
-            AVMetadataObjectTypeUPCECode,
-            AVMetadataObjectTypeCode39Code,
-            AVMetadataObjectTypeCode39Mod43Code,
-            AVMetadataObjectTypeEAN13Code,
-            AVMetadataObjectTypeEAN8Code,
-            AVMetadataObjectTypeCode93Code,
-            AVMetadataObjectTypeCode128Code,
-            AVMetadataObjectTypePDF417Code,
-            AVMetadataObjectTypeQRCode,
-            AVMetadataObjectTypeAztecCode,
-            AVMetadataObjectTypeInterleaved2of5Code,
-            AVMetadataObjectTypeITF14Code,
-            AVMetadataObjectTypeDataMatrixCode,
-        ];
-    }
-    return _metadataObjectTypes;
-}
-
 - (NSString *)sessionPreset {
     if ([self.device supportsAVCaptureSessionPreset:AVCaptureSessionPreset3840x2160]) {
         return AVCaptureSessionPreset3840x2160;
@@ -141,6 +157,11 @@
 - (void)setPreview:(UIView *)preview {
     _preview = preview;
     [preview.layer insertSublayer:self.videoPreviewLayer atIndex:0];
+}
+
+- (void)setMetadataObjectTypes:(NSArray<AVMetadataObjectType> *)metadataObjectTypes {
+    _metadataObjectTypes = metadataObjectTypes;
+    [self setupMetadataObjectTypes];
 }
 
 - (void)setDelegate:(id<FWScanCodeDelegate>)delegate {
@@ -172,23 +193,21 @@
     _metadataOutput.rectOfInterest = rectOfInterest;
 }
 
+- (CGFloat)videoZoomFactor {
+    return self.device.videoZoomFactor;
+}
+
 - (void)setVideoZoomFactor:(CGFloat)factor {
-    if (factor > self.device.maxAvailableVideoZoomFactor) {
-        factor = self.device.maxAvailableVideoZoomFactor;
-    } else if (factor < 1) {
-        factor = 1;
-    }
-    _videoZoomFactor = factor;
-    
-    // 设置焦距大小
+    factor = MIN(MAX(self.device.minAvailableVideoZoomFactor, factor), self.device.maxAvailableVideoZoomFactor);
     if ([self.device lockForConfiguration:nil]) {
-        [self.device rampToVideoZoomFactor:factor withRate:10];
+        self.device.videoZoomFactor = factor;
         [self.device unlockForConfiguration];
     }
 }
 
 - (void)setupMetadataOutput {
-    if (_metadataOutput) return;
+    if (self.issetMetadataOutput) return;
+    self.issetMetadataOutput = YES;
     
     /// 将元数据输出对象添加到会话对象中
     if ([_session canAddOutput:self.metadataOutput]) {
@@ -196,6 +215,22 @@
     }
     
     /// 元数据输出对象的二维码识数据别类型
+    [self setupMetadataObjectTypes];
+}
+
+- (void)setupVideoDataOutput {
+    if (self.issetVideoDataOutput) return;
+    self.issetVideoDataOutput = YES;
+    
+    /// 添加捕获输出流到会话对象；构成识了别光线强弱
+    if ([_session canAddOutput:self.videoDataOutput]) {
+        [_session addOutput:self.videoDataOutput];
+    }
+}
+
+- (void)setupMetadataObjectTypes {
+    if (!self.issetMetadataOutput) return;
+    
     NSMutableArray *objectTypes = [NSMutableArray array];
     for (AVMetadataObjectType objectType in self.metadataObjectTypes) {
         if ([_metadataOutput.availableMetadataObjectTypes containsObject:objectType]) {
@@ -203,15 +238,6 @@
         }
     }
     _metadataOutput.metadataObjectTypes = [objectTypes copy];
-}
-
-- (void)setupVideoDataOutput {
-    if (_videoDataOutput) return;
-    
-    /// 添加捕获输出流到会话对象；构成识了别光线强弱
-    if ([_session canAddOutput:self.videoDataOutput]) {
-        [_session addOutput:self.videoDataOutput];
-    }
 }
 
 #pragma mark - Public
@@ -374,7 +400,7 @@
     // 3、生成处理
     CIImage *outImage = color_filter.outputImage;
     CGFloat outWidth = outImage.extent.size.width;
-    CGFloat scale = outWidth > 0 ? (size / outWidth) : 0;
+    CGFloat scale = outWidth > 0 ? (size / outWidth) : 1;
     outImage = [outImage imageByApplyingTransform:CGAffineTransformMakeScale(scale, scale)];
     return [UIImage imageWithCIImage:outImage];
 }
@@ -490,6 +516,8 @@
 @property (nonatomic, strong) FWScanViewConfiguration *configuration;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIImageView *scanlineImgView;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 @property (nonatomic, strong) CADisplayLink *link;
 @property (nonatomic, assign) BOOL isTop;
 @property (nonatomic, assign) BOOL isSelected;
@@ -528,9 +556,8 @@
     self.isTop = YES;
     [self addSubview:self.contentView];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapAction)];
-    tap.numberOfTapsRequired = 2;
-    [self addGestureRecognizer:tap];
+    [self addGestureRecognizer:self.tapGesture];
+    [self addGestureRecognizer:self.pinchGesture];
 }
 
 - (UIView *)contentView {
@@ -565,11 +592,36 @@
     return _scanlineImgView;
 }
 
+- (UITapGestureRecognizer *)tapGesture {
+    if (!_tapGesture) {
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapAction)];
+        _tapGesture.numberOfTapsRequired = 2;
+        _tapGesture.enabled = NO;
+    }
+    return _tapGesture;
+}
+
+- (UIPinchGestureRecognizer *)pinchGesture {
+    if (!_pinchGesture) {
+        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchAction:)];
+        _pinchGesture.enabled = NO;
+    }
+    return _pinchGesture;
+}
+
 - (void)doubleTapAction {
     self.isSelected = !self.isSelected;
     
     if (self.doubleTapBlock) {
         self.doubleTapBlock(self.isSelected);
+    }
+}
+
+- (void)pinchAction:(UIPinchGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        if (self.pinchScaleBlock) self.pinchScaleBlock(0);
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+        if (self.pinchScaleBlock) self.pinchScaleBlock(gesture.scale);
     }
 }
 
@@ -723,6 +775,18 @@
     if (self.scanlineImgView.image) {
         [self updateScanLineFrame];
     }
+}
+
+- (void)setDoubleTapBlock:(void (^)(BOOL))doubleTapBlock {
+    _doubleTapBlock = doubleTapBlock;
+    
+    self.tapGesture.enabled = doubleTapBlock ? YES : NO;
+}
+
+- (void)setPinchScaleBlock:(void (^)(CGFloat))pinchScaleBlock {
+    _pinchScaleBlock = pinchScaleBlock;
+    
+    self.pinchGesture.enabled = pinchScaleBlock ? YES : NO;
 }
     
 - (void)updateScanLineFrame {
