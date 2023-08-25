@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否自动等比例缩放后像素取整，默认NO
 @property (class, nonatomic, assign) BOOL fw_autoFlat NS_REFINED_FOR_SWIFT;
 
-/// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
+/// 当前视图是否自动等比例缩放布局，未设置时返回全局开关
 @property (nonatomic, assign) BOOL fw_autoScale NS_REFINED_FOR_SWIFT;
 
 /**
@@ -718,20 +718,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSLayoutConstraint (FWAutoLayout)
 
+/// 设置偏移值，根据配置自动等比例缩放和取反
+@property (nonatomic, assign) CGFloat fw_offset NS_REFINED_FOR_SWIFT;
+
 /// 标记是否是相反的约束，一般相对于父视图
 @property (nonatomic, assign) BOOL fw_isOpposite NS_REFINED_FOR_SWIFT;
-
-/// 设置内间距值，如果是相反的约束，会自动取反
-@property (nonatomic, assign) CGFloat fw_inset NS_REFINED_FOR_SWIFT;
 
 /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
 @property (nonatomic, assign) UILayoutPriority fw_priority NS_REFINED_FOR_SWIFT;
 
-/// 可收缩约束的收缩常量值，默认0
-@property (nonatomic, assign) CGFloat fw_collapseConstant NS_REFINED_FOR_SWIFT;
+/// 可收缩约束的收缩偏移值，默认0
+@property (nonatomic, assign) CGFloat fw_collapseOffset NS_REFINED_FOR_SWIFT;
 
-/// 可收缩约束的原始常量值，默认为添加收缩约束时的值
-@property (nonatomic, assign) CGFloat fw_originalConstant NS_REFINED_FOR_SWIFT;
+/// 可收缩约束的原始偏移值，默认为添加收缩约束时的值
+@property (nonatomic, assign) CGFloat fw_originalOffset NS_REFINED_FOR_SWIFT;
 
 /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
 @property (nonatomic, assign) BOOL fw_originalActive NS_REFINED_FOR_SWIFT;
@@ -872,10 +872,10 @@ NS_SWIFT_UNAVAILABLE("")
 #pragma mark - Constraint
 
 @property (nonatomic, copy, readonly) FWLayoutChain * (^offset)(CGFloat offset);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^inset)(CGFloat inset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^constant)(CGFloat constant);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^priority)(UILayoutPriority priority);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^collapse)(CGFloat constant);
-@property (nonatomic, copy, readonly) FWLayoutChain * (^original)(CGFloat constant);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^collapse)(CGFloat offset);
+@property (nonatomic, copy, readonly) FWLayoutChain * (^original)(CGFloat offset);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^toggle)(BOOL active);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^identifier)(NSString * _Nullable identifier);
 @property (nonatomic, copy, readonly) FWLayoutChain * (^active)(BOOL active);
