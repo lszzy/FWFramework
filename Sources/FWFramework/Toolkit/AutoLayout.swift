@@ -45,7 +45,7 @@ extension Wrapper where Base: UIView {
     }
     
     // MARK: - AutoLayout
-    /// 视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关
+    /// 当前视图是否自动等比例缩放布局，未设置时返回全局开关
     public var autoScale: Bool {
         get { return base.__fw_autoScale }
         set { base.__fw_autoScale = newValue }
@@ -512,16 +512,16 @@ extension Wrapper where Base: UIView {
 // MARK: - NSLayoutConstraint+AutoLayout
 extension Wrapper where Base: NSLayoutConstraint {
     
+    /// 设置偏移值，根据配置自动等比例缩放和取反
+    public var offset: CGFloat {
+        get { return base.__fw_offset }
+        set { base.__fw_offset = newValue }
+    }
+    
     /// 标记是否是相反的约束，一般相对于父视图
     public var isOpposite: Bool {
         get { return base.__fw_isOpposite }
         set { base.__fw_isOpposite = newValue }
-    }
-    
-    /// 设置内间距值，如果是相反的约束，会自动取反
-    public var inset: CGFloat {
-        get { return base.__fw_inset }
-        set { base.__fw_inset = newValue }
     }
     
     /// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃
@@ -530,16 +530,16 @@ extension Wrapper where Base: NSLayoutConstraint {
         set { base.__fw_priority = newValue }
     }
     
-    /// 可收缩约束的收缩常量值，默认0
-    public var collapseConstant: CGFloat {
-        get { return base.__fw_collapseConstant }
-        set { base.__fw_collapseConstant = newValue }
+    /// 可收缩约束的收缩偏移值，默认0
+    public var collapseOffset: CGFloat {
+        get { return base.__fw_collapseOffset }
+        set { base.__fw_collapseOffset = newValue }
     }
     
-    /// 可收缩约束的原始常量值，默认为添加收缩约束时的值
-    public var originalConstant: CGFloat {
-        get { return base.__fw_originalConstant }
-        set { base.__fw_originalConstant = newValue }
+    /// 可收缩约束的原始偏移值，默认为添加收缩约束时的值
+    public var originalOffset: CGFloat {
+        get { return base.__fw_originalOffset }
+        set { base.__fw_originalOffset = newValue }
     }
     
     /// 可禁用约束的原始状态，默认为添加禁用约束时的状态
@@ -1110,15 +1110,15 @@ public class LayoutChain {
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
-            obj.constant = offset
+            obj.__fw_offset = offset
         })
         return self
     }
     
     @discardableResult
-    public func inset(_ inset: CGFloat) -> Self {
+    public func constant(_ constant: CGFloat) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
-            obj.__fw_inset = inset
+            obj.constant = constant
         })
         return self
     }
@@ -1132,20 +1132,20 @@ public class LayoutChain {
     }
     
     @discardableResult
-    public func collapse(_ constant: CGFloat? = nil) -> Self {
+    public func collapse(_ offset: CGFloat? = nil) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
             self.view?.__fw_addCollapseConstraint(obj)
-            if let constant = constant {
-                obj.__fw_collapseConstant = constant
+            if let offset = offset {
+                obj.__fw_collapseOffset = offset
             }
         })
         return self
     }
     
     @discardableResult
-    public func original(_ constant: CGFloat) -> Self {
+    public func original(_ offset: CGFloat) -> Self {
         self.view?.__fw_lastConstraints.forEach({ obj in
-            obj.__fw_originalConstant = constant
+            obj.__fw_originalOffset = offset
         })
         return self
     }
@@ -1306,7 +1306,7 @@ extension Wrapper where Base == Array<UIView> {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).constant = offset
+                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).__fw_offset = offset
                     }
                 } else {
                     view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
@@ -1327,7 +1327,7 @@ extension Wrapper where Base == Array<UIView> {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).constant = offset
+                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1)).__fw_offset = offset
                     }
                 } else {
                     view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)

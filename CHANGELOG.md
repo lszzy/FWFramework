@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.16.2] - 2023-08-25
+
+### Changed
+* Modifying autoScale is only effective for the current view, no longer looking for the parent view (unstable)
+* Compatible with loadingFinished and setting before reloadData can also take effect
+
+### Fixed
+* Fixed the problem that finishedView was not refreshed when isDataEmpty changed but finished did not change
+* Fix the problem that the offset and collapse methods are not automatically scaled and reversed when the automatic layout is scaled
+
+### Migrate
+1. If auto scaling layout is enabled, check whether there is a view with autoScale set separately and adapt it
+2. If auto scaling layout is enabled, check the collapse and offset methods with parameters in LayoutChain, and change to automatic scaling
+3. If auto scaling layout is enabled and the layout constraint requires a fixed value, use the constant method of LayoutChain
+
 ## [4.16.1] - 2023-08-24
 
 ### Changed

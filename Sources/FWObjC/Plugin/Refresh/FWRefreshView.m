@@ -957,20 +957,21 @@ static char UIScrollViewFWPullRefreshView;
 }
 
 - (void)setFinished:(BOOL)finished {
+    if (self.showsFinishedView) {
+        if (_finished != finished) _finished = finished;
+        self.finishedView.hidden = !finished || self.isDataEmpty;
+        if (self.finishedBlock) self.finishedBlock(self, finished);
+        return;
+    }
+    
     if (_finished == finished) return;
     _finished = finished;
-    if (self.showsFinishedView) {
-        self.finishedView.hidden = !finished || self.isDataEmpty;
+    if (finished) {
+        [self resetScrollViewContentInset];
     } else {
-        if (finished) {
-            [self resetScrollViewContentInset];
-        } else {
-            [self setScrollViewContentInsetForInfiniteScrolling];
-        }
+        [self setScrollViewContentInsetForInfiniteScrolling];
     }
-    if (self.finishedBlock) {
-        self.finishedBlock(self, finished);
-    }
+    if (self.finishedBlock) self.finishedBlock(self, finished);
 }
 
 - (BOOL)isDataEmpty {
@@ -1179,6 +1180,13 @@ static char UIScrollViewFWInfiniteScrollView;
 
 - (BOOL)fw_infiniteScrollFinished {
     return self.fw_infiniteScrollView.finished;
+}
+
+- (void)fw_reloadInfiniteScroll {
+    if (!self.fw_infiniteScrollView.showsFinishedView) return;
+    
+    BOOL finished = self.fw_infiniteScrollView.finished;
+    self.fw_infiniteScrollView.finished = finished;
 }
 
 @end
