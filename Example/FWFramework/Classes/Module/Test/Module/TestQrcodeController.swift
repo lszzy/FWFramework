@@ -184,7 +184,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 return
             }
             
-            var image = ScanCode.generateQRCode(withData: value, size: 375)
+            let image = ScanCode.generateQRCode(withData: value, size: 375)
             guard let image = image else {
                 self?.startScanManager()
                 return
