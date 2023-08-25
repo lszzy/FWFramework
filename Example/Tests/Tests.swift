@@ -157,9 +157,9 @@ class Tests: XCTestCase {
         var dict = parameter.toDictionary()
         XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
         XCTAssertEqual(dict["_privateValue"] as? Int, nil)
-        XCTAssertEqual(dict[RouterParameter.routerSourceKey] as? String, parameter.routerSource)
-        XCTAssertEqual(dict[RouterParameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
-        XCTAssertTrue(dict[RouterParameter.routerHandlerKey] != nil)
+        XCTAssertEqual(dict[Router.Parameter.routerSourceKey] as? String, parameter.routerSource)
+        XCTAssertEqual(dict[Router.Parameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
+        XCTAssertTrue(dict[Router.Parameter.routerHandlerKey] != nil)
         
         dict["isTrue"] = "true"
         let object = TestParameter.fromDictionary(dict)
@@ -281,7 +281,7 @@ class Tests: XCTestCase {
 // MARK: - Private
 extension Tests {
     
-    class TestParameter: RouterParameter {
+    class TestParameter: Router.Parameter {
         var isTrue: Bool = false
         var _privateValue: Int = 0
     }

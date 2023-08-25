@@ -166,7 +166,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         self.bannerView.didSelectItemBlock = { index in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 Router.openURL("https://www.baidu.com", userInfo: [
-                    RouterParameter.routerOptionsKey: NavigatorOptions.embedInNavigation
+                    Router.Parameter.routerOptionsKey: NavigatorOptions.embedInNavigation
                 ])
                 /*
                 Router.openURL("https://www.baidu.com", userInfo: {

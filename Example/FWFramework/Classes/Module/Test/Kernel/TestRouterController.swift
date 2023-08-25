@@ -322,7 +322,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func onOpen14() {
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
-        vc.context = RouterContext(url: "http://kvm.wuyong.site/test.php?key=value")
+        vc.context = Router.Context(url: "http://kvm.wuyong.site/test.php?key=value")
         vc.app.shouldPopController = { [weak self] in
             TestRouterController.popCount += 1
             let index = TestRouterController.popCount % 3
@@ -369,39 +369,39 @@ class TestRouter: NSObject, AutoloadProtocol {
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
     
-    class func testRouter(_ context: RouterContext) -> Any? {
+    class func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func homeRouter(_ context: RouterContext) -> Any? {
+    class func homeRouter(_ context: Router.Context) -> Any? {
         UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
     
-    class func wildcardRouter(_ context: RouterContext) -> Any? {
+    class func wildcardRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func itemRouter(_ context: RouterContext) -> Any? {
+    class func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func objectRouter(_ context: RouterContext) -> Any? {
+    class func objectRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         return vc
     }
     
-    class func objectUnmatchRouter(_ context: RouterContext) -> Any? {
+    class func objectUnmatchRouter(_ context: Router.Context) -> Any? {
         if context.isOpening {
             return "OBJECT UNMATCH"
         } else {
@@ -410,7 +410,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         }
     }
     
-    class func javascriptRouter(_ context: RouterContext) -> Any? {
+    class func javascriptRouter(_ context: Router.Context) -> Any? {
         guard let webVC = Navigator.topViewController as? WebController,
               webVC.isViewLoaded else { return nil }
         
@@ -425,13 +425,13 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func closeRouter(_ context: RouterContext) -> Any? {
+    class func closeRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
         return nil
     }
     
-    class func loaderRouter(_ context: RouterContext) -> Any? {
+    class func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         return vc
@@ -471,7 +471,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
-                    let userInfo = RouterParameter.fromDictionary(context.userInfo)
+                    let userInfo = Router.Parameter.fromDictionary(context.userInfo)
                     Navigator.open(vc, animated: true, options: userInfo.routerOptions)
                 } else {
                     Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
@@ -515,7 +515,7 @@ class TestRouter: NSObject, AutoloadProtocol {
 
 class TestRouterResultController: UIViewController, ViewControllerProtocol {
     
-    var context: RouterContext?
+    var context: Router.Context?
     
     func setupNavbar() {
         navigationItem.title = context?.url
