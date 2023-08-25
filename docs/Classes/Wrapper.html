@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.16.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.16.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -15587,7 +15587,9 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>当前数据总条数，默认自动获取tableView和collectionView，支持自定义覆盖(优先级高，小于0还原)</p>
+                        <p>当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)</p>
+
+<p>注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数</p>
 
                       </div>
                       <div class="declaration">
@@ -18149,7 +18151,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>结束下拉刷新并标记是否加载完成</p>
+                        <p>结束下拉刷新并标记是否加载完成，最好在reloadData之后调用</p>
 
                       </div>
                       <div class="declaration">
@@ -18243,7 +18245,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否已加载完成，不能继续追加</p>
+                        <p>是否已加载完成，不能继续追加，最好在reloadData之后调用</p>
 
                       </div>
                       <div class="declaration">
@@ -18378,7 +18380,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>结束上拉追加并标记是否加载完成</p>
+                        <p>结束上拉追加并标记是否加载完成，最好在reloadData之后调用</p>
 
                       </div>
                       <div class="declaration">
@@ -18750,6 +18752,33 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">infiniteScrollFinished</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo12UIScrollViewCRbzlE20reloadInfiniteScrollyyF"></a>
+                    <a name="//apple_ref/swift/Method/reloadInfiniteScroll()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo12UIScrollViewCRbzlE20reloadInfiniteScrollyyF">reloadInfiniteScroll()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">reloadInfiniteScroll</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -24716,7 +24745,7 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>视图是否自动等比例缩放布局，默认依次查找当前视图及其父视图，都未设置时返回全局开关</p>
+                        <p>当前视图是否自动等比例缩放布局，未设置时返回全局开关</p>
 
                       </div>
                       <div class="declaration">
@@ -27706,6 +27735,33 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE6offset14CoreFoundation7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/offset" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE6offset14CoreFoundation7CGFloatVvp">offset</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置偏移值，根据配置自动等比例缩放和取反</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE10isOppositeSbvp"></a>
                     <a name="//apple_ref/swift/Property/isOpposite" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE10isOppositeSbvp">isOpposite</a>
@@ -27724,33 +27780,6 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isOpposite</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE5inset14CoreFoundation7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/inset" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE5inset14CoreFoundation7CGFloatVvp">inset</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置内间距值，如果是相反的约束，会自动取反</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -27787,9 +27816,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE16collapseConstant14CoreFoundation7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/collapseConstant" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE16collapseConstant14CoreFoundation7CGFloatVvp">collapseConstant</a>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14collapseOffset14CoreFoundation7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/collapseOffset" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14collapseOffset14CoreFoundation7CGFloatVvp">collapseOffset</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -27797,14 +27826,14 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>可收缩约束的收缩常量值，默认0</p>
+                        <p>可收缩约束的收缩偏移值，默认0</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">collapseConstant</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">collapseOffset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -27814,9 +27843,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE16originalConstant14CoreFoundation7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/originalConstant" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE16originalConstant14CoreFoundation7CGFloatVvp">originalConstant</a>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14originalOffset14CoreFoundation7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/originalOffset" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSLayoutConstraintCRbzlE14originalOffset14CoreFoundation7CGFloatVvp">originalOffset</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -27824,14 +27853,14 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>可收缩约束的原始常量值，默认为添加收缩约束时的值</p>
+                        <p>可收缩约束的原始偏移值，默认为添加收缩约束时的值</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">originalConstant</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">originalOffset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -49433,7 +49462,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-24)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

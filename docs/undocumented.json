@@ -2640,6 +2640,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/RefreshPlugin.swift",
+      "line": 164,
+      "symbol": "Wrapper.reloadInfiniteScroll()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/ToastPlugin.swift",
       "line": 129,
       "symbol": "Wrapper.isShowingLoading",
@@ -6800,7 +6807,7 @@
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
       "line": 1119,
-      "symbol": "LayoutChain.inset(_:)",
+      "symbol": "LayoutChain.constant(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -10510,7 +10517,7 @@
     {
       "file": "docs/FWFramework/FWAutoLayout.h",
       "line": 875,
-      "symbol": "FWLayoutChain.inset",
+      "symbol": "FWLayoutChain.constant",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
@@ -15717,28 +15724,35 @@
     },
     {
       "file": "docs/FWFramework/FWRefreshView.h",
-      "line": 133,
+      "line": 132,
+      "symbol": "UIScrollView(FWInfiniteScroll).-fw_reloadInfiniteScroll",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWRefreshView.h",
+      "line": 134,
       "symbol": "UIScrollView(FWInfiniteScroll).fw_infiniteScrollView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWRefreshView.h",
-      "line": 134,
+      "line": 135,
       "symbol": "UIScrollView(FWInfiniteScroll).fw_infiniteScrollHeight",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWRefreshView.h",
-      "line": 135,
+      "line": 136,
       "symbol": "UIScrollView(FWInfiniteScroll).fw_showInfiniteScroll",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWRefreshView.h",
-      "line": 136,
+      "line": 137,
       "symbol": "UIScrollView(FWInfiniteScroll).fw_infiniteScrollFinished",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
