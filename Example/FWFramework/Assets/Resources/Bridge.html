@@ -15,7 +15,9 @@
 	}
 
     function setupWebViewJavascriptBridge(callback) {
-        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.iOS_Native_InjectJavascript) {
+        if (window.webkit &&
+            window.webkit.messageHandlers &&
+            window.webkit.messageHandlers.iOS_Native_InjectJavascript) {
             if (window.WKWebViewJavascriptBridge) { return callback(WKWebViewJavascriptBridge); }
             if (window.WKWVJBCallbacks) { return window.WKWVJBCallbacks.push(callback); }
             window.WKWVJBCallbacks = [callback];

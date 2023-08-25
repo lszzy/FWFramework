@@ -31,7 +31,7 @@ public class Router: NSObject {
         public private(set) var userInfo: [AnyHashable: Any]
         
         /// 路由完成回调
-        public private(set) var completion: ((Any?) -> Void)?
+        public private(set) var completion: Completion?
         
         /// 路由URL解析参数字典
         public fileprivate(set) lazy var urlParameters: [AnyHashable: Any] = {
@@ -58,7 +58,7 @@ public class Router: NSObject {
         public fileprivate(set) var isOpening: Bool = false
         
         /// 创建路由参数对象
-        public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
+        public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
             self.url = url
             self.userInfo = userInfo ?? [:]
             self.completion = completion
@@ -68,6 +68,8 @@ public class Router: NSObject {
     
     /// 路由处理句柄，仅支持openURL时可返回nil
     public typealias Handler = (Context) -> Any?
+    /// 路由完成回调句柄
+    public typealias Completion = (Any?) -> Void
     
     /// 默认路由参数类，可继承使用，也可完全自定义
     open class Parameter: ParameterModel {
@@ -136,14 +138,14 @@ public class Router: NSObject {
     ///   - mapper: 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:
     public class func unregisterClass(_ clazz: Any, mapper: (([String]) -> [String: String])? = nil) {
         let routes = routeClass(clazz, mapper: mapper)
-        if let objectClass = clazz as? NSObject.Type {
+        if let targetClass = clazz as? NSObject.Type {
             for (key, _) in routes {
-                guard let pattern = objectClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                guard let pattern = targetClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 unregisterURL(pattern)
             }
-        } else if let object = clazz as? NSObject {
+        } else if let targetObject = clazz as? NSObject {
             for (key, _) in routes {
-                guard let pattern = object.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 unregisterURL(pattern)
             }
         }
@@ -206,7 +208,7 @@ public class Router: NSObject {
         routeRules.removeAllObjects()
     }
     
-    /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
+    /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回true，继续解析pattern，否则停止解析
     public static var routeFilter: ((Context) -> Bool)?
     
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
@@ -251,7 +253,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息对象，可自定义
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: Any, userInfo: ParameterCodable?, completion: ((Any?) -> Void)? = nil) {
+    public class func openURL(_ url: Any, userInfo: ParameterCodable?, completion: Completion? = nil) {
         openURL(url, userInfo: userInfo?.toDictionary(), completion: completion)
     }
     
@@ -260,7 +262,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
+    public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -398,18 +400,18 @@ public class Router: NSObject {
     private class func registerClass(_ clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
         var result = true
         let routes = routeClass(clazz, mapper: mapper)
-        if let objectClass = clazz as? NSObject.Type {
+        if let targetClass = clazz as? NSObject.Type {
             for (key, obj) in routes {
-                guard let pattern = objectClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                guard let pattern = targetClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(pattern, handler: { context in
-                    return objectClass.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    return targetClass.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
-        } else if let object = clazz as? NSObject {
+        } else if let targetObject = clazz as? NSObject {
             for (key, obj) in routes {
-                guard let pattern = object.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(pattern, handler: { context in
-                    return object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    return targetObject.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         }

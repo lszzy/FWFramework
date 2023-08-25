@@ -412,10 +412,35 @@ open class WebView: WKWebView {
  ```
  */
 public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
-    public typealias Callback = (_ responseData: Any?) -> Void
-    public typealias Handler = (_ parameters: [String: Any], _ callback: @escaping Callback) -> Void
-    public typealias ErrorHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Void
-    public typealias FilterHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Bool
+    
+    // MARK: - Typealias
+    /// JS桥接上下文
+    public class Context: NSObject {
+        /// 自定义对象
+        public fileprivate(set) weak var object: AnyObject?
+        /// 绑定WKWebView
+        public fileprivate(set) weak var webView: WKWebView?
+        
+        /// 调用方法名称
+        public private(set) var handlerName: String
+        /// 调用参数
+        public private(set) var parameters: [String: Any]
+        /// 完成回调
+        public private(set) var completion: ((Any?) -> Void)?
+        
+        /// 初始化方法
+        public init(handlerName: String, parameters: [String: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
+            self.handlerName = handlerName
+            self.parameters = parameters ?? [:]
+            self.completion = completion
+        }
+    }
+    
+    /// JS桥接处理句柄
+    public typealias Handler = (Context) -> Void
+    /// JS桥接完成回调
+    public typealias Completion = (Any?) -> Void
+    /// JS桥接消息对象
     public typealias Message = [String: Any]
     
     private class LeakAvoider: NSObject, WKScriptMessageHandler {
@@ -431,18 +456,19 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    public var isLogEnable = false
-
+    /// 是否启用日志，默认false
+    public var isLogEnabled = false
+    
     private let iOS_Native_InjectJavascript = "iOS_Native_InjectJavascript"
     private let iOS_Native_FlushMessageQueue = "iOS_Native_FlushMessageQueue"
     
     private weak var webView: WKWebView?
     
     private var startupMessageQueue: [Message]? = []
-    private var responseCallbacks = [String: Callback]()
+    private var responseCallbacks = [String: Completion]()
     private var messageHandlers = [String: Handler]()
-    private var errorHandler: ErrorHandler?
-    private var filterHandler: FilterHandler?
+    private var errorHandler: Handler?
+    private var filterHandler: ((Context) -> Bool)?
     private var uniqueId = 0
     
     public init(webView: WKWebView) {
@@ -460,19 +486,40 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
     
     // MARK: - Public
-    public func registerClass(_ clazz: Any, package: String? = nil, context: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
-        weak var weakContext = context ?? webView
+    /// 注册JS桥接处理类或对象
+    ///
+    /// - Parameters:
+    ///   - clazz: JS桥接处理类或对象
+    ///   - package: 桥接包名，默认nil。示例：app.
+    ///   - object: 自定义上下文，可通过context.object访问，示例：WebView控制器
+    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge:
+    public func registerClass(_ clazz: Any, package: String? = nil, context object: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
-        for (key, obj) in bridges {
-            let name = (package ?? "") + key
-            registerHandler(name) { parameters, callback in
-                guard let context = weakContext else { return }
-                
-                ObjCBridge.invokeMethod(clazz, selector: NSSelectorFromString(obj), objects: [context, parameters, callback])
+        if let targetClass = clazz as? NSObject.Type {
+            for (key, obj) in bridges {
+                let name = (package ?? "") + key
+                registerHandler(name) { [weak object] context in
+                    context.object = object
+                    _ = targetClass.perform(NSSelectorFromString(obj), with: context)
+                }
+            }
+        } else if let targetObject = clazz as? NSObject {
+            for (key, obj) in bridges {
+                let name = (package ?? "") + key
+                registerHandler(name) { [weak object] context in
+                    context.object = object
+                    _ = targetObject.perform(NSSelectorFromString(obj), with: context)
+                }
             }
         }
     }
     
+    /// 取消注册指定JS桥接处理类或对象
+    ///
+    /// - Parameters:
+    ///   - clazz: JS桥接处理类或对象
+    ///   - package: 桥接包名，默认nil。示例：app.
+    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge:
     public func unregisterClass(_ clazz: Any, package: String? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
         for (key, _) in bridges {
@@ -481,33 +528,40 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
+    /// 注册指定名称处理句柄
     public func registerHandler(_ handlerName: String, handler: @escaping Handler) {
         messageHandlers[handlerName] = handler
     }
     
+    /// 移除指定名称处理句柄
     public func removeHandler(_ handlerName: String) {
         messageHandlers.removeValue(forKey: handlerName)
     }
     
+    /// 获取所有已注册处理句柄的名称
     public func getRegisteredHandlers() -> [String] {
         return Array(messageHandlers.keys)
     }
     
-    public func setErrorHandler(_ handler: ErrorHandler?) {
+    /// 设置错误处理句柄，句柄未找到时触发
+    public func setErrorHandler(_ handler: Handler?) {
         errorHandler = handler
     }
     
-    public func setFilterHandler(_ handler: FilterHandler?) {
+    /// 注册过滤器句柄，句柄访问时优先触发。如果返回true，继续处理handler，否则停止处理
+    public func setFilterHandler(_ handler: ((Context) -> Bool)?) {
         filterHandler = handler
     }
     
-    public func callHandler(_ handlerName: String, data: Any? = nil, callback: Callback? = nil) {
+    /// 调用JS端已注册的句柄，完成后回调
+    public func callHandler(_ handlerName: String, data: Any? = nil, callback: Completion? = nil) {
         send(handlerName: handlerName, data: data, callback: callback)
     }
     
+    /// 重置JS桥接队列
     public func reset() {
         startupMessageQueue = nil
-        responseCallbacks = [String: WebViewJSBridge.Callback]()
+        responseCallbacks = [String: Completion]()
         uniqueId = 0
     }
     
@@ -541,12 +595,12 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         
         var bridges: [String: String] = [:]
         for method in methods {
-            guard method.hasSuffix(":data:callback:"),
-                  method.components(separatedBy: ":").count == 4 else {
+            guard method.hasSuffix("Bridge:"),
+                  method.components(separatedBy: ":").count == 2 else {
                 continue
             }
             
-            let name = method.replacingOccurrences(of: ":data:callback:", with: "")
+            let name = method.replacingOccurrences(of: "Bridge:", with: "")
             bridges[name] = method
         }
         return bridges
@@ -555,7 +609,9 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     private func flushMessageQueue() {
         webView?.evaluateJavaScript("WKWebViewJavascriptBridge._fetchQueue();") { (result, error) in
             if error != nil {
-                self.log("WARNING: Error when trying to fetch data from WKWebView: \(String(describing: error))")
+                if self.isLogEnabled {
+                    self.log("WARNING: Error when trying to fetch data from WKWebView: \(String(describing: error))")
+                }
             }
             
             guard let resultStr = result as? String else { return }
@@ -573,7 +629,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: iOS_Native_FlushMessageQueue)
     }
     
-    private func send(handlerName: String, data: Any?, callback: WebViewJSBridge.Callback?) {
+    private func send(handlerName: String, data: Any?, callback: Completion?) {
         var message = [String: Any]()
         message["handlerName"] = handlerName
         
@@ -593,51 +649,57 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     private func flush(messageQueueString: String) {
         guard let messages = deserialize(messageJSON: messageQueueString) else {
-            log("WARNING: " + messageQueueString)
+            if isLogEnabled {
+                log("WARNING: " + messageQueueString)
+            }
             return
         }
         
         for message in messages {
-            log("RCVD: \(message)")
+            if isLogEnabled {
+                log("RCVD: \(message)")
+            }
             
             if let responseID = message["responseID"] as? String {
                 guard let callback = responseCallbacks[responseID] else { continue }
                 callback(message["responseData"])
                 responseCallbacks.removeValue(forKey: responseID)
             } else {
-                var callback: WebViewJSBridge.Callback
+                guard let handlerName = message["handlerName"] as? String else { continue }
+                
+                var callback: Completion?
                 if let callbackID = message["callbackID"] {
-                    callback = { (_ responseData: Any?) -> Void in
-                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as WebViewJSBridge.Message
+                    callback = { responseData in
+                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as Message
                         self.queue(message: msg)
                     }
                 } else {
-                    callback = { (_ responseData: Any?) -> Void in
+                    callback = { ignoreResponseData in
                         // Do nothing
                     }
                 }
                 
-                guard let handlerName = message["handlerName"] as? String else { continue }
+                let context = Context(handlerName: handlerName, parameters: message["data"] as? [String : Any], completion: callback)
+                context.webView = webView
                 
                 if let filterHandler = filterHandler {
-                    let filterResult = filterHandler(handlerName, message["data"] as? [String : Any] ?? [:], callback)
-                    if !filterResult { continue }
+                    if !filterHandler(context) { continue }
                 }
                 
-                guard let handler = messageHandlers[handlerName] else {
-                    log("WARNING: NoHandlerException, No handler for message from JS: \(message)")
-                    if let errorHandler = errorHandler {
-                        errorHandler(handlerName, message["data"] as? [String : Any] ?? [:], callback)
+                if let handler = messageHandlers[handlerName] {
+                    handler(context)
+                } else {
+                    if isLogEnabled {
+                        log("WARNING: NoHandlerException, No handler for message from JS: \(message)")
                     }
-                    continue
+                    
+                    errorHandler?(context)
                 }
-                
-                handler(message["data"] as? [String : Any] ?? [:], callback)
             }
         }
     }
     
-    private func queue(message: WebViewJSBridge.Message) {
+    private func queue(message: Message) {
         if startupMessageQueue == nil {
             dispatch(message: message)
         } else {
@@ -645,9 +707,11 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    private func dispatch(message: WebViewJSBridge.Message) {
+    private func dispatch(message: Message) {
         guard var messageJSON = serialize(message: message, pretty: false) else { return }
-        log("SEND: \(messageJSON)")
+        if isLogEnabled {
+            log("SEND: \(messageJSON)")
+        }
         
         messageJSON = messageJSON.replacingOccurrences(of: "\\", with: "\\\\")
         messageJSON = messageJSON.replacingOccurrences(of: "\"", with: "\\\"")
@@ -668,31 +732,34 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    private func serialize(message: WebViewJSBridge.Message, pretty: Bool) -> String? {
+    private func serialize(message: Message, pretty: Bool) -> String? {
         var result: String?
         do {
             let data = try JSONSerialization.data(withJSONObject: message, options: pretty ? .prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0))
             result = String(data: data, encoding: .utf8)
         } catch let error {
-            log("ERROR: \(error)")
+            if isLogEnabled {
+                log("ERROR: \(error)")
+            }
         }
         return result
     }
     
-    private func deserialize(messageJSON: String) -> [WebViewJSBridge.Message]? {
-        var result: [WebViewJSBridge.Message]?
+    private func deserialize(messageJSON: String) -> [Message]? {
+        var result: [Message]?
         guard let data = messageJSON.data(using: .utf8) else { return nil }
         do {
-            result = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [WebViewJSBridge.Message]
+            result = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Message]
         } catch let error {
-            log("ERROR: \(error)")
+            if isLogEnabled {
+                log("ERROR: \(error)")
+            }
         }
         return result
     }
     
     private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
-        guard isLogEnable else { return }
         Logger.debug(group: Logger.fw_moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
@@ -846,6 +913,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
 })();
 """
+    
 }
 
 // MARK: - WKWebView+WebView
