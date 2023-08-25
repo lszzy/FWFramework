@@ -43,7 +43,11 @@ extension WebViewDelegate {
 
 /// WKWebView封装，默认实现进度条、JS弹窗、Cookie管理、自定义User-Agent等
 ///
-/// 备注：如需实现加载离线资源等场景，请使用configuration.setURLSchemeHandler
+/// 备注：
+/// 1. 如需实现加载离线资源等场景，请使用configuration.setURLSchemeHandler
+/// 2. 第一次加载可携带自定义Header，如果存在重定向，Header里面的Authorization因安全策略会丢失。解决方法示例：可新增Header比如X-Authorization，重定向时不会丢失
+/// 3. 后续非首次加载自定义Header会丢失，解决方法示例：通过JSBridge桥接获取授权信息或采用GET参数|cookie储存等
+/// 4. 如果遇到Cookie丢失问题，可尝试开启cookieEnabled或自行设置Cookie等
 open class WebView: WKWebView {
     
     private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate {
@@ -252,6 +256,9 @@ open class WebView: WKWebView {
     open var allowsSchemeURL = false
     
     /// 是否允许window.close关闭当前控制器，默认YES
+    ///
+    /// 如果WebView新开了界面，触发了createWebView回调后，则不会触发。
+    /// 解决方案示例：使用JSBridge桥接或URL拦截等方式关闭界面
     open var allowsWindowClose = true
 
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
