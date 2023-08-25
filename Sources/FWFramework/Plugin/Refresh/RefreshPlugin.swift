@@ -213,7 +213,7 @@ extension RefreshPlugin {
         plugin.endRefreshing(scrollView: self)
     }
     
-    /// 结束下拉刷新并标记是否加载完成
+    /// 结束下拉刷新并标记是否加载完成，最好在reloadData之后调用
     public func fw_endRefreshing(finished: Bool) {
         self.fw_endRefreshing()
         self.fw_loadingFinished = finished
@@ -238,7 +238,7 @@ extension RefreshPlugin {
         }
     }
     
-    /// 是否已加载完成，不能继续追加
+    /// 是否已加载完成，不能继续追加，最好在reloadData之后调用
     public var fw_loadingFinished: Bool {
         get {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
@@ -274,7 +274,7 @@ extension RefreshPlugin {
         plugin.endLoading(scrollView: self)
     }
     
-    /// 结束上拉追加并标记是否加载完成
+    /// 结束上拉追加并标记是否加载完成，最好在reloadData之后调用
     public func fw_endLoading(finished: Bool) {
         self.fw_endLoading()
         self.fw_loadingFinished = finished
@@ -463,6 +463,14 @@ extension RefreshPlugin {
         set {
             self.fw_infiniteScrollView?.finished = newValue
         }
+    }
+    
+    public func fw_reloadInfiniteScroll() {
+        guard let infiniteScrollView = fw_infiniteScrollView,
+              infiniteScrollView.showsFinishedView else { return }
+        
+        let finished = infiniteScrollView.finished
+        infiniteScrollView.finished = finished
     }
     
 }

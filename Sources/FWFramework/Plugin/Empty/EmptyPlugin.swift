@@ -289,7 +289,9 @@ extension EmptyViewDelegate {
         }
     }
     
-    /// 当前数据总条数，默认自动获取tableView和collectionView，支持自定义覆盖(优先级高，小于0还原)
+    /// 当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)
+    ///
+    /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
     public var fw_totalDataCount: Int {
         get {
             if let totalCount = fw_propertyNumber(forName: "fw_totalDataCount")?.intValue,
@@ -359,6 +361,7 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
+            selfObject.fw_reloadInfiniteScroll()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -369,6 +372,7 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
+            selfObject.fw_reloadInfiniteScroll()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -379,6 +383,7 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
+            selfObject.fw_reloadInfiniteScroll()
         }}
     }
     
