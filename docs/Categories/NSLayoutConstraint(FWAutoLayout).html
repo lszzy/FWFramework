@@ -17,7 +17,7 @@
     <a title="NSLayoutConstraint(FWAutoLayout) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.16.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.16.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2796,20 +2796,20 @@
                   
                   <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">NSLayoutConstraint</span> <span class="p">(</span><span class="nl">FWAutoLayout</span><span class="p">)</span>
 
+<span class="c1">/// 设置偏移值，根据配置自动等比例缩放和取反</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_offset</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
 <span class="c1">/// 标记是否是相反的约束，一般相对于父视图</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_isOpposite</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
-
-<span class="c1">/// 设置内间距值，如果是相反的约束，会自动取反</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_inset</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 安全修改优先级，防止iOS13以下已激活约束修改Required崩溃</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">UILayoutPriority</span> <span class="n">fw_priority</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 可收缩约束的收缩常量值，默认0</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_collapseConstant</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 可收缩约束的收缩偏移值，默认0</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_collapseOffset</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 可收缩约束的原始常量值，默认为添加收缩约束时的值</span>
-<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_originalConstant</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="c1">/// 可收缩约束的原始偏移值，默认为添加收缩约束时的值</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_originalOffset</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 可禁用约束的原始状态，默认为添加禁用约束时的状态</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_originalActive</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -2824,6 +2824,33 @@
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_offset"></a>
+                    <a name="//apple_ref/swift/Property/fw_offset" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_offset">fw_offset</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置偏移值，根据配置自动等比例缩放和取反</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_offset</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -2845,33 +2872,6 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_isOpposite</span><span class="p">;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_inset"></a>
-                    <a name="//apple_ref/swift/Property/fw_inset" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_inset">fw_inset</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置内间距值，如果是相反的约束，会自动取反</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_inset</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2908,9 +2908,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_collapseConstant"></a>
-                    <a name="//apple_ref/swift/Property/fw_collapseConstant" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_collapseConstant">fw_collapseConstant</a>
+                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_collapseOffset"></a>
+                    <a name="//apple_ref/swift/Property/fw_collapseOffset" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_collapseOffset">fw_collapseOffset</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2918,14 +2918,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>可收缩约束的收缩常量值，默认0</p>
+                        <p>可收缩约束的收缩偏移值，默认0</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_collapseConstant</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_collapseOffset</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2935,9 +2935,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_originalConstant"></a>
-                    <a name="//apple_ref/swift/Property/fw_originalConstant" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_originalConstant">fw_originalConstant</a>
+                    <a name="/c:objc(cs)NSLayoutConstraint(py)fw_originalOffset"></a>
+                    <a name="//apple_ref/swift/Property/fw_originalOffset" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSLayoutConstraint(py)fw_originalOffset">fw_originalOffset</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2945,14 +2945,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>可收缩约束的原始常量值，默认为添加收缩约束时的值</p>
+                        <p>可收缩约束的原始偏移值，默认为添加收缩约束时的值</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_originalConstant</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fw_originalOffset</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -2991,7 +2991,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-24)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

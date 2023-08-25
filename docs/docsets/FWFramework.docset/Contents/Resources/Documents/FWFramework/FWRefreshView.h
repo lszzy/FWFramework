@@ -129,6 +129,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 - (void)fw_addInfiniteScrollWithBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
 - (void)fw_addInfiniteScrollWithTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
 - (void)fw_triggerInfiniteScroll NS_REFINED_FOR_SWIFT;
+- (void)fw_reloadInfiniteScroll NS_REFINED_FOR_SWIFT;
 
 @property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fw_infiniteScrollView NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) CGFloat fw_infiniteScrollHeight NS_REFINED_FOR_SWIFT;
