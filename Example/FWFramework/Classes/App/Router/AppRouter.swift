@@ -22,26 +22,26 @@ import FWFramework
 // MARK: - Public
 extension AppRouter {
     
-    class func homeRouter(_ context: RouterContext) -> Any? {
+    class func homeRouter(_ context: Router.Context) -> Any? {
         let viewController = HomeController()
         return viewController
     }
     
-    class func testRouter(_ context: RouterContext) -> Any? {
+    class func testRouter(_ context: Router.Context) -> Any? {
         let viewController = TestController()
         return viewController
     }
     
-    class func settingsRouter(_ context: RouterContext) -> Any? {
+    class func settingsRouter(_ context: Router.Context) -> Any? {
         let viewController = SettingsController()
         return viewController
     }
     
-    class func httpRouter(_ context: RouterContext) -> Any? {
+    class func httpRouter(_ context: Router.Context) -> Any? {
         return httpsRouter(context)
     }
     
-    class func httpsRouter(_ context: RouterContext) -> Any? {
+    class func httpsRouter(_ context: Router.Context) -> Any? {
         let viewController = WebController(requestUrl: context.url)
         return viewController
     }

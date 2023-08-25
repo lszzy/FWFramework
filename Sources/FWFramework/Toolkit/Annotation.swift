@@ -236,7 +236,7 @@ public struct RouterValue {
     public init(
         wrappedValue value: String,
         parameters: Any? = nil,
-        _ handler: RouterHandler? = nil
+        _ handler: Router.Handler? = nil
     ) {
         self.pattern = value
         self.parameters = parameters
@@ -248,7 +248,7 @@ public struct RouterValue {
     public init(
         _ pattern: String,
         parameters: Any? = nil,
-        handler: RouterHandler? = nil
+        handler: Router.Handler? = nil
     ) {
         self.pattern = pattern
         self.parameters = parameters

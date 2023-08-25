@@ -7,108 +7,109 @@
 
 import UIKit
 
-// MARK: - RouterParameter
-/// 默认路由参数类，可继承使用，也可完全自定义
-open class RouterParameter: ParameterModel {
-    
-    /// 路由信息来源Key，兼容字典传参，默认未使用
-    public static let routerSourceKey = "routerSource"
-    /// 路由信息选项Key，兼容字典传参，支持NavigationOptions
-    public static let routerOptionsKey = "routerOptions"
-    /// 路由动画选项Key，兼容字典传参，仅open生效
-    public static let routerAnimatedKey = "routerAnimated"
-    /// 路由信息句柄Key，兼容字典传参，仅open生效
-    public static let routerHandlerKey = "routerHandler"
-    
-    /// 路由信息来源，默认未使用
-    open var routerSource: String?
-    /// 路由信息选项，支持NavigationOptions
-    open var routerOptions: NavigatorOptions = []
-    /// 路由动画选项，仅open生效
-    open var routerAnimated: Bool?
-    /// 路由信息句柄，仅open生效
-    open var routerHandler: ((RouterContext, UIViewController) -> Void)?
-    
-    public required init() {}
-    
-}
-
-// MARK: - RouterContext
-/// URL路由上下文
-public class RouterContext: NSObject {
-    
-    /// 路由URL
-    public private(set) var url: String
-    
-    /// 路由用户信息
-    public private(set) var userInfo: [AnyHashable: Any]
-    
-    /// 路由完成回调
-    public private(set) var completion: ((Any?) -> Void)?
-    
-    /// 路由URL解析参数字典
-    public fileprivate(set) lazy var urlParameters: [AnyHashable: Any] = {
-        var urlParameters: [String: String] = [:]
-        if let queryUrl = URL.fw_url(string: url),
-           let queryItems = URLComponents(url: queryUrl, resolvingAgainstBaseURL: false)?.queryItems {
-            // queryItems.value会自动进行URL参数解码
-            for item in queryItems {
-                urlParameters[item.name] = item.value
-            }
-        }
-        return urlParameters
-    }()
-    
-    /// 路由userInfo和URLParameters合并参数，URL参数优先级高
-    public fileprivate(set) lazy var parameters: [AnyHashable: Any] = {
-        var parameters: [AnyHashable: Any] = [:]
-        parameters.merge(userInfo) { _, last in last }
-        parameters.merge(urlParameters) { _, last in last }
-        return parameters
-    }()
-    
-    /// 路由是否以openURL方式打开，区别于objectForURL
-    public fileprivate(set) var isOpening: Bool = false
-    
-    /// 创建路由参数对象
-    public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
-        self.url = url
-        self.userInfo = userInfo ?? [:]
-        self.completion = completion
-    }
-    
-}
-
 // MARK: - Router
 extension WrapperGlobal {
     /// 路由快速访问
     public static var router = Router.self
 }
 
-/// 路由处理句柄，仅支持openURL时可返回nil
-public typealias RouterHandler = (RouterContext) -> Any?
-
 /// URL路由器
 ///
-/// 由于Function也是闭包，RouterHandler参数支持静态方法，示例：AppRouter.routePlugin(_:)
+/// 由于Function也是闭包，Handler参数支持静态方法，示例：AppRouter.routePlugin(_:)
 /// [MGJRouter](https://github.com/meili/MGJRouter)
 /// [FFRouter](https://github.com/imlifengfeng/FFRouter)
 public class Router: NSObject {
     
-    private static let routeWildcardCharacter = "*"
-    private static let routeSpecialCharacters = "/?&."
-    private static let routeCoreKey = "FWRouterCore"
-    private static let routeBlockKey = "FWRouterBlock"
+    // MARK: - Typealias
+    /// URL路由上下文
+    public class Context: NSObject {
+        
+        /// 路由URL
+        public private(set) var url: String
+        
+        /// 路由用户信息
+        public private(set) var userInfo: [AnyHashable: Any]
+        
+        /// 路由完成回调
+        public private(set) var completion: ((Any?) -> Void)?
+        
+        /// 路由URL解析参数字典
+        public fileprivate(set) lazy var urlParameters: [AnyHashable: Any] = {
+            var urlParameters: [String: String] = [:]
+            if let queryUrl = URL.fw_url(string: url),
+               let queryItems = URLComponents(url: queryUrl, resolvingAgainstBaseURL: false)?.queryItems {
+                // queryItems.value会自动进行URL参数解码
+                for item in queryItems {
+                    urlParameters[item.name] = item.value
+                }
+            }
+            return urlParameters
+        }()
+        
+        /// 路由userInfo和URLParameters合并参数，URL参数优先级高
+        public fileprivate(set) lazy var parameters: [AnyHashable: Any] = {
+            var parameters: [AnyHashable: Any] = [:]
+            parameters.merge(userInfo) { _, last in last }
+            parameters.merge(urlParameters) { _, last in last }
+            return parameters
+        }()
+        
+        /// 路由是否以openURL方式打开，区别于objectForURL
+        public fileprivate(set) var isOpening: Bool = false
+        
+        /// 创建路由参数对象
+        public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
+            self.url = url
+            self.userInfo = userInfo ?? [:]
+            self.completion = completion
+        }
+        
+    }
     
-    /// 路由规则，结构类似 ["beauty": [":id": [routerCoreKey: block]]]
-    private static var routeRules = NSMutableDictionary()
+    /// 路由处理句柄，仅支持openURL时可返回nil
+    public typealias Handler = (Context) -> Any?
     
+    /// 默认路由参数类，可继承使用，也可完全自定义
+    open class Parameter: ParameterModel {
+        
+        /// 路由信息来源Key，兼容字典传参，默认未使用
+        public static let routerSourceKey = "routerSource"
+        /// 路由信息选项Key，兼容字典传参，支持NavigationOptions
+        public static let routerOptionsKey = "routerOptions"
+        /// 路由动画选项Key，兼容字典传参，仅open生效
+        public static let routerAnimatedKey = "routerAnimated"
+        /// 路由信息句柄Key，兼容字典传参，仅open生效
+        public static let routerHandlerKey = "routerHandler"
+        
+        /// 路由信息来源，默认未使用
+        open var routerSource: String?
+        /// 路由信息选项，支持NavigationOptions
+        open var routerOptions: NavigatorOptions = []
+        /// 路由动画选项，仅open生效
+        open var routerAnimated: Bool?
+        /// 路由信息句柄，仅open生效
+        open var routerHandler: ((Context, UIViewController) -> Void)?
+        
+        public required init() {}
+        
+    }
+    
+    // MARK: - Accessor
     /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
     public static let sharedLoader = Loader<String, Any>()
     
     /// 是否开启严格模式，开启后不会以上一层为fallback，默认false
     public static var strictMode = false
     
+    /// 路由规则，结构类似 ["beauty": [":id": [routerCoreKey: block]]]
+    private static var routeRules = NSMutableDictionary()
+    
+    private static let routeWildcardCharacter = "*"
+    private static let routeSpecialCharacters = "/?&."
+    private static let routeCoreKey = "FWRouterCore"
+    private static let routeBlockKey = "FWRouterBlock"
+    
+    // MARK: - Public
     /// 注册路由类或对象，批量注册路由规则
     /// - Parameters:
     ///   - clazz: 路由类或对象，不遍历父类
@@ -127,27 +128,6 @@ public class Router: NSObject {
     @discardableResult
     public class func presetClass(_ clazz: Any, mapper: (([String]) -> [String: String])? = nil) -> Bool {
         return registerClass(clazz, isPreset: true, mapper: mapper)
-    }
-    
-    private class func registerClass(_ clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
-        var result = true
-        let routes = routeClass(clazz, mapper: mapper)
-        if let objectClass = clazz as? NSObject.Type {
-            for (key, obj) in routes {
-                guard let pattern = objectClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                result = registerURL(pattern, handler: { context in
-                    return objectClass.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
-                }, isPreset: isPreset) && result
-            }
-        } else if let object = clazz as? NSObject {
-            for (key, obj) in routes {
-                guard let pattern = object.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                result = registerURL(pattern, handler: { context in
-                    return object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
-                }, isPreset: isPreset) && result
-            }
-        }
-        return result
     }
     
     /// 取消注册某个路由类或对象
@@ -169,43 +149,13 @@ public class Router: NSObject {
         }
     }
     
-    private class func routeClass(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        var targetClass: AnyClass?
-        if let clazz = clazz as? AnyClass {
-            if let className = (NSStringFromClass(clazz) as NSString).utf8String {
-                targetClass = objc_getMetaClass(className) as? AnyClass
-            }
-        } else {
-            targetClass = object_getClass(clazz)
-        }
-        guard let targetClass = targetClass else { return [:] }
-        
-        let methods = NSObject.fw_classMethods(targetClass)
-        if let mapper = mapper {
-            return mapper(methods)
-        }
-        
-        var routes: [String: String] = [:]
-        for method in methods {
-            if !method.hasSuffix("Url") || method.contains(":") { continue }
-            
-            var handler = method.replacingOccurrences(of: "Url", with: "Router:")
-            if !methods.contains(handler) {
-                handler = method.replacingOccurrences(of: "Url", with: "DefaultRouter:")
-                if !methods.contains(handler) { continue }
-            }
-            routes[method] = handler
-        }
-        return routes
-    }
-    
     /// 注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
     /// - Parameters:
     ///   - pattern: 字符串或字符串数组，带上 scheme，如 app://beauty/:id
     ///   - handler: 路由处理句柄，参数为路由上下文对象
     /// - Returns: 是否注册成功
     @discardableResult
-    public class func registerURL(_ pattern: Any, handler: @escaping RouterHandler) -> Bool {
+    public class func registerURL(_ pattern: Any, handler: @escaping Handler) -> Bool {
         return registerURL(pattern, handler: handler, isPreset: false)
     }
     
@@ -214,26 +164,8 @@ public class Router: NSObject {
     ///   - pattern: 字符串或字符串数组，带上 scheme，如 app://beauty/:id
     ///   - handler: 路由处理句柄，参数为路由上下文对象
     /// - Returns: 是否注册成功
-    public class func presetURL(_ pattern: Any, handler: @escaping RouterHandler) -> Bool {
+    public class func presetURL(_ pattern: Any, handler: @escaping Handler) -> Bool {
         return registerURL(pattern, handler: handler, isPreset: true)
-    }
-    
-    private class func registerURL(_ pattern: Any, handler: @escaping RouterHandler, isPreset: Bool) -> Bool {
-        if let patterns = pattern as? [Any] {
-            var result = true
-            for subPattern in patterns {
-                result = registerURL(subPattern, handler: handler, isPreset: isPreset) && result
-            }
-            return result
-        }
-        
-        guard let pattern = pattern as? String, !pattern.isEmpty else { return false }
-        
-        let subRoutes = registerRoute(pattern)
-        if isPreset && subRoutes[routeCoreKey] != nil { return false }
-        
-        subRoutes[routeCoreKey] = handler
-        return true
     }
     
     /// 取消注册某个 pattern
@@ -275,17 +207,17 @@ public class Router: NSObject {
     }
     
     /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回YES，继续解析pattern，否则停止解析
-    public static var routeFilter: ((RouterContext) -> Bool)?
+    public static var routeFilter: ((Context) -> Bool)?
     
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
-    public static var routeHandler: ((RouterContext, Any) -> Any?)?
+    public static var routeHandler: ((Context, Any) -> Any?)?
     
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
-    public static var errorHandler: ((RouterContext) -> Void)?
+    public static var errorHandler: ((Context) -> Void)?
     
     /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
-    public class func presetRouteHandler(_ handler: ((RouterContext, Any) -> Any?)? = nil) {
+    public class func presetRouteHandler(_ handler: ((Context, Any) -> Any?)? = nil) {
         if routeHandler != nil { return }
         
         routeHandler = handler ?? { context, object in
@@ -293,7 +225,7 @@ public class Router: NSObject {
             guard let viewController = object as? UIViewController else { return object }
             
             // 解析默认路由参数userInfo
-            let userInfo = RouterParameter.fromDictionary(context.userInfo)
+            let userInfo = Parameter.fromDictionary(context.userInfo)
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
@@ -333,10 +265,10 @@ public class Router: NSObject {
         guard !rewriteURL.isEmpty else { return }
         
         let urlParameters = routeParameters(from: rewriteURL)
-        let handler = urlParameters[routeBlockKey] as? RouterHandler
+        let handler = urlParameters[routeBlockKey] as? Handler
         urlParameters.removeObject(forKey: routeBlockKey)
         
-        let context = RouterContext(url: rewriteURL, userInfo: userInfo, completion: completion)
+        let context = Context(url: rewriteURL, userInfo: userInfo, completion: completion)
         context.urlParameters = urlParameters as! [AnyHashable : Any]
         context.isOpening = true
         
@@ -353,11 +285,11 @@ public class Router: NSObject {
         errorHandler?(context)
     }
     
-    /// 快速调用RouterHandler参数中的回调句柄，指定回调结果
+    /// 快速调用Handler参数中的回调句柄，指定回调结果
     /// - Parameters:
-    ///   - context: RouterHandler中的模型参数
+    ///   - context: Handler中的模型参数
     ///   - result: URL处理完成后的回调结果
-    public class func completeURL(_ context: RouterContext, result: Any?) {
+    public class func completeURL(_ context: Context, result: Any?) {
         context.completion?(result)
     }
     
@@ -380,10 +312,10 @@ public class Router: NSObject {
         guard !rewriteURL.isEmpty else { return nil }
         
         let urlParameters = routeParameters(from: rewriteURL)
-        let handler = urlParameters[routeBlockKey] as? RouterHandler
+        let handler = urlParameters[routeBlockKey] as? Handler
         urlParameters.removeObject(forKey: routeBlockKey)
         
-        let context = RouterContext(url: rewriteURL, userInfo: userInfo, completion: nil)
+        let context = Context(url: rewriteURL, userInfo: userInfo, completion: nil)
         context.urlParameters = urlParameters as! [AnyHashable : Any]
         context.isOpening = false
         
@@ -460,6 +392,76 @@ public class Router: NSObject {
             }
         }
         return parsedResult
+    }
+    
+    // MARK: - Private
+    private class func registerClass(_ clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
+        var result = true
+        let routes = routeClass(clazz, mapper: mapper)
+        if let objectClass = clazz as? NSObject.Type {
+            for (key, obj) in routes {
+                guard let pattern = objectClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                result = registerURL(pattern, handler: { context in
+                    return objectClass.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                }, isPreset: isPreset) && result
+            }
+        } else if let object = clazz as? NSObject {
+            for (key, obj) in routes {
+                guard let pattern = object.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
+                result = registerURL(pattern, handler: { context in
+                    return object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                }, isPreset: isPreset) && result
+            }
+        }
+        return result
+    }
+    
+    private class func routeClass(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
+        var targetClass: AnyClass?
+        if let clazz = clazz as? AnyClass {
+            if let className = (NSStringFromClass(clazz) as NSString).utf8String {
+                targetClass = objc_getMetaClass(className) as? AnyClass
+            }
+        } else {
+            targetClass = object_getClass(clazz)
+        }
+        guard let targetClass = targetClass else { return [:] }
+        
+        let methods = NSObject.fw_classMethods(targetClass)
+        if let mapper = mapper {
+            return mapper(methods)
+        }
+        
+        var routes: [String: String] = [:]
+        for method in methods {
+            if !method.hasSuffix("Url") || method.contains(":") { continue }
+            
+            var handler = method.replacingOccurrences(of: "Url", with: "Router:")
+            if !methods.contains(handler) {
+                handler = method.replacingOccurrences(of: "Url", with: "DefaultRouter:")
+                if !methods.contains(handler) { continue }
+            }
+            routes[method] = handler
+        }
+        return routes
+    }
+    
+    private class func registerURL(_ pattern: Any, handler: @escaping Handler, isPreset: Bool) -> Bool {
+        if let patterns = pattern as? [Any] {
+            var result = true
+            for subPattern in patterns {
+                result = registerURL(subPattern, handler: handler, isPreset: isPreset) && result
+            }
+            return result
+        }
+        
+        guard let pattern = pattern as? String, !pattern.isEmpty else { return false }
+        
+        let subRoutes = registerRoute(pattern)
+        if isPreset && subRoutes[routeCoreKey] != nil { return false }
+        
+        subRoutes[routeCoreKey] = handler
+        return true
     }
     
     private class func registerRoute(_ pattern: String) -> NSMutableDictionary {
@@ -607,6 +609,7 @@ public class Router: NSObject {
     
 }
 
+// MARK: - Router+Extension
 extension Router {
     
     private static var rewriteRules = [String: String]()
