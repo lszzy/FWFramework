@@ -606,16 +606,17 @@ open class InfiniteScrollView: UIView {
     /// 是否已完成追加
     open var finished = false {
         didSet {
-            guard finished != oldValue else { return }
-            
             if showsFinishedView {
                 finishedView.isHidden = !finished || isDataEmpty
+                finishedBlock?(self, finished)
+                return
+            }
+            
+            guard finished != oldValue else { return }
+            if finished {
+                resetScrollViewContentInset()
             } else {
-                if finished {
-                    resetScrollViewContentInset()
-                } else {
-                    setScrollViewContentInsetForInfiniteScrolling()
-                }
+                setScrollViewContentInsetForInfiniteScrolling()
             }
             finishedBlock?(self, finished)
         }
