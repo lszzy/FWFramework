@@ -1182,4 +1182,11 @@ static char UIScrollViewFWInfiniteScrollView;
     return self.fw_infiniteScrollView.finished;
 }
 
+- (void)fw_reloadInfiniteScroll {
+    if (!self.fw_infiniteScrollView.showsFinishedView) return;
+    
+    BOOL finished = self.fw_infiniteScrollView.finished;
+    self.fw_infiniteScrollView.finished = finished;
+}
+
 @end

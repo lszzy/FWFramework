@@ -99,7 +99,7 @@ NS_SWIFT_NAME(RefreshPlugin)
 /// 结束下拉刷新
 - (void)fw_endRefreshing NS_REFINED_FOR_SWIFT;
 
-/// 结束下拉刷新并标记是否加载完成
+/// 结束下拉刷新并标记是否加载完成，最好在reloadData之后调用
 - (void)fw_endRefreshingWithFinished:(BOOL)finished NS_REFINED_FOR_SWIFT;
 
 #pragma mark - Loading
@@ -110,7 +110,7 @@ NS_SWIFT_NAME(RefreshPlugin)
 /// 是否显示追加组件
 @property (nonatomic, assign) BOOL fw_shouldLoading NS_REFINED_FOR_SWIFT;
 
-/// 是否已加载完成，不能继续追加
+/// 是否已加载完成，不能继续追加，最好在reloadData之后调用
 @property (nonatomic, assign) BOOL fw_loadingFinished NS_REFINED_FOR_SWIFT;
 
 /// 配置上拉追加句柄
@@ -125,7 +125,7 @@ NS_SWIFT_NAME(RefreshPlugin)
 /// 结束上拉追加
 - (void)fw_endLoading NS_REFINED_FOR_SWIFT;
 
-/// 结束上拉追加并标记是否加载完成
+/// 结束上拉追加并标记是否加载完成，最好在reloadData之后调用
 - (void)fw_endLoadingWithFinished:(BOOL)finished NS_REFINED_FOR_SWIFT;
 
 @end

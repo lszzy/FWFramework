@@ -7,6 +7,7 @@
 
 #import "FWEmptyPlugin.h"
 #import "FWEmptyPluginImpl.h"
+#import "FWRefreshView.h"
 #import "FWPlugin.h"
 #import "FWProxy.h"
 #import "FWSwizzle.h"
@@ -222,16 +223,19 @@
         FWSwizzleClass(UITableView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
             FWSwizzleOriginal();
+            [selfObject fw_reloadInfiniteScroll];
         }));
         
         FWSwizzleClass(UITableView, @selector(endUpdates), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
             FWSwizzleOriginal();
+            [selfObject fw_reloadInfiniteScroll];
         }));
         
         FWSwizzleClass(UICollectionView, @selector(reloadData), FWSwizzleReturn(void), FWSwizzleArgs(), FWSwizzleCode({
             [selfObject fw_reloadEmptyView];
             FWSwizzleOriginal();
+            [selfObject fw_reloadInfiniteScroll];
         }));
     });
 }
