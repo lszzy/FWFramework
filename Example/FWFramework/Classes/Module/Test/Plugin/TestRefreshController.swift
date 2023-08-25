@@ -27,7 +27,7 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
     func setupNavbar() {
         app.extendedLayoutEdge = []
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [TestRefreshController.showsFinishedView ? "隐藏FinishedView" : "显示FinishedView", self?.emptyViewMode == 1 ? "显示view空界面" : "显示view空界面", self?.emptyViewMode == 2 ? "隐藏tableView空界面" : "显示tableView空界面"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [TestRefreshController.showsFinishedView ? "隐藏FinishedView" : "显示FinishedView", self?.emptyViewMode == 1 ? "隐藏view空界面" : "显示view空界面", self?.emptyViewMode == 2 ? "隐藏tableView空界面" : "显示tableView空界面"], actionBlock: { index in
                 if index == 0 {
                     TestRefreshController.showsFinishedView = !TestRefreshController.showsFinishedView
                     RefreshPluginImpl.shared.infiniteScrollBlock = { view in
@@ -121,26 +121,28 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
     }
     
     @objc func onRefreshing() {
-        self.view.app.hideEmptyView()
-        
         NSLog("开始刷新")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             NSLog("刷新完成")
             
-            self.tableData.removeAll()
+            self.view.app.hideEmptyView()
+            self.tableView.app.hideEmptyView()
+            self.tableView.app.emptyViewDelegate = nil
+            
             if self.emptyViewMode == 0 {
+                self.tableData.removeAll()
                 for _ in 0 ..< 5 {
                     self.tableData.append(self.randomObject())
                 }
-                self.tableView.app.emptyViewDelegate = nil
                 self.tableView.reloadData()
                 self.tableView.app.endRefreshing(finished: self.tableData.count >= 10)
             } else if self.emptyViewMode == 1 {
-                self.view.app.showEmptyView()
-                self.tableView.app.emptyViewDelegate = nil
+                self.tableData.removeAll()
                 self.tableView.reloadData()
+                self.view.app.showEmptyView()
                 self.tableView.app.endRefreshing(finished: true)
             } else {
+                self.tableData.removeAll()
                 self.tableView.app.emptyViewDelegate = self
                 self.tableView.reloadData()
                 self.tableView.app.endRefreshing(finished: true)
