@@ -10,9 +10,9 @@ import FWFramework
 
 class TestJavascriptBridge: NSObject {
     
-    @objc static func testObjcCallback(_ webView: WKWebView, data: Any, callback: @escaping WebViewJSBridge.Callback) {
-        print("TestJavascriptBridge.testObjcCallback called: \(data)")
-        callback("Response from TestJavascriptBridge.testObjcCallback")
+    @objc static func testObjcCallbackBridge(_ context: WebViewJSBridge.Context) {
+        print("TestJavascriptBridge.testObjcCallback called: \(context.parameters)")
+        context.completion?("Response from TestJavascriptBridge.testObjcCallback")
     }
     
 }
@@ -25,26 +25,26 @@ class TestBridgeController: WebController {
     }
     
     override func setupWebBridge(_ bridge: WebViewJSBridge) {
-        bridge.isLogEnable = true
+        bridge.isLogEnabled = true
         
-        bridge.setErrorHandler { handlerName, data, responseCallback in
-            UIWindow.app.showMessage(text: "handler \(handlerName) undefined: \(data)", style: .default) {
-                responseCallback("Response from errorHandler")
+        bridge.setErrorHandler { context in
+            UIWindow.app.showMessage(text: "handler \(context.handlerName) undefined: \(context.parameters)", style: .default) {
+                context.completion?("Response from errorHandler")
             }
         }
         
-        bridge.setFilterHandler { handlerName, data, responseCallback in
-            if handlerName == "testFilterCallback" {
-                print("testFilterCallback called: \(data)")
-                responseCallback("Response from testFilterCallback")
+        bridge.setFilterHandler { context in
+            if context.handlerName == "testFilterCallback" {
+                print("testFilterCallback called: \(context.parameters)")
+                context.completion?("Response from testFilterCallback")
                 return false
             }
             return true
         }
         
-        bridge.registerHandler("testObjcCallback") { data, responseCallback in
-            print("testObjcCallback called: \(data)")
-            responseCallback("Response from testObjcCallback")
+        bridge.registerHandler("testObjcCallback") { context in
+            print("testObjcCallback called: \(context.parameters)")
+            context.completion?("Response from testObjcCallback")
         }
         
         bridge.registerClass(TestJavascriptBridge.self)
@@ -54,7 +54,7 @@ class TestBridgeController: WebController {
     
     override func setupSubviews() {
         let font = UIFont.systemFont(ofSize: 12)
-        let y = APP.screenHeight - UIScreen.app.safeAreaInsets.bottom - 45
+        let y = APP.screenHeight - APP.toolBarHeight - 45
         
         let callbackButton = UIButton(type: .roundedRect)
         callbackButton.setTitle("Call", for: .normal)

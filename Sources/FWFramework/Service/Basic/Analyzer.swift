@@ -53,7 +53,7 @@ public class Analyzer: NSObject {
     public static let shared = Analyzer()
     
     /// 是否启用日志，默认调试开启，正式关闭
-    public var logEnabled: Bool = {
+    public var isLogEnabled: Bool = {
         #if DEBUG
         true
         #else
@@ -90,7 +90,7 @@ public class Analyzer: NSObject {
     
     /// 初始化所有上报者，仅调用一次
     public func setupReporters() {
-        if logEnabled {
+        if isLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER SETUP===========\n%@", !reporters.isEmpty ? reporters : "")
         }
         
@@ -103,7 +103,7 @@ public class Analyzer: NSObject {
     
     /// 跟踪上报公共参数，公共参数发生变化时调用
     public func trackParameters(_ parameters: [AnyHashable: Any]? = nil) {
-        if logEnabled {
+        if isLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER PARAMETERS===========\n%@", parameters ?? "")
         }
         
@@ -116,7 +116,7 @@ public class Analyzer: NSObject {
     
     /// 跟踪上报用户信息，用户信息发生变化时调用
     public func trackUser(_ parameters: [AnyHashable: Any]? = nil) {
-        if logEnabled {
+        if isLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER USER===========\n%@%@", parameters ?? "")
         }
         
@@ -129,7 +129,7 @@ public class Analyzer: NSObject {
     
     /// 跟踪上报事件，支持分组，事件发生时调用
     public func trackEvent(group: String = "", _ name: String, parameters: [AnyHashable: Any]? = nil) {
-        if logEnabled {
+        if isLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER EVENT===========\n%@%@:\n%@", !group.isEmpty ? "[\(group)] " : "", name, parameters ?? "")
         }
         
@@ -142,7 +142,7 @@ public class Analyzer: NSObject {
     
     /// 跟踪上报错误，支持分组，错误发生时调用
     public func trackError(group: String = "", _ name: String, error: Error, parameters: [AnyHashable: Any]? = nil) {
-        if logEnabled {
+        if isLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========ANALYZER ERROR===========\n%@%@: %@\n%@", !group.isEmpty ? "[\(group)] " : "", name, error.localizedDescription, parameters ?? "")
         }
         
