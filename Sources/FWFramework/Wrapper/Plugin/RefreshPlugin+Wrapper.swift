@@ -51,7 +51,7 @@ extension Wrapper where Base: UIScrollView {
         base.fw_endRefreshing()
     }
     
-    /// 结束下拉刷新并标记是否加载完成，最好在reloadData之后调用
+    /// 结束下拉刷新并标记是否加载完成，需在reloadData之后调用
     public func endRefreshing(finished: Bool) {
         base.fw_endRefreshing(finished: finished)
     }
@@ -69,7 +69,7 @@ extension Wrapper where Base: UIScrollView {
         set { base.fw_shouldLoading = newValue }
     }
     
-    /// 是否已加载完成，不能继续追加，最好在reloadData之后调用
+    /// 是否已加载完成，不能继续追加，需在reloadData之后调用
     public var loadingFinished: Bool {
         get { return base.fw_loadingFinished }
         set { base.fw_loadingFinished = newValue }
@@ -95,7 +95,7 @@ extension Wrapper where Base: UIScrollView {
         base.fw_endLoading()
     }
     
-    /// 结束上拉追加并标记是否加载完成，最好在reloadData之后调用
+    /// 结束上拉追加并标记是否加载完成，需在reloadData之后调用
     public func endLoading(finished: Bool) {
         base.fw_endLoading(finished: finished)
     }
@@ -159,10 +159,6 @@ extension Wrapper where Base: UIScrollView {
     public var infiniteScrollFinished: Bool {
         get { return base.fw_infiniteScrollFinished }
         set { base.fw_infiniteScrollFinished = newValue }
-    }
-    
-    public func reloadInfiniteScroll() {
-        base.fw_reloadInfiniteScroll()
     }
     
 }

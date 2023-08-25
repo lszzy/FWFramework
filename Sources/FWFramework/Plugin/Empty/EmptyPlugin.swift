@@ -361,7 +361,6 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
-            selfObject.fw_reloadInfiniteScroll()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -372,7 +371,6 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
-            selfObject.fw_reloadInfiniteScroll()
         }}
         
         NSObject.fw_swizzleInstanceMethod(
@@ -383,7 +381,6 @@ extension EmptyViewDelegate {
         ) { store in { selfObject in
             selfObject.fw_reloadEmptyView()
             store.original(selfObject, store.selector)
-            selfObject.fw_reloadInfiniteScroll()
         }}
     }
     
