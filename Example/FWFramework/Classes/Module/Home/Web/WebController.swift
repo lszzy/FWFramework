@@ -84,7 +84,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
             .bottom(app.bottomBarHeight)
     }
     
-    func setupWebBridge(_ bridge: WebViewJsBridge) {}
+    func setupWebBridge(_ bridge: WebViewJSBridge) {}
     
     func setupSubviews() {}
     

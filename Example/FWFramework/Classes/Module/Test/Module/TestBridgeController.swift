@@ -10,7 +10,7 @@ import FWFramework
 
 class TestJavascriptBridge: NSObject {
     
-    @objc static func testObjcCallback(_ webView: WKWebView, data: Any, callback: @escaping WebViewJsBridge.Callback) {
+    @objc static func testObjcCallback(_ webView: WKWebView, data: Any, callback: @escaping WebViewJSBridge.Callback) {
         print("TestJavascriptBridge.testObjcCallback called: \(data)")
         callback("Response from TestJavascriptBridge.testObjcCallback")
     }
@@ -24,7 +24,7 @@ class TestBridgeController: WebController {
         webView.app.jsBridgeEnabled = true
     }
     
-    override func setupWebBridge(_ bridge: WebViewJsBridge) {
+    override func setupWebBridge(_ bridge: WebViewJSBridge) {
         bridge.isLogEnable = true
         
         bridge.setErrorHandler { handlerName, data, responseCallback in

@@ -78,7 +78,7 @@ extension Wrapper where Base: WKWebView {
     }
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    public var jsBridge: WebViewJsBridge? {
+    public var jsBridge: WebViewJSBridge? {
         get { return base.fw_jsBridge }
         set { base.fw_jsBridge = newValue }
     }
@@ -91,7 +91,7 @@ extension Wrapper where Base: WKWebView {
     
     /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
     @discardableResult
-    public func setupJsBridge() -> WebViewJsBridge? {
+    public func setupJsBridge() -> WebViewJSBridge? {
         return base.fw_setupJsBridge()
     }
     

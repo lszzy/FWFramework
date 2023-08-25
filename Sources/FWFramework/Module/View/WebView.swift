@@ -368,7 +368,7 @@ open class WebView: WKWebView {
     
 }
 
-// MARK: - WebViewJsBridge
+// MARK: - WebViewJSBridge
 /**
  WKWebView实现Javascript桥接器
  
@@ -411,41 +411,55 @@ open class WebView: WKWebView {
  })
  ```
  */
-public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMessageHandler {
+public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     public typealias Callback = (_ responseData: Any?) -> Void
     public typealias Handler = (_ parameters: [String: Any], _ callback: @escaping Callback) -> Void
     public typealias ErrorHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Void
     public typealias FilterHandler = (_ handlerName: String, _ parameters: [String: Any], _ callback: @escaping Callback) -> Bool
     public typealias Message = [String: Any]
     
-    public var isLogEnable: Bool {
-        get { return base.isLogEnable }
-        set { base.isLogEnable = newValue }
+    private class LeakAvoider: NSObject, WKScriptMessageHandler {
+        weak var delegate: WKScriptMessageHandler?
+        
+        init(delegate: WKScriptMessageHandler) {
+            super.init()
+            self.delegate = delegate
+        }
+        
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            delegate?.userContentController(userContentController, didReceive: message)
+        }
     }
+    
+    public var isLogEnable = false
 
     private let iOS_Native_InjectJavascript = "iOS_Native_InjectJavascript"
     private let iOS_Native_FlushMessageQueue = "iOS_Native_FlushMessageQueue"
     
     private weak var webView: WKWebView?
-    private var base: WebViewJsBridgeBase!
+    
+    private var startupMessageQueue: [Message]? = []
+    private var responseCallbacks = [String: Callback]()
+    private var messageHandlers = [String: Handler]()
+    private var errorHandler: ErrorHandler?
+    private var filterHandler: FilterHandler?
+    private var uniqueId = 0
     
     public init(webView: WKWebView) {
         super.init()
         self.webView = webView
-        base = WebViewJsBridgeBase()
-        base.delegate = self
         addScriptMessageHandlers()
     }
     
     deinit {
         removeScriptMessageHandlers()
+        
+        #if DEBUG
+        Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(self.classForCoder))
+        #endif
     }
     
     // MARK: - Public
-    public func reset() {
-        base.reset()
-    }
-    
     public func registerClass(_ clazz: Any, package: String? = nil, context: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
         weak var weakContext = context ?? webView
         let bridges = getClassBridges(clazz, mapper: mapper)
@@ -468,27 +482,44 @@ public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMes
     }
     
     public func registerHandler(_ handlerName: String, handler: @escaping Handler) {
-        base.messageHandlers[handlerName] = handler
+        messageHandlers[handlerName] = handler
     }
     
     public func removeHandler(_ handlerName: String) {
-        base.messageHandlers.removeValue(forKey: handlerName)
+        messageHandlers.removeValue(forKey: handlerName)
     }
     
     public func getRegisteredHandlers() -> [String] {
-        return Array(base.messageHandlers.keys)
+        return Array(messageHandlers.keys)
     }
     
     public func setErrorHandler(_ handler: ErrorHandler?) {
-        base.errorHandler = handler
+        errorHandler = handler
     }
     
     public func setFilterHandler(_ handler: FilterHandler?) {
-        base.filterHandler = handler
+        filterHandler = handler
     }
     
     public func callHandler(_ handlerName: String, data: Any? = nil, callback: Callback? = nil) {
-        base.send(handlerName: handlerName, data: data, callback: callback)
+        send(handlerName: handlerName, data: data, callback: callback)
+    }
+    
+    public func reset() {
+        startupMessageQueue = nil
+        responseCallbacks = [String: WebViewJSBridge.Callback]()
+        uniqueId = 0
+    }
+    
+    // MARK: - WKScriptMessageHandler
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == iOS_Native_InjectJavascript {
+            injectJavascriptFile()
+        }
+        
+        if message.name == iOS_Native_FlushMessageQueue {
+            flushMessageQueue()
+        }
     }
     
     // MARK: - Private
@@ -524,17 +555,17 @@ public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMes
     private func flushMessageQueue() {
         webView?.evaluateJavaScript("WKWebViewJavascriptBridge._fetchQueue();") { (result, error) in
             if error != nil {
-                self.base.log("WARNING: Error when trying to fetch data from WKWebView: \(String(describing: error))")
+                self.log("WARNING: Error when trying to fetch data from WKWebView: \(String(describing: error))")
             }
             
             guard let resultStr = result as? String else { return }
-            self.base.flush(messageQueueString: resultStr)
+            self.flush(messageQueueString: resultStr)
         }
     }
     
     private func addScriptMessageHandlers() {
-        webView?.configuration.userContentController.add(WebViewLeakAvoider(delegate: self), name: iOS_Native_InjectJavascript)
-        webView?.configuration.userContentController.add(WebViewLeakAvoider(delegate: self), name: iOS_Native_FlushMessageQueue)
+        webView?.configuration.userContentController.add(LeakAvoider(delegate: self), name: iOS_Native_InjectJavascript)
+        webView?.configuration.userContentController.add(LeakAvoider(delegate: self), name: iOS_Native_FlushMessageQueue)
     }
     
     private func removeScriptMessageHandlers() {
@@ -542,59 +573,7 @@ public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMes
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: iOS_Native_FlushMessageQueue)
     }
     
-    // MARK: - WebViewJsBridgeBaseDelegate
-    func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)?) {
-        webView?.evaluateJavaScript(javascript, completionHandler: completion)
-    }
-    
-    // MARK: - WKScriptMessageHandler
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == iOS_Native_InjectJavascript {
-            base.injectJavascriptFile()
-        }
-        
-        if message.name == iOS_Native_FlushMessageQueue {
-            flushMessageQueue()
-        }
-    }
-}
-
-class WebViewLeakAvoider: NSObject, WKScriptMessageHandler {
-    weak var delegate: WKScriptMessageHandler?
-    
-    init(delegate: WKScriptMessageHandler) {
-        super.init()
-        self.delegate = delegate
-    }
-    
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        delegate?.userContentController(userContentController, didReceive: message)
-    }
-}
-
-// MARK: - WebViewJsBridgeBase
-protocol WebViewJsBridgeBaseDelegate: AnyObject {
-    func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)?)
-}
-
-public class WebViewJsBridgeBase: NSObject {
-    var isLogEnable = false
-    
-    weak var delegate: WebViewJsBridgeBaseDelegate?
-    var startupMessageQueue: [WebViewJsBridge.Message]? = []
-    var responseCallbacks = [String: WebViewJsBridge.Callback]()
-    var messageHandlers = [String: WebViewJsBridge.Handler]()
-    var errorHandler: WebViewJsBridge.ErrorHandler?
-    var filterHandler: WebViewJsBridge.FilterHandler?
-    var uniqueId = 0
-    
-    func reset() {
-        startupMessageQueue = nil
-        responseCallbacks = [String: WebViewJsBridge.Callback]()
-        uniqueId = 0
-    }
-    
-    func send(handlerName: String, data: Any?, callback: WebViewJsBridge.Callback?) {
+    private func send(handlerName: String, data: Any?, callback: WebViewJSBridge.Callback?) {
         var message = [String: Any]()
         message["handlerName"] = handlerName
         
@@ -612,7 +591,7 @@ public class WebViewJsBridgeBase: NSObject {
         queue(message: message)
     }
     
-    func flush(messageQueueString: String) {
+    private func flush(messageQueueString: String) {
         guard let messages = deserialize(messageJSON: messageQueueString) else {
             log("WARNING: " + messageQueueString)
             return
@@ -626,10 +605,10 @@ public class WebViewJsBridgeBase: NSObject {
                 callback(message["responseData"])
                 responseCallbacks.removeValue(forKey: responseID)
             } else {
-                var callback: WebViewJsBridge.Callback
+                var callback: WebViewJSBridge.Callback
                 if let callbackID = message["callbackID"] {
                     callback = { (_ responseData: Any?) -> Void in
-                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as WebViewJsBridge.Message
+                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as WebViewJSBridge.Message
                         self.queue(message: msg)
                     }
                 } else {
@@ -658,23 +637,7 @@ public class WebViewJsBridgeBase: NSObject {
         }
     }
     
-    func injectJavascriptFile() {
-        let js = javascriptBridgeJS
-        delegate?.evaluateJavascript(javascript: js, completion: { [weak self] (_, error) in
-            guard let self = self else { return }
-            if let error = error {
-                self.log("ERROR: \(error)")
-                return
-            }
-            self.startupMessageQueue?.forEach({ (message) in
-                self.dispatch(message: message)
-            })
-            self.startupMessageQueue = nil
-        })
-    }
-    
-    // MARK: - Private
-    private func queue(message: WebViewJsBridge.Message) {
+    private func queue(message: WebViewJSBridge.Message) {
         if startupMessageQueue == nil {
             dispatch(message: message)
         } else {
@@ -682,7 +645,7 @@ public class WebViewJsBridgeBase: NSObject {
         }
     }
     
-    private func dispatch(message: WebViewJsBridge.Message) {
+    private func dispatch(message: WebViewJSBridge.Message) {
         guard var messageJSON = serialize(message: message, pretty: false) else { return }
         log("SEND: \(messageJSON)")
         
@@ -697,16 +660,15 @@ public class WebViewJsBridgeBase: NSObject {
         
         let javascriptCommand = "WKWebViewJavascriptBridge._handleMessageFromiOS('\(messageJSON)');"
         if Thread.current.isMainThread {
-            delegate?.evaluateJavascript(javascript: javascriptCommand, completion: nil)
+            evaluateJavascript(javascript: javascriptCommand)
         } else {
             DispatchQueue.main.async {
-                self.delegate?.evaluateJavascript(javascript: javascriptCommand, completion: nil)
+                self.evaluateJavascript(javascript: javascriptCommand)
             }
         }
     }
     
-    // MARK: - JSON
-    private func serialize(message: WebViewJsBridge.Message, pretty: Bool) -> String? {
+    private func serialize(message: WebViewJSBridge.Message, pretty: Bool) -> String? {
         var result: String?
         do {
             let data = try JSONSerialization.data(withJSONObject: message, options: pretty ? .prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0))
@@ -717,26 +679,43 @@ public class WebViewJsBridgeBase: NSObject {
         return result
     }
     
-    private func deserialize(messageJSON: String) -> [WebViewJsBridge.Message]? {
-        var result: [WebViewJsBridge.Message]?
+    private func deserialize(messageJSON: String) -> [WebViewJSBridge.Message]? {
+        var result: [WebViewJSBridge.Message]?
         guard let data = messageJSON.data(using: .utf8) else { return nil }
         do {
-            result = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [WebViewJsBridge.Message]
+            result = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [WebViewJSBridge.Message]
         } catch let error {
             log("ERROR: \(error)")
         }
         return result
     }
     
-    // MARK: - Log
-    fileprivate func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
         guard isLogEnable else { return }
         Logger.debug(group: Logger.fw_moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
     
-    // MARK: - JS
+    private func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)? = nil) {
+        webView?.evaluateJavaScript(javascript, completionHandler: completion)
+    }
+    
+    private func injectJavascriptFile() {
+        let js = javascriptBridgeJS
+        evaluateJavascript(javascript: js, completion: { [weak self] (_, error) in
+            guard let self = self else { return }
+            if let error = error {
+                self.log("ERROR: \(error)")
+                return
+            }
+            self.startupMessageQueue?.forEach({ (message) in
+                self.dispatch(message: message)
+            })
+            self.startupMessageQueue = nil
+        })
+    }
+    
     private let javascriptBridgeJS = """
 ;(function() {
     if (window.WKWebViewJavascriptBridge) {
@@ -1042,8 +1021,8 @@ public class WebViewJsBridgeBase: NSObject {
     }
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    public var fw_jsBridge: WebViewJsBridge? {
-        get { fw_property(forName: "fw_jsBridge") as? WebViewJsBridge }
+    public var fw_jsBridge: WebViewJSBridge? {
+        get { fw_property(forName: "fw_jsBridge") as? WebViewJSBridge }
         set { fw_setProperty(newValue, forName: "fw_jsBridge") }
     }
     
@@ -1055,9 +1034,9 @@ public class WebViewJsBridgeBase: NSObject {
     
     /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
     @discardableResult
-    public func fw_setupJsBridge() -> WebViewJsBridge? {
+    public func fw_setupJsBridge() -> WebViewJSBridge? {
         guard fw_jsBridgeEnabled else { return nil }
-        let jsBridge = WebViewJsBridge(webView: self)
+        let jsBridge = WebViewJSBridge(webView: self)
         self.fw_jsBridge = jsBridge
         return jsBridge
     }
