@@ -40,7 +40,11 @@ extension Wrapper where Base: NSObject {
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
     ///
-    /// swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// swizzleBlock示例：
+    /// ```objc
+    /// ^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// ```
+    ///
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - swizzleMethod: 交换方法
@@ -57,7 +61,6 @@ extension Wrapper where Base: NSObject {
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
     ///
-    /// swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - swizzleMethod: 交换方法
@@ -85,6 +88,7 @@ extension Wrapper where Base: NSObject {
     /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad)
@@ -94,6 +98,7 @@ extension Wrapper where Base: NSObject {
     ///     store.original($0, store.selector)
     ///     // ...
     /// }}
+    /// ```
     ///
     /// - Parameters:
     ///   - target: 目标类或对象
@@ -118,6 +123,7 @@ extension Wrapper where Base: NSObject {
     /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleInstanceMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad),
@@ -127,6 +133,7 @@ extension Wrapper where Base: NSObject {
     ///     store.original(selfObject, store.selector)
     ///     // ...
     /// }}
+    /// ```
     ///
     /// - Parameters:
     ///   - originalClass: 原始类

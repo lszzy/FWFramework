@@ -369,9 +369,48 @@ open class WebView: WKWebView {
 }
 
 // MARK: - WebViewJsBridge
-/// WKWebView实现Javascript桥接器
-///
-/// [WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)
+/**
+ WKWebView实现Javascript桥接器
+ 
+ 参考链接：
+ [WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)
+ 
+ Javascript示例：
+ (兼容FWFramework/[WK]WebViewJavascriptBridge)
+ ```javascript
+ function setupWebViewJavascriptBridge(callback) {
+     if (window.webkit &&
+         window.webkit.messageHandlers &&
+         window.webkit.messageHandlers.iOS_Native_InjectJavascript) {
+         if (window.WKWebViewJavascriptBridge) { return callback(WKWebViewJavascriptBridge); }
+         if (window.WKWVJBCallbacks) { return window.WKWVJBCallbacks.push(callback); }
+         window.WKWVJBCallbacks = [callback];
+         window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null);
+         return;
+     }
+ 
+     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+     if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+     window.WVJBCallbacks = [callback];
+     var WVJBIframe = document.createElement('iframe');
+     WVJBIframe.style.display = 'none';
+     WVJBIframe.src = 'https://__bridge_loaded__';
+     document.documentElement.appendChild(WVJBIframe);
+     setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+ }
+ 
+ setupWebViewJavascriptBridge(function(bridge) {
+     bridge.registerHandler('jsHandler', function(data, responseCallback) {
+         var responseData = {'key': 'value'}
+         responseCallback(responseData)
+     })
+ 
+     bridge.callHandler('iosHandler', {'key': 'value'}, function(response) {
+         console.log(response)
+     })
+ })
+ ```
+ */
 public class WebViewJsBridge: NSObject, WebViewJsBridgeBaseDelegate, WKScriptMessageHandler {
     public typealias Callback = (_ responseData: Any?) -> Void
     public typealias Handler = (_ parameters: [String: Any], _ callback: @escaping Callback) -> Void
