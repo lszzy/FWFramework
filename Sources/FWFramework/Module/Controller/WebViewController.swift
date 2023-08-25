@@ -35,7 +35,7 @@ public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelega
     func setupWebLayout()
 
     /// 渲染网页桥接，jsBridgeEnabled启用后生效，setupSubviews之前调用，默认空实现
-    func setupWebBridge(_ bridge: WebViewJsBridge)
+    func setupWebBridge(_ bridge: WebViewJSBridge)
     
 }
 
@@ -85,7 +85,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     }
     
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现
-    public func setupWebBridge(_ bridge: WebViewJsBridge) {}
+    public func setupWebBridge(_ bridge: WebViewJSBridge) {}
     
 }
 
