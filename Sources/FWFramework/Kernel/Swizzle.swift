@@ -44,7 +44,11 @@ import FWObjC
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
     ///
-    /// swizzleBlock示例：^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// swizzleBlock示例：
+    /// ```objc
+    /// ^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// ```
+    ///
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - swizzleMethod: 交换方法
@@ -61,7 +65,6 @@ import FWObjC
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
     ///
-    /// swizzleBlock示例：^(__unsafe_unretained Class selfClass, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfClass, swizzleSelector, animated); }
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - swizzleMethod: 交换方法
@@ -78,6 +81,7 @@ import FWObjC
     }
     
     /// 生成原始方法对应的随机交换方法
+    ///
     /// - Parameter selector: 原始方法
     /// - Returns: 交换方法
     public static func fw_exchangeSwizzleSelector(
@@ -90,6 +94,7 @@ import FWObjC
     /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString("viewDidLoad")) { targetClass, originalCMD, originalIMP in
     ///     let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in
     ///         let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(UIViewController, Selector) -> Void).self)
@@ -99,6 +104,7 @@ import FWObjC
     ///     }
     ///     return unsafeBitCast(swizzleIMP, to: AnyObject.self)
     /// }
+    /// ```
     ///
     /// - Parameters:
     ///   - target: 目标类或对象
@@ -128,6 +134,7 @@ import FWObjC
     /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleInstanceMethod(UIViewController.self, selector: NSSelectorFromString("viewDidLoad")) { targetClass, originalCMD, originalIMP in
     ///     let swizzleIMP: @convention(block)(UIViewController) -> Void = { selfObject in
     ///         let originalMSG = unsafeBitCast(originalIMP(), to: (@convention(c)(UIViewController, Selector) -> Void).self)
@@ -137,6 +144,7 @@ import FWObjC
     ///     }
     ///     return unsafeBitCast(swizzleIMP, to: AnyObject.self)
     /// }
+    /// ```
     ///
     /// - Parameters:
     ///   - originalClass: 原始类
@@ -155,6 +163,7 @@ import FWObjC
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
+    ///
     /// - Parameters:
     ///   - originalClass: 原始类
     ///   - selector: 原始方法
@@ -173,6 +182,7 @@ import FWObjC
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
+    ///
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - identifier: 唯一标识，默认空字符串
@@ -198,6 +208,7 @@ import FWObjC
     /// 判断对象是否使用swizzle替换过指定identifier实例方法。结合swizzleInstanceMethod使用
     ///
     /// 因为实际替换的是类方法，为了防止影响该类其它对象，需先判断该对象是否替换过，仅替换过才执行自定义流程
+    ///
     /// - Parameters:
     ///   - originalSelector: 原始方法
     ///   - identifier: 唯一标识，默认空字符串
@@ -264,6 +275,7 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
     /// 通用swizzle替换方法为block实现，支持类和对象，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad)
@@ -273,6 +285,7 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
     ///     store.original($0, store.selector)
     ///     // ...
     /// }}
+    /// ```
     ///
     /// - Parameters:
     ///   - target: 目标类或对象
@@ -298,6 +311,7 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
     /// 使用swizzle替换类实例方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
     ///
     /// Swift实现代码示例：
+    /// ```swift
     /// NSObject.fw_swizzleInstanceMethod(
     ///     UIViewController.self,
     ///     selector: #selector(UIViewController.viewDidLoad),
@@ -307,6 +321,7 @@ public class SwizzleStore<MethodSignature, SwizzleSignature> {
     ///     store.original(selfObject, store.selector)
     ///     // ...
     /// }}
+    /// ```
     ///
     /// - Parameters:
     ///   - originalClass: 原始类
