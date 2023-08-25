@@ -1,5 +1,20 @@
 # 更新日志
 
+## [4.16.2] - 2023-08-25
+
+### Changed
+* 修改autoScale仅针对当前视图生效，不再查找父视图(不稳定)
+* 兼容loadingFinished在reloadData之前设置也能生效
+
+### Fixed
+* 修复finished未改变，但isDataEmpty改变时finishedView未刷新问题
+* 修复开启自动布局等比例缩放时offset和collapse方法未自动缩放和取反的问题
+
+### Migrate
+1. 如果开启了等比例缩放，检查是否有单独设置autoScale的视图并适配
+2. 如果开启了等比率缩放，检查LayoutChain中带参数的collapse、offset方法，改为自动缩放
+3. 如果开启了等比例缩放，布局约束需要固定值时，使用LayoutChain的constant方法即可
+
 ## [4.16.1] - 2023-08-24
 
 ### Changed
