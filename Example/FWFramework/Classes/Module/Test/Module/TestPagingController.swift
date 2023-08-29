@@ -88,8 +88,8 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         navigationItem.title = ""
         
         if !refreshList {
-            pagerView.mainTableView.app.pullRefreshHeight = PullRefreshView.height + UIScreen.app.safeAreaInsets.top
             pagerView.mainTableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
+            pagerView.mainTableView.app.pullRefreshView?.height = PullRefreshView.height + UIScreen.app.safeAreaInsets.top
             pagerView.mainTableView.app.pullRefreshView?.indicatorPadding = UIScreen.app.safeAreaInsets.top
             
             app.setRightBarItem("测试") { [weak self] _ in

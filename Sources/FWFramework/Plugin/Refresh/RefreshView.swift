@@ -24,6 +24,22 @@ open class PullRefreshView: UIView {
     // MARK: - Accessor
     /// 全局高度设置
     public static var height: CGFloat = 60
+    
+    /// 当前高度，默认全局高度
+    open var height: CGFloat {
+        get {
+            return _height > 0 ? _height : PullRefreshView.height
+        }
+        set {
+            _height = newValue
+            
+            var newFrame = frame
+            newFrame.size.height = newValue > 0 ? newValue : PullRefreshView.height
+            newFrame.origin.y = -newFrame.size.height
+            frame = newFrame
+        }
+    }
+    private var _height: CGFloat = 0
 
     /// 原始边距
     open var originalInset: UIEdgeInsets = .zero
@@ -351,7 +367,7 @@ open class PullRefreshView: UIView {
             }
         } else if keyPath == "contentSize" {
             layoutSubviews()
-            frame = CGRect(x: 0, y: -scrollView.fw_pullRefreshHeight, width: bounds.size.width, height: scrollView.fw_pullRefreshHeight)
+            frame = CGRect(x: 0, y: -height, width: bounds.size.width, height: height)
         } else if keyPath == "frame" {
             layoutSubviews()
         }
@@ -463,7 +479,7 @@ open class PullRefreshView: UIView {
         guard let scrollView = scrollView else { return }
         
         let adjustedContentOffsetY = contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top
-        let progress = -adjustedContentOffsetY / scrollView.fw_pullRefreshHeight
+        let progress = -adjustedContentOffsetY / height
         if progress > 0 { isActive = true }
         animationProgressBlock?(self, max(min(progress, 1.0), 0.0))
         progressBlock?(self, max(min(progress, 1.0), 0.0))
@@ -477,7 +493,7 @@ open class PullRefreshView: UIView {
         } else if adjustedContentOffsetY >= scrollOffsetThreshold && state != .idle {
             state = .idle
         } else if adjustedContentOffsetY >= scrollOffsetThreshold && state == .idle {
-            pullingPercent = max(min(-adjustedContentOffsetY / scrollView.fw_pullRefreshHeight, 1.0), 0.0)
+            pullingPercent = max(min(-adjustedContentOffsetY / height, 1.0), 0.0)
         }
     }
     
@@ -546,6 +562,21 @@ open class InfiniteScrollView: UIView {
     // MARK: - Accessor
     /// 全局高度设置
     public static var height: CGFloat = 60
+    
+    /// 当前高度，默认全局高度
+    open var height: CGFloat {
+        get {
+            return _height > 0 ? _height : InfiniteScrollView.height
+        }
+        set {
+            _height = newValue
+            
+            var newFrame = frame
+            newFrame.size.height = newValue > 0 ? newValue : InfiniteScrollView.height
+            frame = newFrame
+        }
+    }
+    private var _height: CGFloat = 0
     
     /// 是否启用，默认true
     open var enabled = true
@@ -816,7 +847,7 @@ open class InfiniteScrollView: UIView {
             }
         } else if keyPath == "contentSize" {
             layoutSubviews()
-            frame = CGRect(x: 0, y: scrollView.contentSize.height, width: bounds.size.width, height: scrollView.fw_infiniteScrollHeight)
+            frame = CGRect(x: 0, y: scrollView.contentSize.height, width: bounds.size.width, height: height)
         }
     }
     
@@ -852,7 +883,7 @@ open class InfiniteScrollView: UIView {
         guard let scrollView = scrollView else { return }
         
         var currentInsets = scrollView.contentInset
-        currentInsets.bottom = originalInset.bottom + scrollView.fw_infiniteScrollHeight
+        currentInsets.bottom = originalInset.bottom + height
         setScrollViewContentInset(currentInsets, animated: animated)
     }
     
@@ -908,8 +939,8 @@ open class InfiniteScrollView: UIView {
         
         let adjustedContentOffsetY = contentOffset.y + (scrollView.adjustedContentInset.top - scrollView.contentInset.top)
         if animationProgressBlock != nil || progressBlock != nil {
-            let scrollHeight = max(scrollView.contentSize.height - scrollView.bounds.size.height + (scrollView.adjustedContentInset.top - scrollView.contentInset.top) + scrollView.contentInset.bottom, scrollView.fw_infiniteScrollHeight)
-            let progress = (scrollView.fw_infiniteScrollHeight + adjustedContentOffsetY - scrollHeight) / scrollView.fw_infiniteScrollHeight
+            let scrollHeight = max(scrollView.contentSize.height - scrollView.bounds.size.height + (scrollView.adjustedContentInset.top - scrollView.contentInset.top) + scrollView.contentInset.bottom, height)
+            let progress = (height + adjustedContentOffsetY - scrollHeight) / height
             animationProgressBlock?(self, max(min(progress, 1.0), 0.0))
             progressBlock?(self, max(min(progress, 1.0), 0.0))
         }
