@@ -32,13 +32,13 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void) {
-        base.fw_setRefreshing(block: block)
+    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_setRefreshing(block: block, customBlock: customBlock)
     }
 
     /// 配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector) {
-        base.fw_setRefreshing(target: target, action: action)
+    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_setRefreshing(target: target, action: action, customBlock: customBlock)
     }
 
     /// 开始下拉刷新
@@ -76,13 +76,13 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void) {
-        base.fw_setLoading(block: block)
+    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_setLoading(block: block, customBlock: customBlock)
     }
 
     /// 配置上拉追加事件
-    public func setLoading(target: Any, action: Selector) {
-        base.fw_setLoading(target: target, action: action)
+    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_setLoading(target: target, action: action, customBlock: customBlock)
     }
 
     /// 开始上拉追加

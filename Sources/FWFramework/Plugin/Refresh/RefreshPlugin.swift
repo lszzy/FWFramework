@@ -25,10 +25,10 @@ public protocol RefreshPlugin: AnyObject {
     func setShouldRefreshing(_ shouldRefreshing: Bool, scrollView: UIScrollView)
 
     /// 配置下拉刷新句柄
-    func setRefreshing(block: @escaping () -> Void, scrollView: UIScrollView)
+    func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
 
     /// 配置下拉刷新事件
-    func setRefreshing(target: Any, action: Selector, scrollView: UIScrollView)
+    func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
 
     /// 开始下拉刷新
     func beginRefreshing(scrollView: UIScrollView)
@@ -53,10 +53,10 @@ public protocol RefreshPlugin: AnyObject {
     func setLoadingFinished(_ loadingFinished: Bool, scrollView: UIScrollView)
 
     /// 配置上拉追加句柄
-    func setLoading(block: @escaping () -> Void, scrollView: UIScrollView)
+    func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
 
     /// 配置上拉追加事件
-    func setLoading(target: Any, action: Selector, scrollView: UIScrollView)
+    func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
 
     /// 开始上拉追加
     func beginLoading(scrollView: UIScrollView)
@@ -85,13 +85,13 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setRefreshing(block: block, scrollView: scrollView)
+    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setRefreshing(block: block, customBlock: customBlock, scrollView: scrollView)
     }
 
     /// 默认实现，配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setRefreshing(target: target, action: action, scrollView: scrollView)
+    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setRefreshing(target: target, action: action, customBlock: customBlock, scrollView: scrollView)
     }
 
     /// 默认实现，开始下拉刷新
@@ -131,13 +131,13 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setLoading(block: block, scrollView: scrollView)
+    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setLoading(block: block, customBlock: customBlock, scrollView: scrollView)
     }
 
     /// 默认实现，配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setLoading(target: target, action: action, scrollView: scrollView)
+    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setLoading(target: target, action: action, customBlock: customBlock, scrollView: scrollView)
     }
 
     /// 默认实现，开始上拉追加
@@ -190,15 +190,15 @@ extension RefreshPlugin {
     }
 
     /// 配置下拉刷新句柄
-    public func fw_setRefreshing(block: @escaping () -> Void) {
+    public func fw_setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setRefreshing(block: block, scrollView: self)
+        plugin.setRefreshing(block: block, customBlock: customBlock, scrollView: self)
     }
 
     /// 配置下拉刷新事件
-    public func fw_setRefreshing(target: Any, action: Selector) {
+    public func fw_setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setRefreshing(target: target, action: action, scrollView: self)
+        plugin.setRefreshing(target: target, action: action, customBlock: customBlock, scrollView: self)
     }
 
     /// 开始下拉刷新
@@ -251,15 +251,15 @@ extension RefreshPlugin {
     }
 
     /// 配置上拉追加句柄
-    public func fw_setLoading(block: @escaping () -> Void) {
+    public func fw_setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setLoading(block: block, scrollView: self)
+        plugin.setLoading(block: block, customBlock: customBlock, scrollView: self)
     }
 
     /// 配置上拉追加事件
-    public func fw_setLoading(target: Any, action: Selector) {
+    public func fw_setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setLoading(target: target, action: action, scrollView: self)
+        plugin.setLoading(target: target, action: action, customBlock: customBlock, scrollView: self)
     }
 
     /// 开始上拉追加
