@@ -368,12 +368,12 @@ open class PullRefreshView: UIView {
     }
     
     /// 重置滚动视图contentInset
-    open func resetScrollViewContentInset() {
+    open func resetScrollViewContentInset(animated: Bool = true) {
         guard let scrollView = scrollView else { return }
         
         var currentInsets = scrollView.contentInset
         currentInsets.top = originalInset.top
-        setScrollViewContentInset(currentInsets, pullingPercent: 0)
+        setScrollViewContentInset(currentInsets, pullingPercent: 0, animated: animated)
     }
 
     /// 自定义各状态的标题
@@ -489,8 +489,8 @@ open class PullRefreshView: UIView {
         setScrollViewContentInset(currentInsets, pullingPercent: 1)
     }
     
-    private func setScrollViewContentInset(_ contentInset: UIEdgeInsets, pullingPercent: CGFloat) {
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
+    private func setScrollViewContentInset(_ contentInset: UIEdgeInsets, pullingPercent: CGFloat, animated: Bool = true) {
+        UIView.animate(withDuration: animated ? 0.3 : 0, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
             self.scrollView?.contentInset = contentInset
         } completion: { _ in
             self.pullingPercent = pullingPercent
@@ -613,6 +613,7 @@ open class InfiniteScrollView: UIView {
             }
             
             guard finished != oldValue else { return }
+            finishedView.isHidden = true
             if finished {
                 resetScrollViewContentInset()
             } else {
@@ -838,21 +839,21 @@ open class InfiniteScrollView: UIView {
     }
     
     /// 重置滚动视图contentInset
-    open func resetScrollViewContentInset() {
+    open func resetScrollViewContentInset(animated: Bool = true) {
         guard let scrollView = scrollView else { return }
         
         var currentInsets = scrollView.contentInset
         currentInsets.bottom = originalInset.bottom
-        setScrollViewContentInset(currentInsets)
+        setScrollViewContentInset(currentInsets, animated: animated)
     }
     
     /// 设置滚动视图contentInset到追加位置
-    open func setScrollViewContentInsetForInfiniteScrolling() {
+    open func setScrollViewContentInsetForInfiniteScrolling(animated: Bool = true) {
         guard let scrollView = scrollView else { return }
         
         var currentInsets = scrollView.contentInset
         currentInsets.bottom = originalInset.bottom + scrollView.fw_infiniteScrollHeight
-        setScrollViewContentInset(currentInsets)
+        setScrollViewContentInset(currentInsets, animated: animated)
     }
     
     /// 自定义各状态的视图
@@ -924,10 +925,10 @@ open class InfiniteScrollView: UIView {
         }
     }
     
-    private func setScrollViewContentInset(_ contentInset: UIEdgeInsets) {
+    private func setScrollViewContentInset(_ contentInset: UIEdgeInsets, animated: Bool = true) {
         guard let scrollView = scrollView, contentInset != scrollView.contentInset else { return }
 
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
+        UIView.animate(withDuration: animated ? 0.3 : 0, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
             scrollView.contentInset = contentInset
         }, completion: nil)
     }
