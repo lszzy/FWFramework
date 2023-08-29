@@ -351,7 +351,7 @@ extension RefreshPlugin {
                     self.removeObserver(pullRefreshView, forKeyPath: "contentSize")
                     self.removeObserver(pullRefreshView, forKeyPath: "frame")
                     self.panGestureRecognizer.fw_unobserveProperty("state", target: pullRefreshView, action: #selector(PullRefreshView.gestureRecognizer(_:stateChanged:)))
-                    pullRefreshView.resetScrollViewContentInset()
+                    pullRefreshView.resetScrollViewContentInset(animated: false)
                     pullRefreshView.isObserving = false
                 }
             } else {
@@ -437,7 +437,7 @@ extension RefreshPlugin {
                     self.removeObserver(infiniteScrollView, forKeyPath: "contentOffset")
                     self.removeObserver(infiniteScrollView, forKeyPath: "contentSize")
                     self.panGestureRecognizer.fw_unobserveProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
-                    infiniteScrollView.resetScrollViewContentInset()
+                    infiniteScrollView.resetScrollViewContentInset(animated: false)
                     infiniteScrollView.isObserving = false
                 }
             } else {
@@ -445,7 +445,7 @@ extension RefreshPlugin {
                     self.addObserver(infiniteScrollView, forKeyPath: "contentOffset", options: .new, context: nil)
                     self.addObserver(infiniteScrollView, forKeyPath: "contentSize", options: .new, context: nil)
                     self.panGestureRecognizer.fw_observeProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
-                    infiniteScrollView.setScrollViewContentInsetForInfiniteScrolling()
+                    infiniteScrollView.setScrollViewContentInsetForInfiniteScrolling(animated: false)
                     infiniteScrollView.isObserving = true
                     
                     infiniteScrollView.setNeedsLayout()
