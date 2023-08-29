@@ -738,9 +738,17 @@ import FWObjC
                     })
                 }
                 cropController.onDidFinishCancelled = { _ in
-                    picker?.dismiss(animated: true, completion: nil)
+                    if picker?.navigationController != nil {
+                        picker?.navigationController?.popViewController(animated: true)
+                    } else {
+                        picker?.dismiss(animated: true, completion: nil)
+                    }
                 }
-                picker?.present(cropController, animated: true, completion: nil)
+                if picker?.navigationController != nil {
+                    picker?.navigationController?.pushViewController(cropController, animated: true)
+                } else {
+                    picker?.present(cropController, animated: true, completion: nil)
+                }
             } else {
                 picker?.dismiss(animated: true, completion: {
                     completion(nil, nil, true)
