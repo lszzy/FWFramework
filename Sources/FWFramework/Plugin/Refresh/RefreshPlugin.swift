@@ -295,7 +295,8 @@ extension RefreshPlugin {
     private func fw_addPullRefresh(block: (() -> Void)?, target: Any?, action: Selector?) {
         self.fw_pullRefreshView?.removeFromSuperview()
         
-        let view = PullRefreshView(frame: CGRect(x: 0, y: -self.fw_pullRefreshHeight, width: self.bounds.size.width, height: self.fw_pullRefreshHeight))
+        let view = PullRefreshView()
+        view.frame = CGRect(x: 0, y: -view.height, width: self.bounds.size.width, height: view.height)
         view.pullRefreshBlock = block
         view.target = target as? AnyObject
         view.action = action
@@ -321,16 +322,6 @@ extension RefreshPlugin {
         }
         set {
             fw_setProperty(newValue, forName: "fw_pullRefreshView")
-        }
-    }
-    
-    public var fw_pullRefreshHeight: CGFloat {
-        get {
-            let height = fw_propertyDouble(forName: "fw_pullRefreshHeight")
-            return height > 0 ? height : PullRefreshView.height
-        }
-        set {
-            fw_setPropertyDouble(newValue, forName: "fw_pullRefreshHeight")
         }
     }
     
@@ -364,7 +355,7 @@ extension RefreshPlugin {
                     
                     pullRefreshView.setNeedsLayout()
                     pullRefreshView.layoutIfNeeded()
-                    pullRefreshView.frame = CGRect(x: 0, y: -self.fw_pullRefreshHeight, width: self.bounds.size.width, height: self.fw_pullRefreshHeight)
+                    pullRefreshView.frame = CGRect(x: 0, y: -pullRefreshView.height, width: self.bounds.size.width, height: pullRefreshView.height)
                 }
             }
         }
@@ -381,7 +372,8 @@ extension RefreshPlugin {
     private func fw_addInfiniteScroll(block: (() -> Void)?, target: Any?, action: Selector?) {
         self.fw_infiniteScrollView?.removeFromSuperview()
         
-        let view = InfiniteScrollView(frame: CGRect(x: 0, y: self.contentSize.height, width: self.bounds.size.width, height: self.fw_infiniteScrollHeight))
+        let view = InfiniteScrollView()
+        view.frame = CGRect(x: 0, y: self.contentSize.height, width: self.bounds.size.width, height: view.height)
         view.infiniteScrollBlock = block
         view.target = target as? AnyObject
         view.action = action
@@ -408,16 +400,6 @@ extension RefreshPlugin {
         }
         set {
             fw_setProperty(newValue, forName: "fw_infiniteScrollView")
-        }
-    }
-    
-    public var fw_infiniteScrollHeight: CGFloat {
-        get {
-            let height = fw_propertyDouble(forName: "fw_infiniteScrollHeight")
-            return height > 0 ? height : InfiniteScrollView.height
-        }
-        set {
-            fw_setPropertyDouble(newValue, forName: "fw_infiniteScrollHeight")
         }
     }
     
@@ -450,7 +432,7 @@ extension RefreshPlugin {
                     
                     infiniteScrollView.setNeedsLayout()
                     infiniteScrollView.layoutIfNeeded()
-                    infiniteScrollView.frame = CGRect(x: 0, y: self.contentSize.height, width: infiniteScrollView.bounds.size.width, height: self.fw_infiniteScrollHeight)
+                    infiniteScrollView.frame = CGRect(x: 0, y: self.contentSize.height, width: infiniteScrollView.bounds.size.width, height: infiniteScrollView.height)
                 }
             }
         }
