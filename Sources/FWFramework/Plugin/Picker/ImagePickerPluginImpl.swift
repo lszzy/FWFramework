@@ -19,10 +19,13 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     @objc(sharedInstance)
     public static let shared = ImagePickerPluginImpl()
 
-    /// 是否禁用iOS14+PHPickerViewController(支持多选)，默认NO；设为YES后始终使用UIImagePickerController(仅支持单选)
+    /// 是否禁用iOS14+PHPickerViewController(支持多选)，默认false。设为true后始终使用UIImagePickerController(仅支持单选)
     open var photoPickerDisabled: Bool = false
+    
+    /// 是否启用iOS14+PHPickerViewController导航栏控制器，默认false。注意设为true后customBlock参数将变为UINavigationController
+    open var photoNavigationEnabled: Bool = false
 
-    /// 编辑单张图片时是否启用自定义裁剪控制器，默认NO，使用系统方式
+    /// 编辑单张图片时是否启用自定义裁剪控制器，默认false，使用系统方式
     open var cropControllerEnabled: Bool = false
 
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
@@ -82,9 +85,15 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             }
         }
         
-        guard let pickerController = pickerController else {
+        guard var pickerController = pickerController else {
             completion([], [], true)
             return
+        }
+        
+        if photoNavigationEnabled, !(pickerController is UINavigationController) {
+            let navigationController = UINavigationController(rootViewController: pickerController)
+            navigationController.isNavigationBarHidden = true
+            pickerController = navigationController
         }
         
         self.customBlock?(pickerController)

@@ -20,7 +20,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
             let isFullscreen = self?.isFullscreen ?? false
-            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑", ImagePickerPluginImpl.shared.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪", isFullscreen ? "默认弹出样式" : "全屏弹出样式", ImagePickerPluginImpl.shared.photoPickerDisabled ? "启用PHPicker" : "禁用PHPicker"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑", ImagePickerPluginImpl.shared.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪", isFullscreen ? "默认弹出样式" : "全屏弹出样式", ImagePickerPluginImpl.shared.photoPickerDisabled ? "启用PHPicker" : "禁用PHPicker", ImagePickerPluginImpl.shared.photoNavigationEnabled ? "禁用PHPicker导航栏" : "启用PHPicker导航栏"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.showData(self?.results ?? [])
                 } else if index == 1 {
@@ -36,8 +36,10 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
                     } else {
                         ImagePickerPluginImpl.shared.customBlock = nil
                     }
-                } else {
+                } else if index == 4 {
                     ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled;
+                } else {
+                    ImagePickerPluginImpl.shared.photoNavigationEnabled = !ImagePickerPluginImpl.shared.photoNavigationEnabled;
                 }
             })
         }
@@ -45,6 +47,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
     
     func setupTableView() {
         tableData.append(contentsOf: [
+            "照片选择器(单图)",
             "照片选择器(图片)",
             "照片选择器(LivePhoto)",
             "照片选择器(视频)",
@@ -82,41 +85,46 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            app.showImagePicker(filterType: .image, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
             break
         case 1:
-            app.showImagePicker(filterType: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .image, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
             break
         case 2:
-            app.showImagePicker(filterType: .video, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
             break
         case 3:
-            app.showImagePicker(filterType: [], selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .video, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
                 self?.showData(objects)
             }
             break
         case 4:
+            app.showImagePicker(filterType: [], selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+                self?.showData(objects)
+            }
+            break
+        case 5:
             app.showImageCamera(filterType: .image, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
-        case 5:
+        case 6:
             app.showImageCamera(filterType: .livePhoto, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
-        case 6:
+        case 7:
             app.showImageCamera(filterType: .video, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
             break
-        case 7:
+        case 8:
             app.showImageCamera(filterType: [], allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
                 self?.showData(object != nil ? [object!] : [])
             }
