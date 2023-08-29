@@ -50,13 +50,13 @@ extension Wrapper where Base: UIView {
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block)
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
     /// 隐藏空界面
@@ -100,13 +100,13 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block)
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
     /// 隐藏空界面

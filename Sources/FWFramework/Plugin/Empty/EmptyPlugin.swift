@@ -15,7 +15,7 @@ import FWObjC
 public protocol EmptyPlugin: AnyObject {
     
     /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-    func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView)
+    func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
     /// 隐藏空界面
     func hideEmptyView(_ view: UIView)
@@ -28,8 +28,8 @@ public protocol EmptyPlugin: AnyObject {
 extension EmptyPlugin {
     
     /// 默认实现，显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView) {
-        EmptyPluginImpl.shared.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: view)
+    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+        EmptyPluginImpl.shared.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock, in: view)
     }
 
     /// 默认实现，隐藏空界面
@@ -173,18 +173,18 @@ extension EmptyViewDelegate {
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
-        fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { _, sender in block?(sender) } : nil)
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { _, sender in block?(sender) } : nil, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
             scrollView.fw_showOverlayView()
-            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: scrollView.fw_overlayView)
+            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock, in: scrollView.fw_overlayView)
         } else {
-            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, in: self)
+            plugin.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock, in: self)
         }
     }
 
@@ -235,13 +235,13 @@ extension EmptyViewDelegate {
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?) {
-        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block)
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?) {
-        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+    public func fw_showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
     /// 隐藏空界面

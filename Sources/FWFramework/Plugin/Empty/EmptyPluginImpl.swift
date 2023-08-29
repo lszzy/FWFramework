@@ -44,7 +44,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     private var emptyViewTag: Int = 2021
     
     // MARK: - EmptyPlugin
-    open func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, in view: UIView) {
+    open func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var emptyText = text
         if !loading, emptyText == nil, defaultText != nil {
             emptyText = defaultText?()
@@ -72,6 +72,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         view.addSubview(emptyView)
         emptyView.fw_pinEdges(toSuperview: view.fw_emptyInsets)
 
+        self.customBlock?(emptyView)
         customBlock?(emptyView)
         
         emptyView.setLoadingViewHidden(!loading)

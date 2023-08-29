@@ -120,9 +120,9 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 toastView.indicatorView = lottieView
             }
             tableView.isHidden = true
-            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, in: self.view)
+            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, customBlock: nil, in: self.view)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, in: self.view)
+                toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, customBlock: nil, in: self.view)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 toastPlugin.hideLoading(delayed: false, in: self.view)
@@ -139,9 +139,9 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             toastView.indicatorView = IndicatorView(type: type)
         }
         tableView.isHidden = true
-        toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, in: self.view)
+        toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), cancelBlock: nil, customBlock: nil, in: self.view)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, in: self.view)
+            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), cancelBlock: nil, customBlock: nil, in: self.view)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             toastPlugin.hideLoading(delayed: false, in: self.view)

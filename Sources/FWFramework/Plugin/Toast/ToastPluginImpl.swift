@@ -46,7 +46,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     private var messageViewTag: Int = 2013
     
     // MARK: - ToastPlugin
-    open func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, in view: UIView) {
+    open func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var loadingText = attributedText
         if loadingText == nil, defaultLoadingText != nil {
             loadingText = defaultLoadingText?()
@@ -69,6 +69,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         view.addSubview(toastView)
         toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
         
+        self.customBlock?(toastView)
         customBlock?(toastView)
         toastView.show(animated: fadeAnimated)
     }
@@ -88,7 +89,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         return toastView
     }
     
-    open func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, in view: UIView) {
+    open func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var progressText = attributedText
         if progressText == nil, defaultProgressText != nil {
             progressText = defaultProgressText?()
@@ -113,6 +114,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         view.addSubview(toastView)
         toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
         
+        self.customBlock?(toastView)
         customBlock?(toastView)
         toastView.show(animated: fadeAnimated)
     }
@@ -127,7 +129,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         return toastView
     }
     
-    open func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, in view: UIView) {
+    open func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var messageText = attributedText
         if messageText == nil, defaultMessageText != nil {
             messageText = defaultMessageText?(style)
@@ -145,6 +147,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         view.addSubview(toastView)
         toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
         
+        self.customBlock?(toastView)
         customBlock?(toastView)
         toastView.show(animated: fadeAnimated)
         if autoHide {
