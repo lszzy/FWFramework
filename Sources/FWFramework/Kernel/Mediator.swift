@@ -74,11 +74,11 @@ extension ModuleProtocol where Self: NSObject {
     /// 默认实现NSObject单例对象
     public static var shared: Self {
         return fw_synchronized {
-            if let instance = self.fw_property(forName: "shared") as? Self {
+            if let instance = self.fw_property(forName: #function) as? Self {
                 return instance
             } else {
                 let instance = self.init()
-                self.fw_setProperty(instance, forName: "shared")
+                self.fw_setProperty(instance, forName: #function)
                 return instance
             }
         }
