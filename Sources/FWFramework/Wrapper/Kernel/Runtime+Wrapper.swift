@@ -354,6 +354,12 @@ extension Wrapper where Base: WrapperObject {
         return base.fw_hasBindingKey(key)
     }
     
+    // MARK: - Mirror
+    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    public var mirrorDictionary: [String: Any] {
+        return base.fw_mirrorDictionary
+    }
+    
 }
 
 // MARK: - NSObject+Runtime
@@ -382,6 +388,12 @@ extension Wrapper where Base: NSObject {
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass) -> [String] {
         return Base.fw_classIvars(clazz)
+    }
+    
+    // MARK: - Mirror
+    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
+        return Base.fw_mirrorDictionary(object)
     }
     
 }

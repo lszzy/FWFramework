@@ -299,17 +299,3 @@ extension Wrapper where Base == URL {
         return base.fw_pathURI
     }
 }
-
-extension Wrapper where Base: NSObject {
-    
-    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
-    public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
-        return Base.fw_mirrorDictionary(object)
-    }
-    
-    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
-    public var mirrorDictionary: [String: Any] {
-        return base.fw_mirrorDictionary
-    }
-    
-}
