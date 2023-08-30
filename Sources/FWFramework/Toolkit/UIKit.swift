@@ -2756,6 +2756,18 @@ import AdSupport
         CATransaction.commit()
     }
     
+    /// 计算指定indexPath的frame，可转换为指定视图坐标(如window)
+    public func fw_layoutFrame(at indexPath: IndexPath, toView view: UIView? = nil) -> CGRect? {
+        guard var layoutFrame = layoutAttributesForItem(at: indexPath)?.frame else {
+            return nil
+        }
+        
+        if let view = view {
+            layoutFrame = convert(layoutFrame, to: view)
+        }
+        return layoutFrame
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
