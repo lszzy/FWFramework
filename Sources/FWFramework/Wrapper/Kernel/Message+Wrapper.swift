@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Message
-extension Wrapper where Base: NSObject {
+extension Wrapper where Base: WrapperObject {
     
     // MARK: - Observer
     /// 监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
@@ -90,7 +90,7 @@ extension Wrapper where Base: NSObject {
 }
 
 // MARK: - Notification
-extension Wrapper where Base: NSObject {
+extension Wrapper where Base: WrapperObject {
     
     // MARK: - Observer
     /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
