@@ -10,6 +10,159 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - AnyObject+Foundation
+extension Wrapper where Base: WrapperObject {
+    
+    /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
+    public func lock() {
+        base.fw_lock()
+    }
+
+    /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
+    public func unlock() {
+        base.fw_unlock()
+    }
+    
+    /// 延迟创建队列，默认串行队列
+    public var queue: DispatchQueue {
+        get { base.fw_queue }
+        set { base.fw_queue = newValue }
+    }
+    
+    /// 通用互斥锁方法
+    public static func synchronized(_ closure: () -> Void) {
+        Base.fw_synchronized(closure)
+    }
+    
+    /// 通用互斥锁方法，返回指定对象
+    public static func synchronized<T>(_ closure: () -> T) -> T {
+        return Base.fw_synchronized(closure)
+    }
+    
+    /// 通用互斥锁方法
+    public func synchronized(_ closure: () -> Void) {
+        base.fw_synchronized(closure)
+    }
+    
+    /// 通用互斥锁方法，返回指定对象
+    public func synchronized<T>(_ closure: () -> T) -> T {
+        return base.fw_synchronized(closure)
+    }
+    
+    /// 同一个token仅执行一次block，对象范围
+    public func dispatchOnce(
+        _ token: String,
+        closure: @escaping () -> Void
+    ) {
+        base.fw_dispatchOnce(token, closure: closure)
+    }
+    
+    /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
+    @discardableResult
+    public func performBlock(
+        _ block: @escaping (Any) -> Void,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return base.fw_performBlock(block, afterDelay: delay)
+    }
+
+    /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
+    @discardableResult
+    public func performBlock(
+        inBackground block: @escaping (Any) -> Void,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return base.fw_performBlock(inBackground: block, afterDelay: delay)
+    }
+
+    /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
+    @discardableResult
+    public func performBlock(
+        _ block: @escaping (Any) -> Void,
+        on: DispatchQueue,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return base.fw_performBlock(block, on: on, afterDelay: delay)
+    }
+    
+}
+
+// MARK: - NSObject+Foundation
+extension Wrapper where Base: NSObject {
+    
+    /// 同一个token仅执行一次block，全局范围
+    public static func dispatchOnce(
+        _ token: AnyHashable,
+        closure: @escaping () -> Void
+    ) {
+        Base.fw_dispatchOnce(token, closure: closure)
+    }
+    
+    /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
+    @discardableResult
+    public static func performBlock(
+        _ block: @escaping () -> Void,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return Base.fw_performBlock(block, afterDelay: delay)
+    }
+
+    /// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
+    @discardableResult
+    public static func performBlock(
+        inBackground block: @escaping () -> Void,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return Base.fw_performBlock(inBackground: block, afterDelay: delay)
+    }
+
+    /// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
+    @discardableResult
+    public static func performBlock(
+        _ block: @escaping () -> Void,
+        on: DispatchQueue,
+        afterDelay delay: TimeInterval
+    ) -> Any {
+        return Base.fw_performBlock(block, on: on, afterDelay: delay)
+    }
+
+    /// 取消指定延迟block，全局范围
+    public static func cancelBlock(_ block: Any) {
+        Base.fw_cancelBlock(block)
+    }
+
+    /// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler，全局范围
+    public static func syncPerform(
+        asyncBlock: @escaping (@escaping () -> Void) -> Void
+    ) {
+        Base.fw_syncPerform(asyncBlock: asyncBlock)
+    }
+
+    /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
+    public static func performBlock(
+        _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
+        completion: @escaping (Bool, Any?) -> Void,
+        retryCount: Int,
+        timeoutInterval: TimeInterval,
+        delayInterval: @escaping (Int) -> TimeInterval,
+        isCancelled: (() -> Bool)? = nil
+    ) {
+        Base.fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled)
+    }
+
+    /// 执行轮询block任务，返回任务Id可取消
+    @discardableResult
+    public static func performTask(_ task: @escaping () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
+        return Base.fw_performTask(task, start: start, interval: interval, repeats: repeats, async: async)
+    }
+
+    /// 指定任务Id取消轮询任务
+    public static func cancelTask(_ taskId: String) {
+        Base.fw_cancelTask(taskId)
+    }
+    
+}
+
 // MARK: - Data+Foundation
 extension Wrapper where Base == Data {
     // MARK: - Encrypt
@@ -410,154 +563,6 @@ extension Wrapper where Base: NSAttributedString {
     /// 获取系统字体对应CSS字符串(family|style|weight|size)
     public static func cssString(font: UIFont) -> String {
         return Base.fw_cssString(font: font)
-    }
-    
-}
-
-// MARK: - NSObject+Foundation
-extension Wrapper where Base: NSObject {
-    
-    /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
-    public func lock() {
-        base.fw_lock()
-    }
-
-    /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
-    public func unlock() {
-        base.fw_unlock()
-    }
-    
-    /// 延迟创建队列，默认串行队列
-    public var queue: DispatchQueue {
-        get { base.fw_queue }
-        set { base.fw_queue = newValue }
-    }
-    
-    /// 通用互斥锁方法
-    public static func synchronized(_ closure: () -> Void) {
-        Base.fw_synchronized(closure)
-    }
-    
-    /// 通用互斥锁方法，返回指定对象
-    public static func synchronized<T>(_ closure: () -> T) -> T {
-        return Base.fw_synchronized(closure)
-    }
-    
-    /// 通用互斥锁方法
-    public func synchronized(_ closure: () -> Void) {
-        base.fw_synchronized(closure)
-    }
-    
-    /// 通用互斥锁方法，返回指定对象
-    public func synchronized<T>(_ closure: () -> T) -> T {
-        return base.fw_synchronized(closure)
-    }
-    
-    /// 同一个token仅执行一次block，全局范围
-    public static func dispatchOnce(
-        _ token: AnyHashable,
-        closure: @escaping () -> Void
-    ) {
-        Base.fw_dispatchOnce(token, closure: closure)
-    }
-    
-    /// 同一个token仅执行一次block，对象范围
-    public func dispatchOnce(
-        _ token: String,
-        closure: @escaping () -> Void
-    ) {
-        base.fw_dispatchOnce(token, closure: closure)
-    }
-    
-    /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
-    @discardableResult
-    public func performBlock(
-        _ block: @escaping (Any) -> Void,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return base.fw_performBlock(block, afterDelay: delay)
-    }
-
-    /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
-    @discardableResult
-    public func performBlock(
-        inBackground block: @escaping (Any) -> Void,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return base.fw_performBlock(inBackground: block, afterDelay: delay)
-    }
-
-    /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
-    @discardableResult
-    public func performBlock(
-        _ block: @escaping (Any) -> Void,
-        on: DispatchQueue,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return base.fw_performBlock(block, on: on, afterDelay: delay)
-    }
-    
-    /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
-    @discardableResult
-    public static func performBlock(
-        _ block: @escaping () -> Void,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return Base.fw_performBlock(block, afterDelay: delay)
-    }
-
-    /// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
-    @discardableResult
-    public static func performBlock(
-        inBackground block: @escaping () -> Void,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return Base.fw_performBlock(inBackground: block, afterDelay: delay)
-    }
-
-    /// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
-    @discardableResult
-    public static func performBlock(
-        _ block: @escaping () -> Void,
-        on: DispatchQueue,
-        afterDelay delay: TimeInterval
-    ) -> Any {
-        return Base.fw_performBlock(block, on: on, afterDelay: delay)
-    }
-
-    /// 取消指定延迟block，全局范围
-    public static func cancelBlock(_ block: Any) {
-        Base.fw_cancelBlock(block)
-    }
-
-    /// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler，全局范围
-    public static func syncPerform(
-        asyncBlock: @escaping (@escaping () -> Void) -> Void
-    ) {
-        Base.fw_syncPerform(asyncBlock: asyncBlock)
-    }
-
-    /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
-    public static func performBlock(
-        _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
-        completion: @escaping (Bool, Any?) -> Void,
-        retryCount: Int,
-        timeoutInterval: TimeInterval,
-        delayInterval: @escaping (Int) -> TimeInterval,
-        isCancelled: (() -> Bool)? = nil
-    ) {
-        Base.fw_performBlock(block, completion: completion, retryCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled)
-    }
-
-    /// 执行轮询block任务，返回任务Id可取消
-    @discardableResult
-    public static func performTask(_ task: @escaping () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
-        return Base.fw_performTask(task, start: start, interval: interval, repeats: repeats, async: async)
-    }
-
-    /// 指定任务Id取消轮询任务
-    public static func cancelTask(_ taskId: String) {
-        Base.fw_cancelTask(taskId)
     }
     
 }
