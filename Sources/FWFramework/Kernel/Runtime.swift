@@ -122,8 +122,8 @@ import FWObjC
     // MARK: - Property
     /// 临时对象，强引用，支持KVO
     public var fw_tempObject: Any? {
-        get { return fw_property(forName: "fw_tempObject") }
-        set { fw_setProperty(newValue, forName: "fw_tempObject") }
+        get { return fw_property(forName: #function) }
+        set { fw_setProperty(newValue, forName: #function) }
     }
     
     /// 读取关联属性
@@ -390,12 +390,12 @@ import FWObjC
     }
     
     private var fw_allBoundObjects: NSMutableDictionary {
-        if let boundObjects = fw_property(forName: "fw_allBoundObjects") as? NSMutableDictionary {
+        if let boundObjects = fw_property(forName: #function) as? NSMutableDictionary {
             return boundObjects
         }
         
         let boundObjects = NSMutableDictionary()
-        fw_setProperty(boundObjects, forName: "fw_allBoundObjects")
+        fw_setProperty(boundObjects, forName: #function)
         return boundObjects
     }
     
