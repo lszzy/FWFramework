@@ -95,3 +95,7 @@ extension WrapperCompatible {
     #endif
     
 }
+
+// MARK: - WrapperObject
+/// 属性包装器对象，用于扩展AnyObject
+public typealias WrapperObject = AnyObject & WrapperCompatible
