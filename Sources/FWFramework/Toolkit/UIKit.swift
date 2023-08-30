@@ -2716,6 +2716,54 @@ import AdSupport
             self.layoutMargins = separatorInset
         }
     }
+    
+    /// 调整imageView的位置偏移，默认zero不生效，仅支持default|subtitle样式
+    public var fw_imageEdgeInsets: UIEdgeInsets {
+        get {
+            let value = fw_property(forName: "fw_imageEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_imageEdgeInsets")
+            UITableViewCell.fw_swizzleUIKitTableViewCell()
+        }
+    }
+    
+    /// 调整textLabel的位置偏移，默认zero不生效，仅支持default|subtitle样式
+    public var fw_textEdgeInsets: UIEdgeInsets {
+        get {
+            let value = fw_property(forName: "fw_textEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_textEdgeInsets")
+            UITableViewCell.fw_swizzleUIKitTableViewCell()
+        }
+    }
+    
+    /// 调整detailTextLabel的位置偏移，默认zero不生效，仅支持subtitle样式
+    public var fw_detailTextEdgeInsets: UIEdgeInsets {
+        get {
+            let value = fw_property(forName: "fw_detailTextEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_detailTextEdgeInsets")
+            UITableViewCell.fw_swizzleUIKitTableViewCell()
+        }
+    }
+    
+    /// 调整accessoryView的位置偏移，默认zero不生效，仅对自定义accessoryView生效
+    public var fw_accessoryEdgeInsets: UIEdgeInsets {
+        get {
+            let value = fw_property(forName: "fw_accessoryEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_accessoryEdgeInsets")
+            UITableViewCell.fw_swizzleUIKitTableViewCell()
+        }
+    }
 
     /// 获取当前所属tableView
     public weak var fw_tableView: UITableView? {
@@ -2732,6 +2780,89 @@ import AdSupport
     /// 获取当前显示indexPath
     public var fw_indexPath: IndexPath? {
         return fw_tableView?.indexPath(for: self)
+    }
+    
+    private static var fw_staticTableViewCellSwizzled = false
+    
+    private static func fw_swizzleUIKitTableViewCell() {
+        guard !fw_staticTableViewCellSwizzled else { return }
+        fw_staticTableViewCellSwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableViewCell.self,
+            selector: #selector(UITableViewCell.layoutSubviews),
+            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            let hasAccessoryInset = selfObject.accessoryView?.superview != nil && selfObject.fw_accessoryEdgeInsets != .zero
+            let hasImageInset = selfObject.imageView?.image != nil && selfObject.fw_imageEdgeInsets != .zero
+            let hasTextInset = (selfObject.textLabel?.text?.count ?? 0) > 0 && selfObject.fw_textEdgeInsets != .zero
+            let hasDetailTextInset = (selfObject.detailTextLabel?.text?.count ?? 0) > 0 && selfObject.fw_detailTextEdgeInsets != .zero
+            guard hasAccessoryInset || hasImageInset || hasTextInset || hasDetailTextInset else {
+                return
+            }
+            
+            if hasAccessoryInset {
+                var accessoryFrame = selfObject.accessoryView?.frame ?? .zero
+                accessoryFrame.origin.x = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.right
+                accessoryFrame.origin.y = accessoryFrame.minY + selfObject.fw_accessoryEdgeInsets.top - selfObject.fw_accessoryEdgeInsets.bottom
+                selfObject.accessoryView?.frame = accessoryFrame
+                
+                var contentFrame = selfObject.contentView.frame
+                contentFrame.size.width = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.left
+                selfObject.contentView.frame = contentFrame
+            }
+            
+            var imageFrame = selfObject.imageView?.frame ?? .zero
+            var textFrame = selfObject.textLabel?.frame ?? .zero
+            var detailTextFrame = selfObject.detailTextLabel?.frame ?? .zero
+            
+            if hasImageInset {
+                imageFrame.origin.x += selfObject.fw_imageEdgeInsets.left - selfObject.fw_imageEdgeInsets.right
+                imageFrame.origin.y += selfObject.fw_imageEdgeInsets.top - selfObject.fw_imageEdgeInsets.bottom
+                
+                textFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
+                
+                detailTextFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
+            }
+            if hasTextInset {
+                textFrame.origin.x += selfObject.fw_textEdgeInsets.left - selfObject.fw_textEdgeInsets.right
+                textFrame.origin.y += selfObject.fw_textEdgeInsets.top - selfObject.fw_textEdgeInsets.bottom
+                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
+            }
+            if hasDetailTextInset {
+                detailTextFrame.origin.x += selfObject.fw_detailTextEdgeInsets.left - selfObject.fw_detailTextEdgeInsets.right
+                detailTextFrame.origin.y += selfObject.fw_detailTextEdgeInsets.top - selfObject.fw_detailTextEdgeInsets.bottom
+                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
+            }
+            
+            if hasImageInset {
+                selfObject.imageView?.frame = imageFrame
+            }
+            if hasImageInset || hasTextInset {
+                selfObject.textLabel?.frame = textFrame
+            }
+            if hasImageInset || hasDetailTextInset {
+                selfObject.detailTextLabel?.frame = detailTextFrame
+            }
+            
+            if hasAccessoryInset {
+                if let textLabel = selfObject.textLabel, textLabel.frame.maxX > selfObject.contentView.bounds.width {
+                    var textLabelFrame = textLabel.frame
+                    textLabelFrame.size.width = selfObject.contentView.bounds.width - textLabelFrame.minX
+                    textLabel.frame = textLabelFrame
+                }
+                if let detailTextLabel = selfObject.detailTextLabel, detailTextLabel.frame.maxX > selfObject.contentView.bounds.width {
+                    var detailTextLabelFrame = detailTextLabel.frame
+                    detailTextLabelFrame.size.width = selfObject.contentView.bounds.width - detailTextLabelFrame.minX
+                    detailTextLabel.frame = detailTextLabelFrame
+                }
+            }
+        }}
     }
     
 }

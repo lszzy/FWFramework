@@ -957,6 +957,30 @@ extension Wrapper where Base: UITableViewCell {
         get { return base.fw_separatorInset }
         set { base.fw_separatorInset = newValue }
     }
+    
+    /// 调整imageView的位置偏移，默认zero不生效，仅支持default|subtitle样式
+    public var imageEdgeInsets: UIEdgeInsets {
+        get { return base.fw_imageEdgeInsets }
+        set { base.fw_imageEdgeInsets = newValue }
+    }
+    
+    /// 调整textLabel的位置偏移，默认zero不生效，仅支持default|subtitle样式
+    public var textEdgeInsets: UIEdgeInsets {
+        get { return base.fw_textEdgeInsets }
+        set { base.fw_textEdgeInsets = newValue }
+    }
+    
+    /// 调整detailTextLabel的位置偏移，默认zero不生效，仅支持subtitle样式
+    public var detailTextEdgeInsets: UIEdgeInsets {
+        get { return base.fw_detailTextEdgeInsets }
+        set { base.fw_detailTextEdgeInsets = newValue }
+    }
+    
+    /// 调整accessoryView的位置偏移，默认zero不生效，仅对自定义accessoryView生效
+    public var accessoryEdgeInsets: UIEdgeInsets {
+        get { return base.fw_accessoryEdgeInsets }
+        set { base.fw_accessoryEdgeInsets = newValue }
+    }
 
     /// 获取当前所属tableView
     public weak var tableView: UITableView? {
