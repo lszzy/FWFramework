@@ -11,7 +11,7 @@ import FWObjC
 #endif
 
 // MARK: - Message
-@_spi(FW) extension NSObject {
+@_spi(FW) extension WrapperCompatible where Self: AnyObject {
     
     // MARK: - Observer
     /// 监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
@@ -29,7 +29,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = NotificationTarget()
+        let messageTarget = NSObject.NotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.block = block
@@ -53,7 +53,7 @@ import FWObjC
             dict?[name] = array
         }
         
-        let messageTarget = NotificationTarget()
+        let messageTarget = NSObject.NotificationTarget()
         messageTarget.broadcast = false
         messageTarget.object = object
         messageTarget.target = target
@@ -81,7 +81,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? NotificationTarget,
+                if let obj = elem as? NSObject.NotificationTarget,
                    obj.object === object {
                     array.remove(obj)
                 }
@@ -89,7 +89,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? NotificationTarget,
+                if let obj = elem as? NSObject.NotificationTarget,
                    object === obj.object && target === obj.target && (action == nil || action == obj.action) {
                     array.remove(obj)
                 }
@@ -103,7 +103,7 @@ import FWObjC
     ///   - observer: 监听者
     @discardableResult
     public func fw_unobserveMessage(_ name: Notification.Name, observer: Any) -> Bool {
-        guard let observer = observer as? NotificationTarget,
+        guard let observer = observer as? NSObject.NotificationTarget,
               let dict = fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return false }
         
@@ -153,14 +153,14 @@ import FWObjC
     ///   - userInfo: 用户信息，默认nil
     ///   - toReceiver: 消息接收者
     public static func fw_sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver: Any) {
-        guard let receiver = toReceiver as? NSObject,
+        guard let receiver = toReceiver as? (any WrapperObject),
               let dict = receiver.fw_messageTargets(false),
               let array = dict[name] as? NSMutableArray else { return }
         
         let notification = Notification(name: name, object: object, userInfo: userInfo)
         for (_, elem) in array.enumerated() {
             // obj.object为nil或者obj.object和object相同才触发
-            if let obj = elem as? NotificationTarget,
+            if let obj = elem as? NSObject.NotificationTarget,
                (obj.object == nil || obj.object === object) {
                 obj.handle(notification)
             }
@@ -170,32 +170,7 @@ import FWObjC
 }
 
 // MARK: - Notification
-@_spi(FW) extension NSObject {
-    
-    private class NotificationTarget: NSObject {
-        var broadcast: Bool = false
-        weak var object: AnyObject?
-        weak var target: AnyObject?
-        var action: Selector?
-        var block: ((Notification) -> Void)?
-        
-        deinit {
-            if broadcast {
-                NotificationCenter.default.removeObserver(self)
-            }
-        }
-        
-        @objc func handle(_ notification: Notification) {
-            if block != nil {
-                block?(notification)
-                return
-            }
-            
-            if let target = target, let action = action, target.responds(to: action) {
-                _ = target.perform(action, with: notification)
-            }
-        }
-    }
+@_spi(FW) extension WrapperCompatible where Self: AnyObject {
     
     // MARK: - Observer
     /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
@@ -213,12 +188,12 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = NotificationTarget()
+        let notificationTarget = NSObject.NotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.block = block
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NSObject.NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
     }
     
@@ -238,13 +213,13 @@ import FWObjC
             dict?[name] = array
         }
         
-        let notificationTarget = NotificationTarget()
+        let notificationTarget = NSObject.NotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.object = object
         notificationTarget.target = target
         notificationTarget.action = action
         array?.add(notificationTarget)
-        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
+        NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NSObject.NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
     }
     
@@ -272,7 +247,7 @@ import FWObjC
         // object相同且target为nil时始终移除
         if target == nil {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? NotificationTarget,
+                if let obj = elem as? NSObject.NotificationTarget,
                    obj.object === object {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -281,7 +256,7 @@ import FWObjC
         // object相同且target相同且action为NULL或者action相同才移除
         } else {
             for (_, elem) in array.enumerated() {
-                if let obj = elem as? NotificationTarget,
+                if let obj = elem as? NSObject.NotificationTarget,
                    object === obj.object && target === obj.target && (action == nil || action == obj.action) {
                     NotificationCenter.default.removeObserver(obj)
                     array.remove(obj)
@@ -296,13 +271,13 @@ import FWObjC
     ///   - observer: 监听者
     @discardableResult
     public func fw_unobserveNotification(_ name: Notification.Name, observer: Any) -> Bool {
-        guard let observer = observer as? NotificationTarget,
+        guard let observer = observer as? NSObject.NotificationTarget,
               let dict = fw_notificationTargets(false),
               let array = dict[name] as? NSMutableArray else { return false }
         
         var result = false
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? NotificationTarget, obj == observer {
+            if let obj = elem as? NSObject.NotificationTarget, obj == observer {
                 NotificationCenter.default.removeObserver(obj)
                 array.remove(obj)
                 result = true
@@ -366,6 +341,32 @@ import FWObjC
 // MARK: - KVO
 @_spi(FW) extension NSObject {
     
+    // MARK: - Target
+    fileprivate class NotificationTarget: NSObject {
+        var broadcast: Bool = false
+        weak var object: AnyObject?
+        weak var target: AnyObject?
+        var action: Selector?
+        var block: ((Notification) -> Void)?
+        
+        deinit {
+            if broadcast {
+                NotificationCenter.default.removeObserver(self)
+            }
+        }
+        
+        @objc func handle(_ notification: Notification) {
+            if block != nil {
+                block?(notification)
+                return
+            }
+            
+            if let target = target, let action = action, target.responds(to: action) {
+                _ = target.perform(action, with: notification)
+            }
+        }
+    }
+    
     private class KvoTarget: UnsafeObject {
         var keyPath: String?
         weak var target: AnyObject?
@@ -413,6 +414,7 @@ import FWObjC
         }
     }
     
+    // MARK: - Observer
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - property: 属性名称
