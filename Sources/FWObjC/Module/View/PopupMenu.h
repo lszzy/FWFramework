@@ -122,11 +122,6 @@ NS_SWIFT_NAME(PopupMenuAnimationManager)
 
 #pragma mark - __FWPopupMenu
 
-typedef NS_ENUM(NSInteger , __FWPopupMenuType) {
-    __FWPopupMenuTypeDefault = 0,
-    __FWPopupMenuTypeDark
-} NS_SWIFT_NAME(PopupMenuType);
-
 /**
  箭头方向优先级
 
@@ -311,9 +306,44 @@ NS_SWIFT_NAME(PopupMenu)
 @property (nonatomic, assign) CGFloat minSpace;
 
 /**
- 设置显示模式 自定义cell时忽略 Default is __FWPopupMenuTypeDefault
+ 是否显示分割线，默认YES. 自定义cell时忽略
  */
-@property (nonatomic, assign) __FWPopupMenuType type;
+@property (nonatomic, assign) BOOL showsSeparator;
+
+/**
+ 自定义分割线高度，默认0.5. 自定义cell时忽略
+ */
+@property (nonatomic, assign) CGFloat separatorHeight;
+
+/**
+ 设置分割线颜色，默认lightGrayColor. 自定义cell时忽略
+ */
+@property (nonatomic, strong) UIColor *separatorColor;
+
+/**
+ 设置分割线偏移，默认zero. 自定义cell时忽略
+ */
+@property (nonatomic, assign) UIEdgeInsets separatorInsets;
+
+/**
+ 自定义imageView的位置偏移，默认zero不生效. 自定义cell时忽略
+ */
+@property (nonatomic, assign) UIEdgeInsets imageEdgeInsets;
+
+/**
+ 自定义textLabel的位置偏移，默认zero不生效. 自定义cell时忽略
+ */
+@property (nonatomic, assign) UIEdgeInsets titleEdgeInsets;
+
+/**
+ 点击事件回调句柄
+ */
+@property (nonatomic, copy, nullable) void (^didSelectItemBlock)(NSInteger index);
+
+/**
+ 自定义cell句柄，优先级低于delegate
+ */
+@property (nonatomic, copy, nullable) UITableViewCell * _Nullable (^customCellBlock)(__FWPopupMenu *popupMenu, NSInteger index);
 
 /**
  屏幕旋转管理
