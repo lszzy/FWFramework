@@ -10,132 +10,14 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - NSObject+Runtime
-@_spi(FW) extension NSObject {
+// MARK: - AnyObject+Runtime
+@_spi(FW) extension WrapperCompatible where Self: AnyObject {
     
     // MARK: - Module
     /// 获取类所在的模块名称，兼容主应用和framework等(可能不准确)
-    public class var fw_moduleName: String {
-        return Bundle(for: classForCoder()).executableURL?.lastPathComponent ?? ""
+    public static var fw_moduleName: String {
+        return Bundle(for: self).executableURL?.lastPathComponent ?? ""
     }
-    
-    // MARK: - Class
-    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: 方法列表
-    public static func fw_classMethods(_ clazz: AnyClass) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, type: "M")
-        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
-            return cacheNames
-        }
-        
-        var resultNames: [String] = []
-        var targetClass: AnyClass? = clazz
-        while targetClass != nil {
-            var resultCount: UInt32 = 0
-            let methodList = class_copyMethodList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
-                if let method = methodList?[i],
-                   let resultName = String(utf8String: sel_getName(method_getName(method))),
-                   !resultName.isEmpty,
-                   !resultNames.contains(resultName) {
-                    resultNames.append(resultName)
-                }
-            }
-            free(methodList)
-            
-            targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
-                break
-            }
-        }
-        
-        NSObject.fw_classCaches[cacheKey] = resultNames
-        return resultNames
-    }
-    
-    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: 属性列表
-    public static func fw_classProperties(_ clazz: AnyClass) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, type: "P")
-        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
-            return cacheNames
-        }
-        
-        var resultNames: [String] = []
-        var targetClass: AnyClass? = clazz
-        while targetClass != nil {
-            var resultCount: UInt32 = 0
-            let propertyList = class_copyPropertyList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
-                if let property = propertyList?[i],
-                   let resultName = String(utf8String: property_getName(property)),
-                   !resultName.isEmpty,
-                   !resultNames.contains(resultName) {
-                    resultNames.append(resultName)
-                }
-            }
-            free(propertyList)
-            
-            targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
-                break
-            }
-        }
-        
-        NSObject.fw_classCaches[cacheKey] = resultNames
-        return resultNames
-    }
-    
-    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: Ivar列表
-    public static func fw_classIvars(_ clazz: AnyClass) -> [String] {
-        let cacheKey = fw_classCacheKey(clazz, type: "V")
-        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
-            return cacheNames
-        }
-        
-        var resultNames: [String] = []
-        var targetClass: AnyClass? = clazz
-        while targetClass != nil {
-            var resultCount: UInt32 = 0
-            let ivarList = class_copyIvarList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
-                if let ivar = ivarList?[i],
-                   let ivarName = ivar_getName(ivar),
-                   let resultName = String(utf8String: ivarName),
-                   !resultName.isEmpty,
-                   !resultNames.contains(resultName) {
-                    resultNames.append(resultName)
-                }
-            }
-            free(ivarList)
-            
-            targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
-                break
-            }
-        }
-        
-        NSObject.fw_classCaches[cacheKey] = resultNames
-        return resultNames
-    }
-    
-    private static func fw_classCacheKey(
-        _ clazz: AnyClass,
-        type: String
-    ) -> String {
-        let cacheKey = NSStringFromClass(clazz) + "."
-            + (class_isMetaClass(clazz) ? "M" : "C") + type
-        return cacheKey
-    }
-    
-    private static var fw_classCaches: [String: [String]] = [:]
     
     // MARK: - Runtime
     /// 安全调用方法，如果不能响应，则忽略之
@@ -202,8 +84,8 @@ import FWObjC
     /// - Parameter selector: 要执行的方法
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    public class func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return ObjCBridge.invokeMethod(classForCoder(), selector: selector)
+    public static func fw_invokeMethod(_ selector: Selector) -> Any? {
+        return ObjCBridge.invokeMethod(self, selector: selector)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -212,8 +94,8 @@ import FWObjC
     ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    public class func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, object: object)
+    public static func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
+        return ObjCBridge.invokeMethod(self, selector: selector, object: object)
     }
     
     /// 安全调用类方法，如果不能响应，则忽略之
@@ -223,8 +105,8 @@ import FWObjC
     ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    public class func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, object: object1, object: object2)
+    public static func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
+        return ObjCBridge.invokeMethod(self, selector: selector, object: object1, object: object2)
     }
     
     /// 安全调用类方法，支持多个参数
@@ -233,8 +115,8 @@ import FWObjC
     ///   - objects: 传递的参数数组
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
-    public class func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return ObjCBridge.invokeMethod(classForCoder(), selector: selector, objects: objects)
+    public static func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
     }
     
     // MARK: - Property
@@ -349,8 +231,8 @@ import FWObjC
     /// 读取类关联属性
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
-    public class func fw_property(forName: String) -> Any? {
-        let value = ObjCBridge.getAssociatedObject(classForCoder(), forName: forName)
+    public static func fw_property(forName: String) -> Any? {
+        let value = ObjCBridge.getAssociatedObject(self, forName: forName)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -362,24 +244,24 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public class func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        ObjCBridge.setAssociatedObject(classForCoder(), value: value, policy: policy, forName: forName)
+    public static func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        ObjCBridge.setAssociatedObject(self, value: value, policy: policy, forName: forName)
     }
     
     /// 设置类拷贝关联属性
     /// - Parameters:
     ///   - value: 属性值
     ///   - forName: 属性名称
-    public class func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        ObjCBridge.setAssociatedObject(classForCoder(), value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+    public static func fw_setPropertyCopy(_ value: Any?, forName: String) {
+        ObjCBridge.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
     /// - Parameters:
     ///   - value: 属性值
     ///   - forName: 属性名称
-    public class func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        ObjCBridge.setAssociatedObject(classForCoder(), value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+    public static func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
+        ObjCBridge.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
     }
     
     // MARK: - Bind
@@ -516,5 +398,128 @@ import FWObjC
         fw_setProperty(boundObjects, forName: "fw_allBoundObjects")
         return boundObjects
     }
+    
+}
+
+// MARK: - NSObject+Runtime
+@_spi(FW) extension NSObject {
+    
+    // MARK: - Class
+    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: 方法列表
+    public static func fw_classMethods(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "M")
+        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
+            return cacheNames
+        }
+        
+        var resultNames: [String] = []
+        var targetClass: AnyClass? = clazz
+        while targetClass != nil {
+            var resultCount: UInt32 = 0
+            let methodList = class_copyMethodList(targetClass, &resultCount)
+            for i in 0 ..< Int(resultCount) {
+                if let method = methodList?[i],
+                   let resultName = String(utf8String: sel_getName(method_getName(method))),
+                   !resultName.isEmpty,
+                   !resultNames.contains(resultName) {
+                    resultNames.append(resultName)
+                }
+            }
+            free(methodList)
+            
+            targetClass = class_getSuperclass(targetClass)
+            if targetClass == nil || targetClass == NSObject.classForCoder() {
+                break
+            }
+        }
+        
+        NSObject.fw_classCaches[cacheKey] = resultNames
+        return resultNames
+    }
+    
+    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: 属性列表
+    public static func fw_classProperties(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "P")
+        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
+            return cacheNames
+        }
+        
+        var resultNames: [String] = []
+        var targetClass: AnyClass? = clazz
+        while targetClass != nil {
+            var resultCount: UInt32 = 0
+            let propertyList = class_copyPropertyList(targetClass, &resultCount)
+            for i in 0 ..< Int(resultCount) {
+                if let property = propertyList?[i],
+                   let resultName = String(utf8String: property_getName(property)),
+                   !resultName.isEmpty,
+                   !resultNames.contains(resultName) {
+                    resultNames.append(resultName)
+                }
+            }
+            free(propertyList)
+            
+            targetClass = class_getSuperclass(targetClass)
+            if targetClass == nil || targetClass == NSObject.classForCoder() {
+                break
+            }
+        }
+        
+        NSObject.fw_classCaches[cacheKey] = resultNames
+        return resultNames
+    }
+    
+    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: Ivar列表
+    public static func fw_classIvars(_ clazz: AnyClass) -> [String] {
+        let cacheKey = fw_classCacheKey(clazz, type: "V")
+        if let cacheNames = NSObject.fw_classCaches[cacheKey] {
+            return cacheNames
+        }
+        
+        var resultNames: [String] = []
+        var targetClass: AnyClass? = clazz
+        while targetClass != nil {
+            var resultCount: UInt32 = 0
+            let ivarList = class_copyIvarList(targetClass, &resultCount)
+            for i in 0 ..< Int(resultCount) {
+                if let ivar = ivarList?[i],
+                   let ivarName = ivar_getName(ivar),
+                   let resultName = String(utf8String: ivarName),
+                   !resultName.isEmpty,
+                   !resultNames.contains(resultName) {
+                    resultNames.append(resultName)
+                }
+            }
+            free(ivarList)
+            
+            targetClass = class_getSuperclass(targetClass)
+            if targetClass == nil || targetClass == NSObject.classForCoder() {
+                break
+            }
+        }
+        
+        NSObject.fw_classCaches[cacheKey] = resultNames
+        return resultNames
+    }
+    
+    private static func fw_classCacheKey(
+        _ clazz: AnyClass,
+        type: String
+    ) -> String {
+        let cacheKey = NSStringFromClass(clazz) + "."
+            + (class_isMetaClass(clazz) ? "M" : "C") + type
+        return cacheKey
+    }
+    
+    private static var fw_classCaches: [String: [String]] = [:]
     
 }

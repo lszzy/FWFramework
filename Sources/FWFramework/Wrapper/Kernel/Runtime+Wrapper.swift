@@ -7,38 +7,13 @@
 
 import Foundation
 
-// MARK: - NSObject+Runtime
-extension Wrapper where Base: NSObject {
+// MARK: - AnyObject+Runtime
+extension Wrapper where Base: WrapperObject {
     
     // MARK: - Module
     /// 获取类所在的模块名称，兼容主应用和framework等(可能不准确)
     public static var moduleName: String {
         return Base.fw_moduleName
-    }
-    
-    // MARK: - Class
-    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: 方法列表
-    public static func classMethods(_ clazz: AnyClass) -> [String] {
-        return Base.fw_classMethods(clazz)
-    }
-    
-    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: 属性列表
-    public static func classProperties(_ clazz: AnyClass) -> [String] {
-        return Base.fw_classProperties(clazz)
-    }
-    
-    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
-    /// - Parameters:
-    ///   - clazz: 指定类
-    /// - Returns: Ivar列表
-    public static func classIvars(_ clazz: AnyClass) -> [String] {
-        return Base.fw_classIvars(clazz)
     }
     
     // MARK: - Runtime
@@ -377,6 +352,36 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 是否绑定
     public func hasBindingKey(_ key: String) -> Bool {
         return base.fw_hasBindingKey(key)
+    }
+    
+}
+
+// MARK: - NSObject+Runtime
+extension Wrapper where Base: NSObject {
+    
+    // MARK: - Class
+    /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: 方法列表
+    public static func classMethods(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classMethods(clazz)
+    }
+    
+    /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: 属性列表
+    public static func classProperties(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classProperties(clazz)
+    }
+    
+    /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
+    /// - Parameters:
+    ///   - clazz: 指定类
+    /// - Returns: Ivar列表
+    public static func classIvars(_ clazz: AnyClass) -> [String] {
+        return Base.fw_classIvars(clazz)
     }
     
 }
