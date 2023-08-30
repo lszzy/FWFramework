@@ -559,37 +559,6 @@ extension WrapperGlobal {
     }
 }
 
-@_spi(FW) extension NSObject {
-    
-    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
-    public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
-        guard let object = object else { return [:] }
-        var mirror = Mirror(reflecting: object)
-        var children: [Mirror.Child] = []
-        children += mirror.children
-        while let superclassMirror = mirror.superclassMirror,
-              superclassMirror.subjectType != NSObject.self {
-            children += superclassMirror.children
-            mirror = superclassMirror
-        }
-        
-        var result: [String: Any] = [:]
-        children.forEach { child in
-            if let label = child.label, !label.isEmpty, !label.hasPrefix("_"),
-               !Optional<Any>.isNone(child.value) {
-                result[label] = child.value
-            }
-        }
-        return result
-    }
-    
-    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
-    public var fw_mirrorDictionary: [String: Any] {
-        return NSObject.fw_mirrorDictionary(self)
-    }
-    
-}
-
 // MARK: - SafeValue
 /// 可选类安全转换，不为nil
 extension Optional {
