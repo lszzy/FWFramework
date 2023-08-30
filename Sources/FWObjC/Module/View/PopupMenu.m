@@ -367,8 +367,12 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 #pragma mark - __FWPopupMenu
 
 @interface __FWPopupMenuCell : UITableViewCell
-@property (nonatomic, assign) BOOL showsSeparator;
-@property (nonatomic, strong) UIColor *separatorColor;
+@property (nonatomic, assign) BOOL showsCustomSeparator;
+@property (nonatomic, strong) UIColor *customSeparatorColor;
+@property (nonatomic, assign) CGFloat customSeparatorHeight;
+@property (nonatomic, assign) UIEdgeInsets customSeparatorInsets;
+@property (nonatomic, assign) UIEdgeInsets imageEdgeInsets;
+@property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
 @end
 
 @implementation __FWPopupMenuCell
@@ -377,37 +381,73 @@ static NSString * const FWPopupDismissAnimationKey = @"dismissAnimation";
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _showsSeparator = YES;
-        _separatorColor = [UIColor lightGrayColor];
-        [self setNeedsDisplay];
+        _showsCustomSeparator = YES;
+        _customSeparatorHeight = 0.5;
+        _customSeparatorColor = [UIColor lightGrayColor];
     }
     return self;
 }
 
-- (void)setShowsSeparator:(BOOL)showsSeparator
+- (void)setShowsCustomSeparator:(BOOL)showsCustomSeparator
 {
-    _showsSeparator = showsSeparator;
+    _showsCustomSeparator = showsCustomSeparator;
     [self setNeedsDisplay];
 }
 
-- (void)setSeparatorColor:(UIColor *)separatorColor
+- (void)setCustomSeparatorColor:(UIColor *)customSeparatorColor
 {
-    _separatorColor = separatorColor;
+    _customSeparatorColor = customSeparatorColor;
+    [self setNeedsDisplay];
+}
+
+- (void)setCustomSeparatorInsets:(UIEdgeInsets)customSeparatorInsets
+{
+    _customSeparatorInsets = customSeparatorInsets;
+    [self setNeedsDisplay];
+}
+
+- (void)setCustomSeparatorHeight:(CGFloat)customSeparatorHeight
+{
+    _customSeparatorHeight = customSeparatorHeight;
     [self setNeedsDisplay];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
     self.contentView.frame = self.bounds;
     self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    BOOL hasImageInset = self.imageView.image && !UIEdgeInsetsEqualToEdgeInsets(self.imageEdgeInsets, UIEdgeInsetsZero);
+    BOOL hasTextInset = self.textLabel.text.length > 0 && !UIEdgeInsetsEqualToEdgeInsets(self.textEdgeInsets, UIEdgeInsetsZero);
+    if (!hasImageInset && !hasTextInset) return;
+    
+    CGRect imageViewFrame = self.imageView.frame;
+    CGRect textLabelFrame = self.textLabel.frame;
+    
+    if (hasImageInset) {
+        imageViewFrame.origin.x += self.imageEdgeInsets.left - self.imageEdgeInsets.right;
+        imageViewFrame.origin.y += self.imageEdgeInsets.top - self.imageEdgeInsets.bottom;
+        
+        textLabelFrame.origin.x += self.imageEdgeInsets.left;
+        textLabelFrame.size.width = fmin(CGRectGetWidth(textLabelFrame), CGRectGetWidth(self.contentView.bounds) - CGRectGetMinX(textLabelFrame));
+    }
+    if (hasTextInset) {
+        textLabelFrame.origin.x += self.textEdgeInsets.left - self.textEdgeInsets.right;
+        textLabelFrame.origin.y += self.textEdgeInsets.top - self.textEdgeInsets.bottom;
+        textLabelFrame.size.width = fmin(CGRectGetWidth(textLabelFrame), CGRectGetWidth(self.contentView.bounds) - CGRectGetMinX(textLabelFrame));
+    }
+    
+    self.imageView.frame = imageViewFrame;
+    self.textLabel.frame = textLabelFrame;
 }
 
 - (void)drawRect:(CGRect)rect
 {
-    if (!_showsSeparator) return;
-    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, rect.size.height - 0.5, rect.size.width, 0.5)];
-    [_separatorColor setFill];
+    if (!_showsCustomSeparator) return;
+    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(_customSeparatorInsets.left, rect.size.height - _customSeparatorHeight + _customSeparatorInsets.top - _customSeparatorInsets.bottom, rect.size.width - _customSeparatorInsets.left - _customSeparatorInsets.right, _customSeparatorHeight)];
+    [_customSeparatorColor setFill];
     [bezierPath fillWithBlendMode:kCGBlendModeNormal alpha:1];
     [bezierPath closePath];
 }
@@ -425,7 +465,6 @@ UITableViewDataSource
 @property (nonatomic, assign) CGFloat       itemWidth;
 @property (nonatomic) CGPoint               point;
 @property (nonatomic, assign) BOOL          isCornerChanged;
-@property (nonatomic, strong) UIColor     * separatorColor;
 @property (nonatomic, assign) BOOL          isChangeDirection;
 @property (nonatomic, strong) UIView      * relyView;
 @end
@@ -495,10 +534,11 @@ UITableViewDataSource
     UITableViewCell * tableViewCell = nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenu:cellForRowAtIndex:)]) {
         tableViewCell = [self.delegate popupMenu:self cellForRowAtIndex:indexPath.row];
+        if (tableViewCell) return tableViewCell;
     }
-    
-    if (tableViewCell) {
-        return tableViewCell;
+    if (self.customCellBlock) {
+        tableViewCell = self.customCellBlock(self, indexPath.row);
+        if (tableViewCell) return tableViewCell;
     }
     
     static NSString * identifier = @"FWPopupMenu";
@@ -521,7 +561,6 @@ UITableViewDataSource
     }else {
         cell.textLabel.text = nil;
     }
-    cell.separatorColor = _separatorColor;
     if (_images.count >= indexPath.row + 1) {
         if ([_images[indexPath.row] isKindOfClass:[NSString class]]) {
             cell.imageView.image = [UIImage imageNamed:_images[indexPath.row]];
@@ -530,9 +569,15 @@ UITableViewDataSource
         }else {
             cell.imageView.image = nil;
         }
-    }else {
+    } else {
         cell.imageView.image = nil;
     }
+    cell.customSeparatorColor = _separatorColor;
+    cell.customSeparatorInsets = _separatorInsets;
+    cell.customSeparatorHeight = _separatorHeight;
+    cell.showsCustomSeparator = indexPath.row < (_titles.count - 1) ? _showsSeparator : NO;
+    cell.imageEdgeInsets = _imageEdgeInsets;
+    cell.textEdgeInsets = _titleEdgeInsets;
     return cell;
 }
 
@@ -549,33 +594,9 @@ UITableViewDataSource
     if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenu:didSelectedAtIndex:)]) {
         [self.delegate popupMenu:self didSelectedAtIndex:indexPath.row];
     }
-}
-
-#pragma mark - scrollViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
-        __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.showsSeparator = YES;
+    if (self.didSelectItemBlock) {
+        self.didSelectItemBlock(indexPath.row);
     }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
-        __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.showsSeparator = NO;
-    }
-}
-
-- (__FWPopupMenuCell *)getLastVisibleCell
-{
-    NSArray <NSIndexPath *>*indexPaths = [self.tableView indexPathsForVisibleRows];
-    indexPaths = [indexPaths sortedArrayUsingComparator:^NSComparisonResult(NSIndexPath *  _Nonnull obj1, NSIndexPath *  _Nonnull obj2) {
-        return obj1.row < obj2.row;
-    }];
-    NSIndexPath *indexPath = indexPaths.firstObject;
-    return [self.tableView cellForRowAtIndexPath:indexPath];
 }
 
 #pragma mark - privates
@@ -587,10 +608,6 @@ UITableViewDataSource
     [UIWindow.__fw_mainWindow addSubview:self];
     if (self.delegate && [self.delegate respondsToSelector:@selector(popupMenuBeganShow:)]) {
         [self.delegate popupMenuBeganShow:self];
-    }
-    if ([[self getLastVisibleCell] isKindOfClass:[__FWPopupMenuCell class]]) {
-        __FWPopupMenuCell *cell = [self getLastVisibleCell];
-        cell.showsSeparator = NO;
     }
     __weak typeof(self) weakSelf = self;
     [self.animationManager displayShowAnimationCompletion:^{
@@ -619,7 +636,9 @@ UITableViewDataSource
     _arrowWidth = 15.0;
     _arrowHeight = 10.0;
     _backColor = [UIColor whiteColor];
-    _type = __FWPopupMenuTypeDefault;
+    _showsSeparator = YES;
+    _separatorColor = [UIColor lightGrayColor];
+    _separatorHeight = 0.5;
     _arrowDirection = __FWPopupMenuArrowDirectionTop;
     _priorityDirection = __FWPopupMenuPriorityDirectionTop;
     _minSpace = 10.0;
@@ -717,28 +736,6 @@ UITableViewDataSource
 {
     _maskViewColor = maskViewColor;
     _menuBackView.backgroundColor = self.showsMaskView ? maskViewColor : [UIColor clearColor];
-}
-
-- (void)setType:(__FWPopupMenuType)type
-{
-    _type = type;
-    switch (type) {
-        case __FWPopupMenuTypeDark:
-        {
-            _textColor = [UIColor lightGrayColor];
-            _backColor = [UIColor colorWithRed:0.25 green:0.27 blue:0.29 alpha:1];
-            _separatorColor = [UIColor lightGrayColor];
-        }
-            break;
-            
-        default:
-        {
-            _textColor = [UIColor blackColor];
-            _backColor = [UIColor whiteColor];
-            _separatorColor = [UIColor lightGrayColor];
-        }
-            break;
-    }
 }
 
 - (void)setTitles:(NSArray *)titles
@@ -860,7 +857,6 @@ UITableViewDataSource
         _point = CGPointMake(_relyRect.origin.x, _relyRect.origin.y + _relyRect.size.height / 2);
     }
 }
-
 
 - (void)setFrame:(CGRect)frame
 {
