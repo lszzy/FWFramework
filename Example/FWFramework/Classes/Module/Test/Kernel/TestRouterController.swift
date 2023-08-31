@@ -28,7 +28,11 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["打开Url", "onOpen"],
         ["中文Url", "onOpenChinese"],
         ["打开Url，通配符*", "onOpenWild"],
-        ["打开Url，协议", "onOpenController"],
+        ["打开Url，*id", "onOpenPage"],
+        ["打开Url，*id.html", "onOpenPage2"],
+        ["打开Url，:id", "onOpenShop"],
+        ["打开Url，:id.html", "onOpenShop2"],
+        ["打开Url，:itemId", "onOpenItem"],
         ["打开Url，支持回调", "onOpenCallback"],
         ["解析Url，获取Object", "onOpenObject"],
         ["过滤Url", "onOpenFilter"],
@@ -196,7 +200,23 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         Router.openURL("wildcard://not_found?id=1#anchor")
     }
     
-    func onOpenController() {
+    func onOpenPage() {
+        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1"))
+    }
+    
+    func onOpenPage2() {
+        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1.html"))
+    }
+    
+    func onOpenShop() {
+        Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: 1))
+    }
+    
+    func onOpenShop2() {
+        Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: "1.html"))
+    }
+    
+    func onOpenItem() {
         Router.openURL(Router.generateURL(TestRouter.itemUrl, parameters: [1, 2]))
     }
     
@@ -365,12 +385,15 @@ class TestRouter: NSObject, AutoloadProtocol {
     static let objectUrl = "object://test2"
     static let objectUnmatchUrl = "object://test"
     static let loaderUrl = "app://loader"
+    static let pageUrl = "app://page/*id"
+    static let shopUrl = "app://shops/:id"
     static let itemUrl = "app://shops/:id/items/:itemId"
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
     
     class func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = testUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
@@ -383,6 +406,23 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     class func wildcardRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = wildcardUrl
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func pageRouter(_ context: Router.Context) -> Any? {
+        let vc = TestRouterResultController()
+        vc.rule = pageUrl
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func shopRouter(_ context: Router.Context) -> Any? {
+        let vc = TestRouterResultController()
+        vc.rule = shopUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
@@ -390,6 +430,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     class func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = itemUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
@@ -397,6 +438,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     class func objectRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = objectUrl
         vc.context = context
         return vc
     }
@@ -433,6 +475,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     class func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = loaderUrl
         vc.context = context
         return vc
     }
@@ -460,6 +503,7 @@ class TestRouter: NSObject, AutoloadProtocol {
             
             if url.absoluteString.hasPrefix("app://filter/") {
                 let vc = TestRouterResultController()
+                vc.rule = "app://filter/"
                 vc.context = context
                 Navigator.push(vc, animated: true)
                 return false
@@ -495,6 +539,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         
         Router.registerURL("wildcard://*") { context in
             let vc = TestRouterResultController()
+            vc.rule = "wildcard://*"
             vc.context = context
             Navigator.push(vc, animated: true)
             return nil
@@ -515,10 +560,11 @@ class TestRouter: NSObject, AutoloadProtocol {
 
 class TestRouterResultController: UIViewController, ViewControllerProtocol {
     
+    var rule: String?
     var context: Router.Context?
     
     func setupNavbar() {
-        navigationItem.title = context?.url
+        navigationItem.title = rule ?? context?.url
         
         if context?.completion != nil {
             app.setRightBarItem("完成") { [weak self] _ in
@@ -533,7 +579,7 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "URL: \(APP.safeString(context?.url))\n\nparameters: \(APP.safeString(context?.parameters))"
+        label.text = "url: \(APP.safeString(context?.url))\n\n" + (rule != nil ? "rule: \(rule!)\n\n" : "") + "parameters: \(APP.safeString(context?.parameters))"
         view.addSubview(label)
         label.app.layoutChain
             .center()
