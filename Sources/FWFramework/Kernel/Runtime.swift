@@ -130,7 +130,8 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public func fw_property(forName: String) -> Any? {
-        let value = ObjCBridge.getAssociatedObject(self, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        let value = objc_getAssociatedObject(self, key)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -177,7 +178,8 @@ import FWObjC
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
     public func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        ObjCBridge.setAssociatedObject(self, value: value, policy: policy, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, value, policy)
     }
     
     /// 设置拷贝关联属性，支持KVO
@@ -185,7 +187,8 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        ObjCBridge.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
@@ -193,7 +196,8 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        ObjCBridge.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, WeakObject(object: value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     /// 设置Bool关联属性
@@ -232,7 +236,8 @@ import FWObjC
     /// - Parameter forName: 属性名称
     /// - Returns: 属性值
     public static func fw_property(forName: String) -> Any? {
-        let value = ObjCBridge.getAssociatedObject(self, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        let value = objc_getAssociatedObject(self, key)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -245,7 +250,8 @@ import FWObjC
     ///   - forName: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
     public static func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        ObjCBridge.setAssociatedObject(self, value: value, policy: policy, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, value, policy)
     }
     
     /// 设置类拷贝关联属性
@@ -253,7 +259,8 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public static func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        ObjCBridge.setAssociatedObject(self, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
@@ -261,7 +268,8 @@ import FWObjC
     ///   - value: 属性值
     ///   - forName: 属性名称
     public static func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        ObjCBridge.setAssociatedObject(self, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: forName)
+        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(self, key, WeakObject(object: value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     // MARK: - Bind

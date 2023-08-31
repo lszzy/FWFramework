@@ -59,10 +59,6 @@ NS_SWIFT_NAME(ObjCBridgeProtocol)
 NS_SWIFT_NAME(ObjCBridge)
 @interface FWObjCBridge : NSObject
 
-+ (nullable id)getAssociatedObject:(id)object forName:(NSString *)name;
-
-+ (void)setAssociatedObject:(id)object value:(nullable id)value policy:(objc_AssociationPolicy)policy forName:(NSString *)name;
-
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;

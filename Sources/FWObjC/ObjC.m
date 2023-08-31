@@ -138,14 +138,6 @@
     });
 }
 
-+ (id)getAssociatedObject:(id)object forName:(NSString *)name {
-    return objc_getAssociatedObject(object, NSSelectorFromString(name));
-}
-
-+ (void)setAssociatedObject:(id)object value:(id)value policy:(objc_AssociationPolicy)policy forName:(NSString *)name {
-    objc_setAssociatedObject(object, NSSelectorFromString(name), value, policy);
-}
-
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block {
     if (!originalClass) return NO;
     
