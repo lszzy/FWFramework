@@ -107,6 +107,7 @@ public class Router: NSObject {
     private static var routeRules = NSMutableDictionary()
     
     private static let routeWildcardCharacter = "*"
+    private static let routeParameterCharacter = ":"
     private static let routeSpecialCharacters = "/?&."
     private static let routeCoreKey = "FWRouterCore"
     private static let routeBlockKey = "FWRouterBlock"
@@ -350,7 +351,7 @@ public class Router: NSObject {
         
         for i in 0 ..< patternString.length {
             let character = String(format: "%c", patternString.character(at: i))
-            if character == ":" {
+            if character == routeParameterCharacter {
                 startIndex = i
             }
             if routeSpecialCharacters.range(of: character) != nil &&
@@ -383,7 +384,7 @@ public class Router: NSObject {
             }
         } else if let paramDict = parameters as? [AnyHashable: Any] {
             for idx in 0 ..< placeholders.count {
-                let value = paramDict[placeholders[idx].replacingOccurrences(of: ":", with: "")]
+                let value = paramDict[placeholders[idx].replacingOccurrences(of: routeParameterCharacter, with: "")]
                 if let value = value {
                     parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw_safeString(value))
                 }
@@ -560,7 +561,7 @@ public class Router: NSObject {
                     wildcardRoutes = key == routeWildcardCharacter
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()
                     break
-                } else if key.hasPrefix(":") {
+                } else if key.hasPrefix(routeParameterCharacter) {
                     wildcardMatched = true
                     wildcardRoutes = false
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()

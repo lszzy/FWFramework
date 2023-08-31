@@ -29,10 +29,9 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["中文Url", "onOpenChinese"],
         ["打开Url，通配符*", "onOpenWild"],
         ["打开Url，*id", "onOpenPage"],
-        ["打开Url，*id.html", "onOpenPage2"],
         ["打开Url，:id", "onOpenShop"],
-        ["打开Url，:id.html", "onOpenShop2"],
-        ["打开Url，:itemId", "onOpenItem"],
+        ["打开Url，:id/:id", "onOpenItem"],
+        ["打开Url，:id.html", "onOpenHtml"],
         ["打开Url，支持回调", "onOpenCallback"],
         ["解析Url，获取Object", "onOpenObject"],
         ["过滤Url", "onOpenFilter"],
@@ -204,20 +203,16 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1"))
     }
     
-    func onOpenPage2() {
-        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1.html"))
-    }
-    
     func onOpenShop() {
         Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: 1))
     }
     
-    func onOpenShop2() {
-        Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: "1.html"))
-    }
-    
     func onOpenItem() {
         Router.openURL(Router.generateURL(TestRouter.itemUrl, parameters: [1, 2]))
+    }
+    
+    func onOpenHtml() {
+        Router.openURL(Router.generateURL(TestRouter.htmlUrl, parameters: 1))
     }
     
     func onOpenCallback() {
@@ -388,6 +383,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     static let pageUrl = "app://page/*id"
     static let shopUrl = "app://shops/:id"
     static let itemUrl = "app://shops/:id/items/:itemId"
+    static let htmlUrl = "app://pages/:id.html"
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
     
@@ -431,6 +427,14 @@ class TestRouter: NSObject, AutoloadProtocol {
     class func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = itemUrl
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func htmlRouter(_ context: Router.Context) -> Any? {
+        let vc = TestRouterResultController()
+        vc.rule = htmlUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
