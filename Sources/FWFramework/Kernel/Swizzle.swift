@@ -126,7 +126,8 @@ import FWObjC
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
-            ObjCBridge.setAssociatedObject(target, value: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC, forName: swizzleIdentifier)
+            let key = unsafeBitCast(Selector(swizzleIdentifier), to: UnsafeRawPointer.self)
+            objc_setAssociatedObject(target, key, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return ObjCBridge.swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", with: block)
         }
     }
