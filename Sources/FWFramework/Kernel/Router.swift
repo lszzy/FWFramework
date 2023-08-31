@@ -351,7 +351,7 @@ public class Router: NSObject {
         
         for i in 0 ..< patternString.length {
             let character = String(format: "%c", patternString.character(at: i))
-            if character == routeParameterCharacter {
+            if character == routeParameterCharacter || character == routeWildcardCharacter {
                 startIndex = i
             }
             if routeSpecialCharacters.range(of: character) != nil &&
@@ -378,13 +378,13 @@ public class Router: NSObject {
         if let paramArray = parameters as? [Any] {
             for idx in 0 ..< placeholders.count {
                 if idx < paramArray.count {
-                    let value = paramArray[paramArray.count - 1]
+                    let value = paramArray[idx]
                     parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw_safeString(value))
                 }
             }
         } else if let paramDict = parameters as? [AnyHashable: Any] {
             for idx in 0 ..< placeholders.count {
-                let value = paramDict[placeholders[idx].replacingOccurrences(of: routeParameterCharacter, with: "")]
+                let value = paramDict[placeholders[idx].replacingOccurrences(of: routeParameterCharacter, with: "").replacingOccurrences(of: routeWildcardCharacter, with: "")]
                 if let value = value {
                     parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw_safeString(value))
                 }

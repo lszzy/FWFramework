@@ -196,11 +196,11 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenWild() {
-        Router.openURL("wildcard://not_found?id=1#anchor")
+        Router.openURL(Router.generateURL("wildcard://*", parameters: "not_found?id=1#anchor"))
     }
     
     func onOpenPage() {
-        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1"))
+        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: ["id": "test/1"]))
     }
     
     func onOpenShop() {
@@ -212,7 +212,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenHtml() {
-        Router.openURL(Router.generateURL(TestRouter.htmlUrl, parameters: 1))
+        Router.openURL(Router.generateURL(TestRouter.htmlUrl, parameters: ["id": 1]))
     }
     
     func onOpenCallback() {
