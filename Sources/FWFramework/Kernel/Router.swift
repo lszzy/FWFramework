@@ -547,7 +547,7 @@ public class Router: NSObject {
         
         var wildcardMatched = false
         var wildcardRoutes = false
-        for pathComponent in pathComponents {
+        for (index, pathComponent) in pathComponents.enumerated() {
             // 对 key 进行排序，这样可以把 * 放到最后
             let subRoutesKeys = subRoutes.allKeys.compactMap { key in
                 return key as? String
@@ -556,15 +556,34 @@ public class Router: NSObject {
             }
             
             for key in subRoutesKeys {
-                if key == pathComponent || key == routeWildcardCharacter {
+                if key == pathComponent || key.hasPrefix(routeWildcardCharacter) {
                     wildcardMatched = true
-                    wildcardRoutes = key == routeWildcardCharacter
+                    wildcardRoutes = key.hasPrefix(routeWildcardCharacter)
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()
+                    
+                    if wildcardRoutes && key.count > 1 {
+                        var newKey = (key as NSString).substring(from: 1)
+                        var newPathComponent = pathComponent
+                        if index < pathComponents.count - 1 {
+                            newPathComponent = pathComponents.suffix(from: index).joined(separator: "/")
+                        }
+                        // 再做一下特殊处理，比如 *id.html -> :id
+                        let specialCharactersSet = CharacterSet(charactersIn: routeSpecialCharacters)
+                        let range = (key as NSString).rangeOfCharacter(from: specialCharactersSet)
+                        if range.location != NSNotFound {
+                            // 把 pathComponent 后面的部分也去掉
+                            newKey = (newKey as NSString).substring(to: range.location - 1)
+                            let suffixToStrip = (key as NSString).substring(from: range.location)
+                            newPathComponent = newPathComponent.replacingOccurrences(of: suffixToStrip, with: "")
+                        }
+                        parameters[newKey] = newPathComponent.removingPercentEncoding
+                    }
                     break
                 } else if key.hasPrefix(routeParameterCharacter) {
                     wildcardMatched = true
                     wildcardRoutes = false
                     subRoutes = subRoutes[key] as? NSMutableDictionary ?? NSMutableDictionary()
+                    
                     var newKey = (key as NSString).substring(from: 1)
                     var newPathComponent = pathComponent
                     // 再做一下特殊处理，比如 :id.html -> :id
