@@ -196,7 +196,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenWild() {
-        Router.openURL(Router.generateURL("wildcard://*", parameters: "not_found?id=1#anchor"))
+        Router.openURL(Router.generateURL(TestRouter.wildcardUrl, parameters: "not_found?id=1#anchor"))
     }
     
     func onOpenPage() {
@@ -216,7 +216,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenCallback() {
-        Router.openURL("\(TestRouter.wildcardUrl)?id=2") { result in
+        Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") { result in
             UIWindow.app.showMessage(text: result)
         }
     }
@@ -376,7 +376,8 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     static let testUrl = "app://tests/:id"
     static let homeUrl = "app://tab/home"
-    static let wildcardUrl = "wildcard://test1"
+    static let wildcardUrl = "wildcard://*"
+    static let wildcardTestUrl = "wildcard://test1"
     static let objectUrl = "object://test2"
     static let objectUnmatchUrl = "object://test"
     static let loaderUrl = "app://loader"
@@ -400,9 +401,9 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func wildcardRouter(_ context: Router.Context) -> Any? {
+    class func wildcardTestRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
-        vc.rule = wildcardUrl
+        vc.rule = wildcardTestUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
@@ -541,9 +542,9 @@ class TestRouter: NSObject, AutoloadProtocol {
     static func registerRouters() {
         Router.registerClass(TestRouter.self)
         
-        Router.registerURL("wildcard://*") { context in
+        Router.registerURL(TestRouter.wildcardUrl) { context in
             let vc = TestRouterResultController()
-            vc.rule = "wildcard://*"
+            vc.rule = TestRouter.wildcardUrl
             vc.context = context
             Navigator.push(vc, animated: true)
             return nil
@@ -569,6 +570,12 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
     
     func setupNavbar() {
         navigationItem.title = rule ?? context?.url
+        
+        if app.isPresented {
+            app.setLeftBarItem(Icon.closeImage) { [weak self] _ in
+                self?.app.close()
+            }
+        }
         
         if context?.completion != nil {
             app.setRightBarItem("完成") { [weak self] _ in
