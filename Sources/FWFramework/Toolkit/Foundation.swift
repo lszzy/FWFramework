@@ -960,8 +960,8 @@ extension WrapperGlobal {
     }
     
     /// 快速创建NSAttributedString，自定义字体和颜色
-    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Self {
-        var attributes: [NSAttributedString.Key: Any] = [:]
+    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil, attributes: [NSAttributedString.Key : Any]? = nil) -> Self {
+        var attributes = attributes ?? [:]
         if let font = font {
             attributes[.font] = font
         }
@@ -972,7 +972,7 @@ extension WrapperGlobal {
     }
     
     /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
-    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> Self {
+    public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping, attributes: [NSAttributedString.Key : Any]? = nil) -> Self {
         let paragraphStyle = NSMutableParagraphStyle()
         if lineHeight > 0 {
             paragraphStyle.minimumLineHeight = lineHeight
@@ -981,7 +981,7 @@ extension WrapperGlobal {
         paragraphStyle.lineBreakMode = lineBreakMode
         paragraphStyle.alignment = textAlignment
         
-        var attributes: [NSAttributedString.Key: Any] = [:]
+        var attributes = attributes ?? [:]
         attributes[.paragraphStyle] = paragraphStyle
         if let font = font {
             attributes[.font] = font
