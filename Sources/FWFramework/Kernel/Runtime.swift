@@ -407,6 +407,12 @@ import FWObjC
         return boundObjects
     }
     
+    // MARK: - Hash
+    /// 获取当前对象的hashValue，等同于: ObjectIdentifier(self).hashValue
+    public var fw_hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    
     // MARK: - Mirror
     /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public var fw_mirrorDictionary: [String: Any] {
