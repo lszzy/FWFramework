@@ -46,7 +46,7 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 }
 
 /// 约定类
-public class Promise: NSObject {
+public class Promise {
     
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
@@ -155,7 +155,7 @@ extension Promise {
                 }, catch: { error in
                     completion(error)
                 }, progress: { value in
-                    progress[promise.hash] = value
+                    progress[ObjectIdentifier(promise).hashValue] = value
                     let sum = progress.values.reduce(0) { x, y in x + y }
                     completion(Progress(value: sum / Double(promises.count)))
                 })
@@ -177,7 +177,7 @@ extension Promise {
                         completion(error)
                     }
                 }, progress: { value in
-                    progress[promise.hash] = value
+                    progress[ObjectIdentifier(promise).hashValue] = value
                     completion(Progress(value: progress.values.max() ?? 0))
                 })
             }
@@ -194,7 +194,7 @@ extension Promise {
                 }, catch: { error in
                     completion(error)
                 }, progress: { value in
-                    progress[promise.hash] = value
+                    progress[ObjectIdentifier(promise).hashValue] = value
                     completion(Progress(value: progress.values.max() ?? 0))
                 })
             }
