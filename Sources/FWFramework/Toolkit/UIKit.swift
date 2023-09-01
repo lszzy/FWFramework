@@ -1201,7 +1201,7 @@ import AdSupport
                     }
                     if !NSEqualRanges(range, fullRange) { return }
                     for (attr, value) in attrs {
-                        if ObjCBridge.isEqual(prevTextAttributes[attr], with: value) {
+                        if String.fw_safeString(prevTextAttributes[attr]) == String.fw_safeString(value) {
                             removeAttributes.append(attr)
                         }
                     }

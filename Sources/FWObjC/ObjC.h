@@ -93,8 +93,6 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (void)logMessage:(NSString *)message;
 
-+ (BOOL)isEqual:(nullable id)obj1 withObject:(nullable id)obj2;
-
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
 
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;

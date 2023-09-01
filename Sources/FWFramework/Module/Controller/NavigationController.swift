@@ -465,8 +465,8 @@ import FWObjC
 @_spi(FW) extension UIViewController {
     
     /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
-    public var fw_barTransitionIdentifier: Any? {
-        get { return fw_property(forName: "fw_barTransitionIdentifier") }
+    public var fw_barTransitionIdentifier: AnyHashable? {
+        get { return fw_property(forName: "fw_barTransitionIdentifier") as? AnyHashable }
         set { fw_setProperty(newValue, forName: "fw_barTransitionIdentifier") }
     }
     
@@ -517,7 +517,7 @@ import FWObjC
         let fromIdentifier = from.fw_barTransitionIdentifier
         let toIdentifier = to.fw_barTransitionIdentifier
         if fromIdentifier != nil || toIdentifier != nil {
-            return !ObjCBridge.isEqual(fromIdentifier, with: toIdentifier)
+            return fromIdentifier != toIdentifier
         }
         return true
     }
