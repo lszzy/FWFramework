@@ -259,9 +259,8 @@ public class ViewControllerManager: NSObject {
         }}
         
         NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
-            // dealloc时不调用fw，防止释放时动态创建包装器对象
             let viewController = selfObject as? UIViewController
-            viewController?.fw_lifecycleState = .dealloc
+            viewController?.fw_lifecycleState = .didDeinit
             if let viewController = viewController, viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookDeinit(viewController)
             }

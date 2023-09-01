@@ -1771,14 +1771,14 @@ public enum ViewState: Equatable {
 // MARK: - UIViewController+Toolkit
 /// 视图控制器常用生命周期状态枚举
 public enum ViewControllerLifecycleState: Int {
-    case ready = 0
+    case didInit = 0
     case didLoad = 1
     case willAppear = 2
     case didLayoutSubviews = 3
     case didAppear = 4
     case willDisappear = 5
     case didDisappear = 6
-    case dealloc = 7
+    case didDeinit = 7
 }
 
 /// 为提升性能，触发lifecycleState改变等的swizzle代码统一放到了ViewController
@@ -1788,11 +1788,11 @@ public enum ViewControllerLifecycleState: Int {
         var block: ((UIViewController, ViewControllerLifecycleState) -> Void)?
     }
     
-    /// 当前生命周期状态，默认Ready
+    /// 当前生命周期状态，默认didInit
     public internal(set) var fw_lifecycleState: ViewControllerLifecycleState {
         get {
             let value = fw_propertyInt(forName: "fw_lifecycleState")
-            return .init(rawValue: value) ?? .ready
+            return .init(rawValue: value) ?? .didInit
         }
         set {
             let valueChanged = self.fw_lifecycleState != newValue
