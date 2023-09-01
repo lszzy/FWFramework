@@ -497,10 +497,6 @@
     NSLog(@"%@", message);
 }
 
-+ (BOOL)isEqual:(id)obj1 withObject:(id)obj2 {
-    return obj1 == obj2;
-}
-
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();

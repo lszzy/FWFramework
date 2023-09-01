@@ -41,7 +41,7 @@ extension Wrapper where Base: UINavigationController {
 extension Wrapper where Base: UIViewController {
     
     /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
-    public var barTransitionIdentifier: Any? {
+    public var barTransitionIdentifier: AnyHashable? {
         get { return base.fw_barTransitionIdentifier }
         set { base.fw_barTransitionIdentifier = newValue }
     }
