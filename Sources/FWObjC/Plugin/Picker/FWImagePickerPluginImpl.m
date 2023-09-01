@@ -309,9 +309,17 @@
                 }];
             };
             cropController.onDidFinishCancelled = ^(BOOL isFinished) {
-                [picker dismissViewControllerAnimated:YES completion:nil];
+                if (picker.navigationController) {
+                    [picker.navigationController popViewControllerAnimated:YES];
+                } else {
+                    [picker dismissViewControllerAnimated:YES completion:nil];
+                }
             };
-            [picker presentViewController:cropController animated:YES completion:nil];
+            if (picker.navigationController) {
+                [picker.navigationController pushViewController:cropController animated:YES];
+            } else {
+                [picker presentViewController:cropController animated:YES completion:nil];
+            }
         } else {
             [picker dismissViewControllerAnimated:YES completion:^{
                 if (completion) completion(nil, nil, YES);
@@ -448,6 +456,12 @@
     if (!pickerController) {
         if (completion) completion(@[], @[], YES);
         return;
+    }
+    
+    if (self.photoNavigationEnabled && ![pickerController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:pickerController];
+        navigationController.navigationBarHidden = YES;
+        pickerController = navigationController;
     }
     
     if (self.customBlock) self.customBlock(pickerController);
