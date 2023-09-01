@@ -29,10 +29,10 @@ NS_SWIFT_NAME(RefreshPlugin)
 - (void)setShouldRefreshing:(BOOL)shouldRefreshing scrollView:(UIScrollView *)scrollView;
 
 /// 配置下拉刷新句柄
-- (void)setRefreshingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView;
+- (void)setRefreshingBlock:(void (^)(void))block customBlock:(nullable void (^)(id))customBlock scrollView:(UIScrollView *)scrollView;
 
 /// 配置下拉刷新事件
-- (void)setRefreshingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView;
+- (void)setRefreshingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id))customBlock scrollView:(UIScrollView *)scrollView;
 
 /// 开始下拉刷新
 - (void)beginRefreshing:(UIScrollView *)scrollView;
@@ -58,10 +58,10 @@ NS_SWIFT_NAME(RefreshPlugin)
 - (void)setLoadingFinished:(BOOL)loadingFinished scrollView:(UIScrollView *)scrollView;
 
 /// 配置上拉追加句柄
-- (void)setLoadingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView;
+- (void)setLoadingBlock:(void (^)(void))block customBlock:(nullable void (^)(id))customBlock scrollView:(UIScrollView *)scrollView;
 
 /// 配置上拉追加事件
-- (void)setLoadingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView;
+- (void)setLoadingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id))customBlock scrollView:(UIScrollView *)scrollView;
 
 /// 开始上拉追加
 - (void)beginLoading:(UIScrollView *)scrollView;
@@ -88,10 +88,10 @@ NS_SWIFT_NAME(RefreshPlugin)
 @property (nonatomic, assign) BOOL fw_shouldRefreshing NS_REFINED_FOR_SWIFT;
 
 /// 配置下拉刷新句柄
-- (void)fw_setRefreshingBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
+- (void)fw_setRefreshingBlock:(void (^)(void))block customBlock:(nullable void (^)(id))customBlock NS_REFINED_FOR_SWIFT;
 
 /// 配置下拉刷新事件
-- (void)fw_setRefreshingTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
+- (void)fw_setRefreshingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id))customBlock NS_REFINED_FOR_SWIFT;
 
 /// 开始下拉刷新
 - (void)fw_beginRefreshing NS_REFINED_FOR_SWIFT;
@@ -114,10 +114,10 @@ NS_SWIFT_NAME(RefreshPlugin)
 @property (nonatomic, assign) BOOL fw_loadingFinished NS_REFINED_FOR_SWIFT;
 
 /// 配置上拉追加句柄
-- (void)fw_setLoadingBlock:(void (^)(void))block NS_REFINED_FOR_SWIFT;
+- (void)fw_setLoadingBlock:(void (^)(void))block customBlock:(nullable void (^)(id))customBlock NS_REFINED_FOR_SWIFT;
 
 /// 配置上拉追加事件
-- (void)fw_setLoadingTarget:(id)target action:(SEL)action NS_REFINED_FOR_SWIFT;
+- (void)fw_setLoadingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id))customBlock NS_REFINED_FOR_SWIFT;
 
 /// 开始上拉追加
 - (void)fw_beginLoading NS_REFINED_FOR_SWIFT;
