@@ -29,6 +29,7 @@ NS_SWIFT_NAME(PullRefreshView)
 @interface FWPullRefreshView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
+@property (nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) UIEdgeInsets originalInset;
 @property (nullable, nonatomic, strong) UIColor *arrowColor;
 @property (nullable, nonatomic, strong) UIColor *textColor;
@@ -69,7 +70,6 @@ NS_SWIFT_NAME(PullRefreshView)
 - (void)fw_triggerPullRefresh NS_REFINED_FOR_SWIFT;
 
 @property (nullable, nonatomic, strong, readonly) FWPullRefreshView *fw_pullRefreshView NS_REFINED_FOR_SWIFT;
-@property (nonatomic, assign) CGFloat fw_pullRefreshHeight NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_showPullRefresh NS_REFINED_FOR_SWIFT;
 
 @end
@@ -90,6 +90,7 @@ NS_SWIFT_NAME(InfiniteScrollView)
 @interface FWInfiniteScrollView : UIView
 
 @property (class, nonatomic, assign) CGFloat height;
+@property (nonatomic, assign) CGFloat height;
 @property (nonatomic, readwrite) BOOL enabled;
 @property (nonatomic, readwrite) UIEdgeInsets originalInset;
 @property (nonatomic, readwrite, assign) CGFloat preloadHeight;
@@ -132,7 +133,6 @@ NS_SWIFT_NAME(InfiniteScrollView)
 - (void)fw_reloadInfiniteScroll NS_REFINED_FOR_SWIFT;
 
 @property (nullable, nonatomic, strong, readonly) FWInfiniteScrollView *fw_infiniteScrollView NS_REFINED_FOR_SWIFT;
-@property (nonatomic, assign) CGFloat fw_infiniteScrollHeight NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_showInfiniteScroll NS_REFINED_FOR_SWIFT;
 @property (nonatomic, assign) BOOL fw_infiniteScrollFinished NS_REFINED_FOR_SWIFT;
 

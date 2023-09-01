@@ -120,11 +120,6 @@ extension Wrapper where Base: UIScrollView {
         return base.__fw_pullRefreshView
     }
     
-    public var pullRefreshHeight: CGFloat {
-        get { return base.__fw_pullRefreshHeight }
-        set { base.__fw_pullRefreshHeight = newValue }
-    }
-    
     public var showPullRefresh: Bool {
         get { return base.__fw_showPullRefresh }
         set { base.__fw_showPullRefresh = newValue }
@@ -144,11 +139,6 @@ extension Wrapper where Base: UIScrollView {
 
     public var infiniteScrollView: InfiniteScrollView? {
         return base.__fw_infiniteScrollView
-    }
-    
-    public var infiniteScrollHeight: CGFloat {
-        get { return base.__fw_infiniteScrollHeight }
-        set { base.__fw_infiniteScrollHeight = newValue }
     }
     
     public var showInfiniteScroll: Bool {
