@@ -473,9 +473,9 @@ typedef struct FWProxyBlock {
 - (BOOL)filterDelegates:(BOOL (NS_NOESCAPE ^)(id))filter
 {
     for (id delegate in self.delegates.allObjects) {
-        if (filter(delegate)) return YES;
+        if (!filter(delegate)) return NO;
     }
-    return NO;
+    return YES;
 }
 
 @end

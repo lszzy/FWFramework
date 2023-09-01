@@ -192,7 +192,7 @@ NS_SWIFT_NAME(MulticastDelegate)
 /// 调用所有delegates方法，忽略返回结果
 - (void)invokeDelegates:(void (NS_NOESCAPE ^)(T))block;
 
-/// 过滤并调用delegates代理方法，返回是否调用成功，调用成功时立即停止
+/// 过滤并调用delegates代理方法，返回是否继续执行，为false时立即停止执行
 - (BOOL)filterDelegates:(BOOL (NS_NOESCAPE ^)(T))filter;
 
 @end
