@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.17.0] - 2023-09-01
+
+### Added
+* Router routing supports *id format parameters
+* PopupMenu adds custom style attributes
+* NSAttributedString shortcut initialization method adds attributes parameter
+* Added layoutFrame calculation method for UICollectionView
+* RefreshPlugin adds a customBlock parameter, which needs to be adapted
+* RefreshView supports custom height, remove the original UIScrollView plug-in height setting, need to adapt
+* The picture selector adds a switch to enable the navigation bar property
+* Modify the filter method behavior of MulticastDelegate, need to adapt
+
 ## [4.16.2] - 2023-08-25
 
 ### Changed
