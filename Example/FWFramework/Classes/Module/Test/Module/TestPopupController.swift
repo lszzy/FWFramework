@@ -120,11 +120,13 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
             popupMenu.dismissOnSelected = true
             popupMenu.isShadowShowing = true
             popupMenu.delegate = self
-            popupMenu.cornerRadius = 8
-            popupMenu.type = .default
+            popupMenu.arrowHeight = 0
+            popupMenu.separatorColor = UIColor.red
+            popupMenu.separatorInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+            popupMenu.imageEdgeInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
+            popupMenu.titleEdgeInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0)
+            // popupMenu.tag = 100
             popupMenu.rectCorner = [.topLeft, .topRight]
-            popupMenu.tag = 100
-            popupMenu.tableView.separatorStyle = .singleLine
         }
     }
     
@@ -134,7 +136,8 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
             popupMenu.isShadowShowing = true
             popupMenu.delegate = self
             popupMenu.offset = 10
-            popupMenu.type = .dark
+            popupMenu.textColor = UIColor.lightGray
+            popupMenu.backColor = UIColor(red: 0.25, green: 0.27, blue: 0.29, alpha: 1)
             popupMenu.rectCorner = [.bottomLeft, .bottomRight]
         }
     }
