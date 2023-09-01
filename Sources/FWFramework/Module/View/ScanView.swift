@@ -591,6 +591,19 @@ open class ScanViewConfiguration: NSObject {
 /// 扫码视图
 open class ScanView: UIView {
     
+    private class Proxy: NSObject {
+        weak var target: ScanView?
+        
+        init(target: ScanView?) {
+            super.init()
+            self.target = target
+        }
+        
+        @objc func updateUI() {
+            target?.updateUI()
+        }
+    }
+    
     // MARK: - Accessor
     /// 当前配置
     open private(set) var configuration: ScanViewConfiguration = .init()
@@ -763,7 +776,7 @@ open class ScanView: UIView {
         
         contentView.addSubview(scanlineImgView)
         if displayLink == nil {
-            displayLink = CADisplayLink(target: WeakProxy(target: self), selector: #selector(updateUI))
+            displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
             displayLink?.add(to: .main, forMode: .common)
         }
     }
@@ -793,7 +806,7 @@ open class ScanView: UIView {
         scanlineImgView.frame = CGRect(x: x, y: y, width: w, height: h)
     }
     
-    @objc private func updateUI() {
+    private func updateUI() {
         var frame = scanlineImgView.frame
         let contentViewHeight = contentView.frame.height
         let scanlineY = scanlineImgView.frame.origin.y + (configuration.isFromTop ? 0 : scanlineImgView.frame.size.height)

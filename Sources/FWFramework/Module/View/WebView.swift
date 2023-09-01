@@ -443,7 +443,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     /// JS桥接消息对象
     public typealias Message = [String: Any]
     
-    private class LeakAvoider: NSObject, WKScriptMessageHandler {
+    private class Proxy: NSObject, WKScriptMessageHandler {
         weak var delegate: WKScriptMessageHandler?
         
         init(delegate: WKScriptMessageHandler) {
@@ -620,8 +620,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
     
     private func addScriptMessageHandlers() {
-        webView?.configuration.userContentController.add(LeakAvoider(delegate: self), name: iOS_Native_InjectJavascript)
-        webView?.configuration.userContentController.add(LeakAvoider(delegate: self), name: iOS_Native_FlushMessageQueue)
+        webView?.configuration.userContentController.add(Proxy(delegate: self), name: iOS_Native_InjectJavascript)
+        webView?.configuration.userContentController.add(Proxy(delegate: self), name: iOS_Native_FlushMessageQueue)
     }
     
     private func removeScriptMessageHandlers() {
