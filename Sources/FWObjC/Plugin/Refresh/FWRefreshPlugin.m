@@ -53,20 +53,20 @@
     [refreshPlugin setShouldRefreshing:shouldRefreshing scrollView:self];
 }
 
-- (void)fw_setRefreshingBlock:(void (^)(void))block {
+- (void)fw_setRefreshingBlock:(void (^)(void))block customBlock:(nullable void (^)(id _Nonnull))customBlock {
     id<FWRefreshPlugin> refreshPlugin = self.fw_refreshPlugin;
-    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setRefreshingBlock:scrollView:)]) {
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setRefreshingBlock:customBlock:scrollView:)]) {
         refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    [refreshPlugin setRefreshingBlock:block scrollView:self];
+    [refreshPlugin setRefreshingBlock:block customBlock:customBlock scrollView:self];
 }
 
-- (void)fw_setRefreshingTarget:(id)target action:(SEL)action {
+- (void)fw_setRefreshingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id _Nonnull))customBlock {
     id<FWRefreshPlugin> refreshPlugin = self.fw_refreshPlugin;
-    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setRefreshingTarget:action:scrollView:)]) {
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setRefreshingTarget:action:customBlock:scrollView:)]) {
         refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    [refreshPlugin setRefreshingTarget:target action:action scrollView:self];
+    [refreshPlugin setRefreshingTarget:target action:action customBlock:customBlock scrollView:self];
 }
 
 - (void)fw_beginRefreshing {
@@ -132,20 +132,20 @@
     [refreshPlugin setLoadingFinished:loadingFinished scrollView:self];
 }
 
-- (void)fw_setLoadingBlock:(void (^)(void))block {
+- (void)fw_setLoadingBlock:(void (^)(void))block customBlock:(nullable void (^)(id _Nonnull))customBlock {
     id<FWRefreshPlugin> refreshPlugin = self.fw_refreshPlugin;
-    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setLoadingBlock:scrollView:)]) {
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setLoadingBlock:customBlock:scrollView:)]) {
         refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    [refreshPlugin setLoadingBlock:block scrollView:self];
+    [refreshPlugin setLoadingBlock:block customBlock:customBlock scrollView:self];
 }
 
-- (void)fw_setLoadingTarget:(id)target action:(SEL)action {
+- (void)fw_setLoadingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id _Nonnull))customBlock {
     id<FWRefreshPlugin> refreshPlugin = self.fw_refreshPlugin;
-    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setLoadingTarget:action:scrollView:)]) {
+    if (!refreshPlugin || ![refreshPlugin respondsToSelector:@selector(setLoadingTarget:action:customBlock:scrollView:)]) {
         refreshPlugin = FWRefreshPluginImpl.sharedInstance;
     }
-    [refreshPlugin setLoadingTarget:target action:action scrollView:self];
+    [refreshPlugin setLoadingTarget:target action:action customBlock:customBlock scrollView:self];
 }
 
 - (void)fw_beginLoading {

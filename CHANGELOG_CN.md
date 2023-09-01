@@ -1,5 +1,17 @@
 # 更新日志
 
+## [4.17.0] - 2023-09-01
+
+### Added
+* Router路由支持*id格式参数
+* PopupMenu新增自定义样式属性
+* NSAttributedString快捷初始化方法新增attributes参数
+* UICollectionView新增layoutFrame计算方法
+* RefreshPlugin新增customBlock参数，需适配
+* RefreshView支持自定义height，去掉原UIScrollView插件高度设置，需适配
+* 图片选择器新增开启导航栏属性开关
+* 修改MulticastDelegate的filter方法行为，需适配
+
 ## [4.16.2] - 2023-08-25
 
 ### Changed

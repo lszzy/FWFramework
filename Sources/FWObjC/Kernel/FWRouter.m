@@ -461,7 +461,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     
     for (int i = 0; i < pattern.length; i++) {
         NSString *character = [NSString stringWithFormat:@"%c", [pattern characterAtIndex:i]];
-        if ([character isEqualToString:@":"]) {
+        if ([character isEqualToString:@":"] || [character isEqualToString:FWRouterWildcardCharacter]) {
             startIndexOfColon = i;
         }
         if ([FWRouterSpecialCharacters rangeOfString:character].location != NSNotFound && i > (startIndexOfColon + 1) && startIndexOfColon) {
@@ -494,7 +494,7 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
         }];
     } else if ([parameters isKindOfClass:[NSDictionary class]]) {
         [placeholders enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            id value = [parameters objectForKey:[obj stringByReplacingOccurrencesOfString:@":" withString:@""]];
+            id value = [parameters objectForKey:[[obj stringByReplacingOccurrencesOfString:@":" withString:@""] stringByReplacingOccurrencesOfString:FWRouterWildcardCharacter withString:@""]];
             if (value) {
                 parsedResult = [parsedResult stringByReplacingOccurrencesOfString:obj withString:[NSString stringWithFormat:@"%@", value]];
             }
@@ -588,7 +588,9 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
     
     BOOL wildcardMatched = NO;
     BOOL wildcardRoutes = NO;
+    NSInteger index = -1;
     for (NSString *pathComponent in pathComponents) {
+        index += 1;
         
         // 对 key 进行排序，这样可以把 * 放到最后
         NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch;
@@ -597,15 +599,37 @@ NSString *const FWRouterRewriteComponentFragmentKey = @"fragment";
         }];
         
         for (NSString *key in subRoutesKeys) {
-            if ([key isEqualToString:pathComponent] || [key isEqualToString:FWRouterWildcardCharacter]) {
+            if ([key isEqualToString:pathComponent] || [key hasPrefix:FWRouterWildcardCharacter]) {
                 wildcardMatched = YES;
-                wildcardRoutes = [key isEqualToString:FWRouterWildcardCharacter];
+                wildcardRoutes = [key hasPrefix:FWRouterWildcardCharacter];
                 subRoutes = subRoutes[key];
+                
+                if (wildcardRoutes && key.length > 1) {
+                    NSString *newKey = [key substringFromIndex:1];
+                    NSString *newPathComponent = pathComponent;
+                    if (index < (pathComponents.count - 1)) {
+                        newPathComponent = [[pathComponents subarrayWithRange:NSMakeRange(index, pathComponents.count - index)] componentsJoinedByString:@"/"];
+                    }
+                    // 再做一下特殊处理，比如 :id.html -> :id
+                    NSCharacterSet *specialCharactersSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+                    if ([key rangeOfCharacterFromSet:specialCharactersSet].location != NSNotFound) {
+                        NSCharacterSet *specialCharacterSet = [NSCharacterSet characterSetWithCharactersInString:FWRouterSpecialCharacters];
+                        NSRange range = [key rangeOfCharacterFromSet:specialCharacterSet];
+                        if (range.location != NSNotFound) {
+                            // 把 pathComponent 后面的部分也去掉
+                            newKey = [newKey substringToIndex:range.location - 1];
+                            NSString *suffixToStrip = [key substringFromIndex:range.location];
+                            newPathComponent = [newPathComponent stringByReplacingOccurrencesOfString:suffixToStrip withString:@""];
+                        }
+                    }
+                    parameters[newKey] = [newPathComponent stringByRemovingPercentEncoding];
+                }
                 break;
             } else if ([key hasPrefix:@":"]) {
                 wildcardMatched = YES;
                 wildcardRoutes = NO;
                 subRoutes = subRoutes[key];
+                
                 NSString *newKey = [key substringFromIndex:1];
                 NSString *newPathComponent = pathComponent;
                 // 再做一下特殊处理，比如 :id.html -> :id

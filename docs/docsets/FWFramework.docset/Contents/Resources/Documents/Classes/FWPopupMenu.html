@@ -17,7 +17,7 @@
     <a title="FWPopupMenu Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.16.2 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 4.17.0 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1579,9 +1579,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWPopupMenuPriorityDirection.html">FWPopupMenuPriorityDirection</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/FWPopupMenuType.html">FWPopupMenuType</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/FWPullRefreshState.html">FWPullRefreshState</a>
@@ -3629,9 +3626,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)FWPopupMenu(py)type"></a>
-                    <a name="//apple_ref/swift/Property/type" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)type">type</a>
+                    <a name="/c:objc(cs)FWPopupMenu(py)showsSeparator"></a>
+                    <a name="//apple_ref/swift/Property/showsSeparator" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)showsSeparator">showsSeparator</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3639,19 +3636,243 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置显示模式 自定义cell时忽略 Default is FWPopupMenuTypeDefault</p>
+                        <p>是否显示分割线，默认YES. 自定义cell时忽略</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/FWPopupMenuType.html">FWPopupMenuType</a></span> <span class="n">type</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">showsSeparator</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">PopupMenuType</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">showsSeparator</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)separatorHeight"></a>
+                    <a name="//apple_ref/swift/Property/separatorHeight" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)separatorHeight">separatorHeight</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义分割线高度，默认0.5. 自定义cell时忽略</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">separatorHeight</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">separatorHeight</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)separatorColor"></a>
+                    <a name="//apple_ref/swift/Property/separatorColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)separatorColor">separatorColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置分割线颜色，默认lightGrayColor. 自定义cell时忽略</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">separatorColor</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">separatorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)separatorInsets"></a>
+                    <a name="//apple_ref/swift/Property/separatorInsets" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)separatorInsets">separatorInsets</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置分割线偏移，默认zero. 自定义cell时忽略</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIEdgeInsets</span> <span class="n">separatorInsets</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">separatorInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)imageEdgeInsets"></a>
+                    <a name="//apple_ref/swift/Property/imageEdgeInsets" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)imageEdgeInsets">imageEdgeInsets</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义imageView的位置偏移，默认zero不生效. 自定义cell时忽略</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIEdgeInsets</span> <span class="n">imageEdgeInsets</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">imageEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)titleEdgeInsets"></a>
+                    <a name="//apple_ref/swift/Property/titleEdgeInsets" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)titleEdgeInsets">titleEdgeInsets</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义textLabel的位置偏移，默认zero不生效. 自定义cell时忽略</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIEdgeInsets</span> <span class="n">titleEdgeInsets</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">titleEdgeInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)didSelectItemBlock"></a>
+                    <a name="//apple_ref/swift/Property/didSelectItemBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)didSelectItemBlock">didSelectItemBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>点击事件回调句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSInteger</span><span class="p">)</span> <span class="n">didSelectItemBlock</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">didSelectItemBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)FWPopupMenu(py)customCellBlock"></a>
+                    <a name="//apple_ref/swift/Property/customCellBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)FWPopupMenu(py)customCellBlock">customCellBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义cell句柄，优先级低于delegate</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UITableViewCell</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="p">(</span><span class="o">^</span><span class="p">)</span> <span class="p">(</span><span class="n">FWPopupMenu</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">,</span> <span class="n">NSInteger</span><span class="p">)</span> <span class="n">customCellBlock</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">customCellBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">PopupMenu</span><span class="p">,</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span><span class="p">?)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -4001,7 +4222,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-08-25)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-01)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -34,14 +34,16 @@
     scrollView.fw_showPullRefresh = shouldRefreshing;
 }
 
-- (void)setRefreshingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
+- (void)setRefreshingBlock:(void (^)(void))block customBlock:(nullable void (^)(id _Nonnull))customBlock scrollView:(UIScrollView *)scrollView {
     [scrollView fw_addPullRefreshWithBlock:block];
     if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fw_pullRefreshView);
+    if (customBlock) customBlock(scrollView.fw_pullRefreshView);
 }
 
-- (void)setRefreshingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
+- (void)setRefreshingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id _Nonnull))customBlock scrollView:(UIScrollView *)scrollView {
     [scrollView fw_addPullRefreshWithTarget:target action:action];
     if (self.pullRefreshBlock) self.pullRefreshBlock(scrollView.fw_pullRefreshView);
+    if (customBlock) customBlock(scrollView.fw_pullRefreshView);
 }
 
 - (void)beginRefreshing:(UIScrollView *)scrollView {
@@ -74,14 +76,16 @@
     scrollView.fw_infiniteScrollFinished = loadingFinished;
 }
 
-- (void)setLoadingBlock:(void (^)(void))block scrollView:(UIScrollView *)scrollView {
+- (void)setLoadingBlock:(void (^)(void))block customBlock:(nullable void (^)(id _Nonnull))customBlock scrollView:(UIScrollView *)scrollView {
     [scrollView fw_addInfiniteScrollWithBlock:block];
     if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fw_infiniteScrollView);
+    if (customBlock) customBlock(scrollView.fw_infiniteScrollView);
 }
 
-- (void)setLoadingTarget:(id)target action:(SEL)action scrollView:(UIScrollView *)scrollView {
+- (void)setLoadingTarget:(id)target action:(SEL)action customBlock:(nullable void (^)(id _Nonnull))customBlock scrollView:(UIScrollView *)scrollView {
     [scrollView fw_addInfiniteScrollWithTarget:target action:action];
     if (self.infiniteScrollBlock) self.infiniteScrollBlock(scrollView.fw_infiniteScrollView);
+    if (customBlock) customBlock(scrollView.fw_infiniteScrollView);
 }
 
 - (void)beginLoading:(UIScrollView *)scrollView {

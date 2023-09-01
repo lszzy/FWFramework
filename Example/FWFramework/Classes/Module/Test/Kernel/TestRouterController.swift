@@ -71,6 +71,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
             ["打开Url", "onOpen"],
             ["中文Url", "onOpenChinese"],
             ["打开Url，通配符*", "onOpenWild"],
+            ["打开Url，*id", "onOpenWild2"],
             ["打开Url，协议", "onOpenController"],
             ["打开Url，支持回调", "onOpenCallback"],
             ["解析Url，获取Object", "onOpenObject"],
@@ -144,6 +145,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     
     func onOpenWild() {
         Router.openURL("wildcard://not_found?id=1#anchor")
+    }
+    
+    func onOpenWild2() {
+        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1"))
     }
     
     func onOpenController() {
@@ -307,6 +312,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     static let objectUrl = "object://test2"
     static let objectUnmatchUrl = "object://test"
     static let loaderUrl = "app://loader"
+    static let pageUrl = "app://page/*id"
     static let itemUrl = "app://shops/:id/items/:itemId"
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
@@ -324,6 +330,13 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     class func wildcardRouter(_ context: RouterContext) -> Any? {
+        let vc = TestRouterResultController()
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func pageRouter(_ context: RouterContext) -> Any? {
         let vc = TestRouterResultController()
         vc.context = context
         Navigator.push(vc, animated: true)
