@@ -94,15 +94,15 @@ public class MulticastDelegate<T> {
         }
     }
     
-    /// 过滤并调用delegates代理方法，返回是否调用成功，调用成功时立即停止
+    /// 过滤并调用delegates代理方法，返回是否继续执行，为false时立即停止执行
     @discardableResult
     public func filter(_ filter: (T) -> Bool) -> Bool {
         for delegate in delegates.allObjects {
-            if filter(delegate as! T) {
-                return true
+            if !filter(delegate as! T) {
+                return false
             }
         }
-        return false
+        return true
     }
     
 }
