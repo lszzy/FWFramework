@@ -570,13 +570,13 @@ extension Wrapper where Base: NSAttributedString {
     }
     
     /// 快速创建NSAttributedString，自定义字体和颜色
-    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil) -> Base {
-        return Base.__fw_attributedString(string, with: font, textColor: textColor)
+    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil, attributes: [NSAttributedString.Key : Any]? = nil) -> Base {
+        return Base.__fw_attributedString(string, with: font, textColor: textColor, attributes: attributes)
     }
     
     /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
-    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> Base {
-        return Base.__fw_attributedString(string, with: font, textColor: textColor, lineHeight: lineHeight, textAlignment: textAlignment, lineBreakMode: lineBreakMode)
+    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping, attributes: [NSAttributedString.Key : Any]? = nil) -> Base {
+        return Base.__fw_attributedString(string, with: font, textColor: textColor, lineHeight: lineHeight, textAlignment: textAlignment, lineBreakMode: lineBreakMode, attributes: attributes)
     }
     
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)

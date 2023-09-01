@@ -67,10 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font NS_REFINED_FOR_SWIFT;
 
 /// 快速创建NSAttributedString，自定义字体和颜色
-+ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor NS_REFINED_FOR_SWIFT;
++ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
 
 /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
-+ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor lineHeight:(CGFloat)lineHeight textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode NS_REFINED_FOR_SWIFT;
++ (instancetype)fw_attributedString:(NSString *)string withFont:(nullable UIFont *)font textColor:(nullable UIColor *)textColor lineHeight:(CGFloat)lineHeight textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
 
 /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
 + (nullable instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes NS_REFINED_FOR_SWIFT;
