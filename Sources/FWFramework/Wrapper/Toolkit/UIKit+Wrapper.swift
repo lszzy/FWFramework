@@ -1007,9 +1007,9 @@ extension Wrapper where Base: UICollectionView {
         base.fw_reloadDataWithoutAnimation()
     }
     
-    /// 计算指定indexPath的frame，可转换为指定视图坐标(如window)
-    public func layoutFrame(at indexPath: IndexPath, toView view: UIView? = nil) -> CGRect? {
-        return base.fw_layoutFrame(at: indexPath, toView: view)
+    /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
+    public func layoutFrame(at indexPath: IndexPath, to view: UIView?) -> CGRect? {
+        return base.fw_layoutFrame(at: indexPath, to: view)
     }
     
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView

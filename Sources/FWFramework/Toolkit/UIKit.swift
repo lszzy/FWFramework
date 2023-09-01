@@ -2887,15 +2887,13 @@ import AdSupport
         CATransaction.commit()
     }
     
-    /// 计算指定indexPath的frame，可转换为指定视图坐标(如window)
-    public func fw_layoutFrame(at indexPath: IndexPath, toView view: UIView? = nil) -> CGRect? {
+    /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
+    public func fw_layoutFrame(at indexPath: IndexPath, to view: UIView?) -> CGRect? {
         guard var layoutFrame = layoutAttributesForItem(at: indexPath)?.frame else {
             return nil
         }
         
-        if let view = view {
-            layoutFrame = convert(layoutFrame, to: view)
-        }
+        layoutFrame = convert(layoutFrame, to: view)
         return layoutFrame
     }
     
