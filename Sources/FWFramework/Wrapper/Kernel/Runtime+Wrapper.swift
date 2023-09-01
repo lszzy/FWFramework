@@ -124,127 +124,127 @@ extension Wrapper where Base: WrapperObject {
     }
     
     /// 读取关联属性
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func property(forName: String) -> Any? {
-        return base.fw_property(forName: forName)
+    public func property(forName name: String) -> Any? {
+        return base.fw_property(forName: name)
     }
     
     /// 读取Bool关联属性，默认false
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func propertyBool(forName: String) -> Bool {
-        return base.fw_propertyBool(forName: forName)
+    public func propertyBool(forName name: String) -> Bool {
+        return base.fw_propertyBool(forName: name)
     }
     
     /// 读取Int关联属性，默认0
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func propertyInt(forName: String) -> Int {
-        return base.fw_propertyInt(forName: forName)
+    public func propertyInt(forName name: String) -> Int {
+        return base.fw_propertyInt(forName: name)
     }
     
     /// 读取Double关联属性，默认0
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func propertyDouble(forName: String) -> Double {
-        return base.fw_propertyDouble(forName: forName)
+    public func propertyDouble(forName name: String) -> Double {
+        return base.fw_propertyDouble(forName: name)
     }
     
     /// 读取NSNumber关联属性，默认nil
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func propertyNumber(forName: String) -> NSNumber? {
-        return base.fw_propertyNumber(forName: forName)
+    public func propertyNumber(forName name: String) -> NSNumber? {
+        return base.fw_propertyNumber(forName: name)
     }
     
     /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
+    ///   - name: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public func setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        base.fw_setProperty(object, forName: forName, policy: policy)
+    public func setProperty(_ object: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        base.fw_setProperty(object, forName: name, policy: policy)
     }
     
     /// 设置拷贝关联属性，支持KVO
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyCopy(_ object: Any?, forName: String) {
-        base.fw_setPropertyCopy(object, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyCopy(_ object: Any?, forName name: String) {
+        base.fw_setPropertyCopy(object, forName: name)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyWeak(_ object: AnyObject?, forName: String) {
-        base.fw_setPropertyWeak(object, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyWeak(_ object: AnyObject?, forName name: String) {
+        base.fw_setPropertyWeak(object, forName: name)
     }
     
     /// 设置Bool关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyBool(_ value: Bool, forName: String) {
-        base.fw_setPropertyBool(value, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyBool(_ value: Bool, forName name: String) {
+        base.fw_setPropertyBool(value, forName: name)
     }
     
     /// 设置Int关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyInt(_ value: Int, forName: String) {
-        base.fw_setPropertyInt(value, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyInt(_ value: Int, forName name: String) {
+        base.fw_setPropertyInt(value, forName: name)
     }
     
     /// 设置Double关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyDouble(_ value: Double, forName: String) {
-        base.fw_setPropertyDouble(value, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyDouble(_ value: Double, forName name: String) {
+        base.fw_setPropertyDouble(value, forName: name)
     }
     
     /// 设置NSNumber关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func setPropertyNumber(_ value: NSNumber?, forName: String) {
-        base.fw_setPropertyNumber(value, forName: forName)
+    ///   - name: 属性名称
+    public func setPropertyNumber(_ value: NSNumber?, forName name: String) {
+        base.fw_setPropertyNumber(value, forName: name)
     }
     
     /// 读取类关联属性
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public static func property(forName: String) -> Any? {
-        return Base.fw_property(forName: forName)
+    public static func property(forName name: String) -> Any? {
+        return Base.fw_property(forName: name)
     }
     
     /// 设置类关联属性，可指定关联策略
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
+    ///   - name: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public static func setProperty(_ object: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        Base.fw_setProperty(object, forName: forName, policy: policy)
+    public static func setProperty(_ object: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        Base.fw_setProperty(object, forName: name, policy: policy)
     }
     
     /// 设置类拷贝关联属性
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
-    public static func setPropertyCopy(_ object: Any?, forName: String) {
-        Base.fw_setPropertyCopy(object, forName: forName)
+    ///   - name: 属性名称
+    public static func setPropertyCopy(_ object: Any?, forName name: String) {
+        Base.fw_setPropertyCopy(object, forName: name)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
     /// - Parameters:
     ///   - object: 属性值
-    ///   - forName: 属性名称
-    public static func setPropertyWeak(_ object: AnyObject?, forName: String) {
-        Base.fw_setPropertyWeak(object, forName: forName)
+    ///   - name: 属性名称
+    public static func setPropertyWeak(_ object: AnyObject?, forName name: String) {
+        Base.fw_setPropertyWeak(object, forName: name)
     }
     
     // MARK: - Bind
@@ -394,6 +394,17 @@ extension Wrapper where Base: NSObject {
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass) -> [String] {
         return Base.fw_classIvars(clazz)
+    }
+    
+    // MARK: - Property
+    /// 读取关联对象，key为字符串，一般可使用#function
+    public static func getAssociatedObject(_ object: Any, key: String) -> Any? {
+        return Base.fw_getAssociatedObject(object, key: key)
+    }
+    
+    /// 设置关联对象，key为字符串，一般可使用#function
+    public static func setAssociatedObject(_ object: Any, key: String, value: Any?, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        Base.fw_setAssociatedObject(object, key: key, value: value, policy: policy)
     }
     
     // MARK: - Mirror

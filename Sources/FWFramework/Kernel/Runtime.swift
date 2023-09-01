@@ -127,11 +127,10 @@ import FWObjC
     }
     
     /// 读取关联属性
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func fw_property(forName: String) -> Any? {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        let value = objc_getAssociatedObject(self, key)
+    public func fw_property(forName name: String) -> Any? {
+        let value = NSObject.fw_getAssociatedObject(self, key: name)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -139,34 +138,34 @@ import FWObjC
     }
     
     /// 读取Bool关联属性，默认false
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func fw_propertyBool(forName: String) -> Bool {
-        let number = fw_propertyNumber(forName: forName)
+    public func fw_propertyBool(forName name: String) -> Bool {
+        let number = fw_propertyNumber(forName: name)
         return number?.boolValue ?? false
     }
     
     /// 读取Int关联属性，默认0
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func fw_propertyInt(forName: String) -> Int {
-        let number = fw_propertyNumber(forName: forName)
+    public func fw_propertyInt(forName name: String) -> Int {
+        let number = fw_propertyNumber(forName: name)
         return number?.intValue ?? .zero
     }
     
     /// 读取Double关联属性，默认0
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func fw_propertyDouble(forName: String) -> Double {
-        let number = fw_propertyNumber(forName: forName)
+    public func fw_propertyDouble(forName name: String) -> Double {
+        let number = fw_propertyNumber(forName: name)
         return number?.doubleValue ?? .zero
     }
     
     /// 读取NSNumber关联属性，默认nil
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public func fw_propertyNumber(forName: String) -> NSNumber? {
-        if let number = fw_property(forName: forName) as? NSNumber {
+    public func fw_propertyNumber(forName name: String) -> NSNumber? {
+        if let number = fw_property(forName: name) as? NSNumber {
             return number
         }
         return nil
@@ -175,69 +174,65 @@ import FWObjC
     /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
+    ///   - name: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, value, policy)
+    public func fw_setProperty(_ value: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: value, policy: policy)
     }
     
     /// 设置拷贝关联属性，支持KVO
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    ///   - name: 属性名称
+    public func fw_setPropertyCopy(_ value: Any?, forName name: String) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, WeakObject(object: value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    ///   - name: 属性名称
+    public func fw_setPropertyWeak(_ value: AnyObject?, forName name: String) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     /// 设置Bool关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyBool(_ value: Bool, forName: String) {
-        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
+    ///   - name: 属性名称
+    public func fw_setPropertyBool(_ value: Bool, forName name: String) {
+        fw_setPropertyNumber(NSNumber(value: value), forName: name)
     }
     
     /// 设置Int关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyInt(_ value: Int, forName: String) {
-        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
+    ///   - name: 属性名称
+    public func fw_setPropertyInt(_ value: Int, forName name: String) {
+        fw_setPropertyNumber(NSNumber(value: value), forName: name)
     }
     
     /// 设置Double关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyDouble(_ value: Double, forName: String) {
-        fw_setPropertyNumber(NSNumber(value: value), forName: forName)
+    ///   - name: 属性名称
+    public func fw_setPropertyDouble(_ value: Double, forName name: String) {
+        fw_setPropertyNumber(NSNumber(value: value), forName: name)
     }
     
     /// 设置NSNumber关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public func fw_setPropertyNumber(_ value: NSNumber?, forName: String) {
-        fw_setProperty(value, forName: forName)
+    ///   - name: 属性名称
+    public func fw_setPropertyNumber(_ value: NSNumber?, forName name: String) {
+        fw_setProperty(value, forName: name)
     }
     
     /// 读取类关联属性
-    /// - Parameter forName: 属性名称
+    /// - Parameter name: 属性名称
     /// - Returns: 属性值
-    public static func fw_property(forName: String) -> Any? {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        let value = objc_getAssociatedObject(self, key)
+    public static func fw_property(forName name: String) -> Any? {
+        let value = NSObject.fw_getAssociatedObject(self, key: name)
         if let weakObject = value as? WeakObject {
             return weakObject.object
         }
@@ -247,29 +242,26 @@ import FWObjC
     /// 设置类关联属性，可指定关联策略
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
+    ///   - name: 属性名称
     ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public static func fw_setProperty(_ value: Any?, forName: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, value, policy)
+    public static func fw_setProperty(_ value: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: value, policy: policy)
     }
     
     /// 设置类拷贝关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public static func fw_setPropertyCopy(_ value: Any?, forName: String) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, value, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    ///   - name: 属性名称
+    public static func fw_setPropertyCopy(_ value: Any?, forName name: String) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     /// 设置类弱引用关联属性，OC不支持weak关联属性
     /// - Parameters:
     ///   - value: 属性值
-    ///   - forName: 属性名称
-    public static func fw_setPropertyWeak(_ value: AnyObject?, forName: String) {
-        let key = unsafeBitCast(Selector(forName), to: UnsafeRawPointer.self)
-        objc_setAssociatedObject(self, key, WeakObject(object: value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    ///   - name: 属性名称
+    public static func fw_setPropertyWeak(_ value: AnyObject?, forName name: String) {
+        NSObject.fw_setAssociatedObject(self, key: name, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     // MARK: - Bind
@@ -541,6 +533,19 @@ import FWObjC
     }
     
     private static var fw_classCaches: [String: [String]] = [:]
+    
+    // MARK: - Property
+    /// 读取关联对象，key为字符串，一般可使用#function
+    public static func fw_getAssociatedObject(_ object: Any, key: String) -> Any? {
+        let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
+        return objc_getAssociatedObject(object, pointer)
+    }
+    
+    /// 设置关联对象，key为字符串，一般可使用#function
+    public static func fw_setAssociatedObject(_ object: Any, key: String, value: Any?, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
+        objc_setAssociatedObject(object, pointer, value, policy)
+    }
     
     // MARK: - Mirror
     /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
