@@ -292,19 +292,23 @@ static CGFloat FWInfiniteScrollViewHeight = 60;
 #pragma mark - Scroll View
 
 - (void)resetScrollViewContentInset {
+    [self resetScrollViewContentInsetAnimated:YES];
+}
+
+- (void)resetScrollViewContentInsetAnimated:(BOOL)animated {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = self.originalInset.top;
-    [self setScrollViewContentInset:currentInsets pullingPercent:0];
+    [self setScrollViewContentInset:currentInsets pullingPercent:0 animated:animated];
 }
 
 - (void)setScrollViewContentInsetForLoading {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.top = self.originalInset.top + self.bounds.size.height;
-    [self setScrollViewContentInset:currentInsets pullingPercent:1];
+    [self setScrollViewContentInset:currentInsets pullingPercent:1 animated:YES];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent {
-    [UIView animateWithDuration:0.3
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset pullingPercent:(CGFloat)pullingPercent animated:(BOOL)animated {
+    [UIView animateWithDuration:animated ? 0.3 : 0
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
@@ -683,7 +687,7 @@ static char UIScrollViewFWPullRefreshView;
             [self removeObserver:self.fw_pullRefreshView forKeyPath:@"contentSize"];
             [self removeObserver:self.fw_pullRefreshView forKeyPath:@"frame"];
             [self.panGestureRecognizer fw_unobserveProperty:@"state" target:self.fw_pullRefreshView action:@selector(gestureRecognizer:stateChanged:)];
-            [self.fw_pullRefreshView resetScrollViewContentInset];
+            [self.fw_pullRefreshView resetScrollViewContentInsetAnimated:NO];
             self.fw_pullRefreshView.isObserving = NO;
         }
     }
@@ -776,20 +780,28 @@ static char UIScrollViewFWPullRefreshView;
 #pragma mark - Scroll View
 
 - (void)resetScrollViewContentInset {
+    [self resetScrollViewContentInsetAnimated:YES];
+}
+
+- (void)resetScrollViewContentInsetAnimated:(BOOL)animated {
     UIEdgeInsets currentInsets = self.scrollView.contentInset;
     currentInsets.bottom = self.originalInset.bottom;
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInset:currentInsets animated:animated];
 }
 
 - (void)setScrollViewContentInsetForInfiniteScrolling {
-    UIEdgeInsets currentInsets = self.scrollView.contentInset;
-    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight;
-    [self setScrollViewContentInset:currentInsets];
+    [self setScrollViewContentInsetForInfiniteScrollingAnimated:YES];
 }
 
-- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset {
+- (void)setScrollViewContentInsetForInfiniteScrollingAnimated:(BOOL)animated {
+    UIEdgeInsets currentInsets = self.scrollView.contentInset;
+    currentInsets.bottom = self.originalInset.bottom + self.scrollView.fw_infiniteScrollHeight;
+    [self setScrollViewContentInset:currentInsets animated:animated];
+}
+
+- (void)setScrollViewContentInset:(UIEdgeInsets)contentInset animated:(BOOL)animated {
     if (UIEdgeInsetsEqualToEdgeInsets(contentInset, self.scrollView.contentInset)) return;
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:animated ? 0.3 : 0
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
@@ -1151,7 +1163,7 @@ static char UIScrollViewFWInfiniteScrollView;
             [self removeObserver:self.fw_infiniteScrollView forKeyPath:@"contentOffset"];
             [self removeObserver:self.fw_infiniteScrollView forKeyPath:@"contentSize"];
             [self.panGestureRecognizer fw_unobserveProperty:@"state" target:self.fw_infiniteScrollView action:@selector(gestureRecognizer:stateChanged:)];
-            [self.fw_infiniteScrollView resetScrollViewContentInset];
+            [self.fw_infiniteScrollView resetScrollViewContentInsetAnimated:NO];
             self.fw_infiniteScrollView.isObserving = NO;
         }
     }
@@ -1160,7 +1172,7 @@ static char UIScrollViewFWInfiniteScrollView;
             [self addObserver:self.fw_infiniteScrollView forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
             [self addObserver:self.fw_infiniteScrollView forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
             [self.panGestureRecognizer fw_observeProperty:@"state" target:self.fw_infiniteScrollView action:@selector(gestureRecognizer:stateChanged:)];
-            [self.fw_infiniteScrollView setScrollViewContentInsetForInfiniteScrolling];
+            [self.fw_infiniteScrollView setScrollViewContentInsetForInfiniteScrollingAnimated:NO];
             self.fw_infiniteScrollView.isObserving = YES;
             
             [self.fw_infiniteScrollView setNeedsLayout];
