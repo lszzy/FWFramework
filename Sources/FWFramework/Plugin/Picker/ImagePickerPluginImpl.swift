@@ -64,9 +64,9 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             usePhotoPicker = !photoPickerDisabled
         }
         if usePhotoPicker {
-            if cropControllerEnabled, filterType == .image, selectionLimit == 1, allowsEditing {
-                pickerController = PHPhotoLibrary.fw_pickerController(cropController: cropControllerBlock, completion: { image, result, cancel in
-                    completion(image != nil ? [image!] : [], result != nil ? [result!] : [], cancel)
+            if cropControllerEnabled, filterType == .image, allowsEditing {
+                pickerController = PHPhotoLibrary.fw_pickerController(selectionLimit: selectionLimit, cropController: cropControllerBlock, completion: { images, results, cancel in
+                    completion(images, results, cancel)
                 })
             } else {
                 pickerController = PHPhotoLibrary.fw_pickerController(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, objects, results, cancel in

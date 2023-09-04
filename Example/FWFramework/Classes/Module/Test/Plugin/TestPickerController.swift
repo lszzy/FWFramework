@@ -10,16 +10,7 @@ import FWFramework
 
 class TestPickerController: UIViewController, TableViewControllerProtocol {
     
-    static var isInitialized = false
-    
     private var livePhotoResources: LivePhoto.LivePhotoResources?
-    
-    func didInitialize() {
-        if Self.isInitialized { return }
-        Self.isInitialized = true
-        
-        setupPlugin()
-    }
     
     func setupPlugin() {
         PluginManager.registerPlugin(ImagePickerPlugin.self, object: ImagePickerControllerImpl.self)
