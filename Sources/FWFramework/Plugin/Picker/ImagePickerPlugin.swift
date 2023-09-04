@@ -249,17 +249,20 @@ import FWObjC
     }
 
     /**
-     快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+     快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
      
+     @param selectionLimit 最大选择数量，iOS14以下只支持单选
      @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-     @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+     @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func fw_pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, Any?, Bool) -> Void) -> UIViewController? {
+    public static func fw_pickerController(selectionLimit: Int, cropController: ((UIImage) -> ImageCropController)?, completion: @escaping ([UIImage], [Any], Bool) -> Void) -> UIViewController? {
         if #available(iOS 14.0, *) {
-            return PHPickerViewController.fw_pickerController(cropController: cropController, completion: completion)
+            return PHPickerViewController.fw_pickerController(selectionLimit: selectionLimit, cropController: cropController, completion: completion)
         } else {
-            return UIImagePickerController.fw_pickerController(sourceType: .photoLibrary, cropController: cropController, completion: completion)
+            return UIImagePickerController.fw_pickerController(sourceType: .photoLibrary, cropController: cropController) { image, result, cancel in
+                completion(image != nil ? [image!] : [], result != nil ? [result!] : [], cancel)
+            }
         }
     }
     
@@ -626,7 +629,7 @@ import FWObjC
                             }
                         }
                     }
-                    return
+                    continue
                 }
                 
                 // completionHandler完成后，临时文件url会被系统删除，所以在此期间移动临时文件到FWImagePicker目录
@@ -713,15 +716,16 @@ import FWObjC
     }
 
     /**
-     快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+     快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
      
+     @param selectionLimit 最大选择数量
      @param cropControllerBlock 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-     @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+     @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func fw_pickerController(cropController cropControllerBlock: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, PHPickerResult?, Bool) -> Void) -> PHPickerViewController {
-        let pickerController = PHPickerViewController.fw_pickerController(filterType: .image, selectionLimit: 1, shouldDismiss: false) { picker, objects, results, cancel in
-            if let originalImage = objects.first as? UIImage {
+    public static func fw_pickerController(selectionLimit: Int, cropController cropControllerBlock: ((UIImage) -> ImageCropController)?, completion: @escaping ([UIImage], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+        let pickerController = PHPickerViewController.fw_pickerController(filterType: .image, selectionLimit: selectionLimit, shouldDismiss: false) { picker, objects, results, cancel in
+            if objects.count == 1, let originalImage = objects.first as? UIImage {
                 var cropController: ImageCropController
                 if let cropControllerBlock = cropControllerBlock {
                     cropController = cropControllerBlock(originalImage)
@@ -734,7 +738,7 @@ import FWObjC
                 }
                 cropController.onDidCropToRect = { image, cropRect, angle in
                     picker?.presentingViewController?.dismiss(animated: true, completion: {
-                        completion(image, results.first, false)
+                        completion([image], results, false)
                     })
                 }
                 cropController.onDidFinishCancelled = { _ in
@@ -751,7 +755,7 @@ import FWObjC
                 }
             } else {
                 picker?.dismiss(animated: true, completion: {
-                    completion(nil, nil, true)
+                    completion(objects as? [UIImage] ?? [], results, cancel)
                 })
             }
         }
