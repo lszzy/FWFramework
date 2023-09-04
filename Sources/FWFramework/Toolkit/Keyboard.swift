@@ -31,6 +31,8 @@ import FWObjC
         
         var keyboardDistance: CGFloat = 10
         
+        var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
+        
         var reboundDistance: CGFloat = 0
         
         var keyboardResign = false {
@@ -198,7 +200,8 @@ import FWObjC
                 let convertView = textInput.window ?? viewController.view.window
                 let convertRect = textInput.convert(textInput.bounds, to: convertView)
                 var contentOffset = scrollView.contentOffset
-                var targetOffsetY = max(contentOffset.y + keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), KeyboardConfig.keyboardOffset)
+                let textInputOffset = keyboardDistanceBlock?(keyboardRect.height, convertRect.height) ?? keyboardDistance
+                var targetOffsetY = max(contentOffset.y + textInputOffset + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), KeyboardConfig.keyboardOffset)
                 if reboundDistance > 0 && targetOffsetY < contentOffset.y {
                     targetOffsetY = (targetOffsetY + reboundDistance >= contentOffset.y) ? contentOffset.y : targetOffsetY + reboundDistance
                 }
@@ -218,7 +221,8 @@ import FWObjC
             let convertView = textInput.window ?? viewController.view.window
             let convertRect = textInput.convert(textInput.bounds, to: convertView)
             var viewFrame = viewController.view.frame
-            var viewTargetY = min(viewFrame.origin.y - keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), KeyboardConfig.keyboardOrigin)
+            let textInputOffset = keyboardDistanceBlock?(keyboardRect.height, convertRect.height) ?? keyboardDistance
+            var viewTargetY = min(viewFrame.origin.y - textInputOffset + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), KeyboardConfig.keyboardOrigin)
             if reboundDistance > 0 && viewTargetY > viewFrame.origin.y {
                 viewTargetY = (viewTargetY - reboundDistance <= viewFrame.origin.y) ? viewFrame.origin.y : viewTargetY - reboundDistance
             }
@@ -417,6 +421,12 @@ import FWObjC
     @objc dynamic public var fw_keyboardDistance: CGFloat {
         get { return self.fw_keyboardTarget.keyboardDistance }
         set { self.fw_keyboardTarget.keyboardDistance = newValue }
+    }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    @objc dynamic public var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return self.fw_keyboardTarget.keyboardDistanceBlock }
+        set { self.fw_keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
@@ -641,6 +651,12 @@ import FWObjC
     @objc dynamic public var fw_keyboardDistance: CGFloat {
         get { return self.fw_keyboardTarget.keyboardDistance }
         set { self.fw_keyboardTarget.keyboardDistance = newValue }
+    }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    @objc dynamic public var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return self.fw_keyboardTarget.keyboardDistanceBlock }
+        set { self.fw_keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹

@@ -22,6 +22,12 @@ extension Wrapper where Base: UITextField {
         get { return base.fw_keyboardDistance }
         set { base.fw_keyboardDistance = newValue }
     }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return base.fw_keyboardDistanceBlock }
+        set { base.fw_keyboardDistanceBlock = newValue }
+    }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var reboundDistance: CGFloat {
@@ -169,6 +175,12 @@ extension Wrapper where Base: UITextView {
     public var keyboardDistance: CGFloat {
         get { return base.fw_keyboardDistance }
         set { base.fw_keyboardDistance = newValue }
+    }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return base.fw_keyboardDistanceBlock }
+        set { base.fw_keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
