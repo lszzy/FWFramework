@@ -367,7 +367,7 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 - (nullable UIImage *)fw_imageWithFilter:(CIFilter *)filter NS_REFINED_FOR_SWIFT;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-- (nullable UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength NS_REFINED_FOR_SWIFT;
+- (nullable UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio NS_REFINED_FOR_SWIFT;
 
 /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
 - (nullable NSData *)fw_compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio NS_REFINED_FOR_SWIFT;
@@ -377,6 +377,12 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 
 /// 通过指定图片最长边，获取等比例的图片size
 - (CGSize)fw_scaleSizeWithMaxWidth:(CGFloat)maxWidth NS_REFINED_FOR_SWIFT;
+
+/// 后台线程压缩图片，完成后主线程回调
++ (void)fw_compressImages:(NSArray<UIImage *> *)images maxWidth:(CGFloat)maxWidth maxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio completion:(void (^)(NSArray<UIImage *> *images))completion NS_REFINED_FOR_SWIFT;
+
+/// 后台线程压缩图片数据，完成后主线程回调
++ (void)fw_compressDatas:(NSArray<UIImage *> *)images maxWidth:(CGFloat)maxWidth maxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio completion:(void (^)(NSArray<NSData *> *datas))completion NS_REFINED_FOR_SWIFT;
 
 /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
 @property (nonatomic, readonly) UIImage *fw_originalImage NS_REFINED_FOR_SWIFT;
