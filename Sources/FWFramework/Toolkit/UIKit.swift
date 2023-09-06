@@ -2356,7 +2356,7 @@ import AdSupport
         set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
-    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
         get {
             if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
@@ -2431,8 +2431,8 @@ import AdSupport
             guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
             if rect.size.width != 0 { caretRect.size.width = rect.size.width }
             if rect.size.height != 0 { caretRect.size.height = rect.size.height }
             return caretRect
@@ -2505,7 +2505,7 @@ import AdSupport
         set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
-    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
         get {
             if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
@@ -2607,8 +2607,8 @@ import AdSupport
             guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x = rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y = rect.origin.y }
+            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
             if rect.size.width != 0 { caretRect.size.width = rect.size.width }
             if rect.size.height != 0 { caretRect.size.height = rect.size.height }
             return caretRect
