@@ -94,14 +94,15 @@ extension Wrapper where Base: PHPhotoLibrary {
     }
 
     /**
-     快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+     快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
      
+     @param selectionLimit 最大选择数量，iOS14以下只支持单选
      @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-     @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+     @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, Any?, Bool) -> Void) -> UIViewController? {
-        return Base.__fw_pickerController(cropController: cropController, completion: completion)
+    public static func pickerController(selectionLimit: Int, cropController: ((UIImage) -> ImageCropController)?, completion: @escaping ([UIImage], [Any], Bool) -> Void) -> UIViewController? {
+        return Base.__fw_pickerController(withSelectionLimit: selectionLimit, cropController: cropController, completion: completion)
     }
     
 }
@@ -291,14 +292,15 @@ extension Wrapper where Base: PHPickerViewController {
     }
 
     /**
-     快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+     快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
      
+     @param selectionLimit 最大选择数量
      @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-     @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+     @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(cropController: ((UIImage) -> ImageCropController)?, completion: @escaping (UIImage?, __PHPickerResult?, Bool) -> Void) -> PHPickerViewController {
-        return Base.__fw_pickerController(cropController: cropController, completion: completion)
+    public static func pickerController(selectionLimit: Int, cropController: ((UIImage) -> ImageCropController)?, completion: @escaping ([UIImage], [__PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+        return Base.__fw_pickerController(withSelectionLimit: selectionLimit, cropController: cropController, completion: completion)
     }
     
 }
