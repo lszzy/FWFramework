@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置输入框和键盘的空白间距，默认10.0
 @property (nonatomic, assign) CGFloat fw_keyboardDistance UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
 
+/// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+@property (nonatomic, copy, nullable) CGFloat (^fw_keyboardDistanceBlock)(CGFloat keyboardHeight, CGFloat height) UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
+
 /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
 @property (nonatomic, assign) CGFloat fw_reboundDistance UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
 
@@ -115,6 +118,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置输入框和键盘的空白高度，默认10.0
 @property (nonatomic, assign) CGFloat fw_keyboardDistance UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
+
+/// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+@property (nonatomic, copy, nullable) CGFloat (^fw_keyboardDistanceBlock)(CGFloat keyboardHeight, CGFloat height) UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
 
 /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
 @property (nonatomic, assign) CGFloat fw_reboundDistance UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
