@@ -973,16 +973,8 @@ extension WrapperGlobal {
     
     /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
     public static func fw_attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping, attributes: [NSAttributedString.Key : Any]? = nil) -> Self {
-        let paragraphStyle = NSMutableParagraphStyle()
-        if lineHeight > 0 {
-            paragraphStyle.minimumLineHeight = lineHeight
-            paragraphStyle.maximumLineHeight = lineHeight
-        }
-        paragraphStyle.lineBreakMode = lineBreakMode
-        paragraphStyle.alignment = textAlignment
-        
         var attributes = attributes ?? [:]
-        attributes[.paragraphStyle] = paragraphStyle
+        attributes[.paragraphStyle] = fw_paragraphStyle(lineHeight: lineHeight, textAlignment: textAlignment, lineBreakMode: lineBreakMode)
         if let font = font {
             attributes[.font] = font
             if lineHeight > 0 {
@@ -993,6 +985,18 @@ extension WrapperGlobal {
             attributes[.foregroundColor] = textColor
         }
         return Self(string: string, attributes: attributes)
+    }
+    
+    /// 快速创建指定行高、对齐方式和换行模式的段落样式对象
+    public static func fw_paragraphStyle(lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> NSMutableParagraphStyle {
+        let paragraphStyle = NSMutableParagraphStyle()
+        if lineHeight > 0 {
+            paragraphStyle.minimumLineHeight = lineHeight
+            paragraphStyle.maximumLineHeight = lineHeight
+        }
+        paragraphStyle.lineBreakMode = lineBreakMode
+        paragraphStyle.alignment = textAlignment
+        return paragraphStyle
     }
     
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
