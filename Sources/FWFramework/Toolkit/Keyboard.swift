@@ -356,6 +356,12 @@ extension Wrapper where Base: UITextView {
         get { return base.__fw_verticalAlignment }
         set { base.__fw_verticalAlignment = newValue }
     }
+    
+    /// 快捷设置行高，兼容placeholder和typingAttributes
+    public var lineHeight: CGFloat {
+        get { return base.__fw_lineHeight }
+        set { base.__fw_lineHeight = newValue }
+    }
 
     /// 是否启用自动高度功能，随文字改变高度
     public var autoHeightEnabled: Bool {
