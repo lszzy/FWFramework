@@ -547,12 +547,12 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-    public func compressImage(maxLength: Int) -> UIImage? {
-        return base.__fw_compressImage(withMaxLength: maxLength)
+    public func compressImage(maxLength: Int, compressRatio: CGFloat = 0) -> UIImage? {
+        return base.__fw_compressImage(withMaxLength: maxLength, compressRatio: compressRatio)
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
-    public func compressData(maxLength: Int, compressRatio: CGFloat) -> Data? {
+    public func compressData(maxLength: Int, compressRatio: CGFloat = 0) -> Data? {
         return base.__fw_compressData(withMaxLength: maxLength, compressRatio: compressRatio)
     }
 
@@ -564,6 +564,16 @@ extension Wrapper where Base: UIImage {
     /// 通过指定图片最长边，获取等比例的图片size
     public func scaleSize(maxWidth: CGFloat) -> CGSize {
         return base.__fw_scaleSize(withMaxWidth: maxWidth)
+    }
+    
+    /// 后台线程压缩图片，完成后主线程回调
+    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([UIImage]) -> Void) {
+        Base.__fw_compressImages(images, maxWidth: maxWidth, maxLength: maxLength, compressRatio: compressRatio, completion: completion)
+    }
+
+    /// 后台线程压缩图片数据，完成后主线程回调
+    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([Data]) -> Void) {
+        Base.__fw_compressDatas(images, maxWidth: maxWidth, maxLength: maxLength, compressRatio: compressRatio, completion: completion)
     }
 
     /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
