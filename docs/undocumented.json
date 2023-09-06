@@ -2543,7 +2543,7 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/ImagePickerPlugin.swift",
-      "line": 111,
+      "line": 112,
       "symbol": "Wrapper.croppedImage(frame:angle:circularClip:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -6904,28 +6904,28 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 712,
+      "line": 722,
       "symbol": "ViewState.ready",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 713,
+      "line": 723,
       "symbol": "ViewState.loading",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 714,
+      "line": 724,
       "symbol": "ViewState.success(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 715,
+      "line": 725,
       "symbol": "ViewState.failure(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -12028,77 +12028,77 @@
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 82,
+      "line": 85,
       "symbol": "NSAttributedString(FWFoundation).+fw_CSSStringWithColor:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 85,
+      "line": 88,
       "symbol": "NSAttributedString(FWFoundation).+fw_CSSStringWithFont:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 91,
+      "line": 94,
       "symbol": "NSData(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 149,
+      "line": 152,
       "symbol": "NSDate(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 194,
+      "line": 197,
       "symbol": "NSNumber(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 215,
+      "line": 218,
       "symbol": "NSDictionary(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 230,
+      "line": 233,
       "symbol": "NSObject(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 281,
+      "line": 284,
       "symbol": "NSString(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 434,
+      "line": 437,
       "symbol": "NSFileManager(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 470,
+      "line": 473,
       "symbol": "NSURL(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWFoundation.h",
-      "line": 543,
+      "line": 546,
       "symbol": "NSUserDefaults(FWFoundation)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -12966,7 +12966,7 @@
     },
     {
       "file": "docs/FWFramework/FWImagePickerPluginImpl.h",
-      "line": 106,
+      "line": 107,
       "symbol": "PHPhotoLibrary(FWImagePickerPluginImpl)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -17124,14 +17124,14 @@
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 487,
+      "line": 493,
       "symbol": "UIView(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWToolkit.h",
-      "line": 545,
+      "line": 551,
       "symbol": "UIViewController(FWToolkit)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"

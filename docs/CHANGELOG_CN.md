@@ -1,5 +1,16 @@
 # 更新日志
 
+## [4.17.1] - 2023-09-06
+
+### Changed
+* 键盘管理新增keyboardDistanceBlock自定义句柄
+* 新增后台批量压缩图片处理方法
+* 系统图片选择器选择单张图片时支持自定义裁剪
+* 优化系统图片选择器处理图片完成后才关闭界面并回调
+* 新增快捷创建NSParagraphStyle方法
+* UITextView新增快捷设置lineHeight方法
+* 修改cursorRect的origin含义为偏移量
+
 ## [4.17.0] - 2023-09-01
 
 ### Added
