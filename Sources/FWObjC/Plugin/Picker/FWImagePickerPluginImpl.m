@@ -17,6 +17,7 @@
 
 @property (nonatomic, assign) FWImagePickerFilterType filterType;
 @property (nonatomic, assign) BOOL shouldDismiss;
+@property (nonatomic, assign) BOOL isDismissed;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
 @property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
@@ -67,11 +68,16 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
+    if (self.isDismissed) return;
+    
     FWImagePickerFilterType filterType = self.filterType;
     void (^completion)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
     if (self.shouldDismiss) {
-        [picker dismissViewControllerAnimated:YES completion:^{
-            [FWImagePickerControllerDelegate picker:nil didFinishPicking:results filterType:filterType completion:completion];
+        self.isDismissed = YES;
+        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:^(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
+            [picker dismissViewControllerAnimated:YES completion:^{
+                if (completion) completion(nil, objects, results, cancel);
+            }];
         }];
     } else {
         [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:completion];
@@ -80,7 +86,6 @@
 
 + (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results filterType:(FWImagePickerFilterType)filterType completion:(void (^)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel))completion API_AVAILABLE(ios(14))
 {
-    if (!completion) return;
     if (results.count < 1) {
         completion(picker, @[], results, YES);
         return;
