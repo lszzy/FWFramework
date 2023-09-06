@@ -24,6 +24,7 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 
 @property (nonatomic, assign) BOOL keyboardManager;
 @property (nonatomic, assign) CGFloat keyboardDistance;
+@property (nonatomic, copy) CGFloat (^keyboardDistanceBlock)(CGFloat keyboardHeight, CGFloat height);
 @property (nonatomic, assign) CGFloat reboundDistance;
 @property (nonatomic, assign) BOOL keyboardResign;
 @property (nonatomic, assign) BOOL touchResign;
@@ -214,7 +215,8 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
         UIView *convertView = self.textInput.window ?: self.viewController.view.window;
         CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
         CGPoint contentOffset = self.scrollView.contentOffset;
-        CGFloat targetOffsetY = MAX(contentOffset.y + self.keyboardDistance + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
+        CGFloat textInputOffset = self.keyboardDistanceBlock ? self.keyboardDistanceBlock(keyboardRect.size.height, convertRect.size.height) : self.keyboardDistance;
+        CGFloat targetOffsetY = MAX(contentOffset.y + textInputOffset + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), fwStaticKeyboardOffset);
         if (self.reboundDistance > 0 && targetOffsetY < contentOffset.y) {
             targetOffsetY = (targetOffsetY + self.reboundDistance >= contentOffset.y) ? contentOffset.y : targetOffsetY + self.reboundDistance;
         }
@@ -238,7 +240,8 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     UIView *convertView = self.textInput.window ?: self.viewController.view.window;
     CGRect convertRect = [self.textInput convertRect:self.textInput.bounds toView:convertView];
     CGRect viewFrame = self.viewController.view.frame;
-    CGFloat viewTargetY = MIN(viewFrame.origin.y - self.keyboardDistance + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
+    CGFloat textInputOffset = self.keyboardDistanceBlock ? self.keyboardDistanceBlock(keyboardRect.size.height, convertRect.size.height) : self.keyboardDistance;
+    CGFloat viewTargetY = MIN(viewFrame.origin.y - textInputOffset + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), fwStaticKeyboardOrigin);
     if (self.reboundDistance > 0 && viewTargetY > viewFrame.origin.y) {
         viewTargetY = (viewTargetY - self.reboundDistance <= viewFrame.origin.y) ? viewFrame.origin.y : viewTargetY - self.reboundDistance;
     }
@@ -537,6 +540,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     self.fw_innerKeyboardTarget.keyboardDistance = keyboardDistance;
 }
 
+- (CGFloat (^)(CGFloat, CGFloat))fw_keyboardDistanceBlock
+{
+    return self.fw_innerKeyboardTarget.keyboardDistanceBlock;
+}
+
+- (void)setFw_keyboardDistanceBlock:(CGFloat (^)(CGFloat, CGFloat))keyboardDistanceBlock
+{
+    self.fw_innerKeyboardTarget.keyboardDistanceBlock = keyboardDistanceBlock;
+}
+
 - (CGFloat)fw_reboundDistance
 {
     return self.fw_innerKeyboardTarget.reboundDistance;
@@ -776,6 +789,16 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 - (void)setFw_keyboardDistance:(CGFloat)keyboardDistance
 {
     self.fw_innerKeyboardTarget.keyboardDistance = keyboardDistance;
+}
+
+- (CGFloat (^)(CGFloat, CGFloat))fw_keyboardDistanceBlock
+{
+    return self.fw_innerKeyboardTarget.keyboardDistanceBlock;
+}
+
+- (void)setFw_keyboardDistanceBlock:(CGFloat (^)(CGFloat, CGFloat))keyboardDistanceBlock
+{
+    self.fw_innerKeyboardTarget.keyboardDistanceBlock = keyboardDistanceBlock;
 }
 
 - (CGFloat)fw_reboundDistance
@@ -1157,6 +1180,28 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
 {
     objc_setAssociatedObject(self, @selector(fw_verticalAlignment), @(verticalAlignment), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
+}
+
+- (CGFloat)fw_lineHeight
+{
+    return [objc_getAssociatedObject(self, @selector(fw_lineHeight)) doubleValue];
+}
+
+- (void)setFw_lineHeight:(CGFloat)lineHeight
+{
+    objc_setAssociatedObject(self, @selector(fw_lineHeight), @(lineHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.fw_placeholderLabel.fw_lineHeight = lineHeight;
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    
+    NSMutableDictionary<NSAttributedStringKey, id> *typingAttributes = self.typingAttributes.mutableCopy;
+    NSParagraphStyle *style = typingAttributes[NSParagraphStyleAttributeName];
+    NSMutableParagraphStyle *paragraphStyle = style ? style.mutableCopy : [NSMutableParagraphStyle new];
+    paragraphStyle.minimumLineHeight = lineHeight;
+    paragraphStyle.maximumLineHeight = lineHeight;
+    
+    typingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;
+    self.typingAttributes = typingAttributes;
 }
 
 - (BOOL)fw_autoHeightEnabled

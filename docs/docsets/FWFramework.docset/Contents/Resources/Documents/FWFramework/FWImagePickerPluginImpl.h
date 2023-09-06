@@ -90,14 +90,15 @@ API_AVAILABLE(ios(14.0))
                                       completion:(void (^)(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
 
 /**
- 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+ 快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
+ @param selectionLimit 最大选择数量
  @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+ @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
  @return 照片选择器
  */
-+ (PHPickerViewController *)fw_pickerControllerWithCropController:(nullable FWImageCropController * (^)(UIImage *image))cropController
-                                          completion:(void (^)(UIImage * _Nullable image, PHPickerResult * _Nullable result, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
++ (PHPickerViewController *)fw_pickerControllerWithSelectionLimit:(NSInteger)selectionLimit cropController:(nullable FWImageCropController * (^)(UIImage *image))cropController
+                                          completion:(void (^)(NSArray<UIImage *> *images, NSArray<PHPickerResult *> *results, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -139,14 +140,15 @@ API_AVAILABLE(ios(14.0))
                                                               completion:(void (^)(__kindof UIViewController * _Nullable picker, NSArray *objects, NSArray *results, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
 
 /**
- 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+ 快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
+ @param selectionLimit 最大选择数量，iOS14以下只支持单选
  @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+ @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
  @return 照片选择器
  */
-+ (nullable __kindof UIViewController *)fw_pickerControllerWithCropController:(nullable FWImageCropController * (^)(UIImage *image))cropController
-                                                                  completion:(void (^)(UIImage * _Nullable image, id _Nullable result, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
++ (nullable __kindof UIViewController *)fw_pickerControllerWithSelectionLimit:(NSInteger)selectionLimit cropController:(nullable FWImageCropController * (^)(UIImage *image))cropController
+                                                                  completion:(void (^)(NSArray<UIImage *> *images, NSArray *results, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
 
 @end
 

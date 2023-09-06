@@ -17,7 +17,7 @@
     <a title="Categories  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 4.17.0 Docs</a> (70% documented)</p>
+        <p><a href="index.html">FWFramework 4.17.1 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -6110,14 +6110,15 @@
                                       <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">PHPickerViewController</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">picker</span><span class="p">,</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">objects</span><span class="p">,</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PHPickerResult</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
- 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+ 快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
+ @param selectionLimit 最大选择数量
  @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+ @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
  @return 照片选择器
  */</span>
-<span class="k">+</span> <span class="p">(</span><span class="n">PHPickerViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithCropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
-                                          <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">PHPickerResult</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">result</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">PHPickerViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithSelectionLimit</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">selectionLimit</span> <span class="nf">cropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
+                                          <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">images</span><span class="p">,</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PHPickerResult</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -6196,14 +6197,15 @@
                                                               <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">picker</span><span class="p">,</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">objects</span><span class="p">,</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
- 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+ 快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
+ @param selectionLimit 最大选择数量，iOS14以下只支持单选
  @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+ @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
  @return 照片选择器
  */</span>
-<span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithCropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
-                                                                  <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">id</span> <span class="n">_Nullable</span> <span class="n">result</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">__kindof</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithSelectionLimit</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">selectionLimit</span> <span class="nf">cropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
+                                                                  <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">images</span><span class="p">,</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -7843,7 +7845,7 @@
 <span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_imageWithFilter</span><span class="p">:(</span><span class="n">CIFilter</span> <span class="o">*</span><span class="p">)</span><span class="nv">filter</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小</span>
-<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_compressImageWithMaxLength</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">maxLength</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_compressImageWithMaxLength</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">maxLength</span> <span class="nf">compressRatio</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">compressRatio</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_compressDataWithMaxLength</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">maxLength</span> <span class="nf">compressRatio</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">compressRatio</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -7853,6 +7855,12 @@
 
 <span class="c1">/// 通过指定图片最长边，获取等比例的图片size</span>
 <span class="k">-</span> <span class="p">(</span><span class="n">CGSize</span><span class="p">)</span><span class="nf">fw_scaleSizeWithMaxWidth</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">maxWidth</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 后台线程压缩图片，完成后主线程回调</span>
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_compressImages</span><span class="p">:(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">images</span> <span class="nf">maxWidth</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">maxWidth</span> <span class="nf">maxLength</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">maxLength</span> <span class="nf">compressRatio</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">compressRatio</span> <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">images</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 后台线程压缩图片数据，完成后主线程回调</span>
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_compressDatas</span><span class="p">:(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">images</span> <span class="nf">maxWidth</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">maxWidth</span> <span class="nf">maxLength</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">maxLength</span> <span class="nf">compressRatio</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">compressRatio</span> <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSData</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">datas</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">fw_originalImage</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
@@ -8736,7 +8744,7 @@ shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其�
 <span class="c1">/// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">fw_menuDisabled</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
-<span class="c1">/// 自定义光标大小，不为0才会生效，默认zero不生效</span>
+<span class="c1">/// 自定义光标偏移和大小，不为0才会生效，默认zero不生效</span>
 <span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">fw_cursorRect</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="c1">/// 获取及设置当前选中文字范围</span>
@@ -9022,7 +9030,7 @@ shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其�
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-01)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

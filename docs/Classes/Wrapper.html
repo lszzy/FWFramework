@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.17.0 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.17.1 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -15996,9 +15996,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo14PHPhotoLibraryCRbzlE16pickerController04cropF010completionSo06UIViewF0CSgSo011FWImageCropF0CSo7UIImageCcSg_yAOSg_ypSgSbtctFZ"></a>
-                    <a name="//apple_ref/swift/Method/pickerController(cropController:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14PHPhotoLibraryCRbzlE16pickerController04cropF010completionSo06UIViewF0CSgSo011FWImageCropF0CSo7UIImageCcSg_yAOSg_ypSgSbtctFZ">pickerController(cropController:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo14PHPhotoLibraryCRbzlE16pickerController14selectionLimit04cropF010completionSo06UIViewF0CSgSi_So011FWImageCropF0CSo7UIImageCcSgySayAPG_SayypGSbtctFZ"></a>
+                    <a name="//apple_ref/swift/Method/pickerController(selectionLimit:cropController:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14PHPhotoLibraryCRbzlE16pickerController14selectionLimit04cropF010completionSo06UIViewF0CSgSi_So011FWImageCropF0CSo7UIImageCcSgySayAPG_SayypGSbtctFZ">pickerController(selectionLimit:<wbr>cropController:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -16006,10 +16006,11 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
+                        <p>快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
 
-<p>@param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-@param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+<p>@param selectionLimit 最大选择数量，iOS14以下只支持单选
+@param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+@param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
 @return 照片选择器</p>
 
                       </div>
@@ -16017,7 +16018,7 @@ NSObject.fw.swizzleInstanceMethod(
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">pickerController</span><span class="p">(</span><span class="nv">cropController</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ImageCropController</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIImage</span><span class="p">?,</span> <span class="kt">Any</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">pickerController</span><span class="p">(</span><span class="nv">selectionLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">cropController</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ImageCropController</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt">UIImage</span><span class="p">],</span> <span class="p">[</span><span class="kt">Any</span><span class="p">],</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -17033,9 +17034,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo22PHPickerViewControllerCRbzlE06pickerE004cropE010completionAESo011FWImageCropE0CSo7UIImageCcSg_yALSg_So0C6ResultCSgSbtctFZ"></a>
-                    <a name="//apple_ref/swift/Method/pickerController(cropController:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22PHPickerViewControllerCRbzlE06pickerE004cropE010completionAESo011FWImageCropE0CSo7UIImageCcSg_yALSg_So0C6ResultCSgSbtctFZ">pickerController(cropController:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo22PHPickerViewControllerCRbzlE06pickerE014selectionLimit04cropE010completionAESi_So011FWImageCropE0CSo7UIImageCcSgySayAMG_SaySo0C6ResultCGSbtctFZ"></a>
+                    <a name="//apple_ref/swift/Method/pickerController(selectionLimit:cropController:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo22PHPickerViewControllerCRbzlE06pickerE014selectionLimit04cropE010completionAESi_So011FWImageCropE0CSo7UIImageCcSgySayAMG_SaySo0C6ResultCGSbtctFZ">pickerController(selectionLimit:<wbr>cropController:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -17043,10 +17044,11 @@ NSObject.fw.swizzleInstanceMethod(
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
+                        <p>快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
 
-<p>@param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
-@param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+<p>@param selectionLimit 最大选择数量
+@param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
+@param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
 @return 照片选择器</p>
 
                       </div>
@@ -17054,7 +17056,7 @@ NSObject.fw.swizzleInstanceMethod(
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">pickerController</span><span class="p">(</span><span class="nv">cropController</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ImageCropController</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIImage</span><span class="p">?,</span> <span class="n">__PHPickerResult</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PHPickerViewController</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">pickerController</span><span class="p">(</span><span class="nv">selectionLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">cropController</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ImageCropController</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt">UIImage</span><span class="p">],</span> <span class="p">[</span><span class="n">__PHPickerResult</span><span class="p">],</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PHPickerViewController</span></code></pre>
 
                         </div>
                       </div>
@@ -36353,6 +36355,33 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo18NSAttributedStringCRbzlE14paragraphStyle10lineHeight13textAlignment0G9BreakModeSo018NSMutableParagraphF0C14CoreFoundation7CGFloatV_So06NSTextJ0VSo06NSLinekL0VtFZ"></a>
+                    <a name="//apple_ref/swift/Method/paragraphStyle(lineHeight:textAlignment:lineBreakMode:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSAttributedStringCRbzlE14paragraphStyle10lineHeight13textAlignment0G9BreakModeSo018NSMutableParagraphF0C14CoreFoundation7CGFloatV_So06NSTextJ0VSo06NSLinekL0VtFZ">paragraphStyle(lineHeight:<wbr>textAlignment:<wbr>lineBreakMode:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快速创建指定行高、对齐方式和换行模式的段落样式对象</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">paragraphStyle</span><span class="p">(</span><span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Classes/Wrapper.html#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE4left14CoreFoundation7CGFloatVvp">left</a></span><span class="p">,</span> <span class="nv">lineBreakMode</span><span class="p">:</span> <span class="kt">NSLineBreakMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">byWordWrapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSMutableParagraphStyle</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo18NSAttributedStringCRbzlE010attributedD004htmlD017defaultAttributesxSgSS_SDySo0cD3KeyaypGSgtFZ"></a>
                     <a name="//apple_ref/swift/Method/attributedString(htmlString:defaultAttributes:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo18NSAttributedStringCRbzlE010attributedD004htmlD017defaultAttributesxSgSS_SDySo0cD3KeyaypGSgtFZ">attributedString(htmlString:<wbr>defaultAttributes:<wbr>)</a>
@@ -37343,6 +37372,33 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo11UITextFieldCRbzlE21keyboardDistanceBlock14CoreFoundation7CGFloatVAI_AItcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/keyboardDistanceBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITextFieldCRbzlE21keyboardDistanceBlock14CoreFoundation7CGFloatVAI_AItcSgvp">keyboardDistanceBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keyboardDistanceBlock</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">keyboardHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="n">_</span> <span class="nv">height</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo11UITextFieldCRbzlE15reboundDistance14CoreFoundation7CGFloatVvp"></a>
                     <a name="//apple_ref/swift/Property/reboundDistance" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITextFieldCRbzlE15reboundDistance14CoreFoundation7CGFloatVvp">reboundDistance</a>
@@ -38080,6 +38136,33 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keyboardDistance</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo10UITextViewCRbzlE21keyboardDistanceBlock14CoreFoundation7CGFloatVAI_AItcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/keyboardDistanceBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo10UITextViewCRbzlE21keyboardDistanceBlock14CoreFoundation7CGFloatVAI_AItcSgvp">keyboardDistanceBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keyboardDistanceBlock</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">keyboardHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="n">_</span> <span class="nv">height</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -38934,6 +39017,33 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">verticalAlignment</span><span class="p">:</span> <span class="kt">UIControl</span><span class="o">.</span><span class="kt">ContentVerticalAlignment</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo10UITextViewCRbzlE10lineHeight14CoreFoundation7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/lineHeight" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo10UITextViewCRbzlE10lineHeight14CoreFoundation7CGFloatVvp">lineHeight</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置行高，兼容placeholder和typingAttributes</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -43055,9 +43165,9 @@ NSObject.fw.swizzleInstanceMethod(
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressImage9maxLengthAESgSi_tF"></a>
-                    <a name="//apple_ref/swift/Method/compressImage(maxLength:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressImage9maxLengthAESgSi_tF">compressImage(maxLength:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressImage9maxLength0D5RatioAESgSi_14CoreFoundation7CGFloatVtF"></a>
+                    <a name="//apple_ref/swift/Method/compressImage(maxLength:compressRatio:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressImage9maxLength0D5RatioAESgSi_14CoreFoundation7CGFloatVtF">compressImage(maxLength:<wbr>compressRatio:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -43072,7 +43182,7 @@ NSObject.fw.swizzleInstanceMethod(
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compressImage</span><span class="p">(</span><span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compressImage</span><span class="p">(</span><span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">compressRatio</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -43099,7 +43209,7 @@ NSObject.fw.swizzleInstanceMethod(
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compressData</span><span class="p">(</span><span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">compressRatio</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compressData</span><span class="p">(</span><span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">compressRatio</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -43154,6 +43264,60 @@ NSObject.fw.swizzleInstanceMethod(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">scaleSize</span><span class="p">(</span><span class="nv">maxWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGSize</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo7UIImageCRbzlE14compressImages_8maxWidth0F6Length0D5Ratio10completionySayAEG_14CoreFoundation7CGFloatVSiANyAKctFZ"></a>
+                    <a name="//apple_ref/swift/Method/compressImages(_:maxWidth:maxLength:compressRatio:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIImageCRbzlE14compressImages_8maxWidth0F6Length0D5Ratio10completionySayAEG_14CoreFoundation7CGFloatVSiANyAKctFZ">compressImages(_:<wbr>maxWidth:<wbr>maxLength:<wbr>compressRatio:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>后台线程压缩图片，完成后主线程回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">compressImages</span><span class="p">(</span><span class="n">_</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIImage</span><span class="p">],</span> <span class="nv">maxWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">compressRatio</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt">UIImage</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressDatas_8maxWidth0F6Length0D5Ratio10completionySayAEG_14CoreFoundation7CGFloatVSiANySay0L04DataVGctFZ"></a>
+                    <a name="//apple_ref/swift/Method/compressDatas(_:maxWidth:maxLength:compressRatio:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIImageCRbzlE13compressDatas_8maxWidth0F6Length0D5Ratio10completionySayAEG_14CoreFoundation7CGFloatVSiANySay0L04DataVGctFZ">compressDatas(_:<wbr>maxWidth:<wbr>maxLength:<wbr>compressRatio:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>后台线程压缩图片数据，完成后主线程回调</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">compressDatas</span><span class="p">(</span><span class="n">_</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIImage</span><span class="p">],</span> <span class="nv">maxWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">maxLength</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">compressRatio</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt">Data</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -47918,7 +48082,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义光标大小，不为0才会生效，默认zero不生效</p>
+                        <p>自定义光标偏移和大小，不为0才会生效，默认zero不生效</p>
 
                       </div>
                       <div class="declaration">
@@ -48255,7 +48419,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义光标大小，不为0才会生效，默认zero不生效</p>
+                        <p>自定义光标偏移和大小，不为0才会生效，默认zero不生效</p>
 
                       </div>
                       <div class="declaration">
@@ -49432,7 +49596,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-01)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

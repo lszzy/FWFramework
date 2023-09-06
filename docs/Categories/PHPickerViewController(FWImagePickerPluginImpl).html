@@ -17,7 +17,7 @@
     <a title="PHPickerViewController(FWImagePickerPluginImpl) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.17.0 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.17.1 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2819,14 +2819,15 @@
                                       <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">PHPickerViewController</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">picker</span><span class="p">,</span> <span class="n">NSArray</span> <span class="o">*</span><span class="n">objects</span><span class="p">,</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PHPickerResult</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="cm">/**
- 快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑
+ 快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑
  
+ @param selectionLimit 最大选择数量
  @param cropController 自定义裁剪控制器句柄，nil时自动创建默认裁剪控制器
- @param completion 完成回调，主线程。参数1为图片，2为结果信息，3为是否取消
+ @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
  @return 照片选择器
  */</span>
-<span class="k">+</span> <span class="p">(</span><span class="n">PHPickerViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithCropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
-                                          <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">image</span><span class="p">,</span> <span class="n">PHPickerResult</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">result</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">PHPickerViewController</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_pickerControllerWithSelectionLimit</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">selectionLimit</span> <span class="nf">cropController</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">cropController</span>
+                                          <span class="nf">completion</span><span class="p">:(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">images</span><span class="p">,</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PHPickerResult</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cancel</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
 <span class="k">@end</span></code></pre>
 
@@ -3010,9 +3011,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)PHPickerViewController(cm)fw_pickerControllerWithCropController:completion:"></a>
-                    <a name="//apple_ref/swift/Method/+fw_pickerControllerWithCropController:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)PHPickerViewController(cm)fw_pickerControllerWithCropController:completion:">+fw_pickerControllerWithCropController:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(cs)PHPickerViewController(cm)fw_pickerControllerWithSelectionLimit:cropController:completion:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_pickerControllerWithSelectionLimit:cropController:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)PHPickerViewController(cm)fw_pickerControllerWithSelectionLimit:cropController:completion:">+fw_pickerControllerWithSelectionLimit:<wbr>cropController:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3020,7 +3021,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建单选照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
+                        <p>快速创建照片选择器(仅图片)，使用自定义裁剪控制器编辑</p>
 
                       </div>
                       <div class="declaration">
@@ -3028,13 +3029,15 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PHPickerViewController</span> <span class="o">*</span><span class="p">)</span>
-    <span class="nf">fw_pickerControllerWithCropController</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span>
-            <span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="n">cropController</span>
+    <span class="nf">fw_pickerControllerWithSelectionLimit</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">selectionLimit</span>
+                           <span class="nf">cropController</span><span class="p">:</span>
+                               <span class="p">(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/FWImageCropController.html">FWImageCropController</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span>
+                                   <span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">))</span><span class="n">cropController</span>
                                <span class="n">completion</span><span class="o">:</span>
                                    <span class="p">(</span><span class="n">nonnull</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span>
-                                       <span class="n">UIImage</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
-                                       <span class="n">PHPickerResult</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">__strong</span><span class="p">,</span>
+                                       <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">UIImage</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">,</span>
+                                       <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PHPickerResult</span> <span class="o">*&gt;</span>
+                                           <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">__strong</span><span class="p">,</span>
                                        <span class="n">BOOL</span><span class="p">))</span><span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
@@ -3043,6 +3046,18 @@
                         <h4>Parameters</h4>
                         <table class="graybox">
                           <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selectionLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>最大选择数量</p>
+                                </div>
+                              </td>
+                            </tr>
                             <tr>
                               <td>
                                 <code>
@@ -3063,7 +3078,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>完成回调，主线程。参数1为图片，2为结果信息，3为是否取消</p>
+                                  <p>完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消</p>
                                 </div>
                               </td>
                             </tr>
@@ -3082,7 +3097,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-01)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

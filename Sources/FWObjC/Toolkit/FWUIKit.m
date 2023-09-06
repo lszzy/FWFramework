@@ -2421,8 +2421,8 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             if (!rectValue) return caretRect;
             
             CGRect rect = rectValue.CGRectValue;
-            if (rect.origin.x != 0) caretRect.origin.x = rect.origin.x;
-            if (rect.origin.y != 0) caretRect.origin.y = rect.origin.y;
+            if (rect.origin.x != 0) caretRect.origin.x += rect.origin.x;
+            if (rect.origin.y != 0) caretRect.origin.y += rect.origin.y;
             if (rect.size.width != 0) caretRect.size.width = rect.size.width;
             if (rect.size.height != 0) caretRect.size.height = rect.size.height;
             return caretRect;
@@ -2584,10 +2584,11 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
             CGRect caretRect = FWSwizzleOriginal(position);
             NSValue *rectValue = objc_getAssociatedObject(selfObject, @selector(fw_cursorRect));
             if (!rectValue) return caretRect;
+            NSLog(@"rect: %@", NSStringFromCGRect(caretRect));
             
             CGRect rect = rectValue.CGRectValue;
-            if (rect.origin.x != 0) caretRect.origin.x = rect.origin.x;
-            if (rect.origin.y != 0) caretRect.origin.y = rect.origin.y;
+            if (rect.origin.x != 0) caretRect.origin.x += rect.origin.x;
+            if (rect.origin.y != 0) caretRect.origin.y += rect.origin.y;
             if (rect.size.width != 0) caretRect.size.width = rect.size.width;
             if (rect.size.height != 0) caretRect.size.height = rect.size.height;
             return caretRect;

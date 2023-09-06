@@ -17,6 +17,7 @@
 
 @property (nonatomic, assign) FWImagePickerFilterType filterType;
 @property (nonatomic, assign) BOOL shouldDismiss;
+@property (nonatomic, assign) BOOL isDismissed;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
 @property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
@@ -67,11 +68,16 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
+    if (self.isDismissed) return;
+    
     FWImagePickerFilterType filterType = self.filterType;
     void (^completion)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
     if (self.shouldDismiss) {
-        [picker dismissViewControllerAnimated:YES completion:^{
-            [FWImagePickerControllerDelegate picker:nil didFinishPicking:results filterType:filterType completion:completion];
+        self.isDismissed = YES;
+        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:^(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
+            [picker dismissViewControllerAnimated:YES completion:^{
+                if (completion) completion(nil, objects, results, cancel);
+            }];
         }];
     } else {
         [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:completion];
@@ -80,7 +86,6 @@
 
 + (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results filterType:(FWImagePickerFilterType)filterType completion:(void (^)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel))completion API_AVAILABLE(ios(14))
 {
-    if (!completion) return;
     if (results.count < 1) {
         completion(picker, @[], results, YES);
         return;
@@ -288,11 +293,11 @@
     return pickerController;
 }
 
-+ (PHPickerViewController *)fw_pickerControllerWithCropController:(FWImageCropController * (^)(UIImage * _Nonnull))cropControllerBlock completion:(void (^)(UIImage * _Nullable, PHPickerResult * _Nullable, BOOL))completion
++ (PHPickerViewController *)fw_pickerControllerWithSelectionLimit:(NSInteger)selectionLimit cropController:(FWImageCropController * _Nonnull (^)(UIImage * _Nonnull))cropControllerBlock completion:(void (^)(NSArray<UIImage *> * _Nonnull, NSArray<PHPickerResult *> * _Nonnull, BOOL))completion
 {
-    PHPickerViewController *pickerController = [PHPickerViewController fw_pickerControllerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:1 shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
-        UIImage *originalImage = objects.firstObject;
-        if (originalImage) {
+    PHPickerViewController *pickerController = [PHPickerViewController fw_pickerControllerWithFilterType:FWImagePickerFilterTypeImage selectionLimit:selectionLimit shouldDismiss:NO completion:^(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
+        UIImage *originalImage = objects.count == 1 ? objects.firstObject : nil;
+        if (originalImage && [originalImage isKindOfClass:[UIImage class]]) {
             FWImageCropController *cropController;
             if (cropControllerBlock) {
                 cropController = cropControllerBlock(originalImage);
@@ -305,7 +310,7 @@
             }
             cropController.onDidCropToRect = ^(UIImage * _Nonnull image, CGRect cropRect, NSInteger angle) {
                 [picker.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                    if (completion) completion(image, results.firstObject, NO);
+                    if (completion) completion(@[image], results, NO);
                 }];
             };
             cropController.onDidFinishCancelled = ^(BOOL isFinished) {
@@ -322,7 +327,7 @@
             }
         } else {
             [picker dismissViewControllerAnimated:YES completion:^{
-                if (completion) completion(nil, nil, YES);
+                if (completion) completion(objects, results, cancel);
             }];
         }
     }];
@@ -367,12 +372,14 @@
     }
 }
 
-+ (__kindof UIViewController *)fw_pickerControllerWithCropController:(FWImageCropController * (^)(UIImage * _Nonnull))cropController completion:(void (^)(UIImage * _Nullable, id _Nullable, BOOL))completion
++ (__kindof UIViewController *)fw_pickerControllerWithSelectionLimit:(NSInteger)selectionLimit cropController:(FWImageCropController * (^)(UIImage * _Nonnull))cropController completion:(nonnull void (^)(NSArray<UIImage *> *, NSArray *, BOOL))completion
 {
     if (@available(iOS 14, *)) {
-        return [PHPickerViewController fw_pickerControllerWithCropController:cropController completion:completion];
+        return [PHPickerViewController fw_pickerControllerWithSelectionLimit: selectionLimit cropController:cropController completion:completion];
     } else {
-        return [UIImagePickerController fw_pickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:cropController completion:completion];
+        return [UIImagePickerController fw_pickerControllerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary cropController:cropController completion:^(UIImage * _Nullable image, NSDictionary * _Nullable info, BOOL cancel) {
+            if (completion) completion(image ? @[image] : @[], info ? @[info] : @[], cancel);
+        }];
     }
 }
 
@@ -432,9 +439,9 @@
         usePhotoPicker = !self.photoPickerDisabled;
     }
     if (usePhotoPicker) {
-        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && selectionLimit == 1 && allowsEditing) {
-            pickerController = [PHPhotoLibrary fw_pickerControllerWithCropController:self.cropControllerBlock completion:^(UIImage * _Nullable image, id  _Nullable result, BOOL cancel) {
-                if (completion) completion(image ? @[image] : @[], result ? @[result] : @[], cancel);
+        if (self.cropControllerEnabled && filterType == FWImagePickerFilterTypeImage && allowsEditing) {
+            pickerController = [PHPhotoLibrary fw_pickerControllerWithSelectionLimit:selectionLimit cropController:self.cropControllerBlock completion:^(NSArray<UIImage *> *images, NSArray *results, BOOL cancel) {
+                if (completion) completion(images, results, cancel);
             }];
         } else {
             pickerController = [PHPhotoLibrary fw_pickerControllerWithFilterType:filterType selectionLimit:selectionLimit allowsEditing:allowsEditing shouldDismiss:YES completion:^(__kindof UIViewController * _Nullable picker, NSArray * _Nonnull objects, NSArray * _Nonnull results, BOOL cancel) {
