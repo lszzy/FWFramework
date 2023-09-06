@@ -800,7 +800,7 @@ extension Wrapper where Base: UITextField {
         set { base.fw_menuDisabled = newValue }
     }
 
-    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var cursorRect: CGRect {
         get { return base.fw_cursorRect }
         set { base.fw_cursorRect = newValue }
@@ -873,7 +873,7 @@ extension Wrapper where Base: UITextView {
         set { base.fw_menuDisabled = newValue }
     }
 
-    /// 自定义光标大小，不为0才会生效，默认zero不生效
+    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var cursorRect: CGRect {
         get { return base.fw_cursorRect }
         set { base.fw_cursorRect = newValue }
