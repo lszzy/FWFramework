@@ -66,9 +66,10 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         let result = createTextView()
         result.tag = 3
         result.backgroundColor = AppTheme.backgroundColor
-        result.app.maxUnicodeLength = 10
-        result.app.placeholder = "问题，最多10个中文"
-        result.returnKeyType = .next
+        result.app.maxUnicodeLength = 50
+        result.app.placeholder = "问题\n最多50个中文"
+        result.app.lineHeight = 25
+        // result.returnKeyType = .next
         return result
     }()
     
@@ -131,7 +132,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         textView.app.layoutChain
             .centerX()
             .top(toViewBottom: passwordField, offset: 15)
-        textView.app.returnNext = true
+        // textView.app.returnNext = true
         textView.app.previousResponderTag = 2
         textView.app.nextResponderTag = 4
         textView.app.addToolbar(title: NSAttributedString.app.attributedString(textView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)

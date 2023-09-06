@@ -1031,6 +1031,34 @@ import FWObjC
         }
     }
     
+    /// 快捷设置行高，兼容placeholder和typingAttributes
+    public var fw_lineHeight: CGFloat {
+        get {
+            return fw_propertyDouble(forName: "fw_lineHeight")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+            
+            self.fw_placeholderLabel.fw_lineHeight = newValue
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+            
+            var typingAttributes = self.typingAttributes
+            var paragraphStyle: NSMutableParagraphStyle
+            if let style = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else if let style = (typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else {
+                paragraphStyle = NSMutableParagraphStyle()
+            }
+            paragraphStyle.minimumLineHeight = newValue
+            paragraphStyle.maximumLineHeight = newValue
+            
+            typingAttributes[.paragraphStyle] = paragraphStyle
+            self.typingAttributes = typingAttributes
+        }
+    }
+    
     private var fw_placeholderLabel: UILabel {
         if let label = fw_property(forName: "fw_placeholderLabel") as? UILabel { return label }
         
