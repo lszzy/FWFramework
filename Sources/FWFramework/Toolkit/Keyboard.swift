@@ -25,6 +25,12 @@ extension Wrapper where Base: UITextField {
         get { return base.__fw_keyboardDistance }
         set { base.__fw_keyboardDistance = newValue }
     }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return base.__fw_keyboardDistanceBlock }
+        set { base.__fw_keyboardDistanceBlock = newValue }
+    }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var reboundDistance: CGFloat {
@@ -172,6 +178,12 @@ extension Wrapper where Base: UITextView {
     public var keyboardDistance: CGFloat {
         get { return base.__fw_keyboardDistance }
         set { base.__fw_keyboardDistance = newValue }
+    }
+    
+    /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return base.__fw_keyboardDistanceBlock }
+        set { base.__fw_keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
@@ -343,6 +355,12 @@ extension Wrapper where Base: UITextView {
     public var verticalAlignment: UIControl.ContentVerticalAlignment {
         get { return base.__fw_verticalAlignment }
         set { base.__fw_verticalAlignment = newValue }
+    }
+    
+    /// 快捷设置行高，兼容placeholder和typingAttributes
+    public var lineHeight: CGFloat {
+        get { return base.__fw_lineHeight }
+        set { base.__fw_lineHeight = newValue }
     }
 
     /// 是否启用自动高度功能，随文字改变高度

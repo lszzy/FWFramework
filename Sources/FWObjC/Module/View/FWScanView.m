@@ -353,7 +353,7 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
         UIImage *compressImage = image;
         if (compress && compressImage) {
             compressImage = [compressImage fw_compressImageWithMaxWidth:1080];
-            compressImage = [compressImage fw_compressImageWithMaxLength:512 * 1024];
+            compressImage = [compressImage fw_compressImageWithMaxLength:512 * 1024 compressRatio:0];
         }
         
         CIImage *ciImage = compressImage.CIImage ?: [CIImage imageWithCGImage:compressImage.CGImage];

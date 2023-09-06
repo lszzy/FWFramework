@@ -1169,9 +1169,9 @@ static BOOL fwStaticAutoFlatFont = NO;
     return image;
 }
 
-- (UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength
+- (UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
 {
-    NSData *data = [self fw_compressDataWithMaxLength:maxLength compressRatio:0];
+    NSData *data = [self fw_compressDataWithMaxLength:maxLength compressRatio:compressRatio];
     return [[UIImage alloc] initWithData:data];
 }
 
@@ -1192,6 +1192,8 @@ static BOOL fwStaticAutoFlatFont = NO;
 - (UIImage *)fw_compressImageWithMaxWidth:(NSInteger)maxWidth
 {
     CGSize newSize = [self fw_scaleSizeWithMaxWidth:maxWidth];
+    if (CGSizeEqualToSize(newSize, self.size)) return self;
+    
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
     [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -1224,6 +1226,36 @@ static BOOL fwStaticAutoFlatFont = NO;
     } else {
         return CGSizeMake(width, height);
     }
+}
+
++ (void)fw_compressImages:(NSArray<UIImage *> *)images maxWidth:(CGFloat)maxWidth maxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio completion:(void (^)(NSArray<UIImage *> * _Nonnull))completion
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSMutableArray<UIImage *> *compressImages = [NSMutableArray new];
+        for (UIImage *image in images) {
+            UIImage *compressImage = [[image fw_compressImageWithMaxWidth:maxWidth] fw_compressImageWithMaxLength:maxLength compressRatio:compressRatio];
+            if (compressImage) [compressImages addObject:compressImage];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(compressImages);
+        });
+    });
+}
+
++ (void)fw_compressDatas:(NSArray<UIImage *> *)images maxWidth:(CGFloat)maxWidth maxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio completion:(void (^)(NSArray<NSData *> * _Nonnull))completion
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSMutableArray<NSData *> *compressDatas = [NSMutableArray new];
+        for (UIImage *image in images) {
+            NSData *compressData = [[image fw_compressImageWithMaxWidth:maxWidth] fw_compressDataWithMaxLength:maxLength compressRatio:compressRatio];
+            if (compressData) [compressDatas addObject:compressData];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(compressDatas);
+        });
+    });
 }
 
 - (UIImage *)fw_originalImage

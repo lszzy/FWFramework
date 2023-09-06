@@ -189,6 +189,18 @@
 
 + (instancetype)fw_attributedString:(NSString *)string withFont:(UIFont *)font textColor:(UIColor *)textColor lineHeight:(CGFloat)lineHeight textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode attributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
+    NSMutableDictionary *attr = attributes ? [attributes mutableCopy] : [[NSMutableDictionary alloc] init];
+    attr[NSParagraphStyleAttributeName] = [self fw_paragraphStyleWithLineHeight:lineHeight textAlignment:textAlignment lineBreakMode:lineBreakMode];
+    if (font) attr[NSFontAttributeName] = font;
+    if (textColor) attr[NSForegroundColorAttributeName] = textColor;
+    if (lineHeight > 0 && font) {
+        attr[NSBaselineOffsetAttributeName] = @((lineHeight - font.lineHeight) / 4);
+    }
+    return [[self alloc] initWithString:string attributes:attr];
+}
+
++ (NSMutableParagraphStyle *)fw_paragraphStyleWithLineHeight:(CGFloat)lineHeight textAlignment:(NSTextAlignment)textAlignment lineBreakMode:(NSLineBreakMode)lineBreakMode
+{
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
     if (lineHeight > 0) {
         paraStyle.minimumLineHeight = lineHeight;
@@ -196,15 +208,7 @@
     }
     paraStyle.lineBreakMode = lineBreakMode;
     paraStyle.alignment = textAlignment;
-    
-    NSMutableDictionary *attr = attributes ? [attributes mutableCopy] : [[NSMutableDictionary alloc] init];
-    attr[NSParagraphStyleAttributeName] = paraStyle;
-    if (font) attr[NSFontAttributeName] = font;
-    if (textColor) attr[NSForegroundColorAttributeName] = textColor;
-    if (lineHeight > 0 && font) {
-        attr[NSBaselineOffsetAttributeName] = @((lineHeight - font.lineHeight) / 4);
-    }
-    return [[self alloc] initWithString:string attributes:attr];
+    return paraStyle;
 }
 
 + (instancetype)fw_attributedStringWithHtmlString:(NSString *)htmlString defaultAttributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
