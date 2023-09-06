@@ -1166,13 +1166,13 @@ extension WrapperGlobal {
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
-    public func fw_compressImage(maxLength: Int) -> UIImage? {
-        guard let data = fw_compressData(maxLength: maxLength, compressRatio: 0) else { return nil }
+    public func fw_compressImage(maxLength: Int, compressRatio: CGFloat = 0) -> UIImage? {
+        guard let data = fw_compressData(maxLength: maxLength, compressRatio: compressRatio) else { return nil }
         return UIImage(data: data)
     }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
-    public func fw_compressData(maxLength: Int, compressRatio: CGFloat) -> Data? {
+    public func fw_compressData(maxLength: Int, compressRatio: CGFloat = 0) -> Data? {
         var compress: CGFloat = 1.0
         let stepCompress: CGFloat = compressRatio > 0 ? compressRatio : 0.1
         var data = fw_hasAlpha ? self.pngData() : self.jpegData(compressionQuality: compress)
@@ -1186,6 +1186,8 @@ extension WrapperGlobal {
     /// 长边压缩图片尺寸，获取等比例的图片
     public func fw_compressImage(maxWidth: CGFloat) -> UIImage? {
         let newSize = fw_scaleSize(maxWidth: maxWidth)
+        if newSize.equalTo(self.size) { return self }
+        
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         self.draw(in: CGRect(origin: .zero, size: newSize))
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -1215,6 +1217,42 @@ extension WrapperGlobal {
             return CGSize(width: newWidth, height: newHeight)
         } else {
             return CGSize(width: width, height: height)
+        }
+    }
+    
+    /// 后台线程压缩图片，完成后主线程回调
+    public static func fw_compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([UIImage]) -> Void) {
+        DispatchQueue.global().async {
+            var compressImages: [UIImage] = []
+            for image in images {
+                if let compressImage = image
+                    .fw_compressImage(maxWidth: maxWidth)?
+                    .fw_compressImage(maxLength: maxLength, compressRatio: compressRatio) {
+                    compressImages.append(compressImage)
+                }
+            }
+            
+            DispatchQueue.main.async {
+                completion(compressImages)
+            }
+        }
+    }
+
+    /// 后台线程压缩图片数据，完成后主线程回调
+    public static func fw_compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([Data]) -> Void) {
+        DispatchQueue.global().async {
+            var compressDatas: [Data] = []
+            for image in images {
+                if let compressData = image
+                    .fw_compressImage(maxWidth: maxWidth)?
+                    .fw_compressData(maxLength: maxLength, compressRatio: compressRatio) {
+                    compressDatas.append(compressData)
+                }
+            }
+            
+            DispatchQueue.main.async {
+                completion(compressDatas)
+            }
         }
     }
 
