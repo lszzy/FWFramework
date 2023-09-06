@@ -226,6 +226,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
 @property (nonatomic, assign) UIControlContentVerticalAlignment fw_verticalAlignment NS_REFINED_FOR_SWIFT;
 
+/// 快捷设置行高，兼容placeholder和typingAttributes
+@property (nonatomic, assign) CGFloat fw_lineHeight NS_REFINED_FOR_SWIFT;
+
 /// 是否启用自动高度功能，随文字改变高度
 @property (nonatomic, assign) BOOL fw_autoHeightEnabled NS_REFINED_FOR_SWIFT;
 

@@ -1182,6 +1182,28 @@ static UITapGestureRecognizer *fwStaticKeyboardGesture = nil;
     [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
 }
 
+- (CGFloat)fw_lineHeight
+{
+    return [objc_getAssociatedObject(self, @selector(fw_lineHeight)) doubleValue];
+}
+
+- (void)setFw_lineHeight:(CGFloat)lineHeight
+{
+    objc_setAssociatedObject(self, @selector(fw_lineHeight), @(lineHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.fw_placeholderLabel.fw_lineHeight = lineHeight;
+    [self.fw_innerPlaceholderTarget setNeedsUpdatePlaceholder];
+    
+    NSMutableDictionary<NSAttributedStringKey, id> *typingAttributes = self.typingAttributes.mutableCopy;
+    NSParagraphStyle *style = typingAttributes[NSParagraphStyleAttributeName];
+    NSMutableParagraphStyle *paragraphStyle = style ? style.mutableCopy : [NSMutableParagraphStyle new];
+    paragraphStyle.minimumLineHeight = lineHeight;
+    paragraphStyle.maximumLineHeight = lineHeight;
+    
+    typingAttributes[NSParagraphStyleAttributeName] = paragraphStyle;
+    self.typingAttributes = typingAttributes;
+}
+
 - (BOOL)fw_autoHeightEnabled
 {
     return [objc_getAssociatedObject(self, @selector(fw_autoHeightEnabled)) boolValue];
