@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.17.1] - 2023-09-06
+
+### Changed
+* Keyboard management adds keyboardDistanceBlock custom handle
+* Added batch compression image processing method in the background
+* The system image selector supports custom cropping when selecting a single image
+* Optimize the system image selector to close the interface and call back after processing the image
+* Added shortcut to create NSParagraphStyle method
+* UITextView added quick setting lineHeight method
+* Modify the origin meaning of cursorRect to offset
+
 ## [4.17.0] - 2023-09-01
 
 ### Added
