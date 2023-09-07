@@ -49,6 +49,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         collectionView.app.setLoading { [weak self] in
             self?.onLoading()
         }
+        collectionView.app.addMovementGesture()
     }
     
     func setupCollectionLayout() {
@@ -217,6 +218,22 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        if indexPath.item == 0 { return false }
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let model = collectionData[sourceIndexPath.row]
+        collectionData.remove(at: sourceIndexPath.row)
+        collectionData.insert(model, at: destinationIndexPath.row)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveOfItemFromOriginalIndexPath originalIndexPath: IndexPath, atCurrentIndexPath currentIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+        if proposedIndexPath.item == 0 { return IndexPath(item: 1, section: proposedIndexPath.section) }
+        return proposedIndexPath
     }
     
     func randomObject() -> TestCollectionDynamicLayoutObject {
