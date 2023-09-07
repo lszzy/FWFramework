@@ -12,6 +12,16 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [Int]
     
+    static var showLottieProgress = true
+    
+    func setupNavbar() {
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, block: { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [!Self.showLottieProgress ? "开启Lottie进度展示" : "关闭Lottie进度展示"], actionBlock: { index in
+                Self.showLottieProgress = !Self.showLottieProgress
+            })
+        })
+    }
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -61,6 +71,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             if view == nil {
                 let lottieView = LottiePluginView()
                 view = lottieView
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.tag = 100
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.indicatorColor = AppTheme.textColor
@@ -116,6 +127,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             let toastPlugin = ToastPluginImpl()
             toastPlugin.customBlock = { toastView in
                 let lottieView = LottiePluginView()
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 toastView.indicatorView = lottieView
             }
@@ -165,12 +177,14 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         if indexPath.section == 2 {
             ViewPluginImpl.shared.customIndicatorView = { style in
                 let lottieView = LottiePluginView()
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 return lottieView
             }
             // FWLottieView也支持进度显示
             ViewPluginImpl.shared.customProgressView = { style in
                 let lottieView = LottiePluginView()
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
                 return lottieView
@@ -178,6 +192,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             // FWLottieView支持下拉进度显示
             RefreshPluginImpl.shared.pullRefreshBlock = { view in
                 let lottieView = LottiePluginView(frame: CGRect(x: 0, y: 0, width: 54, height: 54))
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
@@ -185,6 +200,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             }
             RefreshPluginImpl.shared.infiniteScrollBlock = { view in
                 let lottieView = LottiePluginView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+                lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 lottieView.hidesWhenStopped = false
                 view.setAnimationView(lottieView)
