@@ -582,11 +582,10 @@ import FWObjC
         var filterType: ImagePickerFilterType = []
         var shouldDismiss: Bool = false
         var completionBlock: ((PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void)?
-        private var isDismissing: Bool = false
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            guard !isDismissing else { return }
-            isDismissing = true
+            guard !picker.fw_pickerControllerDismissed else { return }
+            picker.fw_pickerControllerDismissed = true
             
             let filterType = self.filterType
             let completion = self.completionBlock
@@ -597,8 +596,7 @@ import FWObjC
                     }
                 }
             } else {
-                PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType) { [weak self] picker, objects, results, cancel in
-                    self?.isDismissing = false
+                PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType) { picker, objects, results, cancel in
                     completion?(picker, objects, results, cancel)
                 }
             }
@@ -761,6 +759,7 @@ import FWObjC
                 } else {
                     picker?.present(cropController, animated: true, completion: nil)
                 }
+                picker?.fw_pickerControllerDismissed = false
             } else {
                 picker?.dismiss(animated: true, completion: {
                     completion(objects as? [UIImage] ?? [], results, cancel)
@@ -768,6 +767,12 @@ import FWObjC
             }
         }
         return pickerController
+    }
+    
+    /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
+    public var fw_pickerControllerDismissed: Bool {
+        get { fw_propertyBool(forName: #function) }
+        set { fw_setPropertyBool(newValue, forName: #function) }
     }
     
 }

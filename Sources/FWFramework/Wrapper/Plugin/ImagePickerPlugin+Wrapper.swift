@@ -288,4 +288,10 @@ extension Wrapper where Base: PHPickerViewController {
         return Base.fw_pickerController(selectionLimit: selectionLimit, cropController: cropController, completion: completion)
     }
     
+    /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
+    public var pickerControllerDismissed: Bool {
+        get { base.fw_pickerControllerDismissed }
+        set { base.fw_pickerControllerDismissed = newValue }
+    }
+    
 }
