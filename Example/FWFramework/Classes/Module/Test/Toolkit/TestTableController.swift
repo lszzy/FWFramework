@@ -245,7 +245,9 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         
         var pictureUrls: [Any] = []
         for object in self.tableData {
-            if object.imageUrl.app.isValid(.isUrl) || object.imageUrl.isEmpty {
+            if object.imageUrl.app.isValid(.isUrl) {
+                pictureUrls.append(object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(Date.app.currentTime)")
+            } else if object.imageUrl.isEmpty {
                 pictureUrls.append(object.imageUrl)
             } else {
                 pictureUrls.append(ModuleBundle.imageNamed(object.imageUrl) as Any)
@@ -255,6 +257,9 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         app.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
             let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
             return cell?.myImageView
+        } placeholderImage: { [weak self] index in
+            let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
+            return cell?.myImageView.image
         }
     }
     

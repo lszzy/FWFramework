@@ -46,7 +46,7 @@ import FWObjC
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         var plugin: ImagePreviewPlugin
         if let imagePreviewPlugin = self.fw_imagePreviewPlugin, imagePreviewPlugin.responds(to: #selector(ImagePreviewPlugin.viewController(_:showImagePreview:imageInfos:currentIndex:sourceView:placeholderImage:renderBlock:customBlock:))) {
             plugin = imagePreviewPlugin
@@ -83,7 +83,7 @@ import FWObjC
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController

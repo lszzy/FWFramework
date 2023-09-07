@@ -37,7 +37,7 @@ extension Wrapper where Base: UIViewController {
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock)
     }
     
@@ -64,7 +64,7 @@ extension Wrapper where Base: UIView {
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock)
     }
     
