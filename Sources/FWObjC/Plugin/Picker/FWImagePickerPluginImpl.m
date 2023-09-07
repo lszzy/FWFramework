@@ -17,7 +17,7 @@
 
 @property (nonatomic, assign) FWImagePickerFilterType filterType;
 @property (nonatomic, assign) BOOL shouldDismiss;
-@property (nonatomic, assign) BOOL isDismissed;
+@property (nonatomic, assign) BOOL isDismissing;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
 @property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
@@ -68,19 +68,23 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
-    if (self.isDismissed) return;
+    if (self.isDismissing) return;
+    self.isDismissing = YES;
     
     FWImagePickerFilterType filterType = self.filterType;
     void (^completion)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
     if (self.shouldDismiss) {
-        self.isDismissed = YES;
         [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:^(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
             [picker dismissViewControllerAnimated:YES completion:^{
                 if (completion) completion(nil, objects, results, cancel);
             }];
         }];
     } else {
-        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:completion];
+        __weak FWImagePickerControllerDelegate *weakSelf = self;
+        [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:^(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
+            weakSelf.isDismissing = NO;
+            if (completion) completion(picker, objects, results, cancel);
+        }];
     }
 }
 
