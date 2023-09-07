@@ -34,6 +34,9 @@ import FWObjC
     
     /// 停止动画时是否自动隐藏，默认true
     open var hidesWhenStopped: Bool = true
+    
+    /// 修改指示器进度时是否始终执行动画，默认false
+    open var animateWhenProgress: Bool = false
 
     /// 当前是否正在执行动画
     open var isAnimating: Bool {
@@ -48,9 +51,15 @@ import FWObjC
     
     /// 指示器进度，大于0小于1时自动显示
     open var progress: CGFloat {
-        get { return animationView.currentProgress }
-        set { setProgress(newValue, animated: false) }
+        get {
+            if animateWhenProgress { return _progress }
+            return animationView.currentProgress
+        }
+        set {
+            setProgress(newValue, animated: false)
+        }
     }
+    private var _progress: CGFloat = 0
     
     // MARK: - Subviews
     /// 当前LottieView视图
@@ -94,8 +103,18 @@ import FWObjC
     public func setProgress(_ value: CGFloat, animated: Bool) {
         let progress: CGFloat = max(0.0, min(value, 1.0))
         let showingProgress = 0 < progress && progress < 1
-        if showingProgress { isHidden = false }
         
+        if animateWhenProgress {
+            _progress = progress
+            if showingProgress {
+                if !isAnimating { startAnimating() }
+            } else {
+                if isAnimating { stopAnimating() }
+            }
+            return
+        }
+        
+        if showingProgress { isHidden = false }
         if animated {
             let currentProgress = animationView.currentProgress
             animationView.play(fromProgress: currentProgress, toProgress: progress, loopMode: .playOnce) { [weak self] _ in
