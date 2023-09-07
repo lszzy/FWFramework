@@ -582,22 +582,25 @@ import FWObjC
         var filterType: ImagePickerFilterType = []
         var shouldDismiss: Bool = false
         var completionBlock: ((PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void)?
-        private var isDismissed: Bool = false
+        private var isDismissing: Bool = false
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            guard !isDismissed else { return }
+            guard !isDismissing else { return }
+            isDismissing = true
             
             let filterType = self.filterType
             let completion = self.completionBlock
             if self.shouldDismiss {
-                self.isDismissed = true
                 PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType) { picker, objects, results, cancel in
                     picker?.dismiss(animated: true) {
                         completion?(nil, objects, results, cancel)
                     }
                 }
             } else {
-                PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType, completion: completion)
+                PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType) { [weak self] picker, objects, results, cancel in
+                    self?.isDismissing = false
+                    completion?(picker, objects, results, cancel)
+                }
             }
         }
         
