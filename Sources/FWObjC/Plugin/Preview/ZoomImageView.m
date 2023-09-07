@@ -826,6 +826,7 @@
     [self.imageView __fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
+        self.image = placeholderImage;
         __weak __typeof__(self) self_weak_ = self;
         [self.imageView __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
