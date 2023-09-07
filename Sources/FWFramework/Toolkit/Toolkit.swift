@@ -1171,10 +1171,10 @@ extension WrapperGlobal {
         return UIImage(data: data)
     }
 
-    /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
+    /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.3。不保证图片大小一定小于该大小
     public func fw_compressData(maxLength: Int, compressRatio: CGFloat = 0) -> Data? {
         var compress: CGFloat = 1.0
-        let stepCompress: CGFloat = compressRatio > 0 ? compressRatio : 0.1
+        let stepCompress: CGFloat = compressRatio > 0 ? compressRatio : 0.3
         var data = fw_hasAlpha ? self.pngData() : self.jpegData(compressionQuality: compress)
         while (data?.count ?? 0) > maxLength && compress > stepCompress {
             compress -= stepCompress

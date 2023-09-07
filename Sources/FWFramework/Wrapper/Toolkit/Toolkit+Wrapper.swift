@@ -505,7 +505,7 @@ extension Wrapper where Base: UIImage {
         return base.fw_compressImage(maxLength: maxLength, compressRatio: compressRatio)
     }
 
-    /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
+    /// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.3。不保证图片大小一定小于该大小
     public func compressData(maxLength: Int, compressRatio: CGFloat = 0) -> Data? {
         return base.fw_compressData(maxLength: maxLength, compressRatio: compressRatio)
     }
