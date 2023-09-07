@@ -2897,6 +2897,39 @@ import AdSupport
         return layoutFrame
     }
     
+    /// 添加拖动排序手势，需结合canMove、moveItem、targetIndexPath使用
+    @discardableResult
+    public func fw_addMovementGesture(customBlock: ((UILongPressGestureRecognizer) -> Bool)? = nil) -> UILongPressGestureRecognizer {
+        fw_movementGestureBlock = customBlock
+        
+        let movementGesture = UILongPressGestureRecognizer(target: self, action: #selector(fw_movementGestureAction(_:)))
+        addGestureRecognizer(movementGesture)
+        return movementGesture
+    }
+    
+    private var fw_movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
+        get { return fw_property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
+        set { fw_setPropertyCopy(newValue, forName: #function) }
+    }
+    
+    @objc private func fw_movementGestureAction(_ gesture: UILongPressGestureRecognizer) {
+        if let customBlock = fw_movementGestureBlock,
+           !customBlock(gesture) { return }
+        
+        switch gesture.state {
+        case .began:
+            if let indexPath = indexPathForItem(at: gesture.location(in: self)) {
+                beginInteractiveMovementForItem(at: indexPath)
+            }
+        case .changed:
+            updateInteractiveMovementTargetPosition(gesture.location(in: self))
+        case .ended:
+            endInteractiveMovement()
+        default:
+            cancelInteractiveMovement()
+        }
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
