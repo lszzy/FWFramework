@@ -13,11 +13,31 @@
 
 #pragma mark - FWImagePickerControllerDelegate
 
+API_AVAILABLE(ios(14.0))
+@interface PHPickerViewController (FWImagePickerControllerDelegate)
+
+@property (nonatomic, assign) BOOL fw_pickerControllerDismissed;
+
+@end
+
+@implementation PHPickerViewController (FWImagePickerControllerDelegate)
+
+- (BOOL)fw_pickerControllerDismissed
+{
+    return [objc_getAssociatedObject(self, @selector(fw_pickerControllerDismissed)) boolValue];
+}
+
+- (void)setFw_pickerControllerDismissed:(BOOL)dismissed
+{
+    objc_setAssociatedObject(self, @selector(fw_pickerControllerDismissed), @(dismissed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
 @interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 
 @property (nonatomic, assign) FWImagePickerFilterType filterType;
 @property (nonatomic, assign) BOOL shouldDismiss;
-@property (nonatomic, assign) BOOL isDismissing;
 @property (nonatomic, copy) void (^completionBlock)(UIImagePickerController * _Nullable picker, id _Nullable object, NSDictionary * _Nullable info, BOOL cancel);
 
 @property (nonatomic, copy) void (^photosCompletionBlock)(PHPickerViewController * _Nullable picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) API_AVAILABLE(ios(14));
@@ -68,8 +88,8 @@
 
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
 {
-    if (self.isDismissing) return;
-    self.isDismissing = YES;
+    if (picker.fw_pickerControllerDismissed) return;
+    picker.fw_pickerControllerDismissed = YES;
     
     FWImagePickerFilterType filterType = self.filterType;
     void (^completion)(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) = self.photosCompletionBlock;
@@ -80,9 +100,7 @@
             }];
         }];
     } else {
-        __weak FWImagePickerControllerDelegate *weakSelf = self;
         [FWImagePickerControllerDelegate picker:picker didFinishPicking:results filterType:filterType completion:^(PHPickerViewController *picker, NSArray *objects, NSArray<PHPickerResult *> *results, BOOL cancel) {
-            weakSelf.isDismissing = NO;
             if (completion) completion(picker, objects, results, cancel);
         }];
     }
@@ -329,6 +347,7 @@
             } else {
                 [picker presentViewController:cropController animated:YES completion:nil];
             }
+            picker.fw_pickerControllerDismissed = NO;
         } else {
             [picker dismissViewControllerAnimated:YES completion:^{
                 if (completion) completion(objects, results, cancel);
