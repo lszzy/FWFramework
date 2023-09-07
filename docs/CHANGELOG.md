@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.17.2] - 2023-09-07
+
+### Changed
+* Add UICollectionView drag sorting method
+* Added an option to always perform animation when modifying progress in Lottie view
+
 ## [4.17.1] - 2023-09-06
 
 ### Changed

@@ -7646,56 +7646,56 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 66,
+      "line": 75,
       "symbol": "LottiePluginView.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 71,
+      "line": 80,
       "symbol": "LottiePluginView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 76,
+      "line": 85,
       "symbol": "LottiePluginView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 135,
+      "line": 154,
       "symbol": "LottiePluginView.frame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 139,
+      "line": 158,
       "symbol": "LottiePluginView.bounds",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 143,
+      "line": 162,
       "symbol": "LottiePluginView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 148,
+      "line": 167,
       "symbol": "LottiePluginView.intrinsicContentSize",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 152,
+      "line": 171,
       "symbol": "LottiePluginView.sizeThatFits(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
