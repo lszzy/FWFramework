@@ -608,12 +608,12 @@ import FWObjC
                 return
             }
             
-            var objects: [Any] = []
+            var objectsDict: [Int: Any] = [:]
             let totalCount = results.count
             var finishCount: Int = 0
             let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
             let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
-            for result in results {
+            for (index, result) in results.enumerated() {
                 let isVideo = checkVideo && result.itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMovie as String)
                 if !isVideo {
                     var objectClass: NSItemProviderReading.Type = UIImage.self
@@ -624,13 +624,14 @@ import FWObjC
                     result.itemProvider.loadObject(ofClass: objectClass) { object, error in
                         DispatchQueue.main.async {
                             if let image = object as? UIImage {
-                                objects.append(image)
+                                objectsDict[index] = image
                             } else if let livePhoto = object as? PHLivePhoto {
-                                objects.append(livePhoto)
+                                objectsDict[index] = livePhoto
                             }
                             
                             finishCount += 1
                             if finishCount == totalCount {
+                                let objects = objectsDict.sorted { $0.key < $1.key }.map { $0.value }
                                 completion?(picker, objects, results, false)
                             }
                         }
@@ -655,11 +656,12 @@ import FWObjC
                     
                     DispatchQueue.main.async {
                         if let fileURL = fileURL {
-                            objects.append(fileURL)
+                            objectsDict[index] = fileURL
                         }
                         
                         finishCount += 1
                         if finishCount == totalCount {
+                            let objects = objectsDict.sorted { $0.key < $1.key }.map { $0.value }
                             completion?(picker, objects, results, false)
                         }
                     }
