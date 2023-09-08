@@ -22,7 +22,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     open var fadeAnimated: Bool = false
 
     /// 图片自定义句柄，setImageURL开始时调用
-    open var customBlock: ((UIImageView) -> Void)?
+    open var customBlock: ((UIView) -> Void)?
     
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
@@ -42,40 +42,47 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         return ImageCoder.shared.encodedData(image: image, format: .undefined, options: options)
     }
     
-    open func imageURL(_ imageView: UIImageView) -> URL? {
-        return ImageDownloader.shared.imageURL(for: imageView)
+    open func imageURL(_ view: UIView) -> URL? {
+        return ImageDownloader.shared.imageURL(for: view)
     }
     
-    open func imageView(_ imageView: UIImageView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
-        customBlock?(imageView)
+    open func view(_ view: UIView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, setImageBlock block: ((UIView, UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
+        customBlock?(view)
+        let setImageBlock = block ?? { view, image in
+            if let imageView = view as? UIImageView {
+                imageView.image = image
+            } else if let button = view as? UIButton {
+                button.setImage(image, for: .normal)
+            }
+        }
         
-        ImageDownloader.shared.downloadImage(for: imageView, imageURL: imageURL, options: options, context: context, placeholder: {
-            imageView.image = placeholder
+        ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
+            setImageBlock(view, placeholder)
         }, completion: { image, isCache, error in
             let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
             if autoSetImage, ImagePluginImpl.shared.fadeAnimated, !isCache {
-                let originalOperationKey = ImageDownloader.shared.imageOperationKey(for: imageView)
-                UIView.transition(with: imageView, duration: 0, options: [], animations: {
-                    let operationKey = ImageDownloader.shared.imageOperationKey(for: imageView)
+                let originalOperationKey = ImageDownloader.shared.imageOperationKey(for: view)
+                UIView.transition(with: view, duration: 0, options: [], animations: {
+                    let operationKey = ImageDownloader.shared.imageOperationKey(for: view)
                     if operationKey == nil || operationKey != originalOperationKey { return }
                 }, completion: { finished in
-                    UIView.transition(with: imageView, duration: 0.5, options: [.transitionCrossDissolve, .allowUserInteraction], animations: {
-                        let operationKey = ImageDownloader.shared.imageOperationKey(for: imageView)
+                    UIView.transition(with: view, duration: 0.5, options: [.transitionCrossDissolve, .allowUserInteraction], animations: {
+                        let operationKey = ImageDownloader.shared.imageOperationKey(for: view)
                         if operationKey == nil || operationKey != originalOperationKey { return }
                         
-                        imageView.image = image
+                        setImageBlock(view, image)
                     }, completion: nil)
                 })
             } else if autoSetImage {
-                imageView.image = image
+                setImageBlock(view, image)
             }
             
             completion?(image, error)
         }, progress: progress)
     }
     
-    open func cancelImageRequest(_ imageView: UIImageView) {
-        ImageDownloader.shared.cancelImageDownloadTask(imageView)
+    open func cancelImageRequest(_ view: UIView) {
+        ImageDownloader.shared.cancelImageDownloadTask(view)
     }
     
     open func downloadImage(_ imageURL: URL?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {

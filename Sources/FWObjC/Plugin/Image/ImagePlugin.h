@@ -36,20 +36,21 @@ NS_SWIFT_NAME(ImagePlugin)
 
 @optional
 
-/// 获取imageView正在加载的URL插件方法
-- (nullable NSURL *)imageURL:(UIImageView *)imageView;
+/// 获取view正在加载的URL插件方法
+- (nullable NSURL *)imageURL:(UIView *)view;
 
-/// imageView加载网络图片插件方法
-- (void)imageView:(UIImageView *)imageView
+/// view加载网络图片插件方法
+- (void)view:(UIView *)view
         setImageURL:(nullable NSURL *)imageURL
         placeholder:(nullable UIImage *)placeholder
             options:(__FWWebImageOptions)options
             context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
+      setImageBlock:(nullable void (^)(UIView *view, UIImage * _Nullable image))setImageBlock
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
 
-/// imageView取消加载网络图片请求插件方法
-- (void)cancelImageRequest:(UIImageView *)imageView;
+/// view取消加载网络图片请求插件方法
+- (void)cancelImageRequest:(UIView *)view;
 
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)downloadImage:(nullable NSURL *)imageURL

@@ -24,7 +24,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     open var fadeAnimated = false
     
     /// 图片自定义句柄，setImageURL开始时调用
-    open var customBlock: ((UIImageView) -> Void)?
+    open var customBlock: ((UIView) -> Void)?
     
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
@@ -72,23 +72,24 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         return SDImageCodersManager.shared.encodedData(with: image, format: .undefined, options: coderOptions)
     }
     
-    open func imageURL(_ imageView: UIImageView) -> URL? {
-        return imageView.sd_imageURL
+    open func imageURL(_ view: UIView) -> URL? {
+        return view.sd_imageURL
     }
     
-    open func imageView(
-        _ imageView: UIImageView,
+    open func view(
+        _ view: UIView,
         setImageURL imageURL: URL?,
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
+        setImageBlock: ((UIView, UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
         progress: ((Double) -> Void)? = nil
     ) {
-        if fadeAnimated && imageView.sd_imageTransition == nil {
-            imageView.sd_imageTransition = SDWebImageTransition.fade
+        if fadeAnimated && view.sd_imageTransition == nil {
+            view.sd_imageTransition = SDWebImageTransition.fade
         }
-        customBlock?(imageView)
+        customBlock?(view)
         
         let targetOptions = SDWebImageOptions(rawValue: options.rawValue)
         var targetContext: [SDWebImageContextOption : Any]?
@@ -103,11 +104,14 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
             }
         }
         
-        imageView.sd_setImage(
+        view.sd_internalSetImage(
             with: imageURL,
             placeholderImage: placeholder,
             options: targetOptions.union(.retryFailed),
             context: targetContext,
+            setImageBlock: setImageBlock != nil ? { image, _, _, _ in
+                setImageBlock?(view, image)
+            } : nil,
             progress: progress != nil ? { receivedSize, expectedSize, _ in
                 guard expectedSize > 0 else { return }
                 if Thread.isMainThread {
@@ -118,14 +122,14 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
                     }
                 }
             } : nil,
-            completed: completion != nil ? { image, error, _, _ in
+            completed: completion != nil ? { image, _, error, _, _, _ in
                 completion?(image, error)
             } : nil
         )
     }
     
-    open func cancelImageRequest(_ imageView: UIImageView) {
-        imageView.sd_cancelCurrentImageLoad()
+    open func cancelImageRequest(_ view: UIView) {
+        view.sd_cancelCurrentImageLoad()
     }
     
     open func downloadImage(

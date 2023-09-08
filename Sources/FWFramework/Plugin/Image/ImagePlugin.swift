@@ -161,7 +161,7 @@ extension WrapperGlobal {
     
 }
 
-@_spi(FW) extension UIImageView {
+@_spi(FW) extension UIView {
     
     /// 自定义图片插件，未设置时自动从插件池加载
     public var fw_imagePlugin: ImagePlugin? {
@@ -185,15 +185,10 @@ extension WrapperGlobal {
         return nil
     }
 
-    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
-    }
-
-    /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
+    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIView, UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
         if let imagePlugin = self.fw_imagePlugin,
-           imagePlugin.responds(to: #selector(ImagePlugin.imageView(_:setImageURL:placeholder:options:context:completion:progress:))) {
+           imagePlugin.responds(to: #selector(ImagePlugin.view(_:setImageURL:placeholder:options:context:setImageBlock:completion:progress:))) {
             var imageURL: URL?
             if let string = url as? String, !string.isEmpty {
                 imageURL = URL.fw_url(string: string)
@@ -203,7 +198,7 @@ extension WrapperGlobal {
                 imageURL = urlRequest.url
             }
             
-            imagePlugin.imageView?(self, setImageURL: imageURL, placeholder: placeholderImage, options: options, context: context, completion: completion, progress: progress)
+            imagePlugin.view?(self, setImageURL: imageURL, placeholder: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress)
         }
     }
 
@@ -215,6 +210,20 @@ extension WrapperGlobal {
         }
     }
     
+}
+
+@_spi(FW) extension UIImageView {
+
+    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
+    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
+    }
+
+    /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
+    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
+    }
+    
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
     public static func fw_animatedImageView() -> UIImageView {
         if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
@@ -223,6 +232,20 @@ extension WrapperGlobal {
         }
         
         return UIImageView()
+    }
+    
+}
+
+@_spi(FW) extension UIButton {
+
+    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
+    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
+    }
+
+    /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
+    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     
 }
