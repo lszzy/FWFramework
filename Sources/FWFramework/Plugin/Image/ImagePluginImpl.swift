@@ -27,8 +27,17 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 自定义动画指示器句柄，默认nil
     open var customIndicatorBlock: ((UIView) -> (UIView & IndicatorViewPlugin)?)?
 
-    /// 图片自定义句柄，setImageURL开始时调用
+    /// 自定义图片处理句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
+    
+    /// 自定义图片进度句柄，setImageURL下载时调用
+    open var customProgressBlock: ((UIView, CGFloat) -> Void)?
+    
+    /// 自定义图片完成句柄，setImageURL完成时调用
+    open var customCompletionBlock: ((UIView, UIImage?, Error?) -> Void)?
+    
+    /// 自定义图片取消句柄，cancelImageRequest时调用
+    open var customCancelBlock: ((UIView) -> Void)?
     
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
@@ -83,18 +92,23 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         }
         if let indicatorView = indicatorView {
             view.bringSubviewToFront(indicatorView)
-            indicatorView.startAnimating()
+            if !indicatorView.isAnimating {
+                indicatorView.startAnimating()
+            }
             indicatorView.isHidden = false
         }
         customBlock?(view)
         
         ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
             setImageBlock(placeholder)
-        }, completion: { image, isCache, error in
+        }, completion: { [weak self] image, isCache, error in
             if let indicatorView = indicatorView {
-                indicatorView.stopAnimating()
+                if indicatorView.isAnimating {
+                    indicatorView.stopAnimating()
+                }
                 indicatorView.isHidden = true
             }
+            self?.customCompletionBlock?(view, image, error)
             
             let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
             if autoSetImage, ImagePluginImpl.shared.fadeAnimated, !isCache {
@@ -115,10 +129,21 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
             
             completion?(image, error)
-        }, progress: progress)
+        }, progress: customProgressBlock != nil ? { [weak self] value in
+            self?.customProgressBlock?(view, value)
+            progress?(value)
+        } : progress)
     }
     
     open func cancelImageRequest(_ view: UIView) {
+        if showsIndicator, let indicatorView = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
+            if indicatorView.isAnimating {
+                indicatorView.stopAnimating()
+            }
+            indicatorView.isHidden = true
+        }
+        customCancelBlock?(view)
+        
         ImageDownloader.shared.cancelImageDownloadTask(view)
     }
     
