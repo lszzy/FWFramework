@@ -20,19 +20,24 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画", "切换占位图加载动画"], actionBlock: { index in
                 guard let self = self else { return }
                 
                 if index == 0 {
                     self.isSDWebImage = !self.isSDWebImage
                     PluginManager.unloadPlugin(ImagePlugin.self)
                     PluginManager.registerPlugin(ImagePlugin.self, object: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
-                } else {
+                } else if index == 1 {
                     if self.isSDWebImage {
                         SDWebImageImpl.shared.showsIndicator = !SDWebImageImpl.shared.showsIndicator
+                        ImagePluginImpl.shared.showsIndicator = SDWebImageImpl.shared.showsIndicator
                     } else {
                         ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
+                        SDWebImageImpl.shared.showsIndicator = ImagePluginImpl.shared.showsIndicator
                     }
+                } else {
+                    ImagePluginImpl.shared.hidesPlaceholderIndicator = !ImagePluginImpl.shared.hidesPlaceholderIndicator
+                    SDWebImageImpl.shared.hidesPlaceholderIndicator = ImagePluginImpl.shared.hidesPlaceholderIndicator
                 }
                 
                 if self.isSDWebImage {
