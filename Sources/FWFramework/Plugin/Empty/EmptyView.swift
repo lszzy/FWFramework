@@ -94,7 +94,7 @@ open class PlaceholderView: UIView {
     }
 
     /// loadingView颜色，默认灰色
-    open var loadingViewColor: UIColor = .gray {
+    open var loadingViewColor: UIColor = ViewPluginImpl.indicatorViewColor {
         didSet {
             loadingView.indicatorColor = loadingViewColor
         }

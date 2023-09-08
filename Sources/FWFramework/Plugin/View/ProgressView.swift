@@ -64,7 +64,7 @@ open class ProgressView: UIView, ProgressViewPlugin {
     private var _progress: CGFloat = 0
     
     public init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
+        super.init(frame: CGRect(origin: .zero, size: ViewPluginImpl.indicatorLargeSize))
         
         didInitialize()
     }
