@@ -15,6 +15,9 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     static var isExpanded = false
     static var faceAware = true
     
+    @StoredValue("testRandomKey")
+    static var testRandomKey: String = ""
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -54,7 +57,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupNavbar() {
         Self.isExpanded = false
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别", "reloadData"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别", "reloadData", "重置图片缓存"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.tableView.contentInsetAdjustmentBehavior = self?.tableView.contentInsetAdjustmentBehavior == .never ? .automatic : .never
                     self?.setupSubviews()
@@ -64,8 +67,10 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
                 } else if index == 2 {
                     Self.faceAware = !Self.faceAware
                     self?.setupSubviews()
-                } else {
+                } else if index == 3 {
                     self?.tableView.reloadData()
+                } else {
+                    TestTableController.testRandomKey = "\(Date.app.currentTime)"
                 }
             })
         }
@@ -239,14 +244,10 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func onPhotoBrowser(_ cell: TestTableDynamicLayoutCell, indexPath: IndexPath) {
-        // 移除所有缓存
-        ImageDownloader.defaultInstance().imageCache?.removeAllImages()
-        ImageDownloader.defaultURLCache().removeAllCachedResponses()
-        
         var pictureUrls: [Any] = []
         for object in self.tableData {
             if object.imageUrl.app.isValid(.isUrl) {
-                pictureUrls.append(object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(Date.app.currentTime)")
+                pictureUrls.append(object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(Self.testRandomKey)")
             } else if object.imageUrl.isEmpty {
                 pictureUrls.append(object.imageUrl)
             } else {
