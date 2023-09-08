@@ -13,27 +13,6 @@
 
 #pragma mark - FWImagePickerControllerDelegate
 
-API_AVAILABLE(ios(14.0))
-@interface PHPickerViewController (FWImagePickerControllerDelegate)
-
-@property (nonatomic, assign) BOOL fw_pickerControllerDismissed;
-
-@end
-
-@implementation PHPickerViewController (FWImagePickerControllerDelegate)
-
-- (BOOL)fw_pickerControllerDismissed
-{
-    return [objc_getAssociatedObject(self, @selector(fw_pickerControllerDismissed)) boolValue];
-}
-
-- (void)setFw_pickerControllerDismissed:(BOOL)dismissed
-{
-    objc_setAssociatedObject(self, @selector(fw_pickerControllerDismissed), @(dismissed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
 @interface FWImagePickerControllerDelegate : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHPickerViewControllerDelegate>
 
 @property (nonatomic, assign) FWImagePickerFilterType filterType;
@@ -113,12 +92,12 @@ API_AVAILABLE(ios(14.0))
         return;
     }
     
-    NSMutableArray *objects = [NSMutableArray array];
+    NSMutableArray *unsortArray = [NSMutableArray array];
     NSInteger totalCount = results.count;
     __block NSInteger finishCount = 0;
     BOOL checkLivePhoto = (filterType & FWImagePickerFilterTypeLivePhoto) || filterType < 1;
     BOOL checkVideo = (filterType & FWImagePickerFilterTypeVideo) || filterType < 1;
-    [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger idx, BOOL *stop) {
+    [results enumerateObjectsUsingBlock:^(PHPickerResult *result, NSUInteger index, BOOL *stop) {
         BOOL isVideo = checkVideo && [result.itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie];
         if (!isVideo) {
             Class objectClass = [UIImage class];
@@ -134,12 +113,21 @@ API_AVAILABLE(ios(14.0))
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([object isKindOfClass:[UIImage class]] ||
                         [object isKindOfClass:[PHLivePhoto class]]) {
-                        [objects addObject:object];
+                        [unsortArray addObject:@[@(index), object, result]];
                     }
                     
                     finishCount += 1;
                     if (finishCount == totalCount) {
-                        completion(picker, [objects copy], results, NO);
+                        NSArray *sortedArray = [unsortArray sortedArrayUsingComparator:^NSComparisonResult(NSArray *arr1, NSArray *arr2) {
+                            return [arr1[0] compare:arr2[0]];
+                        }];
+                        NSMutableArray *sortedObjects = [NSMutableArray array];
+                        NSMutableArray *sortedResults = [NSMutableArray array];
+                        [sortedArray enumerateObjectsUsingBlock:^(NSArray *arr, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [sortedObjects addObject:arr[1]];
+                            [sortedResults addObject:arr[2]];
+                        }];
+                        completion(picker, [sortedObjects copy], [sortedResults copy], NO);
                     }
                 });
             }];
@@ -160,11 +148,20 @@ API_AVAILABLE(ios(14.0))
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (fileURL) [objects addObject:fileURL];
+                if (fileURL) [unsortArray addObject:@[@(index), fileURL, result]];
                 
                 finishCount += 1;
                 if (finishCount == totalCount) {
-                    completion(picker, [objects copy], results, NO);
+                    NSArray *sortedArray = [unsortArray sortedArrayUsingComparator:^NSComparisonResult(NSArray *arr1, NSArray *arr2) {
+                        return [arr1[0] compare:arr2[0]];
+                    }];
+                    NSMutableArray *sortedObjects = [NSMutableArray array];
+                    NSMutableArray *sortedResults = [NSMutableArray array];
+                    [sortedArray enumerateObjectsUsingBlock:^(NSArray *arr, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [sortedObjects addObject:arr[1]];
+                        [sortedResults addObject:arr[2]];
+                    }];
+                    completion(picker, [sortedObjects copy], [sortedResults copy], NO);
                 }
             });
         }];
@@ -355,6 +352,16 @@ API_AVAILABLE(ios(14.0))
         }
     }];
     return pickerController;
+}
+
+- (BOOL)fw_pickerControllerDismissed
+{
+    return [objc_getAssociatedObject(self, @selector(fw_pickerControllerDismissed)) boolValue];
+}
+
+- (void)setFw_pickerControllerDismissed:(BOOL)dismissed
+{
+    objc_setAssociatedObject(self, @selector(fw_pickerControllerDismissed), @(dismissed), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
