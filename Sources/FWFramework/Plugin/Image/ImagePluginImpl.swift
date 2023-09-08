@@ -53,7 +53,6 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func view(_ view: UIView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, setImageBlock block: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
-        customBlock?(view)
         let setImageBlock = block ?? { image in
             if let imageView = view as? UIImageView {
                 imageView.image = image
@@ -62,9 +61,40 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
         }
         
+        var progressView: (UIView & ProgressViewPlugin)?
+        if showsIndicator {
+            if let indicatorView = view.viewWithTag(2061) as? (UIView & ProgressViewPlugin) {
+                progressView = indicatorView
+            } else {
+                if customIndicatorBlock != nil {
+                    progressView = customIndicatorBlock?(view)
+                } else {
+                    let indicator = UIView.fw_progressView(style: .default)
+                    indicator.indicatorColor = .gray
+                    progressView = indicator
+                }
+                if let progressView = progressView {
+                    progressView.tag = 2061
+                    view.addSubview(progressView)
+                    progressView.fw_alignCenter()
+                }
+            }
+        }
+        if let progressView = progressView {
+            view.bringSubviewToFront(progressView)
+            progressView.progress = 0.01
+            progressView.isHidden = false
+        }
+        customBlock?(view)
+        
         ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
             setImageBlock(placeholder)
         }, completion: { image, isCache, error in
+            if let progressView = progressView {
+                progressView.progress = 1
+                progressView.isHidden = true
+            }
+            
             let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
             if autoSetImage, ImagePluginImpl.shared.fadeAnimated, !isCache {
                 let originalOperationKey = ImageDownloader.shared.imageOperationKey(for: view)
@@ -84,7 +114,10 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
             
             completion?(image, error)
-        }, progress: progress)
+        }, progress: progressView != nil ? { value in
+            progressView?.progress = value
+            progress?(value)
+        } : progress)
     }
     
     open func cancelImageRequest(_ view: UIView) {
