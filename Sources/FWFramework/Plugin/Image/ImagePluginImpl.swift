@@ -18,8 +18,14 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     @objc(sharedInstance)
     public static let shared = ImagePluginImpl()
 
-    /// 图片加载完成是否显示渐变动画，默认NO
+    /// 图片加载完成是否显示渐变动画，默认false
     open var fadeAnimated: Bool = false
+    
+    /// 图片加载时是否显示进度指示器，默认false
+    open var showsIndicator = false
+    
+    /// 自定义进度指示器句柄，默认nil
+    open var customIndicatorBlock: ((UIView) -> (UIView & ProgressViewPlugin)?)?
 
     /// 图片自定义句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
