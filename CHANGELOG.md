@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.17.3] - 2023-09-08
+
+### Fixed
+* Fix the problem that the callback order of the system image selector is incorrect and multiple callbacks are triggered
+* Optimized image compression decrement rate default value is 0.3
+
 ## [4.17.2] - 2023-09-07
 
 ### Changed
