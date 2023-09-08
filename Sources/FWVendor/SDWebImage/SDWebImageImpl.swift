@@ -26,6 +26,9 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
+    /// 图片占位图存在时是否隐藏动画指示器，默认false
+    open var hidesPlaceholderIndicator = false
+    
     /// 自定义动画指示器句柄，默认nil时为medium灰色
     open var customIndicatorBlock: ((UIView) -> SDWebImageIndicator?)?
     
@@ -95,7 +98,8 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if fadeAnimated && view.sd_imageTransition == nil {
             view.sd_imageTransition = SDWebImageTransition.fade
         }
-        if showsIndicator && view.sd_imageIndicator == nil {
+        if showsIndicator && view.sd_imageIndicator == nil &&
+            !(hidesPlaceholderIndicator && placeholder != nil) {
             if customIndicatorBlock != nil {
                 view.sd_imageIndicator = customIndicatorBlock?(view)
             } else {

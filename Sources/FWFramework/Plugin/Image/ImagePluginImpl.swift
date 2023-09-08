@@ -24,6 +24,9 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
+    /// 图片占位图存在时是否隐藏动画指示器，默认false
+    open var hidesPlaceholderIndicator = false
+    
     /// 自定义动画指示器句柄，默认nil
     open var customIndicatorBlock: ((UIView) -> (UIView & IndicatorViewPlugin)?)?
 
@@ -71,7 +74,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         }
         
         var indicatorView: (UIView & IndicatorViewPlugin)?
-        if showsIndicator {
+        if showsIndicator && !(hidesPlaceholderIndicator && placeholder != nil) {
             if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
                 indicatorView = indicator
             } else {
