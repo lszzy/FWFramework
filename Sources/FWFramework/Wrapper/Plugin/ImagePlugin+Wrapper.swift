@@ -51,7 +51,7 @@ extension Wrapper where Base: UIImage {
     
 }
 
-extension Wrapper where Base: UIImageView {
+extension Wrapper where Base: UIView {
     
     /// 自定义图片插件，未设置时自动从插件池加载
     public var imagePlugin: ImagePlugin? {
@@ -63,6 +63,20 @@ extension Wrapper where Base: UIImageView {
     public var imageURL: URL? {
         return base.fw_imageURL
     }
+    
+    /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
+    public func setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIView, UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+        base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress)
+    }
+
+    /// 取消加载网络图片请求
+    public func cancelImageRequest() {
+        base.fw_cancelImageRequest()
+    }
+    
+}
+
+extension Wrapper where Base: UIImageView {
 
     /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
     public func setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
@@ -73,15 +87,24 @@ extension Wrapper where Base: UIImageView {
     public func setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
     }
-
-    /// 取消加载网络图片请求
-    public func cancelImageRequest() {
-        base.fw_cancelImageRequest()
-    }
     
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
     public static func animatedImageView() -> UIImageView {
         return Base.fw_animatedImageView()
+    }
+    
+}
+
+extension Wrapper where Base: UIButton {
+    
+    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
+    public func setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+        base.fw_setImage(url: url, placeholderImage: placeholderImage, completion: completion)
+    }
+
+    /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
+    public func setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+        base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
     }
     
 }
