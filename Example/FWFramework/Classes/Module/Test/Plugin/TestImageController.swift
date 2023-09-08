@@ -19,20 +19,36 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        app.setRightBarItem("Change") { [weak self] _ in
-            guard let self = self else { return }
-            self.isSDWebImage = !self.isSDWebImage
-            PluginManager.unloadPlugin(ImagePlugin.self)
-            PluginManager.registerPlugin(ImagePlugin.self, object: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
-            if self.isSDWebImage {
-                SDImageCache.shared.clear(with: .all)
-            }
-            
-            self.tableData.removeAll()
-            self.tableView.reloadData()
-            self.tableView.layoutIfNeeded()
-            self.tableView.setContentOffset(.zero, animated: false)
-            self.setupSubviews()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画"], actionBlock: { index in
+                guard let self = self else { return }
+                
+                if index == 0 {
+                    self.isSDWebImage = !self.isSDWebImage
+                    PluginManager.unloadPlugin(ImagePlugin.self)
+                    PluginManager.registerPlugin(ImagePlugin.self, object: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
+                } else {
+                    if self.isSDWebImage {
+                        SDWebImageImpl.shared.showsIndicator = !SDWebImageImpl.shared.showsIndicator
+                    } else {
+                        ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
+                    }
+                }
+                
+                if self.isSDWebImage {
+                    SDImageCache.shared.clearMemory()
+                    SDImageCache.shared.clearDisk(onCompletion: nil)
+                } else {
+                    ImageDownloader.defaultInstance().imageCache?.removeAllImages()
+                    ImageDownloader.defaultURLCache().removeAllCachedResponses()
+                }
+                
+                self.tableData.removeAll()
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+                self.tableView.setContentOffset(.zero, animated: false)
+                self.setupSubviews()
+            })
         }
     }
     

@@ -23,6 +23,12 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     /// 图片加载完成是否显示渐变动画，默认false
     open var fadeAnimated = false
     
+    /// 图片加载时是否显示动画指示器，默认false
+    open var showsIndicator = false
+    
+    /// 自定义动画指示器句柄，默认nil时为medium灰色
+    open var customIndicatorBlock: ((UIView) -> SDWebImageIndicator?)?
+    
     /// 图片自定义句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
     
@@ -88,6 +94,15 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     ) {
         if fadeAnimated && view.sd_imageTransition == nil {
             view.sd_imageTransition = SDWebImageTransition.fade
+        }
+        if showsIndicator && view.sd_imageIndicator == nil {
+            if customIndicatorBlock != nil {
+                view.sd_imageIndicator = customIndicatorBlock?(view)
+            } else {
+                let indicator = SDWebImageActivityIndicator.medium
+                indicator.indicatorView.color = .gray
+                view.sd_imageIndicator = indicator
+            }
         }
         customBlock?(view)
         
