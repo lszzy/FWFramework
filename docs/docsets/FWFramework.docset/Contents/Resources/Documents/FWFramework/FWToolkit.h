@@ -369,7 +369,7 @@ FOUNDATION_EXPORT UIFont * FWFontBold(CGFloat size) NS_SWIFT_UNAVAILABLE("");
 /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
 - (nullable UIImage *)fw_compressImageWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio NS_REFINED_FOR_SWIFT;
 
-/// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.1。不保证图片大小一定小于该大小
+/// 压缩图片到指定字节，图片太大时会改为JPG格式，可设置递减压缩率，默认0.3。不保证图片大小一定小于该大小
 - (nullable NSData *)fw_compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio NS_REFINED_FOR_SWIFT;
 
 /// 长边压缩图片尺寸，获取等比例的图片

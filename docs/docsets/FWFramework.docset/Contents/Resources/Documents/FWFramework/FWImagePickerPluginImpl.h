@@ -100,6 +100,9 @@ API_AVAILABLE(ios(14.0))
 + (PHPickerViewController *)fw_pickerControllerWithSelectionLimit:(NSInteger)selectionLimit cropController:(nullable FWImageCropController * (^)(UIImage *image))cropController
                                           completion:(void (^)(NSArray<UIImage *> *images, NSArray<PHPickerResult *> *results, BOOL cancel))completion NS_REFINED_FOR_SWIFT;
 
+/// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
+@property (nonatomic, assign) BOOL fw_pickerControllerDismissed NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - PHPhotoLibrary+FWImagePickerPluginImpl

@@ -12966,7 +12966,7 @@
     },
     {
       "file": "docs/FWFramework/FWImagePickerPluginImpl.h",
-      "line": 107,
+      "line": 110,
       "symbol": "PHPhotoLibrary(FWImagePickerPluginImpl)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
