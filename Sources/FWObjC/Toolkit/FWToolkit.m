@@ -1178,7 +1178,7 @@ static BOOL fwStaticAutoFlatFont = NO;
 - (NSData *)fw_compressDataWithMaxLength:(NSInteger)maxLength compressRatio:(CGFloat)compressRatio
 {
     CGFloat compress = 1.f;
-    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.1f;
+    CGFloat stepCompress = compressRatio > 0 ? compressRatio : 0.3f;
     NSData *data = self.fw_hasAlpha
         ? UIImagePNGRepresentation(self)
         : UIImageJPEGRepresentation(self, compress);
