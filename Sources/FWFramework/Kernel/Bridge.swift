@@ -148,15 +148,19 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension UIImageView {
+@_spi(FW) @objc extension UIView {
 
-    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: progress)
+    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: nil, setImageBlock: setImageBlock, completion: completion, progress: progress)
     }
 
     public func __fw_cancelImageRequest() {
         fw_cancelImageRequest()
     }
+    
+}
+
+@_spi(FW) @objc extension UIImageView {
     
     public static func __fw_animatedImageView() -> UIImageView {
         return fw_animatedImageView()

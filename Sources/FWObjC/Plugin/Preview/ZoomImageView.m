@@ -823,12 +823,14 @@
         if (isVideo) imageURL = [AVPlayerItem playerItemWithURL:imageURL];
     }
 
-    [_imageView __fw_cancelImageRequest];
+    [self __fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
-        self.image = placeholderImage;
         __weak __typeof__(self) self_weak_ = self;
-        [self.imageView __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+        [self __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage options:__FWWebImageOptionAvoidSetImage setImageBlock:^(UIImage * _Nullable image) {
+            __typeof__(self) self = self_weak_;
+            self.image = image;
+        } completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             self.progress = 1;
             if (image) self.image = image;

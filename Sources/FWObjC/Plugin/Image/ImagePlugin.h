@@ -45,7 +45,7 @@ NS_SWIFT_NAME(ImagePlugin)
         placeholder:(nullable UIImage *)placeholder
             options:(__FWWebImageOptions)options
             context:(nullable NSDictionary<__FWImageCoderOptions, id> *)context
-      setImageBlock:(nullable void (^)(UIView *view, UIImage * _Nullable image))setImageBlock
+      setImageBlock:(nullable void (^)(UIImage * _Nullable image))setImageBlock
          completion:(nullable void (^)(UIImage * _Nullable image, NSError * _Nullable error))completion
            progress:(nullable void (^)(double progress))progress;
 
