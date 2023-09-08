@@ -21,11 +21,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 图片加载完成是否显示渐变动画，默认false
     open var fadeAnimated: Bool = false
     
-    /// 图片加载时是否显示进度指示器，默认false
+    /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
-    /// 自定义进度指示器句柄，默认nil
-    open var customIndicatorBlock: ((UIView) -> (UIView & ProgressViewPlugin)?)?
+    /// 自定义动画指示器句柄，默认nil
+    open var customIndicatorBlock: ((UIView) -> (UIView & IndicatorViewPlugin)?)?
 
     /// 图片自定义句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
@@ -61,38 +61,39 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
         }
         
-        var progressView: (UIView & ProgressViewPlugin)?
+        var indicatorView: (UIView & IndicatorViewPlugin)?
         if showsIndicator {
-            if let indicatorView = view.viewWithTag(2061) as? (UIView & ProgressViewPlugin) {
-                progressView = indicatorView
+            if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
+                indicatorView = indicator
             } else {
                 if customIndicatorBlock != nil {
-                    progressView = customIndicatorBlock?(view)
+                    indicatorView = customIndicatorBlock?(view)
                 } else {
-                    let indicator = UIView.fw_progressView(style: .default)
-                    indicator.indicatorColor = .gray
-                    progressView = indicator
+                    let indicator = UIView.fw_indicatorView(style: .image)
+                    indicator.indicatorSize = ViewPluginImpl.indicatorMediumSize
+                    indicator.indicatorColor = ViewPluginImpl.indicatorViewColor
+                    indicatorView = indicator
                 }
-                if let progressView = progressView {
-                    progressView.tag = 2061
-                    view.addSubview(progressView)
-                    progressView.fw_alignCenter()
+                if let indicatorView = indicatorView {
+                    indicatorView.tag = 2061
+                    view.addSubview(indicatorView)
+                    indicatorView.fw_alignCenter()
                 }
             }
         }
-        if let progressView = progressView {
-            view.bringSubviewToFront(progressView)
-            progressView.progress = 0.01
-            progressView.isHidden = false
+        if let indicatorView = indicatorView {
+            view.bringSubviewToFront(indicatorView)
+            indicatorView.startAnimating()
+            indicatorView.isHidden = false
         }
         customBlock?(view)
         
         ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
             setImageBlock(placeholder)
         }, completion: { image, isCache, error in
-            if let progressView = progressView {
-                progressView.progress = 1
-                progressView.isHidden = true
+            if let indicatorView = indicatorView {
+                indicatorView.stopAnimating()
+                indicatorView.isHidden = true
             }
             
             let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
@@ -114,10 +115,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
             
             completion?(image, error)
-        }, progress: progressView != nil ? { value in
-            progressView?.progress = value
-            progress?(value)
-        } : progress)
+        }, progress: progress)
     }
     
     open func cancelImageRequest(_ view: UIView) {

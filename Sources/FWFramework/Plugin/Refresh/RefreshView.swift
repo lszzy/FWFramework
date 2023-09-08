@@ -171,7 +171,7 @@ open class PullRefreshView: UIView {
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw_indicatorView(style: .refresh)
-        result.indicatorColor = .gray
+        result.indicatorColor = ViewPluginImpl.indicatorViewColor
         addSubview(result)
         return result
     }() {
@@ -754,7 +754,7 @@ open class InfiniteScrollView: UIView {
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw_indicatorView(style: .refresh)
-        result.indicatorColor = .gray
+        result.indicatorColor = ViewPluginImpl.indicatorViewColor
         addSubview(result)
         return result
     }() {

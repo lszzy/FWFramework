@@ -106,8 +106,8 @@ import UIKit
 
 @_spi(FW) @objc extension UIView {
     
-    public static func __fw_progressViewWithDefault() -> UIView & ProgressViewPlugin {
-        return fw_progressView(style: .default)
+    public static func __fw_progressViewWithPreview() -> UIView & ProgressViewPlugin {
+        return fw_progressView(style: .preview)
     }
 
     public static func __fw_indicatorViewWithRefresh() -> UIView & IndicatorViewPlugin {

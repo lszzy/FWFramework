@@ -59,14 +59,14 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     // MARK: - Lifecycle
     /// 指定动画类型初始化
     public init(type: IndicatorViewAnimationType) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
+        super.init(frame: CGRect(origin: .zero, size: ViewPluginImpl.indicatorLargeSize))
         
         self.type = type
         setupLayer()
     }
     
     public init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
+        super.init(frame: CGRect(origin: .zero, size: ViewPluginImpl.indicatorLargeSize))
         
         setupLayer()
     }

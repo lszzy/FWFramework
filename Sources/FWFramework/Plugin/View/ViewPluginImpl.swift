@@ -18,6 +18,15 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     @objc(sharedInstance)
     public static let shared = ViewPluginImpl()
     
+    /// 全局配置大指示器预设尺寸，默认{37,37}
+    public static var indicatorLargeSize: CGSize = CGSize(width: 37, height: 37)
+    
+    /// 全局配置中指示器预设尺寸，默认{20,20}
+    public static var indicatorMediumSize: CGSize = CGSize(width: 20, height: 20)
+    
+    /// 全局配置指示器视图预设颜色，默认gray
+    public static var indicatorViewColor: UIColor = .gray
+    
     /// 自定义进度视图生产句柄，默认ProgressView
     open var customProgressView: ((ProgressViewStyle) -> UIView & ProgressViewPlugin)?
     

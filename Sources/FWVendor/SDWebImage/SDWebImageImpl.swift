@@ -100,7 +100,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
                 view.sd_imageIndicator = customIndicatorBlock?(view)
             } else {
                 let indicator = SDWebImageActivityIndicator.medium
-                indicator.indicatorView.color = .gray
+                indicator.indicatorView.color = ViewPluginImpl.indicatorViewColor
                 view.sd_imageIndicator = indicator
             }
         }
