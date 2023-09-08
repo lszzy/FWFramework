@@ -823,7 +823,7 @@
         if (isVideo) imageURL = [AVPlayerItem playerItemWithURL:imageURL];
     }
 
-    [self.imageView __fw_cancelImageRequest];
+    [_imageView __fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
         self.image = placeholderImage;
