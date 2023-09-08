@@ -82,7 +82,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
-        setImageBlock: ((UIView, UIImage?) -> Void)?,
+        setImageBlock: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
         progress: ((Double) -> Void)? = nil
     ) {
@@ -110,7 +110,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
             options: targetOptions.union(.retryFailed),
             context: targetContext,
             setImageBlock: setImageBlock != nil ? { image, _, _, _ in
-                setImageBlock?(view, image)
+                setImageBlock?(image)
             } : nil,
             progress: progress != nil ? { receivedSize, expectedSize, _ in
                 guard expectedSize > 0 else { return }

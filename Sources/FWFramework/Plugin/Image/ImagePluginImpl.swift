@@ -46,9 +46,9 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         return ImageDownloader.shared.imageURL(for: view)
     }
     
-    open func view(_ view: UIView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, setImageBlock block: ((UIView, UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
+    open func view(_ view: UIView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, setImageBlock block: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
         customBlock?(view)
-        let setImageBlock = block ?? { view, image in
+        let setImageBlock = block ?? { image in
             if let imageView = view as? UIImageView {
                 imageView.image = image
             } else if let button = view as? UIButton {
@@ -57,7 +57,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         }
         
         ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
-            setImageBlock(view, placeholder)
+            setImageBlock(placeholder)
         }, completion: { image, isCache, error in
             let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
             if autoSetImage, ImagePluginImpl.shared.fadeAnimated, !isCache {
@@ -70,11 +70,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                         let operationKey = ImageDownloader.shared.imageOperationKey(for: view)
                         if operationKey == nil || operationKey != originalOperationKey { return }
                         
-                        setImageBlock(view, image)
+                        setImageBlock(image)
                     }, completion: nil)
                 })
             } else if autoSetImage {
-                setImageBlock(view, image)
+                setImageBlock(image)
             }
             
             completion?(image, error)
