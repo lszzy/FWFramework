@@ -217,6 +217,12 @@ extension WrapperGlobal {
         return nil
     }
     
+    /// 是否隐藏全局图片加载指示器，默认false，仅全局图片指示器开启时生效
+    public var fw_hidesImageIndicator: Bool {
+        get { fw_propertyBool(forName: #function) }
+        set { fw_setPropertyBool(newValue, forName: #function) }
+    }
+    
 }
 
 @_spi(FW) extension UIImageView {

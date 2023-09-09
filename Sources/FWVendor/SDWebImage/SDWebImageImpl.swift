@@ -99,7 +99,9 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if fadeAnimated && view.sd_imageTransition == nil {
             view.sd_imageTransition = SDWebImageTransition.fade
         }
-        if showsIndicator && !(hidesPlaceholderIndicator && placeholder != nil) && view.sd_imageIndicator == nil {
+        if showsIndicator && !view.fw_hidesImageIndicator &&
+            !(hidesPlaceholderIndicator && placeholder != nil) &&
+            view.sd_imageIndicator == nil {
             if customIndicatorBlock != nil {
                 view.sd_imageIndicator = customIndicatorBlock?(view, placeholder != nil)
             } else {

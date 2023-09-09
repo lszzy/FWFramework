@@ -74,7 +74,8 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         }
         
         var indicatorView: (UIView & IndicatorViewPlugin)?
-        if showsIndicator && !(hidesPlaceholderIndicator && placeholder != nil) {
+        if showsIndicator && !view.fw_hidesImageIndicator &&
+            !(hidesPlaceholderIndicator && placeholder != nil) {
             if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
                 indicatorView = indicator
             } else {
