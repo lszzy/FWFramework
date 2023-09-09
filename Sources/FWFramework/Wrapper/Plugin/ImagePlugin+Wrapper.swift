@@ -79,6 +79,12 @@ extension Wrapper where Base: UIView {
         return base.fw_loadImageCache(url: url)
     }
     
+    /// 是否隐藏全局图片加载指示器，默认false，仅全局图片指示器开启时生效
+    public var hidesImageIndicator: Bool {
+        get { base.fw_hidesImageIndicator }
+        set { base.fw_hidesImageIndicator = newValue }
+    }
+    
 }
 
 extension Wrapper where Base: UIImageView {

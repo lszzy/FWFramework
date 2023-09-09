@@ -158,6 +158,11 @@ import UIKit
         return fw_loadImageCache(url: url)
     }
     
+    public var __fw_hidesImageIndicator: Bool {
+        get { fw_hidesImageIndicator }
+        set { fw_hidesImageIndicator = newValue }
+    }
+    
 }
 
 @_spi(FW) @objc extension UIImageView {

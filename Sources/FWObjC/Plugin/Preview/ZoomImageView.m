@@ -64,6 +64,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        self.__fw_hidesImageIndicator = YES;
+        
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
@@ -792,7 +794,7 @@
 
 - (void)setProgress:(CGFloat)progress {
     self.progressView.progress = progress;
-    if (progress >= 1 || progress <= 0) {
+    if (self.hidesProgressView || (progress >= 1 || progress <= 0)) {
         if (!self.progressView.hidden) self.progressView.hidden = YES;
     } else {
         if (self.progressView.hidden) self.progressView.hidden = NO;
