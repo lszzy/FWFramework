@@ -103,7 +103,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
             if customIndicatorBlock != nil {
                 view.sd_imageIndicator = customIndicatorBlock?(view, placeholder != nil)
             } else {
-                view.sd_imageIndicator = SDWebImagePluginIndicator(scene: placeholder != nil ? .imagePlaceholder : .image)
+                view.sd_imageIndicator = SDWebImagePluginIndicator(style: placeholder != nil ? .imagePlaceholder : .image)
             }
         }
         customBlock?(view)
@@ -213,7 +213,10 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
 open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
-        let result = UIView.fw_indicatorView(style: .default, scene: scene)
+        let result = UIView.fw_indicatorView(style: style)
+        if style.indicatorColor == nil {
+            result.indicatorColor = (style == .image) ? .gray : .white
+        }
         return result
     }() {
         didSet {
@@ -221,7 +224,7 @@ open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
         }
     }
     
-    private var scene: IndicatorViewScene = .image
+    private var style: IndicatorViewStyle = .image
     
     public override init() {
         super.init()
@@ -229,10 +232,10 @@ open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
         didInitialize()
     }
     
-    public init(scene: IndicatorViewScene) {
+    public init(style: IndicatorViewStyle) {
         super.init()
         
-        self.scene = scene
+        self.style = style
         didInitialize()
     }
     
@@ -260,7 +263,7 @@ open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
 open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
-        let result = UIView.fw_progressView(style: .default, scene: scene)
+        let result = UIView.fw_progressView(style: style)
         return result
     }() {
         didSet {
@@ -270,7 +273,7 @@ open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
     
     open var animated: Bool = true
     
-    private var scene: ProgressViewScene = .default
+    private var style: ProgressViewStyle = .default
     
     public override init() {
         super.init()
@@ -278,10 +281,10 @@ open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
         didInitialize()
     }
     
-    public init(scene: ProgressViewScene) {
+    public init(style: ProgressViewStyle) {
         super.init()
         
-        self.scene = scene
+        self.style = style
         didInitialize()
     }
     

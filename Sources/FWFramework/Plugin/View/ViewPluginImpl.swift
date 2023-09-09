@@ -19,23 +19,31 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     public static let shared = ViewPluginImpl()
     
     /// 自定义进度视图生产句柄，默认nil时ProgressView
-    open var customProgressView: ((ProgressViewStyle, ProgressViewScene) -> (UIView & ProgressViewPlugin)?)?
+    open var customProgressView: ((ProgressViewStyle) -> (UIView & ProgressViewPlugin)?)?
     
     /// 自定义指示器视图生产句柄，默认nil时UIActivityIndicatorView
-    open var customIndicatorView: ((IndicatorViewStyle, IndicatorViewScene) -> (UIView & IndicatorViewPlugin)?)?
+    open var customIndicatorView: ((IndicatorViewStyle) -> (UIView & IndicatorViewPlugin)?)?
     
     // MARK: - ViewPlugin
-    open func progressView(style: ProgressViewStyle, scene: ProgressViewScene) -> UIView & ProgressViewPlugin {
-        let progressView = customProgressView?(style, scene) ?? ProgressView()
-        progressView.indicatorSize = scene.indicatorSize
-        progressView.indicatorColor = scene.indicatorColor
+    open func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
+        let progressView = customProgressView?(style) ?? ProgressView()
+        if let indicatorSize = style.indicatorSize {
+            progressView.indicatorSize = indicatorSize
+        }
+        if let indicatorColor = style.indicatorColor {
+            progressView.indicatorColor = indicatorColor
+        }
         return progressView
     }
     
-    open func indicatorView(style: IndicatorViewStyle, scene: IndicatorViewScene) -> UIView & IndicatorViewPlugin {
-        let indicatorView = customIndicatorView?(style, scene) ?? UIActivityIndicatorView.fw_indicatorView()
-        indicatorView.indicatorSize = scene.indicatorSize
-        indicatorView.indicatorColor = scene.indicatorColor
+    open func indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
+        let indicatorView = customIndicatorView?(style) ?? UIActivityIndicatorView.fw_indicatorView(color: nil)
+        if let indicatorSize = style.indicatorSize {
+            indicatorView.indicatorSize = indicatorSize
+        }
+        if let indicatorColor = style.indicatorColor {
+            indicatorView.indicatorColor = indicatorColor
+        }
         return indicatorView
     }
     

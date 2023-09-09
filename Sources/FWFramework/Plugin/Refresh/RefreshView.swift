@@ -170,7 +170,11 @@ open class PullRefreshView: UIView {
     
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .default, scene: .refreshPulldown)
+        let style: IndicatorViewStyle = .refreshPulldown
+        let result = UIView.fw_indicatorView(style: style)
+        if style.indicatorColor == nil {
+            result.indicatorColor = .gray
+        }
         addSubview(result)
         return result
     }() {
@@ -750,7 +754,11 @@ open class InfiniteScrollView: UIView {
     
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .default, scene: .refreshPullup)
+        let style: IndicatorViewStyle = .refreshPullup
+        let result = UIView.fw_indicatorView(style: style)
+        if style.indicatorColor == nil {
+            result.indicatorColor = .gray
+        }
         addSubview(result)
         return result
     }() {

@@ -107,7 +107,7 @@ import UIKit
 @_spi(FW) @objc extension UIView {
     
     public static func __fw_progressViewWithPreview() -> UIView & ProgressViewPlugin {
-        return fw_progressView(style: .default, scene: .imagePreview)
+        return fw_progressView(style: .imagePreview)
     }
     
     public func __fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
@@ -166,8 +166,8 @@ import UIKit
 
 @_spi(FW) @objc extension UIActivityIndicatorView {
     
-    public static func __fw_indicatorView() -> UIActivityIndicatorView {
-        return fw_indicatorView()
+    public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
+        return fw_indicatorView(color: color)
     }
     
 }
