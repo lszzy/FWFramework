@@ -789,7 +789,30 @@
 
     id<__FWImageRequestCache> imageCache = self.imageCache;
     UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
-    return cachedImage;
+    if (cachedImage) return cachedImage;
+    
+    NSCachedURLResponse *cachedResponse = [self.sessionManager.session.configuration.URLCache cachedResponseForRequest:urlRequest];
+    id responseObject = cachedResponse ? [self.sessionManager.responseSerializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:nil] : nil;
+    if ([responseObject isKindOfClass:[UIImage class]]) {
+        return (UIImage *)responseObject;
+    }
+    return nil;
+}
+
+- (void)clearImageCaches:(void (^)(void))completion
+{
+    [self.imageCache removeAllImages];
+    [self.sessionManager.session.configuration.URLCache removeAllCachedResponses];
+    
+    if (completion != nil) {
+        if ([NSThread isMainThread]) {
+            completion();
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    }
 }
 
 @end

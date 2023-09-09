@@ -136,6 +136,8 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (nullable UIImage *)loadImageCacheForURL:(nullable id)url;
 
+- (void)clearImageCaches:(nullable void(^)(void))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
