@@ -24,8 +24,8 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
-    /// 图片占位图存在时是否隐藏动画指示器，默认false
-    open var hidesPlaceholderIndicator = false
+    /// 图片占位图存在时是否隐藏动画指示器，默认true
+    open var hidesPlaceholderIndicator = true
     
     /// 自定义动画指示器句柄，默认nil
     open var customIndicatorBlock: ((UIView) -> (UIView & IndicatorViewPlugin)?)?
@@ -78,14 +78,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
                 indicatorView = indicator
             } else {
-                if customIndicatorBlock != nil {
-                    indicatorView = customIndicatorBlock?(view)
-                } else {
-                    let indicator = UIView.fw_indicatorView(style: .image)
-                    indicator.indicatorSize = ViewPluginImpl.indicatorMediumSize
-                    indicator.indicatorColor = ViewPluginImpl.indicatorViewColor
-                    indicatorView = indicator
-                }
+                indicatorView = customIndicatorBlock != nil ? customIndicatorBlock?(view) : UIView.fw_indicatorView(style: .image)
                 if let indicatorView = indicatorView {
                     indicatorView.tag = 2061
                     view.addSubview(indicatorView)

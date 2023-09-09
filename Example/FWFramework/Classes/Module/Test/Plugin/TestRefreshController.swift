@@ -49,14 +49,14 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
     }
     
     func setupSubviews() {
-        InfiniteScrollView.height = 64
+        // InfiniteScrollView.height = 64
         tableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
         tableView.app.setLoading(target: self, action: #selector(onLoading))
         
-        let pullView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        pullView.image = ModuleBundle.imageNamed("Loading.gif")
-        tableView.app.pullRefreshView?.shouldChangeAlpha = false
-        tableView.app.pullRefreshView?.setCustomView(pullView, for: .all)
+        // let pullView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        // pullView.image = ModuleBundle.imageNamed("Loading.gif")
+        // tableView.app.pullRefreshView?.shouldChangeAlpha = false
+        // tableView.app.pullRefreshView?.setCustomView(pullView, for: .all)
         tableView.app.pullRefreshView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "refresh state-\(state.rawValue)"
         }
@@ -64,9 +64,9 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
             self?.navigationItem.title = String(format: "refresh progress-%.2f", progress)
         }
         
-        let infiniteView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        infiniteView.image = ModuleBundle.imageNamed("Loading.gif")
-        tableView.app.infiniteScrollView?.setCustomView(infiniteView, for: .all)
+        // let infiniteView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        // infiniteView.image = ModuleBundle.imageNamed("Loading.gif")
+        // tableView.app.infiniteScrollView?.setCustomView(infiniteView, for: .all)
         // tableView.app.infiniteScrollView?.preloadHeight = 200
         tableView.app.infiniteScrollView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "load state-\(state.rawValue)"

@@ -44,16 +44,27 @@ open class ToastView: UIControl {
     open var horizontalAlignment: Bool = false
     /// 如果不想要内容整体垂直居中，则可通过调整此属性来进行垂直偏移。默认为-30，即内容比中间略微偏上
     open var verticalOffset: CGFloat = -30.0
-    /// 指示器图片，支持动画图片，自适应大小，仅Image生效
-    open var indicatorImage: UIImage?
-    /// 指示器颜色，默认白色，仅Indicator生效
-    open var indicatorColor: UIColor = UIColor.white
-    /// 指示器大小，默认根据类型处理
-    open var indicatorSize: CGSize = .zero
     /// 标题字体，默认16号
     open var titleFont: UIFont = UIFont.systemFont(ofSize: 16)
     /// 标题颜色，默认白色
     open var titleColor: UIColor = UIColor.white
+    /// 指示器图片，支持动画图片，自适应大小，仅Image生效
+    open var indicatorImage: UIImage?
+    /// 指示器大小，默认根据类型处理
+    open var indicatorSize: CGSize = .zero
+    /// 指示器颜色，默认nil时不处理，仅Indicator生效
+    open var indicatorColor: UIColor? {
+        didSet {
+            switch type {
+            case .indicator:
+                indicatorView.indicatorColor = indicatorColor
+            case .progress:
+                progressView.indicatorColor = indicatorColor
+            default:
+                break
+            }
+        }
+    }
     
     /// 带属性标题文本，为空时不显示
     open var attributedTitle: NSAttributedString? {
@@ -212,10 +223,8 @@ open class ToastView: UIControl {
             imageView.image = indicatorImage
         case .indicator:
             firstView = indicatorView
-            indicatorView.indicatorColor = indicatorColor
         case .progress:
             firstView = progressView
-            progressView.indicatorColor = indicatorColor
         default:
             break
         }

@@ -170,8 +170,8 @@ import UIKit
 
 @_spi(FW) @objc extension UIActivityIndicatorView {
     
-    public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
-        return fw_indicatorView(color: color)
+    public static func __fw_indicatorView() -> UIActivityIndicatorView {
+        return fw_indicatorView()
     }
     
 }
