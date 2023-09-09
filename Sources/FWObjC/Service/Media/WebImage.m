@@ -782,4 +782,14 @@
     [self setImageOperationKey:nil forObject:object];
 }
 
+- (UIImage *)loadImageCacheForURL:(id)url
+{
+    NSURLRequest *urlRequest = [self urlRequestWithURL:url options:0];
+    if ([urlRequest URL] == nil) return nil;
+
+    id<__FWImageRequestCache> imageCache = self.imageCache;
+    UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    return cachedImage;
+}
+
 @end

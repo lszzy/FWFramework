@@ -52,6 +52,12 @@ NS_SWIFT_NAME(ImagePlugin)
 /// view取消加载网络图片请求插件方法
 - (void)cancelImageRequest:(UIView *)view;
 
+/// 加载指定URL的本地缓存图片
+- (nullable UIImage *)loadImageCache:(nullable NSURL *)imageURL;
+
+/// 清除所有本地图片缓存
+- (void)clearImageCaches:(nullable void(^)(void))completion;
+
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)downloadImage:(nullable NSURL *)imageURL
                        options:(__FWWebImageOptions)options

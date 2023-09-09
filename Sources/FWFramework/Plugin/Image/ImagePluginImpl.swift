@@ -147,6 +147,24 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         ImageDownloader.shared.cancelImageDownloadTask(view)
     }
     
+    open func loadImageCache(_ imageURL: URL?) -> UIImage? {
+        return ImageDownloader.shared.loadImageCache(forURL: imageURL)
+    }
+    
+    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+        ImageDownloader.defaultInstance().imageCache?.removeAllImages()
+        ImageDownloader.defaultURLCache().removeAllCachedResponses()
+        if completion != nil {
+            if Thread.isMainThread {
+                completion?()
+            } else {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            }
+        }
+    }
+    
     open func downloadImage(_ imageURL: URL?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
         return ImageDownloader.shared.downloadImage(forURL: imageURL, options: options, context: context, success: { request, response, responseObject in
             let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)

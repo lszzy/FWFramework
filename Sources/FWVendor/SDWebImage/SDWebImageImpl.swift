@@ -149,6 +149,17 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         view.sd_cancelCurrentImageLoad()
     }
     
+    open func loadImageCache(_ imageURL: URL?) -> UIImage? {
+        guard let cacheKey = SDWebImageManager.shared.cacheKey(for: imageURL) else { return nil }
+        let cachedImage = SDImageCache.shared.imageFromCache(forKey: cacheKey)
+        return cachedImage
+    }
+    
+    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+        SDImageCache.shared.clearMemory()
+        SDImageCache.shared.clearDisk(onCompletion: completion)
+    }
+    
     open func downloadImage(
         _ imageURL: URL?,
         options: WebImageOptions = [],
