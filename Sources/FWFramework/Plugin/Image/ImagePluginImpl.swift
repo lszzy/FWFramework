@@ -27,7 +27,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 图片占位图存在时是否隐藏动画指示器，默认false
     open var hidesPlaceholderIndicator = false
     
-    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil时为image|placeholder样式
+    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil
     open var customIndicatorBlock: ((UIView, Bool) -> (UIView & IndicatorViewPlugin)?)?
 
     /// 自定义图片处理句柄，setImageURL开始时调用
