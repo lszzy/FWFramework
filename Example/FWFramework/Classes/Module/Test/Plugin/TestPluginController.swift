@@ -20,8 +20,8 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 if index == 0 {
                     Self.showLottieProgress = !Self.showLottieProgress
                 } else {
-                    IndicatorViewScene.setIndicatorColor(.red, for: .all)
-                    ProgressViewScene.setIndicatorColor(.red, for: .all)
+                    IndicatorViewStyle.setIndicatorColor(.red, for: .all)
+                    ProgressViewStyle.setIndicatorColor(.red, for: .all)
                 }
             })
         })
@@ -169,7 +169,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     func onSettings(_ indexPath: IndexPath) {
         if indexPath.section == 0 {
             let annular = indexPath.row == 0
-            ViewPluginImpl.shared.customProgressView = { style, scene in
+            ViewPluginImpl.shared.customProgressView = { style in
                 let progressView = ProgressView()
                 progressView.annular = annular
                 return progressView
@@ -180,14 +180,14 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         }
         
         if indexPath.section == 2 {
-            ViewPluginImpl.shared.customIndicatorView = { style, scene in
+            ViewPluginImpl.shared.customIndicatorView = { style in
                 let lottieView = LottiePluginView()
                 lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 return lottieView
             }
             // FWLottieView也支持进度显示
-            ViewPluginImpl.shared.customProgressView = { style, scene in
+            ViewPluginImpl.shared.customProgressView = { style in
                 let lottieView = LottiePluginView()
                 lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
@@ -216,11 +216,11 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         let sectionData = tableData[indexPath.section]
         let rowData = sectionData[indexPath.row]
         let type = IndicatorViewAnimationType(rawValue: rowData)
-        ViewPluginImpl.shared.customIndicatorView = { style, scene in
+        ViewPluginImpl.shared.customIndicatorView = { style in
             return IndicatorView(type: type)
         }
         // IndicatorView也支持进度显示
-        ViewPluginImpl.shared.customProgressView = { style, scene in
+        ViewPluginImpl.shared.customProgressView = { style in
             let indicatorView = IndicatorView(type: type)
             indicatorView.hidesWhenStopped = false
             return indicatorView

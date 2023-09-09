@@ -19,23 +19,23 @@ extension Wrapper where Base: UIView {
     }
 
     /// 统一进度视图工厂方法
-    public func progressView(style: ProgressViewStyle = .default, scene: ProgressViewScene = .default) -> UIView & ProgressViewPlugin {
-        return base.fw_progressView(style: style, scene: scene)
+    public func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
+        return base.fw_progressView(style: style)
     }
 
     /// 统一指示器视图工厂方法
-    public func indicatorView(style: IndicatorViewStyle = .default, scene: IndicatorViewScene = .default) -> UIView & IndicatorViewPlugin {
-        return base.fw_indicatorView(style: style, scene: scene)
+    public func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
+        return base.fw_indicatorView(style: style)
     }
     
     /// 统一进度视图工厂方法
-    public static func progressView(style: ProgressViewStyle = .default, scene: ProgressViewScene = .default) -> UIView & ProgressViewPlugin {
-        return Base.fw_progressView(style: style, scene: scene)
+    public static func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
+        return Base.fw_progressView(style: style)
     }
 
     /// 统一指示器视图工厂方法
-    public static func indicatorView(style: IndicatorViewStyle = .default, scene: IndicatorViewScene = .default) -> UIView & IndicatorViewPlugin {
-        return Base.fw_indicatorView(style: style, scene: scene)
+    public static func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
+        return Base.fw_indicatorView(style: style)
     }
     
 }
@@ -43,7 +43,7 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIActivityIndicatorView {
     
     /// 快速创建指示器，可指定颜色，默认白色
-    public static func indicatorView(color: UIColor? = nil) -> UIActivityIndicatorView {
+    public static func indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         return Base.fw_indicatorView(color: color)
     }
     
