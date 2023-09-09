@@ -93,8 +93,8 @@ open class PlaceholderView: UIView {
         }
     }
 
-    /// loadingView颜色，默认灰色
-    open var loadingViewColor: UIColor = ViewPluginImpl.indicatorViewColor {
+    /// loadingView颜色，默认nil为指示器颜色
+    open var loadingViewColor: UIColor? {
         didSet {
             loadingView.indicatorColor = loadingViewColor
         }
@@ -141,8 +141,7 @@ open class PlaceholderView: UIView {
     
     /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
     open lazy var loadingView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .default)
-        result.indicatorColor = loadingViewColor
+        let result = UIView.fw_indicatorView(style: .empty)
         return result
     }() {
         didSet {

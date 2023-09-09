@@ -143,17 +143,6 @@ extension AppTheme {
                 return nil
             }
         }
-        ToastPluginImpl.shared.customBlock = { toastView in
-            if toastView.type == .indicator {
-                if (toastView.attributedTitle?.length ?? 0) < 1 {
-                    toastView.contentBackgroundColor = .clear
-                    toastView.indicatorColor = AppTheme.textColor
-                }
-            }
-        }
-        EmptyPluginImpl.shared.customBlock = { (emptyView) in
-            emptyView.loadingViewColor = AppTheme.textColor
-        }
         EmptyPluginImpl.shared.defaultText = {
             return "暂无数据"
         }

@@ -57,12 +57,14 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
     
     public typealias RawValue = Int
     
-    /// 默认指示器样式，用于框架Empty|Toast等插件
+    /// 默认指示器样式，用于框架Toast等插件
     public static let `default`: IndicatorViewStyle = .init(0)
     /// 刷新指示器样式，用于框架Refresh等插件
     public static let refresh: IndicatorViewStyle = .init(1)
+    /// 空界面指示器样式，用于框架Empty等插件
+    public static let empty: IndicatorViewStyle = .init(2)
     /// 图片指示器样式，用于框架Image等插件
-    public static let image: IndicatorViewStyle = .init(2)
+    public static let image: IndicatorViewStyle = .init(3)
     
     public var rawValue: Int
     
@@ -170,7 +172,7 @@ extension ViewPlugin {
 @_spi(FW) extension UIActivityIndicatorView {
     
     /// 快速创建指示器，可指定颜色，默认白色
-    public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
+    public static func fw_indicatorView(color: UIColor? = nil) -> UIActivityIndicatorView {
         var indicatorStyle: UIActivityIndicatorView.Style
         if #available(iOS 13.0, *) {
             indicatorStyle = .medium
