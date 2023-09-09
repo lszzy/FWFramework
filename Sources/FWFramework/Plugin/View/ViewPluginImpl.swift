@@ -30,7 +30,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     /// 自定义指示器视图尺寸句柄，默认nil时{37,37}
     open var customIndicatorSize: ((IndicatorViewStyle) -> CGSize)?
     
-    /// 自定义指示器视图颜色句柄，默认nil时default为白色、refresh|empty|image为灰色
+    /// 自定义指示器视图颜色句柄，默认nil时default|placeholder为白色、refresh|empty|image为灰色
     open var customIndicatorColor: ((IndicatorViewStyle) -> UIColor?)?
     
     /// 自定义指示器视图生产句柄，会执行尺寸和颜色句柄，默认nil时UIActivityIndicatorView
@@ -58,7 +58,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
         if let indicatorColor = customIndicatorColor?(style) {
             indicatorView.indicatorColor = indicatorColor
         } else {
-            indicatorView.indicatorColor = (style == .default) ? .white : .gray
+            indicatorView.indicatorColor = (style == .default || style == .placeholder) ? .white : .gray
         }
         return indicatorView
     }
