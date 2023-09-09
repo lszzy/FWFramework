@@ -18,48 +18,24 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     @objc(sharedInstance)
     public static let shared = ViewPluginImpl()
     
-    /// 自定义进度视图尺寸句柄，默认nil时{37,37}
-    open var customProgressSize: ((ProgressViewStyle) -> CGSize)?
+    /// 自定义进度视图生产句柄，默认nil时ProgressView
+    open var customProgressView: ((ProgressViewStyle, ProgressViewScene) -> (UIView & ProgressViewPlugin)?)?
     
-    /// 自定义进度视图颜色句柄，默认nil时default|preview都为白色
-    open var customProgressColor: ((ProgressViewStyle) -> UIColor?)?
-    
-    /// 自定义进度视图生产句柄，会执行尺寸和颜色句柄，默认nil时ProgressView
-    open var customProgressView: ((ProgressViewStyle) -> (UIView & ProgressViewPlugin)?)?
-    
-    /// 自定义指示器视图尺寸句柄，默认nil时{37,37}
-    open var customIndicatorSize: ((IndicatorViewStyle) -> CGSize)?
-    
-    /// 自定义指示器视图颜色句柄，默认nil时default|placeholder为白色、refresh|empty|image为灰色
-    open var customIndicatorColor: ((IndicatorViewStyle) -> UIColor?)?
-    
-    /// 自定义指示器视图生产句柄，会执行尺寸和颜色句柄，默认nil时UIActivityIndicatorView
-    open var customIndicatorView: ((IndicatorViewStyle) -> (UIView & IndicatorViewPlugin)?)?
+    /// 自定义指示器视图生产句柄，默认nil时UIActivityIndicatorView
+    open var customIndicatorView: ((IndicatorViewStyle, IndicatorViewScene) -> (UIView & IndicatorViewPlugin)?)?
     
     // MARK: - ViewPlugin
-    open func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
-        let progressView = customProgressView?(style) ?? ProgressView()
-        if let indicatorSize = customProgressSize?(style) {
-            progressView.indicatorSize = indicatorSize
-        }
-        if let indicatorColor = customProgressColor?(style) {
-            progressView.indicatorColor = indicatorColor
-        } else {
-            progressView.indicatorColor = .white
-        }
+    open func progressView(style: ProgressViewStyle, scene: ProgressViewScene) -> UIView & ProgressViewPlugin {
+        let progressView = customProgressView?(style, scene) ?? ProgressView()
+        progressView.indicatorSize = scene.indicatorSize
+        progressView.indicatorColor = scene.indicatorColor
         return progressView
     }
     
-    open func indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
-        let indicatorView = customIndicatorView?(style) ?? UIActivityIndicatorView.fw_indicatorView()
-        if let indicatorSize = customIndicatorSize?(style) {
-            indicatorView.indicatorSize = indicatorSize
-        }
-        if let indicatorColor = customIndicatorColor?(style) {
-            indicatorView.indicatorColor = indicatorColor
-        } else {
-            indicatorView.indicatorColor = (style == .default || style == .placeholder) ? .white : .gray
-        }
+    open func indicatorView(style: IndicatorViewStyle, scene: IndicatorViewScene) -> UIView & IndicatorViewPlugin {
+        let indicatorView = customIndicatorView?(style, scene) ?? UIActivityIndicatorView.fw_indicatorView()
+        indicatorView.indicatorSize = scene.indicatorSize
+        indicatorView.indicatorColor = scene.indicatorColor
         return indicatorView
     }
     

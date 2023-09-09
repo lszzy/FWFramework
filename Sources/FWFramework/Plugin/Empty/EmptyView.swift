@@ -141,7 +141,7 @@ open class PlaceholderView: UIView {
     
     /// 此控件通过设置 loadingView.hidden 来控制 loadinView 的显示和隐藏，因此请确保你的loadingView 没有类似于 hidesWhenStopped = YES 之类会使 view.hidden 失效的属性
     open lazy var loadingView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .empty)
+        let result = UIView.fw_indicatorView(style: .default, scene: .empty)
         return result
     }() {
         didSet {

@@ -124,7 +124,7 @@ open class ToastView: UIControl {
     
     /// 指示器视图，可自定义，仅Indicator生效
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .default)
+        let result = UIView.fw_indicatorView(style: .default, scene: .toast)
         result.isUserInteractionEnabled = false
         return result
     }() {
@@ -140,7 +140,7 @@ open class ToastView: UIControl {
     
     /// 进度条视图，可自定义，仅Progress生效
     open lazy var progressView: UIView & ProgressViewPlugin = {
-        let result = UIView.fw_progressView(style: .default)
+        let result = UIView.fw_progressView(style: .default, scene: .toast)
         result.isUserInteractionEnabled = false
         return result
     }() {

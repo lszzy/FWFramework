@@ -170,7 +170,7 @@ open class PullRefreshView: UIView {
     
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .refresh)
+        let result = UIView.fw_indicatorView(style: .default, scene: .refreshPulldown)
         addSubview(result)
         return result
     }() {
@@ -750,7 +750,7 @@ open class InfiniteScrollView: UIView {
     
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .refresh)
+        let result = UIView.fw_indicatorView(style: .default, scene: .refreshPullup)
         addSubview(result)
         return result
     }() {

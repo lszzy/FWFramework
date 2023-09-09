@@ -81,7 +81,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                 if customIndicatorBlock != nil {
                     indicatorView = customIndicatorBlock?(view, placeholder != nil)
                 } else {
-                    indicatorView = UIView.fw_indicatorView(style: placeholder != nil ? .placeholder : .image)
+                    indicatorView = UIView.fw_indicatorView(style: .default, scene: placeholder != nil ? .imagePlaceholder : .image)
                 }
                 if let indicatorView = indicatorView {
                     indicatorView.tag = 2061

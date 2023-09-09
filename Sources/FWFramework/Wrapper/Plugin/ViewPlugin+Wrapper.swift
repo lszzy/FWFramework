@@ -19,23 +19,23 @@ extension Wrapper where Base: UIView {
     }
 
     /// 统一进度视图工厂方法
-    public func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
-        return base.fw_progressView(style: style)
+    public func progressView(style: ProgressViewStyle = .default, scene: ProgressViewScene = .default) -> UIView & ProgressViewPlugin {
+        return base.fw_progressView(style: style, scene: scene)
     }
 
     /// 统一指示器视图工厂方法
-    public func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
-        return base.fw_indicatorView(style: style)
+    public func indicatorView(style: IndicatorViewStyle = .default, scene: IndicatorViewScene = .default) -> UIView & IndicatorViewPlugin {
+        return base.fw_indicatorView(style: style, scene: scene)
     }
     
     /// 统一进度视图工厂方法
-    public static func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
-        return Base.fw_progressView(style: style)
+    public static func progressView(style: ProgressViewStyle = .default, scene: ProgressViewScene = .default) -> UIView & ProgressViewPlugin {
+        return Base.fw_progressView(style: style, scene: scene)
     }
 
     /// 统一指示器视图工厂方法
-    public static func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
-        return Base.fw_indicatorView(style: style)
+    public static func indicatorView(style: IndicatorViewStyle = .default, scene: IndicatorViewScene = .default) -> UIView & IndicatorViewPlugin {
+        return Base.fw_indicatorView(style: style, scene: scene)
     }
     
 }
