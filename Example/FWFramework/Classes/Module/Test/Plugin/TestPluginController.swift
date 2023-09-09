@@ -16,8 +16,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, block: { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [!Self.showLottieProgress ? "开启Lottie进度展示" : "关闭Lottie进度展示"], actionBlock: { index in
-                Self.showLottieProgress = !Self.showLottieProgress
+            self?.app.showSheet(title: nil, message: nil, actions: [!Self.showLottieProgress ? "开启Lottie进度展示" : "关闭Lottie进度展示", "修改指示器颜色为红色"], actionBlock: { index in
+                if index == 0 {
+                    Self.showLottieProgress = !Self.showLottieProgress
+                } else {
+                    IndicatorViewScene.setIndicatorColor(.red, for: .all)
+                    ProgressViewScene.setIndicatorColor(.red, for: .all)
+                }
             })
         })
     }
