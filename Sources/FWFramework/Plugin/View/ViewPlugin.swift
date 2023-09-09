@@ -18,6 +18,7 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
     
     /// 默认进度条样式，用于框架Toast等插件
     public static let `default`: ProgressViewStyle = .init(0)
+    
     /// 预览进度条样式，用于框架Preview等插件
     public static let preview: ProgressViewStyle = .init(1)
     
@@ -59,12 +60,15 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
     
     /// 默认指示器样式，用于框架Toast等插件
     public static let `default`: IndicatorViewStyle = .init(0)
+    
     /// 刷新指示器样式，用于框架Refresh等插件
     public static let refresh: IndicatorViewStyle = .init(1)
     /// 空界面指示器样式，用于框架Empty等插件
     public static let empty: IndicatorViewStyle = .init(2)
     /// 图片指示器样式，用于框架Image等插件
     public static let image: IndicatorViewStyle = .init(3)
+    /// 图片占位指示器样式，用于框架Image占位等插件
+    public static let placeholder: IndicatorViewStyle = .init(4)
     
     public var rawValue: Int
     

@@ -24,11 +24,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
-    /// 图片占位图存在时是否隐藏动画指示器，默认true
-    open var hidesPlaceholderIndicator = true
+    /// 图片占位图存在时是否隐藏动画指示器，默认false
+    open var hidesPlaceholderIndicator = false
     
-    /// 自定义动画指示器句柄，默认nil
-    open var customIndicatorBlock: ((UIView) -> (UIView & IndicatorViewPlugin)?)?
+    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil时为image|placeholder样式
+    open var customIndicatorBlock: ((UIView, Bool) -> (UIView & IndicatorViewPlugin)?)?
 
     /// 自定义图片处理句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
@@ -78,7 +78,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
                 indicatorView = indicator
             } else {
-                indicatorView = customIndicatorBlock != nil ? customIndicatorBlock?(view) : UIView.fw_indicatorView(style: .image)
+                if customIndicatorBlock != nil {
+                    indicatorView = customIndicatorBlock?(view, placeholder != nil)
+                } else {
+                    indicatorView = UIView.fw_indicatorView(style: placeholder != nil ? .placeholder : .image)
+                }
                 if let indicatorView = indicatorView {
                     indicatorView.tag = 2061
                     view.addSubview(indicatorView)

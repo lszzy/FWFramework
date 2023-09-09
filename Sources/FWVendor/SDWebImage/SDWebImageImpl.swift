@@ -26,11 +26,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     /// 图片加载时是否显示动画指示器，默认false
     open var showsIndicator = false
     
-    /// 图片占位图存在时是否隐藏动画指示器，默认true
-    open var hidesPlaceholderIndicator = true
+    /// 图片占位图存在时是否隐藏动画指示器，默认false
+    open var hidesPlaceholderIndicator = false
     
-    /// 自定义动画指示器句柄，默认nil时为medium灰色
-    open var customIndicatorBlock: ((UIView) -> SDWebImageIndicator?)?
+    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil时为image|placeholder样式
+    open var customIndicatorBlock: ((UIView, Bool) -> SDWebImageIndicator?)?
     
     /// 图片自定义句柄，setImageURL开始时调用
     open var customBlock: ((UIView) -> Void)?
@@ -100,7 +100,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         }
         if showsIndicator && !(hidesPlaceholderIndicator && placeholder != nil) && view.sd_imageIndicator == nil {
             if customIndicatorBlock != nil {
-                view.sd_imageIndicator = customIndicatorBlock?(view)
+                view.sd_imageIndicator = customIndicatorBlock?(view, placeholder != nil)
             } else {
                 view.sd_imageIndicator = SDWebImageActivityIndicator.medium
             }
