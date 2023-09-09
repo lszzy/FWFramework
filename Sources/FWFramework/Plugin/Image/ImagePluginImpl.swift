@@ -156,17 +156,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func clearImageCaches(_ completion: (() -> Void)? = nil) {
-        ImageDownloader.defaultInstance().imageCache?.removeAllImages()
-        ImageDownloader.defaultURLCache().removeAllCachedResponses()
-        if completion != nil {
-            if Thread.isMainThread {
-                completion?()
-            } else {
-                DispatchQueue.main.async {
-                    completion?()
-                }
-            }
-        }
+        ImageDownloader.shared.clearImageCaches(completion)
     }
     
     open func downloadImage(_ imageURL: URL?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {

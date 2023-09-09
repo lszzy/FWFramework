@@ -154,6 +154,10 @@ import UIKit
         fw_cancelImageRequest()
     }
     
+    public func __fw_loadImageCache(url: Any?) -> UIImage? {
+        return fw_loadImageCache(url: url)
+    }
+    
 }
 
 @_spi(FW) @objc extension UIImageView {

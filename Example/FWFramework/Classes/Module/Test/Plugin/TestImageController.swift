@@ -12,7 +12,6 @@ import SDWebImage
 class TestImageController: UIViewController, TableViewControllerProtocol {
     
     var isSDWebImage: Bool = false
-    var timeString = "?t=\(Date.app.currentTime)"
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -20,7 +19,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画", "切换占位图加载动画"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画", "切换占位图加载动画", "清除图片缓存"], actionBlock: { index in
                 guard let self = self else { return }
                 
                 if index == 0 {
@@ -35,17 +34,12 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
                         ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
                         SDWebImageImpl.shared.showsIndicator = ImagePluginImpl.shared.showsIndicator
                     }
-                } else {
+                } else if index == 2 {
                     ImagePluginImpl.shared.hidesPlaceholderIndicator = !ImagePluginImpl.shared.hidesPlaceholderIndicator
                     SDWebImageImpl.shared.hidesPlaceholderIndicator = ImagePluginImpl.shared.hidesPlaceholderIndicator
-                }
-                
-                if self.isSDWebImage {
-                    SDImageCache.shared.clearMemory()
-                    SDImageCache.shared.clearDisk(onCompletion: nil)
-                } else {
-                    ImageDownloader.defaultInstance().imageCache?.removeAllImages()
-                    ImageDownloader.defaultURLCache().removeAllCachedResponses()
+                } else if index == 3 {
+                    ImagePluginImpl.shared.clearImageCaches()
+                    SDWebImageImpl.shared.clearImageCaches()
                 }
                 
                 self.tableData.removeAll()
@@ -115,10 +109,13 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
                 }
             }
         } else {
-            let url = fileName.appending(timeString)
+            let url = fileName
             let pixelSize = CGSize(width: 100.0 * UIScreen.main.scale, height: 100.0 * UIScreen.main.scale)
-            cell.systemView.app.setImage(url: url, placeholderImage: nil, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
-            cell.animatedView.app.setImage(url: url, placeholderImage: UIImage.app.appIconImage(), options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
+            let cachedImage = UIImageView.app.loadImageCache(url: url)
+            cell.systemView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.systemView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
+            cell.animatedView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.animatedView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.optionThumbnailPixelSize: NSValue(cgSize: pixelSize)])
         }
         return cell
     }
