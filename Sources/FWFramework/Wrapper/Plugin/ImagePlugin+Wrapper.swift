@@ -74,6 +74,11 @@ extension Wrapper where Base: UIView {
         base.fw_cancelImageRequest()
     }
     
+    /// 加载指定URL的本地缓存图片
+    public func loadImageCache(url: Any?) -> UIImage? {
+        return base.fw_loadImageCache(url: url)
+    }
+    
 }
 
 extension Wrapper where Base: UIImageView {
@@ -86,6 +91,16 @@ extension Wrapper where Base: UIImageView {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
     public func setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
+    }
+    
+    /// 加载指定URL的本地缓存图片
+    public static func loadImageCache(url: Any?) -> UIImage? {
+        return Base.fw_loadImageCache(url: url)
+    }
+
+    /// 清除所有本地图片缓存
+    public static func clearImageCaches(completion: (() -> Void)? = nil) {
+        Base.fw_clearImageCaches(completion: completion)
     }
     
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView

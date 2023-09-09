@@ -137,15 +137,7 @@ extension WrapperGlobal {
     public static func fw_downloadImage(_ url: Any?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
         if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
            imagePlugin.responds(to: #selector(ImagePlugin.downloadImage(_:options:context:completion:progress:))) {
-            var imageURL: URL?
-            if let string = url as? String, !string.isEmpty {
-                imageURL = URL.fw_url(string: string)
-            } else if let nsurl = url as? URL {
-                imageURL = nsurl
-            } else if let urlRequest = url as? URLRequest {
-                imageURL = urlRequest.url
-            }
-            
+            let imageURL = UIImage.fw_imageURL(for: url)
             return imagePlugin.downloadImage?(imageURL, options: options, context: context, completion: completion, progress: progress)
         }
         return nil
@@ -157,6 +149,18 @@ extension WrapperGlobal {
            imagePlugin.responds(to: #selector(ImagePlugin.cancelImageDownload(_:))) {
             imagePlugin.cancelImageDownload?(receipt)
         }
+    }
+    
+    fileprivate static func fw_imageURL(for url: Any?) -> URL? {
+        var imageURL: URL?
+        if let string = url as? String, !string.isEmpty {
+            imageURL = URL.fw_url(string: string)
+        } else if let nsurl = url as? URL {
+            imageURL = nsurl
+        } else if let urlRequest = url as? URLRequest {
+            imageURL = urlRequest.url
+        }
+        return imageURL
     }
     
 }
@@ -189,15 +193,7 @@ extension WrapperGlobal {
     public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
         if let imagePlugin = self.fw_imagePlugin,
            imagePlugin.responds(to: #selector(ImagePlugin.view(_:setImageURL:placeholder:options:context:setImageBlock:completion:progress:))) {
-            var imageURL: URL?
-            if let string = url as? String, !string.isEmpty {
-                imageURL = URL.fw_url(string: string)
-            } else if let nsurl = url as? URL {
-                imageURL = nsurl
-            } else if let urlRequest = url as? URLRequest {
-                imageURL = urlRequest.url
-            }
-            
+            let imageURL = UIImage.fw_imageURL(for: url)
             imagePlugin.view?(self, setImageURL: imageURL, placeholder: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress)
         }
     }
@@ -208,6 +204,17 @@ extension WrapperGlobal {
            imagePlugin.responds(to: #selector(ImagePlugin.cancelImageRequest(_:))) {
             imagePlugin.cancelImageRequest?(self)
         }
+    }
+    
+    /// 加载指定URL的本地缓存图片
+    public func fw_loadImageCache(url: Any?) -> UIImage? {
+        if let imagePlugin = self.fw_imagePlugin,
+           imagePlugin.responds(to: #selector(ImagePlugin.loadImageCache(_:))) {
+            let imageURL = UIImage.fw_imageURL(for: url)
+            return imagePlugin.loadImageCache?(imageURL)
+        }
+        
+        return nil
     }
     
 }
@@ -222,6 +229,25 @@ extension WrapperGlobal {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
     public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
+    }
+    
+    /// 加载指定URL的本地缓存图片
+    public static func fw_loadImageCache(url: Any?) -> UIImage? {
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
+           imagePlugin.responds(to: #selector(ImagePlugin.loadImageCache(_:))) {
+            let imageURL = UIImage.fw_imageURL(for: url)
+            return imagePlugin.loadImageCache?(imageURL)
+        }
+        
+        return nil
+    }
+
+    /// 清除所有本地图片缓存
+    public static func fw_clearImageCaches(completion: (() -> Void)? = nil) {
+        if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self),
+           imagePlugin.responds(to: #selector(ImagePlugin.clearImageCaches(_:))) {
+            imagePlugin.clearImageCaches?(completion)
+        }
     }
     
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
