@@ -12,6 +12,7 @@ import FWObjC
 import FWFramework
 #endif
 
+// MARK: - SDWebImageImpl
 /// SDWebImage图片插件，启用SDWebImage子模块后生效
 open class SDWebImageImpl: NSObject, ImagePlugin {
     
@@ -29,7 +30,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     /// 图片占位图存在时是否隐藏动画指示器，默认false
     open var hidesPlaceholderIndicator = false
     
-    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil时为image|placeholder样式
+    /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil
     open var customIndicatorBlock: ((UIView, Bool) -> SDWebImageIndicator?)?
     
     /// 图片自定义句柄，setImageURL开始时调用
@@ -102,7 +103,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
             if customIndicatorBlock != nil {
                 view.sd_imageIndicator = customIndicatorBlock?(view, placeholder != nil)
             } else {
-                view.sd_imageIndicator = SDWebImageActivityIndicator.medium
+                view.sd_imageIndicator = SDWebImagePluginIndicator(scene: placeholder != nil ? .imagePlaceholder : .image)
             }
         }
         customBlock?(view)
@@ -196,6 +197,110 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     
 }
 
+// MARK: - SDWebImagePluginIndicator
+/// SDWebImage指示器插件Indicator
+open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
+    
+    open lazy var indicatorView: UIView = {
+        let result = UIView.fw_indicatorView(style: .default, scene: scene)
+        return result
+    }() {
+        didSet {
+            indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
+        }
+    }
+    
+    private var scene: IndicatorViewScene = .image
+    
+    public override init() {
+        super.init()
+        
+        didInitialize()
+    }
+    
+    public init(scene: IndicatorViewScene) {
+        super.init()
+        
+        self.scene = scene
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
+    }
+    
+    open func startAnimatingIndicator() {
+        guard let indicatorView = indicatorView as? UIView & IndicatorViewPlugin else { return }
+        
+        indicatorView.startAnimating()
+        indicatorView.isHidden = false
+    }
+    
+    open func stopAnimatingIndicator() {
+        guard let indicatorView = indicatorView as? UIView & IndicatorViewPlugin else { return }
+        
+        indicatorView.stopAnimating()
+        indicatorView.isHidden = true
+    }
+    
+}
+
+// MARK: - SDWebImageProgressPluginIndicator
+open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
+    
+    open lazy var indicatorView: UIView = {
+        let result = UIView.fw_progressView(style: .default, scene: scene)
+        return result
+    }() {
+        didSet {
+            indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
+        }
+    }
+    
+    open var animated: Bool = true
+    
+    private var scene: ProgressViewScene = .default
+    
+    public override init() {
+        super.init()
+        
+        didInitialize()
+    }
+    
+    public init(scene: ProgressViewScene) {
+        super.init()
+        
+        self.scene = scene
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
+    }
+    
+    open func startAnimatingIndicator() {
+        guard let indicatorView = indicatorView as? UIView & ProgressViewPlugin else { return }
+        
+        indicatorView.isHidden = false
+        indicatorView.progress = 0
+    }
+    
+    open func stopAnimatingIndicator() {
+        guard let indicatorView = indicatorView as? UIView & ProgressViewPlugin else { return }
+        
+        indicatorView.progress = 1
+        indicatorView.isHidden = true
+    }
+    
+    open func updateProgress(_ progress: Double) {
+        guard let indicatorView = indicatorView as? UIView & ProgressViewPlugin else { return }
+        
+        indicatorView.setProgress(progress, animated: animated)
+    }
+    
+}
+
+// MARK: - Autoloader+SDWebImageImpl
 @objc extension Autoloader {
     
     func loadSDWebImage() {
