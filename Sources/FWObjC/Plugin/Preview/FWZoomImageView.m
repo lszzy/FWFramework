@@ -161,6 +161,7 @@
 }
 
 - (void)setImage:(UIImage *)image {
+    if (image && image == _image) return;
     _image = image;
     
     if (image) {
@@ -797,7 +798,7 @@
 
 - (void)setProgress:(CGFloat)progress {
     self.progressView.progress = progress;
-    if (progress >= 1 || progress <= 0) {
+    if (self.hidesProgressView || (progress >= 1 || progress <= 0)) {
         if (!self.progressView.hidden) self.progressView.hidden = YES;
     } else {
         if (self.progressView.hidden) self.progressView.hidden = NO;
@@ -825,12 +826,17 @@
         if (isVideo) imageURL = [AVPlayerItem playerItemWithURL:imageURL];
     }
 
-    [self.imageView fw_cancelImageRequest];
+    [_imageView fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
+        // 默认缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
+        if (!self.ignoreImageCache) {
+            UIImage *cachedImage = [self.imageView fw_loadImageCacheWithURL:imageURL];
+            if (cachedImage) placeholderImage = cachedImage;
+        }
         self.image = placeholderImage;
         __weak __typeof__(self) self_weak_ = self;
-        [self.imageView fw_setImageWithURL:imageURL placeholderImage:placeholderImage options:0 context:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
+        [self.imageView fw_setImageWithURL:imageURL placeholderImage:placeholderImage options:FWWebImageOptionAvoidSetImage context:nil completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
             __typeof__(self) self = self_weak_;
             self.progress = 1;
             if (image) self.image = image;
