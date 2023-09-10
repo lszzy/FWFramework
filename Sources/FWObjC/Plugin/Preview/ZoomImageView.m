@@ -829,10 +829,13 @@
     [self __fw_cancelImageRequest];
     if ([imageURL isKindOfClass:[NSURL class]]) {
         self.progress = 0.01;
-        // 缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
-        UIImage *cachedImage = [self __fw_loadImageCacheWithUrl:imageURL];
+        // 默认缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
+        if (!self.ignoreImageCache) {
+            UIImage *cachedImage = [self __fw_loadImageCacheWithUrl:imageURL];
+            if (cachedImage) placeholderImage = cachedImage;
+        }
         __weak __typeof__(self) self_weak_ = self;
-        [self __fw_setImageWithUrl:imageURL placeholderImage:cachedImage ?: placeholderImage options:__FWWebImageOptionAvoidSetImage setImageBlock:^(UIImage * _Nullable image) {
+        [self __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage options:__FWWebImageOptionAvoidSetImage setImageBlock:^(UIImage * _Nullable image) {
             __typeof__(self) self = self_weak_;
             self.image = image;
         } completion:^(UIImage * _Nullable image, NSError * _Nullable error) {
