@@ -49,6 +49,12 @@ NS_SWIFT_NAME(ImagePlugin)
 /// imageView取消加载网络图片请求插件方法
 - (void)cancelImageRequest:(UIImageView *)imageView;
 
+/// 加载指定URL的本地缓存图片
+- (nullable UIImage *)loadImageCache:(nullable NSURL *)imageURL;
+
+/// 清除所有本地图片缓存
+- (void)clearImageCaches:(nullable void(^)(void))completion;
+
 /// image下载网络图片插件方法，返回下载凭据
 - (nullable id)downloadImage:(nullable NSURL *)imageURL
                        options:(FWWebImageOptions)options
@@ -153,6 +159,12 @@ FOUNDATION_EXPORT UIImage * _Nullable FWImageNamed(NSString *name) NS_SWIFT_UNAV
 
 /// 取消加载网络图片请求
 - (void)fw_cancelImageRequest NS_REFINED_FOR_SWIFT;
+
+/// 加载指定URL的本地缓存图片
+- (nullable UIImage *)fw_loadImageCacheWithURL:(nullable id)url NS_REFINED_FOR_SWIFT;
+
+/// 清除所有本地图片缓存
++ (void)fw_clearImageCaches:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT;
 
 /// 创建动画ImageView视图，优先加载插件，默认UIImageView
 + (UIImageView *)fw_animatedImageView NS_SWIFT_NAME(__fw_animatedImageView()) NS_REFINED_FOR_SWIFT;

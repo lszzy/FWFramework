@@ -86,6 +86,16 @@ extension Wrapper where Base: UIImageView {
         base.__fw_cancelImageRequest()
     }
     
+    /// 加载指定URL的本地缓存图片
+    public func loadImageCache(url: Any?) -> UIImage? {
+        return base.__fw_loadImageCache(withURL: url)
+    }
+    
+    /// 清除所有本地图片缓存
+    public static func clearImageCaches(completion: (() -> Void)? = nil) {
+        Base.__fw_clearImageCaches(completion)
+    }
+    
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
     public static func animatedImageView() -> UIImageView {
         return Base.__fw_animatedImageView()
