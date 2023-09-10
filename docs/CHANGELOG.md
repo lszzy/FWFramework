@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.17.4] - 2023-09-10
+
+### Changed
+* Image plug-in adds new methods to read local cache and clear all caches
+* Fixed the issue of occasional transition animation exception when the ZoomImageView image cache exists
+
 ## [4.17.3] - 2023-09-08
 
 ### Fixed

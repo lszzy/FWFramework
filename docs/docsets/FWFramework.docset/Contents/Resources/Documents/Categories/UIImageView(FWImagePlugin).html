@@ -17,7 +17,7 @@
     <a title="UIImageView(FWImagePlugin) Category Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 4.17.3 Docs</a> (70% documented)</p>
+        <p><a href="../index.html">FWFramework 4.17.4 Docs</a> (70% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2822,6 +2822,12 @@
 <span class="c1">/// 取消加载网络图片请求</span>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">fw_cancelImageRequest</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
+<span class="c1">/// 加载指定URL的本地缓存图片</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_loadImageCacheWithURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">url</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
+<span class="c1">/// 清除所有本地图片缓存</span>
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_clearImageCaches</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
+
 <span class="c1">/// 创建动画ImageView视图，优先加载插件，默认UIImageView</span>
 <span class="k">+</span> <span class="p">(</span><span class="n">UIImageView</span> <span class="o">*</span><span class="p">)</span><span class="n">fw_animatedImageView</span> <span class="n">NS_SWIFT_NAME</span><span class="p">(</span><span class="n">__fw_animatedImageView</span><span class="p">())</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span>
 
@@ -3040,6 +3046,60 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)UIImageView(im)fw_loadImageCacheWithURL:"></a>
+                    <a name="//apple_ref/swift/Method/-fw_loadImageCacheWithURL:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIImageView(im)fw_loadImageCacheWithURL:">-fw_loadImageCacheWithURL:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>加载指定URL的本地缓存图片</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">fw_loadImageCacheWithURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="p">)</span><span class="nv">url</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)UIImageView(cm)fw_clearImageCaches:"></a>
+                    <a name="//apple_ref/swift/Method/+fw_clearImageCaches:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)UIImageView(cm)fw_clearImageCaches:">+fw_clearImageCaches:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>清除所有本地图片缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">fw_clearImageCaches</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)UIImageView(cm)fw_animatedImageView"></a>
                     <a name="//apple_ref/swift/Method/+fw_animatedImageView" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)UIImageView(cm)fw_animatedImageView">+fw_animatedImageView</a>
@@ -3069,7 +3129,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-08)</p>
+          <p>&copy; 2023 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2023-09-10)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

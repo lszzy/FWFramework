@@ -782,6 +782,39 @@
     [self setImageOperationKey:nil forObject:object];
 }
 
+- (UIImage *)loadImageCacheForURL:(id)url
+{
+    NSURLRequest *urlRequest = [self urlRequestWithURL:url options:0];
+    if ([urlRequest URL] == nil) return nil;
+
+    id<FWImageRequestCache> imageCache = self.imageCache;
+    UIImage *cachedImage = [imageCache imageforRequest:urlRequest withAdditionalIdentifier:nil];
+    if (cachedImage) return cachedImage;
+    
+    NSCachedURLResponse *cachedResponse = [self.sessionManager.session.configuration.URLCache cachedResponseForRequest:urlRequest];
+    id responseObject = cachedResponse ? [self.sessionManager.responseSerializer responseObjectForResponse:cachedResponse.response data:cachedResponse.data error:nil] : nil;
+    if ([responseObject isKindOfClass:[UIImage class]]) {
+        return (UIImage *)responseObject;
+    }
+    return nil;
+}
+
+- (void)clearImageCaches:(void (^)(void))completion
+{
+    [self.imageCache removeAllImages];
+    [self.sessionManager.session.configuration.URLCache removeAllCachedResponses];
+    
+    if (completion != nil) {
+        if ([NSThread isMainThread]) {
+            completion();
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    }
+}
+
 @end
 
 #pragma mark - FWImagePluginImpl
@@ -871,6 +904,16 @@
 - (void)cancelImageRequest:(UIImageView *)imageView
 {
     [[FWImageDownloader sharedDownloader] cancelImageDownloadTask:imageView];
+}
+
+- (UIImage *)loadImageCache:(NSURL *)imageURL
+{
+    return [[FWImageDownloader sharedDownloader] loadImageCacheForURL:imageURL];
+}
+
+- (void)clearImageCaches:(void (^)(void))completion
+{
+    [[FWImageDownloader sharedDownloader] clearImageCaches:completion];
 }
 
 - (id)downloadImage:(NSURL *)imageURL

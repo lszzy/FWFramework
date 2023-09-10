@@ -112,6 +112,20 @@
     [imageView sd_cancelCurrentImageLoad];
 }
 
+- (UIImage *)loadImageCache:(NSURL *)imageURL
+{
+    NSString *cacheKey = [SDWebImageManager.sharedManager cacheKeyForURL:imageURL];
+    if (cacheKey.length < 1) return nil;
+    UIImage *cachedImage = [SDImageCache.sharedImageCache imageFromCacheForKey:cacheKey];
+    return cachedImage;
+}
+
+- (void)clearImageCaches:(void (^)(void))completion
+{
+    [SDImageCache.sharedImageCache clearMemory];
+    [SDImageCache.sharedImageCache clearDiskOnCompletion:completion];
+}
+
 - (id)downloadImage:(NSURL *)imageURL
               options:(FWWebImageOptions)options
               context:(NSDictionary<FWImageCoderOptions,id> *)context

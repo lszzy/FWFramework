@@ -132,6 +132,10 @@ NS_SWIFT_NAME(ImageDownloader)
 
 - (void)cancelImageDownloadTask:(id)object;
 
+- (nullable UIImage *)loadImageCacheForURL:(nullable id)url;
+
+- (void)clearImageCaches:(nullable void(^)(void))completion;
+
 @end
 
 #pragma mark - FWImagePluginImpl

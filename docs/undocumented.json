@@ -12973,14 +12973,14 @@
     },
     {
       "file": "docs/FWFramework/FWImagePlugin.h",
-      "line": 78,
+      "line": 84,
       "symbol": "UIImage(FWImagePlugin)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWImagePlugin.h",
-      "line": 126,
+      "line": 132,
       "symbol": "UIImageView(FWImagePlugin)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -17620,6 +17620,20 @@
       "warning": "undocumented"
     },
     {
+      "file": "docs/FWFramework/FWWebImage.h",
+      "line": 135,
+      "symbol": "FWImageDownloader.-loadImageCacheForURL:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWWebImage.h",
+      "line": 137,
+      "symbol": "FWImageDownloader.-clearImageCaches:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "docs/FWFramework/FWWebView.h",
       "line": 15,
       "symbol": "FWWebViewDelegate",
@@ -18021,83 +18035,90 @@
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
       "line": 132,
-      "symbol": "FWZoomImageView.progressView",
+      "symbol": "FWZoomImageView.hidesProgressView",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
       "line": 135,
+      "symbol": "FWZoomImageView.progressView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "docs/FWFramework/FWZoomImageView.h",
+      "line": 138,
       "symbol": "FWZoomImageView.progress",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 166,
+      "line": 172,
       "symbol": "FWZoomImageVideoToolbar",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 168,
+      "line": 174,
       "symbol": "FWZoomImageVideoToolbar.playButton",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 169,
+      "line": 175,
       "symbol": "FWZoomImageVideoToolbar.pauseButton",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 170,
+      "line": 176,
       "symbol": "FWZoomImageVideoToolbar.slider",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 171,
+      "line": 177,
       "symbol": "FWZoomImageVideoToolbar.sliderLeftLabel",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 172,
+      "line": 178,
       "symbol": "FWZoomImageVideoToolbar.sliderRightLabel",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 175,
+      "line": 181,
       "symbol": "FWZoomImageVideoToolbar.paddings",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 178,
+      "line": 184,
       "symbol": "FWZoomImageVideoToolbar.playButtonImage",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 179,
+      "line": 185,
       "symbol": "FWZoomImageVideoToolbar.pauseButtonImage",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "docs/FWFramework/FWZoomImageView.h",
-      "line": 185,
+      "line": 191,
       "symbol": "UIView(FWZoomImageView)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
