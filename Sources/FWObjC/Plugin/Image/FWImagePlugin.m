@@ -168,18 +168,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 {
     id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(downloadImage:options:context:completion:progress:)]) {
-        NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
-            imageURL = [NSURL URLWithString:url];
-            if (!imageURL) {
-                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        } else if ([url isKindOfClass:[NSURL class]]) {
-            imageURL = url;
-        } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            imageURL = [url URL];
-        }
-        
+        NSURL *imageURL = [UIImage fw_imageURLwithURL:url];
         return [imagePlugin downloadImage:imageURL options:options context:context completion:completion progress:progress];
     }
     return nil;
@@ -191,6 +180,22 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(cancelImageDownload:)]) {
         [imagePlugin cancelImageDownload:receipt];
     }
+}
+
++ (nullable NSURL *)fw_imageURLwithURL:(id)url
+{
+    NSURL *imageURL = nil;
+    if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
+        imageURL = [NSURL URLWithString:url];
+        if (!imageURL) {
+            imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+        }
+    } else if ([url isKindOfClass:[NSURL class]]) {
+        imageURL = url;
+    } else if ([url isKindOfClass:[NSURLRequest class]]) {
+        imageURL = [url URL];
+    }
+    return imageURL;
 }
 
 @end
@@ -247,18 +252,7 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
 {
     id<FWImagePlugin> imagePlugin = self.fw_imagePlugin;
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(imageView:setImageURL:placeholder:options:context:completion:progress:)]) {
-        NSURL *imageURL = nil;
-        if ([url isKindOfClass:[NSString class]] && [url length] > 0) {
-            imageURL = [NSURL URLWithString:url];
-            if (!imageURL) {
-                imageURL = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            }
-        } else if ([url isKindOfClass:[NSURL class]]) {
-            imageURL = url;
-        } else if ([url isKindOfClass:[NSURLRequest class]]) {
-            imageURL = [url URL];
-        }
-        
+        NSURL *imageURL = [UIImage fw_imageURLwithURL:url];
         [imagePlugin imageView:self setImageURL:imageURL placeholder:placeholderImage options:options context:context completion:completion progress:progress];
     }
 }
@@ -268,6 +262,25 @@ static CGFloat FWInnerStringPathScale(NSString *string) {
     id<FWImagePlugin> imagePlugin = self.fw_imagePlugin;
     if (imagePlugin && [imagePlugin respondsToSelector:@selector(cancelImageRequest:)]) {
         [imagePlugin cancelImageRequest:self];
+    }
+}
+
+- (UIImage *)fw_loadImageCacheWithURL:(id)url
+{
+    id<FWImagePlugin> imagePlugin = self.fw_imagePlugin;
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(loadImageCache:)]) {
+        NSURL *imageURL = [UIImage fw_imageURLwithURL:url];
+        return [imagePlugin loadImageCache:imageURL];
+    }
+    
+    return nil;
+}
+
++ (void)fw_clearImageCaches:(void (^)(void))completion
+{
+    id<FWImagePlugin> imagePlugin = [FWPluginManager loadPlugin:@protocol(FWImagePlugin)];
+    if (imagePlugin && [imagePlugin respondsToSelector:@selector(clearImageCaches:)]) {
+        [imagePlugin clearImageCaches:completion];
     }
 }
 
