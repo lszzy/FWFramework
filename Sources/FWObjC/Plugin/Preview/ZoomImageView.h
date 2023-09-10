@@ -140,6 +140,9 @@ NS_SWIFT_NAME(ZoomImageView)
 /// 是否正在播放视频
 @property(nonatomic, assign, readonly) BOOL isPlayingVideo;
 
+/// 是否忽略本地图片缓存，默认NO
+@property(nonatomic, assign) BOOL ignoreImageCache;
+
 /// 开始视频播放
 - (void)playVideo;
 
