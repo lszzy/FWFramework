@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import WebKit
 
 @objc extension Autoloader {
     func loadWebView() {
