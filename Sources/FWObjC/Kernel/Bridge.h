@@ -20,7 +20,6 @@
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
-#import "WebView.h"
 #import "ImagePlugin.h"
 #import "AlertController.h"
 #import "ImagePickerController.h"

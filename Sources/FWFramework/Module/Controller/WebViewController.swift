@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 #if FWMacroSPM
 import FWObjC
 #endif

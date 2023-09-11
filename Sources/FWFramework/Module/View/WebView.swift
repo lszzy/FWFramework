@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 import JavaScriptCore
 #if FWMacroSPM
 import FWObjC
@@ -212,7 +213,7 @@ open class WebView: WKWebView {
             
             if !(navigationAction.targetFrame?.isMainFrame ?? false) {
                 if let webView = webView as? WebView, webView.cookieEnabled {
-                    webView.load(WebViewCookieManager.fix(navigationAction.request) as URLRequest)
+                    webView.load(WebViewCookieManager.fixRequest(navigationAction.request))
                 } else {
                     webView.load(navigationAction.request)
                 }
@@ -365,6 +366,131 @@ open class WebView: WKWebView {
         
         isFirstLoad = true
     }
+    
+}
+
+// MARK: - WebViewCookieManager
+/// WKWebView管理Cookie
+///
+/// [KKJSBridge](https://github.com/karosLi/KKJSBridge)
+public class WebViewCookieManager: NSObject {
+    
+    /// 同步首个请求的Cookie
+    public static func syncRequestCookie(_ request: NSMutableURLRequest) {
+        guard let url = request.url else { return }
+        let availableCookie = HTTPCookieStorage.shared.cookies(for: url)
+        guard let availableCookie = availableCookie, !availableCookie.isEmpty else { return }
+        
+        let reqHeader = HTTPCookie.requestHeaderFields(with: availableCookie)
+        if let cookieStr = reqHeader["Cookie"] {
+            request.setValue(cookieStr, forHTTPHeaderField: "Cookie")
+        }
+    }
+    
+    /// 同步请求的httpOnly Cookie
+    public static func syncRequestHttpOnlyCookie(_ request: NSMutableURLRequest) {
+        guard let url = request.url else { return }
+        let availableCookie = HTTPCookieStorage.shared.cookies(for: url)
+        guard let availableCookie = availableCookie, !availableCookie.isEmpty else { return }
+        
+        var cookieStr = request.value(forHTTPHeaderField: "Cookie") ?? ""
+        for cookie in availableCookie {
+            if !cookie.isHTTPOnly {
+                continue
+            }
+            cookieStr.append("\(cookie.name)=\(cookie.value);")
+        }
+        request.setValue(cookieStr, forHTTPHeaderField: "Cookie")
+    }
+    
+    /// 同步ajax请求的Cookie
+    public static func ajaxCookieScripts() -> String {
+        var cookieScript = ""
+        let cookies = HTTPCookieStorage.shared.cookies ?? []
+        for cookie in cookies {
+            if cookie.value.range(of: "'") != nil {
+                continue
+            }
+            cookieScript.append("document.cookie='\(cookie.name)=\(cookie.value);")
+            if !cookie.domain.isEmpty {
+                cookieScript.append("domain=\(cookie.domain);")
+            }
+            if !cookie.path.isEmpty {
+                cookieScript.append("path=\(cookie.path);")
+            }
+            if let expiresDate = cookie.expiresDate {
+                cookieScript.append("expires=\(cookieDateFormatter.string(from: expiresDate));")
+            }
+            if cookie.isSecure {
+                cookieScript.append("Secure;")
+            }
+            if cookie.isHTTPOnly {
+                cookieScript.append("HTTPOnly;")
+            }
+            cookieScript.append("'\n")
+        }
+        return cookieScript
+    }
+    
+    /// 同步重定向请求的Cookie
+    public static func fixRequest(_ request: URLRequest) -> URLRequest {
+        var array = [String]()
+        if let url = request.url, let cookies = HTTPCookieStorage.shared.cookies(for: url) {
+            for cookie in cookies {
+                let value = "\(cookie.name)=\(cookie.value)"
+                array.append(value)
+            }
+        }
+        
+        var fixedRequest = request
+        let cookie = array.joined(separator: ";")
+        fixedRequest.setValue(cookie, forHTTPHeaderField: "Cookie")
+        return fixedRequest
+    }
+    
+    /// 拷贝共享Cookie到webView，iOS11+有效
+    public static func copySharedCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+        let cookies = HTTPCookieStorage.shared.cookies ?? []
+        let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
+        if cookies.isEmpty {
+            completion?()
+            return
+        }
+        for (index, cookie) in cookies.enumerated() {
+            cookieStore.setCookie(cookie) {
+                if index == cookies.count - 1 {
+                    completion?()
+                }
+            }
+        }
+    }
+    
+    /// 拷贝webView到共享Cookie，iOS11+有效
+    public static func copyWebViewCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+        let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
+        cookieStore.getAllCookies { cookies in
+            if cookies.isEmpty {
+                completion?()
+                return
+            }
+            for (index, cookie) in cookies.enumerated() {
+                HTTPCookieStorage.shared.setCookie(cookie)
+                if index == cookies.count - 1 {
+                    completion?()
+                }
+            }
+        }
+    }
+    
+    /// Cookie日期格式化对象
+    public static var cookieDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss zzz"
+        return formatter
+    }()
     
 }
 

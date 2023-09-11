@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import WebKit
 
 class TestJavascriptBridge: NSObject {
     
