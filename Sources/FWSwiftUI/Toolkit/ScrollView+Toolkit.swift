@@ -12,7 +12,6 @@ import SwiftUI
 #endif
 
 // MARK: - ScrollView+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等

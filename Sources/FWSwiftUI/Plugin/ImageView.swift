@@ -14,7 +14,6 @@ import FWObjC
 
 // MARK: - ImageView
 /// 图片视图，支持网络图片和动图
-@available(iOS 13.0, *)
 public struct ImageView: UIViewRepresentable {
     
     var url: Any?
@@ -85,7 +84,6 @@ public struct ImageView: UIViewRepresentable {
 
 // MARK: - ResizableView
 /// 可调整大小的视图包装器，解决frame尺寸变为图片尺寸等问题
-@available(iOS 13.0, *)
 public class ResizableView<Content: UIView>: UIView {
     
     public var content: Content

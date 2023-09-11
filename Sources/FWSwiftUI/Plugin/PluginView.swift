@@ -13,7 +13,6 @@ import SwiftUI
 
 // MARK: - LoadingPluginView
 /// 加载插件视图包装器
-@available(iOS 13.0, *)
 public struct LoadingPluginView: UIViewRepresentable {
     
     var text: Any?
@@ -55,7 +54,6 @@ public struct LoadingPluginView: UIViewRepresentable {
 
 // MARK: - ProgressPluginView
 /// 进度插件视图包装器
-@available(iOS 13.0, *)
 public struct ProgressPluginView: UIViewRepresentable {
     
     var progress: CGFloat?
@@ -110,7 +108,6 @@ public struct ProgressPluginView: UIViewRepresentable {
 
 // MARK: - EmptyPluginView
 /// 空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可
-@available(iOS 13.0, *)
 public struct EmptyPluginView: UIViewRepresentable {
     
     var text: String? = nil
@@ -189,7 +186,6 @@ public struct EmptyPluginView: UIViewRepresentable {
 }
 
 // MARK: - View+PluginView
-@available(iOS 13.0, *)
 extension View {
     
     // MARK: - Plugin

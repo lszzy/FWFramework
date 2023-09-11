@@ -10,7 +10,6 @@ import SwiftUI
 
 // MARK: - ViewWrapper
 /// 通用UIView包装器
-@available(iOS 13.0, *)
 public struct ViewWrapper<T: UIView>: UIViewRepresentable {
     
     var maker: (() -> T)?
@@ -61,7 +60,6 @@ public struct ViewWrapper<T: UIView>: UIViewRepresentable {
 
 // MARK: - ViewControllerWrapper
 /// 通用UIViewController包装器
-@available(iOS 13.0, *)
 public struct ViewControllerWrapper<T: UIViewController>: UIViewControllerRepresentable {
     
     var maker: (() -> T)?

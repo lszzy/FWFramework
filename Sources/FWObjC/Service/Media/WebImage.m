@@ -559,11 +559,7 @@
         if (nsurl != nil) {
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:nsurl];
             if (!!(options & __FWWebImageOptionIgnoreCache)) {
-                if (@available(iOS 13.0, *)) {
-                    request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-                } else {
-                    request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-                }
+                request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
             }
             [request addValue:@"image/*,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
             urlRequest = request;

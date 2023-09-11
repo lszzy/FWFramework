@@ -13,7 +13,6 @@ import Combine
 #endif
 
 /// 网络图片视图，仅支持静态图
-@available(iOS 13.0, *)
 public struct WebImageView: View {
     @ObservedObject public private(set) var binder: ImageBinder
     
@@ -102,7 +101,6 @@ public struct WebImageView: View {
     }
 }
 
-@available(iOS 13.0, *)
 extension WebImageView {
     public class ImageBinder: ObservableObject {
         @Published var image: UIImage?

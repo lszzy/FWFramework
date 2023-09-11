@@ -12,7 +12,6 @@ import SwiftUI
 #endif
 
 // MARK: - List+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 重置List样式，去除多余间距等，可指定背景色

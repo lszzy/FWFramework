@@ -17,7 +17,6 @@ import SwiftUI
 /// modifier.
 ///
 /// [SwiftUI-Introspect](https://github.com/siteline/SwiftUI-Introspect)
-@available(iOS 13.0, *)
 public struct IntrospectionScope: OptionSet {
     /// Look within the `receiver` of the `.introspect(...)` modifier.
     public static let receiver = Self(rawValue: 1 << 0)
@@ -31,7 +30,6 @@ public struct IntrospectionScope: OptionSet {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     /// Introspects a SwiftUI view to find its underlying UIKit/AppKit instance.
     ///
@@ -65,7 +63,6 @@ extension View {
     }
 }
 
-@available(iOS 13.0, *)
 struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>: ViewModifier {
     let id = IntrospectionViewID()
     let scope: IntrospectionScope
@@ -112,7 +109,6 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
     }
 }
 
-@available(iOS 13.0, *)
 public protocol PlatformEntity: AnyObject {
     associatedtype Base: PlatformEntity
 
@@ -126,7 +122,6 @@ public protocol PlatformEntity: AnyObject {
     func isDescendant(of other: Base) -> Bool
 }
 
-@available(iOS 13.0, *)
 extension PlatformEntity {
     @_spi(FW)
     public var ancestors: some Sequence<Base> {
@@ -184,7 +179,6 @@ extension PlatformEntity {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformView: PlatformEntity {
     @_spi(FW)
     public var ancestor: PlatformView? {
@@ -197,7 +191,6 @@ extension PlatformView: PlatformEntity {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformViewController: PlatformEntity {
     @_spi(FW)
     public var ancestor: PlatformViewController? {
@@ -215,7 +208,6 @@ extension PlatformViewController: PlatformEntity {
     }
 }
 
-@available(iOS 13.0, *)
 extension UIPresentationController: PlatformEntity {
     @_spi(FW)
     public var ancestor: UIPresentationController? { nil }
@@ -228,7 +220,6 @@ extension UIPresentationController: PlatformEntity {
 }
 
 // MARK: - IntrospectableViewType
-@available(iOS 13.0, *)
 public protocol IntrospectableViewType {
     /// The scope of introspection for this particular view type, i.e. where introspect
     /// should look to find the desired target view relative to the applied
@@ -243,13 +234,11 @@ public protocol IntrospectableViewType {
     var scope: IntrospectionScope { get }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType {
     public var scope: IntrospectionScope { .receiver }
 }
 
 // MARK: - IntrospectionSelector
-@available(iOS 13.0, *)
 @_spi(FW)
 public struct IntrospectionSelector<Target: PlatformEntity> {
     @_spi(FW)
@@ -309,7 +298,6 @@ public struct IntrospectionSelector<Target: PlatformEntity> {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformViewController {
     func `as`<Base: PlatformEntity>(_ baseType: Base.Type) -> (any PlatformEntity)? {
         if Base.self == PlatformView.self {
@@ -322,10 +310,8 @@ extension PlatformViewController {
 }
 
 // MARK: - IntrospectionView
-@available(iOS 13.0, *)
 typealias IntrospectionViewID = UUID
 
-@available(iOS 13.0, *)
 fileprivate enum IntrospectionStore {
     static var shared: [IntrospectionViewID: Pair] = [:]
 
@@ -335,7 +321,6 @@ fileprivate enum IntrospectionStore {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformEntity {
     var introspectionAnchorEntity: Base? {
         if let introspectionController = self as? IntrospectionPlatformViewController {
@@ -351,7 +336,6 @@ extension PlatformEntity {
     }
 }
 
-@available(iOS 13.0, *)
 struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
     typealias UIViewControllerType = IntrospectionAnchorPlatformViewController
 
@@ -374,7 +358,6 @@ struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
     static func dismantlePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
 }
 
-@available(iOS 13.0, *)
 final class IntrospectionAnchorPlatformViewController: PlatformViewController {
     init(id: IntrospectionViewID) {
         super.init(nibName: nil, bundle: nil)
@@ -393,7 +376,6 @@ final class IntrospectionAnchorPlatformViewController: PlatformViewController {
     }
 }
 
-@available(iOS 13.0, *)
 struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresentable {
     typealias UIViewControllerType = IntrospectionPlatformViewController
 
@@ -455,7 +437,6 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
     }
 }
 
-@available(iOS 13.0, *)
 final class IntrospectionPlatformViewController: PlatformViewController {
     let id: IntrospectionViewID
     var handler: (() -> Void)? = nil
@@ -504,7 +485,6 @@ final class IntrospectionPlatformViewController: PlatformViewController {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformView {
     fileprivate var introspectionController: IntrospectionPlatformViewController? {
         get {
@@ -518,7 +498,6 @@ extension PlatformView {
     }
 }
 
-@available(iOS 13.0, *)
 extension PlatformEntity {
     var isIntrospectionPlatformEntity: Bool {
         get {
@@ -533,12 +512,10 @@ extension PlatformEntity {
 }
 
 // MARK: - PlatformVersion
-@available(iOS 13.0, *)
 public protocol PlatformVersion {
     var isCurrent: Bool { get }
 }
 
-@available(iOS 13.0, *)
 public struct iOSVersion: PlatformVersion {
     public let isCurrent: Bool
 
@@ -547,7 +524,6 @@ public struct iOSVersion: PlatformVersion {
     }
 }
 
-@available(iOS 13.0, *)
 extension iOSVersion {
     public static let v13 = iOSVersion {
         if #available(iOS 14, *) {
@@ -589,16 +565,12 @@ extension iOSVersion {
 }
 
 // MARK: - PlatformView
-@available(iOS 13.0, *)
 public typealias PlatformView = UIView
 
-@available(iOS 13.0, *)
 public typealias PlatformViewController = UIViewController
 
-@available(iOS 13.0, *)
 typealias _PlatformViewControllerRepresentable = UIViewControllerRepresentable
 
-@available(iOS 13.0, *)
 protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
     typealias ViewController = UIViewControllerType
 
@@ -607,7 +579,6 @@ protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentab
     static func dismantlePlatformViewController(_ controller: ViewController, coordinator: Coordinator)
 }
 
-@available(iOS 13.0, *)
 extension PlatformViewControllerRepresentable {
     func makeUIViewController(context: Context) -> ViewController {
         makePlatformViewController(context: context)
@@ -621,7 +592,6 @@ extension PlatformViewControllerRepresentable {
 }
 
 // MARK: - PlatformViewVersions
-@available(iOS 13.0, *)
 public struct PlatformViewVersions<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
     let isCurrent: Bool
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
@@ -643,17 +613,14 @@ public struct PlatformViewVersions<SwiftUIViewType: IntrospectableViewType, Plat
     }
 }
 
-@available(iOS 13.0, *)
 public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> =
     PlatformViewVersion<iOSVersion, SwiftUIViewType, PlatformSpecificEntity>
 
-@available(iOS 13.0, *)
 public struct PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
     let isCurrent: Bool
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
 }
 
-@available(iOS 13.0, *)
 extension PlatformViewVersion {
     @_spi(FW) public init(for version: Version, selector: IntrospectionSelector<PlatformSpecificEntity>? = nil) {
         self.init(isCurrent: version.isCurrent, selector: selector)
@@ -720,15 +687,12 @@ func recursiveSequence<S: Sequence>(_ sequence: S, children: @escaping (S.Elemen
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ViewType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ViewType {
     public static var view: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ViewType, UIView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -752,10 +716,8 @@ extension iOSViewVersion<ViewType, UIView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ColorPickerType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ColorPickerType {
     public static var colorPicker: Self { .init() }
 }
@@ -786,15 +748,12 @@ extension iOSViewVersion<ColorPickerType, UIColorWell> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct DatePickerType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == DatePickerType {
     public static var datePicker: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<DatePickerType, UIDatePicker> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -819,19 +778,16 @@ extension iOSViewVersion<DatePickerType, UIDatePicker> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct DatePickerWithCompactStyleType: IntrospectableViewType {
     public enum Style {
         case compact
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == DatePickerWithCompactStyleType {
     public static func datePicker(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker> {
     @available(*, unavailable, message: ".datePickerStyle(.compact) isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -858,19 +814,16 @@ extension iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct DatePickerWithGraphicalStyleType: IntrospectableViewType {
     public enum Style {
         case graphical
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == DatePickerWithGraphicalStyleType {
     public static func datePicker(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker> {
     @available(*, unavailable, message: ".datePickerStyle(.graphical) isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -897,19 +850,16 @@ extension iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct DatePickerWithWheelStyleType: IntrospectableViewType {
     public enum Style {
         case wheel
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == DatePickerWithWheelStyleType {
     public static func datePicker(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -938,22 +888,18 @@ extension iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct FormType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == FormType {
     public static var form: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<FormType, UITableView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<FormType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".form isn't available on all iOS")
@@ -978,19 +924,16 @@ extension iOSViewVersion<FormType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct FormWithGroupedStyleType: IntrospectableViewType {
     public enum Style {
         case grouped
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == FormWithGroupedStyleType {
     public static func form(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<FormWithGroupedStyleType, UITableView> {
     @available(*, unavailable, message: ".formStyle(.grouped) isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1000,7 +943,6 @@ extension iOSViewVersion<FormWithGroupedStyleType, UITableView> {
     public static let v15 = Self.unavailable()
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<FormWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".formStyle(.grouped) isn't available on all iOS")
@@ -1025,17 +967,14 @@ extension iOSViewVersion<FormWithGroupedStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct FullScreenCoverType: IntrospectableViewType {
     public var scope: IntrospectionScope { .ancestor }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == FullScreenCoverType {
     public static var fullScreenCover: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<FullScreenCoverType, UIPresentationController> {
     @available(*, unavailable, message: ".fullScreenCover isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1070,27 +1009,23 @@ extension iOSViewVersion<FullScreenCoverType, UIPresentationController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListType: IntrospectableViewType {
     public enum Style {
         case plain
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListType {
     public static var list: Self { .init() }
     public static func list(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListType, UITableView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".list isn't available on all iOS")
@@ -1118,26 +1053,22 @@ extension iOSViewVersion<ListType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListWithGroupedStyleType: IntrospectableViewType {
     public enum Style {
         case grouped
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListWithGroupedStyleType {
     public static func list(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithGroupedStyleType, UITableView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".listStyle(.grouped) isn't available on all iOS")
@@ -1165,19 +1096,16 @@ extension iOSViewVersion<ListWithGroupedStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListWithInsetGroupedStyleType: IntrospectableViewType {
     public enum Style {
         case insetGrouped
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListWithInsetGroupedStyleType {
     public static func list(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithInsetGroupedStyleType, UITableView> {
     @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -1185,7 +1113,6 @@ extension iOSViewVersion<ListWithInsetGroupedStyleType, UITableView> {
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on all iOS")
@@ -1213,19 +1140,16 @@ extension iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListWithInsetStyleType: IntrospectableViewType {
     public enum Style {
         case inset
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListWithInsetStyleType {
     public static func list(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithInsetStyleType, UITableView> {
     @available(*, unavailable, message: ".listStyle(.inset) isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1233,7 +1157,6 @@ extension iOSViewVersion<ListWithInsetStyleType, UITableView> {
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithInsetStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".listStyle(.inset) isn't available on all iOS")
@@ -1261,19 +1184,16 @@ extension iOSViewVersion<ListWithInsetStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListWithSidebarStyleType: IntrospectableViewType {
     public enum Style {
         case sidebar
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListWithSidebarStyleType {
     public static func list(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithSidebarStyleType, UITableView> {
     @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1281,7 +1201,6 @@ extension iOSViewVersion<ListWithSidebarStyleType, UITableView> {
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListWithSidebarStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on all iOS")
@@ -1308,24 +1227,20 @@ extension iOSViewVersion<ListWithSidebarStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ListCellType: IntrospectableViewType {
     public var scope: IntrospectionScope { .ancestor }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ListCellType {
     public static var listCell: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListCellType, UITableViewCell> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
     public static let v15 = Self(for: .v15)
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ListCellType, UICollectionViewCell> {
     public static let v16 = Self(for: .v16)
     @available(*, unavailable, message: ".listCell isn't available on all iOS")
@@ -1349,15 +1264,12 @@ extension iOSViewVersion<ListCellType, UICollectionViewCell> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct NavigationSplitViewType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == NavigationSplitViewType {
     public static var navigationSplitView: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<NavigationSplitViewType, UISplitViewController> {
     @available(*, unavailable, message: "NavigationSplitView isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1390,15 +1302,12 @@ extension iOSViewVersion<NavigationSplitViewType, UISplitViewController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct NavigationStackType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == NavigationStackType {
     public static var navigationStack: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<NavigationStackType, UINavigationController> {
     @available(*, unavailable, message: "NavigationStack isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1432,19 +1341,16 @@ extension iOSViewVersion<NavigationStackType, UINavigationController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct NavigationViewWithColumnsStyleType: IntrospectableViewType {
     public enum Style {
         case columns
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == NavigationViewWithColumnsStyleType {
     public static func navigationView(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)
@@ -1473,19 +1379,16 @@ extension iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewControll
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct NavigationViewWithStackStyleType: IntrospectableViewType {
     public enum Style {
         case stack
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == NavigationViewWithStackStyleType {
     public static func navigationView(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)
@@ -1518,19 +1421,16 @@ extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationControlle
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct PickerWithSegmentedStyleType: IntrospectableViewType {
     public enum Style {
         case segmented
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == PickerWithSegmentedStyleType {
     public static func picker(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -1559,19 +1459,16 @@ extension iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct PickerWithWheelStyleType: IntrospectableViewType {
     public enum Style {
         case wheel
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == PickerWithWheelStyleType {
     public static func picker(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<PickerWithWheelStyleType, UIPickerView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -1598,17 +1495,14 @@ extension iOSViewVersion<PickerWithWheelStyleType, UIPickerView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct PopoverType: IntrospectableViewType {
     public var scope: IntrospectionScope { .ancestor }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == PopoverType {
     public static var popover: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<PopoverType, UIPopoverPresentationController> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)
@@ -1635,19 +1529,16 @@ extension iOSViewVersion<PopoverType, UIPopoverPresentationController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ProgressViewWithCircularStyleType: IntrospectableViewType {
     public enum Style {
         case circular
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ProgressViewWithCircularStyleType {
     public static func progressView(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView> {
     @available(*, unavailable, message: ".progressViewStyle(.circular) isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -1672,19 +1563,16 @@ extension iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorV
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ProgressViewWithLinearStyleType: IntrospectableViewType {
     public enum Style {
         case linear
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ProgressViewWithLinearStyleType {
     public static func progressView(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView> {
     @available(*, unavailable, message: ".progressViewStyle(.linear) isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -1710,15 +1598,12 @@ extension iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ScrollViewType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ScrollViewType {
     public static var scrollView: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ScrollViewType, UIScrollView> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -1746,15 +1631,12 @@ extension iOSViewVersion<ScrollViewType, UIScrollView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct SearchFieldType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == SearchFieldType {
     public static var searchField: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<SearchFieldType, UISearchBar> {
     @available(*, unavailable, message: ".searchable isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -1790,17 +1672,14 @@ extension iOSViewVersion<SearchFieldType, UISearchBar> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct SheetType: IntrospectableViewType {
     public var scope: IntrospectionScope { .ancestor }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == SheetType {
     public static var sheet: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<SheetType, UIPresentationController> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)
@@ -1840,15 +1719,12 @@ extension iOSViewVersion<SheetType, UISheetPresentationController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct SliderType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == SliderType {
     public static var slider: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<SliderType, UISlider> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -1874,15 +1750,12 @@ extension iOSViewVersion<SliderType, UISlider> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct StepperType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == StepperType {
     public static var stepper: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<StepperType, UIStepper> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -1923,15 +1796,12 @@ extension iOSViewVersion<StepperType, UIStepper> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TableType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TableType {
     public static var table: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TableType, UICollectionView> {
     @available(*, unavailable, message: "Table isn't available on iOS 13")
     public static let v13 = Self(for: .v13)
@@ -1960,15 +1830,12 @@ extension iOSViewVersion<TableType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TabViewType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TabViewType {
     public static var tabView: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TabViewType, UITabBarController> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)
@@ -1998,19 +1865,16 @@ extension iOSViewVersion<TabViewType, UITabBarController> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TabViewWithPageStyleType: IntrospectableViewType {
     public enum Style {
         case page
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TabViewWithPageStyleType {
     public static func tabView(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TabViewWithPageStyleType, UICollectionView> {
     @available(*, unavailable, message: "TabView {}.tabViewStyle(.page) isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -2036,15 +1900,12 @@ extension iOSViewVersion<TabViewWithPageStyleType, UICollectionView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TextEditorType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TextEditorType {
     public static var textEditor: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TextEditorType, UITextView> {
     @available(*, unavailable, message: "TextEditor isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -2070,15 +1931,12 @@ extension iOSViewVersion<TextEditorType, UITextView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TextFieldType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TextFieldType {
     public static var textField: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TextFieldType, UITextField> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -2102,19 +1960,16 @@ extension iOSViewVersion<TextFieldType, UITextField> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct TextFieldWithVerticalAxisType: IntrospectableViewType {
     public enum Axis {
         case vertical
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == TextFieldWithVerticalAxisType {
     public static func textField(axis: Self.Axis) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<TextFieldWithVerticalAxisType, UITextView> {
     @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on iOS 13")
     public static let v13 = Self.unavailable()
@@ -2143,15 +1998,12 @@ extension iOSViewVersion<TextFieldWithVerticalAxisType, UITextView> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ToggleType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ToggleType {
     public static var toggle: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ToggleType, UISwitch> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -2176,19 +2028,16 @@ extension iOSViewVersion<ToggleType, UISwitch> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct ToggleWithSwitchStyleType: IntrospectableViewType {
     public enum Style {
         case `switch`
     }
 }
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == ToggleWithSwitchStyleType {
     public static func toggle(style: Self.Style) -> Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<ToggleWithSwitchStyleType, UISwitch> {
     public static let v13 = Self(for: .v13)
     public static let v14 = Self(for: .v14)
@@ -2210,15 +2059,12 @@ extension iOSViewVersion<ToggleWithSwitchStyleType, UISwitch> {
 ///     }
 /// }
 /// ```
-@available(iOS 13.0, *)
 public struct WindowType: IntrospectableViewType {}
 
-@available(iOS 13.0, *)
 extension IntrospectableViewType where Self == WindowType {
     public static var window: Self { .init() }
 }
 
-@available(iOS 13.0, *)
 extension iOSViewVersion<WindowType, UIWindow> {
     public static let v13 = Self(for: .v13, selector: selector)
     public static let v14 = Self(for: .v14, selector: selector)

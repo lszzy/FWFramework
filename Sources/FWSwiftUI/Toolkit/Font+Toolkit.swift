@@ -11,7 +11,6 @@ import SwiftUI
 @_spi(FW) import FWFramework
 #endif
 
-@available(iOS 13.0, *)
 extension Font {
     
     /// 全局自定义字体句柄，优先调用
