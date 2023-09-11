@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '13.0'
   s.swift_version         = '5.0'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
