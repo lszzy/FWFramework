@@ -1490,6 +1490,40 @@ extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationControlle
     }
 }
 
+// MARK: - PageControl
+/// An abstract representation of the page control type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         TabView {
+///             Text("Page 1").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.red)
+///             Text("Page 2").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.blue)
+///         }
+///         .tabViewStyle(.page(indexDisplayMode: .always))
+///         .introspect(.pageControl, on: .iOS(.v14, .v15, .v16, .v17)) {
+///             print(type(of: $0)) // UIPageControl
+///         }
+///     }
+/// }
+/// ```
+public struct PageControlType: IntrospectableViewType {}
+
+extension IntrospectableViewType where Self == PageControlType {
+    public static var pageControl: Self { .init() }
+}
+
+extension iOSViewVersion<PageControlType, UIPageControl> {
+    @available(*, unavailable, message: ".tabViewStyle(.page) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".tabViewStyle(.page) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
 // MARK: - PickerWithSegmentedStyle
 /// An abstract representation of the `Picker` type in SwiftUI, with `.segmented` style.
 ///
@@ -1748,6 +1782,36 @@ extension iOSViewVersion<SearchFieldType, UISearchBar> {
             $0.viewIfLoaded?.allDescendants.lazy.compactMap { $0 as? UISearchBar }.first
         }
     }
+}
+
+// MARK: - SecureField
+/// An abstract representation of the `SecureField` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var text = "Lorem ipsum"
+///
+///     var body: some View {
+///         SecureField("Secure Field", text: $text)
+///             .introspect(.secureField, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UISecureField
+///             }
+///     }
+/// }
+/// ```
+public struct SecureFieldType: IntrospectableViewType {}
+
+extension IntrospectableViewType where Self == SecureFieldType {
+    public static var secureField: Self { .init() }
+}
+
+extension iOSViewVersion<SecureFieldType, UITextField> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 // MARK: - Sheet
@@ -2185,6 +2249,42 @@ extension iOSViewVersion<WindowType, UIWindow> {
     private static var selector: IntrospectionSelector<UIWindow> {
         .from(UIView.self, selector: \.window)
     }
+}
+
+/// An abstract representation of the receiving SwiftUI view's view controller,
+/// or the closest ancestor view controller if missing.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationView {
+///             Text("Root").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.red)
+///                 .introspect(.viewController, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///                     print(type(of: $0)) // some subclass of UIHostingController
+///                 }
+///         }
+///         .navigationViewStyle(.stack)
+///         .introspect(.viewController, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///             print(type(of: $0)) // UINavigationController
+///         }
+///     }
+/// }
+/// ```
+public struct ViewControllerType: IntrospectableViewType {
+    public var scope: IntrospectionScope { [.receiver, .ancestor] }
+}
+
+extension IntrospectableViewType where Self == ViewControllerType {
+    public static var viewController: Self { .init() }
+}
+
+extension iOSViewVersion<ViewControllerType, UIViewController> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
 }
 
 #endif
