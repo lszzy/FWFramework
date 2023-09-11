@@ -122,12 +122,10 @@ open class WebSocket: WebSocketClient, WebSocketEngineDelegate {
     }
     
     public convenience init(request: URLRequest, certPinner: WebSocketCertificatePinning? = WebSocketFoundationSecurity(), compressionHandler: WebSocketCompressionHandler? = nil, useCustomEngine: Bool = true) {
-        if #available(iOS 13.0, *), !useCustomEngine {
+        if !useCustomEngine {
             self.init(request: request, engine: WebSocketNativeEngine())
-        } else if #available(iOS 12.0, *) {
-            self.init(request: request, engine: WebSocketEngine(transport: WebSocketTCPTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
         } else {
-            self.init(request: request, engine: WebSocketEngine(transport: WebSocketFoundationTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
+            self.init(request: request, engine: WebSocketEngine(transport: WebSocketTCPTransport(), certPinner: certPinner, compressionHandler: compressionHandler))
         }
     }
     
@@ -215,7 +213,6 @@ public protocol WebSocketServerProtocol {
 import Network
 
 /// WebSocketServer is a Network.framework implementation of a WebSocket server
-@available(iOS 12.0, *)
 public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelegate {
     public var onEvent: ((WebSocketServerEvent) -> Void)?
     public var callbackQueue = DispatchQueue.main
@@ -281,7 +278,6 @@ public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelega
     }
 }
 
-@available(iOS 12.0, *)
 public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServerDelegate, WebSocketFramerEventClient, WebSocketFrameCollectorDelegate, WebSocketTransportEventClient {
     let transport: WebSocketTCPTransport
     private let httpHandler = WebSocketFoundationHTTPServerHandler()
@@ -387,6 +383,136 @@ public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServer
         return nil
     }
 }
+
+public enum WebSocketTCPTransportError: Error {
+    case invalidRequest
+}
+
+public class WebSocketTCPTransport: WebSocketTransport {
+    private var connection: NWConnection?
+    private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.networkstream", attributes: [])
+    private weak var delegate: WebSocketTransportEventClient?
+    private var isRunning = false
+    private var isTLS = false
+    
+    public var usingTLS: Bool {
+        return self.isTLS
+    }
+    
+    public init(connection: NWConnection) {
+        self.connection = connection
+        start()
+    }
+    
+    public init() {
+        //normal connection, will use the "connect" method below
+    }
+    
+    public func connect(url: URL, timeout: Double = 10, certificatePinning: WebSocketCertificatePinning? = nil) {
+        guard let parts = url.getParts() else {
+            delegate?.connectionChanged(state: .failed(WebSocketTCPTransportError.invalidRequest))
+            return
+        }
+        self.isTLS = parts.isTLS
+        let options = NWProtocolTCP.Options()
+        options.connectionTimeout = Int(timeout.rounded(.up))
+
+        let tlsOptions = isTLS ? NWProtocolTLS.Options() : nil
+        if let tlsOpts = tlsOptions {
+            sec_protocol_options_set_verify_block(tlsOpts.securityProtocolOptions, { (sec_protocol_metadata, sec_trust, sec_protocol_verify_complete) in
+                let trust = sec_trust_copy_ref(sec_trust).takeRetainedValue()
+                guard let pinner = certificatePinning else {
+                    sec_protocol_verify_complete(true)
+                    return
+                }
+                pinner.evaluateTrust(trust: trust, domain: parts.host, completion: { (state) in
+                    switch state {
+                    case .success:
+                        sec_protocol_verify_complete(true)
+                    case .failed(_):
+                        sec_protocol_verify_complete(false)
+                    }
+                })
+            }, queue)
+        }
+        let parameters = NWParameters(tls: tlsOptions, tcp: options)
+        let conn = NWConnection(host: NWEndpoint.Host.name(parts.host, nil), port: NWEndpoint.Port(rawValue: UInt16(parts.port))!, using: parameters)
+        connection = conn
+        start()
+    }
+    
+    public func disconnect() {
+        isRunning = false
+        connection?.cancel()
+    }
+    
+    public func register(delegate: WebSocketTransportEventClient) {
+        self.delegate = delegate
+    }
+    
+    public func write(data: Data, completion: @escaping ((Error?) -> ())) {
+        connection?.send(content: data, completion: .contentProcessed { (error) in
+            completion(error)
+        })
+    }
+    
+    private func start() {
+        guard let conn = connection else {
+            return
+        }
+        conn.stateUpdateHandler = { [weak self] (newState) in
+            switch newState {
+            case .ready:
+                self?.delegate?.connectionChanged(state: .connected)
+            case .waiting:
+                self?.delegate?.connectionChanged(state: .waiting)
+            case .cancelled:
+                self?.delegate?.connectionChanged(state: .cancelled)
+            case .failed(let error):
+                self?.delegate?.connectionChanged(state: .failed(error))
+            case .setup, .preparing:
+                break
+            @unknown default:
+                break
+            }
+        }
+        
+        conn.viabilityUpdateHandler = { [weak self] (isViable) in
+            self?.delegate?.connectionChanged(state: .viability(isViable))
+        }
+        
+        conn.betterPathUpdateHandler = { [weak self] (isBetter) in
+            self?.delegate?.connectionChanged(state: .shouldReconnect(isBetter))
+        }
+        
+        conn.start(queue: queue)
+        isRunning = true
+        readLoop()
+    }
+    
+    //readLoop keeps reading from the connection to get the latest content
+    private func readLoop() {
+        if !isRunning {
+            return
+        }
+        connection?.receive(minimumIncompleteLength: 2, maximumLength: 4096, completion: {[weak self] (data, context, isComplete, error) in
+            guard let s = self else {return}
+            if let data = data {
+                s.delegate?.connectionChanged(state: .receive(data))
+            }
+            
+            // Refer to https://developer.apple.com/documentation/network/implementing_netcat_with_network_framework
+            if let context = context, context.isFinal, isComplete {
+                return
+            }
+            
+            if error == nil {
+                s.readLoop()
+            }
+
+        })
+    }
+}
 #endif
 
 // MARK: - Security
@@ -438,15 +564,11 @@ extension WebSocketFoundationSecurity: WebSocketCertificatePinning {
     }
     
     private func handleSecurityTrust(trust: SecTrust, completion: ((WebSocketPinningState) -> ())) {
-        if #available(iOS 12.0, *) {
-            var error: CFError?
-            if SecTrustEvaluateWithError(trust, &error) {
-                completion(.success)
-            } else {
-                completion(.failed(error))
-            }
+        var error: CFError?
+        if SecTrustEvaluateWithError(trust, &error) {
+            completion(.success)
         } else {
-            handleOldSecurityTrust(trust: trust, completion: completion)
+            completion(.failed(error))
         }
     }
     
@@ -746,7 +868,6 @@ public protocol WebSocketEngineProtocol {
     func write(string: String, completion: (() -> ())?)
 }
 
-@available(iOS 13.0, *)
 public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessionDataDelegate, URLSessionWebSocketDelegate {
     private var task: URLSessionWebSocketTask?
     weak var delegate: WebSocketEngineDelegate?
@@ -1087,334 +1208,6 @@ public protocol WebSocketTransport: AnyObject {
     func disconnect()
     func write(data: Data, completion: @escaping ((Error?) -> ()))
     var usingTLS: Bool { get }
-}
-
-#if canImport(Network)
-import Network
-
-public enum WebSocketTCPTransportError: Error {
-    case invalidRequest
-}
-
-@available(iOS 12.0, *)
-public class WebSocketTCPTransport: WebSocketTransport {
-    private var connection: NWConnection?
-    private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.networkstream", attributes: [])
-    private weak var delegate: WebSocketTransportEventClient?
-    private var isRunning = false
-    private var isTLS = false
-    
-    public var usingTLS: Bool {
-        return self.isTLS
-    }
-    
-    public init(connection: NWConnection) {
-        self.connection = connection
-        start()
-    }
-    
-    public init() {
-        //normal connection, will use the "connect" method below
-    }
-    
-    public func connect(url: URL, timeout: Double = 10, certificatePinning: WebSocketCertificatePinning? = nil) {
-        guard let parts = url.getParts() else {
-            delegate?.connectionChanged(state: .failed(WebSocketTCPTransportError.invalidRequest))
-            return
-        }
-        self.isTLS = parts.isTLS
-        let options = NWProtocolTCP.Options()
-        options.connectionTimeout = Int(timeout.rounded(.up))
-
-        let tlsOptions = isTLS ? NWProtocolTLS.Options() : nil
-        if let tlsOpts = tlsOptions {
-            sec_protocol_options_set_verify_block(tlsOpts.securityProtocolOptions, { (sec_protocol_metadata, sec_trust, sec_protocol_verify_complete) in
-                let trust = sec_trust_copy_ref(sec_trust).takeRetainedValue()
-                guard let pinner = certificatePinning else {
-                    sec_protocol_verify_complete(true)
-                    return
-                }
-                pinner.evaluateTrust(trust: trust, domain: parts.host, completion: { (state) in
-                    switch state {
-                    case .success:
-                        sec_protocol_verify_complete(true)
-                    case .failed(_):
-                        sec_protocol_verify_complete(false)
-                    }
-                })
-            }, queue)
-        }
-        let parameters = NWParameters(tls: tlsOptions, tcp: options)
-        let conn = NWConnection(host: NWEndpoint.Host.name(parts.host, nil), port: NWEndpoint.Port(rawValue: UInt16(parts.port))!, using: parameters)
-        connection = conn
-        start()
-    }
-    
-    public func disconnect() {
-        isRunning = false
-        connection?.cancel()
-    }
-    
-    public func register(delegate: WebSocketTransportEventClient) {
-        self.delegate = delegate
-    }
-    
-    public func write(data: Data, completion: @escaping ((Error?) -> ())) {
-        connection?.send(content: data, completion: .contentProcessed { (error) in
-            completion(error)
-        })
-    }
-    
-    private func start() {
-        guard let conn = connection else {
-            return
-        }
-        conn.stateUpdateHandler = { [weak self] (newState) in
-            switch newState {
-            case .ready:
-                self?.delegate?.connectionChanged(state: .connected)
-            case .waiting:
-                self?.delegate?.connectionChanged(state: .waiting)
-            case .cancelled:
-                self?.delegate?.connectionChanged(state: .cancelled)
-            case .failed(let error):
-                self?.delegate?.connectionChanged(state: .failed(error))
-            case .setup, .preparing:
-                break
-            @unknown default:
-                break
-            }
-        }
-        
-        conn.viabilityUpdateHandler = { [weak self] (isViable) in
-            self?.delegate?.connectionChanged(state: .viability(isViable))
-        }
-        
-        conn.betterPathUpdateHandler = { [weak self] (isBetter) in
-            self?.delegate?.connectionChanged(state: .shouldReconnect(isBetter))
-        }
-        
-        conn.start(queue: queue)
-        isRunning = true
-        readLoop()
-    }
-    
-    //readLoop keeps reading from the connection to get the latest content
-    private func readLoop() {
-        if !isRunning {
-            return
-        }
-        connection?.receive(minimumIncompleteLength: 2, maximumLength: 4096, completion: {[weak self] (data, context, isComplete, error) in
-            guard let s = self else {return}
-            if let data = data {
-                s.delegate?.connectionChanged(state: .receive(data))
-            }
-            
-            // Refer to https://developer.apple.com/documentation/network/implementing_netcat_with_network_framework
-            if let context = context, context.isFinal, isComplete {
-                return
-            }
-            
-            if error == nil {
-                s.readLoop()
-            }
-
-        })
-    }
-}
-#else
-typealias WebSocketTCPTransport = WebSocketFoundationTransport
-#endif
-
-public enum WebSocketFoundationTransportError: Error {
-    case invalidRequest
-    case invalidOutputStream
-    case timeout
-}
-
-public class WebSocketFoundationTransport: NSObject, WebSocketTransport, StreamDelegate {
-    private weak var delegate: WebSocketTransportEventClient?
-    private let workQueue = DispatchQueue(label: "site.wuyong.queue.websocket.client.websocket", attributes: [])
-    private var inputStream: InputStream?
-    private var outputStream: OutputStream?
-    private var isOpen = false
-    private var onConnect: ((InputStream, OutputStream) -> Void)?
-    private var isTLS = false
-    private var certPinner: WebSocketCertificatePinning?
-    
-    public var usingTLS: Bool {
-        return self.isTLS
-    }
-    
-    public init(streamConfiguration: ((InputStream, OutputStream) -> Void)? = nil) {
-        super.init()
-        onConnect = streamConfiguration
-    }
-    
-    deinit {
-        inputStream?.delegate = nil
-        outputStream?.delegate = nil
-    }
-    
-    public func connect(url: URL, timeout: Double = 10, certificatePinning: WebSocketCertificatePinning? = nil) {
-        guard let parts = url.getParts() else {
-            delegate?.connectionChanged(state: .failed(WebSocketFoundationTransportError.invalidRequest))
-            return
-        }
-        self.certPinner = certificatePinning
-        self.isTLS = parts.isTLS
-        var readStream: Unmanaged<CFReadStream>?
-        var writeStream: Unmanaged<CFWriteStream>?
-        let h = parts.host as NSString
-        CFStreamCreatePairWithSocketToHost(nil, h, UInt32(parts.port), &readStream, &writeStream)
-        inputStream = readStream!.takeRetainedValue()
-        outputStream = writeStream!.takeRetainedValue()
-        guard let inStream = inputStream, let outStream = outputStream else {
-                return
-        }
-        inStream.delegate = self
-        outStream.delegate = self
-    
-        if isTLS {
-            let key = CFStreamPropertyKey(rawValue: kCFStreamPropertySocketSecurityLevel)
-            CFReadStreamSetProperty(inStream, key, kCFStreamSocketSecurityLevelNegotiatedSSL)
-            CFWriteStreamSetProperty(outStream, key, kCFStreamSocketSecurityLevelNegotiatedSSL)
-        }
-        
-        onConnect?(inStream, outStream)
-        
-        isOpen = false
-        CFReadStreamSetDispatchQueue(inStream, workQueue)
-        CFWriteStreamSetDispatchQueue(outStream, workQueue)
-        inStream.open()
-        outStream.open()
-        
-        
-        workQueue.asyncAfter(deadline: .now() + timeout, execute: { [weak self] in
-            guard let s = self else { return }
-            if !s.isOpen {
-                s.delegate?.connectionChanged(state: .failed(WebSocketFoundationTransportError.timeout))
-            }
-        })
-    }
-    
-    public func disconnect() {
-        if let stream = inputStream {
-            stream.delegate = nil
-            CFReadStreamSetDispatchQueue(stream, nil)
-            stream.close()
-        }
-        if let stream = outputStream {
-            stream.delegate = nil
-            CFWriteStreamSetDispatchQueue(stream, nil)
-            stream.close()
-        }
-        isOpen = false
-        outputStream = nil
-        inputStream = nil
-    }
-    
-    public func register(delegate: WebSocketTransportEventClient) {
-        self.delegate = delegate
-    }
-    
-    public func write(data: Data, completion: @escaping ((Error?) -> ())) {
-        guard let outStream = outputStream else {
-            completion(WebSocketFoundationTransportError.invalidOutputStream)
-            return
-        }
-        var total = 0
-        let buffer = UnsafeRawPointer((data as NSData).bytes).assumingMemoryBound(to: UInt8.self)
-        //NOTE: this might need to be dispatched to the work queue instead of being written inline. TBD.
-        while total < data.count {
-            let written = outStream.write(buffer, maxLength: data.count)
-            if written < 0 {
-                completion(WebSocketFoundationTransportError.invalidOutputStream)
-                return
-            }
-            total += written
-        }
-        completion(nil)
-    }
-    
-    private func getSecurityData() -> (SecTrust?, String?) {
-        guard let outputStream = outputStream else {
-            return (nil, nil)
-        }
-        let trust = outputStream.property(forKey: kCFStreamPropertySSLPeerTrust as Stream.PropertyKey) as! SecTrust?
-        var domain = outputStream.property(forKey: kCFStreamSSLPeerName as Stream.PropertyKey) as! String?
-        
-        if domain == nil,
-            let sslContextOut = CFWriteStreamCopyProperty(outputStream, CFStreamPropertyKey(rawValue: kCFStreamPropertySSLContext)) as! SSLContext? {
-            var peerNameLen: Int = 0
-            SSLGetPeerDomainNameLength(sslContextOut, &peerNameLen)
-            var peerName = Data(count: peerNameLen)
-            let _ = peerName.withUnsafeMutableBytes { (peerNamePtr: UnsafeMutablePointer<Int8>) in
-                SSLGetPeerDomainName(sslContextOut, peerNamePtr, &peerNameLen)
-            }
-            if let peerDomain = String(bytes: peerName, encoding: .utf8), peerDomain.count > 0 {
-                domain = peerDomain
-            }
-        }
-        return (trust, domain)
-    }
-    
-    private func read() {
-        guard let stream = inputStream else {
-            return
-        }
-        let maxBuffer = 4096
-        let buf = NSMutableData(capacity: maxBuffer)
-        let buffer = UnsafeMutableRawPointer(mutating: buf!.bytes).assumingMemoryBound(to: UInt8.self)
-        let length = stream.read(buffer, maxLength: maxBuffer)
-        if length < 1 {
-            return
-        }
-        let data = Data(bytes: buffer, count: length)
-        delegate?.connectionChanged(state: .receive(data))
-    }
-    
-    // MARK: - StreamDelegate
-    
-    open func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        switch eventCode {
-        case .hasBytesAvailable:
-            if aStream == inputStream {
-                read()
-            }
-        case .errorOccurred:
-            delegate?.connectionChanged(state: .failed(aStream.streamError))
-        case .endEncountered:
-            if aStream == inputStream {
-                delegate?.connectionChanged(state: .cancelled)
-            }
-        case .openCompleted:
-            if aStream == inputStream {
-                let (trust, domain) = getSecurityData()
-                if let pinner = certPinner, let trust = trust {
-                    pinner.evaluateTrust(trust: trust, domain:  domain, completion: { [weak self] (state) in
-                        switch state {
-                        case .success:
-                            self?.isOpen = true
-                            self?.delegate?.connectionChanged(state: .connected)
-                        case .failed(let error):
-                            self?.delegate?.connectionChanged(state: .failed(error))
-                        }
-                        
-                    })
-                } else {
-                    isOpen = true
-                    delegate?.connectionChanged(state: .connected)
-                }
-            }
-        case .endEncountered:
-            if aStream == inputStream {
-                delegate?.connectionChanged(state: .cancelled)
-            }
-        default:
-            break
-        }
-    }
 }
 
 // MARK: - Framer
