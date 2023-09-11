@@ -55,7 +55,7 @@ extension View {
     /// ```
     public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
         _ viewType: SwiftUIViewType,
-        on platforms: (PlatformViewVersions<SwiftUIViewType, PlatformSpecificEntity>)...,
+        on platforms: (PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>)...,
         scope: IntrospectionScope? = nil,
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) -> some View {
@@ -71,16 +71,12 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
 
     init(
         _ viewType: SwiftUIViewType,
-        platforms: [PlatformViewVersions<SwiftUIViewType, PlatformSpecificEntity>],
+        platforms: [PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>],
         scope: IntrospectionScope?,
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) {
         self.scope = scope ?? viewType.scope
-        if let platform = platforms.first(where: \.isCurrent) {
-            self.selector = platform.selector ?? .default
-        } else {
-            self.selector = nil
-        }
+        self.selector = platforms.lazy.compactMap(\.selector).first
         self.customize = customize
     }
 
@@ -88,10 +84,14 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
         if let selector {
             content
                 .background(
-                    // boxes up content without affecting appearance or behavior, for more accurate `.view` introspection
-                    Color.white
-                        .opacity(0)
-                        .accessibility(hidden: true)
+                    Group {
+                        // box up content for more accurate `.view` introspection
+                        if SwiftUIViewType.self == ViewType.self {
+                            Color.white
+                                .opacity(0)
+                                .accessibility(hidden: true)
+                        }
+                    }
                 )
                 .background(
                     IntrospectionAnchorView(id: id)
@@ -120,6 +120,17 @@ public protocol PlatformEntity: AnyObject {
 
     @_spi(FW)
     func isDescendant(of other: Base) -> Bool
+}
+
+extension PlatformEntity {
+    @_spi(FW)
+    public var ancestor: Base? { nil }
+
+    @_spi(FW)
+    public var descendants: [Base] { [] }
+
+    @_spi(FW)
+    public func isDescendant(of other: Base) -> Bool { false }
 }
 
 extension PlatformEntity {
@@ -209,14 +220,7 @@ extension PlatformViewController: PlatformEntity {
 }
 
 extension UIPresentationController: PlatformEntity {
-    @_spi(FW)
-    public var ancestor: UIPresentationController? { nil }
-
-    @_spi(FW)
-    public var descendants: [UIPresentationController] { [] }
-
-    @_spi(FW)
-    public func isDescendant(of other: UIPresentationController) -> Bool { false }
+    public typealias Base = UIPresentationController
 }
 
 // MARK: - IntrospectableViewType
@@ -461,6 +465,10 @@ final class IntrospectionPlatformViewController: PlatformViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        parent?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -512,65 +520,87 @@ extension PlatformEntity {
 }
 
 // MARK: - PlatformVersion
+public enum PlatformVersionCondition {
+    case past
+    case current
+    case future
+}
+
 public protocol PlatformVersion {
-    var isCurrent: Bool { get }
+    var condition: PlatformVersionCondition? { get }
+}
+
+extension PlatformVersion {
+    public var isCurrent: Bool {
+        condition == .current
+    }
+
+    public var isCurrentOrPast: Bool {
+        condition == .current || condition == .past
+    }
 }
 
 public struct iOSVersion: PlatformVersion {
-    public let isCurrent: Bool
+    public let condition: PlatformVersionCondition?
 
-    public init(isCurrent: () -> Bool) {
-        self.isCurrent = isCurrent()
+    public init(condition: () -> PlatformVersionCondition?) {
+        self.condition = condition()
     }
 }
 
 extension iOSVersion {
     public static let v13 = iOSVersion {
         if #available(iOS 14, *) {
-            return false
+            return .past
         }
-        return true
+        if #available(iOS 13, *) {
+            return .current
+        }
+        return .future
     }
 
     public static let v14 = iOSVersion {
         if #available(iOS 15, *) {
-            return false
+            return .past
         }
         if #available(iOS 14, *) {
-            return true
+            return .current
         }
-        return false
+        return .future
     }
 
     public static let v15 = iOSVersion {
         if #available(iOS 16, *) {
-            return false
+            return .past
         }
         if #available(iOS 15, *) {
-            return true
+            return .current
         }
-        return false
+        return .future
     }
     
     public static let v16 = iOSVersion {
         if #available(iOS 17, *) {
-            return false
+            return .past
         }
         if #available(iOS 16, *) {
-            return true
+            return .current
         }
-        return false
+        return .future
     }
 
     public static let v17 = iOSVersion {
-        if #available(iOS 17, *) {
-            return true
+        if #available(iOS 18, *) {
+            return .past
         }
-        return false
+        if #available(iOS 17, *) {
+            return .current
+        }
+        return .future
     }
     
     public static let all = iOSVersion {
-        return true
+        return .current
     }
 }
 
@@ -601,44 +631,40 @@ extension PlatformViewControllerRepresentable {
     }
 }
 
-// MARK: - PlatformViewVersions
-public struct PlatformViewVersions<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
-    let isCurrent: Bool
+// MARK: - PlatformViewVersion
+public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
 
     private init<Version: PlatformVersion>(
-        _ versions: [PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>]
+        _ versions: [PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>],
+        matches: (PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>) -> Bool
     ) {
-        if let currentVersion = versions.first(where: \.isCurrent) {
-            self.isCurrent = true
-            self.selector = currentVersion.selector
+        if let matchingVersion = versions.first(where: matches) {
+            self.selector = matchingVersion.selector ?? .default
         } else {
-            self.isCurrent = false
             self.selector = nil
         }
     }
 
     public static func iOS(_ versions: (iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>)...) -> Self {
-        Self(versions)
+        Self(versions, matches: \.isCurrent)
+    }
+
+    @_spi(FW)
+    public static func iOS(_ versions: PartialRangeFrom<iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>>) -> Self {
+        Self([versions.lowerBound], matches: \.isCurrentOrPast)
     }
 }
 
 public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> =
     PlatformViewVersion<iOSVersion, SwiftUIViewType, PlatformSpecificEntity>
 
-public struct PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
-    let isCurrent: Bool
-    let selector: IntrospectionSelector<PlatformSpecificEntity>?
-}
+public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+    @_spi(FW) case available(Version, IntrospectionSelector<PlatformSpecificEntity>?)
+    @_spi(FW) case unavailable
 
-extension PlatformViewVersion {
     @_spi(FW) public init(for version: Version, selector: IntrospectionSelector<PlatformSpecificEntity>? = nil) {
-        self.init(isCurrent: version.isCurrent, selector: selector)
-    }
-    
-    @_spi(FW) public init(for versions: [Version], selector: IntrospectionSelector<PlatformSpecificEntity>? = nil) {
-        let isCurrent = versions.first(where: \.isCurrent) != nil
-        self.init(isCurrent: isCurrent, selector: selector)
+        self = .available(version, selector)
     }
 
     @_spi(FW) public static func unavailable(file: StaticString = #file, line: UInt = #line) -> Self {
@@ -647,7 +673,41 @@ extension PlatformViewVersion {
         let fileName = URL(fileURLWithPath: filePath).lastPathComponent
         Logger.debug(group: Logger.fw_moduleName, "\n===========RUNTIME ERROR===========\nIf you're seeing this, someone forgot to mark %@:%@ as unavailable.\nThis won't have any effect, but it should be disallowed altogether.", fileName, "\(line)")
         #endif
-        return Self(isCurrent: false, selector: nil)
+        return .unavailable
+    }
+
+    private var version: Version? {
+        if case .available(let version, _) = self {
+            return version
+        } else {
+            return nil
+        }
+    }
+
+    fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
+        if case .available(_, let selector) = self {
+            return selector
+        } else {
+            return nil
+        }
+    }
+
+    fileprivate var isCurrent: Bool {
+        version?.isCurrent ?? false
+    }
+
+    fileprivate var isCurrentOrPast: Bool {
+        version?.isCurrentOrPast ?? false
+    }
+}
+
+extension PlatformViewVersion: Comparable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        true
+    }
+
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        true
     }
 }
 
