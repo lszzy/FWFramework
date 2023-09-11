@@ -153,7 +153,6 @@ open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDel
         return shouldChangeCharacters?(textField, range, string) ?? true
     }
     
-    @available(iOS 13.0, *)
     open func textFieldDidChangeSelection(_ textField: UITextField) {
         if delegate?.textFieldDidChangeSelection?(textField) != nil {
             return

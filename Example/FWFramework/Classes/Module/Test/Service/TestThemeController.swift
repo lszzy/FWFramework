@@ -16,12 +16,6 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
         app.observeNotification(.ThemeChanged) { _ in
             APP.debug("主题改变通知：\(ThemeManager.shared.style.rawValue)")
         }
-        
-        // iOS13以下named方式不支持动态颜色和图像，可手工注册之
-        if #available(iOS 13.0, *) {} else {
-            UIColor.app.setThemeColor(UIColor.app.themeLight(.black, dark: .white), forName: "themeColor")
-            UIImage.app.setThemeImage(UIImage.app.themeLight(ModuleBundle.imageNamed("themeImageLight"), dark: ModuleBundle.imageNamed("themeImageDark")), forName: "themeImage")
-        }
     }
     
     func setupSubviews() {

@@ -957,9 +957,7 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_presentationDidDismiss")
-            if #available(iOS 13.0, *) {
-                self.presentationController?.delegate = self.fw_presentationTarget
-            }
+            self.presentationController?.delegate = self.fw_presentationTarget
         }
     }
 

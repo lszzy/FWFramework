@@ -169,9 +169,6 @@ extension TestController {
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
         var title = rowData[0] as? String ?? ""
-        if #available(iOS 13.0, *) {} else {
-            if title.hasPrefix("SwiftUI") { title += "(Unsupport)" }
-        }
         cell.textLabel?.text = title
         return cell
     }
@@ -187,9 +184,6 @@ extension TestController {
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
         let title = rowData[0] as? String ?? ""
-        if #available(iOS 13.0, *) {} else {
-            if title.hasPrefix("SwiftUI") { return }
-        }
         
         var className = rowData[1] as! String
         var controllerClass: AnyClass? = NSClassFromString(className)

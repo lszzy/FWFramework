@@ -147,7 +147,6 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     /// 打开推送设置
-    @available(iOS 12.0, *)
     public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
         delegate?.userNotificationCenter?(center, openSettingsFor: notification)
     }

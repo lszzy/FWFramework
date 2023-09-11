@@ -21,7 +21,6 @@ extension Wrapper where Base: UIWindow {
     }
 
     /// 获取当前主场景
-    @available(iOS 13.0, *)
     public static var mainScene: UIWindowScene? {
         return Base.fw_mainScene
     }

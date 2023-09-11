@@ -140,7 +140,6 @@ public class Navigator: NSObject {
     private static var fw_staticWindow: UIWindow?
 
     /// 获取当前主场景
-    @available(iOS 13.0, *)
     public static var fw_mainScene: UIWindowScene? {
         for scene in UIApplication.shared.connectedScenes {
             if scene.activationState == .foregroundActive,

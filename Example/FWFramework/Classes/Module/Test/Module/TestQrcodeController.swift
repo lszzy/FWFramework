@@ -172,16 +172,11 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                         self?.onScanResult(result)
                     }
                 } else {
-                    if #available(iOS 13.0, *) {
-                        self?.app.showLoading(text: "识别中...")
-                        ScanCode.readBarcode(objects.first as? UIImage) { result in
-                            self?.app.hideLoading()
-                            
-                            self?.onScanResult(result)
-                        }
-                    } else {
-                        self?.app.showMessage(text: "暂不支持")
-                        self?.startScanManager()
+                    self?.app.showLoading(text: "识别中...")
+                    ScanCode.readBarcode(objects.first as? UIImage) { result in
+                        self?.app.hideLoading()
+                        
+                        self?.onScanResult(result)
                     }
                 }
             }
