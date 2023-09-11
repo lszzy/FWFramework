@@ -112,7 +112,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         }
         
         let activitySize = CGSize(width: 30, height: 30)
-        let activityView = UIActivityIndicatorView(style: .gray)
+        let activityView = UIActivityIndicatorView(style: .large)
         activityView.indicatorColor = AppTheme.textColor
         activityView.indicatorSize = activitySize
         activityView.startAnimating()

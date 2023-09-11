@@ -571,17 +571,6 @@ extension WebSocketFoundationSecurity: WebSocketCertificatePinning {
             completion(.failed(error))
         }
     }
-    
-    private func handleOldSecurityTrust(trust: SecTrust, completion: ((WebSocketPinningState) -> ())) {
-        var result: SecTrustResultType = .unspecified
-        SecTrustEvaluate(trust, &result)
-        if result == .unspecified || result == .proceed {
-            completion(.success)
-        } else {
-            let e = CFErrorCreate(kCFAllocatorDefault, "FoundationSecurityError" as NSString?, Int(result.rawValue), nil)
-            completion(.failed(e))
-        }
-    }
 }
 
 extension WebSocketFoundationSecurity: WebSocketHeaderValidator {

@@ -168,7 +168,7 @@ extension TestController {
         let sectionData = displayData[indexPath.section] as! [Any]
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
-        var title = rowData[0] as? String ?? ""
+        let title = rowData[0] as? String ?? ""
         cell.textLabel?.text = title
         return cell
     }
