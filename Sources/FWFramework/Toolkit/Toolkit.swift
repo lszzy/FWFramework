@@ -1812,11 +1812,12 @@ public enum ViewControllerLifecycleState: Int {
     case didInit = 0
     case didLoad = 1
     case willAppear = 2
-    case didLayoutSubviews = 3
-    case didAppear = 4
-    case willDisappear = 5
-    case didDisappear = 6
-    case didDeinit = 7
+    case isAppearing = 3
+    case didLayoutSubviews = 4
+    case didAppear = 5
+    case willDisappear = 6
+    case didDisappear = 7
+    case didDeinit = 8
 }
 
 /// 为提升性能，触发lifecycleState改变等的swizzle代码统一放到了ViewController

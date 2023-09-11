@@ -50,6 +50,7 @@ public class ViewControllerIntercepter: NSObject {
     public var initIntercepter: ((UIViewController) -> Void)?
     public var viewDidLoadIntercepter: ((UIViewController) -> Void)?
     public var viewWillAppearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var viewIsAppearingIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewDidLayoutSubviewsIntercepter: ((UIViewController) -> Void)?
     public var viewDidAppearIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewWillDisappearIntercepter: ((UIViewController, Bool) -> Void)?
@@ -76,6 +77,8 @@ public class ViewControllerManager: NSObject {
     public var hookViewDidLoad: ((UIViewController) -> Void)?
     /// 默认全局控制器viewWillAppear钩子句柄，viewWillAppear优先自动调用
     public var hookViewWillAppear: ((UIViewController, Bool) -> Void)?
+    /// 默认全局控制器viewIsAppearing钩子句柄，viewIsAppearing优先自动调用
+    public var hookViewIsAppearing: ((UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidLayoutSubviews钩子句柄，viewDidLayoutSubviews优先自动调用
     public var hookViewDidLayoutSubviews: ((UIViewController) -> Void)?
     /// 默认全局控制器viewDidAppear钩子句柄，viewDidAppear优先自动调用
@@ -199,6 +202,20 @@ public class ViewControllerManager: NSObject {
             selfObject.fw_lifecycleState = .willAppear
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewIsAppearing(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            selfObject.fw_lifecycleState = .isAppearing
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
             }
         }}
         
@@ -366,6 +383,19 @@ public class ViewControllerManager: NSObject {
         for intercepterName in intercepterNames {
             if let intercepter = intercepters[intercepterName] {
                 intercepter.viewWillAppearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    private func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewIsAppearing
+        hookViewIsAppearing?(viewController, animated)
+        
+        // 2. 拦截器viewIsAppearing
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewIsAppearingIntercepter?(viewController, animated)
             }
         }
     }
