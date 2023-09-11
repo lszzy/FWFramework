@@ -186,12 +186,12 @@ extension WrapperGlobal {
 
     /// 是否是iPhone
     public static var fw_isIphone: Bool {
-        return UI_USER_INTERFACE_IDIOM() == .phone
+        return UIDevice.current.userInterfaceIdiom == .phone
     }
     
     /// 是否是iPad
     public static var fw_isIpad: Bool {
-        return UI_USER_INTERFACE_IDIOM() == .pad
+        return UIDevice.current.userInterfaceIdiom == .pad
     }
     
     /// 是否是Mac
