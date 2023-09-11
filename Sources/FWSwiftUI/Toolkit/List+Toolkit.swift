@@ -31,7 +31,7 @@ extension View {
                 }
             }
             .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
-                view.introspect(.list, on: .iOS(.v16)) { collectionView in
+                view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
                     guard !collectionView.fw_propertyBool(forName: "resetListStyle") else { return }
                     collectionView.fw_setPropertyBool(true, forName: "resetListStyle")
                     
@@ -127,7 +127,7 @@ extension View {
             .introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
                 configuration(tableView)
             }
-            .introspect(.list, on: .iOS(.v16)) { collectionView in
+            .introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
                 configuration(collectionView)
             }
     }
