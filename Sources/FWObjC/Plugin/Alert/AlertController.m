@@ -71,31 +71,24 @@
 }
 
 + (UIColor *)colorPairsWithDynamicLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-            if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-                return darkColor;
-            } else {
-                return lightColor;
-            }
-        }];
-    } else {
-        return lightColor;
-    }
-}
-
-+ (UIColor *)colorPairsWithStaticLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
-    if (@available(iOS 13.0, *)) {
-        UIUserInterfaceStyle mode = UITraitCollection.currentTraitCollection.userInterfaceStyle;
-        if (mode == UIUserInterfaceStyleDark) {
+    return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+        if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
             return darkColor;
-        } else if (mode == UIUserInterfaceStyleLight) {
-            return lightColor;
         } else {
             return lightColor;
         }
+    }];
+}
+
++ (UIColor *)colorPairsWithStaticLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
+    UIUserInterfaceStyle mode = UITraitCollection.currentTraitCollection.userInterfaceStyle;
+    if (mode == UIUserInterfaceStyleDark) {
+        return darkColor;
+    } else if (mode == UIUserInterfaceStyleLight) {
+        return lightColor;
+    } else {
+        return lightColor;
     }
-    return lightColor;
 }
 
 @end
@@ -325,12 +318,10 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [super traitCollectionDidChange:previousTraitCollection];
-    if (@available(iOS 13.0, *)) {
-        // 设置CGColor，不要传previousTraitCollection,previousTraitCollection指的是上一次的模式
-        UIColor *resolvedColor = [[self.alertAppearance lineColor] resolvedColorWithTraitCollection:self.traitCollection];
-        for (UITextField *textField in self.textFields) {
-            textField.layer.borderColor = resolvedColor.CGColor;
-        }
+    // 设置CGColor，不要传previousTraitCollection,previousTraitCollection指的是上一次的模式
+    UIColor *resolvedColor = [[self.alertAppearance lineColor] resolvedColorWithTraitCollection:self.traitCollection];
+    for (UITextField *textField in self.textFields) {
+        textField.layer.borderColor = resolvedColor.CGColor;
     }
 }
 

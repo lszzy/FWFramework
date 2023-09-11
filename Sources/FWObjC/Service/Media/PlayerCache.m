@@ -426,11 +426,7 @@ didCompleteWithError:(nullable NSError *)error {
         long long fromOffset = action.range.location;
         long long endOffset = action.range.location + action.range.length - 1;
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url];
-        if (@available(iOS 13.0, *)) {
-            request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-        } else {
-            request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-        }
+        request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
         NSString *range = [NSString stringWithFormat:@"bytes=%lld-%lld", fromOffset, endOffset];
         [request setValue:range forHTTPHeaderField:@"Range"];
         self.startOffset = action.range.location;

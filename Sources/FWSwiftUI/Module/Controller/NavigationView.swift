@@ -13,7 +13,6 @@ import FWObjC
 #endif
 
 /// 导航栏配置，兼容AnyView和UIKit对象
-@available(iOS 13.0, *)
 public struct NavigationBarConfiguration {
     public var leading: Any?
     public var title: Any?
@@ -108,7 +107,6 @@ public struct NavigationBarConfiguration {
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     
     /// 配置导航栏SwiftUI左侧、标题、右侧视图和背景

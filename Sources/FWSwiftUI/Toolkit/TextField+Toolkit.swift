@@ -12,7 +12,6 @@ import SwiftUI
 #endif
 
 // MARK: - TextField+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等

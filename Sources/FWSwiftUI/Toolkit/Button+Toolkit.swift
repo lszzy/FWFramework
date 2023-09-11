@@ -13,7 +13,6 @@ import SwiftUI
 
 // MARK: - OpacityButtonStyle
 /// 透明度按钮样式，支持设置高亮和禁用时的透明度
-@available(iOS 13.0, *)
 public struct OpacityButtonStyle: ButtonStyle {
     
     public var disabled: Bool
@@ -34,7 +33,6 @@ public struct OpacityButtonStyle: ButtonStyle {
 }
 
 // MARK: - View+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 设置按钮高亮和禁用时的透明度，nil时使用默认

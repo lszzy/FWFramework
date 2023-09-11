@@ -15,7 +15,6 @@ import SwiftUI
 /// SwiftUI视图包装类
 ///
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
-@available(iOS 13.0, *)
 open class HostingView<Content: View>: UIView {
     
     // MARK: - Accessor
@@ -102,7 +101,6 @@ open class HostingView<Content: View>: UIView {
 }
 
 // MARK: - View+HostingView
-@available(iOS 13.0, *)
 extension View {
     
     /// 快速包装到HostingView

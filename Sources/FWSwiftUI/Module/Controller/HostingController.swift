@@ -15,7 +15,6 @@ import FWFramework
 /// SwiftUI控制器包装类，可将View事件用delegate代理到VC
 ///
 /// Controller在MVVM中也为View的角色，可持有ViewModel，负责生命周期和界面跳转
-@available(iOS 13.0, *)
 open class HostingController: UIHostingController<AnyView> {
     
     // MARK: - Lifecyecle
