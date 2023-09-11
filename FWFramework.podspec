@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
   s.ios.deployment_target = '13.0'
-  s.swift_version         = '5.0'
+  s.swift_version         = '5.5'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
