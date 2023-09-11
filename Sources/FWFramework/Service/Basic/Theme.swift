@@ -84,14 +84,12 @@ public class ThemeManager: NSObject {
             UserDefaults.standard.set(NSNumber(value: newValue.rawValue), forKey: "FWThemeMode")
             UserDefaults.standard.synchronize()
             
-            if #available(iOS 13.0, *) {
-                if style != oldStyle {
-                    NotificationCenter.default.post(name: .ThemeChanged, object: self, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
-                }
-                if self.overrideWindow {
-                    _overrideWindow = false
-                    self.overrideWindow = true
-                }
+            if style != oldStyle {
+                NotificationCenter.default.post(name: .ThemeChanged, object: self, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
+            }
+            if self.overrideWindow {
+                _overrideWindow = false
+                self.overrideWindow = true
             }
         }
     }
@@ -106,13 +104,11 @@ public class ThemeManager: NSObject {
             guard newValue != _overrideWindow else { return }
             _overrideWindow = newValue
             
-            if #available(iOS 13.0, *) {
-                var style: UIUserInterfaceStyle = .unspecified
-                if newValue && self.mode != .system {
-                    style = self.mode == .dark ? .dark : .light
-                }
-                UIWindow.fw_mainWindow?.overrideUserInterfaceStyle = style
+            var style: UIUserInterfaceStyle = .unspecified
+            if newValue && self.mode != .system {
+                style = self.mode == .dark ? .dark : .light
             }
+            UIWindow.fw_mainWindow?.overrideUserInterfaceStyle = style
         }
     }
     private var _overrideWindow = false
@@ -131,12 +127,8 @@ public class ThemeManager: NSObject {
     /// 指定traitCollection的实际显示样式，传nil时为全局样式
     public func style(for traitCollection: UITraitCollection?) -> ThemeStyle {
         if self.mode == .system {
-            if #available(iOS 13.0, *) {
-                let traitCollection = traitCollection ?? .current
-                return traitCollection.userInterfaceStyle == .dark ? .dark : .light
-            } else {
-                return .light
-            }
+            let traitCollection = traitCollection ?? .current
+            return traitCollection.userInterfaceStyle == .dark ? .dark : .light
         } else {
             return .init(self.mode.rawValue)
         }
@@ -179,11 +171,7 @@ public class ThemeObject<T>: NSObject {
     
     /// 获取当前主题样式对应静态颜色，主要用于iOS13以下兼容主题切换
     public var fw_color: UIColor {
-        if #available(iOS 13.0, *) {
-            return self
-        } else {
-            return fw_themeObject?.object ?? self
-        }
+        return self
     }
 
     /// 指定主题样式获取对应静态颜色，iOS13+可跟随系统改变
@@ -192,12 +180,8 @@ public class ThemeObject<T>: NSObject {
             return themeObject.object(for: style) ?? self
         }
         
-        if #available(iOS 13.0, *) {
-            let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-            return self.resolvedColor(with: traitCollection)
-        } else {
-            return self
-        }
+        let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
+        return self.resolvedColor(with: traitCollection)
     }
 
     /// 是否是主题颜色，仅支持判断使用fwTheme创建的颜色
@@ -219,28 +203,11 @@ public class ThemeObject<T>: NSObject {
 
     /// 动态创建主题色，指定提供句柄
     public static func fw_themeColor(_ provider: @escaping (ThemeStyle) -> UIColor) -> UIColor {
-        if #available(iOS 13.0, *) {
-            let color = UIColor { traitCollection in
-                return provider(ThemeManager.shared.style(for: traitCollection))
-            }
-            color.fw_themeObject = ThemeObject(provider: provider)
-            return color
-        } else {
-            var color = provider(ThemeManager.shared.style)
-            var r: CGFloat = 0
-            var g: CGFloat = 0
-            var b: CGFloat = 0
-            var a: CGFloat = 0
-            if !color.getRed(&r, green: &g, blue: &b, alpha: &a) {
-                if color.getWhite(&r, alpha: &a) {
-                    g = r
-                    b = r
-                }
-            }
-            color = UIColor(red: r, green: g, blue: b, alpha: a)
-            color.fw_themeObject = ThemeObject(provider: provider)
-            return color
+        let color = UIColor { traitCollection in
+            return provider(ThemeManager.shared.style(for: traitCollection))
         }
+        color.fw_themeObject = ThemeObject(provider: provider)
+        return color
     }
 
     /// 动态创建主题色，指定名称，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
@@ -255,16 +222,11 @@ public class ThemeObject<T>: NSObject {
         }
         
         return fw_themeColor { style in
-            if #available(iOS 13.0, *) {
-                if let color = UIColor(named: name, in: bundle, compatibleWith: nil) {
-                    let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-                    return color.resolvedColor(with: traitCollection)
-                }
-                return .clear
-            } else {
-                let color = UIColor(named: name, in: bundle, compatibleWith: nil)
-                return color ?? .clear
+            if let color = UIColor(named: name, in: bundle, compatibleWith: nil) {
+                let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
+                return color.resolvedColor(with: traitCollection)
             }
+            return .clear
         }
     }
 
@@ -366,10 +328,8 @@ public class ThemeObject<T>: NSObject {
         
         return fw_themeImage { style in
             var image = UIImage(named: name, in: bundle, compatibleWith: nil)
-            if #available(iOS 13.0, *) {
-                let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-                image = image?.withConfiguration(traitCollection.imageConfiguration)
-            }
+            let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
+            image = image?.withConfiguration(traitCollection.imageConfiguration)
             return image
         }
     }
@@ -410,10 +370,8 @@ public class ThemeObject<T>: NSObject {
     public func fw_image(forStyle style: ThemeStyle) -> UIImage? {
         let isThemeAsset = fw_propertyBool(forName: "fw_isThemeAsset")
         if isThemeAsset {
-            if #available(iOS 13.0, *) {
-                let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
-                return self.image(with: traitCollection)
-            }
+            let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
+            return self.image(with: traitCollection)
         }
         
         return fw_themeObject?.object(for: style)
@@ -432,21 +390,15 @@ public class ThemeObject<T>: NSObject {
     
     /// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
     public static func fw_themeLight(_ light: UIImage?, dark: UIImage?) -> UIImageAsset {
-        if #available(iOS 13.0, *) {
-            let asset = UIImageAsset()
-            if let light = light {
-                asset.register(light, with: UITraitCollection(userInterfaceStyle: .light))
-            }
-            if let dark = dark {
-                asset.register(dark, with: UITraitCollection(userInterfaceStyle: .dark))
-            }
-            asset.fw_setPropertyBool(true, forName: "fw_isThemeAsset")
-            return asset
-        } else {
-            return fw_themeAsset { style in
-                return style == .dark ? dark : light
-            }
+        let asset = UIImageAsset()
+        if let light = light {
+            asset.register(light, with: UITraitCollection(userInterfaceStyle: .light))
         }
+        if let dark = dark {
+            asset.register(dark, with: UITraitCollection(userInterfaceStyle: .dark))
+        }
+        asset.fw_setPropertyBool(true, forName: "fw_isThemeAsset")
+        return asset
     }
 
     /// 创建主题动态图片资源，指定提供句柄，内部使用ThemeObject实现
@@ -467,24 +419,22 @@ public class ThemeObject<T>: NSObject {
             return fw_property(forName: "fw_themeContext") as? (NSObject & UITraitEnvironment)
         }
         set {
-            if #available(iOS 13.0, *) {
-                let oldContext: NSObject? = fw_themeContext
-                fw_setPropertyWeak(newValue, forName: "fw_themeContext")
-                
-                if let oldContext = oldContext {
-                    if let oldIdentifier = fw_themeContextIdentifier {
-                        oldContext.fw_removeThemeListener(oldIdentifier)
-                    }
-                    fw_themeContextIdentifier = nil
+            let oldContext: NSObject? = fw_themeContext
+            fw_setPropertyWeak(newValue, forName: "fw_themeContext")
+            
+            if let oldContext = oldContext {
+                if let oldIdentifier = fw_themeContextIdentifier {
+                    oldContext.fw_removeThemeListener(oldIdentifier)
                 }
-                
-                let newContext: NSObject? = newValue
-                if let newContext = newContext {
-                    let identifier = newContext.fw_addThemeListener { [weak self] style in
-                        self?.fw_notifyThemeChanged(style)
-                    }
-                    fw_themeContextIdentifier = identifier
+                fw_themeContextIdentifier = nil
+            }
+            
+            let newContext: NSObject? = newValue
+            if let newContext = newContext {
+                let identifier = newContext.fw_addThemeListener { [weak self] style in
+                    self?.fw_notifyThemeChanged(style)
                 }
+                fw_themeContextIdentifier = identifier
             }
         }
     }
@@ -493,27 +443,21 @@ public class ThemeObject<T>: NSObject {
     @discardableResult
     public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String {
         let identifier = UUID().uuidString
-        if #available(iOS 13.0, *) {
-            let listeners = fw_themeListeners(true)
-            listeners?.setObject(listener, forKey: identifier as NSString)
-        }
+        let listeners = fw_themeListeners(true)
+        listeners?.setObject(listener, forKey: identifier as NSString)
         return identifier
     }
 
     /// iOS13根据订阅唯一标志移除主题通知回调
     public func fw_removeThemeListener(_ identifier: String) {
-        if #available(iOS 13.0, *) {
-            let listeners = fw_themeListeners(false)
-            listeners?.removeObject(forKey: identifier)
-        }
+        let listeners = fw_themeListeners(false)
+        listeners?.removeObject(forKey: identifier)
     }
 
     /// iOS13移除所有主题通知回调，一般用于cell重用
     public func fw_removeAllThemeListeners() {
-        if #available(iOS 13.0, *) {
-            let listeners = fw_themeListeners(false)
-            listeners?.removeAllObjects()
-        }
+        let listeners = fw_themeListeners(false)
+        listeners?.removeAllObjects()
     }
     
     private var fw_themeContextIdentifier: String? {
@@ -521,7 +465,6 @@ public class ThemeObject<T>: NSObject {
         set { fw_setPropertyCopy(newValue, forName: "fw_themeContextIdentifier") }
     }
     
-    @available(iOS 13.0, *)
     private func fw_themeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
         var listeners = fw_property(forName: "fw_themeListeners") as? NSMutableDictionary
         if listeners == nil && lazyload {
@@ -531,7 +474,6 @@ public class ThemeObject<T>: NSObject {
         return listeners
     }
     
-    @available(iOS 13.0, *)
     fileprivate func fw_notifyThemeChanged(_ style: ThemeStyle) {
         // 1. 调用themeChanged钩子
         self.themeChanged(style)
@@ -549,17 +491,14 @@ public class ThemeObject<T>: NSObject {
     }
     
     fileprivate static func fw_swizzleThemeClasses() {
-        if #available(iOS 13.0, *) {
-            fw_swizzleThemeClass(UIScreen.self)
-            fw_swizzleThemeClass(UIView.self)
-            fw_swizzleThemeClass(UIViewController.self)
-            // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
-            fw_swizzleThemeClass(UIImageView.self)
-            fw_swizzleThemeClass(UILabel.self)
-        }
+        fw_swizzleThemeClass(UIScreen.self)
+        fw_swizzleThemeClass(UIView.self)
+        fw_swizzleThemeClass(UIViewController.self)
+        // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
+        fw_swizzleThemeClass(UIImageView.self)
+        fw_swizzleThemeClass(UILabel.self)
     }
     
-    @available(iOS 13.0, *)
     private static func fw_swizzleThemeClass(_ themeClass: AnyClass) {
         NSObject.fw_swizzleInstanceMethod(
             themeClass,

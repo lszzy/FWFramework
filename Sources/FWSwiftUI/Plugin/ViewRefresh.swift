@@ -10,17 +10,13 @@ import SwiftUI
 
 // MARK: - Refresh
 /// [Refresh](https://github.com/wxxsw/Refresh)
-@available(iOS 13.0, *)
 public enum Refresh {}
 
-@available(iOS 13.0, *)
 public typealias RefreshHeader = Refresh.Header
 
-@available(iOS 13.0, *)
 public typealias RefreshFooter = Refresh.Footer
 
 // MARK: - Header
-@available(iOS 13.0, *)
 extension Refresh {
     
     public struct Header<Label> where Label: View {
@@ -40,7 +36,6 @@ extension Refresh {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.Header: View {
     
     public var body: some View {
@@ -75,7 +70,6 @@ extension Refresh.Header: View {
 }
 
 // MARK: - HeaderKey
-@available(iOS 13.0, *)
 extension EnvironmentValues {
     
     var refreshHeaderUpdate: Refresh.HeaderUpdateKey.Value {
@@ -84,7 +78,6 @@ extension EnvironmentValues {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh {
     
     struct HeaderAnchorKey {
@@ -96,7 +89,6 @@ extension Refresh {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.HeaderAnchorKey: PreferenceKey {
     
     typealias Value = [Item]
@@ -111,7 +103,6 @@ extension Refresh.HeaderAnchorKey: PreferenceKey {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.HeaderUpdateKey: EnvironmentKey {
     
     struct Value {
@@ -122,7 +113,6 @@ extension Refresh.HeaderUpdateKey: EnvironmentKey {
 }
 
 // MARK: - Footer
-@available(iOS 13.0, *)
 extension Refresh {
     
     public struct Footer<Label> where Label: View {
@@ -145,7 +135,6 @@ extension Refresh {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.Footer {
     
     public func noMore(_ noMore: Bool) -> Self {
@@ -161,7 +150,6 @@ extension Refresh.Footer {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.Footer: View {
     
     public var body: some View {
@@ -199,7 +187,6 @@ extension Refresh.Footer: View {
 }
 
 // MARK: - FooterKey
-@available(iOS 13.0, *)
 extension EnvironmentValues {
     
     var refreshFooterUpdate: Refresh.FooterUpdateKey.Value {
@@ -208,7 +195,6 @@ extension EnvironmentValues {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh {
     
     struct FooterAnchorKey {
@@ -220,7 +206,6 @@ extension Refresh {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.FooterAnchorKey: PreferenceKey {
     
     typealias Value = [Item]
@@ -236,7 +221,6 @@ extension Refresh.FooterAnchorKey: PreferenceKey {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.FooterUpdateKey: EnvironmentKey {
     
     struct Value: Equatable {
@@ -246,7 +230,6 @@ extension Refresh.FooterUpdateKey: EnvironmentKey {
 }
 
 // MARK: - List
-@available(iOS 13.0, *)
 extension ScrollView {
     
     // 启用刷新，添加到首尾即可
@@ -255,7 +238,6 @@ extension ScrollView {
     }
 }
 
-@available(iOS 13.0, *)
 extension List {
     
     // 启用刷新，添加到Header|Footer即可
@@ -265,7 +247,6 @@ extension List {
 }
 
 // MARK: - Modifier
-@available(iOS 13.0, *)
 extension Refresh {
     
     public struct Modifier {
@@ -289,7 +270,6 @@ extension Refresh {
     }
 }
 
-@available(iOS 13.0, *)
 extension Refresh.Modifier: ViewModifier {
     
     public func body(content: Content) -> some View {

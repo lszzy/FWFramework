@@ -3110,27 +3110,6 @@ import AdSupport
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if #available(iOS 13.0, *) {} else {
-                var textFieldMaxX = selfObject.bounds.size.width
-                if let cancelInsetValue = selfObject.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
-                   let cancelButton = selfObject.fw_cancelButton {
-                    let cancelInset = cancelInsetValue.uiEdgeInsetsValue
-                    let cancelWidth = cancelButton.sizeThatFits(selfObject.bounds.size).width
-                    textFieldMaxX = selfObject.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
-                    if let textField = selfObject.fw_textField {
-                        var frame = textField.frame
-                        frame.size.width = textFieldMaxX - frame.origin.x
-                        textField.frame = frame
-                    }
-                }
-                
-                if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
-                    let contentInset = contentInsetValue.uiEdgeInsetsValue
-                    let textField = selfObject.fw_textField
-                    textField?.frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: selfObject.bounds.size.height - contentInset.top - contentInset.bottom)
-                }
-            }
-            
             if let isCenterValue = selfObject.fw_propertyNumber(forName: "fw_searchIconCenter") {
                 if !isCenterValue.boolValue {
                     let offset = selfObject.fw_propertyNumber(forName: "fw_searchIconOffset")
@@ -3152,34 +3131,32 @@ import AdSupport
         }}
         
         // iOS13因为层级关系变化，兼容处理
-        if #available(iOS 13.0, *) {
-            NSObject.fw_swizzleMethod(
-                objc_getClass("UISearchBarTextField"),
-                selector: #selector(setter: UITextField.frame),
-                methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
-                swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
-            ) { store in { selfObject, aFrame in
-                var frame = aFrame
-                let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
-                if let searchBar = searchBar {
-                    var textFieldMaxX = searchBar.bounds.size.width
-                    if let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
-                       let cancelButton = searchBar.fw_cancelButton {
-                        let cancelInset = cancelInsetValue.uiEdgeInsetsValue
-                        let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
-                        textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
-                        frame.size.width = textFieldMaxX - frame.origin.x
-                    }
-                    
-                    if let contentInsetValue = searchBar.fw_property(forName: "fw_contentInset") as? NSValue {
-                        let contentInset = contentInsetValue.uiEdgeInsetsValue
-                        frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
-                    }
+        NSObject.fw_swizzleMethod(
+            objc_getClass("UISearchBarTextField"),
+            selector: #selector(setter: UITextField.frame),
+            methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
+        ) { store in { selfObject, aFrame in
+            var frame = aFrame
+            let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
+            if let searchBar = searchBar {
+                var textFieldMaxX = searchBar.bounds.size.width
+                if let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
+                   let cancelButton = searchBar.fw_cancelButton {
+                    let cancelInset = cancelInsetValue.uiEdgeInsetsValue
+                    let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
+                    textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
+                    frame.size.width = textFieldMaxX - frame.origin.x
                 }
                 
-                store.original(selfObject, store.selector, frame)
-            }}
-        }
+                if let contentInsetValue = searchBar.fw_property(forName: "fw_contentInset") as? NSValue {
+                    let contentInset = contentInsetValue.uiEdgeInsetsValue
+                    frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
+                }
+            }
+            
+            store.original(selfObject, store.selector, frame)
+        }}
         
         NSObject.fw_swizzleMethod(
             objc_getClass("UINavigationButton"),
@@ -3188,12 +3165,7 @@ import AdSupport
             swizzleSignature: (@convention(block) (UIButton, CGRect) -> Void).self
         ) { store in { selfObject, aFrame in
             var frame = aFrame
-            var searchBar: UISearchBar?
-            if #available(iOS 13.0, *) {
-                searchBar = selfObject.superview?.superview?.superview as? UISearchBar
-            } else {
-                searchBar = selfObject.superview?.superview as? UISearchBar
-            }
+            let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
             if let searchBar = searchBar,
                let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue {
                 let cancelInset = cancelInsetValue.uiEdgeInsetsValue
@@ -3247,12 +3219,10 @@ import AdSupport
 
     /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
     public var fw_isPageSheet: Bool {
-        if #available(iOS 13.0, *) {
-            let controller: UIViewController = self.navigationController ?? self
-            if controller.presentingViewController == nil { return false }
-            let style = controller.modalPresentationStyle
-            if style == .automatic || style == .pageSheet { return true }
-        }
+        let controller: UIViewController = self.navigationController ?? self
+        if controller.presentingViewController == nil { return false }
+        let style = controller.modalPresentationStyle
+        if style == .automatic || style == .pageSheet { return true }
         return false
     }
 
