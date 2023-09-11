@@ -130,7 +130,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         }
         
         // 兼容iPad，默认居中显示ActionSheet。注意点击视图(如UIBarButtonItem)必须是sourceView及其子视图
-        if UI_USER_INTERFACE_IDIOM() == .pad,
+        if UIDevice.current.userInterfaceIdiom == .pad,
            let popoverController = alertController.popoverPresentationController {
             let ancestorView = viewController.fw_ancestorView
             popoverController.sourceView = ancestorView
