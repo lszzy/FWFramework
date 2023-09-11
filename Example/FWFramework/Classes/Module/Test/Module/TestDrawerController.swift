@@ -220,20 +220,18 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     func onPickerResult(_ image: UIImage?, cancelled: Bool) {
         guard let cgImage = image?.cgImage else { return }
         
-        if #available(iOS 13.0, *) {
-            UIWindow.app.showLoading()
-            Detector.recognizeText(in: cgImage) { request in
-                request.recognitionLanguages = ["zh-CN", "en-US"]
-                request.usesLanguageCorrection = true
-            } completion: { results in
-                UIWindow.app.hideLoading()
-                let string = NSMutableString()
-                for result in results {
-                    string.appendFormat("text: %@\nconfidence: %@\n", result.text, NSNumber(value: result.confidence))
-                }
-                let message = string.length > 0 ? string.copy() : "识别结果为空"
-                UIWindow.app.main?.app.showAlert(title: "扫描结果", message: message)
+        UIWindow.app.showLoading()
+        Detector.recognizeText(in: cgImage) { request in
+            request.recognitionLanguages = ["zh-CN", "en-US"]
+            request.usesLanguageCorrection = true
+        } completion: { results in
+            UIWindow.app.hideLoading()
+            let string = NSMutableString()
+            for result in results {
+                string.appendFormat("text: %@\nconfidence: %@\n", result.text, NSNumber(value: result.confidence))
             }
+            let message = string.length > 0 ? string.copy() : "识别结果为空"
+            UIWindow.app.main?.app.showAlert(title: "扫描结果", message: message)
         }
     }
     

@@ -11,7 +11,6 @@ import SwiftUI
 import Combine
 import FWFramework
 
-@available(iOS 13.0, *)
 class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
     
     var style: Int = 0
@@ -56,7 +55,6 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
     
 }
 
-@available(iOS 13.0, *)
 struct TestSwiftUIListContent: View {
     
     @Environment(\.viewContext) var viewContext: ViewContext
@@ -132,7 +130,6 @@ struct TestSwiftUIListContent: View {
     
 }
 
-@available(iOS 13.0, *)
 class TestSwiftUIListModel: ViewModel {
     
     var style: Int = 0

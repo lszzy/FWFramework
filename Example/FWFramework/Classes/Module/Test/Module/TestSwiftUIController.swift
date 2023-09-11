@@ -11,7 +11,6 @@ import SwiftUI
 import Combine
 import FWFramework
 
-@available(iOS 13.0, *)
 class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
@@ -36,7 +35,6 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
 }
 
-@available(iOS 13.0, *)
 class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     
     // MARK: - Accessor
@@ -102,7 +100,6 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     
 }
 
-@available(iOS 13.0, *)
 class TestSwiftUIModel: ViewModel {
     // View中可通过$viewModel.isEnglish获取Binding<Bool>
     @Published var isEnglish: Bool = true
@@ -122,7 +119,6 @@ class TestSwiftUIModel: ViewModel {
     }
 }
 
-@available(iOS 13.0, *)
 struct TestSwiftUIContent: View {
     
     @Environment(\.viewContext) var viewContext: ViewContext
@@ -363,7 +359,6 @@ struct TestSwiftUIContent: View {
     
 }
 
-@available(iOS 13.0, *)
 struct TestSwiftUIToggleStyle: ToggleStyle {
     
     func makeBody(configuration: ToggleStyleConfiguration) -> some View {

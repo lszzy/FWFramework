@@ -24,13 +24,11 @@ extension Wrapper where Base: UINavigationBar {
     }
     
     /// 导航栏iOS13+样式对象，用于自定义样式，默认透明
-    @available(iOS 13.0, *)
     public var appearance: UINavigationBarAppearance {
         return base.fw_appearance
     }
 
     /// 手工更新导航栏样式
-    @available(iOS 13.0, *)
     public func updateAppearance() {
         base.fw_updateAppearance()
     }
@@ -102,13 +100,11 @@ extension Wrapper where Base: UINavigationBar {
 extension Wrapper where Base: UITabBar {
     
     /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
-    @available(iOS 13.0, *)
     public var appearance: UITabBarAppearance {
         return base.fw_appearance
     }
 
     /// 手工更新标签栏样式
-    @available(iOS 13.0, *)
     public func updateAppearance() {
         base.fw_updateAppearance()
     }
@@ -163,13 +159,11 @@ extension Wrapper where Base: UITabBar {
 extension Wrapper where Base: UIToolbar {
     
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
-    @available(iOS 13.0, *)
     public var appearance: UIToolbarAppearance {
         return base.fw_appearance
     }
 
     /// 手工更新工具栏样式
-    @available(iOS 13.0, *)
     public func updateAppearance() {
         base.fw_updateAppearance()
     }

@@ -582,14 +582,14 @@ import FWObjC
         self.titleTextAttributes = navigationBar.titleTextAttributes
         self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes
         
-        if UINavigationBar.fw_appearanceEnabled { if #available(iOS 13.0, *) {
+        if UINavigationBar.fw_appearanceEnabled {
             self.standardAppearance = navigationBar.standardAppearance
             self.compactAppearance = navigationBar.compactAppearance
             self.scrollEdgeAppearance = navigationBar.scrollEdgeAppearance
             if #available(iOS 15.0, *) {
                 self.compactScrollEdgeAppearance = navigationBar.compactScrollEdgeAppearance
             }
-        }}
+        }
     }
     
 }

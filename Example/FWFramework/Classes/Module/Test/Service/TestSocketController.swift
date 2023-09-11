@@ -9,7 +9,6 @@
 import FWFramework
 import UIKit
 
-@available(iOS 12.0, *)
 class TestSocketController: UIViewController {
     
     // MARK: - Accessor
@@ -145,7 +144,6 @@ class TestSocketController: UIViewController {
     
 }
 
-@available(iOS 12.0, *)
 extension TestSocketController: ViewControllerProtocol {
     
     func setupSubviews() {
@@ -180,7 +178,6 @@ extension TestSocketController: ViewControllerProtocol {
     
 }
 
-@available(iOS 12.0, *)
 @objc extension TestSocketController {
     
     func onServer() {

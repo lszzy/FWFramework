@@ -453,14 +453,12 @@ open class ImageCoder: NSObject {
         guard let image = image else {
             return false
         }
-        if #available(iOS 13.0, *) {
-            if image.isSymbolImage {
-                return true
-            }
-            let svgSelector = NSSelectorFromString(String(format: "_%@", "CGSVGDocument"))
-            if image.responds(to: svgSelector) && image.perform(svgSelector)?.takeUnretainedValue() != nil {
-                return true
-            }
+        if image.isSymbolImage {
+            return true
+        }
+        let svgSelector = NSSelectorFromString(String(format: "_%@", "CGSVGDocument"))
+        if image.responds(to: svgSelector) && image.perform(svgSelector)?.takeUnretainedValue() != nil {
+            return true
         }
         let pdfSelector = NSSelectorFromString(String(format: "_%@", "CGPDFPage"))
         if image.responds(to: pdfSelector) && image.perform(pdfSelector)?.takeUnretainedValue() != nil {
@@ -475,9 +473,7 @@ open class ImageCoder: NSObject {
         case .png, .gif:
             isAnimated = true
         case .heic, .heif:
-            if #available(iOS 13.0, *) {
-                isAnimated = heicsEnabled
-            }
+            isAnimated = heicsEnabled
         case .webp:
             if #available(iOS 14.0, *) {
                 isAnimated = true
@@ -526,11 +522,7 @@ open class ImageCoder: NSObject {
         case .png:
             return kCGImagePropertyPNGDictionary as String
         case .heic, .heif:
-            if #available(iOS 13.0, *) {
-                return kCGImagePropertyHEICSDictionary as String
-            } else {
-                return "{HEICS}"
-            }
+            return kCGImagePropertyHEICSDictionary as String
         case .webp:
             if #available(iOS 14.0, *) {
                 return kCGImagePropertyWebPDictionary as String
@@ -548,11 +540,7 @@ open class ImageCoder: NSObject {
         case .png:
             return kCGImagePropertyAPNGUnclampedDelayTime as String
         case .heic, .heif:
-            if #available(iOS 13.0, *) {
-                return kCGImagePropertyHEICSUnclampedDelayTime as String
-            } else {
-                return "UnclampedDelayTime"
-            }
+            return kCGImagePropertyHEICSUnclampedDelayTime as String
         case .webp:
             if #available(iOS 14.0, *) {
                 return kCGImagePropertyWebPUnclampedDelayTime as String
@@ -570,11 +558,7 @@ open class ImageCoder: NSObject {
         case .png:
             return kCGImagePropertyAPNGDelayTime as String
         case .heic, .heif:
-            if #available(iOS 13.0, *) {
-                return kCGImagePropertyHEICSDelayTime as String
-            } else {
-                return "DelayTime"
-            }
+            return kCGImagePropertyHEICSDelayTime as String
         case .webp:
             if #available(iOS 14.0, *) {
                 return kCGImagePropertyWebPDelayTime as String
@@ -592,11 +576,7 @@ open class ImageCoder: NSObject {
             case .png:
                 return kCGImagePropertyAPNGLoopCount as String
             case .heic, .heif:
-                if #available(iOS 13.0, *) {
-                    return kCGImagePropertyHEICSLoopCount as String
-                } else {
-                    return "LoopCount"
-                }
+                return kCGImagePropertyHEICSLoopCount as String
             case .webp:
                 if #available(iOS 14.0, *) {
                     return kCGImagePropertyWebPLoopCount as String

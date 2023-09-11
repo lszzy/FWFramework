@@ -818,15 +818,13 @@ import AdSupport
     public func fw_showGrayView() {
         fw_hideGrayView()
         
-        if #available(iOS 13.0, *) {
-            let overlay = SaturationGrayView()
-            overlay.isUserInteractionEnabled = false
-            overlay.backgroundColor = UIColor.lightGray
-            overlay.layer.compositingFilter = "saturationBlendMode"
-            overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-            self.addSubview(overlay)
-            overlay.fw_pinEdges()
-        }
+        let overlay = SaturationGrayView()
+        overlay.isUserInteractionEnabled = false
+        overlay.backgroundColor = UIColor.lightGray
+        overlay.layer.compositingFilter = "saturationBlendMode"
+        overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+        self.addSubview(overlay)
+        overlay.fw_pinEdges()
     }
     
     /// 隐藏灰色视图，仅支持iOS13+

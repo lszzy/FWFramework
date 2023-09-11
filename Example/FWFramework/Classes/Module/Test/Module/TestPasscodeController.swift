@@ -145,11 +145,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         result.inputType = .regex
         result.customInputRegex = "[^0-9]"
-        if #available(iOS 12, *) {
-            result.textContentType = .oneTimeCode
-        } else {
-            result.textContentType = .init(rawValue: "one-time-code")
-        }
+        result.textContentType = .oneTimeCode
         return result
     }
     

@@ -239,10 +239,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
                     selfObject.bringSubviewToFront(badgeView)
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
-                    if #available(iOS 13.0, *) {
-                        if let imageView = UITabBarItem.fw_imageView(selfObject) {
-                            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
-                        }
+                    if let imageView = UITabBarItem.fw_imageView(selfObject) {
+                        badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
                     }
                     break
                 }
@@ -252,12 +250,10 @@ open class BadgeView: UIView, BadgeViewProtocol {
     
     private static func fw_imageView(_ tabBarButton: UIView) -> UIImageView? {
         var superview = tabBarButton
-        if #available(iOS 13.0, *) {
-            // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
-            if let effectView = tabBarButton.subviews.first as? UIVisualEffectView,
-               effectView.contentView.subviews.count > 0 {
-                superview = effectView.contentView
-            }
+        // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
+        if let effectView = tabBarButton.subviews.first as? UIVisualEffectView,
+           effectView.contentView.subviews.count > 0 {
+            superview = effectView.contentView
         }
         
         for subview in superview.subviews {

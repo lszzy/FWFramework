@@ -8,7 +8,6 @@
 import UIKit
 
 /// SceneDelegate基类
-@available(iOS 13.0, *)
 open class SceneResponder: UIResponder, UIWindowSceneDelegate {
     
     /// 场景主window

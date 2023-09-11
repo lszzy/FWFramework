@@ -816,22 +816,20 @@ import FWObjC
             if selfObject.fw_attributedTitle == nil && selfObject.fw_attributedMessage == nil { return }
             
             // 兼容iOS13操作表设置title和message样式不生效问题
-            if #available(iOS 13.0, *) {
-                guard let targetClass = objc_getClass(String(format: "%@%@%@", "_U", "IInterfaceActionGrou", "pHeaderScrollView")) as? AnyClass else { return }
+            guard let targetClass = objc_getClass(String(format: "%@%@%@", "_U", "IInterfaceActionGrou", "pHeaderScrollView")) as? AnyClass else { return }
+            
+            UIAlertController.fw_alertSubview(selfObject.view) { view in
+                if !view.isKind(of: targetClass) { return false }
                 
-                UIAlertController.fw_alertSubview(selfObject.view) { view in
-                    if !view.isKind(of: targetClass) { return false }
-                    
-                    UIAlertController.fw_alertSubview(view) { view in
-                        if let effectView = view as? UIVisualEffectView {
-                            // 取消effect效果，否则样式不生效，全是灰色
-                            effectView.effect = nil
-                            return true
-                        }
-                        return false
+                UIAlertController.fw_alertSubview(view) { view in
+                    if let effectView = view as? UIVisualEffectView {
+                        // 取消effect效果，否则样式不生效，全是灰色
+                        effectView.effect = nil
+                        return true
                     }
-                    return true
+                    return false
                 }
+                return true
             }
         }}
     }

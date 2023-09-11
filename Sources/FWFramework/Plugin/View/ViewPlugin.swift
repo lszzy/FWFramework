@@ -258,11 +258,7 @@ extension ViewPlugin {
     /// 快速创建指示器，可指定颜色，默认白色
     public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         var indicatorStyle: UIActivityIndicatorView.Style
-        if #available(iOS 13.0, *) {
-            indicatorStyle = .medium
-        } else {
-            indicatorStyle = .white
-        }
+        indicatorStyle = .medium
         let indicatorView = UIActivityIndicatorView(style: indicatorStyle)
         indicatorView.color = color ?? .white
         indicatorView.hidesWhenStopped = true

@@ -147,13 +147,11 @@ private extension SettingsController {
     
     @objc func onTheme() {
         var actions = [APP.localized("systemTitle"), APP.localized("themeLight")]
-        if #available(iOS 13.0, *) {
-            actions.append(APP.localized("themeDark"))
-            actions.append(APP.localized("themeGray"))
-        }
+        actions.append(APP.localized("themeDark"))
+        actions.append(APP.localized("themeGray"))
         
         app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex:-1) { (index) in
-            if #available(iOS 13.0, *), index == actions.count - 1 {
+            if index == actions.count - 1 {
                 if UIWindow.app.main?.app.hasGrayView ?? false {
                     UIWindow.app.main?.app.hideGrayView()
                 } else {
