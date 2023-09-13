@@ -3017,6 +3017,44 @@ import AdSupport
     public weak var fw_cancelButton: UIButton? {
         return fw_invokeGetter("cancelButton") as? UIButton
     }
+    
+    /// 输入框的文字颜色
+    public var fw_textColor: UIColor? {
+        get {
+            fw_property(forName: #function) as? UIColor
+        }
+        set {
+            fw_setProperty(newValue, forName: #function)
+            searchTextField.textColor = newValue
+        }
+    }
+    
+    /// 输入框的字体，会同时影响placeholder的字体
+    public var fw_font: UIFont? {
+        get {
+            fw_property(forName: #function) as? UIFont
+        }
+        set {
+            fw_setProperty(newValue, forName: #function)
+            if let placeholder = self.placeholder {
+                self.placeholder = placeholder
+            }
+            searchTextField.font = newValue
+        }
+    }
+    
+    /// 输入框内placeholder的颜色
+    public var fw_placeholderColor: UIColor? {
+        get {
+            fw_property(forName: #function) as? UIColor
+        }
+        set {
+            fw_setProperty(newValue, forName: #function)
+            if let placeholder = self.placeholder {
+                self.placeholder = placeholder
+            }
+        }
+    }
 
     /// 设置整体背景色
     public var fw_backgroundColor: UIColor? {
@@ -3127,6 +3165,43 @@ import AdSupport
                     let position = targetWidth / 2.0 - 6.0
                     selfObject.setPositionAdjustment(UIOffset(horizontal: position > 0 ? position : 0, vertical: 0), for: .search)
                 }
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(setter: UISearchBar.placeholder),
+            methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar, String?) -> Void).self
+        ) { store in { selfObject, placeholder in
+            store.original(selfObject, store.selector, placeholder)
+            
+            if selfObject.fw_placeholderColor != nil || selfObject.fw_font != nil {
+                guard let attrString = selfObject.searchTextField.attributedPlaceholder?.mutableCopy() as? NSMutableAttributedString else { return }
+                
+                if let placeholderColor = selfObject.fw_placeholderColor {
+                    attrString.addAttribute(.foregroundColor, value: placeholderColor, range: NSMakeRange(0, attrString.length))
+                }
+                if let font = selfObject.fw_font {
+                    attrString.addAttribute(.font, value: font, range: NSMakeRange(0, attrString.length))
+                }
+                // 默认移除文字阴影
+                attrString.removeAttribute(.shadow, range: NSMakeRange(0, attrString.length))
+                selfObject.searchTextField.attributedPlaceholder = attrString
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(UISearchBar.didMoveToWindow),
+            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_placeholderColor != nil {
+                let placeholder = selfObject.placeholder
+                selfObject.placeholder = placeholder
             }
         }}
         

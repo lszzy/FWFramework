@@ -1066,6 +1066,24 @@ extension Wrapper where Base: UISearchBar {
     public weak var cancelButton: UIButton? {
         return base.fw_cancelButton
     }
+    
+    /// 输入框的文字颜色
+    public var textColor: UIColor? {
+        get { return base.fw_textColor }
+        set { base.fw_textColor = newValue }
+    }
+    
+    /// 输入框的字体，会同时影响placeholder的字体
+    public var font: UIFont? {
+        get { return base.fw_font }
+        set { base.fw_font = newValue }
+    }
+    
+    /// 输入框内placeholder的颜色
+    public var placeholderColor: UIColor? {
+        get { return base.fw_placeholderColor }
+        set { base.fw_placeholderColor = newValue }
+    }
 
     /// 设置整体背景色
     public var backgroundColor: UIColor? {

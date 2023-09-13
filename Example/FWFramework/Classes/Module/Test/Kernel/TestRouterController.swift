@@ -70,7 +70,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         searchBar.app.searchIconOffset = 10
         searchBar.app.searchTextOffset = 4
         searchBar.app.clearIconOffset = -6
-        searchBar.app.textField.font = APP.font(12)
+        searchBar.app.font = APP.font(12)
         searchBar.app.textField.app.setCornerRadius(18)
         return result
     }()
