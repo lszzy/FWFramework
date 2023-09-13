@@ -1058,7 +1058,7 @@ extension Wrapper where Base: UISearchBar {
     }
 
     /// 输入框内部视图
-    public weak var textField: UITextField? {
+    public var textField: UISearchTextField {
         return base.fw_textField
     }
 

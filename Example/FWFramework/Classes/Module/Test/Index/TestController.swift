@@ -92,10 +92,8 @@ class TestController: UIViewController {
         result.app.searchTextOffset = 4
         result.app.clearIconOffset = -6
         
-        if let textField = result.app.textField {
-            textField.font = APP.font(12)
-            textField.app.setCornerRadius(16)
-        }
+        result.app.textField.font = APP.font(12)
+        result.app.textField.app.setCornerRadius(16)
         return result
     }()
     
