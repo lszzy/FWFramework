@@ -25,9 +25,9 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
         searchBar.app.searchIconCenter = false
         
         let textField = searchBar.app.textField
-        textField?.font = UIFont.systemFont(ofSize: 12)
-        textField?.app.setCornerRadius(16)
-        textField?.app.touchResign = true
+        textField.font = UIFont.systemFont(ofSize: 12)
+        textField.app.setCornerRadius(16)
+        textField.app.touchResign = true
         return searchBar
     }()
     

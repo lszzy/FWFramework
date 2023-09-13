@@ -3009,8 +3009,8 @@ import AdSupport
     }
 
     /// 输入框内部视图
-    public weak var fw_textField: UITextField? {
-        return fw_invokeGetter("searchField") as? UITextField
+    public var fw_textField: UISearchTextField {
+        return searchTextField
     }
 
     /// 取消按钮内部视图，showsCancelButton开启后才存在
@@ -3031,8 +3031,8 @@ import AdSupport
 
     /// 设置输入框背景色
     public var fw_textFieldBackgroundColor: UIColor? {
-        get { fw_textField?.backgroundColor }
-        set { fw_textField?.backgroundColor = newValue }
+        get { fw_textField.backgroundColor }
+        set { fw_textField.backgroundColor = newValue }
     }
 
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
@@ -3117,13 +3117,13 @@ import AdSupport
                 } else {
                     let textField = selfObject.fw_textField
                     var attributes: [NSAttributedString.Key: Any]?
-                    if let font = textField?.font {
+                    if let font = textField.font {
                         attributes = [.font: font]
                     }
                     let placeholderWidth = (selfObject.placeholder as? NSString)?.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attributes, context: nil).size.width ?? .zero
                     let textOffset = 4 + selfObject.searchTextPositionAdjustment.horizontal
-                    let iconWidth = textField?.leftView?.frame.size.width ?? 0
-                    let targetWidth = (textField?.frame.size.width ?? 0) - ceil(placeholderWidth) - textOffset - iconWidth
+                    let iconWidth = textField.leftView?.frame.size.width ?? 0
+                    let targetWidth = textField.frame.size.width - ceil(placeholderWidth) - textOffset - iconWidth
                     let position = targetWidth / 2.0 - 6.0
                     selfObject.setPositionAdjustment(UIOffset(horizontal: position > 0 ? position : 0, vertical: 0), for: .search)
                 }
