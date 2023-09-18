@@ -158,13 +158,13 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     
     private lazy var metadataOutput: AVCaptureMetadataOutput = {
         let result = AVCaptureMetadataOutput()
-        result.setMetadataObjectsDelegate(self, queue: captureQueue)
+        result.setMetadataObjectsDelegate(self, queue: .main)
         return result
     }()
     
     private lazy var videoDataOutput: AVCaptureVideoDataOutput = {
         let result = AVCaptureVideoDataOutput()
-        result.setSampleBufferDelegate(self, queue: captureQueue)
+        result.setSampleBufferDelegate(self, queue: .main)
         return result
     }()
     
@@ -174,8 +174,6 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         result.frame = preview?.frame ?? .zero
         return result
     }()
-    
-    private var captureQueue = DispatchQueue(label: "site.wuyong.queue.scan.capture", attributes: .concurrent)
     
     private var issetMetadataOutput = false
     private var issetVideoDataOutput = false
@@ -263,14 +261,11 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     // MARK: - AVCaptureMetadataOutputObjectsDelegate
     open func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         guard metadataObjects.count > 0 else { return }
-        
         let obj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject
         let resultString = obj?.stringValue
         
-        DispatchQueue.main.async {
-            self.delegate?.scanCode(self, result: resultString)
-            self.scanResultBlock?(resultString)
-        }
+        delegate?.scanCode(self, result: resultString)
+        scanResultBlock?(resultString)
     }
                                   
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
@@ -281,10 +276,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
            let brightnessValue = exifMetadata[kCGImagePropertyExifBrightnessValue as String] as? NSNumber {
             let brightness = brightnessValue.doubleValue
             
-            DispatchQueue.main.async {
-                self.sampleBufferDelegate?.scanCode(self, brightness: brightness)
-                self.scanBrightnessBlock?(brightness)
-            }
+            sampleBufferDelegate?.scanCode(self, brightness: brightness)
+            scanBrightnessBlock?(brightness)
         }
     }
 
