@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CommonCrypto
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -354,22 +355,114 @@ extension WrapperGlobal {
     // MARK: - Encrypt
     /// 利用AES加密数据
     public func fw_aesEncrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__fw_AESEncrypt(withKey: key, andIV: iv)
+        guard let keyData = key.data(using: .utf8) as? NSData,
+              let encryptedData = NSMutableData(length: (self as NSData).length + kCCBlockSizeAES128) else {
+            return nil
+        }
+        
+        var dataMoved: size_t = 0
+        let result = CCCrypt(CCOperation(kCCEncrypt),
+                             CCAlgorithm(kCCAlgorithmAES128),
+                             CCOptions(kCCOptionPKCS7Padding),
+                             keyData.bytes,
+                             keyData.length,
+                             (iv as NSData).bytes,
+                             (self as NSData).bytes,
+                             (self as NSData).length,
+                             encryptedData.mutableBytes,
+                             encryptedData.length,
+                             &dataMoved)
+        
+        if result == kCCSuccess {
+            encryptedData.length = dataMoved
+            return encryptedData as Data
+        }
+        
+        return nil
     }
 
     /// 利用AES解密数据
     public func fw_aesDecrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__fw_AESDecrypt(withKey: key, andIV: iv)
+        guard let keyData = key.data(using: .utf8) as? NSData,
+              let decryptedData = NSMutableData(length: (self as NSData).length + kCCBlockSizeAES128) else {
+            return nil
+        }
+        
+        var dataMoved: size_t = 0
+        let result = CCCrypt(CCOperation(kCCDecrypt),
+                             CCAlgorithm(kCCAlgorithmAES128),
+                             CCOptions(kCCOptionPKCS7Padding),
+                             keyData.bytes,
+                             keyData.length,
+                             (iv as NSData).bytes,
+                             (self as NSData).bytes,
+                             (self as NSData).length,
+                             decryptedData.mutableBytes,
+                             decryptedData.length,
+                             &dataMoved)
+        
+        if result == kCCSuccess {
+            decryptedData.length = dataMoved
+            return decryptedData as Data
+        }
+        
+        return nil
     }
 
     /// 利用3DES加密数据
     public func fw_des3Encrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__fw_DES3Encrypt(withKey: key, andIV: iv)
+        guard let keyData = key.data(using: .utf8) as? NSData,
+              let encryptedData = NSMutableData(length: (self as NSData).length + kCCBlockSize3DES) else {
+            return nil
+        }
+        
+        var dataMoved: size_t = 0
+        let result = CCCrypt(CCOperation(kCCEncrypt),
+                             CCAlgorithm(kCCAlgorithm3DES),
+                             CCOptions(kCCOptionPKCS7Padding),
+                             keyData.bytes,
+                             keyData.length,
+                             (iv as NSData).bytes,
+                             (self as NSData).bytes,
+                             (self as NSData).length,
+                             encryptedData.mutableBytes,
+                             encryptedData.length,
+                             &dataMoved)
+        
+        if result == kCCSuccess {
+            encryptedData.length = dataMoved
+            return encryptedData as Data
+        }
+        
+        return nil
     }
 
     /// 利用3DES解密数据
     public func fw_des3Decrypt(key: String, iv: Data) -> Data? {
-        return (self as NSData).__fw_DES3Decrypt(withKey: key, andIV: iv)
+        guard let keyData = key.data(using: .utf8) as? NSData,
+              let decryptedData = NSMutableData(length: (self as NSData).length + kCCBlockSize3DES) else {
+            return nil
+        }
+        
+        var dataMoved: size_t = 0
+        let result = CCCrypt(CCOperation(kCCDecrypt),
+                             CCAlgorithm(kCCAlgorithm3DES),
+                             CCOptions(kCCOptionPKCS7Padding),
+                             keyData.bytes,
+                             keyData.length,
+                             (iv as NSData).bytes,
+                             (self as NSData).bytes,
+                             (self as NSData).length,
+                             decryptedData.mutableBytes,
+                             decryptedData.length,
+                             &dataMoved)
+        
+        if result == kCCSuccess {
+            decryptedData.length = dataMoved
+            return decryptedData as Data
+        }
+        
+        return nil
     }
 
     // MARK: - RSA
