@@ -266,7 +266,26 @@ import AdSupport
     
     /// 本地IP地址
     public static var fw_ipAddress: String? {
-        return __FWBridge.ipAddress()
+        var ipAddr: String?
+        var addrs: UnsafeMutablePointer<ifaddrs>? = nil
+        
+        let ret = getifaddrs(&addrs)
+        if 0 == ret {
+            var cursor = addrs
+            
+            while cursor != nil {
+                if AF_INET == cursor!.pointee.ifa_addr.pointee.sa_family && 0 == (cursor!.pointee.ifa_flags & UInt32(IFF_LOOPBACK)) {
+                    ipAddr = String(cString: inet_ntoa(UnsafeMutablePointer<sockaddr_in>(OpaquePointer(cursor!.pointee.ifa_addr)).pointee.sin_addr))
+                    break
+                }
+                
+                cursor = cursor!.pointee.ifa_next
+            }
+            
+            freeifaddrs(addrs)
+        }
+        
+        return ipAddr
     }
     
     /// 本地主机名称

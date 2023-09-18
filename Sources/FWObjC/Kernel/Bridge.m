@@ -27,29 +27,6 @@ static SEL __FWCGSVGDocumentSEL = NULL;
 
 @implementation __FWBridge
 
-+ (NSString *)ipAddress {
-    NSString *ipAddr = nil;
-    struct ifaddrs *addrs = NULL;
-    
-    int ret = getifaddrs(&addrs);
-    if (0 == ret) {
-        const struct ifaddrs * cursor = addrs;
-        
-        while (cursor) {
-            if (AF_INET == cursor->ifa_addr->sa_family && 0 == (cursor->ifa_flags & IFF_LOOPBACK)) {
-                ipAddr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
-                break;
-            }
-            
-            cursor = cursor->ifa_next;
-        }
-        
-        freeifaddrs(addrs);
-    }
-    
-    return ipAddr;
-}
-
 + (NSString *)ipAddress:(NSString *)host {
     if ([host hasPrefix:@"http"]) {
         host = [NSURL URLWithString:host].host;
