@@ -45,14 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (__FWEncrypt)
 
-- (nullable NSData *)__fw_AESEncryptWithKey:(NSString *)key andIV:(NSData *)iv;
-
-- (nullable NSData *)__fw_AESDecryptWithKey:(NSString *)key andIV:(NSData *)iv;
-
-- (nullable NSData *)__fw_DES3EncryptWithKey:(NSString *)key andIV:(NSData *)iv;
-
-- (nullable NSData *)__fw_DES3DecryptWithKey:(NSString *)key andIV:(NSData *)iv;
-
 - (nullable NSData *)__fw_RSAEncryptWithPublicKey:(NSString *)publicKey;
 
 - (nullable NSData *)__fw_RSAEncryptWithPublicKey:(NSString *)publicKey andTag:(NSString *)tagName base64Encode:(BOOL)base64Encode;
