@@ -24,7 +24,6 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
 @property (nonatomic, assign) BOOL issetVideoDataOutput;
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
-@property (nonatomic, strong) dispatch_queue_t captureQueue;
 
 @end
 
@@ -65,7 +64,6 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
 
 - (instancetype)init {
     if ([super init]) {
-        self.captureQueue = dispatch_queue_create("site.wuyong.queue.scan.capture", DISPATCH_QUEUE_CONCURRENT);
         _metadataObjectTypes = [FWScanCode metadataObjectTypesQRCode];
         
         /// 将设备输入对象添加到会话对象中
@@ -107,7 +105,7 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
 - (AVCaptureMetadataOutput *)metadataOutput {
     if (!_metadataOutput) {
         _metadataOutput = [[AVCaptureMetadataOutput alloc] init];
-        [_metadataOutput setMetadataObjectsDelegate:self queue:self.captureQueue];
+        [_metadataOutput setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     }
     return _metadataOutput;
 }
@@ -115,7 +113,7 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
 - (AVCaptureVideoDataOutput *)videoDataOutput {
     if (!_videoDataOutput) {
         _videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-        [_videoDataOutput setSampleBufferDelegate:self queue:self.captureQueue];
+        [_videoDataOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
     }
     return _videoDataOutput;
 }
@@ -277,14 +275,12 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
         AVMetadataMachineReadableCodeObject *obj = metadataObjects[0];
         NSString *resultString = obj.stringValue;
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.delegate && [self.delegate respondsToSelector:@selector(scanCode:result:)]) {
-                [self.delegate scanCode:self result:resultString];
-            }
-            if (self.scanResultBlock) {
-                self.scanResultBlock(resultString);
-            }
-        });
+        if (self.delegate && [self.delegate respondsToSelector:@selector(scanCode:result:)]) {
+            [self.delegate scanCode:self result:resultString];
+        }
+        if (self.scanResultBlock) {
+            self.scanResultBlock(resultString);
+        }
     }
 }
 
@@ -297,14 +293,12 @@ static NSArray<AVMetadataObjectType> *fwStaticObjectTypesBarcode = nil;
     NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
     CGFloat brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.sampleBufferDelegate && [self.sampleBufferDelegate respondsToSelector:@selector(scanCode:brightness:)]) {
-            [self.sampleBufferDelegate scanCode:self brightness:brightnessValue];
-        }
-        if (self.scanBrightnessBlock) {
-            self.scanBrightnessBlock(brightnessValue);
-        }
-    });
+    if (self.sampleBufferDelegate && [self.sampleBufferDelegate respondsToSelector:@selector(scanCode:brightness:)]) {
+        [self.sampleBufferDelegate scanCode:self brightness:brightnessValue];
+    }
+    if (self.scanBrightnessBlock) {
+        self.scanBrightnessBlock(brightnessValue);
+    }
 }
 
 #pragma mark - Torch

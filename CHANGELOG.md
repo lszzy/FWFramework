@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.17.5] - 2023-09-18
+
+### Fixed
+* Fixed the problem that the QR code scanning component may be called back multiple times in succession when using it.
+
 ## [4.17.4] - 2023-09-10
 
 ### Changed
