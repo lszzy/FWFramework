@@ -12,14 +12,14 @@ import SwiftUI
 @available(iOS 13.0, *)
 extension View {
     
-    /// 配置TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
-    public func textFieldConfigure(
-        _ configuration: @escaping (UITextField) -> Void,
+    /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textFieldInitialize(
+        _ initialization: @escaping (UITextField) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
-        return introspectTextField { textField in
-            guard textField.fw.property(forName: "textFieldConfigure") == nil else { return }
-            textField.fw.setProperty(NSNumber(value: true), forName: "textFieldConfigure")
+        return textFieldConfigure { textField in
+            guard textField.fw.property(forName: "textFieldInitialize") == nil else { return }
+            textField.fw.setProperty(NSNumber(value: true), forName: "textFieldInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw.visibleStateChanged = { [weak textField] vc, state in
@@ -31,18 +31,27 @@ extension View {
                 }
             }
             
+            initialization(textField)
+        }
+    }
+    
+    /// 配置TextField视图，可调用多次
+    public func textFieldConfigure(
+        _ configuration: @escaping (UITextField) -> Void
+    ) -> some View {
+        return introspect(.textField, on: .iOS(.all)) { textField in
             configuration(textField)
         }
     }
     
-    /// 配置TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
-    public func textViewConfigure(
-        _ configuration: @escaping (UITextView) -> Void,
+    /// 初始化TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textViewInitialize(
+        _ initialization: @escaping (UITextView) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
-        return introspectTextView { textView in
-            guard textView.fw.property(forName: "textViewConfigure") == nil else { return }
-            textView.fw.setProperty(NSNumber(value: true), forName: "textViewConfigure")
+        return textViewConfigure { textView in
+            guard textView.fw.property(forName: "textViewInitialize") == nil else { return }
+            textView.fw.setProperty(NSNumber(value: true), forName: "textViewInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw.visibleStateChanged = { [weak textView] vc, state in
@@ -54,6 +63,15 @@ extension View {
                 }
             }
             
+            initialization(textView)
+        }
+    }
+    
+    /// 配置TextView视图，可调用多次
+    public func textViewConfigure(
+        _ configuration: @escaping (UITextView) -> Void
+    ) -> some View {
+        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16)) { textView in
             configuration(textView)
         }
     }
