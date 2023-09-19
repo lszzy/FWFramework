@@ -7,6 +7,10 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+import FWObjC
+import FWFramework
+#endif
 
 // MARK: - Introspect
 /// The scope of introspection i.e. where introspect should look to find
