@@ -114,7 +114,6 @@ struct TestSwiftUIListContent: View {
             })
         .listViewLoading(
             shouldBegin: $viewModel.beginLoading,
-            shouldLoading: !viewModel.items.isEmpty,
             action: { completionHandler in
                 viewModel.loadData(completionHandler: completionHandler)
             })

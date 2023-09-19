@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface __FWBridge : NSObject
 
-+ (nullable NSString *)ipAddress:(NSString *)host;
-
 + (nullable UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize;
 
 + (nullable NSData *)svgEncode:(UIImage *)image;
