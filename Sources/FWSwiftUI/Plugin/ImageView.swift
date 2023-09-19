@@ -20,6 +20,8 @@ public struct ImageView: UIViewRepresentable {
     var url: Any?
     var placeholder: UIImage?
     var options: WebImageOptions = []
+    var context: [ImageCoderOptions: Any]?
+    var completion: ((UIImageView, UIImage?) -> Void)?
     var contentMode: UIView.ContentMode = .scaleAspectFill
     
     /// 指定本地占位图片初始化
@@ -64,18 +66,19 @@ public struct ImageView: UIViewRepresentable {
     public typealias UIViewType = ResizableView<UIImageView>
     
     public func makeUIView(context: Context) -> ResizableView<UIImageView> {
-        let imageView = ResizableView(UIImageView.fw.animatedImageView())
-        imageView.content.contentMode = contentMode
-        imageView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: nil, completion: nil)
-        return imageView
+        let imageView = UIImageView.fw.animatedImageView()
+        let uiView = ResizableView(imageView)
+        uiView.content.contentMode = contentMode
+        uiView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
+        return uiView
     }
     
-    public func updateUIView(_ imageView: ResizableView<UIImageView>, context: Context) {
-        imageView.content.contentMode = contentMode
+    public func updateUIView(_ uiView: ResizableView<UIImageView>, context: Context) {
+        uiView.content.contentMode = contentMode
     }
     
-    public static func dismantleUIView(_ imageView: ResizableView<UIImageView>, coordinator: ()) {
-        imageView.content.fw.cancelImageRequest()
+    public static func dismantleUIView(_ uiView: ResizableView<UIImageView>, coordinator: ()) {
+        uiView.content.fw.cancelImageRequest()
     }
     
 }

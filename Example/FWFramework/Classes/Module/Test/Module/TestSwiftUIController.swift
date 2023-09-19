@@ -330,13 +330,13 @@ struct TestSwiftUIContent: View {
         .showToast($showingToast, customize: { viewController in
             viewController.fw.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
         })
-        .showEmpty($showingEmpty, customize: { viewController in
+        .showEmpty(showingEmpty, customize: { viewController in
             viewController.app.showEmptyView(text: "我是标题", detail: "我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息", image: UIImage.app.appIconImage(), action: "刷新") { _ in
                 showingEmpty = false
             }
         })
-        .showLoading($showingLoading)
-        .showProgress($showingProgress, customize: { viewController in
+        .showLoading(showingLoading)
+        .showProgress(showingProgress, customize: { viewController in
             viewController.app.showProgress(progressValue, text: "上传中(\(Int(progressValue * 100))%)")
         })
         .transformViewContext(transform: { viewContext in
