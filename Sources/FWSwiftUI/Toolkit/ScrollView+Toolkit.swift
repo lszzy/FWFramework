@@ -12,14 +12,23 @@ import SwiftUI
 @available(iOS 13.0, *)
 extension View {
     
-    /// 配置ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    public func scrollViewInitialize(
+        _ initialization: @escaping (UIScrollView) -> Void
+    ) -> some View {
+        return scrollViewConfigure { scrollView in
+            guard scrollView.fw.property(forName: "scrollViewInitialize") == nil else { return }
+            scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewInitialize")
+            
+            initialization(scrollView)
+        }
+    }
+    
+    /// 配置ScrollView视图，可调用多次
     public func scrollViewConfigure(
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
-        return introspectScrollView { scrollView in
-            guard scrollView.fw.property(forName: "scrollViewConfigure") == nil else { return }
-            scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewConfigure")
-            
+        return introspect(.scrollView, on: .iOS(.all)) { scrollView in
             configuration(scrollView)
         }
     }
@@ -27,10 +36,11 @@ extension View {
     /// 绑定ScrollView下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func scrollViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectScrollView { scrollView in
+        return scrollViewConfigure { scrollView in
             if scrollView.fw.property(forName: "scrollViewRefreshing") == nil {
                 scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewRefreshing")
                 
@@ -52,17 +62,23 @@ extension View {
                     scrollView.fw.beginRefreshing()
                 }
             }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw.loadingFinished = finished
+            }
         }
     }
     
     /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func scrollViewLoading(
         shouldBegin: Binding<Bool>? = nil,
-        shouldLoading: Bool? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
-        return introspectScrollView { scrollView in
+        return scrollViewConfigure { scrollView in
             if scrollView.fw.property(forName: "scrollViewLoading") == nil {
                 scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewLoading")
                 
@@ -77,11 +93,6 @@ extension View {
                 customize?(scrollView)
             }
             
-            if let shouldLoading = shouldLoading,
-               scrollView.fw.shouldLoading != shouldLoading {
-                scrollView.fw.shouldLoading = shouldLoading
-            }
-            
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
@@ -89,12 +100,18 @@ extension View {
                     scrollView.fw.beginLoading()
                 }
             }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw.loadingFinished = finished
+            }
         }
     }
     
     /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
     public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
-        return introspectScrollView { scrollView in
+        return scrollViewConfigure { scrollView in
             if isShowing {
                 if let customize = customize {
                     customize(scrollView)
