@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.18.0] - 2023-09-19
+
+### Added
+* Compatible with Xcode15, iOS17
+* Synchronize SwiftUI component Introspect to the latest version
+* Optimize SwiftUI refresh and add plug-in usage
+
 ## [4.17.5] - 2023-09-18
 
 ### Fixed

@@ -7,692 +7,2445 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
-
-// MARK: - Introspect
-/// Utility methods to inspect the UIKit view hierarchy.
-///
-/// [SwiftUI-Introspect](https://github.com/siteline/SwiftUI-Introspect)
-public enum Introspect {
-    
-    /// Finds a subview of the specified type.
-    /// This method will recursively look for this view.
-    /// Returns nil if it can't find a view of the specified type.
-    public static func findChild<AnyViewType: UIView>(
-        ofType type: AnyViewType.Type,
-        in root: UIView
-    ) -> AnyViewType? {
-        for subview in root.subviews {
-            if let typed = subview as? AnyViewType {
-                return typed
-            } else if let typed = findChild(ofType: type, in: subview) {
-                return typed
-            }
-        }
-        return nil
-    }
-    
-    /// Finds a child view controller of the specified type.
-    /// This method will recursively look for this child.
-    /// Returns nil if it can't find a view of the specified type.
-    public static func findChild<AnyViewControllerType: UIViewController>(
-        ofType type: AnyViewControllerType.Type,
-        in root: UIViewController
-    ) -> AnyViewControllerType? {
-        for child in root.children {
-            if let typed = child as? AnyViewControllerType {
-                return typed
-            } else if let typed = findChild(ofType: type, in: child) {
-                return typed
-            }
-        }
-        return root as? AnyViewControllerType
-    }
-    
-    /// Finds a subview of the specified type.
-    /// This method will recursively look for this view.
-    /// Returns nil if it can't find a view of the specified type.
-    public static func findChildUsingFrame<AnyViewType: UIView>(
-        ofType type: AnyViewType.Type,
-        in root: UIView,
-        from originalEntry: UIView
-    ) -> AnyViewType? {
-        var children: [AnyViewType] = []
-        for subview in root.subviews {
-            if let typed = subview as? AnyViewType {
-                children.append(typed)
-            } else if let typed = findChild(ofType: type, in: subview) {
-                children.append(typed)
-            }
-        }
-        
-        if children.count > 1 {
-            for child in children {
-                let converted = child.convert(
-                    CGPoint(x: originalEntry.frame.size.width / 2, y: originalEntry.frame.size.height / 2),
-                    from: originalEntry
-                )
-                if CGRect(origin: .zero, size: child.frame.size).contains(converted) {
-                    return child
-                }
-            }
-            return nil
-        }
-        
-        return children.first
-    }
-    
-    /// Finds a previous sibling that contains a view of the specified type.
-    /// This method inspects siblings recursively.
-    /// Returns nil if no sibling contains the specified type.
-    public static func previousSibling<AnyViewType: UIView>(
-        containing type: AnyViewType.Type,
-        from entry: UIView
-    ) -> AnyViewType? {
-        
-        guard let superview = entry.superview,
-            let entryIndex = superview.subviews.firstIndex(of: entry),
-            entryIndex > 0
-        else {
-            return nil
-        }
-        
-        for subview in superview.subviews[0..<entryIndex].reversed() {
-            if let typed = findChild(ofType: type, in: subview) {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds a previous sibling that is of the specified type.
-    /// This method inspects siblings recursively.
-    /// Returns nil if no sibling contains the specified type.
-    public static func previousSibling<AnyViewType: UIView>(
-        ofType type: AnyViewType.Type,
-        from entry: UIView
-    ) -> AnyViewType? {
-        
-        guard let superview = entry.superview,
-            let entryIndex = superview.subviews.firstIndex(of: entry),
-            entryIndex > 0
-        else {
-            return nil
-        }
-        
-        for subview in superview.subviews[0..<entryIndex].reversed() {
-            if let typed = subview as? AnyViewType {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds a previous sibling that contains a view controller of the specified type.
-    /// This method inspects siblings recursively.
-    /// Returns nil if no sibling contains the specified type.
-    @available(macOS, unavailable)
-    public static func previousSibling<AnyViewControllerType: UIViewController>(
-        containing type: AnyViewControllerType.Type,
-        from entry: UIViewController
-    ) -> AnyViewControllerType? {
-        
-        guard let parent = entry.parent,
-            let entryIndex = parent.children.firstIndex(of: entry),
-            entryIndex > 0
-        else {
-            return nil
-        }
-        
-        for child in parent.children[0..<entryIndex].reversed() {
-            if let typed = findChild(ofType: type, in: child) {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds a previous sibling that is a view controller of the specified type.
-    /// This method does not inspect siblings recursively.
-    /// Returns nil if no sibling is of the specified type.
-    public static func previousSibling<AnyViewControllerType: UIViewController>(
-        ofType type: AnyViewControllerType.Type,
-        from entry: UIViewController
-    ) -> AnyViewControllerType? {
-        
-        guard let parent = entry.parent,
-            let entryIndex = parent.children.firstIndex(of: entry),
-            entryIndex > 0
-        else {
-            return nil
-        }
-        
-        for child in parent.children[0..<entryIndex].reversed() {
-            if let typed = child as? AnyViewControllerType {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds a next sibling that contains a view of the specified type.
-    /// This method inspects siblings recursively.
-    /// Returns nil if no sibling contains the specified type.
-    public static func nextSibling<AnyViewType: UIView>(
-        containing type: AnyViewType.Type,
-        from entry: UIView
-    ) -> AnyViewType? {
-        
-        guard let superview = entry.superview,
-            let entryIndex = superview.subviews.firstIndex(of: entry)
-        else {
-            return nil
-        }
-        
-        for subview in superview.subviews[entryIndex..<superview.subviews.endIndex] {
-            if let typed = findChild(ofType: type, in: subview) {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds a next sibling that if of the specified type.
-    /// This method inspects siblings recursively.
-    /// Returns nil if no sibling contains the specified type.
-    public static func nextSibling<AnyViewType: UIView>(
-        ofType type: AnyViewType.Type,
-        from entry: UIView
-    ) -> AnyViewType? {
-        
-        guard let superview = entry.superview,
-            let entryIndex = superview.subviews.firstIndex(of: entry)
-        else {
-            return nil
-        }
-        
-        for subview in superview.subviews[entryIndex..<superview.subviews.endIndex] {
-            if let typed = subview as? AnyViewType {
-                return typed
-            }
-        }
-        
-        return nil
-    }
-    
-    /// Finds an ancestor of the specified type.
-    /// If it reaches the top of the view without finding the specified view type, it returns nil.
-    public static func findAncestor<AnyViewType: UIView>(ofType type: AnyViewType.Type, from entry: UIView) -> AnyViewType? {
-        var superview = entry.superview
-        while let s = superview {
-            if let typed = s as? AnyViewType {
-                return typed
-            }
-            superview = s.superview
-        }
-        return nil
-    }
-    
-    /// Finds an ancestor of the specified type.
-    /// If it reaches the top of the view without finding the specified view type, it returns nil.
-    public static func findAncestorOrAncestorChild<AnyViewType: UIView>(ofType type: AnyViewType.Type, from entry: UIView) -> AnyViewType? {
-        var superview = entry.superview
-        while let s = superview {
-            if let typed = s as? AnyViewType ?? findChildUsingFrame(ofType: type, in: s, from: entry) {
-                return typed
-            }
-            superview = s.superview
-        }
-        return nil
-    }
-    
-    /// Finds the hosting view of a specific subview.
-    /// Hosting views generally contain subviews for one specific SwiftUI element.
-    /// For instance, if there are multiple text fields in a VStack, the hosting view will contain those text fields (and their host views, see below).
-    /// Returns nil if it couldn't find a hosting view. This should never happen when called with an IntrospectionView.
-    public static func findHostingView(from entry: UIView) -> UIView? {
-        var superview = entry.superview
-        while let s = superview {
-            if NSStringFromClass(type(of: s)).contains("HostingView") {
-                return s
-            }
-            superview = s.superview
-        }
-        return nil
-    }
-    
-    /// Finds the view host of a specific view.
-    /// SwiftUI wraps each UIView within a ViewHost, then within a HostingView.
-    /// Returns nil if it couldn't find a view host. This should never happen when called with an IntrospectionView.
-    public static func findViewHost(from entry: UIView) -> UIView? {
-        var superview = entry.superview
-        while let s = superview {
-            if NSStringFromClass(type(of: s)).contains("ViewHost") {
-                return s
-            }
-            superview = s.superview
-        }
-        return nil
-    }
-}
-
-public enum TargetViewSelector {
-    public static func siblingContaining<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        guard let viewHost = Introspect.findViewHost(from: entry) else {
-            return nil
-        }
-        return Introspect.previousSibling(containing: TargetView.self, from: viewHost)
-    }
-
-    public static func siblingContainingOrAncestor<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let sibling: TargetView = siblingContaining(from: entry) {
-            return sibling
-        }
-        return Introspect.findAncestor(ofType: TargetView.self, from: entry)
-    }
-    
-    public static func siblingContainingOrAncestorOrAncestorChild<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let sibling: TargetView = siblingContaining(from: entry) {
-            return sibling
-        }
-        return Introspect.findAncestorOrAncestorChild(ofType: TargetView.self, from: entry)
-    }
-    
-    public static func siblingOfType<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        guard let viewHost = Introspect.findViewHost(from: entry) else {
-            return nil
-        }
-        return Introspect.previousSibling(ofType: TargetView.self, from: viewHost)
-    }
-
-    public static func siblingOfTypeOrAncestor<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let sibling: TargetView = siblingOfType(from: entry) {
-            return sibling
-        }
-        return Introspect.findAncestor(ofType: TargetView.self, from: entry)
-    }
-    
-    public static func siblingOrAncestorOrSiblingContainingOrAncestorChild<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let sibling: TargetView = siblingOfType(from: entry) {
-            return sibling
-        }
-        if let ancestor: TargetView = Introspect.findAncestor(ofType: TargetView.self, from: entry) {
-            return ancestor
-        }
-        return siblingContainingOrAncestorOrAncestorChild(from: entry)
-    }
-
-    public static func ancestorOrSiblingContaining<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let tableView = Introspect.findAncestor(ofType: TargetView.self, from: entry) {
-            return tableView
-        }
-        return siblingContaining(from: entry)
-    }
-    
-    public static func ancestorOrSiblingOfType<TargetView: UIView>(from entry: UIView) -> TargetView? {
-        if let tableView = Introspect.findAncestor(ofType: TargetView.self, from: entry) {
-            return tableView
-        }
-        return siblingOfType(from: entry)
-    }
-}
-
-// MARK: - UIKitIntrospectionViewController
-/// Introspection UIViewController that is inserted alongside the target view controller.
-@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
-public class IntrospectionUIViewController: UIViewController {
-    required init() {
-        super.init(nibName: nil, bundle: nil)
-        view = IntrospectionUIView()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-/// This is the same logic as IntrospectionView but for view controllers. Please see details above.
-@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
-public struct UIKitIntrospectionViewController<TargetViewControllerType: UIViewController>: UIViewControllerRepresentable {
-    
-    let selector: (IntrospectionUIViewController) -> TargetViewControllerType?
-    let customize: (TargetViewControllerType) -> Void
-    
-    public init(
-        selector: @escaping (UIViewController) -> TargetViewControllerType?,
-        customize: @escaping (TargetViewControllerType) -> Void
-    ) {
-        self.selector = selector
-        self.customize = customize
-    }
-    
-    public func makeUIViewController(
-        context: UIViewControllerRepresentableContext<UIKitIntrospectionViewController>
-    ) -> IntrospectionUIViewController {
-        let viewController = IntrospectionUIViewController()
-        viewController.accessibilityLabel = "IntrospectionUIViewController<\(TargetViewControllerType.self)>"
-        viewController.view.accessibilityLabel = "IntrospectionUIView<\(TargetViewControllerType.self)>"
-        (viewController.view as? IntrospectionUIView)?.moveToWindowHandler = { [weak viewController] in
-            guard let viewController = viewController else { return }
-            DispatchQueue.main.async {
-                guard let targetView = self.selector(viewController) else {
-                    return
-                }
-                self.customize(targetView)
-            }
-        }
-        return viewController
-    }
-    
-    public func updateUIViewController(
-        _ viewController: IntrospectionUIViewController,
-        context: UIViewControllerRepresentableContext<UIKitIntrospectionViewController>
-    ) {
-        guard let targetView = self.selector(viewController) else {
-            return
-        }
-        self.customize(targetView)
-    }
-    
-    public static func dismantleUIViewController(_ viewController: IntrospectionUIViewController, coordinator: ()) {
-        (viewController.view as? IntrospectionUIView)?.moveToWindowHandler = nil
-    }
-}
-
-// MARK: - UIKitIntrospectionView
-/// Introspection UIView that is inserted alongside the target view.
-@available(iOS 13.0, *)
-public class IntrospectionUIView: UIView {
-    
-    var moveToWindowHandler: (() -> Void)?
-    
-    required init() {
-        super.init(frame: .zero)
-        isHidden = true
-        isUserInteractionEnabled = false
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override public func didMoveToWindow() {
-        super.didMoveToWindow()
-        moveToWindowHandler?()
-    }
-}
-
-/// Introspection View that is injected into the UIKit hierarchy alongside the target view.
-/// After `updateUIView` is called, it calls `selector` to find the target view, then `customize` when the target view is found.
-@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
-public struct UIKitIntrospectionView<TargetViewType: UIView>: UIViewRepresentable {
-    
-    /// Method that introspects the view hierarchy to find the target view.
-    /// First argument is the introspection view itself, which is contained in a view host alongside the target view.
-    let selector: (IntrospectionUIView) -> TargetViewType?
-    
-    /// User-provided customization method for the target view.
-    let customize: (TargetViewType) -> Void
-    
-    public init(
-        selector: @escaping (IntrospectionUIView) -> TargetViewType?,
-        customize: @escaping (TargetViewType) -> Void
-    ) {
-        self.selector = selector
-        self.customize = customize
-    }
-    
-    public func makeUIView(context: UIViewRepresentableContext<UIKitIntrospectionView>) -> IntrospectionUIView {
-        let view = IntrospectionUIView()
-        view.accessibilityLabel = "IntrospectionUIView<\(TargetViewType.self)>"
-        view.moveToWindowHandler = { [weak view] in
-            guard let view = view else { return }
-            DispatchQueue.main.async {
-                guard let targetView = self.selector(view) else {
-                    return
-                }
-                self.customize(targetView)
-            }
-        }
-        return view
-    }
-
-    /// When `updateUiView` is called after creating the Introspection view, it is not yet in the UIKit hierarchy.
-    /// At this point, `introspectionView.superview.superview` is nil and we can't access the target UIKit view.
-    /// To workaround this, we wait until the runloop is done inserting the introspection view in the hierarchy, then run the selector.
-    /// Finding the target view fails silently if the selector yield no result. This happens when `updateUIView`
-    /// gets called when the introspection view gets removed from the hierarchy.
-    public func updateUIView(
-        _ view: IntrospectionUIView,
-        context: UIViewRepresentableContext<UIKitIntrospectionView>
-    ) {
-        guard let targetView = self.selector(view) else {
-            return
-        }
-        self.customize(targetView)
-    }
-    
-    public static func dismantleUIView(_ view: IntrospectionUIView, coordinator: ()) {
-        view.moveToWindowHandler = nil
-    }
-}
-
-// MARK: - ViewExtensions
-@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
-extension View {
-    
-    public func inject<SomeView>(_ view: SomeView) -> some View where SomeView: View {
-        overlay(view.frame(width: 0, height: 0))
-    }
-    
-    /// Finds a `TargetView` from a `SwiftUI.View`
-    public func introspect<TargetView: UIView>(
-        selector: @escaping (IntrospectionUIView) -> TargetView?,
-        customize: @escaping (TargetView) -> ()
-    ) -> some View {
-        inject(UIKitIntrospectionView(
-            selector: selector,
-            customize: customize
-        ))
-    }
-    
-    /// Finds a `UINavigationController` from any view embedded in a `SwiftUI.NavigationView`.
-    public func introspectNavigationController(customize: @escaping (UINavigationController) -> ()) -> some View {
-        inject(UIKitIntrospectionViewController(
-            selector: { introspectionViewController in
-                
-                // Search in ancestors
-                if let navigationController = introspectionViewController.navigationController {
-                    return navigationController
-                }
-                
-                // Search in siblings
-                return Introspect.previousSibling(containing: UINavigationController.self, from: introspectionViewController)
-            },
-            customize: customize
-        ))
-    }
-    
-    /// Finds a `UISplitViewController` from  a `SwiftUI.NavigationView` with style `DoubleColumnNavigationViewStyle`.
-    public func introspectSplitViewController(customize: @escaping (UISplitViewController) -> ()) -> some View {
-            inject(UIKitIntrospectionViewController(
-                selector: { introspectionViewController in
-                    
-                    // Search in ancestors
-                    if let splitViewController = introspectionViewController.splitViewController {
-                        return splitViewController
-                    }
-                    
-                    // Search in siblings
-                    return Introspect.previousSibling(containing: UISplitViewController.self, from: introspectionViewController)
-                },
-                customize: customize
-            ))
-        }
-    
-    /// Finds the containing `UIViewController` of a SwiftUI view.
-    public func introspectViewController(customize: @escaping (UIViewController) -> ()) -> some View {
-        inject(UIKitIntrospectionViewController(
-            selector: { $0.parent },
-            customize: customize
-        ))
-    }
-
-    /// Finds a `UITabBarController` from any SwiftUI view embedded in a `SwiftUI.TabView`
-    public func introspectTabBarController(customize: @escaping (UITabBarController) -> ()) -> some View {
-        inject(UIKitIntrospectionViewController(
-            selector: { introspectionViewController in
-                
-                // Search in ancestors
-                if let navigationController = introspectionViewController.tabBarController {
-                    return navigationController
-                }
-                
-                // Search in siblings
-                return Introspect.previousSibling(ofType: UITabBarController.self, from: introspectionViewController)
-            },
-            customize: customize
-        ))
-    }
-    
-    /// Finds a `UISearchController` from a `SwiftUI.View` with a `.searchable` modifier
-    @available(iOS 15, *)
-    public func introspectSearchController(customize: @escaping (UISearchController) -> ()) -> some View {
-        introspectNavigationController { navigationController in
-            let navigationBar = navigationController.navigationBar
-            if let searchController = navigationBar.topItem?.searchController {
-                customize(searchController)
-            }
-        }
-    }
-    
-    /// Finds a `UITableView` from a `SwiftUI.List`, or `SwiftUI.List` child.
-    public func introspectTableView(customize: @escaping (UITableView) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UITableViewCell` from a `SwiftUI.List`, or `SwiftUI.List` child. You can attach this directly to the element inside the list.
-    public func introspectTableViewCell(customize: @escaping (UITableViewCell) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UICollectionView` from a `SwiftUI.List`, or `SwiftUI.List` child for iOS16+.
-    public func introspectCollectionView(customize: @escaping (UICollectionView) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UICollectionViewCell` from a `SwiftUI.List`, or `SwiftUI.List` child for iOS16+. You can attach this directly to the element inside the list.
-    public func introspectCollectionViewCell(customize: @escaping (UICollectionViewCell) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: customize)
-    }
-
-    /// Finds a `UIScrollView` from a `SwiftUI.ScrollView`, or `SwiftUI.ScrollView` child.
-    public func introspectScrollView(customize: @escaping (UIScrollView) -> ()) -> some View {
-        if #available(iOS 14.0, tvOS 14.0, macOS 11.0, *) {
-            return introspect(selector: TargetViewSelector.siblingOrAncestorOrSiblingContainingOrAncestorChild, customize: customize)
-        } else {
-            return introspect(selector: TargetViewSelector.siblingContainingOrAncestor, customize: customize)
-        }
-    }
-
-    /// Finds the horizontal `UIScrollView` from a `SwiftUI.TabBarView` with tab style `SwiftUI.PageTabViewStyle`.
-    ///
-    /// Customize is called with a `UICollectionView` wrapper, and the horizontal `UIScrollView`.
-    @available(iOS 14, tvOS 14, *)
-    public func introspectPagedTabView(customize: @escaping (UICollectionView, UIScrollView) -> ()) -> some View {
-        if #available(iOS 16, *) {
-            return introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: { (collectionView: UICollectionView) in
-                customize(collectionView, collectionView)
-            })
-        } else {
-            return introspect(selector: TargetViewSelector.ancestorOrSiblingContaining, customize: { (collectionView: UICollectionView) in
-                for subview in collectionView.subviews {
-                    if NSStringFromClass(type(of: subview)).contains("EmbeddedScrollView"), let scrollView = subview as? UIScrollView {
-                        customize(collectionView, scrollView)
-                        break
-                    }
-                }
-            })
-        }
-    }
-
-    /// Finds a `UITextField` from a `SwiftUI.TextField`
-    public func introspectTextField(customize: @escaping (UITextField) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContainingOrAncestorOrAncestorChild, customize: customize)
-    }
-
-    /// Finds a `UITextView` from a `SwiftUI.TextEditor`
-    public func introspectTextView(customize: @escaping (UITextView) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UISwitch` from a `SwiftUI.Toggle`
-    @available(tvOS, unavailable)
-    public func introspectSwitch(customize: @escaping (UISwitch) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UISlider` from a `SwiftUI.Slider`
-    @available(tvOS, unavailable)
-    public func introspectSlider(customize: @escaping (UISlider) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UIStepper` from a `SwiftUI.Stepper`
-    @available(tvOS, unavailable)
-    public func introspectStepper(customize: @escaping (UIStepper) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UIDatePicker` from a `SwiftUI.DatePicker`
-    @available(tvOS, unavailable)
-    public func introspectDatePicker(customize: @escaping (UIDatePicker) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UISegmentedControl` from a `SwiftUI.Picker` with style `SegmentedPickerStyle`
-    public func introspectSegmentedControl(customize: @escaping (UISegmentedControl) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UIColorWell` from a `SwiftUI.ColorPicker`
-    @available(iOS 14.0, *)
-    @available(tvOS, unavailable)
-    public func introspectColorWell(customize: @escaping (UIColorWell) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
-    }
-    
-    /// Finds a `UICollectionView` for iOS16+ or `UITableView` for iOS15-  from a `SwiftUI.List`
-    public func introspectListView(customize: @escaping (UIScrollView) -> ()) -> some View {
-        if #available(iOS 16.0, *) {
-            return introspectCollectionView { collectionView in
-                customize(collectionView)
-            }
-        } else {
-            return introspectTableView { tableView in
-                customize(tableView)
-            }
-        }
-    }
-}
-
+#if FWMacroSPM
+import FWObjC
+import FWFramework
 #endif
 
-#if canImport(MapKit)
-import MapKit
+// MARK: - Introspect
+/// The scope of introspection i.e. where introspect should look to find
+/// the desired target view relative to the applied `.introspect(...)`
+/// modifier.
+///
+/// [SwiftUI-Introspect](https://github.com/siteline/SwiftUI-Introspect)
+@available(iOS 13.0, *)
+public struct IntrospectionScope: OptionSet {
+    /// Look within the `receiver` of the `.introspect(...)` modifier.
+    public static let receiver = Self(rawValue: 1 << 0)
+    /// Look for an `ancestor` relative to the `.introspect(...)` modifier.
+    public static let ancestor = Self(rawValue: 1 << 1)
 
-@available(iOS 13.0, tvOS 13.0, macOS 10.15.0, *)
-extension View {
-    /// Finds an `MKMapView` from a `SwiftUI.Map`
-    @available(iOS 14, tvOS 14, macOS 11, *)
-    public func introspectMapView(customize: @escaping (MKMapView) -> ()) -> some View {
-        introspect(selector: TargetViewSelector.siblingContaining, customize: customize)
+    @_spi(FW) public let rawValue: UInt
+
+    @_spi(FW) public init(rawValue: UInt) {
+        self.rawValue = rawValue
     }
 }
+
+@available(iOS 13.0, *)
+extension View {
+    /// Introspects a SwiftUI view to find its underlying UIKit/AppKit instance.
+    ///
+    /// - Parameters:
+    ///   - viewType: The type of view to be introspected.
+    ///   - platforms: A list of `PlatformViewVersions` that specify platform-specific entities associated with the view, with one or more corresponding version numbers.
+    ///   - scope: An optional `IntrospectionScope` that specifies the scope of introspection.
+    ///   - customize: A closure that hands over the underlying UIKit/AppKit instance ready for customization.
+    ///
+    /// Here's an example usage:
+    ///
+    /// ```swift
+    /// struct ContentView: View {
+    ///     @State var date = Date()
+    ///
+    ///     var body: some View {
+    ///         DatePicker("Pick a date", selection: $date)
+    ///             .introspect(.datePicker, on: .iOS(.all)) {
+    ///                 print(type(of: $0)) // UIDatePicker
+    ///             }
+    ///     }
+    /// }
+    /// ```
+    public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
+        _ viewType: SwiftUIViewType,
+        on platforms: (PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>)...,
+        scope: IntrospectionScope? = nil,
+        customize: @escaping (PlatformSpecificEntity) -> Void
+    ) -> some View {
+        self.modifier(IntrospectModifier(viewType, platforms: platforms, scope: scope, customize: customize))
+    }
+}
+
+@available(iOS 13.0, *)
+struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>: ViewModifier {
+    let id = IntrospectionViewID()
+    let scope: IntrospectionScope
+    let selector: IntrospectionSelector<PlatformSpecificEntity>?
+    let customize: (PlatformSpecificEntity) -> Void
+
+    init(
+        _ viewType: SwiftUIViewType,
+        platforms: [PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>],
+        scope: IntrospectionScope?,
+        customize: @escaping (PlatformSpecificEntity) -> Void
+    ) {
+        self.scope = scope ?? viewType.scope
+        self.selector = platforms.lazy.compactMap(\.selector).first
+        self.customize = customize
+    }
+
+    func body(content: Content) -> some View {
+        if let selector {
+            content
+                .background(
+                    Group {
+                        // box up content for more accurate `.view` introspection
+                        if SwiftUIViewType.self == ViewType.self {
+                            Color.white
+                                .opacity(0)
+                                .accessibility(hidden: true)
+                        }
+                    }
+                )
+                .background(
+                    IntrospectionAnchorView(id: id)
+                        .frame(width: 0, height: 0)
+                        .accessibility(hidden: true)
+                )
+                .overlay(
+                    IntrospectionView(id: id, selector: { selector($0, scope) }, customize: customize)
+                        .frame(width: 0, height: 0)
+                        .accessibility(hidden: true)
+                )
+        } else {
+            content
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+public protocol PlatformEntity: AnyObject {
+    associatedtype Base: PlatformEntity
+
+    @_spi(FW)
+    var ancestor: Base? { get }
+
+    @_spi(FW)
+    var descendants: [Base] { get }
+
+    @_spi(FW)
+    func isDescendant(of other: Base) -> Bool
+}
+
+@available(iOS 13.0, *)
+extension PlatformEntity {
+    @_spi(FW)
+    public var ancestor: Base? { nil }
+
+    @_spi(FW)
+    public var descendants: [Base] { [] }
+
+    @_spi(FW)
+    public func isDescendant(of other: Base) -> Bool { false }
+}
+
+@available(iOS 13.0, *)
+extension PlatformEntity {
+    @_spi(FW)
+    public var ancestors: some Sequence<Base> {
+        sequence(first: self~, next: { $0.ancestor~ }).dropFirst()
+    }
+
+    @_spi(FW)
+    public var allDescendants: some Sequence<Base> {
+        recursiveSequence([self~], children: { $0.descendants~ }).dropFirst()
+    }
+
+    func nearestCommonAncestor(with other: Base) -> Base? {
+        var nearestAncestor: Base? = self~
+
+        while let currentEntity = nearestAncestor, !other.isDescendant(of: currentEntity~) {
+            nearestAncestor = currentEntity.ancestor~
+        }
+
+        return nearestAncestor
+    }
+
+    func allDescendants(between bottomEntity: Base, and topEntity: Base) -> some Sequence<Base> {
+        self.allDescendants
+            .lazy
+            .drop(while: { $0 !== bottomEntity })
+            .prefix(while: { $0 !== topEntity })
+    }
+
+    func receiver<PlatformSpecificEntity: PlatformEntity>(
+        ofType type: PlatformSpecificEntity.Type
+    ) -> PlatformSpecificEntity? {
+        let frontEntity = self
+        guard
+            let backEntity = frontEntity.introspectionAnchorEntity,
+            let commonAncestor = backEntity.nearestCommonAncestor(with: frontEntity~)
+        else {
+            return nil
+        }
+
+        return commonAncestor
+            .allDescendants(between: backEntity~, and: frontEntity~)
+            .filter { !$0.isIntrospectionPlatformEntity }
+            .compactMap { $0 as? PlatformSpecificEntity }
+            .first
+    }
+
+    func ancestor<PlatformSpecificEntity: PlatformEntity>(
+        ofType type: PlatformSpecificEntity.Type
+    ) -> PlatformSpecificEntity? {
+        self.ancestors
+            .lazy
+            .filter { !$0.isIntrospectionPlatformEntity }
+            .compactMap { $0 as? PlatformSpecificEntity }
+            .first
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformView: PlatformEntity {
+    @_spi(FW)
+    public var ancestor: PlatformView? {
+        superview
+    }
+
+    @_spi(FW)
+    public var descendants: [PlatformView] {
+        subviews
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformViewController: PlatformEntity {
+    @_spi(FW)
+    public var ancestor: PlatformViewController? {
+        parent
+    }
+
+    @_spi(FW)
+    public var descendants: [PlatformViewController] {
+        children
+    }
+
+    @_spi(FW)
+    public func isDescendant(of other: PlatformViewController) -> Bool {
+        self.ancestors.contains(other)
+    }
+}
+
+@available(iOS 13.0, *)
+extension UIPresentationController: PlatformEntity {
+    public typealias Base = UIPresentationController
+}
+
+// MARK: - IntrospectableViewType
+@available(iOS 13.0, *)
+public protocol IntrospectableViewType {
+    /// The scope of introspection for this particular view type, i.e. where introspect
+    /// should look to find the desired target view relative to the applied
+    /// `.introspect(...)` modifier.
+    ///
+    /// While the scope can be overridden by the user in their `.introspect(...)` call,
+    /// most of the time it's preferable to defer to the view type's own scope,
+    /// as it guarantees introspection is working as intended by the vendor.
+    ///
+    /// Defaults to `.receiver` if left unimplemented, which is a sensible one in
+    /// most cases if you're looking to implement your own view type.
+    var scope: IntrospectionScope { get }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType {
+    public var scope: IntrospectionScope { .receiver }
+}
+
+// MARK: - IntrospectionSelector
+@available(iOS 13.0, *)
+@_spi(FW)
+public struct IntrospectionSelector<Target: PlatformEntity> {
+    @_spi(FW)
+    public static var `default`: Self { .from(Target.self, selector: { $0 }) }
+
+    @_spi(FW)
+    public static func from<Entry: PlatformEntity>(_ entryType: Entry.Type, selector: @escaping (Entry) -> Target?) -> Self {
+        .init(
+            receiverSelector: { controller in
+                controller.as(Entry.Base.self)?.receiver(ofType: Entry.self).flatMap(selector)
+            },
+            ancestorSelector: { controller in
+                controller.as(Entry.Base.self)?.ancestor(ofType: Entry.self).flatMap(selector)
+            }
+        )
+    }
+
+    private var receiverSelector: (IntrospectionPlatformViewController) -> Target?
+    private var ancestorSelector: (IntrospectionPlatformViewController) -> Target?
+
+    private init(
+        receiverSelector: @escaping (IntrospectionPlatformViewController) -> Target?,
+        ancestorSelector: @escaping (IntrospectionPlatformViewController) -> Target?
+    ) {
+        self.receiverSelector = receiverSelector
+        self.ancestorSelector = ancestorSelector
+    }
+
+    @_spi(FW)
+    public func withReceiverSelector(_ selector: @escaping (PlatformViewController) -> Target?) -> Self {
+        var copy = self
+        copy.receiverSelector = selector
+        return copy
+    }
+
+    @_spi(FW)
+    public func withAncestorSelector(_ selector: @escaping (PlatformViewController) -> Target?) -> Self {
+        var copy = self
+        copy.ancestorSelector = selector
+        return copy
+    }
+
+    func callAsFunction(_ controller: IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
+        if
+            scope.contains(.receiver),
+            let target = receiverSelector(controller)
+        {
+            return target
+        }
+        if
+            scope.contains(.ancestor),
+            let target = ancestorSelector(controller)
+        {
+            return target
+        }
+        return nil
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformViewController {
+    func `as`<Base: PlatformEntity>(_ baseType: Base.Type) -> (any PlatformEntity)? {
+        if Base.self == PlatformView.self {
+            return viewIfLoaded
+        } else if Base.self == PlatformViewController.self {
+            return self
+        }
+        return nil
+    }
+}
+
+// MARK: - IntrospectionView
+@available(iOS 13.0, *)
+typealias IntrospectionViewID = UUID
+
+@available(iOS 13.0, *)
+fileprivate enum IntrospectionStore {
+    static var shared: [IntrospectionViewID: Pair] = [:]
+
+    struct Pair {
+        weak var controller: IntrospectionPlatformViewController?
+        weak var anchor: IntrospectionAnchorPlatformViewController?
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformEntity {
+    var introspectionAnchorEntity: Base? {
+        if let introspectionController = self as? IntrospectionPlatformViewController {
+            return IntrospectionStore.shared[introspectionController.id]?.anchor~
+        }
+        if
+            let view = self as? PlatformView,
+            let introspectionController = view.introspectionController
+        {
+            return IntrospectionStore.shared[introspectionController.id]?.anchor?.view~
+        }
+        return nil
+    }
+}
+
+@available(iOS 13.0, *)
+struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
+    typealias UIViewControllerType = IntrospectionAnchorPlatformViewController
+
+    @Binding
+    private var observed: Void // workaround for state changes not triggering view updates
+
+    let id: IntrospectionViewID
+
+    init(id: IntrospectionViewID) {
+        self._observed = .constant(())
+        self.id = id
+    }
+
+    func makePlatformViewController(context: Context) -> IntrospectionAnchorPlatformViewController {
+        IntrospectionAnchorPlatformViewController(id: id)
+    }
+
+    func updatePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, context: Context) {}
+
+    static func dismantlePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
+}
+
+@available(iOS 13.0, *)
+final class IntrospectionAnchorPlatformViewController: PlatformViewController {
+    init(id: IntrospectionViewID) {
+        super.init(nibName: nil, bundle: nil)
+        self.isIntrospectionPlatformEntity = true
+        IntrospectionStore.shared[id, default: .init()].anchor = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.isIntrospectionPlatformEntity = true
+    }
+}
+
+@available(iOS 13.0, *)
+struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresentable {
+    typealias UIViewControllerType = IntrospectionPlatformViewController
+
+    final class TargetCache {
+        weak var target: Target?
+    }
+
+    @Binding
+    private var observed: Void // workaround for state changes not triggering view updates
+    private let id: IntrospectionViewID
+    private let selector: (IntrospectionPlatformViewController) -> Target?
+    private let customize: (Target) -> Void
+
+    init(
+        id: IntrospectionViewID,
+        selector: @escaping (IntrospectionPlatformViewController) -> Target?,
+        customize: @escaping (Target) -> Void
+    ) {
+        self._observed = .constant(())
+        self.id = id
+        self.selector = selector
+        self.customize = customize
+    }
+
+    func makeCoordinator() -> TargetCache {
+        TargetCache()
+    }
+
+    func makePlatformViewController(context: Context) -> IntrospectionPlatformViewController {
+        let controller = IntrospectionPlatformViewController(id: id) { controller in
+            guard let target = selector(controller) else {
+                return
+            }
+            context.coordinator.target = target
+            customize(target)
+            controller.handler = nil
+        }
+
+        // - Workaround -
+        // iOS/tvOS 13 sometimes need a nudge on the next run loop.
+        if #available(iOS 14, tvOS 14, *) {} else {
+            DispatchQueue.main.async { [weak controller] in
+                controller?.handler?()
+            }
+        }
+
+        return controller
+    }
+
+    func updatePlatformViewController(_ controller: IntrospectionPlatformViewController, context: Context) {
+        guard let target = context.coordinator.target ?? selector(controller) else {
+            return
+        }
+        customize(target)
+    }
+
+    static func dismantlePlatformViewController(_ controller: IntrospectionPlatformViewController, coordinator: Coordinator) {
+        controller.handler = nil
+    }
+}
+
+@available(iOS 13.0, *)
+final class IntrospectionPlatformViewController: PlatformViewController {
+    let id: IntrospectionViewID
+    var handler: (() -> Void)? = nil
+
+    fileprivate init(
+        id: IntrospectionViewID,
+        handler: ((IntrospectionPlatformViewController) -> Void)?
+    ) {
+        self.id = id
+        super.init(nibName: nil, bundle: nil)
+        self.handler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            handler?(self)
+        }
+        self.isIntrospectionPlatformEntity = true
+        IntrospectionStore.shared[id, default: .init()].controller = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        parent?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.introspectionController = self
+        view.isIntrospectionPlatformEntity = true
+        handler?()
+    }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        handler?()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        handler?()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        handler?()
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformView {
+    fileprivate var introspectionController: IntrospectionPlatformViewController? {
+        get {
+            let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
+            return objc_getAssociatedObject(self, key) as? IntrospectionPlatformViewController
+        }
+        set {
+            let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
+            objc_setAssociatedObject(self, key, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformEntity {
+    var isIntrospectionPlatformEntity: Bool {
+        get {
+            let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
+            return objc_getAssociatedObject(self, key) as? Bool ?? false
+        }
+        set {
+            let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
+            objc_setAssociatedObject(self, key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+// MARK: - PlatformVersion
+@available(iOS 13.0, *)
+public enum PlatformVersionCondition {
+    case past
+    case current
+    case future
+}
+
+@available(iOS 13.0, *)
+public protocol PlatformVersion {
+    var condition: PlatformVersionCondition? { get }
+}
+
+@available(iOS 13.0, *)
+extension PlatformVersion {
+    public var isCurrent: Bool {
+        condition == .current
+    }
+
+    public var isCurrentOrPast: Bool {
+        condition == .current || condition == .past
+    }
+}
+
+@available(iOS 13.0, *)
+public struct iOSVersion: PlatformVersion {
+    public let condition: PlatformVersionCondition?
+
+    public init(condition: () -> PlatformVersionCondition?) {
+        self.condition = condition()
+    }
+}
+
+@available(iOS 13.0, *)
+extension iOSVersion {
+    public static let v13 = iOSVersion {
+        if #available(iOS 14, *) {
+            return .past
+        }
+        return .current
+    }
+
+    public static let v14 = iOSVersion {
+        if #available(iOS 15, *) {
+            return .past
+        }
+        if #available(iOS 14, *) {
+            return .current
+        }
+        return .future
+    }
+
+    public static let v15 = iOSVersion {
+        if #available(iOS 16, *) {
+            return .past
+        }
+        if #available(iOS 15, *) {
+            return .current
+        }
+        return .future
+    }
+    
+    public static let v16 = iOSVersion {
+        if #available(iOS 17, *) {
+            return .past
+        }
+        if #available(iOS 16, *) {
+            return .current
+        }
+        return .future
+    }
+
+    public static let v17 = iOSVersion {
+        if #available(iOS 17, *) {
+            return .current
+        }
+        return .future
+    }
+    
+    public static let all = iOSVersion {
+        return .current
+    }
+}
+
+// MARK: - PlatformView
+@available(iOS 13.0, *)
+public typealias PlatformView = UIView
+
+@available(iOS 13.0, *)
+public typealias PlatformViewController = UIViewController
+
+@available(iOS 13.0, *)
+typealias _PlatformViewControllerRepresentable = UIViewControllerRepresentable
+
+@available(iOS 13.0, *)
+protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
+    typealias ViewController = UIViewControllerType
+
+    func makePlatformViewController(context: Context) -> ViewController
+    func updatePlatformViewController(_ controller: ViewController, context: Context)
+    static func dismantlePlatformViewController(_ controller: ViewController, coordinator: Coordinator)
+}
+
+@available(iOS 13.0, *)
+extension PlatformViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> ViewController {
+        makePlatformViewController(context: context)
+    }
+    func updateUIViewController(_ controller: ViewController, context: Context) {
+        updatePlatformViewController(controller, context: context)
+    }
+    static func dismantleUIViewController(_ controller: ViewController, coordinator: Coordinator) {
+        dismantlePlatformViewController(controller, coordinator: coordinator)
+    }
+}
+
+// MARK: - PlatformViewVersion
+@available(iOS 13.0, *)
+public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+    let selector: IntrospectionSelector<PlatformSpecificEntity>?
+
+    private init<Version: PlatformVersion>(
+        _ versions: [PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>],
+        matches: (PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>) -> Bool
+    ) {
+        if let matchingVersion = versions.first(where: matches) {
+            self.selector = matchingVersion.selector ?? .default
+        } else {
+            self.selector = nil
+        }
+    }
+
+    public static func iOS(_ versions: (iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>)...) -> Self {
+        Self(versions, matches: \.isCurrent)
+    }
+
+    @_spi(FW)
+    public static func iOS(_ versions: PartialRangeFrom<iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>>) -> Self {
+        Self([versions.lowerBound], matches: \.isCurrentOrPast)
+    }
+}
+
+@available(iOS 13.0, *)
+public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> =
+    PlatformViewVersion<iOSVersion, SwiftUIViewType, PlatformSpecificEntity>
+
+@available(iOS 13.0, *)
+public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+    @_spi(FW) case available(Version, IntrospectionSelector<PlatformSpecificEntity>?)
+    @_spi(FW) case unavailable
+
+    @_spi(FW) public init(for version: Version, selector: IntrospectionSelector<PlatformSpecificEntity>? = nil) {
+        self = .available(version, selector)
+    }
+
+    @_spi(FW) public static func unavailable(file: StaticString = #file, line: UInt = #line) -> Self {
+        #if DEBUG
+        let filePath = file.withUTF8Buffer { String(decoding: $0, as: UTF8.self) }
+        let fileName = URL(fileURLWithPath: filePath).lastPathComponent
+        Logger.debug("\n===========RUNTIME ERROR===========\nIf you're seeing this, someone forgot to mark %@:%@ as unavailable.\nThis won't have any effect, but it should be disallowed altogether.", fileName, "\(line)")
+        #endif
+        return .unavailable
+    }
+
+    private var version: Version? {
+        if case .available(let version, _) = self {
+            return version
+        } else {
+            return nil
+        }
+    }
+
+    fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
+        if case .available(_, let selector) = self {
+            return selector
+        } else {
+            return nil
+        }
+    }
+
+    fileprivate var isCurrent: Bool {
+        version?.isCurrent ?? false
+    }
+
+    fileprivate var isCurrentOrPast: Bool {
+        version?.isCurrentOrPast ?? false
+    }
+}
+
+@available(iOS 13.0, *)
+extension PlatformViewVersion: Comparable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        true
+    }
+
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        true
+    }
+}
+
+// MARK: - Utils
+postfix operator ~
+
+postfix func ~ <LHS, T>(lhs: LHS) -> T {
+    lhs as! T
+}
+
+postfix func ~ <LHS, T>(lhs: LHS?) -> T? {
+    lhs as? T
+}
+
+func recursiveSequence<S: Sequence>(_ sequence: S, children: @escaping (S.Element) -> S) -> AnySequence<S.Element> {
+    AnySequence {
+        var mainIterator = sequence.makeIterator()
+        // Current iterator, or `nil` if all sequences are exhausted:
+        var iterator: AnyIterator<S.Element>?
+
+        return AnyIterator {
+            guard let iterator, let element = iterator.next() else {
+                if let element = mainIterator.next() {
+                    iterator = recursiveSequence(children(element), children: children).makeIterator()
+                    return element
+                }
+                return nil
+            }
+            return element
+        }
+    }
+}
+
+// MARK: - ViewTypes
+/// An abstract representation of a generic SwiftUI view type.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         HStack {
+///             Image(systemName: "scribble")
+///             Text("Some text")
+///         }
+///         .introspect(.view, on: .iOS(.all)) {
+///             print(type(of: $0)) // some subclass of UIView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ViewType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ViewType {
+    public static var view: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ViewType, UIView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - ColorPicker
+/// An abstract representation of the `ColorPicker` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var color = Color.red
+///
+///     var body: some View {
+///         ColorPicker("Pick a color", selection: $color)
+///             .introspect(.colorPicker, on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UIColorPicker
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ColorPickerType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ColorPickerType {
+    public static var colorPicker: Self { .init() }
+}
+
+@available(iOS 14, *)
+extension iOSViewVersion<ColorPickerType, UIColorWell> {
+    @available(*, unavailable, message: "ColorPicker isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "ColorPicker isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - DatePicker
+/// An abstract representation of the `DatePicker` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var date = Date()
+///
+///     var body: some View {
+///         DatePicker("Pick a date", selection: $date)
+///             .introspect(.datePicker, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UIDatePicker
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct DatePickerType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == DatePickerType {
+    public static var datePicker: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<DatePickerType, UIDatePicker> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - DatePickerWithCompactStyle
+/// An abstract representation of the `DatePicker` type in SwiftUI, with `.compact` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var date = Date()
+///
+///     var body: some View {
+///         DatePicker("Pick a date", selection: $date)
+///             .datePickerStyle(.compact)
+///             .introspect(.datePicker(style: .compact), on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UIDatePicker
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct DatePickerWithCompactStyleType: IntrospectableViewType {
+    public enum Style {
+        case compact
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == DatePickerWithCompactStyleType {
+    public static func datePicker(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker> {
+    @available(*, unavailable, message: ".datePickerStyle(.compact) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".datePickerStyle(.compact) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - DatePickerWithGraphicalStyle
+/// An abstract representation of the `DatePicker` type in SwiftUI, with `.graphical` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var date = Date()
+///
+///     var body: some View {
+///         DatePicker("Pick a date", selection: $date)
+///             .datePickerStyle(.graphical)
+///             .introspect(.datePicker(style: .graphical), on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UIDatePicker
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct DatePickerWithGraphicalStyleType: IntrospectableViewType {
+    public enum Style {
+        case graphical
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == DatePickerWithGraphicalStyleType {
+    public static func datePicker(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker> {
+    @available(*, unavailable, message: ".datePickerStyle(.graphical) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".datePickerStyle(.graphical) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - DatePickerWithWheelStyle
+/// An abstract representation of the `DatePicker` type in SwiftUI, with `.wheel` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var date = Date()
+///
+///     var body: some View {
+///         DatePicker("Pick a date", selection: $date)
+///             .datePickerStyle(.wheel)
+///             .introspect(.datePicker(style: .wheel), on: .iOS(.all)) {
+///                 print(type(of: $0)) // UIDatePicker
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct DatePickerWithWheelStyleType: IntrospectableViewType {
+    public enum Style {
+        case wheel
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == DatePickerWithWheelStyleType {
+    public static func datePicker(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Form
+/// An abstract representation of the `Form` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         Form {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .introspect(.form, on: .iOS(.v13, .v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.form, on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct FormType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == FormType {
+    public static var form: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<FormType, UITableView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<FormType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".form isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - FormWithGroupedStyle
+/// An abstract representation of the `Form` type in SwiftUI, with `.grouped` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         Form {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .formStyle(.grouped)
+///         .introspect(.form(style: .grouped), on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct FormWithGroupedStyleType: IntrospectableViewType {
+    public enum Style {
+        case grouped
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == FormWithGroupedStyleType {
+    public static func form(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<FormWithGroupedStyleType, UITableView> {
+    @available(*, unavailable, message: ".formStyle(.grouped) isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    @available(*, unavailable, message: ".formStyle(.grouped) isn't available on iOS 14")
+    public static let v14 = Self.unavailable()
+    @available(*, unavailable, message: ".formStyle(.grouped) isn't available on iOS 15")
+    public static let v15 = Self.unavailable()
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<FormWithGroupedStyleType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".formStyle(.grouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - FullScreenCover
+/// An abstract representation of `.fullScreenCover` in SwiftUI.
+///
+/// ```swift
+/// public struct ContentView: View {
+///     @State var isPresented = false
+///
+///     public var body: some View {
+///         Button("Present", action: { isPresented = true })
+///             .fullScreenCover(isPresented: $isPresented) {
+///                 Button("Dismiss", action: { isPresented = false })
+///                     .introspect(.fullScreenCover, on: .iOS(.v14, .v15, .v16, .v17)) {
+///                         print(type(of: $0)) // UIPresentationController
+///                     }
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct FullScreenCoverType: IntrospectableViewType {
+    public var scope: IntrospectionScope { .ancestor }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == FullScreenCoverType {
+    public static var fullScreenCover: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<FullScreenCoverType, UIPresentationController> {
+    @available(*, unavailable, message: ".fullScreenCover isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: ".fullScreenCover isn't available on all iOS")
+    public static let all = Self.unavailable()
+
+    private static var selector: IntrospectionSelector<UIPresentationController> {
+        .from(UIViewController.self, selector: \.presentationController)
+    }
+}
+
+// MARK: - List
+/// An abstract representation of the `List` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .introspect(.list, on: .iOS(.v13, .v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.list, on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListType: IntrospectableViewType {
+    public enum Style {
+        case plain
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListType {
+    public static var list: Self { .init() }
+    public static func list(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListType, UITableView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".list isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ListWithGroupedStyle
+/// An abstract representation of the `List` type in SwiftUI, with `.grouped` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .listStyle(.grouped)
+///         .introspect(.list(style: .grouped), on: .iOS(.v13, .v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.list(style: .grouped), on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListWithGroupedStyleType: IntrospectableViewType {
+    public enum Style {
+        case grouped
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListWithGroupedStyleType {
+    public static func list(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithGroupedStyleType, UITableView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithGroupedStyleType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.grouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ListWithInsetGroupedStyleType
+/// An abstract representation of the `List` type in SwiftUI, with `.insetGrouped` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .listStyle(.insetGrouped)
+///         .introspect(.list(style: .insetGrouped), on: .iOS(.v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.list(style: .insetGrouped), on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListWithInsetGroupedStyleType: IntrospectableViewType {
+    public enum Style {
+        case insetGrouped
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListWithInsetGroupedStyleType {
+    public static func list(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithInsetGroupedStyleType, UITableView> {
+    @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ListWithInsetStyle
+/// An abstract representation of the `List` type in SwiftUI, with `.inset` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .listStyle(.inset)
+///         .introspect(.list(style: .inset), on: .iOS(.v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.list(style: .inset), on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListWithInsetStyleType: IntrospectableViewType {
+    public enum Style {
+        case inset
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListWithInsetStyleType {
+    public static func list(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithInsetStyleType, UITableView> {
+    @available(*, unavailable, message: ".listStyle(.inset) isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithInsetStyleType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.inset) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ListWithSidebarStyle
+/// An abstract representation of the `List` type in SwiftUI, with `.sidebar` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             Text("Item 1")
+///             Text("Item 2")
+///             Text("Item 3")
+///         }
+///         .listStyle(.sidebar)
+///         .introspect(.list(style: .sidebar), on: .iOS(.v14, .v15)) {
+///             print(type(of: $0)) // UITableView
+///         }
+///         .introspect(.list(style: .sidebar), on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListWithSidebarStyleType: IntrospectableViewType {
+    public enum Style {
+        case sidebar
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListWithSidebarStyleType {
+    public static func list(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithSidebarStyleType, UITableView> {
+    @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListWithSidebarStyleType, UICollectionView> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ListCell
+/// An abstract representation of a `List` cell type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         List {
+///             ForEach(1...3, id: \.self) { int in
+///                 Text("Item \(int)")
+///                     .introspect(.listCell, on: .iOS(.v13, .v14, .v15)) {
+///                         print(type(of: $0)) // UITableViewCell
+///                     }
+///                     .introspect(.listCell, on: .iOS(.v16, .v17)) {
+///                         print(type(of: $0)) // UICollectionViewCell
+///                     }
+///             }
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ListCellType: IntrospectableViewType {
+    public var scope: IntrospectionScope { .ancestor }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ListCellType {
+    public static var listCell: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListCellType, UITableViewCell> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ListCellType, UICollectionViewCell> {
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".listCell isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - NavigationSplitView
+/// An abstract representation of the `NavigationSplitView` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationSplitView {
+///             Text("Root")
+///         } detail: {
+///             Text("Detail")
+///         }
+///         .introspect(.navigationSplitView, on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UISplitViewController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct NavigationSplitViewType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == NavigationSplitViewType {
+    public static var navigationSplitView: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<NavigationSplitViewType, UISplitViewController> {
+    @available(*, unavailable, message: "NavigationSplitView isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    @available(*, unavailable, message: "NavigationSplitView isn't available on iOS 14")
+    public static let v14 = Self.unavailable()
+    @available(*, unavailable, message: "NavigationSplitView isn't available on iOS 15")
+    public static let v15 = Self.unavailable()
+
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: "NavigationSplitView isn't available on all iOS")
+    public static let all = Self.unavailable()
+
+    private static var selector: IntrospectionSelector<UISplitViewController> {
+        .default.withAncestorSelector(\.splitViewController)
+    }
+}
+
+// MARK: - NavigationStack
+/// An abstract representation of the `NavigationStack` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationStack {
+///             Text("Root")
+///         }
+///         .introspect(.navigationStack, on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UINavigationController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct NavigationStackType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == NavigationStackType {
+    public static var navigationStack: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<NavigationStackType, UINavigationController> {
+    @available(*, unavailable, message: "NavigationStack isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    @available(*, unavailable, message: "NavigationStack isn't available on iOS 14")
+    public static let v14 = Self.unavailable()
+    @available(*, unavailable, message: "NavigationStack isn't available on iOS 15")
+    public static let v15 = Self.unavailable()
+
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: "NavigationStack isn't available on all iOS")
+    public static let all = Self.unavailable()
+
+    private static var selector: IntrospectionSelector<UINavigationController> {
+        .default.withAncestorSelector(\.navigationController)
+    }
+}
+
+// MARK: - NavigationViewWithColumnsStyle
+/// An abstract representation of the `NavigationView` type in SwiftUI, with `.columns` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationView {
+///             Text("Root")
+///         }
+///         .navigationViewStyle(DoubleColumnNavigationViewStyle())
+///         .introspect(.navigationView(style: .columns), on: .iOS(.all)) {
+///             print(type(of: $0)) // UISplitViewController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct NavigationViewWithColumnsStyleType: IntrospectableViewType {
+    public enum Style {
+        case columns
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == NavigationViewWithColumnsStyleType {
+    public static func navigationView(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UISplitViewController> {
+        .default.withAncestorSelector(\.splitViewController)
+    }
+}
+
+// MARK: - NavigationViewWithStackStyle
+/// An abstract representation of the `NavigationView` type in SwiftUI, with `.stack` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationView {
+///             Text("Root")
+///         }
+///         .navigationViewStyle(.stack)
+///         .introspect(.navigationView(style: .stack), on: .iOS(.all)) {
+///             print(type(of: $0)) // UINavigationController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct NavigationViewWithStackStyleType: IntrospectableViewType {
+    public enum Style {
+        case stack
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == NavigationViewWithStackStyleType {
+    public static func navigationView(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UINavigationController> {
+        .default.withAncestorSelector(\.navigationController)
+    }
+}
+
+// MARK: - PageControl
+/// An abstract representation of the page control type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         TabView {
+///             Text("Page 1").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.red)
+///             Text("Page 2").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.blue)
+///         }
+///         .tabViewStyle(.page(indexDisplayMode: .always))
+///         .introspect(.pageControl, on: .iOS(.v14, .v15, .v16, .v17)) {
+///             print(type(of: $0)) // UIPageControl
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct PageControlType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == PageControlType {
+    public static var pageControl: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<PageControlType, UIPageControl> {
+    @available(*, unavailable, message: ".tabViewStyle(.page) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".tabViewStyle(.page) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - PickerWithSegmentedStyle
+/// An abstract representation of the `Picker` type in SwiftUI, with `.segmented` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var selection = "1"
+///
+///     var body: some View {
+///         Picker("Pick a number", selection: $selection) {
+///             Text("1").tag("1")
+///             Text("2").tag("2")
+///             Text("3").tag("3")
+///         }
+///         .pickerStyle(.segmented)
+///         .introspect(.picker(style: .segmented), on: .iOS(.all)) {
+///             print(type(of: $0)) // UISegmentedControl
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct PickerWithSegmentedStyleType: IntrospectableViewType {
+    public enum Style {
+        case segmented
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == PickerWithSegmentedStyleType {
+    public static func picker(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - PickerWithWheelStyle
+/// An abstract representation of the `Picker` type in SwiftUI, with `.wheel` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var selection = "1"
+///
+///     var body: some View {
+///         Picker("Pick a number", selection: $selection) {
+///             Text("1").tag("1")
+///             Text("2").tag("2")
+///             Text("3").tag("3")
+///         }
+///         .pickerStyle(.wheel)
+///         .introspect(.picker(style: .wheel), on: .iOS(.all)) {
+///             print(type(of: $0)) // UIPickerView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct PickerWithWheelStyleType: IntrospectableViewType {
+    public enum Style {
+        case wheel
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == PickerWithWheelStyleType {
+    public static func picker(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<PickerWithWheelStyleType, UIPickerView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Popover
+/// An abstract representation of `.popover` in SwiftUI.
+///
+/// ```swift
+/// public struct ContentView: View {
+///     @State var isPresented = false
+///
+///     public var body: some View {
+///         Button("Present", action: { isPresented = true })
+///             .popover(isPresented: $isPresented) {
+///                 Button("Dismiss", action: { isPresented = false })
+///                     .introspect(.popover, on: .iOS(.all)) {
+///                         print(type(of: $0)) // UIPopoverPresentationController
+///                     }
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct PopoverType: IntrospectableViewType {
+    public var scope: IntrospectionScope { .ancestor }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == PopoverType {
+    public static var popover: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<PopoverType, UIPopoverPresentationController> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UIPopoverPresentationController> {
+        .from(UIViewController.self, selector: \.popoverPresentationController)
+    }
+}
+
+// MARK: - ProgressViewWithCircularStyle
+/// An abstract representation of the `ProgressView` type in SwiftUI, with `.circular` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         ProgressView(value: 0.5)
+///             .progressViewStyle(.circular)
+///             .introspect(.progressView(style: .circular), on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UIActivityIndicatorView
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ProgressViewWithCircularStyleType: IntrospectableViewType {
+    public enum Style {
+        case circular
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ProgressViewWithCircularStyleType {
+    public static func progressView(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView> {
+    @available(*, unavailable, message: ".progressViewStyle(.circular) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".progressViewStyle(.circular) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ProgressViewWithLinearStyle
+/// An abstract representation of the `ProgressView` type in SwiftUI, with `.linear` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         ProgressView(value: 0.5)
+///             .progressViewStyle(.linear)
+///             .introspect(.progressView(style: .linear), on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UIProgressView
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ProgressViewWithLinearStyleType: IntrospectableViewType {
+    public enum Style {
+        case linear
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ProgressViewWithLinearStyleType {
+    public static func progressView(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView> {
+    @available(*, unavailable, message: ".progressViewStyle(.linear) isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: ".progressViewStyle(.linear) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - ScrollView
+/// An abstract representation of the `ScrollView` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         ScrollView {
+///             Text("Item")
+///         }
+///         .introspect(.scrollView, on: .iOS(.all)) {
+///             print(type(of: $0)) // UIScrollView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ScrollViewType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ScrollViewType {
+    public static var scrollView: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ScrollViewType, UIScrollView> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - SearchField
+/// An abstract representation of the search field displayed via the `.searchable` modifier in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var searchTerm = ""
+///
+///     var body: some View {
+///         NavigationView {
+///             Text("Root")
+///                 .searchable(text: $searchTerm)
+///         }
+///         .navigationViewStyle(.stack)
+///         .introspect(.searchField, on: .iOS(.v15, .v16, .v17)) {
+///             print(type(of: $0)) // UISearchBar
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct SearchFieldType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == SearchFieldType {
+    public static var searchField: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<SearchFieldType, UISearchBar> {
+    @available(*, unavailable, message: ".searchable isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    @available(*, unavailable, message: ".searchable isn't available on iOS 14")
+    public static let v14 = Self.unavailable()
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    @available(*, unavailable, message: ".searchable isn't available on all iOS")
+    public static let all = Self.unavailable()
+
+    private static var selector: IntrospectionSelector<UISearchBar> {
+        .from(UINavigationController.self) {
+            $0.viewIfLoaded?.allDescendants.lazy.compactMap { $0 as? UISearchBar }.first
+        }
+    }
+}
+
+// MARK: - SecureField
+/// An abstract representation of the `SecureField` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var text = "Lorem ipsum"
+///
+///     var body: some View {
+///         SecureField("Secure Field", text: $text)
+///             .introspect(.secureField, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UISecureField
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct SecureFieldType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == SecureFieldType {
+    public static var secureField: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<SecureFieldType, UITextField> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Sheet
+/// An abstract representation of `.sheet` in SwiftUI.
+///
+/// ```swift
+/// public struct ContentView: View {
+///     @State var isPresented = false
+///
+///     public var body: some View {
+///         Button("Present", action: { isPresented = true })
+///             .sheet(isPresented: $isPresented) {
+///                 Button("Dismiss", action: { isPresented = false })
+///                     .introspect(.sheet, on: .iOS(.all)) {
+///                         print(type(of: $0)) // UIPresentationController
+///                     }
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct SheetType: IntrospectableViewType {
+    public var scope: IntrospectionScope { .ancestor }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == SheetType {
+    public static var sheet: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<SheetType, UIPresentationController> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UIPresentationController> {
+        .from(UIViewController.self, selector: \.presentationController)
+    }
+}
+
+@available(iOS 15, *)
+extension iOSViewVersion<SheetType, UISheetPresentationController> {
+    @_disfavoredOverload
+    public static let v15 = Self(for: .v15, selector: selector)
+    @_disfavoredOverload
+    public static let v16 = Self(for: .v16, selector: selector)
+    @_disfavoredOverload
+    public static let v17 = Self(for: .v17, selector: selector)
+
+    private static var selector: IntrospectionSelector<UISheetPresentationController> {
+        .from(UIViewController.self, selector: \.sheetPresentationController)
+    }
+}
+
+// MARK: - Slider
+/// An abstract representation of the `Slider` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var selection = 0.5
+///
+///     var body: some View {
+///         Slider(value: $selection, in: 0...1)
+///             .introspect(.slider, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UISlider
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct SliderType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == SliderType {
+    public static var slider: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<SliderType, UISlider> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Stepper
+/// An abstract representation of the `Stepper` type in SwiftUI.
+///
+/// ### iOS
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var selection = 5
+///
+///     var body: some View {
+///         Stepper("Select a number", value: $selection, in: 0...10)
+///             .introspect(.stepper, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UIStepper
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct StepperType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == StepperType {
+    public static var stepper: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<StepperType, UIStepper> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Table
+/// An abstract representation of the `Table` type in SwiftUI, with any style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     struct Purchase: Identifiable {
+///         let id = UUID()
+///         let price: Decimal
+///     }
+///
+///     var body: some View {
+///         Table(of: Purchase.self) {
+///             TableColumn("Base price") { purchase in
+///                 Text(purchase.price, format: .currency(code: "USD"))
+///             }
+///             TableColumn("With 15% tip") { purchase in
+///                 Text(purchase.price * 1.15, format: .currency(code: "USD"))
+///             }
+///             TableColumn("With 20% tip") { purchase in
+///                 Text(purchase.price * 1.2, format: .currency(code: "USD"))
+///             }
+///         } rows: {
+///             TableRow(Purchase(price: 20))
+///             TableRow(Purchase(price: 50))
+///             TableRow(Purchase(price: 75))
+///         }
+///         .introspect(.table, on: .iOS(.v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TableType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TableType {
+    public static var table: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TableType, UICollectionView> {
+    @available(*, unavailable, message: "Table isn't available on iOS 13")
+    public static let v13 = Self(for: .v13)
+    @available(*, unavailable, message: "Table isn't available on iOS 14")
+    public static let v14 = Self(for: .v14)
+    @available(*, unavailable, message: "Table isn't available on iOS 15")
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "Table isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - TabView
+/// An abstract representation of the `TabView` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         TabView {
+///             Text("Tab 1").tabItem { Text("Tab 1") }
+///             Text("Tab 2").tabItem { Text("Tab 2") }
+///         }
+///         .introspect(.tabView, on: .iOS(.all)) {
+///             print(type(of: $0)) // UITabBarController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TabViewType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TabViewType {
+    public static var tabView: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TabViewType, UITabBarController> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UITabBarController> {
+        .default.withAncestorSelector(\.tabBarController)
+    }
+}
+
+// MARK: - TabViewWithPageStyle
+/// An abstract representation of the `TabView` type in SwiftUI, with `.page` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         TabView {
+///             Text("Page 1").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.red)
+///             Text("Page 2").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.blue)
+///         }
+///         .tabViewStyle(.page(indexDisplayMode: .always))
+///         .introspect(.tabView(style: .page), on: .iOS(.v14, .v15, .v16, .v17)) {
+///             print(type(of: $0)) // UICollectionView
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TabViewWithPageStyleType: IntrospectableViewType {
+    public enum Style {
+        case page
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TabViewWithPageStyleType {
+    public static func tabView(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TabViewWithPageStyleType, UICollectionView> {
+    @available(*, unavailable, message: "TabView {}.tabViewStyle(.page) isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TabView {}.tabViewStyle(.page) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - TextEditor
+/// An abstract representation of the `TextEditor` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var text = "Lorem ipsum"
+///
+///     var body: some View {
+///         TextEditor(text: $text)
+///             .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17)) {
+///                 print(type(of: $0)) // UITextView
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TextEditorType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TextEditorType {
+    public static var textEditor: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TextEditorType, UITextView> {
+    @available(*, unavailable, message: "TextEditor isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TextEditor isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - TextField
+/// An abstract representation of the `TextField` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var text = "Lorem ipsum"
+///
+///     var body: some View {
+///         TextField("Text Field", text: $text)
+///             .introspect(.textField, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UITextField
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TextFieldType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TextFieldType {
+    public static var textField: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TextFieldType, UITextField> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - TextFieldWithVerticalAxis
+/// An abstract representation of the `TextField` type in SwiftUI, with `.vertical` axis.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var text = "Lorem ipsum"
+///
+///     var body: some View {
+///         TextField("Text Field", text: $text, axis: .vertical)
+///             .introspect(.textField(axis: .vertical), on: .iOS(.v16, .v17)) {
+///                 print(type(of: $0)) // UITextView
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct TextFieldWithVerticalAxisType: IntrospectableViewType {
+    public enum Axis {
+        case vertical
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == TextFieldWithVerticalAxisType {
+    public static func textField(axis: Self.Axis) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<TextFieldWithVerticalAxisType, UITextView> {
+    @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on iOS 13")
+    public static let v13 = Self.unavailable()
+    @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on iOS 14")
+    public static let v14 = Self.unavailable()
+    @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on iOS 15")
+    public static let v15 = Self.unavailable()
+
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on all iOS")
+    public static let all = Self.unavailable()
+}
+
+// MARK: - Toggle
+/// An abstract representation of the `Toggle` type in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var isOn = false
+///
+///     var body: some View {
+///         Toggle("Toggle", isOn: $isOn)
+///             .introspect(.toggle, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UISwitch
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ToggleType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ToggleType {
+    public static var toggle: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ToggleType, UISwitch> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - ToggleWithSwitchStyle
+/// An abstract representation of the `Toggle` type in SwiftUI, with `.switch` style.
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State var isOn = false
+///
+///     var body: some View {
+///         Toggle("Switch", isOn: $isOn)
+///             .toggleStyle(.switch)
+///             .introspect(.toggle(style: .switch), on: .iOS(.all)) {
+///                 print(type(of: $0)) // UISwitch
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ToggleWithSwitchStyleType: IntrospectableViewType {
+    public enum Style {
+        case `switch`
+    }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ToggleWithSwitchStyleType {
+    public static func toggle(style: Self.Style) -> Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ToggleWithSwitchStyleType, UISwitch> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
+// MARK: - Window
+/// An abstract representation of a view's window in SwiftUI.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         Text("Content")
+///             .introspect(.window, on: .iOS(.all)) {
+///                 print(type(of: $0)) // UIWindow
+///             }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct WindowType: IntrospectableViewType {}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == WindowType {
+    public static var window: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<WindowType, UIWindow> {
+    public static let v13 = Self(for: .v13, selector: selector)
+    public static let v14 = Self(for: .v14, selector: selector)
+    public static let v15 = Self(for: .v15, selector: selector)
+    public static let v16 = Self(for: .v16, selector: selector)
+    public static let v17 = Self(for: .v17, selector: selector)
+    public static let all = Self(for: .all, selector: selector)
+
+    private static var selector: IntrospectionSelector<UIWindow> {
+        .from(UIView.self, selector: \.window)
+    }
+}
+
+/// An abstract representation of the receiving SwiftUI view's view controller,
+/// or the closest ancestor view controller if missing.
+///
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         NavigationView {
+///             Text("Root").frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.red)
+///                 .introspect(.viewController, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///                     print(type(of: $0)) // some subclass of UIHostingController
+///                 }
+///         }
+///         .navigationViewStyle(.stack)
+///         .introspect(.viewController, on: .iOS(.v13, .v14, .v15, .v16, .v17)) {
+///             print(type(of: $0)) // UINavigationController
+///         }
+///     }
+/// }
+/// ```
+@available(iOS 13.0, *)
+public struct ViewControllerType: IntrospectableViewType {
+    public var scope: IntrospectionScope { [.receiver, .ancestor] }
+}
+
+@available(iOS 13.0, *)
+extension IntrospectableViewType where Self == ViewControllerType {
+    public static var viewController: Self { .init() }
+}
+
+@available(iOS 13.0, *)
+extension iOSViewVersion<ViewControllerType, UIViewController> {
+    public static let v13 = Self(for: .v13)
+    public static let v14 = Self(for: .v14)
+    public static let v15 = Self(for: .v15)
+    public static let v16 = Self(for: .v16)
+    public static let v17 = Self(for: .v17)
+    public static let all = Self(for: .all)
+}
+
 #endif
