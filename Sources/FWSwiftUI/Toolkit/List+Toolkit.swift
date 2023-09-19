@@ -135,6 +135,7 @@ extension View {
     /// 绑定List下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func listViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
@@ -160,13 +161,19 @@ extension View {
                     scrollView.fw_beginRefreshing()
                 }
             }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw_loadingFinished = finished
+            }
         }
     }
     
     /// 绑定List上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
     public func listViewLoading(
         shouldBegin: Binding<Bool>? = nil,
-        shouldLoading: Bool? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
         action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
@@ -185,17 +192,18 @@ extension View {
                 customize?(scrollView)
             }
             
-            if let shouldLoading = shouldLoading,
-               scrollView.fw_shouldLoading != shouldLoading {
-                scrollView.fw_shouldLoading = shouldLoading
-            }
-            
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
                 if !scrollView.fw_isLoading {
                     scrollView.fw_beginLoading()
                 }
+            }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw_loadingFinished = finished
             }
         }
     }
