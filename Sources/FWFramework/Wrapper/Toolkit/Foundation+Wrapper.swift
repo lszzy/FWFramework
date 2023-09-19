@@ -684,17 +684,6 @@ extension Wrapper where Base: URLSession {
         return Base.fw_httpProxyString
     }
     
-    /// 获取host在本地DNS的IP地址，可实现防DNS劫持，建议后台调用
-    ///
-    /// 方案说明：
-    /// 1. NSURLProtocol注册全局请求拦截器类
-    /// 2. canonicalRequest方法中检查请求URL是否是合法IP格式
-    /// 3. 如果不满足，获取本地DNS的IP地址添加到请求Header的host以便区分
-    /// [ZXRequestBlock](https://github.com/SmileZXLee/ZXRequestBlock)
-    public static func ipAddress(host: String) -> String? {
-        return Base.fw_ipAddress(host: host)
-    }
-    
 }
 
 // MARK: - UserDefaults+Foundation

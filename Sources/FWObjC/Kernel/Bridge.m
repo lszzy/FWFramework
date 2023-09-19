@@ -9,9 +9,6 @@
 #import <sys/sysctl.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <Accelerate/Accelerate.h>
-#import <arpa/inet.h>
-#import <ifaddrs.h>
-#import <net/if.h>
 #import <dlfcn.h>
 
 #pragma mark - __FWBridge
@@ -26,43 +23,6 @@ static SEL __FWImageWithCGSVGDocumentSEL = NULL;
 static SEL __FWCGSVGDocumentSEL = NULL;
 
 @implementation __FWBridge
-
-+ (NSString *)ipAddress:(NSString *)host {
-    if ([host hasPrefix:@"http"]) {
-        host = [NSURL URLWithString:host].host;
-    }
-    
-    Boolean result, bResolved;
-    CFHostRef hostRef;
-    CFArrayRef addresses = NULL;
-    NSMutableArray *ipsArr = [[NSMutableArray alloc] init];
-    CFStringRef hostNameRef = CFStringCreateWithCString(kCFAllocatorDefault, [host cStringUsingEncoding:NSASCIIStringEncoding], kCFStringEncodingASCII);
-    
-    hostRef = CFHostCreateWithName(kCFAllocatorDefault, hostNameRef);
-    result = CFHostStartInfoResolution(hostRef, kCFHostAddresses, NULL);
-    if (result == TRUE) {
-        addresses = CFHostGetAddressing(hostRef, &result);
-    }
-    bResolved = result == TRUE ? true : false;
-    
-    if (bResolved) {
-        struct sockaddr_in *remoteAddr;
-        for(int i = 0; i < CFArrayGetCount(addresses); i++){
-            CFDataRef saData = (CFDataRef)CFArrayGetValueAtIndex(addresses, i);
-            remoteAddr = (struct sockaddr_in *)CFDataGetBytePtr(saData);
-            if (remoteAddr != NULL) {
-                char ip[16];
-                strcpy(ip, inet_ntoa(remoteAddr->sin_addr));
-                NSString *ipStr = [NSString stringWithCString:ip encoding:NSUTF8StringEncoding];
-                [ipsArr addObject:ipStr];
-            }
-        }
-    }
-    if (ipsArr.count) {
-        return ipsArr[0];
-    }
-    return nil;
-}
 
 + (NSString *)base64Decode:(NSString *)base64String {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];

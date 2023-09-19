@@ -153,7 +153,7 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.app.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         app.setRightBarItem("切换") { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "获取本地DNS的IP地址"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理"], actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {
                     URLSession.app.httpProxyDisabled = !URLSession.app.httpProxyDisabled
@@ -161,19 +161,6 @@ extension TestRequestController: ViewControllerProtocol {
                 } else if index == 1 {
                     let proxyString = URLSession.app.httpProxyString ?? ""
                     self.app.showMessage(text: "网络代理: \n\(proxyString)")
-                } else if index == 2 {
-                    self.app.showPrompt(title: "请输入域名", message: nil, cancel: nil, confirm: nil, promptBlock: { textField in
-                        textField.text = "kvm.wuyong.site"
-                    }, confirmBlock: { [weak self] host in
-                        self?.app.showLoading()
-                        DispatchQueue.global().async {
-                            let ipAddress = URLSession.app.ipAddress(host: host) ?? ""
-                            DispatchQueue.main.async {
-                                self?.app.hideLoading()
-                                self?.app.showMessage(text: "IP地址: \n\(ipAddress)")
-                            }
-                        }
-                    })
                 }
             })
         }
