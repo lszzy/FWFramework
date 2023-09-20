@@ -16,16 +16,6 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         .grouped
     }
     
-    func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["切换取消(仅自定义Sheet支持)"], actionBlock: { index in
-                if index == 0 {
-                    AlertControllerImpl.shared.hidesSheetCancel = !AlertControllerImpl.shared.hidesSheetCancel
-                }
-            })
-        }
-    }
-    
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["警告框(简单)", "onAlert1"],

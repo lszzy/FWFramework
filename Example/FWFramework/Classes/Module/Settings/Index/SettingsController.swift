@@ -189,10 +189,14 @@ private extension SettingsController {
         var actions = Autoloader.alertPlugins.map {
             $0 == Autoloader.alertPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(Autoloader.alertHidesSheetCancel ? "[hidesSheetCancel]" : "hidesSheetCancel")
         actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "AlertPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.alertPlugins.count {
                 Autoloader.alertPluginImpl = Autoloader.alertPlugins[index]
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.alertPlugins.count {
+                Autoloader.alertHidesSheetCancel = !Autoloader.alertHidesSheetCancel
                 Autoloader().loadPlugin()
             } else {
                 Navigator.push(TestAlertController())
@@ -268,10 +272,18 @@ private extension SettingsController {
         var actions = Autoloader.imagePlugins.map {
             $0 == Autoloader.imagePluginImpl ? "[\($0)]" : $0
         }
+        actions.append(Autoloader.imageShowsIndicator ? "[showsIndicator]" : "showsIndicator")
+        actions.append(Autoloader.imageHidesPlaceholderIndicator ? "[hidesPlaceholderIndicator]" : "hidesPlaceholderIndicator")
         actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePlugins.count {
                 Autoloader.imagePluginImpl = Autoloader.imagePlugins[index]
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePlugins.count {
+                Autoloader.imageShowsIndicator = !Autoloader.imageShowsIndicator
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePlugins.count + 1 {
+                Autoloader.imageHidesPlaceholderIndicator = !Autoloader.imageHidesPlaceholderIndicator
                 Autoloader().loadPlugin()
             } else {
                 Navigator.push(TestImageController())
@@ -316,6 +328,8 @@ private extension SettingsController {
     @StoredValue("alertPluginImpl")
     static var alertPluginImpl = alertPlugins[0]
     static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]
+    @StoredValue("alertHidesSheetCancel")
+    static var alertHidesSheetCancel = false
     
     @StoredValue("emptyPluginImpl")
     static var emptyPluginImpl = emptyPlugins[0]
@@ -338,6 +352,10 @@ private extension SettingsController {
     @StoredValue("imagePluginImpl")
     static var imagePluginImpl = imagePlugins[0]
     static let imagePlugins = ["ImagePluginImpl", "SDWebImageImpl"]
+    @StoredValue("imageShowsIndicator")
+    static var imageShowsIndicator = false
+    @StoredValue("imageHidesPlaceholderIndicator")
+    static var imageHidesPlaceholderIndicator = false
     
     @StoredValue("imagePickerPluginImpl")
     static var imagePickerPluginImpl = imagePickerPlugins[0]
@@ -350,6 +368,7 @@ private extension SettingsController {
     func loadPlugin() {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
+        AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel
         
         RefreshPluginImpl.shared.infiniteScrollBlock = { view in
             view.showsFinishedView = Autoloader.refreshShowsFinishedView
@@ -357,6 +376,10 @@ private extension SettingsController {
         
         PluginManager.unloadPlugin(ImagePlugin.self)
         PluginManager.registerPlugin(ImagePlugin.self, object: Autoloader.imagePluginImpl == Autoloader.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
+        ImagePluginImpl.shared.showsIndicator = Autoloader.imageShowsIndicator
+        SDWebImageImpl.shared.showsIndicator = Autoloader.imageShowsIndicator
+        ImagePluginImpl.shared.hidesPlaceholderIndicator = Autoloader.imageHidesPlaceholderIndicator
+        SDWebImageImpl.shared.hidesPlaceholderIndicator = Autoloader.imageHidesPlaceholderIndicator
         
         PluginManager.unloadPlugin(ImagePickerPlugin.self)
         PluginManager.registerPlugin(ImagePickerPlugin.self, object: Autoloader.imagePickerPluginImpl == Autoloader.imagePickerPlugins[0] ? ImagePickerPluginImpl.self : ImagePickerControllerImpl.self)

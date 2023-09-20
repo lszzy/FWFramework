@@ -17,19 +17,11 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["切换加载动画", "切换占位图加载动画", "清除图片缓存"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["清除图片缓存"], actionBlock: { index in
                 guard let self = self else { return }
                 
-                if index == 0 {
-                    SDWebImageImpl.shared.showsIndicator = !SDWebImageImpl.shared.showsIndicator
-                    ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
-                } else if index == 1 {
-                    ImagePluginImpl.shared.hidesPlaceholderIndicator = !ImagePluginImpl.shared.hidesPlaceholderIndicator
-                    SDWebImageImpl.shared.hidesPlaceholderIndicator = ImagePluginImpl.shared.hidesPlaceholderIndicator
-                } else if index == 2 {
-                    ImagePluginImpl.shared.clearImageCaches()
-                    SDWebImageImpl.shared.clearImageCaches()
-                }
+                ImagePluginImpl.shared.clearImageCaches()
+                SDWebImageImpl.shared.clearImageCaches()
                 
                 self.tableData.removeAll()
                 self.tableView.reloadData()
