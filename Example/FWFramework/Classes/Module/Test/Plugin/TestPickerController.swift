@@ -55,11 +55,8 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换选取样式", "自定义选取配置", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
-                    ImagePickerControllerImpl.shared.showsAlbumController = !ImagePickerControllerImpl.shared.showsAlbumController
-                    ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled
-                } else if index == 1 {
                     self?.setupPlugin()
                 } else {
                     try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
