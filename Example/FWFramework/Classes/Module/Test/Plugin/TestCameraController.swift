@@ -20,14 +20,12 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
             let isFullscreen = self?.isFullscreen ?? false
-            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑", ImagePickerPluginImpl.shared.cropControllerEnabled ? "切换系统裁剪" : "切换自定义裁剪", isFullscreen ? "默认弹出样式" : "全屏弹出样式", ImagePickerPluginImpl.shared.photoPickerDisabled ? "启用PHPicker" : "禁用PHPicker", ImagePickerPluginImpl.shared.photoNavigationEnabled ? "禁用PHPicker导航栏" : "启用PHPicker导航栏"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑", isFullscreen ? "默认弹出样式" : "全屏弹出样式"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.showData(self?.results ?? [])
                 } else if index == 1 {
                     self?.allowsEditing = !allowsEditing
                 } else if index == 2 {
-                    ImagePickerPluginImpl.shared.cropControllerEnabled = !ImagePickerPluginImpl.shared.cropControllerEnabled;
-                } else if index == 3 {
                     self?.isFullscreen = !isFullscreen
                     if self?.isFullscreen ?? false {
                         ImagePickerPluginImpl.shared.customBlock = { viewController in
@@ -36,10 +34,6 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
                     } else {
                         ImagePickerPluginImpl.shared.customBlock = nil
                     }
-                } else if index == 4 {
-                    ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled;
-                } else {
-                    ImagePickerPluginImpl.shared.photoNavigationEnabled = !ImagePickerPluginImpl.shared.photoNavigationEnabled;
                 }
             })
         }
