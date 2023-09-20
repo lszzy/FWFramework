@@ -196,31 +196,73 @@ private extension SettingsController {
     }
     
     @objc func onEmptyPlugin() {
-        
+        let actions = Autoloader.emptyPlugins.map {
+            $0 == Autoloader.emptyPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "EmptyPlugin", message: nil, actions: actions) { index in
+            Autoloader.emptyPluginImpl = Autoloader.emptyPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onToastPlugin() {
-        
+        let actions = Autoloader.toastPlugins.map {
+            $0 == Autoloader.toastPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "ToastPlugin", message: nil, actions: actions) { index in
+            Autoloader.toastPluginImpl = Autoloader.toastPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onViewPlugin() {
-        
+        let actions = Autoloader.viewPlugins.map {
+            $0 == Autoloader.viewPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "ViewPlugin", message: nil, actions: actions) { index in
+            Autoloader.viewPluginImpl = Autoloader.viewPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onRefreshPlugin() {
-        
+        let actions = Autoloader.refreshPlugins.map {
+            $0 == Autoloader.refreshPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "RefreshPlugin", message: nil, actions: actions) { index in
+            Autoloader.refreshPluginImpl = Autoloader.refreshPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onImagePlugin() {
-        
+        let actions = Autoloader.imagePlugins.map {
+            $0 == Autoloader.imagePluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "ImagePlugin", message: nil, actions: actions) { index in
+            Autoloader.imagePluginImpl = Autoloader.imagePlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onImagePickerPlugin() {
-        
+        let actions = Autoloader.imagePickerPlugins.map {
+            $0 == Autoloader.imagePickerPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
+            Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
     @objc func onImagePreviewPlugin() {
-        
+        let actions = Autoloader.imagePreviewPlugins.map {
+            $0 == Autoloader.imagePreviewPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "ImagePreviewPlugin", message: nil, actions: actions) { index in
+            Autoloader.imagePreviewPluginImpl = Autoloader.imagePreviewPlugins[index]
+            Autoloader().loadPlugin()
+        }
     }
     
 }
@@ -232,29 +274,42 @@ private extension SettingsController {
     static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]
     
     @StoredValue("emptyPluginImpl")
-    static var emptyPluginImpl = ""
+    static var emptyPluginImpl = emptyPlugins[0]
+    static let emptyPlugins = ["EmptyPluginImpl"]
     
     @StoredValue("refreshPluginImpl")
-    static var refreshPluginImpl = ""
+    static var refreshPluginImpl = refreshPlugins[0]
+    static let refreshPlugins = ["RefreshPluginImpl"]
     
     @StoredValue("toastPluginImpl")
-    static var toastPluginImpl = ""
+    static var toastPluginImpl = toastPlugins[0]
+    static let toastPlugins = ["ToastPluginImpl"]
     
     @StoredValue("viewPluginImpl")
-    static var viewPluginImpl = ""
+    static var viewPluginImpl = viewPlugins[0]
+    static let viewPlugins = ["ViewPluginImpl"]
     
     @StoredValue("imagePluginImpl")
-    static var imagePluginImpl = ""
+    static var imagePluginImpl = imagePlugins[0]
+    static let imagePlugins = ["ImagePluginImpl", "SDWebImageImpl"]
     
     @StoredValue("imagePickerPluginImpl")
-    static var imagePickerPluginImpl = ""
+    static var imagePickerPluginImpl = imagePickerPlugins[0]
+    static let imagePickerPlugins = ["ImagePickerPluginImpl", "ImagePickerControllerImpl"]
     
     @StoredValue("imagePreviewPluginImpl")
-    static var imagePreviewPluginImpl = ""
+    static var imagePreviewPluginImpl = imagePreviewPlugins[0]
+    static let imagePreviewPlugins = ["ImagePreviewPluginImpl"]
     
     func loadPlugin() {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
+        
+        PluginManager.unloadPlugin(ImagePlugin.self)
+        PluginManager.registerPlugin(ImagePlugin.self, object: Autoloader.imagePluginImpl == Autoloader.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
+        
+        PluginManager.unloadPlugin(ImagePickerPlugin.self)
+        PluginManager.registerPlugin(ImagePickerPlugin.self, object: Autoloader.imagePickerPluginImpl == Autoloader.imagePickerPlugins[0] ? ImagePickerPluginImpl.self : ImagePickerControllerImpl.self)
     }
     
 }
