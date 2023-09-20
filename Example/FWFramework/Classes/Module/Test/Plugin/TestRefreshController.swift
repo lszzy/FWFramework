@@ -10,7 +10,6 @@ import FWFramework
 
 class TestRefreshController: UIViewController, TableViewControllerProtocol, EmptyViewDelegate {
     
-    static var showsFinishedView = true
     var emptyViewMode: Int = 0
     
     func setupTableStyle() -> UITableView.Style {
@@ -27,23 +26,13 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
     func setupNavbar() {
         app.extendedLayoutEdge = []
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [TestRefreshController.showsFinishedView ? "隐藏FinishedView" : "显示FinishedView", self?.emptyViewMode == 1 ? "隐藏view空界面" : "显示view空界面", self?.emptyViewMode == 2 ? "隐藏tableView空界面" : "显示tableView空界面"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [self?.emptyViewMode == 1 ? "隐藏view空界面" : "显示view空界面", self?.emptyViewMode == 2 ? "隐藏tableView空界面" : "显示tableView空界面"], actionBlock: { index in
                 if index == 0 {
-                    TestRefreshController.showsFinishedView = !TestRefreshController.showsFinishedView
-                    RefreshPluginImpl.shared.infiniteScrollBlock = { view in
-                        view.showsFinishedView = TestRefreshController.showsFinishedView
-                    }
-                    let vc = TestRefreshController()
-                    vc.emptyViewMode = self?.emptyViewMode ?? 0
-                    self?.navigationController?.app.push(vc, popTopWorkflowAnimated: false)
+                    self?.emptyViewMode = self?.emptyViewMode == 1 ? 0 : 1
                 } else {
-                    if index == 1 {
-                        self?.emptyViewMode = self?.emptyViewMode == 1 ? 0 : 1
-                    } else {
-                        self?.emptyViewMode = self?.emptyViewMode == 2 ? 0 : 2
-                    }
-                    self?.tableView.app.beginRefreshing()
+                    self?.emptyViewMode = self?.emptyViewMode == 2 ? 0 : 2
                 }
+                self?.tableView.app.beginRefreshing()
             })
         }
     }
