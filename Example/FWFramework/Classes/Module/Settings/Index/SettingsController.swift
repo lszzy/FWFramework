@@ -295,10 +295,22 @@ private extension SettingsController {
         var actions = Autoloader.imagePickerPlugins.map {
             $0 == Autoloader.imagePickerPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(Autoloader.imagePickerCropControllerEnabled ? "[cropControllerEnabled]" : "cropControllerEnabled")
+        actions.append(Autoloader.imagePickerPhotoPickerDisabled ? "[photoPickerDisabled]" : "photoPickerDisabled")
+        actions.append(Autoloader.imagePickerPhotoNavigationEnabled ? "[photoNavigationEnabled]" : "photoNavigationEnabled")
         actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePickerPlugins.count {
                 Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePickerPlugins.count {
+                Autoloader.imagePickerCropControllerEnabled = !Autoloader.imagePickerCropControllerEnabled
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePickerPlugins.count + 1 {
+                Autoloader.imagePickerPhotoPickerDisabled = !Autoloader.imagePickerPhotoPickerDisabled
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePickerPlugins.count + 2 {
+                Autoloader.imagePickerPhotoNavigationEnabled = !Autoloader.imagePickerPhotoNavigationEnabled
                 Autoloader().loadPlugin()
             } else {
                 Navigator.push(TestPickerController())
@@ -360,6 +372,12 @@ private extension SettingsController {
     @StoredValue("imagePickerPluginImpl")
     static var imagePickerPluginImpl = imagePickerPlugins[0]
     static let imagePickerPlugins = ["ImagePickerPluginImpl", "ImagePickerControllerImpl"]
+    @StoredValue("imagePickerCropControllerEnabled")
+    static var imagePickerCropControllerEnabled = false
+    @StoredValue("imagePickerPhotoPickerDisabled")
+    static var imagePickerPhotoPickerDisabled = false
+    @StoredValue("imagePickerPhotoNavigationEnabled")
+    static var imagePickerPhotoNavigationEnabled = false
     
     @StoredValue("imagePreviewPluginImpl")
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
@@ -383,6 +401,9 @@ private extension SettingsController {
         
         PluginManager.unloadPlugin(ImagePickerPlugin.self)
         PluginManager.registerPlugin(ImagePickerPlugin.self, object: Autoloader.imagePickerPluginImpl == Autoloader.imagePickerPlugins[0] ? ImagePickerPluginImpl.self : ImagePickerControllerImpl.self)
+        ImagePickerPluginImpl.shared.cropControllerEnabled = Autoloader.imagePickerCropControllerEnabled
+        ImagePickerPluginImpl.shared.photoPickerDisabled = Autoloader.imagePickerPhotoPickerDisabled
+        ImagePickerPluginImpl.shared.photoNavigationEnabled = Autoloader.imagePickerPhotoNavigationEnabled
     }
     
 }
