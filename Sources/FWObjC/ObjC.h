@@ -97,6 +97,10 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;
 
++ (nullable UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize;
+
++ (nullable NSData *)svgEncode:(UIImage *)image;
+
 @end
 
 NS_ASSUME_NONNULL_END

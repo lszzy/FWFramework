@@ -198,7 +198,7 @@ open class ImageCoder: NSObject {
         let count = CGImageSourceGetCount(source)
         let format = ImageCoder.imageFormat(for: data)
         if format == .svg {
-            animatedImage = __FWBridge.svgDecode(data, thumbnailSize: thumbnailSize)
+            animatedImage = ObjCBridge.svgDecode(data, thumbnailSize: thumbnailSize)
         } else if format == .pdf {
             animatedImage = createBitmapPDF(data: data, thumbnailSize: thumbnailSize)
         } else if !isAnimated(format, forDecode: true) || count <= 1 {
@@ -233,7 +233,7 @@ open class ImageCoder: NSObject {
             format = image.fw_hasAlpha ? .png : .jpeg
         }
         if format == .svg {
-            return __FWBridge.svgEncode(image)
+            return ObjCBridge.svgEncode(image)
         }
         
         guard let imageRef = image.cgImage else {
