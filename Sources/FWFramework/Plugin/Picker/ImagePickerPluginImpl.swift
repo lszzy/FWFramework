@@ -27,6 +27,9 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
 
     /// 编辑单张图片时是否启用自定义裁剪控制器，默认false，使用系统方式
     open var cropControllerEnabled: Bool = false
+    
+    /// 是否全屏弹出，默认false，使用系统方式
+    open var presentationFullScreen: Bool = false
 
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
     open var cropControllerBlock: ((UIImage) -> ImageCropController)?
@@ -52,6 +55,9 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             return
         }
         
+        if presentationFullScreen {
+            pickerController.modalPresentationStyle = .fullScreen
+        }
         self.customBlock?(pickerController)
         customBlock?(pickerController)
         viewController.present(pickerController, animated: true)
@@ -96,6 +102,9 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             pickerController = navigationController
         }
         
+        if presentationFullScreen {
+            pickerController.modalPresentationStyle = .fullScreen
+        }
         self.customBlock?(pickerController)
         customBlock?(pickerController)
         viewController.present(pickerController, animated: true)

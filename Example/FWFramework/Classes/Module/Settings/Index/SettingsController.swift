@@ -298,6 +298,7 @@ private extension SettingsController {
         actions.append(Autoloader.imagePickerCropControllerEnabled ? "[cropControllerEnabled]" : "cropControllerEnabled")
         actions.append(Autoloader.imagePickerPhotoPickerDisabled ? "[photoPickerDisabled]" : "photoPickerDisabled")
         actions.append(Autoloader.imagePickerPhotoNavigationEnabled ? "[photoNavigationEnabled]" : "photoNavigationEnabled")
+        actions.append(Autoloader.imagePickerPresentationFullScreen ? "[presentationFullScreen]" : "presentationFullScreen")
         actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePickerPlugins.count {
@@ -311,6 +312,9 @@ private extension SettingsController {
                 Autoloader().loadPlugin()
             } else if index == Autoloader.imagePickerPlugins.count + 2 {
                 Autoloader.imagePickerPhotoNavigationEnabled = !Autoloader.imagePickerPhotoNavigationEnabled
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.imagePickerPlugins.count + 3 {
+                Autoloader.imagePickerPresentationFullScreen = !Autoloader.imagePickerPresentationFullScreen
                 Autoloader().loadPlugin()
             } else {
                 Navigator.push(TestPickerController())
@@ -378,6 +382,8 @@ private extension SettingsController {
     static var imagePickerPhotoPickerDisabled = false
     @StoredValue("imagePickerPhotoNavigationEnabled")
     static var imagePickerPhotoNavigationEnabled = false
+    @StoredValue("imagePickerPresentationFullScreen")
+    static var imagePickerPresentationFullScreen = false
     
     @StoredValue("imagePreviewPluginImpl")
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
@@ -404,6 +410,7 @@ private extension SettingsController {
         ImagePickerPluginImpl.shared.cropControllerEnabled = Autoloader.imagePickerCropControllerEnabled
         ImagePickerPluginImpl.shared.photoPickerDisabled = Autoloader.imagePickerPhotoPickerDisabled
         ImagePickerPluginImpl.shared.photoNavigationEnabled = Autoloader.imagePickerPhotoNavigationEnabled
+        ImagePickerPluginImpl.shared.presentationFullScreen = Autoloader.imagePickerPresentationFullScreen
     }
     
 }

@@ -13,27 +13,16 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
     // MARK: - Accessor
     private var results: [Any] = []
     private var allowsEditing: Bool = false
-    private var isFullscreen: Bool = false
     
     // MARK: - Setup
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
-            let isFullscreen = self?.isFullscreen ?? false
-            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑", isFullscreen ? "默认弹出样式" : "全屏弹出样式"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.showData(self?.results ?? [])
                 } else if index == 1 {
                     self?.allowsEditing = !allowsEditing
-                } else if index == 2 {
-                    self?.isFullscreen = !isFullscreen
-                    if self?.isFullscreen ?? false {
-                        ImagePickerPluginImpl.shared.customBlock = { viewController in
-                            viewController.modalPresentationStyle = .fullScreen
-                        }
-                    } else {
-                        ImagePickerPluginImpl.shared.customBlock = nil
-                    }
                 }
             })
         }
