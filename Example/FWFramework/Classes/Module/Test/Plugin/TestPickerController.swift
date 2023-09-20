@@ -13,7 +13,6 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     private var livePhotoResources: LivePhoto.LivePhotoResources?
     
     func setupPlugin() {
-        PluginManager.registerPlugin(ImagePickerPlugin.self, object: ImagePickerControllerImpl.self)
         ImagePickerControllerImpl.shared.pickerControllerBlock = {
             let pickerController = ImagePickerController()
             pickerController.titleAccessoryImage = APP.iconImage("zmdi-var-caret-down", 24)?.app.image(tintColor: .white)
@@ -56,20 +55,12 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换选取插件", "切换选取样式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换选取样式", "自定义选取配置", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
-                    if PluginManager.loadPlugin(ImagePickerPlugin.self) != nil {
-                        PluginManager.unloadPlugin(ImagePickerPlugin.self)
-                        PluginManager.unregisterPlugin(ImagePickerPlugin.self)
-                    } else {
-                        self?.setupPlugin()
-                    }
+                    ImagePickerControllerImpl.shared.showsAlbumController = !ImagePickerControllerImpl.shared.showsAlbumController
+                    ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled
                 } else if index == 1 {
-                    if PluginManager.loadPlugin(ImagePickerPlugin.self) != nil {
-                        ImagePickerControllerImpl.shared.showsAlbumController = !ImagePickerControllerImpl.shared.showsAlbumController
-                    } else {
-                        ImagePickerPluginImpl.shared.photoPickerDisabled = !ImagePickerPluginImpl.shared.photoPickerDisabled
-                    }
+                    self?.setupPlugin()
                 } else {
                     try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
                     self?.app.showMessage(text: "清理完成")

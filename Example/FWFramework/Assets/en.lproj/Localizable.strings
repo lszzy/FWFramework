@@ -25,3 +25,5 @@
 "envTesting" = "Testing";
 "envStaging" = "Staging";
 "envProduction" = "Production";
+"pluginTitle" = "Plugin";
+"pluginDetail" = "Customize";

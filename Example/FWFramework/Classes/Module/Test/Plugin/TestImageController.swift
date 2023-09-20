@@ -11,33 +11,22 @@ import SDWebImage
 
 class TestImageController: UIViewController, TableViewControllerProtocol {
     
-    var isSDWebImage: Bool = false
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["切换图片插件", "切换加载动画", "切换占位图加载动画", "清除图片缓存"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换加载动画", "切换占位图加载动画", "清除图片缓存"], actionBlock: { index in
                 guard let self = self else { return }
                 
                 if index == 0 {
-                    self.isSDWebImage = !self.isSDWebImage
-                    PluginManager.unloadPlugin(ImagePlugin.self)
-                    PluginManager.registerPlugin(ImagePlugin.self, object: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
+                    SDWebImageImpl.shared.showsIndicator = !SDWebImageImpl.shared.showsIndicator
+                    ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
                 } else if index == 1 {
-                    if self.isSDWebImage {
-                        SDWebImageImpl.shared.showsIndicator = !SDWebImageImpl.shared.showsIndicator
-                        ImagePluginImpl.shared.showsIndicator = SDWebImageImpl.shared.showsIndicator
-                    } else {
-                        ImagePluginImpl.shared.showsIndicator = !ImagePluginImpl.shared.showsIndicator
-                        SDWebImageImpl.shared.showsIndicator = ImagePluginImpl.shared.showsIndicator
-                    }
-                } else if index == 2 {
                     ImagePluginImpl.shared.hidesPlaceholderIndicator = !ImagePluginImpl.shared.hidesPlaceholderIndicator
                     SDWebImageImpl.shared.hidesPlaceholderIndicator = ImagePluginImpl.shared.hidesPlaceholderIndicator
-                } else if index == 3 {
+                } else if index == 2 {
                     ImagePluginImpl.shared.clearImageCaches()
                     SDWebImageImpl.shared.clearImageCaches()
                 }
@@ -52,8 +41,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        self.isSDWebImage = PluginManager.loadPlugin(ImagePlugin.self) is SDWebImageImpl
-        navigationItem.title = self.isSDWebImage ? "FWImage - SDWebImage" : "FWImage - FWWebImage"
+        navigationItem.title = Autoloader.imagePluginImpl
         SDWebImageImpl.shared.fadeAnimated = true
         ImagePluginImpl.shared.fadeAnimated = true
         
@@ -96,7 +84,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = TestImageCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
+        let cell = TestImageCell.app.cell(tableView: tableView)
         let fileName = tableData[indexPath.row] as? String ?? ""
         cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(from: (fileName as NSString).pathExtension))
         if !fileName.app.isValid(.isUrl) {
