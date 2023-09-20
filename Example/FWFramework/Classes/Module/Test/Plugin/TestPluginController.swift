@@ -12,7 +12,14 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [Int]
     
+    @StoredValue("showLottieProgress")
     static var showLottieProgress = true
+    
+    @StoredValue("viewPluginSection")
+    static var viewPluginSection: Int = -1
+    
+    @StoredValue("viewPluginRow")
+    static var viewPluginRow: Int = 0
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, block: { [weak self] _ in
@@ -113,7 +120,9 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             if index == 0 {
                 self?.onPreview(indexPath)
             } else {
-                self?.onSettings(indexPath)
+                TestPluginController.viewPluginSection = indexPath.section
+                TestPluginController.viewPluginRow = indexPath.row
+                TestPluginController.onSettings(indexPath)
             }
         }
     }
@@ -166,7 +175,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         }
     }
     
-    func onSettings(_ indexPath: IndexPath) {
+    static func onSettings(_ indexPath: IndexPath) {
         if indexPath.section == 0 {
             let annular = indexPath.row == 0
             ViewPluginImpl.shared.customProgressView = { style in
@@ -213,9 +222,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             return
         }
         
-        let sectionData = tableData[indexPath.section]
-        let rowData = sectionData[indexPath.row]
-        let type = IndicatorViewAnimationType(rawValue: rowData)
+        let type = IndicatorViewAnimationType(rawValue: indexPath.row)
         ViewPluginImpl.shared.customIndicatorView = { style in
             return IndicatorView(type: type)
         }
@@ -227,6 +234,16 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         }
         RefreshPluginImpl.shared.pullRefreshBlock = nil
         RefreshPluginImpl.shared.infiniteScrollBlock = nil
+    }
+    
+}
+
+@objc extension Autoloader {
+    
+    func loadTestPlugin() {
+        if TestPluginController.viewPluginSection >= 0 {
+            TestPluginController.onSettings(IndexPath(row: TestPluginController.viewPluginRow, section: TestPluginController.viewPluginSection))
+        }
     }
     
 }
