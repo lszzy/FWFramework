@@ -25,3 +25,5 @@
 "envTesting" = "测试";
 "envStaging" = "模拟";
 "envProduction" = "正式";
+"pluginTitle" = "插件";
+"pluginDetail" = "定制";

@@ -63,6 +63,7 @@ extension SettingsController: TableViewControllerProtocol {
         tableData.removeAll()
         tableData.append([APP.localized("languageTitle"), "onLanguage"])
         tableData.append([APP.localized("themeTitle"), "onTheme"])
+        tableData.append([APP.localized("pluginTitle"), "onPlugin"])
         tableView.reloadData()
     }
     
@@ -99,6 +100,8 @@ extension SettingsController {
                 let theme = mode == .system ? APP.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(APP.localized("themeDark")))" : "(\(APP.localized("themeLight")))") : (mode == .dark ? APP.localized("themeDark") : APP.localized("themeLight"))
                 cell.detailTextLabel?.text = theme
             }
+        } else {
+            cell.detailTextLabel?.text = APP.localized("pluginDetail")
         }
         return cell
     }
@@ -162,6 +165,96 @@ private extension SettingsController {
                 TabController.refreshController()
             }
         }
+    }
+    
+    @objc func onPlugin() {
+        let plugins: [[String]] = [
+            ["AlertPlugin", "onAlertPlugin"],
+            ["EmptyPlugin", "onEmptyPlugin"],
+            ["RefreshPlugin", "onRefreshPlugin"],
+            ["ToastPlugin", "onToastPlugin"],
+            ["ViewPlugin", "onViewPlugin"],
+            ["ImagePlugin", "onImagePlugin"],
+            ["ImagePickerPlugin", "onImagePickerPlugin"],
+            ["ImagePreviewPlugin", "onImagePreviewPlugin"],
+        ]
+        
+        app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map({ $0[0] })) { [weak self] index in
+            let action = plugins[index][1]
+            self?.app.invokeMethod(Selector(action))
+        }
+    }
+    
+    @objc func onAlertPlugin() {
+        let actions = Autoloader.alertPlugins.map {
+            $0 == Autoloader.alertPluginImpl ? "[\($0)]" : $0
+        }
+        app.showSheet(title: "AlertPlugin", message: nil, actions: actions) { index in
+            Autoloader.alertPluginImpl = Autoloader.alertPlugins[index]
+            Autoloader().loadPlugin()
+        }
+    }
+    
+    @objc func onEmptyPlugin() {
+        
+    }
+    
+    @objc func onToastPlugin() {
+        
+    }
+    
+    @objc func onViewPlugin() {
+        
+    }
+    
+    @objc func onRefreshPlugin() {
+        
+    }
+    
+    @objc func onImagePlugin() {
+        
+    }
+    
+    @objc func onImagePickerPlugin() {
+        
+    }
+    
+    @objc func onImagePreviewPlugin() {
+        
+    }
+    
+}
+
+@objc extension Autoloader {
+    
+    @StoredValue("alertPluginImpl")
+    static var alertPluginImpl = alertPlugins[0]
+    static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]
+    
+    @StoredValue("emptyPluginImpl")
+    static var emptyPluginImpl = ""
+    
+    @StoredValue("refreshPluginImpl")
+    static var refreshPluginImpl = ""
+    
+    @StoredValue("toastPluginImpl")
+    static var toastPluginImpl = ""
+    
+    @StoredValue("viewPluginImpl")
+    static var viewPluginImpl = ""
+    
+    @StoredValue("imagePluginImpl")
+    static var imagePluginImpl = ""
+    
+    @StoredValue("imagePickerPluginImpl")
+    static var imagePickerPluginImpl = ""
+    
+    @StoredValue("imagePreviewPluginImpl")
+    static var imagePreviewPluginImpl = ""
+    
+    func loadPlugin() {
+        PluginManager.unloadPlugin(AlertPlugin.self)
+        PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
     }
     
 }
