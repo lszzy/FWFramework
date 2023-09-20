@@ -27,16 +27,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWBridge
-
-@interface __FWBridge : NSObject
-
-+ (nullable UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize;
-
-+ (nullable NSData *)svgEncode:(UIImage *)image;
-
-@end
-
 #pragma mark - __FWEncrypt
 
 @interface NSData (__FWEncrypt)
