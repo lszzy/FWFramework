@@ -186,42 +186,62 @@ private extension SettingsController {
     }
     
     @objc func onAlertPlugin() {
-        let actions = Autoloader.alertPlugins.map {
+        var actions = Autoloader.alertPlugins.map {
             $0 == Autoloader.alertPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "AlertPlugin", message: nil, actions: actions) { index in
-            Autoloader.alertPluginImpl = Autoloader.alertPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.alertPlugins.count {
+                Autoloader.alertPluginImpl = Autoloader.alertPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestAlertController())
+            }
         }
     }
     
     @objc func onEmptyPlugin() {
-        let actions = Autoloader.emptyPlugins.map {
+        var actions = Autoloader.emptyPlugins.map {
             $0 == Autoloader.emptyPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "EmptyPlugin", message: nil, actions: actions) { index in
-            Autoloader.emptyPluginImpl = Autoloader.emptyPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.emptyPlugins.count {
+                Autoloader.emptyPluginImpl = Autoloader.emptyPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestEmptyController())
+            }
         }
     }
     
     @objc func onToastPlugin() {
-        let actions = Autoloader.toastPlugins.map {
+        var actions = Autoloader.toastPlugins.map {
             $0 == Autoloader.toastPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ToastPlugin", message: nil, actions: actions) { index in
-            Autoloader.toastPluginImpl = Autoloader.toastPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.toastPlugins.count {
+                Autoloader.toastPluginImpl = Autoloader.toastPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestToastController())
+            }
         }
     }
     
     @objc func onViewPlugin() {
-        let actions = Autoloader.viewPlugins.map {
+        var actions = Autoloader.viewPlugins.map {
             $0 == Autoloader.viewPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ViewPlugin", message: nil, actions: actions) { index in
-            Autoloader.viewPluginImpl = Autoloader.viewPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.viewPlugins.count {
+                Autoloader.viewPluginImpl = Autoloader.viewPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestPluginController())
+            }
         }
     }
     
@@ -230,43 +250,62 @@ private extension SettingsController {
             $0 == Autoloader.refreshPluginImpl ? "[\($0)]" : $0
         }
         actions.append(Autoloader.refreshShowsFinishedView ? "[showsFinishedView]" : "showsFinishedView")
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "RefreshPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.refreshPlugins.count {
                 Autoloader.refreshPluginImpl = Autoloader.refreshPlugins[index]
-            } else {
+                Autoloader().loadPlugin()
+            } else if index == Autoloader.refreshPlugins.count {
                 Autoloader.refreshShowsFinishedView = !Autoloader.refreshShowsFinishedView
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestRefreshController())
             }
-            Autoloader().loadPlugin()
         }
     }
     
     @objc func onImagePlugin() {
-        let actions = Autoloader.imagePlugins.map {
+        var actions = Autoloader.imagePlugins.map {
             $0 == Autoloader.imagePluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePlugin", message: nil, actions: actions) { index in
-            Autoloader.imagePluginImpl = Autoloader.imagePlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.imagePlugins.count {
+                Autoloader.imagePluginImpl = Autoloader.imagePlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestImageController())
+            }
         }
     }
     
     @objc func onImagePickerPlugin() {
-        let actions = Autoloader.imagePickerPlugins.map {
+        var actions = Autoloader.imagePickerPlugins.map {
             $0 == Autoloader.imagePickerPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
-            Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.imagePickerPlugins.count {
+                Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestPickerController())
+            }
         }
     }
     
     @objc func onImagePreviewPlugin() {
-        let actions = Autoloader.imagePreviewPlugins.map {
+        var actions = Autoloader.imagePreviewPlugins.map {
             $0 == Autoloader.imagePreviewPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ImagePreviewPlugin", message: nil, actions: actions) { index in
-            Autoloader.imagePreviewPluginImpl = Autoloader.imagePreviewPlugins[index]
-            Autoloader().loadPlugin()
+            if index < Autoloader.imagePreviewPlugins.count {
+                Autoloader.imagePreviewPluginImpl = Autoloader.imagePreviewPlugins[index]
+                Autoloader().loadPlugin()
+            } else {
+                Navigator.push(TestPreviewController())
+            }
         }
     }
     
