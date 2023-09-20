@@ -400,9 +400,7 @@ private extension SettingsController {
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel
         
-        RefreshPluginImpl.shared.infiniteScrollBlock = { view in
-            view.showsFinishedView = Autoloader.refreshShowsFinishedView
-        }
+        RefreshPluginImpl.shared.showsFinishedView = Autoloader.refreshShowsFinishedView
         
         PluginManager.unloadPlugin(ImagePlugin.self)
         PluginManager.registerPlugin(ImagePlugin.self, object: Autoloader.imagePluginImpl == Autoloader.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)

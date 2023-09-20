@@ -18,6 +18,9 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     @objc(sharedInstance)
     public static let shared = RefreshPluginImpl()
     
+    /// 上拉追加是否显示完成视图，默认true
+    open var showsFinishedView = true
+    
     /// 下拉刷新自定义句柄，开启时自动调用
     open var pullRefreshBlock: ((PullRefreshView) -> Void)?
     
@@ -39,6 +42,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     open func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(block: block)
+        
         if let pullRefreshView = scrollView.fw_pullRefreshView {
             pullRefreshBlock?(pullRefreshView)
             customBlock?(pullRefreshView)
@@ -47,6 +51,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     open func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(target: target, action: action)
+        
         if let pullRefreshView = scrollView.fw_pullRefreshView {
             pullRefreshBlock?(pullRefreshView)
             customBlock?(pullRefreshView)
@@ -83,7 +88,9 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     open func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(block: block)
+        
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
+            infiniteScrollView.showsFinishedView = showsFinishedView
             infiniteScrollBlock?(infiniteScrollView)
             customBlock?(infiniteScrollView)
         }
@@ -91,7 +98,9 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     
     open func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(target: target, action: action)
+        
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
+            infiniteScrollView.showsFinishedView = showsFinishedView
             infiniteScrollBlock?(infiniteScrollView)
             customBlock?(infiniteScrollView)
         }
