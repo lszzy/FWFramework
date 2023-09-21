@@ -1367,22 +1367,28 @@ extension WrapperGlobal {
     }
 
     /// 获取图片的平均颜色
-    public var fw_averageColor: UIColor {
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
-        var rgba = Array<UInt32>(repeating: 0, count: 4)
-        let context = CGContext(data: &rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: bitmapInfo)
-        if let context = context, let cgImage = self.cgImage {
-            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+    public var fw_averageColor: UIColor? {
+        guard let ciImage = ciImage ?? CIImage(image: self) else { return nil }
+
+        let parameters = [kCIInputImageKey: ciImage, kCIInputExtentKey: CIVector(cgRect: ciImage.extent)]
+        guard let outputImage = CIFilter(name: "CIAreaAverage", parameters: parameters)?.outputImage else {
+            return nil
         }
-        
-        if rgba[3] > 0 {
-            let alpha = CGFloat(rgba[3]) / 255.0
-            let multiplier = alpha / 255.0
-            return UIColor(red: CGFloat(rgba[0]) * multiplier, green: CGFloat(rgba[1]) * multiplier, blue: CGFloat(rgba[2]) * multiplier, alpha: alpha)
-        } else {
-            return UIColor(red: CGFloat(rgba[0]) / 255.0, green: CGFloat(rgba[1]) / 255.0, blue: CGFloat(rgba[2]) / 255.0, alpha: CGFloat(rgba[3]) / 255.0)
-        }
+
+        var bitmap = [UInt8](repeating: 0, count: 4)
+        let workingColorSpace: Any = cgImage?.colorSpace ?? NSNull()
+        let context = CIContext(options: [.workingColorSpace: workingColorSpace])
+        context.render(outputImage,
+                       toBitmap: &bitmap,
+                       rowBytes: 4,
+                       bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+                       format: .RGBA8,
+                       colorSpace: nil)
+
+        return UIColor(red: CGFloat(bitmap[0]) / 255.0,
+                       green: CGFloat(bitmap[1]) / 255.0,
+                       blue: CGFloat(bitmap[2]) / 255.0,
+                       alpha: CGFloat(bitmap[3]) / 255.0)
     }
 
     /// 倒影图片
@@ -1441,11 +1447,6 @@ extension WrapperGlobal {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
-    }
-
-    /// 获取装饰图片
-    public var fw_maskImage: UIImage {
-        return self.__fw_mask
     }
 
     /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
