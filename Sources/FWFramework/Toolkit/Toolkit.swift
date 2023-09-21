@@ -1164,6 +1164,27 @@ extension WrapperGlobal {
         let image = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
         return image
     }
+    
+    /// 图片应用高斯模糊滤镜处理
+    public func fw_gaussianBlurImage(fuzzyValue: CGFloat = 10) -> UIImage? {
+        return fw_filteredImage(fuzzyValue: fuzzyValue, filterName: "CIGaussianBlur")
+    }
+    
+    /// 图片应用像素化滤镜处理
+    public func fw_pixellateImage(fuzzyValue: CGFloat = 10) -> UIImage? {
+        return fw_filteredImage(fuzzyValue: fuzzyValue, filterName: "CIPixellate")
+    }
+    
+    private func fw_filteredImage(fuzzyValue: CGFloat, filterName: String) -> UIImage? {
+        guard let ciImage = CIImage(image: self) else { return nil }
+        guard let blurFilter = CIFilter(name: filterName) else { return nil }
+        blurFilter.setValue(ciImage, forKey: kCIInputImageKey)
+        blurFilter.setValue(fuzzyValue, forKey: filterName == "CIPixellate" ? kCIInputScaleKey : kCIInputRadiusKey)
+        guard let outputImage = blurFilter.outputImage else { return nil }
+        let context = CIContext(options: nil)
+        guard let cgImage = context.createCGImage(outputImage, from: ciImage.extent) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
     public func fw_compressImage(maxLength: Int, compressRatio: CGFloat = 0) -> UIImage? {
@@ -1449,9 +1470,72 @@ extension WrapperGlobal {
         return image
     }
 
-    /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
-    public func fw_image(blurRadius: CGFloat, saturationDelta: CGFloat, tintColor: UIColor?, maskImage: UIImage?) -> UIImage? {
-        return self.__fw_image(withBlurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
+    /// 高斯模糊图片，默认模糊半径为10
+    public func fw_blurredImage(radius: CGFloat = 10) -> UIImage? {
+        guard let cgImage = cgImage else {
+            return self
+        }
+        
+        let s = max(radius, 2.0)
+        let pi2 = 2 * CGFloat.pi
+        let sqrtPi2 = sqrt(pi2)
+        var targetRadius = floor(s * 3.0 * sqrtPi2 / 4.0 + 0.5)
+        if targetRadius.truncatingRemainder(dividingBy: 2.0) == 0 { targetRadius += 1 }
+
+        let iterations: Int
+        if radius < 0.5 {
+            iterations = 1
+        } else if radius < 1.5 {
+            iterations = 2
+        } else {
+            iterations = 3
+        }
+        
+        let w = Int(size.width)
+        let h = Int(size.height)
+        
+        func createEffectBuffer(_ context: CGContext) -> vImage_Buffer {
+            let data = context.data
+            let width = vImagePixelCount(context.width)
+            let height = vImagePixelCount(context.height)
+            let rowBytes = context.bytesPerRow
+            
+            return vImage_Buffer(data: data, height: height, width: width, rowBytes: rowBytes)
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return self
+        }
+        context.scaleBy(x: 1.0, y: -1.0)
+        context.translateBy(x: 0, y: -size.height)
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: w, height: h))
+        UIGraphicsEndImageContext()
+        var inBuffer = createEffectBuffer(context)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        guard let outContext = UIGraphicsGetCurrentContext() else {
+            return self
+        }
+        outContext.scaleBy(x: 1.0, y: -1.0)
+        outContext.translateBy(x: 0, y: -size.height)
+        defer { UIGraphicsEndImageContext() }
+        var outBuffer = createEffectBuffer(outContext)
+        
+        for _ in 0 ..< iterations {
+            let flag = vImage_Flags(kvImageEdgeExtend)
+            vImageBoxConvolve_ARGB8888(
+                &inBuffer, &outBuffer, nil, 0, 0, UInt32(targetRadius), UInt32(targetRadius), nil, flag)
+            (inBuffer, outBuffer) = (outBuffer, inBuffer)
+        }
+        
+        let result = outContext.makeImage().flatMap {
+            UIImage(cgImage: $0, scale: self.scale, orientation: self.imageOrientation)
+        }
+        guard let blurredImage = result else {
+            return self
+        }
+        return blurredImage
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等

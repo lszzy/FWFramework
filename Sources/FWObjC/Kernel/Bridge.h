@@ -49,12 +49,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - UIImage+__FWBridge
-
-@interface UIImage (__FWBridge)
-
-- (nullable UIImage *)__fw_imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
-
-@end
-
 NS_ASSUME_NONNULL_END
