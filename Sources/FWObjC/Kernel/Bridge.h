@@ -53,8 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (__FWBridge)
 
-@property (nonatomic, readonly) UIImage *__fw_maskImage;
-
 - (nullable UIImage *)__fw_imageWithBlurRadius:(CGFloat)blurRadius saturationDelta:(CGFloat)saturationDelta tintColor:(nullable UIColor *)tintColor maskImage:(nullable UIImage *)maskImage;
 
 @end

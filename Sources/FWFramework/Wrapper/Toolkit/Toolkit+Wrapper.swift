@@ -586,7 +586,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 获取图片的平均颜色
-    public var averageColor: UIColor {
+    public var averageColor: UIColor? {
         return base.fw_averageColor
     }
 
@@ -603,11 +603,6 @@ extension Wrapper where Base: UIImage {
     /// 阴影图片
     public func image(shadowColor: UIColor, offset: CGSize, blur: CGFloat) -> UIImage? {
         return base.fw_image(shadowColor: shadowColor, offset: offset, blur: blur)
-    }
-
-    /// 获取装饰图片
-    public var maskImage: UIImage {
-        return base.fw_maskImage
     }
 
     /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
