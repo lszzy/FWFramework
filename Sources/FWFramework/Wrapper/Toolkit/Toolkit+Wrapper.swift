@@ -499,6 +499,16 @@ extension Wrapper where Base: UIImage {
     public func image(filter: CIFilter) -> UIImage? {
         return base.fw_image(filter: filter)
     }
+    
+    /// 图片应用高斯模糊滤镜处理
+    public func gaussianBlurImage(fuzzyValue: CGFloat = 10) -> UIImage? {
+        return base.fw_gaussianBlurImage(fuzzyValue: fuzzyValue)
+    }
+    
+    /// 图片应用像素化滤镜处理
+    public func pixellateImage(fuzzyValue: CGFloat = 10) -> UIImage? {
+        return base.fw_pixellateImage(fuzzyValue: fuzzyValue)
+    }
 
     /// 压缩图片到指定字节，图片太大时会改为JPG格式。不保证图片大小一定小于该大小
     public func compressImage(maxLength: Int, compressRatio: CGFloat = 0) -> UIImage? {
@@ -605,9 +615,9 @@ extension Wrapper where Base: UIImage {
         return base.fw_image(shadowColor: shadowColor, offset: offset, blur: blur)
     }
 
-    /// 高斯模糊图片，默认模糊半径为10，饱和度为1。注意CGContextDrawImage如果图片尺寸太大会导致内存不足闪退，建议先压缩再调用
-    public func image(blurRadius: CGFloat, saturationDelta: CGFloat, tintColor: UIColor?, maskImage: UIImage?) -> UIImage? {
-        return base.fw_image(blurRadius: blurRadius, saturationDelta: saturationDelta, tintColor: tintColor, maskImage: maskImage)
+    /// 高斯模糊图片，默认模糊半径为10
+    public func blurredImage(radius: CGFloat = 10) -> UIImage? {
+        return base.fw_blurredImage(radius: radius)
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等

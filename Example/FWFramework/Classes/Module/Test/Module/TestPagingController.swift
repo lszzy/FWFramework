@@ -44,7 +44,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     lazy var headerView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.app.appIconImage()
+        result.image = UIImage.app.appIconImage()?.app.blurredImage()
         return result
     }()
     
