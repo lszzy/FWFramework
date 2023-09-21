@@ -6,6 +6,7 @@
 //
 
 #import "ObjC.h"
+#import <objc/runtime.h>
 #import <dlfcn.h>
 
 #pragma mark - WeakProxyBridge
