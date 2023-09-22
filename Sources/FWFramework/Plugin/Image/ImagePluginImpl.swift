@@ -64,7 +64,16 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         return ImageDownloader.shared.imageURL(for: view)
     }
     
-    open func view(_ view: UIView, setImageURL imageURL: URL?, placeholder: UIImage?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, setImageBlock block: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)? = nil) {
+    open func view(
+        _ view: UIView,
+        setImageURL imageURL: URL?,
+        placeholder: UIImage?,
+        options: WebImageOptions = [], 
+        context: [ImageCoderOptions : Any]?,
+        setImageBlock block: ((UIImage?) -> Void)?,
+        completion: ((UIImage?, Error?) -> Void)?,
+        progress: ((Double) -> Void)? = nil
+    ) {
         let setImageBlock = block ?? { image in
             if let imageView = view as? UIImageView {
                 imageView.image = image
@@ -153,15 +162,21 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func loadImageCache(_ imageURL: URL?) -> UIImage? {
-        return ImageDownloader.shared.loadImageCache(forURL: imageURL)
+        return ImageDownloader.shared.loadImageCache(for: imageURL)
     }
     
     open func clearImageCaches(_ completion: (() -> Void)? = nil) {
         ImageDownloader.shared.clearImageCaches(completion)
     }
     
-    open func downloadImage(_ imageURL: URL?, options: WebImageOptions = [], context: [ImageCoderOptions : Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
-        return ImageDownloader.shared.downloadImage(forURL: imageURL, options: options, context: context, success: { request, response, responseObject in
+    open func downloadImage(
+        _ imageURL: URL?,
+        options: WebImageOptions = [],
+        context: [ImageCoderOptions : Any]?,
+        completion: @escaping (UIImage?, Data?, Error?) -> Void,
+        progress: ((Double) -> Void)? = nil
+    ) -> Any? {
+        return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { request, response, responseObject in
             let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
             ImageResponseSerializer.clearCachedResponseData(for: responseObject)
             completion(responseObject, imageData, nil)
