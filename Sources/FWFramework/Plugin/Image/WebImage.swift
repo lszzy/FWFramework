@@ -129,26 +129,26 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
         return image
     }
 
-    open func addImage(_ image: UIImage, for request: URLRequest, additionalIdentifier: String?) {
+    open func addImage(_ image: UIImage, for request: URLRequest, additionalIdentifier: String? = nil) {
         let cacheKey = imageCacheKey(for: request, additionalIdentifier: additionalIdentifier)
         addImage(image, identifier: cacheKey)
     }
 
-    open func removeImage(for request: URLRequest, additionalIdentifier: String?) -> Bool {
+    open func removeImage(for request: URLRequest, additionalIdentifier: String? = nil) -> Bool {
         let cacheKey = imageCacheKey(for: request, additionalIdentifier: additionalIdentifier)
         return removeImage(identifier: cacheKey)
     }
 
-    open func image(for request: URLRequest, additionalIdentifier: String?) -> UIImage? {
+    open func image(for request: URLRequest, additionalIdentifier: String? = nil) -> UIImage? {
         let cacheKey = imageCacheKey(for: request, additionalIdentifier: additionalIdentifier)
         return image(identifier: cacheKey)
     }
 
-    open func shouldCacheImage(_ image: UIImage, for request: URLRequest, additionalIdentifier: String?) -> Bool {
+    open func shouldCacheImage(_ image: UIImage, for request: URLRequest, additionalIdentifier: String? = nil) -> Bool {
         return true
     }
     
-    open func imageCacheKey(for request: URLRequest, additionalIdentifier: String?) -> String {
+    open func imageCacheKey(for request: URLRequest, additionalIdentifier: String? = nil) -> String {
         var key = request.url?.absoluteString ?? ""
         if let additionalIdentifier = additionalIdentifier {
             key += additionalIdentifier
@@ -185,5 +185,185 @@ fileprivate class CachedImage: NSObject {
     
     override var description: String {
         return "Identifier: \(identifier), lastAccessDate: \(lastAccessDate)"
+    }
+}
+
+// MARK: - ImageDownloader
+/// 图片下载优先顺序
+public enum ImageDownloadPrioritization: Int {
+    case FIFO
+    case LIFO
+}
+
+/// 图片下载凭据
+open class ImageDownloadReceipt: NSObject {
+    public let task: URLSessionDataTask
+    public let receiptID: UUID
+    
+    public init(receiptID: UUID, task: URLSessionDataTask) {
+        self.receiptID = receiptID
+        self.task = task
+        super.init()
+    }
+}
+
+fileprivate class ImageDownloaderResponseHandler: NSObject {
+    var uuid: UUID
+    var successBlock: ((URLRequest, HTTPURLResponse, UIImage) -> Void)?
+    var failureBlock: ((URLRequest, HTTPURLResponse, Error) -> Void)?
+    var progressBlock: ((Progress) -> Void)?
+    
+    init(
+        uuid: UUID,
+        successBlock: ((URLRequest, HTTPURLResponse, UIImage) -> Void)?,
+        failureBlock: ((URLRequest, HTTPURLResponse, Error) -> Void)?,
+        progressBlock: ((Progress) -> Void)?
+    ) {
+        self.uuid = uuid
+        self.successBlock = successBlock
+        self.failureBlock = failureBlock
+        self.progressBlock = progressBlock
+        
+        super.init()
+    }
+    
+    override var description: String {
+        return "<ImageDownloaderResponseHandler>UUID: \(uuid.uuidString)"
+    }
+}
+
+fileprivate class ImageDownloaderMergedTask: NSObject {
+    var urlIdentifier: String
+    var identifier: UUID
+    var task: URLSessionDataTask
+    var responseHandlers: [ImageDownloaderResponseHandler] = []
+    
+    init(urlIdentifier: String, identifier: UUID, task: URLSessionDataTask) {
+        self.urlIdentifier = urlIdentifier
+        self.identifier = identifier
+        self.task = task
+        
+        super.init()
+    }
+    
+    func addResponseHandler(_ handler: ImageDownloaderResponseHandler) {
+        responseHandlers.append(handler)
+    }
+    
+    func removeResponseHandler(_ handler: ImageDownloaderResponseHandler) {
+        responseHandlers.removeAll { $0 == handler }
+    }
+}
+
+/// 图片下载器，默认解码scale为1，同SDWebImage
+open class ImageDownloader: NSObject {
+    public static var shared = ImageDownloader()
+
+    public static func defaultURLCache() -> URLCache {
+        return URLCache(
+            memoryCapacity: 20 * 1024 * 1024,
+            diskCapacity: 150 * 1024 * 1024,
+            diskPath: "FWImageCache"
+        )
+    }
+
+    public static func defaultURLSessionConfiguration() -> URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.default
+        configuration.httpShouldSetCookies = true
+        configuration.httpShouldUsePipelining = false
+        
+        configuration.requestCachePolicy = .useProtocolCachePolicy
+        configuration.allowsCellularAccess = true
+        configuration.timeoutIntervalForRequest = 60
+        configuration.urlCache = defaultURLCache()
+        return configuration
+    }
+    
+    open var imageCache: ImageRequestCache?
+    open var sessionManager: HTTPSessionManager
+    open var downloadPrioritization: ImageDownloadPrioritization = .FIFO
+    
+    private var maximumActiveDownloads: Int = 4
+    private var activeRequestCount: Int = 0
+    private var queuedMergedTasks: [ImageDownloaderMergedTask] = []
+    private var mergedTasks: [String: ImageDownloaderMergedTask] = [:]
+    private var synchronizationQueue = DispatchQueue(label: "site.wuyong.queue.webimage.download.\(UUID().uuidString)")
+    private var responseQueue = DispatchQueue(label: "site.wuyong.queue.webimage.response.\(UUID().uuidString)", attributes: .concurrent)
+
+    public override convenience init() {
+        let defaultConfiguration = Self.defaultURLSessionConfiguration()
+        self.init(sessionConfiguration: defaultConfiguration)
+    }
+
+    public convenience init(sessionConfiguration: URLSessionConfiguration) {
+        let sessionManager = HTTPSessionManager(sessionConfiguration: sessionConfiguration)
+        let responseSerializer = ImageResponseSerializer()
+        responseSerializer.imageScale = 1
+        responseSerializer.shouldCacheResponseData = true
+        sessionManager.responseSerializer = responseSerializer
+        
+        self.init(sessionManager: sessionManager, downloadPrioritization: .FIFO, maximumActiveDownloads: 4, imageCache: AutoPurgingImageCache())
+    }
+
+    public init(
+        sessionManager: HTTPSessionManager,
+        downloadPrioritization: ImageDownloadPrioritization,
+        maximumActiveDownloads: Int,
+        imageCache: ImageRequestCache?
+    ) {
+        self.sessionManager = sessionManager
+        self.downloadPrioritization = downloadPrioritization
+        self.maximumActiveDownloads = maximumActiveDownloads
+        self.imageCache = imageCache
+        
+        super.init()
+    }
+
+    open func downloadImage(
+        for url: Any?,
+        receiptID: UUID = UUID(),
+        options: WebImageOptions,
+        context: [ImageCoderOptions: Any]?,
+        success: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
+        failure: ((URLRequest, HTTPURLResponse?, Error) -> Void)?,
+        progress: ((Progress) -> Void)?
+    ) -> ImageDownloadReceipt? {
+        return nil
+    }
+
+    open func cancelTask(for imageDownloadReceipt: ImageDownloadReceipt) {
+        
+    }
+
+    open func imageURL(for object: Any) -> URL? {
+        return nil
+    }
+
+    open func imageOperationKey(for object: Any) -> String? {
+        return nil
+    }
+
+    open func downloadImage(
+        for object: Any,
+        imageURL: Any?,
+        options: WebImageOptions,
+        context: [ImageCoderOptions: Any]?,
+        placeholder: (() -> Void)?,
+        completion: ((UIImage?, Bool, Error?) -> Void)?,
+        progress: ((Double) -> Void)?
+    ) {
+        
+    }
+
+    open func cancelImageDownloadTask(_ object: Any) {
+        
+    }
+
+    open func loadImageCache(for url: Any?) -> UIImage? {
+        return nil
+    }
+
+    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+        
     }
 }
