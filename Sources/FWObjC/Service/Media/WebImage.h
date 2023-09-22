@@ -7,8 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ImagePlugin.h"
-#import "AudioPlayer.h"
-#import "PlayerCache.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
