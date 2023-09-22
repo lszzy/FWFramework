@@ -12,7 +12,7 @@ import UIKit
 public protocol ImageCache {
     func addImage(_ image: UIImage, identifier: String)
     func removeImage(identifier: String) -> Bool
-    func removeAllImages() -> Bool
+    func removeAllImages()
     func image(identifier: String) -> UIImage?
 }
 
@@ -96,6 +96,7 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
         }
     }
     
+    @discardableResult
     open func removeImage(identifier: String) -> Bool {
         var removed = false
         synchronizationQueue.sync(flags: .barrier) {
@@ -108,16 +109,13 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
         return removed
     }
 
-    @objc open func removeAllImages() -> Bool {
-        var removed = false
+    @objc open func removeAllImages() {
         synchronizationQueue.sync(flags: .barrier) {
             if !self.cachedImages.isEmpty {
                 self.cachedImages.removeAll()
                 self.currentMemoryUsage = 0
-                removed = true
             }
         }
-        return removed
     }
     
     open func image(identifier: String) -> UIImage? {
@@ -134,6 +132,7 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
         addImage(image, identifier: cacheKey)
     }
 
+    @discardableResult
     open func removeImage(for request: URLRequest, additionalIdentifier: String? = nil) -> Bool {
         let cacheKey = imageCacheKey(for: request, additionalIdentifier: additionalIdentifier)
         return removeImage(identifier: cacheKey)
@@ -364,6 +363,44 @@ open class ImageDownloader: NSObject {
     }
 
     open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+        imageCache?.removeAllImages()
+        sessionManager.session.configuration.urlCache?.removeAllCachedResponses()
         
+        if completion != nil {
+            if Thread.isMainThread {
+                completion?()
+            } else {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            }
+        }
+    }
+    
+    private func urlRequest(url: Any?, options: WebImageOptions = []) -> URLRequest? {
+        var urlRequest: URLRequest?
+        if let url = url as? URLRequest {
+            urlRequest = url
+        } else {
+            var nsurl: URL?
+            if let url = url as? URL {
+                nsurl = url
+            } else if let urlString = url as? String, !urlString.isEmpty {
+                nsurl = URL(string: urlString)
+                if nsurl == nil {
+                    nsurl = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
+                }
+            }
+            
+            if let nsurl = nsurl {
+                var request = URLRequest(url: nsurl)
+                if options.contains(.ignoreCache) {
+                    request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+                }
+                request.addValue("image/*,*/*;q=0.8", forHTTPHeaderField: "Accept")
+                urlRequest = request
+            }
+        }
+        return urlRequest
     }
 }
