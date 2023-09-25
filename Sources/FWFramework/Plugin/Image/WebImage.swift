@@ -26,6 +26,7 @@ public protocol ImageRequestCache: ImageCache {
 
 /// 内存自动清理图片缓存
 open class AutoPurgingImageCache: NSObject, ImageRequestCache {
+    // MARK: - Accessor
     open var memoryCapacity: UInt64 = 100 * 1024 * 1024
     open var preferredMemoryUsageAfterPurge: UInt64 = 60 * 1024 * 1024
     
@@ -41,6 +42,7 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
     private var currentMemoryUsage: UInt64 = 0
     private var synchronizationQueue: DispatchQueue = DispatchQueue(label: "site.wuyong.queue.webimage.cache.\(UUID().uuidString)", attributes: .concurrent)
     
+    // MARK: - Lifecycle
     public override init() {
         super.init()
         didInitialize()
@@ -61,6 +63,7 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache {
         NotificationCenter.default.removeObserver(self)
     }
     
+    // MARK: - Public
     open func addImage(_ image: UIImage, identifier: String) {
         synchronizationQueue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
@@ -208,14 +211,14 @@ open class ImageDownloadReceipt: NSObject {
 
 fileprivate class ImageDownloaderResponseHandler: NSObject {
     var uuid: UUID
-    var successBlock: ((URLRequest, HTTPURLResponse, UIImage) -> Void)?
-    var failureBlock: ((URLRequest, HTTPURLResponse, Error) -> Void)?
+    var successBlock: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?
+    var failureBlock: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?
     var progressBlock: ((Progress) -> Void)?
     
     init(
         uuid: UUID,
-        successBlock: ((URLRequest, HTTPURLResponse, UIImage) -> Void)?,
-        failureBlock: ((URLRequest, HTTPURLResponse, Error) -> Void)?,
+        successBlock: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
+        failureBlock: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?,
         progressBlock: ((Progress) -> Void)?
     ) {
         self.uuid = uuid
@@ -256,6 +259,7 @@ fileprivate class ImageDownloaderMergedTask: NSObject {
 
 /// 图片下载器，默认解码scale为1，同SDWebImage
 open class ImageDownloader: NSObject {
+    // MARK: - Accessor
     public static var shared = ImageDownloader()
 
     public static func defaultURLCache() -> URLCache {
@@ -289,6 +293,7 @@ open class ImageDownloader: NSObject {
     private var synchronizationQueue = DispatchQueue(label: "site.wuyong.queue.webimage.download.\(UUID().uuidString)")
     private var responseQueue = DispatchQueue(label: "site.wuyong.queue.webimage.response.\(UUID().uuidString)", attributes: .concurrent)
 
+    // MARK: - Lifecycle
     public override convenience init() {
         let defaultConfiguration = Self.defaultURLSessionConfiguration()
         self.init(sessionConfiguration: defaultConfiguration)
@@ -318,28 +323,158 @@ open class ImageDownloader: NSObject {
         super.init()
     }
 
+    // MARK: - Public
     open func downloadImage(
         for url: Any?,
         receiptID: UUID = UUID(),
         options: WebImageOptions,
         context: [ImageCoderOptions: Any]?,
         success: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
-        failure: ((URLRequest, HTTPURLResponse?, Error) -> Void)?,
+        failure: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?,
         progress: ((Progress) -> Void)?
     ) -> ImageDownloadReceipt? {
-        return nil
+        let request = urlRequest(url: url, options: options)
+        var task: URLSessionDataTask?
+        synchronizationQueue.sync {
+            let urlIdentifier = request?.url?.absoluteString ?? ""
+            guard let request = request, !urlIdentifier.isEmpty else {
+                if failure != nil {
+                    let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil)
+                    DispatchQueue.main.async {
+                        failure?(request, nil, error)
+                    }
+                }
+                return
+            }
+            
+            if let existingMergedTask = self.mergedTasks[urlIdentifier] {
+                let handler = ImageDownloaderResponseHandler(uuid: receiptID, successBlock: success, failureBlock: failure, progressBlock: progress)
+                existingMergedTask.addResponseHandler(handler)
+                task = existingMergedTask.task
+                return
+            }
+            
+            switch request.cachePolicy {
+            case .useProtocolCachePolicy, .returnCacheDataElseLoad, .returnCacheDataDontLoad:
+                if !(options.contains(.refreshCached)) && !(options.contains(.ignoreCache)) {
+                    if let cachedImage = self.imageCache?.image(for: request, additionalIdentifier: nil) {
+                        if success != nil {
+                            DispatchQueue.main.async {
+                                success?(request, nil, cachedImage)
+                            }
+                        }
+                        return
+                    }
+                }
+            default:
+                break
+            }
+            
+            let mergedTaskIdentifier = UUID()
+            var createdTask: URLSessionDataTask
+            createdTask = self.sessionManager.dataTask(with: request, uploadProgress: nil, downloadProgress: { [weak self] downloadProgress in
+                self?.responseQueue.async {
+                    let mergedTask = self?.safelyGetMergedTask(urlIdentifier)
+                    if mergedTask?.identifier == mergedTaskIdentifier {
+                        let responseHandlers = self?.safelyGetResponseHandlers(urlIdentifier) ?? []
+                        for handler in responseHandlers {
+                            if handler.progressBlock != nil {
+                                DispatchQueue.main.async {
+                                    handler.progressBlock?(downloadProgress)
+                                }
+                            }
+                        }
+                    }
+                }
+            }, completionHandler: { [weak self] response, responseObject, error in
+                self?.responseQueue.async {
+                    var mergedTask = self?.safelyGetMergedTask(urlIdentifier)
+                    if mergedTask?.identifier == mergedTaskIdentifier {
+                        mergedTask = self?.safelyRemoveMergedTask(urlIdentifier)
+                        if let image = responseObject as? UIImage, error == nil {
+                            if self?.imageCache?.shouldCacheImage(image, for: request, additionalIdentifier: nil) ?? false {
+                                self?.imageCache?.addImage(image, for: request, additionalIdentifier: nil)
+                            }
+                            
+                            let responseHandlers = mergedTask?.responseHandlers ?? []
+                            for handler in responseHandlers {
+                                if handler.successBlock != nil {
+                                    DispatchQueue.main.async {
+                                        handler.successBlock?(request, response as? HTTPURLResponse, image)
+                                    }
+                                }
+                            }
+                        } else {
+                            let error = error ?? NSError(domain: NSURLErrorDomain, code: NSURLErrorResourceUnavailable, userInfo: nil)
+                            let responseHandlers = mergedTask?.responseHandlers ?? []
+                            for handler in responseHandlers {
+                                if handler.failureBlock != nil {
+                                    DispatchQueue.main.async {
+                                        handler.failureBlock?(request, response as? HTTPURLResponse, error)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    self?.safelyDecrementActiveTaskCount()
+                    self?.safelyStartNextTaskIfNecessary()
+                }
+            })
+            
+            if context != nil {
+                self.sessionManager.setUserInfo(context, for: createdTask)
+            }
+            
+            let handler = ImageDownloaderResponseHandler(uuid: receiptID, successBlock: success, failureBlock: failure, progressBlock: progress)
+            let mergedTask = ImageDownloaderMergedTask(urlIdentifier: urlIdentifier, identifier: mergedTaskIdentifier, task: createdTask)
+            mergedTask.addResponseHandler(handler)
+            self.mergedTasks[urlIdentifier] = mergedTask
+            
+            if self.isActiveRequestCountBelowMaximumLimit() {
+                self.startMergedTask(mergedTask)
+            } else {
+                self.enqueueMergedTask(mergedTask)
+            }
+            
+            task = mergedTask.task
+        }
+        guard let task = task else { return nil }
+        return ImageDownloadReceipt(receiptID: receiptID, task: task)
     }
 
     open func cancelTask(for imageDownloadReceipt: ImageDownloadReceipt) {
-        
+        synchronizationQueue.sync {
+            let urlIdentifier = imageDownloadReceipt.task.originalRequest?.url?.absoluteString ?? ""
+            let mergedTask = self.mergedTasks[urlIdentifier]
+            let handler = mergedTask?.responseHandlers.first(where: { $0.uuid == imageDownloadReceipt.receiptID
+            })
+            
+            if let handler = handler {
+                mergedTask?.removeResponseHandler(handler)
+                let failureReason = "ImageDownloader cancelled URL request: \(urlIdentifier)"
+                let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: [
+                    NSLocalizedFailureReasonErrorKey: failureReason,
+                ])
+                if handler.failureBlock != nil {
+                    DispatchQueue.main.async {
+                        handler.failureBlock?(imageDownloadReceipt.task.originalRequest, nil, error)
+                    }
+                }
+            }
+            
+            if let mergedTask = mergedTask, mergedTask.responseHandlers.isEmpty {
+                mergedTask.task.cancel()
+                self.removeMergedTask(urlIdentifier)
+            }
+        }
     }
 
     open func imageURL(for object: Any) -> URL? {
-        return nil
+        return NSObject.fw_getAssociatedObject(object, key: "imageURL(for:)") as? URL
     }
 
     open func imageOperationKey(for object: Any) -> String? {
-        return nil
+        return NSObject.fw_getAssociatedObject(object, key: "imageOperationKey(for:)") as? String
     }
 
     open func downloadImage(
@@ -351,15 +486,74 @@ open class ImageDownloader: NSObject {
         completion: ((UIImage?, Bool, Error?) -> Void)?,
         progress: ((Double) -> Void)?
     ) {
+        let urlRequest = urlRequest(url: imageURL, options: options)
+        setImageOperationKey(String(describing: type(of: object)), for: object)
+        if let activeReceipt = activeImageDownloadReceipt(for: object) {
+            cancelTask(for: activeReceipt)
+            setActiveImageDownloadReceipt(nil, for: object)
+        }
+        setImageURL(urlRequest?.url, for: object)
         
+        guard let urlRequest = urlRequest, urlRequest.url != nil else {
+            placeholder?()
+            completion?(nil, false, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+            return
+        }
+        
+        var cachedImage: UIImage?
+        if !(options.contains(.refreshCached)) && !(options.contains(.ignoreCache)) {
+            cachedImage = imageCache?.image(for: urlRequest, additionalIdentifier: nil)
+        }
+        if let cachedImage = cachedImage {
+            completion?(cachedImage, true, nil)
+            setActiveImageDownloadReceipt(nil, for: object)
+        } else {
+            placeholder?()
+            let downloadID = UUID()
+            let receipt = downloadImage(for: urlRequest, receiptID: downloadID, options: options, context: context, success: { [weak self] request, response, responseObject in
+                if self?.activeImageDownloadReceipt(for: object)?.receiptID == downloadID {
+                    ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+                    completion?(responseObject, false, nil)
+                    self?.setActiveImageDownloadReceipt(nil, for: object)
+                }
+            }, failure: { [weak self] request, response, error in
+                if self?.activeImageDownloadReceipt(for: object)?.receiptID == downloadID {
+                    completion?(nil, false, error)
+                    self?.setActiveImageDownloadReceipt(nil, for: object)
+                }
+            }, progress: progress != nil ? { [weak self] downloadProgress in
+                if self?.activeImageDownloadReceipt(for: object)?.receiptID == downloadID {
+                    progress?(downloadProgress.fractionCompleted)
+                }
+            } : nil)
+            
+            setActiveImageDownloadReceipt(receipt, for: object)
+        }
     }
 
     open func cancelImageDownloadTask(_ object: Any) {
-        
+        if let receipt = activeImageDownloadReceipt(for: object) {
+            cancelTask(for: receipt)
+            setActiveImageDownloadReceipt(nil, for: object)
+        }
+        setImageOperationKey(nil, for: object)
     }
 
     open func loadImageCache(for url: Any?) -> UIImage? {
-        return nil
+        guard let urlRequest = urlRequest(url: url) else {
+            return nil
+        }
+        
+        if let cachedImage = imageCache?.image(for: urlRequest, additionalIdentifier: nil) {
+            return cachedImage
+        }
+        
+        guard let cachedResponse = sessionManager.session.configuration.urlCache?.cachedResponse(for: urlRequest),
+              let responseObject = sessionManager.responseSerializer.responseObject(for: cachedResponse.response, data: cachedResponse.data, error: nil) else {
+            return nil
+        }
+        
+        return responseObject as? UIImage
     }
 
     open func clearImageCaches(_ completion: (() -> Void)? = nil) {
@@ -375,6 +569,101 @@ open class ImageDownloader: NSObject {
                 }
             }
         }
+    }
+    
+    // MARK: - Private
+    private func safelyRemoveMergedTask(_ urlIdentifier: String) -> ImageDownloaderMergedTask? {
+        var mergedTask: ImageDownloaderMergedTask?
+        synchronizationQueue.sync {
+            mergedTask = self.removeMergedTask(urlIdentifier)
+        }
+        return mergedTask
+    }
+    
+    @discardableResult
+    private func removeMergedTask(_ urlIdentifier: String) -> ImageDownloaderMergedTask? {
+        let mergedTask = mergedTasks[urlIdentifier]
+        mergedTasks.removeValue(forKey: urlIdentifier)
+        return mergedTask
+    }
+    
+    private func safelyDecrementActiveTaskCount() {
+        synchronizationQueue.sync {
+            if self.activeRequestCount > 0 {
+                self.activeRequestCount -= 1
+            }
+        }
+    }
+    
+    private func safelyStartNextTaskIfNecessary() {
+        synchronizationQueue.sync {
+            if self.isActiveRequestCountBelowMaximumLimit() {
+                while self.queuedMergedTasks.count > 0 {
+                    if let mergedTask = self.dequeueMergedTask(),
+                       mergedTask.task.state == .suspended {
+                        self.startMergedTask(mergedTask)
+                        break
+                    }
+                }
+            }
+        }
+    }
+    
+    private func startMergedTask(_ mergedTask: ImageDownloaderMergedTask) {
+        mergedTask.task.resume()
+        self.activeRequestCount += 1
+    }
+    
+    private func enqueueMergedTask(_ mergedTask: ImageDownloaderMergedTask) {
+        switch downloadPrioritization {
+        case .FIFO:
+            self.queuedMergedTasks.append(mergedTask)
+        case .LIFO:
+            self.queuedMergedTasks.insert(mergedTask, at: 0)
+        }
+    }
+    
+    private func dequeueMergedTask() -> ImageDownloaderMergedTask? {
+        guard queuedMergedTasks.count > 0 else { return nil }
+        let mergedTask = queuedMergedTasks.removeFirst()
+        return mergedTask
+    }
+    
+    private func isActiveRequestCountBelowMaximumLimit() -> Bool {
+        return activeRequestCount < maximumActiveDownloads
+    }
+    
+    private func safelyGetMergedTask(_ urlIdentifer: String) -> ImageDownloaderMergedTask? {
+        var mergedTask: ImageDownloaderMergedTask?
+        synchronizationQueue.sync {
+            mergedTask = self.mergedTasks[urlIdentifer]
+        }
+        return mergedTask
+    }
+    
+    private func safelyGetResponseHandlers(_ urlIdentifier: String) -> [ImageDownloaderResponseHandler] {
+        var responseHandlers: [ImageDownloaderResponseHandler] = []
+        synchronizationQueue.sync {
+            let mergedTask = self.mergedTasks[urlIdentifier]
+            responseHandlers = mergedTask?.responseHandlers ?? []
+        }
+        return responseHandlers
+    }
+    
+    private func activeImageDownloadReceipt(for object: Any) -> ImageDownloadReceipt? {
+        return NSObject.fw_getAssociatedObject(object, key: "activeImageDownloadReceipt(for:)") as? ImageDownloadReceipt
+    }
+    
+    private func setActiveImageDownloadReceipt(_ receipt: ImageDownloadReceipt?, for object: Any) {
+        NSObject.fw_setAssociatedObject(object, key: "activeImageDownloadReceipt(for:)", value: receipt)
+    }
+    
+    private func setImageURL(_ imageURL: URL?, for object: Any) {
+        NSObject.fw_setAssociatedObject(object, key: "imageURL(for:)", value: imageURL, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    }
+    
+    private func setImageOperationKey(_ operationKey: String?, for object: Any) {
+        NSObject.fw_setAssociatedObject(object, key: "imageOperationKey(for:)", value: operationKey, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     private func urlRequest(url: Any?, options: WebImageOptions = []) -> URLRequest? {
