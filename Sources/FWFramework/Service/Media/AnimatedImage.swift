@@ -186,11 +186,11 @@ open class ImageCoder: NSObject {
         }
         
         var scale = max(scale, 1)
-        if let scaleFactor = options?[.optionScaleFactor] as? NSNumber {
+        if let scaleFactor = options?[.scaleFactor] as? NSNumber {
             scale = max(scaleFactor.doubleValue, 1)
         }
         var thumbnailSize = CGSize.zero
-        if let thumbnailSizeValue = options?[.optionThumbnailPixelSize] as? NSValue {
+        if let thumbnailSizeValue = options?[.thumbnailPixelSize] as? NSValue {
             thumbnailSize = thumbnailSizeValue.cgSizeValue
         }
 
