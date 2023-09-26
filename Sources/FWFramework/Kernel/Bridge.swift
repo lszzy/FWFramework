@@ -23,19 +23,6 @@ import UIKit
         return AppBundle.localizedString(key)
     }
     
-    @discardableResult
-    public func __fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
-        return fw_observeProperty(property, block: block)
-    }
-    
-    public func __fw_unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
-        fw_unobserveProperty(property, target: target, action: action)
-    }
-    
-    public static func __fw_classMethods(_ clazz: AnyClass) -> [String] {
-        return fw_classMethods(clazz)
-    }
-    
     public func __fw_invokeGetter(_ name: String) -> Any? {
         return fw_invokeGetter(name)
     }
@@ -60,14 +47,6 @@ import UIKit
     
     public static func __fw_formatServerDate(_ dateString: String) -> TimeInterval {
         return Date.fw_formatServerDate(dateString)
-    }
-    
-}
-
-@_spi(FW) @objc extension Timer {
-    
-    public static func __fw_commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
-        return fw_commonTimer(timeInterval: timeInterval, block: block, repeats: repeats)
     }
     
 }
@@ -108,15 +87,6 @@ import UIKit
     
     public static func __fw_progressViewWithPreview() -> UIView & ProgressViewPlugin {
         return fw_progressView(style: .imagePreview)
-    }
-    
-    public func __fw_addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
-        fw_addTapGesture(target: target, action: action, customize: customize)
-    }
-
-    @discardableResult
-    public func __fw_addTapGesture(block: @escaping (Any) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
-        return fw_addTapGesture(block: block, customize: customize)
     }
     
     @discardableResult
@@ -181,14 +151,6 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension UIGestureRecognizer {
-    
-    public static func __fw_gestureRecognizer(block: @escaping (Any) -> Void) -> Self {
-        return fw_gestureRecognizer(block: block)
-    }
-    
-}
-
 @_spi(FW) @objc extension UIWindow {
     
     public static var __fw_mainWindow: UIWindow? {
@@ -200,31 +162,12 @@ import UIKit
 
 @_spi(FW) @objc extension UIImage {
     
-    public var __fw_imageLoopCount: UInt {
-        get { fw_imageLoopCount }
-        set { fw_imageLoopCount = newValue }
-    }
-    
-    /*
-    public var __fw_imageFormat: ImageFormat {
-        get { fw_imageFormat }
-        set { fw_imageFormat = newValue }
-    }*/
-    
-    public var __fw_hasAlpha: Bool {
-        return fw_hasAlpha
-    }
-    
     public func __fw_image(alpha: CGFloat) -> UIImage? {
         return fw_image(alpha: alpha)
     }
     
     public func __fw_image(scaleSize size: CGSize) -> UIImage? {
         return fw_image(scaleSize: size)
-    }
-    
-    public static func __fw_image(size: CGSize, block: (CGContext) -> Void) -> UIImage? {
-        return fw_image(size: size, block: block)
     }
     
     public func __fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
