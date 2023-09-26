@@ -236,7 +236,11 @@ import UIKit
         if let options = options {
             targetOptions = [:]
             for (key, value) in options {
-                targetOptions?[.init("\(key)")] = value
+                if let option = key as? ImageCoderOptions {
+                    targetOptions?[option] = value
+                } else {
+                    targetOptions?[.init("\(key)")] = value
+                }
             }
         }
         return fw_image(data: data, scale: scale, options: targetOptions)
