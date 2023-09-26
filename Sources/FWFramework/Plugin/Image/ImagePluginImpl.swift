@@ -64,11 +64,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         return ImageDownloader.shared.imageURL(for: view)
     }
     
-    open func view(
+    open func setImageURL(
         _ view: UIView,
-        setImageURL imageURL: URL?,
+        url imageURL: URL?,
         placeholder: UIImage?,
-        options: WebImageOptions = [], 
+        options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
         setImageBlock block: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,

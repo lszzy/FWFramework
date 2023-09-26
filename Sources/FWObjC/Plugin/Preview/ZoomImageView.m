@@ -6,7 +6,6 @@
 //
 
 #import "ZoomImageView.h"
-#import "ImagePlugin.h"
 #import <FWFramework/FWFramework-Swift.h>
 
 #pragma mark - __FWZoomImageVideoPlayerView
@@ -835,7 +834,7 @@
             if (cachedImage) placeholderImage = cachedImage;
         }
         __weak __typeof__(self) self_weak_ = self;
-        [self __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage options:__FWWebImageOptionAvoidSetImage setImageBlock:^(UIImage * _Nullable image) {
+        [self __fw_setImageWithUrl:imageURL placeholderImage:placeholderImage avoidSetImage:YES setImageBlock:^(UIImage * _Nullable image) {
             __typeof__(self) self = self_weak_;
             self.image = image;
         } completion:^(UIImage * _Nullable image, NSError * _Nullable error) {

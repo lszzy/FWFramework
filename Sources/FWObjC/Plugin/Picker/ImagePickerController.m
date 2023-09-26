@@ -9,7 +9,6 @@
 #import "ImageCropController.h"
 #import "ToolbarView.h"
 #import "AlertPlugin.h"
-#import "ImagePlugin.h"
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <FWFramework/FWFramework-Swift.h>

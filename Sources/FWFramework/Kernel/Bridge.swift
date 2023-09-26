@@ -146,8 +146,8 @@ import UIKit
 
 @_spi(FW) @objc extension UIView {
 
-    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: nil, setImageBlock: setImageBlock, completion: completion, progress: progress)
+    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, avoidSetImage: Bool, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+        fw_setImage(url: url, placeholderImage: placeholderImage, options: avoidSetImage ? [.avoidSetImage] : [], context: nil, setImageBlock: setImageBlock, completion: completion, progress: progress)
     }
 
     public func __fw_cancelImageRequest() {
@@ -231,12 +231,15 @@ import UIKit
         return fw_croppedImage(frame: frame, angle: angle, circular: circular)
     }
     
-    public static func __fw_imageNamed(_ name: String, bundle: Bundle? = nil, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
-        return fw_imageNamed(name, bundle: bundle, options: options)
-    }
-    
-    public static func __fw_image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
-        return fw_image(data: data, scale: scale, options: options)
+    public static func __fw_image(data: Data?, scale: CGFloat = 1, options: [AnyHashable: Any]? = nil) -> UIImage? {
+        var targetOptions: [ImageCoderOptions: Any]?
+        if let options = options {
+            targetOptions = [:]
+            for (key, value) in options {
+                targetOptions?[.init("\(key)")] = value
+            }
+        }
+        return fw_image(data: data, scale: scale, options: targetOptions)
     }
     
 }

@@ -47,7 +47,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         options: [ImageCoderOptions : Any]? = nil
     ) -> UIImage? {
         var scaleFactor = scale
-        if let scaleOption = options?[.optionScaleFactor] as? NSNumber {
+        if let scaleOption = options?[.scaleFactor] as? NSNumber {
             scaleFactor = scaleOption.doubleValue
         }
         var coderOptions: [SDImageCoderOption : Any] = [:]
@@ -86,9 +86,9 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         return view.sd_imageURL
     }
     
-    open func view(
+    open func setImageURL(
         _ view: UIView,
-        setImageURL imageURL: URL?,
+        url imageURL: URL?,
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
@@ -115,7 +115,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if let context = context {
             targetContext = [:]
             for (key, value) in context {
-                if key == .optionThumbnailPixelSize {
+                if key == .thumbnailPixelSize {
                     targetContext?[.imageThumbnailPixelSize] = value
                 } else {
                     targetContext?[.init(rawValue: key.rawValue)] = value
@@ -174,7 +174,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         if let context = context {
             targetContext = [:]
             for (key, value) in context {
-                if key == .optionThumbnailPixelSize {
+                if key == .thumbnailPixelSize {
                     targetContext?[.imageThumbnailPixelSize] = value
                 } else {
                     targetContext?[.init(rawValue: key.rawValue)] = value
