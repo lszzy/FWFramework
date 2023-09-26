@@ -404,6 +404,7 @@ private extension SettingsController {
         
         PluginManager.unloadPlugin(ImagePlugin.self)
         PluginManager.registerPlugin(ImagePlugin.self, object: Autoloader.imagePluginImpl == Autoloader.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
+        _ = PluginManager.loadPlugin(ImagePlugin.self)
         ImagePluginImpl.shared.showsIndicator = Autoloader.imageShowsIndicator
         SDWebImageImpl.shared.showsIndicator = Autoloader.imageShowsIndicator
         ImagePluginImpl.shared.hidesPlaceholderIndicator = Autoloader.imageHidesPlaceholderIndicator
