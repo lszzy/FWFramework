@@ -312,14 +312,23 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     /// 轮播文字label高度
     open var titleLabelHeight: CGFloat = 30
     
+    /// 轮播文字间距设置，默认全部0
+    open var titleLabelInset: UIEdgeInsets = .zero
+    
     /// 轮播文字label对齐方式
     open var titleLabelTextAlignment: NSTextAlignment = .left
+    
+    /// 图片视图间距设置，默认全部0
+    open var imageViewInset: UIEdgeInsets = .zero
     
     /// 内容视图间距设置，默认全部0
     open var contentViewInset: UIEdgeInsets = .zero
     
     /// 内容视图圆角设置，默认0
     open var contentViewCornerRadius: CGFloat = .zero
+    
+    /// 内容视图背景色，默认nil
+    open var contentViewBackgroundColor: UIColor?
     
     private var pageControlIndex: Int = -1
     
@@ -497,21 +506,24 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             cell.title = titlesGroup?[itemIndex]
         }
         
-        delegate?.bannerView?(self, customCell: cell, for: itemIndex)
-        customCellBlock?(cell, itemIndex)
-        
         if !cell.hasConfigured {
             cell.titleLabelBackgroundColor = titleLabelBackgroundColor
             cell.titleLabelHeight = titleLabelHeight
             cell.titleLabelTextAlignment = titleLabelTextAlignment
             cell.titleLabelTextColor = titleLabelTextColor
             cell.titleLabelTextFont = titleLabelTextFont
+            cell.titleLabelInset = titleLabelInset
             cell.contentViewInset = contentViewInset
             cell.contentViewCornerRadius = contentViewCornerRadius
+            cell.contentViewBackgroundColor = contentViewBackgroundColor
+            cell.imageViewInset = imageViewInset
             cell.imageView.contentMode = imageViewContentMode
             cell.onlyDisplayText = onlyDisplayText
             cell.hasConfigured = true
         }
+        
+        delegate?.bannerView?(self, customCell: cell, for: itemIndex)
+        customCellBlock?(cell, itemIndex)
         return cell
     }
     
@@ -999,12 +1011,18 @@ open class BannerViewCell: UICollectionViewCell {
     /// 轮播文字label高度
     open var titleLabelHeight: CGFloat = 30
     
+    /// 轮播文字间距设置，默认全部0
+    open var titleLabelInset: UIEdgeInsets = .zero
+    
     /// 轮播文字label对齐方式
     open var titleLabelTextAlignment: NSTextAlignment = .left {
         didSet {
             titleLabel.textAlignment = titleLabelTextAlignment
         }
     }
+    
+    /// 图片视图间距设置，默认全部0
+    open var imageViewInset: UIEdgeInsets = .zero
     
     /// 内容视图间距设置，默认全部0
     open var contentViewInset: UIEdgeInsets = .zero
@@ -1013,6 +1031,13 @@ open class BannerViewCell: UICollectionViewCell {
     open var contentViewCornerRadius: CGFloat = .zero {
         didSet {
             insetView.layer.cornerRadius = contentViewCornerRadius
+        }
+    }
+    
+    /// 内容视图背景色，默认nil
+    open var contentViewBackgroundColor: UIColor? {
+        didSet {
+            insetView.backgroundColor = contentViewBackgroundColor
         }
     }
     
@@ -1068,10 +1093,10 @@ open class BannerViewCell: UICollectionViewCell {
         insetView.frame = frame
         
         if (onlyDisplayText) {
-            titleLabel.frame = insetView.bounds
+            titleLabel.frame = CGRect(x: titleLabelInset.left, y: titleLabelInset.top, width: insetView.bounds.size.width - titleLabelInset.left - titleLabelInset.right, height: insetView.bounds.size.height - titleLabelInset.top - titleLabelInset.bottom)
         } else {
-            imageView.frame = insetView.bounds
-            titleLabel.frame = CGRect(x: 0, y: insetView.frame.size.height - titleLabelHeight, width: insetView.frame.size.width, height: titleLabelHeight)
+            imageView.frame = CGRect(x: imageViewInset.left, y: imageViewInset.top, width: insetView.bounds.size.width - imageViewInset.left - imageViewInset.right, height: insetView.bounds.size.height - imageViewInset.top - imageViewInset.bottom)
+            titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
     }
     
