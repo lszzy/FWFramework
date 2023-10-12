@@ -10,7 +10,7 @@ import FWFramework
 
 class TestBannerController: UIViewController, ViewControllerProtocol, BannerViewDelegate {
     
-    var imageUrls: [Any] {
+    var imageUrls: [Any] = {
         return [
             "http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg",
             ModuleBundle.imageNamed("Loading.gif") as Any,
@@ -19,11 +19,11 @@ class TestBannerController: UIViewController, ViewControllerProtocol, BannerView
             "not_found.jpg",
             "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"
         ]
-    }
+    }()
     
-    var titlesGroup: [String] {
-        return ["1", "2", "3", "4", "5", "6"]
-    }
+    var titlesGroup: [Any] = {
+        return ["1", "2", "3", NSAttributedString(string: "4", attributes: [.foregroundColor: UIColor.app.randomColor]), NSAttributedString(string: "5", attributes: [.foregroundColor: UIColor.app.randomColor]), NSAttributedString(string: "6", attributes: [.foregroundColor: UIColor.app.randomColor])]
+    }()
     
     private lazy var bannerView1: BannerView = {
         let result = BannerView()

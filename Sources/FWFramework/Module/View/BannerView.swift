@@ -64,7 +64,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     /// 每张图片对应要显示的文字数组
-    open var titlesGroup: [String]? {
+    open var titlesGroup: [Any]? {
         didSet {
             if onlyDisplayText {
                 var images: [Any] = []
@@ -312,8 +312,11 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     /// 轮播文字label高度
     open var titleLabelHeight: CGFloat = 30
     
-    /// 轮播文字间距设置，默认全部0
+    /// 轮播文字间距设置(影响背景)，默认全部0
     open var titleLabelInset: UIEdgeInsets = .zero
+    
+    /// 轮播文字内容间距设置(不影响背景)，默认{0 16 0 16}
+    open var titleLabelContentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     
     /// 轮播文字label对齐方式
     open var titleLabelTextAlignment: NSTextAlignment = .left
@@ -513,6 +516,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             cell.titleLabelTextColor = titleLabelTextColor
             cell.titleLabelTextFont = titleLabelTextFont
             cell.titleLabelInset = titleLabelInset
+            cell.titleLabelContentInset = titleLabelContentInset
             cell.contentViewInset = contentViewInset
             cell.contentViewCornerRadius = contentViewCornerRadius
             cell.contentViewBackgroundColor = contentViewBackgroundColor
@@ -977,10 +981,14 @@ open class BannerViewFlowLayout: UICollectionViewFlowLayout {
 open class BannerViewCell: UICollectionViewCell {
     
     // MARK: - Accessor
-    /// 标题
-    open var title: String? {
+    /// 标题，支持String|NSAttributedString
+    open var title: Any? {
         didSet {
-            titleLabel.text = String(format: "   %@", title ?? "")
+            if let attributedTitle = title as? NSAttributedString {
+                titleLabel.attributedText = attributedTitle
+            } else {
+                titleLabel.text = title as? String
+            }
             if titleLabel.isHidden {
                 titleLabel.isHidden = false
             }
@@ -1011,8 +1019,13 @@ open class BannerViewCell: UICollectionViewCell {
     /// 轮播文字label高度
     open var titleLabelHeight: CGFloat = 30
     
-    /// 轮播文字间距设置，默认全部0
+    /// 轮播文字间距设置(影响背景)，默认全部0
     open var titleLabelInset: UIEdgeInsets = .zero
+    
+    /// 轮播文字内容间距设置(不影响背景)，默认{0 16 0 16}
+    open var titleLabelContentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) {
+        didSet { titleLabel.fw_contentInset = titleLabelContentInset }
+    }
     
     /// 轮播文字label对齐方式
     open var titleLabelTextAlignment: NSTextAlignment = .left {
@@ -1055,15 +1068,17 @@ open class BannerViewCell: UICollectionViewCell {
         return result
     }()
     
-    private lazy var insetView: UIView = {
-        let result = UIView()
-        result.layer.masksToBounds = true
+    /// 标题标签
+    open lazy var titleLabel: UILabel = {
+        let result = UILabel()
+        result.fw_contentInset = titleLabelContentInset
+        result.isHidden = true
         return result
     }()
     
-    private lazy var titleLabel: UILabel = {
-        let result = UILabel()
-        result.isHidden = true
+    private lazy var insetView: UIView = {
+        let result = UIView()
+        result.layer.masksToBounds = true
         return result
     }()
     
