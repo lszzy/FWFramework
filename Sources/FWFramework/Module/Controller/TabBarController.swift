@@ -946,8 +946,8 @@ open class TabBarItemContentView: UIView {
             var s: CGFloat = 0.0 // image size
             var f: CGFloat = 0.0 // font
             var isLandscape = false
-            if let keyWindow = UIApplication.shared.keyWindow {
-                isLandscape = keyWindow.bounds.width > keyWindow.bounds.height
+            if let window = UIWindow.fw_mainWindow {
+                isLandscape = window.bounds.width > window.bounds.height
             }
             let isWide = isLandscape || traitCollection.horizontalSizeClass == .regular // is landscape or regular
             if isWide {

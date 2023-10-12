@@ -7,10 +7,6 @@
 
 #import "AttributedLabel.h"
 #import <objc/runtime.h>
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark - __FWAttributedLabel
 
@@ -934,10 +930,6 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                                                   attatchmentRect.size.height);
                                     [view setFrame:viewFrame];
                                 }
-                                else
-                                {
-                                    __FWLogDebug(@"Attachment Content Not Supported %@",content);
-                                }
                             }
                         }
                         
@@ -1206,11 +1198,6 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
                                               attatchmentRect.size.height);
                 [view setFrame:viewFrame];
             }
-            else
-            {
-                __FWLogDebug(@"Attachment Content Not Supported %@",content);
-            }
-            
         }
     }
 }
