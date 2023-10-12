@@ -6,10 +6,6 @@
 //
 
 #import "BarrageView.h"
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 NSString *const __FWBarrageAnimation = @"FWBarrageAnimation";
 
@@ -18,7 +14,6 @@ NSString *const __FWBarrageAnimation = @"FWBarrageAnimation";
 @implementation __FWBarrageManager
 
 - (void)dealloc {
-    __FWLogDebug(@"%@", NSStringFromClass(self.class));
     [_renderView stop];
 }
 
@@ -74,10 +69,6 @@ NSString *const __FWBarrageAnimation = @"FWBarrageAnimation";
 #define kNextAvailableTimeKey(identifier, index) [NSString stringWithFormat:@"%@_%d", identifier, index]
 
 @implementation __FWBarrageRenderView
-
-- (void)dealloc {
-    __FWLogDebug(@"%@", NSStringFromClass(self.class));
-}
 
 - (instancetype)init {
     self = [super init];
