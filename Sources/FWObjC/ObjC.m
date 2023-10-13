@@ -508,6 +508,12 @@ static SEL __FWCGSVGDocumentSEL = NULL;
     NSLog(@"%@", message);
 }
 
++ (void)logDebug:(NSString *)message {
+    if ([FWObjCBridge respondsToSelector:@selector(log:)]) {
+        [FWObjCBridge performSelector:@selector(log:) withObject:message];
+    }
+}
+
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();

@@ -1520,13 +1520,12 @@ import AdSupport
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
             swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
         ) { store in { selfObject in
-            var size = store.original(selfObject, store.selector)
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue,
-               !size.equalTo(.zero) {
-                let contentInset = contentInsetValue.uiEdgeInsetsValue
-                size = CGSize(width: size.width + contentInset.left + contentInset.right, height: size.height + contentInset.top + contentInset.bottom)
+            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+                let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
+                return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
             }
-            return size
+            
+            return store.original(selfObject, store.selector)
         }}
         
         NSObject.fw_swizzleInstanceMethod(

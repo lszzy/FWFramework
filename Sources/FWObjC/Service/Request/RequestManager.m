@@ -24,10 +24,7 @@
 #import "RequestManager.h"
 #import <pthread/pthread.h>
 #import "HTTPSessionManager.h"
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWRequestLog( aFormat, ... ) \
-    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+#import "ObjC.h"
 
 #define Lock() pthread_mutex_lock(&_lock)
 #define Unlock() pthread_mutex_unlock(&_lock)
@@ -239,7 +236,9 @@
     [self addRequestToRecord:request];
     [request.requestTask resume];
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", @"▶️ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", @"▶️ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    }
     #endif
 }
 
@@ -259,7 +258,9 @@
     [self removeRequestFromRecord:request];
     [request clearCompletionBlock];
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", @"⏹️ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", @"⏹️ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", [request requestArgument] ?: @""]);
+    }
     #endif
 }
 
@@ -476,7 +477,9 @@
 
 - (void)requestDidSucceedWithRequest:(__FWBaseRequest *)request {
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@", @"✅ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.responseString ?: @"")]);
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@", @"✅ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.responseString ?: @"")]);
+    }
     #endif
     
     @autoreleasepool {
@@ -499,7 +502,9 @@
 - (void)requestDidFailWithRequest:(__FWBaseRequest *)request error:(NSError *)error {
     request.error = error;
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST FAILED===========\n%@%@ %@:\n%@", @"❌ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.error ?: @"")]);
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"\n===========REQUEST FAILED===========\n%@%@ %@:\n%@", @"❌ ", [request requestMethodString], [request requestUrl], [NSString stringWithFormat:@"%@", request.responseJSONObject ?: (request.error ?: @"")]);
+    }
     #endif
 
     // Save incomplete download data.
@@ -552,7 +557,9 @@
     [_requestsRecord removeObjectForKey:@(request.requestIdentifier)];
     #ifdef DEBUG
     if ([_requestsRecord count] > 0) {
-        __FWRequestLog(@"Request queue size = %zd", [_requestsRecord count]);
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"Request queue size = %zd", [_requestsRecord count]);
+        }
     }
     #endif
     Unlock();
@@ -682,7 +689,9 @@
                 }];
                 resumeSucceeded = YES;
             } @catch (NSException *exception) {
-                __FWRequestLog(@"Resume download failed, reason = %@", exception.reason);
+                if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+                    FWLogDebug(@"Resume download failed, reason = %@", exception.reason);
+                }
                 resumeSucceeded = NO;
             }
         }
@@ -711,7 +720,9 @@
     if ([fileManager createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:&error] && error == nil) {
         return cacheFolder;
     }
-    __FWRequestLog(@"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"Failed to create cache directory at %@ with error: %@", cacheFolder, error != nil ? error.localizedDescription : @"unkown");
+    }
     return nil;
 }
 

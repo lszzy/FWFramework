@@ -6,6 +6,7 @@
 //
 
 #import "Database.h"
+#import "ObjC.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -14,10 +15,6 @@
 #else
 #import <sqlite3.h>
 #endif
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 static const NSString * __FWDatabaseSqliteString            = @"TEXT";
 static const NSString * __FWDatabaseSqliteInt               = @"INTERGER";
@@ -1810,7 +1807,7 @@ static sqlite3 * _fw_database;
 }
 
 + (void)log:(NSString *)msg {
-    __FWLogDebug(@"FWDatabase: [%@]", msg);
+    FWLogDebug(@"FWDatabase: [%@]", msg);
 }
 
 @end
