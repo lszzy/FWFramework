@@ -1,5 +1,11 @@
 # 更新日志
 
+## [4.18.1] - 2023-10-13
+
+### Added
+* 修复UILabel自定义contentInset时偶现文本显示不全问题
+* BannerView支持NSAttributedString，新增间距设置等属性
+
 ## [4.18.0] - 2023-09-19
 
 ### Added
