@@ -431,13 +431,12 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
         }));
         
         FWSwizzleClass(UILabel, @selector(intrinsicContentSize), FWSwizzleReturn(CGSize), FWSwizzleArgs(), FWSwizzleCode({
-            CGSize size = FWSwizzleOriginal();
             NSValue *contentInsetValue = objc_getAssociatedObject(selfObject, @selector(fw_contentInset));
-            if (contentInsetValue && !CGSizeEqualToSize(size, CGSizeZero)) {
-                UIEdgeInsets contentInset = [contentInsetValue UIEdgeInsetsValue];
-                size = CGSizeMake(size.width + contentInset.left + contentInset.right, size.height + contentInset.top + contentInset.bottom);
+            if (contentInsetValue) {
+                return [selfObject sizeThatFits:CGSizeMake(selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : CGFLOAT_MAX, CGFLOAT_MAX)];
             }
-            return size;
+            
+            return FWSwizzleOriginal();
         }));
         
         FWSwizzleClass(UILabel, @selector(sizeThatFits:), FWSwizzleReturn(CGSize), FWSwizzleArgs(CGSize size), FWSwizzleCode({

@@ -264,6 +264,7 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _titleLabelTextFont= [UIFont systemFontOfSize:14];
     _titleLabelBackgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     _titleLabelHeight = 30;
+    _titleLabelContentInset = UIEdgeInsetsMake(0, 16, 0, 16);
     _titleLabelTextAlignment = NSTextAlignmentLeft;
     _contentViewInset = UIEdgeInsetsZero;
     _contentViewCornerRadius = 0;
@@ -867,6 +868,23 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         cell.imageView.image = (UIImage *)imagePath;
     }
     
+    if (!cell.hasConfigured) {
+        cell.titleLabelBackgroundColor = self.titleLabelBackgroundColor;
+        cell.titleLabelHeight = self.titleLabelHeight;
+        cell.titleLabelTextAlignment = self.titleLabelTextAlignment;
+        cell.titleLabelTextColor = self.titleLabelTextColor;
+        cell.titleLabelTextFont = self.titleLabelTextFont;
+        cell.titleLabelInset = self.titleLabelInset;
+        cell.titleLabelContentInset = self.titleLabelContentInset;
+        cell.contentViewInset = self.contentViewInset;
+        cell.contentViewCornerRadius = self.contentViewCornerRadius;
+        cell.contentViewBackgroundColor = self.contentViewBackgroundColor;
+        cell.imageViewInset = self.imageViewInset;
+        cell.imageView.contentMode = self.bannerImageViewContentMode;
+        cell.onlyDisplayText = self.onlyDisplayText;
+        cell.hasConfigured = YES;
+    }
+    
     if (_titlesGroup.count && itemIndex < _titlesGroup.count) {
         cell.title = _titlesGroup[itemIndex];
     }
@@ -876,19 +894,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     }
     if (self.customCellBlock) {
         self.customCellBlock(cell, itemIndex);
-    }
-    
-    if (!cell.hasConfigured) {
-        cell.titleLabelBackgroundColor = self.titleLabelBackgroundColor;
-        cell.titleLabelHeight = self.titleLabelHeight;
-        cell.titleLabelTextAlignment = self.titleLabelTextAlignment;
-        cell.titleLabelTextColor = self.titleLabelTextColor;
-        cell.titleLabelTextFont = self.titleLabelTextFont;
-        cell.contentViewInset = self.contentViewInset;
-        cell.contentViewCornerRadius = self.contentViewCornerRadius;
-        cell.hasConfigured = YES;
-        cell.imageView.contentMode = self.bannerImageViewContentMode;
-        cell.onlyDisplayText = self.onlyDisplayText;
     }
     
     return cell;
@@ -1023,12 +1028,13 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 @implementation FWBannerViewCell
 {
     __weak UIView *_insetView;
-    __weak UILabel *_titleLabel;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        _titleLabelContentInset = UIEdgeInsetsMake(0, 16, 0, 16);
+        
         [self setupInsetView];
         [self setupImageView];
         [self setupTitleLabel];
@@ -1073,18 +1079,31 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
 - (void)setupTitleLabel
 {
     UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.fw_contentInset = _titleLabelContentInset;
     _titleLabel = titleLabel;
     _titleLabel.hidden = YES;
     [_insetView addSubview:titleLabel];
 }
 
-- (void)setTitle:(NSString *)title
+- (void)setTitle:(id)title
 {
-    _title = [title copy];
-    _titleLabel.text = [NSString stringWithFormat:@"   %@", title];
+    _title = title;
+    if (title && [title isKindOfClass:[NSAttributedString class]]) {
+        _titleLabel.text = nil;
+        _titleLabel.attributedText = (NSAttributedString *)title;
+    } else {
+        _titleLabel.attributedText = nil;
+        _titleLabel.text = [title isKindOfClass:[NSString class]] ? (NSString *)title : nil;
+    }
     if (_titleLabel.hidden) {
         _titleLabel.hidden = NO;
     }
+}
+
+- (void)setTitleLabelContentInset:(UIEdgeInsets)titleLabelContentInset
+{
+    _titleLabelContentInset = titleLabelContentInset;
+    _titleLabel.fw_contentInset = titleLabelContentInset;
 }
 
 -(void)setTitleLabelTextAlignment:(NSTextAlignment)titleLabelTextAlignment
@@ -1099,6 +1118,12 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _insetView.layer.cornerRadius = contentViewCornerRadius;
 }
 
+- (void)setContentViewBackgroundColor:(UIColor *)contentViewBackgroundColor
+{
+    _contentViewBackgroundColor = contentViewBackgroundColor;
+    _insetView.backgroundColor = contentViewBackgroundColor;
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -1107,10 +1132,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
     _insetView.frame = frame;
     
     if (self.onlyDisplayText) {
-        _titleLabel.frame = _insetView.bounds;
+        _titleLabel.frame = CGRectMake(self.titleLabelInset.left, self.titleLabelInset.top, _insetView.bounds.size.width - self.titleLabelInset.left - self.titleLabelInset.right, _insetView.bounds.size.height - self.titleLabelInset.top - self.titleLabelInset.bottom);
     } else {
-        _imageView.frame = _insetView.bounds;
-        _titleLabel.frame = CGRectMake(0, _insetView.frame.size.height - _titleLabelHeight, _insetView.frame.size.width, _titleLabelHeight);
+        _imageView.frame = CGRectMake(self.imageViewInset.left, self.imageViewInset.top, _insetView.bounds.size.width - self.imageViewInset.left - self.imageViewInset.right, _insetView.bounds.size.height - self.imageViewInset.top - self.imageViewInset.bottom);
+        _titleLabel.frame = CGRectMake(self.titleLabelInset.left, _insetView.frame.size.height - _titleLabelHeight + self.titleLabelInset.top - self.titleLabelInset.bottom, _insetView.frame.size.width - self.titleLabelInset.left - self.titleLabelInset.right, _titleLabelHeight);
     }
 }
 
