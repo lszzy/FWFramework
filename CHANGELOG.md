@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.18.1] - 2023-10-13
+
+### Added
+* Fixed the issue of incomplete text display when UILabel customizes contentInset.
+* BannerView supports NSAttributedString, adding new spacing settings and other attributes
+
 ## [4.18.0] - 2023-09-19
 
 ### Added
