@@ -24,12 +24,9 @@
 #import "RequestConfig.h"
 #import "BaseRequest.h"
 #import "SecurityPolicy.h"
+#import "ObjC.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWRequestLog( aFormat, ... ) \
-    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 @implementation __FWRequestConfig {
     NSMutableArray<id<__FWUrlFilterProtocol>> *_urlFilters;
@@ -150,7 +147,9 @@
     NSError *error = nil;
     [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
     if (error) {
-        __FWRequestLog(@"error to set do not backup attribute, error = %@", error);
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"error to set do not backup attribute, error = %@", error);
+        }
     }
 }
 

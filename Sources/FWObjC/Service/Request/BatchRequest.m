@@ -25,10 +25,7 @@
 #import "BaseRequest.h"
 #import "RequestConfig.h"
 #import "RequestManager.h"
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWRequestLog( aFormat, ... ) \
-    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+#import "ObjC.h"
 
 @interface __FWBatchRequest() <__FWRequestDelegate>
 
@@ -48,7 +45,9 @@
         _stoppedOnFailure = YES;
         for (__FWBaseRequest * req in _requestArray) {
             if (![req isKindOfClass:[__FWBaseRequest class]]) {
-                __FWRequestLog(@"Error, request item must be __FWBaseRequest instance.");
+                if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+                    FWLogDebug(@"Error, request item must be __FWBaseRequest instance.");
+                }
                 return nil;
             }
         }
@@ -58,7 +57,9 @@
 
 - (void)start {
     if (_finishedCount > 0) {
-        __FWRequestLog(@"Error! Batch request has already started.");
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"Error! Batch request has already started.");
+        }
         return;
     }
     [_failedRequestArray removeAllObjects];

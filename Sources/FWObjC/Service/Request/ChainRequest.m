@@ -25,10 +25,7 @@
 #import "RequestConfig.h"
 #import "BaseRequest.h"
 #import "RequestManager.h"
-#import <FWFramework/FWFramework-Swift.h>
-
-#define __FWRequestLog( aFormat, ... ) \
-    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
+#import "ObjC.h"
 
 @interface __FWChainRequest()<__FWRequestDelegate>
 
@@ -56,7 +53,9 @@
 
 - (void)start {
     if (_nextRequestIndex > 0) {
-        __FWRequestLog(@"Error! Chain request has already started.");
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"Error! Chain request has already started.");
+        }
         return;
     }
 
@@ -65,7 +64,9 @@
     [[__FWRequestManager sharedManager] addChainRequest:self];
     [self toggleAccessoriesWillStartCallBack];
     if (![self startNextRequest:nil]) {
-        __FWRequestLog(@"Error! Chain request array is empty.");
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"Error! Chain request array is empty.");
+        }
     }
 }
 

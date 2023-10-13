@@ -6,10 +6,8 @@
 //
 
 #import "AlertController.h"
+#import "ObjC.h"
 #import <FWFramework/FWFramework-Swift.h>
-
-#define __FWLogDebug( aFormat, ... ) \
-    [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #pragma mark ---------------------------- __FWAlertControllerAppearance begin --------------------------------
 
@@ -1196,9 +1194,9 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
         return;
     }
     if (action.style == __FWAlertActionStyleCancel) {
-        __FWLogDebug(@"*** warning in -[__FWAlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with __FWAlertActionStyleCancel style'");
+        FWLogDebug(@"*** warning in -[__FWAlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with __FWAlertActionStyleCancel style'");
     } else if (![self.otherActions containsObject:action]) {
-        __FWLogDebug(@"*** warning in -[__FWAlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with __FWAlertActionStyleCancel style'");
+        FWLogDebug(@"*** warning in -[__FWAlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with __FWAlertActionStyleCancel style'");
     } else {
         NSInteger index = [self.otherActions indexOfObject:action];
         [self.actionSequenceView setCustomSpacing:spacing afterActionIndex:index];

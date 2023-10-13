@@ -9,12 +9,6 @@ import UIKit
 
 @_spi(FW) @objc extension NSObject {
     
-    public static func __fw_logDebug(_ message: String) {
-        #if DEBUG
-        Logger.log(.debug, group: Logger.fw_moduleName, message: message)
-        #endif
-    }
-    
     public static func __fw_bundleImage(_ name: String) -> UIImage? {
         return AppBundle.imageNamed(name)
     }

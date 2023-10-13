@@ -23,11 +23,9 @@
 
 #import "BaseRequest.h"
 #import "RequestManager.h"
+#import "ObjC.h"
 #import <objc/runtime.h>
 #import <FWFramework/FWFramework-Swift.h>
-
-#define __FWRequestLog( aFormat, ... ) \
-    if ([__FWRequestConfig sharedConfig].debugLogEnabled) [NSObject __fw_logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
 
 #ifndef NSFoundationVersionNumber_iOS_8_0
 #define NSFoundationVersionNumber_With_QoS_Available 1140.11
@@ -574,7 +572,9 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
     }
 
     #ifdef DEBUG
-    __FWRequestLog(@"\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", @"💾 ", [self requestMethodString], [self requestUrl], [NSString stringWithFormat:@"%@", self.responseJSONObject ?: (self.responseString ?: @"")]);
+    if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+        FWLogDebug(@"\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", @"💾 ", [self requestMethodString], [self requestUrl], [NSString stringWithFormat:@"%@", self.responseJSONObject ?: (self.responseString ?: @"")]);
+    }
     #endif
     return YES;
 }
@@ -631,7 +631,9 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
             _cacheMetadata = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
             return YES;
         } @catch (NSException *exception) {
-            __FWRequestLog(@"Load cache metadata failed, reason = %@", exception.reason);
+            if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+                FWLogDebug(@"Load cache metadata failed, reason = %@", exception.reason);
+            }
             return NO;
         }
     }
@@ -688,7 +690,9 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
                 metadata.appVersionString = [__FWNetworkUtils appVersionString];
                 [NSKeyedArchiver archiveRootObject:metadata toFile:[self cacheMetadataFilePath]];
             } @catch (NSException *exception) {
-                __FWRequestLog(@"Save cache failed, reason = %@", exception.reason);
+                if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+                    FWLogDebug(@"Save cache failed, reason = %@", exception.reason);
+                }
             }
         }
     }
@@ -724,7 +728,9 @@ static dispatch_queue_t __fw_request_cache_writing_queue(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES
                                                attributes:nil error:&error];
     if (error) {
-        __FWRequestLog(@"create cache directory failed, error = %@", error);
+        if ([__FWRequestConfig sharedConfig].debugLogEnabled) {
+            FWLogDebug(@"create cache directory failed, error = %@", error);
+        }
     } else {
         [__FWNetworkUtils addDoNotBackupAttribute:path];
     }
