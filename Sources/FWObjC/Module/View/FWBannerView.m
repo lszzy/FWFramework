@@ -868,10 +868,6 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         cell.imageView.image = (UIImage *)imagePath;
     }
     
-    if (_titlesGroup.count && itemIndex < _titlesGroup.count) {
-        cell.title = _titlesGroup[itemIndex];
-    }
-    
     if (!cell.hasConfigured) {
         cell.titleLabelBackgroundColor = self.titleLabelBackgroundColor;
         cell.titleLabelHeight = self.titleLabelHeight;
@@ -887,6 +883,10 @@ NSString * const FWBannerViewCellID = @"FWBannerViewCell";
         cell.imageView.contentMode = self.bannerImageViewContentMode;
         cell.onlyDisplayText = self.onlyDisplayText;
         cell.hasConfigured = YES;
+    }
+    
+    if (_titlesGroup.count && itemIndex < _titlesGroup.count) {
+        cell.title = _titlesGroup[itemIndex];
     }
     
     if ([self.delegate respondsToSelector:@selector(bannerView:customCell:forIndex:)]) {
