@@ -505,10 +505,6 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             cell.imageView.image = imagePath
         }
         
-        if let titlesCount = titlesGroup?.count, titlesCount > 0, itemIndex < titlesCount {
-            cell.title = titlesGroup?[itemIndex]
-        }
-        
         if !cell.hasConfigured {
             cell.titleLabelBackgroundColor = titleLabelBackgroundColor
             cell.titleLabelHeight = titleLabelHeight
@@ -524,6 +520,10 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             cell.imageView.contentMode = imageViewContentMode
             cell.onlyDisplayText = onlyDisplayText
             cell.hasConfigured = true
+        }
+        
+        if let titlesCount = titlesGroup?.count, titlesCount > 0, itemIndex < titlesCount {
+            cell.title = titlesGroup?[itemIndex]
         }
         
         delegate?.bannerView?(self, customCell: cell, for: itemIndex)
@@ -985,8 +985,10 @@ open class BannerViewCell: UICollectionViewCell {
     open var title: Any? {
         didSet {
             if let attributedTitle = title as? NSAttributedString {
+                titleLabel.text = nil
                 titleLabel.attributedText = attributedTitle
             } else {
+                titleLabel.attributedText = nil
                 titleLabel.text = title as? String
             }
             if titleLabel.isHidden {
