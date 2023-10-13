@@ -185,14 +185,26 @@ NS_SWIFT_NAME(BannerView)
 /** 轮播文字label高度 */
 @property (nonatomic, assign) CGFloat titleLabelHeight;
 
+/** 轮播文字间距设置(影响背景)，默认全部0 */
+@property (nonatomic, assign) UIEdgeInsets titleLabelInset;
+
+/** 轮播文字内容间距设置(不影响背景)，默认{0 16 0 16} */
+@property (nonatomic, assign) UIEdgeInsets titleLabelContentInset;
+
 /** 轮播文字label对齐方式 */
 @property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
+
+/** 图片视图间距设置，默认全部0 */
+@property (nonatomic, assign) UIEdgeInsets imageViewInset;
 
 /** 内容视图间距设置，默认全部0 */
 @property (nonatomic, assign) UIEdgeInsets contentViewInset;
 
 /** 内容视图圆角设置，默认0 */
 @property (nonatomic, assign) CGFloat contentViewCornerRadius;
+
+/** 内容视图背景色，默认nil */
+@property (nonatomic, strong, nullable) UIColor *contentViewBackgroundColor;
 
 /** 滚动手势禁用（文字轮播较实用） */
 - (void)disableScrollGesture;
@@ -203,15 +215,20 @@ NS_SWIFT_NAME(BannerViewCell)
 @interface FWBannerViewCell : UICollectionViewCell
 
 @property (nonatomic, weak, nullable) UIImageView *imageView;
-@property (nonatomic, copy, nullable) NSString *title;
+@property (nonatomic, weak, nullable) UILabel *titleLabel;
+@property (nonatomic, copy, nullable) id title;
 
 @property (nonatomic, strong, nullable) UIColor *titleLabelTextColor;
 @property (nonatomic, strong, nullable) UIFont *titleLabelTextFont;
 @property (nonatomic, strong, nullable) UIColor *titleLabelBackgroundColor;
 @property (nonatomic, assign) CGFloat titleLabelHeight;
+@property (nonatomic, assign) UIEdgeInsets titleLabelInset;
+@property (nonatomic, assign) UIEdgeInsets titleLabelContentInset;
 @property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;
+@property (nonatomic, assign) UIEdgeInsets imageViewInset;
 @property (nonatomic, assign) UIEdgeInsets contentViewInset;
 @property (nonatomic, assign) CGFloat contentViewCornerRadius;
+@property (nonatomic, strong, nullable) UIColor *contentViewBackgroundColor;
 
 @property (nonatomic, assign) BOOL hasConfigured;
 
