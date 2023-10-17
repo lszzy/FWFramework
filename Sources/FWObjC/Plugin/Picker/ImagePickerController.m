@@ -1236,7 +1236,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.delegate imagePickerPreviewControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }
@@ -2328,7 +2328,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
         if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
             [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
         } else {
-            [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+            [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
         }
         return;
     }
@@ -2465,7 +2465,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             if (self.imagePickerControllerDelegate && [self.imagePickerControllerDelegate respondsToSelector:@selector(imagePickerPreviewControllerWillShowExceed:)]) {
                 [self.imagePickerControllerDelegate imagePickerControllerWillShowExceed:self];
             } else {
-                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil style:__FWAlertStyleDefault cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
+                [self __fw_showAlertWithTitle:[NSString stringWithFormat:[NSObject __fw_bundleString:@"fw.pickerExceed"], @(self.maximumSelectImageCount)] message:nil cancel:[NSObject __fw_bundleString:@"fw.close"] cancelBlock:nil];
             }
             return;
         }

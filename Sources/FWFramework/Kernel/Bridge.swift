@@ -210,11 +210,10 @@ import UIKit
     public func __fw_showAlert(
         title: Any?,
         message: Any?,
-        style: AlertStyle = .default,
         cancel: Any? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
+        fw_showAlert(title: title, message: message, style: .default, cancel: cancel, cancelBlock: cancelBlock)
     }
     
     public func __fw_showSheet(
