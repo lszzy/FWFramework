@@ -48,7 +48,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     open var errorButtonFormatter: ((Error?) -> Any?)?
     
     // MARK: - AlertPlugin
-    open func viewController(_ viewController: UIViewController, showAlertWithTitle title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancel cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = self.customAlertAppearance
         let alertController = UIAlertController.fw_alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
@@ -98,7 +98,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         viewController.present(alertController, animated: true)
     }
     
-    open func viewController(_ viewController: UIViewController, showSheetWithTitle title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancel cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = customSheetAppearance
         let alertController = UIAlertController.fw_alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
@@ -144,7 +144,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         viewController.present(alertController, animated: true)
     }
     
-    open func viewController(_ viewController: UIViewController, hideAlert animated: Bool, completion: (() -> Void)? = nil) {
+    open func hideAlert(animated: Bool, completion: (() -> Void)? = nil, in viewController: UIViewController) {
         let alertController = showingAlertController(viewController)
         if let alertController = alertController {
             alertController.presentingViewController?.dismiss(animated: animated, completion: completion)
@@ -153,7 +153,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         }
     }
     
-    open func isShowingAlert(_ viewController: UIViewController) -> Bool {
+    open func isShowingAlert(in viewController: UIViewController) -> Bool {
         let alertController = showingAlertController(viewController)
         return alertController != nil
     }
@@ -207,11 +207,11 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
     open var customBlock: ((AlertController) -> Void)?
     
     // MARK: - AlertPlugin
-    open func viewController(_ viewController: UIViewController, showAlertWithTitle title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancel cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = self.customAlertAppearance
         let alertController = alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
-        alertController.alertStyle = style
+        // alertController.alertStyle = style
         
         // 添加输入框
         for promptIndex in 0 ..< promptCount {
@@ -262,7 +262,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         viewController.present(alertController, animated: true)
     }
     
-    open func viewController(_ viewController: UIViewController, showSheetWithTitle title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancel cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = customSheetAppearance
         let alertController = alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
@@ -306,7 +306,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
     
     // MARK: - Public
     /// 显示自定义视图弹窗，无默认按钮
-    open func viewController(_ viewController: UIViewController, showAlertWithStyle style: UIAlertController.Style, headerView: UIView, cancel: Any?, actions: [Any]?, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showAlert(style: UIAlertController.Style, headerView: UIView, cancel: Any?, actions: [Any]?, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = style == .actionSheet ? customSheetAppearance : customAlertAppearance
         let alertController = alertController(headerView: headerView, preferredStyle: style == .actionSheet ? .actionSheet : .alert, appearance: customAppearance)

@@ -10,6 +10,119 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - AlertPlugin
+/// 弹框样式可扩展枚举
+public struct AlertStyle: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
+    /// 默认弹框样式
+    public static let `default`: AlertStyle = .init(0)
+    /// 成功弹框样式
+    public static let success: AlertStyle = .init(1)
+    /// 失败弹框样式
+    public static let failure: AlertStyle = .init(2)
+    /// 警告弹框样式
+    public static let warning: AlertStyle = .init(3)
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+}
+
+/// 弹窗插件协议，应用可自定义弹窗实现
+public protocol AlertPlugin: AnyObject {
+    
+    /// 显示弹出框插件方法，默认使用系统UIAlertController
+    func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    
+    /// 显示操作表插件方法，默认使用系统UIAlertController
+    func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    
+    /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
+    func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController)
+    
+    /// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|AlertController
+    func isShowingAlert(in viewController: UIViewController) -> Bool
+    
+}
+
+extension AlertPlugin {
+    
+    /// 显示弹出框插件方法，默认使用系统UIAlertController
+    public func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+        AlertPluginImpl.shared.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
+    }
+    
+    /// 显示操作表插件方法，默认使用系统UIAlertController
+    public func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+        AlertPluginImpl.shared.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
+    }
+    
+    /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
+    public func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController) {
+        AlertPluginImpl.shared.hideAlert(animated: animated, completion: completion, in: viewController)
+    }
+    
+    /// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|AlertController
+    public func isShowingAlert(in viewController: UIViewController) -> Bool {
+        return AlertPluginImpl.shared.isShowingAlert(in: viewController)
+    }
+    
+}
+
+// MARK: - AlertAppearance
+/// 系统弹出框样式配置类，由于系统兼容性，建议优先使用AlertController
+///
+/// 备注：如果未自定义样式，显示效果和系统一致，不会产生任何影响；框架会先渲染actions动作再渲染cancel动作
+open class AlertAppearance: NSObject {
+    
+    /// 单例模式，统一设置样式
+    public static let appearance = AlertAppearance()
+    
+    /// 自定义首选动作句柄，默认nil，跟随系统
+    open var preferredActionBlock: ((_ alertController: Any) -> Any?)?
+    
+    /// 标题颜色，仅全局生效，默认nil
+    open var titleColor: UIColor?
+    /// 标题字体，仅全局生效，默认nil
+    open var titleFont: UIFont?
+    /// 消息颜色，仅全局生效，默认nil
+    open var messageColor: UIColor?
+    /// 消息字体，仅全局生效，默认nil
+    open var messageFont: UIFont?
+    
+    /// 默认动作颜色，仅全局生效，默认nil
+    open var actionColor: UIColor?
+    /// 首选动作颜色，仅全局生效，默认nil
+    open var preferredActionColor: UIColor?
+    /// 取消动作颜色，仅全局生效，默认nil
+    open var cancelActionColor: UIColor?
+    /// 警告动作颜色，仅全局生效，默认nil
+    open var destructiveActionColor: UIColor?
+    /// 禁用动作颜色，仅全局生效，默认nil
+    open var disabledActionColor: UIColor?
+    
+    /// 是否启用Controller样式，设置后自动启用
+    open var controllerEnabled: Bool {
+        return titleColor != nil || titleFont != nil || messageColor != nil || messageFont != nil
+    }
+    
+    /// 是否启用Action样式，设置后自动启用
+    open var actionEnabled: Bool {
+        return actionColor != nil || preferredActionColor != nil || cancelActionColor != nil || destructiveActionColor != nil || disabledActionColor != nil
+    }
+    
+}
+
+// MARK: - UIView+AlertPlugin
 @_spi(FW) extension UIViewController {
     
     /// 自定义弹窗插件，未设置时自动从插件池加载
@@ -200,13 +313,8 @@ import FWObjC
             }
         }
         
-        var plugin: AlertPlugin
-        if let alertPlugin = self.fw_alertPlugin, alertPlugin.responds(to: #selector(AlertPlugin.viewController(_:showAlertWithTitle:message:style:cancel:actions:promptCount:promptBlock:actionBlock:cancel:customBlock:))) {
-            plugin = alertPlugin
-        } else {
-            plugin = AlertPluginImpl.shared
-        }
-        plugin.viewController?(self, showAlertWithTitle: title, message: message, style: style, cancel: targetCancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancel: cancelBlock, customBlock: customBlock)
+        let plugin = self.fw_alertPlugin ?? AlertPluginImpl.shared
+        plugin.showAlert(title: title, message: message, style: style, cancel: targetCancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: self)
     }
     
     /// 显示操作表(无动作)
@@ -292,13 +400,8 @@ import FWObjC
             }
         }
         
-        var plugin: AlertPlugin
-        if let alertPlugin = self.fw_alertPlugin, alertPlugin.responds(to: #selector(AlertPlugin.viewController(_:showSheetWithTitle:message:cancel:actions:currentIndex:actionBlock:cancel:customBlock:))) {
-            plugin = alertPlugin
-        } else {
-            plugin = AlertPluginImpl.shared
-        }
-        plugin.viewController?(self, showSheetWithTitle: title, message: message, cancel: targetCancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancel: cancelBlock, customBlock: customBlock)
+        let plugin = self.fw_alertPlugin ?? AlertPluginImpl.shared
+        plugin.showSheet(title: title, message: message, cancel: targetCancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: self)
     }
     
     /// 手工隐藏弹出框，完成后回调
@@ -309,24 +412,14 @@ import FWObjC
         animated: Bool,
         completion: (() -> Void)? = nil
     ) {
-        var plugin: AlertPlugin
-        if let alertPlugin = self.fw_alertPlugin, alertPlugin.responds(to: #selector(AlertPlugin.viewController(_:hideAlert:completion:))) {
-            plugin = alertPlugin
-        } else {
-            plugin = AlertPluginImpl.shared
-        }
-        plugin.viewController?(self, hideAlert: animated, completion: completion)
+        let plugin = self.fw_alertPlugin ?? AlertPluginImpl.shared
+        plugin.hideAlert(animated: animated, completion: completion, in: self)
     }
     
     /// 判断是否正在显示弹出框
     public var fw_isShowingAlert: Bool {
-        var plugin: AlertPlugin
-        if let alertPlugin = self.fw_alertPlugin, alertPlugin.responds(to: #selector(AlertPlugin.isShowingAlert(_:))) {
-            plugin = alertPlugin
-        } else {
-            plugin = AlertPluginImpl.shared
-        }
-        return plugin.isShowingAlert?(self) ?? false
+        let plugin = self.fw_alertPlugin ?? AlertPluginImpl.shared
+        return plugin.isShowingAlert(in: self)
     }
     
 }
