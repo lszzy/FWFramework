@@ -232,6 +232,9 @@ open class AlertController: UIViewController {
     /// 自定义样式，默认为样式单例
     open var alertAppearance: AlertControllerAppearance
     
+    var backgroundViewAppearanceStyle: UIBlurEffect.Style?
+    var backgroundViewAlpha: CGFloat
+    
     /// 创建控制器(默认对话框)
     public init(title: String?, message: String?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
         
@@ -282,7 +285,7 @@ open class AlertController: UIViewController {
     }
     
     /// 设置蒙层的外观样式,可通过alpha调整透明度
-    open func setBackgroundViewAppearanceStyle(_ style: UIBlurEffect.Style, alpha: CGFloat) {
+    open func setBackgroundViewAppearanceStyle(_ style: UIBlurEffect.Style?, alpha: CGFloat) {
         
     }
     
@@ -296,12 +299,107 @@ open class AlertController: UIViewController {
         
     }
     
+    func layoutAlertControllerView() {
+        
+    }
+    
 }
 
 /// 自定义弹窗展示控制器
 open class AlertPresentationController: UIPresentationController {
     
+    private var overlayView: AlertOverlayView {
+        if let overlayView = _overlayView {
+            return overlayView
+        }
+        
+        let overlayView = AlertOverlayView()
+        _overlayView = overlayView
+        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapOverlayView))
+        overlayView.addGestureRecognizer(tap)
+        self.containerView?.addSubview(overlayView)
+        return overlayView
+    }
+    private weak var _overlayView: AlertOverlayView?
     
+    public override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    open override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        overlayView.frame = self.containerView?.bounds ?? .zero
+    }
+    
+    open override func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+    }
+    
+    open override func presentationTransitionWillBegin() {
+        super.presentationTransitionWillBegin()
+        guard let alertController = presentedViewController as? AlertController else { return }
+        
+        overlayView.setAppearanceStyle(alertController.backgroundViewAppearanceStyle, alpha: alertController.backgroundViewAlpha)
+        // 遮罩的alpha值从0～1变化，UIViewControllerTransitionCoordinator协是一个过渡协调器，当执行模态过渡或push过渡时，可以对视图中的其他部分做动画
+        if let coordinator = presentedViewController.transitionCoordinator {
+            coordinator.animate { [weak self] _ in
+                self?.overlayView.alpha = 1.0
+            }
+        } else {
+            overlayView.alpha = 1.0
+        }
+        alertController.delegate?.willPresentAlertController?(alertController)
+    }
+    
+    open override func presentationTransitionDidEnd(_ completed: Bool) {
+        super.presentationTransitionDidEnd(completed)
+        guard let alertController = presentedViewController as? AlertController else { return }
+        
+        alertController.delegate?.didPresentAlertController?(alertController)
+    }
+    
+    open override func dismissalTransitionWillBegin() {
+        super.dismissalTransitionWillBegin()
+        
+        // 遮罩的alpha值从1～0变化，UIViewControllerTransitionCoordinator协议执行动画可以保证和转场动画同步
+        if let coordinator = presentedViewController.transitionCoordinator {
+            coordinator.animate { [weak self] _ in
+                self?.overlayView.alpha = 0
+            }
+        } else {
+            overlayView.alpha = 0
+        }
+        if let alertController = presentedViewController as? AlertController {
+            alertController.delegate?.willDismissAlertController?(alertController)
+        }
+    }
+    
+    open override func dismissalTransitionDidEnd(_ completed: Bool) {
+        super.dismissalTransitionDidEnd(completed)
+        if completed {
+            _overlayView?.removeFromSuperview()
+            _overlayView = nil
+        }
+        if let alertController = presentedViewController as? AlertController {
+            alertController.delegate?.didDismissAlertController?(alertController)
+        }
+    }
+    
+    open override var frameOfPresentedViewInContainerView: CGRect {
+        return self.presentedView?.frame ?? .zero
+    }
+    
+    @objc func tapOverlayView() {
+        guard let alertController = presentedViewController as? AlertController else { return }
+        if alertController.tapBackgroundViewDismiss {
+            alertController.dismiss(animated: true, completion: alertController.dismissCompletion)
+        }
+    }
     
 }
 
@@ -328,11 +426,322 @@ open class AlertAnimation: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     private func presentAnimationTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        guard let alertController = transitionContext.viewController(forKey: .to) as? AlertController else { return }
         
+        switch alertController.animationType {
+        case .fromBottom:
+            raiseUpWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .fromTop:
+            dropDownWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .fromRight:
+            fromRightWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .fromLeft:
+            fromLeftWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .shrink:
+            shrinkWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .expand:
+            expandWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .fade:
+            alphaWhenPresent(for: alertController, transitionContext: transitionContext)
+        case .none:
+            noneWhenPresent(for: alertController, transitionContext: transitionContext)
+        default:
+            break
+        }
     }
     
     private func dismissAnimationTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        guard let alertController = transitionContext.viewController(forKey: .from) as? AlertController else { return }
         
+        switch alertController.animationType {
+        case .fromBottom:
+            dismissCorrespondingRaiseUp(for: alertController, transitionContext: transitionContext)
+        case .fromTop:
+            dismissCorrespondingDropDown(for: alertController, transitionContext: transitionContext)
+        case .fromRight:
+            dismissCorrespondingFromRight(for: alertController, transitionContext: transitionContext)
+        case .fromLeft:
+            dismissCorrespondingFromLeft(for: alertController, transitionContext: transitionContext)
+        case .shrink:
+            dismissCorrespondingShrink(for: alertController, transitionContext: transitionContext)
+        case .expand:
+            dismissCorrespondingExpand(for: alertController, transitionContext: transitionContext)
+        case .fade:
+            dismissCorrespondingAlpha(for: alertController, transitionContext: transitionContext)
+        case .none:
+            dismissCorrespondingNone(for: alertController, transitionContext: transitionContext)
+        default:
+            break
+        }
+    }
+    
+    // 从底部弹出
+    private func raiseUpWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
+        var controlViewFrame = alertController.view.frame
+        controlViewFrame.origin.y = UIScreen.main.bounds.height
+        alertController.view.frame = controlViewFrame
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut) {
+            var controlViewFrame = alertController.view.frame
+            if alertController.preferredStyle == .actionSheet {
+                controlViewFrame.origin.y = UIScreen.main.bounds.height - controlViewFrame.height
+            } else {
+                controlViewFrame.origin.y = (UIScreen.main.bounds.height - controlViewFrame.height) / 2.0
+                self.offsetCenter(alertController)
+            }
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingRaiseUp(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+            var controlViewFrame = alertController.view.frame
+            controlViewFrame.origin.y = UIScreen.main.bounds.height
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // 从右边弹出
+    private func fromRightWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
+        var controlViewFrame = alertController.view.frame
+        controlViewFrame.origin.x = UIScreen.main.bounds.width
+        alertController.view.frame = controlViewFrame
+        if alertController.preferredStyle == .alert {
+            self.offsetCenter(alertController)
+        }
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut) {
+            var controlViewFrame = alertController.view.frame
+            if alertController.preferredStyle == .actionSheet {
+                controlViewFrame.origin.x = UIScreen.main.bounds.width - controlViewFrame.width
+            } else {
+                controlViewFrame.origin.x = (UIScreen.main.bounds.width - controlViewFrame.width) / 2.0
+            }
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingFromRight(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+            var controlViewFrame = alertController.view.frame
+            controlViewFrame.origin.x = UIScreen.main.bounds.width
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // 从左边弹出
+    private func fromLeftWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
+        var controlViewFrame = alertController.view.frame
+        controlViewFrame.origin.x = -controlViewFrame.size.width
+        alertController.view.frame = controlViewFrame
+        if alertController.preferredStyle == .alert {
+            self.offsetCenter(alertController)
+        }
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut) {
+            var controlViewFrame = alertController.view.frame
+            if alertController.preferredStyle == .actionSheet {
+                controlViewFrame.origin.x = 0
+            } else {
+                controlViewFrame.origin.x = (UIScreen.main.bounds.width - controlViewFrame.width) / 2.0
+            }
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingFromLeft(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+            var controlViewFrame = alertController.view.frame
+            controlViewFrame.origin.x = -controlViewFrame.size.width
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // 从顶部弹出
+    private func dropDownWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        // 这3行代码不能放在[containerView layoutIfNeeded]之前，如果放在之前，[containerView layoutIfNeeded]强制布局后会将以下设置的frame覆盖
+        var controlViewFrame = alertController.view.frame
+        controlViewFrame.origin.y = -controlViewFrame.size.height
+        alertController.view.frame = controlViewFrame
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut) {
+            var controlViewFrame = alertController.view.frame
+            if alertController.preferredStyle == .actionSheet {
+                controlViewFrame.origin.y = 0
+            } else {
+                controlViewFrame.origin.y = (UIScreen.main.bounds.height - controlViewFrame.height) / 2.0
+                self.offsetCenter(alertController)
+            }
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingDropDown(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+            var controlViewFrame = alertController.view.frame
+            controlViewFrame.origin.y = -controlViewFrame.size.height
+            alertController.view.frame = controlViewFrame
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // Alpha动画
+    private func alphaWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        alertController.view.alpha = 0
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            self.offsetCenter(alertController)
+            alertController.view.alpha = 1.0
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingAlpha(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            alertController.view.alpha = 0
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // 发散动画
+    private func expandWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        alertController.view.transform = .init(scaleX: 0.9, y: 0.9)
+        alertController.view.alpha = 0
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            self.offsetCenter(alertController)
+            alertController.view.transform = .identity
+            alertController.view.alpha = 1.0
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingExpand(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            alertController.view.transform = .identity
+            alertController.view.alpha = 0
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+        }
+    }
+    
+    // 收缩动画
+    private func shrinkWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        
+        // 标记需要刷新布局
+        containerView.setNeedsLayout()
+        // 在有标记刷新布局的情况下立即布局，这行代码很重要，第一：立即布局会立即调用AlertController的viewWillLayoutSubviews的方法，第二：立即布局后可以获取到alertController.view的frame,不仅如此，走了viewWillLayoutSubviews键盘就会弹出，此后可以获取到alertController.offset
+        containerView.layoutIfNeeded()
+        
+        alertController.view.transform = .init(scaleX: 1.1, y: 1.1)
+        alertController.view.alpha = 0
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
+            self.offsetCenter(alertController)
+            alertController.view.transform = .identity
+            alertController.view.alpha = 1.0
+        } completion: { finished in
+            transitionContext.completeTransition(finished)
+            alertController.layoutAlertControllerView()
+        }
+    }
+    
+    private func dismissCorrespondingShrink(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        dismissCorrespondingExpand(for: alertController, transitionContext: transitionContext)
+    }
+    
+    // 无动画
+    private func noneWhenPresent(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        containerView.addSubview(alertController.view)
+        transitionContext.completeTransition(transitionContext.isAnimated)
+    }
+    
+    private func dismissCorrespondingNone(for alertController: AlertController, transitionContext: UIViewControllerContextTransitioning) {
+        transitionContext.completeTransition(transitionContext.isAnimated)
+    }
+    
+    private func offsetCenter(_ alertController: AlertController) {
+        guard alertController.offsetForAlert != .zero else { return }
+        
+        var controlViewCenter = alertController.view.center
+        controlViewCenter.x = UIScreen.main.bounds.width / 2.0 + alertController.offsetForAlert.x
+        controlViewCenter.y = UIScreen.main.bounds.height / 2.0 + alertController.offsetForAlert.y
+        alertController.view.center = controlViewCenter
     }
     
 }
@@ -465,6 +874,40 @@ public class AlertAction: NSObject, NSCopying {
         copy.titleEdgeInsets = titleEdgeInsets
         copy.propertyChangedBlock = propertyChangedBlock
         return copy
+    }
+    
+}
+
+// MARK: - AlertView
+class AlertOverlayView: UIView {
+    
+    private weak var effectView: UIVisualEffectView?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setAppearanceStyle(_ style: UIBlurEffect.Style?, alpha: CGFloat) {
+        if let style = style {
+            self.backgroundColor = UIColor.clear
+            let blurEffect = UIBlurEffect(style: style)
+            let effectView = UIVisualEffectView(effect: blurEffect)
+            effectView.frame = self.bounds
+            effectView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+            effectView.isUserInteractionEnabled = false
+            effectView.alpha = alpha
+            self.addSubview(effectView)
+            self.effectView = effectView
+        } else {
+            effectView?.removeFromSuperview()
+            effectView = nil
+            self.backgroundColor = UIColor(white: 0, alpha: alpha < 0 ? 0.5 : alpha)
+            self.alpha = 0
+        }
     }
     
 }

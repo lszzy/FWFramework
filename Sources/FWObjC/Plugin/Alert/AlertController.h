@@ -12,17 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AlertController)
 @interface __FWAlertController : UIViewController
 
-- (void)addAction:(__FWAlertAction *)action;
-@property (nonatomic, readonly) NSArray<__FWAlertAction *> *actions;
-
-@property (nullable, nonatomic, strong) __FWAlertAction *preferredAction;
-
-/* 添加文本输入框
- * 一旦添加后就会回调一次(仅回调一次,因此可以在这个block块里面自由定制textFiled,如设置textField的属性,设置代理,添加addTarget,监听通知等);
- */
-- (void)addTextFieldWithConfigurationHandler:(void (^ __nullable)(UITextField *textField))configurationHandler;
-@property(nullable, nonatomic, readonly) NSArray<UITextField *> *textFields;
-
 /** 主标题 */
 @property(nullable, nonatomic, copy) NSString *title;
 /** 副标题 */
