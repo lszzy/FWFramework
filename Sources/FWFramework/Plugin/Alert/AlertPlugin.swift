@@ -82,41 +82,41 @@ extension AlertPlugin {
 /// 系统弹出框样式配置类，由于系统兼容性，建议优先使用AlertController
 ///
 /// 备注：如果未自定义样式，显示效果和系统一致，不会产生任何影响；框架会先渲染actions动作再渲染cancel动作
-open class AlertAppearance: NSObject {
+public class AlertAppearance: NSObject {
     
     /// 单例模式，统一设置样式
     public static let appearance = AlertAppearance()
     
     /// 自定义首选动作句柄，默认nil，跟随系统
-    open var preferredActionBlock: ((_ alertController: Any) -> Any?)?
+    public var preferredActionBlock: ((_ alertController: UIAlertController) -> UIAlertAction?)?
     
     /// 标题颜色，仅全局生效，默认nil
-    open var titleColor: UIColor?
+    public var titleColor: UIColor?
     /// 标题字体，仅全局生效，默认nil
-    open var titleFont: UIFont?
+    public var titleFont: UIFont?
     /// 消息颜色，仅全局生效，默认nil
-    open var messageColor: UIColor?
+    public var messageColor: UIColor?
     /// 消息字体，仅全局生效，默认nil
-    open var messageFont: UIFont?
+    public var messageFont: UIFont?
     
     /// 默认动作颜色，仅全局生效，默认nil
-    open var actionColor: UIColor?
+    public var actionColor: UIColor?
     /// 首选动作颜色，仅全局生效，默认nil
-    open var preferredActionColor: UIColor?
+    public var preferredActionColor: UIColor?
     /// 取消动作颜色，仅全局生效，默认nil
-    open var cancelActionColor: UIColor?
+    public var cancelActionColor: UIColor?
     /// 警告动作颜色，仅全局生效，默认nil
-    open var destructiveActionColor: UIColor?
+    public var destructiveActionColor: UIColor?
     /// 禁用动作颜色，仅全局生效，默认nil
-    open var disabledActionColor: UIColor?
+    public var disabledActionColor: UIColor?
     
     /// 是否启用Controller样式，设置后自动启用
-    open var controllerEnabled: Bool {
+    public var controllerEnabled: Bool {
         return titleColor != nil || titleFont != nil || messageColor != nil || messageFont != nil
     }
     
     /// 是否启用Action样式，设置后自动启用
-    open var actionEnabled: Bool {
+    public var actionEnabled: Bool {
         return actionColor != nil || preferredActionColor != nil || cancelActionColor != nil || destructiveActionColor != nil || disabledActionColor != nil
     }
     

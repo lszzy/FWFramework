@@ -9,246 +9,6 @@
 #import "ObjC.h"
 #import <FWFramework/FWFramework-Swift.h>
 
-#pragma mark ---------------------------- __FWAlertControllerAppearance begin --------------------------------
-
-@implementation __FWAlertControllerAppearance
-
-+ (__FWAlertControllerAppearance *)appearance {
-    static __FWAlertControllerAppearance *appearance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        appearance = [[__FWAlertControllerAppearance alloc] init];
-    });
-    return appearance;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _lineWidth = (1.0 / [UIScreen mainScreen].scale);
-        _cancelLineWidth = 8.0;
-        _contentInsets = UIEdgeInsetsMake(20, 15, 20, 15);
-        _actionHeight = 55.0;
-        _actionFont = [UIFont systemFontOfSize:18];
-        _actionBoldFont = [UIFont boldSystemFontOfSize:18];
-        _imageTitleSpacing = 16.0;
-        _titleMessageSpacing = 8.0;
-        _textFieldHeight = 30.0;
-        _sheetContainerInsets = UIEdgeInsetsZero;
-        _alertCornerRadius = 6.0;
-        _alertEdgeDistance = (MIN(UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height) - 275) / 2.0;
-        _sheetEdgeDistance = 70;
-        _sheetCornerRadius = 13.0;
-        
-        _normalColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[[UIColor whiteColor] colorWithAlphaComponent:0.7]
-                                                           darkColor:[UIColor colorWithRed:44.0 / 255.0 green:44.0 / 255.0 blue:44.0 / 255.0 alpha:1.0]];
-        _selectedColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]
-                                                             darkColor:[UIColor colorWithRed:55.0 / 255.0 green:55.0 / 255.0 blue:55.0 / 255.0 alpha:1.0]];
-        _lightLineColor = [[UIColor grayColor] colorWithAlphaComponent:0.3];
-        _darkLineColor = [UIColor colorWithRed:60.0 / 255.0 green:60.0 / 255.0 blue:60.0 / 255.0 alpha:1.0];
-        _lineColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:_lightLineColor
-                                                         darkColor:_darkLineColor];
-        _cancelLineColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]
-                                                          darkColor:[UIColor colorWithRed:29.0 / 255.0 green:29.0 / 255.0 blue:29.0 / 255.0 alpha:1.0]];
-        _containerBackgroundColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[UIColor whiteColor]
-                                                                         darkColor:[UIColor blackColor]];
-        _titleDynamicColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[UIColor blackColor]
-                                                                         darkColor:[UIColor whiteColor]];
-        _textFieldBackgroundColor = [__FWAlertControllerAppearance colorPairsWithDynamicLightColor:[UIColor colorWithRed:247.0 / 255.0 green:247.0 / 255.0 blue:247.0 / 255.0 alpha:1.0]
-                                                                       darkColor:[UIColor colorWithRed:54.0 / 255.0 green:54.0 / 255.0 blue:54.0 / 255.0 alpha:1.0]];
-        _textFieldCornerRadius = 6.0;
-        _alertRedColor = [UIColor systemRedColor];
-        _grayColor = [UIColor grayColor];
-    }
-    return self;
-}
-
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    // 自动对contentInsets进行ceil，防止messageLabel偶现显示不全问题
-    _contentInsets = UIEdgeInsetsMake(ceil(contentInsets.top), ceil(contentInsets.left), ceil(contentInsets.bottom), ceil(contentInsets.right));
-}
-
-+ (UIColor *)colorPairsWithDynamicLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
-    return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-        if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-            return darkColor;
-        } else {
-            return lightColor;
-        }
-    }];
-}
-
-+ (UIColor *)colorPairsWithStaticLightColor:(UIColor *)lightColor darkColor:(UIColor *)darkColor {
-    UIUserInterfaceStyle mode = UITraitCollection.currentTraitCollection.userInterfaceStyle;
-    if (mode == UIUserInterfaceStyleDark) {
-        return darkColor;
-    } else if (mode == UIUserInterfaceStyleLight) {
-        return lightColor;
-    } else {
-        return lightColor;
-    }
-}
-
-@end
-
-#pragma mark ---------------------------- __FWAlertControllerAppearance end ----------------------------
-
-#pragma mark ---------------------------- __FWAlertAction begin --------------------------------
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-@interface __FWAlertAction()
-
-@property (nonatomic, assign) __FWAlertActionStyle style;
-@property (nonatomic, strong) __FWAlertControllerAppearance *alertAppearance;
-@property (nonatomic, copy) void (^handler)(__FWAlertAction *action);
-// 当在addAction之后设置action属性时,会回调这个block,设置相应控件的字体、颜色等
-// 如果没有这个block，那使用时，只有在addAction之前设置action的属性才有效
-@property (nonatomic, copy) void (^propertyChangedBlock)(__FWAlertAction *action, BOOL needUpdateConstraints);
-@end
-
-@implementation __FWAlertAction
-
-// 由于要对装载action的数组进行拷贝，所以__FWAlertAction也需要支持拷贝
-- (id)copyWithZone:(NSZone *)zone {
-    
-    __FWAlertAction *action = [[[self class] alloc] init];
-    action.title = self.title;
-    action.attributedTitle = self.attributedTitle;
-    action.image = self.image;
-    action.imageTitleSpacing = self.imageTitleSpacing;
-    action.style = self.style;
-    action.alertAppearance = self.alertAppearance;
-    action.enabled = self.enabled;
-    action.titleColor = self.titleColor;
-    action.titleFont = self.titleFont;
-    action.titleEdgeInsets = self.titleEdgeInsets;
-    action.handler = self.handler;
-    action.propertyChangedBlock = self.propertyChangedBlock;
-    return action;
-}
-
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(__FWAlertActionStyle)style handler:(void (^ __nullable)(__FWAlertAction *action))handler {
-    __FWAlertAction *action = [[self alloc] initWithTitle:title style:(__FWAlertActionStyle)style appearance:nil handler:handler];
-    return action;
-}
-
-+ (instancetype)actionWithTitle:(nullable NSString *)title style:(__FWAlertActionStyle)style appearance:(nullable __FWAlertControllerAppearance *)appearance handler:(void (^ __nullable)(__FWAlertAction *action))handler {
-    __FWAlertAction *action = [[self alloc] initWithTitle:title style:(__FWAlertActionStyle)style appearance:appearance handler:handler];
-    return action;
-}
-
-- (instancetype)initWithTitle:(nullable NSString *)title style:(__FWAlertActionStyle)style appearance:(nullable __FWAlertControllerAppearance *)appearance handler:(void (^ __nullable)(__FWAlertAction *action))handler {
-    self = [super init];
-    self.alertAppearance = appearance;
-    [self initialize];
-    self.title = title;
-    self.style = style;
-    self.handler = handler;
-    if (style == __FWAlertActionStyleDestructive) {
-        self.titleColor = [self.alertAppearance alertRedColor];
-        self.titleFont = [self.alertAppearance actionFont];
-    } else if (style == __FWAlertActionStyleCancel) {
-        self.titleColor = [self.alertAppearance titleDynamicColor];
-        self.titleFont = [self.alertAppearance actionBoldFont];
-    } else {
-        self.titleColor = [self.alertAppearance titleDynamicColor];
-        self.titleFont = [self.alertAppearance actionFont];
-    }
-    return self;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        [self initialize];
-    }
-    return self;
-}
-
-- (void)initialize {
-    _enabled = YES; // 默认能点击
-    _titleColor = [self.alertAppearance titleDynamicColor];
-    _titleFont = [self.alertAppearance actionFont];
-    _titleEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 15);
-}
-
-- (__FWAlertControllerAppearance *)alertAppearance {
-    return _alertAppearance ?: __FWAlertControllerAppearance.appearance;
-}
-
-- (void)setTitle:(NSString *)title {
-    _title = title;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self, YES);
-    }
-}
-
-- (void)setAttributedTitle:(NSAttributedString *)attributedTitle {
-    _attributedTitle = attributedTitle;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self, YES);
-    }
-}
-
-- (void)setImage:(UIImage *)image {
-    _image = image;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self, YES);
-    }
-}
-
-- (void)setImageTitleSpacing:(CGFloat)imageTitleSpacing {
-    _imageTitleSpacing = imageTitleSpacing;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self, YES);
-    }
-}
-
-- (void)setTitleColor:(UIColor *)titleColor {
-    _titleColor = titleColor;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self,NO); // 颜色改变不需要更新布局
-    }
-}
-
-- (void)setTitleFont:(UIFont *)titleFont {
-    _titleFont = titleFont;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self,YES); // 字体改变需要更新布局
-    }
-}
-
-- (void)setEnabled:(BOOL)enabled {
-    _enabled = enabled;
-    if (self.propertyChangedBlock) {
-        self.propertyChangedBlock(self,NO); // enabled改变不需要更新布局
-    }
-}
-
-- (void)setIsPreferred:(BOOL)isPreferred {
-    _isPreferred = isPreferred;
-    if (self.attributedTitle || self.title.length < 1 || !self.alertAppearance.actionEnabled) return;
-    
-    UIColor *titleColor = nil;
-    if (!self.enabled) {
-        titleColor = self.alertAppearance.disabledActionColor;
-    } else if (isPreferred) {
-        titleColor = self.alertAppearance.preferredActionColor;
-    } else if (self.style == UIAlertActionStyleDestructive) {
-        titleColor = self.alertAppearance.destructiveActionColor;
-    } else if (self.style == UIAlertActionStyleCancel) {
-        titleColor = self.alertAppearance.cancelActionColor;
-    } else {
-        titleColor = self.alertAppearance.actionColor;
-    }
-    if (titleColor) self.titleColor = titleColor;
-}
-
-@end
-
-#pragma mark ---------------------------- __FWAlertAction end ----------------------------
-
 #pragma mark ---------------------------- __FWInterfaceActionItemSeparatorView begin --------------------------------
 
 @interface __FWInterfaceActionItemSeparatorView : UIView
@@ -300,7 +60,10 @@
         self.alertAppearance = appearance;
         self.showsHorizontalScrollIndicator = NO;
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        self.contentEdgeInsets = [self.alertAppearance contentInsets];
+        
+        UIEdgeInsets contentInsets = self.alertAppearance.contentInsets;
+        contentInsets = UIEdgeInsetsMake(ceil(contentInsets.top), ceil(contentInsets.left), ceil(contentInsets.bottom), ceil(contentInsets.right));
+        self.contentEdgeInsets = contentInsets;
     }
     return self;
 }
@@ -332,10 +95,12 @@
 
 - (void)safeAreaInsetsDidChange {
     [super safeAreaInsetsDidChange];
-    CGFloat safeTop    = self.safeAreaInsets.top < self.alertAppearance.contentInsets.top ? self.alertAppearance.contentInsets.top : self.safeAreaInsets.top+10;
-    CGFloat safeLeft   = self.safeAreaInsets.left < self.alertAppearance.contentInsets.left ? self.alertAppearance.contentInsets.left : self.safeAreaInsets.left;
-    CGFloat safeBottom = self.safeAreaInsets.bottom < self.alertAppearance.contentInsets.bottom ? self.alertAppearance.contentInsets.bottom : self.safeAreaInsets.bottom+6;
-    CGFloat safeRight  = self.safeAreaInsets.right < self.alertAppearance.contentInsets.right ? self.alertAppearance.contentInsets.right : self.safeAreaInsets.right;
+    UIEdgeInsets contentInsets = self.alertAppearance.contentInsets;
+    contentInsets = UIEdgeInsetsMake(ceil(contentInsets.top), ceil(contentInsets.left), ceil(contentInsets.bottom), ceil(contentInsets.right));
+    CGFloat safeTop    = self.safeAreaInsets.top < contentInsets.top ? contentInsets.top : self.safeAreaInsets.top+10;
+    CGFloat safeLeft   = self.safeAreaInsets.left < contentInsets.left ? contentInsets.left : self.safeAreaInsets.left;
+    CGFloat safeBottom = self.safeAreaInsets.bottom < contentInsets.bottom ? contentInsets.bottom : self.safeAreaInsets.bottom+6;
+    CGFloat safeRight  = self.safeAreaInsets.right < contentInsets.right ? contentInsets.right : self.safeAreaInsets.right;
     _contentEdgeInsets = UIEdgeInsetsMake(safeTop, safeLeft, safeBottom, safeRight);
     // 这个block，主要是更新Label的最大预估宽度
     if (self.headerViewSfeAreaDidChangBlock) {
@@ -1021,21 +786,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @synthesize title = _title;
 
 #pragma mark - public
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle {
-    __FWAlertController *alertVc = [[__FWAlertController alloc] initWithTitle:title message:message customAlertView:nil customHeaderView:nil customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:__FWAlertAnimationTypeDefault appearance:nil];
-    return alertVc;
-}
-
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType {
-    __FWAlertController *alertVc = [[__FWAlertController alloc] initWithTitle:title message:message customAlertView:nil customHeaderView:nil customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:animationType appearance:nil];
-    return alertVc;
-}
-
-+ (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType appearance:(__FWAlertControllerAppearance *)appearance {
-    __FWAlertController *alertVc = [[__FWAlertController alloc] initWithTitle:title message:message customAlertView:nil customHeaderView:nil customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:animationType appearance:appearance];
-    return alertVc;
-}
-
 + (instancetype)alertControllerWithCustomAlertView:(UIView *)customAlertView preferredStyle:(__FWAlertControllerStyle)preferredStyle animationType:(__FWAlertAnimationType)animationType {
     __FWAlertController *alertVc = [[__FWAlertController alloc] initWithTitle:nil message:nil customAlertView:customAlertView customHeaderView:nil customActionSequenceView:nil componentView:nil preferredStyle:preferredStyle animationType:animationType appearance:nil];
     return alertVc;
@@ -2367,30 +2117,6 @@ UIEdgeInsets UIEdgeInsetsAddEdgeInsets(UIEdgeInsets i1,UIEdgeInsets i2) {
 @end
 
 @implementation __FWAlertAnimation
-
-+ (instancetype)animationIsPresenting:(BOOL)isPresenting {
-    return [[self alloc] initWithPresenting:isPresenting];
-}
-
-- (instancetype)initWithPresenting:(BOOL)isPresenting {
-    if (self = [super init]) {
-        self.presenting = isPresenting;
-    }
-    return self;
-}
-
-#pragma mark - UIViewControllerAnimatedTransitioning
-- (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext {
-    return 0.25f;
-}
-
-- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext {
-    if (self.presenting) {
-        [self presentAnimationTransition:transitionContext];
-    } else {
-        [self dismissAnimationTransition:transitionContext];
-    }
-}
 
 - (void)presentAnimationTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     __FWAlertController *alertController = (__FWAlertController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
