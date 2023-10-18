@@ -86,7 +86,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         
         // 添加首选按钮
         if let preferredActionBlock = alertController.fw_alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
-            let preferredAction = preferredActionBlock(alertController) as? UIAlertAction
+            let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
             }
@@ -123,7 +123,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         if currentIndex >= 0, alertController.actions.count > currentIndex {
             alertController.preferredAction = alertController.actions[currentIndex]
         } else if let preferredActionBlock = alertController.fw_alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
-            let preferredAction = preferredActionBlock(alertController) as? UIAlertAction
+            let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
             }
@@ -211,7 +211,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         // 初始化Alert
         let customAppearance = self.customAlertAppearance
         let alertController = alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
-        // alertController.alertStyle = style
+        alertController.alertStyle = style
         
         // 添加输入框
         for promptIndex in 0 ..< promptCount {
@@ -250,7 +250,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         
         // 添加首选按钮
         if let preferredActionBlock = alertController.alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
-            let preferredAction = preferredActionBlock(alertController) as? AlertAction
+            let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
             }
@@ -292,7 +292,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         if currentIndex >= 0, alertController.actions.count > currentIndex {
             alertController.preferredAction = alertController.actions[currentIndex]
         } else if let preferredActionBlock = alertController.alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
-            let preferredAction = preferredActionBlock(alertController) as? AlertAction
+            let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
             }
@@ -334,7 +334,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         
         // 添加首选按钮
         if let preferredActionBlock = alertController.alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
-            let preferredAction = preferredActionBlock(alertController) as? AlertAction
+            let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
             }
