@@ -9,35 +9,6 @@
 #import "ObjC.h"
 #import <FWFramework/FWFramework-Swift.h>
 
-#pragma mark ---------------------------- __FWInterfaceActionItemSeparatorView begin --------------------------------
-
-@interface __FWInterfaceActionItemSeparatorView : UIView
-@property (nonatomic, strong) __FWAlertControllerAppearance *alertAppearance;
-@property (nonatomic, strong) UIColor *customBackgroundColor;
-@end
-@implementation __FWInterfaceActionItemSeparatorView
-- (instancetype)initWithAppearance:(__FWAlertControllerAppearance *)appearance {
-    if (self = [super init]) {
-        self.alertAppearance = appearance;
-        self.backgroundColor = [self.alertAppearance lineColor];
-    }
-    return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    if (self.customBackgroundColor) {
-        self.backgroundColor = self.customBackgroundColor;
-    } else if (MIN(self.frame.size.width, self.frame.size.height) > self.alertAppearance.lineWidth) {
-        self.backgroundColor = [self.alertAppearance cancelLineColor];
-    } else {
-        self.backgroundColor = [self.alertAppearance lineColor];
-    }
-}
-
-@end
-#pragma mark ---------------------------- __FWAlertControllerActionView end --------------------------------
-
 #pragma mark ---------------------------- __FWInterfaceHeaderScrollView begin ----------------------------
 
 @interface __FWInterfaceHeaderScrollView : UIScrollView
