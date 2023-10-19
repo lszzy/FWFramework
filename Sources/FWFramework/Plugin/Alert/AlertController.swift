@@ -911,3 +911,31 @@ class AlertOverlayView: UIView {
     }
     
 }
+
+class AlertActionItemSeparatorView: UIView {
+    
+    var customBackgroundColor: UIColor?
+    private var alertAppearance: AlertControllerAppearance?
+    
+    init(appearance: AlertControllerAppearance?) {
+        super.init(frame: .zero)
+        self.alertAppearance = appearance
+        self.backgroundColor = appearance?.lineColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if customBackgroundColor != nil {
+            backgroundColor = customBackgroundColor
+        } else if let alertAppearance = alertAppearance, min(frame.width, frame.height) > alertAppearance.lineWidth {
+            backgroundColor = alertAppearance.cancelLineColor
+        } else {
+            backgroundColor = alertAppearance?.lineColor
+        }
+    }
+    
+}
