@@ -915,12 +915,16 @@ class AlertOverlayView: UIView {
 class AlertActionItemSeparatorView: UIView {
     
     var customBackgroundColor: UIColor?
-    private var alertAppearance: AlertControllerAppearance?
+    private var appearance: AlertControllerAppearance?
+    
+    private var alertAppearance: AlertControllerAppearance {
+        return appearance ?? AlertControllerAppearance.appearance
+    }
     
     init(appearance: AlertControllerAppearance?) {
         super.init(frame: .zero)
-        self.alertAppearance = appearance
-        self.backgroundColor = appearance?.lineColor
+        self.appearance = appearance
+        self.backgroundColor = alertAppearance.lineColor
     }
     
     required init?(coder: NSCoder) {
@@ -931,11 +935,159 @@ class AlertActionItemSeparatorView: UIView {
         super.layoutSubviews()
         if customBackgroundColor != nil {
             backgroundColor = customBackgroundColor
-        } else if let alertAppearance = alertAppearance, min(frame.width, frame.height) > alertAppearance.lineWidth {
+        } else if min(frame.width, frame.height) > alertAppearance.lineWidth {
             backgroundColor = alertAppearance.cancelLineColor
         } else {
-            backgroundColor = alertAppearance?.lineColor
+            backgroundColor = alertAppearance.lineColor
         }
+    }
+    
+}
+
+class AlertHeaderScrollView: UIScrollView {
+    
+    var headerViewSafeAreaDidChangedBlock: (() -> Void)?
+    var imageLimitSize: CGSize = .zero
+    private var textFields: [UITextField] = []
+    private var contentEdgeInsets: UIEdgeInsets = .zero
+    private var appearance: AlertControllerAppearance?
+    
+    private var alertAppearance: AlertControllerAppearance {
+        return appearance ?? AlertControllerAppearance.appearance
+    }
+    
+    private var appearanceContentInsets: UIEdgeInsets {
+        var contentInsets = alertAppearance.contentInsets
+        return UIEdgeInsets(top: ceil(contentInsets.top), left: ceil(contentInsets.left), bottom: ceil(contentInsets.bottom), right: ceil(contentInsets.right))
+    }
+    
+    private lazy var contentView: UIView = {
+        let result = UIView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(result)
+        return result
+    }()
+    
+    private var titleLabel: UILabel {
+        if let result = _titleLabel {
+            return result
+        }
+        
+        let result = UILabel()
+        result.font = UIFont.boldSystemFont(ofSize: 18)
+        result.textAlignment = .center
+        result.textColor = alertAppearance.titleDynamicColor
+        result.numberOfLines = 0
+        result.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(result)
+        _titleLabel = result
+        return result
+    }
+    private weak var _titleLabel: UILabel?
+    
+    private var messageLabel: UILabel {
+        if let result = _messageLabel {
+            return result
+        }
+        
+        let result = UILabel()
+        result.font = UIFont.systemFont(ofSize: 18)
+        result.textAlignment = .center
+        result.textColor = alertAppearance.grayColor
+        result.numberOfLines = 0
+        result.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(result)
+        _messageLabel = result
+        return result
+    }
+    private weak var _messageLabel: UILabel?
+    
+    private var imageView: UIImageView {
+        if let result = _imageView {
+            return result
+        }
+        
+        let result = UIImageView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.insertSubview(result, at: 0)
+        _imageView = result
+        return result
+    }
+    private weak var _imageView: UIImageView?
+    
+    private var textFieldView: UIStackView {
+        if let result = _textFieldView {
+            return result
+        }
+        
+        let result = UIStackView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.distribution = .fillEqually
+        result.axis = .vertical
+        result.spacing = alertAppearance.textFieldSpacing
+        if !textFields.isEmpty {
+            self.contentView.addSubview(result)
+        }
+        _textFieldView = result
+        return result
+    }
+    private weak var _textFieldView: UIStackView?
+    
+    init(appearance: AlertControllerAppearance?) {
+        super.init(frame: .zero)
+        self.appearance = appearance
+        self.showsHorizontalScrollIndicator = false
+        self.contentInsetAdjustmentBehavior = .never
+        self.contentEdgeInsets = appearanceContentInsets
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let resolvedColor = alertAppearance.lineColor?.resolvedColor(with: traitCollection)
+        textFields.forEach { textField in
+            textField.layer.borderColor = resolvedColor?.cgColor
+        }
+    }
+    
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        let contentInsets = appearanceContentInsets
+        let safeTop = safeAreaInsets.top < contentInsets.top ? contentInsets.top : safeAreaInsets.top + 10
+        let safeLeft = safeAreaInsets.left < contentInsets.left ? contentInsets.left : safeAreaInsets.left
+        let safeBottom = safeAreaInsets.bottom < contentInsets.bottom ? contentInsets.bottom : safeAreaInsets.bottom + 6
+        let safeRight = safeAreaInsets.right < contentInsets.right ? contentInsets.right : safeAreaInsets.right
+        contentEdgeInsets = UIEdgeInsets(top: safeTop, left: safeLeft, bottom: safeBottom, right: safeRight)
+        // 更新Label的最大预估宽度
+        headerViewSafeAreaDidChangedBlock?()
+        setNeedsUpdateConstraints()
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        NSLayoutConstraint.deactivate(self.constraints)
+        NSLayoutConstraint.deactivate(contentView.constraints)
+        
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[contentView]-0-|", metrics: nil, views: ["contentView": contentView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[contentView]-0-|", metrics: nil, views: ["contentView": contentView]))
+        NSLayoutConstraint(item: contentView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0, constant: 0).isActive = true
+        let equalHeightConstraint = NSLayoutConstraint(item: contentView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1.0, constant: 0)
+        equalHeightConstraint.priority = .init(998)
+        equalHeightConstraint.isActive = true
+        
+        let imageView = _imageView
+        let textFieldView = _textFieldView
+        let marginInsets = contentEdgeInsets
+    }
+    
+    func addTextField(_ textField: UITextField) {
+        textFields.append(textField)
+        textFieldView.addArrangedSubview(textField)
+        NSLayoutConstraint(item: textField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertAppearance.textFieldHeight).isActive = true
+        setNeedsUpdateConstraints()
     }
     
 }
