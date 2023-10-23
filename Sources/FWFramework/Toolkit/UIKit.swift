@@ -1401,6 +1401,13 @@ import AdSupport
         return label
     }
     
+    /// 获取当前标签是否非空，兼容attributedText|text
+    public var fw_isNotEmpty: Bool {
+        if (attributedText?.length ?? 0) > 0 { return true }
+        if (text?.count ?? 0) > 0 { return true }
+        return false
+    }
+    
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
     public var fw_textSize: CGSize {
         if self.frame.size.equalTo(.zero) {
