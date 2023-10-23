@@ -443,6 +443,11 @@ extension Wrapper where Base: UILabel {
         return Base.fw_label(font: font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
     }
     
+    /// 获取当前标签是否非空，兼容attributedText|text
+    public var isNotEmpty: Bool {
+        return base.fw_isNotEmpty
+    }
+    
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
     public var textSize: CGSize {
         return base.fw_textSize

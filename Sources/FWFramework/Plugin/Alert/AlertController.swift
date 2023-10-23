@@ -1081,6 +1081,65 @@ class AlertHeaderScrollView: UIScrollView {
         let imageView = _imageView
         let textFieldView = _textFieldView
         let marginInsets = contentEdgeInsets
+        
+        if let imageView = imageView, let image = imageView.image {
+            var imageViewConstraints: [NSLayoutConstraint] = []
+            imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: min(image.size.width, imageLimitSize.width)))
+            imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: min(image.size.height, imageLimitSize.height)))
+            imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1.0, constant: 0))
+            imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: marginInsets.top))
+            if (_titleLabel?.text?.count ?? 0) > 0 || (_titleLabel?.attributedText?.length ?? 0) > 0 {
+                imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: _titleLabel, attribute: .top, multiplier: 1.0, constant: -alertAppearance.imageTitleSpacing))
+            } else if (_messageLabel?.text?.count ?? 0) > 0 || (_messageLabel?.attributedText?.length ?? 0) > 0 {
+                imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: _messageLabel, attribute: .top, multiplier: 1.0, constant: -alertAppearance.imageTitleSpacing))
+            } else if textFields.count > 0 {
+                imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: textFieldView, attribute: .top, multiplier: 1.0, constant: -alertAppearance.imageTitleSpacing))
+            } else {
+                imageViewConstraints.append(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1.0, constant: -marginInsets.bottom))
+            }
+            NSLayoutConstraint.activate(imageViewConstraints)
+        }
+        
+        var titleLabelConstraints: [NSLayoutConstraint] = []
+        var labels: [UILabel] = []
+        if let titleLabel = _titleLabel, (titleLabel.text?.count ?? 0) > 0 || (titleLabel.attributedText?.length ?? 0) > 0 {
+            labels.insert(titleLabel, at: 0)
+        }
+        if let messageLabel = _messageLabel, (messageLabel.text?.count ?? 0) > 0 || (messageLabel.attributedText?.length ?? 0) > 0 {
+            labels.append(messageLabel)
+        }
+        for (idx, label) in labels.enumerated() {
+            titleLabelConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(==leftMargin)-[label]-(==rightMargin)-|", metrics: ["leftMargin": NSNumber(value: marginInsets.left), "rightMargin": NSNumber(value: marginInsets.right)], views: ["label": label]))
+            if idx == 0 {
+                if imageView?.image == nil {
+                    titleLabelConstraints.append(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: marginInsets.top))
+                }
+            }
+            if idx == labels.count - 1 {
+                if textFields.count > 0 {
+                    titleLabelConstraints.append(NSLayoutConstraint(item: label, attribute: .bottom, relatedBy: .equal, toItem: textFieldView, attribute: .top, multiplier: 1.0, constant: -(alertAppearance.textFieldTopMargin > 0 ? alertAppearance.textFieldTopMargin : marginInsets.bottom)))
+                } else {
+                    titleLabelConstraints.append(NSLayoutConstraint(item: label, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1.0, constant: -marginInsets.bottom))
+                }
+            }
+            if idx > 0 {
+                titleLabelConstraints.append(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: labels[idx - 1], attribute: .bottom, multiplier: 1.0, constant: alertAppearance.titleMessageSpacing))
+            }
+        }
+        NSLayoutConstraint.activate(titleLabelConstraints)
+        
+        if textFields.count > 0, let textFieldView = textFieldView {
+            var textFieldViewConstraints: [NSLayoutConstraint] = []
+            if labels.count < 1, imageView?.image == nil {
+                textFieldViewConstraints.append(NSLayoutConstraint(item: textFieldView, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: marginInsets.top))
+            }
+            textFieldViewConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-(==leftMargin)-[textFieldView]-(==rightMargin)-|", metrics: ["leftMargin": NSNumber(value: marginInsets.left), "rightMargin": NSNumber(value: marginInsets.right)], views: ["textFieldView": textFieldView]))
+            textFieldViewConstraints.append(NSLayoutConstraint(item: textFieldView, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1.0, constant: -marginInsets.bottom))
+            NSLayoutConstraint.activate(textFieldViewConstraints)
+        }
+        
+        // systemLayoutSizeFittingSize:方法获取子控件撑起contentView后的高度，如果子控件是UILabel，那么子label必须设置preferredMaxLayoutWidth,否则当label多行文本时计算不准确
+        NSLayoutConstraint(item: contentView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: contentView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height).isActive = true
     }
     
     func addTextField(_ textField: UITextField) {
