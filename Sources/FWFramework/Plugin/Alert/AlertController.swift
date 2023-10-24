@@ -1150,3 +1150,139 @@ class AlertHeaderScrollView: UIScrollView {
     }
     
 }
+
+class AlertControllerActionView: UIView {
+    
+    private weak var target: AnyObject?
+    private var methodAction: Selector?
+    private var actionButtonConstraints: [NSLayoutConstraint] = []
+    private var afterSpacing: CGFloat = 0
+    private var appearance: AlertControllerAppearance?
+    
+    private var action: AlertAction? {
+        didSet {
+            guard let action = action else { return }
+            
+            actionButton.titleLabel?.font = action.titleFont
+            if action.isEnabled {
+                actionButton.setTitleColor(action.titleColor, for: .normal)
+            } else {
+                actionButton.setTitleColor(action.titleColor?.withAlphaComponent(0.4), for: .normal)
+            }
+            
+            // 注意不能赋值给按钮的titleEdgeInsets，当只有文字时，按钮的titleEdgeInsets设置top和bottom值无效
+            actionButton.contentEdgeInsets = action.titleEdgeInsets
+            actionButton.isEnabled = action.isEnabled
+            actionButton.tintColor = action.tintColor
+            if let attributedTitle = action.attributedTitle {
+                // 这里之所以要设置按钮颜色为黑色，是因为如果外界在addAction:之后设置按钮的富文本，那么富文本的颜色在没有采用NSForegroundColorAttributeName的情况下会自动读取按钮上普通文本的颜色，在addAction:之前设置会保持默认色(黑色)，为了在addAction:前后设置富文本保持统一，这里先将按钮置为黑色，富文本就会是黑色
+                actionButton.setTitleColor(alertAppearance.titleDynamicColor, for: .normal)
+                if attributedTitle.string.contains("\n") || attributedTitle.string.contains("\r") {
+                    actionButton.titleLabel?.lineBreakMode = .byWordWrapping
+                }
+                actionButton.setAttributedTitle(attributedTitle, for: .normal)
+                
+                // 设置完富文本之后，还原按钮普通文本的颜色，其实这行代码加不加都不影响，只是为了让按钮普通文本的颜色保持跟action.titleColor一致
+                actionButton.setTitleColor(action.titleColor, for: .normal)
+            } else {
+                let actionTitle = action.title ?? ""
+                if actionTitle.contains("\n") || actionTitle.contains("\r") {
+                    actionButton.titleLabel?.lineBreakMode = .byWordWrapping
+                }
+                actionButton.setTitle(action.title, for: .normal)
+            }
+            actionButton.setImage(action.image, for: .normal)
+            actionButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: action.imageTitleSpacing, bottom: 0, right: -action.imageTitleSpacing)
+            actionButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -action.imageTitleSpacing, bottom: 0, right: action.imageTitleSpacing)
+        }
+    }
+    
+    private var alertAppearance: AlertControllerAppearance {
+        return appearance ?? AlertControllerAppearance.appearance
+    }
+    
+    private lazy var actionButton: UIButton = {
+        let result = UIButton(type: .custom)
+        result.backgroundColor = alertAppearance.normalColor
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.titleLabel?.textAlignment = .center
+        result.titleLabel?.adjustsFontSizeToFitWidth = true
+        result.titleLabel?.baselineAdjustment = .alignCenters
+        result.titleLabel?.minimumScaleFactor = 0.5
+        // 手指按下然后在按钮有效事件范围内抬起
+        result.addTarget(self, action: #selector(touchUpInside(_:)), for: .touchUpInside)
+        // 手指按下或者手指按下后往外拽再往内拽
+        result.addTarget(self, action: #selector(touchDown(_:)), for: [.touchDown, .touchDragInside])
+        // 手指被迫停止、手指按下后往外拽或者取消，取消的可能性:比如点击的那一刻突然来电话
+        result.addTarget(self, action: #selector(touchDragExit(_:)), for: [.touchDragExit, .touchUpOutside, .touchCancel])
+        self.addSubview(result)
+        return result
+    }()
+    
+    init(appearance: AlertControllerAppearance?) {
+        super.init(frame: .zero)
+        self.appearance = appearance
+        self.afterSpacing = alertAppearance.lineWidth
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        let actionTitleInsets = action?.titleEdgeInsets ?? .zero
+        actionButton.contentEdgeInsets = UIEdgeInsets(top: safeAreaInsets.top + actionTitleInsets.top, left: safeAreaInsets.left + actionTitleInsets.left, bottom: safeAreaInsets.bottom + actionTitleInsets.bottom, right: safeAreaInsets.right + actionTitleInsets.right)
+        setNeedsUpdateConstraints()
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        
+        if self.actionButtonConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.actionButtonConstraints)
+            self.actionButtonConstraints.removeAll()
+        }
+        
+        var actionButtonConstraints: [NSLayoutConstraint] = []
+        actionButtonConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[actionButton]-0-|", metrics: nil, views: ["actionButton": actionButton]))
+        actionButtonConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[actionButton]-0-|", metrics: nil, views: ["actionButton": actionButton]))
+        // 按钮必须确认高度，因为其父视图及父视图的父视图乃至根视图都没有设置高度，而且必须用NSLayoutRelationEqual，如果用NSLayoutRelationGreaterThanOrEqual,虽然也能撑起父视图，但是当某个按钮的高度有所变化以后，stackView会将其余按钮按的高度同比增减。
+        let labelH = actionButton.titleLabel?.intrinsicContentSize.height ?? 0
+        let topBottomInsetsSum = actionButton.contentEdgeInsets.top + actionButton.contentEdgeInsets.bottom
+        // 文字的上下间距之和,等于FW_ACTION_HEIGHT-默认字体大小,这是为了保证文字上下有一个固定间距值，不至于使文字靠按钮太紧，,由于按钮内容默认垂直居中，所以最终的顶部或底部间距为topBottom_marginSum/2.0,这个间距，几乎等于18号字体时，最小高度为49时的上下间距
+        let topBottomMarginSum = alertAppearance.actionHeight - (alertAppearance.actionFont?.lineHeight ?? 0)
+        let buttonH = labelH + topBottomInsetsSum + topBottomMarginSum
+        var relation: NSLayoutConstraint.Relation = .equal
+        if let stackView = superview as? UIStackView, stackView.axis == .horizontal {
+            relation = .greaterThanOrEqual
+        }
+        let buttonHConstraint = NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: relation, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonH)
+        buttonHConstraint.priority = .init(999)
+        actionButtonConstraints.append(buttonHConstraint)
+        let minHConstraint = NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertAppearance.actionHeight + topBottomInsetsSum)
+        minHConstraint.priority = .required
+        addConstraints(actionButtonConstraints)
+        self.actionButtonConstraints = actionButtonConstraints
+    }
+    
+    func addTarget(_ target: AnyObject?, action methodAction: Selector?) {
+        self.target = target
+        self.methodAction = methodAction
+    }
+    
+    @objc private func touchUpInside(_ sender: UIButton) {
+        if let target = target, let methodAction = methodAction, target.responds(to: methodAction) {
+            _ = target.perform(methodAction, with: self)
+        }
+    }
+    
+    @objc private func touchDown(_ sender: UIButton) {
+        sender.backgroundColor = alertAppearance.selectedColor
+    }
+    
+    @objc private func touchDragExit(_ sender: UIButton) {
+        sender.backgroundColor = alertAppearance.normalColor
+    }
+    
+}
