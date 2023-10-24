@@ -150,20 +150,16 @@ public class AlertControllerAppearance: NSObject {
 /// 自定义弹窗控制器
 ///
 /// [SPAlertController](https://github.com/SPStore/SPAlertController)
-open class AlertController: UIViewController {
+open class AlertController: UIViewController, UIViewControllerTransitioningDelegate {
     
     /// 获取所有动作
-    open var actions: [AlertAction] {
-        return []
-    }
+    open private(set) var actions: [AlertAction] = []
     
     /// 设置首选动作
     open var preferredAction: AlertAction?
     
     /// 获取所有输入框
-    open var textFields: [UITextField]? {
-        return nil
-    }
+    open private(set) var textFields: [UITextField]? = []
     
     /// 主标题
     open override var title: String? {
@@ -179,7 +175,19 @@ open class AlertController: UIViewController {
     /// 弹窗样式，默认Default
     open var alertStyle: AlertStyle = .default
     /// 动画类型
-    open var animationType: AlertAnimationType
+    open var animationType: AlertAnimationType {
+        get {
+            return _animationType
+        }
+        set {
+            if newValue == .default {
+                _animationType = preferredStyle == .alert ? .shrink : .fromBottom
+            } else {
+                _animationType = newValue
+            }
+        }
+    }
+    private var _animationType: AlertAnimationType = .default
     /// 主标题(富文本)
     open var attributedTitle: NSAttributedString?
     /// 副标题(富文本)
@@ -190,15 +198,15 @@ open class AlertController: UIViewController {
     /// 主标题颜色
     open var titleColor: UIColor?
     /// 主标题字体,默认18,加粗
-    open var titleFont: UIFont?
+    open var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 18)
     /// 副标题颜色
     open var messageColor: UIColor?
     /// 副标题字体,默认16,未加粗
-    open var messageFont: UIFont?
+    open var messageFont: UIFont? = UIFont.systemFont(ofSize: 16)
     /// 对齐方式(包括主标题和副标题)
     open var textAlignment: NSTextAlignment = .center
     /// 头部图标的限制大小,默认无穷大
-    open var imageLimitSize: CGSize = .zero
+    open var imageLimitSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     /// 图片的tintColor,当外部的图片使用了AlwaysTemplate的渲染模式时,该属性可起到作用
     open var imageTintColor: UIColor?
     
@@ -206,57 +214,278 @@ open class AlertController: UIViewController {
     /// actionSheet样式下:默认为UILayoutConstraintAxisVertical(垂直排列), 如果设置为UILayoutConstraintAxisHorizontal(水平排列)，则除去取消样式action之外的其余action将水平排列
     /// alert样式下:当actions的个数大于2，或者某个action的title显示不全时为UILayoutConstraintAxisVertical(垂直排列)，否则默认为UILayoutConstraintAxisHorizontal(水平排列)，此样式下设置该属性可以修改所有action的排列方式
     /// 不论哪种样式，只要外界设置了该属性，永远以外界设置的优先
-    open var actionAxis: NSLayoutConstraint.Axis
+    open var actionAxis: NSLayoutConstraint.Axis = .vertical
     /// 距离屏幕边缘的最小间距
     /// alert样式下该属性是指对话框四边与屏幕边缘之间的距离，此样式下默认值随设备变化，actionSheet样式下是指弹出边的对立边与屏幕之间的距离，比如如果从右边弹出，那么该属性指的就是对话框左边与屏幕之间的距离，此样式下默认值为70
-    open var minDistanceToEdges: CGFloat
+    open var minDistanceToEdges: CGFloat = 0
     /// Alert样式下默认6.0f，ActionSheet样式下默认13.0f，去除半径设置为0即可
-    open var cornerRadius: CGFloat
+    open var cornerRadius: CGFloat = 0
     /// 对话框的偏移量，y值为正向下偏移，为负向上偏移；x值为正向右偏移，为负向左偏移，该属性只对Alert样式有效,键盘的frame改变会自动偏移，如果手动设置偏移只会取手动设置的
-    open var offsetForAlert: CGPoint
-    /// 是否需要对话框拥有毛玻璃,默认为YES
-    open var needDialogBlur: Bool
+    open var offsetForAlert: CGPoint {
+        get {
+            return _offsetForAlert
+        }
+        set {
+            setOffsetForAlert(newValue, animated: false)
+        }
+    }
+    private var _offsetForAlert: CGPoint = .zero
+    /// 是否需要对话框拥有毛玻璃,默认为NO
+    open var needDialogBlur: Bool = false
     /// 是否含有自定义TextField,键盘的frame改变会自动偏移,默认为NO
-    open var customTextField: Bool
+    open var customTextField: Bool = false
     /// 是否单击背景退出对话框,默认为YES
-    open var tapBackgroundViewDismiss: Bool
+    open var tapBackgroundViewDismiss: Bool = true
     /// 是否点击动作按钮退出动画框,默认为YES
-    open var tapActionDismiss: Bool
+    open var tapActionDismiss: Bool = true
     
     /// 单击背景dismiss完成回调，默认nil
     open var dismissCompletion: (() -> Void)?
     /// 事件代理
     open weak var delegate: AlertControllerDelegate?
     /// 弹出框样式
-    open private(set) var preferredStyle: AlertControllerStyle
+    open private(set) var preferredStyle: AlertControllerStyle = .actionSheet
     /// 自定义样式，默认为样式单例
-    open var alertAppearance: AlertControllerAppearance
+    open var alertAppearance: AlertControllerAppearance {
+        return appearance ?? AlertControllerAppearance.appearance
+    }
     
     var backgroundViewAppearanceStyle: UIBlurEffect.Style?
-    var backgroundViewAlpha: CGFloat
+    var backgroundViewAlpha: CGFloat = 0.5
+    private var customViewSize: CGSize = .zero
+    private var customHeaderSpacing: CGFloat = 0
+    private var dimmingKnockoutBackdropView: UIView?
+    private var headerActionLineConstraints: [NSLayoutConstraint] = []
+    private var componentViewConstraints: [NSLayoutConstraint] = []
+    private var componentActionLineConstraints: [NSLayoutConstraint] = []
+    private var alertControllerViewConstraints: [NSLayoutConstraint] = []
+    private var headerViewConstraints: [NSLayoutConstraint] = []
+    private var actionSequenceViewConstraints: [NSLayoutConstraint] = []
+    private var otherActions: [AlertAction] = []
+    // 是否强制排列，外界设置了actionAxis属性认为是强制
+    private var isForceLayout = false
+    // 是否强制偏移，外界设置了offsetForAlert属性认为是强制
+    private var isForceOffset = false
+    private var appearance: AlertControllerAppearance?
+    private var maxWidth: CGFloat {
+        if preferredStyle == .alert {
+            return min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) - minDistanceToEdges * 2
+        } else {
+            return UIScreen.main.bounds.size.width
+        }
+    }
+    
+    private lazy var alertControllerView: UIView = {
+        let result = UIView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        return result
+    }()
+    
+    private var containerView: UIView {
+        if let result = _containerView {
+            return result
+        }
+        
+        let result = UIView()
+        if preferredStyle == .alert {
+            result.layer.cornerRadius = cornerRadius
+            result.layer.masksToBounds = true
+        } else {
+            if cornerRadius > 0 {
+                let maskLayer = CAShapeLayer()
+                result.layer.mask = maskLayer
+            }
+        }
+        alertControllerView.addSubview(result)
+        if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
+            result.fw_pinEdges(toSuperview: alertAppearance.sheetContainerInsets)
+        } else {
+            result.frame = alertControllerView.bounds
+            result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        }
+        _containerView = result
+        return result
+    }
+    private weak var _containerView: UIView?
+    
+    private lazy var alertView: UIView = {
+        let result = UIView()
+        result.frame = alertControllerView.bounds
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        if customAlertView == nil {
+            containerView.addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var headerView: AlertHeaderScrollView = {
+        let result = AlertHeaderScrollView(appearance: appearance)
+        result.backgroundColor = alertAppearance.normalColor
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.headerViewSafeAreaDidChangedBlock = { [weak self] in
+            guard let self = self else { return }
+            self.setupPreferredMaxLayoutWidth(for: self.headerView.titleLabel)
+            self.setupPreferredMaxLayoutWidth(for: self.headerView.messageLabel)
+        }
+        if customHeaderView == nil {
+            alertView.addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var actionSequenceView: AlertActionSequenceView = {
+        let result = AlertActionSequenceView(appearance: appearance)
+        result.preferredStyle = preferredStyle
+        result.cornerRadius = cornerRadius
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.buttonClickedInActionViewBlock = { [weak self] index, actionView in
+            guard let self = self else { return }
+            let action = self.actions[index]
+            if self.tapActionDismiss {
+                self.dismiss(animated: true) {
+                    action.handler?(action)
+                }
+            } else {
+                actionView.actionButton.backgroundColor = actionView.alertAppearance.normalColor
+                action.handler?(action)
+            }
+        }
+        if actions.count > 0, customActionSequenceView == nil {
+            alertView.addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var headerActionLine: AlertActionItemSeparatorView = {
+        let result = AlertActionItemSeparatorView(appearance: appearance)
+        result.translatesAutoresizingMaskIntoConstraints = false
+        if (headerView.superview != nil || customHeaderView?.superview != nil) && (actionSequenceView.superview != nil || customActionSequenceView?.superview != nil) {
+            alertView.addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var componentActionLine: AlertActionItemSeparatorView = {
+        let result = AlertActionItemSeparatorView(appearance: appearance)
+        result.translatesAutoresizingMaskIntoConstraints = false
+        if componentView?.superview != nil && (actionSequenceView.superview != nil || customActionSequenceView?.superview != nil) {
+            alertView.addSubview(result)
+        }
+        return result
+    }()
+    
+    private var customAlertView: UIView? {
+        if let result = _customAlertView, result.superview == nil {
+            if customViewSize.equalTo(.zero) {
+                customViewSize = sizeForCustomView(result)
+            }
+            // 必须在在下面2行代码之前获取_customViewSize
+            result.frame = alertControllerView.bounds
+            result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            containerView.addSubview(result)
+        }
+        return _customAlertView
+    }
+    private var _customAlertView: UIView?
+    
+    private var customHeaderView: UIView? {
+        if let result = _customHeaderView, result.superview == nil {
+            if customViewSize.equalTo(.zero) {
+                customViewSize = sizeForCustomView(result)
+            }
+            result.translatesAutoresizingMaskIntoConstraints = false
+            alertView.addSubview(result)
+        }
+        return _customHeaderView
+    }
+    private var _customHeaderView: UIView?
+    
+    private var customActionSequenceView: UIView? {
+        if let result = _customActionSequenceView, result.superview == nil {
+            if customViewSize.equalTo(.zero) {
+                customViewSize = sizeForCustomView(result)
+            }
+            result.translatesAutoresizingMaskIntoConstraints = false
+            alertView.addSubview(result)
+        }
+        return _customActionSequenceView
+    }
+    private var _customActionSequenceView: UIView?
+    
+    private var componentView: UIView? {
+        if let result = _componentView, result.superview == nil {
+            assert(headerActionLine.superview != nil, "Due to the -componentView is added between the -head and the -action section, the -head and -action must exist together")
+            if customViewSize.equalTo(.zero) {
+                customViewSize = sizeForCustomView(result)
+            }
+            result.translatesAutoresizingMaskIntoConstraints = false
+            alertView.addSubview(result)
+        }
+        return _componentView
+    }
+    private var _componentView: UIView?
     
     /// 创建控制器(默认对话框)
-    public init(title: String?, message: String?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
-        
+    public convenience init(title: String?, message: String?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
+        self.init(title: title, message: message, customAlertView: nil, customHeaderView: nil, customActionSequenceView: nil, componentView: nil, preferredStyle: preferredStyle, animationType: animationType, appearance: appearance)
     }
     
     /// 创建控制器(自定义整个对话框)
-    public init(customAlertView: UIView, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
-        
+    public convenience init(customAlertView: UIView, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
+        self.init(title: nil, message: nil, customAlertView: customAlertView, customHeaderView: nil, customActionSequenceView: nil, componentView: nil, preferredStyle: preferredStyle, animationType: animationType, appearance: appearance)
     }
     
     /// 创建控制器(自定义对话框的头部)
-    public init(customHeaderView: UIView, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
-        
+    public convenience init(customHeaderView: UIView, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
+        self.init(title: nil, message: nil, customAlertView: nil, customHeaderView: customHeaderView, customActionSequenceView: nil, componentView: nil, preferredStyle: preferredStyle, animationType: animationType, appearance: appearance)
     }
     
     /// 创建控制器(自定义对话框的action部分)
-    public init(customActionSequenceView: UIView, title: String?, message: String?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
+    public convenience init(customActionSequenceView: UIView, title: String?, message: String?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType = .default, appearance: AlertControllerAppearance? = nil) {
+        self.init(title: title, message: message, customAlertView: nil, customHeaderView: nil, customActionSequenceView: customActionSequenceView, componentView: nil, preferredStyle: preferredStyle, animationType: animationType, appearance: appearance)
+    }
+    
+    private init(title: String?, message: String?, customAlertView: UIView?, customHeaderView: UIView?, customActionSequenceView: UIView?, componentView: UIView?, preferredStyle: AlertControllerStyle, animationType: AlertAnimationType, appearance: AlertControllerAppearance?) {
+        super.init(nibName: nil, bundle: nil)
+        self.appearance = appearance
+        self.didInitialize()
         
+        self.title = title
+        self.message = message
+        self.preferredStyle = preferredStyle
+        self.animationType = animationType
+        if preferredStyle == .alert {
+            self.minDistanceToEdges = alertAppearance.alertEdgeDistance
+            self.cornerRadius = alertAppearance.alertCornerRadius
+            self.actionAxis = .horizontal
+        } else {
+            self.minDistanceToEdges = alertAppearance.sheetEdgeDistance
+            self.cornerRadius = alertAppearance.sheetCornerRadius
+            self.actionAxis = .vertical
+        }
+        _customAlertView = customAlertView
+        _customHeaderView = customHeaderView
+        _customActionSequenceView = customActionSequenceView
+        _componentView = componentView
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        didInitialize()
     }
     
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func didInitialize() {
+        providesPresentationContextTransitionStyle = true
+        definesPresentationContext = true
+        modalPresentationStyle = .custom
+        transitioningDelegate = self
+        
+        self.titleColor = alertAppearance.titleDynamicColor
+        self.messageColor = alertAppearance.grayColor
     }
     
     /// 添加动作
@@ -271,7 +500,9 @@ open class AlertController: UIViewController {
     
     /// 设置alert样式下的偏移量,动画为NO则跟属性offsetForAlert等效
     open func setOffsetForAlert(_ offsetForAlert: CGPoint, animated: Bool) {
-        
+        _offsetForAlert = offsetForAlert
+        isForceOffset = true
+        makeViewOffset(animated: animated)
     }
     
     /// 设置action与下一个action之间的间距, action仅限于非取消样式，必须在'-addAction:'之后设置，nil时设置header与action间距
@@ -291,7 +522,7 @@ open class AlertController: UIViewController {
     
     /// 插入一个组件view，位置处于头部和action部分之间，要求头部和action部分同时存在
     open func insertComponentView(_ componentView: UIView) {
-        
+        _componentView = componentView
     }
     
     /// 更新自定义view的size，比如屏幕旋转，自定义view的大小发生了改变，可通过该方法更新size
@@ -301,6 +532,87 @@ open class AlertController: UIViewController {
     
     func layoutAlertControllerView() {
         
+    }
+    
+    private func layoutAlertControllerViewForAlertStyle() {
+        
+    }
+    
+    private func layoutAlertControllerViewForActionSheetStyle() {
+        
+    }
+    
+    private func layoutAlertControllerViewForAnimationType(hv: String, equalAttribute: NSLayoutConstraint.Attribute, notEqualAttribute: NSLayoutConstraint.Attribute, lessOrGreaterRelation relation: NSLayoutConstraint.Relation) {
+        
+    }
+    
+    private func layoutChildViews() {
+        
+    }
+    
+    private func layoutHeaderView() {
+        
+    }
+    
+    private func layoutHeaderActionLine() {
+        
+    }
+    
+    private func layoutComponentView() {
+        
+    }
+    
+    private func layoutComponentActionLine() {
+        
+    }
+    
+    private func layoutActionSequenceView() {
+        
+    }
+    
+    private func handleIncompleteTextDisplay() {
+        
+    }
+    
+    private func configureHeaderView() {
+        
+    }
+    
+    private func setupPreferredMaxLayoutWidth(for label: UILabel) {
+        
+    }
+    
+    @objc private func textFieldDidEndOnExit(_ textField: UITextField) {
+        
+    }
+    
+    @objc private func keyboardFrameWillChange(_ notification: Notification) {
+        
+    }
+    
+    private func updateActionAxis() {
+        
+    }
+    
+    private func makeViewOffset(animated: Bool) {
+        
+    }
+    
+    private func sizeForCustomView(_ customView: UIView) -> CGSize {
+        
+    }
+    
+    open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return AlertAnimation(isPresenting: true)
+    }
+    
+    open func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        view.endEditing(true)
+        return AlertAnimation(isPresenting: false)
+    }
+    
+    open func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return AlertPresentationController(presentedViewController: presented, presenting: presenting)
     }
     
 }
@@ -968,7 +1280,7 @@ class AlertHeaderScrollView: UIScrollView {
         return result
     }()
     
-    private var titleLabel: UILabel {
+    var titleLabel: UILabel {
         if let result = _titleLabel {
             return result
         }
@@ -985,7 +1297,7 @@ class AlertHeaderScrollView: UIScrollView {
     }
     private weak var _titleLabel: UILabel?
     
-    private var messageLabel: UILabel {
+    var messageLabel: UILabel {
         if let result = _messageLabel {
             return result
         }
@@ -1197,11 +1509,11 @@ class AlertControllerActionView: UIView {
         }
     }
     
-    private var alertAppearance: AlertControllerAppearance {
+    var alertAppearance: AlertControllerAppearance {
         return appearance ?? AlertControllerAppearance.appearance
     }
     
-    private lazy var actionButton: UIButton = {
+    lazy var actionButton: UIButton = {
         let result = UIButton(type: .custom)
         result.backgroundColor = alertAppearance.normalColor
         result.translatesAutoresizingMaskIntoConstraints = false
