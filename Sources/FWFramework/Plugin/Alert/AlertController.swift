@@ -163,15 +163,29 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     
     /// 主标题
     open override var title: String? {
-        get {
-            
-        }
-        set {
-            
+        didSet {
+            if isViewLoaded {
+                // 如果条件为真，说明外界在对title赋值之前就已经使用了self.view，先走了viewDidLoad方法，如果先走的viewDidLoad，需要在title的setter方法中重新设置数据,以下setter方法中的条件同理
+                headerView.titleLabel.text = title
+                // 文字发生变化后再更新布局，这里更新布局也不是那么重要，因为headerView中的布局方法只有当__FWAlertController被present后才会走一次，而那时候，一般title,titleFont、message、messageFont等都是最新值，这里防止的是：在__FWAlertController被present后的某个时刻再去设置title,titleFont等，我们要更新布局
+                // 这个if条件的意思是当__FWAlertController被present后的某个时刻设置了title，如果在present之前设置的就不用更新，系统会主动更新
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
         }
     }
     /// 副标题
-    open var message: String?
+    open var message: String? {
+        didSet {
+            if isViewLoaded {
+                headerView.messageLabel.text = message
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 弹窗样式，默认Default
     open var alertStyle: AlertStyle = .default
     /// 动画类型
@@ -189,37 +203,164 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     private var _animationType: AlertAnimationType = .default
     /// 主标题(富文本)
-    open var attributedTitle: NSAttributedString?
+    open var attributedTitle: NSAttributedString? {
+        didSet {
+            if isViewLoaded {
+                headerView.titleLabel.attributedText = attributedTitle
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 副标题(富文本)
-    open var attributedMessage: NSAttributedString?
+    open var attributedMessage: NSAttributedString? {
+        didSet {
+            if isViewLoaded {
+                headerView.messageLabel.attributedText = attributedMessage
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 头部图标，位置处于title之上,大小取决于图片本身大小
-    open var image: UIImage?
+    open var image: UIImage? {
+        didSet {
+            if isViewLoaded {
+                headerView.imageView.image = image
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     
     /// 主标题颜色
-    open var titleColor: UIColor?
+    open var titleColor: UIColor? {
+        didSet {
+            if isViewLoaded {
+                headerView.titleLabel.textColor = titleColor
+            }
+        }
+    }
     /// 主标题字体,默认18,加粗
-    open var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 18)
+    open var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 18) {
+        didSet {
+            if isViewLoaded {
+                headerView.titleLabel.font = titleFont
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 副标题颜色
-    open var messageColor: UIColor?
+    open var messageColor: UIColor? {
+        didSet {
+            if isViewLoaded {
+                headerView.messageLabel.textColor = messageColor
+            }
+        }
+    }
     /// 副标题字体,默认16,未加粗
-    open var messageFont: UIFont? = UIFont.systemFont(ofSize: 16)
+    open var messageFont: UIFont? = UIFont.systemFont(ofSize: 16) {
+        didSet {
+            if isViewLoaded {
+                headerView.messageLabel.font = messageFont
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 对齐方式(包括主标题和副标题)
-    open var textAlignment: NSTextAlignment = .center
+    open var textAlignment: NSTextAlignment = .center {
+        didSet {
+            headerView.titleLabel.textAlignment = textAlignment
+            headerView.messageLabel.textAlignment = textAlignment
+        }
+    }
     /// 头部图标的限制大小,默认无穷大
-    open var imageLimitSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    open var imageLimitSize: CGSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude) {
+        didSet {
+            if isViewLoaded {
+                headerView.imageLimitSize = imageLimitSize
+                if presentationController?.presentingViewController != nil {
+                    headerView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// 图片的tintColor,当外部的图片使用了AlwaysTemplate的渲染模式时,该属性可起到作用
-    open var imageTintColor: UIColor?
+    open var imageTintColor: UIColor? {
+        didSet {
+            if isViewLoaded {
+                headerView.imageView.tintColor = imageTintColor
+            }
+        }
+    }
     
     /// action水平排列还是垂直排列
     /// actionSheet样式下:默认为UILayoutConstraintAxisVertical(垂直排列), 如果设置为UILayoutConstraintAxisHorizontal(水平排列)，则除去取消样式action之外的其余action将水平排列
     /// alert样式下:当actions的个数大于2，或者某个action的title显示不全时为UILayoutConstraintAxisVertical(垂直排列)，否则默认为UILayoutConstraintAxisHorizontal(水平排列)，此样式下设置该属性可以修改所有action的排列方式
     /// 不论哪种样式，只要外界设置了该属性，永远以外界设置的优先
-    open var actionAxis: NSLayoutConstraint.Axis = .vertical
+    open var actionAxis: NSLayoutConstraint.Axis = .vertical {
+        didSet {
+            // 调用该setter方法则认为是强制布局，该setter方法只有外界能调，这样才能判断外界有没有调用actionAxis的setter方法，从而是否按照外界的指定布局方式进行布局
+            isForceLayout = true
+            if isViewLoaded {
+                updateActionAxis()
+            }
+        }
+    }
     /// 距离屏幕边缘的最小间距
     /// alert样式下该属性是指对话框四边与屏幕边缘之间的距离，此样式下默认值随设备变化，actionSheet样式下是指弹出边的对立边与屏幕之间的距离，比如如果从右边弹出，那么该属性指的就是对话框左边与屏幕之间的距离，此样式下默认值为70
-    open var minDistanceToEdges: CGFloat = 0
+    open var minDistanceToEdges: CGFloat = 0 {
+        didSet {
+            if isViewLoaded {
+                setupPreferredMaxLayoutWidth(for: headerView.titleLabel)
+                setupPreferredMaxLayoutWidth(for: headerView.messageLabel)
+                if presentationController?.presentingViewController != nil {
+                    layoutAlertControllerView()
+                    headerView.setNeedsUpdateConstraints()
+                    actionSequenceView.setNeedsUpdateConstraints()
+                }
+            }
+        }
+    }
     /// Alert样式下默认6.0f，ActionSheet样式下默认13.0f，去除半径设置为0即可
-    open var cornerRadius: CGFloat = 0
+    open var cornerRadius: CGFloat = 0 {
+        didSet {
+            if preferredStyle == .alert {
+                containerView.layer.cornerRadius = cornerRadius
+                containerView.layer.masksToBounds = true
+            } else {
+                if cornerRadius > 0 {
+                    var corner: UIRectCorner = [.topLeft, .topRight]
+                    switch _animationType {
+                    case .fromBottom:
+                        corner = [.topLeft, .topRight]
+                    case .fromTop:
+                        corner = [.bottomLeft, .bottomRight]
+                    case .fromLeft:
+                        corner = [.topRight, .bottomRight]
+                    case .fromRight:
+                        corner = [.topLeft, .bottomLeft]
+                    default:
+                        break
+                    }
+                    if let _containerView = _containerView,
+                       let maskLayer = _containerView.layer.mask as? CAShapeLayer {
+                        maskLayer.path = UIBezierPath(roundedRect: _containerView.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)).cgPath
+                        maskLayer.frame = _containerView.bounds
+                    }
+                } else {
+                    _containerView?.layer.mask = nil
+                }
+            }
+        }
+    }
     /// 对话框的偏移量，y值为正向下偏移，为负向上偏移；x值为正向右偏移，为负向左偏移，该属性只对Alert样式有效,键盘的frame改变会自动偏移，如果手动设置偏移只会取手动设置的
     open var offsetForAlert: CGPoint {
         get {
@@ -231,7 +372,41 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     private var _offsetForAlert: CGPoint = .zero
     /// 是否需要对话框拥有毛玻璃,默认为NO
-    open var needDialogBlur: Bool = false
+    open var needDialogBlur: Bool = false {
+        didSet {
+            if needDialogBlur {
+                containerView.backgroundColor = .clear
+                if dimmingKnockoutBackdropView == nil {
+                    let viewClass = NSClassFromString(String(format: "%@%@%@", "_U", "IDimmingKnockou", "tBackdropView")) as? UIView.Type
+                    if let viewObject = viewClass?.init(frame: .zero) {
+                        let viewSelector = NSSelectorFromString("setStyle:")
+                        if viewObject.responds(to: viewSelector) {
+                            _ = viewObject.perform(viewSelector, with: UIBlurEffect.Style.light)
+                        }
+                        dimmingKnockoutBackdropView = viewObject
+                    } else {
+                        let blur = UIBlurEffect(style: .extraLight)
+                        dimmingKnockoutBackdropView = UIVisualEffectView(effect: blur)
+                    }
+                    if let dimmingKnockoutBackdropView = dimmingKnockoutBackdropView {
+                        dimmingKnockoutBackdropView.frame = containerView.bounds
+                        dimmingKnockoutBackdropView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                        containerView.insertSubview(dimmingKnockoutBackdropView, at: 0)
+                    }
+                }
+            } else {
+                dimmingKnockoutBackdropView?.removeFromSuperview()
+                dimmingKnockoutBackdropView = nil
+                if _customAlertView != nil {
+                    containerView.backgroundColor = .clear
+                } else if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
+                    containerView.backgroundColor = .clear
+                } else {
+                    containerView.backgroundColor = alertAppearance.containerBackgroundColor
+                }
+            }
+        }
+    }
     /// 是否含有自定义TextField,键盘的frame改变会自动偏移,默认为NO
     open var customTextField: Bool = false
     /// 是否单击背景退出对话框,默认为YES
@@ -488,6 +663,51 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         self.messageColor = alertAppearance.grayColor
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    open override func loadView() {
+        self.view = alertControllerView
+    }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        configureHeaderView()
+        let needBlur = needDialogBlur
+        needDialogBlur = needBlur
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !isForceOffset && ((_customAlertView == nil && _customHeaderView == nil && _customActionSequenceView == nil && _componentView == nil) || customTextField) {
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(_:)), name: UIApplication.keyboardWillChangeFrameNotification, object: nil)
+        }
+        if let firstTextField = textFields?.first {
+            if !firstTextField.isFirstResponder {
+                firstTextField.becomeFirstResponder()
+            }
+        }
+    }
+    
+    open override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupPreferredMaxLayoutWidth(for: headerView.titleLabel)
+        setupPreferredMaxLayoutWidth(for: headerView.messageLabel)
+        layoutAlertControllerView()
+        layoutChildViews()
+        
+        if preferredStyle == .actionSheet {
+            let radius = cornerRadius
+            cornerRadius = radius
+        }
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        handleIncompleteTextDisplay()
+    }
+    
     /// 添加动作
     open func addAction(_ action: AlertAction) {
         
@@ -507,17 +727,36 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     
     /// 设置action与下一个action之间的间距, action仅限于非取消样式，必须在'-addAction:'之后设置，nil时设置header与action间距
     open func setCustomSpacing(_ spacing: CGFloat, afterAction action: AlertAction?) {
-        
+        guard let action = action else {
+            customHeaderSpacing = spacing
+            return
+        }
+        if action.style == .cancel {
+            Logger.debug(group: Logger.fw_moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with AlertActionStyleCancel style'")
+        } else if !otherActions.contains(action) {
+            Logger.debug(group: Logger.fw_moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with AlertActionStyleCancel style'")
+        } else {
+            if let index = otherActions.firstIndex(of: action) {
+                actionSequenceView.setCustomSpacing(spacing, afterActionIndex: index)
+            }
+        }
     }
     
     /// 获取action与下一个action之间的间距, action仅限于非取消样式，必须在'-addAction:'之后获取，nil时获取header与action间距
     open func customSpacingAfterAction(_ action: AlertAction?) -> CGFloat {
+        guard let action = action else {
+            return customHeaderSpacing
+        }
+        if let index = otherActions.firstIndex(of: action) {
+            return actionSequenceView.customSpacing(afterActionIndex: index)
+        }
         return 0
     }
     
     /// 设置蒙层的外观样式,可通过alpha调整透明度
     open func setBackgroundViewAppearanceStyle(_ style: UIBlurEffect.Style?, alpha: CGFloat) {
-        
+        backgroundViewAppearanceStyle = style
+        backgroundViewAlpha = alpha
     }
     
     /// 插入一个组件view，位置处于头部和action部分之间，要求头部和action部分同时存在
@@ -527,7 +766,9 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     
     /// 更新自定义view的size，比如屏幕旋转，自定义view的大小发生了改变，可通过该方法更新size
     open func updateCustomViewSize(_ size: CGSize) {
-        
+        customViewSize = size
+        layoutAlertControllerView()
+        layoutChildViews()
     }
     
     func layoutAlertControllerView() {
@@ -579,27 +820,57 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     
     private func setupPreferredMaxLayoutWidth(for label: UILabel) {
-        
+        if preferredStyle == .alert {
+            label.preferredMaxLayoutWidth = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) - minDistanceToEdges * 2 - headerView.contentEdgeInsets.left - headerView.contentEdgeInsets.right
+        } else {
+            label.preferredMaxLayoutWidth = UIScreen.main.bounds.size.width - headerView.contentEdgeInsets.left - headerView.contentEdgeInsets.right
+        }
     }
     
     @objc private func textFieldDidEndOnExit(_ textField: UITextField) {
-        
+        if let textFields = textFields,
+           let index = textFields.firstIndex(of: textField),
+           textFields.count > index + 1 {
+            let nextTextField = textFields[index + 1]
+            textField.resignFirstResponder()
+            nextTextField.becomeFirstResponder()
+        }
     }
     
     @objc private func keyboardFrameWillChange(_ notification: Notification) {
-        
+        if !isForceOffset && (_offsetForAlert.y == 0 || (textFields?.last?.isFirstResponder ?? false) || customTextField) {
+            let keyboardEndFrame = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+            let diff = abs((UIScreen.main.bounds.size.height - keyboardEndFrame.origin.y) * 0.5)
+            _offsetForAlert.y = -diff
+            makeViewOffset(animated: true)
+        }
     }
     
     private func updateActionAxis() {
-        
+        actionSequenceView.axis = actionAxis
+        if actionAxis == .vertical {
+            actionSequenceView.stackViewDistribution = .fillProportionally
+        } else {
+            actionSequenceView.stackViewDistribution = .fillEqually
+        }
     }
     
     private func makeViewOffset(animated: Bool) {
-        
+        if !isBeingPresented && !isBeingDismissed {
+            layoutAlertControllerView()
+            if animated {
+                UIView.animate(withDuration: 0.25) {
+                    self.view.superview?.layoutIfNeeded()
+                }
+            }
+        }
     }
     
     private func sizeForCustomView(_ customView: UIView) -> CGSize {
-        
+        customView.layoutIfNeeded()
+        let settingSize = customView.frame.size
+        let fittingSize = customView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        return CGSize(width: max(settingSize.width, fittingSize.width), height: max(settingSize.height, fittingSize.height))
     }
     
     open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -1260,8 +1531,8 @@ class AlertHeaderScrollView: UIScrollView {
     
     var headerViewSafeAreaDidChangedBlock: (() -> Void)?
     var imageLimitSize: CGSize = .zero
+    var contentEdgeInsets: UIEdgeInsets = .zero
     private var textFields: [UITextField] = []
-    private var contentEdgeInsets: UIEdgeInsets = .zero
     private var appearance: AlertControllerAppearance?
     
     private var alertAppearance: AlertControllerAppearance {
@@ -1314,7 +1585,7 @@ class AlertHeaderScrollView: UIScrollView {
     }
     private weak var _messageLabel: UILabel?
     
-    private var imageView: UIImageView {
+    var imageView: UIImageView {
         if let result = _imageView {
             return result
         }
