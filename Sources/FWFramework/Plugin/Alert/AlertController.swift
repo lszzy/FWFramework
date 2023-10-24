@@ -1153,13 +1153,13 @@ class AlertHeaderScrollView: UIScrollView {
 
 class AlertControllerActionView: UIView {
     
+    var afterSpacing: CGFloat = 0
     private weak var target: AnyObject?
     private var methodAction: Selector?
     private var actionButtonConstraints: [NSLayoutConstraint] = []
-    private var afterSpacing: CGFloat = 0
     private var appearance: AlertControllerAppearance?
     
-    private var action: AlertAction? {
+    var action: AlertAction? {
         didSet {
             guard let action = action else { return }
             
@@ -1283,6 +1283,282 @@ class AlertControllerActionView: UIView {
     
     @objc private func touchDragExit(_ sender: UIButton) {
         sender.backgroundColor = alertAppearance.normalColor
+    }
+    
+}
+
+class AlertActionSequenceView: UIView {
+    
+    var preferredStyle: AlertControllerStyle = .actionSheet
+    var cornerRadius: CGFloat = 0
+    var cancelAction: AlertAction?
+    var actions: [AlertAction] = []
+    var stackViewDistribution: UIStackView.Distribution = .fillProportionally {
+        didSet {
+            stackView.distribution = stackViewDistribution
+            setNeedsUpdateConstraints()
+        }
+    }
+    var axis: NSLayoutConstraint.Axis = .vertical {
+        didSet {
+            stackView.axis = axis
+            setNeedsUpdateConstraints()
+        }
+    }
+    var buttonClickedInActionViewBlock: ((_ index: Int, _ actionView: AlertControllerActionView) -> Void)?
+    private var actionLineConstraints: [NSLayoutConstraint] = []
+    private var appearance: AlertControllerAppearance?
+    
+    private var alertAppearance: AlertControllerAppearance {
+        return appearance ?? AlertControllerAppearance.appearance
+    }
+    
+    private lazy var scrollView: UIScrollView = {
+        let result = UIScrollView()
+        result.showsHorizontalScrollIndicator = false
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.contentInsetAdjustmentBehavior = .never
+        result.bounces = false
+        if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
+            result.backgroundColor = alertAppearance.containerBackgroundColor
+            result.layer.cornerRadius = cornerRadius
+            result.layer.masksToBounds = true
+        }
+        if (cancelAction != nil && actions.count > 1) || (cancelAction == nil && actions.count > 0) {
+            addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var contentView: UIView = {
+        let result = UIView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(result)
+        return result
+    }()
+    
+    private lazy var cancelView: UIView = {
+        let result = UIView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
+            result.backgroundColor = alertAppearance.containerBackgroundColor
+            result.layer.cornerRadius = cornerRadius
+            result.layer.masksToBounds = true
+        }
+        if cancelAction != nil {
+            addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var cancelActionLine: AlertActionItemSeparatorView = {
+        let result = AlertActionItemSeparatorView(appearance: appearance)
+        result.translatesAutoresizingMaskIntoConstraints = false
+        if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
+            result.customBackgroundColor = .clear
+        }
+        if cancelView.superview != nil, scrollView.superview != nil {
+            addSubview(result)
+        }
+        return result
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let result = UIStackView()
+        result.translatesAutoresizingMaskIntoConstraints = false
+        result.distribution = .fillProportionally
+        result.spacing = alertAppearance.lineWidth
+        result.axis = .vertical
+        contentView.addSubview(result)
+        return result
+    }()
+    
+    init(appearance: AlertControllerAppearance?) {
+        super.init(frame: .zero)
+        self.appearance = appearance
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setCustomSpacing(_ spacing: CGFloat, afterActionIndex index: Int) {
+        guard let actionView = stackView.arrangedSubviews[index] as? AlertControllerActionView else { return }
+        actionView.afterSpacing = spacing
+        stackView.setCustomSpacing(spacing, after: actionView)
+        updateLineConstraints()
+    }
+    
+    func customSpacing(afterActionIndex index: Int) -> CGFloat {
+        guard let actionView = stackView.arrangedSubviews[index] as? AlertControllerActionView else { return 0 }
+        return stackView.customSpacing(after: actionView)
+    }
+    
+    func addAction(_ action: AlertAction) {
+        actions.append(action)
+        let actionView = AlertControllerActionView(appearance: appearance)
+        actionView.action = action
+        actionView.addTarget(self, action: #selector(buttonClicked(in:)))
+        stackView.addArrangedSubview(actionView)
+        
+        // arrangedSubviews个数大于1，说明本次添加至少是第2次添加，此时要加一条分割线
+        if stackView.arrangedSubviews.count > 1 {
+            addLine(for: stackView)
+        }
+        setNeedsUpdateConstraints()
+    }
+    
+    func addCancelAction(_ action: AlertAction) {
+        assert(cancelAction == nil, "AlertController can only have one action with a style of AlertActionStyleCancel")
+        cancelAction = action
+        actions.append(action)
+        let actionView = AlertControllerActionView(appearance: appearance)
+        actionView.translatesAutoresizingMaskIntoConstraints = false
+        actionView.action = action
+        actionView.addTarget(self, action: #selector(buttonClicked(in:)))
+        cancelView.addSubview(actionView)
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[cancelActionView]-0-|", metrics: nil, views: ["cancelActionView": actionView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[cancelActionView]-0-|", metrics: nil, views: ["cancelActionView": actionView]))
+        setNeedsUpdateConstraints()
+    }
+    
+    private func addLine(for stackView: UIStackView) {
+        let actionLine = AlertActionItemSeparatorView(appearance: appearance)
+        actionLine.translatesAutoresizingMaskIntoConstraints = false
+        // 这里必须用addSubview:，不能用addArrangedSubview:,因为分割线不参与排列布局
+        stackView.addSubview(actionLine)
+    }
+    
+    private func filteredArray(from array: [UIView], notIn otherArray: [UIView]) -> [UIView] {
+        let predicate = NSPredicate(format: "NOT (SELF in %@)", otherArray as NSArray)
+        let subArray = (array as NSArray).filtered(using: predicate)
+        return subArray as? [UIView] ?? []
+    }
+    
+    private func updateLineConstraints() {
+        guard stackView.arrangedSubviews.count > 1 else { return }
+        let lines = filteredArray(from: stackView.subviews, notIn: stackView.arrangedSubviews)
+        if stackView.arrangedSubviews.count < lines.count { return }
+        
+        if self.actionLineConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.actionLineConstraints)
+            self.actionLineConstraints.removeAll()
+        }
+        
+        var actionLineConstraints: [NSLayoutConstraint] = []
+        for (index, actionLine) in lines.enumerated() {
+            let actionView1 = stackView.arrangedSubviews[index] as? AlertControllerActionView
+            let actionView2 = stackView.arrangedSubviews[index + 1]
+            if axis == .horizontal {
+                actionLineConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[actionLine]-0-|", metrics: nil, views: ["actionLine": actionLine]))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .left, relatedBy: .equal, toItem: actionView1, attribute: .right, multiplier: 1.0, constant: 0))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .right, relatedBy: .equal, toItem: actionView2, attribute: .left, multiplier: 1.0, constant: 0))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: actionView1?.afterSpacing ?? 0))
+            } else {
+                actionLineConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[actionLine]-0-|", metrics: nil, views: ["actionLine": actionLine]))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .top, relatedBy: .equal, toItem: actionView1, attribute: .bottom, multiplier: 1.0, constant: 0))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .bottom, relatedBy: .equal, toItem: actionView2, attribute: .top, multiplier: 1.0, constant: 0))
+                actionLineConstraints.append(NSLayoutConstraint(item: actionLine, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: actionView1?.afterSpacing ?? 0))
+            }
+        }
+        NSLayoutConstraint.activate(actionLineConstraints)
+        self.actionLineConstraints = actionLineConstraints
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        NSLayoutConstraint.deactivate(self.constraints)
+        
+        if scrollView.superview != nil {
+            var scrollViewConstraints: [NSLayoutConstraint] = []
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[scrollView]-0-|", metrics: nil, views: ["scrollView": scrollView]))
+            scrollViewConstraints.append(NSLayoutConstraint(item: scrollView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
+            if cancelActionLine.superview != nil {
+                scrollViewConstraints.append(NSLayoutConstraint(item: scrollView, attribute: .bottom, relatedBy: .equal, toItem: cancelActionLine, attribute: .top, multiplier: 1.0, constant: 0))
+            } else {
+                scrollViewConstraints.append(NSLayoutConstraint(item: scrollView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
+            }
+            NSLayoutConstraint.activate(scrollViewConstraints)
+            
+            NSLayoutConstraint.deactivate(scrollView.constraints)
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[contentView]-0-|", metrics: nil, views: ["contentView": contentView]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[contentView]-0-|", metrics: nil, views: ["contentView": contentView]))
+            NSLayoutConstraint(item: contentView, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0).isActive = true
+            let equalHeightConstraint = NSLayoutConstraint(item: contentView, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0)
+            // 横向两个按钮时取消始终在左边，纵向两个按钮时取消始终在下边，和系统一致
+            if actions.count == 2, actions.last?.style == .cancel {
+                let actionView = stackView.arrangedSubviews.last as? AlertControllerActionView
+                if axis == .vertical {
+                    if let actionView = actionView, actionView.action?.style != .cancel {
+                        stackView.insertArrangedSubview(actionView, at: 0)
+                    }
+                } else {
+                    if let actionView = actionView, actionView.action?.style == .cancel {
+                        stackView.insertArrangedSubview(actionView, at: 0)
+                    }
+                }
+            }
+            // 计算scrolView的最小和最大高度，下面这个if语句是保证当actions的g总个数大于4时，scrollView的高度至少为4个半FW_ACTION_HEIGHT的高度，否则自适应内容
+            var minHeight: CGFloat = 0
+            if axis == .vertical {
+                if cancelAction != nil {
+                    // 如果有取消按钮且action总个数大于4，则除去取消按钮之外的其余部分的高度至少为3个半FW_ACTION_HEIGHT的高度,即加上取消按钮就是总高度至少为4个半FW_ACTION_HEIGHT的高度
+                    if actions.count > 4 {
+                        minHeight = alertAppearance.actionHeight * 3.5
+                        // 优先级为997，必须小于998.0，因为头部如果内容过多时高度也会有限制，头部的优先级为998.0.这里定的规则是，当头部和action部分同时过多时，头部的优先级更高，但是它不能高到以至于action部分小于最小高度
+                        equalHeightConstraint.priority = .init(997)
+                    // 如果有取消按钮但action的个数大不于4，则该多高就显示多高
+                    } else {
+                        equalHeightConstraint.priority = .init(1000)
+                    }
+                } else {
+                    if actions.count > 4 {
+                        minHeight = alertAppearance.actionHeight * 4.5
+                        equalHeightConstraint.priority = .init(997)
+                    } else {
+                        equalHeightConstraint.priority = .init(1000)
+                    }
+                }
+            } else {
+                minHeight = alertAppearance.actionHeight
+            }
+            let minHeightConstraint = NSLayoutConstraint(item: scrollView, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: minHeight)
+            // 优先级不能大于对话框的最小顶部间距的优先级(999.0)
+            minHeightConstraint.priority = .init(999)
+            minHeightConstraint.isActive = true
+            equalHeightConstraint.isActive = true
+            
+            NSLayoutConstraint.deactivate(contentView.constraints)
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[stackView]-0-|", metrics: nil, views: ["stackView": stackView]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[stackView]-0-|", metrics: nil, views: ["stackView": stackView]))
+            
+            updateLineConstraints()
+        }
+        
+        if cancelActionLine.superview != nil {
+            var cancelActionLineConstraints: [NSLayoutConstraint] = []
+            cancelActionLineConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[cancelActionLine]-0-|", metrics: nil, views: ["cancelActionLine": cancelActionLine]))
+            cancelActionLineConstraints.append(NSLayoutConstraint(item: cancelActionLine, attribute: .bottom, relatedBy: .equal, toItem: cancelView, attribute: .top, multiplier: 1.0, constant: 0))
+            cancelActionLineConstraints.append(NSLayoutConstraint(item: cancelActionLine, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertAppearance.cancelLineWidth))
+            NSLayoutConstraint.activate(cancelActionLineConstraints)
+        }
+        
+        if cancelAction != nil {
+            var cancelViewConstraints: [NSLayoutConstraint] = []
+            cancelViewConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[cancelView]-0-|", metrics: nil, views: ["cancelView": cancelView]))
+            cancelViewConstraints.append(NSLayoutConstraint(item: cancelView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
+            if cancelActionLine.superview == nil {
+                cancelViewConstraints.append(NSLayoutConstraint(item: cancelView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
+            }
+            NSLayoutConstraint.activate(cancelViewConstraints)
+        }
+    }
+    
+    @objc private func buttonClicked(in actionView: AlertControllerActionView) {
+        if let action = actionView.action,
+           let index = actions.firstIndex(of: action) {
+            buttonClickedInActionViewBlock?(index, actionView)
+        }
     }
     
 }
