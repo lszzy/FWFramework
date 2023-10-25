@@ -19,6 +19,5 @@
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
-#import "AlertController.h"
 #import "ImagePickerController.h"
 #import "ImagePreviewController.h"
