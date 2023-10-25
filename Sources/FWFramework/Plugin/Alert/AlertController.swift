@@ -48,7 +48,7 @@ public class AlertControllerAppearance: NSObject {
     public static let appearance = AlertControllerAppearance()
     
     /// 自定义首选动作句柄，默认nil，跟随系统
-    public var preferredActionBlock: ((_ alertController: AlertControllerImpl) -> AlertAction?)?
+    public var preferredActionBlock: ((_ alertController: AlertController) -> AlertAction?)?
     
     /// 标题颜色，仅全局生效，默认nil
     public var titleColor: UIColor?
@@ -156,7 +156,16 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     open private(set) var actions: [AlertAction] = []
     
     /// 设置首选动作
-    open var preferredAction: AlertAction?
+    open var preferredAction: AlertAction? {
+        didSet {
+            for action in actions {
+                if action.titleFont == alertAppearance.actionBoldFont {
+                    action.titleFont = alertAppearance.actionFont
+                }
+            }
+            preferredAction?.titleFont = alertAppearance.actionBoldFont
+        }
+    }
     
     /// 获取所有输入框
     open private(set) var textFields: [UITextField]? = []
@@ -305,8 +314,12 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     /// actionSheet样式下:默认为UILayoutConstraintAxisVertical(垂直排列), 如果设置为UILayoutConstraintAxisHorizontal(水平排列)，则除去取消样式action之外的其余action将水平排列
     /// alert样式下:当actions的个数大于2，或者某个action的title显示不全时为UILayoutConstraintAxisVertical(垂直排列)，否则默认为UILayoutConstraintAxisHorizontal(水平排列)，此样式下设置该属性可以修改所有action的排列方式
     /// 不论哪种样式，只要外界设置了该属性，永远以外界设置的优先
-    open var actionAxis: NSLayoutConstraint.Axis = .vertical {
-        didSet {
+    open var actionAxis: NSLayoutConstraint.Axis {
+        get {
+            return _actionAxis
+        }
+        set {
+            _actionAxis = newValue
             // 调用该setter方法则认为是强制布局，该setter方法只有外界能调，这样才能判断外界有没有调用actionAxis的setter方法，从而是否按照外界的指定布局方式进行布局
             isForceLayout = true
             if isViewLoaded {
@@ -314,6 +327,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
             }
         }
     }
+    private var _actionAxis: NSLayoutConstraint.Axis = .vertical
     /// 距离屏幕边缘的最小间距
     /// alert样式下该属性是指对话框四边与屏幕边缘之间的距离，此样式下默认值随设备变化，actionSheet样式下是指弹出边的对立边与屏幕之间的距离，比如如果从右边弹出，那么该属性指的就是对话框左边与屏幕之间的距离，此样式下默认值为70
     open var minDistanceToEdges: CGFloat = 0 {
@@ -408,7 +422,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         }
     }
     /// 是否含有自定义TextField,键盘的frame改变会自动偏移,默认为NO
-    open var customTextField: Bool = false
+    open var hasCustomTextField: Bool = false
     /// 是否单击背景退出对话框,默认为YES
     open var tapBackgroundViewDismiss: Bool = true
     /// 是否点击动作按钮退出动画框,默认为YES
@@ -632,11 +646,11 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         if preferredStyle == .alert {
             self.minDistanceToEdges = alertAppearance.alertEdgeDistance
             self.cornerRadius = alertAppearance.alertCornerRadius
-            self.actionAxis = .horizontal
+            _actionAxis = .horizontal
         } else {
             self.minDistanceToEdges = alertAppearance.sheetEdgeDistance
             self.cornerRadius = alertAppearance.sheetCornerRadius
-            self.actionAxis = .vertical
+            _actionAxis = .vertical
         }
         _customAlertView = customAlertView
         _customHeaderView = customHeaderView
@@ -680,7 +694,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !isForceOffset && ((_customAlertView == nil && _customHeaderView == nil && _customActionSequenceView == nil && _componentView == nil) || customTextField) {
+        if !isForceOffset && ((_customAlertView == nil && _customHeaderView == nil && _customActionSequenceView == nil && _componentView == nil) || hasCustomTextField) {
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardFrameWillChange(_:)), name: UIApplication.keyboardWillChangeFrameNotification, object: nil)
         }
         if let firstTextField = textFields?.first {
@@ -710,12 +724,107 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     
     /// 添加动作
     open func addAction(_ action: AlertAction) {
+        var actions = self.actions
+        actions.append(action)
+        self.actions = actions
         
+        // alert样式不论是否为取消样式的按钮，都直接按顺序添加
+        if preferredStyle == .alert {
+            if action.style != .cancel {
+                otherActions.append(action)
+            }
+            actionSequenceView.addAction(action)
+        // actionSheet样式
+        } else {
+            if action.style == .cancel {
+                actionSequenceView.addCancelAction(action)
+            } else {
+                otherActions.append(action)
+                actionSequenceView.addAction(action)
+            }
+        }
+        
+        // 如果为NO,说明外界没有设置actionAxis，此时按照默认方式排列
+        if !isForceLayout {
+            if preferredStyle == .alert {
+                // alert样式下，action的个数大于2时垂直排列
+                if self.actions.count > 2 {
+                    // 本框架任何一处都不允许调用actionAxis的setter方法，如果调用了则无法判断是外界调用还是内部调用
+                    _actionAxis = .vertical
+                    updateActionAxis()
+                // action的个数小于等于2，action水平排列
+                } else {
+                    _actionAxis = .horizontal
+                    updateActionAxis()
+                }
+            // actionSheet样式下默认垂直排列
+            } else {
+                _actionAxis = .vertical
+                updateActionAxis()
+            }
+        } else {
+            updateActionAxis()
+        }
+        
+        // 这个block是保证外界在添加action之后再设置action属性时依然生效；当使用时在addAction之后再设置action的属性时，会回调这个block
+        action.propertyChangedBlock = { [weak self] action, needUpdateConstraints in
+            if self?.preferredStyle == .alert {
+                // alert样式下：arrangedSubviews数组和actions是对应的
+                if let index = self?.actions.firstIndex(of: action) {
+                    let actionView = self?.actionSequenceView.stackView.arrangedSubviews[index] as? AlertControllerActionView
+                    actionView?.action = action
+                }
+                if self?.presentationController?.presentingViewController != nil {
+                    // 文字显示不全处理
+                    self?.handleIncompleteTextDisplay()
+                }
+            } else {
+                if action.style == .cancel {
+                    // cancelView中只有唯一的一个actionView
+                    let actionView = self?.actionSequenceView.cancelView.subviews.last as? AlertControllerActionView
+                    actionView?.action = action
+                } else {
+                    // actionSheet样式下：arrangedSubviews数组和otherActions是对应的
+                    if let index = self?.otherActions.firstIndex(of: action) {
+                        let actionView = self?.actionSequenceView.stackView.arrangedSubviews[index] as? AlertControllerActionView
+                        actionView?.action = action
+                    }
+                }
+            }
+            if self?.presentationController?.presentingViewController != nil && needUpdateConstraints {
+                // 如果在present完成后的某个时刻再去设置action的属性，字体等改变需要更新布局
+                self?.actionSequenceView.setNeedsUpdateConstraints()
+            }
+        }
     }
     
     /// 添加文本输入框，一旦添加后就会仅回调一次configurationHandler
     open func addTextField(configurationHandler: ((UITextField) -> Void)? = nil) {
+        assert(preferredStyle == .alert, "AlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of AlertControllerStyleActionSheet")
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.backgroundColor = self.alertAppearance.textFieldBackgroundColor
+        // 系统的UITextBorderStyleLine样式线条过于黑，所以自己设置
+        textField.layer.borderWidth = alertAppearance.lineWidth
+        // 这里设置的颜色是静态的，动态设置CGColor,还需要监听深浅模式的切换
+        textField.layer.borderColor = AlertControllerAppearance.staticColorPairs(light: alertAppearance.lineColor ?? .clear, dark: alertAppearance.darkLineColor ?? .clear).cgColor
+        textField.layer.cornerRadius = alertAppearance.textFieldCornerRadius
+        textField.layer.masksToBounds = true
+        // 在左边设置一张view，充当光标左边的间距，否则光标紧贴textField不美观
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        textField.leftView?.isUserInteractionEnabled = false
+        textField.leftViewMode = .always
+        textField.font = UIFont.systemFont(ofSize: 14)
+        // 去掉textField键盘上部的联想条
+        textField.autocorrectionType = .no
+        textField.addTarget(self, action: #selector(textFieldDidEndOnExit(_:)), for: .editingDidEndOnExit)
+        alertAppearance.textFieldCustomBlock?(textField)
         
+        var textFields = self.textFields ?? []
+        textFields.append(textField)
+        self.textFields = textFields
+        headerView.addTextField(textField)
+        configurationHandler?(textField)
     }
     
     /// 设置alert样式下的偏移量,动画为NO则跟属性offsetForAlert等效
@@ -772,51 +881,314 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     
     func layoutAlertControllerView() {
-        
+        guard alertControllerView.superview != nil else { return }
+        if self.alertControllerViewConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.alertControllerViewConstraints)
+            self.alertControllerViewConstraints.removeAll()
+        }
+        if preferredStyle == .alert {
+            layoutAlertControllerViewForAlertStyle()
+        } else {
+            layoutAlertControllerViewForActionSheetStyle()
+        }
     }
     
     private func layoutAlertControllerViewForAlertStyle() {
-        
+        var alertControllerViewConstraints = [NSLayoutConstraint]()
+        let topValue = minDistanceToEdges
+        let bottomValue = minDistanceToEdges
+        let maxWidth = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) - minDistanceToEdges * 2
+        let maxHeight = UIScreen.main.bounds.size.height - topValue - bottomValue
+        if customAlertView == nil {
+            // 当屏幕旋转的时候，为了保持alert样式下的宽高不变，因此取MIN(UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)
+            alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: maxWidth))
+        } else {
+            alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .width, relatedBy: .lessThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: maxWidth))
+            if customViewSize.width > 0 {
+                // 如果宽度没有值，则会假定customAlertView水平方向能由子控件撑起
+                let customWidth = min(customViewSize.width, maxWidth)
+                alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customWidth))
+            }
+            if customViewSize.height > 0 {
+                // 如果高度没有值，则会假定customAlertView垂直方向能由子控件撑起
+                let customHeight = min(customViewSize.height, maxHeight)
+                alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customHeight))
+            }
+        }
+        let topConstraint = NSLayoutConstraint(item: alertControllerView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: alertControllerView.superview, attribute: .top, multiplier: 1.0, constant: topValue)
+        // 这里优先级为999.0是为了小于垂直中心的优先级，如果含有文本输入框，键盘弹出后，特别是旋转到横屏后，对话框的空间比较小，这个时候优先偏移垂直中心，顶部优先级按理说应该会被忽略，但是由于子控件含有scrollView，所以该优先级仍然会被激活，子控件显示不全scrollView可以滑动。如果外界自定义了整个对话框，且自定义的view上含有文本输入框，子控件不含有scrollView，顶部间距会被忽略
+        topConstraint.priority = .init(999)
+        alertControllerViewConstraints.append(topConstraint)
+        let bottomConstraint = NSLayoutConstraint(item: alertControllerView, attribute: .bottom, relatedBy: .lessThanOrEqual, toItem: alertControllerView.superview, attribute: .bottom, multiplier: 1.0, constant: -bottomValue)
+        bottomConstraint.priority = .init(999)
+        alertControllerViewConstraints.append(bottomConstraint)
+        alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .centerX, relatedBy: .equal, toItem: alertControllerView.superview, attribute: .centerX, multiplier: 1.0, constant: _offsetForAlert.x))
+        alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .centerY, relatedBy: .equal, toItem: alertControllerView.superview, attribute: .centerY, multiplier: 1.0, constant: (isBeingPresented && !isBeingDismissed) ? 0 : _offsetForAlert.y))
+        NSLayoutConstraint.activate(alertControllerViewConstraints)
+        self.alertControllerViewConstraints = alertControllerViewConstraints
     }
     
     private func layoutAlertControllerViewForActionSheetStyle() {
-        
+        switch animationType {
+        case .fromBottom:
+            layoutAlertControllerViewForAnimationType(hv: "H", equalAttribute: .bottom, notEqualAttribute: .top, lessOrGreaterRelation: .greaterThanOrEqual)
+        case .fromTop:
+            layoutAlertControllerViewForAnimationType(hv: "H", equalAttribute: .top, notEqualAttribute: .bottom, lessOrGreaterRelation: .lessThanOrEqual)
+        case .fromLeft:
+            layoutAlertControllerViewForAnimationType(hv: "V", equalAttribute: .left, notEqualAttribute: .right, lessOrGreaterRelation: .lessThanOrEqual)
+        case .fromRight:
+            layoutAlertControllerViewForAnimationType(hv: "V", equalAttribute: .right, notEqualAttribute: .left, lessOrGreaterRelation: .lessThanOrEqual)
+        default:
+            layoutAlertControllerViewForAnimationType(hv: "H", equalAttribute: .bottom, notEqualAttribute: .top, lessOrGreaterRelation: .greaterThanOrEqual)
+        }
     }
     
     private func layoutAlertControllerViewForAnimationType(hv: String, equalAttribute: NSLayoutConstraint.Attribute, notEqualAttribute: NSLayoutConstraint.Attribute, lessOrGreaterRelation relation: NSLayoutConstraint.Relation) {
-        
+        var alertControllerViewConstraints = [NSLayoutConstraint]()
+        if customAlertView == nil {
+            alertControllerViewConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "\(hv):|-0-[alertControllerView]-0-|", metrics: nil, views: ["alertControllerView": alertControllerView]))
+        } else {
+            let centerXorY: NSLayoutConstraint.Attribute = hv == "H" ? .centerX : .centerY
+            alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: centerXorY, relatedBy: .equal, toItem: alertControllerView.superview, attribute: centerXorY, multiplier: 1.0, constant: 0))
+            if customViewSize.width > 0 {
+                // 如果宽度没有值，则会假定customAlertViewh水平方向能由子控件撑起
+                var alertControllerViewWidth: CGFloat = 0
+                if hv == "H" {
+                    alertControllerViewWidth = min(customViewSize.width, UIScreen.main.bounds.size.width)
+                } else {
+                    alertControllerViewWidth = min(customViewSize.width, UIScreen.main.bounds.size.width - minDistanceToEdges)
+                }
+                alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertControllerViewWidth))
+            }
+            if customViewSize.height > 0 {
+                // 如果高度没有值，则会假定customAlertViewh垂直方向能由子控件撑起
+                var alertControllerViewHeight: CGFloat = 0
+                if hv == "H" {
+                    alertControllerViewHeight = min(customViewSize.height, UIScreen.main.bounds.size.height - minDistanceToEdges)
+                } else {
+                    alertControllerViewHeight = min(customViewSize.height, UIScreen.main.bounds.size.height)
+                }
+                alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertControllerViewHeight))
+            }
+        }
+        alertControllerViewConstraints.append(NSLayoutConstraint(item: alertControllerView, attribute: equalAttribute, relatedBy: .equal, toItem: alertControllerView.superview, attribute: equalAttribute, multiplier: 1.0, constant: 0))
+        let someSideConstraint = NSLayoutConstraint(item: alertControllerView, attribute: notEqualAttribute, relatedBy: relation, toItem: alertControllerView.superview, attribute: notEqualAttribute, multiplier: 1.0, constant: minDistanceToEdges)
+        someSideConstraint.priority = .init(999)
+        alertControllerViewConstraints.append(someSideConstraint)
+        NSLayoutConstraint.activate(alertControllerViewConstraints)
+        self.alertControllerViewConstraints = alertControllerViewConstraints
     }
     
     private func layoutChildViews() {
-        
+        // 对头部布局
+        layoutHeaderView()
+        // 对头部和action部分之间的分割线布局
+        layoutHeaderActionLine()
+        // 对组件view布局
+        layoutComponentView()
+        // 对组件view与action部分之间的分割线布局
+        layoutComponentActionLine()
+        // 对action部分布局
+        layoutActionSequenceView()
     }
     
     private func layoutHeaderView() {
+        let headerView = self.customHeaderView ?? self.headerView
+        guard headerView.superview != nil else { return }
+        if preferredStyle == .actionSheet && alertAppearance.sheetContainerTransparent {
+            headerView.backgroundColor = alertAppearance.containerBackgroundColor
+            headerView.layer.cornerRadius = cornerRadius
+            headerView.layer.masksToBounds = true
+        }
         
+        if self.headerViewConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.headerViewConstraints)
+            self.headerViewConstraints.removeAll()
+        }
+        var headerViewConstraints = [NSLayoutConstraint]()
+        if customHeaderView == nil {
+            headerViewConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[headerView]-0-|", metrics: nil, views: ["headerView": headerView]))
+        } else {
+            if customViewSize.width > 0 {
+                let maxWidth = self.maxWidth
+                let headerViewWidth = min(maxWidth, customViewSize.width)
+                headerViewConstraints.append(NSLayoutConstraint(item: headerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: headerViewWidth))
+            }
+            if customViewSize.height > 0 {
+                let customHeightConstraint = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customViewSize.height)
+                customHeightConstraint.priority = .defaultHigh
+                headerViewConstraints.append(customHeightConstraint)
+            }
+            headerViewConstraints.append(NSLayoutConstraint(item: headerView, attribute: .centerX, relatedBy: .equal, toItem: alertView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        }
+        headerViewConstraints.append(NSLayoutConstraint(item: headerView, attribute: .top, relatedBy: .equal, toItem: alertView, attribute: .top, multiplier: 1.0, constant: 0))
+        if headerActionLine.superview == nil {
+            headerViewConstraints.append(NSLayoutConstraint(item: headerView, attribute: .bottom, relatedBy: .equal, toItem: alertView, attribute: .bottom, multiplier: 1.0, constant: 0))
+        }
+        NSLayoutConstraint.activate(headerViewConstraints)
+        self.headerViewConstraints = headerViewConstraints
     }
     
     private func layoutHeaderActionLine() {
+        guard headerActionLine.superview != nil else { return }
+        let headerView = self.customHeaderView ?? self.headerView
+        let actionSequenceView = self.customActionSequenceView ?? self.actionSequenceView
+        if self.headerActionLineConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.headerActionLineConstraints)
+            self.headerActionLineConstraints.removeAll()
+        }
         
+        var headerActionLineConstraints = [NSLayoutConstraint]()
+        headerActionLineConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[headerActionLine]-0-|", metrics: nil, views: ["headerActionLine": headerActionLine]))
+        headerActionLineConstraints.append(NSLayoutConstraint(item: headerActionLine, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .bottom, multiplier: 1.0, constant: 0))
+        if componentView?.superview == nil {
+            headerActionLineConstraints.append(NSLayoutConstraint(item: headerActionLine, attribute: .bottom, relatedBy: .equal, toItem: actionSequenceView, attribute: .top, multiplier: 1.0, constant: 0))
+        }
+        var headerSpacing = alertAppearance.lineWidth
+        if customHeaderSpacing > 0 {
+            headerSpacing = customHeaderSpacing
+        } else if preferredStyle == .actionSheet && alertAppearance.sheetContainerTransparent {
+            headerSpacing = alertAppearance.cancelLineWidth
+        }
+        headerActionLineConstraints.append(NSLayoutConstraint(item: headerActionLine, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: headerSpacing))
+        
+        NSLayoutConstraint.activate(headerActionLineConstraints)
+        self.headerActionLineConstraints = headerActionLineConstraints
     }
     
     private func layoutComponentView() {
+        guard let componentView = componentView, componentView.superview != nil else { return }
+        if preferredStyle == .actionSheet && alertAppearance.sheetContainerTransparent {
+            componentView.backgroundColor = alertAppearance.containerBackgroundColor
+            componentView.layer.cornerRadius = cornerRadius
+            componentView.layer.masksToBounds = true
+        }
         
+        if self.componentViewConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.componentViewConstraints)
+            self.componentViewConstraints.removeAll()
+        }
+        
+        var componentViewConstraints = [NSLayoutConstraint]()
+        componentViewConstraints.append(NSLayoutConstraint(item: componentView, attribute: .top, relatedBy: .equal, toItem: headerActionLine, attribute: .bottom, multiplier: 1.0, constant: 0))
+        componentViewConstraints.append(NSLayoutConstraint(item: componentView, attribute: .bottom, relatedBy: .equal, toItem: componentActionLine, attribute: .top, multiplier: 1.0, constant: 0))
+        componentViewConstraints.append(NSLayoutConstraint(item: componentView, attribute: .centerX, relatedBy: .equal, toItem: alertView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        if customViewSize.height > 0 {
+            let heightConstraint = NSLayoutConstraint(item: componentView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customViewSize.height)
+            heightConstraint.priority = .defaultHigh
+            componentViewConstraints.append(heightConstraint)
+        }
+        if customViewSize.width > 0 {
+            let maxWidth = self.maxWidth
+            let componentViewWidth = min(maxWidth, customViewSize.width)
+            componentViewConstraints.append(NSLayoutConstraint(item: componentView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: componentViewWidth))
+        }
+        NSLayoutConstraint.activate(componentViewConstraints)
+        self.componentViewConstraints = componentViewConstraints
     }
     
     private func layoutComponentActionLine() {
-        
+        guard componentActionLine.superview != nil else { return }
+        if self.componentActionLineConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.componentActionLineConstraints)
+            self.componentActionLineConstraints.removeAll()
+        }
+        var componentActionLineConstraints = [NSLayoutConstraint]()
+        componentActionLineConstraints.append(NSLayoutConstraint(item: componentActionLine, attribute: .bottom, relatedBy: .equal, toItem: actionSequenceView, attribute: .top, multiplier: 1.0, constant: 0))
+        componentActionLineConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[componentActionLine]-0-|", metrics: nil, views: ["componentActionLine": componentActionLine]))
+        componentActionLineConstraints.append(NSLayoutConstraint(item: componentActionLine, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: alertAppearance.lineWidth))
+        NSLayoutConstraint.activate(componentActionLineConstraints)
+        self.componentActionLineConstraints = componentActionLineConstraints
     }
     
     private func layoutActionSequenceView() {
+        let actionSequenceView = self.customActionSequenceView ?? self.actionSequenceView
+        guard actionSequenceView.superview != nil else { return }
         
+        if self.actionSequenceViewConstraints.count > 0 {
+            NSLayoutConstraint.deactivate(self.actionSequenceViewConstraints)
+            self.actionSequenceViewConstraints.removeAll()
+        }
+        
+        var actionSequenceViewConstraints = [NSLayoutConstraint]()
+        if self.customActionSequenceView == nil {
+            actionSequenceViewConstraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[actionSequenceView]-0-|", metrics: nil, views: ["actionSequenceView": actionSequenceView]))
+        } else {
+            if customViewSize.width > 0 {
+                let maxWidth = self.maxWidth
+                if customViewSize.width > maxWidth {
+                    customViewSize.width = maxWidth
+                }
+                actionSequenceViewConstraints.append(NSLayoutConstraint(item: actionSequenceView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customViewSize.width))
+            }
+            if customViewSize.height > 0 {
+                let customHeightConstraint = NSLayoutConstraint(item: actionSequenceView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: customViewSize.height)
+                customHeightConstraint.priority = .defaultHigh
+                actionSequenceViewConstraints.append(customHeightConstraint)
+            }
+            actionSequenceViewConstraints.append(NSLayoutConstraint(item: actionSequenceView, attribute: .centerX, relatedBy: .equal, toItem: alertView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        }
+        if headerActionLine.superview == nil {
+            actionSequenceViewConstraints.append(NSLayoutConstraint(item: actionSequenceView, attribute: .top, relatedBy: .equal, toItem: alertView, attribute: .top, multiplier: 1.0, constant: 0))
+        }
+        actionSequenceViewConstraints.append(NSLayoutConstraint(item: actionSequenceView, attribute: .bottom, relatedBy: .equal, toItem: alertView, attribute: .bottom, multiplier: 1.0, constant: 0))
+
+        NSLayoutConstraint.activate(actionSequenceViewConstraints)
+        self.actionSequenceViewConstraints = actionSequenceViewConstraints
     }
     
     private func handleIncompleteTextDisplay() {
-        
+        guard !isForceLayout, preferredStyle == .alert else { return }
+        for action in actions {
+            // 预估按钮宽度
+            let preButtonWidth = (min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) - minDistanceToEdges * 2 - alertAppearance.lineWidth * CGFloat(actions.count - 1)) / CGFloat(actions.count) - action.titleEdgeInsets.left - action.titleEdgeInsets.right
+            // 如果action的标题文字总宽度，大于按钮的contentRect的宽度，则说明水平排列会导致文字显示不全，此时垂直排列
+            if let attributedTitle = action.attributedTitle {
+                if ceil(attributedTitle.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: alertAppearance.actionHeight), options: .usesLineFragmentOrigin, context: nil).size.width) > preButtonWidth {
+                    _actionAxis = .vertical
+                    updateActionAxis()
+                    actionSequenceView.setNeedsUpdateConstraints()
+                    // 一定要break，只要有一个按钮文字过长就垂直排列
+                    break
+                }
+            } else {
+                if ceil((action.title as? NSString)?.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: alertAppearance.actionHeight), options: .usesLineFragmentOrigin, attributes: [.font: action.titleFont as Any], context: nil).size.width ?? 0) > preButtonWidth {
+                    _actionAxis = .vertical
+                    updateActionAxis()
+                    actionSequenceView.setNeedsUpdateConstraints()
+                    break
+                }
+            }
+        }
     }
     
     private func configureHeaderView() {
-        
+        if image != nil {
+            headerView.imageLimitSize = imageLimitSize
+            headerView.imageView.image = image
+            headerView.imageView.tintColor = imageTintColor
+            headerView.setNeedsUpdateConstraints()
+        }
+        if (attributedTitle?.length ?? 0) > 0 {
+            headerView.titleLabel.attributedText = attributedTitle
+            setupPreferredMaxLayoutWidth(for: headerView.titleLabel)
+        } else if (title?.count ?? 0) > 0 {
+            headerView.titleLabel.text = title
+            headerView.titleLabel.font = titleFont
+            headerView.titleLabel.textColor = titleColor
+            headerView.titleLabel.textAlignment = textAlignment
+            setupPreferredMaxLayoutWidth(for: headerView.titleLabel)
+        }
+        if (attributedMessage?.length ?? 0) > 0 {
+            headerView.messageLabel.attributedText = attributedMessage
+            setupPreferredMaxLayoutWidth(for: headerView.messageLabel)
+        } else if (message?.count ?? 0) > 0 {
+            headerView.messageLabel.text = message
+            headerView.messageLabel.font = messageFont
+            headerView.messageLabel.textColor = messageColor
+            headerView.messageLabel.textAlignment = textAlignment
+            setupPreferredMaxLayoutWidth(for: headerView.messageLabel)
+        }
     }
     
     private func setupPreferredMaxLayoutWidth(for label: UILabel) {
@@ -838,7 +1210,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     
     @objc private func keyboardFrameWillChange(_ notification: Notification) {
-        if !isForceOffset && (_offsetForAlert.y == 0 || (textFields?.last?.isFirstResponder ?? false) || customTextField) {
+        if !isForceOffset && (_offsetForAlert.y == 0 || (textFields?.last?.isFirstResponder ?? false) || hasCustomTextField) {
             let keyboardEndFrame = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
             let diff = abs((UIScreen.main.bounds.size.height - keyboardEndFrame.origin.y) * 0.5)
             _offsetForAlert.y = -diff
@@ -847,8 +1219,8 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
     
     private func updateActionAxis() {
-        actionSequenceView.axis = actionAxis
-        if actionAxis == .vertical {
+        actionSequenceView.axis = _actionAxis
+        if _actionAxis == .vertical {
             actionSequenceView.stackViewDistribution = .fillProportionally
         } else {
             actionSequenceView.stackViewDistribution = .fillEqually
@@ -1540,7 +1912,7 @@ class AlertHeaderScrollView: UIScrollView {
     }
     
     private var appearanceContentInsets: UIEdgeInsets {
-        var contentInsets = alertAppearance.contentInsets
+        let contentInsets = alertAppearance.contentInsets
         return UIEdgeInsets(top: ceil(contentInsets.top), left: ceil(contentInsets.left), bottom: ceil(contentInsets.bottom), right: ceil(contentInsets.right))
     }
     
@@ -1920,7 +2292,7 @@ class AlertActionSequenceView: UIView {
         return result
     }()
     
-    private lazy var cancelView: UIView = {
+    lazy var cancelView: UIView = {
         let result = UIView()
         result.translatesAutoresizingMaskIntoConstraints = false
         if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
@@ -1946,7 +2318,7 @@ class AlertActionSequenceView: UIView {
         return result
     }()
     
-    private lazy var stackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let result = UIStackView()
         result.translatesAutoresizingMaskIntoConstraints = false
         result.distribution = .fillProportionally
