@@ -2219,6 +2219,40 @@ import AdSupport
         }
     }
     
+    /// 自定义关闭时除圆点外的背景色
+    @objc dynamic public var fw_offTintColor: UIColor? {
+        get {
+            return fw_property(forName: "fw_offTintColor") as? UIColor
+        }
+        set {
+            let switchWellView = value(forKeyPath: "_visualElement._switchWellView") as? UIView
+            var defaultOffTintColor = switchWellView?.fw_property(forName: "defaultOffTintColor") as? UIColor
+            if defaultOffTintColor == nil {
+                defaultOffTintColor = switchWellView?.backgroundColor
+                switchWellView?.fw_setProperty(defaultOffTintColor, forName: "defaultOffTintColor")
+            }
+            switchWellView?.backgroundColor = newValue ?? defaultOffTintColor
+            fw_setProperty(newValue, forName: "fw_offTintColor")
+        }
+    }
+    
+    fileprivate static func fw_swizzleUIKitSwitch() {
+        NSObject.fw_swizzleInstanceMethod(
+            UISwitch.self,
+            selector: #selector(UISwitch.traitCollectionDidChange(_:)),
+            methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
+            swizzleSignature: (@convention(block) (UISwitch, UITraitCollection?) -> Void).self
+        ) { store in { selfObject, previousTraitCollection in
+            store.original(selfObject, store.selector, previousTraitCollection)
+
+            guard selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+            guard let offTintColor = selfObject.fw_offTintColor else { return }
+            DispatchQueue.main.async {
+                selfObject.fw_offTintColor = offTintColor
+            }
+        }}
+    }
+    
 }
 
 // MARK: - UITextField+UIKit
@@ -3391,6 +3425,7 @@ internal class UIKitAutoloader: AutoloadProtocol {
         UILabel.fw_swizzleUIKitLabel()
         UIControl.fw_swizzleUIKitControl()
         UIButton.fw_swizzleUIKitButton()
+        UISwitch.fw_swizzleUIKitSwitch()
         UITextField.fw_swizzleUIKitTextField()
         UITextView.fw_swizzleUIKitTextView()
         UISearchBar.fw_swizzleUIKitSearchBar()
