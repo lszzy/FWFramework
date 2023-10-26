@@ -10,7 +10,7 @@ import FWFramework
 
 class TestPickerController: UIViewController, TableViewControllerProtocol {
     
-    private var livePhotoResources: LivePhoto.LivePhotoResources?
+    private var livePhotoResources: LivePhoto.Resources?
     
     func setupPlugin() {
         ImagePickerControllerImpl.shared.pickerControllerBlock = {

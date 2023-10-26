@@ -503,8 +503,8 @@ public class ThemeObject<T>: NSObject {
         NSObject.fw_swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
-            methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection) -> Void).self,
-            swizzleSignature: (@convention(block) (NSObject & UITraitEnvironment, UITraitCollection) -> Void).self
+            methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject & UITraitEnvironment, UITraitCollection?) -> Void).self
         ) { store in { selfObject, traitCollection in
             store.original(selfObject, store.selector, traitCollection)
             
