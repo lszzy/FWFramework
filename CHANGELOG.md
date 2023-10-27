@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.18.2] - 2023-10-27
+
+### Added
+* UISwitch supports custom offTintColor
+
 ## [4.18.1] - 2023-10-13
 
 ### Added
