@@ -2162,6 +2162,24 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
 
 @implementation UISwitch (FWUIKit)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        FWSwizzleClass(UISwitch, @selector(traitCollectionDidChange:), FWSwizzleReturn(void), FWSwizzleArgs(UITraitCollection *previousTraitCollection), FWSwizzleCode({
+            FWSwizzleOriginal(previousTraitCollection);
+            
+            if (@available(iOS 13.0, *)) {
+                if (![selfObject.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) return;
+                if (!selfObject.fw_offTintColor) return;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    selfObject.fw_offTintColor = selfObject.fw_offTintColor;
+                });
+            }
+        }));
+    });
+}
+
 - (CGSize)fw_preferredSize
 {
     CGSize size = self.bounds.size;
@@ -2177,6 +2195,23 @@ static void *kUIViewFWBorderViewRightKey = &kUIViewFWBorderViewRightKey;
     CGFloat height = [self fw_preferredSize].height;
     CGFloat scale = size.height / height;
     self.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+- (UIColor *)fw_offTintColor
+{
+    return objc_getAssociatedObject(self, @selector(fw_offTintColor));
+}
+
+- (void)setFw_offTintColor:(UIColor *)offTintColor
+{
+    UIView *switchWellView = [self valueForKeyPath:@"_visualElement._switchWellView"];
+    UIColor *defaultOffTintColor = switchWellView ? objc_getAssociatedObject(switchWellView, NSSelectorFromString(@"defaultOffTintColor")) : nil;
+    if (!defaultOffTintColor && switchWellView) {
+        defaultOffTintColor = switchWellView.backgroundColor;
+        objc_setAssociatedObject(switchWellView, NSSelectorFromString(@"defaultOffTintColor"), defaultOffTintColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    switchWellView.backgroundColor = offTintColor ?: defaultOffTintColor;
+    objc_setAssociatedObject(self, @selector(fw_offTintColor), offTintColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
