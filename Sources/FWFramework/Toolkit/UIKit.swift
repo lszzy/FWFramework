@@ -736,6 +736,12 @@ extension Wrapper where Base: UISwitch {
         set { base.__fw_preferredSize = newValue }
     }
     
+    /// 自定义关闭时除圆点的背景色
+    public var offTintColor: UIColor? {
+        get { return base.__fw_offTintColor }
+        set { base.__fw_offTintColor = newValue }
+    }
+    
 }
 
 // MARK: - UITextField+UIKit

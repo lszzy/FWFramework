@@ -464,6 +464,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义尺寸大小，默认{51,31}
 @property (nonatomic, assign) CGSize fw_preferredSize NS_REFINED_FOR_SWIFT;
 
+/// 自定义关闭时除圆点的背景色
+@property (nonatomic, strong, nullable) UIColor *fw_offTintColor UI_APPEARANCE_SELECTOR NS_REFINED_FOR_SWIFT;
+
 @end
 
 #pragma mark - UITextField+FWUIKit
