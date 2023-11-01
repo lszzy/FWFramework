@@ -57,46 +57,57 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         view.addSubview(button)
         
         let timerButton = UIButton(type: .custom)
-        timerButton.frame = CGRect(x: 30, y: 160, width: 80, height: 30)
+        timerButton.frame = CGRect(x: 20, y: 160, width: 40, height: 30)
         timerButton.titleLabel?.font = APP.font(15)
         timerButton.setTitleColor(AppTheme.textColor, for: .normal)
         timerButton.setTitle("=>", for: .normal)
         view.addSubview(timerButton)
         
-        let timerButton1 = UIButton(type: .custom)
-        timerButton1.frame = CGRect(x: 120, y: 160, width: 80, height: 30)
-        timerButton1.titleLabel?.font = APP.font(15)
-        timerButton1.setTitleColor(AppTheme.textColor, for: .normal)
-        timerButton1.setTitle("=>", for: .normal)
-        view.addSubview(timerButton1)
-        
-        let timerButton2 = UIButton(type: .custom)
-        timerButton2.frame = CGRect(x: 220, y: 160, width: 80, height: 30)
-        timerButton2.titleLabel?.font = APP.font(15)
-        timerButton2.setTitleColor(AppTheme.textColor, for: .normal)
-        timerButton2.setTitle("发送", for: .normal)
-        view.addSubview(timerButton2)
-        var timer1: Timer?
-        var timer2: Timer?
-        timerButton2.app.addTouch { sender in
+        let sendButton = UIButton(type: .custom)
+        sendButton.frame = CGRect(x: 80, y: 160, width: 40, height: 30)
+        sendButton.titleLabel?.font = APP.font(15)
+        sendButton.setTitleColor(AppTheme.textColor, for: .normal)
+        sendButton.setTitle("发送", for: .normal)
+        view.addSubview(sendButton)
+        var sendTimer: Timer?
+        sendButton.app.addTouch { sender in
             timerButton.app.startCountDown(60, title: "=>", waitTitle: "%lds")
-            timer1?.invalidate()
-            timer1 = Timer.app.commonTimer(countDown: 60, block: { countDown in
-                let title = countDown > 0 ? String(format: "%lds", countDown) : "=>"
-                timerButton1.setTitle(title, for: .normal)
-            })
-            timer2?.invalidate()
+            
+            sendTimer?.invalidate()
             let startTime = Date.app.currentTime
-            timer2 = Timer.app.commonTimer(timeInterval: 1, block: { timer in
+            sendTimer = Timer.app.commonTimer(timeInterval: 1, block: { timer in
                 let countDown = 60 - Int(round(Date.app.currentTime - startTime))
                 if countDown < 1 {
-                    timer2?.invalidate()
+                    sendTimer?.invalidate()
                 }
                 let title = countDown > 0 ? String(format: "%lds", countDown) : "发送"
-                timerButton2.setTitle(title, for: .normal)
-                timerButton2.isEnabled = countDown < 1
+                sendButton.setTitle(title, for: .normal)
+                sendButton.isEnabled = countDown < 1
             }, repeats: true)
-            timer2?.fire()
+            sendTimer?.fire()
+        }
+        
+        let odometerView = OdometerView()
+        odometerView.frame = CGRect(x: 140, y: 150, width: 130, height: 50)
+        odometerView.textFont = APP.font(30, .semibold)
+        odometerView.textColor = AppTheme.textColor
+        odometerView.offsetY = (50.0 - odometerView.textFont.lineHeight) / 2.0
+        odometerView.setNumber("$0.00")
+        view.addSubview(odometerView)
+        
+        let randomButton = UIButton(type: .custom)
+        randomButton.frame = CGRect(x: 290, y: 160, width: 40, height: 30)
+        randomButton.titleLabel?.font = APP.font(15)
+        randomButton.setTitleColor(AppTheme.textColor, for: .normal)
+        randomButton.setTitle("随机", for: .normal)
+        view.addSubview(randomButton)
+        randomButton.app.addTouch { sender in
+            let hasDigit = [true, false].randomElement()!
+            if hasDigit {
+                odometerView.setNumber("$\(arc4random() % 1000).\(arc4random() % 100)")
+            } else {
+                odometerView.setNumber("$\(arc4random() % 1000)")
+            }
         }
         
         var button1 = UIButton(type: .system)
@@ -257,4 +268,180 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         UIWindow.app.showMessage(text: "点击计数：\(count)")
     }
     
+}
+
+public class OdometerView: UIView {
+
+    public var textFont: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+    public var textColor: UIColor = UIColor.black
+    
+    public var duration: CFTimeInterval = 1.5
+    public var durationOffset: CFTimeInterval = 0.2
+    public var offsetY: CGFloat = 0
+    
+    private var numbersText: [String] = []
+    private var scrollLayers: [CAScrollLayer] = []
+    private var textLayers: [CATextLayer] = []
+    private var number: String = ""
+    private var lastNumber: String = ""
+    private var animateCount: Int = 0
+    private var animationKey = "OdometerAnimation"
+    private var density: Int = 9
+    
+    public func setNumber(_ number: String, animated: Bool = true) {
+        stopAnimations()
+        self.number = number
+        prepareAnimations(animated: animated)
+        invalidateIntrinsicContentSize()
+        createAnimations()
+    }
+    
+    public override var intrinsicContentSize: CGSize {
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+        for i in 0 ..< number.count {
+            let digit = number.app.substring(with: NSMakeRange(i, 1))
+            let size = numberSize(digit)
+            height = max(height, size.height)
+            width += size.width
+        }
+        return CGSize(width: width, height: height)
+    }
+    
+    private func stopAnimations() {
+        if animateCount > 0 {
+            lastNumber = number
+        }
+        
+        for scrollLayer in scrollLayers {
+            scrollLayer.removeAnimation(forKey: animationKey)
+            scrollLayer.removeFromSuperlayer()
+        }
+        
+        numbersText.removeAll()
+        scrollLayers.removeAll()
+        textLayers.removeAll()
+    }
+    
+    private func prepareAnimations(animated: Bool) {
+        let animated = animated && lastNumber != "" && number != lastNumber
+        let numberParts = number.components(separatedBy: ".")
+        let lastParts = lastNumber.components(separatedBy: ".")
+        
+        var startNumber = ""
+        let endNumber = number
+        if numberParts.count > 1 {
+            let firstNumber = prepareNumber(startNumber: lastParts.first ?? "", endNumber: numberParts.first ?? "")
+            let digitNumber = prepareNumber(startNumber: lastParts.count > 1 ? (lastParts.last ?? "") : "", endNumber: numberParts.last ?? "")
+            startNumber = "\(firstNumber).\(digitNumber)"
+        } else {
+            startNumber = prepareNumber(startNumber: lastParts.first ?? "", endNumber: endNumber)
+        }
+        
+        var lastFrame = CGRect(x: 0, y: offsetY, width: 0, height: 0)
+        for i in 0 ..< endNumber.count {
+            let startDigit = startNumber.app.substring(with: NSMakeRange(i, 1))
+            let endDigit = endNumber.app.substring(with: NSMakeRange(i, 1))
+            
+            let size = numberSize(endDigit)
+            let scrollLayer = CAScrollLayer()
+            scrollLayer.frame = CGRect(x: lastFrame.maxX, y: lastFrame.minY, width: size.width, height: size.height)
+            lastFrame = scrollLayer.frame
+            scrollLayers.append(scrollLayer)
+            self.layer.addSublayer(scrollLayer)
+            
+            createContent(scrollLayer: scrollLayer, startDigit: startDigit, endDigit: endDigit, animated: animated)
+            numbersText.append(endDigit)
+        }
+    }
+    
+    private func prepareNumber(startNumber: String, endNumber: String) -> String {
+        var result = startNumber
+        let zeroCount = endNumber.count - startNumber.count
+        if zeroCount >= 0 {
+            for _ in 0 ..< zeroCount {
+                result = "0" + result
+            }
+        } else {
+            result = result.app.substring(from: abs(zeroCount))
+        }
+        return result
+    }
+    
+    private func createAnimations() {
+        let duration: CFTimeInterval = self.duration - Double(numbersText.count) * durationOffset
+        var offset: CFTimeInterval = 0
+        for scrollLayer in scrollLayers {
+            let maxY: CGFloat = scrollLayer.sublayers?.last?.frame.origin.y ?? 0
+            let animation = CABasicAnimation(keyPath: "sublayerTransform.translation.y")
+            animation.duration = duration + offset
+            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            animation.isRemovedOnCompletion = false
+            animation.fillMode = .forwards
+            animation.fromValue = NSNumber(value: 0)
+            animation.toValue = NSNumber(value: -maxY)
+            scrollLayer.add(animation, forKey: animationKey)
+            
+            offset += durationOffset
+            beginAnimation()
+            perform(#selector(finishAnimation), with: nil, afterDelay: animation.duration)
+        }
+    }
+    
+    private func createContent(scrollLayer: CAScrollLayer, startDigit: String, endDigit: String, animated: Bool) {
+        var textForScroll: [String] = []
+        if !animated || !isNumber(endDigit) || startDigit == endDigit {
+            textForScroll.append(endDigit)
+        } else {
+            let digitValue = (startDigit as NSString).integerValue
+            for i in 0 ..< density + 1 {
+                let currentValue = (digitValue + i) % 10
+                textForScroll.append("\(currentValue)")
+                if currentValue == (endDigit as NSString).integerValue {
+                    break
+                }
+            }
+        }
+        
+        var offsetY: CGFloat = 0
+        for text in textForScroll {
+            let frame = CGRect(x: 0, y: offsetY, width: scrollLayer.frame.width, height: scrollLayer.frame.height)
+            let textLayer = CATextLayer()
+            textLayer.foregroundColor = textColor.cgColor
+            textLayer.font = CGFont(textFont.fontName as CFString)
+            textLayer.fontSize = textFont.pointSize
+            textLayer.alignmentMode = .center
+            textLayer.string = text
+            textLayer.contentsScale = UIScreen.main.scale
+            textLayer.frame = frame
+            scrollLayer.addSublayer(textLayer)
+            textLayers.append(textLayer)
+            offsetY = frame.maxY
+        }
+    }
+    
+    private func beginAnimation() {
+        animateCount += 1
+    }
+    
+    @objc private func finishAnimation() {
+        animateCount -= 1
+        
+        if animateCount <= 0 {
+            lastNumber = number
+        }
+    }
+    
+    private func isNumber(_ number: String) -> Bool {
+        var intNumber: Int = 0
+        let scanNumber = Scanner(string: number)
+        let result = scanNumber.scanInt(&intNumber) && scanNumber.isAtEnd
+        return result
+    }
+    
+    private func numberSize(_ number: String) -> CGSize {
+        let size = number.app.size(font: textFont)
+        return APP.flat(size)
+    }
+
 }
