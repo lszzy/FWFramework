@@ -144,7 +144,7 @@ private extension SettingsController {
         app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), "中文", "English"], currentIndex: -1) { (index) in
             let language: String? = index == 1 ? "zh-Hans" : (index == 2 ? "en" : nil)
             Bundle.app.localizedLanguage = language
-            TabController.refreshController()
+            AppDelegate.shared?.reloadController()
         }
     }
     
@@ -162,7 +162,7 @@ private extension SettingsController {
                 }
             } else {
                 ThemeManager.shared.mode = ThemeMode(index)
-                TabController.refreshController()
+                AppDelegate.shared?.reloadController()
             }
         }
     }

@@ -71,17 +71,6 @@ extension TabController {
     
 }
 
-// MARK: - Public
-extension TabController {
-    
-    static func refreshController() {
-        if let appDelegate = UIApplication.shared.delegate as? AppResponder {
-            appDelegate.setupController()
-        }
-    }
-    
-}
-
 // MARK: - UITabBarControllerDelegate
 extension TabController: UITabBarControllerDelegate {
     
