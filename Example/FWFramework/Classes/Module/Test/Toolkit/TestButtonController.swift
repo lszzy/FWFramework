@@ -91,7 +91,6 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         odometerView.frame = CGRect(x: 140, y: 150, width: 130, height: 50)
         odometerView.textFont = APP.font(30, .semibold)
         odometerView.textColor = AppTheme.textColor
-        odometerView.offsetY = (50.0 - odometerView.textFont.lineHeight) / 2.0
         odometerView.setNumber("$0.00")
         view.addSubview(odometerView)
         
@@ -277,7 +276,6 @@ public class OdometerView: UIView {
     
     public var duration: CFTimeInterval = 1.5
     public var durationOffset: CFTimeInterval = 0.2
-    public var offsetY: CGFloat = 0
     
     private var numbersText: [String] = []
     private var scrollLayers: [CAScrollLayer] = []
@@ -332,18 +330,19 @@ public class OdometerView: UIView {
         let endNumber = number
         if numberParts.count > 1 {
             let firstNumber = prepareNumber(startNumber: lastParts.first ?? "", endNumber: numberParts.first ?? "")
-            let digitNumber = prepareNumber(startNumber: lastParts.count > 1 ? (lastParts.last ?? "") : "", endNumber: numberParts.last ?? "")
+            let digitNumber = prepareNumber(startNumber: lastParts.count > 1 ? (lastParts.last ?? "") : "", endNumber: numberParts.last ?? "", isDigit: true)
             startNumber = "\(firstNumber).\(digitNumber)"
         } else {
             startNumber = prepareNumber(startNumber: lastParts.first ?? "", endNumber: endNumber)
         }
         
-        var lastFrame = CGRect(x: 0, y: offsetY, width: 0, height: 0)
+        var lastFrame: CGRect = .zero
         for i in 0 ..< endNumber.count {
             let startDigit = startNumber.app.substring(with: NSMakeRange(i, 1))
             let endDigit = endNumber.app.substring(with: NSMakeRange(i, 1))
             
             let size = numberSize(endDigit)
+            lastFrame.origin.y = max(0, (self.frame.height - size.height) / 2.0)
             let scrollLayer = CAScrollLayer()
             scrollLayer.frame = CGRect(x: lastFrame.maxX, y: lastFrame.minY, width: size.width, height: size.height)
             lastFrame = scrollLayer.frame
@@ -355,15 +354,15 @@ public class OdometerView: UIView {
         }
     }
     
-    private func prepareNumber(startNumber: String, endNumber: String) -> String {
+    private func prepareNumber(startNumber: String, endNumber: String, isDigit: Bool = false) -> String {
         var result = startNumber
         let zeroCount = endNumber.count - startNumber.count
         if zeroCount >= 0 {
             for _ in 0 ..< zeroCount {
-                result = "0" + result
+                result = isDigit ? result + "0" : "0" + result
             }
         } else {
-            result = result.app.substring(from: abs(zeroCount))
+            result = isDigit ? result.app.substring(to: abs(zeroCount)) : result.app.substring(from: abs(zeroCount))
         }
         return result
     }
