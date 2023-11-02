@@ -46,12 +46,12 @@ public class Asset: NSObject {
     public private(set) var assetType: AssetType = .unknown
     /// 只读资源子类型
     public private(set) var assetSubType: AssetSubType = .unknown
-    /// Asset 的标识，每个 Asset 的 identifier 都不同。只要两个 Asset 的 identifier 相同则认为它们是同一个 asset
-    public private(set) var identifier: String = ""
     /// 从 iCloud 下载资源大图的状态
     public private(set) var downloadStatus: AssetDownloadStatus = .succeed
     /// 从 iCloud 下载资源大图的进度
-    public var downloadProgress: Double = 0
+    public var downloadProgress: Double = 0 {
+        didSet { downloadStatus = .downloading }
+    }
     /// 从 iCloud 请求获得资源的大图的请求 ID
     public var requestId: Int = 0
     /// 自定义编辑后的图片，用于实现图片裁剪等功能，默认nil
@@ -60,6 +60,10 @@ public class Asset: NSObject {
     public var requestObject: Any?
     /// 自定义请求结果信息，用于保存请求结果场景，默认nil
     public var requestInfo: [AnyHashable: Any]?
+    /// Asset 的标识，每个 Asset 的 identifier 都不同。只要两个 Asset 的 identifier 相同则认为它们是同一个 asset
+    public var identifier: String {
+        return phAsset.localIdentifier
+    }
     
     private var phAssetInfo: [AnyHashable: Any]?
     
@@ -149,7 +153,7 @@ public class Asset: NSObject {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestOriginImage(completion: ((_ result: UIImage?, _ info: [String: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestOriginImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
@@ -159,7 +163,7 @@ public class Asset: NSObject {
             if let imageData = imageData {
                 image = UIImage(data: imageData)
             }
-            completion?(image, info as? [String: Any], true)
+            completion?(image, info, true)
         }
         return Int(imageRequestId)
     }
@@ -174,13 +178,16 @@ public class Asset: NSObject {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestThumbnailImage(size: CGSize, completion: ((_ result: UIImage?, _ info: [String: Any]?, _ finished: Bool) -> Void)?) -> Int {
+    public func requestThumbnailImage(size: CGSize, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.resizeMode = .fast
         
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
         let imageRequestId = AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+            let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
+            let downloadFailed = info?[PHImageErrorKey] != nil
+            completion?(result, info, downloadSucceed || downloadFailed)
         }
         return Int(imageRequestId)
     }
@@ -195,13 +202,15 @@ public class Asset: NSObject {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestPreviewImage(completion: ((_ result: UIImage?, _ info: [String: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestPreviewImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         
         let imageRequestId = AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
-            
+            let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
+            let downloadFailed = info?[PHImageErrorKey] != nil
+            completion?(result, info, downloadSucceed || downloadFailed)
         }
         return Int(imageRequestId)
     }
@@ -216,13 +225,15 @@ public class Asset: NSObject {
      - Returns: 返回请求 Live Photo 的请求 id
      */
     @discardableResult
-    public func requestLivePhoto(completion: ((_ livePhoto: PHLivePhoto?, _ info: [String: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestLivePhoto(completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let livePhotoRequestOptions = PHLivePhotoRequestOptions()
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
         
         let livePhotoRequestId = AssetManager.shared.phCachingImageManager().requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
-            
+            let downloadSucceed = (livePhoto != nil && info == nil) || (!Asset.isValueTrue(info, key: PHLivePhotoInfoCancelledKey) && info?[PHLivePhotoInfoErrorKey] == nil && !Asset.isValueTrue(info, key: PHLivePhotoInfoIsDegradedKey) && !Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
+            let downloadFailed = info?[PHLivePhotoInfoErrorKey] != nil || info?[PHImageErrorKey] != nil
+            completion?(livePhoto, info, downloadSucceed || downloadFailed)
         }
         return Int(livePhotoRequestId)
     }
@@ -237,13 +248,13 @@ public class Asset: NSObject {
      - Returns: 返回请求 AVPlayerItem 的请求 id
      */
     @discardableResult
-    public func requestPlayerItem(completion: ((_ playerItem: AVPlayerItem?, _ info: [String: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestPlayerItem(completion: ((_ playerItem: AVPlayerItem?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
         
         let videoRequestId = AssetManager.shared.phCachingImageManager().requestPlayerItem(forVideo: phAsset, options: videoRequestOptions) { playerItem, info in
-            
+            completion?(playerItem, info)
         }
         return Int(videoRequestId)
     }
@@ -260,13 +271,26 @@ public class Asset: NSObject {
      - Returns: 返回请求 视频文件URL 的请求 id
      */
     @discardableResult
-    public func requestVideoURL(outputURL: URL, exportPreset: String, completion: ((_ videoURL: URL?, _ info: [String: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestVideoURL(outputURL: URL, exportPreset: String, completion: ((_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
         
         let videoRequestId = AssetManager.shared.phCachingImageManager().requestExportSession(forVideo: phAsset, options: videoRequestOptions, exportPreset: exportPreset) { exportSession, info in
+            guard let exportSession = exportSession else {
+                completion?(nil, info)
+                return
+            }
             
+            exportSession.outputURL = outputURL
+            exportSession.outputFileType = .mp4
+            exportSession.exportAsynchronously {
+                if exportSession.status == .completed {
+                    completion?(outputURL, info)
+                } else {
+                    completion?(nil, info)
+                }
+            }
         }
         return Int(videoRequestId)
     }
@@ -276,28 +300,131 @@ public class Asset: NSObject {
 
      - Parameter completion: 完成请求后调用的 block，参数中包含了请求的图片 Data（若 assetType 不是 AssetTypeImage 或 AssetTypeLivePhoto 则为 nil），该图片是否为 GIF 的判断值，以及该图片的文件格式是否为 HEIC
      */
-    public func requestImageData(completion: ((_ imageData: Data?, _ info: [String: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?) {
+    public func requestImageData(completion: ((_ imageData: Data?, _ info: [AnyHashable: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?) {
+        guard assetType == .image else {
+            completion?(nil, nil, false, false)
+            return
+        }
         
+        if let phAssetInfo = phAssetInfo {
+            let imageData = phAssetInfo[Asset.kAssetInfoImageData] as? Data
+            let originInfo = phAssetInfo[Asset.kAssetInfoOriginInfo] as? [AnyHashable: Any]
+            let dataUTI = phAssetInfo[Asset.kAssetInfoDataUTI] as? String
+            let isGIF = assetSubType == .gif
+            let isHEIC = "public.heic" == dataUTI
+            completion?(imageData, originInfo, isGIF, isHEIC)
+        } else {
+            requestPhAssetInfo { [weak self] phAssetInfo in
+                self?.phAssetInfo = phAssetInfo
+                
+                let imageData = phAssetInfo[Asset.kAssetInfoImageData] as? Data
+                let originInfo = phAssetInfo[Asset.kAssetInfoOriginInfo] as? [AnyHashable: Any]
+                let dataUTI = phAssetInfo[Asset.kAssetInfoDataUTI] as? String
+                let isGIF = self?.assetSubType == .gif
+                let isHEIC = "public.heic" == dataUTI
+                completion?(imageData, originInfo, isGIF, isHEIC)
+            }
+        }
+    }
+    
+    private func requestPhAssetInfo(completion: (([AnyHashable: Any]) -> Void)?) {
+        if assetType == .video {
+            let videoRequestOptions = PHVideoRequestOptions()
+            videoRequestOptions.isNetworkAccessAllowed = true
+            
+            AssetManager.shared.phCachingImageManager().requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, _, info in
+                var phAssetInfo: [AnyHashable: Any] = [:]
+                if let info = info {
+                    phAssetInfo[Asset.kAssetInfoOriginInfo] = info
+                }
+                if let asset = asset as? AVURLAsset {
+                    var size: AnyObject?
+                    try? (asset.url as NSURL).getResourceValue(&size, forKey: .fileSizeKey)
+                    phAssetInfo[Asset.kAssetInfoSize] = size
+                }
+                completion?(phAssetInfo)
+            }
+        } else {
+            requestImagePhAssetInfo(synchronous: false, completion: completion)
+        }
+    }
+    
+    private func requestImagePhAssetInfo(synchronous: Bool, completion: (([AnyHashable: Any]) -> Void)?) {
+        let imageRequestOptions = PHImageRequestOptions()
+        imageRequestOptions.isSynchronous = synchronous
+        imageRequestOptions.isNetworkAccessAllowed = true
+        
+        AssetManager.shared.phCachingImageManager().requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, dataUTI, exifOrientation, info in
+            var phAssetInfo: [AnyHashable: Any] = [:]
+            if let imageData = imageData {
+                phAssetInfo[Asset.kAssetInfoImageData] = imageData
+                phAssetInfo[Asset.kAssetInfoSize] = NSNumber(value: imageData.count)
+            }
+            if let info = info {
+                phAssetInfo[Asset.kAssetInfoOriginInfo] = info
+            }
+            if let dataUTI = dataUTI {
+                phAssetInfo[Asset.kAssetInfoDataUTI] = dataUTI
+            }
+            phAssetInfo[Asset.kAssetInfoOrientation] = NSNumber(value: ImageCoder.imageOrientation(from: exifOrientation).rawValue)
+            completion?(phAssetInfo)
+        }
+    }
+    
+    private static func isValueTrue(_ info: [AnyHashable: Any]?, key: String) -> Bool {
+        let number = info?[key] as? NSNumber
+        return number?.boolValue ?? false
     }
     
     /// 获取图片的 UIImageOrientation 值，仅 assetType 为 AssetTypeImage 或 AssetTypeLivePhoto 时有效
     public var imageOrientation: UIImage.Orientation {
-        return .up
+        var orientation: UIImage.Orientation = .up
+        if assetType == .image {
+            if phAssetInfo == nil {
+                requestImagePhAssetInfo(synchronous: true) { [weak self] phAssetInfo in
+                    self?.phAssetInfo = phAssetInfo
+                }
+            }
+            let number = phAssetInfo?[Asset.kAssetInfoOrientation] as? NSNumber
+            orientation = .init(rawValue: number?.intValue ?? 0) ?? .up
+        }
+        return orientation
     }
     
     /// 更新下载资源的结果
     public func updateDownloadStatus(succeed: Bool) {
-        
+        downloadStatus = succeed ? .succeed : .failed
     }
     
     /// 获取 Asset 的体积（数据大小）
     public func assetSize(completion: ((Int64) -> Void)?) {
-        
+        if let phAssetInfo = phAssetInfo {
+            let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
+            completion?(number?.int64Value ?? 0)
+        } else {
+            requestPhAssetInfo { [weak self] phAssetInfo in
+                self?.phAssetInfo = phAssetInfo
+                DispatchQueue.main.async {
+                    let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
+                    completion?(number?.int64Value ?? 0)
+                }
+            }
+        }
     }
     
     /// 获取 Asset 的总时长（仅视频）
     public var duration: TimeInterval {
-        return 0
+        guard assetType == .video else { return 0 }
+        return phAsset.duration
+    }
+    
+    /// 重写比较方法，只要两个 Asset 的 identifier 相同则认为它们是同一个 asset
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let asset = object as? Asset,
+           asset.identifier == identifier {
+            return true
+        }
+        return super.isEqual(object)
     }
     
 }

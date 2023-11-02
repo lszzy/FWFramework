@@ -254,7 +254,7 @@ open class ImageCoder: NSObject {
         properties[kCGImageDestinationEmbedThumbnail as String] = false
 
         if !isAnimated || count <= 1 {
-            properties[kCGImagePropertyOrientation as String] = exifOrientation(image.imageOrientation)
+            properties[kCGImagePropertyOrientation as String] = Self.exifOrientation(from: image.imageOrientation)
             CGImageDestinationAddImage(imageDestination, imageRef, properties as CFDictionary)
         } else {
             var dictionaryProperties: [String: Any] = [:]
@@ -436,6 +436,56 @@ open class ImageCoder: NSObject {
         }
         return "application/octet-stream"
     }
+    
+    /// 图片方向转为EXIF方向
+    open class func exifOrientation(from imageOrientation: UIImage.Orientation) -> CGImagePropertyOrientation {
+        var exifOrientation: CGImagePropertyOrientation = .up
+        switch imageOrientation {
+        case .up:
+            exifOrientation = .up
+        case .down:
+            exifOrientation = .down
+        case .left:
+            exifOrientation = .left
+        case .right:
+            exifOrientation = .right
+        case .upMirrored:
+            exifOrientation = .upMirrored
+        case .downMirrored:
+            exifOrientation = .downMirrored
+        case .leftMirrored:
+            exifOrientation = .leftMirrored
+        case .rightMirrored:
+            exifOrientation = .rightMirrored
+        @unknown default:
+            break
+        }
+        return exifOrientation
+    }
+    
+    /// EXIF方向转为图片方向
+    open class func imageOrientation(from exifOrientation: CGImagePropertyOrientation) -> UIImage.Orientation {
+        var imageOrientation: UIImage.Orientation = .up
+        switch exifOrientation {
+        case .up:
+            imageOrientation = .up
+        case .down:
+            imageOrientation = .down
+        case .left:
+            imageOrientation = .left
+        case .right:
+            imageOrientation = .right
+        case .upMirrored:
+            imageOrientation = .upMirrored
+        case .downMirrored:
+            imageOrientation = .downMirrored
+        case .leftMirrored:
+            imageOrientation = .leftMirrored
+        case .rightMirrored:
+            imageOrientation = .rightMirrored
+        }
+        return imageOrientation
+    }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式
     open class func base64String(for imageData: Data?) -> String? {
@@ -488,31 +538,6 @@ open class ImageCoder: NSObject {
         let imageUTType = ImageCoder.utType(from: format)
         let imageUTTypes = forDecode ? decodeUTTypes : encodeUTTypes
         return imageUTTypes.contains(imageUTType as String)
-    }
-    
-    private func exifOrientation(_ imageOrientation: UIImage.Orientation) -> CGImagePropertyOrientation {
-        var exifOrientation: CGImagePropertyOrientation = .up
-        switch imageOrientation {
-        case .up:
-            exifOrientation = .up
-        case .down:
-            exifOrientation = .down
-        case .left:
-            exifOrientation = .left
-        case .right:
-            exifOrientation = .right
-        case .upMirrored:
-            exifOrientation = .upMirrored
-        case .downMirrored:
-            exifOrientation = .downMirrored
-        case .leftMirrored:
-            exifOrientation = .leftMirrored
-        case .rightMirrored:
-            exifOrientation = .rightMirrored
-        @unknown default:
-            break
-        }
-        return exifOrientation
     }
     
     private func dictionaryProperty(_ format: ImageFormat) -> String? {
