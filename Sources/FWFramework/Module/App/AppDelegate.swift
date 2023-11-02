@@ -10,9 +10,15 @@ import UIKit
 /// AppDelegate基类
 open class AppResponder: UIResponder, UIApplicationDelegate {
     
+    /// 应用主delegate
+    public class var shared: Self? {
+        return UIApplication.shared.delegate as? Self
+    }
+    
     /// 应用主window
     open var window: UIWindow?
     
+    // MARK: - Override
     /// 初始化应用配置，子类重写
     open func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         /*
@@ -48,6 +54,11 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         /*
         预加载启动广告、检查App更新等
          */
+    }
+    
+    /// 重新加载根控制器，子类可重写
+    open func reloadController() {
+        setupController()
     }
     
     // MARK: - UIApplicationDelegate

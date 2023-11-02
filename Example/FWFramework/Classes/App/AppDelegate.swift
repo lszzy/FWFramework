@@ -14,6 +14,7 @@ class AppDelegate: AppResponder {
     var backgroundTask: ((@escaping () -> Void) -> Void)?
     var expirationHandler: (() -> Void)?
     
+    // MARK: - Override
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.backgroundColor
@@ -33,6 +34,11 @@ class AppDelegate: AppResponder {
     
     override func setupController() {
         window?.rootViewController = TabController()
+    }
+    
+    override func reloadController() {
+        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 1.0)
+        super.reloadController()
     }
     
     // MARK: - UIApplicationDelegate
