@@ -207,7 +207,7 @@ public class ViewControllerManager: NSObject {
         
         NSObject.fw_swizzleInstanceMethod(
             UIViewController.self,
-            selector: #selector(UIViewController.viewIsAppearing(_:)),
+            selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in

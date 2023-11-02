@@ -37,7 +37,7 @@ class AppDelegate: AppResponder {
     }
     
     override func reloadController() {
-        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 1.0)
+        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 0.5)
         super.reloadController()
     }
     
