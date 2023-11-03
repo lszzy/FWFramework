@@ -430,6 +430,100 @@ public class Asset: NSObject {
 }
 
 // MARK: - AssetGroup
+/// 相册展示内容的类型
+public enum AlbumContentType: UInt {
+    /// 展示所有资源
+    case all = 0
+    /// 只展示照片
+    case onlyPhoto
+    /// 只展示视频
+    case onlyVideo
+    /// 只展示音频
+    case onlyAudio
+    /// 只展示LivePhoto
+    case onlyLivePhoto
+}
+
+/// 相册展示内容按日期排序的方式
+public enum AlbumSortType: UInt {
+    /// 日期最新的内容排在后面
+    case positive = 0
+    /// 日期最新的内容排在前面
+    case reverse
+}
+
+/// 资源分组
+public class AssetGroup: NSObject {
+    
+    /// 只读PHAssetCollection对象
+    public let phAssetCollection: PHAssetCollection
+    /// 只读PHFetchResult对象
+    public let phFetchResult: PHFetchResult<PHAsset>
+    
+    /// 相册的名称
+    public var name: String? {
+        let resultName = phAssetCollection.localizedTitle ?? ""
+        return NSLocalizedString(resultName, comment: resultName)
+    }
+    
+    /// 相册内的资源数量，包括视频、图片、音频（如果支持）这些类型的所有资源
+    public var numberOfAssets: Int {
+        return phFetchResult.count
+    }
+    
+    /// 初始化方法
+    public init(phAssetCollection: PHAssetCollection, fetchAssetsOptions: PHFetchOptions? = nil) {
+        self.phAssetCollection = phAssetCollection
+        self.phFetchResult = PHAsset.fetchAssets(in: phAssetCollection, options: fetchAssetsOptions)
+        super.init()
+    }
+    
+    /// 相册的缩略图，即系统接口中的相册海报（Poster Image）
+    public func posterImage(size: CGSize) -> UIImage? {
+        // 系统的隐藏相册不应该显示缩略图
+        if phAssetCollection.assetCollectionSubtype == .smartAlbumAllHidden {
+            return nil
+        }
+        
+        var resultImage: UIImage?
+        let count = phFetchResult.count
+        if count > 0 {
+            let asset = phFetchResult[count - 1]
+            let imageRequestOptions = PHImageRequestOptions()
+            imageRequestOptions.isSynchronous = true
+            imageRequestOptions.resizeMode = .exact
+            // targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
+            AssetManager.shared.phCachingImageManager().requestImage(for: asset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+                resultImage = result
+            }
+        }
+        return resultImage
+    }
+    
+    /// 枚举相册内所有的资源
+    ///
+    /// - Parameters:
+    ///   - options: 相册内资源的排序方式，可以选择日期最新的排在最前面，默认日期最新的排在最后面
+    ///   - block: 枚举相册内资源时调用的 block，参数 result 表示每次枚举时对应的资源。枚举所有资源结束后，enumerationBlock 会被再调用一次，这时 result 的值为 nil。可以以此作为判断枚举结束的标记
+    public func enumerateAssets(options: AlbumSortType = .positive, using block: ((Asset?) -> Void)?) {
+        let resultCount = phFetchResult.count
+        if options == .reverse {
+            for i in (0 ..< resultCount).reversed() {
+                let asset = Asset(phAsset: phFetchResult[i])
+                block?(asset)
+            }
+        } else {
+            for i in 0 ..< resultCount {
+                let asset = Asset(phAsset: phFetchResult[i])
+                block?(asset)
+            }
+        }
+        
+        // For 循环遍历完毕，这时再调用一次 enumerationBlock，并传递 nil 作为实参，作为枚举资源结束的标记
+        block?(nil)
+    }
+    
+}
 
 // MARK: - AssetManager
 
