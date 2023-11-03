@@ -645,7 +645,8 @@ public class AssetManager: NSObject {
         PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imageRef: imageRef, orientation: orientation) { success, creationDate, error in
             if success {
                 let fetchOptions = PHFetchOptions()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchDate = creationDate as? NSDate ?? NSDate()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
                 let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
                 var asset: Asset?
                 if let phAsset = fetchResult.lastObject {
@@ -664,7 +665,8 @@ public class AssetManager: NSObject {
         PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imagePathURL: imagePathURL) { success, creationDate, error in
             if success {
                 let fetchOptions = PHFetchOptions()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchDate = creationDate as? NSDate ?? NSDate()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
                 let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
                 var asset: Asset?
                 if let phAsset = fetchResult.lastObject {
@@ -683,7 +685,8 @@ public class AssetManager: NSObject {
         PHPhotoLibrary.shared().fw_addVideo(toAlbum: assetCollection, videoPathURL: videoPathURL) { success, creationDate, error in
             if success {
                 let fetchOptions = PHFetchOptions()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchDate = creationDate as? NSDate ?? NSDate()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
                 let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
                 var asset: Asset?
                 if let phAsset = fetchResult.lastObject {
