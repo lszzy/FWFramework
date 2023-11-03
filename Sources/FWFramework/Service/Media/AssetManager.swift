@@ -12,6 +12,7 @@ import Photos
 
 // MARK: - Asset
 /// 资源类型枚举
+@objc(__FWAssetType)
 public enum AssetType: UInt {
     case unknown = 0
     case image
@@ -20,6 +21,7 @@ public enum AssetType: UInt {
 }
 
 /// 资源子类型枚举
+@objc(__FWAssetSubType)
 public enum AssetSubType: UInt {
     case unknown = 0
     case image
@@ -38,6 +40,8 @@ public enum AssetDownloadStatus: UInt {
 /// 相册里某一个资源的包装对象，该资源可能是图片、视频等
 ///
 /// Asset 重写了 isEqual: 方法，只要两个 Asset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 Asset 进行遍历查找等操作
+@objcMembers
+@objc(__FWAsset)
 public class Asset: NSObject {
     
     /// 只读PHAsset对象
@@ -53,7 +57,7 @@ public class Asset: NSObject {
         didSet { downloadStatus = .downloading }
     }
     /// 从 iCloud 请求获得资源的大图的请求 ID
-    public var requestId: Int = 0
+    public var requestID: Int = 0
     /// 自定义编辑后的图片，用于实现图片裁剪等功能，默认nil
     public var editedImage: UIImage?
     /// 自定义请求结果对象，用于保存请求结果场景，默认nil
@@ -392,7 +396,7 @@ public class Asset: NSObject {
     }
     
     /// 更新下载资源的结果
-    public func updateDownloadStatus(succeed: Bool) {
+    public func updateDownloadStatus(downloadResult succeed: Bool) {
         downloadStatus = succeed ? .succeed : .failed
     }
     
@@ -431,6 +435,7 @@ public class Asset: NSObject {
 
 // MARK: - AssetGroup
 /// 相册展示内容的类型
+@objc
 public enum AlbumContentType: UInt {
     /// 展示所有资源
     case all = 0
@@ -445,6 +450,7 @@ public enum AlbumContentType: UInt {
 }
 
 /// 相册展示内容按日期排序的方式
+@objc
 public enum AlbumSortType: UInt {
     /// 日期最新的内容排在后面
     case positive = 0
@@ -453,6 +459,8 @@ public enum AlbumSortType: UInt {
 }
 
 /// 资源分组
+@objcMembers
+@objc(__FWAssetGroup)
 public class AssetGroup: NSObject {
     
     /// 只读PHAssetCollection对象
@@ -527,6 +535,7 @@ public class AssetGroup: NSObject {
 
 // MARK: - AssetManager
 /// Asset 授权的状态
+@objc(__FWAssetAuthorizationStatus)
 public enum AssetAuthorizationStatus: UInt {
     /// 还不确定有没有授权
     case notDetermined = 0
@@ -541,6 +550,8 @@ public enum AssetAuthorizationStatus: UInt {
 ///  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，AssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取PHCachingImageManager 的实例。
 ///
 ///  [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
+@objcMembers
+@objc(__FWAssetManager)
 public class AssetManager: NSObject {
     
     /// 获取 AssetManager 的单例
