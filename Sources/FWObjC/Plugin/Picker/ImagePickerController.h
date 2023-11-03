@@ -12,6 +12,29 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class __FWAsset;
+@class __FWAssetGroup;
+
+typedef NS_ENUM(NSUInteger, __FWAssetDownloadStatus) {
+    __FWAssetDownloadStatusSucceed,
+    __FWAssetDownloadStatusDownloading,
+    __FWAssetDownloadStatusCanceled,
+    __FWAssetDownloadStatusFailed
+} NS_SWIFT_NAME(AssetDownloadStatus);
+
+typedef NS_ENUM(NSUInteger, __FWAlbumContentType) {
+    __FWAlbumContentTypeAll,
+    __FWAlbumContentTypeOnlyPhoto,
+    __FWAlbumContentTypeOnlyVideo,
+    __FWAlbumContentTypeOnlyAudio,
+    __FWAlbumContentTypeOnlyLivePhoto
+} NS_SWIFT_NAME(AlbumContentType);
+
+typedef NS_ENUM(NSUInteger, __FWAlbumSortType) {
+    __FWAlbumSortTypePositive,
+    __FWAlbumSortTypeReverse
+} NS_SWIFT_NAME(AlbumSortType);
+
 #pragma mark - __FWImageAlbumController
 
 @class __FWImageAlbumTableCell;

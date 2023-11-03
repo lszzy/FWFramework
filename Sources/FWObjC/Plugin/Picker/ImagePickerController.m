@@ -216,7 +216,7 @@
     
     __FWAssetAuthorizationStatus authorizationStatus = [__FWAssetManager authorizationStatus];
     if (authorizationStatus == __FWAssetAuthorizationStatusNotDetermined) {
-        [__FWAssetManager requestAuthorization:^(__FWAssetAuthorizationStatus status) {
+        [__FWAssetManager requestAuthorizationWithCompletion:^(__FWAssetAuthorizationStatus status) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (status == __FWAssetAuthorizationStatusNotAuthorized) {
                     [self showDeniedView];
@@ -262,7 +262,7 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[__FWAssetManager sharedInstance] enumerateAllAlbumsWithAlbumContentType:self.contentType usingBlock:^(__FWAssetGroup *resultAssetsGroup) {
+        [[__FWAssetManager shared] enumerateAllAlbumsWithAlbumContentType:(AlbumContentType)self.contentType showEmptyAlbum:NO showSmartAlbum:YES using:^(__FWAssetGroup *resultAssetsGroup) {
             if (resultAssetsGroup) {
                 [self.albumsArray addObject:resultAssetsGroup];
             } else {
@@ -1056,7 +1056,7 @@
                     imageView.livePhoto = nil;
                 }
             });
-        } withProgressHandler:phProgressHandler];
+        } progressHandler:phProgressHandler];
         imageView.tag = imageAsset.requestID;
     } else {
         if (imageAsset.assetType != __FWAssetTypeImage) {
@@ -1095,12 +1095,12 @@
                         imageView.progress = 0;
                     }
                 });
-            } withProgressHandler:phProgressHandler];
+            } progressHandler:phProgressHandler];
             imageView.tag = imageAsset.requestID;
         }
         
         if (isLivePhoto) {
-        } else if (imageAsset.assetSubType == __FWAssetSubTypeGIF) {
+        } else if (imageAsset.assetSubType == __FWAssetSubTypeGif) {
             [imageAsset requestImageDataWithCompletion:^(NSData *imageData, NSDictionary<NSString *,id> *info, BOOL isGIF, BOOL isHEIC) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     UIImage *resultImage = [UIImage __fw_imageWithData:imageData scale:1 options:nil];
@@ -1140,7 +1140,7 @@
                         imageView.progress = 0;
                     }
                 });
-            } withProgressHandler:phProgressHandler];
+            } progressHandler:phProgressHandler];
             imageView.tag = imageAsset.requestID;
         }
     }
@@ -1279,7 +1279,7 @@
                 imageView.progress = 0;
             }
         });
-    } withProgressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+    } progressHandler:^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
         imageAsset.downloadProgress = progress;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.downloadStatus != __FWAssetDownloadStatusDownloading) {
@@ -1974,7 +1974,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [assetsGroup enumerateAssetsWithOptions:albumSortType usingBlock:^(__FWAsset *resultAsset) {
+        [assetsGroup enumerateAssetsWithOptions:(AlbumSortType)albumSortType using:^(__FWAsset *resultAsset) {
             // 这里需要对 UI 进行操作，因此放回主线程处理
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (resultAsset) {
@@ -2509,7 +2509,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
             cell.downloadStatus = __FWAssetDownloadStatusFailed;
         }
         
-    } withProgressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+    } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         imageAsset.downloadProgress = progress;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2633,7 +2633,7 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionHandler(asset, videoURL, info);
                 });
-            } withProgressHandler:nil];
+            } progressHandler:nil];
         } else if (asset.assetType == __FWAssetTypeImage) {
             if (asset.editedImage) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2647,8 +2647,8 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (finished) completionHandler(asset, livePhoto, info);
                     });
-                } withProgressHandler:nil];
-            } else if (asset.assetSubType == __FWAssetSubTypeGIF) {
+                } progressHandler:nil];
+            } else if (asset.assetSubType == __FWAssetSubTypeGif) {
                 [asset requestImageDataWithCompletion:^(NSData *imageData, NSDictionary<NSString *,id> *info, BOOL isGIF, BOOL isHEIC) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         UIImage *resultImage = imageData ? [UIImage __fw_imageWithData:imageData scale:1 options:nil] : nil;
@@ -2663,13 +2663,13 @@ static NSString * const kImageOrUnknownCellIdentifier = @"imageorunknown";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (finished) completionHandler(asset, result, info);
                         });
-                    } withProgressHandler:nil];
+                    } progressHandler:nil];
                 } else {
                     [asset requestPreviewImageWithCompletion:^(UIImage *result, NSDictionary<NSString *,id> *info, BOOL finished) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (finished) completionHandler(asset, result, info);
                         });
-                    } withProgressHandler:nil];
+                    } progressHandler:nil];
                 }
             }
         }
