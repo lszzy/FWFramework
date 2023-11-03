@@ -107,7 +107,7 @@ public class Asset: NSObject {
         imageRequestOptions.isSynchronous = true
         
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager().requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions, resultHandler: { imageData, _, _, _ in
+        AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions, resultHandler: { imageData, _, _, _ in
             if let imageData = imageData {
                 resultImage = UIImage(data: imageData)
             }
@@ -124,7 +124,7 @@ public class Asset: NSObject {
         
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
             resultImage = result
         }
         return resultImage
@@ -137,7 +137,7 @@ public class Asset: NSObject {
         imageRequestOptions.isSynchronous = true
         
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
             resultImage = result
         }
         return resultImage
@@ -158,7 +158,7 @@ public class Asset: NSObject {
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         
-        let imageRequestId = AssetManager.shared.phCachingImageManager().requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, _, _, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, _, _, info in
             var image: UIImage?
             if let imageData = imageData {
                 image = UIImage(data: imageData)
@@ -184,7 +184,7 @@ public class Asset: NSObject {
         imageRequestOptions.resizeMode = .fast
         
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-        let imageRequestId = AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -207,7 +207,7 @@ public class Asset: NSObject {
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         
-        let imageRequestId = AssetManager.shared.phCachingImageManager().requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -230,7 +230,7 @@ public class Asset: NSObject {
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
         
-        let livePhotoRequestId = AssetManager.shared.phCachingImageManager().requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
+        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
             let downloadSucceed = (livePhoto != nil && info == nil) || (!Asset.isValueTrue(info, key: PHLivePhotoInfoCancelledKey) && info?[PHLivePhotoInfoErrorKey] == nil && !Asset.isValueTrue(info, key: PHLivePhotoInfoIsDegradedKey) && !Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHLivePhotoInfoErrorKey] != nil || info?[PHImageErrorKey] != nil
             completion?(livePhoto, info, downloadSucceed || downloadFailed)
@@ -253,7 +253,7 @@ public class Asset: NSObject {
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
         
-        let videoRequestId = AssetManager.shared.phCachingImageManager().requestPlayerItem(forVideo: phAsset, options: videoRequestOptions) { playerItem, info in
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestPlayerItem(forVideo: phAsset, options: videoRequestOptions) { playerItem, info in
             completion?(playerItem, info)
         }
         return Int(videoRequestId)
@@ -276,7 +276,7 @@ public class Asset: NSObject {
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
         
-        let videoRequestId = AssetManager.shared.phCachingImageManager().requestExportSession(forVideo: phAsset, options: videoRequestOptions, exportPreset: exportPreset) { exportSession, info in
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestExportSession(forVideo: phAsset, options: videoRequestOptions, exportPreset: exportPreset) { exportSession, info in
             guard let exportSession = exportSession else {
                 completion?(nil, info)
                 return
@@ -332,7 +332,7 @@ public class Asset: NSObject {
             let videoRequestOptions = PHVideoRequestOptions()
             videoRequestOptions.isNetworkAccessAllowed = true
             
-            AssetManager.shared.phCachingImageManager().requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, _, info in
+            AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, _, info in
                 var phAssetInfo: [AnyHashable: Any] = [:]
                 if let info = info {
                     phAssetInfo[Asset.kAssetInfoOriginInfo] = info
@@ -354,7 +354,7 @@ public class Asset: NSObject {
         imageRequestOptions.isSynchronous = synchronous
         imageRequestOptions.isNetworkAccessAllowed = true
         
-        AssetManager.shared.phCachingImageManager().requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, dataUTI, exifOrientation, info in
+        AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, dataUTI, exifOrientation, info in
             var phAssetInfo: [AnyHashable: Any] = [:]
             if let imageData = imageData {
                 phAssetInfo[Asset.kAssetInfoImageData] = imageData
@@ -493,7 +493,7 @@ public class AssetGroup: NSObject {
             imageRequestOptions.isSynchronous = true
             imageRequestOptions.resizeMode = .exact
             // targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-            AssetManager.shared.phCachingImageManager().requestImage(for: asset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+            AssetManager.shared.phCachingImageManager.requestImage(for: asset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
                 resultImage = result
             }
         }
@@ -526,6 +526,166 @@ public class AssetGroup: NSObject {
 }
 
 // MARK: - AssetManager
+/// Asset 授权的状态
+public enum AssetAuthorizationStatus: UInt {
+    /// 还不确定有没有授权
+    case notDetermined = 0
+    /// 已经授权
+    case authorized
+    /// 手动禁止了授权
+    case notAuthorized
+}
+
+/// 构建 AssetManager 这个对象并提供单例的调用方式主要出于下面两点考虑：
+/// 1. 保存照片/视频的方法较为复杂，为了方便封装系统接口，同时灵活地扩展功能，需要有一个独立对象去管理这些方法。
+///  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，AssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取PHCachingImageManager 的实例。
+///
+///  [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
+public class AssetManager: NSObject {
+    
+    /// 获取 AssetManager 的单例
+    public static let shared = AssetManager()
+    
+    /// 资源管理器临时文件存放目录，使用完成后需自行删除
+    public static var cachePath: String {
+        let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+        return (cachesPath as NSString).appendingPathComponent("FWAssetManager")
+    }
+    
+    /// 获取当前应用的“照片”访问授权状态
+    public static var authorizationStatus: AssetAuthorizationStatus {
+        let status: AssetAuthorizationStatus
+        let phStatus = PHPhotoLibrary.authorizationStatus()
+        if phStatus == .restricted || phStatus == .denied {
+            status = .notAuthorized
+        } else if phStatus == .notDetermined {
+            status = .notDetermined
+        } else {
+            status = .authorized
+        }
+        return status
+    }
+    
+    /// 调起系统询问是否授权访问“照片”的 UIAlertView
+    ///
+    /// - Parameter completion: 授权结束后调用的 block，默认不在主线程上执行，如果需要在 block 中修改 UI，记得 dispatch 到 mainqueue
+    public static func requestAuthorization(completion: ((AssetAuthorizationStatus) -> Void)? = nil) {
+        PHPhotoLibrary.requestAuthorization { phStatus in
+            let status: AssetAuthorizationStatus
+            if phStatus == .restricted || phStatus == .denied {
+                status = .notAuthorized
+            } else if phStatus == .notDetermined {
+                status = .notDetermined
+            } else {
+                status = .authorized
+            }
+            completion?(status)
+        }
+    }
+    
+    /// 保存图片到指定相册（传入 UIImage）
+    public static func saveImage(image: UIImage?, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        guard let image = image, let cgImage = image.cgImage else {
+            completion(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorResourceUnavailable, userInfo: nil))
+            return
+        }
+        
+        AssetManager.shared.saveImage(imageRef: cgImage, albumAssetsGroup: albumAssetsGroup, orientation: image.imageOrientation, completion: completion)
+    }
+    
+    /// 保存图片到指定相册（传入 图片路径）
+    public static func saveImage(imagePath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        AssetManager.shared.saveImage(imagePathURL: NSURL.fileURL(withPath: imagePath), albumAssetsGroup: albumAssetsGroup, completion: completion)
+    }
+    
+    /// 保存视频到指定相册（传入 视频路径）
+    public static func saveVideo(videoPath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        AssetManager.shared.saveVideo(videoPathURL: NSURL.fileURL(withPath: videoPath), albumAssetsGroup: albumAssetsGroup, completion: completion)
+    }
+    
+    /// 获取一个 PHCachingImageManager 的实例
+    public lazy var phCachingImageManager = PHCachingImageManager()
+    
+    /// 获取所有的相册，包括个人收藏，最近添加，自拍这类“智能相册”
+    ///
+    /// - Parameters:
+    ///   - albumContentType: 相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
+    ///   - showEmptyAlbum: 是否显示空相册（经过 contentType 过滤后仍为空的相册），默认false
+    ///   - showSmartAlbum: 是否显示"智能相册"，默认true
+    ///   - block: 参数 resultAssetsGroup 表示每次枚举时对应的相册。枚举所有相册结束后，enumerationBlock 会被再调用一次，这时 resultAssetsGroup 的值为 nil。可以以此作为判断枚举结束的标记。
+    public func enumerateAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool = false, showSmartAlbum: Bool = true, using block: ((AssetGroup?) -> Void)?) {
+        // 根据条件获取所有合适的相册，并保存到临时数组中
+        let albumsArray = PHPhotoLibrary.fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
+        // 创建一个 PHFetchOptions，用于 AssetGroup 对资源的排序以及对内容类型进行控制
+        let phFetchOptions = PHPhotoLibrary.fw_createFetchOptions(albumContentType: albumContentType)
+        // 遍历结果，生成对应的 AssetGroup，并调用 enumerationBlock
+        for i in 0 ..< albumsArray.count {
+            let assetsGroup = AssetGroup(phAssetCollection: albumsArray[i], fetchAssetsOptions: phFetchOptions)
+            block?(assetsGroup)
+        }
+        
+        // 所有结果遍历完毕，这时再调用一次 enumerationBlock，并传递 nil 作为实参，作为枚举相册结束的标记
+        block?(nil)
+    }
+    
+    /// 保存图片到指定相册（传入 CGImage）
+    public func saveImage(imageRef: CGImage, albumAssetsGroup: AssetGroup, orientation: UIImage.Orientation, completion: @escaping (Asset?, Error?) -> Void) {
+        let assetCollection = albumAssetsGroup.phAssetCollection
+        PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imageRef: imageRef, orientation: orientation) { success, creationDate, error in
+            if success {
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                var asset: Asset?
+                if let phAsset = fetchResult.lastObject {
+                    asset = Asset(phAsset: phAsset)
+                }
+                completion(asset, error)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    /// 保存图片到指定相册（传入 图片路径URL）
+    public func saveImage(imagePathURL: URL, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        let assetCollection = albumAssetsGroup.phAssetCollection
+        PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imagePathURL: imagePathURL) { success, creationDate, error in
+            if success {
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                var asset: Asset?
+                if let phAsset = fetchResult.lastObject {
+                    asset = Asset(phAsset: phAsset)
+                }
+                completion(asset, error)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    /// 保存视频到指定相册（传入 视频路径URL）
+    public func saveVideo(videoPathURL: URL, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        let assetCollection = albumAssetsGroup.phAssetCollection
+        PHPhotoLibrary.shared().fw_addVideo(toAlbum: assetCollection, videoPathURL: videoPathURL) { success, creationDate, error in
+            if success {
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", creationDate ?? Date())
+                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                var asset: Asset?
+                if let phAsset = fetchResult.lastObject {
+                    asset = Asset(phAsset: phAsset)
+                }
+                completion(asset, error)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
+    
+}
 
 // MARK: - LivePhoto
 /// [LivePhoto](https://github.com/LimitPoint/LivePhoto)

@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AssetManager.h"
 #import "ImagePickerPlugin.h"
 #import "ImageCropController.h"
 #import "ImagePreviewController.h"

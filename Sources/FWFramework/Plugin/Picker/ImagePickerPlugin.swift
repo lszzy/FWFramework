@@ -21,16 +21,16 @@ import FWObjC
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func fw_addImage(toAlbum imageRef: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+    public func fw_addImage(toAlbum assetCollection: PHAssetCollection, imageRef: CGImage, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         let targetImage = UIImage(cgImage: imageRef, scale: UIScreen.main.scale, orientation: orientation)
-        fw_addImage(toAlbum: targetImage, imagePathURL: nil, assetCollection: assetCollection, completionHandler: completionHandler)
+        fw_addImage(toAlbum: assetCollection, image: targetImage, imagePathURL: nil, completionHandler: completionHandler)
     }
 
-    public func fw_addImage(toAlbum imagePathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        fw_addImage(toAlbum: nil, imagePathURL: imagePathURL, assetCollection: assetCollection, completionHandler: completionHandler)
+    public func fw_addImage(toAlbum assetCollection: PHAssetCollection, imagePathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        fw_addImage(toAlbum: assetCollection, image: nil, imagePathURL: imagePathURL, completionHandler: completionHandler)
     }
     
-    private func fw_addImage(toAlbum image: UIImage?, imagePathURL: URL?, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+    private func fw_addImage(toAlbum assetCollection: PHAssetCollection, image: UIImage?, imagePathURL: URL?, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         var creationDate: Date?
         self.performChanges {
             // 创建一个以图片生成新的 PHAsset，这时图片已经被添加到“相机胶卷”
@@ -72,7 +72,7 @@ import FWObjC
         }
     }
 
-    public func fw_addVideo(toAlbum videoPathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+    public func fw_addVideo(toAlbum assetCollection: PHAssetCollection, videoPathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
         var creationDate: Date?
         self.performChanges {
             // 创建一个以视频生成新的 PHAsset 的请求

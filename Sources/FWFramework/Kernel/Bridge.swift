@@ -53,30 +53,6 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension PHPhotoLibrary {
-    
-    public func __fw_addImage(toAlbum imageRef: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        fw_addImage(toAlbum: imageRef, assetCollection: assetCollection, orientation: orientation, completionHandler: completionHandler)
-    }
-
-    public func __fw_addImage(toAlbum imagePathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        fw_addImage(toAlbum: imagePathURL, assetCollection: assetCollection, completionHandler: completionHandler)
-    }
-
-    public func __fw_addVideo(toAlbum videoPathURL: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        fw_addVideo(toAlbum: videoPathURL, assetCollection: assetCollection, completionHandler: completionHandler)
-    }
-    
-    public static func __fw_createFetchOptions(albumContentType: AlbumContentType) -> PHFetchOptions {
-        return fw_createFetchOptions(albumContentType: albumContentType)
-    }
-
-    public static func __fw_fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
-        return fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
-    }
-    
-}
-
 @_spi(FW) @objc extension UIView {
     
     public static func __fw_progressViewWithPreview() -> UIView & ProgressViewPlugin {
