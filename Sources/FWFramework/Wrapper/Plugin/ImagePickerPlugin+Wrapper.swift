@@ -14,21 +14,23 @@ import FWObjC
 
 extension Wrapper where Base: PHPhotoLibrary {
     
-    /// 保存图片或视频到指定的相册
+    /// 保存图片到指定的相册，传入CGImage
     ///
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func addImage(toAlbum: CGImage, assetCollection: PHAssetCollection, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addImage(toAlbum: toAlbum, assetCollection: assetCollection, orientation: orientation, completionHandler: completionHandler)
+    public func addImage(toAlbum assetCollection: PHAssetCollection, imageRef: CGImage, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        base.fw_addImage(toAlbum: assetCollection, imageRef: imageRef, orientation: orientation, completionHandler: completionHandler)
     }
 
-    public func addImage(toAlbum: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addImage(toAlbum: toAlbum, assetCollection: assetCollection, completionHandler: completionHandler)
+    /// 保存图片到指定的相册，传入图片路径
+    public func addImage(toAlbum assetCollection: PHAssetCollection, imagePathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        base.fw_addImage(toAlbum: assetCollection, imagePathURL: imagePathURL, completionHandler: completionHandler)
     }
 
-    public func addVideo(toAlbum: URL, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addVideo(toAlbum: toAlbum, assetCollection: assetCollection, completionHandler: completionHandler)
+    /// 保存视频到指定的相册，传入视频路径
+    public func addVideo(toAlbum assetCollection: PHAssetCollection, videoPathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        base.fw_addVideo(toAlbum: assetCollection, videoPathURL: videoPathURL, completionHandler: completionHandler)
     }
     
     /**
