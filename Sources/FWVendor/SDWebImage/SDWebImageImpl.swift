@@ -82,19 +82,19 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         return SDImageCodersManager.shared.encodedData(with: image, format: .undefined, options: coderOptions)
     }
     
-    open func imageURL(_ view: UIView) -> URL? {
+    open func imageURL(for view: UIView) -> URL? {
         return view.sd_imageURL
     }
     
     open func setImageURL(
-        _ view: UIView,
         url imageURL: URL?,
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
         setImageBlock: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
-        progress: ((Double) -> Void)? = nil
+        progress: ((Double) -> Void)? = nil,
+        for view: UIView
     ) {
         if fadeAnimated && view.sd_imageTransition == nil {
             view.sd_imageTransition = SDWebImageTransition.fade
@@ -147,7 +147,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         )
     }
     
-    open func cancelImageRequest(_ view: UIView) {
+    open func cancelImageRequest(for view: UIView) {
         view.sd_cancelCurrentImageLoad()
     }
     

@@ -64,13 +64,13 @@ public struct WebImageOptions: OptionSet {
 /// 图片插件协议，应用可自定义图片插件
 public protocol ImagePlugin: AnyObject {
     /// 获取view正在加载的URL插件方法
-    func imageURL(_ view: UIView) -> URL?
+    func imageURL(for view: UIView) -> URL?
     
     /// view加载网络图片插件方法
-    func setImageURL(_ view: UIView, url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?)
+    func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView)
     
     /// view取消加载网络图片请求插件方法
-    func cancelImageRequest(_ view: UIView)
+    func cancelImageRequest(for view: UIView)
     
     /// 加载指定URL的本地缓存图片
     func loadImageCache(_ imageURL: URL?) -> UIImage?
@@ -97,18 +97,18 @@ public protocol ImagePlugin: AnyObject {
 extension ImagePlugin {
     
     /// 获取view正在加载的URL插件方法
-    public func imageURL(_ view: UIView) -> URL? {
-        return ImagePluginImpl.shared.imageURL(view)
+    public func imageURL(for view: UIView) -> URL? {
+        return ImagePluginImpl.shared.imageURL(for: view)
     }
     
     /// view加载网络图片插件方法
-    public func setImageURL(_ view: UIView, url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
-        ImagePluginImpl.shared.setImageURL(view, url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress)
+    public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView) {
+        ImagePluginImpl.shared.setImageURL(url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: view)
     }
     
     /// view取消加载网络图片请求插件方法
-    public func cancelImageRequest(_ view: UIView) {
-        ImagePluginImpl.shared.cancelImageRequest(view)
+    public func cancelImageRequest(for view: UIView) {
+        ImagePluginImpl.shared.cancelImageRequest(for: view)
     }
     
     /// 加载指定URL的本地缓存图片
@@ -309,7 +309,7 @@ extension ImagePlugin {
     /// 当前正在加载的网络图片URL
     public var fw_imageURL: URL? {
         if let imagePlugin = self.fw_imagePlugin {
-            return imagePlugin.imageURL(self)
+            return imagePlugin.imageURL(for: self)
         }
         return nil
     }
@@ -318,14 +318,14 @@ extension ImagePlugin {
     public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
         if let imagePlugin = self.fw_imagePlugin {
             let imageURL = UIImage.fw_imageURL(for: url)
-            imagePlugin.setImageURL(self, url: imageURL, placeholder: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress)
+            imagePlugin.setImageURL(url: imageURL, placeholder: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: self)
         }
     }
 
     /// 取消加载网络图片请求
     public func fw_cancelImageRequest() {
         if let imagePlugin = self.fw_imagePlugin {
-            imagePlugin.cancelImageRequest(self)
+            imagePlugin.cancelImageRequest(for: self)
         }
     }
     

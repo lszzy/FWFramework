@@ -60,19 +60,19 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         return ImageCoder.shared.encodedData(image: image, format: .undefined, options: options)
     }
     
-    open func imageURL(_ view: UIView) -> URL? {
+    open func imageURL(for view: UIView) -> URL? {
         return ImageDownloader.shared.imageURL(for: view)
     }
     
     open func setImageURL(
-        _ view: UIView,
         url imageURL: URL?,
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
         setImageBlock block: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
-        progress: ((Double) -> Void)? = nil
+        progress: ((Double) -> Void)? = nil,
+        for view: UIView
     ) {
         let setImageBlock = block ?? { image in
             if let imageView = view as? UIImageView {
@@ -149,7 +149,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         } : progress)
     }
     
-    open func cancelImageRequest(_ view: UIView) {
+    open func cancelImageRequest(for view: UIView) {
         if showsIndicator, let indicatorView = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
             if indicatorView.isAnimating {
                 indicatorView.stopAnimating()

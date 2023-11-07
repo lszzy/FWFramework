@@ -100,7 +100,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
     }
     
-    open func hideEmptyView(_ view: UIView) {
+    open func hideEmptyView(in view: UIView) {
         guard let emptyView = view.fw_subview(tag: emptyViewTag) else { return }
         
         if let overlayView = emptyView.superview as? ScrollOverlayView {
@@ -111,7 +111,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
     }
     
-    open func showingEmptyView(_ view: UIView) -> UIView? {
+    open func showingEmptyView(in view: UIView) -> UIView? {
         let emptyView = view.fw_subview(tag: emptyViewTag)
         return emptyView
     }

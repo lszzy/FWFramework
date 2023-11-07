@@ -16,53 +16,53 @@ public protocol RefreshPlugin: AnyObject {
 
     // MARK: - Refreshing
     /// 是否正在刷新中
-    func isRefreshing(scrollView: UIScrollView) -> Bool
+    func isRefreshing(in scrollView: UIScrollView) -> Bool
 
     /// 是否显示刷新组件
-    func shouldRefreshing(scrollView: UIScrollView) -> Bool
+    func shouldRefreshing(in scrollView: UIScrollView) -> Bool
 
     /// 设置是否显示刷新组件
-    func setShouldRefreshing(_ shouldRefreshing: Bool, scrollView: UIScrollView)
+    func setShouldRefreshing(_ shouldRefreshing: Bool, in scrollView: UIScrollView)
 
     /// 配置下拉刷新句柄
-    func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
+    func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置下拉刷新事件
-    func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
+    func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始下拉刷新
-    func beginRefreshing(scrollView: UIScrollView)
+    func beginRefreshing(in scrollView: UIScrollView)
 
     /// 结束下拉刷新
-    func endRefreshing(scrollView: UIScrollView)
+    func endRefreshing(in scrollView: UIScrollView)
 
     // MARK: - Loading
     /// 是否正在追加中
-    func isLoading(scrollView: UIScrollView) -> Bool
+    func isLoading(in scrollView: UIScrollView) -> Bool
 
     /// 是否显示追加组件
-    func shouldLoading(scrollView: UIScrollView) -> Bool
+    func shouldLoading(in scrollView: UIScrollView) -> Bool
 
     /// 设置是否显示追加组件
-    func setShouldLoading(_ shouldLoading: Bool, scrollView: UIScrollView)
+    func setShouldLoading(_ shouldLoading: Bool, in scrollView: UIScrollView)
 
     /// 是否已追加完成，不能继续追加
-    func loadingFinished(scrollView: UIScrollView) -> Bool
+    func loadingFinished(in scrollView: UIScrollView) -> Bool
 
     /// 设置是否已追加完成，不能继续追加
-    func setLoadingFinished(_ loadingFinished: Bool, scrollView: UIScrollView)
+    func setLoadingFinished(_ loadingFinished: Bool, in scrollView: UIScrollView)
 
     /// 配置上拉追加句柄
-    func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
+    func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置上拉追加事件
-    func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView)
+    func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始上拉追加
-    func beginLoading(scrollView: UIScrollView)
+    func beginLoading(in scrollView: UIScrollView)
 
     /// 结束上拉追加
-    func endLoading(scrollView: UIScrollView)
+    func endLoading(in scrollView: UIScrollView)
     
 }
 
@@ -70,84 +70,84 @@ extension RefreshPlugin {
     
     // MARK: - Refreshing
     /// 默认实现，是否正在刷新中
-    public func isRefreshing(scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.isRefreshing(scrollView: scrollView)
+    public func isRefreshing(in scrollView: UIScrollView) -> Bool {
+        return RefreshPluginImpl.shared.isRefreshing(in: scrollView)
     }
 
     /// 默认实现，是否显示刷新组件
-    public func shouldRefreshing(scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.shouldRefreshing(scrollView: scrollView)
+    public func shouldRefreshing(in scrollView: UIScrollView) -> Bool {
+        return RefreshPluginImpl.shared.shouldRefreshing(in: scrollView)
     }
 
     /// 默认实现，设置是否显示刷新组件
-    public func setShouldRefreshing(_ shouldRefreshing: Bool, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setShouldRefreshing(shouldRefreshing, scrollView: scrollView)
+    public func setShouldRefreshing(_ shouldRefreshing: Bool, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setShouldRefreshing(shouldRefreshing, in: scrollView)
     }
 
     /// 默认实现，配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setRefreshing(block: block, customBlock: customBlock, scrollView: scrollView)
+    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setRefreshing(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setRefreshing(target: target, action: action, customBlock: customBlock, scrollView: scrollView)
+    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setRefreshing(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，开始下拉刷新
-    public func beginRefreshing(scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.beginRefreshing(scrollView: scrollView)
+    public func beginRefreshing(in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.beginRefreshing(in: scrollView)
     }
 
     /// 默认实现，结束下拉刷新
-    public func endRefreshing(scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.endRefreshing(scrollView: scrollView)
+    public func endRefreshing(in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.endRefreshing(in: scrollView)
     }
 
     // MARK: - Loading
     /// 默认实现，是否正在追加中
-    public func isLoading(scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.isLoading(scrollView: scrollView)
+    public func isLoading(in scrollView: UIScrollView) -> Bool {
+        return RefreshPluginImpl.shared.isLoading(in: scrollView)
     }
 
     /// 默认实现，是否显示追加组件
-    public func shouldLoading(scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.shouldLoading(scrollView: scrollView)
+    public func shouldLoading(in scrollView: UIScrollView) -> Bool {
+        return RefreshPluginImpl.shared.shouldLoading(in: scrollView)
     }
 
     /// 默认实现，设置是否显示追加组件
-    public func setShouldLoading(_ shouldLoading: Bool, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setShouldLoading(shouldLoading, scrollView: scrollView)
+    public func setShouldLoading(_ shouldLoading: Bool, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setShouldLoading(shouldLoading, in: scrollView)
     }
 
     /// 默认实现，是否已追加完成，不能继续追加
-    public func loadingFinished(scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.loadingFinished(scrollView: scrollView)
+    public func loadingFinished(in scrollView: UIScrollView) -> Bool {
+        return RefreshPluginImpl.shared.loadingFinished(in: scrollView)
     }
 
     /// 默认实现，设置是否已追加完成，不能继续追加
-    public func setLoadingFinished(_ loadingFinished: Bool, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setLoadingFinished(loadingFinished, scrollView: scrollView)
+    public func setLoadingFinished(_ loadingFinished: Bool, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setLoadingFinished(loadingFinished, in: scrollView)
     }
 
     /// 默认实现，配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setLoading(block: block, customBlock: customBlock, scrollView: scrollView)
+    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setLoading(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.setLoading(target: target, action: action, customBlock: customBlock, scrollView: scrollView)
+    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.setLoading(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，开始上拉追加
-    public func beginLoading(scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.beginLoading(scrollView: scrollView)
+    public func beginLoading(in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.beginLoading(in: scrollView)
     }
 
     /// 默认实现，结束上拉追加
-    public func endLoading(scrollView: UIScrollView) {
-        RefreshPluginImpl.shared.endLoading(scrollView: scrollView)
+    public func endLoading(in scrollView: UIScrollView) {
+        RefreshPluginImpl.shared.endLoading(in: scrollView)
     }
     
 }
@@ -174,43 +174,43 @@ extension RefreshPlugin {
     /// 是否正在刷新中
     public var fw_isRefreshing: Bool {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        return plugin.isRefreshing(scrollView: self)
+        return plugin.isRefreshing(in: self)
     }
 
     /// 是否显示刷新组件
     public var fw_shouldRefreshing: Bool {
         get {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            return plugin.shouldRefreshing(scrollView: self)
+            return plugin.shouldRefreshing(in: self)
         }
         set {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            plugin.setShouldRefreshing(newValue, scrollView: self)
+            plugin.setShouldRefreshing(newValue, in: self)
         }
     }
 
     /// 配置下拉刷新句柄
     public func fw_setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setRefreshing(block: block, customBlock: customBlock, scrollView: self)
+        plugin.setRefreshing(block: block, customBlock: customBlock, in: self)
     }
 
     /// 配置下拉刷新事件
     public func fw_setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setRefreshing(target: target, action: action, customBlock: customBlock, scrollView: self)
+        plugin.setRefreshing(target: target, action: action, customBlock: customBlock, in: self)
     }
 
     /// 开始下拉刷新
     public func fw_beginRefreshing() {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.beginRefreshing(scrollView: self)
+        plugin.beginRefreshing(in: self)
     }
 
     /// 结束下拉刷新
     public func fw_endRefreshing() {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.endRefreshing(scrollView: self)
+        plugin.endRefreshing(in: self)
     }
     
     /// 结束下拉刷新并标记是否加载完成，需在reloadData之后调用
@@ -223,18 +223,18 @@ extension RefreshPlugin {
     /// 是否正在追加中
     public var fw_isLoading: Bool {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        return plugin.isLoading(scrollView: self)
+        return plugin.isLoading(in: self)
     }
 
     /// 是否显示追加组件
     public var fw_shouldLoading: Bool {
         get {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            return plugin.shouldLoading(scrollView: self)
+            return plugin.shouldLoading(in: self)
         }
         set {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            plugin.setShouldLoading(newValue, scrollView: self)
+            plugin.setShouldLoading(newValue, in: self)
         }
     }
     
@@ -242,36 +242,36 @@ extension RefreshPlugin {
     public var fw_loadingFinished: Bool {
         get {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            return plugin.loadingFinished(scrollView: self)
+            return plugin.loadingFinished(in: self)
         }
         set {
             let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-            plugin.setLoadingFinished(newValue, scrollView: self)
+            plugin.setLoadingFinished(newValue, in: self)
         }
     }
 
     /// 配置上拉追加句柄
     public func fw_setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setLoading(block: block, customBlock: customBlock, scrollView: self)
+        plugin.setLoading(block: block, customBlock: customBlock, in: self)
     }
 
     /// 配置上拉追加事件
     public func fw_setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.setLoading(target: target, action: action, customBlock: customBlock, scrollView: self)
+        plugin.setLoading(target: target, action: action, customBlock: customBlock, in: self)
     }
 
     /// 开始上拉追加
     public func fw_beginLoading() {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.beginLoading(scrollView: self)
+        plugin.beginLoading(in: self)
     }
 
     /// 结束上拉追加
     public func fw_endLoading() {
         let plugin = self.fw_refreshPlugin ?? RefreshPluginImpl.shared
-        plugin.endLoading(scrollView: self)
+        plugin.endLoading(in: self)
     }
     
     /// 结束上拉追加并标记是否加载完成，需在reloadData之后调用

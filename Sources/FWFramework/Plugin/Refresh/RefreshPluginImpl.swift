@@ -28,19 +28,19 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
     open var infiniteScrollBlock: ((InfiniteScrollView) -> Void)?
     
     // MARK: - RefreshPlugin
-    open func isRefreshing(scrollView: UIScrollView) -> Bool {
+    open func isRefreshing(in scrollView: UIScrollView) -> Bool {
         return scrollView.fw_pullRefreshView?.state == .loading
     }
     
-    open func shouldRefreshing(scrollView: UIScrollView) -> Bool {
+    open func shouldRefreshing(in scrollView: UIScrollView) -> Bool {
         return scrollView.fw_showPullRefresh
     }
     
-    open func setShouldRefreshing(_ shouldRefreshing: Bool, scrollView: UIScrollView) {
+    open func setShouldRefreshing(_ shouldRefreshing: Bool, in scrollView: UIScrollView) {
         scrollView.fw_showPullRefresh = shouldRefreshing
     }
     
-    open func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+    open func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(block: block)
         
         if let pullRefreshView = scrollView.fw_pullRefreshView {
@@ -49,7 +49,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         }
     }
     
-    open func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+    open func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw_addPullRefresh(target: target, action: action)
         
         if let pullRefreshView = scrollView.fw_pullRefreshView {
@@ -58,35 +58,35 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         }
     }
     
-    open func beginRefreshing(scrollView: UIScrollView) {
+    open func beginRefreshing(in scrollView: UIScrollView) {
         scrollView.fw_triggerPullRefresh()
     }
     
-    open func endRefreshing(scrollView: UIScrollView) {
+    open func endRefreshing(in scrollView: UIScrollView) {
         scrollView.fw_pullRefreshView?.stopAnimating()
     }
     
-    open func isLoading(scrollView: UIScrollView) -> Bool {
+    open func isLoading(in scrollView: UIScrollView) -> Bool {
         return scrollView.fw_infiniteScrollView?.state == .loading
     }
     
-    open func shouldLoading(scrollView: UIScrollView) -> Bool {
+    open func shouldLoading(in scrollView: UIScrollView) -> Bool {
         return scrollView.fw_showInfiniteScroll
     }
     
-    open func setShouldLoading(_ shouldLoading: Bool, scrollView: UIScrollView) {
+    open func setShouldLoading(_ shouldLoading: Bool, in scrollView: UIScrollView) {
         scrollView.fw_showInfiniteScroll = shouldLoading
     }
     
-    open func loadingFinished(scrollView: UIScrollView) -> Bool {
+    open func loadingFinished(in scrollView: UIScrollView) -> Bool {
         return scrollView.fw_infiniteScrollFinished
     }
     
-    open func setLoadingFinished(_ loadingFinished: Bool, scrollView: UIScrollView) {
+    open func setLoadingFinished(_ loadingFinished: Bool, in scrollView: UIScrollView) {
         scrollView.fw_infiniteScrollFinished = loadingFinished
     }
     
-    open func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+    open func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(block: block)
         
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
@@ -96,7 +96,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         }
     }
     
-    open func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, scrollView: UIScrollView) {
+    open func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw_addInfiniteScroll(target: target, action: action)
         
         if let infiniteScrollView = scrollView.fw_infiniteScrollView {
@@ -106,11 +106,11 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin {
         }
     }
     
-    open func beginLoading(scrollView: UIScrollView) {
+    open func beginLoading(in scrollView: UIScrollView) {
         scrollView.fw_triggerInfiniteScroll()
     }
     
-    open func endLoading(scrollView: UIScrollView) {
+    open func endLoading(in scrollView: UIScrollView) {
         scrollView.fw_infiniteScrollView?.stopAnimating()
     }
     
