@@ -8,20 +8,6 @@
 #import "ZoomImageView.h"
 #import <FWFramework/FWFramework-Swift.h>
 
-#pragma mark - __FWZoomImageVideoPlayerView
-
-@interface __FWZoomImageVideoPlayerView : UIView
-
-@end
-
-@implementation __FWZoomImageVideoPlayerView
-
-+ (Class)layerClass {
-    return [AVPlayerLayer class];
-}
-
-@end
-
 #pragma mark - __FWZoomImageView
 
 @interface __FWZoomImageView () <UIGestureRecognizerDelegate>
@@ -46,61 +32,6 @@
 @synthesize progressView = _progressView;
 @synthesize maximumZoomScale = _maximumZoomScale;
 @synthesize minimumZoomScale = _minimumZoomScale;
-
-+ (void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self setDefaultAppearance];
-    });
-}
-
-+ (void)setDefaultAppearance {
-    __FWZoomImageView *appearance = [__FWZoomImageView appearance];
-    appearance.videoToolbarMargins = UIEdgeInsetsMake(0, 16, 16, 8);
-    appearance.videoPlayButtonImage = [NSObject __fw_bundleImage:@"fw.videoPlay"];
-    appearance.videoCloseButtonImage = [NSObject __fw_bundleImage:@"fw.navClose"];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.__fw_hidesImageIndicator = YES;
-        
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.scrollView.showsHorizontalScrollIndicator = NO;
-        self.scrollView.showsVerticalScrollIndicator = NO;
-        self.scrollView.delegate = self;
-        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        [self addSubview:self.scrollView];
-        
-        UITapGestureRecognizer *singleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTapGestureWithPoint:)];
-        singleTapGesture.delegate = self;
-        singleTapGesture.numberOfTapsRequired = 1;
-        singleTapGesture.numberOfTouchesRequired = 1;
-        [self addGestureRecognizer:singleTapGesture];
-        
-        UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTapGestureWithPoint:)];
-        doubleTapGesture.numberOfTapsRequired = 2;
-        doubleTapGesture.numberOfTouchesRequired = 1;
-        [self addGestureRecognizer:doubleTapGesture];
-        
-        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-        [self addGestureRecognizer:longPressGesture];
-        
-        // 双击失败后才出发单击
-        [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
-        
-        self.contentMode = UIViewContentModeScaleAspectFit;
-    }
-    return self;
-}
-
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    // 当 self.window 为 nil 时说明此 view 被移出了可视区域（比如所在的 controller 被 pop 了），此时应该停止视频播放
-    if (!self.window) {
-        [self endPlayingVideo];
-    }
-}
 
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -130,30 +61,7 @@
     }
 }
 
-- (void)setFrame:(CGRect)frame {
-    BOOL isBoundsChanged = !CGSizeEqualToSize(frame.size, self.frame.size);
-    [super setFrame:frame];
-    if (isBoundsChanged) {
-        [self revertZooming];
-    }
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 #pragma mark - Normal Image
-
-- (UIImageView *)imageView {
-    [self initImageViewIfNeeded];
-    return _imageView;
-}
-
-- (void)initImageViewIfNeeded {
-    if (_imageView) return;
-    _imageView = [UIImageView __fw_animatedImageView];
-    [self.scrollView addSubview:_imageView];
-}
 
 - (void)setImage:(UIImage *)image {
     if (image && image == _image) return;
@@ -187,11 +95,6 @@
 
 #pragma mark - Live Photo
 
-- (PHLivePhotoView *)livePhotoView {
-    [self initLivePhotoViewIfNeeded];
-    return _livePhotoView;
-}
-
 - (void)setLivePhoto:(PHLivePhoto *)livePhoto {
     _livePhoto = livePhoto;
     
@@ -221,31 +124,7 @@
     }
 }
 
-- (void)initLivePhotoViewIfNeeded {
-    if (_livePhotoView) return;
-    _livePhotoView = [[PHLivePhotoView alloc] init];
-    [self.scrollView addSubview:_livePhotoView];
-}
-
 #pragma mark - Image Scale
-
-- (void)setContentMode:(UIViewContentMode)contentMode {
-    BOOL isContentModeChanged = self.contentMode != contentMode;
-    [super setContentMode:contentMode];
-    if (isContentModeChanged) {
-        [self revertZooming];
-    }
-}
-
-- (void)setMaximumZoomScale:(CGFloat)maximumZoomScale {
-    _maximumZoomScale = maximumZoomScale;
-    self.scrollView.maximumZoomScale = maximumZoomScale;
-}
-
-- (void)setMinimumZoomScale:(CGFloat)minimumZoomScale {
-    _minimumZoomScale = minimumZoomScale;
-    self.scrollView.minimumZoomScale = minimumZoomScale;
-}
 
 - (CGFloat)maximumZoomScale {
     if (_maximumZoomScale > 0) return _maximumZoomScale;
@@ -386,14 +265,6 @@
     }
 }
 
-- (CGRect)contentViewRect {
-    UIView *contentView = [self contentView];
-    if (!contentView) {
-        return CGRectZero;
-    }
-    return [self convertRect:contentView.frame fromView:contentView.superview];
-}
-
 - (void)handleDidEndZooming {
     CGRect viewport = [self finalViewportRect];
     
@@ -423,17 +294,6 @@
     
     self.scrollView.contentInset = contentInset;
     self.scrollView.contentSize = contentView.frame.size;
-}
-
-- (BOOL)enabledZoomImageView {
-    BOOL enabledZoom = YES;
-    BOOL isLivePhoto = isLivePhoto = !!self.livePhoto;
-    if ([self.delegate respondsToSelector:@selector(enabledZoomViewInZoomImageView:)]) {
-        enabledZoom = [self.delegate enabledZoomViewInZoomImageView:self];
-    } else if (!self.image && !isLivePhoto && !self.videoPlayerItem) {
-        enabledZoom = NO;
-    }
-    return enabledZoom;
 }
 
 #pragma mark - Video
@@ -604,17 +464,6 @@
     self.videoToolbar.sliderLeftLabel.text = [self timeStringFromSeconds:currentSeconds];
 }
 
-- (NSString *)timeStringFromSeconds:(NSUInteger)seconds {
-    NSUInteger min = floor(seconds / 60);
-    NSUInteger sec = floor(seconds - min * 60);
-    return [NSString stringWithFormat:@"%02ld:%02ld", (long)min, (long)sec];
-}
-
-- (BOOL)isPlayingVideo {
-    if (!self.videoPlayer) return NO;
-    return self.videoPlayer.rate != 0.f;
-}
-
 - (void)playVideo {
     if (!self.videoPlayer) return;
     [self handlePlayButton:nil];
@@ -634,26 +483,6 @@
     self.videoToolbar.hidden = YES;
     self.videoCloseButton.hidden = YES;
     self.videoPlayButton.hidden = NO;
-}
-
-- (AVPlayerLayer *)videoPlayerLayer {
-    [self initVideoPlayerLayerIfNeeded];
-    return _videoPlayerLayer;
-}
-
-- (__FWZoomImageVideoToolbar *)videoToolbar {
-    [self initVideoToolbarIfNeeded];
-    return _videoToolbar;
-}
-
-- (UIButton *)videoPlayButton {
-    [self initVideoPlayButtonIfNeeded];
-    return _videoPlayButton;
-}
-
-- (UIButton *)videoCloseButton {
-    [self initVideoCloseButtonIfNeeded];
-    return _videoCloseButton;
 }
 
 - (void)initVideoPlayerLayerIfNeeded {
@@ -763,48 +592,7 @@
     [self setNeedsLayout];
 }
 
-- (void)applicationDidEnterBackground {
-    [self pauseVideo];
-}
-
-#pragma mark - Progress
-
-- (UIView<__FWProgressViewPlugin> *)progressView {
-    if (!_progressView) {
-        _progressView = [UIView __fw_progressViewWithPreview];
-        _progressView.hidden = YES;
-        [self addSubview:_progressView];
-        [_progressView __fw_alignCenterToSuperview:CGPointZero];
-    }
-    return _progressView;
-}
-
-- (void)setProgressView:(UIView<__FWProgressViewPlugin> *)progressView {
-    [_progressView removeFromSuperview];
-    _progressView = progressView;
-    _progressView.hidden = YES;
-    [self addSubview:_progressView];
-    [_progressView __fw_alignCenterToSuperview:CGPointZero];
-}
-
-- (CGFloat)progress {
-    return self.progressView.progress;
-}
-
-- (void)setProgress:(CGFloat)progress {
-    self.progressView.progress = progress;
-    if (self.hidesProgressView || (progress >= 1 || progress <= 0)) {
-        if (!self.progressView.hidden) self.progressView.hidden = YES;
-    } else {
-        if (self.progressView.hidden) self.progressView.hidden = NO;
-    }
-}
-
 #pragma mark - ImageURL
-
-- (void)setImageURL:(id)imageURL {
-    [self setImageURL:imageURL placeholderImage:nil completion:nil];
-}
 
 - (void)setImageURL:(id)imageURL placeholderImage:(UIImage *)placeholderImage completion:(void (^)(UIImage * _Nullable))completion {
     if ([imageURL isKindOfClass:[NSString class]]) {
@@ -919,184 +707,6 @@
             [self.delegate longPressInZoomingImageView:self];
         }
     }
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([touch.view isKindOfClass:[UISlider class]]) {
-        return NO;
-    }
-    return YES;
-}
-
-#pragma mark - <UIScrollViewDelegate>
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return [self contentView];
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    [self handleDidEndZooming];
-}
-
-#pragma mark - 工具方法
-
-- (CGRect)finalViewportRect {
-    CGRect rect = self.viewportRect;
-    if (CGRectIsEmpty(rect) && !CGRectIsEmpty(self.bounds)) {
-        // 有可能此时还没有走到过 layoutSubviews 因此拿不到正确的 scrollView 的 size，因此这里要强制 layout 一下
-        if (!CGSizeEqualToSize(self.scrollView.bounds.size, self.bounds.size)) {
-            [self setNeedsLayout];
-            [self layoutIfNeeded];
-        }
-        rect = CGRectMake(0, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
-    }
-    return rect;
-}
-
-- (void)hideViews {
-    _livePhotoView.hidden = YES;
-    _imageView.hidden = YES;
-    _videoPlayButton.hidden = YES;
-    _videoPlayerLayer.hidden = YES;
-    _videoToolbar.hidden = YES;
-    _videoCloseButton.hidden = YES;
-    _videoToolbar.pauseButton.hidden = YES;
-    _videoToolbar.playButton.hidden = YES;
-}
-
-- (UIView *)contentView {
-    if (_imageView) {
-        return _imageView;
-    }
-    if (_livePhotoView) {
-        return _livePhotoView;
-    }
-    if (self.videoPlayerView) {
-        return self.videoPlayerView;
-    }
-    return nil;
-}
-
-@end
-
-#pragma mark - __FWZoomImageVideoToolbar
-
-@implementation __FWZoomImageVideoToolbar
-
-+ (void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self setDefaultAppearance];
-    });
-}
-
-+ (void)setDefaultAppearance {
-    __FWZoomImageVideoToolbar *appearance = [__FWZoomImageVideoToolbar appearance];
-    appearance.playButtonImage = [NSObject __fw_bundleImage:@"fw.videoStart"];
-    appearance.pauseButtonImage = [NSObject __fw_bundleImage:@"fw.videoPause"];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        
-        _playButton = [[UIButton alloc] init];
-        self.playButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        [self.playButton setImage:self.playButtonImage forState:UIControlStateNormal];
-        [self addSubview:self.playButton];
-        
-        _pauseButton = [[UIButton alloc] init];
-        self.pauseButton.hidden = YES;
-        self.pauseButton.__fw_touchInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        [self.pauseButton setImage:self.pauseButtonImage forState:UIControlStateNormal];
-        [self addSubview:self.pauseButton];
-        
-        _slider = [[UISlider alloc] init];
-        self.slider.minimumTrackTintColor = [UIColor colorWithRed:195/255.f green:195/255.f blue:195/255.f alpha:1];
-        self.slider.maximumTrackTintColor = [UIColor colorWithRed:95/255.f green:95/255.f blue:95/255.f alpha:1];
-        self.slider.__fw_thumbSize = CGSizeMake(12, 12);
-        self.slider.__fw_thumbColor = UIColor.whiteColor;
-        [self addSubview:self.slider];
-        
-        _sliderLeftLabel = [[UILabel alloc] init];
-        self.sliderLeftLabel.font = [UIFont systemFontOfSize:12];
-        self.sliderLeftLabel.textColor = [UIColor whiteColor];
-        self.sliderLeftLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:self.sliderLeftLabel];
-        
-        _sliderRightLabel = [[UILabel alloc] init];
-        self.sliderRightLabel.font = [UIFont systemFontOfSize:12];
-        self.sliderRightLabel.textColor = [UIColor whiteColor];
-        self.sliderRightLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:self.sliderRightLabel];
-        
-        self.layer.shadowColor = UIColor.blackColor.CGColor;
-        self.layer.shadowOpacity = .5;
-        self.layer.shadowOffset = CGSizeMake(0, 0);
-        self.layer.shadowRadius = 10;
-    }
-    return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    CGFloat contentHeight = CGRectGetHeight(self.bounds) - (self.paddings.top + self.paddings.bottom);
-    
-    self.playButton.frame = ({
-        CGSize size = [self.playButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
-        CGRectMake(self.paddings.left, (contentHeight - size.height) / 2.0 + self.paddings.top, size.width, size.height);
-    });
-    
-    self.pauseButton.frame = ({
-        CGSize size = [self.pauseButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
-        CGRectMake(CGRectGetMidX(self.playButton.frame) - size.width / 2, CGRectGetMidY(self.playButton.frame) - size.height / 2, size.width, size.height);
-    });
-    
-    CGFloat timeLabelWidth = 55;
-    self.sliderLeftLabel.frame = ({
-        CGFloat marginLeft = 19;
-        CGRectMake(CGRectGetMaxX(self.playButton.frame) + marginLeft, self.paddings.top, timeLabelWidth, contentHeight);
-    });
-    self.sliderRightLabel.frame = ({
-        CGRectMake(CGRectGetWidth(self.bounds) - self.paddings.right - timeLabelWidth, self.paddings.top, timeLabelWidth, contentHeight);
-    });
-    self.slider.frame = ({
-        CGFloat marginToLabel = 4;
-        CGFloat x = CGRectGetMaxX(self.sliderLeftLabel.frame) + marginToLabel;
-        CGRectMake(x, self.paddings.top, CGRectGetMinX(self.sliderRightLabel.frame) - marginToLabel - x, contentHeight);
-    });
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGFloat contentHeight = [self maxHeightAmongViews:@[self.playButton, self.pauseButton, self.sliderLeftLabel, self.sliderRightLabel, self.slider]];
-    size.height = contentHeight + (self.paddings.top + self.paddings.bottom);
-    return size;
-}
-
-- (void)setPaddings:(UIEdgeInsets)paddings {
-    _paddings = paddings;
-    [self setNeedsLayout];
-}
-
-- (void)setPlayButtonImage:(UIImage *)playButtonImage {
-    _playButtonImage = playButtonImage;
-    [self.playButton setImage:playButtonImage forState:UIControlStateNormal];
-    [self setNeedsLayout];
-}
-
-- (void)setPauseButtonImage:(UIImage *)pauseButtonImage {
-    _pauseButtonImage = pauseButtonImage;
-    [self.pauseButton setImage:pauseButtonImage forState:UIControlStateNormal];
-    [self setNeedsLayout];
-}
-
-- (CGFloat)maxHeightAmongViews:(NSArray<UIView *> *)views {
-    __block CGFloat maxValue = 0;
-    [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGFloat height = [obj sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].height;
-        maxValue = MAX(height, maxValue);
-    }];
-    return maxValue;
 }
 
 @end

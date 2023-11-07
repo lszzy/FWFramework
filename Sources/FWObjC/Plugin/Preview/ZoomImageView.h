@@ -166,24 +166,4 @@ NS_SWIFT_NAME(ZoomImageView)
 
 @end
 
-#pragma mark - __FWZoomImageVideoToolbar
-
-NS_SWIFT_NAME(ZoomImageVideoToolbar)
-@interface __FWZoomImageVideoToolbar : UIView
-
-@property(nonatomic, strong, readonly) UIButton *playButton;
-@property(nonatomic, strong, readonly) UIButton *pauseButton;
-@property(nonatomic, strong, readonly) UISlider *slider;
-@property(nonatomic, strong, readonly) UILabel *sliderLeftLabel;
-@property(nonatomic, strong, readonly) UILabel *sliderRightLabel;
-
-// 可通过调整此属性来调整 toolbar 内部的间距，默认为 {0, 0, 0, 0}
-@property(nonatomic, assign) UIEdgeInsets paddings UI_APPEARANCE_SELECTOR;
-
-// 可通过这些属性修改 video 播放时屏幕底部工具栏的播放/暂停图标
-@property(nonatomic, strong) UIImage *playButtonImage UI_APPEARANCE_SELECTOR;
-@property(nonatomic, strong) UIImage *pauseButtonImage UI_APPEARANCE_SELECTOR;
-
-@end
-
 NS_ASSUME_NONNULL_END
