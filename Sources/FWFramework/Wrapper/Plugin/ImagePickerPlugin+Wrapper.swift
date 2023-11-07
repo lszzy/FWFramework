@@ -13,54 +13,6 @@ import FWObjC
 #endif
 
 extension Wrapper where Base: PHPhotoLibrary {
-    
-    /// 保存图片到指定的相册，传入CGImage
-    ///
-    /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
-    /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
-    /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func addImage(toAlbum assetCollection: PHAssetCollection, imageRef: CGImage, orientation: UIImage.Orientation, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addImage(toAlbum: assetCollection, imageRef: imageRef, orientation: orientation, completionHandler: completionHandler)
-    }
-
-    /// 保存图片到指定的相册，传入图片路径
-    public func addImage(toAlbum assetCollection: PHAssetCollection, imagePathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addImage(toAlbum: assetCollection, imagePathURL: imagePathURL, completionHandler: completionHandler)
-    }
-
-    /// 保存视频到指定的相册，传入视频路径
-    public func addVideo(toAlbum assetCollection: PHAssetCollection, videoPathURL: URL, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
-        base.fw_addVideo(toAlbum: assetCollection, videoPathURL: videoPathURL, completionHandler: completionHandler)
-    }
-    
-    /**
-     *  根据 contentType 的值产生一个合适的 PHFetchOptions，并把内容以资源创建日期排序，创建日期较新的资源排在前面
-     *
-     *  @param contentType 相册的内容类型
-     *
-     *  @return 返回一个合适的 PHFetchOptions
-     */
-    public static func createFetchOptions(albumContentType: AlbumContentType) -> PHFetchOptions {
-        return Base.fw_createFetchOptions(albumContentType: albumContentType)
-    }
-
-    /**
-     *  获取所有相册
-     *
-     *  @param contentType    相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
-     *  @param showEmptyAlbum 是否显示空相册（经过 contentType 过滤后仍为空的相册）
-     *  @param showSmartAlbum 是否显示“智能相册”
-     *
-     *  @return 返回包含所有合适相册的数组
-     */
-    public static func fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
-        return Base.fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
-    }
-
-    /// 获取一个 PHAssetCollection 中创建日期最新的资源
-    public static func fetchLatestAsset(assetCollection: PHAssetCollection) -> PHAsset? {
-        return Base.fw_fetchLatestAsset(assetCollection: assetCollection)
-    }
 
     /**
      快速创建照片选择器(仅图片)
