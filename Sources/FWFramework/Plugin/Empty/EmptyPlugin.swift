@@ -18,10 +18,10 @@ public protocol EmptyPlugin: AnyObject {
     func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
     /// 隐藏空界面
-    func hideEmptyView(_ view: UIView)
+    func hideEmptyView(in view: UIView)
 
     /// 获取正在显示的空界面视图
-    func showingEmptyView(_ view: UIView) -> UIView?
+    func showingEmptyView(in view: UIView) -> UIView?
     
 }
 
@@ -33,13 +33,13 @@ extension EmptyPlugin {
     }
 
     /// 默认实现，隐藏空界面
-    public func hideEmptyView(_ view: UIView) {
-        EmptyPluginImpl.shared.hideEmptyView(view)
+    public func hideEmptyView(in view: UIView) {
+        EmptyPluginImpl.shared.hideEmptyView(in: view)
     }
 
     /// 默认实现，获取正在显示的空界面视图
-    public func showingEmptyView(_ view: UIView) -> UIView? {
-        return EmptyPluginImpl.shared.showingEmptyView(view)
+    public func showingEmptyView(in view: UIView) -> UIView? {
+        return EmptyPluginImpl.shared.showingEmptyView(in: view)
     }
     
 }
@@ -138,11 +138,11 @@ extension EmptyViewDelegate {
         let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
             if scrollView.fw_hasOverlayView {
-                return plugin.showingEmptyView(scrollView.fw_overlayView)
+                return plugin.showingEmptyView(in: scrollView.fw_overlayView)
             }
             return nil
         } else {
-            return plugin.showingEmptyView(self)
+            return plugin.showingEmptyView(in: self)
         }
     }
 
@@ -192,10 +192,10 @@ extension EmptyViewDelegate {
     public func fw_hideEmptyView() {
         let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = self as? UIScrollView {
-            plugin.hideEmptyView(scrollView.fw_overlayView)
+            plugin.hideEmptyView(in: scrollView.fw_overlayView)
             scrollView.fw_hideOverlayView()
         } else {
-            plugin.hideEmptyView(self)
+            plugin.hideEmptyView(in: self)
         }
     }
     
