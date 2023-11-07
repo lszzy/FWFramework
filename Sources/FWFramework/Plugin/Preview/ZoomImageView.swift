@@ -54,7 +54,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// 最大缩放比率，默认0根据contentMode自动计算
     open var maximumZoomScale: CGFloat {
         get {
-            
+            return 0
         }
         set {
             _maximumZoomScale = newValue
@@ -66,7 +66,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// 最小缩率比率，默认0根据contentMode自动计算
     open var minimumZoomScale: CGFloat {
         get {
-            
+            return 0
         }
         set {
             _minimumZoomScale = newValue
@@ -104,8 +104,8 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         if _livePhotoView != nil {
             return _livePhotoView
         }
-        if _videoPlayerView != nil {
-            return _videoPlayerView
+        if videoPlayerView != nil {
+            return videoPlayerView
         }
         return nil
     }
@@ -197,11 +197,6 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         return _livePhotoView!
     }
     private var _livePhotoView: PHLivePhotoView?
-    
-    private var videoPlayerView: ZoomImageVideoPlayerView {
-        
-    }
-    private var _videoPlayerView: ZoomImageVideoPlayerView?
 
     /// 用于显示 video 的 layer
     open var videoPlayerLayer: AVPlayerLayer {
@@ -263,6 +258,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         }
     }
     
+    private var videoPlayerView: ZoomImageVideoPlayerView?
     private var videoPlayer: AVPlayer?
     private var videoTimeObserver: Any?
     private var isSeekingVideo = false
@@ -319,6 +315,12 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             endPlayingVideo()
         }
     }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        
+    }
 
     /// 开始视频播放
     open func playVideo() {
@@ -358,6 +360,14 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     
     open func scrollViewDidZoom(_ scrollView: UIScrollView) {
         handleDidEndZooming()
+    }
+    
+    private func setZoomScale(_ zoomScale: CGFloat, animated: Bool) {
+        
+    }
+    
+    private func zoomToRect(_ rect: CGRect, animated: Bool) {
+        
     }
     
     private func syncVideoProgressSlider() {
@@ -452,6 +462,34 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func handleDidEndZooming() {
+        
+    }
+    
+    @objc private func handleCloseButton(_ button: UIButton) {
+        
+    }
+    
+    @objc private func handlePlayButton(_ button: UIButton) {
+        
+    }
+    
+    @objc private func handlePauseButton() {
+        
+    }
+    
+    @objc private func handleVideoPlayToEndEvent() {
+        
+    }
+    
+    @objc private func handleStartDragVideoSlider(_ slider: UISlider) {
+        
+    }
+    
+    @objc private func handleDraggingVideoSlider(_ slider: UISlider) {
+        
+    }
+    
+    @objc private func handleFinishDragVideoSlider(_ slider: UISlider) {
         
     }
     
