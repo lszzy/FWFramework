@@ -1,1 +1,0 @@
-../../FWObjC/Plugin/Picker/AssetManager.h
