@@ -1,1 +1,0 @@
-../../FWObjC/Plugin/Preview/ImagePreviewPluginImpl.h

@@ -1,1 +1,0 @@
-../../FWObjC/Service/Media/AnimatedImage.h

@@ -1,1 +1,0 @@
-../../FWObjC/Plugin/View/IndicatorView.h
