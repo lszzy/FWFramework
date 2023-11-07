@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImagePreviewPlugin.h"
 #import "ZoomImageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
