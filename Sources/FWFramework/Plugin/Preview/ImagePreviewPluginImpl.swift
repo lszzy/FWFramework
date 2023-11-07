@@ -25,7 +25,7 @@ open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin {
     open var customBlock: ((ImagePreviewController) -> Void)?
     
     // MARK: - ImagePreviewPlugin
-    open func viewController(_ viewController: UIViewController, showImagePreview imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    open func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         var previewController: ImagePreviewController
         if let previewControllerBlock = previewControllerBlock {
             previewController = previewControllerBlock()
