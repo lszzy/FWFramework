@@ -38,7 +38,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     open var customBlock: ((UIViewController) -> Void)?
     
     // MARK: - ImagePickerPlugin
-    open func viewController(_ viewController: UIViewController, showImageCamera filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
+    open func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
         var pickerController: UIImagePickerController?
         if cropControllerEnabled, filterType == .image, allowsEditing {
             pickerController = UIImagePickerController.fw_pickerController(sourceType: .camera, cropController: cropControllerBlock, completion: { image, info, cancel in
@@ -63,7 +63,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
         viewController.present(pickerController, animated: true)
     }
     
-    open func viewController(_ viewController: UIViewController, showImagePicker filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
         var pickerController: UIViewController?
         var usePhotoPicker = false
         if #available(iOS 14.0, *) {
@@ -140,7 +140,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
     open var customBlock: ((ImagePickerController) -> Void)?
     
     // MARK: - ImagePickerPlugin
-    open func viewController(_ viewController: UIViewController, showImagePicker filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
         if showsAlbumController {
             let albumController = albumController(filterType: filterType)
             albumController.pickerControllerBlock = {
@@ -155,7 +155,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
             pickerController.albumControllerBlock = {
                 return ImagePickerControllerImpl.shared.albumController(filterType: filterType)
             }
-            pickerController.refresh(with: filterType)
+            pickerController.refresh(with: .init(rawValue: filterType.rawValue))
             
             let navigationController = UINavigationController(rootViewController: pickerController)
             navigationController.modalPresentationStyle = .fullScreen
@@ -174,7 +174,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
         pickerController.allowsMultipleSelection = selectionLimit != 1
         pickerController.maximumSelectImageCount = selectionLimit > 0 ? UInt(selectionLimit) : UInt.max
         pickerController.shouldRequestImage = true
-        pickerController.filterType = filterType
+        pickerController.filterType = .init(rawValue: filterType.rawValue)
         pickerController.previewControllerBlock = {
             return ImagePickerControllerImpl.shared.previewController(allowsEditing: allowsEditing)
         }
@@ -206,7 +206,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
             albumController = ImageAlbumController()
             albumController.pickDefaultAlbumGroup = showsAlbumController
         }
-        albumController.contentType = ImagePickerController.albumContentType(with: filterType)
+        albumController.contentType = ImagePickerController.albumContentType(with: .init(rawValue: filterType.rawValue))
         return albumController
     }
     

@@ -13,6 +13,61 @@ import MobileCoreServices
 import FWObjC
 #endif
 
+// MARK: ImagePickerPlugin
+/// 图片选择插件过滤类型
+public struct ImagePickerFilterType: OptionSet {
+    
+    public let rawValue: UInt
+    
+    public static let image = ImagePickerFilterType(rawValue: 1 << 0)
+    public static let livePhoto = ImagePickerFilterType(rawValue: 1 << 1)
+    public static let video = ImagePickerFilterType(rawValue: 1 << 2)
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+}
+
+/// 图片选取插件协议，应用可自定义图片选取插件实现
+public protocol ImagePickerPlugin: AnyObject {
+    
+    /// 从Camera选取单张图片插件方法
+    /// - Parameters:
+    ///   - filterType: 过滤类型，默认0同系统
+    ///   - allowsEditing: 是否允许编辑
+    ///   - customBlock: 自定义配置句柄，默认nil
+    ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
+    ///   - viewController: 当前视图控制器
+    func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void, in viewController: UIViewController)
+    
+    /// 从图片库选取多张图片插件方法
+    /// - Parameters:
+    ///   - filterType: 过滤类型，默认0同系统
+    ///   - selectionLimit: 最大选择数量
+    ///   - allowsEditing: 是否允许编辑
+    ///   - customBlock: 自定义配置句柄，默认nil
+    ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
+    ///   - viewController: 当前视图控制器
+    func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController)
+    
+}
+
+extension ImagePickerPlugin {
+    
+    /// 从Camera选取单张图片插件方法
+    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
+        ImagePickerPluginImpl.shared.showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: viewController)
+    }
+    
+    /// 从图片库选取多张图片插件方法
+    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+        ImagePickerPluginImpl.shared.showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: viewController)
+    }
+    
+}
+
+// MARK: UIViewController+ImagePickerPlugin
 /// 通用相册：[PHPhotoLibrary sharedPhotoLibrary]
 @_spi(FW) extension PHPhotoLibrary {
 
@@ -106,13 +161,8 @@ import FWObjC
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
     public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
-        var plugin: ImagePickerPlugin
-        if let pickerPlugin = self.fw_imagePickerPlugin, pickerPlugin.responds(to: #selector(ImagePickerPlugin.viewController(_:showImageCamera:allowsEditing:customBlock:completion:))) {
-            plugin = pickerPlugin
-        } else {
-            plugin = ImagePickerPluginImpl.shared
-        }
-        plugin.viewController?(self, showImageCamera: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        let plugin = self.fw_imagePickerPlugin ?? ImagePickerPluginImpl.shared
+        plugin.showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: self)
     }
 
     /// 从图片库选取单张图片(简单版)
@@ -144,13 +194,8 @@ import FWObjC
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
     public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
-        var plugin: ImagePickerPlugin
-        if let pickerPlugin = self.fw_imagePickerPlugin, pickerPlugin.responds(to: #selector(ImagePickerPlugin.viewController(_:showImagePicker:selectionLimit:allowsEditing:customBlock:completion:))) {
-            plugin = pickerPlugin
-        } else {
-            plugin = ImagePickerPluginImpl.shared
-        }
-        plugin.viewController?(self, showImagePicker: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
+        let plugin = self.fw_imagePickerPlugin ?? ImagePickerPluginImpl.shared
+        plugin.showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: self)
     }
     
 }

@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImagePickerPlugin.h"
 #import "ImageCropController.h"
 #import "ImagePreviewController.h"
 
@@ -20,7 +19,7 @@ typedef NS_ENUM(NSUInteger, __FWAssetDownloadStatus) {
     __FWAssetDownloadStatusDownloading,
     __FWAssetDownloadStatusCanceled,
     __FWAssetDownloadStatusFailed
-} NS_SWIFT_NAME(AssetDownloadStatus);
+};
 
 typedef NS_ENUM(NSUInteger, __FWAlbumContentType) {
     __FWAlbumContentTypeAll,
@@ -28,12 +27,18 @@ typedef NS_ENUM(NSUInteger, __FWAlbumContentType) {
     __FWAlbumContentTypeOnlyVideo,
     __FWAlbumContentTypeOnlyAudio,
     __FWAlbumContentTypeOnlyLivePhoto
-} NS_SWIFT_NAME(AlbumContentType);
+};
 
 typedef NS_ENUM(NSUInteger, __FWAlbumSortType) {
     __FWAlbumSortTypePositive,
     __FWAlbumSortTypeReverse
-} NS_SWIFT_NAME(AlbumSortType);
+};
+
+typedef NS_OPTIONS(NSUInteger, __FWImagePickerFilterType) {
+    __FWImagePickerFilterTypeImage      = 1 << 0,
+    __FWImagePickerFilterTypeLivePhoto  = 1 << 1,
+    __FWImagePickerFilterTypeVideo      = 1 << 2,
+};
 
 #pragma mark - __FWImageAlbumController
 
