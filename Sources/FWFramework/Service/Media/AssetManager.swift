@@ -554,6 +554,7 @@ public enum AssetAuthorizationStatus: UInt {
 @objc(__FWAssetManager)
 public class AssetManager: NSObject {
     
+    // MARK: - Static
     /// 获取 AssetManager 的单例
     public static let shared = AssetManager()
     
@@ -593,6 +594,117 @@ public class AssetManager: NSObject {
             completion?(status)
         }
     }
+
+    /**
+     *  获取所有相册
+     *
+     *  @param albumContentType 相册的内容类型，设定了内容类型后，所获取的相册中只包含对应类型的资源
+     *  @param showEmptyAlbum 是否显示空相册（经过 contentType 过滤后仍为空的相册）
+     *  @param showSmartAlbum 是否显示“智能相册”
+     *
+     *  @return 返回包含所有合适相册的数组
+     */
+    public static func fetchAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool, showSmartAlbum: Bool) -> [PHAssetCollection] {
+        var albumsArray: [PHAssetCollection] = []
+        // 创建一个 PHFetchOptions，用于创建 AssetGroup 对资源的排序和类型进行控制
+        let fetchOptions = createFetchOptions(albumContentType: albumContentType)
+        
+        var fetchResult: PHFetchResult<PHAssetCollection>
+        if showSmartAlbum {
+            // 允许显示系统的“智能相册”
+            // 获取保存了所有“智能相册”的 PHFetchResult
+            fetchResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
+        } else {
+            // 不允许显示系统的智能相册，但由于在 PhotoKit 中，“相机胶卷”也属于“智能相册”，因此这里从“智能相册”中单独获取到“相机胶卷”
+            fetchResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
+        }
+        // 循环遍历相册列表
+        for i in 0 ..< fetchResult.count {
+            // 获取一个相册
+            let assetCollection = fetchResult[i]
+            // 获取相册内的资源对应的 fetchResult，用于判断根据内容类型过滤后的资源数量是否大于 0，只有资源数量大于 0 的相册才会作为有效的相册显示
+            let currentFetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+            if currentFetchResult.count > 0 || showEmptyAlbum {
+                // 若相册不为空，或者允许显示空相册，则保存相册到结果数组
+                // 判断如果是“相机胶卷”，则放到结果列表的第一位
+                if assetCollection.assetCollectionSubtype == .smartAlbumUserLibrary {
+                    albumsArray.insert(assetCollection, at: 0)
+                } else {
+                    albumsArray.append(assetCollection)
+                }
+            }
+        }
+        
+        // 获取所有用户自己建立的相册
+        let topLevelUserCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
+        // 循环遍历用户自己建立的相册
+        for i in 0 ..< topLevelUserCollections.count {
+            // 获取一个相册
+            if let assetCollection = topLevelUserCollections[i] as? PHAssetCollection {
+                if showEmptyAlbum {
+                    // 允许显示空相册，直接保存相册到结果数组中
+                    albumsArray.append(assetCollection)
+                } else {
+                    // 不允许显示空相册，需要判断当前相册是否为空
+                    let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                    // 获取相册内的资源对应的 fetchResult，用于判断根据内容类型过滤后的资源数量是否大于 0
+                    if fetchResult.count > 0 {
+                        albumsArray.append(assetCollection)
+                    }
+                }
+            }
+        }
+        
+        // 获取从 macOS 设备同步过来的相册，同步过来的相册不允许删除照片，因此不会为空
+        let macCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumSyncedAlbum, options: nil)
+        // 循环从 macOS 设备同步过来的相册
+        for i in 0 ..< macCollections.count {
+            // 获取一个相册
+            albumsArray.append(macCollections[i])
+        }
+        
+        return albumsArray
+    }
+
+    /// 获取一个 PHAssetCollection 中创建日期最新的资源，可指定创建日期
+    public static func fetchLatestAsset(assetCollection: PHAssetCollection, creationDate: Date? = nil) -> PHAsset? {
+        let fetchOptions = PHFetchOptions()
+        // 如果指定了创建日期，直接筛选指定创建日期资源，获取最后一个资源即可
+        if let fetchDate = creationDate as? NSDate {
+            fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
+        // 按时间的先后对 PHAssetCollection 内的资源进行排序，最新的资源排在数组最后面，获取最后一个资源即可
+        } else {
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        }
+        let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+        let latestAsset = fetchResult.lastObject
+        return latestAsset
+    }
+    
+    /**
+     *  根据 contentType 的值产生一个合适的 PHFetchOptions，并把内容以资源创建日期排序，创建日期较新的资源排在前面
+     *
+     *  @param albumContentType 相册的内容类型
+     *
+     *  @return 返回一个合适的 PHFetchOptions
+     */
+    public static func createFetchOptions(albumContentType: AlbumContentType) -> PHFetchOptions {
+        let fetchOptions = PHFetchOptions()
+        // 根据输入的内容类型过滤相册内的资源
+        switch albumContentType {
+        case .onlyPhoto:
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.image.rawValue)
+        case .onlyVideo:
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.video.rawValue)
+        case .onlyAudio:
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %i", PHAssetMediaType.audio.rawValue)
+        case .onlyLivePhoto:
+            fetchOptions.predicate = NSPredicate(format: "(mediaType = %i) AND ((mediaSubtype & %d) == %d)", PHAssetMediaType.image.rawValue, PHAssetMediaSubtype.photoLive.rawValue, PHAssetMediaSubtype.photoLive.rawValue)
+        default:
+            break
+        }
+        return fetchOptions
+    }
     
     /// 保存图片到指定相册（传入 UIImage）
     public static func saveImage(image: UIImage?, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
@@ -601,7 +713,7 @@ public class AssetManager: NSObject {
             return
         }
         
-        AssetManager.shared.saveImage(imageRef: cgImage, albumAssetsGroup: albumAssetsGroup, orientation: image.imageOrientation, completion: completion)
+        AssetManager.shared.saveImage(imageRef: cgImage, orientation: image.imageOrientation, albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
     /// 保存图片到指定相册（传入 图片路径）
@@ -614,6 +726,7 @@ public class AssetManager: NSObject {
         AssetManager.shared.saveVideo(videoPathURL: NSURL.fileURL(withPath: videoPath), albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
+    // MARK: - Public
     /// 获取一个 PHCachingImageManager 的实例
     public lazy var phCachingImageManager = PHCachingImageManager()
     
@@ -626,9 +739,9 @@ public class AssetManager: NSObject {
     ///   - block: 参数 resultAssetsGroup 表示每次枚举时对应的相册。枚举所有相册结束后，enumerationBlock 会被再调用一次，这时 resultAssetsGroup 的值为 nil。可以以此作为判断枚举结束的标记。
     public func enumerateAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool = false, showSmartAlbum: Bool = true, using block: ((AssetGroup?) -> Void)?) {
         // 根据条件获取所有合适的相册，并保存到临时数组中
-        let albumsArray = PHPhotoLibrary.fw_fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
+        let albumsArray = AssetManager.fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
         // 创建一个 PHFetchOptions，用于 AssetGroup 对资源的排序以及对内容类型进行控制
-        let phFetchOptions = PHPhotoLibrary.fw_createFetchOptions(albumContentType: albumContentType)
+        let phFetchOptions = AssetManager.createFetchOptions(albumContentType: albumContentType)
         // 遍历结果，生成对应的 AssetGroup，并调用 enumerationBlock
         for i in 0 ..< albumsArray.count {
             let assetsGroup = AssetGroup(phAssetCollection: albumsArray[i], fetchAssetsOptions: phFetchOptions)
@@ -640,16 +753,18 @@ public class AssetManager: NSObject {
     }
     
     /// 保存图片到指定相册（传入 CGImage）
-    public func saveImage(imageRef: CGImage, albumAssetsGroup: AssetGroup, orientation: UIImage.Orientation, completion: @escaping (Asset?, Error?) -> Void) {
+    ///
+    /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
+    /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
+    /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
+    public func saveImage(imageRef: CGImage, orientation: UIImage.Orientation, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+        let image = UIImage(cgImage: imageRef, scale: UIScreen.main.scale, orientation: orientation)
         let assetCollection = albumAssetsGroup.phAssetCollection
-        PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imageRef: imageRef, orientation: orientation) { success, creationDate, error in
+        addImage(image: image, imagePathURL: nil, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {
-                let fetchOptions = PHFetchOptions()
-                let fetchDate = creationDate as? NSDate ?? NSDate()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
-                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                let phAsset = AssetManager.fetchLatestAsset(assetCollection: assetCollection, creationDate: creationDate)
                 var asset: Asset?
-                if let phAsset = fetchResult.lastObject {
+                if let phAsset = phAsset {
                     asset = Asset(phAsset: phAsset)
                 }
                 completion(asset, error)
@@ -660,16 +775,17 @@ public class AssetManager: NSObject {
     }
     
     /// 保存图片到指定相册（传入 图片路径URL）
-    public func saveImage(imagePathURL: URL, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    ///
+    /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
+    /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
+    /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
+    public func saveImage(imagePathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
         let assetCollection = albumAssetsGroup.phAssetCollection
-        PHPhotoLibrary.shared().fw_addImage(toAlbum: assetCollection, imagePathURL: imagePathURL) { success, creationDate, error in
+        addImage(image: nil, imagePathURL: imagePathURL, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {
-                let fetchOptions = PHFetchOptions()
-                let fetchDate = creationDate as? NSDate ?? NSDate()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
-                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                let phAsset = AssetManager.fetchLatestAsset(assetCollection: assetCollection, creationDate: creationDate)
                 var asset: Asset?
-                if let phAsset = fetchResult.lastObject {
+                if let phAsset = phAsset {
                     asset = Asset(phAsset: phAsset)
                 }
                 completion(asset, error)
@@ -680,21 +796,98 @@ public class AssetManager: NSObject {
     }
     
     /// 保存视频到指定相册（传入 视频路径URL）
-    public func saveVideo(videoPathURL: URL, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    ///
+    /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
+    /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
+    /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
+    public func saveVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
         let assetCollection = albumAssetsGroup.phAssetCollection
-        PHPhotoLibrary.shared().fw_addVideo(toAlbum: assetCollection, videoPathURL: videoPathURL) { success, creationDate, error in
+        addVideo(videoPathURL: videoPathURL, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {
-                let fetchOptions = PHFetchOptions()
-                let fetchDate = creationDate as? NSDate ?? NSDate()
-                fetchOptions.predicate = NSPredicate(format: "creationDate = %@", fetchDate)
-                let fetchResult = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                let phAsset = AssetManager.fetchLatestAsset(assetCollection: assetCollection, creationDate: creationDate)
                 var asset: Asset?
-                if let phAsset = fetchResult.lastObject {
+                if let phAsset = phAsset {
                     asset = Asset(phAsset: phAsset)
                 }
                 completion(asset, error)
             } else {
                 completion(nil, error)
+            }
+        }
+    }
+    
+    // MARK: - Private
+    private func addImage(image: UIImage?, imagePathURL: URL?, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        var creationDate: Date?
+        photoLibrary.performChanges {
+            // 创建一个以图片生成新的 PHAsset，这时图片已经被添加到“相机胶卷”
+            var assetChangeRequest: PHAssetChangeRequest?
+            if let image = image {
+                assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            } else if let imagePathURL = imagePathURL {
+                assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: imagePathURL)
+            } else {
+                return
+            }
+            assetChangeRequest?.creationDate = Date()
+            creationDate = assetChangeRequest?.creationDate
+            
+            if assetCollection.assetCollectionType == .album {
+                // 如果传入的相册类型为标准的相册（非“智能相册”和“时刻”），则把刚刚创建的 Asset 添加到传入的相册中。
+                // 创建一个改变 PHAssetCollection 的请求，并指定相册对应的 PHAssetCollection
+                let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+                /**
+                 *  把 PHAsset 加入到对应的 PHAssetCollection 中，系统推荐的方法是调用 placeholderForCreatedAsset ，
+                 *  返回一个的 placeholder 来代替刚创建的 PHAsset 的引用，并把该引用加入到一个 PHAssetCollectionChangeRequest 中。
+                 */
+                if let placeholder = assetChangeRequest?.placeholderForCreatedAsset {
+                    assetCollectionChangeRequest?.addAssets(NSArray(object: placeholder))
+                }
+            }
+        } completionHandler: { success, error in
+            if completionHandler != nil {
+                /**
+                 *  performChanges:completionHandler 不在主线程执行，若用户在该 block 中操作 UI 时会产生一些问题，
+                 *  为了避免这种情况，这里该 block 主动放到主线程执行。
+                 */
+                DispatchQueue.main.async {
+                    // 若创建时间为 nil，则说明 performChanges 中传入的资源为空，因此需要同时判断 performChanges 是否执行成功以及资源是否有创建时间。
+                    let creatingSuccess = success && creationDate != nil
+                    completionHandler?(creatingSuccess, creationDate, error)
+                }
+            }
+        }
+    }
+
+    private func addVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+        var creationDate: Date?
+        photoLibrary.performChanges {
+            // 创建一个以视频生成新的 PHAsset 的请求
+            let assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoPathURL)
+            assetChangeRequest?.creationDate = Date()
+            creationDate = assetChangeRequest?.creationDate
+            
+            if assetCollection.assetCollectionType == .album {
+                // 如果传入的相册类型为标准的相册（非“智能相册”和“时刻”），则把刚刚创建的 Asset 添加到传入的相册中。
+                // 创建一个改变 PHAssetCollection 的请求，并指定相册对应的 PHAssetCollection
+                let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+                /**
+                 *  把 PHAsset 加入到对应的 PHAssetCollection 中，系统推荐的方法是调用 placeholderForCreatedAsset ，
+                 *  返回一个的 placeholder 来代替刚创建的 PHAsset 的引用，并把该引用加入到一个 PHAssetCollectionChangeRequest 中。
+                 */
+                if let placeholder = assetChangeRequest?.placeholderForCreatedAsset {
+                    assetCollectionChangeRequest?.addAssets(NSArray(object: placeholder))
+                }
+            }
+        } completionHandler: { success, error in
+            if completionHandler != nil {
+                /**
+                 *  performChanges:completionHandler 不在主线程执行，若用户在该 block 中操作 UI 时会产生一些问题，
+                 *  为了避免这种情况，这里该 block 主动放到主线程执行。
+                 */
+                DispatchQueue.main.async {
+                    completionHandler?(success, creationDate, error)
+                }
             }
         }
     }
