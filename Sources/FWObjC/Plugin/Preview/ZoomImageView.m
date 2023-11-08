@@ -543,55 +543,6 @@
     [self setNeedsLayout];
 }
 
-- (void)destroyVideoRelatedObjectsIfNeeded {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [self removePlayerTimeObserver];
-    
-    [self.videoPlayerView removeFromSuperview];
-    self.videoPlayerView = nil;
-    
-    [self.videoToolbar removeFromSuperview];
-    _videoToolbar = nil;
-    
-    [self.videoPlayButton removeFromSuperview];
-    _videoPlayButton = nil;
-    
-    [self.videoCloseButton removeFromSuperview];
-    _videoCloseButton = nil;
-    
-    self.videoPlayer = nil;
-    _videoPlayerLayer.player = nil;
-}
-
-- (void)setVideoToolbarMargins:(UIEdgeInsets)videoToolbarMargins {
-    _videoToolbarMargins = videoToolbarMargins;
-    [self setNeedsLayout];
-}
-
-- (void)setVideoPlayButtonImage:(UIImage *)videoPlayButtonImage {
-    _videoPlayButtonImage = videoPlayButtonImage;
-    if (!self.videoPlayButton) return;
-    
-    [self.videoPlayButton setImage:videoPlayButtonImage forState:UIControlStateNormal];
-    [self setNeedsLayout];
-}
-
-- (void)setVideoCloseButtonCenter:(CGPoint (^)(void))videoCloseButtonCenter {
-    _videoCloseButtonCenter = videoCloseButtonCenter;
-    if (!self.videoCloseButton) return;
-    
-    [self setNeedsLayout];
-}
-
-- (void)setVideoCloseButtonImage:(UIImage *)videoCloseButtonImage {
-    _videoCloseButtonImage = videoCloseButtonImage;
-    if (!self.videoCloseButton) return;
-    
-    [self.videoCloseButton setImage:videoCloseButtonImage forState:UIControlStateNormal];
-    [self setNeedsLayout];
-}
-
 #pragma mark - ImageURL
 
 - (void)setImageURL:(id)imageURL placeholderImage:(UIImage *)placeholderImage completion:(void (^)(UIImage * _Nullable))completion {
@@ -650,62 +601,6 @@
         self.progress = 1;
         self.image = placeholderImage;
         if (completion) completion(nil);
-    }
-}
-
-#pragma mark - GestureRecognizers
-
-- (void)handleSingleTapGestureWithPoint:(UITapGestureRecognizer *)gestureRecognizer {
-    if (self.videoPlayerItem) {
-        if (self.showsVideoCloseButton) {
-            self.videoCloseButton.hidden = !self.videoCloseButton.hidden;
-        }
-        if (self.showsVideoToolbar) {
-            self.videoToolbar.hidden = !self.videoToolbar.hidden;
-            if ([self.delegate respondsToSelector:@selector(zoomImageView:didHideVideoToolbar:)]) {
-                [self.delegate zoomImageView:self didHideVideoToolbar:self.videoToolbar.hidden];
-            }
-        }
-    }
-    
-    CGPoint gesturePoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-    if ([self.delegate respondsToSelector:@selector(singleTouchInZoomingImageView:location:)]) {
-        [self.delegate singleTouchInZoomingImageView:self location:gesturePoint];
-    }
-}
-
-- (void)handleDoubleTapGestureWithPoint:(UITapGestureRecognizer *)gestureRecognizer {
-    CGPoint gesturePoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-    if ([self.delegate respondsToSelector:@selector(doubleTouchInZoomingImageView:location:)]) {
-        [self.delegate doubleTouchInZoomingImageView:self location:gesturePoint];
-    }
-    
-    if ([self enabledZoomImageView]) {
-        // 默认第一次双击放大，再次双击还原，可通过zoomInScaleBlock自定义缩放效果
-        if (self.scrollView.zoomScale >= self.scrollView.maximumZoomScale) {
-            [self setZoomScale:self.scrollView.minimumZoomScale animated:YES];
-        } else {
-            CGFloat newZoomScale = self.scrollView.maximumZoomScale;
-            if (self.zoomInScaleBlock) {
-                newZoomScale = self.zoomInScaleBlock(self.scrollView);
-            }
-            
-            CGRect zoomRect = CGRectZero;
-            CGPoint tapPoint = [[self contentView] convertPoint:gesturePoint fromView:gestureRecognizer.view];
-            zoomRect.size.width = CGRectGetWidth(self.bounds) / newZoomScale;
-            zoomRect.size.height = CGRectGetHeight(self.bounds) / newZoomScale;
-            zoomRect.origin.x = tapPoint.x - CGRectGetWidth(zoomRect) / 2;
-            zoomRect.origin.y = tapPoint.y - CGRectGetHeight(zoomRect) / 2;
-            [self zoomToRect:zoomRect animated:YES];
-        }
-    }
-}
-
-- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
-    if ([self enabledZoomImageView] && longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        if ([self.delegate respondsToSelector:@selector(longPressInZoomingImageView:)]) {
-            [self.delegate longPressInZoomingImageView:self];
-        }
     }
 }
 
