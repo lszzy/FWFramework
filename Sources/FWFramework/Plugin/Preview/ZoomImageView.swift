@@ -123,19 +123,37 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     open var showsVideoToolbar = false
 
     /// 视频底部控制条的 margins，会在此基础上自动叠加安全区域，默认值为 {0, 16, 16, 8}
-    open var videoToolbarMargins = UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 8)
+    open var videoToolbarMargins = UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 8) {
+        didSet {
+            setNeedsLayout()
+        }
+    }
 
     /// 可通过此属性修改 video 播放时屏幕中央的播放按钮图片
-    open var videoPlayButtonImage: UIImage?
+    open var videoPlayButtonImage: UIImage? {
+        didSet {
+            videoPlayButton.setImage(videoPlayButtonImage, for: .normal)
+            setNeedsLayout()
+        }
+    }
 
     /// 是否显示播放 video 时屏幕左上角的关闭按钮，默认NO，仅播放视频时生效
     open var showsVideoCloseButton = false
 
     /// 可通过此属性修改 video 播放时屏幕左上角的关闭按钮图片
-    open var videoCloseButtonImage: UIImage?
+    open var videoCloseButtonImage: UIImage? {
+        didSet {
+            videoCloseButton.setImage(videoCloseButtonImage, for: .normal)
+            setNeedsLayout()
+        }
+    }
 
     /// 播放 video 时屏幕左上角的关闭按钮中心句柄，默认同导航栏关闭按钮
-    open var videoCloseButtonCenter: (() -> CGPoint)?
+    open var videoCloseButtonCenter: (() -> CGPoint)? {
+        didSet {
+            setNeedsLayout()
+        }
+    }
 
     /// 是否隐藏进度视图，默认NO
     open var hidesProgressView = false
@@ -324,17 +342,26 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
 
     /// 开始视频播放
     open func playVideo() {
-        
+        if videoPlayer == nil { return }
+        handlePlayButton(nil)
     }
 
     /// 暂停视频播放
     open func pauseVideo() {
-        
+        if videoPlayer == nil { return }
+        handlePauseButton()
+        removePlayerTimeObserver()
     }
 
     /// 停止视频播放，将播放状态重置到初始状态
     open func endPlayingVideo() {
-        
+        guard let videoPlayer = videoPlayer else { return }
+        videoPlayer.seek(to: CMTimeMake(value: 0, timescale: 1))
+        pauseVideo()
+        syncVideoProgressSlider()
+        videoToolbar.isHidden = true
+        videoCloseButton.isHidden = true
+        videoPlayButton.isHidden = false
     }
 
     /// 重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。注意子类重写需要调一下super
@@ -363,36 +390,70 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func setZoomScale(_ zoomScale: CGFloat, animated: Bool) {
-        
+        if animated {
+            UIView.animate(withDuration: 0.25, delay: 0, options: .init(rawValue: 7<<16)) {
+                self.scrollView.zoomScale = zoomScale
+            }
+        } else {
+            scrollView.zoomScale = zoomScale
+        }
     }
     
     private func zoomToRect(_ rect: CGRect, animated: Bool) {
-        
+        if animated {
+            UIView.animate(withDuration: 0.25, delay: 0, options: .init(rawValue: 7<<16)) {
+                self.scrollView.zoom(to: rect, animated: false)
+            }
+        } else {
+            scrollView.zoom(to: rect, animated: false)
+        }
     }
     
     private func syncVideoProgressSlider() {
-        
+        guard let videoPlayer = videoPlayer else { return }
+        let currentSeconds = CMTimeGetSeconds(videoPlayer.currentTime())
+        videoToolbar.slider.value = Float(currentSeconds)
+        updateVideoSliderLeftLabel()
     }
     
     private func configVideoProgressSlider() {
+        guard let videoPlayerItem = videoPlayerItem else { return }
+        videoToolbar.sliderLeftLabel.text = timeString(from: 0)
+        let duration = CMTimeGetSeconds(videoPlayerItem.asset.duration)
+        videoToolbar.sliderRightLabel.text = timeString(from: duration)
         
+        videoToolbar.slider.minimumValue = 0.0
+        videoToolbar.slider.maximumValue = Float(duration)
+        videoToolbar.slider.value = 0
+        videoToolbar.slider.addTarget(self, action: #selector(handleStartDragVideoSlider(_:)), for: .touchDown)
+        videoToolbar.slider.addTarget(self, action: #selector(handleDraggingVideoSlider(_:)), for: .valueChanged)
+        videoToolbar.slider.addTarget(self, action: #selector(handleFinishDragVideoSlider(_:)), for: .touchUpInside)
+        
+        addPlayerTimeObserver()
     }
     
     private func addPlayerTimeObserver() {
-        
+        guard videoTimeObserver == nil else { return }
+        videoTimeObserver = videoPlayer?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, preferredTimescale: Int32(NSEC_PER_SEC)), queue: nil, using: { [weak self] time in
+            self?.syncVideoProgressSlider()
+        })
     }
     
     private func removePlayerTimeObserver() {
-        
+        guard let observer = videoTimeObserver else { return }
+        videoPlayer?.removeTimeObserver(observer)
+        videoTimeObserver = nil
     }
     
     private func updateVideoSliderLeftLabel() {
-        
+        guard let videoPlayer = videoPlayer else { return }
+        let currentSeconds = CMTimeGetSeconds(videoPlayer.currentTime())
+        videoToolbar.sliderLeftLabel.text = timeString(from: currentSeconds)
     }
     
-    private func timeString(from seconds: UInt) -> String {
-        let min: UInt = UInt(floor(Double(seconds) / 60.0))
-        let sec: UInt = seconds - min * 60
+    private func timeString(from seconds: Double) -> String {
+        let min: UInt = UInt(floor(seconds / 60.0))
+        let sec: UInt = UInt(floor(seconds - Double(min * 60)))
         return String(format: "%02ld:%02ld", min, sec)
     }
     
@@ -404,27 +465,85 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func initVideoPlayerLayerIfNeeded() {
+        guard videoPlayerView == nil else { return }
         
+        let videoPlayerView = ZoomImageVideoPlayerView()
+        self.videoPlayerView = videoPlayerView
+        _videoPlayerLayer = videoPlayerView.layer as? AVPlayerLayer
+        videoPlayerView.isHidden = true
+        scrollView.addSubview(videoPlayerView)
     }
     
     private func initVideoToolbarIfNeeded() {
-        
+        guard _videoToolbar == nil else { return }
+            
+        _videoToolbar = {
+            let videoToolbar = ZoomImageVideoToolbar()
+            videoToolbar.paddings = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            videoToolbar.playButton.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchUpInside)
+            videoToolbar.pauseButton.addTarget(self, action: #selector(handlePauseButton), for: .touchUpInside)
+            videoToolbar.isHidden = true
+            addSubview(videoToolbar)
+            return videoToolbar
+        }()
     }
     
     private func initVideoPlayButtonIfNeeded() {
+        guard _videoPlayButton == nil else { return }
         
+        _videoPlayButton = {
+            let playButton = UIButton()
+            playButton.fw_touchInsets = UIEdgeInsets(top: 60, left: 60, bottom: 60, right: 60)
+            playButton.tag = 1
+            playButton.setImage(videoPlayButtonImage, for: .normal)
+            playButton.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchUpInside)
+            playButton.isHidden = true
+            addSubview(playButton)
+            return playButton
+        }()
     }
     
     private func initVideoCloseButtonIfNeeded() {
+        guard _videoCloseButton == nil else { return }
         
+        _videoCloseButton = {
+            let closeButton = UIButton()
+            closeButton.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            closeButton.setImage(videoCloseButtonImage, for: .normal)
+            closeButton.addTarget(self, action: #selector(handleCloseButton(_:)), for: .touchUpInside)
+            closeButton.isHidden = true
+            addSubview(closeButton)
+            return closeButton
+        }()
     }
     
     private func initVideoRelatedViewsIfNeeded() {
-        
+        initVideoPlayerLayerIfNeeded()
+        initVideoToolbarIfNeeded()
+        initVideoPlayButtonIfNeeded()
+        initVideoCloseButtonIfNeeded()
+        setNeedsLayout()
     }
     
     private func destroyVideoRelatedObjectsIfNeeded() {
+        NotificationCenter.default.removeObserver(self, name: AVPlayerItem.didPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        removePlayerTimeObserver()
         
+        videoPlayerView?.removeFromSuperview()
+        videoPlayerView = nil
+        
+        videoToolbar.removeFromSuperview()
+        _videoToolbar = nil
+        
+        videoPlayButton.removeFromSuperview()
+        _videoPlayButton = nil
+        
+        videoCloseButton.removeFromSuperview()
+        _videoCloseButton = nil
+        
+        videoPlayer = nil
+        _videoPlayerLayer?.player = nil
     }
     
     private func enabledZoomImageView() -> Bool {
@@ -466,43 +585,115 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     @objc private func handleCloseButton(_ button: UIButton) {
-        
+        if let viewController = fw_viewController, viewController.fw_isPresented {
+            viewController.dismiss(animated: true)
+        }
     }
     
-    @objc private func handlePlayButton(_ button: UIButton) {
-        
+    @objc private func handlePlayButton(_ button: UIButton?) {
+        addPlayerTimeObserver()
+        videoPlayer?.play()
+        videoPlayButton.isHidden = true
+        videoToolbar.playButton.isHidden = true
+        videoToolbar.pauseButton.isHidden = false
+        if button?.tag == 1 {
+            if showsVideoCloseButton {
+                videoCloseButton.isHidden = true
+            }
+            if showsVideoToolbar {
+                videoToolbar.isHidden = true
+                delegate?.zoomImageView?(self, didHideVideoToolbar: true)
+            }
+        }
     }
     
     @objc private func handlePauseButton() {
-        
+        videoPlayer?.pause()
+        videoToolbar.playButton.isHidden = false
+        videoToolbar.pauseButton.isHidden = true
+        if !showsVideoToolbar {
+            videoPlayButton.isHidden = false
+        }
     }
     
     @objc private func handleVideoPlayToEndEvent() {
-        
+        videoPlayer?.seek(to: CMTimeMake(value: 0, timescale: 1))
+        videoPlayButton.isHidden = false
+        videoToolbar.playButton.isHidden = false
+        videoToolbar.pauseButton.isHidden = true
     }
     
     @objc private func handleStartDragVideoSlider(_ slider: UISlider) {
-        
+        videoPlayer?.pause()
+        removePlayerTimeObserver()
     }
     
     @objc private func handleDraggingVideoSlider(_ slider: UISlider) {
+        guard !isSeekingVideo else { return }
+        isSeekingVideo = true
+        updateVideoSliderLeftLabel()
         
+        let currentValue: Float64 = Float64(slider.value)
+        videoPlayer?.seek(to: CMTimeMakeWithSeconds(currentValue, preferredTimescale: Int32(NSEC_PER_SEC)), completionHandler: { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.isSeekingVideo = false
+            }
+        })
     }
     
     @objc private func handleFinishDragVideoSlider(_ slider: UISlider) {
+        videoPlayer?.play()
+        videoPlayButton.isHidden = true
+        videoToolbar.playButton.isHidden = true
+        videoToolbar.pauseButton.isHidden = false
         
+        addPlayerTimeObserver()
     }
     
     @objc private func handleSingleTapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        if videoPlayerItem != nil {
+            if showsVideoCloseButton {
+                videoCloseButton.isHidden = !videoCloseButton.isHidden
+            }
+            if showsVideoToolbar {
+                videoToolbar.isHidden = !videoToolbar.isHidden
+                delegate?.zoomImageView?(self, didHideVideoToolbar: videoToolbar.isHidden)
+            }
+        }
         
+        let gesturePoint = gestureRecognizer.location(in: gestureRecognizer.view)
+        delegate?.singleTouch?(in: self, location: gesturePoint)
     }
     
     @objc private func handleDoubleTapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        let gesturePoint = gestureRecognizer.location(in: gestureRecognizer.view)
+        delegate?.doubleTouch?(in: self, location: gesturePoint)
         
+        if enabledZoomImageView() {
+            // 默认第一次双击放大，再次双击还原，可通过zoomInScaleBlock自定义缩放效果
+            if scrollView.zoomScale >= scrollView.maximumZoomScale {
+                setZoomScale(scrollView.minimumZoomScale, animated: true)
+            } else {
+                var newZoomScale = scrollView.maximumZoomScale
+                if let scaleBlock = zoomInScaleBlock {
+                    newZoomScale = scaleBlock(scrollView)
+                }
+                
+                var zoomRect: CGRect = .zero
+                let tapPoint: CGPoint = contentView?.convert(gesturePoint, from: gestureRecognizer.view) ?? .zero
+                zoomRect.size.width = self.bounds.width / newZoomScale
+                zoomRect.size.height = self.bounds.height / newZoomScale
+                zoomRect.origin.x = tapPoint.x - zoomRect.width / 2
+                zoomRect.origin.y = tapPoint.y - zoomRect.height / 2
+                zoomToRect(zoomRect, animated: true)
+            }
+        }
     }
     
     @objc private func handleLongPressGesture(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        
+        if enabledZoomImageView() && gestureRecognizer.state == .began {
+            delegate?.longPress?(in: self)
+        }
     }
     
     @objc private func applicationDidEnterBackground() {
