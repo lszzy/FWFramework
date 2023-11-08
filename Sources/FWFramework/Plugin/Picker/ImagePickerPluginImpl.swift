@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 #if FWMacroSPM
 import FWObjC
 #endif

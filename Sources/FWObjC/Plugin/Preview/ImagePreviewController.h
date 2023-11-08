@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZoomImageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - __FWImagePreviewView
 
+@protocol __FWZoomImageViewDelegate;
+@class __FWZoomImageView;
 @class __FWImagePreviewView;
 
 typedef NS_ENUM (NSUInteger, __FWImagePreviewMediaType) {

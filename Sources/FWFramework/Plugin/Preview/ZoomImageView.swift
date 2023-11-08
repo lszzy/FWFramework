@@ -10,7 +10,8 @@ import PhotosUI
 import AVFoundation
 
 /// ZoomImageView事件代理
-@objc public protocol ZoomImageViewDelegate {
+@objc(__FWZoomImageViewDelegate)
+public protocol ZoomImageViewDelegate {
 
     /// 单击事件代理方法
     @objc optional func singleTouch(in zoomImageView: ZoomImageView, location: CGPoint)
@@ -39,6 +40,8 @@ import AVFoundation
 /// ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通过继承来实现。
 ///
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
+@objcMembers
+@objc(__FWZoomImageView)
 open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     
     /// 代理
@@ -54,7 +57,32 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// 最大缩放比率，默认0根据contentMode自动计算
     open var maximumZoomScale: CGFloat {
         get {
-            return 0
+            if _maximumZoomScale > 0 {
+                return _maximumZoomScale
+            }
+            
+            if image == nil && livePhoto == nil && videoPlayerItem == nil {
+                return 1
+            }
+            
+            let viewport = finalViewportRect()
+            var mediaSize = CGSize.zero
+            if let image = self.image {
+                mediaSize = image.size
+            } else if let livePhoto = self.livePhoto {
+                mediaSize = livePhoto.size
+            } else if self.videoPlayerItem != nil {
+                mediaSize = videoSize
+            }
+            let scaleX = viewport.width / mediaSize.width
+            let scaleY = viewport.height / mediaSize.height
+            
+            if let scaleBlock = maximumZoomScaleBlock {
+                return scaleBlock(scaleX, scaleY)
+            }
+            
+            let minScale = minimumZoomScale
+            return max(minScale * 2, 2)
         }
         set {
             _maximumZoomScale = newValue
@@ -66,7 +94,48 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// 最小缩率比率，默认0根据contentMode自动计算
     open var minimumZoomScale: CGFloat {
         get {
-            return 0
+            if _minimumZoomScale > 0 {
+                return _minimumZoomScale
+            }
+            
+            if image == nil && livePhoto == nil && videoPlayerItem == nil {
+                return 1
+            }
+            
+            let viewport = finalViewportRect()
+            var mediaSize = CGSize.zero
+            if let image = self.image {
+                mediaSize = image.size
+            } else if let livePhoto = self.livePhoto {
+                mediaSize = livePhoto.size
+            } else if self.videoPlayerItem != nil {
+                mediaSize = videoSize
+            }
+            let scaleX = viewport.width / mediaSize.width
+            let scaleY = viewport.height / mediaSize.height
+            
+            if let scaleBlock = minimumZoomScaleBlock {
+                return scaleBlock(scaleX, scaleY)
+            }
+            
+            var minScale: CGFloat = 1
+            switch contentMode {
+            case .scaleAspectFit:
+                minScale = min(scaleX, scaleY)
+            case .scaleAspectFill:
+                minScale = max(scaleX, scaleY)
+            case .center:
+                if scaleX >= 1 && scaleY >= 1 {
+                    minScale = 1
+                } else {
+                    minScale = min(scaleX, scaleY)
+                }
+            case .scaleToFill:
+                minScale = scaleX
+            default:
+                break
+            }
+            return minScale
         }
         set {
             _minimumZoomScale = newValue
@@ -88,13 +157,110 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     open var reusedIdentifier: String?
 
     /// 设置当前要显示的图片，会把 livePhoto/video 相关内容清空，因此注意不要直接通过 imageView.image 来设置图片。
-    open weak var image: UIImage?
+    open weak var image: UIImage? {
+        didSet {
+            if image != nil && image == oldValue { return }
+            
+            if image != nil {
+                livePhoto = nil
+                videoPlayerItem = nil
+            }
+            
+            if image == nil {
+                _imageView?.image = nil
+                _imageView?.removeFromSuperview()
+                _imageView = nil
+                return
+            }
+            
+            imageView.image = image
+            // 更新 imageView 的大小时，imageView 可能已经被缩放过，所以要应用当前的缩放
+            imageView.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: image?.size.width ?? 0, height: image?.size.height ?? 0)
+            hideViews()
+            imageView.isHidden = false
+            
+            revertZooming()
+            delegate?.zoomImageView?(self, customContentView: imageView)
+        }
+    }
 
     /// 设置当前要显示的 Live Photo，会把 image/video 相关内容清空，因此注意不要直接通过 livePhotoView.livePhoto 来设置
-    open weak var livePhoto: PHLivePhoto?
+    open weak var livePhoto: PHLivePhoto? {
+        didSet {
+            if livePhoto != nil {
+                image = nil
+                videoPlayerItem = nil
+            }
+            
+            if livePhoto == nil {
+                _livePhotoView?.livePhoto = nil
+                _livePhotoView?.removeFromSuperview()
+                _livePhotoView = nil
+                return
+            }
+            
+            livePhotoView.livePhoto = livePhoto
+            livePhotoView.isHidden = false
+            // 更新 livePhotoView 的大小时，livePhotoView 可能已经被缩放过，所以要应用当前的缩放
+            livePhotoView.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: livePhoto?.size.width ?? 0, height: livePhoto?.size.height ?? 0)
+            
+            revertZooming()
+            delegate?.zoomImageView?(self, customContentView: livePhotoView)
+        }
+    }
 
     /// 设置当前要显示的 video ，会把 image/livePhoto 相关内容清空，因此注意不要直接通过 videoPlayerLayer 来设置
-    open weak var videoPlayerItem: AVPlayerItem?
+    open weak var videoPlayerItem: AVPlayerItem? {
+        didSet {
+            if videoPlayerItem != nil {
+                livePhoto = nil
+                image = nil
+                hideViews()
+            }
+            
+            // 移除旧的 videoPlayer 时，同时移除相应的 timeObserver
+            if videoPlayer != nil {
+                removePlayerTimeObserver()
+            }
+            
+            if videoPlayerItem == nil {
+                destroyVideoRelatedObjectsIfNeeded()
+                return
+            }
+            
+            // 获取视频尺寸
+            let tracksArray = videoPlayerItem?.asset.tracks ?? []
+            self.videoSize = .zero
+            for track in tracksArray {
+                if track.mediaType == .video {
+                    let size = track.naturalSize.applying(track.preferredTransform)
+                    self.videoSize = CGSize(width: abs(size.width), height: abs(size.height))
+                    break
+                }
+            }
+            
+            self.videoPlayer = AVPlayer(playerItem: videoPlayerItem)
+            initVideoRelatedViewsIfNeeded()
+            _videoPlayerLayer?.player = self.videoPlayer
+            // 更新 videoPlayerView 的大小时，videoView 可能已经被缩放过，所以要应用当前的缩放
+            videoPlayerView?.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: self.videoSize.width, height: self.videoSize.height)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(handleVideoPlayToEndEvent), name: AVPlayerItem.didPlayToEndTimeNotification, object: videoPlayerItem)
+            NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+            
+            configVideoProgressSlider()
+            
+            videoPlayerLayer.isHidden = false
+            videoPlayButton.isHidden = false
+            videoToolbar.playButton.isHidden = false
+            if !showsVideoToolbar && showsVideoCloseButton {
+                videoCloseButton.isHidden = false
+            }
+            
+            revertZooming()
+            delegate?.zoomImageView?(self, customContentView: videoPlayerView!)
+        }
+    }
 
     /// 获取当前正在显示的图片/视频的容器
     open weak var contentView: UIView? {
@@ -336,8 +502,31 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+        guard !CGRectIsEmpty(bounds) else { return }
         
+        scrollView.frame = bounds
         
+        let viewportRect = finalViewportRect()
+        
+        if let _videoPlayButton = _videoPlayButton {
+            _videoPlayButton.sizeToFit()
+            _videoPlayButton.center = CGPoint(x: viewportRect.midX, y: viewportRect.midY)
+        }
+        
+        if let _videoCloseButton = _videoCloseButton {
+            _videoCloseButton.sizeToFit()
+            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw_safeAreaInsets.left + 24, y: UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2)
+            _videoCloseButton.center = videoCloseButtonCenter
+        }
+        
+        if let _videoToolbar = _videoToolbar {
+            _videoToolbar.frame = {
+                let margins = UIEdgeInsets(top: videoToolbarMargins.top + safeAreaInsets.top, left: videoToolbarMargins.left + safeAreaInsets.left, bottom: videoToolbarMargins.bottom + safeAreaInsets.bottom, right: videoToolbarMargins.right + safeAreaInsets.right)
+                let width = bounds.width - (margins.left + margins.right)
+                let height = _videoToolbar.sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)).height
+                return CGRect(x: margins.left, y: bounds.height - margins.bottom - height, width: width, height: height)
+            }()
+        }
     }
 
     /// 开始视频播放
@@ -366,12 +555,99 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
 
     /// 重置图片或视频的大小，使用的场景例如：相册控件里放大当前图片、划到下一张、再回来，当前的图片或视频应该恢复到原来大小。注意子类重写需要调一下super
     open func revertZooming() {
+        guard !CGRectIsEmpty(bounds) else { return }
         
+        let enabledZoomImageView = enabledZoomImageView()
+        let minimumZoomScale = self.minimumZoomScale
+        let maximumZoomScale = enabledZoomImageView ? self.maximumZoomScale : minimumZoomScale
+        
+        let zoomScale = minimumZoomScale
+        let shouldFireDidZoomingManual = zoomScale == scrollView.zoomScale
+        scrollView.panGestureRecognizer.isEnabled = enabledZoomImageView
+        scrollView.pinchGestureRecognizer?.isEnabled = enabledZoomImageView
+        scrollView.minimumZoomScale = minimumZoomScale
+        scrollView.maximumZoomScale = maximumZoomScale
+        contentView?.frame = CGRect(x: 0, y: 0, width: contentView?.frame.size.width ?? 0, height: contentView?.frame.size.height ?? 0)
+        setZoomScale(zoomScale, animated: false)
+        
+        // 只有前后的 zoomScale 不相等，才会触发 UIScrollViewDelegate scrollViewDidZoom:，因此对于相等的情况要自己手动触发
+        if shouldFireDidZoomingManual {
+            handleDidEndZooming()
+        }
+        
+        // 当内容比 viewport 的区域更大时，要把内容放在 viewport 正中间
+        scrollView.contentOffset = {
+            var x = scrollView.contentOffset.x
+            var y = scrollView.contentOffset.y
+            let viewport = finalViewportRect()
+            if !CGRectIsEmpty(viewport), let contentView = self.contentView {
+                if viewport.width < contentView.frame.width {
+                    x = (contentView.frame.width / 2 - viewport.width / 2) - viewport.minX
+                }
+                if viewport.height < contentView.frame.height {
+                    y = (contentView.frame.height / 2 - viewport.height / 2) - viewport.minY
+                }
+            }
+            return CGPoint(x: x, y: y)
+        }()
     }
 
     /// 快速设置图片URL，支持占位图和完成回调，参数支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString类型
-    open func setImageURL(_ imageURL: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
+    open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
+        var imageURL = aImageURL
+        if let urlString = imageURL as? String {
+            if (urlString as NSString).isAbsolutePath {
+                imageURL = URL(fileURLWithPath: urlString)
+            } else {
+                imageURL = URL.fw_url(string: urlString)
+            }
+        }
+        if let url = imageURL as? URL {
+            // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
+            let pathExtension = url.pathExtension
+            let videoExtensions = ["mp4", "mov", "m4v", "3gp", "avi"]
+            let isVideo = videoExtensions.contains(pathExtension)
+            if isVideo {
+                imageURL = AVPlayerItem(url: url)
+            }
+        }
         
+        fw_cancelImageRequest()
+        if let url = imageURL as? URL {
+            progress = 0.01
+            // 默认缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
+            var placeholderImage = aPlaceholderImage
+            if !ignoreImageCache {
+                if let cachedImage = fw_loadImageCache(url: url) {
+                    placeholderImage = cachedImage
+                }
+            }
+            fw_setImage(url: url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
+                self?.image = image
+            } completion: { [weak self] image, error in
+                self?.progress = 1
+                if image != nil { self?.image = image }
+                completion?(image)
+            } progress: { [weak self] progress in
+                self?.progress = progress
+            }
+        } else if let livePhoto = imageURL as? PHLivePhoto {
+            progress = 1
+            self.livePhoto = livePhoto
+            completion?(nil)
+        } else if let playerItem = imageURL as? AVPlayerItem {
+            progress = 1
+            self.videoPlayerItem = playerItem
+            completion?(nil)
+        } else if let image = imageURL as? UIImage {
+            progress = 1
+            self.image = image
+            completion?(self.image)
+        } else {
+            progress = 1
+            self.image = aPlaceholderImage
+            completion?(nil)
+        }
     }
     
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -581,7 +857,33 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func handleDidEndZooming() {
+        let viewport = finalViewportRect()
         
+        let contentView = self.contentView
+        // 强制 layout 以确保下面的一堆计算依赖的都是最新的 frame 的值
+        layoutIfNeeded()
+        let contentViewFrame = contentView != nil ? convert(contentView!.frame, from: contentView?.superview) : CGRect.zero
+        var contentInset = UIEdgeInsets.zero
+        contentInset.top = viewport.minY
+        contentInset.left = viewport.minX
+        contentInset.right = bounds.width - viewport.maxX
+        contentInset.bottom = bounds.height - viewport.maxY
+        
+        // 图片 height 比选图框(viewport)的 height 小，这时应该把图片纵向摆放在选图框中间，且不允许上下移动
+        if viewport.height > contentViewFrame.height {
+            // 用 floor 而不是 flat，是因为 flat 本质上是向上取整，会导致 top + bottom 比实际的大，然后 scrollView 就认为可滚动了
+            contentInset.top = floor(viewport.midY - contentViewFrame.height / 2.0)
+            contentInset.bottom = floor(bounds.height - viewport.midY - contentViewFrame.height / 2.0)
+        }
+        
+        // 图片 width 比选图框的 width 小，这时应该把图片横向摆放在选图框中间，且不允许左右移动
+        if viewport.width > contentViewFrame.width {
+            contentInset.left = floor(viewport.midX - contentViewFrame.width / 2.0)
+            contentInset.right = floor(bounds.width - viewport.midX - contentViewFrame.width / 2.0)
+        }
+        
+        scrollView.contentInset = contentInset
+        scrollView.contentSize = contentView?.frame.size ?? .zero
     }
     
     @objc private func handleCloseButton(_ button: UIButton) {
