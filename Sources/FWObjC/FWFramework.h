@@ -20,4 +20,3 @@
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
 #import "ImagePickerController.h"
-#import "ImagePreviewController.h"

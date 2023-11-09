@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ImageCropController.h"
-#import "ImagePreviewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
