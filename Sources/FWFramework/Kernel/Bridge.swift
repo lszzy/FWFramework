@@ -17,10 +17,6 @@ import UIKit
         return AppBundle.localizedString(key)
     }
     
-    public func __fw_invokeGetter(_ name: String) -> Any? {
-        return fw_invokeGetter(name)
-    }
-    
     @discardableResult
     public static func __fw_swizzleMethod(
         _ target: Any?,
@@ -45,19 +41,7 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension CALayer {
-    
-    public func __fw_removeDefaultAnimations() {
-        fw_removeDefaultAnimations()
-    }
-    
-}
-
 @_spi(FW) @objc extension UIView {
-    
-    public static func __fw_progressViewWithPreview() -> UIView & ProgressViewPlugin {
-        return fw_progressView(style: .imagePreview)
-    }
     
     @discardableResult
     public func __fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
@@ -80,30 +64,6 @@ import UIKit
     @discardableResult
     public func __fw_addTouch(block: @escaping (Any) -> Void) -> String {
         fw_addTouch(block: block)
-    }
-    
-}
-
-@_spi(FW) @objc extension UIView {
-
-    public func __fw_setImage(url: Any?, placeholderImage: UIImage?, avoidSetImage: Bool, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
-        fw_setImage(url: url, placeholderImage: placeholderImage, options: avoidSetImage ? [.avoidSetImage] : [], context: nil, setImageBlock: setImageBlock, completion: completion, progress: progress)
-    }
-
-    public func __fw_cancelImageRequest() {
-        fw_cancelImageRequest()
-    }
-    
-    public func __fw_loadImageCache(url: Any?) -> UIImage? {
-        return fw_loadImageCache(url: url)
-    }
-    
-}
-
-@_spi(FW) @objc extension UIImageView {
-    
-    public static func __fw_animatedImageView() -> UIImageView {
-        return fw_animatedImageView()
     }
     
 }
@@ -169,14 +129,6 @@ import UIKit
 }
 
 @_spi(FW) @objc extension UIViewController {
-    
-    public func __fw_isInvisibleState() -> Bool {
-        if self.fw_lifecycleState.rawValue < ViewControllerLifecycleState.didAppear.rawValue ||
-            self.fw_lifecycleState.rawValue >= ViewControllerLifecycleState.didDisappear.rawValue {
-            return true
-        }
-        return false
-    }
     
     public func __fw_showAlert(
         title: Any?,
