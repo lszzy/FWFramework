@@ -403,18 +403,28 @@ public enum ImagePreviewTransitioningStyle: UInt {
 @objc(__FWImagePreviewController)
 open class ImagePreviewController: UIViewController, UIViewControllerTransitioningDelegate {
     
-    /// 图片背后的黑色背景，默认为配置表里的 UIColorBlack
-    open var backgroundColor: UIColor?
-    
-    open lazy var imagePreviewView: ImagePreviewView = {
-        return ImagePreviewView()
-    }()
+    /// 图片背后的黑色背景，默认为黑色
+    open var backgroundColor: UIColor? = .black {
+        didSet {
+            if isViewLoaded {
+                view.backgroundColor = backgroundColor
+            }
+        }
+    }
     
     /// 以 present 方式进入大图预览的时候使用的转场动画 animator，可通过 ImagePreviewTransitionAnimator 提供的若干个 block 属性自定义动画，也可以完全重写一个自己的 animator。
-    open var transitioningAnimator: ImagePreviewTransitionAnimator?
+    open var transitioningAnimator: ImagePreviewTransitionAnimator? {
+        didSet {
+            transitioningAnimator?.imagePreviewViewController = self
+        }
+    }
     
     /// present 时的动画，默认为 fade，当修改了 presentingStyle 时会自动把 dismissingStyle 也修改为相同的值。
-    open var presentingStyle: ImagePreviewTransitioningStyle = .fade
+    open var presentingStyle: ImagePreviewTransitioningStyle = .fade {
+        didSet {
+            dismissingStyle = presentingStyle
+        }
+    }
     
     /// dismiss 时的动画，默认为 fade，默认与 presentingStyle 的值相同，若需要与之不同，请在设置完 presentingStyle 之后再设置 dismissingStyle。
     open var dismissingStyle: ImagePreviewTransitioningStyle = .fade
@@ -444,15 +454,14 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open var pageIndexChanged: ((_ index: Int) -> Void)?
     
     /// 是否显示页数标签，默认NO
-    open var showsPageLabel: Bool = false
-    
-    /// 页数标签，默认字号16、白色
-    open lazy var pageLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .white
-        return label
-    }()
+    open var showsPageLabel: Bool {
+        get {
+            return !pageLabel.isHidden
+        }
+        set {
+            pageLabel.isHidden = !newValue
+        }
+    }
     
     /// 页数标签中心句柄，默认nil时离底部安全距离+18
     open var pageLabelCenter: (() -> CGPoint)?
@@ -460,19 +469,273 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     /// 页数文本句柄，默认nil时为index / count
     open var pageLabelText: ((_ index: Int, _ count: Int) -> String)?
     
+    /// 图片预览视图
+    open lazy var imagePreviewView: ImagePreviewView = {
+        let result = ImagePreviewView(frame: isViewLoaded ? view.bounds : .zero)
+        result.previewController = self
+        return result
+    }()
+    
+    /// 页数标签，默认字号16、白色
+    open lazy var pageLabel: UILabel = {
+        let result = UILabel()
+        result.font = UIFont.systemFont(ofSize: 16)
+        result.textColor = .white
+        result.textAlignment = .center
+        result.isHidden = true
+        return result
+    }()
+    
+    private var dismissingGesture: UIPanGestureRecognizer?
+    private var gestureBeganLocation: CGPoint = .zero
+    private weak var gestureZoomImageView: ZoomImageView?
+    private var originalStatusBarHidden = false
+    private var statusBarHidden = false
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        transitioningAnimator = ImagePreviewTransitionAnimator()
+        transitioningAnimator?.imagePreviewViewController = self
+        modalPresentationStyle = .custom
+        modalPresentationCapturesStatusBarAppearance = true
+        transitioningDelegate = self
+    }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = backgroundColor
+        view.addSubview(imagePreviewView)
+        view.addSubview(pageLabel)
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        imagePreviewView.fw_frameApplyTransform = view.bounds
+        if (pageLabel.text?.count ?? 0) < 1 && imagePreviewView.imageCount > 0 {
+            updatePageLabel()
+        }
+        let pageLabelCenter = self.pageLabelCenter?() ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - (UIScreen.fw_safeAreaInsets.bottom + 18))
+        pageLabel.center = pageLabelCenter
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if fw_isPresented {
+            initObjectsForZoomStyleIfNeeded()
+        }
+        imagePreviewView.collectionView.reloadData()
+        imagePreviewView.collectionView.layoutIfNeeded()
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if fw_isPresented {
+            statusBarHidden = true
+        }
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        statusBarHidden = originalStatusBarHidden
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        removeObjectsForZoomStyle()
+        resetDismissingGesture()
+    }
+    
+    open override var prefersStatusBarHidden: Bool {
+        if fw_lifecycleState.rawValue < ViewControllerLifecycleState.didAppear.rawValue ||
+            fw_lifecycleState.rawValue >= ViewControllerLifecycleState.didDisappear.rawValue {
+            // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
+            if presentingViewController != nil {
+                originalStatusBarHidden = presentingViewController?.view.window?.windowScene?.statusBarManager?.isStatusBarHidden ?? false
+                return originalStatusBarHidden
+            }
+            return super.prefersStatusBarHidden
+        }
+        return statusBarHidden
+    }
+    
+    open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        dismissingGestureChanged(true)
+        super.dismiss(animated: flag, completion: completion)
+    }
+    
     /// 页数标签需要更新，子类可重写
     open func updatePageLabel() {
+        if let textBlock = pageLabelText {
+            pageLabel.text = textBlock(imagePreviewView.currentImageIndex, imagePreviewView.imageCount)
+        } else {
+            pageLabel.text = String(format: "%@ / %@", "\(imagePreviewView.currentImageIndex + 1)", "\(imagePreviewView.imageCount)")
+        }
+        pageLabel.sizeToFit()
         
+        pageIndexChanged?(imagePreviewView.currentImageIndex)
     }
     
     /// 处理单击关闭事件，子类可重写
     open func dismissingWhenTapped(_ zoomImageView: ZoomImageView) {
+        guard fw_isPresented else { return }
         
+        var shouldDismiss = false
+        if zoomImageView.videoPlayerItem != nil {
+            if dismissingWhenTappedVideo { shouldDismiss = true }
+        } else {
+            if dismissingWhenTappedImage { shouldDismiss = true }
+        }
+        if shouldDismiss {
+            dismiss(animated: true)
+        }
     }
     
     /// 触发拖动手势或dismiss时切换子视图显示或隐藏，子类可重写
     open func dismissingGestureChanged(_ isHidden: Bool) {
+        let zoomImageView = imagePreviewView.currentZoomImageView
+        if let zoomImageView = zoomImageView, zoomImageView.videoPlayerItem != nil {
+            if zoomImageView.showsVideoToolbar {
+                zoomImageView.videoToolbar.alpha = isHidden ? 0 : 1
+            }
+            if zoomImageView.showsVideoCloseButton {
+                zoomImageView.videoCloseButton.alpha = isHidden ? 0 : 1
+            }
+        }
+        view.subviews.forEach { obj in
+            if obj != self.imagePreviewView {
+                obj.alpha = isHidden ? 0 : 1
+            }
+        }
+    }
+    
+    open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitioningAnimator
+    }
+    
+    open func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitioningAnimator
+    }
+    
+    private func initObjectsForZoomStyleIfNeeded() {
+        if dismissingGesture == nil && dismissingGestureEnabled {
+            let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleDismissingPreviewGesture(_:)))
+            dismissingGesture = gesture
+            view.addGestureRecognizer(gesture)
+        }
+    }
+    
+    private func removeObjectsForZoomStyle() {
+        guard let gesture = dismissingGesture else { return }
+        gesture.removeTarget(self, action: #selector(handleDismissingPreviewGesture(_:)))
+        view.removeGestureRecognizer(gesture)
+        dismissingGesture = nil
+    }
+    
+    @objc private func handleDismissingPreviewGesture(_ gesture: UIPanGestureRecognizer) {
+        guard dismissingGestureEnabled else { return }
         
+        switch gesture.state {
+        case .began:
+            gestureBeganLocation = gesture.location(in: view)
+            gestureZoomImageView = imagePreviewView.currentZoomImageView
+            // 当 contentView 被放大后，如果不去掉 clipToBounds，那么手势退出预览时，contentView 溢出的那部分内容就看不到
+            gestureZoomImageView?.scrollView.clipsToBounds = false
+            if dismissingGestureEnabled {
+                dismissingGestureChanged(true)
+            }
+            
+        case .changed:
+            let location = gesture.location(in: view)
+            let horizontalDistance = location.x - gestureBeganLocation.x
+            var verticalDistance = location.y - gestureBeganLocation.y
+            var ratio: CGFloat = 1.0
+            var alpha: CGFloat = 1.0
+            
+            if verticalDistance > 0 {
+                // 往下拉的话，当启用图片缩小，但图片移动距离与手指移动距离保持一致
+                if dismissingScaleEnabled {
+                    ratio = 1.0 - verticalDistance / view.bounds.height / 2
+                }
+                
+                // 如果预览大图支持横竖屏而背后的界面只支持竖屏，则在横屏时手势拖拽不要露出背后的界面
+                if dismissingGestureEnabled {
+                    alpha = 1.0 - verticalDistance / view.bounds.height * 1.8
+                }
+            } else {
+                // 往上拉的话，图片不缩小，但手指越往上移动，图片将会越难被拖走；后面这个加数越大，拖动时会越快达到不怎么拖得动的状态
+                let a = gestureBeganLocation.y + 100
+                let b = 1 - pow((a - abs(verticalDistance)) / a, 2)
+                let contentViewHeight = gestureZoomImageView?.contentViewRect.height ?? 0
+                let c = (view.bounds.height - contentViewHeight) / 2
+                verticalDistance = -c * b
+            }
+            
+            var transform = CGAffineTransform(translationX: horizontalDistance, y: verticalDistance)
+            transform = transform.scaledBy(x: ratio, y: ratio)
+            gestureZoomImageView?.transform = transform
+            view.backgroundColor = view.backgroundColor?.withAlphaComponent(alpha)
+            
+            let statusBarHidden = alpha >= 1 ? true : originalStatusBarHidden
+            if statusBarHidden != self.statusBarHidden {
+                self.statusBarHidden = statusBarHidden
+                setNeedsStatusBarAppearanceUpdate()
+            }
+            
+        case .ended:
+            let location = gesture.location(in: view)
+            let verticalDistance = location.y - gestureBeganLocation.y
+            if verticalDistance > view.bounds.height / 2 / 3 {
+                // 如果背后的界面支持的方向与当前预览大图的界面不一样，则为了避免在 dismiss 后看到背后界面的旋转，这里提前触发背后界面的 viewWillAppear，从而借助 AutomaticallyRotateDeviceOrientation 的功能去提前旋转到正确方向。（备忘，如果不这么处理，标准的触发 viewWillAppear: 的时机是在 animator 的 animateTransition: 时，这里就算重复调用一次也不会导致 viewWillAppear: 多次触发）
+                // 这里只能解决手势拖拽的 dismiss，如果是业务代码手动调用 dismiss 则无法兼顾，再看怎么处理。
+                if !dismissingGestureEnabled {
+                    presentingViewController?.beginAppearanceTransition(true, animated: true)
+                }
+                
+                dismiss(animated: true)
+            } else {
+                cancelDismissingGesture()
+            }
+            
+        default:
+            cancelDismissingGesture()
+        }
+    }
+    
+    private func cancelDismissingGesture() {
+        // 手势判定失败，恢复到手势前的状态
+        statusBarHidden = true
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+            self.setNeedsStatusBarAppearanceUpdate()
+            self.resetDismissingGesture()
+        }
+    }
+    
+    private func resetDismissingGesture() {
+        // 清理手势相关的变量
+        gestureZoomImageView?.transform = .identity
+        gestureBeganLocation = .zero
+        if dismissingGestureEnabled {
+            dismissingGestureChanged(false)
+        }
+        gestureZoomImageView = nil
+        view.backgroundColor = backgroundColor
     }
     
 }
