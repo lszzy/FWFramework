@@ -7,6 +7,102 @@
 
 import UIKit
 
+// MARK: - ImageAlbumController
+/// 相册列表默认Cell
+open class ImageAlbumTableCell: UITableViewCell {
+    
+    /// 相册缩略图的大小，默认60
+    open var albumImageSize: CGFloat = 60
+    /// 相册缩略图的 left，-1 表示自动保持与上下 margin 相等，默认16
+    open var albumImageMarginLeft: CGFloat = 16
+    /// 相册名称的上下左右间距
+    open var albumNameInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 4)
+    /// 相册名的字体
+    open var albumNameFont: UIFont? = UIFont.systemFont(ofSize: 17) {
+        didSet { textLabel?.font = albumNameFont }
+    }
+    /// 相册名的颜色
+    open var albumNameColor: UIColor? = UIColor.white {
+        didSet { textLabel?.textColor = albumNameColor }
+    }
+    /// 相册资源数量的字体
+    open var albumAssetsNumberFont: UIFont? = UIFont.systemFont(ofSize: 17) {
+        didSet { detailTextLabel?.font = albumAssetsNumberFont }
+    }
+    /// 相册资源数量的颜色
+    open var albumAssetsNumberColor: UIColor? = UIColor.white {
+        didSet { detailTextLabel?.textColor = albumAssetsNumberColor }
+    }
+    /// 选中时蒙层颜色
+    open var checkedMaskColor: UIColor? {
+        didSet { coverView.backgroundColor = checked ? checkedMaskColor : nil }
+    }
+    /// 当前是否选中
+    open var checked: Bool = false {
+        didSet { coverView.backgroundColor = checked ? checkedMaskColor : nil }
+    }
+    
+    /// 蒙层视图
+    open lazy var coverView: UIView = {
+        let result = UIView()
+        return result
+    }()
+    
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        selectionStyle = .none
+        backgroundColor = .clear
+        imageView?.contentMode = .scaleAspectFill
+        imageView?.clipsToBounds = true
+        imageView?.layer.borderWidth = 1.0 / UIScreen.main.scale
+        imageView?.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1).cgColor
+        textLabel?.font = albumNameFont
+        textLabel?.textColor = albumNameColor
+        detailTextLabel?.font = albumAssetsNumberFont
+        detailTextLabel?.textColor = albumAssetsNumberColor
+        
+        contentView.addSubview(coverView)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        coverView.frame = CGRect(x: 0, y: 0, width: max(contentView.bounds.width, bounds.width), height: contentView.bounds.height)
+        let imageEdgeTop = (contentView.bounds.height - albumImageSize) / 2.0
+        let imageEdgeLeft = albumImageMarginLeft == -1 ? imageEdgeTop : albumImageMarginLeft
+        imageView?.frame = CGRect(x: imageEdgeLeft, y: imageEdgeTop, width: albumImageSize, height: albumImageSize)
+        
+        if let textLabel = textLabel {
+            var textLabelFrame = textLabel.frame
+            textLabelFrame.origin = CGPoint(x: (imageView?.frame.maxX ?? 0) + albumNameInsets.left, y: ((textLabel.superview?.bounds.height ?? 0) - textLabel.frame.height) / 2.0)
+            textLabel.frame = textLabelFrame
+            
+            let textLabelMaxWidth = contentView.bounds.width - textLabel.frame.minX - (detailTextLabel?.bounds.width ?? 0) - albumNameInsets.right
+            if textLabel.bounds.width > textLabelMaxWidth {
+                var textLabelFrame = textLabel.frame
+                textLabelFrame.size.width = textLabelMaxWidth
+                textLabel.frame = textLabelFrame
+            }
+        }
+        
+        if let detailTextLabel = detailTextLabel {
+            var detailTextLabelFrame = detailTextLabel.frame
+            detailTextLabelFrame.origin = CGPoint(x: (textLabel?.frame.maxX ?? 0) + albumNameInsets.right, y: ((detailTextLabel.superview?.bounds.height ?? 0) - detailTextLabel.frame.height) / 2.0)
+            detailTextLabel.frame = detailTextLabelFrame
+        }
+    }
+    
+}
+
 // MARK: - ImagePickerPreviewController
 /// 图片选择器预览集合Cell
 open class ImagePickerPreviewCollectionCell: UICollectionViewCell {
@@ -221,3 +317,5 @@ fileprivate extension Asset {
     }
     
 }
+
+// MARK: - ImagePickerController
