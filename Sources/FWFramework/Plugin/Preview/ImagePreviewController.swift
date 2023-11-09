@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 // MARK: - ImagePreviewView
 /// 图片预览媒体类型枚举
@@ -61,10 +62,18 @@ open class ImagePreviewView: UIView, UICollectionViewDataSource, UICollectionVie
     
     /// 当前图片数量
     open var imageCount: Int {
-        return 0
+        return collectionView.numberOfItems(inSection: 0)
     }
     /// 获取当前正在查看的图片 index，也可强制将图片滚动到指定的 index
-    open var currentImageIndex: Int = 0
+    open var currentImageIndex: Int {
+        get {
+            return _currentImageIndex
+        }
+        set {
+            setCurrentImageIndex(newValue, animated: false)
+        }
+    }
+    private var _currentImageIndex: Int = 0
     
     /// 图片数组，delegate不存在时调用，支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString等
     open var imageURLs: [Any]?
@@ -83,7 +92,7 @@ open class ImagePreviewView: UIView, UICollectionViewDataSource, UICollectionVie
     open var customZoomContentView: ((_ zoomImageView: ZoomImageView, _ contentView: UIView) -> Void)?
     /// 获取当前正在查看的zoomImageView，若当前 index 对应的图片不可见（不处于可视区域），则返回 nil
     open weak var currentZoomImageView: ZoomImageView? {
-        return nil
+        return zoomImageView(at: currentImageIndex)
     }
     
     /// 集合视图
@@ -136,19 +145,208 @@ open class ImagePreviewView: UIView, UICollectionViewDataSource, UICollectionVie
         addSubview(collectionView)
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let isCollectionViewSizeChanged = !collectionView.bounds.size.equalTo(bounds.size)
+        if isCollectionViewSizeChanged {
+            isChangingCollectionViewBounds = true
+            
+            // 必须先 invalidateLayout，再更新 collectionView.frame，否则横竖屏旋转前后的图片不一致（因为 scrollViewDidScroll: 时 contentSize、contentOffset 那些是错的）
+            collectionViewLayout.invalidateLayout()
+            collectionView.frame = bounds
+            if currentImageIndex < collectionView.numberOfItems(inSection: 0) {
+                collectionView.scrollToItem(at: IndexPath(item: currentImageIndex, section: 0), at: .centeredHorizontally, animated: false)
+            }
+            
+            isChangingCollectionViewBounds = false
+        }
+    }
+    
     /// 将图片滚动到指定的 index
     open func setCurrentImageIndex(_ currentImageIndex: Int, animated: Bool) {
+        _currentImageIndex = currentImageIndex
+        isChangingIndexWhenScrolling = false
+        previewController?.updatePageLabel()
         
+        collectionView.reloadData()
+        if currentImageIndex < collectionView.numberOfItems(inSection: 0) {
+            collectionView.scrollToItem(at: IndexPath(item: currentImageIndex, section: 0), at: .centeredHorizontally, animated: animated)
+            // collectionView.layoutIfNeeded()
+        }
     }
     
     /// 获取某个 ZoomImageView 所对应的 index，若当前的 zoomImageView 不可见，会返回nil
     open func index(for zoomImageView: ZoomImageView) -> Int? {
+        if let cell = zoomImageView.superview?.superview as? ImagePreviewCell {
+            return collectionView.indexPath(for: cell)?.item
+        }
         return nil
     }
     
     /// 获取某个 index 对应的 zoomImageView，若该 index 对应的图片当前不可见（不处于可视区域），则返回 nil
     open func zoomImageView(at index: Int) -> ZoomImageView? {
-        return nil
+        let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? ImagePreviewCell
+        return cell?.zoomImageView
+    }
+    
+    // MARK: - UICollectionView
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let numberOfImages = delegate?.numberOfImages?(in: self) {
+            return numberOfImages
+        }
+        return imageURLs?.count ?? 0
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var identifier = kImageOrUnknownCellIdentifier
+        var imageURL: Any?
+        if let type = delegate?.imagePreviewView?(self, assetTypeAt: indexPath.item) {
+            if type == .livePhoto {
+                identifier = kLivePhotoCellIdentifier
+            } else if type == .video {
+                identifier = kVideoCellIdentifier
+            }
+        } else if (imageURLs?.count ?? 0) > indexPath.item {
+            imageURL = imageURLs?[indexPath.item]
+            if imageURL is PHLivePhoto {
+                identifier = kLivePhotoCellIdentifier
+            } else if imageURL is AVPlayerItem {
+                identifier = kVideoCellIdentifier
+            }
+        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! ImagePreviewCell
+        let zoomView = cell.zoomImageView
+        zoomView.delegate = self
+        
+        // 因为 cell 复用的问题，很可能此时会显示一张错误的图片，因此这里要清空所有图片的显示
+        var shouldReset = true
+        if let reset = delegate?.imagePreviewView?(self, shouldResetZoomImageView: zoomView, at: indexPath.item) {
+            shouldReset = reset
+        }
+        if shouldReset {
+            zoomView.image = nil
+            zoomView.videoPlayerItem = nil
+            zoomView.livePhoto = nil
+        }
+        
+        self.customZoomImageView?(zoomView, indexPath.item)
+        
+        if delegate?.imagePreviewView?(self, renderZoomImageView: zoomView, at: indexPath.item) != nil {
+        } else if let renderBlock = self.renderZoomImageView {
+            renderBlock(zoomView, indexPath.item)
+        } else if (imageURLs?.count ?? 0) > indexPath.item {
+            let placeholderImage = self.placeholderImage?(indexPath.item)
+            zoomView.setImageURL(imageURL, placeholderImage: placeholderImage, completion: nil)
+        }
+        
+        // 自动播放视频
+        if autoplayVideo && !isChangingIndexWhenScrolling {
+            if zoomView.videoPlayerItem != nil {
+                zoomView.playVideo()
+            }
+        }
+        return cell
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? ImagePreviewCell else { return }
+        cell.zoomImageView.revertZooming()
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? ImagePreviewCell else { return }
+        cell.zoomImageView.endPlayingVideo()
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == collectionView else { return }
+        
+        // 当前滚动到的页数
+        delegate?.imagePreviewView?(self, didScrollTo: currentImageIndex)
+        
+        // 自动播放视频
+        if autoplayVideo && isChangingIndexWhenScrolling {
+            let zoomImageView = zoomImageView(at: currentImageIndex)
+            if zoomImageView?.videoPlayerItem != nil {
+                zoomImageView?.playVideo()
+            }
+        }
+    }
+    
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == collectionView,
+              !isChangingCollectionViewBounds else {
+            return
+        }
+        
+        let pageWidth = collectionView(collectionView, layout: collectionViewLayout, sizeForItemAt: IndexPath(item: 0, section: 0)).width
+        let pageHorizontalMargin = collectionViewLayout.minimumLineSpacing
+        let contentOffsetX = collectionView.contentOffset.x
+        var index = contentOffsetX / (pageWidth + pageHorizontalMargin)
+        
+        // 在滑动过临界点的那一次才去调用 delegate，避免过于频繁的调用
+        let isFirstDidScroll = previousIndexWhenScrolling == 0
+        
+        // fastToRight 示例 : previousIndexWhenScrolling 1.49, index = 2.0
+        let fastToRight = (floor(index) - floor(previousIndexWhenScrolling) >= 1.0) && (floor(index) - previousIndexWhenScrolling > 0.5)
+        let turnPageToRight = fastToRight || (previousIndexWhenScrolling <= floor(index) + 0.5 && floor(index) + 0.5 <= index)
+
+        // fastToLeft 示例 : previousIndexWhenScrolling 2.51, index = 1.99
+        let fastToLeft = (floor(previousIndexWhenScrolling) - floor(index) >= 1.0) && (previousIndexWhenScrolling - ceil(index) > 0.5)
+        let turnPageToLeft = fastToLeft || (index <= floor(index) + 0.5 && floor(index) + 0.5 <= previousIndexWhenScrolling)
+        
+        if !isFirstDidScroll && (turnPageToRight || turnPageToLeft) {
+            index = round(index)
+            let roundIndex = Int(index)
+            if 0 <= roundIndex && roundIndex < collectionView.numberOfItems(inSection: 0) {
+                // 不调用 setter，避免又走一次 scrollToItem
+                _currentImageIndex = roundIndex
+                isChangingIndexWhenScrolling = true
+                previewController?.updatePageLabel()
+                
+                delegate?.imagePreviewView?(self, willScrollHalfTo: roundIndex)
+            }
+        }
+        previousIndexWhenScrolling = index
+    }
+    
+    // MARK: - ZoomImageViewDelegate
+    open func singleTouch(in zoomImageView: ZoomImageView, location: CGPoint) {
+        previewController?.dismissingWhenTapped(zoomImageView)
+        delegate?.singleTouch?(in: zoomImageView, location: location)
+    }
+    
+    open func doubleTouch(in zoomImageView: ZoomImageView, location: CGPoint) {
+        delegate?.doubleTouch?(in: zoomImageView, location: location)
+    }
+    
+    open func longPress(in zoomImageView: ZoomImageView) {
+        delegate?.longPress?(in: zoomImageView)
+    }
+    
+    open func zoomImageView(_ zoomImageView: ZoomImageView, didHideVideoToolbar didHide: Bool) {
+        delegate?.zoomImageView?(zoomImageView, didHideVideoToolbar: didHide)
+    }
+    
+    open func zoomImageView(_ zoomImageView: ZoomImageView, customContentView contentView: UIView) {
+        if delegate?.zoomImageView?(zoomImageView, customContentView: contentView) != nil {
+        } else {
+            customZoomContentView?(zoomImageView, contentView)
+        }
+    }
+    
+    open func enabledZoomView(in zoomImageView: ZoomImageView) -> Bool {
+        if let enabled = delegate?.enabledZoomView?(in: zoomImageView) {
+            return enabled
+        }
+        return true
     }
     
 }
@@ -205,9 +403,6 @@ public enum ImagePreviewTransitioningStyle: UInt {
 @objc(__FWImagePreviewController)
 open class ImagePreviewController: UIViewController, UIViewControllerTransitioningDelegate {
     
-    /// 自动计算圆角常量
-    public static let cornerRadiusAutomaticDimension: CGFloat = -1
-    
     /// 图片背后的黑色背景，默认为配置表里的 UIColorBlack
     open var backgroundColor: UIColor?
     
@@ -230,8 +425,8 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 CGRectZero，则会强制使用 fade 动画。注意返回值要进行坐标系转换。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
     open var sourceImageRect: ((_ index: Int) -> CGRect)?
     
-    /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 ImagePreviewCornerRadiusAutomaticDimension，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
-    open var sourceImageCornerRadius: CGFloat = ImagePreviewController.cornerRadiusAutomaticDimension
+    /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 -1(小于0即可)，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
+    open var sourceImageCornerRadius: CGFloat = -1
     
     /// 手势拖拽退出预览模式时是否启用缩放效果，默认YES。仅对以 present 方式进入大图预览的场景有效。
     open var dismissingScaleEnabled: Bool = true
@@ -390,7 +585,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
                 
                 let sourceImageIndex = animator.imagePreviewViewController?.imagePreviewView.currentImageIndex ?? 0
                 var cornerRadius = max(animator.imagePreviewViewController?.sourceImageCornerRadius ?? 0, 0)
-                if animator.imagePreviewViewController?.sourceImageCornerRadius == ImagePreviewController.cornerRadiusAutomaticDimension,
+                if (animator.imagePreviewViewController?.sourceImageCornerRadius ?? 0) < 0,
                    let sourceImageView = animator.imagePreviewViewController?.sourceImageView?(sourceImageIndex) as? UIView {
                     cornerRadius = sourceImageView.layer.cornerRadius
                 }

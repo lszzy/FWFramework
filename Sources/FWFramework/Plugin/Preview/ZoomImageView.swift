@@ -23,10 +23,10 @@ public protocol ZoomImageViewDelegate {
     @objc optional func longPress(in zoomImageView: ZoomImageView)
     
     /// 在视频预览界面里，由于用户点击了空白区域或播放视频等导致了底部的视频工具栏被显示或隐藏
-    @objc optional func zoomImageView(_ imageView: ZoomImageView, didHideVideoToolbar didHide: Bool)
+    @objc optional func zoomImageView(_ zoomImageView: ZoomImageView, didHideVideoToolbar didHide: Bool)
     
     /// 自定义内容视图代理方法，contentView根据显示内容不同而不同
-    @objc optional func zoomImageView(_ imageView: ZoomImageView, customContentView contentView: UIView)
+    @objc optional func zoomImageView(_ zoomImageView: ZoomImageView, customContentView contentView: UIView)
     
     /// 是否支持缩放，默认为 YES
     @objc optional func enabledZoomView(in zoomImageView: ZoomImageView) -> Bool
