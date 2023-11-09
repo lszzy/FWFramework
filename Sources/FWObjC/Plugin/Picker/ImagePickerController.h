@@ -275,48 +275,6 @@ NS_SWIFT_NAME(ImagePickerPreviewController)
 
 @end
 
-NS_SWIFT_NAME(ImagePickerPreviewCollectionCell)
-@interface __FWImagePickerPreviewCollectionCell : UICollectionViewCell
-
-/// 缩略图视图
-@property(nonatomic, strong, readonly) UIImageView *imageView;
-/// imageView内边距，默认zero占满
-@property(nonatomic, assign) UIEdgeInsets imageViewInsets UI_APPEARANCE_SELECTOR;
-/// 选中边框颜色，默认白色
-@property(nullable, nonatomic, strong) UIColor *checkedBorderColor UI_APPEARANCE_SELECTOR;
-/// 选中边框宽度，默认3
-@property(nonatomic, assign) CGFloat checkedBorderWidth UI_APPEARANCE_SELECTOR;
-/// 禁用时蒙层颜色
-@property(nonatomic, strong, nullable) UIColor *disabledMaskColor UI_APPEARANCE_SELECTOR;
-/// 蒙层视图
-@property(nonatomic, strong, readonly) UIView *maskView;
-/// 当前是否选中
-@property(nonatomic, assign) BOOL checked;
-/// 当前是否禁用，默认NO
-@property(nonatomic, assign) BOOL disabled;
-
-@property(nonatomic, strong, readonly) UILabel *videoDurationLabel;
-/// 是否显示videoDurationLabel，默认YES
-@property(nonatomic, assign) BOOL showsVideoDurationLabel UI_APPEARANCE_SELECTOR;
-/// videoDurationLabel 的字号
-@property(nonatomic, strong) UIFont *videoDurationLabelFont UI_APPEARANCE_SELECTOR;
-/// videoDurationLabel 的字体颜色
-@property(nonatomic, strong) UIColor *videoDurationLabelTextColor UI_APPEARANCE_SELECTOR;
-/// 视频时长文字的间距，相对于 cell 右下角而言，也即如果 right 越大则越往左，bottom 越大则越往上，另外 top 会影响底部遮罩的高度
-@property(nonatomic, assign) UIEdgeInsets videoDurationLabelMargins UI_APPEARANCE_SELECTOR;
-
-/// 左下角图标视图，默认判断显示editedIconImage和videoIconImage
-@property(nonatomic, strong, readonly) UIImageView *iconImageView;
-@property(nullable, nonatomic, strong) UIImage *editedIconImage UI_APPEARANCE_SELECTOR;
-@property(nullable, nonatomic, strong) UIImage *videoIconImage UI_APPEARANCE_SELECTOR;
-@property(nonatomic, assign) UIEdgeInsets iconImageViewMargins UI_APPEARANCE_SELECTOR;
-
-/// 当前这个 cell 正在展示的 __FWAsset 的 identifier
-@property(nonatomic, copy, nullable) NSString *assetIdentifier;
-- (void)renderWithAsset:(__FWAsset *)asset referenceSize:(CGSize)referenceSize;
-
-@end
-
 #pragma mark - __FWImagePickerController
 
 @class __FWImagePickerCollectionCell;
