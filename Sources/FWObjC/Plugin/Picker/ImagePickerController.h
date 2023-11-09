@@ -76,33 +76,6 @@ NS_SWIFT_NAME(ImageAlbumControllerDelegate)
 
 @end
 
-/// 相册列表默认Cell
-NS_SWIFT_NAME(ImageAlbumTableCell)
-@interface __FWImageAlbumTableCell : UITableViewCell
-
-// 相册缩略图的大小
-@property(nonatomic, assign) CGFloat albumImageSize UI_APPEARANCE_SELECTOR;
-// 相册缩略图的 left，-1 表示自动保持与上下 margin 相等
-@property(nonatomic, assign) CGFloat albumImageMarginLeft UI_APPEARANCE_SELECTOR;
-// 相册名称的上下左右间距
-@property(nonatomic, assign) UIEdgeInsets albumNameInsets UI_APPEARANCE_SELECTOR;
-// 相册名的字体
-@property(nullable, nonatomic, strong) UIFont *albumNameFont UI_APPEARANCE_SELECTOR;
-// 相册名的颜色
-@property(nullable, nonatomic, strong) UIColor *albumNameColor UI_APPEARANCE_SELECTOR;
-// 相册资源数量的字体
-@property(nullable, nonatomic, strong) UIFont *albumAssetsNumberFont UI_APPEARANCE_SELECTOR;
-// 相册资源数量的颜色
-@property(nullable, nonatomic, strong) UIColor *albumAssetsNumberColor UI_APPEARANCE_SELECTOR;
-// 选中时蒙层颜色
-@property(nonatomic, strong, nullable) UIColor *checkedMaskColor UI_APPEARANCE_SELECTOR;
-/// 蒙层视图
-@property(nonatomic, strong, readonly) UIView *maskView;
-/// 当前是否选中
-@property(nonatomic, assign) BOOL checked;
-
-@end
-
 /**
  *  当前设备照片里的相簿列表，使用方式：
  *  1. 使用 init 初始化。
@@ -455,72 +428,6 @@ NS_SWIFT_NAME(ImagePickerController)
                      filterType:(__FWImagePickerFilterType)filterType
                       useOrigin:(BOOL)useOrigin
                      completion:(nullable void (^)(void))completion;
-
-@end
-
-#pragma mark - __FWImagePickerCollectionCell
-
-/**
- *  图片选择空间里的九宫格 cell，支持显示 checkbox、饼状进度条及重试按钮（iCloud 图片需要）
- */
-NS_SWIFT_NAME(ImagePickerCollectionCell)
-@interface __FWImagePickerCollectionCell : UICollectionViewCell
-
-/// checkbox 未被选中时显示的图片
-@property(nonatomic, strong) UIImage *checkboxImage UI_APPEARANCE_SELECTOR;
-/// checkbox 被选中时显示的图片
-@property(nonatomic, strong) UIImage *checkboxCheckedImage UI_APPEARANCE_SELECTOR;
-/// checkbox 的 margin，定位从每个 cell（即每张图片）的最右边开始计算
-@property(nonatomic, assign) UIEdgeInsets checkboxButtonMargins UI_APPEARANCE_SELECTOR;
-
-/// 禁用时蒙层颜色
-@property(nonatomic, strong, nullable) UIColor *disabledMaskColor UI_APPEARANCE_SELECTOR;
-/// 选中时蒙层颜色
-@property(nonatomic, strong, nullable) UIColor *checkedMaskColor UI_APPEARANCE_SELECTOR;
-/// 蒙层视图
-@property(nonatomic, strong, readonly) UIView *maskView;
-
-/// videoDurationLabel 的字号
-@property(nonatomic, strong) UIFont *videoDurationLabelFont UI_APPEARANCE_SELECTOR;
-/// videoDurationLabel 的字体颜色
-@property(nonatomic, strong) UIColor *videoDurationLabelTextColor UI_APPEARANCE_SELECTOR;
-/// 视频时长文字的间距，相对于 cell 右下角而言，也即如果 right 越大则越往左，bottom 越大则越往上，另外 top 会影响底部遮罩的高度
-@property(nonatomic, assign) UIEdgeInsets videoDurationLabelMargins UI_APPEARANCE_SELECTOR;
-
-/// 左下角图标视图，默认判断显示editedIconImage和videoIconImage
-@property(nonatomic, strong, readonly) UIImageView *iconImageView;
-@property(nullable, nonatomic, strong) UIImage *editedIconImage UI_APPEARANCE_SELECTOR;
-@property(nullable, nonatomic, strong) UIImage *videoIconImage UI_APPEARANCE_SELECTOR;
-@property(nonatomic, assign) UIEdgeInsets iconImageViewMargins UI_APPEARANCE_SELECTOR;
-
-/// checkedIndexLabel 的字号
-@property(nonatomic, strong) UIFont *checkedIndexLabelFont UI_APPEARANCE_SELECTOR;
-/// checkedIndexLabel 的字体颜色
-@property(nonatomic, strong) UIColor *checkedIndexLabelTextColor UI_APPEARANCE_SELECTOR;
-/// checkedIndexLabel 的尺寸
-@property(nonatomic, assign) CGSize checkedIndexLabelSize UI_APPEARANCE_SELECTOR;
-/// checkedIndexLabel 的 margin，定位从每个 cell（即每张图片）的最右边开始计算
-@property(nonatomic, assign) UIEdgeInsets checkedIndexLabelMargins UI_APPEARANCE_SELECTOR;
-/// checkedIndexLabel 的背景色
-@property(nonatomic, strong) UIColor *checkedIndexLabelBackgroundColor UI_APPEARANCE_SELECTOR;
-/// 是否显示checkedIndexLabel，大小和checkboxButton保持一致
-@property(nonatomic, assign) BOOL showsCheckedIndexLabel UI_APPEARANCE_SELECTOR;
-/// 是否显示videoDurationLabel，默认YES
-@property(nonatomic, assign) BOOL showsVideoDurationLabel UI_APPEARANCE_SELECTOR;
-
-@property(nonatomic, strong, readonly) UIImageView *contentImageView;
-@property(nonatomic, strong, readonly) UIButton *checkboxButton;
-@property(nonatomic, strong, readonly) UILabel *videoDurationLabel;
-@property(nonatomic, strong, readonly) UILabel *checkedIndexLabel;
-
-@property(nonatomic, assign, getter=isSelectable) BOOL selectable;
-@property(nonatomic, assign, getter=isChecked) BOOL checked;
-@property(nonatomic, assign) BOOL disabled;
-@property(nonatomic, assign) NSInteger checkedIndex;
-@property(nonatomic, assign) __FWAssetDownloadStatus downloadStatus; // Cell 中对应资源的下载状态，这个值的变动会相应地调整 UI 表现
-@property(nonatomic, copy, nullable) NSString *assetIdentifier;// 当前这个 cell 正在展示的 __FWAsset 的 identifier
-
-- (void)renderWithAsset:(__FWAsset *)asset referenceSize:(CGSize)referenceSize;
 
 @end
 
