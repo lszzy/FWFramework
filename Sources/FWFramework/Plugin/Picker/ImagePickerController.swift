@@ -358,7 +358,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
             // 清空imagePickerController导航栏左侧按钮并添加默认按钮
             if pickerController.navigationItem.leftBarButtonItem != nil {
                 pickerController.navigationItem.leftBarButtonItem = nil
-                pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: AppBundle.cancelButton, style: .plain, target: pickerController, action: #selector(handleCancelButtonClick(_:)))
+                pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: AppBundle.cancelButton, style: .plain, target: pickerController, action: #selector(ImagePickerController.handleCancelButtonClick(_:)))
             }
             // 此处需要强引用imagePickerController，防止weak属性释放imagePickerController
             fw_setProperty(pickerController, forName: "imagePickerController")
@@ -1017,6 +1017,79 @@ fileprivate extension Asset {
 }
 
 // MARK: - ImagePickerController
+@objc public protocol ImagePickerControllerDelegate {
+    
+    /// 创建一个 ImagePickerPreviewViewController 用于预览图片
+    @objc optional func imagePickerPreviewController(for imagePickerController: ImagePickerController) -> ImagePickerPreviewController
+    
+    /// 控制照片的排序，若不实现，默认为 AlbumSortTypePositive
+    ///
+    /// 注意返回值会决定第一次进来相片列表时列表默认的滚动位置，如果为 AlbumSortTypePositive，则列表默认滚动到底部，如果为 AlbumSortTypeReverse，则列表默认滚动到顶部。
+    @objc optional func albumSortType(for imagePickerController: ImagePickerController) -> AlbumSortType
+    
+    /// 选择图片完毕后被调用（点击 sendButton 后被调用），如果previewController没有实现完成回调方法，也会走到这个方法
+    /// - Parameters:
+    ///   - imagePickerController: 对应的 ImagePickerController
+    ///   - imagesAssetArray: 包含被选择的图片的 Asset 对象的数组。
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, didFinishPickingImage imagesAssetArray: [Asset])
+    
+    /// 取消选择图片后被调用，如果albumController没有实现取消回调方法，也会走到这个方法
+    @objc optional func imagePickerControllerDidCancel(_ imagePickerController: ImagePickerController)
+    
+    /// cell 被点击时调用（先调用这个接口，然后才去走预览大图的逻辑），注意这并非指选中 checkbox 事件
+    /// - Parameters:
+    ///   - imagePickerController: 对应的 ImagePickerController
+    ///   - imageAsset: 被选中的图片的 Asset 对象
+    ///   - imagePickerPreviewController: 选中图片后进行图片预览的 viewController
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, didSelectImage imageAsset: Asset, afterPreviewControllerUpdate imagePickerPreviewController: ImagePickerPreviewController)
+    
+    /// 是否能够选中 checkbox
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, shouldCheckImageAt index: Int) -> Bool
+    
+    /// 即将选中 checkbox 时调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, willCheckImageAt index: Int)
+    
+    /// 选中了 checkbox 之后调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, didCheckImageAt index: Int)
+    
+    /// 即将取消选中 checkbox 时调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, willUncheckImageAt index: Int)
+    
+    /// 取消了 checkbox 选中之后调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, didUncheckImageAt index: Int)
+    
+    /// 选中数量变化时调用，仅多选有效
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, willChangeCheckedCount checkedCount: Int)
+    
+    /// 自定义图片九宫格cell展示，cellForRow自动调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, customCell cell: ImagePickerCollectionCell, at indexPath: IndexPath)
+    
+    /// 标题视图被点击时调用，返回弹出的相册列表控制器
+    @objc optional func albumController(for imagePickerController: ImagePickerController) -> ImageAlbumController
+    
+    /// 即将显示弹出相册列表控制器时调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, willShowAlbumController albumController: ImageAlbumController)
+    
+    /// 即将隐藏弹出相册列表控制器时调用
+    @objc optional func imagePickerController(_ imagePickerController: ImagePickerController, willHideAlbumController albumController: ImageAlbumController)
+    
+    /// 即将需要显示 Loading 时调用
+    @objc optional func imagePickerControllerWillStartLoading(_ imagePickerController: ImagePickerController)
+    
+    /// 即将需要隐藏 Loading 时调用
+    @objc optional func imagePickerControllerDidFinishLoading(_ imagePickerController: ImagePickerController)
+    
+    /// 图片未授权时调用，可自定义空界面等
+    @objc optional func imagePickerControllerWillShowDenied(_ imagePickerController: ImagePickerController)
+    
+    /// 图片为空时调用，可自定义空界面等
+    @objc optional func imagePickerControllerWillShowEmpty(_ imagePickerController: ImagePickerController)
+    
+    /// 已经选中数量超过最大选择数量时被调用，默认弹窗提示
+    @objc optional func imagePickerControllerWillShowExceed(_ imagePickerController: ImagePickerController)
+    
+}
+
 /// 图片选择空间里的九宫格 cell，支持显示 checkbox、饼状进度条及重试按钮（iCloud 图片需要）
 open class ImagePickerCollectionCell: UICollectionViewCell {
     
