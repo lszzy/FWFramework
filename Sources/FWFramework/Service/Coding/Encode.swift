@@ -693,11 +693,40 @@ extension Array: SafeType {
         return safeElement(index)
     }
 }
+extension Array {
+    public mutating func safeSwap(from index: Index, to otherIndex: Index) {
+        guard index != otherIndex else { return }
+        guard startIndex..<endIndex ~= index else { return }
+        guard startIndex..<endIndex ~= otherIndex else { return }
+        swapAt(index, otherIndex)
+    }
+}
+extension Array where Element: Equatable {
+    @discardableResult
+    public mutating func removeAll(_ item: Element) -> [Element] {
+        removeAll(where: { $0 == item })
+        return self
+    }
+    @discardableResult
+    public mutating func removeAll(_ items: [Element]) -> [Element] {
+        guard !items.isEmpty else { return self }
+        removeAll(where: { items.contains($0) })
+        return self
+    }
+}
 extension Set: SafeType {
     public static var safeValue: Set<Element> { return [] }
 }
 extension Dictionary: SafeType {
     public static var safeValue: Dictionary<Key, Value> { return [:] }
+}
+extension Dictionary {
+    public func has(key: Key) -> Bool {
+        return index(forKey: key) != nil
+    }
+    public mutating func removeAll<S: Sequence>(keys: S) where S.Element == Key {
+        keys.forEach { removeValue(forKey: $0) }
+    }
 }
 extension CGFloat: SafeType {
     public static var safeValue: CGFloat = .zero
