@@ -482,6 +482,326 @@ open class ImageAlbumTableCell: UITableViewCell {
 }
 
 // MARK: - ImagePickerPreviewController
+@objc public protocol ImagePickerPreviewControllerDelegate {
+    
+    /// 完成选中图片回调，未实现时自动转发给当前imagePickerController
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, didFinishPickingImage imagesAssetArray: [Asset])
+    
+    /// 即将选中图片
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, willCheckImageAt index: Int)
+    
+    /// 已经选中图片
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, didCheckImageAt index: Int)
+    
+    /// 即将取消选中图片
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, willUncheckImageAt index: Int)
+    
+    /// 已经取消选中图片
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, didUncheckImageAt index: Int)
+    
+    /// 选中数量变化时调用，仅多选有效
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, willChangeCheckedCount checkedCount: Int)
+    
+    /// 即将需要显示 Loading 时调用
+    @objc optional func imagePickerPreviewControllerWillStartLoading(_ imagePickerPreviewController: ImagePickerPreviewController)
+    
+    /// 即将需要隐藏 Loading 时调用
+    @objc optional func imagePickerPreviewControllerDidFinishLoading(_ imagePickerPreviewController: ImagePickerPreviewController)
+    
+    /// 已经选中数量超过最大选择数量时被调用，默认弹窗提示
+    @objc optional func imagePickerPreviewControllerWillShowExceed(_ imagePickerPreviewController: ImagePickerPreviewController)
+    
+    /// 图片预览界面关闭返回时被调用
+    @objc optional func imagePickerPreviewControllerDidCancel(_ imagePickerPreviewController: ImagePickerPreviewController)
+    
+    /// 自定义编辑按钮点击事件，启用编辑时生效，未实现时使用图片裁剪控制器
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, willEditImageAt index: Int)
+    
+    /// 自定义图片裁剪控制器，启用编辑时生效，未实现时使用默认配置
+    @objc optional func imageCropController(for imagePickerPreviewController: ImagePickerPreviewController, image: UIImage) -> ImageCropController
+    
+    /// 自定义编辑cell展示，cellForRow自动调用
+    @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, customCell cell: ImagePickerPreviewCollectionCell, at indexPath: IndexPath)
+    
+}
+
+open class ImagePickerPreviewController: ImagePreviewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePreviewViewDelegate {
+    
+    open weak var delegate: ImagePickerPreviewControllerDelegate?
+    /// 自定义裁剪控制器句柄，优先级低于delegate
+    open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
+    open var customCellBlock: ((_ cell: ImagePickerPreviewCollectionCell, _ indexPath: IndexPath) -> Void)?
+    
+    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0)
+    open var toolbarTintColor: UIColor? = .white
+    open var toolbarPaddingHorizontal: CGFloat = 16
+    /// 自定义底部工具栏高度，默认同系统
+    open var bottomToolbarHeight: CGFloat {
+        get { return _bottomToolbarHeight > 0 ? _bottomToolbarHeight : UIScreen.fw_toolBarHeight }
+        set { _bottomToolbarHeight = newValue }
+    }
+    private var _bottomToolbarHeight: CGFloat = 0
+    
+    open var checkboxImage: UIImage? = AppBundle.pickerCheckImage
+    open var checkboxCheckedImage: UIImage? = AppBundle.pickerCheckedImage
+    
+    open var originImageCheckboxImage: UIImage? = {
+        return AppBundle.pickerCheckImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+    }()
+    open var originImageCheckboxCheckedImage: UIImage? = {
+        return AppBundle.pickerCheckedImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+    }()
+    /// 是否使用原图，不显示原图按钮时默认YES，显示原图按钮时默认NO
+    open var shouldUseOriginImage: Bool = true
+    /// 是否显示原图按钮，默认NO，设置后会修改shouldUseOriginImage
+    open var showsOriginImageCheckboxButton: Bool = false
+    /// 是否显示编辑按钮，默认YES
+    open var showsEditButton: Bool = true
+    
+    /// 是否显示编辑collectionView，默认YES，仅多选生效
+    open var showsEditCollectionView: Bool = true
+    /// 编辑collectionView总高度，默认80
+    open var editCollectionViewHeight: CGFloat = 80
+    /// 编辑collectionCell大小，默认(60, 60)
+    open var editCollectionCellSize: CGSize = CGSizeMake(60, 60)
+    
+    /// 是否显示默认loading，优先级低于delegate，默认YES
+    open var showsDefaultLoading: Bool = true
+    
+    /// 由于组件需要通过本地图片的 Asset 对象读取图片的详细信息，因此这里的需要传入的是包含一个或多个 Asset 对象的数组
+    open var imagesAssetArray: [Asset]?
+    open var selectedImageAssetArray: [Asset]?
+    
+    open var downloadStatus: AssetDownloadStatus = .succeed
+    
+    /// 最多可以选择的图片数，默认为9
+    open var maximumSelectImageCount: UInt = 9
+    /// 最少需要选择的图片数，默认为 0
+    open var minimumSelectImageCount: UInt = 0
+    
+    open lazy var topToolbarView: UIView = {
+        let result = UIView()
+        result.backgroundColor = toolbarBackgroundColor
+        result.tintColor = toolbarTintColor
+        result.addSubview(backButton)
+        result.addSubview(checkboxButton)
+        return result
+    }()
+    
+    open lazy var backButton: UIButton = {
+        let result = UIButton()
+        result.setImage(AppBundle.navBackImage, for: .normal)
+        result.sizeToFit()
+        result.addTarget(self, action: #selector(handleCancelButtonClick(_:)), for: .touchUpInside)
+        result.fw_touchInsets = UIEdgeInsets(top: 30, left: 20, bottom: 50, right: 80)
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        return result
+    }()
+    
+    open lazy var checkboxButton: UIButton = {
+        let result = UIButton()
+        result.setImage(checkboxImage, for: .normal)
+        result.setImage(checkboxCheckedImage, for: .selected)
+        result.setImage(checkboxCheckedImage, for: .highlighted)
+        result.sizeToFit()
+        result.addTarget(self, action: #selector(handleCheckButtonClick(_:)), for: .touchUpInside)
+        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        return result
+    }()
+    
+    open lazy var bottomToolbarView: UIView = {
+        let result = UIView()
+        result.backgroundColor = toolbarBackgroundColor
+        result.addSubview(editButton)
+        result.addSubview(sendButton)
+        result.addSubview(originImageCheckboxButton)
+        return result
+    }()
+    
+    open lazy var sendButton: UIButton = {
+        let result = UIButton()
+        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.setTitle(AppBundle.doneButton, for: .normal)
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.sizeToFit()
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.addTarget(self, action: #selector(handleSendButtonClick(_:)), for: .touchUpInside)
+        return result
+    }()
+    
+    open lazy var editButton: UIButton = {
+        let result = UIButton()
+        result.isHidden = !showsEditButton
+        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.setTitle(AppBundle.editButton, for: .normal)
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.sizeToFit()
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.addTarget(self, action: #selector(handleEditButtonClick(_:)), for: .touchUpInside)
+        return result
+    }()
+    
+    open lazy var originImageCheckboxButton: UIButton = {
+        let result = UIButton()
+        result.isHidden = !showsOriginImageCheckboxButton
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.setImage(originImageCheckboxImage, for: .normal)
+        result.setImage(originImageCheckboxCheckedImage, for: .selected)
+        result.setImage(originImageCheckboxCheckedImage, for: .highlighted)
+        result.setTitle(AppBundle.originalButton, for: .normal)
+        result.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 5)
+        result.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+        result.sizeToFit()
+        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.addTarget(self, action: #selector(handleOriginImageCheckboxButtonClick(_:)), for: .touchUpInside)
+        return result
+    }()
+    
+    open lazy var editCollectionViewLayout: UICollectionViewFlowLayout = {
+        let result = UICollectionViewFlowLayout()
+        result.scrollDirection = .horizontal
+        result.sectionInset = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        result.minimumLineSpacing = result.sectionInset.bottom
+        result.minimumInteritemSpacing = result.sectionInset.left
+        return result
+    }()
+    
+    open lazy var editCollectionView: UICollectionView = {
+        let result = UICollectionView(frame: isViewLoaded ? view.bounds : .zero, collectionViewLayout: editCollectionViewLayout)
+        result.backgroundColor = toolbarBackgroundColor
+        result.isHidden = true
+        result.delegate = self
+        result.dataSource = self
+        result.showsHorizontalScrollIndicator = false
+        result.showsVerticalScrollIndicator = false
+        result.alwaysBounceHorizontal = true
+        result.register(ImagePickerPreviewCollectionCell.self, forCellWithReuseIdentifier: "cell")
+        result.contentInsetAdjustmentBehavior = .never
+        return result
+    }()
+    
+    weak var imagePickerController: ImagePickerController?
+    private var editCheckedIndex: Int?
+    private var shouldResetPreviewView = false
+    private var singleCheckMode = false
+    private var previewMode = false
+    private var editImageAssetArray: [Asset] {
+        if previewMode {
+            return imagesAssetArray ?? []
+        } else {
+            return selectedImageAssetArray ?? []
+        }
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        extendedLayoutIncludesOpaqueBars = true
+    }
+    
+    /// 更新数据并刷新 UI，手工调用
+    /// - Parameters:
+    ///   - imageAssetArray: 包含所有需要展示的图片的数组
+    ///   - selectedImageAssetArray: 包含所有需要展示的图片中已经被选中的图片的数组
+    ///   - currentImageIndex: 当前展示的图片在 imageAssetArray 的索引
+    ///   - singleCheckMode: 是否为单选模式，如果是单选模式，则不显示 checkbox
+    ///   - previewMode: 是否是预览模式，如果是预览模式，图片取消选中时editCollectionView会置灰而不是隐藏
+    open func updateImagePickerPreviewView(
+        imageAssetArray: [Asset]?,
+        selectedImageAssetArray: [Asset]?,
+        currentImageIndex: Int,
+        singleCheckMode: Bool,
+        previewMode: Bool
+    ) {
+        
+    }
+    
+    // MARK: - UICollectionView
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return editImageAssetArray.count
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return editCollectionCellSize
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let imageAsset = editImageAssetArray[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! ImagePickerPreviewCollectionCell
+        let referenceSize = CGSize(width: editCollectionCellSize.width - cell.imageViewInsets.left - cell.imageViewInsets.right, height: editCollectionCellSize.height - cell.imageViewInsets.top - cell.imageViewInsets.bottom)
+        cell.render(asset: imageAsset, referenceSize: referenceSize)
+        cell.checked = indexPath.item == editCheckedIndex
+        cell.disabled = !(selectedImageAssetArray?.contains(imageAsset) ?? false)
+        
+        if delegate?.imagePickerPreviewController?(self, customCell: cell, at: indexPath) != nil {
+        } else {
+            customCellBlock?(cell, indexPath)
+        }
+        return cell
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let imageAsset = editImageAssetArray[indexPath.item]
+        let imageIndex = imagesAssetArray?.firstIndex(of: imageAsset)
+        if let imageIndex = imageIndex, imagePreviewView.currentImageIndex != imageIndex {
+            imagePreviewView.currentImageIndex = imageIndex
+            updateOriginImageCheckboxButton(index: imageIndex)
+        }
+        
+        updateCollectionViewCheckedIndex(indexPath.item)
+    }
+    
+    // MARK: - Private
+    @objc private func handleCancelButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    @objc private func handleCheckButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    @objc private func handleEditButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    @objc private func handleSendButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    @objc private func handleOriginImageCheckboxButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    private func updateOriginImageCheckboxButton(index: Int) {
+        
+    }
+    
+    private func updateCollectionViewCheckedIndex(_ index: Int) {
+        
+    }
+    
+}
+
 /// 图片选择器预览集合Cell
 open class ImagePickerPreviewCollectionCell: UICollectionViewCell {
     
