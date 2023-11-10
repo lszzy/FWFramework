@@ -8,6 +8,384 @@
 import UIKit
 
 // MARK: - ImageAlbumController
+/// 相册列表事件代理
+@objc public protocol ImageAlbumControllerDelegate {
+    
+    /// 需提供 ImagePickerController 用于展示九宫格图片列表
+    @objc optional func imagePickerController(for albumController: ImageAlbumController) -> ImagePickerController
+    
+    /// 点击相簿里某一行时被调用，未实现时默认打开imagePickerController
+    @objc optional func albumController(_ albumController: ImageAlbumController, didSelect assetsGroup: AssetGroup)
+    
+    /// 自定义相册列表cell展示，cellForRow自动调用
+    @objc optional func albumController(_ albumController: ImageAlbumController, customCell cell: ImageAlbumTableCell, at indexPath: IndexPath)
+    
+    /// 取消查看相册列表后被调用，未实现时自动转发给当前imagePickerController
+    @objc optional func albumControllerDidCancel(_ albumController: ImageAlbumController)
+    
+    /// 即将需要显示 Loading 时调用，可自定义Loading效果
+    @objc optional func albumControllerWillStartLoading(_ albumController: ImageAlbumController)
+    
+    /// 需要隐藏 Loading 时调用，可自定义Loading效果
+    @objc optional func albumControllerDidFinishLoading(_ albumController: ImageAlbumController)
+    
+    /// 相册列表未授权时调用，可自定义空界面等
+    @objc optional func albumControllerWillShowDenied(_ albumController: ImageAlbumController)
+    
+    /// 相册列表为空时调用，可自定义空界面等
+    @objc optional func albumControllerWillShowEmpty(_ albumController: ImageAlbumController)
+    
+}
+
+/// 当前设备照片里的相簿列表
+///
+/// 使用方式：
+/// 1. 使用 init 初始化。
+/// 2. 指定一个 albumControllerDelegate，并实现 @required 方法。
+///
+/// 注意，iOS 访问相册需要得到授权，建议先询问用户授权([AssetsManager requestAuthorization:])，通过了再进行 ImageAlbumController 的初始化工作。
+open class ImageAlbumController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    /// 工具栏背景色
+    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
+        didSet {
+            navigationController?.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+        }
+    }
+    /// 工具栏颜色
+    open var toolbarTintColor: UIColor? = .white {
+        didSet {
+            navigationController?.navigationBar.fw_foregroundColor = toolbarTintColor
+        }
+    }
+    
+    /// 相册列表 cell 的高度，同时也是相册预览图的宽高，默认76
+    open var albumTableViewCellHeight: CGFloat = 76
+    /// 相册列表视图最大高度，默认0不限制
+    open var maximumTableViewHeight: CGFloat = 0
+    /// 相册列表附加显示高度，当内容高度小于最大高度时生效，默认0
+    open var additionalTableViewHeight: CGFloat = 0
+    /// 当前相册列表实际显示高度，只读
+    open var tableViewHeight: CGFloat {
+        if maximumTableViewHeight <= 0 {
+            return view.bounds.size.height
+        }
+        
+        let albumsHeight = CGFloat(albumsArray.count) * albumTableViewCellHeight
+        return min(maximumTableViewHeight, albumsHeight + additionalTableViewHeight)
+    }
+    
+    /// 当前相册列表，异步加载
+    open private(set) var albumsArray: [AssetGroup] = []
+    
+    /// 相册列表事件代理
+    open weak var albumControllerDelegate: ImageAlbumControllerDelegate?
+    
+    /// 自定义pickerController句柄，优先级低于delegate
+    open var pickerControllerBlock: (() -> ImagePickerController)?
+    
+    /// 自定义cell展示句柄，cellForRow自动调用，优先级低于delegate
+    open var customCellBlock: ((ImageAlbumTableCell, IndexPath) -> Void)?
+    
+    /// 相册列表默认封面图，默认nil
+    open var defaultPosterImage: UIImage?
+    
+    /// 相册展示内容的类型，可以控制只展示照片、视频或音频的其中一种，也可以同时展示所有类型的资源，默认展示所有类型的资源。
+    open var contentType: AlbumContentType = .all
+    
+    /// 当前选中相册，默认nil
+    open private(set) var assetsGroup: AssetGroup? {
+        didSet {
+            if let oldGroup = oldValue, let index = albumsArray.firstIndex(of: oldGroup) {
+                let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImageAlbumTableCell
+                cell?.checked = false
+            }
+            if let assetsGroup = assetsGroup, let index = albumsArray.firstIndex(of: assetsGroup) {
+                let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImageAlbumTableCell
+                cell?.checked = true
+            }
+        }
+    }
+    
+    /// 是否显示默认loading，优先级低于delegate，默认YES
+    open var showsDefaultLoading: Bool = true
+    
+    /// 是否直接进入第一个相册列表，默认NO
+    open var pickDefaultAlbumGroup: Bool = false
+    
+    /// 背景视图，可设置背景色，添加点击手势等
+    open lazy var backgroundView: UIView = {
+        let result = UIView()
+        return result
+    }()
+    
+    /// 相册只读列表视图
+    open lazy var tableView: UITableView = {
+        let result = UITableView(frame: isViewLoaded ? view.bounds : .zero, style: .plain)
+        result.separatorStyle = .none
+        result.showsVerticalScrollIndicator = false
+        result.showsHorizontalScrollIndicator = false
+        result.dataSource = self
+        result.delegate = self
+        result.backgroundColor = .black
+        result.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 15.0, *) {
+            result.sectionHeaderTopPadding = 0
+        }
+        return result
+    }()
+    
+    weak var imagePickerController: ImagePickerController?
+    var assetsGroupSelected: ((AssetGroup) -> Void)?
+    var albumsArrayLoaded: (() -> Void)?
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        extendedLayoutIncludesOpaqueBars = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: AppBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
+    }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.fw_backImage = AppBundle.navBackImage
+        if title == nil { title = AppBundle.pickerAlbumTitle }
+        
+        view.addSubview(backgroundView)
+        view.addSubview(tableView)
+        
+        let authorizationStatus = AssetManager.authorizationStatus
+        if authorizationStatus == .notDetermined {
+            AssetManager.requestAuthorization { [weak self] status in
+                DispatchQueue.main.async {
+                    if status == .notAuthorized {
+                        self?.showDeniedView()
+                    } else {
+                        self?.loadAlbumArray()
+                    }
+                }
+            }
+        } else if authorizationStatus == .notAuthorized {
+            showDeniedView()
+        } else {
+            loadAlbumArray()
+        }
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let navigationController = navigationController else { return }
+        if navigationController.isNavigationBarHidden != false {
+            navigationController.setNavigationBarHidden(false, animated: animated)
+        }
+        navigationController.navigationBar.fw_isTranslucent = false
+        navigationController.navigationBar.fw_shadowColor = nil
+        navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+        navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        backgroundView.frame = view.bounds
+        let contentInset = UIEdgeInsets(top: UIScreen.fw_topBarHeight, left: tableView.safeAreaInsets.left, bottom: tableView.safeAreaInsets.bottom, right: tableView.safeAreaInsets.right)
+        if tableView.contentInset != contentInset {
+            tableView.contentInset = contentInset
+        }
+    }
+    
+    open override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    // MARK: - UITableView
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return albumsArray.count
+    }
+    
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return albumTableViewCellHeight
+    }
+    
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ImageAlbumTableCell
+        if let reuseCell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ImageAlbumTableCell {
+            cell = reuseCell
+        } else {
+            cell = ImageAlbumTableCell(style: .subtitle, reuseIdentifier: "cell")
+        }
+        let assetsGroup = albumsArray[indexPath.row]
+        cell.imageView?.image = assetsGroup.posterImage(size: CGSize(width: cell.albumImageSize, height: cell.albumImageSize)) ?? defaultPosterImage
+        cell.textLabel?.font = cell.albumNameFont
+        cell.textLabel?.text = assetsGroup.name
+        cell.detailTextLabel?.font = cell.albumAssetsNumberFont
+        cell.detailTextLabel?.text = String(format: "· %@", "\(assetsGroup.numberOfAssets)")
+        cell.checked = assetsGroup == self.assetsGroup
+        
+        if albumControllerDelegate?.albumController?(self, customCell: cell, at: indexPath) != nil {
+        } else {
+            customCellBlock?(cell, indexPath)
+        }
+        return cell
+    }
+    
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        pickAlbumsGroup(albumsArray[indexPath.row], animated: true)
+    }
+    
+    // MARK: - Private
+    private func loadAlbumArray() {
+        if albumControllerDelegate?.albumControllerWillStartLoading?(self) != nil {
+        } else if showsDefaultLoading {
+            fw_showLoading()
+        }
+        
+        DispatchQueue.global(qos: .default).async { [weak self] in
+            AssetManager.shared.enumerateAllAlbums(albumContentType: self?.contentType ?? .all) { resultAssetsGroup in
+                if let resultAssetsGroup = resultAssetsGroup {
+                    self?.albumsArray.append(resultAssetsGroup)
+                } else {
+                    // 意味着遍历完所有的相簿了
+                    self?.sortAlbumArray()
+                    DispatchQueue.main.async {
+                        self?.refreshAlbumGroups()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func sortAlbumArray() {
+        // 把隐藏相册排序强制放到最后
+        var hiddenGroup: AssetGroup?
+        for album in albumsArray {
+            if album.phAssetCollection.assetCollectionSubtype == .smartAlbumAllHidden {
+                hiddenGroup = album
+                break
+            }
+        }
+        
+        if let hiddenGroup = hiddenGroup {
+            albumsArray.removeAll(where: { $0 == hiddenGroup })
+            albumsArray.append(hiddenGroup)
+        }
+    }
+    
+    private func refreshAlbumGroups() {
+        if albumControllerDelegate?.albumControllerDidFinishLoading?(self) != nil {
+        } else if showsDefaultLoading {
+            fw_hideLoading()
+        }
+        
+        if maximumTableViewHeight > 0 {
+            var tableFrame = tableView.frame
+            tableFrame.size.height = tableViewHeight + UIScreen.fw_topBarHeight
+            tableView.frame = tableFrame
+        }
+        
+        if albumsArray.count > 0 {
+            if pickDefaultAlbumGroup {
+                pickAlbumsGroup(albumsArray.first, animated: false)
+            }
+            tableView.reloadData()
+        } else {
+            if albumControllerDelegate?.albumControllerWillShowEmpty?(self) != nil {
+            } else {
+                fw_showEmptyView(text: AppBundle.pickerEmptyTitle)
+            }
+        }
+        
+        albumsArrayLoaded?()
+    }
+    
+    private func showDeniedView() {
+        if maximumTableViewHeight > 0 {
+            var tableFrame = tableView.frame
+            tableFrame.size.height = tableViewHeight + UIScreen.fw_topBarHeight
+            tableView.frame = tableFrame
+        }
+        
+        if albumControllerDelegate?.albumControllerWillShowDenied?(self) != nil {
+        } else {
+            let appName = UIApplication.fw_appDisplayName
+            let tipText = String(format: AppBundle.pickerDeniedTitle, appName)
+            fw_showEmptyView(text: tipText)
+        }
+        
+        albumsArrayLoaded?()
+    }
+    
+    private func pickAlbumsGroup(_ assetsGroup: AssetGroup?, animated: Bool) {
+        guard let assetsGroup = assetsGroup else { return }
+        self.assetsGroup = assetsGroup
+        
+        initImagePickerControllerIfNeeded()
+        if assetsGroupSelected != nil {
+            assetsGroupSelected?(assetsGroup)
+        } else if albumControllerDelegate?.albumController?(self, didSelect: assetsGroup) != nil {
+        } else if let pickerController = imagePickerController {
+            pickerController.title = assetsGroup.name
+            pickerController.refresh(withAssetsGroup: assetsGroup)
+            navigationController?.pushViewController(pickerController, animated: animated)
+        }
+    }
+    
+    private func initImagePickerControllerIfNeeded() {
+        guard imagePickerController == nil else { return }
+        
+        var pickerController: ImagePickerController?
+        if let controller = albumControllerDelegate?.imagePickerController?(for: self) {
+            pickerController = controller
+        } else if let block = pickerControllerBlock {
+            pickerController = block()
+        }
+        if let pickerController = pickerController {
+            // 清空imagePickerController导航栏左侧按钮并添加默认按钮
+            if pickerController.navigationItem.leftBarButtonItem != nil {
+                pickerController.navigationItem.leftBarButtonItem = nil
+                pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: AppBundle.cancelButton, style: .plain, target: pickerController, action: #selector(handleCancelButtonClick(_:)))
+            }
+            // 此处需要强引用imagePickerController，防止weak属性释放imagePickerController
+            fw_setProperty(pickerController, forName: "imagePickerController")
+            self.imagePickerController = pickerController
+        }
+    }
+    
+    @objc private func handleCancelButtonClick(_ sender: Any) {
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            
+            if self.albumControllerDelegate?.albumControllerDidCancel?(self) != nil {
+            } else {
+                self.initImagePickerControllerIfNeeded()
+                if let pickerController = self.imagePickerController {
+                    if pickerController.imagePickerControllerDelegate?.imagePickerControllerDidCancel?(pickerController) != nil {
+                    } else {
+                        pickerController.didCancelPicking?()
+                    }
+                }
+            }
+            self.imagePickerController?.selectedImageAssetArray?.removeAllObjects()
+        }
+    }
+    
+}
+
 /// 相册列表默认Cell
 open class ImageAlbumTableCell: UITableViewCell {
     
