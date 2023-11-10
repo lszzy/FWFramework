@@ -113,7 +113,7 @@ extension WrapperGlobal {
     
     /// 读取应用名称
     public static var fw_appName: String {
-        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+        let appName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
         return appName ?? ""
     }
 
@@ -131,7 +131,7 @@ extension WrapperGlobal {
 
     /// 读取应用构建版本号，示例：1.0.0.1
     public static var fw_appBuildVersion: String {
-        let buildVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        let buildVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
         return buildVersion ?? ""
     }
 
