@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 // MARK: - ImageAlbumController
 /// 相册列表事件代理
@@ -340,7 +341,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         } else if albumControllerDelegate?.albumController?(self, didSelect: assetsGroup) != nil {
         } else if let pickerController = imagePickerController {
             pickerController.title = assetsGroup.name
-            pickerController.refresh(withAssetsGroup: assetsGroup)
+            pickerController.refresh(assetsGroup: assetsGroup)
             navigationController?.pushViewController(pickerController, animated: animated)
         }
     }
@@ -380,7 +381,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
                     }
                 }
             }
-            self.imagePickerController?.selectedImageAssetArray?.removeAllObjects()
+            self.imagePickerController?.selectedImageAssetArray.removeAll()
         }
     }
     
@@ -533,8 +534,18 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
     open var customCellBlock: ((_ cell: ImagePickerPreviewCollectionCell, _ indexPath: IndexPath) -> Void)?
     
-    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0)
-    open var toolbarTintColor: UIColor? = .white
+    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
+        didSet {
+            topToolbarView.backgroundColor = toolbarBackgroundColor
+            bottomToolbarView.backgroundColor = toolbarBackgroundColor
+        }
+    }
+    open var toolbarTintColor: UIColor? = .white {
+        didSet {
+            topToolbarView.tintColor = toolbarTintColor
+            bottomToolbarView.tintColor = toolbarTintColor
+        }
+    }
     open var toolbarPaddingHorizontal: CGFloat = 16
     /// 自定义底部工具栏高度，默认同系统
     open var bottomToolbarHeight: CGFloat {
@@ -555,9 +566,18 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     /// 是否使用原图，不显示原图按钮时默认YES，显示原图按钮时默认NO
     open var shouldUseOriginImage: Bool = true
     /// 是否显示原图按钮，默认NO，设置后会修改shouldUseOriginImage
-    open var showsOriginImageCheckboxButton: Bool = false
+    open var showsOriginImageCheckboxButton: Bool = false {
+        didSet {
+            shouldUseOriginImage = !showsOriginImageCheckboxButton
+            originImageCheckboxButton.isHidden = !showsOriginImageCheckboxButton
+        }
+    }
     /// 是否显示编辑按钮，默认YES
-    open var showsEditButton: Bool = true
+    open var showsEditButton: Bool = true {
+        didSet {
+            editButton.isHidden = !showsEditButton
+        }
+    }
     
     /// 是否显示编辑collectionView，默认YES，仅多选生效
     open var showsEditCollectionView: Bool = true
@@ -570,10 +590,16 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open var showsDefaultLoading: Bool = true
     
     /// 由于组件需要通过本地图片的 Asset 对象读取图片的详细信息，因此这里的需要传入的是包含一个或多个 Asset 对象的数组
-    open var imagesAssetArray: [Asset]?
-    open var selectedImageAssetArray: [Asset]?
+    open var imagesAssetArray: [Asset] = []
+    open var selectedImageAssetArray: [Asset] = []
     
-    open var downloadStatus: AssetDownloadStatus = .succeed
+    open var downloadStatus: AssetDownloadStatus = .succeed {
+        didSet {
+            if !singleCheckMode {
+                checkboxButton.isHidden = false
+            }
+        }
+    }
     
     /// 最多可以选择的图片数，默认为9
     open var maximumSelectImageCount: UInt = 9
@@ -616,6 +642,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open lazy var bottomToolbarView: UIView = {
         let result = UIView()
         result.backgroundColor = toolbarBackgroundColor
+        result.tintColor = toolbarTintColor
         result.addSubview(editButton)
         result.addSubview(sendButton)
         result.addSubview(originImageCheckboxButton)
@@ -695,9 +722,9 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     private var previewMode = false
     private var editImageAssetArray: [Asset] {
         if previewMode {
-            return imagesAssetArray ?? []
+            return imagesAssetArray
         } else {
-            return selectedImageAssetArray ?? []
+            return selectedImageAssetArray
         }
     }
     
@@ -715,6 +742,75 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         extendedLayoutIncludesOpaqueBars = true
     }
     
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        imagePreviewView.delegate = self
+        view.addSubview(topToolbarView)
+        view.addSubview(bottomToolbarView)
+        view.addSubview(editCollectionView)
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationController = navigationController,
+           navigationController.isNavigationBarHidden != true {
+            navigationController.setNavigationBarHidden(true, animated: animated)
+        }
+        
+        if !singleCheckMode {
+            let imageAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+            checkboxButton.isSelected = selectedImageAssetArray.contains(imageAsset)
+        }
+        updateOriginImageCheckboxButton(index: imagePreviewView.currentImageIndex)
+        updateImageCountAndCollectionView(false)
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        topToolbarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: UIScreen.fw_topBarHeight)
+        let topToolbarPaddingTop = view.safeAreaInsets.top
+        let topToolbarContentHeight = topToolbarView.bounds.height - topToolbarPaddingTop
+        var backButtonFrame = backButton.frame
+        backButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: topToolbarPaddingTop + (topToolbarContentHeight - backButton.frame.height) / 2.0)
+        backButton.frame = backButtonFrame
+        if !checkboxButton.isHidden {
+            var checkboxButtonFrame = checkboxButton.frame
+            checkboxButtonFrame.origin = CGPoint(x: topToolbarView.frame.width - toolbarPaddingHorizontal - view.safeAreaInsets.right - checkboxButton.frame.width, y: topToolbarPaddingTop + (topToolbarContentHeight - checkboxButton.frame.height) / 2.0)
+            checkboxButton.frame = checkboxButtonFrame
+        }
+        
+        let bottomToolbarHeight = self.bottomToolbarHeight
+        let bottomToolbarContentHeight = bottomToolbarHeight - view.safeAreaInsets.bottom
+        bottomToolbarView.frame = CGRect(x: 0, y: view.bounds.height - bottomToolbarHeight, width: view.bounds.width, height: bottomToolbarHeight)
+        updateSendButtonLayout()
+        
+        var editButtonFrame = editButton.frame
+        editButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: (bottomToolbarContentHeight - editButton.frame.height) / 2.0)
+        editButton.frame = editButtonFrame
+        if showsEditButton {
+            var originImageCheckboxButtonFrame = originImageCheckboxButton.frame
+            originImageCheckboxButtonFrame.origin = CGPoint(x: (bottomToolbarView.frame.width - originImageCheckboxButton.frame.width) / 2.0, y: (bottomToolbarContentHeight - originImageCheckboxButton.frame.height) / 2.0)
+            originImageCheckboxButton.frame = originImageCheckboxButtonFrame
+        } else {
+            var originImageCheckboxButtonFrame = originImageCheckboxButton.frame
+            originImageCheckboxButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: (bottomToolbarContentHeight - originImageCheckboxButton.frame.height) / 2.0)
+            originImageCheckboxButton.frame = originImageCheckboxButtonFrame
+        }
+        
+        editCollectionView.frame = CGRect(x: 0, y: bottomToolbarView.frame.minY - editCollectionViewHeight, width: view.bounds.width, height: editCollectionViewHeight)
+        let contentInset = UIEdgeInsets(top: 0, left: editCollectionView.safeAreaInsets.left, bottom: 0, right: editCollectionView.safeAreaInsets.right)
+        if editCollectionView.contentInset != contentInset {
+            editCollectionView.contentInset = contentInset
+        }
+    }
+    
+    open override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     /// 更新数据并刷新 UI，手工调用
     /// - Parameters:
     ///   - imageAssetArray: 包含所有需要展示的图片的数组
@@ -723,13 +819,21 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     ///   - singleCheckMode: 是否为单选模式，如果是单选模式，则不显示 checkbox
     ///   - previewMode: 是否是预览模式，如果是预览模式，图片取消选中时editCollectionView会置灰而不是隐藏
     open func updateImagePickerPreviewView(
-        imageAssetArray: [Asset]?,
-        selectedImageAssetArray: [Asset]?,
+        imageAssetArray: [Asset],
+        selectedImageAssetArray: [Asset],
         currentImageIndex: Int,
         singleCheckMode: Bool,
         previewMode: Bool
     ) {
-        
+        self.imagesAssetArray = imageAssetArray
+        self.selectedImageAssetArray = selectedImageAssetArray
+        imagePreviewView.currentImageIndex = currentImageIndex
+        shouldResetPreviewView = true
+        self.singleCheckMode = singleCheckMode
+        self.previewMode = previewMode
+        if singleCheckMode {
+            checkboxButton.isHidden = true
+        }
     }
     
     // MARK: - UICollectionView
@@ -751,7 +855,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         let referenceSize = CGSize(width: editCollectionCellSize.width - cell.imageViewInsets.left - cell.imageViewInsets.right, height: editCollectionCellSize.height - cell.imageViewInsets.top - cell.imageViewInsets.bottom)
         cell.render(asset: imageAsset, referenceSize: referenceSize)
         cell.checked = indexPath.item == editCheckedIndex
-        cell.disabled = !(selectedImageAssetArray?.contains(imageAsset) ?? false)
+        cell.disabled = !selectedImageAssetArray.contains(imageAsset)
         
         if delegate?.imagePickerPreviewController?(self, customCell: cell, at: indexPath) != nil {
         } else {
@@ -762,7 +866,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let imageAsset = editImageAssetArray[indexPath.item]
-        let imageIndex = imagesAssetArray?.firstIndex(of: imageAsset)
+        let imageIndex = imagesAssetArray.firstIndex(of: imageAsset)
         if let imageIndex = imageIndex, imagePreviewView.currentImageIndex != imageIndex {
             imagePreviewView.currentImageIndex = imageIndex
             updateOriginImageCheckboxButton(index: imageIndex)
@@ -771,33 +875,449 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         updateCollectionViewCheckedIndex(indexPath.item)
     }
     
-    // MARK: - Private
-    @objc private func handleCancelButtonClick(_ sender: UIButton) {
-        
+    // MARK: - ImagePreviewViewDelegate
+    open func numberOfImages(in imagePreviewView: ImagePreviewView) -> Int {
+        return imagesAssetArray.count
     }
     
-    @objc private func handleCheckButtonClick(_ sender: UIButton) {
+    open func imagePreviewView(_ imagePreviewView: ImagePreviewView, assetTypeAt index: Int) -> ImagePreviewMediaType {
+        let imageAsset = imagesAssetArray[index]
+        if imageAsset.assetType == .image {
+            if imageAsset.assetSubType == .livePhoto, let pickerController = imagePickerController {
+                let checkLivePhoto = pickerController.filterType.contains(.livePhoto) || pickerController.filterType.rawValue < 1
+                if checkLivePhoto { return .livePhoto }
+            }
+            return .image
+        } else if imageAsset.assetType == .video {
+            return .video
+        } else {
+            return .others
+        }
+    }
+    
+    open func imagePreviewView(_ imagePreviewView: ImagePreviewView, shouldResetZoomImageView zoomImageView: ZoomImageView, at index: Int) -> Bool {
+        if shouldResetPreviewView {
+            // 刷新数据源时需重置zoomImageView，清空当前显示内容
+            shouldResetPreviewView = false
+            return true
+        } else {
+            // 为了防止切换图片时产生闪烁，快速切换时只重置videoPlayerItem，加载失败时需清空显示
+            zoomImageView.videoPlayerItem = nil
+            return false
+        }
+    }
+    
+    open func imagePreviewView(_ imagePreviewView: ImagePreviewView, renderZoomImageView zoomImageView: ZoomImageView, at index: Int) {
+        requestImage(for: zoomImageView, at: index)
         
+        var insets = zoomImageView.videoToolbarMargins
+        insets.bottom = zoomImageView.videoToolbarMargins.bottom + bottomToolbarView.frame.height - imagePreviewView.safeAreaInsets.bottom
+        zoomImageView.videoToolbarMargins = insets
+    }
+    
+    open func imagePreviewView(_ imagePreviewView: ImagePreviewView, willScrollHalfTo index: Int) {
+        let imageAsset = imagesAssetArray[index]
+        if !singleCheckMode {
+            checkboxButton.isSelected = selectedImageAssetArray.contains(imageAsset)
+        }
+        
+        updateOriginImageCheckboxButton(index: index)
+        let editIndex = editImageAssetArray.firstIndex(of: imageAsset)
+        updateCollectionViewCheckedIndex(editIndex)
+    }
+    
+    private func requestImage(for zoomImageView: ZoomImageView, at index: Int) {
+        // 如果是走 PhotoKit 的逻辑，那么这个 block 会被多次调用，并且第一次调用时返回的图片是一张小图，
+        // 拉取图片的过程中可能会多次返回结果，且图片尺寸越来越大，因此这里 contentMode为ScaleAspectFit 以防止图片大小跳动
+        let imageAsset = imagesAssetArray[index]
+        if imageAsset.editedImage != nil {
+            zoomImageView.image = imageAsset.editedImage
+            return
+        }
+        
+        // 获取资源图片的预览图，这是一张适合当前设备屏幕大小的图片，最终展示时把图片交给组件控制最终展示出来的大小。
+        // 系统相册本质上也是这么处理的，因此无论是系统相册，还是这个系列组件，由始至终都没有显示照片原图，
+        // 这也是系统相册能加载这么快的原因。
+        // 另外这里采用异步请求获取图片，避免获取图片时 UI 卡顿
+        let progressHandler: PHAssetImageProgressHandler = { [weak self] progress, error, _, _ in
+            imageAsset.downloadProgress = progress
+            DispatchQueue.main.async {
+                if self?.downloadStatus != .downloading {
+                    self?.downloadStatus = .downloading
+                    zoomImageView.progress = 0
+                }
+                // 拉取资源的初期，会有一段时间没有进度，猜测是发出网络请求以及与 iCloud 建立连接的耗时，这时预先给个 0.02 的进度值，看上去好看些
+                var targetProgress = max(0.02, progress)
+                if targetProgress < zoomImageView.progress {
+                    zoomImageView.progress = targetProgress
+                } else {
+                    zoomImageView.progress = max(0.02, progress)
+                }
+                if error != nil {
+                    self?.downloadStatus = .failed
+                    zoomImageView.progress = 0
+                }
+            }
+        }
+        
+        if imageAsset.assetType == .video {
+            zoomImageView.tag = -1
+            imageAsset.requestID = imageAsset.requestPlayerItem(completion: { playerItem, info in
+                // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
+                // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                DispatchQueue.main.async {
+                    let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
+                    let loadICloudImageFault = playerItem == nil || info?[PHImageErrorKey] != nil
+                    if isCurrentRequest && !loadICloudImageFault {
+                        zoomImageView.videoPlayerItem = playerItem
+                    } else if isCurrentRequest {
+                        zoomImageView.image = nil
+                        zoomImageView.livePhoto = nil
+                    }
+                }
+            }, progressHandler: progressHandler)
+            zoomImageView.tag = imageAsset.requestID
+        } else {
+            if imageAsset.assetType != .image { return }
+            
+            var isLivePhoto = false
+            var checkLivePhoto = false
+            if let pickerController = imagePickerController {
+                checkLivePhoto = pickerController.filterType.contains(.livePhoto) || pickerController.filterType.rawValue < 1
+            }
+            if imageAsset.assetSubType == .livePhoto && checkLivePhoto {
+                isLivePhoto = true
+                zoomImageView.tag = -1
+                imageAsset.requestID = imageAsset.requestLivePhoto(completion: { [weak self] livePhoto, info, finished in
+                    // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
+                    // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                    DispatchQueue.main.async {
+                        let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
+                        let loadICloudImageFault = livePhoto == nil || info?[PHImageErrorKey] != nil
+                        if isCurrentRequest && !loadICloudImageFault {
+                            // 如果是走 PhotoKit 的逻辑，那么这个 block 会被多次调用，并且第一次调用时返回的图片是一张小图，
+                            // 这时需要把图片放大到跟屏幕一样大，避免后面加载大图后图片的显示会有跳动
+                            zoomImageView.livePhoto = livePhoto
+                        } else if isCurrentRequest {
+                            zoomImageView.image = nil
+                            zoomImageView.livePhoto = nil
+                        }
+                        if finished && livePhoto != nil {
+                            imageAsset.updateDownloadStatus(downloadResult: true)
+                            self?.downloadStatus = .succeed
+                            zoomImageView.progress = 1
+                        } else if finished {
+                            imageAsset.updateDownloadStatus(downloadResult: false)
+                            self?.downloadStatus = .failed
+                            zoomImageView.progress = 0
+                        }
+                    }
+                }, progressHandler: progressHandler)
+                zoomImageView.tag = imageAsset.requestID
+            }
+            
+            if isLivePhoto {
+            } else if imageAsset.assetSubType == .gif {
+                imageAsset.requestImageData { imageData, info, isGIF, isHEIC in
+                    DispatchQueue.global(qos: .default).async {
+                        var resultImage: UIImage?
+                        if let imageData = imageData {
+                            resultImage = UIImage.fw_image(data: imageData, scale: 1)
+                        }
+                        DispatchQueue.main.async {
+                            if resultImage != nil {
+                                zoomImageView.image = resultImage
+                            } else {
+                                zoomImageView.image = nil
+                                zoomImageView.livePhoto = nil
+                            }
+                        }
+                    }
+                }
+            } else {
+                zoomImageView.tag = -1
+                imageAsset.requestID = imageAsset.requestOriginImage(completion: { [weak self] result, info, finished in
+                    // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
+                    // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                    DispatchQueue.main.async {
+                        let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
+                        let loadICloudImageFault = result == nil || info?[PHImageErrorKey] != nil
+                        if isCurrentRequest && !loadICloudImageFault {
+                            zoomImageView.image = result
+                        } else if isCurrentRequest {
+                            zoomImageView.image = nil
+                            zoomImageView.livePhoto = nil
+                        }
+                        if finished && result != nil {
+                            imageAsset.updateDownloadStatus(downloadResult: true)
+                            self?.downloadStatus = .succeed
+                            zoomImageView.progress = 1
+                        } else if finished {
+                            imageAsset.updateDownloadStatus(downloadResult: false)
+                            self?.downloadStatus = .failed
+                            zoomImageView.progress = 0
+                        }
+                    }
+                }, progressHandler: progressHandler)
+                zoomImageView.tag = imageAsset.requestID
+            }
+        }
+    }
+    
+    open func singleTouch(in zoomImageView: ZoomImageView, location: CGPoint) {
+        topToolbarView.isHidden = !topToolbarView.isHidden
+        bottomToolbarView.isHidden = !bottomToolbarView.isHidden
+        if !singleCheckMode && showsEditCollectionView {
+            editCollectionView.isHidden = !editCollectionView.isHidden || editImageAssetArray.count < 1
+        }
+    }
+    
+    open func zoomImageView(_ zoomImageView: ZoomImageView, didHideVideoToolbar didHide: Bool) {
+        topToolbarView.isHidden = didHide
+        bottomToolbarView.isHidden = didHide
+        if !singleCheckMode && showsEditCollectionView {
+            editCollectionView.isHidden = didHide || editImageAssetArray.count < 1
+        }
+    }
+    
+    // MARK: - Private
+    @objc private func handleCancelButtonClick(_ sender: UIButton) {
+        navigationController?.popViewController(animated: true)
+        delegate?.imagePickerPreviewControllerDidCancel?(self)
+    }
+    
+    @objc private func handleCheckButtonClick(_ button: UIButton) {
+        if button.isSelected {
+            delegate?.imagePickerPreviewController?(self, willUncheckImageAt: imagePreviewView.currentImageIndex)
+            
+            button.isSelected = false
+            let imageAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+            selectedImageAssetArray.removeAll(where: { $0 == imageAsset })
+            updateImageCountAndCollectionView(true)
+            
+            delegate?.imagePickerPreviewController?(self, didUncheckImageAt: imagePreviewView.currentImageIndex)
+        } else {
+            if selectedImageAssetArray.count >= maximumSelectImageCount {
+                if delegate?.imagePickerPreviewControllerWillShowExceed?(self) != nil {
+                } else {
+                    fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+                }
+                return
+            }
+            
+            delegate?.imagePickerPreviewController?(self, willCheckImageAt: imagePreviewView.currentImageIndex)
+            
+            button.isSelected = true
+            let imageAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+            selectedImageAssetArray.append(imageAsset)
+            updateImageCountAndCollectionView(true)
+            
+            delegate?.imagePickerPreviewController?(self, didCheckImageAt: imagePreviewView.currentImageIndex)
+        }
     }
     
     @objc private func handleEditButtonClick(_ sender: UIButton) {
+        if delegate?.imagePickerPreviewController?(self, willEditImageAt: imagePreviewView.currentImageIndex) != nil {
+            return
+        }
         
+        let zoomImageView = imagePreviewView.currentZoomImageView
+        let imageAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+        imageAsset.requestOriginImage { [weak self] result, info, finished in
+            DispatchQueue.main.async {
+                if finished, let result = result {
+                    imageAsset.updateDownloadStatus(downloadResult: true)
+                    self?.downloadStatus = .succeed
+                    zoomImageView?.progress = 1
+                    
+                    self?.beginEditImageAsset(imageAsset, image: result)
+                } else if finished {
+                    imageAsset.updateDownloadStatus(downloadResult: false)
+                    self?.downloadStatus = .failed
+                    zoomImageView?.progress = 0
+                }
+            }
+        } progressHandler: { [weak self] progress, error, _, _ in
+            imageAsset.downloadProgress = progress
+            DispatchQueue.main.async {
+                if self?.downloadStatus != .downloading {
+                    self?.downloadStatus = .downloading
+                    zoomImageView?.progress = 0
+                }
+                // 拉取资源的初期，会有一段时间没有进度，猜测是发出网络请求以及与 iCloud 建立连接的耗时，这时预先给个 0.02 的进度值，看上去好看些
+                var targetProgress = max(0.02, progress)
+                if targetProgress < (zoomImageView?.progress ?? 0) {
+                    zoomImageView?.progress = targetProgress
+                } else {
+                    zoomImageView?.progress = max(0.02, progress)
+                }
+                if error != nil {
+                    self?.downloadStatus = .failed
+                    zoomImageView?.progress = 0
+                }
+            }
+        }
     }
     
     @objc private func handleSendButtonClick(_ sender: UIButton) {
+        sender.isUserInteractionEnabled = false
+        if selectedImageAssetArray.count == 0 {
+            // 如果没选中任何一张，则点击发送按钮直接发送当前这张大图
+            let currentAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+            selectedImageAssetArray.append(currentAsset)
+        }
         
+        if imagePickerController?.shouldRequestImage ?? false {
+            if delegate?.imagePickerPreviewControllerWillStartLoading?(self) != nil {
+            } else if showsDefaultLoading {
+                fw_showLoading()
+            }
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOrigin: shouldUseOriginImage) { [weak self] in
+                guard let self = self else { return }
+                if self.delegate?.imagePickerPreviewControllerDidFinishLoading?(self) != nil {
+                } else if self.showsDefaultLoading {
+                    self.fw_hideLoading()
+                }
+                
+                self.dismiss(animated: true) { [weak self] in
+                    guard let self = self else { return }
+                    if self.delegate?.imagePickerPreviewController?(self, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                    } else if let pickerController = self.imagePickerController {
+                        if pickerController.imagePickerControllerDelegate?.imagePickerController?(pickerController, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                        } else {
+                            pickerController.didFinishPicking?(self.selectedImageAssetArray)
+                        }
+                    }
+                    self.imagePickerController?.selectedImageAssetArray.removeAll()
+                }
+            }
+        } else {
+            dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                if self.delegate?.imagePickerPreviewController?(self, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                } else if let pickerController = self.imagePickerController {
+                    if pickerController.imagePickerControllerDelegate?.imagePickerController?(pickerController, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                    } else {
+                        pickerController.didFinishPicking?(self.selectedImageAssetArray)
+                    }
+                }
+                self.imagePickerController?.selectedImageAssetArray.removeAll()
+            }
+        }
     }
     
-    @objc private func handleOriginImageCheckboxButtonClick(_ sender: UIButton) {
-        
+    @objc private func handleOriginImageCheckboxButtonClick(_ button: UIButton) {
+        if button.isSelected {
+            button.isSelected = false
+            button.setTitle(AppBundle.originalButton, for: .normal)
+            button.sizeToFit()
+            bottomToolbarView.setNeedsLayout()
+        } else {
+            button.isSelected = true
+            updateOriginImageCheckboxButton(index: imagePreviewView.currentImageIndex)
+            if !checkboxButton.isSelected {
+                checkboxButton.sendActions(for: .touchUpInside)
+            }
+        }
+        shouldUseOriginImage = button.isSelected
     }
     
     private func updateOriginImageCheckboxButton(index: Int) {
-        
+        let asset = imagesAssetArray[index]
+        if asset.assetType == .audio || asset.assetType == .video {
+            originImageCheckboxButton.isHidden = true
+            if showsEditButton {
+                editButton.isHidden = true
+            }
+        } else {
+            if showsOriginImageCheckboxButton {
+                originImageCheckboxButton.isHidden = false
+            }
+            if showsEditButton {
+                editButton.isHidden = false
+            }
+        }
     }
     
-    private func updateCollectionViewCheckedIndex(_ index: Int) {
+    private func beginEditImageAsset(_ imageAsset: Asset, image: UIImage) {
+        let cropController: ImageCropController
+        if let controller = delegate?.imageCropController?(for: self, image: image) {
+            cropController = controller
+        } else if let controller = cropControllerBlock?(image) {
+            cropController = controller
+        } else {
+            cropController = ImageCropController(image: image)
+        }
+        if imageAsset.editedImage != nil {
+            cropController.imageCropFrame = imageAsset.pickerCroppedRect
+            cropController.angle = imageAsset.pickerCroppedAngle
+        }
+        cropController.onDidCropToRect = { [weak self] editedImage, cropRect, angle in
+            imageAsset.editedImage = editedImage != image ? editedImage : nil
+            imageAsset.pickerCroppedRect = cropRect
+            imageAsset.pickerCroppedAngle = angle
+            self?.presentedViewController?.dismiss(animated: false)
+        }
+        cropController.onDidFinishCancelled = { [weak self] _ in
+            self?.presentedViewController?.dismiss(animated: false)
+        }
+        present(cropController, animated: false)
+    }
+    
+    private func updateSendButtonLayout() {
+        let bottomToolbarContentHeight = bottomToolbarHeight - view.safeAreaInsets.bottom
+        sendButton.sizeToFit()
+        var sendButtonFrame = sendButton.frame
+        sendButtonFrame.origin = CGPoint(x: bottomToolbarView.frame.width - toolbarPaddingHorizontal - sendButton.frame.width - view.safeAreaInsets.right, y: (bottomToolbarContentHeight - sendButton.frame.height) / 2.0)
+        sendButton.frame = sendButtonFrame
+    }
+    
+    private func updateImageCountAndCollectionView(_ animated: Bool) {
+        if !singleCheckMode {
+            let selectedCount = selectedImageAssetArray.count
+            if selectedCount > 0 {
+                sendButton.isEnabled = selectedCount >= minimumSelectImageCount
+                sendButton.setTitle("\(AppBundle.doneButton)(\(selectedCount))", for: .normal)
+            } else {
+                sendButton.isEnabled = minimumSelectImageCount <= 1
+                sendButton.setTitle(AppBundle.doneButton, for: .normal)
+            }
+            delegate?.imagePickerPreviewController?(self, willChangeCheckedCount: selectedCount)
+            updateSendButtonLayout()
+        }
         
+        if !singleCheckMode && showsEditCollectionView {
+            let currentAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
+            editCheckedIndex = editImageAssetArray.firstIndex(of: currentAsset)
+            editCollectionView.isHidden = editImageAssetArray.count < 1
+            editCollectionView.reloadData()
+            if let editCheckedIndex = editCheckedIndex {
+                editCollectionView.performBatchUpdates {} completion: { [weak self] _ in
+                    if (self?.editCollectionView.numberOfItems(inSection: 0) ?? 0) > editCheckedIndex {
+                        self?.editCollectionView.scrollToItem(at: IndexPath(item: editCheckedIndex, section: 0), at: .centeredHorizontally, animated: true)
+                    }
+                }
+            }
+        } else {
+            editCollectionView.isHidden = true
+        }
+    }
+    
+    private func updateCollectionViewCheckedIndex(_ index: Int?) {
+        if let editCheckedIndex = editCheckedIndex {
+            let cell = editCollectionView.cellForItem(at: IndexPath(item: editCheckedIndex, section: 0)) as? ImagePickerPreviewCollectionCell
+            cell?.checked = false
+        }
+        
+        editCheckedIndex = index
+        if let editCheckedIndex = editCheckedIndex {
+            let indexPath = IndexPath(item: editCheckedIndex, section: 0)
+            let cell = editCollectionView.cellForItem(at: indexPath) as? ImagePickerPreviewCollectionCell
+            cell?.checked = true
+            if editCollectionView.numberOfItems(inSection: 0) > editCheckedIndex {
+                editCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            }
+        }
     }
     
 }
@@ -1087,6 +1607,289 @@ fileprivate extension Asset {
     
     /// 已经选中数量超过最大选择数量时被调用，默认弹窗提示
     @objc optional func imagePickerControllerWillShowExceed(_ imagePickerController: ImagePickerController)
+    
+}
+
+open class ImagePickerController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePickerPreviewControllerDelegate, ToolbarTitleViewDelegate {
+    
+    open weak var imagePickerControllerDelegate: ImagePickerControllerDelegate?
+    /// 自定义预览控制器句柄，优先级低于delegate
+    open var previewControllerBlock: (() -> ImagePickerPreviewController)?
+    /// 自定义相册控制器句柄，优先级低于delegate
+    open var albumControllerBlock: (() -> ImageAlbumController)?
+    /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
+    open var customCellBlock: ((_ cell: ImagePickerCollectionCell, _ indexPath: IndexPath) -> Void)?
+    
+    /// 图片选取完成回调句柄，优先级低于delegate
+    open var didFinishPicking: (([Asset]) -> Void)?
+    /// 图片选取取消回调句柄，优先级低于delegate
+    open var didCancelPicking: (() -> Void)?
+    
+    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0)
+    open var toolbarTintColor: UIColor? = .white
+    
+    /// 标题视图accessoryImage，默认nil，contentType方式会自动设置
+    open var titleAccessoryImage: UIImage?
+    
+    /// 图片的最小尺寸，布局时如果有剩余空间，会将空间分配给图片大小，所以最终显示出来的大小不一定等于minimumImageWidth。默认是75。
+    /// collectionViewLayout 和 collectionView 可能有设置 sectionInsets 和 contentInsets，所以设置几行不可以简单的通过 screenWdith / columnCount 来获得
+    open var minimumImageWidth: CGFloat = 75
+    /// 图片显示列数，默认0使用minimumImageWidth自动计算，指定后固定列数
+    open var imageColumnCount: Int = 0
+    
+    open var toolbarPaddingHorizontal: CGFloat = 16
+    /// 自定义工具栏高度，默认同系统
+    open var operationToolbarHeight: CGFloat {
+        get {
+            guard allowsMultipleSelection else { return 0 }
+            return _operationToolbarHeight > 0 ? _operationToolbarHeight : UIScreen.fw_toolBarHeight
+        }
+        set {
+            _operationToolbarHeight = newValue
+        }
+    }
+    private var _operationToolbarHeight: CGFloat = 0
+    
+    open private(set) var imagesAssetArray: [Asset] = []
+    open private(set) var assetsGroup: AssetGroup?
+    
+    /// 图片过滤类型，默认0不过滤，影响requestImage结果和previewController预览效果
+    open var filterType: ImagePickerFilterType = []
+    
+    /// 当前被选择的图片对应的 Asset 对象数组
+    open internal(set) var selectedImageAssetArray: [Asset] = []
+    
+    /// 是否允许图片多选，默认为 YES。如果为 NO，则不显示 checkbox 和底部工具栏
+    open var allowsMultipleSelection: Bool = true
+    
+    /// 是否禁用预览时左右滚动，默认NO。如果为YES，单选时不能左右滚动切换图片
+    open var previewScrollDisabled: Bool = false
+    
+    /// 最多可以选择的图片数，默认为9
+    open var maximumSelectImageCount: UInt = 9
+    
+    /// 最少需要选择的图片数，默认为 0
+    open var minimumSelectImageCount: UInt = 0
+    
+    /// 是否显示默认loading，优先级低于delegate，默认YES
+    open var showsDefaultLoading: Bool = true
+    
+    /// 是否需要请求图片资源，默认NO，开启后会先requestImagesAssetArray再回调didFinishPicking
+    open var shouldRequestImage: Bool = false
+    
+    /// 当前titleView，默认不可点击，contentType方式会自动切换点击状态
+    open lazy var titleView: ToolbarTitleView = {
+        let result = ToolbarTitleView()
+        result.delegate = self
+        return result
+    }()
+    
+    open lazy var collectionView: UICollectionView = {
+        let result = UICollectionView(frame: isViewLoaded ? view.bounds : .zero, collectionViewLayout: collectionViewLayout)
+        result.dataSource = self
+        result.delegate = self
+        result.showsHorizontalScrollIndicator = false
+        result.showsVerticalScrollIndicator = false
+        result.alwaysBounceVertical = true
+        result.contentInsetAdjustmentBehavior = .never
+        result.backgroundColor = .black
+        result.register(ImagePickerCollectionCell.self, forCellWithReuseIdentifier: kVideoCellIdentifier)
+        result.register(ImagePickerCollectionCell.self, forCellWithReuseIdentifier: kImageOrUnknownCellIdentifier)
+        return result
+    }()
+    
+    open lazy var collectionViewLayout: UICollectionViewFlowLayout = {
+        let result = UICollectionViewFlowLayout()
+        let inset = 2.0 / UIScreen.main.scale
+        result.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        result.minimumLineSpacing = result.sectionInset.bottom
+        result.minimumInteritemSpacing = result.sectionInset.left
+        return result
+    }()
+    
+    open lazy var operationToolbarView: UIView = {
+        let result = UIView()
+        result.backgroundColor = toolbarBackgroundColor
+        result.addSubview(sendButton)
+        result.addSubview(previewButton)
+        return result
+    }()
+    
+    open lazy var sendButton: UIButton = {
+        let result = UIButton()
+        result.isEnabled = false
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.contentHorizontalAlignment = .right
+        result.setTitleColor(toolbarTintColor, for: .normal)
+        result.setTitle(AppBundle.doneButton, for: .normal)
+        result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.sizeToFit()
+        result.addTarget(self, action: #selector(handleSendButtonClick(_:)), for: .touchUpInside)
+        return result
+    }()
+    
+    open lazy var previewButton: UIButton = {
+        let result = UIButton()
+        result.isEnabled = false
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.setTitleColor(toolbarTintColor, for: .normal)
+        result.setTitle(AppBundle.previewButton, for: .normal)
+        result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
+        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.sizeToFit()
+        result.addTarget(self, action: #selector(handlePreviewButtonClick(_:)), for: .touchUpInside)
+        return result
+    }()
+    
+    private var imagePickerPreviewController: ImagePickerPreviewController?
+    private weak var albumController: ImageAlbumController?
+    private var isImagesAssetLoaded = false
+    private var isImagesAssetLoading = false
+    private var hasScrollToInitialPosition = false
+    
+    private let kVideoCellIdentifier = "video"
+    private let kImageOrUnknownCellIdentifier = "imageorunknown"
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        extendedLayoutIncludesOpaqueBars = true
+        navigationItem.titleView = titleView
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: AppBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
+    }
+    
+    deinit {
+        collectionView.dataSource = nil
+        collectionView.delegate = nil
+    }
+    
+    open override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    /// 图片过滤类型转换为相册内容类型
+    open class func albumContentType(filterType: ImagePickerFilterType) -> AlbumContentType {
+        
+    }
+    
+    /// 检查并下载一组资源，如果资源仍未从 iCloud 中成功下载，则会发出请求从 iCloud 加载资源，下载完成后，主线程回调。
+    /// 图片资源对象和结果信息保存在Asset.requestObject，自动根据过滤类型返回UIImage|PHLivePhoto|NSURL
+    open class func requestImagesAssetArray(
+        _ imagesAssetArray: [Asset],
+        filterType: ImagePickerFilterType,
+        useOrigin: Bool,
+        completion: (() -> Void)?
+    ) {
+        
+    }
+    
+    /// 也可以直接传入 AssetGroup，然后读取其中的 Asset 并储存到 imagesAssetArray 中，传入后会赋值到 AssetGroup，并自动刷新 UI 展示
+    open func refresh(assetsGroup: AssetGroup?) {
+        
+    }
+    
+    /// 根据filterType刷新，自动选取第一个符合条件的相册，自动初始化并使用albumController
+    open func refresh(filterType: ImagePickerFilterType) {
+        
+    }
+    
+    // MARK: - UICollectionView
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imagesAssetArray.count
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return referenceImageSize()
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+    }
+    
+    // MARK: - ToolbarTitleViewDelegate
+    open func didTouch(_ titleView: ToolbarTitleView, isActive: Bool) {
+        
+    }
+    
+    // MARK: - Private
+    private func refreshCollectionView() {
+        
+    }
+    
+    private func initPreviewViewControllerIfNeeded() {
+        
+    }
+    
+    private func referenceImageSize() -> CGSize {
+        
+    }
+    
+    private func scrollToInitialPositionIfNeeded() {
+        
+    }
+    
+    private func showAlbumControllerAnimated(_ animated: Bool) {
+        
+    }
+    
+    private func hideAlbumControllerAnimated(_ animated: Bool) {
+        
+    }
+    
+    private func initAlbumControllerIfNeeded() {
+        
+    }
+    
+    private func requestImage(indexPath: IndexPath) {
+        
+    }
+    
+    private func updateSendButtonLayout() {
+        
+    }
+    
+    private func updateImageCountAndCheckLimited(_ reloadData: Bool) {
+        
+    }
+    
+    @objc private func handleSendButtonClick(_ sender: UIButton) {
+        
+    }
+    
+    @objc private func handlePreviewButtonClick(_ sender: Any) {
+        
+    }
+    
+    @objc private func handleCheckBoxButtonClick(_ button: UIButton) {
+        
+    }
+    
+    @objc private func handleAlbumButtonClick(_ sender: Any) {
+        
+    }
+    
+    @objc func handleCancelButtonClick(_ sender: Any) {
+        
+    }
     
 }
 
