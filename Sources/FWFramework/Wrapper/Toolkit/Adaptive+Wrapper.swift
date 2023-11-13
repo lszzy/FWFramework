@@ -126,6 +126,11 @@ extension Wrapper where Base: UIScreen {
         return Base.fw_isNotchedScreen
     }
     
+    /// 是否是灵动岛屏幕
+    public static var isDynamicIsland: Bool {
+        return Base.fw_isDynamicIsland
+    }
+    
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
         return Base.fw_pixelOne
