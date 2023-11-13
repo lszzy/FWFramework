@@ -95,7 +95,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     open var contentType: AlbumContentType = .all
     
     /// 当前选中相册，默认nil
-    open private(set) var assetsGroup: AssetGroup? {
+    open internal(set) var assetsGroup: AssetGroup? {
         didSet {
             if let oldGroup = oldValue, let index = albumsArray.firstIndex(of: oldGroup) {
                 let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImageAlbumTableCell
@@ -186,14 +186,15 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        guard let navigationController = navigationController else { return }
-        if navigationController.isNavigationBarHidden != false {
-            navigationController.setNavigationBarHidden(false, animated: animated)
+        if let navigationController = navigationController {
+            if navigationController.isNavigationBarHidden != false {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+            navigationController.navigationBar.fw_isTranslucent = false
+            navigationController.navigationBar.fw_shadowColor = nil
+            navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+            navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
         }
-        navigationController.navigationBar.fw_isTranslucent = false
-        navigationController.navigationBar.fw_shadowColor = nil
-        navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
-        navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
     }
     
     open override func viewDidLayoutSubviews() {
@@ -1020,10 +1021,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             } else if imageAsset.assetSubType == .gif {
                 imageAsset.requestImageData { imageData, info, isGIF, isHEIC in
                     DispatchQueue.global(qos: .default).async {
-                        var resultImage: UIImage?
-                        if let imageData = imageData {
-                            resultImage = UIImage.fw_image(data: imageData, scale: 1)
-                        }
+                        let resultImage = UIImage.fw_image(data: imageData, scale: 1)
                         DispatchQueue.main.async {
                             if resultImage != nil {
                                 zoomImageView.image = resultImage
@@ -1625,17 +1623,35 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     /// 图片选取取消回调句柄，优先级低于delegate
     open var didCancelPicking: (() -> Void)?
     
-    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0)
-    open var toolbarTintColor: UIColor? = .white
+    open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
+        didSet {
+            navigationController?.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+        }
+    }
+    open var toolbarTintColor: UIColor? = .white {
+        didSet {
+            navigationController?.navigationBar.fw_foregroundColor = toolbarTintColor
+        }
+    }
     
     /// 标题视图accessoryImage，默认nil，contentType方式会自动设置
     open var titleAccessoryImage: UIImage?
     
     /// 图片的最小尺寸，布局时如果有剩余空间，会将空间分配给图片大小，所以最终显示出来的大小不一定等于minimumImageWidth。默认是75。
     /// collectionViewLayout 和 collectionView 可能有设置 sectionInsets 和 contentInsets，所以设置几行不可以简单的通过 screenWdith / columnCount 来获得
-    open var minimumImageWidth: CGFloat = 75
+    open var minimumImageWidth: CGFloat = 75 {
+        didSet {
+            referenceImageSize()
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
     /// 图片显示列数，默认0使用minimumImageWidth自动计算，指定后固定列数
-    open var imageColumnCount: Int = 0
+    open var imageColumnCount: Int = 0 {
+        didSet {
+            referenceImageSize()
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
     
     open var toolbarPaddingHorizontal: CGFloat = 16
     /// 自定义工具栏高度，默认同系统
@@ -1660,7 +1676,17 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     open internal(set) var selectedImageAssetArray: [Asset] = []
     
     /// 是否允许图片多选，默认为 YES。如果为 NO，则不显示 checkbox 和底部工具栏
-    open var allowsMultipleSelection: Bool = true
+    open var allowsMultipleSelection: Bool = true {
+        didSet {
+            if isViewLoaded {
+                if allowsMultipleSelection {
+                    view.addSubview(operationToolbarView)
+                } else {
+                    operationToolbarView.removeFromSuperview()
+                }
+            }
+        }
+    }
     
     /// 是否禁用预览时左右滚动，默认NO。如果为YES，单选时不能左右滚动切换图片
     open var previewScrollDisabled: Bool = false
@@ -1774,6 +1800,62 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         collectionView.delegate = nil
     }
     
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = collectionView.backgroundColor
+        view.addSubview(collectionView)
+        if allowsMultipleSelection {
+            view.addSubview(operationToolbarView)
+        }
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationController = navigationController {
+            if navigationController.isNavigationBarHidden != false {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+            navigationController.navigationBar.fw_isTranslucent = false
+            navigationController.navigationBar.fw_shadowColor = nil
+            navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+            navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
+        }
+        
+        // 由于被选中的图片 selectedImageAssetArray 可以由外部改变，因此检查一下图片被选中的情况，并刷新 collectionView
+        if allowsMultipleSelection {
+            updateImageCountAndCheckLimited(true)
+        } else {
+            collectionView.reloadData()
+        }
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var operationToolbarViewHeight: CGFloat = 0
+        if allowsMultipleSelection {
+            operationToolbarViewHeight = operationToolbarHeight
+            operationToolbarView.frame = CGRect(x: 0, y: view.bounds.height - operationToolbarViewHeight, width: view.bounds.width, height: operationToolbarViewHeight)
+            var previewButtonFrame = previewButton.frame
+            previewButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: (operationToolbarView.bounds.height - view.safeAreaInsets.bottom - previewButton.frame.height) / 2.0)
+            previewButton.frame = previewButtonFrame
+            updateSendButtonLayout()
+            operationToolbarViewHeight = operationToolbarView.frame.height
+        }
+        
+        if collectionView.frame.size != view.bounds.size {
+            collectionView.frame = view.bounds
+        }
+        let contentInset = UIEdgeInsets(top: UIScreen.fw_topBarHeight, left: collectionView.safeAreaInsets.left, bottom: max(operationToolbarViewHeight, collectionView.safeAreaInsets.bottom), right: collectionView.safeAreaInsets.right)
+        if collectionView.contentInset != contentInset {
+            collectionView.contentInset = contentInset
+            // 放在这里是因为有时候会先走完 refreshWithAssetsGroup 里的 completion 再走到这里，此时前者不会导致 scollToInitialPosition 的滚动，所以在这里再调用一次保证一定会滚
+            scrollToInitialPositionIfNeeded()
+        }
+    }
+    
     open override var prefersStatusBarHidden: Bool {
         return false
     }
@@ -1784,7 +1866,17 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     
     /// 图片过滤类型转换为相册内容类型
     open class func albumContentType(filterType: ImagePickerFilterType) -> AlbumContentType {
-        
+        var contentType: AlbumContentType = filterType.rawValue < 1 ? .all : .onlyPhoto
+        if filterType.contains(.video) {
+            if filterType.contains(.image) || filterType.contains(.livePhoto) {
+                contentType = .all
+            } else {
+                contentType = .onlyVideo
+            }
+        } else if filterType.contains(.livePhoto) && !filterType.contains(.image) {
+            contentType = .onlyLivePhoto
+        }
+        return contentType
     }
     
     /// 检查并下载一组资源，如果资源仍未从 iCloud 中成功下载，则会发出请求从 iCloud 加载资源，下载完成后，主线程回调。
@@ -1795,17 +1887,116 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         useOrigin: Bool,
         completion: (() -> Void)?
     ) {
+        if imagesAssetArray.count < 1 {
+            completion?()
+            return
+        }
         
+        let totalCount = imagesAssetArray.count
+        var finishCount: Int = 0
+        var completionHandler: (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
+            DispatchQueue.main.async {
+                asset.requestObject = object
+                asset.requestInfo = info
+                
+                finishCount += 1
+                if finishCount == totalCount {
+                    completion?()
+                }
+            }
+        }
+        
+        let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
+        let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
+        for asset in imagesAssetArray {
+            if checkVideo && asset.assetType == .video {
+                var filePath = AssetManager.cachePath
+                try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
+                filePath = (filePath as NSString).appendingPathComponent(UUID().uuidString.fw_md5Encode)
+                filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
+                let fileURL = URL(fileURLWithPath: filePath)
+                asset.requestVideoURL(outputURL: fileURL, exportPreset: useOrigin ? AVAssetExportPresetHighestQuality : AVAssetExportPresetMediumQuality) { videoURL, info in
+                    completionHandler(asset, videoURL, info)
+                }
+            } else if asset.assetType == .image {
+                if asset.editedImage != nil {
+                    completionHandler(asset, asset.editedImage, nil)
+                } else if checkLivePhoto && asset.assetSubType == .livePhoto {
+                    asset.requestLivePhoto { livePhoto, info, finished in
+                        if finished {
+                            completionHandler(asset, livePhoto, info)
+                        }
+                    }
+                } else if asset.assetSubType == .gif {
+                    asset.requestImageData { imageData, info, isGIF, isHEIC in
+                        DispatchQueue.global(qos: .default).async {
+                            let resultImage = UIImage.fw_image(data: imageData, scale: 1)
+                            completionHandler(asset, resultImage, info)
+                        }
+                    }
+                } else if useOrigin {
+                    asset.requestOriginImage { result, info, finished in
+                        if finished {
+                            completionHandler(asset, result, info)
+                        }
+                    }
+                } else {
+                    asset.requestPreviewImage { result, info, finished in
+                        if finished {
+                            completionHandler(asset, result, info)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     /// 也可以直接传入 AssetGroup，然后读取其中的 Asset 并储存到 imagesAssetArray 中，传入后会赋值到 AssetGroup，并自动刷新 UI 展示
     open func refresh(assetsGroup: AssetGroup?) {
+        self.assetsGroup = assetsGroup
+        imagesAssetArray.removeAll()
+        // 通过 AssetGroup 获取该相册所有的图片 Asset，并且储存到数组中
+        var albumSortType: AlbumSortType = .positive
+        // 从 delegate 中获取相册内容的排序方式，如果没有实现这个 delegate，则使用 AlbumSortType 的默认值，即最新的内容排在最后面
+        if let sortType = imagePickerControllerDelegate?.albumSortType?(for: self) {
+            albumSortType = sortType
+        }
+        // 遍历相册内的资源较为耗时，交给子线程去处理，因此这里需要显示 Loading
+        if !isImagesAssetLoading {
+            isImagesAssetLoading = true
+            if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
+            } else if showsDefaultLoading {
+                fw_showLoading()
+            }
+        }
+        if assetsGroup == nil {
+            refreshCollectionView()
+            return
+        }
         
+        DispatchQueue.global(qos: .default).async { [weak self] in
+            assetsGroup?.enumerateAssets(options: albumSortType, using: { resultAsset in
+                DispatchQueue.main.async {
+                    if let resultAsset = resultAsset {
+                        self?.isImagesAssetLoaded = false
+                        self?.imagesAssetArray.append(resultAsset)
+                    } else {
+                        self?.refreshCollectionView()
+                    }
+                }
+            })
+        }
     }
     
     /// 根据filterType刷新，自动选取第一个符合条件的相册，自动初始化并使用albumController
     open func refresh(filterType: ImagePickerFilterType) {
-        
+        self.filterType = filterType
+        if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
+        } else if showsDefaultLoading {
+            fw_showLoading()
+        }
+        isImagesAssetLoading = true
+        initAlbumControllerIfNeeded()
     }
     
     // MARK: - UICollectionView
@@ -1822,73 +2013,421 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let imageAsset = imagesAssetArray[indexPath.item]
+        let identifier = imageAsset.assetType == .video ? kVideoCellIdentifier : kImageOrUnknownCellIdentifier
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! ImagePickerCollectionCell
+        cell.render(asset: imageAsset, referenceSize: referenceImageSize())
         
+        cell.checkboxButton.tag = indexPath.item
+        cell.checkboxButton.addTarget(self, action: #selector(handleCheckBoxButtonClick(_:)), for: .touchUpInside)
+        cell.selectable = allowsMultipleSelection
+        if cell.selectable {
+            // 如果该图片的 Asset 被包含在已选择图片的数组中，则控制该图片被选中
+            cell.checked = selectedImageAssetArray.contains(imageAsset)
+            cell.checkedIndex = selectedImageAssetArray.firstIndex(of: imageAsset)
+            cell.disabled = !cell.checked && selectedImageAssetArray.count >= maximumSelectImageCount
+        }
+        
+        if imagePickerControllerDelegate?.imagePickerController?(self, customCell: cell, at: indexPath) != nil {
+        } else {
+            customCellBlock?(cell, indexPath)
+        }
+        return cell
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let imageAsset = imagesAssetArray[indexPath.item]
+        if !selectedImageAssetArray.contains(imageAsset) && selectedImageAssetArray.count >= maximumSelectImageCount {
+            if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
+            } else {
+                fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+            }
+            return
+        }
+        
+        initPreviewViewControllerIfNeeded()
+        guard let imagePickerPreviewController = imagePickerPreviewController else { return }
+        imagePickerControllerDelegate?.imagePickerController?(self, didSelectImage: imageAsset, afterPreviewControllerUpdate: imagePickerPreviewController)
+        
+        if !allowsMultipleSelection {
+            // 单选的情况下
+            imagePickerPreviewController.updateImagePickerPreviewView(imageAssetArray: previewScrollDisabled ? [imageAsset] : imagesAssetArray, selectedImageAssetArray: selectedImageAssetArray, currentImageIndex: previewScrollDisabled ? 0 : indexPath.item, singleCheckMode: true, previewMode: false)
+        } else {
+            // cell 处于编辑状态，即图片允许多选
+            imagePickerPreviewController.updateImagePickerPreviewView(imageAssetArray: imagesAssetArray, selectedImageAssetArray: selectedImageAssetArray, currentImageIndex: indexPath.item, singleCheckMode: false, previewMode: false)
+        }
+        navigationController?.pushViewController(imagePickerPreviewController, animated: true)
     }
     
     // MARK: - ToolbarTitleViewDelegate
     open func didTouch(_ titleView: ToolbarTitleView, isActive: Bool) {
-        
+        if isActive {
+            showAlbumControllerAnimated(true)
+        } else {
+            hideAlbumControllerAnimated(true)
+        }
     }
     
     // MARK: - Private
     private func refreshCollectionView() {
-        
+        isImagesAssetLoaded = true
+        if imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
+        } else if showsDefaultLoading {
+            fw_hideLoading()
+        }
+        isImagesAssetLoading = false
+        if imagesAssetArray.count > 0 {
+            collectionView.isHidden = true
+            collectionView.reloadData()
+            hasScrollToInitialPosition = false
+            collectionView.performBatchUpdates { [weak self] in
+                self?.scrollToInitialPositionIfNeeded()
+            } completion: { [weak self] _ in
+                self?.collectionView.isHidden = false
+            }
+        } else {
+            collectionView.reloadData()
+            if AssetManager.authorizationStatus == .notAuthorized {
+                if imagePickerControllerDelegate?.imagePickerControllerWillShowDenied?(self) != nil {
+                } else {
+                    let appName = UIApplication.fw_appDisplayName
+                    let tipText = String(format: AppBundle.pickerDeniedTitle, appName)
+                    fw_showEmptyView(text: tipText)
+                }
+            } else {
+                if imagePickerControllerDelegate?.imagePickerControllerWillShowEmpty?(self) != nil {
+                } else {
+                    fw_showEmptyView(text: AppBundle.pickerEmptyTitle)
+                }
+            }
+        }
     }
     
     private func initPreviewViewControllerIfNeeded() {
+        guard imagePickerPreviewController == nil else { return }
         
+        if let controller = imagePickerControllerDelegate?.imagePickerPreviewController?(for: self) {
+            imagePickerPreviewController = controller
+        } else if previewControllerBlock != nil {
+            imagePickerPreviewController = previewControllerBlock?()
+        } else {
+            imagePickerPreviewController = ImagePickerPreviewController()
+        }
+        imagePickerPreviewController?.imagePickerController = self
+        imagePickerPreviewController?.maximumSelectImageCount = maximumSelectImageCount
+        imagePickerPreviewController?.minimumSelectImageCount = minimumSelectImageCount
     }
     
+    @discardableResult
     private func referenceImageSize() -> CGSize {
-        
+        let collectionViewWidth = collectionView.bounds.width
+        let collectionViewContentSpacing = collectionViewWidth - (collectionView.contentInset.left + collectionView.contentInset.right) - (collectionViewLayout.sectionInset.left + collectionViewLayout.sectionInset.right)
+        var referenceImageWidth = minimumImageWidth
+        var columnCount = imageColumnCount
+        if columnCount < 1 {
+            columnCount = Int(floor(collectionViewContentSpacing / minimumImageWidth))
+            let isSpacingEnoughWhenDisplayInMinImageSize = (minimumImageWidth + collectionViewLayout.minimumInteritemSpacing) * CGFloat(columnCount) - collectionViewLayout.minimumInteritemSpacing <= collectionViewContentSpacing
+            if !isSpacingEnoughWhenDisplayInMinImageSize {
+                // 算上图片之间的间隙后发现其实还是放不下啦，所以得把列数减少，然后放大图片以撑满剩余空间
+                columnCount -= 1
+            }
+        }
+        referenceImageWidth = floor((collectionViewContentSpacing - collectionViewLayout.minimumInteritemSpacing * CGFloat(columnCount - 1)) / CGFloat(columnCount))
+        return CGSize(width: referenceImageWidth, height: referenceImageWidth)
     }
     
     private func scrollToInitialPositionIfNeeded() {
-        
+        if isImagesAssetLoaded && !hasScrollToInitialPosition {
+            let itemsCount = collectionView.numberOfItems(inSection: 0)
+            if imagePickerControllerDelegate?.albumSortType?(for: self) == .reverse {
+                if itemsCount > 0 {
+                    collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+                }
+            } else {
+                if itemsCount > 0 {
+                    collectionView.scrollToItem(at: IndexPath(item: itemsCount - 1, section: 0), at: .bottom, animated: false)
+                }
+            }
+            hasScrollToInitialPosition = true
+        }
     }
     
     private func showAlbumControllerAnimated(_ animated: Bool) {
+        initAlbumControllerIfNeeded()
+        guard let albumController = albumController else { return }
+        imagePickerControllerDelegate?.imagePickerController?(self, willShowAlbumController: albumController)
         
+        albumController.view.frame = view.bounds
+        albumController.view.isHidden = false
+        albumController.view.alpha = 0
+        let toFrame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: albumController.tableViewHeight + UIScreen.fw_topBarHeight)
+        var fromFrame = toFrame
+        fromFrame.origin.y = -toFrame.size.height
+        albumController.tableView.frame = fromFrame
+        UIView.animate(withDuration: animated ? 0.25 : 0) {
+            albumController.view.alpha = 1
+            albumController.tableView.frame = toFrame
+        }
     }
     
     private func hideAlbumControllerAnimated(_ animated: Bool) {
+        guard let albumController = albumController else { return }
+        imagePickerControllerDelegate?.imagePickerController?(self, willHideAlbumController: albumController)
         
+        titleView.setActive(false, animated: animated)
+        var toFrame = albumController.tableView.frame
+        toFrame.origin.y = -toFrame.size.height
+        UIView.animate(withDuration: animated ? 0.25 : 0) {
+            albumController.view.alpha = 0
+            albumController.tableView.frame = toFrame
+        } completion: { _ in
+            albumController.view.isHidden = true
+            albumController.view.alpha = 1
+        }
     }
     
     private func initAlbumControllerIfNeeded() {
+        guard albumController == nil else { return }
+        let albumController: ImageAlbumController
+        if let controller = imagePickerControllerDelegate?.albumController?(for: self) {
+            albumController = controller
+        } else if let block = albumControllerBlock {
+            albumController = block()
+        } else {
+            albumController = ImageAlbumController()
+        }
+        self.albumController = albumController
         
+        albumController.imagePickerController = self
+        albumController.contentType = ImagePickerController.albumContentType(filterType: filterType)
+        albumController.albumsArrayLoaded = { [weak self] in
+            if albumController.albumsArray.count > 0 {
+                let assetsGroup = albumController.albumsArray.first
+                albumController.assetsGroup = assetsGroup
+                self?.titleView.isUserInteractionEnabled = true
+                if self?.titleAccessoryImage != nil {
+                    self?.titleView.accessoryImage = self?.titleAccessoryImage
+                }
+                self?.title = assetsGroup?.name
+                self?.refresh(assetsGroup: assetsGroup)
+            } else {
+                self?.refresh(assetsGroup: nil)
+            }
+        }
+        albumController.assetsGroupSelected = { [weak self] assetsGroup in
+            self?.title = assetsGroup.name
+            self?.refresh(assetsGroup: assetsGroup)
+            self?.hideAlbumControllerAnimated(true)
+        }
+        
+        addChild(albumController)
+        albumController.view.isHidden = true
+        view.addSubview(albumController.view)
+        albumController.didMove(toParent: self)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleAlbumButtonClick(_:)))
+        albumController.backgroundView.addGestureRecognizer(tapGesture)
+        if albumController.backgroundView.backgroundColor == nil {
+            albumController.backgroundView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        }
+        if albumController.maximumTableViewHeight <= 0 {
+            albumController.maximumTableViewHeight = albumController.albumTableViewCellHeight * ceil(UIScreen.main.bounds.height / albumController.albumTableViewCellHeight / 2.0) + albumController.additionalTableViewHeight
+        }
     }
     
     private func requestImage(indexPath: IndexPath) {
-        
+        // 发出请求获取大图，如果图片在 iCloud，则会发出网络请求下载图片。这里同时保存请求 id，供取消请求使用
+        let imageAsset = imagesAssetArray[indexPath.item]
+        let cell = collectionView.cellForItem(at: indexPath) as? ImagePickerCollectionCell
+        imageAsset.requestID = imageAsset.requestOriginImage(completion: { result, info, finished in
+            if finished && result != nil {
+                imageAsset.updateDownloadStatus(downloadResult: true)
+                cell?.downloadStatus = .succeed
+            } else if finished {
+                imageAsset.updateDownloadStatus(downloadResult: false)
+                cell?.downloadStatus = .failed
+            }
+        }, progressHandler: { [weak self] progress, error, _, _ in
+            imageAsset.downloadProgress = progress
+            DispatchQueue.main.async {
+                let visibleIndexPaths = self?.collectionView.indexPathsForVisibleItems ?? []
+                var itemVisible = false
+                for visibleIndexPath in visibleIndexPaths {
+                    if indexPath == visibleIndexPath {
+                        itemVisible = true
+                        break
+                    }
+                }
+                
+                if itemVisible {
+                    if cell?.downloadStatus != .downloading {
+                        cell?.downloadStatus = .downloading
+                        // 预先设置预览界面的下载状态
+                        self?.imagePickerPreviewController?.downloadStatus = .downloading
+                    }
+                    if error != nil {
+                        cell?.downloadStatus = .failed
+                    }
+                }
+            }
+        })
     }
     
     private func updateSendButtonLayout() {
+        guard allowsMultipleSelection else { return }
         
+        sendButton.sizeToFit()
+        sendButton.frame = CGRect(
+            x: operationToolbarView.bounds.width - toolbarPaddingHorizontal - sendButton.frame.width - view.safeAreaInsets.right,
+            y: (operationToolbarView.frame.height - view.safeAreaInsets.bottom - sendButton.frame.height) / 2.0,
+            width: sendButton.frame.width,
+            height: sendButton.frame.height
+        )
     }
     
     private func updateImageCountAndCheckLimited(_ reloadData: Bool) {
+        if allowsMultipleSelection {
+            let selectedCount = selectedImageAssetArray.count
+            if selectedCount > 0 {
+                previewButton.isEnabled = selectedCount >= minimumSelectImageCount
+                sendButton.isEnabled = selectedCount >= minimumSelectImageCount
+                sendButton.setTitle("\(AppBundle.doneButton)(\(selectedCount))", for: .normal)
+            } else {
+                previewButton.isEnabled = false
+                sendButton.isEnabled = false
+                sendButton.setTitle(AppBundle.doneButton, for: .normal)
+            }
+            imagePickerControllerDelegate?.imagePickerController?(self, willChangeCheckedCount: selectedCount)
+            updateSendButtonLayout()
+        }
         
+        if reloadData {
+            collectionView.reloadData()
+        } else {
+            selectedImageAssetArray.forEach { imageAsset in
+                guard let imageIndex = self.imagesAssetArray.firstIndex(of: imageAsset),
+                      let cell = self.collectionView.cellForItem(at: IndexPath(item: imageIndex, section: 0)) as? ImagePickerCollectionCell else { return }
+                
+                if cell.selectable {
+                    cell.checked = true
+                    cell.checkedIndex = self.selectedImageAssetArray.firstIndex(of: imageAsset)
+                    cell.disabled = !cell.checked && self.selectedImageAssetArray.count >= self.maximumSelectImageCount
+                }
+            }
+        }
     }
     
     @objc private func handleSendButtonClick(_ sender: UIButton) {
-        
+        sender.isUserInteractionEnabled = false
+        if shouldRequestImage {
+            if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
+            } else if showsDefaultLoading {
+                fw_showLoading()
+            }
+            
+            initPreviewViewControllerIfNeeded()
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: filterType, useOrigin: imagePickerPreviewController?.shouldUseOriginImage ?? false) { [weak self] in
+                guard let self = self else { return }
+                if self.imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
+                } else if self.showsDefaultLoading {
+                    self.fw_hideLoading()
+                }
+                
+                self.dismiss(animated: true) { [weak self] in
+                    guard let self = self else { return }
+                    if self.imagePickerControllerDelegate?.imagePickerController?(self, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                    } else {
+                        self.didFinishPicking?(self.selectedImageAssetArray)
+                    }
+                    self.selectedImageAssetArray.removeAll()
+                }
+            }
+        } else {
+            dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                if self.imagePickerControllerDelegate?.imagePickerController?(self, didFinishPickingImage: self.selectedImageAssetArray) != nil {
+                } else {
+                    self.didFinishPicking?(self.selectedImageAssetArray)
+                }
+                self.selectedImageAssetArray.removeAll()
+            }
+        }
     }
     
     @objc private func handlePreviewButtonClick(_ sender: Any) {
-        
+        initPreviewViewControllerIfNeeded()
+        // 手工更新图片预览界面
+        imagePickerPreviewController?.updateImagePickerPreviewView(imageAssetArray: selectedImageAssetArray, selectedImageAssetArray: selectedImageAssetArray, currentImageIndex: 0, singleCheckMode: false, previewMode: true)
+        if let previewController = imagePickerPreviewController {
+            navigationController?.pushViewController(previewController, animated: true)
+        }
     }
     
-    @objc private func handleCheckBoxButtonClick(_ button: UIButton) {
+    @objc private func handleCheckBoxButtonClick(_ checkboxButton: UIButton) {
+        let indexPath = IndexPath(item: checkboxButton.tag, section: 0)
+        if let shouldCheck = imagePickerControllerDelegate?.imagePickerController?(self, shouldCheckImageAt: indexPath.item), !shouldCheck {
+            return
+        }
         
+        let cell = collectionView.cellForItem(at: indexPath) as! ImagePickerCollectionCell
+        let imageAsset = imagesAssetArray[indexPath.item]
+        if cell.checked {
+            imagePickerControllerDelegate?.imagePickerController?(self, willUncheckImageAt: indexPath.item)
+            
+            selectedImageAssetArray.removeAll(where: { $0 == imageAsset })
+            // 根据选择图片数控制预览和发送按钮的 enable，以及修改已选中的图片数
+            if selectedImageAssetArray.count >= maximumSelectImageCount - 1 {
+                updateImageCountAndCheckLimited(true)
+            } else {
+                cell.checked = false
+                cell.checkedIndex = nil
+                cell.disabled = !cell.checked && selectedImageAssetArray.count >= maximumSelectImageCount
+                updateImageCountAndCheckLimited(false)
+            }
+            
+            imagePickerControllerDelegate?.imagePickerController?(self, didUncheckImageAt: indexPath.item)
+        } else {
+            if selectedImageAssetArray.count >= maximumSelectImageCount {
+                if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
+                } else {
+                    fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+                }
+                return
+            }
+            
+            imagePickerControllerDelegate?.imagePickerController?(self, willCheckImageAt: indexPath.item)
+            
+            selectedImageAssetArray.append(imageAsset)
+            // 根据选择图片数控制预览和发送按钮的 enable，以及修改已选中的图片数
+            if selectedImageAssetArray.count >= maximumSelectImageCount {
+                updateImageCountAndCheckLimited(true)
+            } else {
+                cell.checked = true
+                cell.checkedIndex = selectedImageAssetArray.firstIndex(of: imageAsset)
+                cell.disabled = !cell.checked && selectedImageAssetArray.count >= maximumSelectImageCount
+                updateImageCountAndCheckLimited(false)
+            }
+            
+            imagePickerControllerDelegate?.imagePickerController?(self, didCheckImageAt: indexPath.item)
+            
+            // 发出请求获取大图，如果图片在 iCloud，则会发出网络请求下载图片。这里同时保存请求 id，供取消请求使用
+            requestImage(indexPath: indexPath)
+        }
     }
     
     @objc private func handleAlbumButtonClick(_ sender: Any) {
-        
+        hideAlbumControllerAnimated(true)
     }
     
     @objc func handleCancelButtonClick(_ sender: Any) {
-        
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            if self.imagePickerControllerDelegate?.imagePickerControllerDidCancel?(self) != nil {
+            } else {
+                self.didCancelPicking?()
+            }
+            self.selectedImageAssetArray.removeAll()
+        }
     }
     
 }

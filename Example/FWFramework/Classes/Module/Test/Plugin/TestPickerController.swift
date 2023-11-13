@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import Photos
 
 class TestPickerController: UIViewController, TableViewControllerProtocol {
     

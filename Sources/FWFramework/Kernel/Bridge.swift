@@ -9,10 +9,6 @@ import UIKit
 
 @_spi(FW) @objc extension NSObject {
     
-    public static func __fw_bundleImage(_ name: String) -> UIImage? {
-        return AppBundle.imageNamed(name)
-    }
-    
     public static func __fw_bundleString(_ key: String) -> String {
         return AppBundle.localizedString(key)
     }
@@ -130,15 +126,6 @@ import UIKit
 
 @_spi(FW) @objc extension UIViewController {
     
-    public func __fw_showAlert(
-        title: Any?,
-        message: Any?,
-        cancel: Any? = nil,
-        cancelBlock: (() -> Void)? = nil
-    ) {
-        fw_showAlert(title: title, message: message, style: .default, cancel: cancel, cancelBlock: cancelBlock)
-    }
-    
     public func __fw_showSheet(
         title: Any?,
         message: Any?,
@@ -149,18 +136,6 @@ import UIKit
         cancelBlock: (() -> Void)? = nil
     ) {
         fw_showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock)
-    }
-    
-    public func __fw_showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
-        fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
-    }
-    
-    public func __fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil) {
-        fw_showLoading(text: text, cancelBlock: cancelBlock)
-    }
-
-    public func __fw_hideLoading(delayed: Bool = false) {
-        fw_hideLoading(delayed: delayed)
     }
     
 }

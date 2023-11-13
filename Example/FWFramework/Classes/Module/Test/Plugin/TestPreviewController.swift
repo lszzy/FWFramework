@@ -197,13 +197,13 @@ extension TestPreviewController: ImagePreviewViewDelegate {
     func imagePreviewView(_ imagePreviewView: ImagePreviewView, renderZoomImageView zoomImageView: ZoomImageView, at index: Int) {
         // 强制宽度缩放模式
         zoomImageView.contentMode = .scaleToFill
-        zoomImageView.reusedIdentifier = "\(index)" as NSString
+        zoomImageView.reusedIdentifier = "\(index)"
         zoomImageView.showsVideoToolbar = self.showsToolbar
         zoomImageView.showsVideoCloseButton = self.showsClose
         
         if self.mockProgress {
             TestController.mockProgress { [weak self] progress, finished in
-                guard let identifier = zoomImageView.reusedIdentifier as? String else { return }
+                guard let identifier = zoomImageView.reusedIdentifier else { return }
                 if identifier.app.safeInt != index { return }
                 
                 zoomImageView.progress = progress

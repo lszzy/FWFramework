@@ -19,4 +19,4 @@
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
 #import "ToolbarView.h"
-#import "ImagePickerController.h"
+#import "ImageCropController.h"
