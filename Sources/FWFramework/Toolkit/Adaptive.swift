@@ -59,6 +59,8 @@ extension WrapperGlobal {
     public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw_isScreenInch(inch) }
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool { UIScreen.fw_isNotchedScreen }
+    /// 是否是灵动岛屏幕
+    public static var isDynamicIsland: Bool { UIScreen.fw_isDynamicIsland }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { UIScreen.fw_pixelOne }
     /// 屏幕安全区域距离
@@ -364,6 +366,17 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         return fw_safeAreaInsets.bottom > 0
     }
     
+    /// 是否是灵动岛屏幕
+    public static var fw_isDynamicIsland: Bool {
+        guard UIDevice.fw_isIphone else { return false }
+        let deviceModel = UIDevice.fw_deviceModel ?? ""
+        let targetModels: [String] = [
+            "iPhone15,2", "iPhone15,3", "iPhone15,4", "iPhone15,5",
+            "iPhone16,1", "iPhone16,2",
+        ]
+        return targetModels.contains(deviceModel)
+    }
+    
     /// 屏幕一像素的大小
     public static var fw_pixelOne: CGFloat {
         return 1.0 / UIScreen.main.scale
@@ -402,9 +415,8 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         
         if UIDevice.fw_isLandscape { return 0 }
         if !fw_isNotchedScreen { return 20 }
-        let deviceModel = UIDevice.fw_deviceModel
-        if deviceModel == "iPhone12,1" { return 48 }
-        if deviceModel == "iPhone15,2" || deviceModel == "iPhone15,3" { return 54 }
+        if fw_isDynamicIsland { return 54 }
+        if UIDevice.fw_deviceModel == "iPhone12,1" { return 48 }
         if UIDevice.fw_deviceSize.equalTo(CGSize(width: 390, height: 844)) { return 47 }
         if fw_isScreenInch(.inch67) { return 47 }
         if fw_isScreenInch(.inch54) && UIDevice.fw_iosVersion >= 15.0 { return 50 }
