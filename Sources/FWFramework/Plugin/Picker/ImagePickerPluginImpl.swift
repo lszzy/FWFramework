@@ -156,7 +156,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
             pickerController.albumControllerBlock = {
                 return ImagePickerControllerImpl.shared.albumController(filterType: filterType)
             }
-            pickerController.refresh(with: .init(rawValue: filterType.rawValue))
+            pickerController.refresh(filterType: filterType)
             
             let navigationController = UINavigationController(rootViewController: pickerController)
             navigationController.modalPresentationStyle = .fullScreen
@@ -207,7 +207,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
             albumController = ImageAlbumController()
             albumController.pickDefaultAlbumGroup = showsAlbumController
         }
-        albumController.contentType = ImagePickerController.albumContentType(with: .init(rawValue: filterType.rawValue))
+        albumController.contentType = ImagePickerController.albumContentType(filterType: filterType)
         return albumController
     }
     
