@@ -772,8 +772,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         super.viewDidLayoutSubviews()
         
         topToolbarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: UIScreen.fw_topBarHeight)
-        let topToolbarPaddingTop = view.safeAreaInsets.top
-        let topToolbarContentHeight = topToolbarView.bounds.height - topToolbarPaddingTop
+        let topToolbarContentHeight = UIScreen.fw_navigationBarHeight
+        let topToolbarPaddingTop = topToolbarView.bounds.height - topToolbarContentHeight
         var backButtonFrame = backButton.frame
         backButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: topToolbarPaddingTop + (topToolbarContentHeight - backButton.frame.height) / 2.0)
         backButton.frame = backButtonFrame
