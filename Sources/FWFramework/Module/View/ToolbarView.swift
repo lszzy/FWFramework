@@ -217,7 +217,7 @@ open class ToolbarView: UIView {
     open override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         
-        let isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
+        let isLandscape = UIDevice.fw_isLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             updateHeight(false)
@@ -558,6 +558,169 @@ open class ToolbarMenuView: UIView {
             constraints.append(centerButton.fw_pinEdge(toSuperview: .right, inset: rightWidth, relation: .greaterThanOrEqual))
         }
         subviewConstraints = constraints
+    }
+    
+}
+
+// MARK: - ToolbarButton
+/// 自定义工具栏按钮，使用非等比例缩放布局，兼容系统customView方式和自定义方式
+///
+/// UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8；
+/// ToolbarButton作为customView使用时，会自动调整按钮内间距，和系统表现一致；
+/// ToolbarButton自动适配横竖屏切换，竖屏时默认内间距{8, 8, 8, 8}，横屏时默认内间距{0,8,0,8}
+open class ToolbarButton: UIButton {
+    
+    /// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
+    open var adjustsTintColor: Bool = true {
+        didSet {
+            guard adjustsTintColor != oldValue, currentImage != nil else { return }
+            
+            var states: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
+            for state in states {
+                guard let image = image(for: state) else { continue }
+                
+                if adjustsTintColor {
+                    setImage(image, for: state)
+                } else {
+                    setImage(image.withRenderingMode(.alwaysOriginal), for: state)
+                }
+            }
+        }
+    }
+    
+    private var highlightedImage: UIImage?
+    private var disabledImage: UIImage?
+    private var isLandscape = false
+    
+    /// 指定标题初始化，自适应内边距，可自定义
+    public convenience init(title: String?) {
+        self.init(image: nil, title: title)
+    }
+    
+    /// 指定图片和标题初始化，自适应内边距，可自定义
+    public convenience init(image: UIImage?, title: String? = nil) {
+        self.init(frame: .zero)
+        setTitle(title, for: .normal)
+        setImage(image, for: .normal)
+        sizeToFit()
+    }
+    
+    /// 指定对象初始化，支持UIImage|NSAttributedString|NSString(默认)，同时添加点击事件
+    public convenience init(object: Any?, target: Any?, action: Selector?) {
+        if let attributedString = object as? NSAttributedString {
+            self.init(frame: .zero)
+            setAttributedTitle(attributedString, for: .normal)
+            sizeToFit()
+        } else {
+            self.init(image: object as? UIImage, title: object as? String)
+        }
+        if target != nil, let action = action {
+            addTarget(target, action: action, for: .touchUpInside)
+        }
+    }
+    
+    /// 指定对象初始化，支持UIImage|NSString(默认)，同时添加点击句柄
+    public convenience init(object: Any?, block: ((Any) -> Void)?) {
+        if let attributedString = object as? NSAttributedString {
+            self.init(frame: .zero)
+            setAttributedTitle(attributedString, for: .normal)
+            sizeToFit()
+        } else {
+            self.init(image: object as? UIImage, title: object as? String)
+        }
+        if let block = block {
+            fw_addTouch(block: block)
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        titleLabel?.backgroundColor = UIColor.clear
+        titleLabel?.lineBreakMode = .byTruncatingTail
+        contentMode = .center
+        contentHorizontalAlignment = .center
+        contentVerticalAlignment = .center
+        adjustsImageWhenHighlighted = false
+        adjustsImageWhenDisabled = false
+        contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+    }
+    
+    open override func setImage(_ image: UIImage?, for state: UIControl.State) {
+        var image = image
+        if image != nil && adjustsTintColor {
+            image = image?.withRenderingMode(.alwaysTemplate)
+        }
+        
+        if let image = image, self.image(for: state) != image {
+            if state == .normal {
+                self.highlightedImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                setImage(self.highlightedImage, for: .highlighted)
+                self.disabledImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                setImage(self.disabledImage, for: .disabled)
+            } else {
+                if image != self.highlightedImage && image != self.disabledImage {
+                    if self.image(for: .highlighted) == self.highlightedImage && state != .highlighted {
+                        setImage(nil, for: .highlighted)
+                    }
+                    if self.image(for: .disabled) == self.disabledImage && state != .disabled {
+                        setImage(nil, for: .disabled)
+                    }
+                }
+            }
+        }
+        
+        super.setImage(image, for: state)
+    }
+    
+    open override func tintColorDidChange() {
+        super.tintColorDidChange()
+        setTitleColor(tintColor, for: .normal)
+        setTitleColor(tintColor?.withAlphaComponent(0.2), for: .highlighted)
+        setTitleColor(tintColor?.withAlphaComponent(0.2), for: .disabled)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // 横竖屏方向改变时才修改默认contentEdgeInsets，方便项目使用
+        let isLandscape = UIDevice.fw_isLandscape
+        if isLandscape != self.isLandscape {
+            self.isLandscape = isLandscape
+            var edgeInsets = self.contentEdgeInsets
+            edgeInsets.top = isLandscape ? 0 : 8
+            edgeInsets.bottom = isLandscape ? 0 : 8
+            self.contentEdgeInsets = edgeInsets
+        }
+        
+        // 处理navigationBar左侧第一个按钮和右侧第一个按钮位置，和系统一致
+        guard let navigationBar = searchNavigationBar(self) else { return }
+        
+        let convertFrame = self.superview?.convert(self.frame, to: navigationBar) ?? .zero
+        if convertFrame.minX == 16 {
+            var edgeInsets = self.contentEdgeInsets
+            edgeInsets.left = 0
+            self.contentEdgeInsets = edgeInsets
+        } else if convertFrame.maxX + 16 == navigationBar.bounds.width {
+            var edgeInsets = self.contentEdgeInsets
+            edgeInsets.right = 0
+            self.contentEdgeInsets = edgeInsets
+        }
+    }
+    
+    private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
+        guard let parent = child.superview else { return nil }
+        if let navigationBar = parent as? UINavigationBar { return navigationBar }
+        return searchNavigationBar(parent)
     }
     
 }
