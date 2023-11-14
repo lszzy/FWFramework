@@ -166,36 +166,4 @@ NS_SWIFT_NAME(ToolbarTitleView)
 
 @end
 
-#pragma mark - __FWToolbarButton
-
-/**
- * 自定义工具栏按钮，使用非等比例缩放布局，兼容系统customView方式和自定义方式
- *
- * UIBarButtonItem自定义导航栏时最左和最右间距为16，系统导航栏时为8；
- * __FWToolbarButton作为customView使用时，会自动调整按钮内间距，和系统表现一致；
- * __FWToolbarButton自动适配横竖屏切换，竖屏时默认内间距{8, 8, 8, 8}，横屏时默认内间距{0,8,0,8}
- */
-NS_SWIFT_NAME(ToolbarButton)
-@interface __FWToolbarButton : UIButton
-
-/// UIBarButtonItem默认都是跟随tintColor的，所以这里声明是否让图片也是用AlwaysTemplate模式，默认YES
-@property (nonatomic, assign) BOOL adjustsTintColor;
-
-/// 指定标题初始化，自适应内边距，可自定义
-- (instancetype)initWithTitle:(nullable NSString *)title;
-
-/// 指定图片初始化，自适应内边距，可自定义
-- (instancetype)initWithImage:(nullable UIImage *)image;
-
-/// 指定图片和标题初始化，自适应内边距，可自定义
-- (instancetype)initWithImage:(nullable UIImage *)image title:(nullable NSString *)title;
-
-/// 使用指定对象创建按钮，支持UIImage|NSString(默认)，同时添加点击事件
-+ (instancetype)buttonWithObject:(nullable id)object target:(nullable id)target action:(nullable SEL)action;
-
-/// 使用指定对象创建按钮，支持UIImage|NSString(默认)，同时添加点击句柄
-+ (instancetype)buttonWithObject:(nullable id)object block:(nullable void (^)(id sender))block;
-
-@end
-
 NS_ASSUME_NONNULL_END
