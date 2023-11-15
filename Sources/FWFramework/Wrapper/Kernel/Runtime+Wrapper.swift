@@ -375,7 +375,7 @@ extension Wrapper where Base: NSObject {
     /// 获取指定类的metaClass
     /// - Parameter clazz: 支持AnyClass|NSObject对象
     /// - Returns: 参数为AnyClass时，返回metaClass；参数为NSObject对象时，返回NSObject类
-    public static func metaClass(_ clazz: Any) -> AnyClass? {
+    public static func metaClass(_ clazz: Any?) -> AnyClass? {
         return Base.fw_metaClass(clazz)
     }
     

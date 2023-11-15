@@ -10,7 +10,7 @@ import FWFramework
 import WebKit
 
 @objc extension Autoloader {
-    func loadWebView() {
+    static func loadWebView() {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
             let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")

@@ -240,7 +240,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
 
 @objc extension Autoloader {
     
-    func loadTestPlugin() {
+    static func loadTestPlugin() {
         if TestPluginController.viewPluginSection >= 0 {
             TestPluginController.onSettings(IndexPath(row: TestPluginController.viewPluginRow, section: TestPluginController.viewPluginSection))
         }

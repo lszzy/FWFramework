@@ -34,24 +34,19 @@ public protocol AutoloadProtocol {
 /// 自动加载器，处理swift不支持load方法问题
 ///
 /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高，使用简单，使用方法：
-/// 新增Autoloader扩展objc类方法，以load开头即会自动调用，注意方法名不要重复，建议load+类名+扩展名
+/// 新增Autoloader objc扩展，以load开头且无参静态方法即会自动调用，方法名建议load+类名+扩展名
 public class Autoloader: NSObject, AutoloadProtocol {
     
-    private static var autoloadMethods: [String] = []
     private static var isAutoloaded = false
+    private static var debugMethods: [String] = []
     
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
     @discardableResult
     public static func autoload(_ clazz: Any) -> Bool {
         var autoloader = clazz as? AutoloadProtocol.Type
-        if autoloader == nil, let name = clazz as? String {
-            if let nameClass = NSClassFromString(name) {
-                autoloader = nameClass as? AutoloadProtocol.Type
-            } else if let module = Bundle.main.infoDictionary?[kCFBundleExecutableKey as String] as? String,
-                      let nameClass = NSClassFromString("\(module).\(name)") {
-                autoloader = nameClass as? AutoloadProtocol.Type
-            }
+        if autoloader == nil, let className = clazz as? String {
+            autoloader = autoloadClass(className) as? AutoloadProtocol.Type
         }
         
         if let autoloader = autoloader {
@@ -61,11 +56,51 @@ public class Autoloader: NSObject, AutoloadProtocol {
         return false
     }
     
+    /// 自动加载objc类以load开头且无参静态方法，返回方法列表
+    @discardableResult
+    public static func autoloadMethods(_ aClass: Any) -> [String] {
+        var clazz: Any? = aClass
+        if let className = clazz as? String {
+            clazz = autoloadClass(className)
+        }
+        guard let metaClass = NSObject.fw_metaClass(clazz) else { return [] }
+        
+        let methodNames = NSObject.fw_classMethods(metaClass)
+            .filter({ methodName in
+                return methodName.hasPrefix("load") && methodName.count > 4 && !methodName.contains(":")
+            })
+            .sorted()
+        guard !methodNames.isEmpty else { return [] }
+        
+        if let targetClass = clazz as? NSObject.Type {
+            for methodName in methodNames {
+                targetClass.perform(NSSelectorFromString(methodName))
+            }
+            return methodNames
+        } else if let targetObject = clazz as? NSObject {
+            for methodName in methodNames {
+                targetObject.perform(NSSelectorFromString(methodName))
+            }
+            return methodNames
+        }
+        return []
+    }
+    
+    private static func autoloadClass(_ className: String) -> AnyClass? {
+        if let nameClass = NSClassFromString(className) {
+            return nameClass
+        } else if let moduleName = Bundle.main.infoDictionary?[kCFBundleExecutableKey as String] as? String,
+                  let nameClass = NSClassFromString("\(moduleName).\(className)") {
+            return nameClass
+        }
+        return nil
+    }
+    
     /// 自动加载器调试描述
     public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for methodName in autoloadMethods {
+        for methodName in debugMethods {
             debugCount += 1
             debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), methodName))
         }
@@ -77,9 +112,6 @@ public class Autoloader: NSObject, AutoloadProtocol {
     public static func autoload() {
         guard !isAutoloaded else { return }
         isAutoloaded = true
-        
-        // 自动加载Autoloader
-        autoloadAutoloader()
         
         // 自动加载框架内置组件
         autoload(AutoLayoutAutoloader.self)
@@ -97,22 +129,9 @@ public class Autoloader: NSObject, AutoloadProtocol {
         // 调试模式自动执行单元测试
         autoload(UnitTest.self)
         #endif
-    }
-    
-    private static func autoloadAutoloader() {
-        autoloadMethods = NSObject.fw
-            .classMethods(Autoloader.self)
-            .filter({ methodName in
-                return methodName.hasPrefix("load") && !methodName.contains(":")
-            })
-            .sorted()
         
-        if autoloadMethods.count > 0 {
-            let autoloader = Autoloader()
-            for methodName in autoloadMethods {
-                autoloader.perform(NSSelectorFromString(methodName))
-            }
-        }
+        // 自动加载Autoloader
+        debugMethods = autoloadMethods(Autoloader.self)
         
         #if DEBUG
         Logger.debug(group: Logger.fw_moduleName, "%@", debugDescription())

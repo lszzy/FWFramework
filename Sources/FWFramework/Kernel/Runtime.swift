@@ -420,7 +420,7 @@ import FWObjC
     /// 获取指定类的metaClass
     /// - Parameter clazz: 支持AnyClass|NSObject对象
     /// - Returns: 参数为AnyClass时，返回metaClass；参数为NSObject对象时，返回NSObject类
-    public static func fw_metaClass(_ clazz: Any) -> AnyClass? {
+    public static func fw_metaClass(_ clazz: Any?) -> AnyClass? {
         var metaClass: AnyClass?
         if let clazz = clazz as? AnyClass {
             if let className = (NSStringFromClass(clazz) as NSString).utf8String {
