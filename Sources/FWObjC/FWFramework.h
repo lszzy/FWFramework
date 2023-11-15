@@ -18,5 +18,4 @@
 #import "PopupMenu.h"
 #import "SegmentedControl.h"
 #import "TagCollectionView.h"
-#import "ToolbarView.h"
 #import "ImageCropController.h"

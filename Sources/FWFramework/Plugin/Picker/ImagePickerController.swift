@@ -2060,7 +2060,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     }
     
     // MARK: - ToolbarTitleViewDelegate
-    open func didTouch(_ titleView: ToolbarTitleView, isActive: Bool) {
+    open func didTouchTitleView(_ titleView: ToolbarTitleView, isActive: Bool) {
         if isActive {
             showAlbumControllerAnimated(true)
         } else {
