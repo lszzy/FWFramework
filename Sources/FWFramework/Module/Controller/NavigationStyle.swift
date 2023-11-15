@@ -335,10 +335,10 @@ open class NavigationBarAppearance: NSObject {
     
 }
 
-// MARK: - NavigationStyleAutoloader
-internal class NavigationStyleAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+NavigationStyle
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadModule_NavigationStyle() {
         UIViewController.fw_swizzleNavigationStyle()
     }
     

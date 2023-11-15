@@ -880,10 +880,10 @@ import FWObjC
     
 }
 
-// MARK: - AutoLayoutAutoloader
-internal class AutoLayoutAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+AutoLayout
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadToolkit_AutoLayout() {
         UIView.fw_swizzleAutoLayoutView()
         if UIView.fw_autoLayoutDebug {
             UIView.fw_swizzleAutoLayoutDebug()
