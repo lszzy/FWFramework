@@ -193,9 +193,10 @@ extension Notification.Name {
     
 }
 
-internal class LanguageAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+Language
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadService_Language() {
         if let language = Bundle.fw_localizedLanguage {
             Bundle.fw_localizedChanged(language)
         }

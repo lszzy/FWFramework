@@ -1583,10 +1583,10 @@ open class ExpandedTitleView: UIView {
     
 }
 
-// MARK: - ToolbarViewAutoloader
-internal class ToolbarViewAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+ToolbarView
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadModule_ToolbarView() {
         ToolbarTitleView.swizzleToolbarTitleView()
     }
     

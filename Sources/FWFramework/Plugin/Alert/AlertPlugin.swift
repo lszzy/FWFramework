@@ -945,10 +945,10 @@ public class AlertAppearance: NSObject {
     
 }
 
-// MARK: - AlertPluginAutoloader
-internal class AlertPluginAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+AlertPlugin
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadPlugin_AlertPlugin() {
         UIAlertController.fw_swizzleAlertController()
     }
     

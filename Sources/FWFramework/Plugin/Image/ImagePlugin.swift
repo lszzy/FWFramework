@@ -401,10 +401,10 @@ extension ImagePlugin {
     
 }
 
-// MARK: - ImagePluginAutoloader
-internal class ImagePluginAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+ImagePlugin
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadPlugin_ImagePlugin() {
         PluginManager.presetPlugin(ImagePlugin.self, object: ImagePluginImpl.self)
     }
     

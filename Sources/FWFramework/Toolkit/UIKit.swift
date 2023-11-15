@@ -3417,10 +3417,10 @@ import AdSupport
     
 }
 
-// MARK: - UIKitAutoloader
-internal class UIKitAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+UIKit
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadToolkit_UIKit() {
         UIView.fw_swizzleUIKitView()
         UILabel.fw_swizzleUIKitLabel()
         UIControl.fw_swizzleUIKitControl()

@@ -533,9 +533,10 @@ public class ThemeObject<T>: NSObject {
     
 }
 
-internal class ThemeAutoloader: AutoloadProtocol {
+// MARK: - FrameworkAutoloader+Theme
+@objc extension FrameworkAutoloader {
     
-    static func autoload() {
+    static func loadService_Theme() {
         NSObject.fw_swizzleThemeClasses()
     }
     

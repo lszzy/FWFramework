@@ -34,7 +34,7 @@ public protocol AutoloadProtocol {
 /// 自动加载器，处理swift不支持load方法问题
 ///
 /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高，使用简单，使用方法：
-/// 新增Autoloader objc扩展，以load开头且无参静态方法即会自动调用，方法名建议load+类名+扩展名
+/// 新增Autoloader objc扩展，以load开头且无参静态方法即会自动调用，方法名建议[load模块名_文件名|类名]
 public class Autoloader: NSObject, AutoloadProtocol {
     
     private static var isAutoloaded = false
@@ -119,29 +119,37 @@ public class Autoloader: NSObject, AutoloadProtocol {
         guard !isAutoloaded else { return }
         isAutoloaded = true
         
-        // 自动加载框架内置组件
-        autoload(AutoLayoutAutoloader.self)
-        autoload(ThemeAutoloader.self)
-        autoload(LanguageAutoloader.self)
-        autoload(UIKitAutoloader.self)
-        autoload(ViewControllerAutoloader.self)
-        autoload(NavigationControllerAutoloader.self)
-        autoload(NavigationStyleAutoloader.self)
-        autoload(AlertPluginAutoloader.self)
-        autoload(ImagePluginAutoloader.self)
-        autoload(ToolbarViewAutoloader.self)
-        
-        #if DEBUG
-        // 调试模式自动执行单元测试
-        autoload(UnitTest.self)
-        #endif
-        
-        // 自动加载Autoloader
+        FrameworkAutoloader.debugMethods = autoloadMethods(FrameworkAutoloader.self)
         debugMethods = autoloadMethods(Autoloader.self)
         
         #if DEBUG
+        // Logger.debug(group: Logger.fw_moduleName, "%@", FrameworkAutoloader.debugDescription())
         Logger.debug(group: Logger.fw_moduleName, "%@", debugDescription())
         #endif
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader
+/// 框架内部自动加载器，自动加载框架内置组件
+internal class FrameworkAutoloader: NSObject {
+    
+    static var debugMethods: [String] = []
+    
+    /// 自动加载器调试描述
+    override class func debugDescription() -> String {
+        var debugDescription = ""
+        var debugCount = 0
+        for methodName in debugMethods {
+            let formatName = methodName
+                .replacingOccurrences(of: "load", with: "")
+                .trimmingCharacters(in: .init(charactersIn: "_"))
+                .replacingOccurrences(of: "_", with: ".")
+            
+            debugCount += 1
+            debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), formatName))
+        }
+        return String(format: "\n========== FRAMEWORK ==========\n%@========== FRAMEWORK ==========", debugDescription)
     }
     
 }

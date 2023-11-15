@@ -77,29 +77,28 @@ open class TestCase: NSObject {
 
 // MARK: - UnitTest
 /// 单元测试启动器
-internal class UnitTest: NSObject, AutoloadProtocol {
+fileprivate class UnitTest: NSObject {
     
-    static let shared = UnitTest()
+    private static let shared = UnitTest()
     
-    static func autoload() {
+    private var testCases: [AnyClass] = []
+    private var testLogs: String?
+    
+    static func runTests() {
         DispatchQueue.main.async {
-            UnitTest.shared.testCases.append(contentsOf: testSuite())
-            if UnitTest.shared.testCases.count > 0 {
-                let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
-                queue.async {
-                    UnitTest.shared.runTests()
-                    Logger.debug(group: Logger.fw_moduleName, "%@", UnitTest.debugDescription())
-                }
+            let unitTest = UnitTest.shared
+            unitTest.testCases.append(contentsOf: unitTest.testSuite())
+            guard unitTest.testCases.count > 0 else { return }
+            
+            let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
+            queue.async {
+                unitTest.run()
+                Logger.debug(group: Logger.fw_moduleName, "%@", unitTest.debugDescription)
             }
         }
     }
     
-    override class func debugDescription() -> String {
-        if let testLogs = UnitTest.shared.testLogs { return testLogs }
-        return super.debugDescription()
-    }
-    
-    private class func testSuite() -> [AnyClass] {
+    private func testSuite() -> [AnyClass] {
         let testCases = ObjCBridge.getClasses(TestCase.classForCoder())
             .sorted { obj1, obj2 in
                 return NSStringFromClass(obj1) < NSStringFromClass(obj2)
@@ -107,7 +106,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
         return testCases
     }
     
-    private class func testMethods(_ clazz: AnyClass) -> [String] {
+    private func testMethods(_ clazz: AnyClass) -> [String] {
         var methodNames: [String] = []
         let selectorNames = NSObject.fw_classMethods(clazz)
         for selectorName in selectorNames {
@@ -118,10 +117,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
         return methodNames
     }
     
-    private var testCases: [AnyClass] = []
-    private var testLogs: String?
-    
-    private func runTests() {
+    private func run() {
         let testCases = self.testCases
         var failedCount: UInt = 0
         var succeedCount: UInt = 0
@@ -137,7 +133,7 @@ internal class UnitTest: NSObject, AutoloadProtocol {
                 .replacingOccurrences(of: "_", with: ".")
             var formatMethod = ""
             var formatMessage = ""
-            let selectorNames = UnitTest.testMethods(classType)
+            let selectorNames = testMethods(classType)
             var testCasePassed = true
             let totalTestCount: UInt = UInt(selectorNames.count)
             var currentTestCount: UInt = 0
@@ -186,6 +182,20 @@ internal class UnitTest: NSObject, AutoloadProtocol {
         let passRate: Float = totalCount > 0 ? (Float(succeedCount) / Float(totalCount) * 100.0) : 100.0
         let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✔️" : "❌", succeedCount, totalCount, passRate, totalTime)
         self.testLogs = String(format: "\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : "")
+    }
+    
+    override var debugDescription: String {
+        if let testLogs = testLogs { return testLogs }
+        return super.debugDescription
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+Test
+@objc extension FrameworkAutoloader {
+    
+    static func loadKernel_Test() {
+        UnitTest.runTests()
     }
     
 }
