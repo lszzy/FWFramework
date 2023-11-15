@@ -80,18 +80,10 @@ Pod::Spec.new do |s|
       }
     end
 
-    ss.subspec 'AppleMusic' do |sss|
-      sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroAppleMusic'
-      }
-    end
-
     ss.subspec 'Tracking' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking',
-        'GCC_PREPROCESSOR_DEFINITIONS' => 'FWMacroTracking=1'
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
       }
     end
   end

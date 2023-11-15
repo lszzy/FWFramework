@@ -35,7 +35,6 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
             ["联系人", AuthorizeType.contacts],
             ["日历", AuthorizeType.calendars],
             ["提醒", AuthorizeType.reminders],
-            ["音乐", AuthorizeType.appleMusic],
             ["通知", AuthorizeType.notifications],
             ["广告追踪", AuthorizeType.tracking],
         ]
