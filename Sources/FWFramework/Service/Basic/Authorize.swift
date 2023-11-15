@@ -495,8 +495,8 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
 }
 #endif
 
-// MARK: - FrameworkAutoloader+Authorize
-@objc extension FrameworkAutoloader {
+// MARK: - Autoloader+Authorize
+@objc extension Autoloader {
     
     #if FWMacroContacts
     static func loadVendor_Contacts() {}

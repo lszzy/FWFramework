@@ -127,8 +127,8 @@ extension WrapperCompatible {
 public typealias WrapperObject = AnyObject & WrapperCompatible
 
 #if FWMacroSPI
-// MARK: - FrameworkAutoloader+Wrapper
-@objc extension FrameworkAutoloader {
+// MARK: - Autoloader+Wrapper
+@objc extension Autoloader {
     
     static func loadVendor_SPI() {}
     
