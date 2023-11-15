@@ -125,3 +125,12 @@ extension WrapperCompatible {
 /// 2. 静态static方法需要使用self的才扩展WrapperObject，否则扩展NSObject
 /// 3. 扩展WrapperObject时如需使用static var变量，可借助NSObject的fileprivate扩展
 public typealias WrapperObject = AnyObject & WrapperCompatible
+
+#if FWMacroSPI
+// MARK: - FrameworkAutoloader+Wrapper
+@objc extension FrameworkAutoloader {
+    
+    static func loadVendor_SPI() {}
+    
+}
+#endif

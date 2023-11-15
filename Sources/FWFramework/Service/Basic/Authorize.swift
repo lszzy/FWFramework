@@ -33,12 +33,10 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     public static let calendars: AuthorizeType = .init(7)
     /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription
     public static let reminders: AuthorizeType = .init(8)
-    /// 音乐，需启用AppleMusic子模块，Info.plist需配置NSAppleMusicUsageDescription
-    public static let appleMusic: AuthorizeType = .init(9)
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    public static let notifications: AuthorizeType = .init(10)
+    public static let notifications: AuthorizeType = .init(9)
     /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
-    public static let tracking: AuthorizeType = .init(11)
+    public static let tracking: AuthorizeType = .init(10)
     
     public var rawValue: Int
     
@@ -137,10 +135,6 @@ public class AuthorizeManager: NSObject {
         #if FWMacroMicrophone
         case .microphone:
             return AuthorizeMicrophone()
-        #endif
-        #if FWMacroAppleMusic
-        case .appleMusic:
-            return AuthorizeAppleMusic()
         #endif
         #if FWMacroTracking
         case .tracking:
@@ -350,39 +344,6 @@ internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
     }
 }
 
-// MARK: - AuthorizeAppleMusic
-#if FWMacroAppleMusic
-import MediaPlayer
-
-/// AppleMusic授权
-private class AuthorizeAppleMusic: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
-        let status = MPMediaLibrary.authorizationStatus()
-        switch status {
-        case .denied:
-            return .denied
-        case .restricted:
-            return .restricted
-        case .authorized:
-            return .authorized
-        default:
-            return .notDetermined
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        MPMediaLibrary.requestAuthorization { status in
-            if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    completion?(self.authorizeStatus())
-                }
-            }
-        }
-    }
-}
-#endif
-
 // MARK: - AuthorizeCalendar
 #if FWMacroCalendar
 import EventKit
@@ -533,3 +494,24 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
     }
 }
 #endif
+
+// MARK: - FrameworkAutoloader+Authorize
+@objc extension FrameworkAutoloader {
+    
+    #if FWMacroContacts
+    static func loadVendor_Contacts() {}
+    #endif
+    
+    #if FWMacroMicrophone
+    static func loadVendor_Microphone() {}
+    #endif
+    
+    #if FWMacroCalendar
+    static func loadVendor_Calendar() {}
+    #endif
+        
+    #if FWMacroTracking
+    static func loadVendor_Tracking() {}
+    #endif
+    
+}

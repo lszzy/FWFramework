@@ -128,4 +128,11 @@ extension UILayoutPriority {
     
 }
 
+// MARK: - FrameworkAutoloader+Shortcut
+@objc extension FrameworkAutoloader {
+    
+    static func loadVendor_Shortcut() {}
+    
+}
+
 #endif
