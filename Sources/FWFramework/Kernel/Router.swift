@@ -420,17 +420,11 @@ public class Router: NSObject {
     }
     
     private class func routeClass(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        var targetClass: AnyClass?
-        if let clazz = clazz as? AnyClass {
-            if let className = (NSStringFromClass(clazz) as NSString).utf8String {
-                targetClass = objc_getMetaClass(className) as? AnyClass
-            }
-        } else {
-            targetClass = object_getClass(clazz)
+        guard let metaClass = NSObject.fw_metaClass(clazz) else {
+            return [:]
         }
-        guard let targetClass = targetClass else { return [:] }
         
-        let methods = NSObject.fw_classMethods(targetClass)
+        let methods = NSObject.fw_classMethods(metaClass)
         if let mapper = mapper {
             return mapper(methods)
         }

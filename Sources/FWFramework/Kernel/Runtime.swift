@@ -417,6 +417,21 @@ import FWObjC
 @_spi(FW) extension NSObject {
     
     // MARK: - Class
+    /// 获取指定类的metaClass
+    /// - Parameter clazz: 支持AnyClass|NSObject对象
+    /// - Returns: 参数为AnyClass时，返回metaClass；参数为NSObject对象时，返回NSObject类
+    public static func fw_metaClass(_ clazz: Any) -> AnyClass? {
+        var metaClass: AnyClass?
+        if let clazz = clazz as? AnyClass {
+            if let className = (NSStringFromClass(clazz) as NSString).utf8String {
+                metaClass = objc_getMetaClass(className) as? AnyClass
+            }
+        } else {
+            metaClass = object_getClass(clazz)
+        }
+        return metaClass
+    }
+    
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
