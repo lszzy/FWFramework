@@ -362,7 +362,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     @StoredValue("routerStrictMode")
     static var routerStrictMode: Bool = false
     
-    static func loadTestRouter() {
+    static func loadApp_TestRouter() {
         APP.autoload(TestRouter.self)
         Router.strictMode = Autoloader.routerStrictMode
     }

@@ -194,10 +194,10 @@ private extension SettingsController {
         app.showSheet(title: "AlertPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.alertPlugins.count {
                 Autoloader.alertPluginImpl = Autoloader.alertPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.alertPlugins.count {
                 Autoloader.alertHidesSheetCancel = !Autoloader.alertHidesSheetCancel
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestAlertController())
             }
@@ -212,7 +212,7 @@ private extension SettingsController {
         app.showSheet(title: "EmptyPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.emptyPlugins.count {
                 Autoloader.emptyPluginImpl = Autoloader.emptyPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestEmptyController())
             }
@@ -227,7 +227,7 @@ private extension SettingsController {
         app.showSheet(title: "ToastPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.toastPlugins.count {
                 Autoloader.toastPluginImpl = Autoloader.toastPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestToastController())
             }
@@ -242,7 +242,7 @@ private extension SettingsController {
         app.showSheet(title: "ViewPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.viewPlugins.count {
                 Autoloader.viewPluginImpl = Autoloader.viewPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestPluginController())
             }
@@ -258,10 +258,10 @@ private extension SettingsController {
         app.showSheet(title: "RefreshPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.refreshPlugins.count {
                 Autoloader.refreshPluginImpl = Autoloader.refreshPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.refreshPlugins.count {
                 Autoloader.refreshShowsFinishedView = !Autoloader.refreshShowsFinishedView
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestRefreshController())
             }
@@ -278,13 +278,13 @@ private extension SettingsController {
         app.showSheet(title: "ImagePlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePlugins.count {
                 Autoloader.imagePluginImpl = Autoloader.imagePlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePlugins.count {
                 Autoloader.imageShowsIndicator = !Autoloader.imageShowsIndicator
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePlugins.count + 1 {
                 Autoloader.imageHidesPlaceholderIndicator = !Autoloader.imageHidesPlaceholderIndicator
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestImageController())
             }
@@ -304,22 +304,22 @@ private extension SettingsController {
         app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePickerPlugins.count {
                 Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePickerPlugins.count {
                 Autoloader.imagePickerCropControllerEnabled = !Autoloader.imagePickerCropControllerEnabled
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePickerPlugins.count + 1 {
                 Autoloader.imagePickerPhotoPickerDisabled = !Autoloader.imagePickerPhotoPickerDisabled
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePickerPlugins.count + 2 {
                 Autoloader.imagePickerPhotoNavigationEnabled = !Autoloader.imagePickerPhotoNavigationEnabled
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePickerPlugins.count + 3 {
                 Autoloader.imagePickerPresentationFullScreen = !Autoloader.imagePickerPresentationFullScreen
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else if index == Autoloader.imagePickerPlugins.count + 4 {
                 Autoloader.imagePickerShowsAlbumController = !Autoloader.imagePickerShowsAlbumController
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestPickerController())
             }
@@ -334,7 +334,7 @@ private extension SettingsController {
         app.showSheet(title: "ImagePreviewPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePreviewPlugins.count {
                 Autoloader.imagePreviewPluginImpl = Autoloader.imagePreviewPlugins[index]
-                Autoloader.loadPlugin()
+                Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestPreviewController())
             }
@@ -395,7 +395,7 @@ private extension SettingsController {
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
     static let imagePreviewPlugins = ["ImagePreviewPluginImpl"]
     
-    static func loadPlugin() {
+    static func loadApp_Plugin() {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel

@@ -89,9 +89,10 @@ public class Autoloader: NSObject, AutoloadProtocol {
     private static func autoloadClass(_ className: String) -> AnyClass? {
         if let nameClass = NSClassFromString(className) {
             return nameClass
-        } else if let moduleName = Bundle.main.infoDictionary?[kCFBundleExecutableKey as String] as? String,
-                  let nameClass = NSClassFromString("\(moduleName).\(className)") {
-            return nameClass
+        }
+        let moduleName = Bundle.main.infoDictionary?[kCFBundleExecutableKey as String] as? String ?? ""
+        if !moduleName.isEmpty {
+            return NSClassFromString("\(moduleName).\(className)")
         }
         return nil
     }
@@ -101,8 +102,13 @@ public class Autoloader: NSObject, AutoloadProtocol {
         var debugDescription = ""
         var debugCount = 0
         for methodName in debugMethods {
+            let formatName = methodName
+                .replacingOccurrences(of: "load", with: "")
+                .trimmingCharacters(in: .init(charactersIn: "_"))
+                .replacingOccurrences(of: "_", with: ".")
+            
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), methodName))
+            debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), formatName))
         }
         return String(format: "\n========== AUTOLOADER ==========\n%@========== AUTOLOADER ==========", debugDescription)
     }
