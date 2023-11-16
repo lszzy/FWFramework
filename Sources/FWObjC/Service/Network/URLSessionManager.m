@@ -487,8 +487,6 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
 
     self.securityPolicy = [__FWSecurityPolicy defaultPolicy];
 
-    self.reachabilityManager = [__FWNetworkReachabilityManager sharedManager];
-
     self.mutableTaskDelegatesKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
 
     self.lock = [[NSLock alloc] init];
