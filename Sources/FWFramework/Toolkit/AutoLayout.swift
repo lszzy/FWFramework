@@ -738,6 +738,14 @@ import FWObjC
     
 }
 
+// MARK: - UILayoutPriority+AutoLayout
+extension UILayoutPriority {
+    
+    /// 中优先级，500
+    public static let defaultMedium: UILayoutPriority = .init(500)
+    
+}
+
 // MARK: - NSLayoutConstraint+AutoLayout
 @_spi(FW) extension NSLayoutConstraint {
     

@@ -120,14 +120,6 @@ extension UIView {
     
 }
 
-// MARK: - UILayoutPriority+Shortcut
-extension UILayoutPriority {
-    
-    /// 中优先级，500
-    public static let defaultMedium: UILayoutPriority = .init(500)
-    
-}
-
 // MARK: - Autoloader+Shortcut
 @objc extension Autoloader {
     
