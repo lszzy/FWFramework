@@ -127,6 +127,13 @@ class TestRequestController: UIViewController {
         return button
     }()
     
+    private lazy var observeButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Observe Status", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onObserve))
+        return button
+    }()
+    
 }
 
 // MARK: - Setup
@@ -147,6 +154,12 @@ extension TestRequestController: ViewControllerProtocol {
         APP.debug("query: %@", queryValue.removingPercentEncoding ?? "")
         queryValue = "%E6%88%91%E6%98%AF%E5%AD%97%E7%AC%A6%E4%B8%B2100%25%E6%B5%8B%E8%AF%95"
         APP.debug("query2: %@", queryValue.removingPercentEncoding ?? "")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        onStopObserve()
     }
     
     func setupNavbar() {
@@ -172,6 +185,7 @@ extension TestRequestController: ViewControllerProtocol {
         view.addSubview(failedButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
+        view.addSubview(observeButton)
     }
     
     func setupLayout() {
@@ -194,6 +208,10 @@ extension TestRequestController: ViewControllerProtocol {
         syncButton.app.layoutChain
             .centerX()
             .top(toViewBottom: asyncButton, offset: 20)
+        
+        observeButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: syncButton, offset: 20)
     }
     
 }
@@ -308,6 +326,29 @@ private extension TestRequestController {
                 }
             }
         }
+    }
+    
+    @objc func onObserve() {
+        if NetworkReachabilityManager.shared.isListening {
+            onStopObserve()
+            return
+        }
+        
+        NetworkReachabilityManager.shared.startListening { [weak self] status in
+            switch status {
+            case .unknown:
+                self?.observeButton.setTitle("Unknown", for: .normal)
+            case .notReachable:
+                self?.observeButton.setTitle("Not Reachable", for: .normal)
+            case .reachable(let connectionType):
+                self?.observeButton.setTitle(connectionType == .ethernetOrWiFi ? "WiFi Reachable" : "WWAN Reachable", for: .normal)
+            }
+        }
+    }
+    
+    @objc func onStopObserve() {
+        NetworkReachabilityManager.shared.stopListening()
+        observeButton.setTitle("Observe Status", for: .normal)
     }
     
 }
