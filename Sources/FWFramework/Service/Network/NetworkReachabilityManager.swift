@@ -62,7 +62,7 @@ open class NetworkReachabilityManager {
     public typealias Listener = (NetworkReachabilityStatus) -> Void
 
     /// 默认网络可达性管理器
-    public static let `default` = NetworkReachabilityManager()
+    public static let shared = NetworkReachabilityManager()
 
     // MARK: - Accessor
     /// 当前是否可访问网络
@@ -79,8 +79,9 @@ open class NetworkReachabilityManager {
 
     /// 当前可访问类型标记
     open var flags: SCNetworkReachabilityFlags? {
+        guard let reachability = reachability else { return nil }
+        
         var flags = SCNetworkReachabilityFlags()
-
         return SCNetworkReachabilityGetFlags(reachability, &flags) ? flags : nil
     }
 
@@ -95,33 +96,30 @@ open class NetworkReachabilityManager {
         var previousStatus: NetworkReachabilityStatus?
     }
 
-    private let reachability: SCNetworkReachability
+    private let reachability: SCNetworkReachability?
 
     private var mutableState = MutableState()
     
     private let stateLock = NSLock()
 
-    // MARK: - Initialization
-
+    // MARK: - Lifecycle
     /// 指定host初始化
-    public convenience init?(host: String) {
-        guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else { return nil }
-
+    public convenience init(host: String) {
+        let reachability = SCNetworkReachabilityCreateWithName(nil, host)
         self.init(reachability: reachability)
     }
 
     /// 使用默认地址0.0.0.0初始化
-    public convenience init?() {
+    public convenience init() {
         var zero = sockaddr()
         zero.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zero.sa_family = sa_family_t(AF_INET)
 
-        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zero) else { return nil }
-
+        let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zero)
         self.init(reachability: reachability)
     }
 
-    private init(reachability: SCNetworkReachability) {
+    private init(reachability: SCNetworkReachability?) {
         self.reachability = reachability
     }
 
@@ -129,8 +127,16 @@ open class NetworkReachabilityManager {
         stopListening()
     }
 
-    // MARK: - Listening
-
+    // MARK: - Public
+    /// 是否正在监听中
+    open var isListening: Bool {
+        var listening = false
+        stateLock.lock()
+        listening = mutableState.listener != nil
+        stateLock.unlock()
+        return listening
+    }
+    
     /// 开始监听网络状态，自动停止之前已有的监听
     ///
     /// - Parameters:
@@ -178,8 +184,12 @@ open class NetworkReachabilityManager {
             weakManager.manager?.notifyListener(flags)
         }
 
-        let queueAdded = SCNetworkReachabilitySetDispatchQueue(reachability, reachabilityQueue)
-        let callbackAdded = SCNetworkReachabilitySetCallback(reachability, callback, &context)
+        var queueAdded = false
+        var callbackAdded = false
+        if let reachability = reachability {
+            queueAdded = SCNetworkReachabilitySetDispatchQueue(reachability, reachabilityQueue)
+            callbackAdded = SCNetworkReachabilitySetCallback(reachability, callback, &context)
+        }
 
         if let currentFlags = flags {
             reachabilityQueue.async {
@@ -192,8 +202,10 @@ open class NetworkReachabilityManager {
 
     /// 停止监听
     open func stopListening() {
-        SCNetworkReachabilitySetCallback(reachability, nil, nil)
-        SCNetworkReachabilitySetDispatchQueue(reachability, nil)
+        if let reachability = reachability {
+            SCNetworkReachabilitySetCallback(reachability, nil, nil)
+            SCNetworkReachabilitySetDispatchQueue(reachability, nil)
+        }
         
         stateLock.lock()
         mutableState.listener = nil
