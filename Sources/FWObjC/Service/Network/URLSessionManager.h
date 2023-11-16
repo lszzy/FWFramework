@@ -25,7 +25,6 @@
 #import "URLResponseSerialization.h"
 #import "URLRequestSerialization.h"
 #import "SecurityPolicy.h"
-#import "NetworkReachabilityManager.h"
 
 /**
  `__FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
@@ -66,10 +65,6 @@
  - `URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:`
 
  If any of these methods are overridden in a subclass, they _must_ call the `super` implementation first.
-
- ## Network Reachability Monitoring
-
- Network reachability status and change monitoring is available through the `reachabilityManager` property. Applications may choose to monitor network reachability conditions in order to prevent or suspend any outbound requests. See `__FWNetworkReachabilityManager` for more details.
 
  ## NSCoding Caveats
 
@@ -113,15 +108,6 @@ NS_SWIFT_NAME(URLSessionManager)
  The security policy used by created session to evaluate server trust for secure connections. `__FWURLSessionManager` uses the `defaultPolicy` unless otherwise specified.
  */
 @property (nonatomic, strong) __FWSecurityPolicy *securityPolicy;
-
-///--------------------------------------
-/// @name Monitoring Network Reachability
-///--------------------------------------
-
-/**
- The network reachability manager. `__FWURLSessionManager` uses the `sharedManager` by default.
- */
-@property (readwrite, nonatomic, strong) __FWNetworkReachabilityManager *reachabilityManager;
 
 ///----------------------------
 /// @name Getting Session Tasks
