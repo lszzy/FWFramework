@@ -1527,7 +1527,7 @@ import AdSupport
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
             swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
         ) { store in { selfObject in
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+            if selfObject.fw_property(forName: "fw_contentInset") != nil {
                 let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
                 return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
             }
