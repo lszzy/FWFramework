@@ -42,14 +42,12 @@ import FWObjC
     /// - Returns: CADisplayLink
     public static func fw_displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
         let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.fw_displayLinkAction(_:)))
-        objc_setAssociatedObject(displayLink, &CADisplayLink.fw_displayLinkActionKey, block, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        displayLink.fw_setPropertyCopy(block, forName: "fw_displayLinkAction")
         return displayLink
     }
     
-    private static var fw_displayLinkActionKey = "fw_displayLinkAction"
-    
     @objc private class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
-        let block = objc_getAssociatedObject(displayLink, &CADisplayLink.fw_displayLinkActionKey) as? (CADisplayLink) -> Void
+        let block = displayLink.fw_property(forName: "fw_displayLinkAction") as? (CADisplayLink) -> Void
         block?(displayLink)
     }
     

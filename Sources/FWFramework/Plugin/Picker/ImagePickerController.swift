@@ -948,7 +948,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                     zoomImageView.progress = 0
                 }
                 // 拉取资源的初期，会有一段时间没有进度，猜测是发出网络请求以及与 iCloud 建立连接的耗时，这时预先给个 0.02 的进度值，看上去好看些
-                var targetProgress = max(0.02, progress)
+                let targetProgress = max(0.02, progress)
                 if targetProgress < zoomImageView.progress {
                     zoomImageView.progress = targetProgress
                 } else {
@@ -1143,7 +1143,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                     zoomImageView?.progress = 0
                 }
                 // 拉取资源的初期，会有一段时间没有进度，猜测是发出网络请求以及与 iCloud 建立连接的耗时，这时预先给个 0.02 的进度值，看上去好看些
-                var targetProgress = max(0.02, progress)
+                let targetProgress = max(0.02, progress)
                 if targetProgress < (zoomImageView?.progress ?? 0) {
                     zoomImageView?.progress = targetProgress
                 } else {
@@ -1894,7 +1894,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         
         let totalCount = imagesAssetArray.count
         var finishCount: Int = 0
-        var completionHandler: (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
+        let completionHandler: (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
             DispatchQueue.main.async {
                 asset.requestObject = object
                 asset.requestInfo = info

@@ -13,20 +13,6 @@ import UIKit
         return AppBundle.localizedString(key)
     }
     
-    @discardableResult
-    public static func __fw_swizzleMethod(
-        _ target: Any?,
-        selector: Selector,
-        identifier: String? = nil,
-        block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
-    ) -> Bool {
-        return fw_swizzleMethod(target, selector: selector, identifier: identifier, block: block)
-    }
-    
-    public func __fw_applyAppearance() {
-        fw_applyAppearance()
-    }
-    
 }
 
 @_spi(FW) @objc extension NSDate {
@@ -51,23 +37,6 @@ import UIKit
     
     public func __fw_statisticalCheckExposure() {
         fw_statisticalCheckExposure()
-    }
-    
-}
-
-@_spi(FW) @objc extension UIControl {
-    
-    @discardableResult
-    public func __fw_addTouch(block: @escaping (Any) -> Void) -> String {
-        fw_addTouch(block: block)
-    }
-    
-}
-
-@_spi(FW) @objc extension UIActivityIndicatorView {
-    
-    public static func __fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
-        return fw_indicatorView(color: color)
     }
     
 }
@@ -110,18 +79,6 @@ import UIKit
         return fw_image(data: data, scale: scale, options: targetOptions)
     }
     
-}
-
-@_spi(FW) @objc extension UICollectionViewFlowLayout {
-    
-    public func __fw_sectionConfigPrepareLayout() {
-        fw_sectionConfigPrepareLayout()
-    }
-
-    public func __fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
-        return fw_sectionConfigLayoutAttributes(forElementsIn: rect)
-    }
-
 }
 
 @_spi(FW) @objc extension UIViewController {

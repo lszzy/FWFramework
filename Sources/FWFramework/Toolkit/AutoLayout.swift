@@ -1452,12 +1452,12 @@ public class LayoutChain {
 
     /// 链式布局对象
     public var fw_layoutChain: LayoutChain {
-        if let layoutChain = objc_getAssociatedObject(self, &UIView.fw_layoutChainKey) as? LayoutChain {
+        if let layoutChain = fw_property(forName: "fw_layoutChain") as? LayoutChain {
             return layoutChain
         }
         
         let layoutChain = LayoutChain(view: self)
-        objc_setAssociatedObject(self, &UIView.fw_layoutChainKey, layoutChain, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        fw_setProperty(layoutChain, forName: "fw_layoutChain")
         return layoutChain
     }
     
@@ -1465,9 +1465,6 @@ public class LayoutChain {
     public func fw_layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         closure(fw_layoutChain)
     }
-    
-    /// 关联对象Key
-    private static var fw_layoutChainKey = "fw_layoutChain"
     
 }
 
