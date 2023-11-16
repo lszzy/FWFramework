@@ -369,12 +369,11 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     /// 是否是灵动岛屏幕
     public static var fw_isDynamicIsland: Bool {
         guard UIDevice.fw_isIphone else { return false }
-        let deviceModel = UIDevice.fw_deviceModel ?? ""
-        let targetModels: [String] = [
-            "iPhone15,2", "iPhone15,3", "iPhone15,4", "iPhone15,5",
-            "iPhone16,1", "iPhone16,2",
-        ]
-        return targetModels.contains(deviceModel)
+        if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+            return fw_safeAreaInsets.top >= 59.0
+        } else {
+            return fw_safeAreaInsets.left >= 59.0
+        }
     }
     
     /// 屏幕一像素的大小
