@@ -10,8 +10,7 @@ import PhotosUI
 import AVFoundation
 
 /// ZoomImageView事件代理
-@objc(__FWZoomImageViewDelegate)
-public protocol ZoomImageViewDelegate {
+@objc public protocol ZoomImageViewDelegate {
 
     /// 单击事件代理方法
     @objc optional func singleTouch(in zoomImageView: ZoomImageView, location: CGPoint)
@@ -40,8 +39,6 @@ public protocol ZoomImageViewDelegate {
 /// ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通过继承来实现。
 ///
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-@objcMembers
-@objc(__FWZoomImageView)
 open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     
     /// 代理
