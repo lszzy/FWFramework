@@ -13,7 +13,7 @@ open class NetworkPluginImpl: NSObject, NetworkPlugin {
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
-    public static let shared = ViewPluginImpl()
+    public static let shared = NetworkPluginImpl()
     
     // MARK: - NetworkPlugin
     
