@@ -88,6 +88,7 @@ public enum WebSocketEvent {
     case viabilityChanged(Bool)
     case reconnectSuggested(Bool)
     case cancelled
+    case peerClosed
 }
 
 public protocol WebSocketDelegate: AnyObject {
@@ -220,9 +221,12 @@ public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelega
     private var listener: NWListener?
     private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.server.networkstream", attributes: [])
     
-    public init() {}
+    public init() {
+        
+    }
     
     public func start(address: String, port: UInt16) -> Error? {
+        //TODO: support TLS cert adding/binding
         let parameters = NWParameters(tls: nil, tcp: NWProtocolTCP.Options())
         let p = NWEndpoint.Port(rawValue: port)!
         parameters.requiredLocalEndpoint = NWEndpoint.hostPort(host: NWEndpoint.Host.name(address, nil), port: p)
@@ -328,6 +332,8 @@ public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServer
         case .cancelled:
             print("server connection cancelled!")
             //broadcast(event: .cancelled)
+        case .peerClosed:
+            delegate?.didReceive(event: .disconnected(self, "Connection closed by peer", UInt16(WebSocketFrameOpCode.connectionClose.rawValue)))
         }
     }
     
@@ -394,7 +400,11 @@ public class WebSocketTCPTransport: WebSocketTransport {
     private weak var delegate: WebSocketTransportEventClient?
     private var isRunning = false
     private var isTLS = false
-    
+   
+    deinit {
+        disconnect()
+    }
+ 
     public var usingTLS: Bool {
         return self.isTLS
     }
@@ -444,6 +454,7 @@ public class WebSocketTCPTransport: WebSocketTransport {
     public func disconnect() {
         isRunning = false
         connection?.cancel()
+        connection = nil
     }
     
     public func register(delegate: WebSocketTransportEventClient) {
@@ -503,6 +514,13 @@ public class WebSocketTCPTransport: WebSocketTransport {
             
             // Refer to https://developer.apple.com/documentation/network/implementing_netcat_with_network_framework
             if let context = context, context.isFinal, isComplete {
+                if let delegate = s.delegate {
+                    // Let the owner of this TCPTransport decide what to do next: disconnect or reconnect?
+                    delegate.connectionChanged(state: .peerClosed)
+                } else {
+                    // No use to keep connection alive
+                    s.disconnect()
+                }
                 return
             }
             
@@ -548,6 +566,7 @@ public class WebSocketFoundationSecurity  {
     public init(allowSelfSigned: Bool = false) {
         self.allowSelfSigned = allowSelfSigned
     }
+    
     
 }
 
@@ -611,12 +630,18 @@ public class WebSocketCompression: WebSocketCompressionHandler {
     var decompressorTakeOver = false
     var compressorTakeOver = false
     
-    public init() {}
+    public init() {
+        
+    }
     
     public func load(headers: [String: String]) {
         guard let extensionHeader = headers[headerWSExtensionName] else { return }
         decompressorTakeOver = false
         compressorTakeOver = false
+
+        // assume defaults unless the headers say otherwise
+        compressor = WebSocketCompressor(windowBits: 15)
+        decompressor = WebSocketDecompressor(windowBits: 15)
         
         let parts = extensionHeader.components(separatedBy: ";")
         for p in parts {
@@ -777,6 +802,11 @@ class WebSocketCompressor {
     }
 
     func compress(_ data: Data) throws -> Data {
+        guard !data.isEmpty else {
+            // For example, PONG has no content
+            return data
+        }
+
         var compressed = Data()
         var res: CInt = 0
         data.withUnsafeBytes { (ptr:UnsafePointer<UInt8>) -> Void in
@@ -942,6 +972,10 @@ public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessio
         }
         broadcast(event: .disconnected(r, UInt16(closeCode.rawValue)))
     }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        broadcast(event: .error(error))
+    }
 }
 
 public class WebSocketEngine: WebSocketEngineProtocol, WebSocketTransportEventClient, WebSocketFramerEventClient,
@@ -960,6 +994,7 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
     private let writeQueue = DispatchQueue(label: "site.wuyong.queue.websocket.client.writequeue")
     private let mutex = DispatchSemaphore(value: 1)
     private var canSend = false
+    private var isConnecting = false
     
     weak var delegate: WebSocketEngineDelegate?
     public var respondToPingWithPong: Bool = true
@@ -986,9 +1021,10 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
     
     public func start(request: URLRequest) {
         mutex.wait()
+        let isConnecting = self.isConnecting
         let isConnected = canSend
         mutex.signal()
-        if isConnected {
+        if isConnecting || isConnected {
             return
         }
         
@@ -1000,6 +1036,9 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
         guard let url = request.url else {
             return
         }
+        mutex.wait()
+        self.isConnecting = true
+        mutex.signal()
         transport.connect(url: url, timeout: request.timeoutInterval, certificatePinning: certPinner)
     }
     
@@ -1015,6 +1054,10 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
     }
     
     public func forceStop() {
+        mutex.wait()
+        isConnecting = false
+        mutex.signal()
+        
         transport.disconnect()
     }
     
@@ -1075,7 +1118,13 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
                 }
             }
         case .cancelled:
+            mutex.wait()
+            isConnecting = false
+            mutex.signal()
+            
             broadcast(event: .cancelled)
+        case .peerClosed:
+            broadcast(event: .peerClosed)
         }
     }
     
@@ -1089,6 +1138,7 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
                 return
             }
             mutex.wait()
+            isConnecting = false
             didUpgrade = true
             canSend = true
             mutex.signal()
@@ -1161,30 +1211,42 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
     
     private func reset() {
         mutex.wait()
+        isConnecting = false
         canSend = false
         didUpgrade = false
         mutex.signal()
     }
     
+    
 }
 
 // MARK: - Transport
 public enum WebSocketConnectionState {
+    /// Ready connections can send and receive data
     case connected
+    
+    /// Waiting connections have not yet been started, or do not have a viable network
     case waiting
+    
+    /// Cancelled connections have been invalidated by the client and will send no more events
     case cancelled
+    
+    /// Failed connections are disconnected and can no longer send or receive data
     case failed(Error?)
     
-    //the viability (connection status) of the connection has updated
-    //e.g. connection is down, connection came back up, etc
+    /// Viability (connection status) of the connection has updated
+    /// e.g. connection is down, connection came back up, etc.
     case viability(Bool)
     
-    //the connection has upgrade to wifi from cellular.
-    //you should consider reconnecting to take advantage of this
+    /// Connection ca be upgraded to wifi from cellular.
+    /// You should consider reconnecting to take advantage of this.
     case shouldReconnect(Bool)
     
-    //the connection receive data
+    /// Received data
     case receive(Data)
+    
+    /// Remote peer has closed the network connection.
+    case peerClosed
 }
 
 public protocol WebSocketTransportEventClient: AnyObject {
@@ -1671,12 +1733,14 @@ public struct WebSocketHTTPHeader {
         req.setValue(WebSocketHTTPHeader.versionValue, forHTTPHeaderField: WebSocketHTTPHeader.versionName)
         req.setValue(secKeyValue, forHTTPHeaderField: WebSocketHTTPHeader.keyName)
         
-        if let cookies = HTTPCookieStorage.shared.cookies(for: url), !cookies.isEmpty {
-            let headers = HTTPCookie.requestHeaderFields(with: cookies)
-            for (key, val) in headers {
-                req.setValue(val, forHTTPHeaderField: key)
+        if req.allHTTPHeaderFields?["Cookie"] == nil {
+            if let cookies = HTTPCookieStorage.shared.cookies(for: url), !cookies.isEmpty {
+                let headers = HTTPCookie.requestHeaderFields(with: cookies)
+                for (key, val) in headers {
+                    req.setValue(val, forHTTPHeaderField: key)
+                }
             }
-        }
+         }
         
         if supportsCompression {
             let val = "permessage-deflate; client_max_window_bits; server_max_window_bits=15"
@@ -1756,7 +1820,9 @@ public class WebSocketFoundationHTTPHandler: WebSocketHTTPHandler {
     var buffer = Data()
     weak var delegate: WebSocketHTTPHandlerDelegate?
     
-    public init() {}
+    public init() {
+        
+    }
     
     public func convert(request: URLRequest) -> Data {
         let msg = CFHTTPMessageCreateRequest(kCFAllocatorDefault, request.httpMethod! as CFString,
