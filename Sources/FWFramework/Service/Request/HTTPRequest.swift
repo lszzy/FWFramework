@@ -7,51 +7,59 @@
 
 import Foundation
 
-/// 请求验证错误
-public enum RequestValidationError: Int, Swift.Error, CustomNSError {
-    case invalidStatusCode = -8
-    case invalidJSONFormat = -9
+/// 请求错误
+public enum RequestError: Error {
+    case validationInvalidStatusCode(Int)
+    case validationInvalidJSONFormat
+    case cacheExpired
+    case cacheVersionMismatch
+    case cacheSensitiveDataMismatch
+    case cacheAppVersionMismatch
+    case cacheInvalidCacheTime
+    case cacheInvalidMetadata
+    case cacheInvalidCacheData
+}
+
+extension RequestError {
+    public var isValidationError: Bool {
+        if case .validationInvalidStatusCode = self { return true }
+        if case .validationInvalidJSONFormat = self { return true }
+        return false
+    }
     
-    public static var errorDomain: String { "site.wuyong.error.request.validation" }
-    public var errorCode: Int { self.rawValue }
-    public var errorUserInfo: [String: Any] {
-        switch self {
-        case .invalidStatusCode:
-            return [NSLocalizedDescriptionKey: "Invalid status code"]
-        case .invalidJSONFormat:
-            return [NSLocalizedDescriptionKey: "Invalid JSON format"]
-        }
+    public var isCacheError: Bool {
+        if case .cacheExpired = self { return true }
+        if case .cacheVersionMismatch = self { return true }
+        if case .cacheSensitiveDataMismatch = self { return true }
+        if case .cacheAppVersionMismatch = self { return true }
+        if case .cacheInvalidCacheTime = self { return true }
+        if case .cacheInvalidMetadata = self { return true }
+        if case .cacheInvalidCacheData = self { return true }
+        return false
     }
 }
 
-/// 请求缓存错误
-public enum RequestCacheError: Int, Swift.Error, CustomNSError {
-    case expired = -1
-    case versionMismatch = -2
-    case sensitiveDataMismatch = -3
-    case appVersionMismatch = -4
-    case invalidCacheTime = -5
-    case invalidMetadata = -6
-    case invalidCacheData = -7
-    
-    public static var errorDomain: String { "site.wuyong.error.request.cache" }
-    public var errorCode: Int { self.rawValue }
-    public var errorUserInfo: [String: Any] {
+extension RequestError: LocalizedError {
+    public var errorDescription: String? {
         switch self {
-        case .expired:
-            return [NSLocalizedDescriptionKey: "Cache expired"]
-        case .versionMismatch:
-            return [NSLocalizedDescriptionKey: "Cache version mismatch"]
-        case .sensitiveDataMismatch:
-            return [NSLocalizedDescriptionKey: "Cache sensitive data mismatch"]
-        case .appVersionMismatch:
-            return [NSLocalizedDescriptionKey: "App version mismatch"]
-        case .invalidCacheTime:
-            return [NSLocalizedDescriptionKey: "Invalid cache time"]
-        case .invalidMetadata:
-            return [NSLocalizedDescriptionKey: "Invalid metadata. Cache may not exist"]
-        case .invalidCacheData:
-            return [NSLocalizedDescriptionKey: "Invalid cache data"]
+        case let .validationInvalidStatusCode(statusCode):
+            return "Invalid status code (\(statusCode))"
+        case .validationInvalidJSONFormat:
+            return "Invalid JSON format"
+        case .cacheExpired:
+            return "Cache expired"
+        case .cacheVersionMismatch:
+            return "Cache version mismatch"
+        case .cacheSensitiveDataMismatch:
+            return "Cache sensitive data mismatch"
+        case .cacheAppVersionMismatch:
+            return "App version mismatch"
+        case .cacheInvalidCacheTime:
+            return "Invalid cache time"
+        case .cacheInvalidMetadata:
+            return "Invalid metadata. Cache may not exist"
+        case .cacheInvalidCacheData:
+            return "Invalid cache data"
         }
     }
 }
@@ -120,86 +128,6 @@ extension RequestDelegate {
     public func requestFinished(_ request: HTTPRequest) {}
     /// 默认实现请求失败
     public func requestFailed(_ request: HTTPRequest) {}
-}
-
-/// 请求配件
-public protocol RequestAccessoryProtocol: AnyObject {
-    /// 网络请求即将开始
-    func requestWillStart(_ request: Any)
-    /// 网络请求即将结束
-    func requestWillStop(_ request: Any)
-    /// 网络请求已经结束
-    func requestDidStop(_ request: Any)
-}
-
-/// 默认句柄请求配件类
-open class RequestAccessory: NSObject, RequestAccessoryProtocol {
-    /// 即将开始句柄
-    open var willStartBlock: ((Any) -> Void)?
-    /// 即将结束句柄
-    open var willStopBlock: ((Any) -> Void)?
-    /// 已经结束句柄
-    open var didStopBlock: ((Any) -> Void)?
-    
-    open func requestWillStart(_ request: Any) {
-        if willStartBlock != nil {
-            willStartBlock?(request)
-            willStartBlock = nil
-        }
-    }
-    
-    open func requestWillStop(_ request: Any) {
-        if willStopBlock != nil {
-            willStopBlock?(request)
-            willStopBlock = nil
-        }
-    }
-    
-    open func requestDidStop(_ request: Any) {
-        if didStopBlock != nil {
-            didStopBlock?(request)
-            didStopBlock = nil
-        }
-    }
-}
-
-/// 请求重试器协议
-public protocol RequestRetryerProtocol: AnyObject {
-    /// 请求重试次数
-    func requestRetryCount(for request: HTTPRequest) -> Int
-    /// 请求重试间隔
-    func requestRetryInterval(for request: HTTPRequest) -> TimeInterval
-    /// 请求重试超时时间
-    func requestRetryTimeout(for request: HTTPRequest) -> TimeInterval
-    /// 请求重试验证方法，返回是否重试，requestRetryCount大于0生效
-    func requestRetryValidator(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool
-    /// 请求重试处理方法，requestRetryValidator返回true生效，必须调用completionHandler
-    func requestRetryProcessor(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void)
-}
-
-/// 默认请求重试器，直接调用request的钩子方法
-open class RequestRetryer: NSObject, RequestRetryerProtocol {
-    public static let shared = RequestRetryer()
-    
-    open func requestRetryCount(for request: HTTPRequest) -> Int {
-        return request.requestRetryCount()
-    }
-    
-    open func requestRetryInterval(for request: HTTPRequest) -> TimeInterval {
-        return request.requestRetryInterval()
-    }
-    
-    open func requestRetryTimeout(for request: HTTPRequest) -> TimeInterval {
-        return request.requestRetryTimeout()
-    }
-    
-    open func requestRetryValidator(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
-        return request.requestRetryValidator(response, responseObject: responseObject, error: error)
-    }
-    
-    open func requestRetryProcessor(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
-        request.requestRetryProcessor(response, responseObject: responseObject, error: error, completionHandler: completionHandler)
-    }
 }
 
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
