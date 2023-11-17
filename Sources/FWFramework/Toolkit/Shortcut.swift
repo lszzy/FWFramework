@@ -123,7 +123,7 @@ extension UIView {
 // MARK: - Autoloader+Shortcut
 @objc extension Autoloader {
     
-    static func loadVendor_Shortcut() {}
+    static func loadMacro_Shortcut() {}
     
 }
 

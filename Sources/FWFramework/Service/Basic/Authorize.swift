@@ -499,19 +499,19 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
 @objc extension Autoloader {
     
     #if FWMacroContacts
-    static func loadVendor_Contacts() {}
+    static func loadMacro_Contacts() {}
     #endif
     
     #if FWMacroMicrophone
-    static func loadVendor_Microphone() {}
+    static func loadMacro_Microphone() {}
     #endif
     
     #if FWMacroCalendar
-    static func loadVendor_Calendar() {}
+    static func loadMacro_Calendar() {}
     #endif
         
     #if FWMacroTracking
-    static func loadVendor_Tracking() {}
+    static func loadMacro_Tracking() {}
     #endif
     
 }

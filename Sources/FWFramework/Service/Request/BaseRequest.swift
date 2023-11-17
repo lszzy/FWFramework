@@ -210,6 +210,7 @@ open class BaseRequest: NSObject {
     // MARK: - Accessor
     /// 自定义网络插件，未设置时自动从插件池加载
     open var networkPlugin: NetworkPlugin?
+    
     /// 当前URLSessionTask，请求开始后可用
     open var requestTask: URLSessionTask?
     /// 当前请求唯一标志符
