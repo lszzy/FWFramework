@@ -1,5 +1,5 @@
 //
-//  BaseRequest.swift
+//  HTTPRequest.swift
 //  FWFramework
 //
 //  Created by wuyong on 2023/11/17.
@@ -110,16 +110,16 @@ public protocol RequestMultipartFormData: AnyObject {
 /// 请求代理
 public protocol RequestDelegate: AnyObject {
     /// 请求完成
-    func requestFinished(_ request: BaseRequest)
+    func requestFinished(_ request: HTTPRequest)
     /// 请求失败
-    func requestFailed(_ request: BaseRequest)
+    func requestFailed(_ request: HTTPRequest)
 }
 
 extension RequestDelegate {
     /// 默认实现请求完成
-    public func requestFinished(_ request: BaseRequest) {}
+    public func requestFinished(_ request: HTTPRequest) {}
     /// 默认实现请求失败
-    public func requestFailed(_ request: BaseRequest) {}
+    public func requestFailed(_ request: HTTPRequest) {}
 }
 
 /// 请求配件
@@ -166,50 +166,50 @@ open class RequestAccessory: NSObject, RequestAccessoryProtocol {
 /// 请求重试器协议
 public protocol RequestRetryerProtocol: AnyObject {
     /// 请求重试次数
-    func requestRetryCount(for request: BaseRequest) -> Int
+    func requestRetryCount(for request: HTTPRequest) -> Int
     /// 请求重试间隔
-    func requestRetryInterval(for request: BaseRequest) -> TimeInterval
+    func requestRetryInterval(for request: HTTPRequest) -> TimeInterval
     /// 请求重试超时时间
-    func requestRetryTimeout(for request: BaseRequest) -> TimeInterval
+    func requestRetryTimeout(for request: HTTPRequest) -> TimeInterval
     /// 请求重试验证方法，返回是否重试，requestRetryCount大于0生效
-    func requestRetryValidator(for request: BaseRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool
+    func requestRetryValidator(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool
     /// 请求重试处理方法，requestRetryValidator返回true生效，必须调用completionHandler
-    func requestRetryProcessor(for request: BaseRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void)
+    func requestRetryProcessor(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
 open class RequestRetryer: NSObject, RequestRetryerProtocol {
     public static let shared = RequestRetryer()
     
-    open func requestRetryCount(for request: BaseRequest) -> Int {
+    open func requestRetryCount(for request: HTTPRequest) -> Int {
         return request.requestRetryCount()
     }
     
-    open func requestRetryInterval(for request: BaseRequest) -> TimeInterval {
+    open func requestRetryInterval(for request: HTTPRequest) -> TimeInterval {
         return request.requestRetryInterval()
     }
     
-    open func requestRetryTimeout(for request: BaseRequest) -> TimeInterval {
+    open func requestRetryTimeout(for request: HTTPRequest) -> TimeInterval {
         return request.requestRetryTimeout()
     }
     
-    open func requestRetryValidator(for request: BaseRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+    open func requestRetryValidator(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
         return request.requestRetryValidator(response, responseObject: responseObject, error: error)
     }
     
-    open func requestRetryProcessor(for request: BaseRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
+    open func requestRetryProcessor(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
         request.requestRetryProcessor(response, responseObject: responseObject, error: error, completionHandler: completionHandler)
     }
 }
 
-/// 请求基类，支持缓存和重试机制，使用时继承即可
+/// HTTP请求基类，支持缓存和重试机制，使用时继承即可
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class BaseRequest: NSObject {
+open class HTTPRequest: NSObject {
     
     // MARK: - Accessor
-    /// 自定义网络插件，未设置时自动从插件池加载
-    open var networkPlugin: NetworkPlugin?
+    /// 自定义请求插件，未设置时自动从插件池加载
+    open var requestPlugin: RequestPlugin?
     
     /// 当前URLSessionTask，请求开始后可用
     open var requestTask: URLSessionTask?
