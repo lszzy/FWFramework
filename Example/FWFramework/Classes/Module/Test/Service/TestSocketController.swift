@@ -89,6 +89,9 @@ class TestSocketController: UIViewController {
                 self?.isConnected = false
             case .error(let error):
                 self?.isConnected = false
+            case .peerClosed:
+                self?.clientLabel.text = "client stopped"
+                break
             }
         }
         return result
