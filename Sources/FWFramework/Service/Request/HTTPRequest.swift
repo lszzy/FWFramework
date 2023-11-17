@@ -8,59 +8,55 @@
 import Foundation
 
 /// 请求错误
-public enum RequestError: Error {
-    case validationInvalidStatusCode(Int)
-    case validationInvalidJSONFormat
-    case cacheExpired
-    case cacheVersionMismatch
-    case cacheSensitiveDataMismatch
-    case cacheAppVersionMismatch
-    case cacheInvalidCacheTime
-    case cacheInvalidMetadata
-    case cacheInvalidCacheData
-}
-
-extension RequestError {
-    public var isValidationError: Bool {
-        if case .validationInvalidStatusCode = self { return true }
-        if case .validationInvalidJSONFormat = self { return true }
+public enum RequestError: Int, Swift.Error, CustomNSError {
+    case cacheExpired = -1
+    case cacheVersionMismatch = -2
+    case cacheSensitiveDataMismatch = -3
+    case cacheAppVersionMismatch = -4
+    case cacheInvalidCacheTime = -5
+    case cacheInvalidMetadata = -6
+    case cacheInvalidCacheData = -7
+    case validationInvalidStatusCode = -8
+    case validationInvalidJSONFormat = -9
+    
+    public static var errorDomain: String { "site.wuyong.error.request" }
+    public var errorCode: Int { self.rawValue }
+    public var errorUserInfo: [String: Any] {
+        switch self {
+        case .cacheExpired:
+            return [NSLocalizedDescriptionKey: "Cache expired"]
+        case .cacheVersionMismatch:
+            return [NSLocalizedDescriptionKey: "Cache version mismatch"]
+        case .cacheSensitiveDataMismatch:
+            return [NSLocalizedDescriptionKey: "Cache sensitive data mismatch"]
+        case .cacheAppVersionMismatch:
+            return [NSLocalizedDescriptionKey: "App version mismatch"]
+        case .cacheInvalidCacheTime:
+            return [NSLocalizedDescriptionKey: "Invalid cache time"]
+        case .cacheInvalidMetadata:
+            return [NSLocalizedDescriptionKey: "Invalid metadata. Cache may not exist"]
+        case .cacheInvalidCacheData:
+            return [NSLocalizedDescriptionKey: "Invalid cache data"]
+        case .validationInvalidStatusCode:
+            return [NSLocalizedDescriptionKey: "Invalid status code"]
+        case .validationInvalidJSONFormat:
+            return [NSLocalizedDescriptionKey: "Invalid JSON format"]
+        }
+    }
+    
+    /// 判断是否是网络请求错误
+    public static func isRequestError(_ error: Error?) -> Bool {
         return false
     }
     
-    public var isCacheError: Bool {
-        if case .cacheExpired = self { return true }
-        if case .cacheVersionMismatch = self { return true }
-        if case .cacheSensitiveDataMismatch = self { return true }
-        if case .cacheAppVersionMismatch = self { return true }
-        if case .cacheInvalidCacheTime = self { return true }
-        if case .cacheInvalidMetadata = self { return true }
-        if case .cacheInvalidCacheData = self { return true }
+    /// 判断是否是网络连接错误
+    public static func isConnectionError(_ error: Error?) -> Bool {
         return false
     }
-}
-
-extension RequestError: LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case let .validationInvalidStatusCode(statusCode):
-            return "Invalid status code (\(statusCode))"
-        case .validationInvalidJSONFormat:
-            return "Invalid JSON format"
-        case .cacheExpired:
-            return "Cache expired"
-        case .cacheVersionMismatch:
-            return "Cache version mismatch"
-        case .cacheSensitiveDataMismatch:
-            return "Cache sensitive data mismatch"
-        case .cacheAppVersionMismatch:
-            return "App version mismatch"
-        case .cacheInvalidCacheTime:
-            return "Invalid cache time"
-        case .cacheInvalidMetadata:
-            return "Invalid metadata. Cache may not exist"
-        case .cacheInvalidCacheData:
-            return "Invalid cache data"
-        }
+    
+    /// 判断是否是网络取消错误
+    public static func isCancelledError(_ error: Error?) -> Bool {
+        return false
     }
 }
 
