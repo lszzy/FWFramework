@@ -130,7 +130,7 @@ public typealias WrapperObject = AnyObject & WrapperCompatible
 // MARK: - Autoloader+Wrapper
 @objc extension Autoloader {
     
-    static func loadVendor_SPI() {}
+    static func loadMacro_SPI() {}
     
 }
 #endif

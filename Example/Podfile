@@ -5,7 +5,7 @@ use_frameworks!
 target "FWFramework_Example" do
   project 'FWFramework', 'Staging' => :release, 'Testing' => :release
   
-  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWVendor']
+  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWMacro', 'FWVendor']
   pod 'FWDebug', :configurations => ['Debug', 'Testing']
   
   target 'FWFramework_Tests' do

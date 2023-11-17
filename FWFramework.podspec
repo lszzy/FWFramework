@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/FWFramework'
   end
   
-  s.subspec 'FWVendor' do |ss|
+  s.subspec 'FWMacro' do |ss|
     ss.subspec 'SPI' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
@@ -45,18 +45,6 @@ Pod::Spec.new do |s|
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroShortcut'
       }
-    end
-      
-    ss.subspec 'SDWebImage' do |sss|
-      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
-      sss.dependency 'SDWebImage'
-      sss.dependency 'FWFramework/FWFramework'
-    end
-      
-    ss.subspec 'Lottie' do |sss|
-      sss.source_files = 'Sources/FWVendor/Lottie/**/*.swift'
-      sss.dependency 'lottie-ios'
-      sss.dependency 'FWFramework/FWFramework'
     end
       
     ss.subspec 'Contacts' do |sss|
@@ -85,6 +73,20 @@ Pod::Spec.new do |s|
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
       }
+    end
+  end
+  
+  s.subspec 'FWVendor' do |ss|
+    ss.subspec 'SDWebImage' do |sss|
+      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
+      sss.dependency 'SDWebImage'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+      
+    ss.subspec 'Lottie' do |sss|
+      sss.source_files = 'Sources/FWVendor/Lottie/**/*.swift'
+      sss.dependency 'lottie-ios'
+      sss.dependency 'FWFramework/FWFramework'
     end
   end
 end
