@@ -74,8 +74,7 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 自定义进度条视图插件
-@objc(__FWProgressViewPlugin)
-public protocol ProgressViewPlugin {
+public protocol ProgressViewPlugin: AnyObject {
     
     /// 设置或获取进度条当前颜色
     var indicatorColor: UIColor? { get set }
@@ -163,8 +162,7 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 自定义指示器视图协议
-@objc(__FWIndicatorViewPlugin)
-public protocol IndicatorViewPlugin {
+public protocol IndicatorViewPlugin: AnyObject {
     
     /// 设置或获取指示器当前颜色
     var indicatorColor: UIColor? { get set }

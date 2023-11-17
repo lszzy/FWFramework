@@ -11,7 +11,7 @@ import UIKit
 open class AppResponder: UIResponder, UIApplicationDelegate {
     
     /// 应用主delegate
-    public class var shared: Self? {
+    public class var shared: Self! {
         return UIApplication.shared.delegate as? Self
     }
     

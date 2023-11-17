@@ -10,8 +10,7 @@ import Photos
 
 // MARK: - ImagePreviewView
 /// 图片预览媒体类型枚举
-@objc(__FWImagePreviewMediaType)
-public enum ImagePreviewMediaType: UInt {
+@objc public enum ImagePreviewMediaType: UInt {
     case image
     case livePhoto
     case video
@@ -19,8 +18,7 @@ public enum ImagePreviewMediaType: UInt {
 }
 
 /// 图片预览视图代理
-@objc(__FWImagePreviewViewDelegate)
-public protocol ImagePreviewViewDelegate: ZoomImageViewDelegate {
+@objc public protocol ImagePreviewViewDelegate: ZoomImageViewDelegate {
     
     /// 返回预览的图片数量
     @objc optional func numberOfImages(in imagePreviewView: ImagePreviewView) -> Int
@@ -53,8 +51,6 @@ public protocol ImagePreviewViewDelegate: ZoomImageViewDelegate {
 /// 6. 若需要从指定的某一张图片开始查看，可使用 currentImageIndex 属性。
 ///
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-@objcMembers
-@objc(__FWImagePreviewView)
 open class ImagePreviewView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ZoomImageViewDelegate {
     
     /// 事件代理
@@ -385,7 +381,6 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
 }
 
 // MARK: - ImagePreviewController
-@objc(__FWImagePreviewTransitioningStyle)
 public enum ImagePreviewTransitioningStyle: UInt {
     /// present 时整个界面渐现，dismiss 时整个界面渐隐，默认。
     case fade
@@ -399,8 +394,6 @@ public enum ImagePreviewTransitioningStyle: UInt {
 /// 1. 使用 init 方法初始化
 /// 2. 添加 self.imagePreviewView 的 delegate
 /// 3. 以 push 或 present 的方式打开界面。如果是 present，则支持 ImagePreviewTransitioningStyle 里定义的动画。特别地，如果使用 zoom 方式，则需要通过 sourceImageView() 返回一个原界面上的 view 以作为 present 动画的起点和 dismiss 动画的终点。
-@objcMembers
-@objc(__FWImagePreviewController)
 open class ImagePreviewController: UIViewController, UIViewControllerTransitioningDelegate {
     
     /// 图片背后的黑色背景，默认为黑色
