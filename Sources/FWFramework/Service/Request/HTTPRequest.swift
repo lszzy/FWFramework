@@ -7,59 +7,7 @@
 
 import Foundation
 
-/// 请求错误
-public enum RequestError: Int, Swift.Error, CustomNSError {
-    case cacheExpired = -1
-    case cacheVersionMismatch = -2
-    case cacheSensitiveDataMismatch = -3
-    case cacheAppVersionMismatch = -4
-    case cacheInvalidCacheTime = -5
-    case cacheInvalidMetadata = -6
-    case cacheInvalidCacheData = -7
-    case validationInvalidStatusCode = -8
-    case validationInvalidJSONFormat = -9
-    
-    public static var errorDomain: String { "site.wuyong.error.request" }
-    public var errorCode: Int { self.rawValue }
-    public var errorUserInfo: [String: Any] {
-        switch self {
-        case .cacheExpired:
-            return [NSLocalizedDescriptionKey: "Cache expired"]
-        case .cacheVersionMismatch:
-            return [NSLocalizedDescriptionKey: "Cache version mismatch"]
-        case .cacheSensitiveDataMismatch:
-            return [NSLocalizedDescriptionKey: "Cache sensitive data mismatch"]
-        case .cacheAppVersionMismatch:
-            return [NSLocalizedDescriptionKey: "App version mismatch"]
-        case .cacheInvalidCacheTime:
-            return [NSLocalizedDescriptionKey: "Invalid cache time"]
-        case .cacheInvalidMetadata:
-            return [NSLocalizedDescriptionKey: "Invalid metadata. Cache may not exist"]
-        case .cacheInvalidCacheData:
-            return [NSLocalizedDescriptionKey: "Invalid cache data"]
-        case .validationInvalidStatusCode:
-            return [NSLocalizedDescriptionKey: "Invalid status code"]
-        case .validationInvalidJSONFormat:
-            return [NSLocalizedDescriptionKey: "Invalid JSON format"]
-        }
-    }
-    
-    /// 判断是否是网络请求错误
-    public static func isRequestError(_ error: Error?) -> Bool {
-        return false
-    }
-    
-    /// 判断是否是网络连接错误
-    public static func isConnectionError(_ error: Error?) -> Bool {
-        return false
-    }
-    
-    /// 判断是否是网络取消错误
-    public static func isCancelledError(_ error: Error?) -> Bool {
-        return false
-    }
-}
-
+// MARK: - HTTPRequest
 /// 请求方式
 public enum RequestMethod: String {
     case GET = "GET"
@@ -79,13 +27,6 @@ public enum RequestSerializerType: Int {
     case JSON
 }
 
-/// 请求优先级
-public enum RequestPriority: Int {
-    case `default` = 0
-    case low = -4
-    case high = 4
-}
-
 /// 响应序列化类型
 public enum ResponseSerializerType: Int {
     case HTTP = 0
@@ -93,22 +34,11 @@ public enum ResponseSerializerType: Int {
     case xmlParser
 }
 
-/// 请求表单数据协议
-public protocol RequestMultipartFormData: AnyObject {
-    /// 添加文件，自动使用fileName和mimeType
-    func appendPart(fileURL: URL, name: String)
-    /// 添加文件，指定fileName和mimeType
-    func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String)
-    /// 添加输入流，指定fileName和mimeType
-    func appendPart(inputStream: InputStream?, name: String, fileName: String, length: Int64, mimeType: String)
-    /// 添加文件数据，指定fileName和mimeType
-    func appendPart(fileData: Data, name: String, fileName: String, mimeType: String)
-    /// 添加表单数据
-    func appendPart(formData: Data, name: String)
-    /// 添加头信息和主题数据
-    func appendPart(headers: [String: String]?, body: Data)
-    /// 限制请求带宽
-    func throttleBandwidth(packetSize numberOfBytes: UInt, dalay: TimeInterval)
+/// 请求优先级
+public enum RequestPriority: Int {
+    case `default` = 0
+    case low = -4
+    case high = 4
 }
 
 /// 请求代理
@@ -175,7 +105,20 @@ open class HTTPRequest: NSObject {
     /// 当前响应JSON对象
     open var responseJSONObject: Any?
     /// 当前网络错误
-    open var error: Error?
+    open var error: Error? {
+        get {
+            return _error
+        }
+        set {
+            if let error = newValue as? NSError {
+                error.fw_setPropertyBool(true, forName: "isRequestError")
+                _error = error
+            } else {
+                _error = nil
+            }
+        }
+    }
+    private var _error: Error?
     
     // MARK: - Override
     open func baseUrl() -> String {
@@ -285,4 +228,114 @@ open class HTTPRequest: NSObject {
         completionHandler(true)
     }
     
+}
+
+// MARK: - RequestMultipartFormData
+/// 请求表单数据协议
+public protocol RequestMultipartFormData: AnyObject {
+    /// 添加文件，自动使用fileName和mimeType
+    func appendPart(fileURL: URL, name: String)
+    /// 添加文件，指定fileName和mimeType
+    func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String)
+    /// 添加输入流，指定fileName和mimeType
+    func appendPart(inputStream: InputStream?, name: String, fileName: String, length: Int64, mimeType: String)
+    /// 添加文件数据，指定fileName和mimeType
+    func appendPart(fileData: Data, name: String, fileName: String, mimeType: String)
+    /// 添加表单数据
+    func appendPart(formData: Data, name: String)
+    /// 添加头信息和主题数据
+    func appendPart(headers: [String: String]?, body: Data)
+    /// 限制请求带宽
+    func throttleBandwidth(packetSize numberOfBytes: UInt, dalay: TimeInterval)
+}
+
+// MARK: - RequestError
+/// 请求错误
+public enum RequestError: Int, Swift.Error, CustomNSError {
+    case cacheExpired = -1
+    case cacheVersionMismatch = -2
+    case cacheSensitiveDataMismatch = -3
+    case cacheAppVersionMismatch = -4
+    case cacheInvalidCacheTime = -5
+    case cacheInvalidMetadata = -6
+    case cacheInvalidCacheData = -7
+    case validationInvalidStatusCode = -8
+    case validationInvalidJSONFormat = -9
+    
+    public static var errorDomain: String { "site.wuyong.error.request" }
+    public var errorCode: Int { self.rawValue }
+    public var errorUserInfo: [String: Any] {
+        switch self {
+        case .cacheExpired:
+            return [NSLocalizedDescriptionKey: "Cache expired"]
+        case .cacheVersionMismatch:
+            return [NSLocalizedDescriptionKey: "Cache version mismatch"]
+        case .cacheSensitiveDataMismatch:
+            return [NSLocalizedDescriptionKey: "Cache sensitive data mismatch"]
+        case .cacheAppVersionMismatch:
+            return [NSLocalizedDescriptionKey: "App version mismatch"]
+        case .cacheInvalidCacheTime:
+            return [NSLocalizedDescriptionKey: "Invalid cache time"]
+        case .cacheInvalidMetadata:
+            return [NSLocalizedDescriptionKey: "Invalid metadata. Cache may not exist"]
+        case .cacheInvalidCacheData:
+            return [NSLocalizedDescriptionKey: "Invalid cache data"]
+        case .validationInvalidStatusCode:
+            return [NSLocalizedDescriptionKey: "Invalid status code"]
+        case .validationInvalidJSONFormat:
+            return [NSLocalizedDescriptionKey: "Invalid JSON format"]
+        }
+    }
+    
+    /// 判断是否是网络请求错误
+    public static func isRequestError(_ error: Error?) -> Bool {
+        guard let error = error as? NSError else { return false }
+        if error.domain == NSURLErrorDomain { return true }
+        return error.fw_propertyBool(forName: "isRequestError")
+    }
+    
+    /// 判断是否是网络连接错误
+    public static func isConnectionError(_ error: Error?) -> Bool {
+        guard let error = error as? NSError else { return false }
+        return connectionErrorCodes.contains(error.code)
+    }
+    
+    /// 判断是否是网络取消错误
+    public static func isCancelledError(_ error: Error?) -> Bool {
+        guard let error = error as? NSError else { return false }
+        return cancelledErrorCodes.contains(error.code)
+    }
+    
+    private static let connectionErrorCodes: [Int] = [
+        NSURLErrorCancelled,
+        NSURLErrorBadURL,
+        NSURLErrorTimedOut,
+        NSURLErrorUnsupportedURL,
+        NSURLErrorCannotFindHost,
+        NSURLErrorCannotConnectToHost,
+        NSURLErrorNetworkConnectionLost,
+        NSURLErrorDNSLookupFailed,
+        NSURLErrorNotConnectedToInternet,
+        NSURLErrorUserCancelledAuthentication,
+        NSURLErrorUserAuthenticationRequired,
+        NSURLErrorAppTransportSecurityRequiresSecureConnection,
+        NSURLErrorSecureConnectionFailed,
+        NSURLErrorServerCertificateHasBadDate,
+        NSURLErrorServerCertificateUntrusted,
+        NSURLErrorServerCertificateHasUnknownRoot,
+        NSURLErrorServerCertificateNotYetValid,
+        NSURLErrorClientCertificateRejected,
+        NSURLErrorClientCertificateRequired,
+        NSURLErrorCannotLoadFromNetwork,
+        NSURLErrorInternationalRoamingOff,
+        NSURLErrorCallIsActive,
+        NSURLErrorDataNotAllowed,
+        NSURLErrorRequestBodyStreamExhausted,
+    ]
+    
+    private static let cancelledErrorCodes: [Int] = [
+        NSURLErrorCancelled,
+        NSURLErrorUserCancelledAuthentication,
+        NSUserCancelledError,
+    ]
 }
