@@ -82,6 +82,12 @@ Pod::Spec.new do |s|
       sss.dependency 'SDWebImage'
       sss.dependency 'FWFramework/FWFramework'
     end
+    
+    ss.subspec 'Alamofire' do |sss|
+      sss.source_files = 'Sources/FWVendor/Alamofire/**/*.swift'
+      sss.dependency 'Alamofire'
+      sss.dependency 'FWFramework/FWFramework'
+    end
       
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWVendor/Lottie/**/*.swift'

@@ -9,7 +9,7 @@
 import FWFramework
 import UIKit
 
-class TestModelRequest: BaseRequest {
+class TestModelRequest: HTTPRequest {
     
     private(set) var responseName = ""
     
@@ -49,7 +49,7 @@ class TestModelRequest: BaseRequest {
     
 }
 
-class TestWeatherRequest: BaseRequest {
+class TestWeatherRequest: HTTPRequest {
     
     var city: String = ""
     var temp: String = ""
@@ -272,7 +272,7 @@ private extension TestRequestController {
     
     @objc func onAsync() {
         self.app.showLoading()
-        let requests: [BaseRequest] = [
+        let requests: [HTTPRequest] = [
             TestWeatherRequest(),
             TestWeatherRequest(),
             TestModelRequest(),
@@ -301,7 +301,7 @@ private extension TestRequestController {
     
     @objc func onSync() {
         self.app.showLoading()
-        let requests: [BaseRequest] = [
+        let requests: [HTTPRequest] = [
             TestWeatherRequest(),
             TestWeatherRequest(),
             TestModelRequest(),
