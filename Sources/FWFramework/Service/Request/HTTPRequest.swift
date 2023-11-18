@@ -56,14 +56,57 @@ extension RequestDelegate {
     public func requestFailed(_ request: HTTPRequest) {}
 }
 
+/// 请求可选协议
+@objc public protocol RequestProtocol {
+    /// 自定义POST请求HTTP body数据
+    @objc optional func requestFormData(_ formData: RequestMultipartFormData)
+}
+
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: NSObject {
+open class HTTPRequest: NSObject, RequestProtocol {
     
     // MARK: - Accessor
     /// 自定义请求插件，未设置时自动从插件池加载
-    open var requestPlugin: RequestPlugin?
+    open var requestPlugin: RequestPlugin! {
+        get {
+            if let requestPlugin = _requestPlugin {
+                return requestPlugin
+            } else if let requestPlugin = PluginManager.loadPlugin(RequestPlugin.self) {
+                return requestPlugin
+            }
+            return RequestPluginImpl.shared
+        }
+        set {
+            _requestPlugin = newValue
+        }
+    }
+    private var _requestPlugin: RequestPlugin?
+    
+    /// 自定义请求配置，未设置时使用全局配置
+    open var requestConfig: RequestConfig! {
+        get { _requestConfig ?? RequestConfig.shared() }
+        set { _requestConfig = newValue }
+    }
+    private var _requestConfig: RequestConfig?
+    
+    /// 自定义请求代理
+    open weak var delegate: RequestDelegate?
+    /// 自定义成功回调句柄
+    open var successCompletionBlock: ((HTTPRequest) -> Void)?
+    /// 自定义失败回调句柄
+    open var failureCompletionBlock: ((HTTPRequest) -> Void)?
+    /// 自定义请求配件数组
+    open var requestAccessories: [RequestAccessory]?
+    /// 自定义POST请求HTTP body数据
+    open var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+    /// 断点续传下载路径
+    open var resumableDownloadPath: String?
+    /// 断点续传进度句柄
+    open var resumableDownloadProgressBlock: ((Progress) -> Void)?
+    /// 上传进度句柄
+    open var uploadProgressBlock: ((Progress) -> Void)?
     
     /// 当前URLSessionTask，请求开始后可用
     open var requestTask: URLSessionTask?
@@ -71,6 +114,14 @@ open class HTTPRequest: NSObject {
     open var requestIdentifier: Int {
         return requestTask?.taskIdentifier ?? 0
     }
+    /// 自定义标签，默认0
+    open var tag: Int = 0
+    /// 自定义用户信息
+    open var requestUserInfo: [AnyHashable: Any]?
+    /// 请求总次数
+    open var requestTotalCount: Int = 0
+    /// 请求总时长
+    open var requestTotalTime: TimeInterval = 0
     /// 当前URLRequest
     open var currentRequest: URLRequest? {
         return requestTask?.currentRequest
@@ -110,15 +161,52 @@ open class HTTPRequest: NSObject {
             return _error
         }
         set {
-            if let error = newValue as? NSError {
-                error.fw_setPropertyBool(true, forName: "isRequestError")
-                _error = error
-            } else {
-                _error = nil
-            }
+            let error = newValue as? NSError
+            error?.fw_setPropertyBool(true, forName: "isRequestError")
+            _error = error
         }
     }
     private var _error: Error?
+    
+    /// 请求是否已完成
+    open var isFinished: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .completed && error == nil
+    }
+    
+    /// 请求是否已失败
+    open var isFailed: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .completed && error != nil
+    }
+    
+    /// 请求是否已取消
+    open var isCancelled: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .canceling || cancelled
+    }
+    
+    /// 请求是否执行中
+    open var isExecuting: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .running
+    }
+    
+    private class CacheMetadata: NSObject {
+        var version: Int64 = 0
+        var sensitiveDataString: String = ""
+        var stringEncoding: String.Encoding?
+        var creationDate: Date?
+        var appVersionString: String = ""
+    }
+    
+    private var cacheData: Data?
+    private var cacheString: String?
+    private var cacheJSON: Any?
+    private var cacheXML: XMLParser?
+    private var cacheMetadata: CacheMetadata?
+    private var dataFromCache = false
+    private var cancelled = false
     
     // MARK: - Override
     open func baseUrl() -> String {
@@ -200,7 +288,11 @@ open class HTTPRequest: NSObject {
     
     // MARK: - Retry
     /// 自定义请求重试器，未设置时使用默认重试器
-    open var requestRetryer: RequestRetryerProtocol?
+    open var requestRetryer: RequestRetryerProtocol! {
+        get { _requestRetryer ?? RequestRetryer.shared }
+        set { _requestRetryer = newValue }
+    }
+    private var _requestRetryer: RequestRetryerProtocol?
     
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
@@ -232,7 +324,7 @@ open class HTTPRequest: NSObject {
 
 // MARK: - RequestMultipartFormData
 /// 请求表单数据协议
-public protocol RequestMultipartFormData: AnyObject {
+@objc public protocol RequestMultipartFormData {
     /// 添加文件，自动使用fileName和mimeType
     func appendPart(fileURL: URL, name: String)
     /// 添加文件，指定fileName和mimeType
