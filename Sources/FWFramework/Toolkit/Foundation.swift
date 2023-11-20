@@ -810,6 +810,20 @@ extension WrapperGlobal {
         return folderSize
     }
     
+    /// 将路径标记为禁止iCloud备份
+    @discardableResult
+    public static func fw_skipBackup(_ path: String) -> Bool {
+        var url = URL(fileURLWithPath: path)
+        var backup = URLResourceValues()
+        backup.isExcludedFromBackup = true
+        do {
+            try url.setResourceValues(backup)
+            return true
+        } catch {
+            return false
+        }
+    }
+    
 }
 
 // MARK: - NSAttributedString+Foundation

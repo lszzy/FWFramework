@@ -7,6 +7,96 @@
 
 import Foundation
 
+// MARK: - RequestFilter
+/// 请求过滤器协议
+@objc public protocol RequestFilterProtocol {
+    
+    /// 请求URL过滤器，返回处理后的URL
+    @objc optional func filterUrl(_ originUrl: String, with request: HTTPRequest) -> String
+    
+    /// 请求缓存路径过滤镜，返回处理后的路径
+    @objc optional func filterCacheDirPath(_ originPath: String, with request: HTTPRequest) -> String
+    
+    /// 请求URLRequest过滤器，处理后才发送请求
+    @objc optional func filterUrlRequest(_ urlRequest: NSMutableURLRequest, with request: HTTPRequest)
+    
+    /// 请求Response过滤器，处理后才调用回调
+    @objc optional func filterResponse(with request: HTTPRequest) throws
+    
+}
+
+// MARK: - RequestConfig
+/// 请求配置类
+open class RequestConfig: NSObject {
+    
+    public static let shared = RequestConfig()
+    
+    /// 自定义请求插件，未设置时自动从插件池加载
+    open var requestPlugin: RequestPlugin! {
+        get {
+            if let requestPlugin = _requestPlugin {
+                return requestPlugin
+            } else if let requestPlugin = PluginManager.loadPlugin(RequestPlugin.self) {
+                return requestPlugin
+            }
+            return RequestPluginImpl.shared
+        }
+        set {
+            _requestPlugin = newValue
+        }
+    }
+    private var _requestPlugin: RequestPlugin?
+    
+    /// 当前请求重试器，默认全局重试器
+    open lazy var requestRetrier: RequestRetrierProtocol = RequestRetrier.default
+    
+    /// 请求过滤器数组
+    open private(set) var requestFilters: [RequestFilterProtocol] = []
+    
+    /// 请求基准地址
+    open var baseUrl: String = ""
+    /// 请求CDN地址
+    open var cdnUrl: String = ""
+    
+    /// 是否启用调试
+    open var debugLogEnabled: Bool = {
+        #if DEBUG
+        true
+        #else
+        false
+        #endif
+    }()
+    /// 是否启用调试Mock
+    open var debugMockEnabled: Bool = false
+    /// 调试Mock验证器，默认nil
+    open var debugMockValidator: ((HTTPRequest) -> Bool)?
+    /// 调试Mock处理器，默认nil
+    open var debugMockProcessor: ((HTTPRequest) -> Bool)?
+    /// 自定义下载临时文件夹名称
+    open var downloadFolderName: String = "Incomplete"
+    /// 自定义显示网络错误方法，主线程优先调用，默认nil
+    open var showRequestErrorBlock: ((HTTPRequest) -> Void)?
+    
+    public override init() {
+        super.init()
+    }
+    
+    open override var description: String {
+        return String(format: "<%@: %p>{ baseURL: %@ } { cdnURL: %@ }", NSStringFromClass(self.classForCoder), self, baseUrl, cdnUrl)
+    }
+    
+    /// 添加请求过滤器
+    open func addRequestFilter(_ fileter: RequestFilterProtocol) {
+        requestFilters.append(fileter)
+    }
+    
+    /// 清空所有请求过滤器
+    open func clearRequestFilters() {
+        requestFilters.removeAll()
+    }
+    
+}
+
 // MARK: - RequestAccessory
 /// 请求配件
 public protocol RequestAccessoryProtocol: AnyObject {
@@ -89,7 +179,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
     }
 }
 
-// MARK: - RequestCache
+// MARK: - RequestCacheMetadata
 /// 请求缓存Metadata
 public class RequestCacheMetadata: NSObject, NSSecureCoding {
     public var version: Int?
@@ -123,92 +213,4 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
         aCoder.encode(self.creationDate, forKey: "creationDate")
         aCoder.encode(self.appVersionString, forKey: "appVersionString")
     }
-}
-
-// MARK: - RequestFilterProtocol
-/// 请求过滤器协议
-@objc public protocol RequestFilterProtocol {
-    
-    /// 请求URL过滤器，返回处理后的URL
-    @objc optional func filterUrl(_ originUrl: String, with request: HTTPRequest) -> String
-    
-    /// 请求缓存路径过滤镜，返回处理后的路径
-    @objc optional func filterCacheDirPath(_ originPath: String, with request: HTTPRequest) -> String
-    
-    /// 请求URLRequest过滤器，处理后才发送请求
-    @objc optional func filterUrlRequest(_ urlRequest: NSMutableURLRequest, with request: HTTPRequest)
-    
-    /// 请求Response过滤器，处理后才调用回调
-    @objc optional func filterResponse(with request: HTTPRequest) throws
-    
-}
-
-// MARK: - RequestConfig
-/// 请求配置类
-open class RequestConfig: NSObject {
-    
-    public static let shared = RequestConfig()
-    
-    /// 自定义请求插件，未设置时自动从插件池加载
-    open var requestPlugin: RequestPlugin! {
-        get {
-            if let requestPlugin = _requestPlugin {
-                return requestPlugin
-            } else if let requestPlugin = PluginManager.loadPlugin(RequestPlugin.self) {
-                return requestPlugin
-            }
-            return RequestPluginImpl.shared
-        }
-        set {
-            _requestPlugin = newValue
-        }
-    }
-    private var _requestPlugin: RequestPlugin?
-    
-    /// 当前请求重试器，默认全局重试器
-    open lazy var requestRetrier: RequestRetrierProtocol = RequestRetrier.default
-    
-    /// 请求过滤器数组
-    open private(set) var requestFilters: [RequestFilterProtocol] = []
-    
-    /// 请求基准地址
-    open var baseUrl: String = ""
-    /// 请求CDN地址
-    open var cdnUrl: String = ""
-    
-    /// 是否启用调试
-    open var debugLogEnabled: Bool = {
-        #if DEBUG
-        true
-        #else
-        false
-        #endif
-    }()
-    /// 是否启用调试Mock
-    open var debugMockEnabled: Bool = false
-    /// 调试Mock验证器，默认nil
-    open var debugMockValidator: ((HTTPRequest) -> Bool)?
-    /// 调试Mock处理器，默认nil
-    open var debugMockProcessor: ((HTTPRequest) -> Bool)?
-    /// 自定义显示网络错误方法，主线程优先调用，默认nil
-    open var showRequestErrorBlock: ((HTTPRequest) -> Void)?
-    
-    public override init() {
-        super.init()
-    }
-    
-    open override var description: String {
-        return String(format: "<%@: %p>{ baseURL: %@ } { cdnURL: %@ }", NSStringFromClass(self.classForCoder), self, baseUrl, cdnUrl)
-    }
-    
-    /// 添加请求过滤器
-    open func addRequestFilter(_ fileter: RequestFilterProtocol) {
-        requestFilters.append(fileter)
-    }
-    
-    /// 清空所有请求过滤器
-    open func clearRequestFilters() {
-        requestFilters.removeAll()
-    }
-    
 }
