@@ -49,9 +49,9 @@ open class RequestAccessory: NSObject, RequestAccessoryProtocol {
     }
 }
 
-// MARK: - RequestRetryer
+// MARK: - RequestRetrier
 /// 请求重试器协议
-public protocol RequestRetryerProtocol: AnyObject {
+public protocol RequestRetrierProtocol: AnyObject {
     /// 请求重试次数
     func requestRetryCount(for request: HTTPRequest) -> Int
     /// 请求重试间隔
@@ -65,8 +65,8 @@ public protocol RequestRetryerProtocol: AnyObject {
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
-open class RequestRetryer: NSObject, RequestRetryerProtocol {
-    public static let shared = RequestRetryer()
+open class RequestRetrier: NSObject, RequestRetrierProtocol {
+    public static let `default` = RequestRetrier()
     
     open func requestRetryCount(for request: HTTPRequest) -> Int {
         return request.requestRetryCount()
@@ -132,14 +132,14 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
     /// 请求URL过滤器，返回处理后的URL
     @objc optional func filterUrl(_ originUrl: String, with request: HTTPRequest) -> String
     
+    /// 请求缓存路径过滤镜，返回处理后的路径
+    @objc optional func filterCacheDirPath(_ originPath: String, with request: HTTPRequest) -> String
+    
     /// 请求URLRequest过滤器，处理后才发送请求
     @objc optional func filterUrlRequest(_ urlRequest: NSMutableURLRequest, with request: HTTPRequest)
     
     /// 请求Response过滤器，处理后才调用回调
     @objc optional func filterResponse(with request: HTTPRequest) throws
-    
-    /// 请求缓存路径过滤镜，返回处理后的路径
-    @objc optional func filterCacheDirPath(_ originPath: String, with request: HTTPRequest) -> String
     
 }
 
@@ -165,12 +165,8 @@ open class RequestConfig: NSObject {
     }
     private var _requestPlugin: RequestPlugin?
     
-    /// 自定义请求重试器，未设置时使用默认重试器
-    open var requestRetryer: RequestRetryerProtocol! {
-        get { _requestRetryer ?? RequestRetryer.shared }
-        set { _requestRetryer = newValue }
-    }
-    private var _requestRetryer: RequestRetryerProtocol?
+    /// 当前请求重试器，默认全局重试器
+    open lazy var requestRetrier: RequestRetrierProtocol = RequestRetrier.default
     
     /// 请求过滤器数组
     open private(set) var requestFilters: [RequestFilterProtocol] = []

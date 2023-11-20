@@ -76,7 +76,7 @@ open class HTTPRequest: NSObject {
     /// 自定义失败回调句柄
     open var failureCompletionBlock: ((HTTPRequest) -> Void)?
     /// 自定义请求配件数组
-    open var requestAccessories: [RequestAccessoryProtocol] = []
+    open var requestAccessories: [RequestAccessoryProtocol]?
     /// 自定义POST请求HTTP body数据
     open var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
     /// 断点续传下载路径
@@ -429,7 +429,10 @@ open class HTTPRequest: NSObject {
     
     /// 添加请求配件
     open func addAccessory(_ accessory: RequestAccessoryProtocol) {
-        requestAccessories.append(accessory)
+        if requestAccessories == nil {
+            requestAccessories = []
+        }
+        requestAccessories?.append(accessory)
     }
     
     /// 清理完成句柄
@@ -441,6 +444,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
+        guard let requestAccessories = requestAccessories else { return }
         for accessory in requestAccessories {
             accessory.requestWillStart(self)
         }
@@ -448,6 +452,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
+        guard let requestAccessories = requestAccessories else { return }
         for accessory in requestAccessories {
             accessory.requestWillStop(self)
         }
@@ -455,6 +460,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
+        guard let requestAccessories = requestAccessories else { return }
         for accessory in requestAccessories {
             accessory.requestDidStop(self)
         }
@@ -495,8 +501,8 @@ open class HTTPRequest: NSObject {
     }
     
     /// 加载本地缓存，返回是否成功
-    open func loadCacheWithError(_ error: inout Error?) -> Bool {
-        return false
+    open func loadCache() throws {
+        
     }
     
     /// 开始请求，忽略本地缓存
