@@ -87,8 +87,26 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return urlReqeust
     }
     
-    open func resumeRequest(for request: HTTPRequest) {
-        request.requestTask?.resume()
+    open func startDataRequest(_ request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        let dataTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: completionHandler)
+        startRequest(for: request, requestTask: dataTask)
+    }
+    
+    open func startDownloadRequest(_ request: HTTPRequest, urlRequest: URLRequest?, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+        if let resumeData = resumeData {
+            let downloadTask = manager.downloadTask(withResumeData: resumeData, progress: request.resumableDownloadProgressBlock, destination: { _, _ in
+                return URL(fileURLWithPath: destination, isDirectory: false)
+            }, completionHandler: completionHandler)
+            startRequest(for: request, requestTask: downloadTask)
+            return
+        }
+        
+        if let urlRequest = urlRequest {
+            let downloadTask = manager.downloadTask(with: urlRequest, progress: request.resumableDownloadProgressBlock, destination: { _, _ in
+                return URL(fileURLWithPath: destination, isDirectory: false)
+            }, completionHandler: completionHandler)
+            startRequest(for: request, requestTask: downloadTask)
+        }
     }
     
     open func cancelRequest(for request: HTTPRequest) {
@@ -122,6 +140,20 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             }
         }
         return requestSerializer
+    }
+    
+    private func startRequest(for request: HTTPRequest, requestTask: URLSessionTask) {
+        switch request.requestPriority {
+        case .high:
+            requestTask.priority = URLSessionTask.highPriority
+        case .low:
+            requestTask.priority = URLSessionTask.lowPriority
+        default:
+            requestTask.priority = URLSessionTask.defaultPriority
+        }
+        
+        request.requestTask = requestTask
+        request.requestTask?.resume()
     }
     
 }
