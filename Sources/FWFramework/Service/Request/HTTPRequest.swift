@@ -230,6 +230,8 @@ open class HTTPRequest: NSObject {
     private var dataFromCache = false
     private var cancelled = false
     
+    private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
+    
     // MARK: - Lifecycle
     public override init() {
         super.init()
@@ -343,12 +345,18 @@ open class HTTPRequest: NSObject {
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
     open func filterResponse() throws {
-        
     }
     
     /// 请求完成预处理器，后台线程调用
     open func requestCompletePreprocessor() {
-        
+        let responseData = _responseData
+        if writeCacheAsynchronously() {
+            HTTPRequest.cacheQueue.async { [weak self] in
+                self?.saveResponseDataToCacheFile(responseData)
+            }
+        } else {
+            saveResponseDataToCacheFile(responseData)
+        }
     }
     
     /// 请求完成过滤器，主线程调用
@@ -397,12 +405,42 @@ open class HTTPRequest: NSObject {
     // MARK: - Action
     /// 开始请求
     open func start() {
+        if !useCacheResponse {
+            startWithoutCache()
+            return
+        }
         
+        if let downloadPath = resumableDownloadPath, !downloadPath.isEmpty {
+            startWithoutCache()
+            return
+        }
+        
+        do {
+            try loadCache()
+        } catch {
+            startWithoutCache()
+            return
+        }
+        
+        dataFromCache = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.requestCompletePreprocessor()
+            self.requestCompleteFilter()
+            self.delegate?.requestFinished(self)
+            self.successCompletionBlock?(self)
+            self.clearCompletionBlock()
+        }
     }
     
     /// 停止请求
     open func stop() {
-        
+        toggleAccessoriesWillStopCallBack()
+        delegate = nil
+        RequestManager.shared.cancelRequest(self)
+        cancelled = true
+        toggleAccessoriesDidStopCallBack()
     }
     
     /// 开始请求并指定成功、失败句柄
@@ -419,12 +457,18 @@ open class HTTPRequest: NSObject {
     
     /// 开始同步请求并指定成功、失败句柄
     open func startSynchronously(success: ((Self) -> Void)?, failure: ((Self) -> Void)?) {
-        
+        startSynchronously(filter: nil) { request in
+            if request.error == nil {
+                success?(request)
+            } else {
+                failure?(request)
+            }
+        }
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((Self) -> Void)?) {
-        
+        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion != nil ? { completion?($0 as! Self) } : nil)
     }
     
     /// 添加请求配件
@@ -444,26 +488,23 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
-        }
+        })
     }
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
-        }
+        })
     }
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
-        }
+        })
     }
     
     // MARK: - Cache
@@ -502,22 +543,169 @@ open class HTTPRequest: NSObject {
     
     /// 加载本地缓存，返回是否成功
     open func loadCache() throws {
+        if cacheTimeInSeconds() < 0 {
+            throw RequestError.cacheInvalidCacheTime
+        }
         
+        if !loadCacheMetadata() {
+            throw RequestError.cacheInvalidMetadata
+        }
+        
+        try validateCache()
+        
+        if !loadCacheData() {
+            throw RequestError.cacheInvalidCacheData
+        }
+        
+        #if DEBUG
+        if requestConfig.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+        }
+        #endif
     }
     
     /// 开始请求，忽略本地缓存
     open func startWithoutCache() {
-        
+        clearCacheVariables()
+        toggleAccessoriesWillStartCallBack()
+        RequestManager.shared.addRequest(self)
     }
     
     /// 保存指定响应数据到缓存文件
-    open func saveResponseDataToCacheFile(_ data: Data) {
+    open func saveResponseDataToCacheFile(_ data: Data?) {
+        guard let data = data else { return }
+        guard cacheTimeInSeconds() > 0, !isDataFromCache else { return }
         
+        do {
+            try data.write(to: URL(fileURLWithPath: cacheFilePath()), options: .atomic)
+            
+            let metadata = RequestCacheMetadata()
+            metadata.version = cacheVersion()
+            metadata.sensitiveDataString = String.fw_safeString(cacheSensitiveData())
+            metadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
+            metadata.creationDate = Date()
+            metadata.appVersionString = UIApplication.fw_appVersion
+            Data.fw_archiveObject(metadata, toFile: cacheMetadataFilePath())
+        } catch {
+            #if DEBUG
+            if requestConfig.debugLogEnabled {
+                Logger.debug(group: Logger.fw_moduleName, "Save cache failed, reason = %@", error.localizedDescription)
+            }
+            #endif
+        }
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
     open func filterCacheFileName(_ argument: Any?) -> Any? {
         return argument
+    }
+    
+    private func loadCacheMetadata() -> Bool {
+        let path = cacheMetadataFilePath()
+        if FileManager.default.fileExists(atPath: path, isDirectory: nil) {
+            if let metadata = Data.fw_unarchivedObject(withFile: path) as? RequestCacheMetadata {
+                cacheMetadata = metadata
+                return true
+            } else {
+                #if DEBUG
+                if requestConfig.debugLogEnabled {
+                    Logger.debug(group: Logger.fw_moduleName, "Load cache metadata failed")
+                }
+                #endif
+                return false
+            }
+        }
+        return false
+    }
+    
+    private func validateCache() throws {
+        let metadataDuration = -(cacheMetadata?.creationDate?.timeIntervalSinceNow ?? 0)
+        if metadataDuration < 0 || metadataDuration > TimeInterval(cacheTimeInSeconds()) {
+            throw RequestError.cacheExpired
+        }
+        
+        let metadataVersion = cacheMetadata?.version ?? 0
+        if metadataVersion != cacheVersion() {
+            throw RequestError.cacheVersionMismatch
+        }
+        
+        let metadataSensitive = cacheMetadata?.sensitiveDataString ?? ""
+        let currentSensitive = String.fw_safeString(cacheSensitiveData())
+        if metadataSensitive != currentSensitive {
+            throw RequestError.cacheSensitiveDataMismatch
+        }
+        
+        let metadataAppVersion = cacheMetadata?.appVersionString ?? ""
+        let currentAppVersion = UIApplication.fw_appVersion
+        if metadataAppVersion != currentAppVersion {
+            throw RequestError.cacheAppVersionMismatch
+        }
+    }
+    
+    private func loadCacheData() -> Bool {
+        let path = cacheFilePath()
+        if FileManager.default.fileExists(atPath: path, isDirectory: nil),
+           let data = NSData(contentsOfFile: path) as? Data {
+            cacheData = data
+            cacheString = String(data: data, encoding: cacheMetadata?.stringEncoding ?? .utf8)
+            switch responseSerializerType() {
+            case .HTTP:
+                return true
+            case .JSON:
+                cacheJSON = cacheData?.fw_jsonDecode
+                return cacheJSON != nil
+            case .xmlParser:
+                cacheXML = XMLParser(data: data)
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func clearCacheVariables() {
+        cacheData = nil
+        cacheXML = nil
+        cacheJSON = nil
+        cacheString = nil
+        cacheMetadata = nil
+        dataFromCache = false
+    }
+    
+    private func createDirectoryIfNeeded(_ path: String) {
+        var isDir: ObjCBool = true
+        if !FileManager.default.fileExists(atPath: path, isDirectory: &isDir) {
+            createBaseDirectoryAtPath(path)
+        } else {
+            if !isDir.boolValue {
+                try? FileManager.default.removeItem(atPath: path)
+                createBaseDirectoryAtPath(path)
+            }
+        }
+    }
+    
+    private func createBaseDirectoryAtPath(_ path: String) {
+        do {
+            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
+            FileManager.fw_skipBackup(path)
+        } catch {
+            #if DEBUG
+            if requestConfig.debugLogEnabled {
+                Logger.debug(group: Logger.fw_moduleName, "create cache directory failed, error = %@", error.localizedDescription)
+            }
+            #endif
+        }
+    }
+    
+    private func cacheFileName() -> String {
+        return ""
+    }
+    
+    private func cacheFilePath() -> String {
+        return ""
+    }
+    
+    private func cacheMetadataFilePath() -> String {
+        return ""
     }
     
     // MARK: - Error
