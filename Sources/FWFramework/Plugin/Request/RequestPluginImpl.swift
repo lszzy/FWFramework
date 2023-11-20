@@ -65,6 +65,63 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     }
     
     // MARK: - RequestPlugin
+    open func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
+        let urlString = RequestManager.shared.buildRequestUrl(request)
+        let requestSerializer = requestSerializer(for: request)
+        
+        if request.constructingBodyBlock != nil {
+            var error: NSError?
+            let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
+                if let requestFormData = formData as? RequestMultipartFormData {
+                    request.constructingBodyBlock?(requestFormData)
+                }
+            }, error: &error)
+            
+            if let error = error {
+                throw error
+            }
+            return urlRequest
+        }
+        
+        let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument())
+        return urlReqeust
+    }
     
+    open func resumeRequest(for request: HTTPRequest) {
+        request.requestTask?.resume()
+    }
+    
+    open func cancelRequest(for request: HTTPRequest) {
+        request.requestTask?.cancel()
+    }
+    
+    // MARK: - Private
+    private func requestSerializer(for request: HTTPRequest) -> HTTPRequestSerializer {
+        let requestSerializer: HTTPRequestSerializer
+        if request.requestSerializerType() == .JSON {
+            requestSerializer = JSONRequestSerializer()
+        } else {
+            requestSerializer = HTTPRequestSerializer()
+        }
+        
+        requestSerializer.timeoutInterval = request.requestTimeoutInterval()
+        requestSerializer.allowsCellularAccess = request.allowsCellularAccess()
+        if let cachePolicy = request.requestCachePolicy() {
+            requestSerializer.cachePolicy = cachePolicy
+        }
+        
+        if let headerFieldArray = request.requestAuthorizationHeaderFieldArray(),
+           !headerFieldArray.isEmpty {
+            requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
+        }
+        
+        if let headerFieldDictionary = request.requestHeaderFieldValueDictionary(),
+           !headerFieldDictionary.isEmpty {
+            for (fieldKey, fieldValue) in headerFieldDictionary {
+                requestSerializer.setValue(fieldValue, forHTTPHeaderField: fieldKey)
+            }
+        }
+        return requestSerializer
+    }
     
 }
