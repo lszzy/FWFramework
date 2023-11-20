@@ -22,9 +22,10 @@ open class RequestManager: NSObject {
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
         do {
-            try startRequest(request)
+            try sessionTask(for: request)
             
             addRequestToRecord(request)
+            request.requestConfig.requestPlugin.startRequest(for: request)
             #if DEBUG
             if request.requestConfig.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
@@ -217,19 +218,28 @@ open class RequestManager: NSObject {
         #endif
     }
     
-    private func startRequest(_ request: HTTPRequest) throws {
+    private func sessionTask(for request: HTTPRequest) throws {
         if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
-            try startDownloadRequest(request)
+            try downloadTask(for: request)
         } else {
-            try startDataRequest(request)
+            try dataTask(for: request)
+        }
+        
+        switch request.requestPriority {
+        case .high:
+            request.requestTask?.priority = URLSessionTask.highPriority
+        case .low:
+            request.requestTask?.priority = URLSessionTask.lowPriority
+        default:
+            request.requestTask?.priority = URLSessionTask.defaultPriority
         }
     }
     
-    private func startDataRequest(_ request: HTTPRequest) throws {
+    private func dataTask(for request: HTTPRequest) throws {
         // TODO: -
     }
     
-    private func startDownloadRequest(_ request: HTTPRequest) throws {
+    private func downloadTask(for request: HTTPRequest) throws {
         // TODO: -
     }
     
