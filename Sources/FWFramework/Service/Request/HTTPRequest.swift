@@ -530,7 +530,18 @@ open class HTTPRequest: NSObject {
     
     /// 缓存基本路径
     open func cacheBasePath() -> String {
-        return ""
+        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
+        var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
+        
+        let filters = requestConfig.requestFilters
+        for filter in filters {
+            if let filterPath = filter.filterCacheDirPath?(path, with: self) {
+                path = filterPath
+            }
+        }
+        
+        createDirectoryIfNeeded(path)
+        return path
     }
     
     /// 是否使用已缓存响应
@@ -697,15 +708,30 @@ open class HTTPRequest: NSObject {
     }
     
     private func cacheFileName() -> String {
-        return ""
+        let requestUrl = requestUrl()
+        let baseUrl: String
+        if useCDN() {
+            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : requestConfig.cdnUrl
+        } else {
+            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : requestConfig.baseUrl
+        }
+        let argument = filterCacheFileName(requestArgument())
+        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
+        return requestInfo.fw_md5Encode
     }
     
     private func cacheFilePath() -> String {
-        return ""
+        let cacheFileName = cacheFileName()
+        var path = cacheBasePath()
+        path = (path as NSString).appendingPathComponent(cacheFileName)
+        return path
     }
     
     private func cacheMetadataFilePath() -> String {
-        return ""
+        let metadataFileName = "\(cacheFileName()).metadata"
+        var path = cacheBasePath()
+        path = (path as NSString).appendingPathComponent(metadataFileName)
+        return path
     }
     
     // MARK: - Error
