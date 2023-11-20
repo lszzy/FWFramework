@@ -23,7 +23,10 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: NSObject {
+open class ChainRequest: NSObject, RequestDelegate {
+    
+    /// 回调句柄声明
+    public typealias Callback = (ChainRequest, HTTPRequest) -> Void
     
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
@@ -50,24 +53,43 @@ open class ChainRequest: NSObject {
     /// 请求构建句柄，所有请求完成后才会主线程调用
     open var requestBuilder: ((_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
     
-    /// 指定请求数组初始化
-    public init(requestArray: [HTTPRequest]) {
-        
+    private var requestCallbackArray: [Callback] = []
+    private var nextRequestIndex: Int = 0
+    private weak var nextRequest: HTTPRequest?
+    private let emptyCallback: Callback = { _, _ in }
+    
+    public override init() {
+        super.init()
+    }
+    
+    deinit {
+        clearRequest()
     }
     
     /// 添加请求，可设置请求完成回调
-    open func addRequest(_ request: HTTPRequest, callback: ((ChainRequest, HTTPRequest) -> Void)? = nil) {
-        
+    open func addRequest(_ request: HTTPRequest, callback: Callback? = nil) {
+        requestArray.append(request)
+        requestCallbackArray.append(callback ?? emptyCallback)
     }
     
-    /// 开始请求
+    /// 开始请求，仅能调用一次
     open func start() {
+        guard nextRequestIndex <= 0 else { return }
         
+        succeedRequest = nil
+        failedRequest = nil
+        RequestManager.shared.addChainRequest(self)
+        toggleAccessoriesWillStartCallBack()
+        startNextRequest(nil)
     }
     
     /// 停止请求
     open func stop() {
-        
+        toggleAccessoriesWillStopCallBack()
+        delegate = nil
+        clearRequest()
+        toggleAccessoriesDidStopCallBack()
+        RequestManager.shared.removeChainRequest(self)
     }
     
     /// 开始请求并指定成功、失败句柄
@@ -84,12 +106,18 @@ open class ChainRequest: NSObject {
     
     /// 开始同步请求并指定成功、失败句柄
     open func startSynchronously(success: ((ChainRequest) -> Void)?, failure: ((ChainRequest) -> Void)?) {
-        
+        startSynchronously(filter: nil) { chainRequest in
+            if chainRequest.failedRequest == nil {
+                success?(chainRequest)
+            } else {
+                failure?(chainRequest)
+            }
+        }
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((ChainRequest) -> Void)?) {
-        
+        RequestManager.shared.synchronousChainRequest(self, filter: filter, completion: completion)
     }
     
     /// 添加请求配件
@@ -128,6 +156,87 @@ open class ChainRequest: NSObject {
         for accessory in requestAccessories {
             accessory.requestDidStop(self)
         }
+    }
+    
+    open func requestFinished(_ request: HTTPRequest) {
+        succeedRequest = request
+        failedRequest = nil
+        
+        let currentRequestIndex = nextRequestIndex - 1
+        let chainCallback = requestCallbackArray[currentRequestIndex]
+        chainCallback(self, request)
+        
+        if stoppedOnSuccess || !startNextRequest(request) {
+            requestCompleted()
+        }
+    }
+    
+    open func requestFailed(_ request: HTTPRequest) {
+        succeedRequest = nil
+        failedRequest = request
+        
+        if stoppedOnFailure || !startNextRequest(request) {
+            requestCompleted()
+        }
+    }
+    
+    @discardableResult
+    private func startNextRequest(_ previousRequest: HTTPRequest?) -> Bool {
+        if nextRequestIndex >= requestArray.count, requestBuilder != nil {
+            if let request = requestBuilder?(self, previousRequest) {
+                addRequest(request, callback: nil)
+            }
+        }
+        
+        if nextRequestIndex < requestArray.count {
+            let request = requestArray[nextRequestIndex]
+            nextRequestIndex += 1
+            request.delegate = self
+            request.clearCompletionBlock()
+            if nextRequestIndex > 1 && requestInterval > 0 {
+                nextRequest = request
+                DispatchQueue.main.asyncAfter(deadline: .now() + requestInterval) { [weak self] in
+                    self?.nextRequest?.start()
+                }
+            } else {
+                nextRequest = nil
+                request.start()
+            }
+            return true
+        }
+        return false
+    }
+    
+    private func requestCompleted() {
+        toggleAccessoriesWillStopCallBack()
+        
+        if failedRequest == nil {
+            delegate?.chainRequestFinished(self)
+            successCompletionBlock?(self)
+        } else {
+            delegate?.chainRequestFailed(self)
+            failureCompletionBlock?(self)
+        }
+        
+        clearCompletionBlock()
+        toggleAccessoriesDidStopCallBack()
+        RequestManager.shared.removeChainRequest(self)
+    }
+    
+    private func clearRequest() {
+        if nextRequestIndex > 0 {
+            let currentRequestIndex = nextRequestIndex - 1
+            if currentRequestIndex < requestArray.count {
+                let request = requestArray[currentRequestIndex]
+                request.stop()
+            }
+        }
+        
+        nextRequest = nil
+        requestArray.removeAll()
+        requestCallbackArray.removeAll()
+        requestBuilder = nil
+        clearCompletionBlock()
     }
     
 }

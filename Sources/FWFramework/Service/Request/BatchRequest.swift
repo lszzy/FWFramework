@@ -23,7 +23,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: NSObject {
+open class BatchRequest: NSObject, RequestDelegate {
     
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
@@ -38,7 +38,9 @@ open class BatchRequest: NSObject {
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
     /// 第一个导致批量请求失败的请求
-    open private(set) var failedRequest: HTTPRequest?
+    open var failedRequest: HTTPRequest? {
+        return failedRequestArray.first
+    }
     /// 已失败请求数组
     open private(set) var failedRequestArray: [HTTPRequest] = []
     /// 某个请求失败时，是否立即停止批量请求，默认true
@@ -46,22 +48,49 @@ open class BatchRequest: NSObject {
     
     /// 是否所有响应数据都来自本地缓存
     open var isDataFromCache: Bool {
-        return false
+        var result = true
+        for req in requestArray {
+            if !req.isDataFromCache {
+                result = false
+                break
+            }
+        }
+        return result
     }
+    
+    private var finishedCount: Int = 0
     
     /// 指定请求数组初始化
     public init(requestArray: [HTTPRequest]) {
-        
+        super.init()
+        self.requestArray = requestArray
     }
     
-    /// 开始请求
+    deinit {
+        clearRequest()
+    }
+    
+    /// 开始请求，仅能调用一次
     open func start() {
+        guard finishedCount <= 0 else { return }
         
+        failedRequestArray.removeAll()
+        RequestManager.shared.addBatchRequest(self)
+        toggleAccessoriesWillStartCallBack()
+        for req in requestArray {
+            req.delegate = self
+            req.clearCompletionBlock()
+            req.start()
+        }
     }
     
     /// 停止请求
     open func stop() {
-        
+        toggleAccessoriesWillStopCallBack()
+        delegate = nil
+        clearRequest()
+        toggleAccessoriesDidStopCallBack()
+        RequestManager.shared.removeBatchRequest(self)
     }
     
     /// 开始请求并指定成功、失败句柄
@@ -78,12 +107,18 @@ open class BatchRequest: NSObject {
     
     /// 开始同步请求并指定成功、失败句柄
     open func startSynchronously(success: ((BatchRequest) -> Void)?, failure: ((BatchRequest) -> Void)?) {
-        
+        startSynchronously(filter: nil) { batchRequest in
+            if batchRequest.failedRequest == nil {
+                success?(batchRequest)
+            } else {
+                failure?(batchRequest)
+            }
+        }
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((BatchRequest) -> Void)?) {
-        
+        RequestManager.shared.synchronousBatchRequest(self, filter: filter, completion: completion)
     }
     
     /// 添加请求配件
@@ -122,6 +157,52 @@ open class BatchRequest: NSObject {
         for accessory in requestAccessories {
             accessory.requestDidStop(self)
         }
+    }
+    
+    open func requestFinished(_ request: HTTPRequest) {
+        finishedCount += 1
+        if finishedCount == requestArray.count {
+            requestCompleted()
+        }
+    }
+    
+    open func requestFailed(_ request: HTTPRequest) {
+        failedRequestArray.append(request)
+        if stoppedOnFailure {
+            for req in requestArray {
+                req.stop()
+            }
+            requestCompleted()
+            return
+        }
+        
+        finishedCount += 1
+        if finishedCount == requestArray.count {
+            requestCompleted()
+        }
+    }
+    
+    private func requestCompleted() {
+        toggleAccessoriesWillStopCallBack()
+        
+        if failedRequestArray.count < 1 {
+            delegate?.batchRequestFinished(self)
+            successCompletionBlock?(self)
+        } else {
+            delegate?.batchRequestFailed(self)
+            failureCompletionBlock?(self)
+        }
+        
+        clearCompletionBlock()
+        toggleAccessoriesDidStopCallBack()
+        RequestManager.shared.removeBatchRequest(self)
+    }
+    
+    private func clearRequest() {
+        for req in requestArray {
+            req.stop()
+        }
+        clearCompletionBlock()
     }
     
 }

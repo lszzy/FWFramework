@@ -428,6 +428,12 @@ extension Wrapper where Base: FileManager {
         return Base.fw_folderSize(folderPath)
     }
     
+    /// 将路径标记为禁止iCloud备份
+    @discardableResult
+    public static func skipBackup(_ path: String) -> Bool {
+        return Base.fw_skipBackup(path)
+    }
+    
 }
 
 // MARK: - NSAttributedString+Foundation

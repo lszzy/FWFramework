@@ -67,9 +67,21 @@ open class RequestManager: NSObject {
         return ""
     }
     
-    /// 文件下载临时目录
-    open func incompleteDownloadTempCacheFolder() -> String {
-        return ""
+    /// 获取响应编码
+    open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
+        var stringEncoding = String.Encoding.utf8
+        if let textEncoding = request.response?.textEncodingName {
+            let encoding = CFStringConvertIANACharSetNameToEncoding(textEncoding as CFString)
+            if encoding != kCFStringEncodingInvalidId {
+                stringEncoding = String.Encoding(rawValue: UInt(encoding))
+            }
+        }
+        return stringEncoding
+    }
+    
+    /// 获取下载路径的临时路径
+    open func incompleteDownloadTempPath(for request: HTTPRequest, downloadPath: String?) -> URL? {
+        return nil
     }
     
 }
