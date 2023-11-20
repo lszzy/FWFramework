@@ -22,19 +22,9 @@ open class RequestManager: NSObject {
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
         do {
-            request.requestTask = try sessionTask(for: request)
-            
-            switch request.requestPriority {
-            case .high:
-                request.requestTask?.priority = URLSessionTask.highPriority
-            case .low:
-                request.requestTask?.priority = URLSessionTask.lowPriority
-            default:
-                request.requestTask?.priority = URLSessionTask.defaultPriority
-            }
+            try startRequest(request)
             
             addRequestToRecord(request)
-            request.requestConfig.requestPlugin.resumeRequest(for: request)
             #if DEBUG
             if request.requestConfig.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
@@ -227,20 +217,20 @@ open class RequestManager: NSObject {
         #endif
     }
     
-    private func sessionTask(for request: HTTPRequest) throws -> URLSessionTask {
+    private func startRequest(_ request: HTTPRequest) throws {
         if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
-            return try downloadTask(with: request, progress: request.resumableDownloadProgressBlock)
+            try startDownloadRequest(request)
         } else {
-            return try dataTask(with: request)
+            try startDataRequest(request)
         }
     }
     
-    private func dataTask(with request: HTTPRequest) throws -> URLSessionDataTask {
-        throw RequestError.cacheExpired
+    private func startDataRequest(_ request: HTTPRequest) throws {
+        // TODO: -
     }
     
-    private func downloadTask(with request: HTTPRequest, progress downloadProgressBlock: ((Progress) -> Void)?) throws -> URLSessionDownloadTask {
-        throw RequestError.cacheExpired
+    private func startDownloadRequest(_ request: HTTPRequest) throws {
+        // TODO: -
     }
     
     private func validateResult(_ request: HTTPRequest) throws {
