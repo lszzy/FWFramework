@@ -137,26 +137,23 @@ open class BatchRequest: NSObject, RequestDelegate {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
-        }
+        })
     }
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
-        }
+        })
     }
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
-        guard let requestAccessories = requestAccessories else { return }
-        for accessory in requestAccessories {
+        requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
-        }
+        })
     }
     
     open func requestFinished(_ request: HTTPRequest) {
