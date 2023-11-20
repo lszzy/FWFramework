@@ -88,6 +88,8 @@ open class HTTPRequest: NSObject {
     /// 请求优先级，默认default
     open var requestPriority: RequestPriority = .default
     
+    /// 当前请求适配器，根据插件不同而不同
+    open var requestAdapter: Any?
     /// 当前URLSessionTask，请求开始后可用
     open var requestTask: URLSessionTask?
     /// 当前请求唯一标志符
