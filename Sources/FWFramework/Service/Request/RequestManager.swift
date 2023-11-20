@@ -12,6 +12,13 @@ open class RequestManager: NSObject {
     
     public static let shared = RequestManager()
     
+    private var batchRequestArray: [BatchRequest] = []
+    private var chainRequestArray: [ChainRequest] = []
+    private var requestsRecord: [Int: HTTPRequest] = [:]
+    private var lock = NSLock()
+    private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
+    private var synchronousSemaphore = DispatchSemaphore(value: 1)
+    
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
         
@@ -64,7 +71,33 @@ open class RequestManager: NSObject {
     
     /// 构建请求URL
     open func buildRequestUrl(_ request: HTTPRequest) -> String {
-        return ""
+        var requestUrl = request.requestUrl()
+        let tempUrl = URL.fw_url(string: requestUrl)
+        if tempUrl != nil, tempUrl?.host != nil, tempUrl?.scheme != nil {
+            return requestUrl
+        }
+        
+        let filters = request.requestConfig.requestFilters
+        for filter in filters {
+            if let filterUrl = filter.filterUrl?(requestUrl, with: request) {
+                requestUrl = filterUrl
+            }
+        }
+        
+        let baseUrl: String
+        if request.useCDN() {
+            baseUrl = request.cdnUrl().count > 0 ? request.cdnUrl() : request.requestConfig.cdnUrl
+        } else {
+            baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : request.requestConfig.baseUrl
+        }
+        
+        var url = URL.fw_url(string: baseUrl)
+        if !baseUrl.isEmpty, !baseUrl.hasSuffix("/") {
+            url = url?.appendingPathComponent("")
+        }
+        
+        let resultUrl = URL.fw_url(string: requestUrl, relativeTo: url)
+        return resultUrl?.absoluteString ?? ""
     }
     
     /// 获取响应编码

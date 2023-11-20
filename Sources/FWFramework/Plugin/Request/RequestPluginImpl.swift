@@ -26,9 +26,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     
     private var allStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
     private var processingQueue = DispatchQueue(label: "site.wuyong.queue.request.processing", attributes: .concurrent)
-    private var lock = NSLock()
-    private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
-    private var synchronousSemaphore = DispatchSemaphore(value: 1)
     
     /// 管理器
     open lazy var manager: HTTPSessionManager = {

@@ -72,8 +72,6 @@ open class RequestConfig: NSObject {
     open var debugMockValidator: ((HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
-    /// 自定义下载临时文件夹名称
-    open var downloadFolderName: String = "Incomplete"
     /// 自定义显示网络错误方法，主线程优先调用，默认nil
     open var showRequestErrorBlock: ((HTTPRequest) -> Void)?
     
