@@ -16,7 +16,7 @@ public struct Validator<Value> {
     
     private let predicate: (Value) -> Bool
     
-    /// 默认空验证器
+    /// 默认验证器
     public init() {
         self.predicate = { value in true }
     }
@@ -46,14 +46,6 @@ public struct Validator<Value> {
     /// 执行可选值验证并返回结果
     public func validate(_ value: Value?) -> Bool {
         if let value = value {
-            return validate(value)
-        }
-        return false
-    }
-    
-    /// 执行任意值验证并返回结果
-    public func validate(_ value: Any?) -> Bool {
-        if let value = value as? Value {
             return validate(value)
         }
         return false
@@ -205,7 +197,7 @@ extension Validator where Value: Comparable {
     }
     
     /// 值区间验证器
-    public static func isBetween(
+    public static func between(
         min: @autoclosure @escaping () -> Value,
         max: @autoclosure @escaping () -> Value
     ) -> Self {
@@ -247,7 +239,7 @@ extension Validator where Value: StringProtocol {
     }
     
     /// 指定长度验证器
-    public static func isLength(
+    public static func length(
         _ count: @autoclosure @escaping () -> Int
     ) -> Self {
         .init { value in
@@ -256,7 +248,7 @@ extension Validator where Value: StringProtocol {
     }
     
     /// 长度区间验证器
-    public static func isLength(
+    public static func length(
         min: @autoclosure @escaping () -> Int = 0,
         max: @autoclosure @escaping () -> Int
     ) -> Self {
