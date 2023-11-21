@@ -122,7 +122,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
         
-        app.showEmptyView(text: NetworkUtils.isConnectionError(error) ? "网络连接失败" : "服务器异常", detail: error.localizedDescription, image: nil, action: "点击重试") { [weak self] _ in
+        app.showEmptyView(text: RequestError.isConnectionError(error) ? "网络连接失败" : "服务器异常", detail: error.localizedDescription, image: nil, action: "点击重试") { [weak self] _ in
             self?.loadRequestUrl()
         }
     }
