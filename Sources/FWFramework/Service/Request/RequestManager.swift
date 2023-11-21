@@ -18,6 +18,7 @@ open class RequestManager: NSObject {
     private var lock = NSLock()
     private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
     private var synchronousSemaphore = DispatchSemaphore(value: 1)
+    private var downloadFolderName = "Incomplete"
     
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
@@ -181,6 +182,24 @@ open class RequestManager: NSObject {
         return resultUrl?.absoluteString ?? ""
     }
     
+    /// 构建请求URLRequest
+    open func buildUrlRequest(_ request: HTTPRequest) throws -> URLRequest {
+        if let customUrlRequest = request.buildCustomUrlRequest() {
+            return customUrlRequest
+        }
+        
+        let urlRequest = try request.requestConfig.requestPlugin.urlRequest(for: request)
+        
+        request.filterUrlRequest(urlRequest)
+        
+        let filters = request.requestConfig.requestFilters
+        for filter in filters {
+            filter.filterUrlRequest?(urlRequest, with: request)
+        }
+        
+        return urlRequest as URLRequest
+    }
+    
     /// 获取响应编码
     open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
         var stringEncoding = String.Encoding.utf8
@@ -193,9 +212,48 @@ open class RequestManager: NSObject {
         return stringEncoding
     }
     
+    /// 根据规则验证JSON，返回验证结果
+    open func validateJSON(for request: HTTPRequest) -> Bool {
+        var result = true
+        let json = request.responseJSONObject
+        let validator = request.jsonValidator()
+        if let json = json, let validator = validator {
+            // TODO
+            result = true
+        }
+        return result
+    }
+    
     /// 获取下载路径的临时路径
     open func incompleteDownloadTempPath(for request: HTTPRequest, downloadPath: String?) -> URL? {
-        return nil
+        guard let downloadPath = downloadPath, !downloadPath.isEmpty else {
+            return nil
+        }
+        
+        var tempPath: String?
+        let cacheFolder = (NSTemporaryDirectory() as NSString).appendingPathComponent(downloadFolderName)
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: cacheFolder, isDirectory: &isDirectory), isDirectory.boolValue {
+            tempPath = cacheFolder
+        } else {
+            do {
+                try FileManager.default.createDirectory(atPath: cacheFolder, withIntermediateDirectories: true)
+                tempPath = cacheFolder
+            } catch {
+                tempPath = nil
+                #if DEBUG
+                if request.requestConfig.debugLogEnabled {
+                    Logger.debug(group: Logger.fw_moduleName, "Failed to create cache directory at %@ with error: %@", cacheFolder, error.localizedDescription)
+                }
+                #endif
+            }
+        }
+        guard var tempPath = tempPath else {
+            return nil
+        }
+        
+        tempPath = (tempPath as NSString).appendingPathComponent(downloadPath.fw_md5Encode)
+        return URL(fileURLWithPath: tempPath)
     }
     
     // MARK: - Private
@@ -236,27 +294,277 @@ open class RequestManager: NSObject {
     }
     
     private func dataTask(for request: HTTPRequest) throws {
-        // TODO: -
+        let startTime = Date().timeIntervalSince1970
+        let retryCount = request.requestConfig.requestRetrier.requestRetryCount(for: request)
+        try dataTask(for: request, retryCount: retryCount, remainCount: retryCount, startTime: startTime) { response, responseObject, error, decisionHandler in
+            guard let response = response as? HTTPURLResponse else {
+                decisionHandler(false)
+                return
+            }
+            
+            let shouldRetry = request.requestConfig.requestRetrier.requestRetryValidator(for: request, response: response, responseObject: responseObject, error: error)
+            if !shouldRetry {
+                decisionHandler(false)
+                return
+            }
+            
+            request.requestConfig.requestRetrier.requestRetryProcessor(for: request, response: response, responseObject: responseObject, error: error) { success in
+                decisionHandler(success)
+            }
+        } completionHandler: { [weak self] response, responseObject, error in
+            self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
+        }
+    }
+    
+    private func dataTask(
+        for request: HTTPRequest,
+        retryCount: Int,
+        remainCount: Int,
+        startTime: TimeInterval,
+        shouldRetry: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ decisionHandler: @escaping (Bool) -> Void) -> Void)?,
+        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+    ) throws {
+        let shouldRetry = shouldRetry ?? { response, responseObject, error, decisionHandler in
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+            decisionHandler(error != nil || statusCode < 200 || statusCode > 299)
+        }
+        
+        let urlRequest = try RequestManager.shared.buildUrlRequest(request)
+        request.requestConfig.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { response, responseObject, error in
+            if request.isCancelled { return }
+            
+            request.requestTotalCount = retryCount - remainCount + 1
+            request.requestTotalTime = Date().timeIntervalSince1970 - startTime
+            
+            let canRetry = retryCount < 0 || remainCount > 0
+            let waitTime: TimeInterval = canRetry ? max(0, request.requestConfig.requestRetrier.requestRetryInterval(for: request)) : 0
+            let timeoutInterval = request.requestConfig.requestRetrier.requestRetryTimeout(for: request)
+            if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
+                shouldRetry(response, responseObject, error, { retry in
+                    if request.isCancelled { return }
+                    
+                    if retry {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) { [weak self] in
+                            if request.isCancelled { return }
+                            
+                            do {
+                                try self?.dataTask(for: request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
+                                
+                                request.requestConfig.requestPlugin.startRequest(for: request)
+                            } catch let retryError {
+                                #if DEBUG
+                                if request.requestConfig.debugLogEnabled {
+                                    Logger.debug(group: Logger.fw_moduleName, "Failed to retry request %@ %@ with error: %@", request.requestMethod().rawValue, request.requestUrl(), retryError.localizedDescription)
+                                }
+                                #endif
+                            }
+                        }
+                    } else {
+                        completionHandler?(response, responseObject, error)
+                    }
+                })
+            } else {
+                completionHandler?(response, responseObject, error)
+            }
+        }
     }
     
     private func downloadTask(for request: HTTPRequest) throws {
-        // TODO: -
+        let urlRequest = try request.requestConfig.requestPlugin.urlRequest(for: request)
+        
+        request.filterUrlRequest(urlRequest)
+        
+        let filters = request.requestConfig.requestFilters
+        for filter in filters {
+            filter.filterUrlRequest?(urlRequest, with: request)
+        }
+        
+        let downloadPath = request.resumableDownloadPath ?? ""
+        var downloadTargetPath: String = ""
+        var isDirectory: ObjCBool = false
+        if !FileManager.default.fileExists(atPath: downloadPath, isDirectory: &isDirectory) {
+            isDirectory = false
+        }
+        if isDirectory.boolValue {
+            let fileName = urlRequest.url?.lastPathComponent ?? ""
+            downloadTargetPath = NSString.path(withComponents: [downloadPath, fileName])
+        } else {
+            downloadTargetPath = downloadPath
+        }
+        
+        if FileManager.default.fileExists(atPath: downloadTargetPath) {
+            try? FileManager.default.removeItem(atPath: downloadTargetPath)
+        }
+        
+        var resumeSucceed = false
+        if let localUrl = incompleteDownloadTempPath(for: request, downloadPath: downloadPath) {
+            let resumeDataFileExists = FileManager.default.fileExists(atPath: localUrl.path)
+            let data = try? Data(contentsOf: localUrl)
+            let resumeDataIsValid = validateResumeData(data)
+            
+            if resumeDataFileExists && resumeDataIsValid {
+                request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: nil, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
+                    self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+                }
+                resumeSucceed = request.requestTask != nil
+            }
+        }
+        if !resumeSucceed {
+            request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: urlRequest as URLRequest, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
+                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+            }
+        }
     }
     
     private func validateResult(_ request: HTTPRequest) throws {
+        if !request.statusCodeValidator() {
+            throw RequestError.validationInvalidStatusCode
+        }
         
+        if !validateJSON(for: request) {
+            throw RequestError.validationInvalidJSONFormat
+        }
+    }
+    
+    private func validateResumeData(_ data: Data?) -> Bool {
+        guard let data = data, data.count > 0 else { return false }
+        
+        let resumeDictionary = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil) as? [AnyHashable: Any]
+        if let resumeDictionary = resumeDictionary, !resumeDictionary.isEmpty {
+            return true
+        }
+        return false
     }
     
     private func handleRequestResult(_ requestIdentifier: Int, response: URLResponse?, responseObject: Any?, error: Error?) {
+        lock.lock()
+        let request = requestsRecord[requestIdentifier]
+        lock.unlock()
+        guard let request = request else { return }
         
+        var serializationError: Error?
+        do {
+            try request.requestConfig.requestPlugin.urlResponse(for: request, response: response, responseObject: responseObject)
+        } catch let responseError {
+            serializationError = responseError
+        }
+        
+        var requestError: Error?
+        var succeed = true
+        if error != nil {
+            succeed = false
+            requestError = error
+        } else if serializationError != nil {
+            succeed = false
+            requestError = serializationError
+        } else {
+            do {
+                try validateResult(request)
+            } catch let validationError {
+                succeed = false
+                requestError = validationError
+            }
+        }
+        
+        #if DEBUG
+        if !succeed, request.requestConfig.debugMockEnabled, request.responseMockValidator() {
+            succeed = request.responseMockProcessor()
+            if succeed {
+                requestError = nil
+            }
+        }
+        #endif
+        
+        if succeed {
+            do {
+                try request.filterResponse()
+            } catch let responseError {
+                succeed = false
+                requestError = responseError
+            }
+        }
+        
+        if succeed {
+            let filters = request.requestConfig.requestFilters
+            for filter in filters {
+                do {
+                    try filter.filterResponse?(with: request)
+                } catch let responseError {
+                    succeed = false
+                    requestError = responseError
+                }
+                if !succeed {
+                    break
+                }
+            }
+        }
+        
+        if succeed {
+            requestDidSucceed(request)
+        } else {
+            requestDidFail(request, error: requestError ?? RequestError.validationInvalidJSONFormat)
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.removeRequestFromRecord(request)
+            request.clearCompletionBlock()
+        }
     }
     
     private func requestDidSucceed(_ request: HTTPRequest) {
+        #if DEBUG
+        if request.requestConfig.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.responseString))
+        }
+        #endif
         
+        autoreleasepool {
+            request.requestCompletePreprocessor()
+        }
+        DispatchQueue.main.async {
+            request.toggleAccessoriesWillStopCallBack()
+            request.requestCompleteFilter()
+            request.delegate?.requestFinished(request)
+            request.successCompletionBlock?(request)
+            request.toggleAccessoriesDidStopCallBack()
+        }
     }
     
     private func requestDidFail(_ request: HTTPRequest, error: Error) {
+        request.error = error
+        #if DEBUG
+        if request.requestConfig.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST FAILED===========\n%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.error))
+        }
+        #endif
         
+        let incompleteDownloadData = (error as NSError).userInfo[NSURLSessionDownloadTaskResumeData] as? Data
+        if incompleteDownloadData != nil,
+           let downloadPath = request.resumableDownloadPath,
+           let localUrl = incompleteDownloadTempPath(for: request, downloadPath: downloadPath) {
+            try? incompleteDownloadData?.write(to: localUrl, options: .atomic)
+        }
+        
+        if let url = request.responseObject as? URL {
+            if url.isFileURL && FileManager.default.fileExists(atPath: url.path) {
+                request.responseData = try? Data(contentsOf: url)
+                request.responseString = request.responseData != nil ? String(data: request.responseData!, encoding: stringEncoding(for: request)) : nil
+                
+                try? FileManager.default.removeItem(at: url)
+            }
+            request.responseObject = nil
+        }
+        
+        autoreleasepool {
+            request.requestFailedPreprocessor()
+        }
+        DispatchQueue.main.async {
+            request.toggleAccessoriesWillStopCallBack()
+            request.requestFailedFilter()
+            request.delegate?.requestFailed(request)
+            request.failureCompletionBlock?(request)
+            request.toggleAccessoriesDidStopCallBack()
+        }
     }
     
 }

@@ -87,6 +87,29 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return urlReqeust
     }
     
+    open func urlResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?) throws {
+        request.responseObject = responseObject
+        if let responseData = request.responseObject as? Data {
+            request.responseData = responseData
+            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
+            
+            var error: NSError?
+            switch request.responseSerializerType() {
+            case .JSON:
+                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &error)
+                request.responseJSONObject = request.responseObject
+            case .xmlParser:
+                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &error)
+            default:
+                break
+            }
+            
+            if let error = error {
+                throw error
+            }
+        }
+    }
+    
     open func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: completionHandler)
     }
