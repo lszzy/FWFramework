@@ -44,7 +44,10 @@ class TestModelRequest: HTTPRequest {
     
     override func jsonValidator() -> Any? {
         return [
-            "name": Validator<String>(),
+            // 必须为String且不能为nil
+            "name": Validator<String>().anyValidator,
+            // 必须为String且可以为Nil
+            "nullName": Validator<String>.isValid.anyValidator,
         ]
     }
     

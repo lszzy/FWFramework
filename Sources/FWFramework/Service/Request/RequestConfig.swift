@@ -208,44 +208,33 @@ open class RequestValidator: NSObject, RequestValidatorProtocol {
         return validateJSON(json, with: jsonValidator)
     }
     
-    open func validateJSON(_ json: Any, with jsonValidator: Any) -> Bool {
-        if let dict = json as? NSDictionary,
-           let validator = jsonValidator as? NSDictionary {
+    open func validateJSON(_ json: Any?, with jsonValidator: Any) -> Bool {
+        if let dict = json as? [AnyHashable: Any],
+           let validatorDict = jsonValidator as? [AnyHashable: Any] {
             var result = true
-            let enumerator = validator.keyEnumerator()
-            while let key = enumerator.nextObject() as? String {
+            for (key, validator) in validatorDict {
                 let value = dict[key]
-                let format = validator[key]
-                if let value = value, let format = format,
-                   (value is NSDictionary || value is NSArray) {
-                    result = validateJSON(value, with: format)
+                result = validateJSON(value, with: validator)
+                if !result {
+                    break
+                }
+            }
+            return result
+        } else if let array = json as? [Any],
+                  let validatorArray = jsonValidator as? [Any] {
+            var result = true
+            if validatorArray.count > 0 {
+                let validator = validatorArray[0]
+                for item in array {
+                    result = validateJSON(item, with: validator)
                     if !result {
-                        break
-                    }
-                } else if let object = value as? NSObject,
-                          let validatorClass = format as? AnyClass {
-                    if !object.isKind(of: validatorClass) && !(object is NSNull) {
-                        result = false
                         break
                     }
                 }
             }
             return result
-        } else if let array = json as? NSArray,
-                  let validatorArray = jsonValidator as? NSArray {
-            if validatorArray.count > 0 {
-                let validator = validatorArray[0]
-                for item in array {
-                    let result = validateJSON(item, with: validator)
-                    if !result {
-                        return false
-                    }
-                }
-            }
-            return true
-        } else if let object = json as? NSObject,
-                  let validatorClass = jsonValidator as? AnyClass {
-            return object.isKind(of: validatorClass)
+        } else if let anyValidator = jsonValidator as? AnyValidator {
+            return anyValidator.validate(json)
         } else {
             return false
         }
