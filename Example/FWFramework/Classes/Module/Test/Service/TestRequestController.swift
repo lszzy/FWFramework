@@ -235,7 +235,7 @@ private extension TestRequestController {
         } failure: { _ in
             self.app.hideLoading()
             
-            var message = "json请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")"
+            var message = "json请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")"
             let serverTime = request.responseServerTime
             if serverTime > 0 {
                 Date.app.currentTime = serverTime
@@ -253,7 +253,7 @@ private extension TestRequestController {
             self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "天气请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
+            self.app.showMessage(text: "天气请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
@@ -266,7 +266,7 @@ private extension TestRequestController {
             self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in
             self.app.hideLoading()
-            self.app.showMessage(text: "天气请求\(NetworkUtils.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
+            self.app.showMessage(text: "天气请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
         }
     }
     
