@@ -93,9 +93,7 @@ open class HTTPRequest: NSObject {
     /// 当前URLSessionTask，请求开始后可用
     open var requestTask: URLSessionTask?
     /// 当前请求唯一标志符
-    open var requestIdentifier: Int {
-        return requestTask?.taskIdentifier ?? 0
-    }
+    open var requestIdentifier: Int = 0
     /// 自定义标签，默认0
     open var tag: Int = 0
     /// 自定义用户信息

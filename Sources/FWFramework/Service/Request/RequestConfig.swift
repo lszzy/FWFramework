@@ -21,7 +21,15 @@ import Foundation
     @objc optional func filterUrlRequest(_ urlRequest: NSMutableURLRequest, with request: HTTPRequest)
     
     /// 请求Response过滤器，处理后才调用回调
-    @objc optional func filterResponse(with request: HTTPRequest) throws
+    func filterResponse(with request: HTTPRequest) throws
+    
+}
+
+extension RequestFilterProtocol {
+    
+    /// 默认实现请求Response过滤器，处理后才调用回调
+    public func filterResponse(with request: HTTPRequest) throws {
+    }
     
 }
 
@@ -48,7 +56,10 @@ open class RequestConfig: NSObject {
     private var _requestPlugin: RequestPlugin?
     
     /// 当前请求重试器，默认全局重试器
-    open lazy var requestRetrier: RequestRetrierProtocol = RequestRetrier.default
+    open var requestRetrier: RequestRetrierProtocol = RequestRetrier.default
+    
+    /// 当前请求验证器，默认全局验证器
+    open var requestValidator: RequestValidatorProtocol = RequestValidator.default
     
     /// 请求过滤器数组
     open private(set) var requestFilters: [RequestFilterProtocol] = []
@@ -174,6 +185,70 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
     
     open func requestRetryProcessor(for request: HTTPRequest, response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
         request.requestRetryProcessor(response, responseObject: responseObject, error: error, completionHandler: completionHandler)
+    }
+}
+
+// MARK: - RequestValidator
+/// 请求验证器协议
+public protocol RequestValidatorProtocol: AnyObject {
+    /// 验证响应结果，返回是否验证通过
+    func validateResponse(for request: HTTPRequest) -> Bool
+}
+
+/// 默认请求验证器，调用jsonValidator验证responseJSONObject
+open class RequestValidator: NSObject, RequestValidatorProtocol {
+    public static let `default` = RequestValidator()
+    
+    open func validateResponse(for request: HTTPRequest) -> Bool {
+        guard let json = request.responseJSONObject,
+              let jsonValidator = request.jsonValidator() else {
+            return true
+        }
+        
+        return validateJSON(json, with: jsonValidator)
+    }
+    
+    open func validateJSON(_ json: Any, with jsonValidator: Any) -> Bool {
+        if let dict = json as? NSDictionary,
+           let validator = jsonValidator as? NSDictionary {
+            var result = true
+            let enumerator = validator.keyEnumerator()
+            while let key = enumerator.nextObject() as? String {
+                let value = dict[key]
+                let format = validator[key]
+                if let value = value, let format = format,
+                   (value is NSDictionary || value is NSArray) {
+                    result = validateJSON(value, with: format)
+                    if !result {
+                        break
+                    }
+                } else if let object = value as? NSObject,
+                          let validatorClass = format as? AnyClass {
+                    if !object.isKind(of: validatorClass) && !(object is NSNull) {
+                        result = false
+                        break
+                    }
+                }
+            }
+            return result
+        } else if let array = json as? NSArray,
+                  let validatorArray = jsonValidator as? NSArray {
+            if validatorArray.count > 0 {
+                let validator = validatorArray[0]
+                for item in array {
+                    let result = validateJSON(item, with: validator)
+                    if !result {
+                        return false
+                    }
+                }
+            }
+            return true
+        } else if let object = json as? NSObject,
+                  let validatorClass = jsonValidator as? AnyClass {
+            return object.isKind(of: validatorClass)
+        } else {
+            return false
+        }
     }
 }
 

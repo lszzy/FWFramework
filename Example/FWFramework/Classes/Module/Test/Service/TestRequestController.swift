@@ -42,6 +42,12 @@ class TestModelRequest: HTTPRequest {
         }
     }
     
+    override func jsonValidator() -> Any? {
+        return [
+            "name": Validator<String>(),
+        ]
+    }
+    
     override func requestCompleteFilter() {
         let responseJSON = JSON(responseJSONObject)
         responseName = responseJSON["name"].stringValue

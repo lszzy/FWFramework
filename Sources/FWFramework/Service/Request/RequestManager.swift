@@ -212,18 +212,6 @@ open class RequestManager: NSObject {
         return stringEncoding
     }
     
-    /// 根据规则验证JSON，返回验证结果
-    open func validateJSON(for request: HTTPRequest) -> Bool {
-        var result = true
-        let json = request.responseJSONObject
-        let validator = request.jsonValidator()
-        if let json = json, let validator = validator {
-            // TODO
-            result = true
-        }
-        return result
-    }
-    
     /// 获取下载路径的临时路径
     open func incompleteDownloadTempPath(for request: HTTPRequest, downloadPath: String?) -> URL? {
         guard let downloadPath = downloadPath, !downloadPath.isEmpty else {
@@ -282,14 +270,16 @@ open class RequestManager: NSObject {
         } else {
             try dataTask(for: request)
         }
+        guard let requestTask = request.requestTask else { return }
         
+        request.requestIdentifier = requestTask.taskIdentifier
         switch request.requestPriority {
         case .high:
-            request.requestTask?.priority = URLSessionTask.highPriority
+            requestTask.priority = URLSessionTask.highPriority
         case .low:
-            request.requestTask?.priority = URLSessionTask.lowPriority
+            requestTask.priority = URLSessionTask.lowPriority
         default:
-            request.requestTask?.priority = URLSessionTask.defaultPriority
+            requestTask.priority = URLSessionTask.defaultPriority
         }
     }
     
@@ -417,11 +407,13 @@ open class RequestManager: NSObject {
     }
     
     private func validateResult(_ request: HTTPRequest) throws {
-        if !request.statusCodeValidator() {
+        var result = request.statusCodeValidator()
+        if !result {
             throw RequestError.validationInvalidStatusCode
         }
         
-        if !validateJSON(for: request) {
+        result = request.requestConfig.requestValidator.validateResponse(for: request)
+        if !result {
             throw RequestError.validationInvalidJSONFormat
         }
     }
@@ -488,7 +480,7 @@ open class RequestManager: NSObject {
             let filters = request.requestConfig.requestFilters
             for filter in filters {
                 do {
-                    try filter.filterResponse?(with: request)
+                    try filter.filterResponse(with: request)
                 } catch let responseError {
                     succeed = false
                     requestError = responseError
