@@ -312,7 +312,7 @@ open class HTTPRequest: NSObject {
         return nil
     }
     
-    /// JSON验证器
+    /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
         return nil
     }

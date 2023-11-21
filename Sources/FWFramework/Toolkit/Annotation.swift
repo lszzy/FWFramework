@@ -131,12 +131,11 @@ public struct ValidatedValue<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: T? = nil,
-        defaultValid: @autoclosure @escaping () -> Bool = false
+        defaultValue: T? = nil
     ) where WrappedValue? == T {
         self.init(
             wrappedValue: wrappedValue,
-            Validator(validator, defaultValid: defaultValid()),
+            Validator(validator),
             defaultValue: defaultValue
         )
     }
