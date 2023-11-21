@@ -242,7 +242,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             // 更新 videoPlayerView 的大小时，videoView 可能已经被缩放过，所以要应用当前的缩放
             videoPlayerView?.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: self.videoSize.width, height: self.videoSize.height)
             
-            NotificationCenter.default.addObserver(self, selector: #selector(handleVideoPlayToEndEvent), name: AVPlayerItem.didPlayToEndTimeNotification, object: videoPlayerItem)
+            NotificationCenter.default.addObserver(self, selector: #selector(handleVideoPlayToEndEvent), name: .AVPlayerItemDidPlayToEndTime, object: videoPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
             
             configVideoProgressSlider()
@@ -799,7 +799,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func destroyVideoRelatedObjectsIfNeeded() {
-        NotificationCenter.default.removeObserver(self, name: AVPlayerItem.didPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
         removePlayerTimeObserver()
         
