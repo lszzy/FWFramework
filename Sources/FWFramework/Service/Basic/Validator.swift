@@ -8,10 +8,18 @@
 import Foundation
 
 // MARK: - Validator
+/// 任意值验证器
+public typealias AnyValidator = Validator<Any>
+
 /// 规则验证器，可扩展
 public struct Validator<Value> {
     
     private let predicate: (Value) -> Bool
+    
+    /// 默认空验证器
+    public init() {
+        self.predicate = { value in true }
+    }
     
     /// 初始化验证器
     public init(
@@ -33,6 +41,22 @@ public struct Validator<Value> {
     /// 执行验证并返回结果
     public func validate(_ value: Value) -> Bool {
         self.predicate(value)
+    }
+    
+    /// 执行可选值验证并返回结果
+    public func validate(_ value: Value?) -> Bool {
+        if let value = value {
+            return validate(value)
+        }
+        return false
+    }
+    
+    /// 执行任意值验证并返回结果
+    public func validate(_ value: Any?) -> Bool {
+        if let value = value as? Value {
+            return validate(value)
+        }
+        return false
     }
     
 }
