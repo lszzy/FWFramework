@@ -26,9 +26,9 @@ open class RequestManager: NSObject {
             try sessionTask(for: request)
             
             addRecord(for: request)
-            request.requestConfig.requestPlugin.startRequest(for: request)
+            request.config.requestPlugin.startRequest(for: request)
             #if DEBUG
-            if request.requestConfig.debugLogEnabled {
+            if request.config.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
             }
             #endif
@@ -46,13 +46,13 @@ open class RequestManager: NSObject {
                 try? resumeData?.write(to: localUrl, options: .atomic)
             })
         } else {
-            request.requestConfig.requestPlugin.cancelRequest(for: request)
+            request.config.requestPlugin.cancelRequest(for: request)
         }
         
         removeRecord(for: request)
         request.clearCompletionBlock()
         #if DEBUG
-        if request.requestConfig.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
         }
         #endif
@@ -159,7 +159,7 @@ open class RequestManager: NSObject {
             return requestUrl
         }
         
-        let filters = request.requestConfig.requestFilters
+        let filters = request.config.requestFilters
         for filter in filters {
             if let filterUrl = filter.filterUrl?(requestUrl, with: request) {
                 requestUrl = filterUrl
@@ -168,9 +168,9 @@ open class RequestManager: NSObject {
         
         let baseUrl: String
         if request.useCDN() {
-            baseUrl = request.cdnUrl().count > 0 ? request.cdnUrl() : request.requestConfig.cdnUrl
+            baseUrl = request.cdnUrl().count > 0 ? request.cdnUrl() : request.config.cdnUrl
         } else {
-            baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : request.requestConfig.baseUrl
+            baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : request.config.baseUrl
         }
         
         var url = URL.fw_url(string: baseUrl)
@@ -188,11 +188,11 @@ open class RequestManager: NSObject {
             return customUrlRequest
         }
         
-        let urlRequest = try request.requestConfig.requestPlugin.urlRequest(for: request)
+        let urlRequest = try request.config.requestPlugin.urlRequest(for: request)
         
         request.filterUrlRequest(urlRequest)
         
-        let filters = request.requestConfig.requestFilters
+        let filters = request.config.requestFilters
         for filter in filters {
             filter.filterUrlRequest?(urlRequest, with: request)
         }
@@ -230,7 +230,7 @@ open class RequestManager: NSObject {
             } catch {
                 tempPath = nil
                 #if DEBUG
-                if request.requestConfig.debugLogEnabled {
+                if request.config.debugLogEnabled {
                     Logger.debug(group: Logger.fw_moduleName, "Failed to create cache directory at %@ with error: %@", cacheFolder, error.localizedDescription)
                 }
                 #endif
@@ -257,7 +257,7 @@ open class RequestManager: NSObject {
         requestsRecord.removeValue(forKey: request.requestIdentifier)
         #if DEBUG
         if requestsRecord.count > 0 {
-            if request.requestConfig.debugLogEnabled {
+            if request.config.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "Request queue size = %zd", requestsRecord.count)
             }
         }
@@ -284,15 +284,15 @@ open class RequestManager: NSObject {
     }
     
     private func dataTask(for request: HTTPRequest) throws {
-        let retryRequest = request.requestConfig.requestPlugin.retryRequest(for: request)
-        if retryRequest, let requestRetrier = request.requestConfig.requestRetrier {
+        let retryRequest = request.config.requestPlugin.retryRequest(for: request)
+        if retryRequest, let requestRetrier = request.config.requestRetrier {
             try requestRetrier.retryDataTask(for: request) { [weak self] response, responseObject, error in
                 self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         } else {
             let startTime = Date().timeIntervalSince1970
             let urlRequest = try RequestManager.shared.buildUrlRequest(request)
-            request.requestConfig.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { [weak self] response, responseObject, error in
+            request.config.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { [weak self] response, responseObject, error in
                 request.requestTotalCount = 1
                 request.requestTotalTime = Date().timeIntervalSince1970 - startTime
                 
@@ -302,11 +302,11 @@ open class RequestManager: NSObject {
     }
     
     private func downloadTask(for request: HTTPRequest) throws {
-        let urlRequest = try request.requestConfig.requestPlugin.urlRequest(for: request)
+        let urlRequest = try request.config.requestPlugin.urlRequest(for: request)
         
         request.filterUrlRequest(urlRequest)
         
-        let filters = request.requestConfig.requestFilters
+        let filters = request.config.requestFilters
         for filter in filters {
             filter.filterUrlRequest?(urlRequest, with: request)
         }
@@ -335,14 +335,14 @@ open class RequestManager: NSObject {
             let resumeDataIsValid = validateResumeData(data)
             
             if resumeDataFileExists && resumeDataIsValid {
-                request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: nil, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
+                request.config.requestPlugin.downloadTask(for: request, urlRequest: nil, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
                     self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
                 }
                 resumeSucceed = request.requestTask != nil
             }
         }
         if !resumeSucceed {
-            request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: urlRequest as URLRequest, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
+            request.config.requestPlugin.downloadTask(for: request, urlRequest: urlRequest as URLRequest, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
                 self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
             }
         }
@@ -356,7 +356,7 @@ open class RequestManager: NSObject {
         
         var serializationError: Error?
         do {
-            try request.requestConfig.requestPlugin.urlResponse(for: request, response: response, responseObject: responseObject)
+            try request.config.requestPlugin.urlResponse(for: request, response: response, responseObject: responseObject)
         } catch let responseError {
             serializationError = responseError
         }
@@ -379,7 +379,7 @@ open class RequestManager: NSObject {
         }
         
         #if DEBUG
-        if !succeed, request.requestConfig.debugMockEnabled, request.responseMockValidator() {
+        if !succeed, request.config.debugMockEnabled, request.responseMockValidator() {
             succeed = request.responseMockProcessor()
             if succeed {
                 requestError = nil
@@ -397,7 +397,7 @@ open class RequestManager: NSObject {
         }
         
         if succeed {
-            let filters = request.requestConfig.requestFilters
+            let filters = request.config.requestFilters
             for filter in filters {
                 do {
                     try filter.filterResponse(with: request)
@@ -428,7 +428,7 @@ open class RequestManager: NSObject {
             throw RequestError.validationInvalidStatusCode
         }
         
-        if let requestValidator = request.requestConfig.requestValidator,
+        if let requestValidator = request.config.requestValidator,
            !requestValidator.validateResponse(for: request) {
             throw RequestError.validationInvalidJSONFormat
         }
@@ -446,7 +446,7 @@ open class RequestManager: NSObject {
     
     private func requestDidSucceed(_ request: HTTPRequest) {
         #if DEBUG
-        if request.requestConfig.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.responseString))
         }
         #endif
@@ -466,7 +466,7 @@ open class RequestManager: NSObject {
     private func requestDidFail(_ request: HTTPRequest, error: Error) {
         request.error = error
         #if DEBUG
-        if request.requestConfig.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST FAILED===========\n%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.error))
         }
         #endif

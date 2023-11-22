@@ -23,7 +23,7 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: NSObject, RequestDelegate {
+open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
     /// 回调句柄声明
     public typealias Callback = (ChainRequest, HTTPRequest) -> Void
@@ -44,6 +44,12 @@ open class ChainRequest: NSObject, RequestDelegate {
     open private(set) var succeedRequest: HTTPRequest?
     /// 最后一个导致队列请求失败的请求
     open private(set) var failedRequest: HTTPRequest?
+    /// 当前网络错误
+    open var error: Error? {
+        return failedRequest?.error
+    }
+    /// 请求是否已取消
+    open private(set) var isCancelled = false
     /// 请求间的时间间隔
     open var requestInterval: TimeInterval = 0
     /// 某个请求失败时，是否立即停止队列请求，默认true
@@ -57,6 +63,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     private var nextRequestIndex: Int = 0
     private weak var nextRequest: HTTPRequest?
     private let emptyCallback: Callback = { _, _ in }
+    private lazy var contextAccessory = RequestContextAccessory()
     
     public override init() {
         super.init()
@@ -79,7 +86,6 @@ open class ChainRequest: NSObject, RequestDelegate {
         succeedRequest = nil
         failedRequest = nil
         RequestManager.shared.addChainRequest(self)
-        toggleAccessoriesWillStartCallBack()
         startNextRequest(nil)
     }
     
@@ -88,6 +94,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         clearRequest()
+        isCancelled = true
         toggleAccessoriesDidStopCallBack()
         RequestManager.shared.removeChainRequest(self)
     }
@@ -136,6 +143,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
+        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
@@ -143,6 +151,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
+        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
@@ -150,6 +159,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
+        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -185,9 +195,15 @@ open class ChainRequest: NSObject, RequestDelegate {
             }
         }
         
+        if previousRequest == nil {
+            toggleAccessoriesWillStartCallBack()
+        }
+        
         if nextRequestIndex < requestArray.count {
             let request = requestArray[nextRequestIndex]
             nextRequestIndex += 1
+            request.autoShowLoading = false
+            request.autoShowError = false
             request.delegate = self
             request.clearCompletionBlock()
             if nextRequestIndex > 1 && requestInterval > 0 {
@@ -234,6 +250,29 @@ open class ChainRequest: NSObject, RequestDelegate {
         requestCallbackArray.removeAll()
         requestBuilder = nil
         clearCompletionBlock()
+    }
+    
+    // MARK: - Context
+    /// 自定义请求的上下文，支持UIViewController|UIView，nil时默认获取主窗口
+    open weak var context: AnyObject?
+    /// 是否自动显示错误信息
+    open var autoShowError = false
+    /// 是否自动显示加载信息
+    open var autoShowLoading = false
+    
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        contextAccessory.showError(for: self)
+    }
+    
+    /// 显示加载条，默认显示加载插件
+    open func showLoading() {
+        contextAccessory.showLoading(for: self)
+    }
+    
+    /// 隐藏加载条，默认隐藏加载插件
+    open func hideLoading() {
+        contextAccessory.hideLoading(for: self)
     }
     
 }

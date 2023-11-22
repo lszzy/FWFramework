@@ -23,7 +23,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: NSObject, RequestDelegate {
+open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
@@ -43,6 +43,12 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     /// 已失败请求数组
     open private(set) var failedRequestArray: [HTTPRequest] = []
+    /// 当前网络错误
+    open var error: Error? {
+        return failedRequest?.error
+    }
+    /// 请求是否已取消
+    open private(set) var isCancelled = false
     /// 某个请求失败时，是否立即停止批量请求，默认true
     open var stoppedOnFailure = true
     
@@ -59,6 +65,7 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     
     private var finishedCount: Int = 0
+    private lazy var contextAccessory = RequestContextAccessory()
     
     /// 指定请求数组初始化
     public init(requestArray: [HTTPRequest]) {
@@ -78,6 +85,8 @@ open class BatchRequest: NSObject, RequestDelegate {
         RequestManager.shared.addBatchRequest(self)
         toggleAccessoriesWillStartCallBack()
         for req in requestArray {
+            req.autoShowLoading = false
+            req.autoShowError = false
             req.delegate = self
             req.clearCompletionBlock()
             req.start()
@@ -89,6 +98,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         clearRequest()
+        isCancelled = true
         toggleAccessoriesDidStopCallBack()
         RequestManager.shared.removeBatchRequest(self)
     }
@@ -137,6 +147,7 @@ open class BatchRequest: NSObject, RequestDelegate {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
+        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
@@ -144,6 +155,7 @@ open class BatchRequest: NSObject, RequestDelegate {
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
+        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
@@ -151,6 +163,7 @@ open class BatchRequest: NSObject, RequestDelegate {
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
+        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -200,6 +213,29 @@ open class BatchRequest: NSObject, RequestDelegate {
             req.stop()
         }
         clearCompletionBlock()
+    }
+    
+    // MARK: - Context
+    /// 自定义请求的上下文，支持UIViewController|UIView，nil时默认获取主窗口
+    open weak var context: AnyObject?
+    /// 是否自动显示错误信息
+    open var autoShowError = false
+    /// 是否自动显示加载信息
+    open var autoShowLoading = false
+    
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        contextAccessory.showError(for: self)
+    }
+    
+    /// 显示加载条，默认显示加载插件
+    open func showLoading() {
+        contextAccessory.showLoading(for: self)
+    }
+    
+    /// 隐藏加载条，默认隐藏加载插件
+    open func hideLoading() {
+        contextAccessory.hideLoading(for: self)
     }
     
 }
