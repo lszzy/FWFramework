@@ -284,77 +284,19 @@ open class RequestManager: NSObject {
     }
     
     private func dataTask(for request: HTTPRequest) throws {
-        let startTime = Date().timeIntervalSince1970
-        let retryCount = request.requestConfig.requestRetrier.requestRetryCount(for: request)
-        try dataTask(for: request, retryCount: retryCount, remainCount: retryCount, startTime: startTime) { response, responseObject, error, decisionHandler in
-            guard let response = response as? HTTPURLResponse else {
-                decisionHandler(false)
-                return
+        let retryRequest = request.requestConfig.requestPlugin.retryRequest(for: request)
+        if retryRequest, let requestRetrier = request.requestConfig.requestRetrier {
+            try requestRetrier.retryDataTask(for: request) { [weak self] response, responseObject, error in
+                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
-            
-            let shouldRetry = request.requestConfig.requestRetrier.requestRetryValidator(for: request, response: response, responseObject: responseObject, error: error)
-            if !shouldRetry {
-                decisionHandler(false)
-                return
-            }
-            
-            request.requestConfig.requestRetrier.requestRetryProcessor(for: request, response: response, responseObject: responseObject, error: error) { success in
-                decisionHandler(success)
-            }
-        } completionHandler: { [weak self] response, responseObject, error in
-            self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
-        }
-    }
-    
-    private func dataTask(
-        for request: HTTPRequest,
-        retryCount: Int,
-        remainCount: Int,
-        startTime: TimeInterval,
-        shouldRetry: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ decisionHandler: @escaping (Bool) -> Void) -> Void)?,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
-    ) throws {
-        let shouldRetry = shouldRetry ?? { response, responseObject, error, decisionHandler in
-            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-            decisionHandler(error != nil || statusCode < 200 || statusCode > 299)
-        }
-        
-        let urlRequest = try RequestManager.shared.buildUrlRequest(request)
-        request.requestConfig.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { response, responseObject, error in
-            if request.isCancelled { return }
-            
-            request.requestTotalCount = retryCount - remainCount + 1
-            request.requestTotalTime = Date().timeIntervalSince1970 - startTime
-            
-            let canRetry = retryCount < 0 || remainCount > 0
-            let waitTime: TimeInterval = canRetry ? max(0, request.requestConfig.requestRetrier.requestRetryInterval(for: request)) : 0
-            let timeoutInterval = request.requestConfig.requestRetrier.requestRetryTimeout(for: request)
-            if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
-                shouldRetry(response, responseObject, error, { retry in
-                    if request.isCancelled { return }
-                    
-                    if retry {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) { [weak self] in
-                            if request.isCancelled { return }
-                            
-                            do {
-                                try self?.dataTask(for: request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
-                                
-                                request.requestConfig.requestPlugin.startRequest(for: request)
-                            } catch let retryError {
-                                #if DEBUG
-                                if request.requestConfig.debugLogEnabled {
-                                    Logger.debug(group: Logger.fw_moduleName, "Failed to retry request %@ %@ with error: %@", request.requestMethod().rawValue, request.requestUrl(), retryError.localizedDescription)
-                                }
-                                #endif
-                            }
-                        }
-                    } else {
-                        completionHandler?(response, responseObject, error)
-                    }
-                })
-            } else {
-                completionHandler?(response, responseObject, error)
+        } else {
+            let startTime = Date().timeIntervalSince1970
+            let urlRequest = try RequestManager.shared.buildUrlRequest(request)
+            request.requestConfig.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { [weak self] response, responseObject, error in
+                request.requestTotalCount = 1
+                request.requestTotalTime = Date().timeIntervalSince1970 - startTime
+                
+                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         }
     }
@@ -407,13 +349,12 @@ open class RequestManager: NSObject {
     }
     
     private func validateResult(_ request: HTTPRequest) throws {
-        var result = request.statusCodeValidator()
-        if !result {
+        if !request.statusCodeValidator() {
             throw RequestError.validationInvalidStatusCode
         }
         
-        result = request.requestConfig.requestValidator.validateResponse(for: request)
-        if !result {
+        if let requestValidator = request.requestConfig.requestValidator,
+           !requestValidator.validateResponse(for: request) {
             throw RequestError.validationInvalidJSONFormat
         }
     }
