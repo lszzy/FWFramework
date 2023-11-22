@@ -110,6 +110,10 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         }
     }
     
+    open func retryRequest(for request: HTTPRequest) -> Bool {
+        return true
+    }
+    
     open func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: completionHandler)
     }
