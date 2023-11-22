@@ -20,11 +20,11 @@
 // THE SOFTWARE.
 
 #import "URLResponseSerialization.h"
+#import "ObjC.h"
 #import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
-#import <FWFramework/FWFramework-Swift.h>
 
 NSString * const __FWURLResponseSerializationErrorDomain = @"site.wuyong.error.serialization.response";
 NSString * const __FWNetworkingOperationFailingURLResponseErrorKey = @"site.wuyong.serialization.response.error.response";
@@ -566,33 +566,17 @@ static UIImage * __FWImageWithDataAtScale(NSData *data, CGFloat scale, NSDiction
     }
     
     static NSLock *imageLock = nil;
-    static BOOL imageHook = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageLock = [[NSLock alloc] init];
-        imageHook = [UIImage respondsToSelector:@selector(__fw_imageWithData:scale:options:)];
     });
-    
-    // Use hook method if exists
-    if (imageHook) {
-        UIImage *image = nil;
-        [imageLock lock];
-        image = [UIImage __fw_imageWithData:data scale:scale options:options];
-        [imageLock unlock];
-        
-        return image;
-    }
     
     UIImage *image = nil;
     [imageLock lock];
-    image = [UIImage imageWithData:data];
+    image = [FWObjCBridge decodeImage:data scale:scale options:options];
     [imageLock unlock];
     
-    if (image.images || !image) {
-        return image;
-    }
-
-    return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
+    return image;
 }
 
 static UIImage * __FWInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *response, NSData *data, CGFloat scale, NSDictionary *options) {

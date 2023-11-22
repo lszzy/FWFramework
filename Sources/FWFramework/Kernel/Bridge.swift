@@ -15,14 +15,6 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension NSDate {
-    
-    public static func __fw_formatServerDate(_ dateString: String) -> TimeInterval {
-        return Date.fw_formatServerDate(dateString)
-    }
-    
-}
-
 @_spi(FW) @objc extension UIView {
     
     @discardableResult
@@ -52,31 +44,8 @@ import UIKit
 
 @_spi(FW) @objc extension UIImage {
     
-    public func __fw_image(alpha: CGFloat) -> UIImage? {
-        return fw_image(alpha: alpha)
-    }
-    
-    public func __fw_image(scaleSize size: CGSize) -> UIImage? {
-        return fw_image(scaleSize: size)
-    }
-    
     public func __fw_croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         return fw_croppedImage(frame: frame, angle: angle, circular: circular)
-    }
-    
-    public static func __fw_image(data: Data?, scale: CGFloat = 1, options: [AnyHashable: Any]? = nil) -> UIImage? {
-        var targetOptions: [ImageCoderOptions: Any]?
-        if let options = options {
-            targetOptions = [:]
-            for (key, value) in options {
-                if let option = key as? ImageCoderOptions {
-                    targetOptions?[option] = value
-                } else {
-                    targetOptions?[.init("\(key)")] = value
-                }
-            }
-        }
-        return fw_image(data: data, scale: scale, options: targetOptions)
     }
     
 }

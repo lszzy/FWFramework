@@ -34,6 +34,9 @@ public enum ResponseSerializerType: Int {
     case xmlParser
 }
 
+/// 请求表单数据协议
+public typealias RequestMultipartFormData = MultipartFormData
+
 /// 请求优先级
 public enum RequestPriority: Int {
     case `default` = 0
@@ -755,25 +758,6 @@ open class HTTPRequest: NSObject {
         }
     }
     
-}
-
-// MARK: - RequestMultipartFormData
-/// 请求表单数据协议
-@objc public protocol RequestMultipartFormData {
-    /// 添加文件，自动使用fileName和mimeType
-    func appendPart(fileURL: URL, name: String)
-    /// 添加文件，指定fileName和mimeType
-    func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String)
-    /// 添加输入流，指定fileName和mimeType
-    func appendPart(inputStream: InputStream?, name: String, fileName: String, length: Int64, mimeType: String)
-    /// 添加文件数据，指定fileName和mimeType
-    func appendPart(fileData: Data, name: String, fileName: String, mimeType: String)
-    /// 添加表单数据
-    func appendPart(formData: Data, name: String)
-    /// 添加头信息和主题数据
-    func appendPart(headers: [String: String]?, body: Data)
-    /// 限制请求带宽
-    func throttleBandwidth(packetSize numberOfBytes: UInt, dalay: TimeInterval)
 }
 
 // MARK: - RequestError

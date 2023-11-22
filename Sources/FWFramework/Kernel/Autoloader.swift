@@ -169,4 +169,20 @@ internal class FrameworkAutoloader: NSObject {
         #endif
     }
     
+    /// 图片解码桥接方法
+    public static func image(_ data: Data, scale: CGFloat, options: [AnyHashable : Any]? = nil) -> UIImage? {
+        var targetOptions: [ImageCoderOptions: Any]?
+        if let options = options {
+            targetOptions = [:]
+            for (key, value) in options {
+                if let option = key as? ImageCoderOptions {
+                    targetOptions?[option] = value
+                } else {
+                    targetOptions?[.init("\(key)")] = value
+                }
+            }
+        }
+        return UIImage.fw_image(data: data, scale: scale, options: targetOptions)
+    }
+    
 }
