@@ -84,14 +84,14 @@ open class RequestConfig: NSObject {
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
     
-    /// 自定义请求上下文配件创建句柄，默认nil
-    open var contextAccessoryBlock: ((RequestContextProtocol) -> RequestContextAccessory)?
+    /// 自定义请求上下文配件句柄，默认nil
+    open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     /// 自定义显示错误方法，主线程优先调用，默认nil
-    open var showErrorBlock: ((RequestContextProtocol) -> Void)?
+    open var showErrorBlock: ((HTTPRequest) -> Void)?
     /// 自定义显示加载方法，主线程优先调用，默认nil
-    open var showLoadingBlock: ((RequestContextProtocol) -> Void)?
+    open var showLoadingBlock: ((HTTPRequest) -> Void)?
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
-    open var hideLoadingBlock: ((RequestContextProtocol) -> Void)?
+    open var hideLoadingBlock: ((HTTPRequest) -> Void)?
     
     public override init() {
         super.init()
@@ -155,44 +155,33 @@ open class RequestAccessory: NSObject, RequestAccessoryProtocol {
     }
 }
 
-// MARK: - RequestContext
-/// 请求上下文协议，用于处理加载条和显示错误等
-public protocol RequestContextProtocol: AnyObject {
-    /// 当前请求上下文弱引用，支持UIViewController|UIView，nil时默认获取主窗口
-    var context: AnyObject? { get set }
-    /// 当前请求错误信息
-    var error: Error? { get }
-    /// 请求是否已取消
-    var isCancelled: Bool { get }
-    
-    /// 是否自动显示错误信息
-    var autoShowError: Bool { get set }
-    /// 是否自动显示加载信息
-    var autoShowLoading: Bool { get set }
-    
-    /// 显示网络错误，默认显示Toast提示
-    func showError()
-    /// 显示加载条，默认显示加载插件
-    func showLoading()
-    /// 隐藏加载条，默认隐藏加载插件
-    func hideLoading()
-}
-
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory {
+    /// 是否自动初始化当前context控制器，默认true
+    open var autoSetupContext: Bool = true
+    /// 是否自动监听当前context控制器，当释放时自动停止请求，默认true
+    open var autoObserveContext: Bool = true
+    
     public override init() {
         super.init()
         
-        self.willStartBlock = { request in
-            guard let request = request as? RequestContextProtocol else { return }
+        self.willStartBlock = { [weak self] request in
+            guard let request = request as? HTTPRequest else { return }
             
+            if (request.autoShowLoading || request.autoShowError),
+               self?.autoSetupContext == true, request.context == nil {
+                self?.setupContext(for: request)
+            }
+            if request.context != nil, self?.autoObserveContext == true {
+                self?.observeContext(for: request)
+            }
             if request.autoShowLoading {
                 request.showLoading()
             }
         }
         self.willStopBlock = nil
         self.didStopBlock = { request in
-            guard let request = request as? RequestContextProtocol else { return }
+            guard let request = request as? HTTPRequest else { return }
             
             if request.autoShowLoading {
                 request.hideLoading()
@@ -203,18 +192,35 @@ open class RequestContextAccessory: RequestAccessory {
         }
     }
     
-    open func showError(for request: RequestContextProtocol) {
-        guard !request.isCancelled, let error = request.error else { return }
+    /// 初始化请求上下文，默认获取当前顶部控制器
+    open func setupContext(for request: HTTPRequest) {
+        guard request.context == nil else { return }
         
-        var configRequest: HTTPRequest?
-        if let httpRequest = request as? HTTPRequest {
-            configRequest = httpRequest
-        } else if let batchRequest = request as? BatchRequest {
-            configRequest = batchRequest.failedRequest
-        } else if let chainRequest = request as? ChainRequest {
-            configRequest = chainRequest.failedRequest
+        request.context = UIWindow.fw_mainWindow?.fw_topViewController
+    }
+    
+    /// 监听请求上下文，默认context控制器释放时自动停止请求
+    open func observeContext(for request: HTTPRequest) {
+        var viewController = request.context as? UIViewController
+        if viewController == nil, let view = request.context as? UIView {
+            viewController = view.fw_viewController
         }
-        if let block = configRequest?.config.showErrorBlock {
+        guard let viewController = viewController else { return }
+        
+        viewController.fw_observeLifecycleState { _, state in
+            guard state == .didDeinit else { return }
+            guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
+            
+            request.stop()
+        }
+    }
+    
+    /// 显示请求错误，优先调用config，默认显示Toast提示
+    open func showError(for request: HTTPRequest) {
+        guard request.context != nil, !request.isCancelled,
+              let error = request.error else { return }
+        
+        if let block = request.config.showErrorBlock {
             block(request)
             return
         }
@@ -222,23 +228,17 @@ open class RequestContextAccessory: RequestAccessory {
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_showMessage(error: error)
-            } else {
-                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
-                view?.fw_showMessage(error: error)
+            } else if let view = request.context as? UIView {
+                view.fw_showMessage(error: error)
             }
         }
     }
     
-    open func showLoading(for request: RequestContextProtocol) {
-        var configRequest: HTTPRequest?
-        if let httpRequest = request as? HTTPRequest {
-            configRequest = httpRequest
-        } else if let batchRequest = request as? BatchRequest {
-            configRequest = batchRequest.requestArray.first
-        } else if let chainRequest = request as? ChainRequest {
-            configRequest = chainRequest.requestArray.first
-        }
-        if let block = configRequest?.config.showLoadingBlock {
+    /// 显示请求加载条，优先调用config
+    open func showLoading(for request: HTTPRequest) {
+        guard request.context != nil else { return }
+        
+        if let block = request.config.showLoadingBlock {
             block(request)
             return
         }
@@ -246,23 +246,17 @@ open class RequestContextAccessory: RequestAccessory {
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_showLoading()
-            } else {
-                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
-                view?.fw_showLoading()
+            } else if let view = request.context as? UIView {
+                view.fw_showLoading()
             }
         }
     }
     
-    open func hideLoading(for request: RequestContextProtocol) {
-        var configRequest: HTTPRequest?
-        if let httpRequest = request as? HTTPRequest {
-            configRequest = httpRequest
-        } else if let batchRequest = request as? BatchRequest {
-            configRequest = batchRequest.requestArray.first
-        } else if let chainRequest = request as? ChainRequest {
-            configRequest = chainRequest.requestArray.first
-        }
-        if let block = configRequest?.config.hideLoadingBlock {
+    /// 隐藏请求加载条，优先调用config
+    open func hideLoading(for request: HTTPRequest) {
+        guard request.context != nil else { return }
+        
+        if let block = request.config.hideLoadingBlock {
             block(request)
             return
         }
@@ -270,9 +264,8 @@ open class RequestContextAccessory: RequestAccessory {
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_hideLoading()
-            } else {
-                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
-                view?.fw_hideLoading()
+            } else if let view = request.context as? UIView {
+                view.fw_hideLoading()
             }
         }
     }

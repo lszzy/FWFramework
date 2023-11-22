@@ -66,7 +66,7 @@ extension RequestDelegate {
 /// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: NSObject, RequestContextProtocol {
+open class HTTPRequest: NSObject {
     
     // MARK: - Accessor
     /// 自定义请求配置，未设置时使用全局配置
@@ -756,7 +756,7 @@ open class HTTPRequest: NSObject, RequestContextProtocol {
     }
     
     // MARK: - Context
-    /// 自定义请求的上下文，支持UIViewController|UIView，nil时默认获取主窗口
+    /// 当前请求的上下文，支持UIViewController|UIView
     open weak var context: AnyObject?
     /// 是否自动显示错误信息
     open var autoShowError = false
