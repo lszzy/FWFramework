@@ -12,6 +12,7 @@ import UIKit
 class TestModelRequest: HTTPRequest {
     
     private(set) var responseName = ""
+    var testFailed = false
     
     override func requestUrl() -> String {
         "http://kvm.wuyong.site/test.json"
@@ -46,8 +47,8 @@ class TestModelRequest: HTTPRequest {
         return [
             // 必须为String且不能为nil
             "name": Validator<String>.isNotNil.anyValidator,
-            // 必须为String且可以为Nil
-            "nullName": Validator<String>.isValid.anyValidator,
+            // 成功：必须为String且可以为Nil | 失败：必须为String且不能为空
+            "nullName": (testFailed ? Validator<String>.isNotEmpty : Validator<String>.isValid).anyValidator,
         ]
     }
     
@@ -108,17 +109,10 @@ class TestRequestController: UIViewController {
         return button
     }()
     
-    private lazy var weatherButton: UIButton = {
+    private lazy var retryButton: UIButton = {
         let button = AppTheme.largeButton()
-        button.setTitle("Start Weather", for: .normal)
-        button.app.addTouch(target: self, action: #selector(onWeather))
-        return button
-    }()
-    
-    private lazy var failedButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Failed Request", for: .normal)
-        button.app.addTouch(target: self, action: #selector(onFailed))
+        button.setTitle("Retry Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onRetry))
         return button
     }()
     
@@ -190,8 +184,7 @@ extension TestRequestController: ViewControllerProtocol {
    
     func setupSubviews() {
         view.addSubview(requestButton)
-        view.addSubview(weatherButton)
-        view.addSubview(failedButton)
+        view.addSubview(retryButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
         view.addSubview(observeButton)
@@ -200,19 +193,15 @@ extension TestRequestController: ViewControllerProtocol {
     func setupLayout() {
         requestButton.app.layoutChain
             .centerX()
-            .top(toSafeArea: 50)
+            .top(toSafeArea: 20)
         
-        weatherButton.app.layoutChain
+        retryButton.app.layoutChain
             .centerX()
             .top(toViewBottom: requestButton, offset: 20)
         
-        failedButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: weatherButton, offset: 20)
-        
         asyncButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: failedButton, offset: 20)
+            .top(toViewBottom: retryButton, offset: 20)
         
         syncButton.app.layoutChain
             .centerX()
@@ -229,11 +218,12 @@ extension TestRequestController: ViewControllerProtocol {
 private extension TestRequestController {
     
     @objc func onRequest() {
-        self.app.showLoading()
         let request = TestModelRequest()
+        request.testFailed = [true, false].randomElement()!
+        request.context = self
+        request.autoShowLoading = true
+        request.autoShowError = true
         request.start { _ in
-            self.app.hideLoading()
-            
             var message = "json请求成功: \n\(request.responseName)"
             let serverTime = request.responseServerTime
             if serverTime > 0 {
@@ -241,32 +231,10 @@ private extension TestRequestController {
                 message += "\n当前服务器时间：\(serverTime)"
             }
             self.app.showMessage(text: message)
-        } failure: { _ in
-            self.app.hideLoading()
-            
-            var message = "json请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")"
-            let serverTime = request.responseServerTime
-            if serverTime > 0 {
-                Date.app.currentTime = serverTime
-                message += "\n当前服务器时间：\(serverTime)"
-            }
-            self.app.showMessage(text: message)
-        }
+        } failure: { _ in }
     }
     
-    @objc func onWeather() {
-        self.app.showLoading()
-        let request = TestWeatherRequest()
-        request.start { _ in
-            self.app.hideLoading()
-            self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
-        } failure: { _ in
-            self.app.hideLoading()
-            self.app.showMessage(text: "天气请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
-        }
-    }
-    
-    @objc func onFailed() {
+    @objc func onRetry() {
         self.app.showLoading()
         let request = TestWeatherRequest()
         request.testFailed = true

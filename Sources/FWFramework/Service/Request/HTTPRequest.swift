@@ -62,15 +62,15 @@ extension RequestDelegate {
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: NSObject {
+open class HTTPRequest: NSObject, RequestContextProtocol {
     
     // MARK: - Accessor
     /// 自定义请求配置，未设置时使用全局配置
-    open var requestConfig: RequestConfig! {
-        get { _requestConfig ?? RequestConfig.shared }
-        set { _requestConfig = newValue }
+    open var config: RequestConfig! {
+        get { _config ?? RequestConfig.shared }
+        set { _config = newValue }
     }
-    private var _requestConfig: RequestConfig?
+    private var _config: RequestConfig?
     
     /// 自定义请求代理
     open weak var delegate: RequestDelegate?
@@ -232,6 +232,7 @@ open class HTTPRequest: NSObject {
     private var cacheMetadata: RequestCacheMetadata?
     private var dataFromCache = false
     private var cancelled = false
+    private lazy var contextAccessory = RequestContextAccessory()
     
     private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
     
@@ -328,7 +329,7 @@ open class HTTPRequest: NSObject {
     
     /// 调试请求Mock验证器，默认判断404
     open func responseMockValidator() -> Bool {
-        if let validator = requestConfig.debugMockValidator {
+        if let validator = config.debugMockValidator {
             return validator(self)
         }
         return responseStatusCode == 404
@@ -336,7 +337,7 @@ open class HTTPRequest: NSObject {
     
     /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
     open func responseMockProcessor() -> Bool {
-        if let processor = requestConfig.debugMockProcessor {
+        if let processor = config.debugMockProcessor {
             return processor(self)
         }
         return false
@@ -370,11 +371,8 @@ open class HTTPRequest: NSObject {
     open func requestFailedPreprocessor() {
     }
     
-    /// 请求失败过滤器，主线程调用，默认处理autoShowError
+    /// 请求失败过滤器，主线程调用
     open func requestFailedFilter() {
-        if autoShowError {
-            showRequestError()
-        }
     }
     
     // MARK: - Retry
@@ -491,6 +489,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
+        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
@@ -498,6 +497,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
+        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
@@ -505,6 +505,7 @@ open class HTTPRequest: NSObject {
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
+        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -536,7 +537,7 @@ open class HTTPRequest: NSObject {
         let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
         var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
         
-        let filters = requestConfig.requestFilters
+        let filters = config.requestFilters
         for filter in filters {
             if let filterPath = filter.filterCacheDirPath?(path, with: self) {
                 path = filterPath
@@ -572,7 +573,7 @@ open class HTTPRequest: NSObject {
         }
         
         #if DEBUG
-        if requestConfig.debugLogEnabled {
+        if config.debugLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
         }
         #endif
@@ -602,7 +603,7 @@ open class HTTPRequest: NSObject {
             Data.fw_archiveObject(metadata, toFile: cacheMetadataFilePath())
         } catch {
             #if DEBUG
-            if requestConfig.debugLogEnabled {
+            if config.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "Save cache failed, reason = %@", error.localizedDescription)
             }
             #endif
@@ -622,7 +623,7 @@ open class HTTPRequest: NSObject {
                 return true
             } else {
                 #if DEBUG
-                if requestConfig.debugLogEnabled {
+                if config.debugLogEnabled {
                     Logger.debug(group: Logger.fw_moduleName, "Load cache metadata failed")
                 }
                 #endif
@@ -703,7 +704,7 @@ open class HTTPRequest: NSObject {
             FileManager.fw_skipBackup(path)
         } catch {
             #if DEBUG
-            if requestConfig.debugLogEnabled {
+            if config.debugLogEnabled {
                 Logger.debug(group: Logger.fw_moduleName, "create cache directory failed, error = %@", error.localizedDescription)
             }
             #endif
@@ -714,9 +715,9 @@ open class HTTPRequest: NSObject {
         let requestUrl = requestUrl()
         let baseUrl: String
         if useCDN() {
-            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : requestConfig.cdnUrl
+            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
         } else {
-            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : requestConfig.baseUrl
+            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
         }
         let argument = filterCacheFileName(requestArgument())
         let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
@@ -737,25 +738,27 @@ open class HTTPRequest: NSObject {
         return path
     }
     
-    // MARK: - Error
+    // MARK: - Context
+    /// 自定义请求的上下文，支持UIViewController|UIView，nil时默认获取主窗口
+    open weak var context: AnyObject?
     /// 是否自动显示错误信息
     open var autoShowError = false
+    /// 是否自动显示加载信息
+    open var autoShowLoading = false
     
     /// 显示网络错误，默认显示Toast提示
-    open func showRequestError() {
-        guard let error = error else { return }
-        
-        if let block = requestConfig.showRequestErrorBlock {
-            block(self)
-        } else {
-            if Thread.isMainThread {
-                UIWindow.fw_showMessage(error: error)
-            } else {
-                DispatchQueue.main.async {
-                    UIWindow.fw_showMessage(error: error)
-                }
-            }
-        }
+    open func showError() {
+        contextAccessory.showError(for: self)
+    }
+    
+    /// 显示加载条，默认显示加载插件
+    open func showLoading() {
+        contextAccessory.showLoading(for: self)
+    }
+    
+    /// 隐藏加载条，默认隐藏加载插件
+    open func hideLoading() {
+        contextAccessory.hideLoading(for: self)
     }
     
 }

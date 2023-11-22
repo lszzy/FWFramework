@@ -83,8 +83,15 @@ open class RequestConfig: NSObject {
     open var debugMockValidator: ((HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
-    /// 自定义显示网络错误方法，主线程优先调用，默认nil
-    open var showRequestErrorBlock: ((HTTPRequest) -> Void)?
+    
+    /// 自定义请求上下文配件创建句柄，默认nil
+    open var contextAccessoryBlock: ((RequestContextProtocol) -> RequestContextAccessory)?
+    /// 自定义显示错误方法，主线程优先调用，默认nil
+    open var showErrorBlock: ((RequestContextProtocol) -> Void)?
+    /// 自定义显示加载方法，主线程优先调用，默认nil
+    open var showLoadingBlock: ((RequestContextProtocol) -> Void)?
+    /// 自定义隐藏加载方法，主线程优先调用，默认nil
+    open var hideLoadingBlock: ((RequestContextProtocol) -> Void)?
     
     public override init() {
         super.init()
@@ -148,6 +155,129 @@ open class RequestAccessory: NSObject, RequestAccessoryProtocol {
     }
 }
 
+// MARK: - RequestContext
+/// 请求上下文协议，用于处理加载条和显示错误等
+public protocol RequestContextProtocol: AnyObject {
+    /// 自定义请求上下文弱引用，支持UIViewController|UIView，nil时默认获取主窗口
+    var context: AnyObject? { get set }
+    /// 当前请求错误信息
+    var error: Error? { get }
+    /// 请求是否已取消
+    var isCancelled: Bool { get }
+    
+    /// 是否自动显示错误信息
+    var autoShowError: Bool { get set }
+    /// 是否自动显示加载信息
+    var autoShowLoading: Bool { get set }
+    
+    /// 显示网络错误，默认显示Toast提示
+    func showError()
+    /// 显示加载条，默认显示加载插件
+    func showLoading()
+    /// 隐藏加载条，默认隐藏加载插件
+    func hideLoading()
+}
+
+/// 默认请求上下文配件，用于处理加载条和显示错误等
+open class RequestContextAccessory: RequestAccessory {
+    public override init() {
+        super.init()
+        
+        self.willStartBlock = { request in
+            guard let request = request as? RequestContextProtocol else { return }
+            
+            if request.autoShowLoading {
+                request.showLoading()
+            }
+        }
+        self.willStopBlock = nil
+        self.didStopBlock = { request in
+            guard let request = request as? RequestContextProtocol else { return }
+            
+            if request.autoShowLoading {
+                request.hideLoading()
+            }
+            if request.autoShowError, request.error != nil {
+                request.showError()
+            }
+        }
+    }
+    
+    open func showError(for request: RequestContextProtocol) {
+        guard !request.isCancelled, let error = request.error else { return }
+        
+        var configRequest: HTTPRequest?
+        if let httpRequest = request as? HTTPRequest {
+            configRequest = httpRequest
+        } else if let batchRequest = request as? BatchRequest {
+            configRequest = batchRequest.failedRequest
+        } else if let chainRequest = request as? ChainRequest {
+            configRequest = chainRequest.failedRequest
+        }
+        if let block = configRequest?.config.showErrorBlock {
+            block(request)
+            return
+        }
+        
+        DispatchQueue.fw_mainAsync {
+            if let viewController = request.context as? UIViewController {
+                viewController.fw_showMessage(error: error)
+            } else {
+                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
+                view?.fw_showMessage(error: error)
+            }
+        }
+    }
+    
+    open func showLoading(for request: RequestContextProtocol) {
+        var configRequest: HTTPRequest?
+        if let httpRequest = request as? HTTPRequest {
+            configRequest = httpRequest
+        } else if let batchRequest = request as? BatchRequest {
+            configRequest = batchRequest.requestArray.first
+        } else if let chainRequest = request as? ChainRequest {
+            configRequest = chainRequest.requestArray.first
+        }
+        if let block = configRequest?.config.showLoadingBlock {
+            block(request)
+            return
+        }
+        
+        DispatchQueue.fw_mainAsync {
+            if let viewController = request.context as? UIViewController {
+                viewController.fw_showLoading()
+            } else {
+                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
+                view?.fw_showLoading()
+            }
+        }
+    }
+    
+    open func hideLoading(for request: RequestContextProtocol) {
+        var configRequest: HTTPRequest?
+        if let httpRequest = request as? HTTPRequest {
+            configRequest = httpRequest
+        } else if let batchRequest = request as? BatchRequest {
+            configRequest = batchRequest.requestArray.first
+        } else if let chainRequest = request as? ChainRequest {
+            configRequest = chainRequest.requestArray.first
+        }
+        if let block = configRequest?.config.hideLoadingBlock {
+            block(request)
+            return
+        }
+        
+        DispatchQueue.fw_mainAsync {
+            if let viewController = request.context as? UIViewController {
+                viewController.fw_hideLoading()
+            } else {
+                let view = (request.context as? UIView) ?? UIWindow.fw_mainWindow
+                view?.fw_hideLoading()
+            }
+        }
+    }
+}
+
 // MARK: - RequestRetrier
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
@@ -194,7 +324,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
         }
         
         let urlRequest = try RequestManager.shared.buildUrlRequest(request)
-        request.requestConfig.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { response, responseObject, error in
+        request.config.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { response, responseObject, error in
             if request.isCancelled { return }
             
             request.requestTotalCount = retryCount - remainCount + 1
@@ -214,7 +344,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
                             do {
                                 try self?.retryDataTask(for: request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
                                 
-                                request.requestConfig.requestPlugin.startRequest(for: request)
+                                request.config.requestPlugin.startRequest(for: request)
                             } catch let retryError {
                                 completionHandler?(response, responseObject, error ?? retryError)
                             }
