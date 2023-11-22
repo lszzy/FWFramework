@@ -25,6 +25,7 @@ extension BatchRequestDelegate {
 /// 批量请求类
 open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
+    // MARK: - Accessor
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
     /// 事件代理
@@ -64,9 +65,15 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
         return result
     }
     
-    private var finishedCount: Int = 0
-    private lazy var contextAccessory = RequestContextAccessory()
+    private lazy var contextAccessory: RequestContextAccessory = {
+        let config = requestArray.first?.config ?? RequestConfig.shared
+        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+        return result
+    }()
     
+    private var finishedCount: Int = 0
+    
+    // MARK: - Lifecycle
     /// 指定请求数组初始化
     public init(requestArray: [HTTPRequest]) {
         super.init()
@@ -77,6 +84,7 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
         clearRequest()
     }
     
+    // MARK: - Public
     /// 开始请求，仅能调用一次
     open func start() {
         guard finishedCount <= 0 else { return }
@@ -192,6 +200,7 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
         }
     }
     
+    // MARK: - Private
     private func requestCompleted() {
         toggleAccessoriesWillStopCallBack()
         
@@ -223,18 +232,21 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     /// 是否自动显示加载信息
     open var autoShowLoading = false
     
-    /// 显示网络错误，默认显示Toast提示
+    /// 显示网络错误，默认显示Toast提示，requestArray需大于0
     open func showError() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.showError(for: self)
     }
     
-    /// 显示加载条，默认显示加载插件
+    /// 显示加载条，默认显示加载插件，requestArray需大于0
     open func showLoading() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.showLoading(for: self)
     }
     
-    /// 隐藏加载条，默认隐藏加载插件
+    /// 隐藏加载条，默认隐藏加载插件，requestArray需大于0
     open func hideLoading() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.hideLoading(for: self)
     }
     

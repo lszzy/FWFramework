@@ -25,6 +25,7 @@ extension ChainRequestDelegate {
 /// 队列请求类
 open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
+    // MARK: - Accessor
     /// 回调句柄声明
     public typealias Callback = (ChainRequest, HTTPRequest) -> Void
     
@@ -59,12 +60,18 @@ open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
     /// 请求构建句柄，所有请求完成后才会主线程调用
     open var requestBuilder: ((_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
     
+    private lazy var contextAccessory: RequestContextAccessory = {
+        let config = requestArray.first?.config ?? RequestConfig.shared
+        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+        return result
+    }()
+    
     private var requestCallbackArray: [Callback] = []
     private var nextRequestIndex: Int = 0
     private weak var nextRequest: HTTPRequest?
     private let emptyCallback: Callback = { _, _ in }
-    private lazy var contextAccessory = RequestContextAccessory()
     
+    // MARK: - Lifecycle
     public override init() {
         super.init()
     }
@@ -73,6 +80,7 @@ open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
         clearRequest()
     }
     
+    // MARK: - Public
     /// 添加请求，可设置请求完成回调
     open func addRequest(_ request: HTTPRequest, callback: Callback? = nil) {
         requestArray.append(request)
@@ -187,6 +195,7 @@ open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
         }
     }
     
+    // MARK: - Private
     @discardableResult
     private func startNextRequest(_ previousRequest: HTTPRequest?) -> Bool {
         if nextRequestIndex >= requestArray.count, requestBuilder != nil {
@@ -260,18 +269,21 @@ open class ChainRequest: NSObject, RequestDelegate, RequestContextProtocol {
     /// 是否自动显示加载信息
     open var autoShowLoading = false
     
-    /// 显示网络错误，默认显示Toast提示
+    /// 显示网络错误，默认显示Toast提示，requestArray需大于0
     open func showError() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.showError(for: self)
     }
     
-    /// 显示加载条，默认显示加载插件
+    /// 显示加载条，默认显示加载插件，requestArray需大于0
     open func showLoading() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.showLoading(for: self)
     }
     
-    /// 隐藏加载条，默认隐藏加载插件
+    /// 隐藏加载条，默认隐藏加载插件，requestArray需大于0
     open func hideLoading() {
+        guard !requestArray.isEmpty else { return }
         contextAccessory.hideLoading(for: self)
     }
     

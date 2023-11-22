@@ -158,7 +158,7 @@ open class RequestAccessory: NSObject, RequestAccessoryProtocol {
 // MARK: - RequestContext
 /// 请求上下文协议，用于处理加载条和显示错误等
 public protocol RequestContextProtocol: AnyObject {
-    /// 自定义请求上下文弱引用，支持UIViewController|UIView，nil时默认获取主窗口
+    /// 当前请求上下文弱引用，支持UIViewController|UIView，nil时默认获取主窗口
     var context: AnyObject? { get set }
     /// 当前请求错误信息
     var error: Error? { get }

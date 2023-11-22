@@ -130,6 +130,20 @@ class TestRequestController: UIViewController {
         return button
     }()
     
+    private lazy var uploadButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Upload Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onUpload))
+        return button
+    }()
+    
+    private lazy var downloadButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Download Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onDownload))
+        return button
+    }()
+    
     private lazy var observeButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Observe Status", for: .normal)
@@ -187,6 +201,8 @@ extension TestRequestController: ViewControllerProtocol {
         view.addSubview(retryButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
+        view.addSubview(uploadButton)
+        view.addSubview(downloadButton)
         view.addSubview(observeButton)
     }
     
@@ -207,9 +223,17 @@ extension TestRequestController: ViewControllerProtocol {
             .centerX()
             .top(toViewBottom: asyncButton, offset: 20)
         
-        observeButton.app.layoutChain
+        uploadButton.app.layoutChain
             .centerX()
             .top(toViewBottom: syncButton, offset: 20)
+        
+        downloadButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: uploadButton, offset: 20)
+        
+        observeButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: downloadButton, offset: 20)
     }
     
 }
@@ -303,6 +327,14 @@ private extension TestRequestController {
                 }
             }
         }
+    }
+    
+    @objc func onUpload() {
+        
+    }
+    
+    @objc func onDownload() {
+        
     }
     
     @objc func onObserve() {
