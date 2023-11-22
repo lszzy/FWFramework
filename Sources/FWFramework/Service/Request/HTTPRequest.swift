@@ -225,6 +225,11 @@ open class HTTPRequest: NSObject, RequestContextProtocol {
         return requestTask.state == .running
     }
     
+    private lazy var contextAccessory: RequestContextAccessory = {
+        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+        return result
+    }()
+    
     private var cacheData: Data?
     private var cacheString: String?
     private var cacheJSON: Any?
@@ -232,7 +237,6 @@ open class HTTPRequest: NSObject, RequestContextProtocol {
     private var cacheMetadata: RequestCacheMetadata?
     private var dataFromCache = false
     private var cancelled = false
-    private lazy var contextAccessory = RequestContextAccessory()
     
     private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
     

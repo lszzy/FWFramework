@@ -177,6 +177,7 @@ private extension SettingsController {
             ["ImagePlugin", "onImagePlugin"],
             ["ImagePickerPlugin", "onImagePickerPlugin"],
             ["ImagePreviewPlugin", "onImagePreviewPlugin"],
+            ["RequestPlugin", "onRequestPlugin"],
         ]
         
         app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map({ $0[0] })) { [weak self] index in
@@ -341,6 +342,21 @@ private extension SettingsController {
         }
     }
     
+    @objc func onRequestPlugin() {
+        var actions = Autoloader.requestPlugins.map {
+            $0 == Autoloader.requestPluginImpl ? "[\($0)]" : $0
+        }
+        actions.append(APP.localized("pluginDemo"))
+        app.showSheet(title: "RequestPlugin", message: nil, actions: actions) { index in
+            if index < Autoloader.requestPlugins.count {
+                Autoloader.requestPluginImpl = Autoloader.requestPlugins[index]
+                Autoloader.loadApp_Plugin()
+            } else {
+                Navigator.push(TestRequestController())
+            }
+        }
+    }
+    
 }
 
 @objc extension Autoloader {
@@ -395,6 +411,10 @@ private extension SettingsController {
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
     static let imagePreviewPlugins = ["ImagePreviewPluginImpl"]
     
+    @StoredValue("requestPluginImpl")
+    static var requestPluginImpl = requestPlugins[0]
+    static let requestPlugins = ["RequestPluginImpl", "AlamofireImpl"]
+    
     static func loadApp_Plugin() {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
@@ -416,6 +436,9 @@ private extension SettingsController {
         ImagePickerPluginImpl.shared.photoNavigationEnabled = Autoloader.imagePickerPhotoNavigationEnabled
         ImagePickerPluginImpl.shared.presentationFullScreen = Autoloader.imagePickerPresentationFullScreen
         ImagePickerControllerImpl.shared.showsAlbumController = Autoloader.imagePickerShowsAlbumController
+        
+        PluginManager.unloadPlugin(RequestPlugin.self)
+        PluginManager.registerPlugin(RequestPlugin.self, object: Autoloader.requestPluginImpl == Autoloader.requestPlugins[0] ? RequestPluginImpl.self : AlamofireImpl.self)
     }
     
 }
