@@ -23,7 +23,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
+open class BatchRequest: NSObject, RequestDelegate {
     
     // MARK: - Accessor
     /// 当前请求数组
@@ -64,12 +64,6 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
         }
         return result
     }
-    
-    private lazy var contextAccessory: RequestContextAccessory = {
-        let config = requestArray.first?.config ?? RequestConfig.shared
-        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
-        return result
-    }()
     
     private var finishedCount: Int = 0
     
@@ -155,7 +149,6 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
     /// 切换配件将开始回调
     open func toggleAccessoriesWillStartCallBack() {
-        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
@@ -163,7 +156,6 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
     /// 切换配件将结束回调
     open func toggleAccessoriesWillStopCallBack() {
-        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
@@ -171,7 +163,6 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
     
     /// 切换配件已经结束回调
     open func toggleAccessoriesDidStopCallBack() {
-        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -222,32 +213,6 @@ open class BatchRequest: NSObject, RequestDelegate, RequestContextProtocol {
             req.stop()
         }
         clearCompletionBlock()
-    }
-    
-    // MARK: - Context
-    /// 自定义请求的上下文，支持UIViewController|UIView，nil时默认获取主窗口
-    open weak var context: AnyObject?
-    /// 是否自动显示错误信息
-    open var autoShowError = false
-    /// 是否自动显示加载信息
-    open var autoShowLoading = false
-    
-    /// 显示网络错误，默认显示Toast提示，requestArray需大于0
-    open func showError() {
-        guard !requestArray.isEmpty else { return }
-        contextAccessory.showError(for: self)
-    }
-    
-    /// 显示加载条，默认显示加载插件，requestArray需大于0
-    open func showLoading() {
-        guard !requestArray.isEmpty else { return }
-        contextAccessory.showLoading(for: self)
-    }
-    
-    /// 隐藏加载条，默认隐藏加载插件，requestArray需大于0
-    open func hideLoading() {
-        guard !requestArray.isEmpty else { return }
-        contextAccessory.hideLoading(for: self)
     }
     
 }
