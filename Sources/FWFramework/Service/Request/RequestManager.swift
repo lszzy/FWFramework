@@ -25,7 +25,7 @@ open class RequestManager: NSObject {
         do {
             try sessionTask(for: request)
             
-            addRequestToRecord(request)
+            addRecord(for: request)
             request.requestConfig.requestPlugin.startRequest(for: request)
             #if DEBUG
             if request.requestConfig.debugLogEnabled {
@@ -49,7 +49,7 @@ open class RequestManager: NSObject {
             request.requestConfig.requestPlugin.cancelRequest(for: request)
         }
         
-        removeRequestFromRecord(request)
+        removeRecord(for: request)
         request.clearCompletionBlock()
         #if DEBUG
         if request.requestConfig.debugLogEnabled {
@@ -245,13 +245,13 @@ open class RequestManager: NSObject {
     }
     
     // MARK: - Private
-    private func addRequestToRecord(_ request: HTTPRequest) {
+    private func addRecord(for request: HTTPRequest) {
         lock.lock()
         defer { lock.unlock() }
         requestsRecord[request.requestIdentifier] = request
     }
     
-    private func removeRequestFromRecord(_ request: HTTPRequest) {
+    private func removeRecord(for request: HTTPRequest) {
         lock.lock()
         defer { lock.unlock() }
         requestsRecord.removeValue(forKey: request.requestIdentifier)
@@ -287,7 +287,7 @@ open class RequestManager: NSObject {
         let retryRequest = request.requestConfig.requestPlugin.retryRequest(for: request)
         if retryRequest, let requestRetrier = request.requestConfig.requestRetrier {
             try requestRetrier.retryDataTask(for: request) { [weak self] response, responseObject, error in
-                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
+                self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         } else {
             let startTime = Date().timeIntervalSince1970
@@ -296,7 +296,7 @@ open class RequestManager: NSObject {
                 request.requestTotalCount = 1
                 request.requestTotalTime = Date().timeIntervalSince1970 - startTime
                 
-                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
+                self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         }
     }
@@ -336,40 +336,19 @@ open class RequestManager: NSObject {
             
             if resumeDataFileExists && resumeDataIsValid {
                 request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: nil, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
-                    self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+                    self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
                 }
                 resumeSucceed = request.requestTask != nil
             }
         }
         if !resumeSucceed {
             request.requestConfig.requestPlugin.downloadTask(for: request, urlRequest: urlRequest as URLRequest, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
-                self?.handleRequestResult(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+                self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
             }
         }
     }
     
-    private func validateResult(_ request: HTTPRequest) throws {
-        if !request.statusCodeValidator() {
-            throw RequestError.validationInvalidStatusCode
-        }
-        
-        if let requestValidator = request.requestConfig.requestValidator,
-           !requestValidator.validateResponse(for: request) {
-            throw RequestError.validationInvalidJSONFormat
-        }
-    }
-    
-    private func validateResumeData(_ data: Data?) -> Bool {
-        guard let data = data, data.count > 0 else { return false }
-        
-        let resumeDictionary = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil) as? [AnyHashable: Any]
-        if let resumeDictionary = resumeDictionary, !resumeDictionary.isEmpty {
-            return true
-        }
-        return false
-    }
-    
-    private func handleRequestResult(_ requestIdentifier: Int, response: URLResponse?, responseObject: Any?, error: Error?) {
+    private func handleResponse(_ requestIdentifier: Int, response: URLResponse?, responseObject: Any?, error: Error?) {
         lock.lock()
         let request = requestsRecord[requestIdentifier]
         lock.unlock()
@@ -392,7 +371,7 @@ open class RequestManager: NSObject {
             requestError = serializationError
         } else {
             do {
-                try validateResult(request)
+                try validateResponse(request)
             } catch let validationError {
                 succeed = false
                 requestError = validationError
@@ -439,9 +418,30 @@ open class RequestManager: NSObject {
         }
         
         DispatchQueue.main.async { [weak self] in
-            self?.removeRequestFromRecord(request)
+            self?.removeRecord(for: request)
             request.clearCompletionBlock()
         }
+    }
+    
+    private func validateResponse(_ request: HTTPRequest) throws {
+        if !request.statusCodeValidator() {
+            throw RequestError.validationInvalidStatusCode
+        }
+        
+        if let requestValidator = request.requestConfig.requestValidator,
+           !requestValidator.validateResponse(for: request) {
+            throw RequestError.validationInvalidJSONFormat
+        }
+    }
+    
+    private func validateResumeData(_ data: Data?) -> Bool {
+        guard let data = data, data.count > 0 else { return false }
+        
+        let resumeDictionary = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainers, format: nil) as? [AnyHashable: Any]
+        if let resumeDictionary = resumeDictionary, !resumeDictionary.isEmpty {
+            return true
+        }
+        return false
     }
     
     private func requestDidSucceed(_ request: HTTPRequest) {
