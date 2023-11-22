@@ -215,7 +215,9 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
                                 try self?.retryDataTask(for: request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
                                 
                                 request.requestConfig.requestPlugin.startRequest(for: request)
-                            } catch {}
+                            } catch let retryError {
+                                completionHandler?(response, responseObject, error ?? retryError)
+                            }
                         }
                     } else {
                         completionHandler?(response, responseObject, error)
