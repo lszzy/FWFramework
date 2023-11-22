@@ -34,15 +34,15 @@ public enum ResponseSerializerType: Int {
     case xmlParser
 }
 
-/// 请求表单数据协议
-public typealias RequestMultipartFormData = MultipartFormData
-
 /// 请求优先级
 public enum RequestPriority: Int {
     case `default` = 0
     case low = -4
     case high = 4
 }
+
+/// 请求表单数据定义
+public typealias RequestMultipartFormData = MultipartFormData
 
 /// 请求代理
 public protocol RequestDelegate: AnyObject {
@@ -303,6 +303,15 @@ open class HTTPRequest: NSObject, RequestContextProtocol {
     /// 响应序列化方式，默认JSON
     open func responseSerializerType() -> ResponseSerializerType {
         return .JSON
+    }
+    
+    /// 是否开启请求表单数据方法，开启后自动调用requestFormData(_:)方法，默认false
+    open func requestFormDataEnabled() -> Bool {
+        return false
+    }
+    
+    /// 自定义请求表单数据方法，作用同constructingBodyBlock，开启requestFormDataEnabled后生效
+    open func requestFormData(_ formData: RequestMultipartFormData) {
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
