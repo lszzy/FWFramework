@@ -80,7 +80,7 @@ class TestWeatherRequest: HTTPRequest {
     }
     
     override func requestRetryCount() -> Int {
-        return testFailed ? 2 : 0
+        return testFailed ? 3 : 0
     }
     
     override func requestRetryInterval() -> TimeInterval {
@@ -93,6 +93,33 @@ class TestWeatherRequest: HTTPRequest {
     
     override func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
         return true
+    }
+    
+}
+
+class TestUploadRequest: HTTPRequest {
+    
+    
+    var uploadData: Any?
+    
+    override func requestUrl() -> String {
+        "http://127.0.0.1:8001/upload"
+    }
+    
+    override func requestMethod() -> RequestMethod {
+        .POST
+    }
+    
+    override func requestFormDataEnabled() -> Bool {
+        true
+    }
+    
+    override func requestFormData(_ formData: RequestMultipartFormData) {
+        if let imageData = uploadData as? Data {
+            formData.appendPart(withForm: imageData, name: "file")
+        } else if let videoURL = uploadData as? URL {
+            try? formData.appendPart(withFileURL: videoURL, name: "file")
+        }
     }
     
 }
@@ -259,16 +286,14 @@ private extension TestRequestController {
     }
     
     @objc func onRetry() {
-        self.app.showLoading()
         let request = TestWeatherRequest()
+        request.context = self
+        request.autoShowLoading = true
+        request.autoShowError = true
         request.testFailed = true
         request.start { _ in
-            self.app.hideLoading()
             self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
-        } failure: { _ in
-            self.app.hideLoading()
-            self.app.showMessage(text: "天气请求\(RequestError.isConnectionError(request.error) ? "失败" : "异常"): \n\(request.error?.localizedDescription ?? "")")
-        }
+        } failure: { _ in }
     }
     
     @objc func onAsync() {
@@ -330,7 +355,31 @@ private extension TestRequestController {
     }
     
     @objc func onUpload() {
-        
+        app.showImagePicker(filterType: [.image, .video], selectionLimit: 1, allowsEditing: true) { [weak self] results, info, cancelled in
+            if let image = results.first as? UIImage {
+                self?.app.showLoading()
+                UIImage.app.compressDatas([image], maxWidth: 1024, maxLength: 512 * 1024) { imageDatas in
+                    self?.app.hideLoading()
+                    self?.onUploadData(imageDatas.first)
+                }
+            } else if let videoURL = results.first as? URL {
+                self?.onUploadData(videoURL)
+            } else {
+                self?.app.showMessage(text: "已取消")
+            }
+        }
+    }
+    
+    private func onUploadData(_ uploadData: Any?) {
+        let request = TestUploadRequest()
+        request.context = self
+        request.uploadData = uploadData
+        request.autoShowLoading = true
+        request.autoShowError = true
+        request.start { [weak self] _ in
+            
+            self?.app.showMessage(text: "上传成功")
+        } failure: { _ in }
     }
     
     @objc func onDownload() {

@@ -160,7 +160,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
+    public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         let plugin = self.fw_imagePickerPlugin ?? ImagePickerPluginImpl.shared
         plugin.showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: self)
     }
@@ -193,7 +193,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         let plugin = self.fw_imagePickerPlugin ?? ImagePickerPluginImpl.shared
         plugin.showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: self)
     }
@@ -220,7 +220,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
+    public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
@@ -260,7 +260,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController

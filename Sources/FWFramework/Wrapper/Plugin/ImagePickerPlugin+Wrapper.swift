@@ -76,7 +76,7 @@ extension Wrapper where Base: UIViewController {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
+    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         base.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
 
@@ -104,7 +104,7 @@ extension Wrapper where Base: UIViewController {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         base.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
     
@@ -126,7 +126,7 @@ extension Wrapper where Base: UIView {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void) {
+    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         base.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
 
@@ -154,7 +154,7 @@ extension Wrapper where Base: UIView {
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) {
+    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         base.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
     
