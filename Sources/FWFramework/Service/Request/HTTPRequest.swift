@@ -61,6 +61,10 @@ extension RequestDelegate {
 
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
 ///
+/// 注意事项：
+/// 如果vc请求回调句柄中未使用weak self，会产生强引用，则self会在vc关闭且等待请求完成后才会释放
+/// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
+///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
 open class HTTPRequest: NSObject, RequestContextProtocol {
     

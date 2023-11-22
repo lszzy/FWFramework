@@ -274,14 +274,14 @@ private extension TestRequestController {
         request.context = self
         request.autoShowLoading = true
         request.autoShowError = true
-        request.start { _ in
+        request.start { [weak self] _ in
             var message = "json请求成功: \n\(request.responseName)"
             let serverTime = request.responseServerTime
             if serverTime > 0 {
                 Date.app.currentTime = serverTime
                 message += "\n当前服务器时间：\(serverTime)"
             }
-            self.app.showMessage(text: message)
+            self?.app.showMessage(text: message)
         } failure: { _ in }
     }
     
@@ -291,8 +291,8 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.testFailed = true
-        request.start { _ in
-            self.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
+        request.start { [weak self] _ in
+            self?.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
         } failure: { _ in }
     }
     
@@ -307,19 +307,19 @@ private extension TestRequestController {
         var finishedCount: Int = 0
         Benchmark.begin("async")
         for request in requests {
-            request.start { _ in
+            request.start { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
-                    self.app.hideLoading()
+                    self?.app.hideLoading()
                     let requestTime = Benchmark.end("async")
-                    self.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
                 }
-            } failure: { _ in
+            } failure: { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
-                    self.app.hideLoading()
+                    self?.app.hideLoading()
                     let requestTime = Benchmark.end("async")
-                    self.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
                 }
             }
         }
@@ -336,19 +336,19 @@ private extension TestRequestController {
         var finishedCount: Int = 0
         Benchmark.begin("sync")
         for request in requests {
-            request.startSynchronously { _ in
+            request.startSynchronously { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
-                    self.app.hideLoading()
+                    self?.app.hideLoading()
                     let requestTime = Benchmark.end("sync")
-                    self.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
                 }
-            } failure: { _ in
+            } failure: { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
-                    self.app.hideLoading()
+                    self?.app.hideLoading()
                     let requestTime = Benchmark.end("sync")
-                    self.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
                 }
             }
         }
