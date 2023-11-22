@@ -510,7 +510,21 @@ static SEL __FWCGSVGDocumentSEL = NULL;
 
 + (void)logDebug:(NSString *)message {
     if ([FWObjCBridge respondsToSelector:@selector(log:)]) {
-        [FWObjCBridge performSelector:@selector(log:) withObject:message];
+        id objcBridge = [FWObjCBridge class];
+        [objcBridge log:message];
+    }
+}
+
++ (UIImage *)decodeImage:(NSData *)data scale:(CGFloat)scale options:(NSDictionary *)options {
+    if ([FWObjCBridge respondsToSelector:@selector(image:scale:options:)]) {
+        id objcBridge = [FWObjCBridge class];
+        return [objcBridge image:data scale:scale options:options];
+    } else {
+        UIImage *image = [UIImage imageWithData:data];
+        if (image.images || !image) {
+            return image;
+        }
+        return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
     }
 }
 

@@ -376,6 +376,21 @@ NS_SWIFT_NAME(MultipartFormData)
 #pragma mark -
 
 /**
+ The default implementation of `__FWMultipartFormData` protocol.
+ */
+NS_SWIFT_NAME(StreamingMultipartFormData)
+@interface __FWStreamingMultipartFormData : NSObject <__FWMultipartFormData>
+
+- (instancetype)initWithURLRequest:(NSMutableURLRequest *)urlRequest
+                    stringEncoding:(NSStringEncoding)encoding;
+
+- (NSMutableURLRequest *)requestByFinalizingMultipartFormData;
+
+@end
+
+#pragma mark -
+
+/**
  `__FWJSONRequestSerializer` is a subclass of `__FWHTTPRequestSerializer` that encodes parameters as JSON using `NSJSONSerialization`, setting the `Content-Type` of the encoded request to `application/json`.
  */
 NS_SWIFT_NAME(JSONRequestSerializer)

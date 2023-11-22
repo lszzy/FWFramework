@@ -157,15 +157,6 @@ NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 #pragma mark -
 
-@interface __FWStreamingMultipartFormData : NSObject <__FWMultipartFormData>
-- (instancetype)initWithURLRequest:(NSMutableURLRequest *)urlRequest
-                    stringEncoding:(NSStringEncoding)encoding;
-
-- (NSMutableURLRequest *)requestByFinalizingMultipartFormData;
-@end
-
-#pragma mark -
-
 static NSArray * __FWHTTPRequestSerializerObservedKeyPaths(void) {
     static NSArray *___FWHTTPRequestSerializerObservedKeyPaths = nil;
     static dispatch_once_t onceToken;
