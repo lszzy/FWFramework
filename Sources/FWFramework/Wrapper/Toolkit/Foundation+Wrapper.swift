@@ -301,6 +301,26 @@ extension Wrapper where Base: NSNumber {
 
 // MARK: - String+Foundation
 extension Wrapper where Base == String {
+    /// 将波浪线相对路径展开为绝对路径
+    public var expandingTildePath: String {
+        return base.fw_expandingTildePath
+    }
+    
+    /// 将绝对路径替换为波浪线相对路径
+    public var abbreviatingTildePath: String {
+        return base.fw_abbreviatingTildePath
+    }
+    
+    /// 附加路径组件
+    public func appendingPath(_ component: String) -> String {
+        return base.fw_appendingPath(component)
+    }
+    
+    /// 附加路径组件数组
+    public func appendingPath(_ components: [String]) -> String {
+        return base.fw_appendingPath(components)
+    }
+    
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
     public func size(
         font: UIFont,
@@ -421,6 +441,29 @@ extension Wrapper where Base: FileManager {
     /// 资源路径，不可写
     public static var pathResource: String {
         return Base.fw_pathResource
+    }
+    
+    /// 递归创建目录，返回是否成功
+    @discardableResult
+    public static func createDirectory(atPath: String, attributes: [FileAttributeKey: Any]? = nil) -> Bool {
+        return Base.fw_createDirectory(atPath: atPath, attributes: attributes)
+    }
+    
+    /// 递归删除目录|文件，返回是否成功
+    @discardableResult
+    public static func removeItem(atPath: String) -> Bool {
+        return Base.fw_removeItem(atPath: atPath)
+    }
+    
+    /// 移动目录|文件，返回是否成功
+    @discardableResult
+    public static func moveItem(atPath: String, toPath: String) -> Bool {
+        return Base.fw_moveItem(atPath: atPath, toPath: toPath)
+    }
+    
+    /// 查询目录|文件是否存在
+    public static func fileExists(atPath: String, isDirectory: Bool? = nil) -> Bool {
+        return Base.fw_fileExists(atPath: atPath, isDirectory: isDirectory)
     }
 
     /// 获取目录大小，单位：B
