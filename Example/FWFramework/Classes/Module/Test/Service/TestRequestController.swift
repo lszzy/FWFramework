@@ -129,6 +129,8 @@ class TestUploadRequest: HTTPRequest {
         } else if let videoURL = uploadData as? URL {
             try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: fileName, mimeType: Data.app.mimeType(from: "mp4"))
         }
+        // 限制宽度以模拟长时间上传
+        formData.throttleBandwidth(withPacketSize: 1024 * 100, delay: 0.1)
     }
     
 }
@@ -395,10 +397,8 @@ private extension TestRequestController {
         FileManager.app.createDirectory(atPath: testPath)
         app.showImagePicker(filterType: [.image, .video], selectionLimit: 1, allowsEditing: true) { [weak self] results, info, cancelled in
             if let image = results.first as? UIImage {
-                self?.app.showLoading()
+                self?.app.showProgress(0.01, text: "压缩中...")
                 UIImage.app.compressDatas([image], maxWidth: 1024, maxLength: 512 * 1024) { imageDatas in
-                    self?.app.hideLoading(delayed: true)
-                    
                     self?.onUploadData(imageDatas.first)
                 }
             } else if let videoURL = results.first as? URL {
@@ -414,9 +414,15 @@ private extension TestRequestController {
         let request = TestUploadRequest()
         request.context = self
         request.uploadData = uploadData
+        request.uploadProgressBlock = { [weak self] progress in
+            DispatchQueue.app.mainAsync {
+                self?.app.showProgress(progress.fractionCompleted, text: "上传中...")
+            }
+        }
         request.fileName = isVideo ? "upload.mp4" : "upload.jpg"
-        request.autoShowLoading = true
         request.start { [weak self] _ in
+            self?.app.hideProgress()
+            
             var previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
             if isVideo {
                 previewUrl = (self?.testPath ?? "").app.appendingPath(request.fileName)
@@ -426,6 +432,8 @@ private extension TestRequestController {
                 self?.app.showImagePreview(imageURLs: [previewUrl], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] _ in
+            self?.app.hideProgress()
+            
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
         }
     }
