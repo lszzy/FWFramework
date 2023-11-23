@@ -286,7 +286,18 @@ extension ImagePickerPlugin {
             if checkLivePhoto && mediaType == (kUTTypeLivePhoto as String) {
                 object = info[.livePhoto]
             } else if checkVideo && mediaType == (kUTTypeMovie as String) {
-                object = info[.mediaURL]
+                // 视频文件在tmp临时目录中，为防止系统自动删除，统一拷贝到选择器目录
+                if let url = info[.mediaURL] as? URL {
+                    let filePath = AssetManager.cachePath
+                    try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
+                    if let fullPath = ((filePath as NSString).appendingPathComponent(url.absoluteString.fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
+                        let tempFileURL = NSURL.fileURL(withPath: fullPath)
+                        do {
+                            try FileManager.default.moveItem(at: url, to: tempFileURL)
+                            object = tempFileURL
+                        } catch { }
+                    }
+                }
             } else {
                 object = info[.editedImage] ?? info[.originalImage]
             }
