@@ -110,15 +110,23 @@ class TestUploadRequest: HTTPRequest {
         .POST
     }
     
+    override func requestArgument() -> Any? {
+        return ["path": "/website/test/"]
+    }
+    
+    override func requestSerializerType() -> RequestSerializerType {
+        .JSON
+    }
+    
     override func requestFormDataEnabled() -> Bool {
         true
     }
     
     override func requestFormData(_ formData: RequestMultipartFormData) {
         if let imageData = uploadData as? Data {
-            formData.appendPart(withForm: imageData, name: "file")
+            formData.appendPart(withFileData: imageData, name: "files[]", fileName: "upload.jpg", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
         } else if let videoURL = uploadData as? URL {
-            try? formData.appendPart(withFileURL: videoURL, name: "file")
+            try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: "upload.mp4", mimeType: Data.app.mimeType(from: "mp4"))
         }
     }
     
@@ -127,6 +135,9 @@ class TestUploadRequest: HTTPRequest {
 class TestRequestController: UIViewController {
     
     private var httpProxyKey = "httpProxyDisabled"
+    private var testPath: String {
+        return FileManager.app.pathDocument.app.appendingPath(["website", "test"])
+    }
     
     // MARK: - Subviews
     private lazy var requestButton: UIButton = {
@@ -210,7 +221,7 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.app.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
         app.setRightBarItem("切换") { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "清理上传下载缓存"], actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {
                     URLSession.app.httpProxyDisabled = !URLSession.app.httpProxyDisabled
@@ -218,6 +229,8 @@ extension TestRequestController: ViewControllerProtocol {
                 } else if index == 1 {
                     let proxyString = URLSession.app.httpProxyString ?? ""
                     self.app.showMessage(text: "网络代理: \n\(proxyString)")
+                } else if index == 2 {
+                    FileManager.app.removeItem(atPath: self.testPath)
                 }
             })
         }
@@ -355,11 +368,14 @@ private extension TestRequestController {
     }
     
     @objc func onUpload() {
+        FileManager.app.createDirectory(atPath: testPath)
+        
         app.showImagePicker(filterType: [.image, .video], selectionLimit: 1, allowsEditing: true) { [weak self] results, info, cancelled in
             if let image = results.first as? UIImage {
                 self?.app.showLoading()
                 UIImage.app.compressDatas([image], maxWidth: 1024, maxLength: 512 * 1024) { imageDatas in
-                    self?.app.hideLoading()
+                    self?.app.hideLoading(delayed: true)
+                    
                     self?.onUploadData(imageDatas.first)
                 }
             } else if let videoURL = results.first as? URL {
@@ -383,6 +399,7 @@ private extension TestRequestController {
     }
     
     @objc func onDownload() {
+        FileManager.app.createDirectory(atPath: testPath)
         
     }
     

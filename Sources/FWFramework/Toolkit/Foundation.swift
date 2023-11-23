@@ -609,6 +609,30 @@ extension WrapperGlobal {
 
 // MARK: - String+Foundation
 @_spi(FW) extension String {
+    /// 将波浪线相对路径展开为绝对路径
+    public var fw_expandingTildePath: String {
+        return (self as NSString).expandingTildeInPath
+    }
+    
+    /// 将绝对路径替换为波浪线相对路径
+    public var fw_abbreviatingTildePath: String {
+        return (self as NSString).abbreviatingWithTildeInPath
+    }
+    
+    /// 附加路径组件
+    public func fw_appendingPath(_ component: String) -> String {
+        return (self as NSString).appendingPathComponent(component)
+    }
+    
+    /// 附加路径组件数组
+    public func fw_appendingPath(_ components: [String]) -> String {
+        var result = self
+        for component in components {
+            result = (result as NSString).appendingPathComponent(component)
+        }
+        return result
+    }
+    
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
     public func fw_size(
         font: UIFont,
@@ -793,6 +817,52 @@ extension WrapperGlobal {
     /// 资源路径，不可写
     public static var fw_pathResource: String {
         return Bundle.main.resourcePath ?? ""
+    }
+    
+    /// 递归创建目录，返回是否成功
+    @discardableResult
+    public static func fw_createDirectory(atPath: String, attributes: [FileAttributeKey: Any]? = nil) -> Bool {
+        do {
+            try FileManager.default.createDirectory(atPath: atPath, withIntermediateDirectories: true, attributes: attributes)
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+    /// 递归删除目录|文件，返回是否成功
+    @discardableResult
+    public static func fw_removeItem(atPath: String) -> Bool {
+        do {
+            try FileManager.default.removeItem(atPath: atPath)
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+    /// 移动目录|文件，返回是否成功
+    @discardableResult
+    public static func fw_moveItem(atPath: String, toPath: String) -> Bool {
+        do {
+            try FileManager.default.moveItem(atPath: atPath, toPath: toPath)
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+    /// 查询目录|文件是否存在
+    public static func fw_fileExists(atPath: String, isDirectory: Bool? = nil) -> Bool {
+        if let isDirectory = isDirectory {
+            var objCBool: ObjCBool = false
+            if FileManager.default.fileExists(atPath: atPath, isDirectory: &objCBool) {
+                return isDirectory == objCBool.boolValue
+            }
+            return false
+        } else {
+            return FileManager.default.fileExists(atPath: atPath)
+        }
     }
 
     /// 获取目录大小，单位：B

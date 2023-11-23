@@ -197,6 +197,15 @@ open class RequestManager: NSObject {
             filter.filterUrlRequest?(urlRequest, with: request)
         }
         
+        if request.requestSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        if request.responseSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        }
+        
         return urlRequest as URLRequest
     }
     
@@ -302,14 +311,7 @@ open class RequestManager: NSObject {
     }
     
     private func downloadTask(for request: HTTPRequest) throws {
-        let urlRequest = try request.config.requestPlugin.urlRequest(for: request)
-        
-        request.filterUrlRequest(urlRequest)
-        
-        let filters = request.config.requestFilters
-        for filter in filters {
-            filter.filterUrlRequest?(urlRequest, with: request)
-        }
+        let urlRequest = try buildUrlRequest(request)
         
         let downloadPath = request.resumableDownloadPath ?? ""
         var downloadTargetPath: String = ""
