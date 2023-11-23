@@ -89,7 +89,7 @@ NS_SWIFT_NAME(AttributedLabel)
 
 - (void)addCustomLink:(id)linkData
              forRange:(NSRange)range
-            linkColor:(UIColor *)color;
+           attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 //大小
 - (CGSize)sizeThatFits:(CGSize)size;
@@ -103,11 +103,11 @@ NS_SWIFT_NAME(AttributedLabelURL)
 
 @property (nonatomic,strong)          id      linkData;
 @property (nonatomic,assign)          NSRange range;
-@property (nonatomic,strong,nullable) UIColor *color;
+@property (nonatomic,copy,nullable)   NSDictionary<NSAttributedStringKey, id> *attributes;
 
 + (__FWAttributedLabelURL *)urlWithLinkData:(id)linkData
-                                    range:(NSRange)range
-                                    color:(nullable UIColor *)color;
+                                      range:(NSRange)range
+                                 attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
 @end
 
@@ -120,15 +120,12 @@ NS_SWIFT_NAME(AttributedLabelURLDetectorProtocol)
 - (void)detectLinks:(nullable NSString *)plainText completion:(__FWAttributedLinkDetectCompletion)completion;
 @end
 
-NS_SWIFT_NAME(AttributedLabelDefaultURLDetector)
-@interface __FWAttributedLabelDefaultURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
-@property (nonatomic,strong,null_resettable) NSRegularExpression *dataDetector;
-@end
-
 NS_SWIFT_NAME(AttributedLabelURLDetector)
 @interface __FWAttributedLabelURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
-@property (nonatomic,strong,null_resettable) id<__FWAttributedLabelURLDetectorProtocol> detector;
-+ (instancetype)shared;
+@property (class, nonatomic, readonly) __FWAttributedLabelURLDetector *sharedInstance NS_SWIFT_NAME(shared);
+@property (nonatomic,strong,nullable) id<__FWAttributedLabelURLDetectorProtocol> detector;
+- (void)addRegularExpression:(NSRegularExpression *)regularExpression attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
+- (void)removeAllRegularExpressions;
 @end
 
 #pragma mark - __FWAttributedLabelAttachment

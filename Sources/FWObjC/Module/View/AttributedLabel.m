@@ -237,7 +237,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 - (id<__FWAttributedLabelURLDetectorProtocol>)linkDetector
 {
     if (_linkDetector == nil) {
-        _linkDetector = __FWAttributedLabelURLDetector.shared;
+        _linkDetector = __FWAttributedLabelURLDetector.sharedInstance;
     }
     return _linkDetector;
 }
@@ -406,14 +406,32 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
             {
                 continue;
             }
-            UIColor *drawLinkColor = url.color ?: self.linkColor;
+            NSMutableDictionary *attributes = [url.attributes mutableCopy];
+            UIColor *drawLinkColor = self.linkColor;
+            UIColor *urlColor = attributes[(NSString *)kCTForegroundColorAttributeName] ?: attributes[NSForegroundColorAttributeName];
+            if (urlColor != nil) {
+                drawLinkColor = urlColor;
+                [attributes removeObjectForKey:(NSString *)kCTForegroundColorAttributeName];
+                [attributes removeObjectForKey:NSForegroundColorAttributeName];
+            }
             [drawString removeAttribute:(NSString *)kCTForegroundColorAttributeName range:url.range];
             if (drawLinkColor.CGColor) [drawString addAttribute:(NSString *)kCTForegroundColorAttributeName value:(id)drawLinkColor.CGColor range:url.range];
+            
             [drawString removeAttribute:(NSString *)kCTUnderlineColorAttributeName range:url.range];
             CTUnderlineStyle underlineStyle = _underLineForLink ? kCTUnderlineStyleSingle : kCTUnderlineStyleNone;
+            NSNumber *urlUnderline = attributes[(NSString *)kCTUnderlineStyleAttributeName] ?: attributes[NSUnderlineStyleAttributeName];
+            if (urlUnderline != nil) {
+                underlineStyle = [urlUnderline intValue];
+                [attributes removeObjectForKey:(NSString *)kCTUnderlineStyleAttributeName];
+                [attributes removeObjectForKey:NSUnderlineStyleAttributeName];
+            }
             [drawString addAttribute:(NSString *)kCTUnderlineStyleAttributeName
                          value:[NSNumber numberWithInt:(underlineStyle|kCTUnderlinePatternSolid)]
                          range:url.range];
+            
+            if (attributes != nil && attributes.count > 0) {
+                [drawString addAttributes:attributes range:url.range];
+            }
         }
         return drawString;
     }
@@ -680,16 +698,16 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 {
     [self addCustomLink:linkData
                forRange:range
-              linkColor:self.linkColor];
+             attributes:nil];
 }
 
 - (void)addCustomLink:(id)linkData
              forRange:(NSRange)range
-            linkColor:(UIColor *)color
+           attributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     __FWAttributedLabelURL *url = [__FWAttributedLabelURL urlWithLinkData:linkData
-                                                                  range:range
-                                                                  color:color];
+                                                                    range:range
+                                                               attributes:attributes];
     [_linkLocations addObject:url];
     [self resetTextFrame];
 }
@@ -1315,7 +1333,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
         }
     }
     [self addCustomLink:link.linkData
-               forRange:link.range];
+               forRange:link.range
+             attributes:link.attributes];
 }
 
 #pragma mark - 点击事件相应
@@ -1411,61 +1430,28 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 + (__FWAttributedLabelURL *)urlWithLinkData:(id)linkData
                                      range:(NSRange)range
-                                     color:(UIColor *)color
+                                     attributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
 {
     __FWAttributedLabelURL *url  = [[__FWAttributedLabelURL alloc]init];
     url.linkData                = linkData;
     url.range                   = range;
-    url.color                   = color;
+    url.attributes              = attributes;
     return url;
-    
-}
-
-@end
-
-#pragma mark - __FWAttributedLabelDefaultURLDetector
-
-@implementation __FWAttributedLabelDefaultURLDetector
-
-- (NSRegularExpression *)dataDetector
-{
-    if (_dataDetector == nil) {
-        _dataDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber error:nil];
-    }
-    return _dataDetector;
-}
-
-- (void)detectLinks:(nullable NSString *)plainText
-         completion:(__FWAttributedLinkDetectCompletion)completion
-{
-    if (completion == nil) { return; }
-    
-    NSMutableArray *links = nil;
-    if ([plainText length])
-    {
-        links = [NSMutableArray array];
-        [self.dataDetector enumerateMatchesInString:plainText
-                                   options:0
-                                     range:NSMakeRange(0, [plainText length])
-                                usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
-                                    NSRange range = result.range;
-                                    NSString *text = [plainText substringWithRange:range];
-                                    __FWAttributedLabelURL *link = [__FWAttributedLabelURL urlWithLinkData:text
-                                                                                                   range:range
-                                                                                                   color:nil];
-                                    [links addObject:link];
-                                }];
-    }
-    completion(links);
 }
 
 @end
 
 #pragma mark - __FWAttributedLabelURLDetector
 
+@interface __FWAttributedLabelURLDetector ()
+
+@property (nonatomic, strong) NSMutableArray *regularExpressions;
+
+@end
+
 @implementation __FWAttributedLabelURLDetector
 
-+ (instancetype)shared
++ (__FWAttributedLabelURLDetector *)sharedInstance
 {
     static __FWAttributedLabelURLDetector *instance = nil;
     static dispatch_once_t onceToken;
@@ -1475,12 +1461,27 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     return instance;
 }
 
-- (id<__FWAttributedLabelURLDetectorProtocol>)detector
+- (instancetype)init
 {
-    if (_detector == nil) {
-        _detector = [[__FWAttributedLabelDefaultURLDetector alloc] init];
+    self = [super init];
+    if (self) {
+        _regularExpressions = [[NSMutableArray alloc] init];
+        
+        NSDataDetector *dataDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber error:nil];
+        if (dataDetector) [self addRegularExpression:dataDetector attributes:nil];
     }
-    return _detector;
+    return self;
+}
+
+- (void)addRegularExpression:(NSRegularExpression *)regularExpression attributes:(nullable NSDictionary<NSAttributedStringKey,id> *)attributes
+{
+    objc_setAssociatedObject(regularExpression, @selector(detectLinks:completion:), attributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self.regularExpressions addObject:regularExpression];
+}
+
+- (void)removeAllRegularExpressions
+{
+    [self.regularExpressions removeAllObjects];
 }
 
 - (void)detectLinks:(nullable NSString *)plainText
@@ -1488,7 +1489,31 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 {
     if (completion == nil) { return; }
     
-    [self.detector detectLinks:plainText completion:completion];
+    if (self.detector) {
+        [self.detector detectLinks:plainText completion:completion];
+        return;
+    }
+    
+    NSMutableArray *links = nil;
+    if ([plainText length])
+    {
+        links = [NSMutableArray array];
+        for (NSRegularExpression *regularExpression in self.regularExpressions) {
+            NSDictionary *attributes = objc_getAssociatedObject(regularExpression, @selector(detectLinks:completion:));
+            [regularExpression enumerateMatchesInString:plainText
+                                       options:0
+                                         range:NSMakeRange(0, [plainText length])
+                                    usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+                                        NSRange range = result.range;
+                                        NSString *text = [plainText substringWithRange:range];
+                                        __FWAttributedLabelURL *link = [__FWAttributedLabelURL urlWithLinkData:text
+                                                                                                       range:range
+                                                                                                       attributes:attributes];
+                                        [links addObject:link];
+                                    }];
+        }
+    }
+    completion(links);
 }
 
 @end
