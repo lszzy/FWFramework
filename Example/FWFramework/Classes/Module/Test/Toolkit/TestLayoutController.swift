@@ -15,7 +15,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     lazy var attributedLabel: AttributedLabel = {
         let result = AttributedLabel()
         result.clipsToBounds = true
-        result.numberOfLines = 2
+        result.numberOfLines = 3
         result.lineBreakMode = .byTruncatingTail
         result.lineTruncatingSpacing = self.buttonWidth
         result.backgroundColor = AppTheme.backgroundColor
@@ -124,14 +124,14 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20)
             .top(toViewBottom: iconsView, offset: 20)
         
-        attributedLabel.text = "我是非常长的文本，要多长有多长，我会自动截断，再附加视图，不信你看嘛，我是显示不下了的文本，我是更多文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我又要换行了"
+        attributedLabel.text = "我是非常长的文本，我可以截断并附加视图，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本"
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(APP.font(16).lineHeight))
         collapseLabel.isUserInteractionEnabled = true
         collapseLabel.app.addTapGesture { [weak self] _ in
             self?.attributedLabel.lineTruncatingSpacing = self?.buttonWidth ?? 0
-            self?.attributedLabel.numberOfLines = 2
+            self?.attributedLabel.numberOfLines = 3
             self?.attributedLabel.lineBreakMode = .byTruncatingTail
         }
         attributedLabel.append(collapseLabel, margin: .zero)

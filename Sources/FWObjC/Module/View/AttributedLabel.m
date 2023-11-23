@@ -30,6 +30,8 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @implementation __FWAttributedLabel
 
+@synthesize linkDetector = _linkDetector;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -228,6 +230,23 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     if (_autoDetectLinks != autoDetectLinks)
     {
         _autoDetectLinks = autoDetectLinks;
+        [self resetTextFrame];
+    }
+}
+
+- (__FWAttributedLabelURLDetector *)linkDetector
+{
+    if (_linkDetector == nil) {
+        _linkDetector = __FWAttributedLabelURLDetector.shared;
+    }
+    return _linkDetector;
+}
+
+- (void)setLinkDetector:(__FWAttributedLabelURLDetector *)linkDetector
+{
+    if (_linkDetector != linkDetector)
+    {
+        _linkDetector = linkDetector;
         [self resetTextFrame];
     }
 }
@@ -1265,24 +1284,24 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     __weak typeof(self) weakSelf = self;
     self.ignoreRedraw = YES;
     
-    [__FWAttributedLabelURLDetector.shared detectLinks:text
-                                           completion:^(NSArray<__FWAttributedLabelURL *> * _Nullable links) {
-                                               __strong typeof(weakSelf) strongSelf = weakSelf;
-                                               NSString *plainText = [[strongSelf attributedString] string];
-                                               if ([text isEqualToString:plainText])
-                                               {
-                                                   strongSelf.linkDetected = YES;
-                                                   if ([links count])
-                                                   {
-                                                       for (__FWAttributedLabelURL *link in links)
-                                                       {
-                                                           [strongSelf addAutoDetectedLink:link];
-                                                       }
-                                                       [strongSelf resetTextFrame];
-                                                   }
-                                                   strongSelf.ignoreRedraw = NO;
-                                               }
-                                            }];
+    [self.linkDetector detectLinks:text
+                        completion:^(NSArray<__FWAttributedLabelURL *> * _Nullable links) {
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            NSString *plainText = [[strongSelf attributedString] string];
+                            if ([text isEqualToString:plainText])
+                            {
+                                strongSelf.linkDetected = YES;
+                                if ([links count])
+                                {
+                                    for (__FWAttributedLabelURL *link in links)
+                                    {
+                                        [strongSelf addAutoDetectedLink:link];
+                                    }
+                                    [strongSelf resetTextFrame];
+                                }
+                                strongSelf.ignoreRedraw = NO;
+                            }
+                        }];
 }
 
 - (void)addAutoDetectedLink:(__FWAttributedLabelURL *)link
@@ -1404,9 +1423,48 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @end
 
+#pragma mark - __FWAttributedLabelDefaultURLDetector
+
+@implementation __FWAttributedLabelDefaultURLDetector
+
+- (NSRegularExpression *)dataDetector
+{
+    if (_dataDetector == nil) {
+        _dataDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber error:nil];
+    }
+    return _dataDetector;
+}
+
+- (void)detectLinks:(nullable NSString *)plainText
+         completion:(__FWAttributedLinkDetectCompletion)completion
+{
+    if (completion == nil) { return; }
+    
+    NSMutableArray *links = nil;
+    if ([plainText length])
+    {
+        links = [NSMutableArray array];
+        [self.dataDetector enumerateMatchesInString:plainText
+                                   options:0
+                                     range:NSMakeRange(0, [plainText length])
+                                usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+                                    NSRange range = result.range;
+                                    NSString *text = [plainText substringWithRange:range];
+                                    __FWAttributedLabelURL *link = [__FWAttributedLabelURL urlWithLinkData:text
+                                                                                                   range:range
+                                                                                                   color:nil];
+                                    [links addObject:link];
+                                }];
+    }
+    completion(links);
+}
+
+@end
+
 #pragma mark - __FWAttributedLabelURLDetector
 
 @implementation __FWAttributedLabelURLDetector
+
 + (instancetype)shared
 {
     static __FWAttributedLabelURLDetector *instance = nil;
@@ -1417,58 +1475,20 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     return instance;
 }
 
+- (id<__FWAttributedLabelURLDetectorProtocol>)detector
+{
+    if (_detector == nil) {
+        _detector = [[__FWAttributedLabelDefaultURLDetector alloc] init];
+    }
+    return _detector;
+}
+
 - (void)detectLinks:(nullable NSString *)plainText
          completion:(__FWAttributedLinkDetectCompletion)completion
 {
-    if (completion == nil)
-    {
-        return;
-    }
+    if (completion == nil) { return; }
     
-    if (self.detector)
-    {
-        [self.detector detectLinks:plainText
-                        completion:completion];
-    }
-    else
-    {
-        NSMutableArray *links = nil;
-        if ([plainText length])
-        {
-            links = [NSMutableArray array];
-            NSDataDetector *detector = [self linkDetector];
-            [detector enumerateMatchesInString:plainText
-                                       options:0
-                                         range:NSMakeRange(0, [plainText length])
-                                    usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
-                                        NSRange range = result.range;
-                                        NSString *text = [plainText substringWithRange:range];
-                                        __FWAttributedLabelURL *link = [__FWAttributedLabelURL urlWithLinkData:text
-                                                                                                       range:range
-                                                                                                       color:nil];
-                                        [links addObject:link];
-                                    }];
-        }
-        completion(links);
-    }
-}
-
-- (NSDataDetector *)linkDetector
-{
-    static NSString *FWLinkDetectorKey = @"FWLinkDetectorKey";
-    
-    NSMutableDictionary *dict = [[NSThread currentThread] threadDictionary];
-    NSDataDetector *detector = dict[FWLinkDetectorKey];
-    if (detector == nil)
-    {
-        detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber
-                                                   error:nil];
-        if (detector)
-        {
-            dict[FWLinkDetectorKey] = detector;
-        }
-    }
-    return detector;
+    [self.detector detectLinks:plainText completion:completion];
 }
 
 @end

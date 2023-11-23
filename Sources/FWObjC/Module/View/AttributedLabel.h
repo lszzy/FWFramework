@@ -19,6 +19,7 @@ typedef NS_OPTIONS(NSUInteger, __FWAttributedAlignment) {
 
 @class __FWAttributedLabel;
 @class __FWAttributedLabelAttachment;
+@class __FWAttributedLabelURLDetector;
 
 NS_SWIFT_NAME(AttributedLabelDelegate)
 @protocol __FWAttributedLabelDelegate <NSObject>
@@ -45,6 +46,7 @@ NS_SWIFT_NAME(AttributedLabel)
 @property (nonatomic,assign)                CGFloat shadowBlur;                     //阴影半径
 @property (nonatomic,assign)                BOOL    underLineForLink;               //链接是否带下划线
 @property (nonatomic,assign)                BOOL    autoDetectLinks;                //自动检测
+@property (nonatomic,strong)                __FWAttributedLabelURLDetector *linkDetector; //自定义链接检测器，默认shared
 @property (nonatomic,copy,nullable)         void (^clickedOnLink)(id linkData);     //链接点击句柄
 @property (nonatomic,assign)                NSInteger   numberOfLines;              //行数
 @property (nonatomic,assign)                CTTextAlignment textAlignment;          //文字排版样式
@@ -113,18 +115,20 @@ NS_SWIFT_NAME(AttributedLabelURL)
 
 typedef void(^__FWAttributedLinkDetectCompletion)(NSArray<__FWAttributedLabelURL *> * _Nullable links) NS_SWIFT_NAME(AttributedLinkDetectCompletion);
 
-NS_SWIFT_NAME(AttributedLabelCustomURLDetector)
-@protocol __FWAttributedLabelCustomURLDetector <NSObject>
+NS_SWIFT_NAME(AttributedLabelURLDetectorProtocol)
+@protocol __FWAttributedLabelURLDetectorProtocol <NSObject>
 - (void)detectLinks:(nullable NSString *)plainText completion:(__FWAttributedLinkDetectCompletion)completion;
 @end
 
+NS_SWIFT_NAME(AttributedLabelDefaultURLDetector)
+@interface __FWAttributedLabelDefaultURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
+@property (nonatomic,strong) NSRegularExpression *dataDetector;
+@end
+
 NS_SWIFT_NAME(AttributedLabelURLDetector)
-@interface __FWAttributedLabelURLDetector : NSObject
-@property (nonatomic,strong) id<__FWAttributedLabelCustomURLDetector> detector;
-
+@interface __FWAttributedLabelURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
+@property (nonatomic,strong) id<__FWAttributedLabelURLDetectorProtocol> detector;
 + (instancetype)shared;
-
-- (void)detectLinks:(nullable NSString *)plainText completion:(__FWAttributedLinkDetectCompletion)completion;
 @end
 
 #pragma mark - __FWAttributedLabelAttachment
