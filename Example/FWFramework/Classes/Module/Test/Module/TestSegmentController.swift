@@ -194,7 +194,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .underlineColor: AppTheme.textColor,
         ]))
-        label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), linkColor: AppTheme.buttonColor)
+        label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), attributes: [.foregroundColor: AppTheme.buttonColor])
         label.appendAttributedText(NSAttributedString(string: " 我是删除线", attributes: [
             .font: UIFont.systemFont(ofSize: 15),
             .foregroundColor: AppTheme.buttonColor,

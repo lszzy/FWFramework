@@ -10,42 +10,11 @@ import FWFramework
 
 class TestLayoutController: UIViewController, ViewControllerProtocol {
     
-    private class TestLinkDetector: NSObject, AttributedLabelURLDetectorProtocol {
-        func detectLinks(_ plainText: String?, completion: @escaping AttributedLinkDetectCompletion) {
-            var labelUrls: [AttributedLabelURL] = []
-            let defaultDetector = AttributedLabelDefaultURLDetector()
-            defaultDetector.detectLinks(plainText) { defaultUrls in
-                if let defaultUrls = defaultUrls, !defaultUrls.isEmpty {
-                    labelUrls.append(contentsOf: defaultUrls)
-                }
-                
-                let tagDetector = AttributedLabelDefaultURLDetector()
-                tagDetector.dataDetector = try? NSRegularExpression(pattern: "#[^#]+#")
-                tagDetector.detectLinks(plainText) { tagUrls in
-                    if let tagUrls = tagUrls, !tagUrls.isEmpty {
-                        labelUrls.append(contentsOf: tagUrls)
-                    }
-                    
-                    let usserDetector = AttributedLabelDefaultURLDetector()
-                    usserDetector.dataDetector = try? NSRegularExpression(pattern: "@[^ ]+ ")
-                    usserDetector.detectLinks(plainText) { userUrls in
-                        if let userUrls = userUrls, !userUrls.isEmpty {
-                            labelUrls.append(contentsOf: userUrls)
-                        }
-                        
-                        completion(labelUrls)
-                    }
-                }
-            }
-        }
-    }
-    
     var buttonWidth: CGFloat = 0
     
     lazy var attributedLabel: AttributedLabel = {
         let result = AttributedLabel()
         result.clipsToBounds = true
-        result.linkDetector = TestLinkDetector()
         result.numberOfLines = 3
         result.lineBreakMode = .byTruncatingTail
         result.lineTruncatingSpacing = self.buttonWidth
@@ -61,6 +30,15 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 self?.app.showMessage(text: "点击了 \(linkData)")
             }
         }
+        
+        let linkDetector = AttributedLabelURLDetector()
+        if let tagDetector = try? NSRegularExpression(pattern: "#[^#]+#") {
+            linkDetector.add(tagDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue])
+        }
+        if let usserDetector = try? NSRegularExpression(pattern: "@[^ ]+ ") {
+            linkDetector.add(usserDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue, .foregroundColor: UIColor.red])
+        }
+        result.linkDetector = linkDetector
         return result
     }()
     
