@@ -285,6 +285,7 @@ public class OdometerView: UIView {
     private var animateCount: Int = 0
     private var animationKey = "OdometerAnimation"
     private var density: Int = 9
+    private var isReverse = false
     
     public func setNumber(_ number: String, animated: Bool = true) {
         stopAnimations()
@@ -322,6 +323,7 @@ public class OdometerView: UIView {
     }
     
     private func prepareAnimations(animated: Bool) {
+        isReverse = numberValue(number) < numberValue(lastNumber)
         let animated = animated && lastNumber != "" && number != lastNumber
         let numberParts = number.components(separatedBy: ".")
         let lastParts = lastNumber.components(separatedBy: ".")
@@ -377,8 +379,8 @@ public class OdometerView: UIView {
             animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
             animation.isRemovedOnCompletion = false
             animation.fillMode = .forwards
-            animation.fromValue = NSNumber(value: 0)
-            animation.toValue = NSNumber(value: -maxY)
+            animation.fromValue = NSNumber(value: isReverse ? -maxY : 0)
+            animation.toValue = NSNumber(value: isReverse ? 0 : -maxY)
             scrollLayer.add(animation, forKey: animationKey)
             
             offset += durationOffset
@@ -394,11 +396,14 @@ public class OdometerView: UIView {
         } else {
             let digitValue = (startDigit as NSString).integerValue
             for i in 0 ..< density + 1 {
-                let currentValue = (digitValue + i) % 10
+                let currentValue = (digitValue + 10 + (isReverse ? -i : i)) % 10
                 textForScroll.append("\(currentValue)")
                 if currentValue == (endDigit as NSString).integerValue {
                     break
                 }
+            }
+            if isReverse {
+                textForScroll = textForScroll.reversed()
             }
         }
         
@@ -429,6 +434,12 @@ public class OdometerView: UIView {
         if animateCount <= 0 {
             lastNumber = number
         }
+    }
+    
+    private func numberValue(_ number: String) -> Double {
+        let string = number.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789.").inverted)
+        let value = Double(string) ?? .zero
+        return number.contains("-") ? -value : value
     }
     
     private func isNumber(_ number: String) -> Bool {
