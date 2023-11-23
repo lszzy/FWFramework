@@ -87,11 +87,11 @@ open class RequestConfig: NSObject {
     /// 自定义请求上下文配件句柄，默认nil
     open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     /// 自定义显示错误方法，主线程优先调用，默认nil
-    open var showErrorBlock: ((HTTPRequest) -> Void)?
+    open var showErrorBlock: HTTPRequest.Completion?
     /// 自定义显示加载方法，主线程优先调用，默认nil
-    open var showLoadingBlock: ((HTTPRequest) -> Void)?
+    open var showLoadingBlock: HTTPRequest.Completion?
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
-    open var hideLoadingBlock: ((HTTPRequest) -> Void)?
+    open var hideLoadingBlock: HTTPRequest.Completion?
     
     public override init() {
         super.init()

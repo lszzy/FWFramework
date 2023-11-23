@@ -7,6 +7,22 @@
 
 import Foundation
 
+// MARK: - WrapperGlobal+ChainRequest
+extension WrapperGlobal {
+    
+    /// 开始队列请求并指定完成句柄
+    public static func request(_ request: ChainRequest, completion: ChainRequest.Completion? = nil) {
+        request.start(completion: completion)
+    }
+    
+    /// 开始队列请求并指定成功、失败句柄
+    public static func request(_ request: ChainRequest, success: ChainRequest.Completion?, failure: ChainRequest.Completion?) {
+        request.start(success: success, failure: failure)
+    }
+    
+}
+
+// MARK: - ChainRequest
 /// 队列请求代理
 public protocol ChainRequestDelegate: AnyObject {
     /// 队列请求完成
@@ -25,18 +41,20 @@ extension ChainRequestDelegate {
 /// 队列请求类
 open class ChainRequest: NSObject, RequestDelegate {
     
-    // MARK: - Accessor
-    /// 回调句柄声明
-    public typealias Callback = (ChainRequest, HTTPRequest) -> Void
+    /// 队列请求完成句柄
+    public typealias Completion = (ChainRequest) -> Void
+    /// 回调处理句柄声明
+    public typealias CallbackHandler = (ChainRequest, HTTPRequest) -> Void
     
+    // MARK: - Accessor
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
     /// 事件代理
     open weak var delegate: ChainRequestDelegate?
     /// 成功完成回调
-    open var successCompletionBlock: ((ChainRequest) -> Void)?
+    open var successCompletionBlock: Completion?
     /// 失败完成回调
-    open var failureCompletionBlock: ((ChainRequest) -> Void)?
+    open var failureCompletionBlock: Completion?
     /// 请求标签，默认0
     open var tag: Int = 0
     /// 自定义请求配件数组
@@ -60,10 +78,10 @@ open class ChainRequest: NSObject, RequestDelegate {
     /// 请求构建句柄，所有请求完成后才会主线程调用
     open var requestBuilder: ((_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
     
-    private var requestCallbackArray: [Callback] = []
+    private var requestCallbackArray: [CallbackHandler] = []
     private var nextRequestIndex: Int = 0
     private weak var nextRequest: HTTPRequest?
-    private let emptyCallback: Callback = { _, _ in }
+    private let emptyCallback: CallbackHandler = { _, _ in }
     
     // MARK: - Lifecycle
     public override init() {
@@ -76,7 +94,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     
     // MARK: - Public
     /// 添加请求，可设置请求完成回调
-    open func addRequest(_ request: HTTPRequest, callback: Callback? = nil) {
+    open func addRequest(_ request: HTTPRequest, callback: CallbackHandler? = nil) {
         requestArray.append(request)
         requestCallbackArray.append(callback ?? emptyCallback)
     }
@@ -102,19 +120,19 @@ open class ChainRequest: NSObject, RequestDelegate {
     }
     
     /// 开始请求并指定成功、失败句柄
-    open func start(success: ((ChainRequest) -> Void)?, failure: ((ChainRequest) -> Void)?) {
+    open func start(success: Completion?, failure: Completion?) {
         successCompletionBlock = success
         failureCompletionBlock = failure
         start()
     }
     
     /// 开始请求并指定完成句柄
-    open func start(completion: ((ChainRequest) -> Void)?) {
+    open func start(completion: Completion?) {
         start(success: completion, failure: completion)
     }
     
     /// 开始同步请求并指定成功、失败句柄
-    open func startSynchronously(success: ((ChainRequest) -> Void)?, failure: ((ChainRequest) -> Void)?) {
+    open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { chainRequest in
             if chainRequest.failedRequest == nil {
                 success?(chainRequest)
@@ -125,7 +143,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((ChainRequest) -> Void)?) {
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
         RequestManager.shared.synchronousChainRequest(self, filter: filter, completion: completion)
     }
     

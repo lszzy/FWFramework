@@ -7,6 +7,22 @@
 
 import Foundation
 
+// MARK: - WrapperGlobal+BatchRequest
+extension WrapperGlobal {
+    
+    /// 开始批量请求并指定完成句柄
+    public static func request(_ request: BatchRequest, completion: BatchRequest.Completion? = nil) {
+        request.start(completion: completion)
+    }
+    
+    /// 开始批量请求并指定成功、失败句柄
+    public static func request(_ request: BatchRequest, success: BatchRequest.Completion?, failure: BatchRequest.Completion?) {
+        request.start(success: success, failure: failure)
+    }
+    
+}
+
+// MARK: - BatchRequest
 /// 批量请求代理
 public protocol BatchRequestDelegate: AnyObject {
     /// 批量请求完成
@@ -25,15 +41,18 @@ extension BatchRequestDelegate {
 /// 批量请求类
 open class BatchRequest: NSObject, RequestDelegate {
     
+    /// 批量请求完成句柄
+    public typealias Completion = (BatchRequest) -> Void
+    
     // MARK: - Accessor
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
     /// 事件代理
     open weak var delegate: BatchRequestDelegate?
     /// 成功完成回调
-    open var successCompletionBlock: ((BatchRequest) -> Void)?
+    open var successCompletionBlock: Completion?
     /// 失败完成回调
-    open var failureCompletionBlock: ((BatchRequest) -> Void)?
+    open var failureCompletionBlock: Completion?
     /// 请求标签，默认0
     open var tag: Int = 0
     /// 自定义请求配件数组
@@ -106,19 +125,19 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     
     /// 开始请求并指定成功、失败句柄
-    open func start(success: ((BatchRequest) -> Void)?, failure: ((BatchRequest) -> Void)?) {
+    open func start(success: Completion?, failure: Completion?) {
         successCompletionBlock = success
         failureCompletionBlock = failure
         start()
     }
     
     /// 开始请求并指定完成句柄
-    open func start(completion: ((BatchRequest) -> Void)?) {
+    open func start(completion: Completion?) {
         start(success: completion, failure: completion)
     }
     
     /// 开始同步请求并指定成功、失败句柄
-    open func startSynchronously(success: ((BatchRequest) -> Void)?, failure: ((BatchRequest) -> Void)?) {
+    open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { batchRequest in
             if batchRequest.failedRequest == nil {
                 success?(batchRequest)
@@ -129,7 +148,7 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((BatchRequest) -> Void)?) {
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
         RequestManager.shared.synchronousBatchRequest(self, filter: filter, completion: completion)
     }
     
