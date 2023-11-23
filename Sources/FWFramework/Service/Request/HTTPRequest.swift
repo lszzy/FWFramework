@@ -7,6 +7,21 @@
 
 import Foundation
 
+// MARK: - WrapperGlobal+HTTPRequest
+extension WrapperGlobal {
+    
+    /// 开始请求并指定完成句柄
+    public static func request<T: HTTPRequest>(_ request: T, completion: ((T) -> Void)? = nil) {
+        request.start(completion: completion != nil ? { completion?($0 as! T) } : nil)
+    }
+    
+    /// 开始请求并指定成功、失败句柄
+    public static func request<T: HTTPRequest>(_ request: T, success: ((T) -> Void)?, failure: ((T) -> Void)?) {
+        request.start(success: success != nil ? { success?($0 as! T) } : nil, failure: failure != nil ? { failure?($0 as! T) } : nil)
+    }
+    
+}
+
 // MARK: - HTTPRequest
 /// 请求方式
 public enum RequestMethod: String {
@@ -68,6 +83,9 @@ extension RequestDelegate {
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
 open class HTTPRequest: NSObject {
     
+    /// 请求完成句柄
+    public typealias Completion = (HTTPRequest) -> Void
+    
     // MARK: - Accessor
     /// 自定义请求配置，未设置时使用全局配置
     open var config: RequestConfig! {
@@ -79,9 +97,9 @@ open class HTTPRequest: NSObject {
     /// 自定义请求代理
     open weak var delegate: RequestDelegate?
     /// 自定义成功回调句柄
-    open var successCompletionBlock: ((HTTPRequest) -> Void)?
+    open var successCompletionBlock: Completion?
     /// 自定义失败回调句柄
-    open var failureCompletionBlock: ((HTTPRequest) -> Void)?
+    open var failureCompletionBlock: Completion?
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
     /// 自定义POST请求HTTP body数据
@@ -462,19 +480,19 @@ open class HTTPRequest: NSObject {
     }
     
     /// 开始请求并指定成功、失败句柄
-    open func start(success: ((Self) -> Void)?, failure: ((Self) -> Void)?) {
-        successCompletionBlock = success != nil ? { success?($0 as! Self) } : nil
-        failureCompletionBlock = failure != nil ? { failure?($0 as! Self ) } : nil
+    open func start(success: Completion?, failure: Completion?) {
+        successCompletionBlock = success
+        failureCompletionBlock = failure
         start()
     }
     
     /// 开始请求并指定完成句柄
-    open func start(completion: ((Self) -> Void)?) {
+    open func start(completion: Completion?) {
         start(success: completion, failure: completion)
     }
     
     /// 开始同步请求并指定成功、失败句柄
-    open func startSynchronously(success: ((Self) -> Void)?, failure: ((Self) -> Void)?) {
+    open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { request in
             if request.error == nil {
                 success?(request)
@@ -485,8 +503,8 @@ open class HTTPRequest: NSObject {
     }
     
     /// 开始同步请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: ((Self) -> Void)?) {
-        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion != nil ? { completion?($0 as! Self) } : nil)
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
+        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion)
     }
     
     /// 添加请求配件

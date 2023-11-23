@@ -101,7 +101,7 @@ open class RequestManager: NSObject {
     }
     
     /// 当filter为nil或返回true时开始同步请求，完成后主线程回调
-    open func synchronousRequest(_ request: HTTPRequest, filter: (() -> Bool)? = nil, completion: ((HTTPRequest) -> Void)?) {
+    open func synchronousRequest(_ request: HTTPRequest, filter: (() -> Bool)? = nil, completion: HTTPRequest.Completion?) {
         synchronousQueue.async { [weak self] in
             self?.synchronousSemaphore.wait()
             let filterResult = filter != nil ? filter!() : true
@@ -118,7 +118,7 @@ open class RequestManager: NSObject {
     }
     
     /// 当filter为nil或返回true时开始同步批量请求，完成后主线程回调
-    open func synchronousBatchRequest(_ batchRequest: BatchRequest, filter: (() -> Bool)? = nil, completion: ((BatchRequest) -> Void)?) {
+    open func synchronousBatchRequest(_ batchRequest: BatchRequest, filter: (() -> Bool)? = nil, completion: BatchRequest.Completion?) {
         synchronousQueue.async { [weak self] in
             self?.synchronousSemaphore.wait()
             let filterResult = filter != nil ? filter!() : true
@@ -135,7 +135,7 @@ open class RequestManager: NSObject {
     }
     
     /// 当filter为nil或返回true时开始同步队列请求，完成后主线程回调
-    open func synchronousChainRequest(_ chainRequest: ChainRequest, filter: (() -> Bool)? = nil, completion: ((ChainRequest) -> Void)?) {
+    open func synchronousChainRequest(_ chainRequest: ChainRequest, filter: (() -> Bool)? = nil, completion: ChainRequest.Completion?) {
         synchronousQueue.async { [weak self] in
             self?.synchronousSemaphore.wait()
             let filterResult = filter != nil ? filter!() : true
