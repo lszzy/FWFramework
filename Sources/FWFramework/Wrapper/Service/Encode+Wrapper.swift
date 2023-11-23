@@ -269,7 +269,7 @@ extension Wrapper where Base: NSNumber {
 }
 
 extension Wrapper where Base == URL {
-    /// 安全URL，不为nil
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func safeURL(_ value: Any?) -> URL {
         return Base.fw_safeURL(value)
     }
