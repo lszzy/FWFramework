@@ -234,7 +234,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     }
 }
 
-- (__FWAttributedLabelURLDetector *)linkDetector
+- (id<__FWAttributedLabelURLDetectorProtocol>)linkDetector
 {
     if (_linkDetector == nil) {
         _linkDetector = __FWAttributedLabelURLDetector.shared;
@@ -242,7 +242,7 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
     return _linkDetector;
 }
 
-- (void)setLinkDetector:(__FWAttributedLabelURLDetector *)linkDetector
+- (void)setLinkDetector:(id<__FWAttributedLabelURLDetectorProtocol>)linkDetector
 {
     if (_linkDetector != linkDetector)
     {
