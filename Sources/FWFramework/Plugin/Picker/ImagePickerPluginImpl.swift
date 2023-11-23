@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import PhotosUI
 #if FWMacroSPM
 import FWObjC
 #endif
@@ -31,9 +32,15 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     
     /// 是否全屏弹出，默认false，使用系统方式
     open var presentationFullScreen: Bool = false
-
+    
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
     open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    
+    /// 自定义视频导出质量，默认nil时不处理
+    open var videoExportPreset: String?
+    
+    /// 自定义视频质量，默认nil时不生效
+    open var videoQuality: UIImagePickerController.QualityType?
 
     /// 图片选取全局自定义句柄，show方法自动调用
     open var customBlock: ((UIViewController) -> Void)?
@@ -54,6 +61,10 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
         guard let pickerController = pickerController else {
             completion(nil, nil, true)
             return
+        }
+        
+        if let videoQuality = videoQuality {
+            pickerController.videoQuality = videoQuality
         }
         
         if presentationFullScreen {
@@ -97,6 +108,17 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             return
         }
         
+        if #available(iOS 14.0, *) {
+            if let videoExportPreset = videoExportPreset,
+               let phPicker = pickerController as? PHPickerViewController {
+                phPicker.fw_videoExportPreset = videoExportPreset
+            }
+        }
+        if let videoQuality = videoQuality,
+           let imagePicker = pickerController as? UIImagePickerController {
+            imagePicker.videoQuality = videoQuality
+        }
+        
         if photoNavigationEnabled, !(pickerController is UINavigationController) {
             let navigationController = UINavigationController(rootViewController: pickerController)
             navigationController.isNavigationBarHidden = true
@@ -136,6 +158,9 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
 
     /// 自定义图片裁剪控制器句柄，预览控制器未自定义时生效，默认nil时使用自带控制器
     open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    
+    /// 自定义视频导出质量，默认nil时不处理
+    open var videoExportPreset: String?
 
     /// 图片选取全局自定义句柄，show方法自动调用
     open var customBlock: ((ImagePickerController) -> Void)?
@@ -192,6 +217,10 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
                 }
             }
             completion(objects, results, objects.count < 1)
+        }
+        
+        if let videoExportPreset = videoExportPreset {
+            pickerController.videoExportPreset = videoExportPreset
         }
         
         self.customBlock?(pickerController)

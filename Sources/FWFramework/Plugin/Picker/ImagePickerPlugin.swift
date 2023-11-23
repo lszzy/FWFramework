@@ -290,7 +290,7 @@ extension ImagePickerPlugin {
                 if let url = info[.mediaURL] as? URL {
                     let filePath = AssetManager.cachePath
                     try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
-                    if let fullPath = ((filePath as NSString).appendingPathComponent(url.absoluteString.fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
+                    if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                         let tempFileURL = NSURL.fileURL(withPath: fullPath)
                         do {
                             try FileManager.default.moveItem(at: url, to: tempFileURL)
@@ -451,7 +451,7 @@ extension ImagePickerPlugin {
             let completion = self.completionBlock
             if self.shouldDismiss {
                 PickerViewControllerDelegate.picker(picker, didFinishPicking: results, filterType: filterType) { picker, objects, results, cancel in
-                    picker?.dismiss(animated: true) {
+                    picker.dismiss(animated: true) {
                         completion?(nil, objects, results, cancel)
                     }
                 }
@@ -462,7 +462,7 @@ extension ImagePickerPlugin {
             }
         }
         
-        static func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult], filterType: ImagePickerFilterType, completion: ((PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void)?) {
+        static func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult], filterType: ImagePickerFilterType, completion: ((PHPickerViewController, [Any], [PHPickerResult], Bool) -> Void)?) {
             if results.count < 1 {
                 completion?(picker, [], results, true)
                 return
@@ -501,24 +501,51 @@ extension ImagePickerPlugin {
                     continue
                 }
                 
+                // 如果指定了videoExportPreset，优先尝试使用Asset导出，失败时才使用itemProvider
+                if let videoExportPreset = picker.fw_videoExportPreset,
+                   let assetIdentifier = result.assetIdentifier,
+                   let asset = Asset.asset(identifier: assetIdentifier) {
+                    var filePath = AssetManager.cachePath
+                    try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
+                    filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
+                    filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
+                    let fileURL = URL(fileURLWithPath: filePath)
+                    asset.requestVideoURL(outputURL: fileURL, exportPreset: videoExportPreset) { videoURL, info in
+                        DispatchQueue.main.async {
+                            if let videoURL = videoURL {
+                                objectDict[index] = (videoURL, result)
+                            }
+                            
+                            finishCount += 1
+                            if finishCount == totalCount {
+                                let objectList = objectDict.sorted { $0.key < $1.key }
+                                let sortedObjects = objectList.map { $0.value.0 }
+                                let sortedResults = objectList.map { $0.value.1 }
+                                completion?(picker, sortedObjects, sortedResults, false)
+                            }
+                        }
+                    }
+                    continue
+                }
+                
                 // completionHandler完成后，临时文件url会被系统删除，所以在此期间移动临时文件到FWImagePicker目录
                 result.itemProvider.loadFileRepresentation(forTypeIdentifier: kUTTypeMovie as String) { url, error in
-                    var fileURL: URL?
+                    var videoURL: URL?
                     if let url = url {
                         let filePath = AssetManager.cachePath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
-                        if let fullPath = ((filePath as NSString).appendingPathComponent(url.absoluteString.fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
-                            let tempFileURL = NSURL.fileURL(withPath: fullPath)
+                        if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
+                            let fileURL = NSURL.fileURL(withPath: fullPath)
                             do {
-                                try FileManager.default.moveItem(at: url, to: tempFileURL)
-                                fileURL = tempFileURL
+                                try FileManager.default.moveItem(at: url, to: fileURL)
+                                videoURL = fileURL
                             } catch { }
                         }
                     }
                     
                     DispatchQueue.main.async {
-                        if let fileURL = fileURL {
-                            objectDict[index] = (fileURL, result)
+                        if let videoURL = videoURL {
+                            objectDict[index] = (videoURL, result)
                         }
                         
                         finishCount += 1
@@ -639,6 +666,12 @@ extension ImagePickerPlugin {
     public var fw_pickerControllerDismissed: Bool {
         get { fw_propertyBool(forName: #function) }
         set { fw_setPropertyBool(newValue, forName: #function) }
+    }
+    
+    /// 自定义视频导出质量，默认nil时不处理
+    public var fw_videoExportPreset: String? {
+        get { fw_property(forName: #function) as? String }
+        set { fw_setPropertyCopy(newValue, forName: #function) }
     }
     
 }
