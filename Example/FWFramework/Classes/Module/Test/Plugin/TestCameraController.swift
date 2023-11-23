@@ -49,7 +49,23 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
             return
         }
         
-        app.showImagePreview(imageURLs: results, imageInfos: nil, currentIndex: 0, sourceView: nil)
+        app.showImagePreview(imageURLs: results, imageInfos: results.map({ object in
+            var title: String = ""
+            if let url = object as? URL, url.isFileURL {
+                title = String.app.sizeString(FileManager.app.fileSize(url.path))
+            }
+            return title
+        }), currentIndex: 0, sourceView: nil, placeholderImage: nil, customBlock: { controller in
+            guard let controller = controller as? ImagePreviewController else { return }
+            
+            controller.pageLabelText = { [weak controller] index, count in
+                var text = "\(index + 1) / \(count)"
+                if let title = controller?.imagePreviewView.imageInfos?.safeElement(index) as? String, !title.isEmpty {
+                    text += " - \(title)"
+                }
+                return text
+            }
+        })
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

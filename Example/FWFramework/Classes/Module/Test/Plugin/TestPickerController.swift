@@ -98,7 +98,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 if cancel || objects.count < 1 {
                     self?.app.showMessage(text: "已取消")
                 } else {
-                    self?.app.showImagePreview(imageURLs: objects, imageInfos: nil, currentIndex: 0)
+                    self?.showData(objects)
                 }
             }
         } else if index == 4 {
@@ -115,7 +115,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     }
                     
                     self?.livePhotoResources = resources
-                    self?.app.showImagePreview(imageURLs: [resources.pairedImage, resources.pairedVideo], imageInfos: nil, currentIndex: 0)
+                    self?.showData([resources.pairedImage, resources.pairedVideo])
                 }
             }
         } else if index == 5 {
@@ -133,7 +133,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     return
                 }
                 
-                self?.app.showImagePreview(imageURLs: [livePhoto], imageInfos: nil, currentIndex: 0)
+                self?.showData([livePhoto])
             }
         } else if index == 6 {
             guard let resources = livePhotoResources else {
@@ -145,6 +145,26 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 self?.app.showMessage(text: success ? "保存成功" : "保存失败")
             }
         }
+    }
+    
+    private func showData(_ results: [Any]) {
+        app.showImagePreview(imageURLs: results, imageInfos: results.map({ object in
+            var title: String = ""
+            if let url = object as? URL, url.isFileURL {
+                title = String.app.sizeString(FileManager.app.fileSize(url.path))
+            }
+            return title
+        }), currentIndex: 0, sourceView: nil, placeholderImage: nil, customBlock: { controller in
+            guard let controller = controller as? ImagePreviewController else { return }
+            
+            controller.pageLabelText = { [weak controller] index, count in
+                var text = "\(index + 1) / \(count)"
+                if let title = controller?.imagePreviewView.imageInfos?.safeElement(index) as? String, !title.isEmpty {
+                    text += " - \(title)"
+                }
+                return text
+            }
+        })
     }
     
 }
