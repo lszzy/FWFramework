@@ -331,7 +331,7 @@ extension Wrapper where Base == String {
     }
     
     /// 格式化文件大小为".0K/.1M/.1G"
-    public static func sizeString(_ aFileSize: UInt) -> String {
+    public static func sizeString(_ aFileSize: UInt64) -> String {
         return Base.fw_sizeString(aFileSize)
     }
     
@@ -464,6 +464,11 @@ extension Wrapper where Base: FileManager {
     /// 查询目录|文件是否存在
     public static func fileExists(atPath: String, isDirectory: Bool? = nil) -> Bool {
         return Base.fw_fileExists(atPath: atPath, isDirectory: isDirectory)
+    }
+    
+    /// 获取文件大小，单位：B
+    public static func fileSize(_ filePath: String) -> UInt64 {
+        return Base.fw_fileSize(filePath)
     }
 
     /// 获取目录大小，单位：B

@@ -423,13 +423,12 @@ private extension TestRequestController {
         request.start { [weak self] _ in
             self?.app.hideProgress()
             
-            var previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
-            if isVideo {
-                previewUrl = (self?.testPath ?? "").app.appendingPath(request.fileName)
-            }
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
+            let filePath = (self?.testPath ?? "").app.appendingPath(request.fileName)
+            let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
-            self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {
-                self?.app.showImagePreview(imageURLs: [previewUrl], imageInfos: nil, currentIndex: 0)
+            self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: {
+                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewUrl], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] _ in
             self?.app.hideProgress()
@@ -455,13 +454,12 @@ private extension TestRequestController {
         request.context = self
         request.autoShowLoading = true
         request.start { [weak self] _ in
-            var previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
-            if isVideo {
-                previewUrl = request.savePath
-            }
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
+            let filePath = request.savePath
+            let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
-            self?.app.showConfirm(title: "下载\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {
-                self?.app.showImagePreview(imageURLs: [previewUrl], imageInfos: nil, currentIndex: 0)
+            self?.app.showConfirm(title: "下载\(isVideo ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: {
+                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewUrl], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] _ in
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
