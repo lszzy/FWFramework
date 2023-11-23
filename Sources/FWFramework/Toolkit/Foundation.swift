@@ -651,7 +651,7 @@ extension WrapperGlobal {
     }
     
     /// 格式化文件大小为".0K/.1M/.1G"
-    public static func fw_sizeString(_ aFileSize: UInt) -> String {
+    public static func fw_sizeString(_ aFileSize: UInt64) -> String {
         guard aFileSize > 0 else { return "0K" }
         var fileSize = Double(aFileSize) / 1024
         if fileSize >= 1024 {
@@ -863,6 +863,16 @@ extension WrapperGlobal {
         } else {
             return FileManager.default.fileExists(atPath: atPath)
         }
+    }
+    
+    /// 获取文件大小，单位：B
+    public static func fw_fileSize(_ filePath: String) -> UInt64 {
+        var fileSize: UInt64 = 0
+        if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: filePath),
+           let sizeNumber = fileAttributes[.size] as? NSNumber {
+            fileSize = sizeNumber.uint64Value
+        }
+        return fileSize
     }
 
     /// 获取目录大小，单位：B
