@@ -417,10 +417,9 @@ private extension TestRequestController {
         request.fileName = isVideo ? "upload.mp4" : "upload.jpg"
         request.autoShowLoading = true
         request.start { [weak self] _ in
-            // 由于previewUrl是动态链接，不含pathExtension，需手工生成AVPlayerItem
-            var previewUrl: Any = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
+            var previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
             if isVideo {
-                previewUrl = AVPlayerItem(url: APP.safeURL(previewUrl))
+                previewUrl = (self?.testPath ?? "").app.appendingPath(request.fileName)
             }
             
             self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {
@@ -448,10 +447,9 @@ private extension TestRequestController {
         request.context = self
         request.autoShowLoading = true
         request.start { [weak self] _ in
-            // 由于previewUrl是动态链接，不含pathExtension，需手工生成AVPlayerItem
-            var previewUrl: Any = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
+            var previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
             if isVideo {
-                previewUrl = AVPlayerItem(url: APP.safeURL(previewUrl))
+                previewUrl = request.savePath
             }
             
             self?.app.showConfirm(title: "下载\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {

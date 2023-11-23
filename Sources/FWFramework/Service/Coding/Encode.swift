@@ -21,7 +21,7 @@ extension WrapperGlobal {
         return NSNumber.fw_safeNumber(value)
     }
 
-    /// 安全URL，不为nil
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func safeURL(_ value: Any?) -> URL {
         return URL.fw_safeURL(value)
     }
@@ -501,7 +501,7 @@ extension WrapperGlobal {
 }
 
 @_spi(FW) extension URL {
-    /// 安全URL，不为nil
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func fw_safeURL(_ value: Any?) -> URL {
         guard let value = value else { return NSURL() as URL }
         if let url = value as? URL { return url }
