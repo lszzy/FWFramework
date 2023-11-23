@@ -603,7 +603,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
             let pathExtension = url.pathExtension
             let videoExtensions = ["mp4", "mov", "m4v", "3gp", "avi"]
-            let isVideo = videoExtensions.contains(pathExtension)
+            let isVideo = videoExtensions.contains(pathExtension.lowercased())
             if isVideo {
                 imageURL = AVPlayerItem(url: url)
             }
