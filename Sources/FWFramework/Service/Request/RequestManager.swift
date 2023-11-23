@@ -427,7 +427,7 @@ open class RequestManager: NSObject {
     
     private func validateResponse(_ request: HTTPRequest) throws {
         if !request.statusCodeValidator() {
-            throw RequestError.validationInvalidStatusCode
+            throw RequestError.validationInvalidStatusCode(request.responseStatusCode)
         }
         
         if let requestValidator = request.config.requestValidator,

@@ -101,6 +101,7 @@ class TestUploadRequest: HTTPRequest {
     
     
     var uploadData: Any?
+    var fileName: String = ""
     
     override func requestUrl() -> String {
         "http://127.0.0.1:8001/upload"
@@ -124,10 +125,33 @@ class TestUploadRequest: HTTPRequest {
     
     override func requestFormData(_ formData: RequestMultipartFormData) {
         if let imageData = uploadData as? Data {
-            formData.appendPart(withFileData: imageData, name: "files[]", fileName: "upload.jpg", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
+            formData.appendPart(withFileData: imageData, name: "files[]", fileName: fileName, mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
         } else if let videoURL = uploadData as? URL {
-            try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: "upload.mp4", mimeType: Data.app.mimeType(from: "mp4"))
+            try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: fileName, mimeType: Data.app.mimeType(from: "mp4"))
         }
+    }
+    
+}
+
+class TestDownloadRequest: HTTPRequest {
+    
+    var fileName: String = ""
+    var savePath: String = "" {
+        didSet {
+            resumableDownloadPath = savePath
+        }
+    }
+    
+    override func requestUrl() -> String {
+        "http://127.0.0.1:8001/download"
+    }
+    
+    override func requestMethod() -> RequestMethod {
+        .GET
+    }
+    
+    override func requestArgument() -> Any? {
+        return ["path": "/website/test/\(fileName)"]
     }
     
 }
@@ -369,7 +393,6 @@ private extension TestRequestController {
     
     @objc func onUpload() {
         FileManager.app.createDirectory(atPath: testPath)
-        
         app.showImagePicker(filterType: [.image, .video], selectionLimit: 1, allowsEditing: true) { [weak self] results, info, cancelled in
             if let image = results.first as? UIImage {
                 self?.app.showLoading()
@@ -387,20 +410,56 @@ private extension TestRequestController {
     }
     
     private func onUploadData(_ uploadData: Any?) {
+        let isVideo = uploadData is URL
         let request = TestUploadRequest()
         request.context = self
         request.uploadData = uploadData
+        request.fileName = isVideo ? "upload.mp4" : "upload.jpg"
         request.autoShowLoading = true
-        request.autoShowError = true
         request.start { [weak self] _ in
+            // 由于previewUrl是动态链接，不含pathExtension，需手工生成AVPlayerItem
+            var previewUrl: Any = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
+            if isVideo {
+                previewUrl = AVPlayerItem(url: APP.safeURL(previewUrl))
+            }
             
-            self?.app.showMessage(text: "上传成功")
-        } failure: { _ in }
+            self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {
+                self?.app.showImagePreview(imageURLs: [previewUrl], imageInfos: nil, currentIndex: 0)
+            })
+        } failure: { [weak self] _ in
+            self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
+        }
     }
     
     @objc func onDownload() {
         FileManager.app.createDirectory(atPath: testPath)
+        var fileName = "upload.mp4"
+        var saveName = "download.mp4"
+        var isVideo = true
+        if !FileManager.app.fileExists(atPath: testPath.app.appendingPath(fileName), isDirectory: false) {
+            fileName = "upload.jpg"
+            saveName = "download.jpg"
+            isVideo = false
+        }
         
+        let request = TestDownloadRequest()
+        request.fileName = fileName
+        request.savePath = testPath.app.appendingPath(saveName)
+        request.context = self
+        request.autoShowLoading = true
+        request.start { [weak self] _ in
+            // 由于previewUrl是动态链接，不含pathExtension，需手工生成AVPlayerItem
+            var previewUrl: Any = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
+            if isVideo {
+                previewUrl = AVPlayerItem(url: APP.safeURL(previewUrl))
+            }
+            
+            self?.app.showConfirm(title: "下载\(isVideo ? "视频" : "图片")成功", message: "是否打开预览？", confirmBlock: {
+                self?.app.showImagePreview(imageURLs: [previewUrl], imageInfos: nil, currentIndex: 0)
+            })
+        } failure: { [weak self] _ in
+            self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
+        }
     }
     
     @objc func onObserve() {
