@@ -73,6 +73,15 @@ public class Asset: NSObject {
     private static let kAssetInfoOrientation = "orientation"
     private static let kAssetInfoSize = "size"
     
+    /// 根据唯一标志初始化
+    public static func asset(identifier: String) -> Asset? {
+        let phAssets = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
+        if let phAsset = phAssets.firstObject {
+            return Asset(phAsset: phAsset)
+        }
+        return nil
+    }
+    
     /// 初始化方法
     public init(phAsset: PHAsset) {
         self.phAsset = phAsset
@@ -473,6 +482,20 @@ public class AssetGroup: NSObject {
         return phFetchResult.count
     }
     
+    /// AssetGroup 的标识，每个 AssetGroup 的 identifier 都不同。只要两个 AssetGroup 的 identifier 相同则认为它们是同一个 assetGroup
+    public var identifier: String {
+        return phAssetCollection.localIdentifier
+    }
+    
+    /// 根据唯一标志初始化
+    public static func assetGroup(identifier: String) -> AssetGroup? {
+        let phAssetCollections = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [identifier], options: nil)
+        if let phAssetCollection = phAssetCollections.firstObject {
+            return AssetGroup(phAssetCollection: phAssetCollection)
+        }
+        return nil
+    }
+    
     /// 初始化方法
     public init(phAssetCollection: PHAssetCollection, fetchAssetsOptions: PHFetchOptions? = nil) {
         self.phAssetCollection = phAssetCollection
@@ -523,6 +546,15 @@ public class AssetGroup: NSObject {
         
         // For 循环遍历完毕，这时再调用一次 enumerationBlock，并传递 nil 作为实参，作为枚举资源结束的标记
         block?(nil)
+    }
+    
+    /// 重写比较方法，只要两个 AssetGroup 的 identifier 相同则认为它们是同一个 assetGroup
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let assetGroup = object as? AssetGroup,
+           assetGroup.identifier == identifier {
+            return true
+        }
+        return super.isEqual(object)
     }
     
 }

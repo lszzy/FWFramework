@@ -248,4 +248,10 @@ extension Wrapper where Base: PHPickerViewController {
         set { base.fw_pickerControllerDismissed = newValue }
     }
     
+    /// 自定义视频导出质量，默认nil时不处理
+    public var videoExportPreset: String? {
+        get { base.fw_videoExportPreset }
+        set { base.fw_videoExportPreset = newValue }
+    }
+    
 }

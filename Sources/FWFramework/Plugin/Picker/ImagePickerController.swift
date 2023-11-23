@@ -1916,7 +1916,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if checkVideo && asset.assetType == .video {
                 var filePath = AssetManager.cachePath
                 try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
-                filePath = (filePath as NSString).appendingPathComponent(UUID().uuidString.fw_md5Encode)
+                filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
                 filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
                 let fileURL = URL(fileURLWithPath: filePath)
                 asset.requestVideoURL(outputURL: fileURL, exportPreset: useOrigin ? AVAssetExportPresetHighestQuality : (videoExportPreset ?? AVAssetExportPresetMediumQuality)) { videoURL, info in
