@@ -10,11 +10,42 @@ import FWFramework
 
 class TestLayoutController: UIViewController, ViewControllerProtocol {
     
+    private class TestLinkDetector: NSObject, AttributedLabelURLDetectorProtocol {
+        func detectLinks(_ plainText: String?, completion: @escaping AttributedLinkDetectCompletion) {
+            var labelUrls: [AttributedLabelURL] = []
+            let defaultDetector = AttributedLabelDefaultURLDetector()
+            defaultDetector.detectLinks(plainText) { defaultUrls in
+                if let defaultUrls = defaultUrls, !defaultUrls.isEmpty {
+                    labelUrls.append(contentsOf: defaultUrls)
+                }
+                
+                let tagDetector = AttributedLabelDefaultURLDetector()
+                tagDetector.dataDetector = try? NSRegularExpression(pattern: "#[^#]+#")
+                tagDetector.detectLinks(plainText) { tagUrls in
+                    if let tagUrls = tagUrls, !tagUrls.isEmpty {
+                        labelUrls.append(contentsOf: tagUrls)
+                    }
+                    
+                    let usserDetector = AttributedLabelDefaultURLDetector()
+                    usserDetector.dataDetector = try? NSRegularExpression(pattern: "@[^ ]+ ")
+                    usserDetector.detectLinks(plainText) { userUrls in
+                        if let userUrls = userUrls, !userUrls.isEmpty {
+                            labelUrls.append(contentsOf: userUrls)
+                        }
+                        
+                        completion(labelUrls)
+                    }
+                }
+            }
+        }
+    }
+    
     var buttonWidth: CGFloat = 0
     
     lazy var attributedLabel: AttributedLabel = {
         let result = AttributedLabel()
         result.clipsToBounds = true
+        result.linkDetector = TestLinkDetector()
         result.numberOfLines = 3
         result.lineBreakMode = .byTruncatingTail
         result.lineTruncatingSpacing = self.buttonWidth
@@ -22,6 +53,14 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         result.font = APP.font(16)
         result.textColor = AppTheme.textColor
         result.textAlignment = .left
+        result.clickedOnLink = { [weak self] linkData in
+            guard let linkData = linkData as? String else { return }
+            if linkData.app.isValid(.isUrl) {
+                Router.openURL(linkData)
+            } else {
+                self?.app.showMessage(text: "点击了 \(linkData)")
+            }
+        }
         return result
     }()
     
@@ -124,7 +163,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20)
             .top(toViewBottom: iconsView, offset: 20)
         
-        attributedLabel.text = "我是非常长的文本，我可以截断并附加视图，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本"
+        attributedLabel.text = "我是非常长的文本，我可以截断并附加视图，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本"
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(APP.font(16).lineHeight))

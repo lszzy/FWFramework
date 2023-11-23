@@ -19,7 +19,7 @@ typedef NS_OPTIONS(NSUInteger, __FWAttributedAlignment) {
 
 @class __FWAttributedLabel;
 @class __FWAttributedLabelAttachment;
-@class __FWAttributedLabelURLDetector;
+@protocol __FWAttributedLabelURLDetectorProtocol;
 
 NS_SWIFT_NAME(AttributedLabelDelegate)
 @protocol __FWAttributedLabelDelegate <NSObject>
@@ -46,7 +46,7 @@ NS_SWIFT_NAME(AttributedLabel)
 @property (nonatomic,assign)                CGFloat shadowBlur;                     //阴影半径
 @property (nonatomic,assign)                BOOL    underLineForLink;               //链接是否带下划线
 @property (nonatomic,assign)                BOOL    autoDetectLinks;                //自动检测
-@property (nonatomic,strong)                __FWAttributedLabelURLDetector *linkDetector; //自定义链接检测器，默认shared
+@property (nonatomic,strong)                id<__FWAttributedLabelURLDetectorProtocol> linkDetector; //自定义链接检测器，默认shared
 @property (nonatomic,copy,nullable)         void (^clickedOnLink)(id linkData);     //链接点击句柄
 @property (nonatomic,assign)                NSInteger   numberOfLines;              //行数
 @property (nonatomic,assign)                CTTextAlignment textAlignment;          //文字排版样式
@@ -122,12 +122,12 @@ NS_SWIFT_NAME(AttributedLabelURLDetectorProtocol)
 
 NS_SWIFT_NAME(AttributedLabelDefaultURLDetector)
 @interface __FWAttributedLabelDefaultURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
-@property (nonatomic,strong) NSRegularExpression *dataDetector;
+@property (nonatomic,strong,null_resettable) NSRegularExpression *dataDetector;
 @end
 
 NS_SWIFT_NAME(AttributedLabelURLDetector)
 @interface __FWAttributedLabelURLDetector : NSObject <__FWAttributedLabelURLDetectorProtocol>
-@property (nonatomic,strong) id<__FWAttributedLabelURLDetectorProtocol> detector;
+@property (nonatomic,strong,null_resettable) id<__FWAttributedLabelURLDetectorProtocol> detector;
 + (instancetype)shared;
 @end
 
