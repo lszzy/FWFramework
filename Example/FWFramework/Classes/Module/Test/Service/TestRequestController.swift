@@ -328,8 +328,8 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.testFailed = true
-        request.start { [weak self] _ in
-            self?.app.showMessage(text: "天气请求成功: \n\(request.city) - \(request.temp)℃")
+        APP.start(request) { [weak self] req in
+            self?.app.showMessage(text: "天气请求成功: \n\(req.city) - \(req.temp)℃")
         } failure: { _ in }
     }
     

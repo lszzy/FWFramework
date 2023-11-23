@@ -11,12 +11,12 @@ import Foundation
 extension WrapperGlobal {
     
     /// 开始请求并指定完成句柄
-    public static func request<T: HTTPRequest>(_ request: T, completion: ((T) -> Void)? = nil) {
+    public static func start<T: HTTPRequest>(_ request: T, completion: ((T) -> Void)? = nil) {
         request.start(completion: completion != nil ? { completion?($0 as! T) } : nil)
     }
     
     /// 开始请求并指定成功、失败句柄
-    public static func request<T: HTTPRequest>(_ request: T, success: ((T) -> Void)?, failure: ((T) -> Void)?) {
+    public static func start<T: HTTPRequest>(_ request: T, success: ((T) -> Void)?, failure: ((T) -> Void)?) {
         request.start(success: success != nil ? { success?($0 as! T) } : nil, failure: failure != nil ? { failure?($0 as! T) } : nil)
     }
     

@@ -11,12 +11,12 @@ import Foundation
 extension WrapperGlobal {
     
     /// 开始批量请求并指定完成句柄
-    public static func request(_ request: BatchRequest, completion: BatchRequest.Completion? = nil) {
+    public static func start(_ request: BatchRequest, completion: BatchRequest.Completion? = nil) {
         request.start(completion: completion)
     }
     
     /// 开始批量请求并指定成功、失败句柄
-    public static func request(_ request: BatchRequest, success: BatchRequest.Completion?, failure: BatchRequest.Completion?) {
+    public static func start(_ request: BatchRequest, success: BatchRequest.Completion?, failure: BatchRequest.Completion?) {
         request.start(success: success, failure: failure)
     }
     
