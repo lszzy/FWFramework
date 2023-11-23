@@ -782,19 +782,40 @@ open class HTTPRequest: NSObject {
 
 // MARK: - RequestError
 /// 请求错误
-public enum RequestError: Int, Swift.Error, CustomNSError {
-    case cacheExpired = -1
-    case cacheVersionMismatch = -2
-    case cacheSensitiveDataMismatch = -3
-    case cacheAppVersionMismatch = -4
-    case cacheInvalidCacheTime = -5
-    case cacheInvalidMetadata = -6
-    case cacheInvalidCacheData = -7
-    case validationInvalidStatusCode = -8
-    case validationInvalidJSONFormat = -9
+public enum RequestError: Swift.Error, CustomNSError {
+    case cacheExpired
+    case cacheVersionMismatch
+    case cacheSensitiveDataMismatch
+    case cacheAppVersionMismatch
+    case cacheInvalidCacheTime
+    case cacheInvalidMetadata
+    case cacheInvalidCacheData
+    case validationInvalidStatusCode(_ code: Int)
+    case validationInvalidJSONFormat
     
     public static var errorDomain: String { "site.wuyong.error.request" }
-    public var errorCode: Int { self.rawValue }
+    public var errorCode: Int {
+        switch self {
+        case .cacheExpired:
+            return -1
+        case .cacheVersionMismatch:
+            return -2
+        case .cacheSensitiveDataMismatch:
+            return -3
+        case .cacheAppVersionMismatch:
+            return -4
+        case .cacheInvalidCacheTime:
+            return -5
+        case .cacheInvalidMetadata:
+            return -6
+        case .cacheInvalidCacheData:
+            return -7
+        case .validationInvalidStatusCode:
+            return -8
+        case .validationInvalidJSONFormat:
+            return -9
+        }
+    }
     public var errorUserInfo: [String: Any] {
         switch self {
         case .cacheExpired:
@@ -811,8 +832,8 @@ public enum RequestError: Int, Swift.Error, CustomNSError {
             return [NSLocalizedDescriptionKey: "Invalid metadata. Cache may not exist"]
         case .cacheInvalidCacheData:
             return [NSLocalizedDescriptionKey: "Invalid cache data"]
-        case .validationInvalidStatusCode:
-            return [NSLocalizedDescriptionKey: "Invalid status code"]
+        case let .validationInvalidStatusCode(code):
+            return [NSLocalizedDescriptionKey: "Invalid status code (\(code))"]
         case .validationInvalidJSONFormat:
             return [NSLocalizedDescriptionKey: "Invalid JSON format"]
         }
