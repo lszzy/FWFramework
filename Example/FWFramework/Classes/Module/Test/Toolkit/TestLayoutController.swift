@@ -20,6 +20,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         result.lineTruncatingSpacing = self.buttonWidth
         result.backgroundColor = AppTheme.backgroundColor
         result.font = APP.font(16)
+        result.lineSpacing = APP.font(16).pointSize / 2.0
         result.textColor = AppTheme.textColor
         result.textAlignment = .left
         result.clickedOnLink = { [weak self] linkData in
