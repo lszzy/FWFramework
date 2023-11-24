@@ -301,6 +301,11 @@ extension Wrapper where Base: NSNumber {
 
 // MARK: - String+Foundation
 extension Wrapper where Base == String {
+    /// 转换成文件URL
+    public var pathURL: URL {
+        return base.fw_pathURL
+    }
+    
     /// 将波浪线相对路径展开为绝对路径
     public var expandingTildePath: String {
         return base.fw_expandingTildePath
@@ -319,6 +324,11 @@ extension Wrapper where Base == String {
     /// 附加路径组件数组
     public func appendingPath(_ components: [String]) -> String {
         return base.fw_appendingPath(components)
+    }
+    
+    /// 附加路径后缀，失败时返回空
+    public func appendingPathExtension(_ ext: String) -> String {
+        return base.fw_appendingPathExtension(ext)
     }
     
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸

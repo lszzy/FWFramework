@@ -107,6 +107,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
             "导出LivePhoto",
             "合成LivePhoto",
             "保存LivePhoto",
+            "导出视频并转码",
         ])
     }
     
@@ -174,6 +175,65 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
             
             AssetLivePhoto.saveToLibrary(resources) { [weak self] success, _ in
                 self?.app.showMessage(text: success ? "保存成功" : "保存失败")
+            }
+        } else if index == 7 {
+            app.showImagePicker(filterType: .video, selectionLimit: 1, allowsEditing: true) { picker in
+                if let picker = picker as? ImagePickerController {
+                    picker.videoExportAVAsset = true
+                }
+            } completion: { [weak self] objects, _, cancel in
+                if cancel || objects.count < 1 {
+                    self?.app.showMessage(text: "已取消")
+                    return
+                }
+                
+                var avAsset: AVAsset?
+                if let asset = objects.first as? AVAsset {
+                    avAsset = asset
+                } else if let url = objects.first as? URL {
+                    avAsset = AVURLAsset(url: url)
+                }
+                guard let avAsset = avAsset else {
+                    self?.app.showMessage(text: "导出失败")
+                    return
+                }
+                
+                self?.app.showLoading(text: "视频转码中...")
+                let outputPath = AssetManager.cachePath
+                FileManager.app.createDirectory(atPath: outputPath)
+                let outputURL = URL(fileURLWithPath: outputPath)
+                    .appendingPathComponent(UUID().uuidString.app.md5Encode)
+                    .appendingPathExtension("mp4")
+                AssetSessionExporter.export(asset: avAsset, outputFileType: .mp4, outputURL: outputURL, videoOutputConfiguration: [
+                    AVVideoCodecKey: AVVideoCodecType.h264,
+                    AVVideoWidthKey: NSNumber(integerLiteral: 1920),
+                    AVVideoHeightKey: NSNumber(integerLiteral: 1080),
+                    AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
+                    AVVideoCompressionPropertiesKey: [
+                        AVVideoAverageBitRateKey: NSNumber(integerLiteral: 6000000),
+                        AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel as String,
+                    ]
+                ], audioOutputConfiguration: [
+                    AVFormatIDKey: kAudioFormatMPEG4AAC,
+                    AVEncoderBitRateKey: NSNumber(integerLiteral: 128000),
+                    AVNumberOfChannelsKey: NSNumber(integerLiteral: 2),
+                    AVSampleRateKey: NSNumber(value: Float(44100))
+                ], progressHandler: nil) { result in
+                    self?.app.hideLoading()
+                    
+                    switch result {
+                    case .success(let status):
+                        switch status {
+                        case .completed:
+                            self?.showData([outputURL])
+                            break
+                        default:
+                            break
+                        }
+                    case .failure(let error):
+                        self?.app.showMessage(error: error)
+                    }
+                }
             }
         }
     }
