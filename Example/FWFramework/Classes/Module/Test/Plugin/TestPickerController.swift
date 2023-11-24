@@ -12,7 +12,7 @@ import PhotosUI
 
 class TestPickerController: UIViewController, TableViewControllerProtocol {
     
-    private var livePhotoResources: LivePhoto.Resources?
+    private var livePhotoResources: AssetLivePhoto.Resources?
     
     func setupPlugin() {
         ImagePickerControllerImpl.shared.pickerControllerBlock = {
@@ -139,7 +139,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     return
                 }
                 
-                LivePhoto.extractResources(from: livePhoto) { resources in
+                AssetLivePhoto.extractResources(from: livePhoto) { resources in
                     guard let resources = resources else {
                         self?.app.showMessage(text: "导出失败")
                         return
@@ -155,7 +155,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 return
             }
             
-            LivePhoto.generate(from: resources.pairedImage, videoURL: resources.pairedVideo) { [weak self] progress in
+            AssetLivePhoto.generate(from: resources.pairedImage, videoURL: resources.pairedVideo) { [weak self] progress in
                 self?.app.showProgress(progress, text: "合成中...")
             } completion: { [weak self] livePhoto, _ in
                 self?.app.hideProgress()
@@ -172,7 +172,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 return
             }
             
-            LivePhoto.saveToLibrary(resources) { [weak self] success, _ in
+            AssetLivePhoto.saveToLibrary(resources) { [weak self] success, _ in
                 self?.app.showMessage(text: success ? "保存成功" : "保存失败")
             }
         }
