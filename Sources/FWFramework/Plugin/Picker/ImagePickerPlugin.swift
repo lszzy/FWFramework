@@ -571,8 +571,8 @@ extension ImagePickerPlugin {
             subFilters.append(PHPickerFilter.videos)
         }
         
-        // 注意preferredAssetRepresentationMode默认值为automatic会自动转码视频，导出视频时会变慢。如果无需视频转码，可设置为current加快导出
-        var configuration = PHPickerConfiguration()
+        // 注意preferredAssetRepresentationMode默认值为automatic会自动转码视频，如果无需视频转码，可设置为current
+        var configuration = PHPickerViewController.fw_pickerConfigurationBlock?() ?? PHPickerConfiguration()
         configuration.selectionLimit = selectionLimit
         if subFilters.count > 0 {
             configuration.filter = PHPickerFilter.any(of: subFilters)
@@ -636,6 +636,9 @@ extension ImagePickerPlugin {
         }
         return pickerController
     }
+    
+    /// 自定义全局PHPickerConfiguration创建句柄，默认nil
+    public static var fw_pickerConfigurationBlock: (() -> PHPickerConfiguration)?
     
     /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
     public var fw_pickerControllerDismissed: Bool {

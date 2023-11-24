@@ -242,6 +242,12 @@ extension Wrapper where Base: PHPickerViewController {
         return Base.fw_pickerController(selectionLimit: selectionLimit, cropController: cropController, completion: completion)
     }
     
+    /// 自定义全局PHPickerConfiguration创建句柄，默认nil
+    public static var pickerConfigurationBlock: (() -> PHPickerConfiguration)? {
+        get { Base.fw_pickerConfigurationBlock }
+        set { Base.fw_pickerConfigurationBlock = newValue }
+    }
+    
     /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
     public var pickerControllerDismissed: Bool {
         get { base.fw_pickerControllerDismissed }

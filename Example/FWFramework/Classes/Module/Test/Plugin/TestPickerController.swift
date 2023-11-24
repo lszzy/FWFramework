@@ -8,6 +8,7 @@
 
 import FWFramework
 import Photos
+import PhotosUI
 
 class TestPickerController: UIViewController, TableViewControllerProtocol {
     
@@ -56,9 +57,21 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.setupPlugin()
+                } else if index == 1 {
+                    if #available(iOS 14.0, *) {
+                        if PHPickerViewController.app.pickerConfigurationBlock == nil {
+                            PHPickerViewController.app.pickerConfigurationBlock = {
+                                var configuration = PHPickerConfiguration()
+                                configuration.preferredAssetRepresentationMode = .current
+                                return configuration
+                            }
+                        } else {
+                            PHPickerViewController.app.pickerConfigurationBlock = nil
+                        }
+                    }
                 } else {
                     try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
                     self?.app.showMessage(text: "清理完成")
