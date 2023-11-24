@@ -1169,7 +1169,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             } else if showsDefaultLoading {
                 fw_showLoading()
             }
-            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOriginImage: shouldUseOriginImage, videoExportPreset: imagePickerController?.videoExportPreset) { [weak self] in
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOriginImage: shouldUseOriginImage, videoExportPreset: imagePickerController?.videoExportPreset, videoExportAVAsset: imagePickerController?.videoExportAVAsset ?? false) { [weak self] in
                 guard let self = self else { return }
                 if self.delegate?.imagePickerPreviewControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {
@@ -1674,6 +1674,9 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     /// 自定义视频导出质量，默认nil时为AVAssetExportPresetMediumQuality
     open var videoExportPreset: String?
     
+    /// 是否视频导出为AVAsset，默认false
+    open var videoExportAVAsset = false
+    
     /// 当前被选择的图片对应的 Asset 对象数组
     open internal(set) var selectedImageAssetArray: [Asset] = []
     
@@ -1888,6 +1891,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         filterType: ImagePickerFilterType,
         useOriginImage: Bool,
         videoExportPreset: String? = nil,
+        videoExportAVAsset: Bool = false,
         completion: (() -> Void)?
     ) {
         if imagesAssetArray.count < 1 {
@@ -1913,13 +1917,19 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
         for asset in imagesAssetArray {
             if checkVideo && asset.assetType == .video {
-                var filePath = AssetManager.cachePath
-                try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
-                filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
-                filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
-                let fileURL = URL(fileURLWithPath: filePath)
-                asset.requestVideoURL(outputURL: fileURL, exportPreset: videoExportPreset ?? AVAssetExportPresetMediumQuality) { videoURL, info in
-                    completionHandler(asset, videoURL, info)
+                if videoExportAVAsset {
+                    asset.requestAVAsset { avAsset, audioMix, info in
+                        completionHandler(asset, avAsset, info)
+                    }
+                } else {
+                    var filePath = AssetManager.cachePath
+                    try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
+                    filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
+                    filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
+                    let fileURL = URL(fileURLWithPath: filePath)
+                    asset.requestVideoURL(outputURL: fileURL, exportPreset: videoExportPreset ?? AVAssetExportPresetMediumQuality) { videoURL, info in
+                        completionHandler(asset, videoURL, info)
+                    }
                 }
             } else if asset.assetType == .image {
                 if asset.editedImage != nil {
@@ -2329,7 +2339,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             }
             
             initPreviewViewControllerIfNeeded()
-            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: filterType, useOriginImage: imagePickerPreviewController?.shouldUseOriginImage ?? false, videoExportPreset: videoExportPreset) { [weak self] in
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: filterType, useOriginImage: imagePickerPreviewController?.shouldUseOriginImage ?? false, videoExportPreset: videoExportPreset, videoExportAVAsset: videoExportAVAsset) { [weak self] in
                 guard let self = self else { return }
                 if self.imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {

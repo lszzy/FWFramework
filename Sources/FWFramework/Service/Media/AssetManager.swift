@@ -303,6 +303,27 @@ public class Asset: NSObject {
         }
         return Int(videoRequestId)
     }
+    
+    /**
+     异步请求 视频AVAsset，可能会有网络请求
+
+     - Parameters:
+       - completion: 完成请求后调用的 block，参数中包含了请求的 AVAsset 以及相关信息
+       - progressHandler: 处理请求进度的 handler，不在主线程上执行，在 block 中修改 UI 时注意需要手工放到主线程处理。
+     
+     - Returns: 返回请求 视频AVAsset 的请求 id
+     */
+    @discardableResult
+    public func requestAVAsset(completion: ((_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+        let videoRequestOptions = PHVideoRequestOptions()
+        videoRequestOptions.isNetworkAccessAllowed = true
+        videoRequestOptions.progressHandler = progressHandler
+        
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, audioMix, info in
+            completion?(asset, audioMix, info)
+        }
+        return Int(videoRequestId)
+    }
 
     /**
      异步请求图片的 Data
@@ -1296,7 +1317,6 @@ open class AssetSessionExporter: NSObject {
     ///   - audioOutputConfiguration: audio output configuration
     ///   - progressHandler: progress fraction handler
     ///   - completionHandler: completion handler
-    @discardableResult
     public static func export(
         asset: AVAsset,
         outputFileType: AVFileType? = AVFileType.mp4,
@@ -1307,14 +1327,13 @@ open class AssetSessionExporter: NSObject {
         audioOutputConfiguration: [String : Any],
         progressHandler: AssetSessionExporter.ProgressHandler? = nil,
         completionHandler: AssetSessionExporter.CompletionHandler? = nil
-    ) -> AssetSessionExporter {
+    ) {
         let exporter = AssetSessionExporter(withAsset: asset)
         exporter.outputFileType = outputFileType
         exporter.outputURL = outputURL
         exporter.videoOutputConfiguration = videoOutputConfiguration
         exporter.audioOutputConfiguration = audioOutputConfiguration
         exporter.export(progressHandler: progressHandler, completionHandler: completionHandler)
-        return exporter
     }
 
     /// Input asset for export, provided when initialized.
@@ -1515,7 +1534,15 @@ extension AssetSessionExporter {
         
         self._progressHandler = progressHandler
         self._renderHandler = renderHandler
-        self._completionHandler = completionHandler
+        self._completionHandler = completionHandler != nil ? { result in
+            if Thread.isMainThread {
+                completionHandler?(result)
+            } else {
+                DispatchQueue.main.async {
+                    completionHandler?(result)
+                }
+            }
+        } : nil
         
         self._reader?.timeRange = self.timeRange
         self._writer?.shouldOptimizeForNetworkUse = self.optimizeForNetworkUse
@@ -1776,8 +1803,8 @@ extension AssetSessionExporter {
                 let videoHeight = videoConfiguration[AVVideoHeightKey] as? NSNumber
                 
                 // validated to be non-nil byt this point
-                let width = videoWidth!.intValue
-                let height = videoHeight!.intValue
+                let width = videoWidth?.intValue ?? 0
+                let height = videoHeight?.intValue ?? 0
                 
                 let targetSize = CGSize(width: width, height: height)
                 var naturalSize = videoTrack.naturalSize

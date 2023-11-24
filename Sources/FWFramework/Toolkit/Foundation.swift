@@ -609,6 +609,11 @@ extension WrapperGlobal {
 
 // MARK: - String+Foundation
 @_spi(FW) extension String {
+    /// 转换成文件URL
+    public var fw_pathURL: URL {
+        return URL(fileURLWithPath: self)
+    }
+    
     /// 将波浪线相对路径展开为绝对路径
     public var fw_expandingTildePath: String {
         return (self as NSString).expandingTildeInPath
@@ -631,6 +636,11 @@ extension WrapperGlobal {
             result = (result as NSString).appendingPathComponent(component)
         }
         return result
+    }
+    
+    /// 附加路径后缀，失败时返回空
+    public func fw_appendingPathExtension(_ ext: String) -> String {
+        return (self as NSString).appendingPathExtension(ext) ?? ""
     }
     
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
