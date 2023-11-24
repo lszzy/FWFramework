@@ -12,7 +12,7 @@
 
 #pragma mark - __FWPlayerCacheLoaderManager
 
-static NSString *__FWPlayerCacheScheme = @"__FWPlayerCache___:";
+static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 
 @interface __FWPlayerCacheLoaderManager () <__FWPlayerCacheLoaderDelegate>
 
@@ -396,14 +396,10 @@ didCompleteWithError:(nullable NSError *)error {
         return;
     }
     
-    __FWPlayerCacheAction *action = [self.actions firstObject];
+    __FWPlayerCacheAction *action = [self popFirstActionInList];
     if (!action) {
-        if ([self.delegate respondsToSelector:@selector(actionWorker:didFinishWithError:)]) {
-            [self.delegate actionWorker:self didFinishWithError:nil];
-        }
         return;
     }
-    [self.actions removeObjectAtIndex:0];
     
     if (action.actionType == __FWPlayerCacheAtionTypeLocal) {
         NSError *error;
@@ -416,7 +412,7 @@ didCompleteWithError:(nullable NSError *)error {
             if ([self.delegate respondsToSelector:@selector(actionWorker:didReceiveData:isLocal:)]) {
                 [self.delegate actionWorker:self didReceiveData:data isLocal:YES];
             }
-            [self processActions];
+            [self processActionsLater];
         }
     } else {
         long long fromOffset = action.range.location;
@@ -429,6 +425,28 @@ didCompleteWithError:(nullable NSError *)error {
         self.task = [self.session dataTaskWithRequest:request];
         [self.task resume];
     }
+}
+
+- (void)processActionsLater {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __strong typeof(self) self = weakSelf;
+        [self processActions];
+    });
+}
+
+- (__FWPlayerCacheAction *)popFirstActionInList {
+    @synchronized (self) {
+        __FWPlayerCacheAction *action = [self.actions firstObject];
+        if (action) {
+            [self.actions removeObjectAtIndex:0];
+            return action;
+        }
+    }
+    if ([self.delegate respondsToSelector:@selector(actionWorker:didFinishWithError:)]) {
+        [self.delegate actionWorker:self didFinishWithError:nil];
+    }
+    return nil;
 }
 
 - (void)notifyDownloadProgressWithFlush:(BOOL)flush finished:(BOOL)finished {
@@ -751,6 +769,7 @@ didCompleteWithError:(nullable NSError *)error {
 
 - (void)finish {
     if (!self.request.isFinished) {
+        [self.mediaDownloader cancel];
         [self.request finishLoadingWithError:[self loaderCancelledError]];
     }
 }
@@ -989,6 +1008,16 @@ static NSString *kURLKey = @"kURLKey";
 #pragma mark - Update
 
 - (void)save {
+    if ([NSThread isMainThread]) {
+        [self doDelaySaveAction];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self doDelaySaveAction];
+        });
+    }
+}
+
+- (void)doDelaySaveAction {
     [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(archiveData) object:nil];
     [self performSelector:@selector(archiveData) withObject:nil afterDelay:1.0];
 }
@@ -1316,7 +1345,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 
 #pragma mark - __FWPlayerCacheWorker
 
-static NSInteger const kPackageLength = 204800; // 200kb per package
+static NSInteger const kPackageLength = 512 * 1024; // 512 kb per package
 static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
 
 @interface __FWPlayerCacheWorker ()
