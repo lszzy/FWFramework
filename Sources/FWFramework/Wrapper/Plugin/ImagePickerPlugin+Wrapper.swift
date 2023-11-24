@@ -254,4 +254,10 @@ extension Wrapper where Base: PHPickerViewController {
         set { base.fw_pickerControllerDismissed = newValue }
     }
     
+    /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
+    public var exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
+        get { base.fw_exportProgressBlock }
+        set { base.fw_exportProgressBlock = newValue }
+    }
+    
 }
