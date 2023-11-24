@@ -136,7 +136,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         start(success: completion, failure: completion)
     }
     
-    /// 开始同步请求并指定成功、失败句柄
+    /// 开始同步串行请求并指定成功、失败句柄
     open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { batchRequest in
             if batchRequest.failedRequest == nil {
@@ -147,7 +147,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         }
     }
     
-    /// 开始同步请求并指定过滤器和完成句柄
+    /// 开始同步串行请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
         RequestManager.shared.synchronousBatchRequest(self, filter: filter, completion: completion)
     }
