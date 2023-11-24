@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol __FWPlayerCacheLoaderManagerDelegate;
 
-// @see https://github.com/vitoziv/VIMediaCache
+// [VIMediaCache](https://github.com/vitoziv/VIMediaCache)
 NS_SWIFT_NAME(PlayerCacheLoaderManager)
 @interface __FWPlayerCacheLoaderManager : NSObject <AVAssetResourceLoaderDelegate>
 
