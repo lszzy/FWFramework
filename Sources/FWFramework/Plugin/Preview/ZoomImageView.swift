@@ -607,11 +607,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             }
         }
         if let url = imageURL as? URL {
-            // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
-            let pathExtension = url.pathExtension
-            let videoExtensions = ["mp4", "mov", "m4v", "3gp", "avi"]
-            let isVideo = videoExtensions.contains(pathExtension.lowercased())
-            if isVideo {
+            if isVideoURL(url) {
                 imageURL = AVPlayerItem(url: url)
             }
         }
@@ -667,6 +663,14 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     
     open func scrollViewDidZoom(_ scrollView: UIScrollView) {
         handleDidEndZooming()
+    }
+    
+    private func isVideoURL(_ url: URL) -> Bool {
+        // 默认只判断几种视频格式，不使用缓存，如果不满足需求，自行生成AVPlayerItem即可
+        let pathExtension = url.pathExtension
+        let videoExtensions = ["mp4", "mov", "m4v", "3gp", "avi"]
+        let isVideo = videoExtensions.contains(pathExtension.lowercased())
+        return isVideo
     }
     
     private func setZoomScale(_ zoomScale: CGFloat, animated: Bool) {

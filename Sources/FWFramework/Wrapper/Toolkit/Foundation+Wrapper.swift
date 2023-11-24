@@ -301,11 +301,6 @@ extension Wrapper where Base: NSNumber {
 
 // MARK: - String+Foundation
 extension Wrapper where Base == String {
-    /// 转换成文件URL
-    public var pathURL: URL {
-        return base.fw_pathURL
-    }
-    
     /// 将波浪线相对路径展开为绝对路径
     public var expandingTildePath: String {
         return base.fw_expandingTildePath
@@ -380,14 +375,13 @@ extension Wrapper where Base == String {
         return base.fw_regexReplace(regex, string: string)
     }
 
-    /**
-     *  正则匹配回调
-     *
-     *  @param regex 正则表达式
-     *  @param block 回调句柄。range从大至小，方便replace
-     */
-    public func regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
-        return base.fw_regexMatches(regex, block: block)
+    /// 正则匹配回调
+    /// - Parameters:
+    ///   - regex: 正则表达式
+    ///   - reverse: 匹配结果是否反向，默认true
+    ///   - block: 回调句柄。正向时range从小到大，反向时从大至小，方便replace
+    public func regexMatches(_ regex: String, reverse: Bool = true, block: (NSRange) -> Void) {
+        return base.fw_regexMatches(regex, reverse: reverse, block: block)
     }
     
     /// 转义Html，如"a<"转义为"a&lt;"
