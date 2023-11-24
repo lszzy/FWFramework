@@ -38,6 +38,9 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     
     /// 自定义视频质量，默认nil时不生效
     open var videoQuality: UIImagePickerController.QualityType?
+    
+    /// 自定义PHPicker导出进度句柄，主线程回调，默认nil
+    open var exportProgressBlock: ((_ controller: UIViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)?
 
     /// 图片选取全局自定义句柄，show方法自动调用
     open var customBlock: ((UIViewController) -> Void)?
@@ -108,6 +111,16 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
         if let videoQuality = videoQuality,
            let imagePicker = pickerController as? UIImagePickerController {
             imagePicker.videoQuality = videoQuality
+        }
+        
+        if #available(iOS 14.0, *) {
+            if let progressBlock = exportProgressBlock,
+               let picker = pickerController as? PHPickerViewController {
+                picker.fw_exportProgressBlock = { picker, finishedCount, totalCount in
+                    let controller: UIViewController = picker.navigationController ?? picker
+                    progressBlock(controller, finishedCount, totalCount)
+                }
+            }
         }
         
         if photoNavigationEnabled, !(pickerController is UINavigationController) {
