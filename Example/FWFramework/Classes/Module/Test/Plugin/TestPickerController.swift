@@ -57,7 +57,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "切换自定义选择器视频质量", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "切换自定义选择器视频质量", "切换PHPicker导出进度", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.setupPlugin()
                 } else if index == 1 {
@@ -77,6 +77,18 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                         ImagePickerControllerImpl.shared.videoExportPreset = AVAssetExportPresetHighestQuality
                     } else {
                         ImagePickerControllerImpl.shared.videoExportPreset = nil
+                    }
+                } else if index == 3 {
+                    if ImagePickerPluginImpl.shared.exportProgressBlock == nil {
+                        ImagePickerPluginImpl.shared.exportProgressBlock = { controller, finished, total in
+                            if finished != total {
+                                controller.app.showLoading()
+                            } else {
+                                controller.app.hideLoading()
+                            }
+                        }
+                    } else {
+                        ImagePickerPluginImpl.shared.exportProgressBlock = nil
                     }
                 } else {
                     try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
@@ -113,27 +125,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
         tableView.deselectRow(at: indexPath, animated: false)
         let index = indexPath.row
         if index < 4 {
-            app.showImagePicker(filterType: index == 2 ? .image : (index == 3 ? .video : []), selectionLimit: index == 0 ? 1 : 9, allowsEditing: index == 2 ? false : true, customBlock: index == 3 ? { picker in
-                if #available(iOS 14.0, *) {
-                    // Demo各种情况都存在，实际项目只需要处理一种
-                    var controller: PHPickerViewController?
-                    if let picker = picker as? PHPickerViewController {
-                        controller = picker
-                    } else if let nav = picker as? UINavigationController {
-                        controller = nav.viewControllers.first as? PHPickerViewController
-                    }
-                    guard let controller = controller else { return }
-                    
-                    controller.app.exportProgressBlock = { vc, finished, total in
-                        let controller: UIViewController = vc.navigationController ?? vc
-                        if finished != total {
-                            controller.app.showProgress(CGFloat(finished) / CGFloat(total))
-                        } else {
-                            controller.app.hideProgress()
-                        }
-                    }
-                }
-            } : nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: index == 2 ? .image : (index == 3 ? .video : []), selectionLimit: index == 0 ? 1 : 9, allowsEditing: index == 2 ? false : true, customBlock: nil) { [weak self] objects, results, cancel in
                 if cancel || objects.count < 1 {
                     self?.app.showMessage(text: "已取消")
                 } else {
