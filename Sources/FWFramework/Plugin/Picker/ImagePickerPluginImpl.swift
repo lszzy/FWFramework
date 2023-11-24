@@ -21,7 +21,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     @objc(sharedInstance)
     public static let shared = ImagePickerPluginImpl()
 
-    /// 是否禁用iOS14+PHPickerViewController(支持多选)，默认false。设为true后始终使用UIImagePickerController(仅支持单选)
+    /// 是否禁用iOS14+PHPickerViewController(支持多选、无需用户隐私授权)，默认false。设为true后始终使用UIImagePickerController(仅支持单选)
     open var photoPickerDisabled: Bool = false
     
     /// 是否启用iOS14+PHPickerViewController导航栏控制器，默认false。注意设为true后customBlock参数将变为UINavigationController
@@ -35,9 +35,6 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
     open var cropControllerBlock: ((UIImage) -> ImageCropController)?
-    
-    /// 自定义视频导出质量，默认nil时不处理
-    open var videoExportPreset: String?
     
     /// 自定义视频质量，默认nil时不生效
     open var videoQuality: UIImagePickerController.QualityType?
@@ -108,12 +105,6 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
             return
         }
         
-        if #available(iOS 14.0, *) {
-            if let videoExportPreset = videoExportPreset,
-               let phPicker = pickerController as? PHPickerViewController {
-                phPicker.fw_videoExportPreset = videoExportPreset
-            }
-        }
         if let videoQuality = videoQuality,
            let imagePicker = pickerController as? UIImagePickerController {
             imagePicker.videoQuality = videoQuality

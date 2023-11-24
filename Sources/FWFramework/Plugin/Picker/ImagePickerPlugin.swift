@@ -474,6 +474,7 @@ extension ImagePickerPlugin {
             let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
             let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
             for (index, result) in results.enumerated() {
+                // assetIdentifier为空，无法获取到PHAsset，且获取PHAsset需要用户授权
                 let isVideo = checkVideo && result.itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMovie as String)
                 if !isVideo {
                     var objectClass: NSItemProviderReading.Type = UIImage.self
@@ -487,33 +488,6 @@ extension ImagePickerPlugin {
                                 objectDict[index] = (image, result)
                             } else if let livePhoto = object as? PHLivePhoto {
                                 objectDict[index] = (livePhoto, result)
-                            }
-                            
-                            finishCount += 1
-                            if finishCount == totalCount {
-                                let objectList = objectDict.sorted { $0.key < $1.key }
-                                let sortedObjects = objectList.map { $0.value.0 }
-                                let sortedResults = objectList.map { $0.value.1 }
-                                completion?(picker, sortedObjects, sortedResults, false)
-                            }
-                        }
-                    }
-                    continue
-                }
-                
-                // 如果指定了videoExportPreset，优先尝试使用Asset导出，失败时才使用itemProvider
-                if let videoExportPreset = picker.fw_videoExportPreset,
-                   let assetIdentifier = result.assetIdentifier,
-                   let asset = Asset.asset(identifier: assetIdentifier) {
-                    var filePath = AssetManager.cachePath
-                    try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true)
-                    filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
-                    filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
-                    let fileURL = URL(fileURLWithPath: filePath)
-                    asset.requestVideoURL(outputURL: fileURL, exportPreset: videoExportPreset) { videoURL, info in
-                        DispatchQueue.main.async {
-                            if let videoURL = videoURL {
-                                objectDict[index] = (videoURL, result)
                             }
                             
                             finishCount += 1
@@ -597,6 +571,7 @@ extension ImagePickerPlugin {
             subFilters.append(PHPickerFilter.videos)
         }
         
+        // 注意preferredAssetRepresentationMode默认值为automatic会自动转码视频，导出视频时会变慢。如果无需视频转码，可设置为current加快导出
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = selectionLimit
         if subFilters.count > 0 {
@@ -666,12 +641,6 @@ extension ImagePickerPlugin {
     public var fw_pickerControllerDismissed: Bool {
         get { fw_propertyBool(forName: #function) }
         set { fw_setPropertyBool(newValue, forName: #function) }
-    }
-    
-    /// 自定义视频导出质量，默认nil时不处理
-    public var fw_videoExportPreset: String? {
-        get { fw_property(forName: #function) as? String }
-        set { fw_setPropertyCopy(newValue, forName: #function) }
     }
     
 }
