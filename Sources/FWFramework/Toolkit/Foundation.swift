@@ -609,11 +609,6 @@ extension WrapperGlobal {
 
 // MARK: - String+Foundation
 @_spi(FW) extension String {
-    /// 转换成文件URL
-    public var fw_pathURL: URL {
-        return URL(fileURLWithPath: self)
-    }
-    
     /// 将波浪线相对路径展开为绝对路径
     public var fw_expandingTildePath: String {
         return (self as NSString).expandingTildeInPath
@@ -727,17 +722,16 @@ extension WrapperGlobal {
         return regexObj.stringByReplacingMatches(in: self, range: NSMakeRange(0, (self as NSString).length), withTemplate: string)
     }
 
-    /**
-     *  正则匹配回调
-     *
-     *  @param regex 正则表达式
-     *  @param block 回调句柄。range从大至小，方便replace
-     */
-    public func fw_regexMatches(_ regex: String, block: @escaping (NSRange) -> Void) {
+    /// 正则匹配回调
+    /// - Parameters:
+    ///   - regex: 正则表达式
+    ///   - reverse: 匹配结果是否反向，默认true
+    ///   - block: 回调句柄。正向时range从小到大，反向时从大至小，方便replace
+    public func fw_regexMatches(_ regex: String, reverse: Bool = true, block: (NSRange) -> Void) {
         guard let regexObj = try? NSRegularExpression(pattern: regex) else { return }
         let matches = regexObj.matches(in: self, range: NSMakeRange(0, (self as NSString).length))
         // 倒序循环，避免replace等越界
-        for match in matches.reversed() {
+        for match in (reverse ? matches.reversed() : matches) {
             block(match.range)
         }
     }

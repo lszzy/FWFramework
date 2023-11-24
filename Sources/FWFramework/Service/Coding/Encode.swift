@@ -447,6 +447,11 @@ extension WrapperGlobal {
         return URL.fw_url(string: self)
     }
     
+    /// 转换为文件URL
+    public var fw_fileURL: URL {
+        return URL(fileURLWithPath: self)
+    }
+    
     /// 转换为NSNumber
     public var fw_number: NSNumber? {
         let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]

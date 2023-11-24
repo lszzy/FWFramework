@@ -235,6 +235,11 @@ extension Wrapper where Base == String {
         return base.fw_url
     }
     
+    /// 转换为文件URL
+    public var fileURL: URL {
+        return base.fw_fileURL
+    }
+    
     /// 转换为NSNumber
     public var number: NSNumber? {
         return base.fw_number
