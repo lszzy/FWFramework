@@ -57,10 +57,16 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "切换自定义选择器视频质量", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.setupPlugin()
                 } else if index == 1 {
+                    if ImagePickerControllerImpl.shared.videoExportPreset == nil {
+                        ImagePickerControllerImpl.shared.videoExportPreset = AVAssetExportPresetHighestQuality
+                    } else {
+                        ImagePickerControllerImpl.shared.videoExportPreset = nil
+                    }
+                } else if index == 2 {
                     if #available(iOS 14.0, *) {
                         if PHPickerViewController.app.pickerConfigurationBlock == nil {
                             PHPickerViewController.app.pickerConfigurationBlock = {
