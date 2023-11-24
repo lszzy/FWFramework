@@ -571,7 +571,7 @@ extension ImagePickerPlugin {
             subFilters.append(PHPickerFilter.videos)
         }
         
-        // 注意preferredAssetRepresentationMode默认值为automatic会自动转码视频，如果无需视频转码，可设置为current
+        // 注意preferredAssetRepresentationMode默认值为automatic会自动转码视频，导出会变慢。如果无需视频转码，可设置为current加快导出
         var configuration = PHPickerViewController.fw_pickerConfigurationBlock?() ?? PHPickerConfiguration()
         configuration.selectionLimit = selectionLimit
         if subFilters.count > 0 {
