@@ -1335,6 +1335,16 @@ open class AssetSessionExporter: NSObject {
         exporter.audioOutputConfiguration = audioOutputConfiguration
         exporter.export(progressHandler: progressHandler, completionHandler: completionHandler)
     }
+    
+    /// The natural dimensions of the asset.
+    public static func naturalSize(for asset: AVAsset) -> CGSize {
+        if let track = asset.tracks(withMediaType: .video).first {
+            let size = track.naturalSize.applying(track.preferredTransform)
+            return CGSize(width: abs(size.width), height: abs(size.height))
+        } else {
+            return CGSize.zero
+        }
+    }
 
     /// Input asset for export, provided when initialized.
     public var asset: AVAsset?
@@ -1576,8 +1586,9 @@ extension AssetSessionExporter {
         self._reader?.startReading()
         self._writer?.startSession(atSourceTime: self.timeRange.start)
         
-        let audioSemaphore = DispatchSemaphore(value: 0)
-        let videoSemaphore = DispatchSemaphore(value: 0)
+        let group = DispatchGroup()
+        group.enter()
+        group.enter()
     
         let videoTracks = asset.tracks(withMediaType: AVMediaType.video)
         if let videoInput = self._videoInput,
@@ -1585,30 +1596,26 @@ extension AssetSessionExporter {
            videoTracks.count > 0 {
             videoInput.requestMediaDataWhenReady(on: self._inputQueue, using: {
                 if self.encode(readySamplesFromReaderOutput: videoOutput, toWriterInput: videoInput) == false {
-                    videoSemaphore.signal()
+                    group.leave()
                 }
             })
         } else {
-            videoSemaphore.signal()
+            group.leave()
         }
         
         if let audioInput = self._audioInput,
             let audioOutput = self._audioOutput {
             audioInput.requestMediaDataWhenReady(on: self._inputQueue, using: {
                 if self.encode(readySamplesFromReaderOutput: audioOutput, toWriterInput: audioInput) == false {
-                    audioSemaphore.signal()
+                    group.leave()
                 }
             })
         } else {
-            audioSemaphore.signal()
+            group.leave()
         }
         
-        DispatchQueue.global().async {
-            audioSemaphore.wait()
-            videoSemaphore.wait()
-            DispatchQueue.main.async {
-                self.finish()
-            }
+        group.notify(queue: .main) {
+            self.finish()
         }
     }
     

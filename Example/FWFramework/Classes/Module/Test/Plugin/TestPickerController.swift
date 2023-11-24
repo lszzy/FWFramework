@@ -197,6 +197,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     self?.app.showMessage(text: "导出失败")
                     return
                 }
+                let assetSize = AssetSessionExporter.naturalSize(for: avAsset)
                 
                 self?.app.showLoading(text: "视频转码中...")
                 let outputPath = AssetManager.cachePath
@@ -206,8 +207,8 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                     .appendingPathExtension("mp4")
                 AssetSessionExporter.export(asset: avAsset, outputFileType: .mp4, outputURL: outputURL, videoOutputConfiguration: [
                     AVVideoCodecKey: AVVideoCodecType.h264,
-                    AVVideoWidthKey: NSNumber(integerLiteral: 1920),
-                    AVVideoHeightKey: NSNumber(integerLiteral: 1080),
+                    AVVideoWidthKey: NSNumber(value: assetSize.width),
+                    AVVideoHeightKey: NSNumber(value: assetSize.height),
                     AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
                     AVVideoCompressionPropertiesKey: [
                         AVVideoAverageBitRateKey: NSNumber(integerLiteral: 6000000),
