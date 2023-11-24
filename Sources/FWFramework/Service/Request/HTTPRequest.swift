@@ -800,12 +800,20 @@ open class HTTPRequest: NSObject {
     // MARK: - JSONModel
     /// 快速解析响应JSON为数据模型，支持具体路径
     open func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T? {
-        return T.deserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+        if let array = responseJSONObject as? [Any] {
+            return T.deserialize(array, designatedPath: designatedPath)
+        } else {
+            return T.deserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+        }
     }
     
     /// 快速安全解析响应JSON为数据模型，支持具体路径
     open func safeResponseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T {
-        return T.safeDeserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+        if let array = responseJSONObject as? [Any] {
+            return T.safeDeserialize(array, designatedPath: designatedPath)
+        } else {
+            return T.safeDeserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+        }
     }
     
     /// 快速安全解析响应JSON为数据模型数组，支持具体路径
