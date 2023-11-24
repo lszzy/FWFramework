@@ -468,9 +468,16 @@ extension ImagePickerPlugin {
                 return
             }
             
-            var objectDict: [Int: (Any, PHPickerResult)] = [:]
             let totalCount = results.count
             var finishCount: Int = 0
+            let progressBlock = picker.fw_exportProgressBlock
+            if progressBlock != nil {
+                DispatchQueue.main.async {
+                    progressBlock?(picker, finishCount, totalCount)
+                }
+            }
+            
+            var objectDict: [Int: (Any, PHPickerResult)] = [:]
             let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
             let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
             for (index, result) in results.enumerated() {
@@ -491,6 +498,7 @@ extension ImagePickerPlugin {
                             }
                             
                             finishCount += 1
+                            progressBlock?(picker, finishCount, totalCount)
                             if finishCount == totalCount {
                                 let objectList = objectDict.sorted { $0.key < $1.key }
                                 let sortedObjects = objectList.map { $0.value.0 }
@@ -523,6 +531,7 @@ extension ImagePickerPlugin {
                         }
                         
                         finishCount += 1
+                        progressBlock?(picker, finishCount, totalCount)
                         if finishCount == totalCount {
                             let objectList = objectDict.sorted { $0.key < $1.key }
                             let sortedObjects = objectList.map { $0.value.0 }
@@ -644,6 +653,12 @@ extension ImagePickerPlugin {
     public var fw_pickerControllerDismissed: Bool {
         get { fw_propertyBool(forName: #function) }
         set { fw_setPropertyBool(newValue, forName: #function) }
+    }
+    
+    /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
+    public var fw_exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
+        get { fw_property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: #function) }
     }
     
 }

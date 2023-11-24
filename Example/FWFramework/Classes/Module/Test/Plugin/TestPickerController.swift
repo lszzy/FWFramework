@@ -61,12 +61,6 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 if index == 0 {
                     self?.setupPlugin()
                 } else if index == 1 {
-                    if ImagePickerControllerImpl.shared.videoExportPreset == nil {
-                        ImagePickerControllerImpl.shared.videoExportPreset = AVAssetExportPresetHighestQuality
-                    } else {
-                        ImagePickerControllerImpl.shared.videoExportPreset = nil
-                    }
-                } else if index == 2 {
                     if #available(iOS 14.0, *) {
                         if PHPickerViewController.app.pickerConfigurationBlock == nil {
                             PHPickerViewController.app.pickerConfigurationBlock = {
@@ -77,6 +71,12 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                         } else {
                             PHPickerViewController.app.pickerConfigurationBlock = nil
                         }
+                    }
+                } else if index == 2 {
+                    if ImagePickerControllerImpl.shared.videoExportPreset == nil {
+                        ImagePickerControllerImpl.shared.videoExportPreset = AVAssetExportPresetHighestQuality
+                    } else {
+                        ImagePickerControllerImpl.shared.videoExportPreset = nil
                     }
                 } else {
                     try? FileManager.default.removeItem(atPath: AssetManager.cachePath)
@@ -113,7 +113,27 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
         tableView.deselectRow(at: indexPath, animated: false)
         let index = indexPath.row
         if index < 4 {
-            app.showImagePicker(filterType: index == 2 ? .image : (index == 3 ? .video : []), selectionLimit: index == 0 ? 1 : 9, allowsEditing: index == 2 ? false : true, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: index == 2 ? .image : (index == 3 ? .video : []), selectionLimit: index == 0 ? 1 : 9, allowsEditing: index == 2 ? false : true, customBlock: index == 3 ? { picker in
+                if #available(iOS 14.0, *) {
+                    // Demo各种情况都存在，实际项目只需要处理一种
+                    var controller: PHPickerViewController?
+                    if let picker = picker as? PHPickerViewController {
+                        controller = picker
+                    } else if let nav = picker as? UINavigationController {
+                        controller = nav.viewControllers.first as? PHPickerViewController
+                    }
+                    guard let controller = controller else { return }
+                    
+                    controller.app.exportProgressBlock = { vc, finished, total in
+                        let controller: UIViewController = vc.navigationController ?? vc
+                        if finished != total {
+                            controller.app.showProgress(CGFloat(finished) / CGFloat(total))
+                        } else {
+                            controller.app.hideProgress()
+                        }
+                    }
+                }
+            } : nil) { [weak self] objects, results, cancel in
                 if cancel || objects.count < 1 {
                     self?.app.showMessage(text: "已取消")
                 } else {
