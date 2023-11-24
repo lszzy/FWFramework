@@ -301,9 +301,8 @@ private extension SettingsController {
         actions.append(Autoloader.imagePickerPhotoNavigationEnabled ? "[photoNavigationEnabled]" : "photoNavigationEnabled")
         actions.append(Autoloader.imagePickerPresentationFullScreen ? "[presentationFullScreen]" : "presentationFullScreen")
         actions.append(Autoloader.imagePickerShowsAlbumController ? "[showsAlbumController]" : "showsAlbumController")
-        actions.append("videoExportPreset")
         actions.append(APP.localized("pluginDemo"))
-        app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { [weak self] index in
+        app.showSheet(title: "ImagePickerPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.imagePickerPlugins.count {
                 Autoloader.imagePickerPluginImpl = Autoloader.imagePickerPlugins[index]
                 Autoloader.loadApp_Plugin()
@@ -322,22 +321,8 @@ private extension SettingsController {
             } else if index == Autoloader.imagePickerPlugins.count + 4 {
                 Autoloader.imagePickerShowsAlbumController = !Autoloader.imagePickerShowsAlbumController
                 Autoloader.loadApp_Plugin()
-            } else if index == Autoloader.imagePickerPlugins.count + 5 {
-                self?.onImagePickerVideoExportPreset()
             } else {
                 Navigator.push(TestPickerController())
-            }
-        }
-    }
-    
-    @objc func onImagePickerVideoExportPreset() {
-        var actions = Autoloader.imagePickerVideoExportPresets.map {
-            $0 == Autoloader.imagePickerVideoExportPreset ? "[\($0)]" : $0
-        }
-        app.showSheet(title: "videoExportPreset", message: nil, actions: actions) { index in
-            if index < Autoloader.imagePickerVideoExportPresets.count {
-                Autoloader.imagePickerVideoExportPreset = Autoloader.imagePickerVideoExportPresets[index]
-                Autoloader.loadApp_Plugin()
             }
         }
     }
@@ -421,9 +406,6 @@ private extension SettingsController {
     static var imagePickerPresentationFullScreen = false
     @StoredValue("imagePickerShowsAlbumController")
     static var imagePickerShowsAlbumController = false
-    @StoredValue("imagePickerVideoExportPreset")
-    static var imagePickerVideoExportPreset = imagePickerVideoExportPresets[0]
-    static let imagePickerVideoExportPresets = ["Default", "Low", "Medium", "Highest"]
     
     @StoredValue("imagePreviewPluginImpl")
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
@@ -454,21 +436,6 @@ private extension SettingsController {
         ImagePickerPluginImpl.shared.photoNavigationEnabled = Autoloader.imagePickerPhotoNavigationEnabled
         ImagePickerPluginImpl.shared.presentationFullScreen = Autoloader.imagePickerPresentationFullScreen
         ImagePickerControllerImpl.shared.showsAlbumController = Autoloader.imagePickerShowsAlbumController
-        var videoExportPreset: String?
-        var videoQuality: UIImagePickerController.QualityType?
-        if Autoloader.imagePickerVideoExportPreset == Autoloader.imagePickerVideoExportPresets[1] {
-            videoExportPreset = AVAssetExportPresetLowQuality
-            videoQuality = .typeLow
-        } else if Autoloader.imagePickerVideoExportPreset == Autoloader.imagePickerVideoExportPresets[2] {
-            videoExportPreset = AVAssetExportPresetMediumQuality
-            videoQuality = .typeMedium
-        } else if Autoloader.imagePickerVideoExportPreset == Autoloader.imagePickerVideoExportPresets[3] {
-            videoExportPreset = AVAssetExportPresetHighestQuality
-            videoQuality = .typeHigh
-        }
-        ImagePickerPluginImpl.shared.videoExportPreset = videoExportPreset
-        ImagePickerPluginImpl.shared.videoQuality = videoQuality
-        ImagePickerControllerImpl.shared.videoExportPreset = videoExportPreset
         
         PluginManager.unloadPlugin(RequestPlugin.self)
         PluginManager.registerPlugin(RequestPlugin.self, object: Autoloader.requestPluginImpl == Autoloader.requestPlugins[0] ? RequestPluginImpl.self : AlamofireImpl.self)

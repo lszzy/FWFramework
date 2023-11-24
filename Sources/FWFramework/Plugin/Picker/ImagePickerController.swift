@@ -564,12 +564,11 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open var originImageCheckboxCheckedImage: UIImage? = {
         return AppBundle.pickerCheckedImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
     }()
-    /// 是否使用原图，不显示原图按钮时默认YES，显示原图按钮时默认NO
-    open var shouldUseOriginImage: Bool = true
-    /// 是否显示原图按钮，默认NO，设置后会修改shouldUseOriginImage
+    /// 是否使用原图，默认NO
+    open var shouldUseOriginImage: Bool = false
+    /// 是否显示原图按钮，默认NO
     open var showsOriginImageCheckboxButton: Bool = false {
         didSet {
-            shouldUseOriginImage = !showsOriginImageCheckboxButton
             originImageCheckboxButton.isHidden = !showsOriginImageCheckboxButton
         }
     }
@@ -1170,7 +1169,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             } else if showsDefaultLoading {
                 fw_showLoading()
             }
-            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOrigin: shouldUseOriginImage, videoExportPreset: imagePickerController?.videoExportPreset) { [weak self] in
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOriginImage: shouldUseOriginImage, videoExportPreset: imagePickerController?.videoExportPreset) { [weak self] in
                 guard let self = self else { return }
                 if self.delegate?.imagePickerPreviewControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {
@@ -1887,7 +1886,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     open class func requestImagesAssetArray(
         _ imagesAssetArray: [Asset],
         filterType: ImagePickerFilterType,
-        useOrigin: Bool,
+        useOriginImage: Bool,
         videoExportPreset: String? = nil,
         completion: (() -> Void)?
     ) {
@@ -1919,7 +1918,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 filePath = (filePath as NSString).appendingPathComponent((asset.identifier + UUID().uuidString).fw_md5Encode)
                 filePath = (filePath as NSString).appendingPathExtension("mp4") ?? ""
                 let fileURL = URL(fileURLWithPath: filePath)
-                asset.requestVideoURL(outputURL: fileURL, exportPreset: useOrigin ? AVAssetExportPresetHighestQuality : (videoExportPreset ?? AVAssetExportPresetMediumQuality)) { videoURL, info in
+                asset.requestVideoURL(outputURL: fileURL, exportPreset: videoExportPreset ?? AVAssetExportPresetMediumQuality) { videoURL, info in
                     completionHandler(asset, videoURL, info)
                 }
             } else if asset.assetType == .image {
@@ -1938,7 +1937,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                             completionHandler(asset, resultImage, info)
                         }
                     }
-                } else if useOrigin {
+                } else if useOriginImage {
                     asset.requestOriginImage { result, info, finished in
                         if finished {
                             completionHandler(asset, result, info)
@@ -2330,7 +2329,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             }
             
             initPreviewViewControllerIfNeeded()
-            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: filterType, useOrigin: imagePickerPreviewController?.shouldUseOriginImage ?? false, videoExportPreset: videoExportPreset) { [weak self] in
+            ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: filterType, useOriginImage: imagePickerPreviewController?.shouldUseOriginImage ?? false, videoExportPreset: videoExportPreset) { [weak self] in
                 guard let self = self else { return }
                 if self.imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {

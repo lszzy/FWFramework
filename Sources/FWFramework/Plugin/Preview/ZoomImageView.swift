@@ -590,6 +590,13 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
 
     /// 快速设置图片URL，支持占位图和完成回调，参数支持UIImage|PHLivePhoto|AVPlayerItem|NSURL|NSString类型
+    ///
+    /// 使用视频缓存生成AVPlayerItem示例：
+    /// ```swift
+    /// let resourceLoader = PlayerCacheLoaderManager()
+    /// let asset = resourceLoader.urlAsset(with: videoURL)
+    /// let playerItem = AVPlayerItem(asset: asset)
+    /// ```
     open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
         var imageURL = aImageURL
         if let urlString = imageURL as? String {
