@@ -815,6 +815,12 @@ public extension JSONModel {
     static func deserialize(from json: String?, designatedPath: String? = nil) -> Self? {
         return JSONDeserializer<Self>.deserializeFrom(json: json, designatedPath: designatedPath)
     }
+    
+    /// Finds the internal JSON field in `array` as the `designatedPath` specified, and converts it to a Model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
+    static func deserialize(from array: [Any]?, designatedPath: String? = nil) -> Self? {
+        return JSONDeserializer<Self>.deserializeFrom(array: array, designatedPath: designatedPath)
+    }
 }
 
 public extension Array where Element: JSONModel {
@@ -865,11 +871,23 @@ public class JSONDeserializer<T: JSONModel> {
         }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: _json.data(using: String.Encoding.utf8)!, options: .allowFragments)
-            if let jsonDict = jsonObject as? NSDictionary {
-                return self.deserializeFrom(dict: jsonDict, designatedPath: designatedPath)
+            if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? NSDictionary {
+                return self.deserializeFrom(dict: jsonDict)
             }
         } catch let error {
             InternalLogger.logError(error)
+        }
+        return nil
+    }
+    
+    /// Finds the internal JSON field in `array` as the `designatedPath` specified, and converts it to Model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
+    public static func deserializeFrom(array: [Any]?, designatedPath: String? = nil) -> T? {
+        guard let jsonObject = array else {
+            return nil
+        }
+        if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? NSDictionary {
+            return self.deserializeFrom(dict: jsonDict)
         }
         return nil
     }
@@ -901,6 +919,17 @@ public class JSONDeserializer<T: JSONModel> {
             InternalLogger.logError(error)
         }
     }
+    
+    /// Finds the internal JSON field in `array` as the `designatedPath` specified, and use it to reassign an exist model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
+    public static func update(object: inout T, from array: [Any]?, designatedPath: String? = nil) {
+        guard let jsonObject = array else {
+            return
+        }
+        if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
+            update(object: &object, from: jsonDict)
+        }
+    }
 
     /// if the JSON field found by `designatedPath` in `json` is representing a array, such as `[{...}, {...}, {...}]`,
     /// this method converts it to a Models array
@@ -923,8 +952,8 @@ public class JSONDeserializer<T: JSONModel> {
     
     /// if the JSON field found by `designatedPath` in `object` is representing a array, such as `[{...}, {...}, {...}]`,
     /// this method converts it to a Models array
-    public static func deserializeModelArrayFrom(object: Any?, designatedPath: String? = nil) -> [T?]? {
-        guard let jsonObject = object else {
+    public static func deserializeModelArrayFrom(dict: [AnyHashable: Any]?, designatedPath: String? = nil) -> [T?]? {
+        guard let jsonObject = dict else {
             return nil
         }
         if let jsonArray = getInnerObject(inside: jsonObject, by: designatedPath) as? [Any] {
@@ -958,16 +987,26 @@ fileprivate func getInnerObject(inside object: Any?, by designatedPath: String?)
     var result: Any? = object
     var abort = false
     if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
-        var next = object as? [String: Any]
+        var next = object
         paths.forEach({ (seg) in
             if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
                 return
             }
-            if let _next = next?[seg] {
-                result = _next
-                next = _next as? [String: Any]
+            if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
+                if let array = next as? [Any], index < array.count {
+                    let _next = array[index]
+                    result = _next
+                    next = _next
+                } else {
+                    abort = true
+                }
             } else {
-                abort = true
+                if let _next = (next as? [String: Any])?[seg] {
+                    result = _next
+                    next = _next
+                } else {
+                    abort = true
+                }
             }
         })
     }
@@ -2404,7 +2443,15 @@ public extension JSONModel {
     }
     
     static func deserialize(_ json: JSON, designatedPath: String? = nil) -> Self? {
-        return deserialize(from: json.dictionaryObject, designatedPath: designatedPath)
+        if let array = json.arrayObject {
+            return deserialize(array, designatedPath: designatedPath)
+        } else {
+            return deserialize(json.dictionaryObject, designatedPath: designatedPath)
+        }
+    }
+    
+    static func deserialize(_ array: [Any]?, designatedPath: String? = nil) -> Self? {
+        return deserialize(from: array, designatedPath: designatedPath)
     }
     
     static func safeDeserialize(_ dict: [AnyHashable: Any]?, designatedPath: String? = nil) -> Self {
@@ -2416,7 +2463,15 @@ public extension JSONModel {
     }
     
     static func safeDeserialize(_ json: JSON, designatedPath: String? = nil) -> Self {
-        return deserialize(from: json.dictionaryObject, designatedPath: designatedPath) ?? Self()
+        if let array = json.arrayObject {
+            return safeDeserialize(array, designatedPath: designatedPath)
+        } else {
+            return safeDeserialize(json.dictionaryObject, designatedPath: designatedPath)
+        }
+    }
+    
+    static func safeDeserialize(_ array: [Any]?, designatedPath: String? = nil) -> Self {
+        return deserialize(from: array, designatedPath: designatedPath) ?? Self()
     }
     
     mutating func merge(_ dict: [AnyHashable: Any]?, designatedPath: String? = nil) {
@@ -2428,7 +2483,15 @@ public extension JSONModel {
     }
     
     mutating func merge(_ json: JSON, designatedPath: String? = nil) {
-        merge(json.dictionaryObject, designatedPath: designatedPath)
+        if let array = json.arrayObject {
+            merge(array, designatedPath: designatedPath)
+        } else {
+            merge(json.dictionaryObject, designatedPath: designatedPath)
+        }
+    }
+    
+    mutating func merge(_ array: [Any]?, designatedPath: String? = nil) {
+        JSONDeserializer.update(object: &self, from: array, designatedPath: designatedPath)
     }
     
 }
@@ -2449,7 +2512,7 @@ public extension Array where Element: JSONModel {
     }
     
     static func deserialize(_ dict: [AnyHashable: Any]?, designatedPath: String? = nil) -> [Element] {
-        let elements = JSONDeserializer<Element>.deserializeModelArrayFrom(object: dict, designatedPath: designatedPath) ?? []
+        let elements = JSONDeserializer<Element>.deserializeModelArrayFrom(dict: dict, designatedPath: designatedPath) ?? []
         return elements.compactMap({ $0 })
     }
     
