@@ -34,6 +34,7 @@ public enum RequestMethod: String {
     case TRACE = "TRACE"
     case CONNECT = "CONNECT"
     case OPTIONS = "OPTIONS"
+    case QUERY = "QUERY"
 }
 
 /// 请求序列化类型
@@ -794,6 +795,26 @@ open class HTTPRequest: NSObject {
     /// 隐藏加载条，默认隐藏加载插件
     open func hideLoading() {
         contextAccessory.hideLoading(for: self)
+    }
+    
+    // MARK: - JSONModel
+    /// 快速解析响应JSON为数据模型，支持具体路径
+    open func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T? {
+        return T.deserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+    }
+    
+    /// 快速安全解析响应JSON为数据模型，支持具体路径
+    open func safeResponseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T {
+        return T.safeDeserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+    }
+    
+    /// 快速安全解析响应JSON为数据模型数组，支持具体路径
+    open func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T] {
+        if let dict = responseJSONObject as? [AnyHashable: Any] {
+            return [T].deserialize(dict, designatedPath: designatedPath)
+        } else {
+            return [T].deserialize(responseJSONObject as? [Any], designatedPath: designatedPath)
+        }
     }
     
 }
