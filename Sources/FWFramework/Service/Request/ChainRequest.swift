@@ -131,7 +131,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         start(success: completion, failure: completion)
     }
     
-    /// 开始同步请求并指定成功、失败句柄
+    /// 开始同步串行请求并指定成功、失败句柄
     open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { chainRequest in
             if chainRequest.failedRequest == nil {
@@ -142,7 +142,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         }
     }
     
-    /// 开始同步请求并指定过滤器和完成句柄
+    /// 开始同步串行请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
         RequestManager.shared.synchronousChainRequest(self, filter: filter, completion: completion)
     }

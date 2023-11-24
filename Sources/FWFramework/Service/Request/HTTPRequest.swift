@@ -10,12 +10,12 @@ import Foundation
 // MARK: - WrapperGlobal+HTTPRequest
 extension WrapperGlobal {
     
-    /// 开始请求并指定完成句柄
+    /// 开始并发请求并指定完成句柄
     public static func start<T: HTTPRequest>(_ request: T, completion: ((T) -> Void)? = nil) {
         request.start(completion: completion != nil ? { completion?($0 as! T) } : nil)
     }
     
-    /// 开始请求并指定成功、失败句柄
+    /// 开始并发请求并指定成功、失败句柄
     public static func start<T: HTTPRequest>(_ request: T, success: ((T) -> Void)?, failure: ((T) -> Void)?) {
         request.start(success: success != nil ? { success?($0 as! T) } : nil, failure: failure != nil ? { failure?($0 as! T) } : nil)
     }
@@ -272,7 +272,7 @@ open class HTTPRequest: NSObject {
         return String(format: "<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass(self.classForCoder), self, String.fw_safeString(currentRequest?.url), currentRequest?.httpMethod ?? "", String.fw_safeString(requestArgument()))
     }
     
-    // MARK: - Override
+    // MARK: - Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
         return ""
@@ -357,6 +357,7 @@ open class HTTPRequest: NSObject {
         return nil
     }
     
+    // MARK: - Response
     /// 状态码验证器
     open func statusCodeValidator() -> Bool {
         let statusCode = responseStatusCode
@@ -440,7 +441,7 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Action
-    /// 开始请求
+    /// 开始并发请求
     open func start() {
         if !useCacheResponse {
             startWithoutCache()
@@ -471,7 +472,7 @@ open class HTTPRequest: NSObject {
         }
     }
     
-    /// 停止请求
+    /// 停止并发请求
     open func stop() {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
@@ -480,19 +481,19 @@ open class HTTPRequest: NSObject {
         toggleAccessoriesDidStopCallBack()
     }
     
-    /// 开始请求并指定成功、失败句柄
+    /// 开始并发请求并指定成功、失败句柄
     open func start(success: Completion?, failure: Completion?) {
         successCompletionBlock = success
         failureCompletionBlock = failure
         start()
     }
     
-    /// 开始请求并指定完成句柄
+    /// 开始并发请求并指定完成句柄
     open func start(completion: Completion?) {
         start(success: completion, failure: completion)
     }
     
-    /// 开始同步请求并指定成功、失败句柄
+    /// 开始同步串行请求并指定成功、失败句柄
     open func startSynchronously(success: Completion?, failure: Completion?) {
         startSynchronously(filter: nil) { request in
             if request.error == nil {
@@ -503,7 +504,7 @@ open class HTTPRequest: NSObject {
         }
     }
     
-    /// 开始同步请求并指定过滤器和完成句柄
+    /// 开始同步串行请求并指定过滤器和完成句柄
     open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
         RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion)
     }
@@ -839,6 +840,7 @@ public enum RequestError: Swift.Error, CustomNSError {
     case cacheInvalidCacheData
     case validationInvalidStatusCode(_ code: Int)
     case validationInvalidJSONFormat
+    case unknownError
     
     public static var errorDomain: String { "site.wuyong.error.request" }
     public var errorCode: Int {
@@ -861,6 +863,8 @@ public enum RequestError: Swift.Error, CustomNSError {
             return -8
         case .validationInvalidJSONFormat:
             return -9
+        case .unknownError:
+            return -10
         }
     }
     public var errorUserInfo: [String: Any] {
@@ -883,6 +887,8 @@ public enum RequestError: Swift.Error, CustomNSError {
             return [NSLocalizedDescriptionKey: "Invalid status code (\(code))"]
         case .validationInvalidJSONFormat:
             return [NSLocalizedDescriptionKey: "Invalid JSON format"]
+        case .unknownError:
+            return [NSLocalizedDescriptionKey: "Unknown error"]
         }
     }
     
