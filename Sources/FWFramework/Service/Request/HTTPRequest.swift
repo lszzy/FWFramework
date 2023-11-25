@@ -290,57 +290,57 @@ open class HTTPRequest: NSObject {
     // MARK: - Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
-        return ""
+        return _baseUrl ?? ""
     }
     
     /// 请求URL地址，默认空，示例：/v1/user
     open func requestUrl() -> String {
-        return ""
+        return _requestUrl ?? ""
     }
     
     /// 请求可选CDN地址，默认空
     open func cdnUrl() -> String {
-        return ""
+        return _cdnUrl ?? ""
     }
     
     /// 是否使用CDN
     open func useCDN() -> Bool {
-        return false
+        return _useCDN ?? false
     }
     
     /// 是否允许蜂窝网络访问，默认true
     open func allowsCellularAccess() -> Bool {
-        return true
+        return _allowsCellularAccess ?? true
     }
     
     /// 请求超时，默认60秒
     open func requestTimeoutInterval() -> TimeInterval {
-        return 60
+        return _requestTimeoutInterval ?? 60
     }
     
     /// 自定义请求缓存策略，默认nil不处理
     open func requestCachePolicy() -> URLRequest.CachePolicy? {
-        return nil
+        return _requestCachePolicy
     }
     
     /// 请求方式，默认GET
     open func requestMethod() -> RequestMethod {
-        return .GET
+        return _requestMethod ?? .GET
     }
     
     /// 请求附加参数，默认nil
     open func requestArgument() -> Any? {
-        return nil
+        return _requestArgument
     }
     
     /// 请求序列化方式，默认HTTP
     open func requestSerializerType() -> RequestSerializerType {
-        return .HTTP
+        return _requestSerializerType ?? .HTTP
     }
     
     /// 响应序列化方式，默认JSON
     open func responseSerializerType() -> ResponseSerializerType {
-        return .JSON
+        return _responseSerializerType ?? .JSON
     }
     
     /// 是否开启请求表单数据方法，开启后自动调用requestFormData(_:)方法，默认false
@@ -354,25 +354,172 @@ open class HTTPRequest: NSObject {
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
     open func requestAuthorizationHeaderFieldArray() -> [String]? {
-        return nil
+        return _requestAuthorizationHeaderFieldArray
     }
     
     /// 自定义请求Header字典
     open func requestHeaderFieldValueDictionary() -> [String: String]? {
-        return nil
+        return _requestHeaderFieldValueDictionary
     }
     
     /// 构建自定义URLRequest
     open func customUrlRequest() -> URLRequest? {
-        return nil
+        return _customUrlRequest
     }
     
     /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
-        return nil
+        return _jsonValidator
     }
     
     // MARK: - Builder
+    /// 请求基准URL，默认空，示例：https://www.wuyong.site
+    @discardableResult
+    open func baseUrl(_ baseUrl: String) -> Self {
+        _baseUrl = baseUrl
+        return self
+    }
+    
+    /// 请求URL地址，默认空，示例：/v1/user
+    @discardableResult
+    open func requestUrl(_ requestUrl: String) -> Self {
+        _requestUrl = requestUrl
+        return self
+    }
+    
+    /// 请求可选CDN地址，默认空
+    @discardableResult
+    open func cdnUrl(_ cdnUrl: String) -> Self {
+        _cdnUrl = cdnUrl
+        return self
+    }
+    
+    /// 是否使用CDN
+    @discardableResult
+    open func useCDN(_ useCDN: Bool) -> Self {
+        _useCDN = useCDN
+        return self
+    }
+    
+    /// 是否允许蜂窝网络访问，默认true
+    @discardableResult
+    open func allowsCellularAccess(_ allows: Bool) -> Self {
+        _allowsCellularAccess = allows
+        return self
+    }
+    
+    /// 请求超时，默认60秒
+    @discardableResult
+    open func requestTimeoutInterval(_ interval: TimeInterval) -> Self {
+        _requestTimeoutInterval = interval
+        return self
+    }
+    
+    /// 自定义请求缓存策略，默认nil不处理
+    @discardableResult
+    open func requestCachePolicy(_ cachePolicy: URLRequest.CachePolicy?) -> Self {
+        _requestCachePolicy = cachePolicy
+        return self
+    }
+    
+    /// 请求方式，默认GET
+    @discardableResult
+    open func requestMethod(_ requestMethod: RequestMethod) -> Self {
+        _requestMethod = requestMethod
+        return self
+    }
+    
+    /// 请求附加参数，默认nil
+    @discardableResult
+    open func requestArgument(_ argument: Any?) -> Self {
+        _requestArgument = argument
+        return self
+    }
+    
+    /// 请求序列化方式，默认HTTP
+    @discardableResult
+    open func requestSerializerType(_ serializerType: RequestSerializerType) -> Self {
+        _requestSerializerType = serializerType
+        return self
+    }
+    
+    /// 响应序列化方式，默认JSON
+    @discardableResult
+    open func responseSerializerType(_ serializerType: ResponseSerializerType) -> Self {
+        _responseSerializerType = serializerType
+        return self
+    }
+    
+    /// HTTP请求授权Header数组，示例：["UserName", "Password"]
+    @discardableResult
+    open func requestAuthorizationHeaderFieldArray(_ array: [String]?) -> Self {
+        _requestAuthorizationHeaderFieldArray = array
+        return self
+    }
+    
+    /// 自定义请求Header字典
+    @discardableResult
+    open func requestHeaderFieldValueDictionary(_ dict: [String: String]?) -> Self {
+        _requestHeaderFieldValueDictionary = dict
+        return self
+    }
+    
+    /// 构建自定义URLRequest
+    @discardableResult
+    open func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
+        _customUrlRequest = urlRequest
+        return self
+    }
+    
+    /// JSON验证器，默认支持AnyValidator
+    @discardableResult
+    open func jsonValidator(_ validator: Any?) -> Self {
+        _jsonValidator = validator
+        return self
+    }
+    
+    /// 请求重试次数，默认0
+    @discardableResult
+    open func requestRetryCount(_ count: Int) -> Self {
+        _requestRetryCount = count
+        return self
+    }
+    
+    /// 请求重试间隔，默认0
+    @discardableResult
+    open func requestRetryInterval(_ interval: TimeInterval) -> Self {
+        _requestRetryInterval = interval
+        return self
+    }
+    
+    /// 请求重试超时时间，默认0
+    @discardableResult
+    open func requestRetryTimeout(_ timeout: TimeInterval) -> Self {
+        _requestRetryTimeout = timeout
+        return self
+    }
+    
+    /// 缓存有效期，默认-1不缓存
+    @discardableResult
+    open func cacheTimeInSeconds(_ seconds: Int) -> Self {
+        _cacheTimeInSeconds = seconds
+        return self
+    }
+    
+    /// 缓存版本号，默认0
+    @discardableResult
+    open func cacheVersion(_ version: Int) -> Self {
+        _cacheVersion = version
+        return self
+    }
+    
+    /// 缓存附加数据，变化时会更新缓存
+    @discardableResult
+    open func cacheSensitiveData(_ sensitiveData: Any?) -> Self {
+        _cacheSensitiveData = sensitiveData
+        return self
+    }
+    
     /// 自定义成功回调句柄
     @discardableResult
     open func successCompletionBlock(_ block: Completion?) -> Self {
@@ -522,17 +669,17 @@ open class HTTPRequest: NSObject {
     // MARK: - Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
-        return 0
+        return _requestRetryCount ?? 0
     }
     
     /// 请求重试间隔，默认0
     open func requestRetryInterval() -> TimeInterval {
-        return 0
+        return _requestRetryInterval ?? 0
     }
     
     /// 请求重试超时时间，默认0
     open func requestRetryTimeout() -> TimeInterval {
-        return 0
+        return _requestRetryTimeout ?? 0
     }
     
     /// 请求重试验证方法，requestRetryCount大于0生效，默认检查状态码和错误
@@ -693,17 +840,17 @@ open class HTTPRequest: NSObject {
     // MARK: - Cache
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
-        return -1
+        return _cacheTimeInSeconds ?? -1
     }
     
     /// 缓存版本号，默认0
     open func cacheVersion() -> Int {
-        return 0
+        return _cacheVersion ?? 0
     }
     
     /// 缓存附加数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
-        return nil
+        return _cacheSensitiveData
     }
     
     /// 是否异步写入缓存，默认true
