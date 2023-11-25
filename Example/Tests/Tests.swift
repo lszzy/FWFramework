@@ -150,7 +150,7 @@ class Tests: XCTestCase {
         parameter.routerOptions = .embedInNavigation
         parameter.routerHandler = { _, _ in }
         parameter._privateValue = 1
-        parameter.merge([
+        parameter.merge(from: [
             "routerSource": "test2"
         ])
         XCTAssertEqual(parameter.routerSource, "test2")

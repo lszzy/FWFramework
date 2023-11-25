@@ -7,21 +7,6 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal+ChainRequest
-extension WrapperGlobal {
-    
-    /// 开始队列请求并指定完成句柄
-    public static func start(_ request: ChainRequest, completion: ChainRequest.Completion? = nil) {
-        request.start(completion: completion)
-    }
-    
-    /// 开始队列请求并指定成功、失败句柄
-    public static func start(_ request: ChainRequest, success: ChainRequest.Completion?, failure: ChainRequest.Completion?) {
-        request.start(success: success, failure: failure)
-    }
-    
-}
-
 // MARK: - ChainRequest
 /// 队列请求代理
 public protocol ChainRequestDelegate: AnyObject {

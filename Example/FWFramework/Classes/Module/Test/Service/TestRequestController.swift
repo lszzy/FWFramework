@@ -9,9 +9,14 @@
 import FWFramework
 import UIKit
 
-class TestModelRequest: HTTPRequest {
+// 自动解析ResponseModel实例
+class TestModelRequest: HTTPRequest, ResponseModelProtocol {
+    typealias ResponseModel = TestModel
     
-    private(set) var responseName = ""
+    struct TestModel: JSONModel {
+        var name: String = ""
+    }
+    
     var testFailed = false
     
     override func requestUrl() -> String {
@@ -52,17 +57,17 @@ class TestModelRequest: HTTPRequest {
         ]
     }
     
-    override func requestCompleteFilter() {
-        let responseJSON = JSON(responseJSONObject)
-        responseName = responseJSON["name"].stringValue
-    }
-    
 }
 
-class TestWeatherRequest: HTTPRequest {
+// 手工解析ResponseModel实例
+class TestWeatherRequest: HTTPRequest, ResponseModelProtocol {
+    typealias ResponseModel = TestWeatherModel
     
-    var city: String = ""
-    var temp: String = ""
+    struct TestWeatherModel: JSONModel {
+        var city: String = ""
+        var temp: String = ""
+    }
+    
     var testFailed = false
     
     override func requestUrl() -> String {
@@ -73,10 +78,8 @@ class TestWeatherRequest: HTTPRequest {
         testFailed ? .JSON : .HTTP
     }
     
-    override func requestCompleteFilter() {
-        let responseJSON = JSON(responseString?.app.jsonDecode)
-        city = responseJSON["weatherinfo"]["city"].stringValue
-        temp = responseJSON["weatherinfo"]["temp"].stringValue
+    func responseModelFilter() -> TestWeatherModel? {
+        parseResponseModel(designatedPath: "weatherinfo")
     }
     
     override func requestRetryCount() -> Int {
@@ -314,7 +317,7 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.start { [weak self] _ in
-            var message = "json请求成功: \n\(request.responseName)"
+            var message = "json请求成功: \n\(request.safeResponseModel.name)"
             let serverTime = request.responseServerTime
             if serverTime > 0 {
                 Date.app.currentTime = serverTime
@@ -330,8 +333,8 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.testFailed = true
-        APP.start(request) { [weak self] req in
-            self?.app.showMessage(text: "天气请求成功: \n\(req.city) - \(req.temp)℃")
+        request.start { [weak self] req in
+            self?.app.showMessage(text: "天气请求成功: \n\(request.safeResponseModel.city) - \(request.safeResponseModel.temp)℃")
         } failure: { _ in }
     }
     
