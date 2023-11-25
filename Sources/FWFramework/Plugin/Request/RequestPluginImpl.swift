@@ -118,14 +118,14 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     
     open func downloadTask(for request: HTTPRequest, urlRequest: URLRequest?, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
         if let resumeData = resumeData {
-            request.requestTask = manager.downloadTask(withResumeData: resumeData, progress: request.resumableDownloadProgressBlock, destination: { _, _ in
+            request.requestTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
             }, completionHandler: completionHandler)
             return
         }
         
         if let urlRequest = urlRequest {
-            request.requestTask = manager.downloadTask(with: urlRequest, progress: request.resumableDownloadProgressBlock, destination: { _, _ in
+            request.requestTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
             }, completionHandler: completionHandler)
         }
@@ -154,12 +154,12 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             requestSerializer.cachePolicy = cachePolicy
         }
         
-        if let headerFieldArray = request.requestAuthorizationHeaderFieldArray(),
+        if let headerFieldArray = request.requestAuthorizationHeaders(),
            !headerFieldArray.isEmpty {
             requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
         }
         
-        if let headerFieldDictionary = request.requestHeaderFieldValueDictionary(),
+        if let headerFieldDictionary = request.requestHeaders(),
            !headerFieldDictionary.isEmpty {
             for (fieldKey, fieldValue) in headerFieldDictionary {
                 requestSerializer.setValue(fieldValue, forHTTPHeaderField: fieldKey)

@@ -94,7 +94,7 @@ open class HTTPRequest: NSObject {
     /// 断点续传下载路径
     open var resumableDownloadPath: String?
     /// 断点续传进度句柄
-    open var resumableDownloadProgressBlock: ((Progress) -> Void)?
+    open var downloadProgressBlock: ((Progress) -> Void)?
     /// 上传进度句柄
     open var uploadProgressBlock: ((Progress) -> Void)?
     /// 请求优先级，默认default
@@ -103,28 +103,22 @@ open class HTTPRequest: NSObject {
     open var requestUserInfo: [AnyHashable: Any]?
     /// 是否使用已缓存响应
     open var useCacheResponse: Bool = false
+    /// 是否是本地缓存数据
+    open private(set) var isDataFromCache: Bool = false
     
-    /// 当前请求适配器，根据插件不同而不同
-    open var requestAdapter: Any?
-    /// 当前URLSessionTask，请求开始后可用
-    open var requestTask: URLSessionTask?
     /// 当前请求唯一标志符
     open var requestIdentifier: Int = 0
-    /// 请求总次数
-    open internal(set) var requestTotalCount: Int = 0
-    /// 请求总时长
-    open internal(set) var requestTotalTime: TimeInterval = 0
-    /// 当前URLRequest
-    open var currentRequest: URLRequest? {
-        return requestTask?.currentRequest
-    }
-    /// 原始URLRequest
-    open var originalRequest: URLRequest? {
-        return requestTask?.originalRequest
-    }
+    /// 当前URLSessionTask，请求开始后可用
+    open var requestTask: URLSessionTask?
+    /// 当前请求适配器，根据插件不同而不同
+    open var requestAdapter: Any?
     /// 当前响应
     open var response: HTTPURLResponse? {
         return requestTask?.response as? HTTPURLResponse
+    }
+    /// 当前响应Header
+    open var responseHeaders: [AnyHashable: Any]? {
+        return response?.allHeaderFields
     }
     /// 当前响应状态码
     open var responseStatusCode: Int {
@@ -135,10 +129,11 @@ open class HTTPRequest: NSObject {
         guard let serverDate = response?.allHeaderFields["Date"] as? String else { return 0 }
         return Date.fw_formatServerDate(serverDate)
     }
-    /// 当前响应Header
-    open var responseHeaders: [AnyHashable: Any]? {
-        return response?.allHeaderFields
-    }
+    /// 请求总次数
+    open internal(set) var requestTotalCount: Int = 0
+    /// 请求总时长
+    open internal(set) var requestTotalTime: TimeInterval = 0
+    
     /// 请求是否已完成
     open var isFinished: Bool {
         guard let requestTask = requestTask else { return false }
@@ -254,7 +249,6 @@ open class HTTPRequest: NSObject {
     private var cacheJSON: Any?
     private var cacheXML: XMLParser?
     private var cacheMetadata: RequestCacheMetadata?
-    private var dataFromCache = false
     private var cancelled = false
     
     private var _baseUrl: String?
@@ -268,8 +262,8 @@ open class HTTPRequest: NSObject {
     private var _requestArgument: Any?
     private var _requestSerializerType: RequestSerializerType?
     private var _responseSerializerType: ResponseSerializerType?
-    private var _requestAuthorizationHeaderFieldArray: [String]?
-    private var _requestHeaderFieldValueDictionary: [String: String]?
+    private var _requestAuthorizationHeaders: [String]?
+    private var _requestHeaders: [String: String]?
     private var _customUrlRequest: URLRequest?
     private var _jsonValidator: Any?
     private var _requestRetryCount: Int?
@@ -287,8 +281,16 @@ open class HTTPRequest: NSObject {
         super.init()
     }
     
+    /// 请求描述
     open override var description: String {
-        return String(format: "<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass(self.classForCoder), self, String.fw_safeString(currentRequest?.url), currentRequest?.httpMethod ?? "", String.fw_safeString(requestArgument()))
+        return String(
+            format: "<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }",
+            NSStringFromClass(self.classForCoder),
+            self,
+            requestTask?.currentRequest?.url?.absoluteString ?? requestUrl(),
+            requestTask?.currentRequest?.httpMethod ?? requestMethod().rawValue,
+            String.fw_safeString(requestArgument())
+        )
     }
     
     // MARK: - Request
@@ -425,26 +427,26 @@ open class HTTPRequest: NSObject {
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
-    @discardableResult
-    open func requestAuthorizationHeaderFieldArray(_ array: [String]?) -> Self {
-        _requestAuthorizationHeaderFieldArray = array
-        return self
+    open func requestAuthorizationHeaders() -> [String]? {
+        return _requestAuthorizationHeaders
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
-    open func requestAuthorizationHeaderFieldArray() -> [String]? {
-        return _requestAuthorizationHeaderFieldArray
+    @discardableResult
+    open func requestAuthorizationHeaders(_ array: [String]?) -> Self {
+        _requestAuthorizationHeaders = array
+        return self
     }
     
     /// 自定义请求Header字典
-    open func requestHeaderFieldValueDictionary() -> [String: String]? {
-        return _requestHeaderFieldValueDictionary
+    open func requestHeaders() -> [String: String]? {
+        return _requestHeaders
     }
     
     /// 自定义请求Header字典
     @discardableResult
-    open func requestHeaderFieldValueDictionary(_ dict: [String: String]?) -> Self {
-        _requestHeaderFieldValueDictionary = dict
+    open func requestHeaders(_ headers: [String: String]?) -> Self {
+        _requestHeaders = headers
         return self
     }
     
@@ -464,8 +466,8 @@ open class HTTPRequest: NSObject {
     
     /// 断点续传进度句柄
     @discardableResult
-    open func resumableDownloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
-        self.resumableDownloadProgressBlock = block
+    open func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+        self.downloadProgressBlock = block
         return self
     }
     
@@ -600,10 +602,10 @@ open class HTTPRequest: NSObject {
         let responseData = _responseData
         if writeCacheAsynchronously() {
             HTTPRequest.cacheQueue.async { [weak self] in
-                self?.saveResponseDataToCacheFile(responseData)
+                self?.saveResponseData(responseData)
             }
         } else {
-            saveResponseDataToCacheFile(responseData)
+            saveResponseData(responseData)
         }
     }
     
@@ -723,7 +725,7 @@ open class HTTPRequest: NSObject {
             return startWithoutCache()
         }
         
-        dataFromCache = true
+        isDataFromCache = true
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
@@ -877,11 +879,6 @@ open class HTTPRequest: NSObject {
         return argument
     }
     
-    /// 是否是本地缓存数据
-    open var isDataFromCache: Bool {
-        return dataFromCache
-    }
-    
     /// 是否异步写入缓存，默认true
     open func writeCacheAsynchronously() -> Bool {
         return true
@@ -911,7 +908,7 @@ open class HTTPRequest: NSObject {
     }
     
     /// 保存指定响应数据到缓存文件
-    open func saveResponseDataToCacheFile(_ data: Data?) {
+    open func saveResponseData(_ data: Data?) {
         guard let data = data else { return }
         guard cacheTimeInSeconds() > 0, !isDataFromCache else { return }
         
@@ -946,7 +943,7 @@ open class HTTPRequest: NSObject {
             }
         }
         
-        createDirectoryIfNeeded(path)
+        createCacheDirectory(path)
         return path
     }
     
@@ -1018,22 +1015,22 @@ open class HTTPRequest: NSObject {
         cacheJSON = nil
         cacheString = nil
         cacheMetadata = nil
-        dataFromCache = false
+        isDataFromCache = false
     }
     
-    private func createDirectoryIfNeeded(_ path: String) {
+    private func createCacheDirectory(_ path: String) {
         var isDir: ObjCBool = true
         if !FileManager.default.fileExists(atPath: path, isDirectory: &isDir) {
-            createBaseDirectoryAtPath(path)
+            createBaseDirectory(path)
         } else {
             if !isDir.boolValue {
                 try? FileManager.default.removeItem(atPath: path)
-                createBaseDirectoryAtPath(path)
+                createBaseDirectory(path)
             }
         }
     }
     
-    private func createBaseDirectoryAtPath(_ path: String) {
+    private func createBaseDirectory(_ path: String) {
         do {
             try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
             FileManager.fw_skipBackup(path)
