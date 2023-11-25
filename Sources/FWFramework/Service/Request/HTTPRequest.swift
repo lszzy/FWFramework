@@ -758,22 +758,22 @@ open class HTTPRequest: NSObject {
     
     /// 开始并发请求并指定成功、失败句柄
     @discardableResult
-    open func start(success: Completion?, failure: Completion?) -> Self {
-        successCompletionBlock = success
-        failureCompletionBlock = failure
+    open func start<T: HTTPRequest>(success: ((T) -> Void)?, failure: ((T) -> Void)?) -> Self {
+        successCompletionBlock = success != nil ? { success?($0 as! T) } : nil
+        failureCompletionBlock = failure != nil ? { failure?($0 as! T) } : nil
         return start()
     }
     
     /// 开始并发请求并指定完成句柄
     @discardableResult
-    open func start(completion: Completion?) -> Self {
+    open func start<T: HTTPRequest>(completion: ((T) -> Void)?) -> Self {
         return start(success: completion, failure: completion)
     }
     
     /// 开始同步串行请求并指定成功、失败句柄
     @discardableResult
-    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
-        return startSynchronously(filter: nil) { request in
+    open func startSynchronously<T: HTTPRequest>(success: ((T) -> Void)?, failure: ((T) -> Void)?) -> Self {
+        return startSynchronously(filter: nil) { (request: T) in
             if request.error == nil {
                 success?(request)
             } else {
@@ -784,8 +784,8 @@ open class HTTPRequest: NSObject {
     
     /// 开始同步串行请求并指定过滤器和完成句柄
     @discardableResult
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
-        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion)
+    open func startSynchronously<T: HTTPRequest>(filter: (() -> Bool)? = nil, completion: ((T) -> Void)?) -> Self {
+        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion != nil ? { completion?($0 as! T) } : nil)
         return self
     }
     
