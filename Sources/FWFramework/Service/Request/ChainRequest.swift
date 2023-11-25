@@ -79,19 +79,23 @@ open class ChainRequest: NSObject, RequestDelegate {
     
     // MARK: - Public
     /// 添加请求，可设置请求完成回调
-    open func addRequest(_ request: HTTPRequest, callback: CallbackHandler? = nil) {
+    @discardableResult
+    open func addRequest(_ request: HTTPRequest, callback: CallbackHandler? = nil) -> Self {
         requestArray.append(request)
         requestCallbackArray.append(callback ?? emptyCallback)
+        return self
     }
     
     /// 开始请求，仅能调用一次
-    open func start() {
-        guard nextRequestIndex <= 0 else { return }
+    @discardableResult
+    open func start() -> Self {
+        guard nextRequestIndex <= 0 else { return self }
         
         succeedRequest = nil
         failedRequest = nil
         RequestManager.shared.addChainRequest(self)
         startNextRequest(nil)
+        return self
     }
     
     /// 停止请求
@@ -105,20 +109,23 @@ open class ChainRequest: NSObject, RequestDelegate {
     }
     
     /// 开始请求并指定成功、失败句柄
-    open func start(success: Completion?, failure: Completion?) {
+    @discardableResult
+    open func start(success: Completion?, failure: Completion?) -> Self {
         successCompletionBlock = success
         failureCompletionBlock = failure
-        start()
+        return start()
     }
     
     /// 开始请求并指定完成句柄
-    open func start(completion: Completion?) {
-        start(success: completion, failure: completion)
+    @discardableResult
+    open func start(completion: Completion?) -> Self {
+        return start(success: completion, failure: completion)
     }
     
     /// 开始同步串行请求并指定成功、失败句柄
-    open func startSynchronously(success: Completion?, failure: Completion?) {
-        startSynchronously(filter: nil) { chainRequest in
+    @discardableResult
+    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
+        return startSynchronously(filter: nil) { chainRequest in
             if chainRequest.failedRequest == nil {
                 success?(chainRequest)
             } else {
@@ -128,16 +135,20 @@ open class ChainRequest: NSObject, RequestDelegate {
     }
     
     /// 开始同步串行请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
+    @discardableResult
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
         RequestManager.shared.synchronousChainRequest(self, filter: filter, completion: completion)
+        return self
     }
     
     /// 添加请求配件
-    open func addAccessory(_ accessory: RequestAccessoryProtocol) {
+    @discardableResult
+    open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
         if requestAccessories == nil {
             requestAccessories = []
         }
         requestAccessories?.append(accessory)
+        return self
     }
     
     /// 清理完成句柄
