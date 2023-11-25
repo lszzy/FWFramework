@@ -383,8 +383,10 @@ private extension TestRequestController {
         request.autoShowError = true
         request.testFailed = true
         request.start { [weak self] (req: TestWeatherRequest) in
+            guard req.isFinished else { return }
+            
             self?.app.showMessage(text: "天气请求成功: \n\(req.safeResponseModel.city) - \(req.safeResponseModel.temp)℃")
-        } failure: { _ in }
+        }
     }
     
     @objc func onAsync() {
