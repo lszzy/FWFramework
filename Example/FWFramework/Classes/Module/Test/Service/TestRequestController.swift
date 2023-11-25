@@ -362,12 +362,12 @@ private extension TestRequestController {
         request.testFailed = true
         request.context = self
         request.autoShowLoading = true
-        request.start { [weak self] _ in
-            let message = "json请求成功: \n\(request.safeResponseModel.name)"
+        request.start { [weak self] (req: TestModelRequest) in
+            let message = "json请求成功: \n\(req.safeResponseModel.name)"
             self?.app.showMessage(text: message)
-        } failure: { [weak self] _ in
-            var message = "json请求失败: \n\(request.error!.localizedDescription)"
-            let serverTime = request.responseServerTime
+        } failure: { [weak self] req in
+            var message = "json请求失败: \n\(req.error!.localizedDescription)"
+            let serverTime = req.responseServerTime
             if serverTime > 0 {
                 Date.app.currentTime = serverTime
                 message += "\n当前服务器时间：\(serverTime)"
@@ -382,8 +382,8 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.testFailed = true
-        request.start { [weak self] req in
-            self?.app.showMessage(text: "天气请求成功: \n\(request.safeResponseModel.city) - \(request.safeResponseModel.temp)℃")
+        request.start { [weak self] (req: TestWeatherRequest) in
+            self?.app.showMessage(text: "天气请求成功: \n\(req.safeResponseModel.city) - \(req.safeResponseModel.temp)℃")
         } failure: { _ in }
     }
     
@@ -482,7 +482,7 @@ private extension TestRequestController {
             self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: {
                 self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewUrl], imageInfos: nil, currentIndex: 0)
             })
-        } failure: { [weak self] _ in
+        } failure: { [weak self] request in
             self?.app.hideProgress()
             
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
