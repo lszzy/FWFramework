@@ -102,7 +102,6 @@ class TestWeatherRequest: HTTPRequest, ResponseModelProtocol {
 
 class TestUploadRequest: HTTPRequest {
     
-    
     var uploadData: Any?
     var fileName: String = ""
     
@@ -169,10 +168,17 @@ class TestRequestController: UIViewController {
     }
     
     // MARK: - Subviews
-    private lazy var requestButton: UIButton = {
+    private lazy var succeedButton: UIButton = {
         let button = AppTheme.largeButton()
-        button.setTitle("Start Request", for: .normal)
-        button.app.addTouch(target: self, action: #selector(onRequest))
+        button.setTitle("Succeed Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onSucceed))
+        return button
+    }()
+    
+    private lazy var failedButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Failed Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onFailed))
         return button
     }()
     
@@ -266,7 +272,8 @@ extension TestRequestController: ViewControllerProtocol {
     }
    
     func setupSubviews() {
-        view.addSubview(requestButton)
+        view.addSubview(succeedButton)
+        view.addSubview(failedButton)
         view.addSubview(retryButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
@@ -276,13 +283,17 @@ extension TestRequestController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        requestButton.app.layoutChain
+        succeedButton.app.layoutChain
             .centerX()
             .top(toSafeArea: 20)
         
+        failedButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: succeedButton, offset: 20)
+        
         retryButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: requestButton, offset: 20)
+            .top(toViewBottom: failedButton, offset: 20)
         
         asyncButton.app.layoutChain
             .centerX()
@@ -310,21 +321,59 @@ extension TestRequestController: ViewControllerProtocol {
 // MARK: - Action
 private extension TestRequestController {
     
-    @objc func onRequest() {
+    @objc func onSucceed() {
+        let request = HTTPRequest()
+        request
+            .requestUrl("http://kvm.wuyong.site/test.json")
+            .responseSerializerType(.JSON)
+            .requestTimeoutInterval(30)
+            .requestCachePolicy(.reloadIgnoringLocalAndRemoteCacheData)
+            .requestHeaders([
+                "Authorization": "",
+                "X-Access-Key": "",
+                "X-Timestamp": "",
+                "X-Nonce-Data": "",
+                "X-Meta-Data": "",
+                "X-Sign-Data": "",
+            ])
+            .jsonValidator([
+                "name": Validator<String>.isNotNil.anyValidator,
+                "nullName": Validator<String>.isValid.anyValidator,
+            ])
+            .context(self)
+            .autoShowLoading(true)
+            .autoShowError(true)
+            .responseModel(of: TestModelRequest.TestModel.self) { [weak self] responseModel in
+                var message = "json请求成功: \n\(responseModel.name)"
+                let serverTime = request.responseServerTime
+                if serverTime > 0 {
+                    Date.app.currentTime = serverTime
+                    message += "\n当前服务器时间：\(serverTime)"
+                }
+                self?.app.showMessage(text: message)
+            }
+            .responseError { error in
+            }
+            .start()
+    }
+    
+    @objc func onFailed() {
         let request = TestModelRequest()
-        request.testFailed = [true, false].randomElement()!
+        request.testFailed = true
         request.context = self
         request.autoShowLoading = true
-        request.autoShowError = true
         request.start { [weak self] _ in
-            var message = "json请求成功: \n\(request.safeResponseModel.name)"
+            let message = "json请求成功: \n\(request.safeResponseModel.name)"
+            self?.app.showMessage(text: message)
+        } failure: { [weak self] _ in
+            var message = "json请求失败: \n\(request.error!.localizedDescription)"
             let serverTime = request.responseServerTime
             if serverTime > 0 {
                 Date.app.currentTime = serverTime
                 message += "\n当前服务器时间：\(serverTime)"
             }
             self?.app.showMessage(text: message)
-        } failure: { _ in }
+        }
     }
     
     @objc func onRetry() {
