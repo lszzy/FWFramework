@@ -7,21 +7,6 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal+HTTPRequest
-extension WrapperGlobal {
-    
-    /// 开始并发请求并指定完成句柄
-    public static func start<T: HTTPRequest>(_ request: T, completion: ((T) -> Void)? = nil) {
-        request.start(completion: completion != nil ? { completion?($0 as! T) } : nil)
-    }
-    
-    /// 开始并发请求并指定成功、失败句柄
-    public static func start<T: HTTPRequest>(_ request: T, success: ((T) -> Void)?, failure: ((T) -> Void)?) {
-        request.start(success: success != nil ? { success?($0 as! T) } : nil, failure: failure != nil ? { failure?($0 as! T) } : nil)
-    }
-    
-}
-
 // MARK: - HTTPRequest
 /// 请求方式
 public enum RequestMethod: String {
@@ -153,6 +138,7 @@ open class HTTPRequest: NSObject {
     open var responseHeaders: [AnyHashable: Any]? {
         return response?.allHeaderFields
     }
+    
     /// 当前响应数据
     open var responseData: Data? {
         get {
@@ -166,6 +152,7 @@ open class HTTPRequest: NSObject {
         }
     }
     private var _responseData: Data?
+    
     /// 当前响应字符串
     open var responseString: String? {
         get {
@@ -179,6 +166,7 @@ open class HTTPRequest: NSObject {
         }
     }
     private var _responseString: String?
+    
     /// 当前响应对象
     open var responseObject: Any? {
         get {
@@ -198,6 +186,7 @@ open class HTTPRequest: NSObject {
         }
     }
     private var _responseObject: Any?
+    
     /// 当前响应JSON对象
     open var responseJSONObject: Any? {
         get {
@@ -211,6 +200,7 @@ open class HTTPRequest: NSObject {
         }
     }
     private var _responseJSONObject: Any?
+    
     /// 当前网络错误
     open var error: Error? {
         get {
@@ -260,6 +250,9 @@ open class HTTPRequest: NSObject {
     private var cacheMetadata: RequestCacheMetadata?
     private var dataFromCache = false
     private var cancelled = false
+    
+    fileprivate var _responseModel: Any?
+    fileprivate var _responseModels: [Any]?
     
     private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
     
@@ -799,31 +792,157 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - JSONModel
-    /// 快速解析响应JSON为数据模型，支持具体路径
-    open func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T? {
+    /// 快速解析responseJSONObject为JSONModel模型，支持具体路径
+    open func parseJSONModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T? {
         if let array = responseJSONObject as? [Any] {
-            return T.deserialize(array, designatedPath: designatedPath)
+            return T.deserialize(from: array, designatedPath: designatedPath)
         } else {
-            return T.deserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+            return T.deserialize(from: responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
         }
     }
     
-    /// 快速安全解析响应JSON为数据模型，支持具体路径
-    open func safeResponseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T {
+    /// 快速安全解析responseJSONObject为JSONModel模型，支持具体路径
+    open func safeParseJSONModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T {
         if let array = responseJSONObject as? [Any] {
-            return T.safeDeserialize(array, designatedPath: designatedPath)
+            return T.safeDeserialize(from: array, designatedPath: designatedPath)
         } else {
-            return T.safeDeserialize(responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
+            return T.safeDeserialize(from: responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
         }
     }
     
-    /// 快速安全解析响应JSON为数据模型数组，支持具体路径
-    open func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T] {
+    /// 快速解析responseJSONObject为JSONModel模型数组，支持具体路径
+    open func parseJSONModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T]? {
         if let dict = responseJSONObject as? [AnyHashable: Any] {
-            return [T].deserialize(dict, designatedPath: designatedPath)
+            let elements = [T].deserialize(from: dict, designatedPath: designatedPath)
+            return elements?.compactMap({ $0 })
         } else {
-            return [T].deserialize(responseJSONObject as? [Any], designatedPath: designatedPath)
+            let elements = [T].deserialize(from: responseJSONObject as? [Any], designatedPath: designatedPath)
+            return elements?.compactMap({ $0 })
         }
+    }
+    
+    /// 快速安全解析responseJSONObject为JSONModel模型数组，支持具体路径
+    open func safeParseJSONModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T] {
+        if let dict = responseJSONObject as? [AnyHashable: Any] {
+            return [T].safeDeserialize(from: dict, designatedPath: designatedPath)
+        } else {
+            return [T].safeDeserialize(from: responseJSONObject as? [Any], designatedPath: designatedPath)
+        }
+    }
+    
+}
+
+// MARK: - ResponseModelProtocol
+/// 响应模型协议
+public protocol ResponseModelProtocol {
+    /// 关联响应模型数据类型
+    associatedtype ResponseModel: Any
+    
+    /// 当前响应模型，默认调用responseModelFilter
+    var responseModel: ResponseModel? { get set }
+    /// 当前安全响应模型，默认实现SafeType、JSONModel、NSObject，可扩展
+    var safeResponseModel: ResponseModel { get }
+    /// 解析响应模型方法
+    func responseModelFilter() -> ResponseModel?
+    
+    /// 当前响应模型数组，默认调用responseModelsFilter
+    var responseModels: [ResponseModel]? { get set }
+    /// 当前安全响应模型数组
+    var safeResponseModels: [ResponseModel] { get }
+    /// 解析响应模型数组方法
+    func responseModelsFilter() -> [ResponseModel]?
+}
+
+/// HTTPRequest响应模型协议默认实现
+extension ResponseModelProtocol where Self: HTTPRequest {
+    
+    /// 默认实现当前响应模型，解析成功时自动缓存
+    public var responseModel: ResponseModel? {
+        get {
+            if _responseModel == nil {
+                _responseModel = responseModelFilter()
+            }
+            return _responseModel as? ResponseModel
+        }
+        set {
+            _responseModel = newValue
+        }
+    }
+    
+    /// 默认实现解析响应模型方法，调用parseResponseModel，具体路径为nil
+    public func responseModelFilter() -> ResponseModel? {
+        return responseJSONObject as? ResponseModel
+    }
+    
+    /// 默认实现当前响应模型数组，解析成功时自动缓存
+    public var responseModels: [ResponseModel]? {
+        get {
+            if _responseModels == nil {
+                _responseModels = responseModelsFilter()
+            }
+            return _responseModels as? [ResponseModel]
+        }
+        set {
+            _responseModels = newValue
+        }
+    }
+    
+    /// 默认实现当前安全响应模型数组
+    public var safeResponseModels: [ResponseModel] {
+        return responseModels ?? []
+    }
+    
+    /// 解析响应模型数组方法
+    public func responseModelsFilter() -> [ResponseModel]? {
+        return responseJSONObject as? [ResponseModel]
+    }
+    
+}
+
+extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: SafeType {
+    
+    /// 默认实现当前安全响应模型
+    public var safeResponseModel: ResponseModel {
+        return responseModel ?? .safeValue
+    }
+    
+}
+
+extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: NSObject {
+    
+    /// 默认实现当前安全响应模型
+    public var safeResponseModel: ResponseModel {
+        return responseModel ?? .init()
+    }
+    
+}
+
+/// HTTPRequest JSONModel响应模型协议默认实现
+extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: JSONModel {
+    
+    /// 默认实现当前安全响应模型
+    public var safeResponseModel: ResponseModel {
+        return responseModel ?? .init()
+    }
+    
+    /// 默认实现解析响应模型方法，调用parseResponseModel，具体路径为nil
+    public func responseModelFilter() -> ResponseModel? {
+        return parseResponseModel()
+    }
+    
+    /// 默认实现快速解析响应数据为数据模型，支持具体路径
+    public func parseResponseModel(designatedPath: String? = nil) -> ResponseModel? {
+        return parseJSONModel(of: ResponseModel.self, designatedPath: designatedPath)
+    }
+    
+    /// 默认实现解析响应模型数组方法
+    public func responseModelsFilter() -> [ResponseModel]? {
+        return parseResponseModels()
+    }
+    
+    /// 默认实现快速解析响应数据为数据模型，支持具体路径
+    public func parseResponseModels(designatedPath: String? = nil) -> [ResponseModel]? {
+        return parseJSONModels(of: ResponseModel.self, designatedPath: designatedPath)
     }
     
 }

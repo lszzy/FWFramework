@@ -25,7 +25,7 @@ extension ParameterModel {
     
     /// 从字典解码为参数，非递归方式
     public static func fromDictionary(_ dict: [AnyHashable: Any]?) -> Self {
-        return safeDeserialize(dict)
+        return safeDeserialize(from: dict)
     }
     
     /// 编码为字典，非递归方式

@@ -7,21 +7,6 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal+BatchRequest
-extension WrapperGlobal {
-    
-    /// 开始批量请求并指定完成句柄
-    public static func start(_ request: BatchRequest, completion: BatchRequest.Completion? = nil) {
-        request.start(completion: completion)
-    }
-    
-    /// 开始批量请求并指定成功、失败句柄
-    public static func start(_ request: BatchRequest, success: BatchRequest.Completion?, failure: BatchRequest.Completion?) {
-        request.start(success: success, failure: failure)
-    }
-    
-}
-
 // MARK: - BatchRequest
 /// 批量请求代理
 public protocol BatchRequestDelegate: AnyObject {

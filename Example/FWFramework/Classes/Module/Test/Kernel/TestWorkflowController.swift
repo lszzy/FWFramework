@@ -245,7 +245,7 @@ extension TestWorkflowController: ViewControllerProtocol {
             
             let request = TestModelRequest()
             request.start { _ in
-                let string = "后台请求成功：\(request.responseName)\n时间：\(request.responseServerTime)"
+                let string = "后台请求成功：\(request.safeResponseModel.name)\n时间：\(request.responseServerTime)"
                 CacheFile.shared.setObject(string, forKey: "backgroundTask")
                 
                 completionHandler()
