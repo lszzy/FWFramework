@@ -727,69 +727,6 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
     return dataTask;
 }
 
-- (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
-                                          retryCount:(NSInteger)retryCount
-                                       retryInterval:(NSTimeInterval (^)(NSInteger))retryInterval
-                                     timeoutInterval:(NSTimeInterval)timeoutInterval
-                                         shouldRetry:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
-                                         isCancelled:(nullable BOOL (^)(void))isCancelled
-                                         taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
-                                      uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
-                                    downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
-                                   completionHandler:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable))completionHandler
-{
-    NSTimeInterval startTime = [NSDate date].timeIntervalSince1970;
-    return [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:retryCount retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry ? shouldRetry : ^void(NSURLResponse *response, id _Nullable responseObject, NSError * _Nullable error, void (^decisionHandler)(BOOL)){
-        
-        NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-        decisionHandler(error != nil || statusCode < 200 || statusCode > 299);
-    } isCancelled:isCancelled taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
-}
-
-- (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
-                                          retryCount:(NSInteger)retryCount
-                                         remainCount:(NSInteger)remainCount
-                                       retryInterval:(NSTimeInterval (^)(NSInteger requestCount))retryInterval
-                                     timeoutInterval:(NSTimeInterval)timeoutInterval
-                                           startTime:(NSTimeInterval)startTime
-                                         shouldRetry:(void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable, void (^ _Nonnull)(BOOL retry)))shouldRetry
-                                         isCancelled:(nullable BOOL (^)(void))isCancelled
-                                         taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
-                                      uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
-                                    downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
-                                   completionHandler:(nullable void (^)(NSURLResponse * _Nonnull, id _Nullable, NSError * _Nullable))completionHandler
-{
-    return [self dataTaskWithRequest:requestBuilder() uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        if (isCancelled && isCancelled()) return;
-        
-        [self setRequestTotalCount:retryCount - remainCount + 1 forResponse:response];
-        [self setRequestTotalTime:[NSDate date].timeIntervalSince1970 - startTime forResponse:response];
-        
-        BOOL canRetry = (retryCount < 0 || remainCount > 0);
-        NSTimeInterval waitTime = canRetry && retryInterval ? MAX(retryInterval(retryCount - remainCount + 1), 0) : 0;
-        if (canRetry && (timeoutInterval <= 0 || ([[NSDate date] timeIntervalSince1970] - startTime + waitTime) < timeoutInterval)) {
-            shouldRetry(response, responseObject, error, ^(BOOL retry){
-                if (isCancelled && isCancelled()) return;
-                
-                if (retry) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(waitTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        if (isCancelled && isCancelled()) return;
-                        
-                        NSURLSessionDataTask *dataTask = [self dataTaskWithRequestBuilder:requestBuilder retryCount:retryCount remainCount:remainCount - 1 retryInterval:retryInterval timeoutInterval:timeoutInterval startTime:startTime shouldRetry:shouldRetry isCancelled:isCancelled taskHandler:taskHandler uploadProgress:uploadProgress downloadProgress:downloadProgress completionHandler:completionHandler];
-                        
-                        if (taskHandler) taskHandler(dataTask);
-                        [dataTask resume];
-                    });
-                } else {
-                    if (completionHandler) completionHandler(response, responseObject, error);
-                }
-            });
-        } else {
-            if (completionHandler) completionHandler(response, responseObject, error);
-        }
-    }];
-}
-
 #pragma mark -
 
 - (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request
@@ -874,30 +811,6 @@ static NSString * const __FWNSURLSessionTaskDidSuspendNotification = @"site.wuyo
 - (NSDictionary *)userInfoForTask:(NSURLSessionTask *)task {
     if (!task) return nil;
     return objc_getAssociatedObject(task, @selector(userInfoForTask:));
-}
-
-- (void)setRequestTotalCount:(NSInteger)totalCount forResponse:(NSURLResponse *)response
-{
-    if (!response) return;
-    objc_setAssociatedObject(response, @selector(requestTotalCountForResponse:), @(totalCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSInteger)requestTotalCountForResponse:(NSURLResponse *)response
-{
-    if (!response) return 0;
-    return [objc_getAssociatedObject(response, @selector(requestTotalCountForResponse:)) integerValue];
-}
-
-- (void)setRequestTotalTime:(NSTimeInterval)totalTime forResponse:(NSURLResponse *)response
-{
-    if (!response) return;
-    objc_setAssociatedObject(response, @selector(requestTotalTimeForResponse:), @(totalTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSTimeInterval)requestTotalTimeForResponse:(NSURLResponse *)response
-{
-    if (!response) return 0;
-    return [objc_getAssociatedObject(response, @selector(requestTotalTimeForResponse:)) doubleValue];
 }
 
 #pragma mark -

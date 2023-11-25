@@ -69,14 +69,10 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         let urlString = RequestManager.shared.buildRequestUrl(request)
         let requestSerializer = requestSerializer(for: request)
         
-        if request.constructingBodyBlock != nil || request.requestFormDataEnabled() {
+        if request.constructingBodyBlock != nil {
             var error: NSError?
             let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
-                if request.constructingBodyBlock != nil {
-                    request.constructingBodyBlock?(formData)
-                } else {
-                    request.requestFormData(formData)
-                }
+                request.constructingBodyBlock?(formData)
             }, error: &error)
             
             if let error = error {

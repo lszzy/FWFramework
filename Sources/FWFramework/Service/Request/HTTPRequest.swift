@@ -73,15 +73,16 @@ open class HTTPRequest: NSObject {
     public typealias Completion = (HTTPRequest) -> Void
     
     // MARK: - Accessor
-    /// 自定义请求配置，未设置时使用全局配置
-    open var config: RequestConfig! {
-        get { _config ?? RequestConfig.shared }
-        set { _config = newValue }
-    }
-    private var _config: RequestConfig?
-    
     /// 自定义请求代理
     open weak var delegate: RequestDelegate?
+    /// 自定义标签，默认0
+    open var tag: Int = 0
+    /// 当前请求的上下文，支持UIViewController|UIView
+    open weak var context: AnyObject?
+    /// 是否自动显示错误信息
+    open var autoShowError = false
+    /// 是否自动显示加载信息
+    open var autoShowLoading = false
     /// 自定义成功回调句柄
     open var successCompletionBlock: Completion?
     /// 自定义失败回调句柄
@@ -98,6 +99,10 @@ open class HTTPRequest: NSObject {
     open var uploadProgressBlock: ((Progress) -> Void)?
     /// 请求优先级，默认default
     open var requestPriority: RequestPriority = .default
+    /// 自定义用户信息
+    open var requestUserInfo: [AnyHashable: Any]?
+    /// 是否使用已缓存响应
+    open var useCacheResponse: Bool = false
     
     /// 当前请求适配器，根据插件不同而不同
     open var requestAdapter: Any?
@@ -105,10 +110,6 @@ open class HTTPRequest: NSObject {
     open var requestTask: URLSessionTask?
     /// 当前请求唯一标志符
     open var requestIdentifier: Int = 0
-    /// 自定义标签，默认0
-    open var tag: Int = 0
-    /// 自定义用户信息
-    open var requestUserInfo: [AnyHashable: Any]?
     /// 请求总次数
     open internal(set) var requestTotalCount: Int = 0
     /// 请求总时长
@@ -137,6 +138,26 @@ open class HTTPRequest: NSObject {
     /// 当前响应Header
     open var responseHeaders: [AnyHashable: Any]? {
         return response?.allHeaderFields
+    }
+    /// 请求是否已完成
+    open var isFinished: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .completed && error == nil
+    }
+    /// 请求是否已失败
+    open var isFailed: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .completed && error != nil
+    }
+    /// 请求是否已取消
+    open var isCancelled: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .canceling || cancelled
+    }
+    /// 请求是否执行中
+    open var isExecuting: Bool {
+        guard let requestTask = requestTask else { return false }
+        return requestTask.state == .running
     }
     
     /// 当前响应数据
@@ -214,34 +235,19 @@ open class HTTPRequest: NSObject {
     }
     private var _error: Error?
     
-    /// 请求是否已完成
-    open var isFinished: Bool {
-        guard let requestTask = requestTask else { return false }
-        return requestTask.state == .completed && error == nil
+    /// 自定义请求配置，未设置时使用全局配置
+    open var config: RequestConfig! {
+        get { _config ?? RequestConfig.shared }
+        set { _config = newValue }
     }
-    
-    /// 请求是否已失败
-    open var isFailed: Bool {
-        guard let requestTask = requestTask else { return false }
-        return requestTask.state == .completed && error != nil
-    }
-    
-    /// 请求是否已取消
-    open var isCancelled: Bool {
-        guard let requestTask = requestTask else { return false }
-        return requestTask.state == .canceling || cancelled
-    }
-    
-    /// 请求是否执行中
-    open var isExecuting: Bool {
-        guard let requestTask = requestTask else { return false }
-        return requestTask.state == .running
-    }
+    private var _config: RequestConfig?
     
     private lazy var contextAccessory: RequestContextAccessory = {
         let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
         return result
     }()
+    
+    private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
     
     private var cacheData: Data?
     private var cacheString: String?
@@ -276,8 +282,6 @@ open class HTTPRequest: NSObject {
     fileprivate var _responseModel: Any?
     fileprivate var _responseModels: [Any]?
     
-    private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
-    
     // MARK: - Lifecycle
     public override init() {
         super.init()
@@ -293,86 +297,6 @@ open class HTTPRequest: NSObject {
         return _baseUrl ?? ""
     }
     
-    /// 请求URL地址，默认空，示例：/v1/user
-    open func requestUrl() -> String {
-        return _requestUrl ?? ""
-    }
-    
-    /// 请求可选CDN地址，默认空
-    open func cdnUrl() -> String {
-        return _cdnUrl ?? ""
-    }
-    
-    /// 是否使用CDN
-    open func useCDN() -> Bool {
-        return _useCDN ?? false
-    }
-    
-    /// 是否允许蜂窝网络访问，默认true
-    open func allowsCellularAccess() -> Bool {
-        return _allowsCellularAccess ?? true
-    }
-    
-    /// 请求超时，默认60秒
-    open func requestTimeoutInterval() -> TimeInterval {
-        return _requestTimeoutInterval ?? 60
-    }
-    
-    /// 自定义请求缓存策略，默认nil不处理
-    open func requestCachePolicy() -> URLRequest.CachePolicy? {
-        return _requestCachePolicy
-    }
-    
-    /// 请求方式，默认GET
-    open func requestMethod() -> RequestMethod {
-        return _requestMethod ?? .GET
-    }
-    
-    /// 请求附加参数，默认nil
-    open func requestArgument() -> Any? {
-        return _requestArgument
-    }
-    
-    /// 请求序列化方式，默认HTTP
-    open func requestSerializerType() -> RequestSerializerType {
-        return _requestSerializerType ?? .HTTP
-    }
-    
-    /// 响应序列化方式，默认JSON
-    open func responseSerializerType() -> ResponseSerializerType {
-        return _responseSerializerType ?? .JSON
-    }
-    
-    /// 是否开启请求表单数据方法，开启后自动调用requestFormData(_:)方法，默认false
-    open func requestFormDataEnabled() -> Bool {
-        return false
-    }
-    
-    /// 自定义请求表单数据方法，作用同constructingBodyBlock，开启requestFormDataEnabled后生效
-    open func requestFormData(_ formData: RequestMultipartFormData) {
-    }
-    
-    /// HTTP请求授权Header数组，示例：["UserName", "Password"]
-    open func requestAuthorizationHeaderFieldArray() -> [String]? {
-        return _requestAuthorizationHeaderFieldArray
-    }
-    
-    /// 自定义请求Header字典
-    open func requestHeaderFieldValueDictionary() -> [String: String]? {
-        return _requestHeaderFieldValueDictionary
-    }
-    
-    /// 构建自定义URLRequest
-    open func customUrlRequest() -> URLRequest? {
-        return _customUrlRequest
-    }
-    
-    /// JSON验证器，默认支持AnyValidator
-    open func jsonValidator() -> Any? {
-        return _jsonValidator
-    }
-    
-    // MARK: - Builder
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     @discardableResult
     open func baseUrl(_ baseUrl: String) -> Self {
@@ -385,6 +309,16 @@ open class HTTPRequest: NSObject {
     open func requestUrl(_ requestUrl: String) -> Self {
         _requestUrl = requestUrl
         return self
+    }
+    
+    /// 请求URL地址，默认空，示例：/v1/user
+    open func requestUrl() -> String {
+        return _requestUrl ?? ""
+    }
+    
+    /// 请求可选CDN地址，默认空
+    open func cdnUrl() -> String {
+        return _cdnUrl ?? ""
     }
     
     /// 请求可选CDN地址，默认空
@@ -401,6 +335,16 @@ open class HTTPRequest: NSObject {
         return self
     }
     
+    /// 是否使用CDN
+    open func useCDN() -> Bool {
+        return _useCDN ?? false
+    }
+    
+    /// 是否允许蜂窝网络访问，默认true
+    open func allowsCellularAccess() -> Bool {
+        return _allowsCellularAccess ?? true
+    }
+    
     /// 是否允许蜂窝网络访问，默认true
     @discardableResult
     open func allowsCellularAccess(_ allows: Bool) -> Self {
@@ -413,6 +357,16 @@ open class HTTPRequest: NSObject {
     open func requestTimeoutInterval(_ interval: TimeInterval) -> Self {
         _requestTimeoutInterval = interval
         return self
+    }
+    
+    /// 请求超时，默认60秒
+    open func requestTimeoutInterval() -> TimeInterval {
+        return _requestTimeoutInterval ?? 60
+    }
+    
+    /// 自定义请求缓存策略，默认nil不处理
+    open func requestCachePolicy() -> URLRequest.CachePolicy? {
+        return _requestCachePolicy
     }
     
     /// 自定义请求缓存策略，默认nil不处理
@@ -429,6 +383,16 @@ open class HTTPRequest: NSObject {
         return self
     }
     
+    /// 请求方式，默认GET
+    open func requestMethod() -> RequestMethod {
+        return _requestMethod ?? .GET
+    }
+    
+    /// 请求附加参数，默认nil
+    open func requestArgument() -> Any? {
+        return _requestArgument
+    }
+    
     /// 请求附加参数，默认nil
     @discardableResult
     open func requestArgument(_ argument: Any?) -> Self {
@@ -441,6 +405,16 @@ open class HTTPRequest: NSObject {
     open func requestSerializerType(_ serializerType: RequestSerializerType) -> Self {
         _requestSerializerType = serializerType
         return self
+    }
+    
+    /// 请求序列化方式，默认HTTP
+    open func requestSerializerType() -> RequestSerializerType {
+        return _requestSerializerType ?? .HTTP
+    }
+    
+    /// 响应序列化方式，默认JSON
+    open func responseSerializerType() -> ResponseSerializerType {
+        return _responseSerializerType ?? .JSON
     }
     
     /// 响应序列化方式，默认JSON
@@ -457,80 +431,20 @@ open class HTTPRequest: NSObject {
         return self
     }
     
+    /// HTTP请求授权Header数组，示例：["UserName", "Password"]
+    open func requestAuthorizationHeaderFieldArray() -> [String]? {
+        return _requestAuthorizationHeaderFieldArray
+    }
+    
+    /// 自定义请求Header字典
+    open func requestHeaderFieldValueDictionary() -> [String: String]? {
+        return _requestHeaderFieldValueDictionary
+    }
+    
     /// 自定义请求Header字典
     @discardableResult
     open func requestHeaderFieldValueDictionary(_ dict: [String: String]?) -> Self {
         _requestHeaderFieldValueDictionary = dict
-        return self
-    }
-    
-    /// 构建自定义URLRequest
-    @discardableResult
-    open func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
-        _customUrlRequest = urlRequest
-        return self
-    }
-    
-    /// JSON验证器，默认支持AnyValidator
-    @discardableResult
-    open func jsonValidator(_ validator: Any?) -> Self {
-        _jsonValidator = validator
-        return self
-    }
-    
-    /// 请求重试次数，默认0
-    @discardableResult
-    open func requestRetryCount(_ count: Int) -> Self {
-        _requestRetryCount = count
-        return self
-    }
-    
-    /// 请求重试间隔，默认0
-    @discardableResult
-    open func requestRetryInterval(_ interval: TimeInterval) -> Self {
-        _requestRetryInterval = interval
-        return self
-    }
-    
-    /// 请求重试超时时间，默认0
-    @discardableResult
-    open func requestRetryTimeout(_ timeout: TimeInterval) -> Self {
-        _requestRetryTimeout = timeout
-        return self
-    }
-    
-    /// 缓存有效期，默认-1不缓存
-    @discardableResult
-    open func cacheTimeInSeconds(_ seconds: Int) -> Self {
-        _cacheTimeInSeconds = seconds
-        return self
-    }
-    
-    /// 缓存版本号，默认0
-    @discardableResult
-    open func cacheVersion(_ version: Int) -> Self {
-        _cacheVersion = version
-        return self
-    }
-    
-    /// 缓存附加数据，变化时会更新缓存
-    @discardableResult
-    open func cacheSensitiveData(_ sensitiveData: Any?) -> Self {
-        _cacheSensitiveData = sensitiveData
-        return self
-    }
-    
-    /// 自定义成功回调句柄
-    @discardableResult
-    open func successCompletionBlock(_ block: Completion?) -> Self {
-        self.successCompletionBlock = block
-        return self
-    }
-    
-    /// 自定义失败回调句柄
-    @discardableResult
-    open func failureCompletionBlock(_ block: Completion?) -> Self {
-        self.failureCompletionBlock = block
         return self
     }
     
@@ -569,13 +483,6 @@ open class HTTPRequest: NSObject {
         return self
     }
     
-    /// 自定义标签，默认0
-    @discardableResult
-    open func tag(_ tag: Int) -> Self {
-        self.tag = tag
-        return self
-    }
-    
     /// 自定义用户信息
     @discardableResult
     open func requestUserInfo(_ userInfo: [AnyHashable: Any]?) -> Self {
@@ -583,31 +490,77 @@ open class HTTPRequest: NSObject {
         return self
     }
     
-    /// 是否使用已缓存响应
+    /// 自定义标签，默认0
     @discardableResult
-    open func useCacheResponse(_ useCacheResponse: Bool) -> Self {
-        self.useCacheResponse = useCacheResponse
+    open func tag(_ tag: Int) -> Self {
+        self.tag = tag
         return self
     }
     
-    /// 当前请求的上下文，支持UIViewController|UIView
+    /// JSON验证器，默认支持AnyValidator
     @discardableResult
-    open func context(_ context: AnyObject?) -> Self {
-        self.context = context
+    open func jsonValidator(_ validator: Any?) -> Self {
+        _jsonValidator = validator
         return self
     }
     
-    /// 是否自动显示错误信息
+    /// JSON验证器，默认支持AnyValidator
+    open func jsonValidator() -> Any? {
+        return _jsonValidator
+    }
+    
+    /// 构建自定义URLRequest
+    open func customUrlRequest() -> URLRequest? {
+        return _customUrlRequest
+    }
+    
+    /// 构建自定义URLRequest
     @discardableResult
-    open func autoShowError(_ autoShowError: Bool) -> Self {
-        self.autoShowError = autoShowError
+    open func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
+        _customUrlRequest = urlRequest
         return self
     }
     
-    /// 是否自动显示加载信息
+    /// 自定义成功回调句柄
     @discardableResult
-    open func autoShowLoading(_ autoShowLoading: Bool) -> Self {
-        self.autoShowLoading = autoShowLoading
+    open func successCompletionBlock(_ block: Completion?) -> Self {
+        self.successCompletionBlock = block
+        return self
+    }
+    
+    /// 自定义失败回调句柄
+    @discardableResult
+    open func failureCompletionBlock(_ block: Completion?) -> Self {
+        self.failureCompletionBlock = block
+        return self
+    }
+    
+    /// 快捷设置模型响应成功句柄
+    @discardableResult
+    public func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            let responseModel = T.safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
+            success?(responseModel)
+        }
+        return self
+    }
+    
+    /// 快捷设置模型数组响应成功句柄
+    @discardableResult
+    public func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: (([T]) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            let responseModels = [T].safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
+            success?(responseModels)
+        }
+        return self
+    }
+    
+    /// 快捷设置响应失败句柄
+    @discardableResult
+    public func responseError(_ failure: ((Error) -> Void)?) -> Self {
+        failureCompletionBlock = { request in
+            failure?(request.error ?? RequestError.unknownError)
+        }
         return self
     }
     
@@ -666,10 +619,54 @@ open class HTTPRequest: NSObject {
     open func requestFailedFilter() {
     }
     
+    // MARK: - Context
+    /// 当前请求的上下文，支持UIViewController|UIView
+    @discardableResult
+    open func context(_ context: AnyObject?) -> Self {
+        self.context = context
+        return self
+    }
+    
+    /// 是否自动显示错误信息
+    @discardableResult
+    open func autoShowError(_ autoShowError: Bool) -> Self {
+        self.autoShowError = autoShowError
+        return self
+    }
+    
+    /// 是否自动显示加载信息
+    @discardableResult
+    open func autoShowLoading(_ autoShowLoading: Bool) -> Self {
+        self.autoShowLoading = autoShowLoading
+        return self
+    }
+    
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        contextAccessory.showError(for: self)
+    }
+    
+    /// 显示加载条，默认显示加载插件
+    open func showLoading() {
+        contextAccessory.showLoading(for: self)
+    }
+    
+    /// 隐藏加载条，默认隐藏加载插件
+    open func hideLoading() {
+        contextAccessory.hideLoading(for: self)
+    }
+    
     // MARK: - Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
         return _requestRetryCount ?? 0
+    }
+    
+    /// 请求重试次数，默认0
+    @discardableResult
+    open func requestRetryCount(_ count: Int) -> Self {
+        _requestRetryCount = count
+        return self
     }
     
     /// 请求重试间隔，默认0
@@ -677,9 +674,23 @@ open class HTTPRequest: NSObject {
         return _requestRetryInterval ?? 0
     }
     
+    /// 请求重试间隔，默认0
+    @discardableResult
+    open func requestRetryInterval(_ interval: TimeInterval) -> Self {
+        _requestRetryInterval = interval
+        return self
+    }
+    
     /// 请求重试超时时间，默认0
     open func requestRetryTimeout() -> TimeInterval {
         return _requestRetryTimeout ?? 0
+    }
+    
+    /// 请求重试超时时间，默认0
+    @discardableResult
+    open func requestRetryTimeout(_ timeout: TimeInterval) -> Self {
+        _requestRetryTimeout = timeout
+        return self
     }
     
     /// 请求重试验证方法，requestRetryCount大于0生效，默认检查状态码和错误
@@ -695,35 +706,6 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Action
-    /// 快捷设置模型响应成功句柄
-    @discardableResult
-    public func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        successCompletionBlock = { request in
-            let responseModel = T.safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
-            success?(responseModel)
-        }
-        return self
-    }
-    
-    /// 快捷设置模型数组响应成功句柄
-    @discardableResult
-    public func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: (([T]) -> Void)?) -> Self {
-        successCompletionBlock = { request in
-            let responseModels = [T].safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
-            success?(responseModels)
-        }
-        return self
-    }
-    
-    /// 快捷设置响应失败句柄
-    @discardableResult
-    public func responseError(_ failure: ((Error) -> Void)?) -> Self {
-        failureCompletionBlock = { request in
-            failure?(request.error ?? RequestError.unknownError)
-        }
-        return self
-    }
-    
     /// 开始并发请求
     @discardableResult
     open func start() -> Self {
@@ -751,6 +733,15 @@ open class HTTPRequest: NSObject {
             self.successCompletionBlock?(self)
             self.clearCompletionBlock()
         }
+        return self
+    }
+    
+    /// 开始请求，忽略本地缓存
+    @discardableResult
+    open func startWithoutCache() -> Self {
+        clearCacheVariables()
+        toggleAccessoriesWillStartCallBack()
+        RequestManager.shared.addRequest(self)
         return self
     }
     
@@ -838,9 +829,23 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Cache
+    /// 是否使用已缓存响应
+    @discardableResult
+    open func useCacheResponse(_ useCacheResponse: Bool) -> Self {
+        self.useCacheResponse = useCacheResponse
+        return self
+    }
+    
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
         return _cacheTimeInSeconds ?? -1
+    }
+    
+    /// 缓存有效期，默认-1不缓存
+    @discardableResult
+    open func cacheTimeInSeconds(_ seconds: Int) -> Self {
+        _cacheTimeInSeconds = seconds
+        return self
     }
     
     /// 缓存版本号，默认0
@@ -848,38 +853,38 @@ open class HTTPRequest: NSObject {
         return _cacheVersion ?? 0
     }
     
+    /// 缓存版本号，默认0
+    @discardableResult
+    open func cacheVersion(_ version: Int) -> Self {
+        _cacheVersion = version
+        return self
+    }
+    
     /// 缓存附加数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
         return _cacheSensitiveData
     }
     
-    /// 是否异步写入缓存，默认true
-    open func writeCacheAsynchronously() -> Bool {
-        return true
+    /// 缓存附加数据，变化时会更新缓存
+    @discardableResult
+    open func cacheSensitiveData(_ sensitiveData: Any?) -> Self {
+        _cacheSensitiveData = sensitiveData
+        return self
     }
     
-    /// 缓存基本路径
-    open func cacheBasePath() -> String {
-        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
-        var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
-        
-        let filters = config.requestFilters
-        for filter in filters {
-            if let filterPath = filter.filterCacheDirPath?(path, with: self) {
-                path = filterPath
-            }
-        }
-        
-        createDirectoryIfNeeded(path)
-        return path
+    /// 缓存文件名过滤器，参数为请求参数，默认返回argument
+    open func filterCacheFileName(_ argument: Any?) -> Any? {
+        return argument
     }
-    
-    /// 是否使用已缓存响应
-    open var useCacheResponse: Bool = false
     
     /// 是否是本地缓存数据
     open var isDataFromCache: Bool {
         return dataFromCache
+    }
+    
+    /// 是否异步写入缓存，默认true
+    open func writeCacheAsynchronously() -> Bool {
+        return true
     }
     
     /// 加载本地缓存，返回是否成功
@@ -903,15 +908,6 @@ open class HTTPRequest: NSObject {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
         }
         #endif
-    }
-    
-    /// 开始请求，忽略本地缓存
-    @discardableResult
-    open func startWithoutCache() -> Self {
-        clearCacheVariables()
-        toggleAccessoriesWillStartCallBack()
-        RequestManager.shared.addRequest(self)
-        return self
     }
     
     /// 保存指定响应数据到缓存文件
@@ -938,9 +934,20 @@ open class HTTPRequest: NSObject {
         }
     }
     
-    /// 缓存文件名过滤器，参数为请求参数，默认返回argument
-    open func filterCacheFileName(_ argument: Any?) -> Any? {
-        return argument
+    /// 缓存基本路径
+    open func cacheBasePath() -> String {
+        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
+        var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
+        
+        let filters = config.requestFilters
+        for filter in filters {
+            if let filterPath = filter.filterCacheDirPath?(path, with: self) {
+                path = filterPath
+            }
+        }
+        
+        createDirectoryIfNeeded(path)
+        return path
     }
     
     private func loadCacheMetadata() -> Bool {
@@ -1064,29 +1071,6 @@ open class HTTPRequest: NSObject {
         var path = cacheBasePath()
         path = (path as NSString).appendingPathComponent(metadataFileName)
         return path
-    }
-    
-    // MARK: - Context
-    /// 当前请求的上下文，支持UIViewController|UIView
-    open weak var context: AnyObject?
-    /// 是否自动显示错误信息
-    open var autoShowError = false
-    /// 是否自动显示加载信息
-    open var autoShowLoading = false
-    
-    /// 显示网络错误，默认显示Toast提示
-    open func showError() {
-        contextAccessory.showError(for: self)
-    }
-    
-    /// 显示加载条，默认显示加载插件
-    open func showLoading() {
-        contextAccessory.showLoading(for: self)
-    }
-    
-    /// 隐藏加载条，默认隐藏加载插件
-    open func hideLoading() {
-        contextAccessory.hideLoading(for: self)
     }
     
 }

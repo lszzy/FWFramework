@@ -106,6 +106,20 @@ class TestUploadRequest: HTTPRequest {
     var uploadData: Any?
     var fileName: String = ""
     
+    override init() {
+        super.init()
+        
+        constructingBodyBlock { [weak self] formData in
+            if let imageData = self?.uploadData as? Data {
+                formData.appendPart(withFileData: imageData, name: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
+            } else if let videoURL = self?.uploadData as? URL {
+                try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: "mp4"))
+            }
+            // 限制宽度以模拟长时间上传
+            formData.throttleBandwidth(withPacketSize: 1024 * 100, delay: 0.1)
+        }
+    }
+    
     override func requestUrl() -> String {
         "http://127.0.0.1:8001/upload"
     }
@@ -120,20 +134,6 @@ class TestUploadRequest: HTTPRequest {
     
     override func requestSerializerType() -> RequestSerializerType {
         .JSON
-    }
-    
-    override func requestFormDataEnabled() -> Bool {
-        true
-    }
-    
-    override func requestFormData(_ formData: RequestMultipartFormData) {
-        if let imageData = uploadData as? Data {
-            formData.appendPart(withFileData: imageData, name: "files[]", fileName: fileName, mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
-        } else if let videoURL = uploadData as? URL {
-            try? formData.appendPart(withFileURL: videoURL, name: "files[]", fileName: fileName, mimeType: Data.app.mimeType(from: "mp4"))
-        }
-        // 限制宽度以模拟长时间上传
-        formData.throttleBandwidth(withPacketSize: 1024 * 100, delay: 0.1)
     }
     
 }

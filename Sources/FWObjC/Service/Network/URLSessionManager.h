@@ -185,33 +185,6 @@ NS_SWIFT_NAME(URLSessionManager)
                              downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
                             completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler;
 
-/**
- Creates an `NSURLSessionDataTask` with a retry request.
-
- @param requestBuilder The request builder.
- @param retryCount The retry limit, eg 4, less than 0 means no limit
- @param retryInterval The retry interval block, default nil means 0.
- @param timeoutInterval The retry timeout, less than or equal to 0 means no timeout.
- @param shouldRetry Whether the retry should start, must call decisionHandler, default to check statusCode and error.
- @param isCancelled Whether the request is cancelled block, default to nil.
- @param taskHandler A block object to be executed when the retry task is created.
- @param uploadProgress A block object to be executed when the upload progress is updated. Note this block is called on the session queue, not the main queue.
- @param downloadProgress A block object to be executed when the download progress is updated. Note this block is called on the session queue, not the main queue.
- @param completionHandler A block object to be executed when the task finishes. This block has no return value and takes three arguments: the server response, the response object created by that serializer, and the error that occurred, if any.
-
- @see -dataTaskWithRequest:uploadProgress:downloadProgress:completionHandler:
- */
-- (NSURLSessionDataTask *)dataTaskWithRequestBuilder:(NSURLRequest * (^)(void))requestBuilder
-                                          retryCount:(NSInteger)retryCount
-                                       retryInterval:(nullable NSTimeInterval (^)(NSInteger requestCount))retryInterval
-                                     timeoutInterval:(NSTimeInterval)timeoutInterval
-                                         shouldRetry:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject, NSError * _Nullable error, void (^decisionHandler)(BOOL retry)))shouldRetry
-                                         isCancelled:(nullable BOOL (^)(void))isCancelled
-                                         taskHandler:(nullable void (^)(NSURLSessionDataTask *))taskHandler
-                                      uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
-                                    downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
-                                   completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject, NSError * _Nullable error))completionHandler;
-
 ///---------------------------
 /// @name Running Upload Tasks
 ///---------------------------
@@ -318,26 +291,6 @@ NS_SWIFT_NAME(URLSessionManager)
  Returns the user info of the specified task.
  */
 - (nullable NSDictionary *)userInfoForTask:(NSURLSessionTask *)task;
-
-/**
- Sets total request count to be used for the specified response.
- */
-- (void)setRequestTotalCount:(NSInteger)totalCount forResponse:(NSURLResponse *)response;
-
-/**
- Returns the total request count of the specified response.
- */
-- (NSInteger)requestTotalCountForResponse:(NSURLResponse *)response;
-
-/**
- Sets total request time to be used for the specified response.
- */
-- (void)setRequestTotalTime:(NSTimeInterval)totalTime forResponse:(NSURLResponse *)response;
-
-/**
- Returns the retry total request time of the specified response.
- */
-- (NSTimeInterval)requestTotalTimeForResponse:(NSURLResponse *)response;
 
 ///-----------------------------------------
 /// @name Setting Session Delegate Callbacks
