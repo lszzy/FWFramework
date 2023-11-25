@@ -184,7 +184,7 @@ open class RequestManager: NSObject {
     
     /// 构建请求URLRequest
     open func buildUrlRequest(_ request: HTTPRequest) throws -> URLRequest {
-        if let customUrlRequest = request.buildCustomUrlRequest() {
+        if let customUrlRequest = request.customUrlRequest() {
             return customUrlRequest
         }
         

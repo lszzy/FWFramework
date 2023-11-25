@@ -251,6 +251,28 @@ open class HTTPRequest: NSObject {
     private var dataFromCache = false
     private var cancelled = false
     
+    private var _baseUrl: String?
+    private var _requestUrl: String?
+    private var _cdnUrl: String?
+    private var _useCDN: Bool?
+    private var _allowsCellularAccess: Bool?
+    private var _requestTimeoutInterval: TimeInterval?
+    private var _requestCachePolicy: URLRequest.CachePolicy?
+    private var _requestMethod: RequestMethod?
+    private var _requestArgument: Any?
+    private var _requestSerializerType: RequestSerializerType?
+    private var _responseSerializerType: ResponseSerializerType?
+    private var _requestAuthorizationHeaderFieldArray: [String]?
+    private var _requestHeaderFieldValueDictionary: [String: String]?
+    private var _customUrlRequest: URLRequest?
+    private var _jsonValidator: Any?
+    private var _requestRetryCount: Int?
+    private var _requestRetryInterval: TimeInterval?
+    private var _requestRetryTimeout: TimeInterval?
+    private var _cacheTimeInSeconds: Int?
+    private var _cacheVersion: Int?
+    private var _cacheSensitiveData: Any?
+    
     fileprivate var _responseModel: Any?
     fileprivate var _responseModels: [Any]?
     
@@ -341,13 +363,105 @@ open class HTTPRequest: NSObject {
     }
     
     /// 构建自定义URLRequest
-    open func buildCustomUrlRequest() -> URLRequest? {
+    open func customUrlRequest() -> URLRequest? {
         return nil
     }
     
     /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
         return nil
+    }
+    
+    // MARK: - Builder
+    /// 自定义成功回调句柄
+    @discardableResult
+    open func successCompletionBlock(_ block: Completion?) -> Self {
+        self.successCompletionBlock = block
+        return self
+    }
+    
+    /// 自定义失败回调句柄
+    @discardableResult
+    open func failureCompletionBlock(_ block: Completion?) -> Self {
+        self.failureCompletionBlock = block
+        return self
+    }
+    
+    /// 自定义POST请求HTTP body数据
+    @discardableResult
+    open func constructingBodyBlock(_ block: ((RequestMultipartFormData) -> Void)?) -> Self {
+        self.constructingBodyBlock = block
+        return self
+    }
+    
+    /// 断点续传下载路径
+    @discardableResult
+    open func resumableDownloadPath(_ path: String?) -> Self {
+        self.resumableDownloadPath = path
+        return self
+    }
+    
+    /// 断点续传进度句柄
+    @discardableResult
+    open func resumableDownloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+        self.resumableDownloadProgressBlock = block
+        return self
+    }
+    
+    /// 上传进度句柄
+    @discardableResult
+    open func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+        self.uploadProgressBlock = block
+        return self
+    }
+    
+    /// 请求优先级，默认default
+    @discardableResult
+    open func requestPriority(_ priority: RequestPriority) -> Self {
+        self.requestPriority = priority
+        return self
+    }
+    
+    /// 自定义标签，默认0
+    @discardableResult
+    open func tag(_ tag: Int) -> Self {
+        self.tag = tag
+        return self
+    }
+    
+    /// 自定义用户信息
+    @discardableResult
+    open func requestUserInfo(_ userInfo: [AnyHashable: Any]?) -> Self {
+        self.requestUserInfo = userInfo
+        return self
+    }
+    
+    /// 是否使用已缓存响应
+    @discardableResult
+    open func useCacheResponse(_ useCacheResponse: Bool) -> Self {
+        self.useCacheResponse = useCacheResponse
+        return self
+    }
+    
+    /// 当前请求的上下文，支持UIViewController|UIView
+    @discardableResult
+    open func context(_ context: AnyObject?) -> Self {
+        self.context = context
+        return self
+    }
+    
+    /// 是否自动显示错误信息
+    @discardableResult
+    open func autoShowError(_ autoShowError: Bool) -> Self {
+        self.autoShowError = autoShowError
+        return self
+    }
+    
+    /// 是否自动显示加载信息
+    @discardableResult
+    open func autoShowLoading(_ autoShowLoading: Bool) -> Self {
+        self.autoShowLoading = autoShowLoading
+        return self
     }
     
     // MARK: - Response
