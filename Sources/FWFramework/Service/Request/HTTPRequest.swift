@@ -434,23 +434,50 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Action
+    /// 快捷设置模型响应成功句柄
+    @discardableResult
+    public func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            let responseModel = T.safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
+            success?(responseModel)
+        }
+        return self
+    }
+    
+    /// 快捷设置模型数组响应成功句柄
+    @discardableResult
+    public func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: (([T]) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            let responseModels = [T].safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
+            success?(responseModels)
+        }
+        return self
+    }
+    
+    /// 快捷设置响应失败句柄
+    @discardableResult
+    public func responseError(_ failure: ((Error) -> Void)?) -> Self {
+        failureCompletionBlock = { request in
+            failure?(request.error ?? RequestError.unknownError)
+        }
+        return self
+    }
+    
     /// 开始并发请求
-    open func start() {
+    @discardableResult
+    open func start() -> Self {
         if !useCacheResponse {
-            startWithoutCache()
-            return
+            return startWithoutCache()
         }
         
         if let downloadPath = resumableDownloadPath, !downloadPath.isEmpty {
-            startWithoutCache()
-            return
+            return startWithoutCache()
         }
         
         do {
             try loadCache()
         } catch {
-            startWithoutCache()
-            return
+            return startWithoutCache()
         }
         
         dataFromCache = true
@@ -463,6 +490,7 @@ open class HTTPRequest: NSObject {
             self.successCompletionBlock?(self)
             self.clearCompletionBlock()
         }
+        return self
     }
     
     /// 停止并发请求
@@ -475,20 +503,23 @@ open class HTTPRequest: NSObject {
     }
     
     /// 开始并发请求并指定成功、失败句柄
-    open func start(success: Completion?, failure: Completion?) {
+    @discardableResult
+    open func start(success: Completion?, failure: Completion?) -> Self {
         successCompletionBlock = success
         failureCompletionBlock = failure
-        start()
+        return start()
     }
     
     /// 开始并发请求并指定完成句柄
-    open func start(completion: Completion?) {
-        start(success: completion, failure: completion)
+    @discardableResult
+    open func start(completion: Completion?) -> Self {
+        return start(success: completion, failure: completion)
     }
     
     /// 开始同步串行请求并指定成功、失败句柄
-    open func startSynchronously(success: Completion?, failure: Completion?) {
-        startSynchronously(filter: nil) { request in
+    @discardableResult
+    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
+        return startSynchronously(filter: nil) { request in
             if request.error == nil {
                 success?(request)
             } else {
@@ -498,16 +529,20 @@ open class HTTPRequest: NSObject {
     }
     
     /// 开始同步串行请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
+    @discardableResult
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
         RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion)
+        return self
     }
     
     /// 添加请求配件
-    open func addAccessory(_ accessory: RequestAccessoryProtocol) {
+    @discardableResult
+    open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
         if requestAccessories == nil {
             requestAccessories = []
         }
         requestAccessories?.append(accessory)
+        return self
     }
     
     /// 清理完成句柄
@@ -610,10 +645,12 @@ open class HTTPRequest: NSObject {
     }
     
     /// 开始请求，忽略本地缓存
-    open func startWithoutCache() {
+    @discardableResult
+    open func startWithoutCache() -> Self {
         clearCacheVariables()
         toggleAccessoriesWillStartCallBack()
         RequestManager.shared.addRequest(self)
+        return self
     }
     
     /// 保存指定响应数据到缓存文件
@@ -791,45 +828,6 @@ open class HTTPRequest: NSObject {
         contextAccessory.hideLoading(for: self)
     }
     
-    // MARK: - JSONModel
-    /// 快速解析responseJSONObject为JSONModel模型，支持具体路径
-    open func parseJSONModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T? {
-        if let array = responseJSONObject as? [Any] {
-            return T.deserialize(from: array, designatedPath: designatedPath)
-        } else {
-            return T.deserialize(from: responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
-        }
-    }
-    
-    /// 快速安全解析responseJSONObject为JSONModel模型，支持具体路径
-    open func safeParseJSONModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> T {
-        if let array = responseJSONObject as? [Any] {
-            return T.safeDeserialize(from: array, designatedPath: designatedPath)
-        } else {
-            return T.safeDeserialize(from: responseJSONObject as? [AnyHashable: Any], designatedPath: designatedPath)
-        }
-    }
-    
-    /// 快速解析responseJSONObject为JSONModel模型数组，支持具体路径
-    open func parseJSONModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T]? {
-        if let dict = responseJSONObject as? [AnyHashable: Any] {
-            let elements = [T].deserialize(from: dict, designatedPath: designatedPath)
-            return elements?.compactMap({ $0 })
-        } else {
-            let elements = [T].deserialize(from: responseJSONObject as? [Any], designatedPath: designatedPath)
-            return elements?.compactMap({ $0 })
-        }
-    }
-    
-    /// 快速安全解析responseJSONObject为JSONModel模型数组，支持具体路径
-    open func safeParseJSONModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil) -> [T] {
-        if let dict = responseJSONObject as? [AnyHashable: Any] {
-            return [T].safeDeserialize(from: dict, designatedPath: designatedPath)
-        } else {
-            return [T].safeDeserialize(from: responseJSONObject as? [Any], designatedPath: designatedPath)
-        }
-    }
-    
 }
 
 // MARK: - ResponseModelProtocol
@@ -897,6 +895,24 @@ extension ResponseModelProtocol where Self: HTTPRequest {
         return responseJSONObject as? [ResponseModel]
     }
     
+    /// 快捷设置模型响应成功句柄
+    @discardableResult
+    public func responseModel(_ success: ((ResponseModel) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            success?((request as! Self).safeResponseModel)
+        }
+        return self
+    }
+    
+    /// 快捷设置模型数组响应成功句柄
+    @discardableResult
+    public func responseModels(_ success: (([ResponseModel]) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            success?((request as! Self).safeResponseModels)
+        }
+        return self
+    }
+    
 }
 
 extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: SafeType {
@@ -932,7 +948,7 @@ extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: JSONMode
     
     /// 默认实现快速解析响应数据为数据模型，支持具体路径
     public func parseResponseModel(designatedPath: String? = nil) -> ResponseModel? {
-        return parseJSONModel(of: ResponseModel.self, designatedPath: designatedPath)
+        return ResponseModel.deserializeAny(from: responseJSONObject, designatedPath: designatedPath)
     }
     
     /// 默认实现解析响应模型数组方法
@@ -942,7 +958,7 @@ extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: JSONMode
     
     /// 默认实现快速解析响应数据为数据模型，支持具体路径
     public func parseResponseModels(designatedPath: String? = nil) -> [ResponseModel]? {
-        return parseJSONModels(of: ResponseModel.self, designatedPath: designatedPath)
+        return [ResponseModel].deserializeAny(from: responseJSONObject, designatedPath: designatedPath)
     }
     
 }

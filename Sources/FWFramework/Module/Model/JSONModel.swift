@@ -816,6 +816,18 @@ public extension JSONModel {
         return JSONDeserializer<Self>.deserializeFrom(array: array, designatedPath: designatedPath)
     }
     
+    /// Finds the internal JSON field in  `object` as the `designatedPath` specified, and converts it to a Model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
+    static func deserializeAny(from object: Any?, designatedPath: String? = nil) -> Self? {
+        if let dict = object as? [AnyHashable: Any] {
+            return deserialize(from: dict, designatedPath: designatedPath)
+        } else if let array = object as? [Any] {
+            return deserialize(from: array, designatedPath: designatedPath)
+        } else {
+            return deserialize(from: object as? String, designatedPath: designatedPath)
+        }
+    }
+    
     /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and safe converts it to a Model
     /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
     static func safeDeserialize(from dict: [AnyHashable: Any]?, designatedPath: String? = nil) -> Self {
@@ -834,6 +846,18 @@ public extension JSONModel {
         return deserialize(from: array, designatedPath: designatedPath) ?? Self()
     }
     
+    /// Finds the internal JSON field in `object` as the `designatedPath` specified, and safe converts it to a Model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
+    static func safeDeserializeAny(from object: Any?, designatedPath: String? = nil) -> Self {
+        if let dict = object as? [AnyHashable: Any] {
+            return deserialize(from: dict, designatedPath: designatedPath) ?? Self()
+        } else if let array = object as? [Any] {
+            return deserialize(from: array, designatedPath: designatedPath) ?? Self()
+        } else {
+            return deserialize(from: object as? String, designatedPath: designatedPath) ?? Self()
+        }
+    }
+    
     /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and use it to reassign an exist model
     /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
     mutating func merge(from dict: [AnyHashable: Any]?, designatedPath: String? = nil) {
@@ -850,6 +874,18 @@ public extension JSONModel {
     /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
     mutating func merge(from array: [Any]?, designatedPath: String? = nil) {
         JSONDeserializer.update(object: &self, from: array, designatedPath: designatedPath)
+    }
+    
+    /// Finds the internal JSON field in `object` as the `designatedPath` specified, and use it to reassign an exist model
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
+    mutating func mergeAny(from object: Any?, designatedPath: String? = nil) {
+        if let dict = object as? [AnyHashable: Any] {
+            merge(from: dict, designatedPath: designatedPath)
+        } else if let array = object as? [Any] {
+            merge(from: array, designatedPath: designatedPath)
+        } else {
+            merge(from: object as? String, designatedPath: designatedPath)
+        }
     }
 }
 
@@ -871,6 +907,20 @@ public extension Array where Element: JSONModel {
         return JSONDeserializer<Element>.deserializeModelArrayFrom(array: array, designatedPath: designatedPath)
     }
     
+    /// deserialize model array from object
+    static func deserializeAny(from object: Any?, designatedPath: String? = nil) -> [Element]? {
+        if let array = object as? [Any] {
+            let elements = deserialize(from: array, designatedPath: designatedPath)
+            return elements?.compactMap({ $0 })
+        } else if let dict = object as? [AnyHashable: Any] {
+            let elements = deserialize(from: dict, designatedPath: designatedPath)
+            return elements?.compactMap({ $0 })
+        } else {
+            let elements = deserialize(from: object as? String, designatedPath: designatedPath)
+            return elements?.compactMap({ $0 })
+        }
+    }
+    
     /// safe deserialize model array from array
     static func safeDeserialize(from array: [Any]?, designatedPath: String? = nil) -> [Element] {
         let elements = deserialize(from: array, designatedPath: designatedPath) ?? []
@@ -888,6 +938,17 @@ public extension Array where Element: JSONModel {
     static func safeDeserialize(from dict: [AnyHashable: Any]?, designatedPath: String? = nil) -> [Element] {
         let elements = JSONDeserializer<Element>.deserializeModelArrayFrom(dict: dict, designatedPath: designatedPath) ?? []
         return elements.compactMap({ $0 })
+    }
+    
+    /// safe deserialize model array from object
+    static func safeDeserializeAny(from object: Any?, designatedPath: String? = nil) -> [Element] {
+        if let array = object as? [Any] {
+            return safeDeserialize(from: array, designatedPath: designatedPath)
+        } else if let dict = object as? [AnyHashable: Any] {
+            return safeDeserialize(from: dict, designatedPath: designatedPath)
+        } else {
+            return safeDeserialize(from: object as? String, designatedPath: designatedPath)
+        }
     }
 }
 

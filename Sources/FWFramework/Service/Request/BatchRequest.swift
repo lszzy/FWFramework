@@ -84,8 +84,9 @@ open class BatchRequest: NSObject, RequestDelegate {
     
     // MARK: - Public
     /// 开始请求，仅能调用一次
-    open func start() {
-        guard finishedCount <= 0 else { return }
+    @discardableResult
+    open func start() -> Self {
+        guard finishedCount <= 0 else { return self }
         
         failedRequestArray.removeAll()
         RequestManager.shared.addBatchRequest(self)
@@ -97,6 +98,7 @@ open class BatchRequest: NSObject, RequestDelegate {
             req.clearCompletionBlock()
             req.start()
         }
+        return self
     }
     
     /// 停止请求
@@ -110,20 +112,23 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     
     /// 开始请求并指定成功、失败句柄
-    open func start(success: Completion?, failure: Completion?) {
+    @discardableResult
+    open func start(success: Completion?, failure: Completion?) -> Self {
         successCompletionBlock = success
         failureCompletionBlock = failure
-        start()
+        return start()
     }
     
     /// 开始请求并指定完成句柄
-    open func start(completion: Completion?) {
-        start(success: completion, failure: completion)
+    @discardableResult
+    open func start(completion: Completion?) -> Self {
+        return start(success: completion, failure: completion)
     }
     
     /// 开始同步串行请求并指定成功、失败句柄
-    open func startSynchronously(success: Completion?, failure: Completion?) {
-        startSynchronously(filter: nil) { batchRequest in
+    @discardableResult
+    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
+        return startSynchronously(filter: nil) { batchRequest in
             if batchRequest.failedRequest == nil {
                 success?(batchRequest)
             } else {
@@ -133,16 +138,20 @@ open class BatchRequest: NSObject, RequestDelegate {
     }
     
     /// 开始同步串行请求并指定过滤器和完成句柄
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) {
+    @discardableResult
+    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
         RequestManager.shared.synchronousBatchRequest(self, filter: filter, completion: completion)
+        return self
     }
     
     /// 添加请求配件
-    open func addAccessory(_ accessory: RequestAccessoryProtocol) {
+    @discardableResult
+    open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
         if requestAccessories == nil {
             requestAccessories = []
         }
         requestAccessories?.append(accessory)
+        return self
     }
     
     /// 清理完成句柄
