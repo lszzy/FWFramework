@@ -274,7 +274,6 @@ open class HTTPRequest: NSObject {
     private var _cacheSensitiveData: Any?
     
     fileprivate var _responseModel: Any?
-    fileprivate var _responseModels: [Any]?
     
     // MARK: - Lifecycle
     public override init() {
@@ -539,20 +538,20 @@ open class HTTPRequest: NSObject {
     
     /// 快捷设置模型响应成功句柄
     @discardableResult
-    public func responseModel<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         successCompletionBlock = { request in
-            let responseModel = T.safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
+            let responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             success?(responseModel)
         }
         return self
     }
     
-    /// 快捷设置模型数组响应成功句柄
+    /// 快捷设置安全模型响应成功句柄
     @discardableResult
-    public func responseModels<T: JSONModel>(of type: T.Type, designatedPath: String? = nil, success: (([T]) -> Void)?) -> Self {
+    public func safeResponseModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         successCompletionBlock = { request in
-            let responseModels = [T].safeDeserializeAny(from: request.responseJSONObject, designatedPath: designatedPath)
-            success?(responseModels)
+            let responseModel = T.decodeSafeModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            success?(responseModel)
         }
         return self
     }
@@ -1073,23 +1072,18 @@ open class HTTPRequest: NSObject {
 }
 
 // MARK: - ResponseModelRequest
-/// 响应模型协议
+/// 响应模型请求协议
 public protocol ResponseModelRequest {
-    /// 关联响应模型数据类型
+    /// 关联响应模型数据类型，默认支持Any|AnyCodableModel，可扩展
     associatedtype ResponseModel: Any
     
     /// 当前响应模型，默认调用responseModelFilter
     var responseModel: ResponseModel? { get set }
-    /// 当前安全响应模型，默认支持AnyCodableModel，可扩展
-    var safeResponseModel: ResponseModel { get }
     /// 解析响应模型方法
     func responseModelFilter() -> ResponseModel?
-    
-    
-    /// TODO: - TODO
 }
 
-/// HTTPRequest响应模型协议默认实现
+/// HTTPRequest Any响应模型请求协议默认实现
 extension ResponseModelRequest where Self: HTTPRequest {
     
     /// 默认实现当前响应模型，解析成功时自动缓存
@@ -1105,98 +1099,52 @@ extension ResponseModelRequest where Self: HTTPRequest {
         }
     }
     
-    /// 默认实现解析响应模型方法，调用parseResponseModel，具体路径为nil
+    /// 默认实现解析响应模型方法，返回responseJSONObject
     public func responseModelFilter() -> ResponseModel? {
         return responseJSONObject as? ResponseModel
     }
     
-    /// 默认实现当前响应模型数组，解析成功时自动缓存
-    public var responseModels: [ResponseModel]? {
-        get {
-            if _responseModels == nil {
-                _responseModels = responseModelsFilter()
-            }
-            return _responseModels as? [ResponseModel]
-        }
-        set {
-            _responseModels = newValue
-        }
-    }
-    
-    /// 默认实现当前安全响应模型数组
-    public var safeResponseModels: [ResponseModel] {
-        return responseModels ?? []
-    }
-    
-    /// 解析响应模型数组方法
-    public func responseModelsFilter() -> [ResponseModel]? {
-        return responseJSONObject as? [ResponseModel]
-    }
-    
     /// 快捷设置模型响应成功句柄
     @discardableResult
-    public func responseModel(_ success: ((ResponseModel) -> Void)?) -> Self {
+    public func responseModel(_ success: ((ResponseModel?) -> Void)?) -> Self {
+        successCompletionBlock = { request in
+            success?((request as! Self).responseModel)
+        }
+        return self
+    }
+    
+}
+
+/// HTTPRequest AnyCodableModel响应模型请求协议默认实现
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodableModel {
+    
+    /// 默认实现解析响应模型方法，调用decodeResponseModel，具体路径为nil
+    public func responseModelFilter() -> ResponseModel? {
+        return decodeResponseModel()
+    }
+    
+    /// 默认实现解析响应数据为数据模型，支持具体路径
+    public func decodeResponseModel(designatedPath: String? = nil) -> ResponseModel? {
+        return ResponseModel.decodeAnyModel(from: responseJSONObject, designatedPath: designatedPath)
+    }
+    
+}
+
+/// HTTPRequest SafeCodableModel响应模型请求协议默认实现
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeCodableModel {
+    
+    /// 默认实现当前安全响应模型
+    public var safeResponseModel: ResponseModel {
+        return responseModel ?? .init()
+    }
+    
+    /// 快捷设置安全模型响应成功句柄
+    @discardableResult
+    public func safeResponseModel(_ success: ((ResponseModel) -> Void)?) -> Self {
         successCompletionBlock = { request in
             success?((request as! Self).safeResponseModel)
         }
         return self
-    }
-    
-    /// 快捷设置模型数组响应成功句柄
-    @discardableResult
-    public func responseModels(_ success: (([ResponseModel]) -> Void)?) -> Self {
-        successCompletionBlock = { request in
-            success?((request as! Self).safeResponseModels)
-        }
-        return self
-    }
-    
-}
-
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeType {
-    
-    /// 默认实现当前安全响应模型
-    public var safeResponseModel: ResponseModel {
-        return responseModel ?? .safeValue
-    }
-    
-}
-
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: NSObject {
-    
-    /// 默认实现当前安全响应模型
-    public var safeResponseModel: ResponseModel {
-        return responseModel ?? .init()
-    }
-    
-}
-
-/// HTTPRequest JSONModel响应模型协议默认实现
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: JSONModel {
-    
-    /// 默认实现当前安全响应模型
-    public var safeResponseModel: ResponseModel {
-        return responseModel ?? .init()
-    }
-    
-    /// 默认实现解析响应模型方法，调用parseResponseModel，具体路径为nil
-    public func responseModelFilter() -> ResponseModel? {
-        return parseResponseModel()
-    }
-    
-    /// 默认实现快速解析响应数据为数据模型，支持具体路径
-    public func parseResponseModel(designatedPath: String? = nil) -> ResponseModel? {
-        return ResponseModel.deserializeAny(from: responseJSONObject, designatedPath: designatedPath)
-    }
-    
-    /// 默认实现解析响应模型数组方法
-    public func responseModelsFilter() -> [ResponseModel]? {
-        return parseResponseModels()
-    }
-    
-    /// 默认实现快速解析响应数据为数据模型，支持具体路径
-    public func parseResponseModels(designatedPath: String? = nil) -> [ResponseModel]? {
-        return [ResponseModel].deserializeAny(from: responseJSONObject, designatedPath: designatedPath)
     }
     
 }
