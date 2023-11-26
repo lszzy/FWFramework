@@ -17,7 +17,7 @@ public protocol RequestPlugin: AnyObject {
     /// 构建请求响应
     func urlResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?) throws
     
-    /// 是否启用请求重试机制
+    /// 请求重试，返回是否启用默认重试方案
     func retryRequest(for request: HTTPRequest) -> Bool
     
     /// 构建数据任务，需设置requestTask

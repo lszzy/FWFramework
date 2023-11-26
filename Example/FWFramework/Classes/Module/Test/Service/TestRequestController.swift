@@ -9,13 +9,19 @@
 import FWFramework
 import UIKit
 
-// 自动解析ResponseModel实例
+// 解析单个ResponseModel实例
 class TestModelRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = TestModel
     
-    struct TestModel: JSONModel {
+    struct TestModel: AnyJSONModel {
         var name: String = ""
     }
+    
+    /*
+    // 不实现时自动解析，实现为手工解析
+    func responseModelFilter() -> TestModel? {
+        decodeResponseModel()
+    }*/
     
     var testFailed = false
     
@@ -59,13 +65,18 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     
 }
 
-// 手工解析ResponseModel实例
+// 解析ResponseModel数组实例
 class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
-    typealias ResponseModel = TestWeatherModel
+    typealias ResponseModel = [TestWeatherModel]
     
-    struct TestWeatherModel: JSONModel {
+    struct TestWeatherModel: AnyJSONModel {
         var city: String = ""
         var temp: String = ""
+    }
+    
+    // 不实现时自动解析，实现为手工解析
+    func responseModelFilter() -> [TestWeatherModel]? {
+        decodeResponseModel(designatedPath: "weatherinfo")
     }
     
     var testFailed = false
@@ -76,10 +87,6 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
     
     override func responseSerializerType() -> ResponseSerializerType {
         testFailed ? .JSON : .HTTP
-    }
-    
-    func responseModelFilter() -> TestWeatherModel? {
-        parseResponseModel(designatedPath: "weatherinfo")
     }
     
     override func requestRetryCount() -> Int {
@@ -343,17 +350,17 @@ private extension TestRequestController {
             .context(self)
             .autoShowLoading(true)
             .autoShowError(true)
-            .responseModel(of: TestModelRequest.TestModel.self) { [weak self] responseModel in
-                var message = "json请求成功: \n\(responseModel.name)"
+            .safeResponseModel(of: TestModelRequest.TestModel.self, success: { [weak self] responseModel in
+                var message = "json请求成功：\n" + responseModel.name
                 let serverTime = request.responseServerTime
                 if serverTime > 0 {
                     Date.app.currentTime = serverTime
                     message += "\n当前服务器时间：\(serverTime)"
                 }
                 self?.app.showMessage(text: message)
-            }
-            .responseError { error in
-            }
+            })
+            .responseError({ error in
+            })
             .start()
     }
     
@@ -385,7 +392,7 @@ private extension TestRequestController {
         request.start { [weak self] (req: TestWeatherRequest) in
             guard req.isFinished else { return }
             
-            self?.app.showMessage(text: "天气请求成功: \n\(req.safeResponseModel.city) - \(req.safeResponseModel.temp)℃")
+            self?.app.showMessage(text: "天气请求成功: \n\(req.safeResponseModel.first?.city ?? "") - \(req.safeResponseModel.first?.temp ?? "")℃")
         }
     }
     

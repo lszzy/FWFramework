@@ -610,8 +610,40 @@ fileprivate func merge(children: [(String, Any)], propertyInfos: [PropertyInfo])
     return result
 }
 
-// this's a workaround before https://bugs.swift.org/browse/SR-5223 fixed
 extension NSObject {
+    /// Finds the internal object in `object` as the `designatedPath` specified
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
+    public static func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
+        var result: Any? = object
+        var abort = false
+        if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
+            var next = object
+            paths.forEach({ (seg) in
+                if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
+                    return
+                }
+                if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
+                    if let array = next as? [Any], index < array.count {
+                        let _next = array[index]
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
+                } else {
+                    if let _next = (next as? [String: Any])?[seg] {
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
+                }
+            })
+        }
+        return abort ? nil : result
+    }
+    
+    // this's a workaround before https://bugs.swift.org/browse/SR-5223 fixed
     static func createInstance() -> NSObject {
         return self.init()
     }
@@ -979,7 +1011,7 @@ public class JSONDeserializer<T: JSONModel> {
     public static func deserializeFrom(dict: [String: Any]?, designatedPath: String? = nil) -> T? {
         var targetDict = dict
         if let path = designatedPath {
-            targetDict = getInnerObject(inside: targetDict, by: path) as? [String: Any]
+            targetDict = NSObject.getInnerObject(inside: targetDict, by: path) as? [String: Any]
         }
         if let _dict = targetDict {
             return T._transform(dict: _dict) as? T
@@ -995,7 +1027,7 @@ public class JSONDeserializer<T: JSONModel> {
         }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: _json.data(using: String.Encoding.utf8)!, options: .allowFragments)
-            if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
+            if let jsonDict = NSObject.getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
                 return self.deserializeFrom(dict: jsonDict)
             }
         } catch let error {
@@ -1010,7 +1042,7 @@ public class JSONDeserializer<T: JSONModel> {
         guard let jsonObject = array else {
             return nil
         }
-        if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
+        if let jsonDict = NSObject.getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
             return self.deserializeFrom(dict: jsonDict)
         }
         return nil
@@ -1021,7 +1053,7 @@ public class JSONDeserializer<T: JSONModel> {
     public static func update(object: inout T, from dict: [String: Any]?, designatedPath: String? = nil) {
         var targetDict = dict
         if let path = designatedPath {
-            targetDict = getInnerObject(inside: targetDict, by: path) as? [String: Any]
+            targetDict = NSObject.getInnerObject(inside: targetDict, by: path) as? [String: Any]
         }
         if let _dict = targetDict {
             T._transform(dict: _dict, to: &object)
@@ -1050,7 +1082,7 @@ public class JSONDeserializer<T: JSONModel> {
         guard let jsonObject = array else {
             return
         }
-        if let jsonDict = getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
+        if let jsonDict = NSObject.getInnerObject(inside: jsonObject, by: designatedPath) as? [String: Any] {
             update(object: &object, from: jsonDict)
         }
     }
@@ -1063,7 +1095,7 @@ public class JSONDeserializer<T: JSONModel> {
         }
         do {
             let jsonObject = try JSONSerialization.jsonObject(with: _json.data(using: String.Encoding.utf8)!, options: .allowFragments)
-            if let jsonArray = getInnerObject(inside: jsonObject, by: designatedPath) as? [Any] {
+            if let jsonArray = NSObject.getInnerObject(inside: jsonObject, by: designatedPath) as? [Any] {
                 return jsonArray.map({ (item) -> T? in
                     return self.deserializeFrom(dict: item as? [String: Any])
                 })
@@ -1080,7 +1112,7 @@ public class JSONDeserializer<T: JSONModel> {
         guard let jsonObject = dict else {
             return nil
         }
-        if let jsonArray = getInnerObject(inside: jsonObject, by: designatedPath) as? [Any] {
+        if let jsonArray = NSObject.getInnerObject(inside: jsonObject, by: designatedPath) as? [Any] {
             return jsonArray.map({ (item) -> T? in
                 return self.deserializeFrom(dict: item as? [String: Any])
             })
@@ -1093,44 +1125,12 @@ public class JSONDeserializer<T: JSONModel> {
         guard let _arr = array else {
             return nil
         }
-        if let jsonArray = getInnerObject(inside: _arr, by: designatedPath) as? [Any] {
+        if let jsonArray = NSObject.getInnerObject(inside: _arr, by: designatedPath) as? [Any] {
             return jsonArray.map({ (item) -> T? in
                 return self.deserializeFrom(dict: item as? [String: Any])
             })
         }
         return nil
-    }
-    
-    /// Finds the internal object in `object` as the `designatedPath` specified
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
-    public static func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
-        var result: Any? = object
-        var abort = false
-        if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
-            var next = object
-            paths.forEach({ (seg) in
-                if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
-                    return
-                }
-                if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
-                    if let array = next as? [Any], index < array.count {
-                        let _next = array[index]
-                        result = _next
-                        next = _next
-                    } else {
-                        abort = true
-                    }
-                } else {
-                    if let _next = (next as? [String: Any])?[seg] {
-                        result = _next
-                        next = _next
-                    } else {
-                        abort = true
-                    }
-                }
-            })
-        }
-        return abort ? nil : result
     }
 }
 
