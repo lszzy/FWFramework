@@ -1072,9 +1072,9 @@ open class HTTPRequest: NSObject {
     
 }
 
-// MARK: - ResponseModelProtocol
+// MARK: - ResponseModelRequest
 /// 响应模型协议
-public protocol ResponseModelProtocol {
+public protocol ResponseModelRequest {
     /// 关联响应模型数据类型
     associatedtype ResponseModel: Any
     
@@ -1094,7 +1094,7 @@ public protocol ResponseModelProtocol {
 }
 
 /// HTTPRequest响应模型协议默认实现
-extension ResponseModelProtocol where Self: HTTPRequest {
+extension ResponseModelRequest where Self: HTTPRequest {
     
     /// 默认实现当前响应模型，解析成功时自动缓存
     public var responseModel: ResponseModel? {
@@ -1157,7 +1157,7 @@ extension ResponseModelProtocol where Self: HTTPRequest {
     
 }
 
-extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: SafeType {
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeType {
     
     /// 默认实现当前安全响应模型
     public var safeResponseModel: ResponseModel {
@@ -1166,7 +1166,7 @@ extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: SafeType
     
 }
 
-extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: NSObject {
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: NSObject {
     
     /// 默认实现当前安全响应模型
     public var safeResponseModel: ResponseModel {
@@ -1176,7 +1176,7 @@ extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: NSObject
 }
 
 /// HTTPRequest JSONModel响应模型协议默认实现
-extension ResponseModelProtocol where Self: HTTPRequest, ResponseModel: JSONModel {
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: JSONModel {
     
     /// 默认实现当前安全响应模型
     public var safeResponseModel: ResponseModel {
