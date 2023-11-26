@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - AnyCoderModel
-/// 通用编码模型协议，可扩展
+/// 通用编码模型协议，默认兼容SafeType|NSObject|Codable|JSON|JSONModel，可扩展
 public protocol AnyCoderModel {
     /// 从Object解码成可选Model
     static func decodeAnyModel(from object: Any?) -> Self?
@@ -35,6 +35,32 @@ extension AnyCoderModel {
     /// 默认实现从Model编码成Object
     public func encodeAnyObject() -> Any? {
         return self
+    }
+}
+
+// MARK: - AnyCoderModel+Array
+extension Array where Element: AnyCoderModel {
+    /// 从Object解码成可选Model数组
+    public static func decodeAnyModel(from object: Any?) -> Array<Element>? {
+        if let array = object as? [Any] {
+            return array.compactMap { Element.decodeAnyModel(from: $0) }
+        }
+        return nil
+    }
+    
+    /// 从Object安全解码成Model数组
+    public static func safeDecodeAnyModel(from object: Any?) -> Array<Element> {
+        return decodeAnyModel(from: object) ?? safeAnyModel()
+    }
+    
+    /// 解码失败时创建安全Model数组
+    public static func safeAnyModel() -> Array<Element> {
+        return []
+    }
+    
+    /// 从数组Model编码成Object
+    public func encodeAnyObject() -> Any? {
+        return compactMap { $0.encodeAnyObject() }
     }
 }
 
@@ -82,6 +108,50 @@ extension AnyCoderModel where Self: NSObject {
     }
 }
 
+// MARK: - AnyCoderModel+Codable
+extension AnyCoderModel where Self: Codable {
+    /// 默认实现从Object解码成可选Model
+    public static func decodeAnyModel(from object: Any?) -> Self? {
+        var data: Data? = object as? Data
+        if data == nil, let object = object {
+            if let string = object as? String {
+                data = string.data(using: .utf8)
+            } else {
+                data = Data.fw_jsonEncode(object)
+            }
+        }
+        return try? data?.fw_decoded(as: self)
+    }
+    
+    /// 默认实现从Model编码成Object
+    public func encodeAnyObject() -> Any? {
+        let data = try? Data.fw_encoded(self)
+        return data?.fw_jsonDecode
+    }
+}
+
+
+// MARK: - AnyCoderModel+JSON
+/// 默认实现编码模型协议
+extension JSON: AnyCoderModel {}
+
+extension AnyCoderModel where Self == JSON {
+    /// 默认实现从Object解码成可选Model
+    public static func decodeAnyModel(from object: Any?) -> Self? {
+        return object != nil ? JSON(object) : nil
+    }
+    
+    /// 默认实现解码失败时创建安全Model
+    public static func safeAnyModel() -> Self {
+        return .null
+    }
+    
+    /// 默认实现从Model编码成Object
+    public func encodeAnyObject() -> Any? {
+        return self.object
+    }
+}
+
 // MARK: - AnyCoderModel+JSONModel
 /// 通用JSONModel编码模型协议
 public typealias AnyJSONModel = AnyCoderModel & JSONModel
@@ -118,32 +188,6 @@ extension AnyCoderModel where Self: JSONModel {
     }
 }
 
-// MARK: - AnyCoderModel+Array
-extension Array where Element: AnyCoderModel {
-    /// 从Object解码成可选Model数组
-    public static func decodeAnyModel(from object: Any?) -> Array<Element>? {
-        if let array = object as? [Any] {
-            return array.compactMap { Element.decodeAnyModel(from: $0) }
-        }
-        return nil
-    }
-    
-    /// 从Object安全解码成Model数组
-    public static func safeDecodeAnyModel(from object: Any?) -> Array<Element> {
-        return decodeAnyModel(from: object) ?? safeAnyModel()
-    }
-    
-    /// 解码失败时创建安全Model数组
-    public static func safeAnyModel() -> Array<Element> {
-        return []
-    }
-    
-    /// 从数组Model编码成Object
-    public func encodeAnyObject() -> Any? {
-        return compactMap { $0.encodeAnyObject() }
-    }
-}
-
 extension Array where Element: AnyJSONModel {
     /// 从Object解码成可选Model数组
     public static func decodeAnyModel(from object: Any?) -> Array<Element>? {
@@ -163,11 +207,6 @@ extension Array where Element: AnyJSONModel {
     /// 从Object安全解码成Model数组，支持具体路径
     public static func safeDecodeAnyModel(from object: Any?, designatedPath: String?) -> Array<Element> {
         return decodeAnyModel(from: object, designatedPath: designatedPath) ?? safeAnyModel()
-    }
-    
-    /// 解码失败时创建安全Model数组
-    public static func safeAnyModel() -> Array<Element> {
-        return []
     }
     
     /// 从数组Model编码成Object
