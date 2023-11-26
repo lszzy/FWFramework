@@ -1080,7 +1080,7 @@ public protocol ResponseModelRequest {
     
     /// 当前响应模型，默认调用responseModelFilter
     var responseModel: ResponseModel? { get set }
-    /// 当前安全响应模型，默认支持AnyCoderModel，可扩展
+    /// 当前安全响应模型，默认支持AnyCodableModel，可扩展
     var safeResponseModel: ResponseModel { get }
     /// 解析响应模型方法
     func responseModelFilter() -> ResponseModel?

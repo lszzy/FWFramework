@@ -612,6 +612,7 @@ extension Optional {
 public protocol SafeType {
     static var safeValue: Self { get }
     var isEmpty: Bool { get }
+    init()
 }
 
 extension SafeType {
@@ -682,6 +683,10 @@ extension Bool: SafeType {
 extension URL: SafeType {
     public static var safeValue: URL = NSURL() as URL
     public var isEmpty: Bool { return absoluteString.isEmpty }
+    public init() {
+        self.init(string: " ")!
+        self = NSURL() as URL
+    }
 }
 extension Data: SafeType {
     public static var safeValue: Data = Data()
