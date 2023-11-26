@@ -389,12 +389,12 @@ open class HTTPRequest: NSObject {
         return _requestMethod ?? .GET
     }
     
-    /// 请求附加参数，默认nil
+    /// 请求附加参数，建议[String: Any]?，默认nil
     open func requestArgument() -> Any? {
         return _requestArgument
     }
     
-    /// 请求附加参数，默认nil
+    /// 请求附加参数，建议[String: Any]?，默认nil
     @discardableResult
     open func requestArgument(_ argument: Any?) -> Self {
         _requestArgument = argument
