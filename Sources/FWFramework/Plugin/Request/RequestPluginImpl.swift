@@ -15,24 +15,28 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     @objc(sharedInstance)
     public static let shared = RequestPluginImpl()
     
-    /// 自定义安全策略，默认default
-    open var securityPolicy = SecurityPolicy.default()
-    /// 是否移除响应JSON中的NSNull值，默认true
-    open var removeNullValues = true
     /// SessionConfiguration配置，默认nil
     open var sessionConfiguration: URLSessionConfiguration?
+    /// 自定义安全策略，默认default
+    open var securityPolicy = SecurityPolicy.default()
     /// SessionTaskMetrics配置句柄，默认nil
     open var collectingMetricsBlock: ((_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
     
-    private var allStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
-    private var processingQueue = DispatchQueue(label: "site.wuyong.queue.request.processing", attributes: .concurrent)
+    /// 是否移除响应JSON中的NSNull值，默认true
+    open var removeNullValues = true
+    /// 有效状态码范围，默认为(100-600)
+    open var acceptableStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
+    /// 有效的contentType列表，默认nil不修改
+    open var acceptableContentTypes: Set<String>?
+    
+    private var completionQueue = DispatchQueue(label: "site.wuyong.queue.request.completion", attributes: .concurrent)
     
     /// 管理器
     open lazy var manager: HTTPSessionManager = {
         let result = HTTPSessionManager(sessionConfiguration: sessionConfiguration)
         result.securityPolicy = securityPolicy
         result.responseSerializer = httpResponseSerializer
-        result.completionQueue = processingQueue
+        result.completionQueue = completionQueue
         result.setTaskDidFinishCollectingMetricsBlock(collectingMetricsBlock)
         return result
     }()
@@ -40,14 +44,20 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     /// HTTP响应序列化
     open lazy var httpResponseSerializer: HTTPResponseSerializer = {
         let result = HTTPResponseSerializer()
-        result.acceptableStatusCodes = allStatusCodes
+        result.acceptableStatusCodes = acceptableStatusCodes
+        if let acceptableContentTypes = acceptableContentTypes {
+            result.acceptableContentTypes = acceptableContentTypes
+        }
         return result
     }()
     
     /// JSON响应序列化
     open lazy var jsonResponseSerializer: JSONResponseSerializer = {
         let result = JSONResponseSerializer()
-        result.acceptableStatusCodes = allStatusCodes
+        result.acceptableStatusCodes = acceptableStatusCodes
+        if let acceptableContentTypes = acceptableContentTypes {
+            result.acceptableContentTypes = acceptableContentTypes
+        }
         result.removesKeysWithNullValues = removeNullValues
         return result
     }()
@@ -55,19 +65,41 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     /// XML响应序列化
     open lazy var xmlParserResponseSerialzier: XMLParserResponseSerializer = {
         let result = XMLParserResponseSerializer()
-        result.acceptableStatusCodes = allStatusCodes
+        result.acceptableStatusCodes = acceptableStatusCodes
+        if let acceptableContentTypes = acceptableContentTypes {
+            result.acceptableContentTypes = acceptableContentTypes
+        }
         return result
     }()
-    
-    /// 重置URLSessionManager
-    open func resetURLSessionManager(configuration: URLSessionConfiguration? = nil) {
-        manager = HTTPSessionManager(sessionConfiguration: configuration)
-    }
     
     // MARK: - RequestPlugin
     open func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
         let urlString = RequestManager.shared.buildRequestUrl(request)
-        let requestSerializer = requestSerializer(for: request)
+        
+        let requestSerializer: HTTPRequestSerializer
+        if request.requestSerializerType() == .JSON {
+            requestSerializer = JSONRequestSerializer()
+        } else {
+            requestSerializer = HTTPRequestSerializer()
+        }
+        
+        requestSerializer.timeoutInterval = request.requestTimeoutInterval()
+        requestSerializer.allowsCellularAccess = request.allowsCellularAccess()
+        if let cachePolicy = request.requestCachePolicy() {
+            requestSerializer.cachePolicy = cachePolicy
+        }
+        
+        if let headerFieldArray = request.requestAuthorizationHeaders(),
+           !headerFieldArray.isEmpty {
+            requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
+        }
+        
+        if let headerFieldDictionary = request.requestHeaders(),
+           !headerFieldDictionary.isEmpty {
+            for (fieldKey, fieldValue) in headerFieldDictionary {
+                requestSerializer.setValue(fieldValue, forHTTPHeaderField: fieldKey)
+            }
+        }
         
         if request.constructingBodyBlock != nil {
             var error: NSError?
@@ -83,33 +115,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument())
         return urlReqeust
-    }
-    
-    open func urlResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?) throws {
-        request.responseObject = responseObject
-        if let responseData = request.responseObject as? Data {
-            request.responseData = responseData
-            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-            
-            var error: NSError?
-            switch request.responseSerializerType() {
-            case .JSON:
-                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &error)
-                request.responseJSONObject = request.responseObject
-            case .xmlParser:
-                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &error)
-            default:
-                break
-            }
-            
-            if let error = error {
-                throw error
-            }
-        }
-    }
-    
-    open func retryRequest(for request: HTTPRequest) -> Bool {
-        return true
     }
     
     open func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
@@ -139,33 +144,31 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         request.requestTask?.cancel()
     }
     
-    // MARK: - Private
-    private func requestSerializer(for request: HTTPRequest) -> HTTPRequestSerializer {
-        let requestSerializer: HTTPRequestSerializer
-        if request.requestSerializerType() == .JSON {
-            requestSerializer = JSONRequestSerializer()
-        } else {
-            requestSerializer = HTTPRequestSerializer()
-        }
-        
-        requestSerializer.timeoutInterval = request.requestTimeoutInterval()
-        requestSerializer.allowsCellularAccess = request.allowsCellularAccess()
-        if let cachePolicy = request.requestCachePolicy() {
-            requestSerializer.cachePolicy = cachePolicy
-        }
-        
-        if let headerFieldArray = request.requestAuthorizationHeaders(),
-           !headerFieldArray.isEmpty {
-            requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
-        }
-        
-        if let headerFieldDictionary = request.requestHeaders(),
-           !headerFieldDictionary.isEmpty {
-            for (fieldKey, fieldValue) in headerFieldDictionary {
-                requestSerializer.setValue(fieldValue, forHTTPHeaderField: fieldKey)
+    open func urlResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?) throws {
+        request.responseObject = responseObject
+        if let responseData = request.responseObject as? Data {
+            request.responseData = responseData
+            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
+            
+            var error: NSError?
+            switch request.responseSerializerType() {
+            case .JSON:
+                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &error)
+                request.responseJSONObject = request.responseObject
+            case .xmlParser:
+                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &error)
+            default:
+                break
+            }
+            
+            if let error = error {
+                throw error
             }
         }
-        return requestSerializer
+    }
+    
+    open func retryRequest(for request: HTTPRequest) -> Bool {
+        return true
     }
     
 }
