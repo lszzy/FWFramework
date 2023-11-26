@@ -10,7 +10,7 @@ import FWFramework
 import UIKit
 
 // 自动解析ResponseModel实例
-class TestModelRequest: HTTPRequest, ResponseModelProtocol {
+class TestModelRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = TestModel
     
     struct TestModel: JSONModel {
@@ -60,7 +60,7 @@ class TestModelRequest: HTTPRequest, ResponseModelProtocol {
 }
 
 // 手工解析ResponseModel实例
-class TestWeatherRequest: HTTPRequest, ResponseModelProtocol {
+class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = TestWeatherModel
     
     struct TestWeatherModel: JSONModel {

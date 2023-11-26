@@ -1080,36 +1080,38 @@ public class JSONDeserializer<T: JSONModel> {
         }
         return nil
     }
-}
-
-fileprivate func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
-    var result: Any? = object
-    var abort = false
-    if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
-        var next = object
-        paths.forEach({ (seg) in
-            if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
-                return
-            }
-            if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
-                if let array = next as? [Any], index < array.count {
-                    let _next = array[index]
-                    result = _next
-                    next = _next
-                } else {
-                    abort = true
+    
+    /// Finds the internal object in `object` as the `designatedPath` specified
+    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
+    public static func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
+        var result: Any? = object
+        var abort = false
+        if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
+            var next = object
+            paths.forEach({ (seg) in
+                if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
+                    return
                 }
-            } else {
-                if let _next = (next as? [String: Any])?[seg] {
-                    result = _next
-                    next = _next
+                if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
+                    if let array = next as? [Any], index < array.count {
+                        let _next = array[index]
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
                 } else {
-                    abort = true
+                    if let _next = (next as? [String: Any])?[seg] {
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
                 }
-            }
-        })
+            })
+        }
+        return abort ? nil : result
     }
-    return abort ? nil : result
 }
 
 // MARK: - Serializer
