@@ -1080,17 +1080,13 @@ public protocol ResponseModelRequest {
     
     /// 当前响应模型，默认调用responseModelFilter
     var responseModel: ResponseModel? { get set }
-    /// 当前安全响应模型，默认实现SafeType、JSONModel、NSObject，可扩展
+    /// 当前安全响应模型，默认支持AnyCoderModel，可扩展
     var safeResponseModel: ResponseModel { get }
     /// 解析响应模型方法
     func responseModelFilter() -> ResponseModel?
     
-    /// 当前响应模型数组，默认调用responseModelsFilter
-    var responseModels: [ResponseModel]? { get set }
-    /// 当前安全响应模型数组
-    var safeResponseModels: [ResponseModel] { get }
-    /// 解析响应模型数组方法
-    func responseModelsFilter() -> [ResponseModel]?
+    
+    /// TODO: - TODO
 }
 
 /// HTTPRequest响应模型协议默认实现

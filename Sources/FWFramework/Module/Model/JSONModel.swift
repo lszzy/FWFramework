@@ -824,7 +824,11 @@ public extension JSONModel {
         } else if let array = object as? [Any] {
             return deserialize(from: array, designatedPath: designatedPath)
         } else {
-            return deserialize(from: object as? String, designatedPath: designatedPath)
+            var string = object as? String
+            if string == nil, let data = object as? Data {
+                string = String(data: data, encoding: .utf8)
+            }
+            return deserialize(from: string, designatedPath: designatedPath)
         }
     }
     
@@ -854,7 +858,11 @@ public extension JSONModel {
         } else if let array = object as? [Any] {
             return deserialize(from: array, designatedPath: designatedPath) ?? Self()
         } else {
-            return deserialize(from: object as? String, designatedPath: designatedPath) ?? Self()
+            var string = object as? String
+            if string == nil, let data = object as? Data {
+                string = String(data: data, encoding: .utf8)
+            }
+            return deserialize(from: string, designatedPath: designatedPath) ?? Self()
         }
     }
     
@@ -884,7 +892,11 @@ public extension JSONModel {
         } else if let array = object as? [Any] {
             merge(from: array, designatedPath: designatedPath)
         } else {
-            merge(from: object as? String, designatedPath: designatedPath)
+            var string = object as? String
+            if string == nil, let data = object as? Data {
+                string = String(data: data, encoding: .utf8)
+            }
+            merge(from: string, designatedPath: designatedPath)
         }
     }
 }
@@ -916,7 +928,11 @@ public extension Array where Element: JSONModel {
             let elements = deserialize(from: dict, designatedPath: designatedPath)
             return elements?.compactMap({ $0 })
         } else {
-            let elements = deserialize(from: object as? String, designatedPath: designatedPath)
+            var string = object as? String
+            if string == nil, let data = object as? Data {
+                string = String(data: data, encoding: .utf8)
+            }
+            let elements = deserialize(from: string, designatedPath: designatedPath)
             return elements?.compactMap({ $0 })
         }
     }
@@ -947,7 +963,11 @@ public extension Array where Element: JSONModel {
         } else if let dict = object as? [AnyHashable: Any] {
             return safeDeserialize(from: dict, designatedPath: designatedPath)
         } else {
-            return safeDeserialize(from: object as? String, designatedPath: designatedPath)
+            var string = object as? String
+            if string == nil, let data = object as? Data {
+                string = String(data: data, encoding: .utf8)
+            }
+            return safeDeserialize(from: string, designatedPath: designatedPath)
         }
     }
 }
