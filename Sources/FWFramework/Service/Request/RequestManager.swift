@@ -318,27 +318,17 @@ open class RequestManager: NSObject {
         }
     }
     
-    private func handleResponse(_ requestIdentifier: Int, response: URLResponse?, responseObject: Any?, error: Error?) {
+    private func handleResponse(_ requestIdentifier: Int, response: URLResponse, responseObject: Any?, error: Error?) {
         lock.lock()
         let request = requestsRecord[requestIdentifier]
         lock.unlock()
         guard let request = request else { return }
-        
-        var serializationError: Error?
-        do {
-            try request.config.requestPlugin.urlResponse(for: request, response: response, responseObject: responseObject)
-        } catch let responseError {
-            serializationError = responseError
-        }
         
         var requestError: Error?
         var succeed = true
         if error != nil {
             succeed = false
             requestError = error
-        } else if serializationError != nil {
-            succeed = false
-            requestError = serializationError
         } else {
             do {
                 try validateResponse(request)
