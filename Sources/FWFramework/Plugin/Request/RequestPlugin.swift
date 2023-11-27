@@ -11,14 +11,11 @@ import Foundation
 /// 请求插件协议
 public protocol RequestPlugin: AnyObject {
     
-    /// 构建URLRequest方法
-    func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest
-    
     /// 构建数据任务，需设置requestTask
-    func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?)
+    func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws
     
     /// 构建下载任务，支持断点续传，须设置requestTask
-    func downloadTask(for request: HTTPRequest, urlRequest: URLRequest?, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?)
+    func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws
     
     /// 开始请求
     func startRequest(for request: HTTPRequest)
@@ -36,19 +33,14 @@ public protocol RequestPlugin: AnyObject {
 
 extension RequestPlugin {
     
-    /// 默认实现构建URLRequest方法
-    public func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
-        return try RequestPluginImpl.shared.urlRequest(for: request)
-    }
-    
     /// 默认实现构建数据任务，需设置requestTask
-    public func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        RequestPluginImpl.shared.dataTask(for: request, urlRequest: urlRequest, completionHandler: completionHandler)
+    public func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
+        try RequestPluginImpl.shared.dataTask(for: request, completionHandler: completionHandler)
     }
     
     /// 默认实现构建下载任务，支持断点续传，须设置requestTask
-    public func downloadTask(for request: HTTPRequest, urlRequest: URLRequest?, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
-        RequestPluginImpl.shared.downloadTask(for: request, urlRequest: urlRequest, resumeData: resumeData, destination: destination, completionHandler: completionHandler)
+    public func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
+        try RequestPluginImpl.shared.downloadTask(for: request, resumeData: resumeData, destination: destination, completionHandler: completionHandler)
     }
     
     /// 默认实现开始请求
