@@ -32,7 +32,6 @@ public enum RequestSerializerType: Int {
 public enum ResponseSerializerType: Int {
     case HTTP = 0
     case JSON
-    case xmlParser
 }
 
 /// 请求优先级
@@ -204,9 +203,6 @@ open class HTTPRequest: NSObject {
             if cacheJSON != nil {
                 return cacheJSON
             }
-            if cacheXML != nil {
-                return cacheXML
-            }
             if cacheData != nil {
                 return cacheData
             }
@@ -262,7 +258,6 @@ open class HTTPRequest: NSObject {
     private var cacheData: Data?
     private var cacheString: String?
     private var cacheJSON: Any?
-    private var cacheXML: XMLParser?
     private var cacheMetadata: RequestCacheMetadata?
     private var cancelled = false
     
@@ -1015,9 +1010,6 @@ open class HTTPRequest: NSObject {
             case .JSON:
                 cacheJSON = cacheData?.fw_jsonDecode
                 return cacheJSON != nil
-            case .xmlParser:
-                cacheXML = XMLParser(data: data)
-                return true
             }
         }
         return false
@@ -1025,7 +1017,6 @@ open class HTTPRequest: NSObject {
     
     private func clearCacheVariables() {
         cacheData = nil
-        cacheXML = nil
         cacheJSON = nil
         cacheString = nil
         cacheMetadata = nil
