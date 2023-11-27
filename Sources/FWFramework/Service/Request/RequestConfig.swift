@@ -316,8 +316,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
             decisionHandler(error != nil || statusCode < 200 || statusCode > 299)
         }
         
-        let urlRequest = try RequestManager.shared.buildUrlRequest(request)
-        request.config.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { response, responseObject, error in
+        try request.config.requestPlugin.dataTask(for: request) { response, responseObject, error in
             if request.isCancelled { return }
             
             request.requestTotalCount = retryCount - remainCount + 1

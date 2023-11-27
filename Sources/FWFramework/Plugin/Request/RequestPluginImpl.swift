@@ -72,9 +72,36 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return result
     }()
     
-    // MARK: - RequestPlugin
-    open func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
-        let urlString = RequestManager.shared.buildRequestUrl(request)
+    // MARK: - Public
+    /// 构建请求URLRequest
+    open func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
+        if let customUrlRequest = request.customUrlRequest() {
+            return customUrlRequest
+        }
+        
+        let urlRequest = try urlRequest(for: request)
+        
+        request.filterUrlRequest(urlRequest)
+        
+        let filters = request.config.requestFilters
+        for filter in filters {
+            filter.filterUrlRequest?(urlRequest, with: request)
+        }
+        
+        if request.requestSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        if request.responseSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        }
+        
+        return urlRequest as URLRequest
+    }
+    
+    private func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
+        let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
         
         let requestSerializer: HTTPRequestSerializer
         if request.requestSerializerType() == .JSON {
@@ -103,7 +130,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         if request.constructingBodyBlock != nil {
             var error: NSError?
-            let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
+            let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
                 request.constructingBodyBlock?(formData)
             }, error: &error)
             
@@ -113,15 +140,17 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             return urlRequest
         }
         
-        let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: urlString, parameters: request.requestArgument())
+        let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
         return urlReqeust
     }
     
-    open func dataTask(for request: HTTPRequest, urlRequest: URLRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    // MARK: - RequestPlugin
+    open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
+        let urlRequest = try buildUrlRequest(for: request)
         request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: completionHandler)
     }
     
-    open func downloadTask(for request: HTTPRequest, urlRequest: URLRequest?, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+    open func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
         if let resumeData = resumeData {
             request.requestTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
@@ -129,11 +158,10 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             return
         }
         
-        if let urlRequest = urlRequest {
-            request.requestTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
-                return URL(fileURLWithPath: destination, isDirectory: false)
-            }, completionHandler: completionHandler)
-        }
+        let urlRequest = try buildUrlRequest(for: request)
+        request.requestTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
+            return URL(fileURLWithPath: destination, isDirectory: false)
+        }, completionHandler: completionHandler)
     }
     
     open func startRequest(for request: HTTPRequest) {

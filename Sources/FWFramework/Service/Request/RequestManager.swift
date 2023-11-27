@@ -152,11 +152,10 @@ open class RequestManager: NSObject {
     }
     
     /// 构建请求URL
-    open func buildRequestUrl(_ request: HTTPRequest) -> String {
+    open func buildRequestUrl(for request: HTTPRequest) -> URL {
         var requestUrl = request.requestUrl()
-        let tempUrl = URL.fw_url(string: requestUrl)
-        if tempUrl != nil, tempUrl?.host != nil, tempUrl?.scheme != nil {
-            return requestUrl
+        if let url = URL.fw_url(string: requestUrl), url.host != nil, url.scheme != nil {
+            return url
         }
         
         let filters = request.config.requestFilters
@@ -177,36 +176,7 @@ open class RequestManager: NSObject {
         if !baseUrl.isEmpty, !baseUrl.hasSuffix("/") {
             url = url?.appendingPathComponent("")
         }
-        
-        let resultUrl = URL.fw_url(string: requestUrl, relativeTo: url)
-        return resultUrl?.absoluteString ?? ""
-    }
-    
-    /// 构建请求URLRequest
-    open func buildUrlRequest(_ request: HTTPRequest) throws -> URLRequest {
-        if let customUrlRequest = request.customUrlRequest() {
-            return customUrlRequest
-        }
-        
-        let urlRequest = try request.config.requestPlugin.urlRequest(for: request)
-        
-        request.filterUrlRequest(urlRequest)
-        
-        let filters = request.config.requestFilters
-        for filter in filters {
-            filter.filterUrlRequest?(urlRequest, with: request)
-        }
-        
-        if request.requestSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        if request.responseSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        }
-        
-        return urlRequest as URLRequest
+        return URL.fw_url(string: requestUrl, relativeTo: url) ?? NSURL() as URL
     }
     
     /// 获取响应编码
@@ -300,8 +270,7 @@ open class RequestManager: NSObject {
             }
         } else {
             let startTime = Date().timeIntervalSince1970
-            let urlRequest = try RequestManager.shared.buildUrlRequest(request)
-            request.config.requestPlugin.dataTask(for: request, urlRequest: urlRequest) { [weak self] response, responseObject, error in
+            try request.config.requestPlugin.dataTask(for: request) { [weak self] response, responseObject, error in
                 request.requestTotalCount = 1
                 request.requestTotalTime = Date().timeIntervalSince1970 - startTime
                 
@@ -311,8 +280,6 @@ open class RequestManager: NSObject {
     }
     
     private func downloadTask(for request: HTTPRequest) throws {
-        let urlRequest = try buildUrlRequest(request)
-        
         let downloadPath = request.resumableDownloadPath ?? ""
         var downloadTargetPath: String = ""
         var isDirectory: ObjCBool = false
@@ -320,7 +287,8 @@ open class RequestManager: NSObject {
             isDirectory = false
         }
         if isDirectory.boolValue {
-            let fileName = urlRequest.url?.lastPathComponent ?? ""
+            let requestUrl = buildRequestUrl(for: request)
+            let fileName = requestUrl.lastPathComponent
             downloadTargetPath = NSString.path(withComponents: [downloadPath, fileName])
         } else {
             downloadTargetPath = downloadPath
@@ -337,14 +305,14 @@ open class RequestManager: NSObject {
             let resumeDataIsValid = validateResumeData(data)
             
             if resumeDataFileExists && resumeDataIsValid {
-                request.config.requestPlugin.downloadTask(for: request, urlRequest: nil, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
+                try request.config.requestPlugin.downloadTask(for: request, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
                     self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
                 }
                 resumeSucceed = request.requestTask != nil
             }
         }
         if !resumeSucceed {
-            request.config.requestPlugin.downloadTask(for: request, urlRequest: urlRequest as URLRequest, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
+            try request.config.requestPlugin.downloadTask(for: request, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
                 self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
             }
         }
