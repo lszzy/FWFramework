@@ -168,21 +168,31 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     // MARK: - RequestPlugin
     open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
         let urlRequest = try buildUrlRequest(for: request)
-        request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: completionHandler)
+        request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: { [weak self] response, responseObject, error in
+            self?.handleResponse(request, response: response, responseObject: responseObject, error: error, completionHandler: completionHandler)
+        })
     }
     
     open func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
         if let resumeData = resumeData {
             request.requestTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
-            }, completionHandler: completionHandler)
+            }, completionHandler: { [weak self] response, fileUrl, error in
+                self?.handleResponse(request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
+                    completionHandler?(response, responseObject as? URL, error)
+                })
+            })
             return
         }
         
         let urlRequest = try buildUrlRequest(for: request)
         request.requestTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
             return URL(fileURLWithPath: destination, isDirectory: false)
-        }, completionHandler: completionHandler)
+        }, completionHandler: { [weak self] response, fileUrl, error in
+            self?.handleResponse(request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
+                completionHandler?(response, responseObject as? URL, error)
+            })
+        })
     }
     
     open func startRequest(for request: HTTPRequest) {
