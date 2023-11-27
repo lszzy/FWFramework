@@ -9,26 +9,32 @@ import Foundation
 
 // MARK: - RequestFilter
 /// 请求过滤器协议
-@objc public protocol RequestFilterProtocol {
+public protocol RequestFilterProtocol: AnyObject {
     
     /// 请求URL过滤器，返回处理后的URL
-    @objc optional func filterUrl(_ originUrl: String, with request: HTTPRequest) -> String
-    
-    /// 请求缓存路径过滤镜，返回处理后的路径
-    @objc optional func filterCacheDirPath(_ originPath: String, with request: HTTPRequest) -> String
+    func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
     
     /// 请求URLRequest过滤器，处理后才发送请求
-    @objc optional func filterUrlRequest(_ urlRequest: NSMutableURLRequest, with request: HTTPRequest)
+    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest)
     
     /// 请求Response过滤器，处理后才调用回调
-    func filterResponse(with request: HTTPRequest) throws
+    func filterResponse(for request: HTTPRequest) throws
     
 }
 
 extension RequestFilterProtocol {
     
+    /// 默认实现请求URL过滤器，返回处理后的URL
+    public func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String {
+        return originUrl
+    }
+    
+    /// 默认实现请求URLRequest过滤器，处理后才发送请求
+    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {
+    }
+    
     /// 默认实现请求Response过滤器，处理后才调用回调
-    public func filterResponse(with request: HTTPRequest) throws {
+    public func filterResponse(for request: HTTPRequest) throws {
     }
     
 }
@@ -84,6 +90,8 @@ open class RequestConfig: NSObject {
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
     
+    /// 请求缓存路径过滤句柄，返回处理后的路径
+    open var cacheDirPathFilter: ((_ request: HTTPRequest, _ originPath: String) -> String)?
     /// 自定义请求上下文配件句柄，默认nil
     open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     /// 自定义显示错误方法，主线程优先调用，默认nil

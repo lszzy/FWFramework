@@ -160,9 +160,7 @@ open class RequestManager: NSObject {
         
         let filters = request.config.requestFilters
         for filter in filters {
-            if let filterUrl = filter.filterUrl?(requestUrl, with: request) {
-                requestUrl = filterUrl
-            }
+            requestUrl = filter.filterUrl(requestUrl, for: request)
         }
         
         let baseUrl: String
@@ -360,7 +358,7 @@ open class RequestManager: NSObject {
             let filters = request.config.requestFilters
             for filter in filters {
                 do {
-                    try filter.filterResponse(with: request)
+                    try filter.filterResponse(for: request)
                 } catch let responseError {
                     succeed = false
                     requestError = responseError

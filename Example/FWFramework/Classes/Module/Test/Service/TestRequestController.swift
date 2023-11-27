@@ -37,7 +37,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
         30
     }
     
-    override func filterUrlRequest(_ urlRequest: NSMutableURLRequest) {
+    override func filterUrlRequest(_ urlRequest: inout URLRequest) {
         urlRequest.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         
         // 一般在filterUrlRequest中进行请求签名，注意header不能含有中文等非法字符
