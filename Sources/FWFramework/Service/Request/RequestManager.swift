@@ -305,15 +305,15 @@ open class RequestManager: NSObject {
             let resumeDataIsValid = validateResumeData(data)
             
             if resumeDataFileExists && resumeDataIsValid {
-                try request.config.requestPlugin.downloadTask(for: request, resumeData: data, destination: downloadTargetPath) { [weak self] response, filePath, error in
-                    self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+                try request.config.requestPlugin.downloadTask(for: request, resumeData: data, destination: downloadTargetPath) { [weak self] response, fileUrl, error in
+                    self?.handleResponse(request.requestIdentifier, response: response, responseObject: fileUrl, error: error)
                 }
                 resumeSucceed = request.requestTask != nil
             }
         }
         if !resumeSucceed {
-            try request.config.requestPlugin.downloadTask(for: request, resumeData: nil, destination: downloadTargetPath) { [weak self] response, filePath, error in
-                self?.handleResponse(request.requestIdentifier, response: response, responseObject: filePath, error: error)
+            try request.config.requestPlugin.downloadTask(for: request, resumeData: nil, destination: downloadTargetPath) { [weak self] response, fileUrl, error in
+                self?.handleResponse(request.requestIdentifier, response: response, responseObject: fileUrl, error: error)
             }
         }
     }
