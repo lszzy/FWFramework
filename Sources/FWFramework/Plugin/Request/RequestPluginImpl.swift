@@ -62,16 +62,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return result
     }()
     
-    /// XML响应序列化
-    open lazy var xmlParserResponseSerialzier: XMLParserResponseSerializer = {
-        let result = XMLParserResponseSerializer()
-        result.acceptableStatusCodes = acceptableStatusCodes
-        if let acceptableContentTypes = acceptableContentTypes {
-            result.acceptableContentTypes = acceptableContentTypes
-        }
-        return result
-    }()
-    
     // MARK: - Public
     /// 构建请求URLRequest
     open func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
@@ -155,8 +145,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             case .JSON:
                 request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
                 request.responseJSONObject = request.responseObject
-            case .xmlParser:
-                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &serializationError)
             default:
                 break
             }
