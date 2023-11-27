@@ -117,9 +117,9 @@ class TestUploadRequest: HTTPRequest {
         
         constructingBodyBlock { [weak self] formData in
             if let imageData = self?.uploadData as? Data {
-                formData.append(imageData, withName: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
+                formData.append(imageData, name: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
             } else if let videoURL = self?.uploadData as? URL {
-                formData.append(videoURL, withName: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: "mp4"))
+                formData.append(videoURL, name: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: "mp4"))
             }
             // 默认插件限制宽度以模拟长时间上传
             if let streamingFormData = formData as? StreamingMultipartFormData {

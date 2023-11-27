@@ -202,27 +202,31 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
 
 // MARK: - StreamingMultipartFormData+RequestPluginImpl
 extension StreamingMultipartFormData: RequestMultipartFormData {
-    public func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?) {
-        if let fileName = fileName, let mimeType = mimeType {
-            appendPart(withFileData: data, name: name, fileName: fileName, mimeType: mimeType)
-        } else {
-            appendPart(withForm: data, name: name)
-        }
+    public func append(_ formData: Data, name: String) {
+        appendPart(withForm: formData, name: name)
     }
     
-    public func append(_ fileURL: URL, withName name: String, fileName: String?, mimeType: String?) {
-        if let fileName = fileName, let mimeType = mimeType {
-            try? appendPart(withFileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
-        } else {
-            try? appendPart(withFileURL: fileURL, name: name)
-        }
+    public func append(_ fileData: Data, name: String, fileName: String, mimeType: String) {
+        appendPart(withFileData: fileData, name: name, fileName: fileName, mimeType: mimeType)
     }
     
-    public func append(_ inputStream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String) {
+    public func append(_ fileURL: URL, name: String) {
+        try? appendPart(withFileURL: fileURL, name: name)
+    }
+    
+    public func append(_ fileURL: URL, name: String, fileName: String, mimeType: String) {
+        try? appendPart(withFileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
+    }
+    
+    public func append(_ inputStream: InputStream, length: UInt64, name: String, fileName: String, mimeType: String) {
         appendPart(with: inputStream, name: name, fileName: fileName, length: Int64(length), mimeType: mimeType)
     }
     
-    public func append(_ inputStream: InputStream, withLength length: UInt64, headers: [String : String]) {
+    public func append(_ inputStream: InputStream, length: UInt64, headers: [String: String]) {
         appendPart(with: inputStream, length: Int64(length), headers: headers)
+    }
+    
+    public func append(_ body: Data, headers: [String: String]) {
+        appendPart(withHeaders: headers, body: body)
     }
 }
