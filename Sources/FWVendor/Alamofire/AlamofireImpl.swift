@@ -34,6 +34,8 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     /// 事件模拟器数组，默认空
     open var eventMonitors: [EventMonitor] = []
     
+    /// 是否移除响应JSON中的NSNull值，默认true
+    open var removeNullValues = true
     /// 有效状态码范围，默认为(100-600)
     open var acceptableStatusCodes: [Int] = Array(100..<600)
     /// 有效的contentType列表，默认nil不修改
@@ -87,89 +89,41 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         }
     }
     
-    private func handleResponse(_ request: HTTPRequest, alamofireRequest: Request, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        if let dataRequest = alamofireRequest as? DataRequest {
-            dataRequest.validate(statusCode: acceptableStatusCodes)
-            if let contentTypes = acceptableContentTypes {
-                dataRequest.validate(contentType: contentTypes)
-            }
+    private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        var serializationError: Error?
+        request.responseObject = responseObject
+        if let responseData = request.responseObject as? Data {
+            request.responseData = responseData
+            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
             
             switch request.responseSerializerType() {
             case .JSON:
-                dataRequest.responseJSON { response in
-                    switch response.result {
-                    case .success(let responseObject):
-                        request.responseObject = responseObject
-                        request.responseJSONObject = responseObject
-                    default:
-                        break
+                var jsonObject = responseData.fw_jsonDecode
+                if jsonObject != nil {
+                    if removeNullValues {
+                        jsonObject = JSONObjectByRemovingKeysWithNullValues(jsonObject!, readingOptions: [])
                     }
-                    
-                    if let responseData = response.data {
-                        request.responseData = responseData
-                        request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-                    }
-                    
-                    completionHandler?(response.response ?? .init(), request.responseObject, response.error)
+                } else {
+                    serializationError = RequestError.validationInvalidJSONFormat
                 }
+                
+                request.responseObject = jsonObject
+                request.responseJSONObject = request.responseObject
             default:
-                dataRequest.response { response in
-                    request.responseObject = response.data
-                    
-                    if let responseData = response.data {
-                        request.responseData = responseData
-                        request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-                    }
-                    
-                    completionHandler?(response.response ?? .init(), request.responseObject, response.error)
-                }
-            }
-        } else if let downloadRequest = alamofireRequest as? DownloadRequest {
-            downloadRequest.validate(statusCode: acceptableStatusCodes)
-            if let contentTypes = acceptableContentTypes {
-                downloadRequest.validate(contentType: contentTypes)
-            }
-            
-            switch request.responseSerializerType() {
-            case .JSON:
-                downloadRequest.responseJSON { response in
-                    request.responseObject = response.fileURL
-                    
-                    if let responseData = response.resumeData {
-                        request.responseData = responseData
-                        request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-                    }
-                    
-                    completionHandler?(response.response ?? .init(), request.responseObject, response.error)
-                }
-            default:
-                downloadRequest.response { response in
-                    request.responseObject = response.fileURL
-                    
-                    if let responseData = response.resumeData {
-                        request.responseData = responseData
-                        request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-                    }
-                    
-                    completionHandler?(response.response ?? .init(), request.responseObject, response.error)
-                }
+                break
             }
         }
         
-        request.requestAdapter = alamofireRequest
-        request.requestTaskBlock = { request in
-            return (request.requestAdapter as? Request)?.task
-        }
-        request.requestTask = alamofireRequest.task
+        completionHandler?(response, request.responseObject, error ?? serializationError)
     }
     
     // MARK: - RequestPlugin
     open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
-        let alamofireRequest: DataRequest
+        let dataRequest: DataRequest
         let requestIntercepter = requestIntercepterBlock?(request)
         
         if let customUrlRequest = request.customUrlRequest() {
-            alamofireRequest = session.request(customUrlRequest, interceptor: requestIntercepter)
+            dataRequest = session.request(customUrlRequest, interceptor: requestIntercepter)
         } else {
             let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
             let method: HTTPMethod = .init(rawValue: request.requestMethod().rawValue)
@@ -180,20 +134,10 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             }
             
             if request.constructingBodyBlock != nil {
-                alamofireRequest = session.upload(multipartFormData: { formData in
-                    if let parameters = parameters {
-                        parameters.forEach { (field, value) in
-                            var data: Data?
-                            if let valueData = value as? Data {
-                                data = valueData
-                            } else if value is NSNull {
-                                data = Data()
-                            } else {
-                                data = String.fw_safeString(value).data(using: .utf8)
-                            }
-                            if let data = data {
-                                formData.append(data, name: field)
-                            }
+                dataRequest = session.upload(multipartFormData: { formData in
+                    parameters?.forEach { (field, value) in
+                        if let data = (value as? Data) ?? String.fw_safeString(value).data(using: .utf8) {
+                            formData.append(data, name: field)
                         }
                     }
                     
@@ -202,7 +146,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
                     self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
                 })
             } else {
-                alamofireRequest = session.request(requestUrl, method: method, parameters: parameters, encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
+                dataRequest = session.request(requestUrl, method: method, parameters: parameters, encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
                     self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
                 })
             }
@@ -211,22 +155,32 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
-            alamofireRequest.authenticate(username: authUser, password: authPwd)
+            dataRequest.authenticate(username: authUser, password: authPwd)
         }
-        
         if let progressBlock = request.uploadProgressBlock {
-            alamofireRequest.uploadProgress(closure: progressBlock)
+            dataRequest.uploadProgress(closure: progressBlock)
+        }
+        dataRequest.validate(statusCode: acceptableStatusCodes)
+        if let contentTypes = acceptableContentTypes {
+            dataRequest.validate(contentType: contentTypes)
+        }
+        dataRequest.response { [weak self] response in
+            self?.handleResponse(request, response: response.response ?? .init(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
         }
         
-        handleResponse(request, alamofireRequest: alamofireRequest, completionHandler: completionHandler)
+        request.requestAdapter = dataRequest
+        request.requestTaskBlock = { request in
+            return (request.requestAdapter as? Request)?.task
+        }
+        request.requestTask = dataRequest.task
     }
     
     open func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
-        let alamofireRequest: DownloadRequest
+        let downloadRequest: DownloadRequest
         let requestIntercepter = requestIntercepterBlock?(request)
         
         if let resumeData = resumeData {
-            alamofireRequest = session.download(resumingWith: resumeData, interceptor: requestIntercepter, to: { _, _ in
+            downloadRequest = session.download(resumingWith: resumeData, interceptor: requestIntercepter, to: { _, _ in
                 return (URL(fileURLWithPath: destination, isDirectory: false), [])
             })
         } else {
@@ -237,7 +191,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
                 headers = .init(requestHeaders)
             }
             
-            alamofireRequest = session.download(requestUrl, method: method, parameters: request.requestArgument() as? [String: Any], encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
+            downloadRequest = session.download(requestUrl, method: method, parameters: request.requestArgument() as? [String: Any], encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
                 self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
             }, to: { _, _ in
                 return (URL(fileURLWithPath: destination, isDirectory: false), [])
@@ -247,16 +201,26 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
-            alamofireRequest.authenticate(username: authUser, password: authPwd)
+            downloadRequest.authenticate(username: authUser, password: authPwd)
         }
-        
         if let progressBlock = request.downloadProgressBlock {
-            alamofireRequest.downloadProgress(closure: progressBlock)
+            downloadRequest.downloadProgress(closure: progressBlock)
+        }
+        downloadRequest.validate(statusCode: acceptableStatusCodes)
+        if let contentTypes = acceptableContentTypes {
+            downloadRequest.validate(contentType: contentTypes)
+        }
+        downloadRequest.response { [weak self] response in
+            self?.handleResponse(request, response: response.response ?? .init(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
+                completionHandler?(response, responseObject as? URL, error)
+            })
         }
         
-        handleResponse(request, alamofireRequest: alamofireRequest) { response, responseObject, error in
-            completionHandler?(response, responseObject as? URL, error)
+        request.requestAdapter = downloadRequest
+        request.requestTaskBlock = { request in
+            return (request.requestAdapter as? Request)?.task
         }
+        request.requestTask = downloadRequest.task
     }
     
     open func startRequest(for request: HTTPRequest) {
