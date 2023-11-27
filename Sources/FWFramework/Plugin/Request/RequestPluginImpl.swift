@@ -144,6 +144,27 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return urlReqeust
     }
     
+    private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        var serializationError: NSError?
+        request.responseObject = responseObject
+        if let responseData = request.responseObject as? Data {
+            request.responseData = responseData
+            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
+            
+            switch request.responseSerializerType() {
+            case .JSON:
+                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
+                request.responseJSONObject = request.responseObject
+            case .xmlParser:
+                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &serializationError)
+            default:
+                break
+            }
+        }
+        
+        completionHandler?(response, request.responseObject, error ?? serializationError)
+    }
+    
     // MARK: - RequestPlugin
     open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
         let urlRequest = try buildUrlRequest(for: request)
@@ -170,29 +191,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     
     open func cancelRequest(for request: HTTPRequest) {
         request.requestTask?.cancel()
-    }
-    
-    open func urlResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?) throws {
-        request.responseObject = responseObject
-        if let responseData = request.responseObject as? Data {
-            request.responseData = responseData
-            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-            
-            var error: NSError?
-            switch request.responseSerializerType() {
-            case .JSON:
-                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &error)
-                request.responseJSONObject = request.responseObject
-            case .xmlParser:
-                request.responseObject = xmlParserResponseSerialzier.responseObject(for: response, data: request.responseData, error: &error)
-            default:
-                break
-            }
-            
-            if let error = error {
-                throw error
-            }
-        }
     }
     
     open func retryRequest(for request: HTTPRequest) -> Bool {
