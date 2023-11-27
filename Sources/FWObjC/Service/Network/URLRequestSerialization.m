@@ -790,6 +790,20 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     [self.bodyStream appendHTTPBodyPart:bodyPart];
 }
 
+- (void)appendPartWithInputStream:(NSInputStream *)inputStream
+                           length:(int64_t)length
+                          headers:(NSDictionary<NSString *,NSString *> *)headers
+{
+    __FWHTTPBodyPart *bodyPart = [[__FWHTTPBodyPart alloc] init];
+    bodyPart.stringEncoding = self.stringEncoding;
+    bodyPart.headers = headers;
+    bodyPart.boundary = self.boundary;
+    bodyPart.bodyContentLength = length;
+    bodyPart.body = inputStream;
+
+    [self.bodyStream appendHTTPBodyPart:bodyPart];
+}
+
 - (void)throttleBandwidthWithPacketSize:(NSUInteger)numberOfBytes
                                   delay:(NSTimeInterval)delay
 {

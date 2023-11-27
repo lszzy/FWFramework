@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - RequestPluginImpl
 /// 默认请求插件
 open class RequestPluginImpl: NSObject, RequestPlugin {
     
@@ -121,7 +122,9 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         if request.constructingBodyBlock != nil {
             var error: NSError?
             let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
-                request.constructingBodyBlock?(formData)
+                if let requestFormData = formData as? RequestMultipartFormData {
+                    request.constructingBodyBlock?(requestFormData)
+                }
             }, error: &error)
             
             if let error = error {
@@ -130,8 +133,8 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             return urlRequest as URLRequest
         }
         
-        let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
-        return urlReqeust as URLRequest
+        let urlRequest = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
+        return urlRequest as URLRequest
     }
     
     private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
@@ -195,4 +198,31 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return true
     }
     
+}
+
+// MARK: - StreamingMultipartFormData+RequestPluginImpl
+extension StreamingMultipartFormData: RequestMultipartFormData {
+    public func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?) {
+        if let fileName = fileName, let mimeType = mimeType {
+            appendPart(withFileData: data, name: name, fileName: fileName, mimeType: mimeType)
+        } else {
+            appendPart(withForm: data, name: name)
+        }
+    }
+    
+    public func append(_ fileURL: URL, withName name: String, fileName: String?, mimeType: String?) {
+        if let fileName = fileName, let mimeType = mimeType {
+            try? appendPart(withFileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
+        } else {
+            try? appendPart(withFileURL: fileURL, name: name)
+        }
+    }
+    
+    public func append(_ inputStream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String) {
+        appendPart(with: inputStream, name: name, fileName: fileName, length: Int64(length), mimeType: mimeType)
+    }
+    
+    public func append(_ inputStream: InputStream, withLength length: UInt64, headers: [String : String]) {
+        appendPart(with: inputStream, length: Int64(length), headers: headers)
+    }
 }

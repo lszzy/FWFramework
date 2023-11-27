@@ -361,6 +361,17 @@ NS_SWIFT_NAME(MultipartFormData)
                          body:(NSData *)body;
 
 /**
+ Appends HTTP headers, followed by the data from the input stream and the multipart form boundary.
+
+ @param inputStream The input stream to be appended to the form data
+ @param length The length of the specified input stream in bytes.
+ @param headers The HTTP headers to be appended to the form data.
+ */
+- (void)appendPartWithInputStream:(nullable NSInputStream *)inputStream
+                           length:(int64_t)length
+                          headers:(nullable NSDictionary <NSString *, NSString *> *)headers;
+
+/**
  Throttles request bandwidth by limiting the packet size and adding a delay for each chunk read from the upload stream.
 
  When uploading over a 3G or EDGE connection, requests may fail with "request body stream exhausted". Setting a maximum packet size and delay according to the recommended values (`kFWUploadStream3GSuggestedPacketSize` and `kFWUploadStream3GSuggestedDelay`) lowers the risk of the input stream exceeding its allocated bandwidth. Unfortunately, there is no definite way to distinguish between a 3G, EDGE, or LTE connection over `NSURLConnection`. As such, it is not recommended that you throttle bandwidth based solely on network reachability. Instead, you should consider checking for the "request body stream exhausted" in a failure block, and then retrying the request with throttled bandwidth.

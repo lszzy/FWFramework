@@ -41,9 +41,6 @@ public enum RequestPriority: Int {
     case high = 4
 }
 
-/// 请求表单数据定义
-public typealias RequestMultipartFormData = MultipartFormData
-
 /// 请求代理
 public protocol RequestDelegate: AnyObject {
     /// 请求完成
@@ -1072,6 +1069,41 @@ open class HTTPRequest: NSObject {
         return path
     }
     
+}
+
+// MARK: - RequestMultipartFormData
+/// 请求表单数据定义
+public protocol RequestMultipartFormData: AnyObject {
+    
+    /// 添加文件数据，指定fileName和mimeType
+    func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?)
+    
+    /// 添加文件，指定fileName和mimeType
+    func append(_ fileURL: URL, withName name: String, fileName: String?, mimeType: String?)
+    
+    /// 添加输入流，指定fileName和mimeType
+    func append(_ inputStream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String)
+    
+    /// 添加输入流，指定头信息
+    func append(_ inputStream: InputStream, withLength length: UInt64, headers: [String: String])
+    
+}
+
+extension RequestMultipartFormData {
+    /// 添加文件数据，自动处理fileName和mimeType
+    public func append(_ data: Data, withName name: String) {
+        append(data, withName: name, fileName: nil, mimeType: nil)
+    }
+    
+    /// 添加文件，自动处理fileName和mimeType
+    public func append(_ fileURL: URL, withName name: String) {
+        append(fileURL, withName: name, fileName: nil, mimeType: nil)
+    }
+    
+    /// 添加主题数据，指定头信息
+    public func append(_ body: Data, withHeaders headers: [String: String]) {
+        append(InputStream(data: body), withLength: UInt64(body.count), headers: headers)
+    }
 }
 
 // MARK: - ResponseModelRequest
