@@ -1075,35 +1075,27 @@ open class HTTPRequest: NSObject {
 /// 请求表单数据定义
 public protocol RequestMultipartFormData: AnyObject {
     
-    /// 添加文件数据，指定fileName和mimeType
-    func append(_ data: Data, withName name: String, fileName: String?, mimeType: String?)
+    /// 添加表单数据，指定名称
+    func append(_ formData: Data, name: String)
     
-    /// 添加文件，指定fileName和mimeType
-    func append(_ fileURL: URL, withName name: String, fileName: String?, mimeType: String?)
+    /// 添加文件数据，指定fileName、mimeType
+    func append(_ fileData: Data, name: String, fileName: String, mimeType: String)
     
-    /// 添加输入流，指定fileName和mimeType
-    func append(_ inputStream: InputStream, withLength length: UInt64, name: String, fileName: String, mimeType: String)
+    /// 添加文件URL，自动处理fileName、mimeType
+    func append(_ fileURL: URL, name: String)
+    
+    /// 添加文件URL，指定fileName、mimeType
+    func append(_ fileURL: URL, name: String, fileName: String, mimeType: String)
+    
+    /// 添加输入流，指定fileName、mimeType
+    func append(_ inputStream: InputStream, length: UInt64, name: String, fileName: String, mimeType: String)
     
     /// 添加输入流，指定头信息
-    func append(_ inputStream: InputStream, withLength length: UInt64, headers: [String: String])
+    func append(_ inputStream: InputStream, length: UInt64, headers: [String: String])
     
-}
-
-extension RequestMultipartFormData {
-    /// 添加文件数据，自动处理fileName和mimeType
-    public func append(_ data: Data, withName name: String) {
-        append(data, withName: name, fileName: nil, mimeType: nil)
-    }
+    /// 添加body数据，指定头信息
+    func append(_ body: Data, headers: [String: String])
     
-    /// 添加文件，自动处理fileName和mimeType
-    public func append(_ fileURL: URL, withName name: String) {
-        append(fileURL, withName: name, fileName: nil, mimeType: nil)
-    }
-    
-    /// 添加主题数据，指定头信息
-    public func append(_ body: Data, withHeaders headers: [String: String]) {
-        append(InputStream(data: body), withLength: UInt64(body.count), headers: headers)
-    }
 }
 
 // MARK: - ResponseModelRequest
