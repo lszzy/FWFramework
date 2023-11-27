@@ -486,7 +486,7 @@ private extension TestRequestController {
         request.start { [weak self] _ in
             self?.app.hideProgress()
             
-            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"])
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"]) + "&t=\(Date.app.currentTime)"
             let filePath = (self?.testPath ?? "").app.appendingPath(request.fileName)
             let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
@@ -517,7 +517,7 @@ private extension TestRequestController {
         request.context = self
         request.autoShowLoading = true
         request.start { [weak self] _ in
-            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"]) + "&t=\(Date.app.currentTime)"
             let filePath = request.savePath
             let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
