@@ -599,7 +599,7 @@ open class HTTPRequest: NSObject {
     }
     
     /// 请求发送前URLRequest过滤方法，默认不处理
-    open func filterUrlRequest(_ urlRequest: NSMutableURLRequest) {
+    open func filterUrlRequest(_ urlRequest: inout URLRequest) {
     }
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
@@ -945,11 +945,8 @@ open class HTTPRequest: NSObject {
         let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
         var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
         
-        let filters = config.requestFilters
-        for filter in filters {
-            if let filterPath = filter.filterCacheDirPath?(path, with: self) {
-                path = filterPath
-            }
+        if let filterPath = config.cacheDirPathFilter?(self, path) {
+            path = filterPath
         }
         
         createCacheDirectory(path)

@@ -69,13 +69,13 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             return customUrlRequest
         }
         
-        let urlRequest = try urlRequest(for: request)
+        var urlRequest = try urlRequest(for: request)
         
-        request.filterUrlRequest(urlRequest)
+        request.filterUrlRequest(&urlRequest)
         
         let filters = request.config.requestFilters
         for filter in filters {
-            filter.filterUrlRequest?(urlRequest, with: request)
+            filter.filterUrlRequest(&urlRequest, for: request)
         }
         
         if request.requestSerializerType() == .JSON,
@@ -87,10 +87,10 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         }
         
-        return urlRequest as URLRequest
+        return urlRequest
     }
     
-    private func urlRequest(for request: HTTPRequest) throws -> NSMutableURLRequest {
+    private func urlRequest(for request: HTTPRequest) throws -> URLRequest {
         let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
         
         let requestSerializer: HTTPRequestSerializer
@@ -127,11 +127,11 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             if let error = error {
                 throw error
             }
-            return urlRequest
+            return urlRequest as URLRequest
         }
         
         let urlReqeust = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
-        return urlReqeust
+        return urlReqeust as URLRequest
     }
     
     private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
