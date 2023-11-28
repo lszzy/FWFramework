@@ -196,9 +196,7 @@ public class VersionManager: NSObject {
     }
     
     private func checkCallback(_ completion: (() -> Void)?) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
+        DispatchQueue.main.async {
             if let latestVersion = self.latestVersion {
                 let result = self.currentVersion.compare(latestVersion, options: .numeric)
                 switch result {

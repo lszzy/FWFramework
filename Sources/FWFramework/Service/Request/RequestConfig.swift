@@ -347,10 +347,10 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
                     if request.isCancelled { return }
                     
                     if retry {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) { [weak self] in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
                             if request.isCancelled { return }
                             
-                            self?.startRetryRequest(request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
+                            self.startRetryRequest(request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
                         }
                     } else {
                         completionHandler?(response, responseObject, error)

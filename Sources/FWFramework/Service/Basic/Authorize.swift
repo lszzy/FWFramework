@@ -210,8 +210,7 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
         
         // 主线程回调，仅一次
         if completionBlock != nil {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+            DispatchQueue.main.async {
                 self.completionBlock?(self.authorizeStatus())
                 self.completionBlock = nil
             }
@@ -239,8 +238,7 @@ private class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }
@@ -273,8 +271,7 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }
@@ -477,16 +474,14 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
+                    DispatchQueue.main.async {
                         completion?(self.authorizeStatus())
                     }
                 }
             }
         } else {
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }

@@ -347,8 +347,8 @@ open class RequestManager: NSObject {
             requestDidFail(request, error: requestError ?? RequestError.unknownError)
         }
         
-        DispatchQueue.main.async { [weak self] in
-            self?.removeRecord(for: request)
+        DispatchQueue.main.async {
+            self.removeRecord(for: request)
             request.clearCompletionBlock()
         }
     }
