@@ -614,7 +614,7 @@ extension Optional {
 }
 
 // MARK: - SafeType
-public protocol SafeType {
+public protocol SafeType: SafeCodableModel {
     static var safeValue: Self { get }
     var isEmpty: Bool { get }
     init()
