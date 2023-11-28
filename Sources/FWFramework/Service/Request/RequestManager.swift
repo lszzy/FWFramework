@@ -262,7 +262,8 @@ open class RequestManager: NSObject {
     
     private func dataTask(for request: HTTPRequest) throws {
         let retryRequest = request.config.requestPlugin.retryRequest(for: request)
-        if retryRequest, let requestRetrier = request.config.requestRetrier {
+        if retryRequest, let requestRetrier = request.config.requestRetrier,
+           requestRetrier.shouldRetryDataTask(for: request) {
             try requestRetrier.retryDataTask(for: request) { [weak self] response, responseObject, error in
                 self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
