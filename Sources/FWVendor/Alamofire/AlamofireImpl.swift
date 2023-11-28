@@ -245,6 +245,9 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     
 }
 
+// MARK: - AFError+AlamofireImpl
+extension AFError: RequestErrorProtocol, UnderlyingErrorProtocol {}
+
 // MARK: - MultipartFormData+AlamofireImpl
 extension Alamofire.MultipartFormData: RequestMultipartFormData {
     public func append(_ formData: Data, name: String) {

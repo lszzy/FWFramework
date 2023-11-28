@@ -1163,8 +1163,16 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeCodab
 }
 
 // MARK: - RequestError
+/// 请求错误协议，用于错误判断
+public protocol RequestErrorProtocol {}
+
+/// 嵌套错误协议，获取内部错误
+public protocol UnderlyingErrorProtocol {
+    var underlyingError: Error? { get }
+}
+
 /// 请求错误
-public enum RequestError: Swift.Error, CustomNSError {
+public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     case unknownError
     case cacheExpired
     case cacheVersionMismatch
@@ -1226,23 +1234,36 @@ public enum RequestError: Swift.Error, CustomNSError {
         }
     }
     
-    /// 判断是否是网络请求错误
+    /// 判断是否是网络请求错误，支持嵌套请求错误
     public static func isRequestError(_ error: Error?) -> Bool {
-        guard let error = error as? NSError else { return false }
-        if error.domain == NSURLErrorDomain { return true }
-        return error.fw_propertyBool(forName: "isRequestError")
+        guard let error = error else { return false }
+        if error is RequestErrorProtocol { return true }
+        if (error as NSError).fw_propertyBool(forName: "isRequestError") { return true }
+        if (error as NSError).domain == NSURLErrorDomain { return true }
+        if let underlyingError = error as? UnderlyingErrorProtocol {
+            return isRequestError(underlyingError.underlyingError)
+        }
+        return false
     }
     
-    /// 判断是否是网络连接错误
+    /// 判断是否是网络连接错误，支持嵌套请求错误
     public static func isConnectionError(_ error: Error?) -> Bool {
-        guard let error = error as? NSError else { return false }
-        return connectionErrorCodes.contains(error.code)
+        guard let error = error else { return false }
+        if connectionErrorCodes.contains((error as NSError).code) { return true }
+        if let underlyingError = error as? UnderlyingErrorProtocol {
+            return isConnectionError(underlyingError.underlyingError)
+        }
+        return false
     }
     
-    /// 判断是否是网络取消错误
+    /// 判断是否是网络取消错误，支持嵌套请求错误
     public static func isCancelledError(_ error: Error?) -> Bool {
-        guard let error = error as? NSError else { return false }
-        return cancelledErrorCodes.contains(error.code)
+        guard let error = error else { return false }
+        if cancelledErrorCodes.contains((error as NSError).code) { return true }
+        if let underlyingError = error as? UnderlyingErrorProtocol {
+            return isCancelledError(underlyingError.underlyingError)
+        }
+        return false
     }
     
     private static let connectionErrorCodes: [Int] = [
