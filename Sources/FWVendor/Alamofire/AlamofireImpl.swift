@@ -41,8 +41,8 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: [String]?
     
-    /// 自定义请求重试句柄，返回是否启用默认重试方案，默认nil
-    open var requestRetryBlock: ((HTTPRequest) -> Bool)?
+    /// 自定义请求重试过滤句柄，返回是否启用默认重试方案，默认nil
+    open var retryRequestFilter: ((HTTPRequest) -> Bool)?
     /// 自定义请求intercepter句柄，如配置RetryPolicy等，默认nil
     open var requestIntercepterBlock: ((HTTPRequest) -> RequestInterceptor?)?
     
@@ -240,7 +240,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     }
     
     open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
-        return requestRetryBlock?(request) ?? true
+        return retryRequestFilter?(request) ?? true
     }
     
 }

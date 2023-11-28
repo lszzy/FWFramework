@@ -92,6 +92,8 @@ open class RequestConfig: NSObject {
     
     /// 请求缓存路径过滤句柄，返回处理后的路径
     open var cacheDirPathFilter: ((_ request: HTTPRequest, _ originPath: String) -> String)?
+    /// 是否后台预加载数据模型过滤句柄，默认nil
+    open var preloadModelFilter: ((HTTPRequest) -> Bool)?
     /// 自定义请求上下文配件句柄，默认nil
     open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     /// 自定义显示错误方法，主线程优先调用，默认nil
