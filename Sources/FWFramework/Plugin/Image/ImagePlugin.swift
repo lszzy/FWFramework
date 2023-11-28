@@ -315,9 +315,18 @@ extension ImagePlugin {
 
     /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
     public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+        // 兼容URLRequest.cachePolicy缓存策略
+        var targetOptions = options
+        if let urlRequest = url as? URLRequest,
+            (urlRequest.cachePolicy == .reloadIgnoringLocalCacheData ||
+             urlRequest.cachePolicy == .reloadIgnoringLocalAndRemoteCacheData ||
+             urlRequest.cachePolicy == .reloadIgnoringCacheData) {
+            targetOptions.formUnion(.ignoreCache)
+        }
+        
         let imageURL = UIImage.fw_imageURL(for: url)
         let imagePlugin = self.fw_imagePlugin ?? ImagePluginImpl.shared
-        imagePlugin.setImageURL(url: imageURL, placeholder: placeholderImage, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: self)
+        imagePlugin.setImageURL(url: imageURL, placeholder: placeholderImage, options: targetOptions, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: self)
     }
 
     /// 取消加载网络图片请求

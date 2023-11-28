@@ -474,6 +474,10 @@ private extension TestRequestController {
     
     private func onUploadData(_ uploadData: Any?) {
         let isVideo = uploadData is URL
+        let fileName = isVideo ? "upload.mp4" : "upload.jpg"
+        let filePath = testPath.app.appendingPath(fileName)
+        FileManager.app.removeItem(atPath: filePath)
+        
         let request = TestUploadRequest()
         request.context = self
         request.uploadData = uploadData
@@ -482,16 +486,16 @@ private extension TestRequestController {
                 self?.app.showProgress(progress.fractionCompleted, text: "上传中...")
             }
         }
-        request.fileName = isVideo ? "upload.mp4" : "upload.jpg"
+        request.fileName = fileName
         request.start { [weak self] _ in
             self?.app.hideProgress()
             
-            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(request.fileName)"]) + "&t=\(Date.app.currentTime)"
-            let filePath = (self?.testPath ?? "").app.appendingPath(request.fileName)
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(fileName)"])
+            let previewRequest = URLRequest(url: APP.safeURL(previewUrl), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
             let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
             self?.app.showConfirm(title: "上传\(isVideo ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: {
-                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewUrl], imageInfos: nil, currentIndex: 0)
+                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewRequest], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] request in
             self?.app.hideProgress()
@@ -517,12 +521,13 @@ private extension TestRequestController {
         request.context = self
         request.autoShowLoading = true
         request.start { [weak self] _ in
-            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"]) + "&t=\(Date.app.currentTime)"
+            let previewUrl = "http://127.0.0.1:8001/download?" + String.app.queryEncode(["path": "/website/test/\(saveName)"])
+            let previewRequest = URLRequest(url: APP.safeURL(previewUrl), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
             let filePath = request.savePath
             let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
             
             self?.app.showConfirm(title: "下载\(isVideo ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: {
-                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewUrl], imageInfos: nil, currentIndex: 0)
+                self?.app.showImagePreview(imageURLs: [isVideo ? filePath : previewRequest], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] _ in
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)

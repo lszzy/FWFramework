@@ -599,17 +599,19 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// ```
     open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
         var imageURL = aImageURL
+        var isUrlRequest = false
         if let urlString = imageURL as? String {
             if (urlString as NSString).isAbsolutePath {
                 imageURL = URL(fileURLWithPath: urlString)
             } else {
                 imageURL = URL.fw_url(string: urlString)
             }
+        } else if let urlRequest = imageURL as? URLRequest {
+            imageURL = urlRequest.url
+            isUrlRequest = true
         }
-        if let url = imageURL as? URL {
-            if isVideoURL(url) {
-                imageURL = AVPlayerItem(url: url)
-            }
+        if let url = imageURL as? URL, isVideoURL(url) {
+            imageURL = AVPlayerItem(url: url)
         }
         
         fw_cancelImageRequest()
@@ -622,7 +624,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
                     placeholderImage = cachedImage
                 }
             }
-            fw_setImage(url: url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
+            fw_setImage(url: isUrlRequest ? aImageURL : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
                 self?.image = image
             } completion: { [weak self] image, error in
                 self?.progress = 1
