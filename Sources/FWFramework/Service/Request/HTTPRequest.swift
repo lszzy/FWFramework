@@ -206,6 +206,9 @@ open class HTTPRequest: NSObject {
         return result
     }()
     
+    fileprivate var cacheResponseModel: Any?
+    private var responseModelBlock: Completion?
+    
     private var _baseUrl: String?
     private var _requestUrl: String?
     private var _cdnUrl: String?
@@ -236,12 +239,8 @@ open class HTTPRequest: NSObject {
     private var _cacheTimeInSeconds: Int?
     private var _cacheVersion: Int?
     private var _cacheSensitiveData: Any?
-    
     private var _cancelled = false
     private var _preloadResponseModel: Bool?
-    private var _preloadModelBlock: Completion?
-    fileprivate var _responseModel: Any?
-    fileprivate var _cacheResponseModel: Any?
     
     // MARK: - Lifecycle
     public override init() {
@@ -394,7 +393,7 @@ open class HTTPRequest: NSObject {
                 _ = modelRequest.responseModel
             // 调用responseModel自定义预加载句柄
             } else {
-                _preloadModelBlock?(self)
+                responseModelBlock?(self)
             }
         }
         
@@ -618,15 +617,17 @@ extension HTTPRequest {
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
-        _preloadModelBlock = { request in
-            if (request._responseModel as? T) == nil {
-                request._responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+        responseModelBlock = { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         }
         
         successCompletionBlock = { request in
-            request._preloadModelBlock?(request)
-            success?(request._responseModel as? T)
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+            success?(request.cacheResponseModel as? T)
         }
         return self
     }
@@ -634,15 +635,17 @@ extension HTTPRequest {
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func safeResponseModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        _preloadModelBlock = { request in
-            if (request._responseModel as? T) == nil {
-                request._responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+        responseModelBlock = { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         }
         
         successCompletionBlock = { request in
-            request._preloadModelBlock?(request)
-            success?(request._responseModel as? T ?? .init())
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+            success?(request.cacheResponseModel as? T ?? .init())
         }
         return self
     }
@@ -1064,6 +1067,8 @@ extension HTTPRequest {
         _cacheJSON = nil
         _cacheString = nil
         _cacheMetadata = nil
+        cacheResponseModel = nil
+        responseModelBlock = nil
         isDataFromCache = false
     }
     
@@ -1166,13 +1171,13 @@ extension ResponseModelRequest where Self: HTTPRequest {
     /// 默认实现当前响应模型，解析成功时自动缓存
     public var responseModel: ResponseModel? {
         get {
-            if _responseModel == nil {
-                _responseModel = responseModelFilter()
+            if cacheResponseModel == nil {
+                cacheResponseModel = responseModelFilter()
             }
-            return _responseModel as? ResponseModel
+            return cacheResponseModel as? ResponseModel
         }
         set {
-            _responseModel = newValue
+            cacheResponseModel = newValue
         }
     }
     
