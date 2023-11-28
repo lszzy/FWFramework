@@ -32,7 +32,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     
     private var completionQueue = DispatchQueue(label: "site.wuyong.queue.request.completion", attributes: .concurrent)
     
-    /// 管理器
+    /// 管理器，延迟加载前可配置
     open lazy var manager: HTTPSessionManager = {
         let result = HTTPSessionManager(sessionConfiguration: sessionConfiguration)
         result.securityPolicy = securityPolicy
@@ -137,7 +137,21 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return urlRequest as URLRequest
     }
     
-    private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func startRequestTask(_ requestTask: URLSessionTask, for request: HTTPRequest) {
+        switch request.requestPriority {
+        case .high:
+            requestTask.priority = URLSessionTask.highPriority
+        case .low:
+            requestTask.priority = URLSessionTask.lowPriority
+        default:
+            requestTask.priority = URLSessionTask.defaultPriority
+        }
+        
+        request.requestTask = requestTask
+        requestTask.resume()
+    }
+    
+    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         var serializationError: NSError?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {
@@ -157,44 +171,58 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     }
     
     // MARK: - RequestPlugin
-    open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
-        let urlRequest = try buildUrlRequest(for: request)
-        request.requestTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: { [weak self] response, responseObject, error in
-            self?.handleResponse(request, response: response, responseObject: responseObject, error: error, completionHandler: completionHandler)
-        })
-    }
-    
-    open func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
-        if let resumeData = resumeData {
-            request.requestTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
-                return URL(fileURLWithPath: destination, isDirectory: false)
-            }, completionHandler: { [weak self] response, fileUrl, error in
-                self?.handleResponse(request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
-                    completionHandler?(response, responseObject as? URL, error)
-                })
-            })
+    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        let urlRequest: URLRequest
+        do {
+            urlRequest = try buildUrlRequest(for: request)
+        } catch {
+            completionHandler?(HTTPURLResponse(), nil, error)
             return
         }
         
-        let urlRequest = try buildUrlRequest(for: request)
-        request.requestTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
-            return URL(fileURLWithPath: destination, isDirectory: false)
-        }, completionHandler: { [weak self] response, fileUrl, error in
-            self?.handleResponse(request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
-                completionHandler?(response, responseObject as? URL, error)
-            })
+        let dataTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: { [weak self] response, responseObject, error in
+            self?.handleResponse(for: request, response: response, responseObject: responseObject, error: error, completionHandler: completionHandler)
         })
+        
+        startRequestTask(dataTask, for: request)
     }
     
-    open func startRequest(for request: HTTPRequest) {
-        request.requestTask?.resume()
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+        let downloadTask: URLSessionDownloadTask
+        if let resumeData = resumeData {
+            downloadTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
+                return URL(fileURLWithPath: destination, isDirectory: false)
+            }, completionHandler: { [weak self] response, fileUrl, error in
+                self?.handleResponse(for: request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
+                    completionHandler?(response, responseObject as? URL, error)
+                })
+            })
+        } else {
+            let urlRequest: URLRequest
+            do {
+                urlRequest = try buildUrlRequest(for: request)
+            } catch {
+                completionHandler?(HTTPURLResponse(), nil, error)
+                return
+            }
+            
+            downloadTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
+                return URL(fileURLWithPath: destination, isDirectory: false)
+            }, completionHandler: { [weak self] response, fileUrl, error in
+                self?.handleResponse(for: request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
+                    completionHandler?(response, responseObject as? URL, error)
+                })
+            })
+        }
+        
+        startRequestTask(downloadTask, for: request)
     }
     
-    open func cancelRequest(for request: HTTPRequest) {
+    open func cancelRequest(_ request: HTTPRequest) {
         request.requestTask?.cancel()
     }
     
-    open func retryRequest(for request: HTTPRequest) -> Bool {
+    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
         return true
     }
     

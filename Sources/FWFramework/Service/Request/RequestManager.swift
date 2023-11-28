@@ -14,7 +14,7 @@ open class RequestManager: NSObject {
     
     private var batchRequestArray: [BatchRequest] = []
     private var chainRequestArray: [ChainRequest] = []
-    private var requestsRecord: [Int: HTTPRequest] = [:]
+    private var requestsRecord: [String: HTTPRequest] = [:]
     private var lock = NSLock()
     private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
     private var synchronousSemaphore = DispatchSemaphore(value: 1)
@@ -22,19 +22,14 @@ open class RequestManager: NSObject {
     
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
-        do {
-            try sessionTask(for: request)
-            
-            addRecord(for: request)
-            request.config.requestPlugin.startRequest(for: request)
-            #if DEBUG
-            if request.config.debugLogEnabled {
-                Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
-            }
-            #endif
-        } catch {
-            requestDidFail(request, error: error)
+        addRecord(for: request)
+        startRequest(request)
+        
+        #if DEBUG
+        if request.config.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
         }
+        #endif
     }
     
     /// 取消已经添加的请求
@@ -46,7 +41,7 @@ open class RequestManager: NSObject {
                 try? resumeData?.write(to: localUrl, options: .atomic)
             })
         } else {
-            request.config.requestPlugin.cancelRequest(for: request)
+            request.config.requestPlugin.cancelRequest(request)
         }
         
         removeRecord(for: request)
@@ -177,6 +172,15 @@ open class RequestManager: NSObject {
         return URL.fw_url(string: requestUrl, relativeTo: url) ?? NSURL() as URL
     }
     
+    /// 开始session任务，完成时回调，用于重试
+    open func startSessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
+            startDownloadTask(for: request, completionHandler: completionHandler)
+        } else {
+            startDataTask(for: request, completionHandler: completionHandler)
+        }
+    }
+    
     /// 获取响应编码
     open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
         var stringEncoding = String.Encoding.utf8
@@ -206,11 +210,6 @@ open class RequestManager: NSObject {
                 tempPath = cacheFolder
             } catch {
                 tempPath = nil
-                #if DEBUG
-                if request.config.debugLogEnabled {
-                    Logger.debug(group: Logger.fw_moduleName, "Failed to create cache directory at %@ with error: %@", cacheFolder, error.localizedDescription)
-                }
-                #endif
             }
         }
         guard var tempPath = tempPath else {
@@ -232,55 +231,31 @@ open class RequestManager: NSObject {
         lock.lock()
         defer { lock.unlock() }
         requestsRecord.removeValue(forKey: request.requestIdentifier)
-        #if DEBUG
-        if requestsRecord.count > 0 {
-            if request.config.debugLogEnabled {
-                Logger.debug(group: Logger.fw_moduleName, "Request queue size = %zd", requestsRecord.count)
-            }
-        }
-        #endif
     }
     
-    private func sessionTask(for request: HTTPRequest) throws {
-        if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
-            try downloadTask(for: request)
-        } else {
-            try dataTask(for: request)
-        }
-        guard let requestTask = request.requestTask else {
-            throw RequestError.sessionTaskFailed
-        }
-        
-        request.requestIdentifier = requestTask.taskIdentifier
-        switch request.requestPriority {
-        case .high:
-            requestTask.priority = URLSessionTask.highPriority
-        case .low:
-            requestTask.priority = URLSessionTask.lowPriority
-        default:
-            requestTask.priority = URLSessionTask.defaultPriority
-        }
-    }
-    
-    private func dataTask(for request: HTTPRequest) throws {
-        let retryRequest = request.config.requestPlugin.retryRequest(for: request)
-        if retryRequest, let requestRetrier = request.config.requestRetrier,
-           requestRetrier.shouldRetryDataTask(for: request) {
-            try requestRetrier.retryDataTask(for: request) { [weak self] response, responseObject, error in
-                self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
+    private func startRequest(_ request: HTTPRequest) {
+        if request.config.requestPlugin.shouldRetryRequest(request),
+           let requestRetrier = request.config.requestRetrier,
+           requestRetrier.shouldRetryRequest(request) {
+            requestRetrier.startRetryRequest(request) { [weak self] response, responseObject, error in
+                self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         } else {
             let startTime = Date().timeIntervalSince1970
-            try request.config.requestPlugin.dataTask(for: request) { [weak self] response, responseObject, error in
+            startSessionTask(for: request) { [weak self] response, responseObject, error in
                 request.requestTotalCount = 1
                 request.requestTotalTime = Date().timeIntervalSince1970 - startTime
                 
-                self?.handleResponse(request.requestIdentifier, response: response, responseObject: responseObject, error: error)
+                self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
         }
     }
     
-    private func downloadTask(for request: HTTPRequest) throws {
+    private func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        request.config.requestPlugin.startDataTask(for: request, completionHandler: completionHandler)
+    }
+    
+    private func startDownloadTask(for request: HTTPRequest, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
         let downloadPath = request.resumableDownloadPath ?? ""
         var downloadTargetPath: String = ""
         var isDirectory: ObjCBool = false
@@ -299,27 +274,21 @@ open class RequestManager: NSObject {
             try? FileManager.default.removeItem(atPath: downloadTargetPath)
         }
         
-        var resumeSucceed = false
+        var resumeData: Data?
         if let localUrl = incompleteDownloadTempPath(for: request, downloadPath: downloadPath) {
             let resumeDataFileExists = FileManager.default.fileExists(atPath: localUrl.path)
             let data = try? Data(contentsOf: localUrl)
             let resumeDataIsValid = validateResumeData(data)
             
             if resumeDataFileExists && resumeDataIsValid {
-                try request.config.requestPlugin.downloadTask(for: request, resumeData: data, destination: downloadTargetPath) { [weak self] response, fileUrl, error in
-                    self?.handleResponse(request.requestIdentifier, response: response, responseObject: fileUrl, error: error)
-                }
-                resumeSucceed = request.requestTask != nil
+                resumeData = data
             }
         }
-        if !resumeSucceed {
-            try request.config.requestPlugin.downloadTask(for: request, resumeData: nil, destination: downloadTargetPath) { [weak self] response, fileUrl, error in
-                self?.handleResponse(request.requestIdentifier, response: response, responseObject: fileUrl, error: error)
-            }
-        }
+        
+        request.config.requestPlugin.startDownloadTask(for: request, resumeData: resumeData, destination: downloadTargetPath, completionHandler: completionHandler)
     }
     
-    private func handleResponse(_ requestIdentifier: Int, response: URLResponse, responseObject: Any?, error: Error?) {
+    private func handleResponse(with requestIdentifier: String, response: URLResponse, responseObject: Any?, error: Error?) {
         lock.lock()
         let request = requestsRecord[requestIdentifier]
         lock.unlock()
