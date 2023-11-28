@@ -26,6 +26,11 @@ extension Wrapper where Base == Data {
         return Base.fw_jsonEncode(object)
     }
     
+    /// json数据解码为Foundation对象，失败时抛异常
+    public static func jsonDecode(_ data: Data) throws -> Any {
+        return try Base.fw_jsonDecode(data)
+    }
+    
     /// json数据解码为Foundation对象
     public var jsonDecode: Any? {
         return base.fw_jsonDecode
