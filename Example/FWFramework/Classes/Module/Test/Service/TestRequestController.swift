@@ -13,7 +13,14 @@ import UIKit
 class TestModelRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = TestModel
     
-    struct TestModel: AnyJSONModel {
+    /*
+    // 兼容JSONModel协议
+    struct TestModel: JSONModel {
+        var name: String = ""
+    }*/
+    
+    // 也兼容CodableModel协议
+    struct TestModel: CodableModel, SafeCodableModel {
         var name: String = ""
     }
     
@@ -69,7 +76,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
 class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = [TestWeatherModel]
     
-    struct TestWeatherModel: AnyJSONModel {
+    struct TestWeatherModel: JSONModel {
         var city: String = ""
         var temp: String = ""
     }
@@ -108,6 +115,32 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
     
     override func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
         return true
+    }
+    
+}
+
+// 请求缓存实例
+class TestCacheRequest: HTTPRequest, ResponseModelRequest {
+    typealias ResponseModel = String
+    
+    func responseModelFilter() -> String? {
+        decodeResponseModel(designatedPath: "time")
+    }
+    
+    override func requestUrl() -> String {
+        "http://kvm.wuyong.site/time.php"
+    }
+    
+    override func responseSerializerType() -> ResponseSerializerType {
+        .JSON
+    }
+    
+    override func requestTimeoutInterval() -> TimeInterval {
+        30
+    }
+    
+    override func cacheTimeInSeconds() -> Int {
+        60
     }
     
 }
@@ -196,6 +229,13 @@ class TestRequestController: UIViewController {
         return button
     }()
     
+    private lazy var cacheButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Cache Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onCache))
+        return button
+    }()
+    
     private lazy var retryButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Retry Request", for: .normal)
@@ -260,6 +300,12 @@ extension TestRequestController: ViewControllerProtocol {
         APP.debug("query2: %@", queryValue.removingPercentEncoding ?? "")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        loadCache()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -288,6 +334,7 @@ extension TestRequestController: ViewControllerProtocol {
     func setupSubviews() {
         view.addSubview(succeedButton)
         view.addSubview(failedButton)
+        view.addSubview(cacheButton)
         view.addSubview(retryButton)
         view.addSubview(asyncButton)
         view.addSubview(syncButton)
@@ -299,35 +346,39 @@ extension TestRequestController: ViewControllerProtocol {
     func setupLayout() {
         succeedButton.app.layoutChain
             .centerX()
-            .top(toSafeArea: 20)
+            .top(toSafeArea: 10)
         
         failedButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: succeedButton, offset: 20)
+            .top(toViewBottom: succeedButton, offset: 10)
+        
+        cacheButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: failedButton, offset: 10)
         
         retryButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: failedButton, offset: 20)
+            .top(toViewBottom: cacheButton, offset: 10)
         
         asyncButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: retryButton, offset: 20)
+            .top(toViewBottom: retryButton, offset: 10)
         
         syncButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: asyncButton, offset: 20)
+            .top(toViewBottom: asyncButton, offset: 10)
         
         uploadButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: syncButton, offset: 20)
+            .top(toViewBottom: syncButton, offset: 10)
         
         downloadButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: uploadButton, offset: 20)
+            .top(toViewBottom: uploadButton, offset: 10)
         
         observeButton.app.layoutChain
             .centerX()
-            .top(toViewBottom: downloadButton, offset: 20)
+            .top(toViewBottom: downloadButton, offset: 10)
     }
     
 }
@@ -389,6 +440,28 @@ private extension TestRequestController {
             }
             self?.app.showMessage(text: message)
         }
+    }
+    
+    private func loadCache() {
+        let request = TestCacheRequest()
+        request.useCacheResponse = true
+        request.start { [weak self] (req: TestCacheRequest) in
+            self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
+        } failure: { [weak self] req in
+            self?.app.showMessage(error: req.error)
+        }
+    }
+    
+    @objc func onCache() {
+        let request = TestCacheRequest()
+        // context不指定时默认自动查找
+        request
+            .autoShowLoading(true)
+            .autoShowError(true)
+            .responseSuccess { [weak self] (req: TestCacheRequest) in
+                self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
+            }
+            .start()
     }
     
     @objc func onRetry() {

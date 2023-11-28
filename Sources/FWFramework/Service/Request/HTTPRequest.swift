@@ -241,6 +241,7 @@ open class HTTPRequest: NSObject {
     private var _preloadResponseModel: Bool?
     private var _preloadModelBlock: Completion?
     fileprivate var _responseModel: Any?
+    fileprivate var _cacheResponseModel: Any?
     
     // MARK: - Lifecycle
     public override init() {
@@ -454,7 +455,7 @@ open class HTTPRequest: NSObject {
         return _cacheVersion ?? 0
     }
     
-    /// 缓存附加数据，变化时会更新缓存
+    /// 缓存敏感数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
         return _cacheSensitiveData
     }
