@@ -267,7 +267,7 @@ open class HTTPRequest: NSObject {
     private var _cacheSensitiveData: Any?
     
     private var _preloadResponseModel: Bool?
-    private var _preloadModelBlock: (() -> Void)?
+    private var _preloadModelBlock: ((HTTPRequest) -> Void)?
     fileprivate var _responseModel: Any?
     
     // MARK: - Lifecycle
@@ -549,9 +549,15 @@ open class HTTPRequest: NSObject {
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+        _preloadModelBlock = { request in
+            if (request._responseModel as? T) == nil {
+                request._responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+        }
+        
         successCompletionBlock = { request in
-            let responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            success?(responseModel)
+            request._preloadModelBlock?(request)
+            success?(request._responseModel as? T)
         }
         return self
     }
@@ -559,9 +565,15 @@ open class HTTPRequest: NSObject {
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func safeResponseModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+        _preloadModelBlock = { request in
+            if (request._responseModel as? T) == nil {
+                request._responseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+        }
+        
         successCompletionBlock = { request in
-            let responseModel = T.decodeSafeModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            success?(responseModel)
+            request._preloadModelBlock?(request)
+            success?(request._responseModel as? T ?? .init())
         }
         return self
     }
@@ -618,12 +630,12 @@ open class HTTPRequest: NSObject {
         }
         
         if preloadResponseModel() {
+            // 访问responseModel即可自动加载并缓存响应模型
             if let modelRequest = self as? (any ResponseModelRequest) {
-                // 访问responseModel即可自动加载并缓存响应模型
                 _ = modelRequest.responseModel
+            // 调用responseModel自定义预加载句柄
             } else {
-                // 调用responseModel自定义预加载句柄
-                _preloadModelBlock?()
+                _preloadModelBlock?(self)
             }
         }
     }
