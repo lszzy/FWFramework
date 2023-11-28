@@ -146,6 +146,8 @@ open class HTTPRequest: NSObject {
         guard let requestTask = requestTask else { return false }
         return requestTask.state == .canceling
     }
+    /// 请求是否已开始，已开始之后再次调用start不会生效
+    open private(set) var isStarted: Bool = false
     /// 请求是否执行中，requestTask状态为running
     open var isExecuting: Bool {
         guard let requestTask = requestTask else { return false }
@@ -483,34 +485,29 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Action
-    /// 开始并发请求
+    /// 开始并发请求，如果加载缓存且缓存存在时允许再调用一次
     @discardableResult
     open func start() -> Self {
+        guard !isStarted else { return self }
+        
         if !useCacheResponse || resumableDownloadPath != nil {
             startWithoutCache()
             return self
         }
         
         do {
-            try loadCache()
+            try loadCacheResponse(isPreload: false, completion: nil)
+            return self
         } catch {
             startWithoutCache()
             return self
         }
-        
-        isDataFromCache = true
-        DispatchQueue.main.async {
-            self.requestCompletePreprocessor()
-            self.requestCompleteFilter()
-            self.delegate?.requestFinished(self)
-            self.successCompletionBlock?(self)
-            self.clearCompletionBlock()
-        }
-        return self
     }
     
     /// 停止并发请求
     open func stop() {
+        guard !_cancelled else { return }
+        
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         RequestManager.shared.cancelRequest(self)
@@ -651,6 +648,45 @@ extension HTTPRequest {
     }
     
     // MARK: - Cache
+    /// 预加载缓存句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func preloadCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
+        try? loadCacheResponse(isPreload: true, completion: { block?($0 as! T) })
+        return self
+    }
+    
+    /// 预加载指定缓存响应模型句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func preloadCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+        try? loadCacheResponse(isPreload: true, completion: { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+            success?(request.cacheResponseModel as? T)
+        }, processor: { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+        })
+        return self
+    }
+    
+    /// 预加载指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func preloadSafeCacheModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+        try? loadCacheResponse(isPreload: true, completion: { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+            success?(request.cacheResponseModel as? T ?? .init())
+        }, processor: { request in
+            if (request.cacheResponseModel as? T) == nil {
+                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            }
+        })
+        return self
+    }
+    
     /// 加载本地缓存，返回是否成功
     public func loadCache() throws {
         if cacheTimeInSeconds() < 0 {
@@ -998,9 +1034,32 @@ extension HTTPRequest {
     private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
     
     private func startWithoutCache() {
+        isStarted = true
         clearCacheVariables()
         toggleAccessoriesWillStartCallBack()
         RequestManager.shared.addRequest(self)
+    }
+    
+    fileprivate func loadCacheResponse(isPreload: Bool, completion: Completion?, processor: Completion? = nil) throws {
+        if isPreload {
+            guard !isStarted, Thread.isMainThread else { return }
+        }
+        
+        try loadCache()
+        
+        if isPreload {
+            responseModelBlock = processor
+            successCompletionBlock = completion
+        }
+        
+        isDataFromCache = true
+        DispatchQueue.fw_mainAsync {
+            self.requestCompletePreprocessor()
+            self.requestCompleteFilter()
+            self.delegate?.requestFinished(self)
+            self.successCompletionBlock?(self)
+            self.clearCompletionBlock()
+        }
     }
     
     private func loadCacheMetadata() -> Bool {
@@ -1195,6 +1254,15 @@ extension ResponseModelRequest where Self: HTTPRequest {
         return self
     }
     
+    /// 预加载缓存响应模型句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func preloadCacheModel(_ success: ((ResponseModel?) -> Void)?) -> Self {
+        try? loadCacheResponse(isPreload: true, completion: { request in
+            success?((request as! Self).responseModel)
+        })
+        return self
+    }
+    
 }
 
 /// HTTPRequest AnyCodableModel响应模型请求协议默认实现
@@ -1226,6 +1294,15 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeCodab
         successCompletionBlock = { request in
             success?((request as! Self).safeResponseModel)
         }
+        return self
+    }
+    
+    /// 预加载缓存安全响应模型句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func preloadSafeCacheModel(_ success: ((ResponseModel) -> Void)?) -> Self {
+        try? loadCacheResponse(isPreload: true, completion: { request in
+            success?((request as! Self).safeResponseModel)
+        })
         return self
     }
     
