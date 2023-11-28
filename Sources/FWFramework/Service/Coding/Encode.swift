@@ -54,18 +54,23 @@ extension WrapperGlobal {
         return try? JSONSerialization.data(withJSONObject: object)
     }
     
+    /// json数据解码为Foundation对象，失败时抛异常
+    public static func fw_jsonDecode(_ data: Data) throws -> Any {
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        } catch {
+            guard (error as NSError).code == 3840 else { throw error }
+            
+            let string = String(data: data, encoding: .utf8)
+            guard let escapeData = string?.fw_escapeJson.data(using: .utf8) else { throw error }
+            if escapeData.count == data.count { throw error }
+            return try JSONSerialization.jsonObject(with: escapeData, options: .allowFragments)
+        }
+    }
+    
     /// json数据解码为Foundation对象
     public var fw_jsonDecode: Any? {
-        do {
-            return try JSONSerialization.jsonObject(with: self, options: .allowFragments)
-        } catch {
-            guard (error as NSError).code == 3840 else { return nil }
-            
-            let string = String(data: self, encoding: .utf8)
-            guard let data = string?.fw_escapeJson.data(using: .utf8) else { return nil }
-            if data.count == self.count { return nil }
-            return try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        }
+        return try? Data.fw_jsonDecode(self)
     }
     
     /// base64编码

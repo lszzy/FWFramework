@@ -98,17 +98,20 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             
             switch request.responseSerializerType() {
             case .JSON:
-                var jsonObject = responseData.fw_jsonDecode
-                if jsonObject != nil {
+                do {
+                    var jsonObject = try Data.fw_jsonDecode(responseData)
                     if removeNullValues {
-                        jsonObject = JSONObjectByRemovingKeysWithNullValues(jsonObject!, readingOptions: [])
+                        jsonObject = JSONObjectByRemovingKeysWithNullValues(jsonObject, readingOptions: [])
                     }
-                } else {
-                    serializationError = RequestError.validationInvalidJSONFormat
+                    
+                    request.responseObject = jsonObject
+                    request.responseJSONObject = request.responseObject
+                } catch {
+                    serializationError = AFError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error))
+                    
+                    request.responseObject = nil
+                    request.responseJSONObject = request.responseObject
                 }
-                
-                request.responseObject = jsonObject
-                request.responseJSONObject = request.responseObject
             default:
                 break
             }
