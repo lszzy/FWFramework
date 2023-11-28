@@ -487,12 +487,7 @@ open class HTTPRequest: NSObject {
     /// 开始并发请求
     @discardableResult
     open func start() -> Self {
-        if !useCacheResponse {
-            startWithoutCache()
-            return self
-        }
-        
-        if let downloadPath = resumableDownloadPath, !downloadPath.isEmpty {
+        if !useCacheResponse || resumableDownloadPath != nil {
             startWithoutCache()
             return self
         }
@@ -505,9 +500,7 @@ open class HTTPRequest: NSObject {
         }
         
         isDataFromCache = true
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
+        DispatchQueue.main.async {
             self.requestCompletePreprocessor()
             self.requestCompleteFilter()
             self.delegate?.requestFinished(self)

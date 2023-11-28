@@ -222,8 +222,8 @@ open class ChainRequest: NSObject, RequestDelegate {
             request.clearCompletionBlock()
             if nextRequestIndex > 1 && requestInterval > 0 {
                 nextRequest = request
-                DispatchQueue.main.asyncAfter(deadline: .now() + requestInterval) { [weak self] in
-                    self?.nextRequest?.start()
+                DispatchQueue.main.asyncAfter(deadline: .now() + requestInterval) {
+                    self.nextRequest?.start()
                 }
             } else {
                 nextRequest = nil

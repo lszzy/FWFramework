@@ -140,7 +140,7 @@ class TestCacheRequest: HTTPRequest, ResponseModelRequest {
     }
     
     override func cacheTimeInSeconds() -> Int {
-        60
+        60 * 60
     }
     
 }
