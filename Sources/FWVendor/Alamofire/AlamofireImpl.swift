@@ -48,12 +48,12 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
     
-    /// 会话
+    /// 会话，延迟加载前可配置
     open lazy var session: Session = {
         let result = Session(
             configuration: sessionConfiguration ?? .af.default,
             rootQueue: rootQueue,
-            startRequestsImmediately: false,
+            startRequestsImmediately: true,
             interceptor: intercepter,
             serverTrustManager: serverTrustManager,
             redirectHandler: redirectHandler,
@@ -89,7 +89,24 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         }
     }
     
-    private func handleResponse(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func adaptRequest(_ alamofireRequest: Request, for request: HTTPRequest) {
+        alamofireRequest.onURLSessionTaskCreation { requestTask in
+            switch request.requestPriority {
+            case .high:
+                requestTask.priority = URLSessionTask.highPriority
+            case .low:
+                requestTask.priority = URLSessionTask.lowPriority
+            default:
+                requestTask.priority = URLSessionTask.defaultPriority
+            }
+            
+            request.requestTask = requestTask
+        }
+        
+        request.requestAdapter = alamofireRequest
+    }
+    
+    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {
@@ -121,7 +138,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     }
     
     // MARK: - RequestPlugin
-    open func dataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
+    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         let dataRequest: DataRequest
         let requestIntercepter = requestIntercepterBlock?(request)
         
@@ -155,6 +172,8 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             }
         }
         
+        adaptRequest(dataRequest, for: request)
+        
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
@@ -168,17 +187,11 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             dataRequest.validate(contentType: contentTypes)
         }
         dataRequest.response { [weak self] response in
-            self?.handleResponse(request, response: response.response ?? .init(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
+            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
         }
-        
-        request.requestAdapter = dataRequest
-        request.requestTaskBlock = { request in
-            return (request.requestAdapter as? Request)?.task
-        }
-        request.requestTask = dataRequest.task
     }
     
-    open func downloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
         let downloadRequest: DownloadRequest
         let requestIntercepter = requestIntercepterBlock?(request)
         
@@ -201,6 +214,8 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             })
         }
         
+        adaptRequest(downloadRequest, for: request)
+        
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
@@ -214,27 +229,17 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             downloadRequest.validate(contentType: contentTypes)
         }
         downloadRequest.response { [weak self] response in
-            self?.handleResponse(request, response: response.response ?? .init(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
+            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
                 completionHandler?(response, responseObject as? URL, error)
             })
         }
-        
-        request.requestAdapter = downloadRequest
-        request.requestTaskBlock = { request in
-            return (request.requestAdapter as? Request)?.task
-        }
-        request.requestTask = downloadRequest.task
     }
     
-    open func startRequest(for request: HTTPRequest) {
-        (request.requestAdapter as? Request)?.resume()
-    }
-    
-    open func cancelRequest(for request: HTTPRequest) {
+    open func cancelRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.cancel()
     }
     
-    open func retryRequest(for request: HTTPRequest) -> Bool {
+    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
         return requestRetryBlock?(request) ?? true
     }
     

@@ -102,26 +102,12 @@ open class HTTPRequest: NSObject {
     /// 是否是本地缓存数据
     open private(set) var isDataFromCache: Bool = false
     
-    /// 当前请求唯一标志符，只初始化一次，重试时也不变
-    open var requestIdentifier: Int = 0
+    /// 当前请求唯一标志符，只读
+    public let requestIdentifier = UUID().uuidString
     /// 当前请求适配器，根据插件不同而不同
     open var requestAdapter: Any?
-    /// 自定义请求Task获取句柄，用于插件适配
-    open var requestTaskBlock: ((HTTPRequest) -> URLSessionTask?)?
-    
-    /// 当前URLSessionTask，请求开始后可用
-    open var requestTask: URLSessionTask? {
-        get {
-            if let block = requestTaskBlock {
-                return block(self)
-            }
-            return _requestTask
-        }
-        set {
-            _requestTask = newValue
-        }
-    }
-    private var _requestTask: URLSessionTask?
+    /// 当前URLSessionTask，请求开始后才可用
+    open var requestTask: URLSessionTask?
     
     /// 当前响应
     open var response: HTTPURLResponse? {
@@ -145,22 +131,22 @@ open class HTTPRequest: NSObject {
     /// 请求总时长
     open internal(set) var requestTotalTime: TimeInterval = 0
     
-    /// 请求是否已完成
+    /// 请求是否已完成，requestTask必须完成且error为nil
     open var isFinished: Bool {
         guard let requestTask = requestTask else { return false }
         return requestTask.state == .completed && error == nil
     }
-    /// 请求是否已失败
+    /// 请求是否已失败，error不为nil，不检查requestTask
     open var isFailed: Bool {
-        guard let requestTask = requestTask else { return false }
-        return requestTask.state == .completed && error != nil
+        return error != nil
     }
-    /// 请求是否已取消
+    /// 请求是否已取消，含手动取消和requestTask取消
     open var isCancelled: Bool {
+        if cancelled { return true }
         guard let requestTask = requestTask else { return false }
-        return requestTask.state == .canceling || cancelled
+        return requestTask.state == .canceling
     }
-    /// 请求是否执行中
+    /// 请求是否执行中，requestTask状态为running
     open var isExecuting: Bool {
         guard let requestTask = requestTask else { return false }
         return requestTask.state == .running
@@ -1189,7 +1175,6 @@ public enum RequestError: Swift.Error, CustomNSError {
     case cacheInvalidCacheData
     case validationInvalidStatusCode(_ code: Int)
     case validationInvalidJSONFormat
-    case sessionTaskFailed
     
     public static var errorDomain: String { "site.wuyong.error.request" }
     public var errorCode: Int {
@@ -1214,8 +1199,6 @@ public enum RequestError: Swift.Error, CustomNSError {
             return -8
         case .validationInvalidJSONFormat:
             return -9
-        case .sessionTaskFailed:
-            return -10
         }
     }
     public var errorUserInfo: [String: Any] {
@@ -1240,8 +1223,6 @@ public enum RequestError: Swift.Error, CustomNSError {
             return [NSLocalizedDescriptionKey: "Invalid status code (\(code))"]
         case .validationInvalidJSONFormat:
             return [NSLocalizedDescriptionKey: "Invalid JSON format"]
-        case .sessionTaskFailed:
-            return [NSLocalizedDescriptionKey: "Session task failed"]
         }
     }
     

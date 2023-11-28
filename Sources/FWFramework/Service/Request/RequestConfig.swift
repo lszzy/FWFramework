@@ -283,24 +283,24 @@ open class RequestContextAccessory: RequestAccessory {
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
     /// 指定请求是否需要重试
-    func shouldRetryDataTask(for request: HTTPRequest) -> Bool
+    func shouldRetryRequest(_ request: HTTPRequest) -> Bool
     
-    /// 重试方式创建数据任务
-    func retryDataTask(for request: HTTPRequest, completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?) throws
+    /// 开始可重试请求
+    func startRetryRequest(_ request: HTTPRequest, completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
 open class RequestRetrier: NSObject, RequestRetrierProtocol {
     public static let `default` = RequestRetrier()
     
-    open func shouldRetryDataTask(for request: HTTPRequest) -> Bool {
+    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
         return request.requestRetryCount() > 0
     }
     
-    open func retryDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
+    open func startRetryRequest(_ request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         let startTime = Date().timeIntervalSince1970
         let retryCount = request.requestRetryCount()
-        try retryDataTask(for: request, retryCount: retryCount, remainCount: retryCount, startTime: startTime, shouldRetry: { response, responseObject, error, decisionHandler in
+        startRetryRequest(request, retryCount: retryCount, remainCount: retryCount, startTime: startTime, shouldRetry: { response, responseObject, error, decisionHandler in
             guard let response = response as? HTTPURLResponse else {
                 decisionHandler(false)
                 return
@@ -318,20 +318,20 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
         }, completionHandler: completionHandler)
     }
     
-    private func retryDataTask(
-        for request: HTTPRequest,
+    private func startRetryRequest(
+        _ request: HTTPRequest,
         retryCount: Int,
         remainCount: Int,
         startTime: TimeInterval,
         shouldRetry: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ decisionHandler: @escaping (Bool) -> Void) -> Void)?,
         completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
-    ) throws {
+    ) {
         let shouldRetry = shouldRetry ?? { response, responseObject, error, decisionHandler in
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
             decisionHandler(error != nil || statusCode < 200 || statusCode > 299)
         }
         
-        try request.config.requestPlugin.dataTask(for: request) { response, responseObject, error in
+        RequestManager.shared.startSessionTask(for: request) { response, responseObject, error in
             if request.isCancelled { return }
             
             request.requestTotalCount = retryCount - remainCount + 1
@@ -348,13 +348,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
                         DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) { [weak self] in
                             if request.isCancelled { return }
                             
-                            do {
-                                try self?.retryDataTask(for: request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
-                                
-                                request.config.requestPlugin.startRequest(for: request)
-                            } catch let retryError {
-                                completionHandler?(response, responseObject, error ?? retryError)
-                            }
+                            self?.startRetryRequest(request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
                         }
                     } else {
                         completionHandler?(response, responseObject, error)
