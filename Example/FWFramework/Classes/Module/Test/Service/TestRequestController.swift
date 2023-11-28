@@ -414,14 +414,14 @@ private extension TestRequestController {
                 if finishedCount == requests.count {
                     self?.app.hideLoading()
                     let requestTime = Benchmark.end("async")
-                    self?.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "异步请求成功：%.3fms", requestTime * 1000))
                 }
             } failure: { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
                     self?.app.hideLoading()
                     let requestTime = Benchmark.end("async")
-                    self?.app.showMessage(text: String(format: "异步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "异步请求失败：%.3fms", requestTime * 1000))
                 }
             }
         }
@@ -443,14 +443,14 @@ private extension TestRequestController {
                 if finishedCount == requests.count {
                     self?.app.hideLoading()
                     let requestTime = Benchmark.end("sync")
-                    self?.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "同步请求成功：%.3fms", requestTime * 1000))
                 }
             } failure: { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
                     self?.app.hideLoading()
                     let requestTime = Benchmark.end("sync")
-                    self?.app.showMessage(text: String(format: "同步请求完成：%.3fms", requestTime * 1000))
+                    self?.app.showMessage(text: String(format: "同步请求失败：%.3fms", requestTime * 1000))
                 }
             }
         }

@@ -247,7 +247,9 @@ open class RequestManager: NSObject {
         } else {
             try dataTask(for: request)
         }
-        guard let requestTask = request.requestTask else { return }
+        guard let requestTask = request.requestTask else {
+            throw RequestError.sessionTaskFailed
+        }
         
         request.requestIdentifier = requestTask.taskIdentifier
         switch request.requestPriority {
