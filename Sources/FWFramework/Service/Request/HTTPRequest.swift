@@ -1179,6 +1179,7 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeCodab
 // MARK: - RequestError
 /// 请求错误
 public enum RequestError: Swift.Error, CustomNSError {
+    case unknownError
     case cacheExpired
     case cacheVersionMismatch
     case cacheSensitiveDataMismatch
@@ -1188,11 +1189,13 @@ public enum RequestError: Swift.Error, CustomNSError {
     case cacheInvalidCacheData
     case validationInvalidStatusCode(_ code: Int)
     case validationInvalidJSONFormat
-    case unknownError
+    case sessionTaskFailed
     
     public static var errorDomain: String { "site.wuyong.error.request" }
     public var errorCode: Int {
         switch self {
+        case .unknownError:
+            return 0
         case .cacheExpired:
             return -1
         case .cacheVersionMismatch:
@@ -1211,12 +1214,14 @@ public enum RequestError: Swift.Error, CustomNSError {
             return -8
         case .validationInvalidJSONFormat:
             return -9
-        case .unknownError:
+        case .sessionTaskFailed:
             return -10
         }
     }
     public var errorUserInfo: [String: Any] {
         switch self {
+        case .unknownError:
+            return [NSLocalizedDescriptionKey: "Unknown error"]
         case .cacheExpired:
             return [NSLocalizedDescriptionKey: "Cache expired"]
         case .cacheVersionMismatch:
@@ -1235,8 +1240,8 @@ public enum RequestError: Swift.Error, CustomNSError {
             return [NSLocalizedDescriptionKey: "Invalid status code (\(code))"]
         case .validationInvalidJSONFormat:
             return [NSLocalizedDescriptionKey: "Invalid JSON format"]
-        case .unknownError:
-            return [NSLocalizedDescriptionKey: "Unknown error"]
+        case .sessionTaskFailed:
+            return [NSLocalizedDescriptionKey: "Session task failed"]
         }
     }
     
