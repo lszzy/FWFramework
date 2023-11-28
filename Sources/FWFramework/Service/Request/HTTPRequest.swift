@@ -154,60 +154,29 @@ open class HTTPRequest: NSObject {
     
     /// 当前响应数据
     open var responseData: Data? {
-        get {
-            if _cacheData != nil {
-                return _cacheData
-            }
-            return _responseData
-        }
-        set {
-            _responseData = newValue
-        }
+        get { return _responseData ?? _cacheData }
+        set { _responseData = newValue }
     }
     private var _responseData: Data?
     
     /// 当前响应字符串
     open var responseString: String? {
-        get {
-            if _cacheString != nil {
-                return _cacheString
-            }
-            return _responseString
-        }
-        set {
-            _responseString = newValue
-        }
+        get { return _responseString ?? _cacheString }
+        set { _responseString = newValue }
     }
     private var _responseString: String?
     
     /// 当前响应对象
     open var responseObject: Any? {
-        get {
-            if _cacheJSON != nil {
-                return _cacheJSON
-            }
-            if _cacheData != nil {
-                return _cacheData
-            }
-            return _responseObject
-        }
-        set {
-            _responseObject = newValue
-        }
+        get { return _responseObject ?? (_cacheJSON ?? _cacheData) }
+        set { _responseObject = newValue }
     }
     private var _responseObject: Any?
     
     /// 当前响应JSON对象
     open var responseJSONObject: Any? {
-        get {
-            if _cacheJSON != nil {
-                return _cacheJSON
-            }
-            return _responseJSONObject
-        }
-        set {
-            _responseJSONObject = newValue
-        }
+        get { return _responseJSONObject ?? _cacheJSON }
+        set { _responseJSONObject = newValue }
     }
     private var _responseJSONObject: Any?
     
@@ -408,12 +377,14 @@ open class HTTPRequest: NSObject {
     /// 请求完成预处理器，后台线程调用。默认写入请求缓存、预加载响应模型
     open func requestCompletePreprocessor() {
         let responseData = _responseData
-        if writeCacheAsynchronously() {
-            HTTPRequest.cacheQueue.async { [weak self] in
-                self?.saveCache(responseData)
+        if (responseData != nil) {
+            if writeCacheAsynchronously() {
+                HTTPRequest.cacheQueue.async { [weak self] in
+                    self?.saveCache(responseData)
+                }
+            } else {
+                saveCache(responseData)
             }
-        } else {
-            saveCache(responseData)
         }
         
         if preloadResponseModel() {
@@ -591,7 +562,6 @@ open class HTTPRequest: NSObject {
     open func clearCompletionBlock() {
         successCompletionBlock = nil
         failureCompletionBlock = nil
-        uploadProgressBlock = nil
     }
     
     // MARK: - Context
