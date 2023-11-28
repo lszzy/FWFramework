@@ -377,7 +377,7 @@ open class RequestManager: NSObject {
     private func requestDidSucceed(_ request: HTTPRequest) {
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST SUCCEED===========\n%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.responseString))
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.responseString))
         }
         #endif
         
@@ -397,7 +397,7 @@ open class RequestManager: NSObject {
         request.error = error
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST FAILED===========\n%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.error))
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.error))
         }
         #endif
         
