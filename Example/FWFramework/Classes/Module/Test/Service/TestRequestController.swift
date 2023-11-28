@@ -74,6 +74,11 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
         var temp: String = ""
     }
     
+    // 后台预加载数据模型
+    override func preloadResponseModel() -> Bool {
+        return true
+    }
+    
     // 不实现时自动解析，实现为手工解析
     func responseModelFilter() -> [TestWeatherModel]? {
         decodeResponseModel(designatedPath: "weatherinfo")
@@ -352,6 +357,7 @@ private extension TestRequestController {
             .context(self)
             .autoShowLoading(true)
             .autoShowError(true)
+            .preloadResponseModel(true)
             .safeResponseModel(of: TestModelRequest.TestModel.self, success: { [weak self] responseModel in
                 var message = "json请求成功：\n" + responseModel.name
                 let serverTime = request.responseServerTime

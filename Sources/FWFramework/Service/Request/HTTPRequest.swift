@@ -266,6 +266,8 @@ open class HTTPRequest: NSObject {
     private var _cacheVersion: Int?
     private var _cacheSensitiveData: Any?
     
+    private var _preloadResponseModel: Bool?
+    private var _preloadModelBlock: (() -> Void)?
     fileprivate var _responseModel: Any?
     
     // MARK: - Lifecycle
@@ -529,7 +531,22 @@ open class HTTPRequest: NSObject {
         return self
     }
     
-    /// 快捷设置模型响应成功句柄
+    /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
+    open func preloadResponseModel() -> Bool {
+        if let preload = _preloadResponseModel {
+            return preload
+        }
+        return config.preloadModelFilter?(self) ?? false
+    }
+    
+    /// 设置是否预加载响应模型，仅ResponseModelRequest生效
+    @discardableResult
+    open func preloadResponseModel(_ preload: Bool) -> Self {
+        _preloadResponseModel = preload
+        return self
+    }
+    
+    /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         successCompletionBlock = { request in
@@ -539,7 +556,7 @@ open class HTTPRequest: NSObject {
         return self
     }
     
-    /// 快捷设置安全模型响应成功句柄
+    /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     public func safeResponseModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         successCompletionBlock = { request in
@@ -589,7 +606,7 @@ open class HTTPRequest: NSObject {
     open func filterResponse() throws {
     }
     
-    /// 请求完成预处理器，后台线程调用
+    /// 请求完成预处理器，后台线程调用。默认写入请求缓存、预加载响应模型
     open func requestCompletePreprocessor() {
         let responseData = _responseData
         if writeCacheAsynchronously() {
@@ -599,17 +616,27 @@ open class HTTPRequest: NSObject {
         } else {
             saveResponseData(responseData)
         }
+        
+        if preloadResponseModel() {
+            if let modelRequest = self as? (any ResponseModelRequest) {
+                // 访问responseModel即可自动加载并缓存响应模型
+                _ = modelRequest.responseModel
+            } else {
+                // 调用responseModel自定义预加载句柄
+                _preloadModelBlock?()
+            }
+        }
     }
     
-    /// 请求完成过滤器，主线程调用
+    /// 请求完成过滤器，主线程调用，默认不处理
     open func requestCompleteFilter() {
     }
     
-    /// 请求失败预处理器，后台线程调用
+    /// 请求失败预处理器，后台线程调用，默认不处理
     open func requestFailedPreprocessor() {
     }
     
-    /// 请求失败过滤器，主线程调用
+    /// 请求失败过滤器，主线程调用，默认不处理
     open func requestFailedFilter() {
     }
     
