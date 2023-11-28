@@ -444,18 +444,37 @@ private extension TestRequestController {
     
     private func loadCache() {
         let request = TestCacheRequest()
-        request.useCacheResponse = true
-        request.start { [weak self] (req: TestCacheRequest) in
-            self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
-        } failure: { [weak self] req in
-            self?.app.showMessage(error: req.error)
+        var delay = false
+        
+        request
+            .autoShowLoading(true)
+            .preloadSafeCacheModel { [weak self] title in
+                delay = true
+                self?.cacheButton.setTitle(title, for: .normal)
+            }
+            .responseSuccess { [weak self] (req: TestCacheRequest) in
+                self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
+            }
+            .responseFailure { [weak self] req in
+                self?.app.showMessage(error: req.error)
+            }
+        
+        if delay {
+            // 请求太快了，加延迟模拟先加载缓存再请求的效果
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.app.showLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    request.start()
+                }
+            }
+        } else {
+            request.start()
         }
     }
     
     @objc func onCache() {
-        let request = TestCacheRequest()
         // context不指定时默认自动查找
-        request
+        TestCacheRequest()
             .autoShowLoading(true)
             .autoShowError(true)
             .responseSuccess { [weak self] (req: TestCacheRequest) in
