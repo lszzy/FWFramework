@@ -282,6 +282,9 @@ open class RequestContextAccessory: RequestAccessory {
 // MARK: - RequestRetrier
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
+    /// 指定请求是否需要重试
+    func shouldRetryDataTask(for request: HTTPRequest) -> Bool
+    
     /// 重试方式创建数据任务
     func retryDataTask(for request: HTTPRequest, completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?) throws
 }
@@ -289,6 +292,10 @@ public protocol RequestRetrierProtocol: AnyObject {
 /// 默认请求重试器，直接调用request的钩子方法
 open class RequestRetrier: NSObject, RequestRetrierProtocol {
     public static let `default` = RequestRetrier()
+    
+    open func shouldRetryDataTask(for request: HTTPRequest) -> Bool {
+        return request.requestRetryCount() > 0
+    }
     
     open func retryDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) throws {
         let startTime = Date().timeIntervalSince1970
@@ -332,7 +339,7 @@ open class RequestRetrier: NSObject, RequestRetrierProtocol {
             
             let canRetry = retryCount < 0 || remainCount > 0
             let waitTime: TimeInterval = canRetry ? max(0, request.requestRetryInterval()) : 0
-            let timeoutInterval = request.requestRetryTimeout()
+            let timeoutInterval = canRetry ? request.requestRetryTimeout() : 0
             if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
                 shouldRetry(response, responseObject, error, { retry in
                     if request.isCancelled { return }
