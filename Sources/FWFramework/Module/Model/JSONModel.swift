@@ -622,7 +622,7 @@ extension NSObject {
                 if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
                     return
                 }
-                if (seg.first?.isNumber ?? false), let index = Int(seg), index >= 0 {
+                if let index = Int(seg), index >= 0 {
                     if let array = next as? [Any], index < array.count {
                         let _next = array[index]
                         result = _next
