@@ -433,14 +433,14 @@ open class HTTPRequest: NSObject {
         return _requestRetryTimeout ?? 0
     }
     
-    /// 请求重试验证方法，requestRetryCount大于0生效，默认检查状态码和错误
+    /// 请求重试验证方法，默认检查状态码和错误
     open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
         if isCancelled { return false }
         let statusCode = response.statusCode
         return error != nil || statusCode < 200 || statusCode > 299
     }
     
-    /// 请求重试处理方法，requestRetryValidator返回true生效，默认调用completionHandler(true)
+    /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
     open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
         completionHandler(true)
     }
