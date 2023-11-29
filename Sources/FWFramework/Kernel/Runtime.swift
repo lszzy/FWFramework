@@ -578,7 +578,7 @@ import FWObjC
         var result: [String: Any] = [:]
         children.forEach { child in
             if let label = child.label, !label.isEmpty, !label.hasPrefix("_"),
-               !Optional<Any>.isNone(child.value) {
+               !Optional<Any>.isNil(child.value) {
                 result[label] = child.value
             }
         }

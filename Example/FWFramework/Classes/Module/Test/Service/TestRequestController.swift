@@ -20,7 +20,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     }*/
     
     // 也兼容CodableModel协议
-    struct TestModel: CodableModel, SafeCodableModel {
+    struct TestModel: CodableModel {
         var name: String = ""
     }
     

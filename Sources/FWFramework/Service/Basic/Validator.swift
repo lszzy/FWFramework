@@ -204,14 +204,14 @@ extension Validator {
     
 }
 
-// MARK: - Validator+Where
-extension Validator where Value: SafeType {
+// MARK: - Validator+Extension
+extension Validator where Value: BasicCodableType {
     
     /// 空验证器
     public static var isEmpty: Self {
         .predicate { value in
             if let value = value {
-                return value.isEmpty
+                return !value.isNotEmpty
             }
             return true
         }
@@ -221,7 +221,7 @@ extension Validator where Value: SafeType {
     public static var isNotEmpty: Self {
         .predicate { value in
             if let value = value {
-                return !value.isEmpty
+                return value.isNotEmpty
             }
             return false
         }

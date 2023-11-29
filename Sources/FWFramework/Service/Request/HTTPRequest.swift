@@ -631,7 +631,7 @@ extension HTTPRequest {
     
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    public func safeResponseModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    public func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         responseModelBlock = { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -673,7 +673,7 @@ extension HTTPRequest {
     
     /// 预加载指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
-    public func preloadSafeCacheModel<T: SafeCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    public func preloadSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -1268,6 +1268,11 @@ extension ResponseModelRequest where Self: HTTPRequest {
 /// HTTPRequest AnyCodableModel响应模型请求协议默认实现
 extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodableModel {
     
+    /// 默认实现当前安全响应模型
+    public var safeResponseModel: ResponseModel {
+        return responseModel ?? .init()
+    }
+    
     /// 默认实现解析响应模型方法，调用decodeResponseModel，具体路径为nil
     public func responseModelFilter() -> ResponseModel? {
         return decodeResponseModel()
@@ -1276,16 +1281,6 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodabl
     /// 默认实现解析响应数据为数据模型，支持具体路径
     public func decodeResponseModel(designatedPath: String? = nil) -> ResponseModel? {
         return ResponseModel.decodeAnyModel(from: responseJSONObject, designatedPath: designatedPath)
-    }
-    
-}
-
-/// HTTPRequest SafeCodableModel响应模型请求协议默认实现
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: SafeCodableModel {
-    
-    /// 默认实现当前安全响应模型
-    public var safeResponseModel: ResponseModel {
-        return responseModel ?? .init()
     }
     
     /// 快捷设置安全模型响应成功句柄
