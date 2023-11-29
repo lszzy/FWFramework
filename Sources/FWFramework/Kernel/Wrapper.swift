@@ -11,7 +11,6 @@ import Foundation
 /// 全局包装器(因struct只读，只能用class)
 public class WrapperGlobal {}
 
-#if FWMacroSPI
 /// 全局包装器别名
 ///
 /// 自定义FW为任意名称(如APP)示例：
@@ -23,20 +22,6 @@ public class WrapperGlobal {}
 /// APP.safeString(object)
 /// ```
 @_spi(FW) public typealias FW = WrapperGlobal
-
-#else
-/// 全局包装器别名
-///
-/// 自定义FW为任意名称(如APP)示例：
-/// ```swift
-/// public typealias APP = WrapperGlobal
-/// ```
-/// 使用示例：
-/// ```swift
-/// APP.safeString(object)
-/// ```
-public typealias FW = WrapperGlobal
-#endif
 
 // MARK: - Wrapper
 /// 属性包装器(因struct只读，只能用class)
@@ -58,8 +43,8 @@ public class Wrapper<Base> {
 /// 自定义fw为任意名称(如app)示例：
 /// ```swift
 /// extension WrapperCompatible {
-///     public static var app: Wrapper<Self>.Type { get { fw } set {} }
-///     public var app: Wrapper<Self> { get { fw } set {} }
+///     public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+///     public var app: Wrapper<Self> { get { wrapperExtension } set {} }
 /// }
 /// ```
 /// 使用示例：
@@ -71,49 +56,43 @@ public protocol WrapperCompatible {
     /// 关联类型
     associatedtype WrapperBase
     
-    #if FWMacroSPI
-    /// 类包装器属性
-    @_spi(FW) static var fw: Wrapper<WrapperBase>.Type { get set }
-    /// 对象包装器属性
-    @_spi(FW) var fw: Wrapper<WrapperBase> { get set }
+    /// wrapperExtension类包装器属性
+    static var wrapperExtension: Wrapper<WrapperBase>.Type { get set }
+    /// wrapperExtension对象包装器属性
+    var wrapperExtension: Wrapper<WrapperBase> { get set }
     
-    #else
-    /// 类包装器属性
-    static var fw: Wrapper<WrapperBase>.Type { get set }
-    /// 对象包装器属性
-    var fw: Wrapper<WrapperBase> { get set }
-    #endif
+    /// fw类包装器属性
+    @_spi(FW) static var fw: Wrapper<WrapperBase>.Type { get set }
+    /// fw对象包装器属性
+    @_spi(FW) var fw: Wrapper<WrapperBase> { get set }
     
 }
 
 extension WrapperCompatible {
     
-    #if FWMacroSPI
-    /// 类包装器属性
+    /// wrapperExtension类包装器属性
+    public static var wrapperExtension: Wrapper<Self>.Type {
+        get { Wrapper<Self>.self }
+        set {}
+    }
+    
+    /// wrapperExtension对象包装器属性
+    public var wrapperExtension: Wrapper<Self> {
+        get { Wrapper(self) }
+        set {}
+    }
+    
+    /// fw类包装器属性
     @_spi(FW) public static var fw: Wrapper<Self>.Type {
         get { Wrapper<Self>.self }
         set {}
     }
     
-    /// 对象包装器属性
+    /// fw对象包装器属性
     @_spi(FW) public var fw: Wrapper<Self> {
         get { Wrapper(self) }
         set {}
     }
-    
-    #else
-    /// 类包装器属性
-    public static var fw: Wrapper<Self>.Type {
-        get { Wrapper<Self>.self }
-        set {}
-    }
-    
-    /// 对象包装器属性
-    public var fw: Wrapper<Self> {
-        get { Wrapper(self) }
-        set {}
-    }
-    #endif
     
 }
 
@@ -125,12 +104,3 @@ extension WrapperCompatible {
 /// 2. 静态static方法需要使用self的才扩展WrapperObject，否则扩展NSObject
 /// 3. 扩展WrapperObject时如需使用static var变量，可借助NSObject的fileprivate扩展
 public typealias WrapperObject = AnyObject & WrapperCompatible
-
-#if FWMacroSPI
-// MARK: - Autoloader+Wrapper
-@objc extension Autoloader {
-    
-    static func loadMacro_SPI() {}
-    
-}
-#endif

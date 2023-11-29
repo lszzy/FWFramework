@@ -7,15 +7,15 @@
 //
 
 import UIKit
-@_spi(FW) import FWFramework
+import FWFramework
 
 // MARK: - Wrapper
 public typealias APP = WrapperGlobal
 
 extension WrapperCompatible {
     
-    public static var app: Wrapper<Self>.Type { get { fw } set {} }
-    public var app: Wrapper<Self> { get { fw } set {} }
+    public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+    public var app: Wrapper<Self> { get { wrapperExtension } set {} }
     
 }
 
