@@ -222,10 +222,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         request.requestTask?.cancel()
     }
     
-    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
-        return true
-    }
-    
 }
 
 // MARK: - StreamingMultipartFormData+RequestPluginImpl

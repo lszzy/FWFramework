@@ -33,6 +33,8 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     open var cachedResponseHandler: CachedResponseHandler?
     /// 事件模拟器数组，默认空
     open var eventMonitors: [EventMonitor] = []
+    /// 自定义请求intercepter句柄，如配置RetryPolicy等，默认nil
+    open var requestIntercepterBlock: ((HTTPRequest) -> RequestInterceptor?)?
     
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
@@ -40,11 +42,6 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     open var acceptableStatusCodes: [Int] = Array(100..<600)
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: [String]?
-    
-    /// 自定义请求重试过滤句柄，返回是否启用默认重试方案，默认nil
-    open var retryRequestFilter: ((HTTPRequest) -> Bool)?
-    /// 自定义请求intercepter句柄，如配置RetryPolicy等，默认nil
-    open var requestIntercepterBlock: ((HTTPRequest) -> RequestInterceptor?)?
     
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
     
@@ -237,10 +234,6 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     
     open func cancelRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.cancel()
-    }
-    
-    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
-        return retryRequestFilter?(request) ?? true
     }
     
 }
