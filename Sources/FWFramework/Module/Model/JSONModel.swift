@@ -14,11 +14,11 @@ import UIKit
  
  - see: [HandyJSON](https://github.com/alibaba/HandyJSON)
  */
-public protocol JSONModel: _ExtendCustomModelType, SafeCodableModel {}
+public protocol JSONModel: _ExtendCustomModelType, AnyCodableModel {}
 
-public protocol JSONModelCustomTransformable: _ExtendCustomBasicType, SafeCodableModel {}
+public protocol JSONModelCustomTransformable: _ExtendCustomBasicType, AnyCodableModel {}
 
-public protocol JSONModelEnum: _RawEnumProtocol, SafeCodableModel {}
+public protocol JSONModelEnum: _RawEnumProtocol, AnyCodableModel {}
 
 // MARK: - Measuable
 typealias Byte = Int8

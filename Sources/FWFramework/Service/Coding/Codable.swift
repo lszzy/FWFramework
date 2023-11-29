@@ -1,5 +1,5 @@
 //
-//  Parameter.swift
+//  Codable.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal+SafeValue
+// MARK: - WrapperGlobal+Codable
 extension WrapperGlobal {
     
     /// 安全字符串，不为nil
@@ -25,26 +25,24 @@ extension WrapperGlobal {
         return URL.fw_safeURL(value)
     }
     
-}
-
-// MARK: - WrapperGlobal+SafeType
-extension WrapperGlobal {
     /// 获取安全值
-    public static func safeValue<T: SafeType>(_ value: T?) -> T {
+    public static func safeValue<T: BasicCodableType>(_ value: T?) -> T {
         return value.safeValue
     }
 
-    /// 判断是否为空
-    public static func isEmpty<T: SafeType>(_ value: T?) -> Bool {
-        return value.isEmpty
+    /// 判断是否不为空
+    public static func isNotEmpty<T: BasicCodableType>(_ value: T?) -> Bool {
+        return value.isNotEmpty
     }
     
-    /// 判断是否为none，兼容嵌套Optional
-    public static func isNone(_ value: Any?) -> Bool {
-        return Optional<Any>.isNone(value)
+    /// 判断是否为nil，兼容嵌套Optional
+    public static func isNil(_ value: Any?) -> Bool {
+        return Optional<Any>.isNil(value)
     }
+    
 }
 
+// MARK: - Codable+Extension
 @_spi(FW) extension String {
     /// 安全字符串，不为nil
     public static func fw_safeString(_ value: Any?) -> String {
@@ -129,7 +127,6 @@ extension WrapperGlobal {
     }
 }
 
-// MARK: - SafeValue
 /// 可选类安全转换，不为nil
 extension Optional {
     public var safeInt: Int { return safeNumber.intValue }
@@ -140,135 +137,71 @@ extension Optional {
     public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
-    public var safeJSON: JSON { return JSON(self) }
     
-    public static func isNone(_ value: Wrapped?) -> Bool {
+    public var isNil: Bool { return self == nil }
+    public static func isNil(_ value: Wrapped?) -> Bool {
         return value == nil || value._plainValue() == nil
-    }
-    public var isSome: Bool { return self != nil }
-    public var isNone: Bool { return !isSome }
-    @discardableResult
-    public func onSome(_ block: (Wrapped) -> Void) -> Self {
-        if let this = self { block(this) }
-        return self
-    }
-    @discardableResult
-    public func onNone(_ block: () -> Void) -> Self {
-        if isNone { block() }
-        return self
-    }
-    public func or(_ defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
-        return self ?? defaultValue()
-    }
-    public func then<T>(_ optional: @autoclosure () -> T?) -> T? {
-        guard self != nil else { return nil }
-        return optional()
     }
     public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
         guard let this = self else { return nil }
         return try block(this)
     }
-    public func filter(_ condition: (Wrapped) -> Bool) -> Self {
-        return map(condition) == .some(true) ? self : .none
-    }
 }
 
-// MARK: - SafeType
-public protocol SafeType: SafeCodableModel {
-    static var safeValue: Self { get }
-    var isEmpty: Bool { get }
+// MARK: - AnyCodableType
+public protocol AnyCodableType {
     init()
 }
 
-extension SafeType {
-    public var isNotEmpty: Bool { return !self.isEmpty }
+public protocol BasicCodableType: AnyCodableType {
+    var isNotEmpty: Bool { get }
 }
 
-extension Optional where Wrapped: SafeType {
-    public static var safeValue: Wrapped { return .safeValue }
-    public var isEmpty: Bool { if let value = self { return value.isEmpty } else { return true } }
-    public var isNotEmpty: Bool { if let value = self { return !value.isEmpty } else { return false } }
-    public var safeValue: Wrapped { if let value = self { return value } else { return .safeValue } }
+extension BasicCodableType where Self: Equatable {
+    public var isNotEmpty: Bool { return self != .init() }
 }
 
-extension Int: SafeType {
-    public static var safeValue: Int = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension Optional where Wrapped: AnyCodableType {
+    public var safeValue: Wrapped { if let value = self { return value } else { return .init() } }
 }
-extension Int8: SafeType {
-    public static var safeValue: Int8 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension Optional where Wrapped: BasicCodableType {
+    public var isNotEmpty: Bool { if let value = self { return value.isNotEmpty } else { return false } }
 }
-extension Int16: SafeType {
-    public static var safeValue: Int16 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension Int32: SafeType {
-    public static var safeValue: Int32 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension Int64: SafeType {
-    public static var safeValue: Int64 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension UInt: SafeType {
-    public static var safeValue: UInt = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension UInt8: SafeType {
-    public static var safeValue: UInt8 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension UInt16: SafeType {
-    public static var safeValue: UInt16 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension UInt32: SafeType {
-    public static var safeValue: UInt32 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension UInt64: SafeType {
-    public static var safeValue: UInt64 = .zero
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension Float: SafeType {
-    public static var safeValue: Float = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+
+// MARK: - AnyCodableType+Extension
+extension Int: BasicCodableType {}
+extension Int8: BasicCodableType {}
+extension Int16: BasicCodableType {}
+extension Int32: BasicCodableType {}
+extension Int64: BasicCodableType {}
+extension UInt: BasicCodableType {}
+extension UInt8: BasicCodableType {}
+extension UInt16: BasicCodableType {}
+extension UInt32: BasicCodableType {}
+extension UInt64: BasicCodableType {}
+extension Bool: BasicCodableType {}
+extension Float: BasicCodableType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension Double: SafeType {
-    public static var safeValue: Double = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension Double: BasicCodableType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension Bool: SafeType {
-    public static var safeValue: Bool = false
-    public var isEmpty: Bool { return self == .safeValue }
-}
-extension URL: SafeType {
-    public static var safeValue: URL = NSURL() as URL
-    public var isEmpty: Bool { return absoluteString.isEmpty }
+extension URL: BasicCodableType {
     public init() {
         self.init(string: " ")!
         self = NSURL() as URL
     }
 }
-extension Data: SafeType {
-    public static var safeValue: Data = Data()
-}
-extension String: SafeType {
-    public static var safeValue: String = ""
-}
-extension Array: SafeType {
-    public static var safeValue: Array<Element> { return [] }
+extension Data: BasicCodableType {}
+extension String: BasicCodableType {}
+extension Array: BasicCodableType {
+    public var isNotEmpty: Bool { return !isEmpty }
     public func safeElement(_ index: Int) -> Element? {
         return index >= 0 && index < endIndex ? self[index] : nil
     }
     public subscript(safe index: Int) -> Element? {
         return safeElement(index)
     }
-}
-extension Array {
     public mutating func safeSwap(from index: Index, to otherIndex: Index) {
         guard index != otherIndex else { return }
         guard startIndex..<endIndex ~= index else { return }
@@ -289,13 +222,9 @@ extension Array where Element: Equatable {
         return self
     }
 }
-extension Set: SafeType {
-    public static var safeValue: Set<Element> { return [] }
-}
-extension Dictionary: SafeType {
-    public static var safeValue: Dictionary<Key, Value> { return [:] }
-}
-extension Dictionary {
+extension Set: BasicCodableType {}
+extension Dictionary: BasicCodableType {
+    public var isNotEmpty: Bool { return !isEmpty }
     public func has(key: Key) -> Bool {
         return index(forKey: key) != nil
     }
@@ -303,40 +232,57 @@ extension Dictionary {
         keys.forEach { removeValue(forKey: $0) }
     }
 }
-extension CGFloat: SafeType {
-    public static var safeValue: CGFloat = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension CGFloat: BasicCodableType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension CGPoint: SafeType {
-    public static var safeValue: CGPoint = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension CGPoint: BasicCodableType {
     public var isValid: Bool { return x.isValid && y.isValid }
 }
-extension CGSize: SafeType {
-    public static var safeValue: CGSize = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension CGSize: BasicCodableType {
     public var isValid: Bool { return width.isValid && height.isValid }
 }
-extension CGRect: SafeType {
-    public static var safeValue: CGRect = .zero
-    public var isEmpty: Bool { return self == .safeValue }
+extension CGRect: BasicCodableType {
     public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
 }
 
-// MARK: - DataParameter
-public protocol DataParameter {
+// MARK: - AnyParameter
+public protocol AnyParameter {}
+
+public protocol DataParameter: AnyParameter {
     var dataValue: Data { get }
 }
 
+public protocol StringParameter: AnyParameter {
+    var stringValue: String { get }
+}
+
+public protocol URLParameter: AnyParameter {
+    var urlValue: URL { get }
+}
+
+public protocol URLRequestParameter: AnyParameter {
+    var urlRequestValue: URLRequest { get }
+}
+
+public protocol ArrayParameter<E>: AnyParameter {
+    associatedtype E
+    var arrayValue: Array<E> { get }
+}
+
+public protocol DictionaryParameter<K, V>: AnyParameter where K: Hashable {
+    associatedtype K
+    associatedtype V
+    var dictionaryValue: Dictionary<K, V> { get }
+}
+
+public protocol ObjectParameter: DictionaryParameter {
+    static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self
+}
+
+// MARK: - AnyParameter+Extension
 extension Data: DataParameter, StringParameter {
     public var dataValue: Data { self }
     public var stringValue: String { String(data: self, encoding: .utf8) ?? .init() }
-}
-
-// MARK: - StringParameter
-public protocol StringParameter {
-    var stringValue: String { get }
 }
 
 extension String: StringParameter, DataParameter, URLParameter, URLRequestParameter {
@@ -346,20 +292,10 @@ extension String: StringParameter, DataParameter, URLParameter, URLRequestParame
     public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
 }
 
-// MARK: - URLParameter
-public protocol URLParameter {
-    var urlValue: URL { get }
-}
-
 extension URL: URLParameter, StringParameter, URLRequestParameter {
     public var urlValue: URL { self }
     public var stringValue: String { absoluteString }
     public var urlRequestValue: URLRequest { URLRequest(url: self) }
-}
-
-// MARK: - URLRequestParameter
-public protocol URLRequestParameter {
-    var urlRequestValue: URLRequest { get }
 }
 
 extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
@@ -368,39 +304,21 @@ extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
     public var stringValue: String { url?.absoluteString ?? .init() }
 }
 
-// MARK: - ArrayParameter
-public protocol ArrayParameter<E> {
-    associatedtype E
-    var arrayValue: Array<E> { get }
-}
-
 extension Array: ArrayParameter {
     public var arrayValue: Array<Element> { self }
-}
-
-// MARK: - DictionaryParameter
-public protocol DictionaryParameter<K, V> where K: Hashable {
-    associatedtype K
-    associatedtype V
-    var dictionaryValue: Dictionary<K, V> { get }
 }
 
 extension Dictionary: DictionaryParameter {
     public var dictionaryValue: Dictionary<Key, Value> { self }
 }
 
-// MARK: - ParameterProtocol
-public protocol ParameterProtocol: DictionaryParameter {
-    static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self
-}
-
-extension ParameterProtocol {
+extension ObjectParameter {
     public var dictionaryValue: [AnyHashable: Any] {
         NSObject.fw_mirrorDictionary(self)
     }
 }
 
-extension ParameterProtocol where Self: JSONModel {
+extension ObjectParameter where Self: JSONModel {
     public static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self {
         return safeDeserialize(from: dict)
     }
