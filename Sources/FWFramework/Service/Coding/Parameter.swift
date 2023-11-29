@@ -324,59 +324,84 @@ extension CGRect: SafeType {
     public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
 }
 
-// MARK: - SafeData
-public protocol SafeData {
-    var safeData: Data { get }
+// MARK: - DataParameter
+public protocol DataParameter {
+    var dataValue: Data { get }
 }
 
-extension Data: SafeData {
-    public var safeData: Data { self }
+extension Data: DataParameter, StringParameter {
+    public var dataValue: Data { self }
+    public var stringValue: String { String(data: self, encoding: .utf8) ?? .init() }
 }
 
-// MARK: - SafeString
-public protocol SafeString {
-    var safeString: String { get }
+// MARK: - StringParameter
+public protocol StringParameter {
+    var stringValue: String { get }
 }
 
-extension String: SafeString {
-    public var safeString: String { self }
+extension String: StringParameter, DataParameter, URLParameter, URLRequestParameter {
+    public var stringValue: String { self }
+    public var dataValue: Data { data(using: .utf8) ?? .init() }
+    public var urlValue: URL { URL.fw_url(string: self) ?? NSURL() as URL }
+    public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
 }
 
-// MARK: - SafeURL
-public protocol SafeURL {
-    var safeURL: URL { get }
+// MARK: - URLParameter
+public protocol URLParameter {
+    var urlValue: URL { get }
 }
 
-extension URL: SafeURL {
-    public var safeURL: URL { self }
+extension URL: URLParameter, StringParameter, URLRequestParameter {
+    public var urlValue: URL { self }
+    public var stringValue: String { absoluteString }
+    public var urlRequestValue: URLRequest { URLRequest(url: self) }
 }
 
-// MARK: - SafeURLRequest
-public protocol SafeURLRequest {
-    var safeURLRequest: URLRequest { get }
+// MARK: - URLRequestParameter
+public protocol URLRequestParameter {
+    var urlRequestValue: URLRequest { get }
 }
 
-extension URLRequest: SafeURLRequest {
-    public var safeURLRequest: URLRequest { self }
+extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
+    public var urlRequestValue: URLRequest { self }
+    public var urlValue: URL { url ?? NSURL() as URL }
+    public var stringValue: String { url?.absoluteString ?? .init() }
 }
 
-// MARK: - SafeArray
-public protocol SafeArray<Element> {
-    associatedtype Element
-    var safeArray: Array<Element> { get }
+// MARK: - ArrayParameter
+public protocol ArrayParameter<E> {
+    associatedtype E
+    var arrayValue: Array<E> { get }
 }
 
-extension Array: SafeArray {
-    public var safeArray: Array<Element> { self }
+extension Array: ArrayParameter {
+    public var arrayValue: Array<Element> { self }
 }
 
-// MARK: - SafeDictionary
-public protocol SafeDictionary<Key, Value> where Key: Hashable {
-    associatedtype Key
-    associatedtype Value
-    var safeDictionary: Dictionary<Key, Value> { get }
+// MARK: - DictionaryParameter
+public protocol DictionaryParameter<K, V> where K: Hashable {
+    associatedtype K
+    associatedtype V
+    var dictionaryValue: Dictionary<K, V> { get }
 }
 
-extension Dictionary: SafeDictionary {
-    public var safeDictionary: Dictionary<Key, Value> { self }
+extension Dictionary: DictionaryParameter {
+    public var dictionaryValue: Dictionary<Key, Value> { self }
+}
+
+// MARK: - ParameterProtocol
+public protocol ParameterProtocol: DictionaryParameter {
+    static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self
+}
+
+extension ParameterProtocol {
+    public var dictionaryValue: [AnyHashable: Any] {
+        NSObject.fw_mirrorDictionary(self)
+    }
+}
+
+extension ParameterProtocol where Self: JSONModel {
+    public static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self {
+        return safeDeserialize(from: dict)
+    }
 }
