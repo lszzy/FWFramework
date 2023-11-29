@@ -234,8 +234,7 @@ open class RequestManager: NSObject {
     }
     
     private func startRequest(_ request: HTTPRequest) {
-        if request.config.requestPlugin.shouldRetryRequest(request),
-           let requestRetrier = request.config.requestRetrier,
+        if let requestRetrier = request.config.requestRetrier,
            requestRetrier.shouldRetryRequest(request) {
             requestRetrier.startRetryRequest(request) { [weak self] response, responseObject, error in
                 self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)

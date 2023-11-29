@@ -20,9 +20,6 @@ public protocol RequestPlugin: AnyObject {
     /// 取消请求
     func cancelRequest(_ request: HTTPRequest)
     
-    /// 是否启用默认重试方案
-    func shouldRetryRequest(_ request: HTTPRequest) -> Bool
-    
 }
 
 extension RequestPlugin {
@@ -40,11 +37,6 @@ extension RequestPlugin {
     /// 默认实现取消请求
     public func cancelRequest(_ request: HTTPRequest) {
         RequestPluginImpl.shared.cancelRequest(request)
-    }
-    
-    /// 默认实现是否启用请求重试机制
-    public func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
-        return RequestPluginImpl.shared.shouldRetryRequest(request)
     }
     
 }
