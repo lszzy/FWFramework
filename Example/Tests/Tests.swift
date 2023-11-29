@@ -154,7 +154,7 @@ class Tests: XCTestCase {
             "routerSource": "test2"
         ])
         XCTAssertEqual(parameter.routerSource, "test2")
-        var dict = parameter.toDictionary()
+        var dict = parameter.dictionaryValue
         XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
         XCTAssertEqual(dict["_privateValue"] as? Int, nil)
         XCTAssertEqual(dict[Router.Parameter.routerSourceKey] as? String, parameter.routerSource)
