@@ -5,8 +5,6 @@
 //  Created by wuyong on 2023/7/14.
 //
 
-#if FWMacroShortcut
-
 // MARK: - Adaptive+Shortcut
 extension CGFloat {
     
@@ -14,10 +12,6 @@ extension CGFloat {
     public var relative: CGFloat { UIScreen.fw_relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public var fixed: CGFloat { UIScreen.fw_fixedValue(self) }
-    /// 获取相对设计图高度等比例缩放值
-    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(self) }
-    /// 获取相对设计图高度等比例缩放时的固定高度值
-    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(self) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw_flatValue(self) }
     
@@ -73,10 +67,6 @@ extension Int {
     public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放值
-    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放时的固定高度值
-    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
     
@@ -88,10 +78,6 @@ extension Float {
     public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放值
-    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放时的固定高度值
-    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
     
@@ -103,10 +89,6 @@ extension Double {
     public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放值
-    public var relativeHeight: CGFloat { UIScreen.fw_relativeHeight(CGFloat(self)) }
-    /// 获取相对设计图高度等比例缩放时的固定高度值
-    public var fixedHeight: CGFloat { UIScreen.fw_fixedHeight(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
     
@@ -116,15 +98,6 @@ extension Double {
 extension UIView {
     
     /// 链式布局对象
-    public var chain: LayoutChain {  fw_layoutChain }
+    public var chain: LayoutChain { fw_layoutChain }
     
 }
-
-// MARK: - Autoloader+Shortcut
-@objc extension Autoloader {
-    
-    static func loadMacro_Shortcut() {}
-    
-}
-
-#endif

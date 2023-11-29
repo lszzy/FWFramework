@@ -33,20 +33,6 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWMacro' do |ss|
-    ss.subspec 'SPI' do |sss|
-      sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroSPI'
-      }
-    end
-    
-    ss.subspec 'Shortcut' do |sss|
-      sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroShortcut'
-      }
-    end
-      
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
