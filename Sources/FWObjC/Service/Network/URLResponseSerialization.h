@@ -154,54 +154,6 @@ NS_SWIFT_NAME(JSONResponseSerializer)
 #pragma mark -
 
 /**
- `__FWXMLParserResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLParser` objects.
-
- By default, `__FWXMLParserResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
-
- - `application/xml`
- - `text/xml`
- */
-NS_SWIFT_NAME(XMLParserResponseSerializer)
-@interface __FWXMLParserResponseSerializer : __FWHTTPResponseSerializer
-
-@end
-
-#pragma mark -
-
-#ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
-
-/**
- `__FWXMLDocumentResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
-
- By default, `__FWXMLDocumentResponseSerializer` accepts the following MIME types, which includes the official standard, `application/xml`, as well as other commonly-used types:
-
- - `application/xml`
- - `text/xml`
- */
-NS_SWIFT_NAME(XMLDocumentResponseSerializer)
-@interface __FWXMLDocumentResponseSerializer : __FWHTTPResponseSerializer
-
-- (instancetype)init;
-
-/**
- Input and output options specifically intended for `NSXMLDocument` objects. For possible values, see the `NSXMLDocument` documentation section "Input and Output Options". `0` by default.
- */
-@property (nonatomic, assign) NSUInteger options;
-
-/**
- Creates and returns an XML document serializer with the specified options.
-
- @param mask The XML document options.
- */
-+ (instancetype)serializerWithXMLDocumentOptions:(NSUInteger)mask;
-
-@end
-
-#endif
-
-#pragma mark -
-
-/**
  `__FWPropertyListResponseSerializer` is a subclass of `__FWHTTPResponseSerializer` that validates and decodes XML responses as an `NSXMLDocument` objects.
 
  By default, `__FWPropertyListResponseSerializer` accepts the following MIME types:
