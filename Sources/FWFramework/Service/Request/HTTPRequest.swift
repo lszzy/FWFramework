@@ -95,6 +95,8 @@ open class HTTPRequest: NSObject {
     open var uploadProgressBlock: ((Progress) -> Void)?
     /// 请求优先级，默认default
     open var requestPriority: RequestPriority = .default
+    /// 是否是同步串行请求，默认false为异步并发请求
+    open var isSynchronously: Bool = false
     /// 自定义用户信息
     open var requestUserInfo: [AnyHashable: Any]?
     /// 是否使用已缓存响应
@@ -485,7 +487,7 @@ open class HTTPRequest: NSObject {
     }
     
     // MARK: - Action
-    /// 开始并发请求，如果加载缓存且缓存存在时允许再调用一次
+    /// 开始请求，如果加载缓存且缓存存在时允许再调用一次
     @discardableResult
     open func start() -> Self {
         guard !isStarted else { return self }
@@ -504,18 +506,18 @@ open class HTTPRequest: NSObject {
         }
     }
     
-    /// 停止并发请求
+    /// 停止请求
     open func stop() {
         guard !_cancelled else { return }
         
+        _cancelled = true
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         RequestManager.shared.cancelRequest(self)
-        _cancelled = true
         toggleAccessoriesDidStopCallBack()
     }
     
-    /// 开始并发请求并指定成功、失败句柄
+    /// 开始请求并指定成功、失败句柄
     @discardableResult
     open func start<T: HTTPRequest>(success: ((T) -> Void)?, failure: ((T) -> Void)?) -> Self {
         successCompletionBlock = success != nil ? { success?($0 as! T) } : nil
@@ -523,29 +525,10 @@ open class HTTPRequest: NSObject {
         return start()
     }
     
-    /// 开始并发请求并指定完成句柄
+    /// 开始请求并指定完成句柄
     @discardableResult
     open func start<T: HTTPRequest>(completion: ((T) -> Void)?) -> Self {
         return start(success: completion, failure: completion)
-    }
-    
-    /// 开始同步串行请求并指定成功、失败句柄
-    @discardableResult
-    open func startSynchronously<T: HTTPRequest>(success: ((T) -> Void)?, failure: ((T) -> Void)?) -> Self {
-        return startSynchronously(filter: nil) { (request: T) in
-            if request.error == nil {
-                success?(request)
-            } else {
-                failure?(request)
-            }
-        }
-    }
-    
-    /// 开始同步串行请求并指定过滤器和完成句柄
-    @discardableResult
-    open func startSynchronously<T: HTTPRequest>(filter: (() -> Bool)? = nil, completion: ((T) -> Void)?) -> Self {
-        RequestManager.shared.synchronousRequest(self, filter: filter, completion: completion != nil ? { completion?($0 as! T) } : nil)
-        return self
     }
     
     /// 清理完成句柄
@@ -900,6 +883,13 @@ extension HTTPRequest {
         return self
     }
     
+    /// 设置是否是同步串行请求
+    @discardableResult
+    public func synchronously(_ synchronously: Bool) -> Self {
+        self.isSynchronously = synchronously
+        return self
+    }
+    
     /// 自定义用户信息
     @discardableResult
     public func requestUserInfo(_ userInfo: [AnyHashable: Any]?) -> Self {
@@ -1036,7 +1026,6 @@ extension HTTPRequest {
     private func startWithoutCache() {
         isStarted = true
         clearCacheVariables()
-        toggleAccessoriesWillStartCallBack()
         RequestManager.shared.addRequest(self)
     }
     
