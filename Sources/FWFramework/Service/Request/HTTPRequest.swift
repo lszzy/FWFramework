@@ -63,7 +63,7 @@ extension RequestDelegate {
 /// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: NSObject {
+open class HTTPRequest: CustomStringConvertible {
     
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void
@@ -256,20 +256,14 @@ open class HTTPRequest: NSObject {
     private var _isCancelled = false
     
     // MARK: - Lifecycle
-    public override init() {
-        super.init()
-    }
+    public init() {}
     
-    /// 请求描述
-    open override var description: String {
-        return String(
-            format: "<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }",
-            NSStringFromClass(self.classForCoder),
-            self,
-            requestTask?.currentRequest?.url?.absoluteString ?? requestUrl(),
-            requestTask?.currentRequest?.httpMethod ?? requestMethod().rawValue,
-            String.fw_safeString(requestArgument())
-        )
+    open var description: String {
+        let url = requestTask?.currentRequest?.url?.absoluteString ?? requestUrl()
+        let method = requestTask?.currentRequest?.httpMethod ?? requestMethod().rawValue
+        var result = "\(method) \(url)"
+        if let response = response { result += " \(response.statusCode)" }
+        return result
     }
     
     // MARK: - Request

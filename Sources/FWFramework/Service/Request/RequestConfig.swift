@@ -41,7 +41,7 @@ extension RequestFilterProtocol {
 
 // MARK: - RequestConfig
 /// 请求配置类
-open class RequestConfig: NSObject {
+open class RequestConfig {
     
     public static let shared = RequestConfig()
     
@@ -104,13 +104,8 @@ open class RequestConfig: NSObject {
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
     open var hideLoadingBlock: HTTPRequest.Completion?
     
-    public override init() {
-        super.init()
-    }
-    
-    open override var description: String {
-        return String(format: "<%@: %p>{ baseURL: %@ } { cdnURL: %@ }", NSStringFromClass(self.classForCoder), self, baseUrl, cdnUrl)
-    }
+    /// 初始化方法
+    public init() {}
     
     /// 添加请求过滤器
     open func addRequestFilter(_ fileter: RequestFilterProtocol) {
@@ -136,7 +131,7 @@ public protocol RequestAccessoryProtocol: AnyObject {
 }
 
 /// 默认句柄请求配件类
-open class RequestAccessory: NSObject, RequestAccessoryProtocol {
+open class RequestAccessory: RequestAccessoryProtocol {
     /// 即将开始句柄
     open var willStartBlock: ((Any) -> Void)?
     /// 即将结束句柄
@@ -290,7 +285,7 @@ public protocol RequestRetrierProtocol: AnyObject {
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
-open class RequestRetrier: NSObject, RequestRetrierProtocol {
+open class RequestRetrier: RequestRetrierProtocol {
     public static let `default` = RequestRetrier()
     
     /// 自定义重试过滤器，优先级最高且线程安全，必须回调completionHandler，可用于刷新授权等
@@ -364,7 +359,7 @@ public protocol RequestValidatorProtocol: AnyObject {
 }
 
 /// 默认请求验证器，调用jsonValidator验证responseJSONObject
-open class RequestValidator: NSObject, RequestValidatorProtocol {
+open class RequestValidator: RequestValidatorProtocol {
     public static let `default` = RequestValidator()
     
     open func validateResponse(for request: HTTPRequest) -> Bool {
@@ -418,7 +413,7 @@ public protocol RequestCacheProtocol: AnyObject {
 }
 
 /// 默认请求文件缓存
-open class RequestCache: NSObject, RequestCacheProtocol {
+open class RequestCache: RequestCacheProtocol {
     public static let `default` = RequestCache()
     
     static let cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)

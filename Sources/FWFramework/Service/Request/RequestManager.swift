@@ -8,7 +8,7 @@
 import Foundation
 
 /// 请求管理器
-open class RequestManager: NSObject {
+open class RequestManager {
     
     public static let shared = RequestManager()
     

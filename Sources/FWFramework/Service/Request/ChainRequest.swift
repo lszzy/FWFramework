@@ -24,7 +24,7 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: NSObject, RequestDelegate {
+open class ChainRequest: RequestDelegate {
     
     /// 队列请求完成句柄
     public typealias Completion = (ChainRequest) -> Void
@@ -69,9 +69,7 @@ open class ChainRequest: NSObject, RequestDelegate {
     private let emptyCallback: CallbackHandler = { _, _ in }
     
     // MARK: - Lifecycle
-    public override init() {
-        super.init()
-    }
+    public init() {}
     
     deinit {
         clearRequest()
@@ -251,7 +249,7 @@ open class ChainRequest: NSObject, RequestDelegate {
 
 // MARK: - ChainRequestManager
 /// 队列请求管理器
-open class ChainRequestManager: NSObject {
+open class ChainRequestManager {
     
     public static let shared = ChainRequestManager()
     
@@ -269,7 +267,7 @@ open class ChainRequestManager: NSObject {
     open func removeChainRequest(_ chainRequest: ChainRequest) {
         lock.lock()
         defer { lock.unlock() }
-        chainRequestArray.removeAll(where: { $0 == chainRequest })
+        chainRequestArray.removeAll(where: { $0 === chainRequest })
     }
     
 }
