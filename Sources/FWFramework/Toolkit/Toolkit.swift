@@ -17,63 +17,6 @@ import StoreKit
 import FWObjC
 #endif
 
-// MARK: - WrapperGlobal+Toolkit
-extension WrapperGlobal {
-    
-    /// 从16进制创建UIColor
-    ///
-    /// - Parameters:
-    ///   - hex: 十六进制值，格式0xFFFFFF
-    ///   - alpha: 透明度可选，默认1.0
-    /// - Returns: UIColor
-    public static func color(_ hex: Int, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor.fw_color(hex: hex, alpha: alpha)
-    }
-
-    /// 从RGB创建UIColor
-    ///
-    /// - Parameters:
-    ///   - red: 红色值
-    ///   - green: 绿色值
-    ///   - blue: 蓝色值
-    ///   - alpha: 透明度可选，默认1.0
-    /// - Returns: UIColor
-    public static func color(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
-    }
-
-    /// 快速创建系统字体
-    ///
-    /// - Parameters:
-    ///   - size: 字体字号
-    ///   - weight: 字重可选，默认Regular
-    /// - Returns: UIFont
-    public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
-        return UIFont.fw_font(ofSize: size, weight: weight)
-    }
-    
-    /// 快速创建图标对象
-    ///
-    /// - Parameters:
-    ///   - named: 图标名称
-    ///   - size: 图标大小
-    /// - Returns: FWIcon对象
-    public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
-        return Icon.iconNamed(named, size: size)
-    }
-    
-    /// 快速创建图标图像
-    ///
-    /// - Parameters:
-    ///   - name: 图标名称
-    ///   - size: 图片大小
-    /// - Returns: UIImage对象
-    public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
-        return Icon.iconImage(name, size: size)
-    }
-    
-}
-
 // MARK: - UIApplication+Toolkit
 /// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app。
 /// 为了防止系统启动图缓存，每次更换启动图时建议修改启动图名称(比如添加日期等)，防止刚更新App时新图不生效

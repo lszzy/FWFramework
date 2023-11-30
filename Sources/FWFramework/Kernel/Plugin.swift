@@ -10,11 +10,6 @@ import Foundation
 import FWObjC
 #endif
 
-extension WrapperGlobal {
-    /// 插件快速访问
-    public static var plugin = PluginManager.self
-}
-
 /// 可选插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
 @objc public protocol PluginProtocol {
     

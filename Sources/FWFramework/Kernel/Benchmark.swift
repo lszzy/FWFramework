@@ -7,27 +7,6 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal+Benchmark
-extension WrapperGlobal {
-    
-    /// 标记时间调试开始
-    ///
-    /// - Parameter name: 调试标签，默认空字符串
-    public static func begin(_ name: String = "") {
-        Benchmark.begin(name)
-    }
-
-    /// 标记时间调试结束并打印消耗时间
-    ///
-    /// - Parameter name: 调试标签，默认空字符串
-    /// - Returns: 消耗时间
-    @discardableResult
-    public static func end(_ name: String = "") -> TimeInterval {
-        return Benchmark.end(name)
-    }
-    
-}
-
 // MARK: - Benchmark
 /// 时间调试器
 public class Benchmark: NSObject {

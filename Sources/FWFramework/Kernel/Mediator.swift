@@ -10,12 +10,6 @@ import Foundation
 import FWObjC
 #endif
 
-// MARK: - WrapperGlobal+Mediator
-extension WrapperGlobal {
-    /// 中间件快速访问
-    public static var mediator = Mediator.self
-}
-
 // MARK: - ModulePriority
 /// 模块可扩展优先级
 public struct ModulePriority: RawRepresentable, Equatable, Hashable {

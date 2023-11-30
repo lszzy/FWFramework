@@ -8,11 +8,6 @@
 import UIKit
 
 // MARK: - Router
-extension WrapperGlobal {
-    /// 路由快速访问
-    public static var router = Router.self
-}
-
 /// URL路由器
 ///
 /// 由于Function也是闭包，Handler参数支持静态方法，示例：AppRouter.routePlugin(_:)

@@ -7,6 +7,21 @@
 
 import Foundation
 
+// MARK: - WrapperGlobal+Language
+extension WrapperGlobal {
+    
+    /// 读取本地化字符串
+    ///
+    /// - Parameters:
+    ///   - key: 本地化键名
+    ///   - table: 本地化表名，默认Localizable.strings
+    /// - Returns: 本地化字符串
+    public static func localized(_ key: String, _ table: String? = nil) -> String {
+        return Bundle.fw_localizedString(key, table: table)
+    }
+    
+}
+
 // MARK: - String+Language
 extension Wrapper where Base == String {
     /// 快速读取本地化语言
