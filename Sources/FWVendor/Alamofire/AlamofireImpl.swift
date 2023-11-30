@@ -69,7 +69,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             urlRequest.cachePolicy = cachePolicy
         }
         
-        request.filterUrlRequest(&urlRequest)
+        request.urlRequestFilter(&urlRequest)
         
         let filters = request.config.requestFilters
         for filter in filters {

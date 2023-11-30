@@ -266,7 +266,7 @@ open class RequestManager: NSObject {
         
         if succeed {
             do {
-                try request.filterResponse()
+                try request.responseFilter()
             } catch let responseError {
                 succeed = false
                 requestError = responseError
