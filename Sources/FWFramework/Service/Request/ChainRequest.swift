@@ -93,7 +93,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         
         succeedRequest = nil
         failedRequest = nil
-        RequestManager.shared.addChainRequest(self)
+        ChainRequestManager.shared.addChainRequest(self)
         startNextRequest(nil)
         return self
     }
@@ -105,7 +105,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         clearRequest()
         isCancelled = true
         toggleAccessoriesDidStopCallBack()
-        RequestManager.shared.removeChainRequest(self)
+        ChainRequestManager.shared.removeChainRequest(self)
     }
     
     /// 开始请求并指定成功、失败句柄
@@ -120,25 +120,6 @@ open class ChainRequest: NSObject, RequestDelegate {
     @discardableResult
     open func start(completion: Completion?) -> Self {
         return start(success: completion, failure: completion)
-    }
-    
-    /// 开始同步串行请求并指定成功、失败句柄
-    @discardableResult
-    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
-        return startSynchronously(filter: nil) { chainRequest in
-            if chainRequest.failedRequest == nil {
-                success?(chainRequest)
-            } else {
-                failure?(chainRequest)
-            }
-        }
-    }
-    
-    /// 开始同步串行请求并指定过滤器和完成句柄
-    @discardableResult
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
-        RequestManager.shared.synchronousChainRequest(self, filter: filter, completion: completion)
-        return self
     }
     
     /// 添加请求配件
@@ -247,7 +228,7 @@ open class ChainRequest: NSObject, RequestDelegate {
         
         clearCompletionBlock()
         toggleAccessoriesDidStopCallBack()
-        RequestManager.shared.removeChainRequest(self)
+        ChainRequestManager.shared.removeChainRequest(self)
     }
     
     private func clearRequest() {
@@ -264,6 +245,31 @@ open class ChainRequest: NSObject, RequestDelegate {
         requestCallbackArray.removeAll()
         requestBuilder = nil
         clearCompletionBlock()
+    }
+    
+}
+
+// MARK: - ChainRequestManager
+/// 队列请求管理器
+open class ChainRequestManager: NSObject {
+    
+    public static let shared = ChainRequestManager()
+    
+    private var chainRequestArray: [ChainRequest] = []
+    private var lock = NSLock()
+    
+    /// 添加队列请求
+    open func addChainRequest(_ chainRequest: ChainRequest) {
+        lock.lock()
+        defer { lock.unlock() }
+        chainRequestArray.append(chainRequest)
+    }
+    
+    /// 移除队列请求
+    open func removeChainRequest(_ chainRequest: ChainRequest) {
+        lock.lock()
+        defer { lock.unlock() }
+        chainRequestArray.removeAll(where: { $0 == chainRequest })
     }
     
 }

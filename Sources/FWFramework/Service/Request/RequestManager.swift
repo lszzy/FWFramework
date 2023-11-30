@@ -12,13 +12,11 @@ open class RequestManager: NSObject {
     
     public static let shared = RequestManager()
     
-    private var batchRequestArray: [BatchRequest] = []
-    private var chainRequestArray: [ChainRequest] = []
     private var requestsRecord: [String: HTTPRequest] = [:]
+    private var downloadFolderName = "Incomplete"
     private var lock = NSLock()
     private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
     private var synchronousSemaphore = DispatchSemaphore(value: 1)
-    private var downloadFolderName = "Incomplete"
     
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
@@ -67,34 +65,6 @@ open class RequestManager: NSObject {
         }
     }
     
-    /// 添加批量请求
-    open func addBatchRequest(_ batchRequest: BatchRequest) {
-        lock.lock()
-        defer { lock.unlock() }
-        batchRequestArray.append(batchRequest)
-    }
-    
-    /// 移除批量请求
-    open func removeBatchRequest(_ batchRequest: BatchRequest) {
-        lock.lock()
-        defer { lock.unlock() }
-        batchRequestArray.removeAll(where: { $0 == batchRequest })
-    }
-    
-    /// 添加队列请求
-    open func addChainRequest(_ chainRequest: ChainRequest) {
-        lock.lock()
-        defer { lock.unlock() }
-        chainRequestArray.append(chainRequest)
-    }
-    
-    /// 移除队列请求
-    open func removeChainRequest(_ chainRequest: ChainRequest) {
-        lock.lock()
-        defer { lock.unlock() }
-        chainRequestArray.removeAll(where: { $0 == chainRequest })
-    }
-    
     /// 当filter为nil或返回true时开始同步串行请求，完成后主线程回调
     open func synchronousRequest(_ request: HTTPRequest, filter: (() -> Bool)? = nil, completion: HTTPRequest.Completion?) {
         synchronousQueue.async { [weak self] in
@@ -107,40 +77,6 @@ open class RequestManager: NSObject {
             
             request.start { [weak self] request in
                 completion?(request)
-                self?.synchronousSemaphore.signal()
-            }
-        }
-    }
-    
-    /// 当filter为nil或返回true时开始同步串行批量请求，完成后主线程回调
-    open func synchronousBatchRequest(_ batchRequest: BatchRequest, filter: (() -> Bool)? = nil, completion: BatchRequest.Completion?) {
-        synchronousQueue.async { [weak self] in
-            self?.synchronousSemaphore.wait()
-            let filterResult = filter != nil ? filter!() : true
-            if !filterResult {
-                self?.synchronousSemaphore.signal()
-                return
-            }
-            
-            batchRequest.start { [weak self] batchRequest in
-                completion?(batchRequest)
-                self?.synchronousSemaphore.signal()
-            }
-        }
-    }
-    
-    /// 当filter为nil或返回true时开始同步串行队列请求，完成后主线程回调
-    open func synchronousChainRequest(_ chainRequest: ChainRequest, filter: (() -> Bool)? = nil, completion: ChainRequest.Completion?) {
-        synchronousQueue.async { [weak self] in
-            self?.synchronousSemaphore.wait()
-            let filterResult = filter != nil ? filter!() : true
-            if !filterResult {
-                self?.synchronousSemaphore.signal()
-                return
-            }
-            
-            chainRequest.start { [weak self] chainRequest in
-                completion?(chainRequest)
                 self?.synchronousSemaphore.signal()
             }
         }

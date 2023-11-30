@@ -89,7 +89,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         guard finishedCount <= 0 else { return self }
         
         failedRequestArray.removeAll()
-        RequestManager.shared.addBatchRequest(self)
+        BatchRequestManager.shared.addBatchRequest(self)
         toggleAccessoriesWillStartCallBack()
         for req in requestArray {
             req.autoShowLoading = false
@@ -108,7 +108,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         clearRequest()
         isCancelled = true
         toggleAccessoriesDidStopCallBack()
-        RequestManager.shared.removeBatchRequest(self)
+        BatchRequestManager.shared.removeBatchRequest(self)
     }
     
     /// 开始请求并指定成功、失败句柄
@@ -123,25 +123,6 @@ open class BatchRequest: NSObject, RequestDelegate {
     @discardableResult
     open func start(completion: Completion?) -> Self {
         return start(success: completion, failure: completion)
-    }
-    
-    /// 开始同步串行请求并指定成功、失败句柄
-    @discardableResult
-    open func startSynchronously(success: Completion?, failure: Completion?) -> Self {
-        return startSynchronously(filter: nil) { batchRequest in
-            if batchRequest.failedRequest == nil {
-                success?(batchRequest)
-            } else {
-                failure?(batchRequest)
-            }
-        }
-    }
-    
-    /// 开始同步串行请求并指定过滤器和完成句柄
-    @discardableResult
-    open func startSynchronously(filter: (() -> Bool)? = nil, completion: Completion?) -> Self {
-        RequestManager.shared.synchronousBatchRequest(self, filter: filter, completion: completion)
-        return self
     }
     
     /// 添加请求配件
@@ -218,7 +199,7 @@ open class BatchRequest: NSObject, RequestDelegate {
         
         clearCompletionBlock()
         toggleAccessoriesDidStopCallBack()
-        RequestManager.shared.removeBatchRequest(self)
+        BatchRequestManager.shared.removeBatchRequest(self)
     }
     
     private func clearRequest() {
@@ -226,6 +207,31 @@ open class BatchRequest: NSObject, RequestDelegate {
             req.stop()
         }
         clearCompletionBlock()
+    }
+    
+}
+
+// MARK: - BatchRequestManager
+/// 批量请求管理器
+open class BatchRequestManager: NSObject {
+    
+    public static let shared = BatchRequestManager()
+    
+    private var batchRequestArray: [BatchRequest] = []
+    private var lock = NSLock()
+    
+    /// 添加批量请求
+    open func addBatchRequest(_ batchRequest: BatchRequest) {
+        lock.lock()
+        defer { lock.unlock() }
+        batchRequestArray.append(batchRequest)
+    }
+    
+    /// 移除批量请求
+    open func removeBatchRequest(_ batchRequest: BatchRequest) {
+        lock.lock()
+        defer { lock.unlock() }
+        batchRequestArray.removeAll(where: { $0 == batchRequest })
     }
     
 }
