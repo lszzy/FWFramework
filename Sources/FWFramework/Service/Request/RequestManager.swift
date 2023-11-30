@@ -177,7 +177,7 @@ open class RequestManager: NSObject {
             request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
             
             if let requestRetrier = request.config.requestRetrier {
-                requestRetrier.retryRequest(request, response, responseObject, error) { shouldRetry in
+                requestRetrier.retryRequest(request, response: response, responseObject: responseObject, error: error) { shouldRetry in
                     if shouldRetry {
                         self?.retrySessionTask(for: request, completionHandler: completionHandler)
                     } else {
