@@ -24,7 +24,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: NSObject, RequestDelegate {
+open class BatchRequest: RequestDelegate {
     
     /// 批量请求完成句柄
     public typealias Completion = (BatchRequest) -> Void
@@ -72,9 +72,9 @@ open class BatchRequest: NSObject, RequestDelegate {
     private var finishedCount: Int = 0
     
     // MARK: - Lifecycle
-    /// 指定请求数组初始化
+    public init() {}
+    
     public init(requestArray: [HTTPRequest]) {
-        super.init()
         self.requestArray = requestArray
     }
     
@@ -213,7 +213,7 @@ open class BatchRequest: NSObject, RequestDelegate {
 
 // MARK: - BatchRequestManager
 /// 批量请求管理器
-open class BatchRequestManager: NSObject {
+open class BatchRequestManager {
     
     public static let shared = BatchRequestManager()
     
@@ -231,7 +231,7 @@ open class BatchRequestManager: NSObject {
     open func removeBatchRequest(_ batchRequest: BatchRequest) {
         lock.lock()
         defer { lock.unlock() }
-        batchRequestArray.removeAll(where: { $0 == batchRequest })
+        batchRequestArray.removeAll(where: { $0 === batchRequest })
     }
     
 }
