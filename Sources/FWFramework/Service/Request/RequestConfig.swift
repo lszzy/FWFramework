@@ -284,80 +284,44 @@ open class RequestContextAccessory: RequestAccessory {
 // MARK: - RequestRetrier
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
-    /// 指定请求是否需要重试
-    func shouldRetryRequest(_ request: HTTPRequest) -> Bool
-    
-    /// 开始可重试请求
-    func startRetryRequest(_ request: HTTPRequest, completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?)
+    /// 处理重试请求，处理完成回调是否需要重试
+    func retryRequest(_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, completionHandler: @escaping (Bool) -> Void)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
 open class RequestRetrier: NSObject, RequestRetrierProtocol {
     public static let `default` = RequestRetrier()
     
-    open func shouldRetryRequest(_ request: HTTPRequest) -> Bool {
-        return request.requestRetryCount() > 0
-    }
-    
-    open func startRetryRequest(_ request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        let startTime = Date().timeIntervalSince1970
+    open func retryRequest(_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, completionHandler: @escaping (Bool) -> Void) {
+        if request.isCancelled { return }
+        
         let retryCount = request.requestRetryCount()
-        startRetryRequest(request, retryCount: retryCount, remainCount: retryCount, startTime: startTime, shouldRetry: { response, responseObject, error, decisionHandler in
-            guard let response = response as? HTTPURLResponse else {
-                decisionHandler(false)
-                return
-            }
-            
-            let shouldRetry = request.requestRetryValidator(response, responseObject: responseObject, error: error)
-            if !shouldRetry {
-                decisionHandler(false)
-                return
-            }
-            
-            request.requestRetryProcessor(response, responseObject: responseObject, error: error) { success in
-                decisionHandler(success)
-            }
-        }, completionHandler: completionHandler)
-    }
-    
-    private func startRetryRequest(
-        _ request: HTTPRequest,
-        retryCount: Int,
-        remainCount: Int,
-        startTime: TimeInterval,
-        shouldRetry: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ decisionHandler: @escaping (Bool) -> Void) -> Void)?,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
-    ) {
-        let shouldRetry = shouldRetry ?? { response, responseObject, error, decisionHandler in
-            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-            decisionHandler(error != nil || statusCode < 200 || statusCode > 299)
+        let remainCount = retryCount - (request.requestTotalCount - 1)
+        var canRetry = retryCount < 0 || remainCount > 0
+        var waitTime: TimeInterval = 0
+        if canRetry {
+            let timeoutInterval = request.requestRetryTimeout()
+            waitTime = max(0, request.requestRetryInterval())
+            canRetry = (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - request.requestStartTime + waitTime) < timeoutInterval)
         }
         
-        RequestManager.shared.startSessionTask(for: request) { response, responseObject, error in
+        guard canRetry, let response = response as? HTTPURLResponse,
+              request.requestRetryValidator(response, responseObject: responseObject, error: error) else {
+            completionHandler(false)
+            return
+        }
+        
+        request.requestRetryProcessor(response, responseObject: responseObject, error: error) { shouldRetry in
             if request.isCancelled { return }
             
-            request.requestTotalCount = retryCount - remainCount + 1
-            request.requestTotalTime = Date().timeIntervalSince1970 - startTime
-            
-            let canRetry = retryCount < 0 || remainCount > 0
-            let waitTime: TimeInterval = canRetry ? max(0, request.requestRetryInterval()) : 0
-            let timeoutInterval = canRetry ? request.requestRetryTimeout() : 0
-            if canRetry && (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - startTime + waitTime) < timeoutInterval) {
-                shouldRetry(response, responseObject, error, { retry in
+            if shouldRetry {
+                DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
                     if request.isCancelled { return }
                     
-                    if retry {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-                            if request.isCancelled { return }
-                            
-                            self.startRetryRequest(request, retryCount: retryCount, remainCount: remainCount - 1, startTime: startTime, shouldRetry: shouldRetry, completionHandler: completionHandler)
-                        }
-                    } else {
-                        completionHandler?(response, responseObject, error)
-                    }
-                })
+                    completionHandler(true)
+                }
             } else {
-                completionHandler?(response, responseObject, error)
+                completionHandler(false)
             }
         }
     }
