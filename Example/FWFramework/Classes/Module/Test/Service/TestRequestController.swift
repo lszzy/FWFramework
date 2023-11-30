@@ -536,7 +536,8 @@ private extension TestRequestController {
         var finishedCount: Int = 0
         Benchmark.begin("sync")
         for request in requests {
-            request.startSynchronously { [weak self] _ in
+            request.isSynchronously = true
+            request.start { [weak self] _ in
                 finishedCount += 1
                 if finishedCount == requests.count {
                     self?.app.hideLoading()

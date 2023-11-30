@@ -21,13 +21,16 @@ open class RequestManager: NSObject {
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
         addRecord(for: request)
-        startRequest(request)
         
-        #if DEBUG
-        if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
+        if request.isSynchronously {
+            synchronousQueue.async { [weak self] in
+                self?.synchronousSemaphore.wait()
+                
+                self?.startRequest(request)
+            }
+        } else {
+            startRequest(request)
         }
-        #endif
     }
     
     /// 取消已经添加的请求
@@ -42,8 +45,8 @@ open class RequestManager: NSObject {
             request.config.requestPlugin.cancelRequest(request)
         }
         
-        removeRecord(for: request)
-        request.clearCompletionBlock()
+        finishRequest(request)
+        
         #if DEBUG
         if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
@@ -62,23 +65,6 @@ open class RequestManager: NSObject {
             lock.unlock()
             
             request?.stop()
-        }
-    }
-    
-    /// 当filter为nil或返回true时开始同步串行请求，完成后主线程回调
-    open func synchronousRequest(_ request: HTTPRequest, filter: (() -> Bool)? = nil, completion: HTTPRequest.Completion?) {
-        synchronousQueue.async { [weak self] in
-            self?.synchronousSemaphore.wait()
-            let filterResult = filter != nil ? filter!() : true
-            if !filterResult {
-                self?.synchronousSemaphore.signal()
-                return
-            }
-            
-            request.start { [weak self] request in
-                completion?(request)
-                self?.synchronousSemaphore.signal()
-            }
         }
     }
     
@@ -170,6 +156,8 @@ open class RequestManager: NSObject {
     }
     
     private func startRequest(_ request: HTTPRequest) {
+        request.toggleAccessoriesWillStartCallBack()
+        
         if let requestRetrier = request.config.requestRetrier,
            requestRetrier.shouldRetryRequest(request) {
             requestRetrier.startRetryRequest(request) { [weak self] response, responseObject, error in
@@ -183,6 +171,21 @@ open class RequestManager: NSObject {
                 
                 self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
             }
+        }
+        
+        #if DEBUG
+        if request.config.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
+        }
+        #endif
+    }
+    
+    private func finishRequest(_ request: HTTPRequest) {
+        removeRecord(for: request)
+        request.clearCompletionBlock()
+        
+        if request.isSynchronously {
+            synchronousSemaphore.signal()
         }
     }
     
@@ -281,11 +284,6 @@ open class RequestManager: NSObject {
         } else {
             requestDidFail(request, error: requestError ?? RequestError.unknownError)
         }
-        
-        DispatchQueue.main.async {
-            self.removeRecord(for: request)
-            request.clearCompletionBlock()
-        }
     }
     
     private func validateResponse(_ request: HTTPRequest) throws {
@@ -325,6 +323,8 @@ open class RequestManager: NSObject {
             request.delegate?.requestFinished(request)
             request.successCompletionBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
+            
+            self.finishRequest(request)
         }
     }
     
@@ -362,6 +362,8 @@ open class RequestManager: NSObject {
             request.delegate?.requestFailed(request)
             request.failureCompletionBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
+            
+            self.finishRequest(request)
         }
     }
     
