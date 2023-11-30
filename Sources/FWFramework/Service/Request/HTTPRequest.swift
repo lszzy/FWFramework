@@ -252,8 +252,8 @@ open class HTTPRequest: NSObject {
     private var _cacheSensitiveData: Any?
     private var _cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
     private var _writeCacheAsynchronously: Bool?
-    private var _isCancelled = false
     private var _preloadResponseModel: Bool?
+    private var _isCancelled = false
     
     // MARK: - Lifecycle
     public override init() {
@@ -755,6 +755,74 @@ extension HTTPRequest {
         }
     }
     
+    private func startWithoutCache() {
+        isStarted = true
+        clearCacheVariables()
+        RequestManager.shared.addRequest(self)
+    }
+    
+    fileprivate func loadCacheResponse(isPreload: Bool, completion: Completion?, processor: Completion? = nil) throws {
+        if isPreload {
+            guard !isStarted, Thread.isMainThread else { return }
+        }
+        
+        try loadCache()
+        
+        if isPreload {
+            responseModelBlock = processor
+            successCompletionBlock = completion
+        }
+        
+        isDataFromCache = true
+        DispatchQueue.fw_mainAsync {
+            self.requestCompletePreprocessor()
+            self.requestCompleteFilter()
+            self.delegate?.requestFinished(self)
+            self.successCompletionBlock?(self)
+            self.clearCompletionBlock()
+        }
+    }
+    
+    private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
+        guard let cacheMetadata = metadata.fw_unarchivedObject() as? RequestCacheMetadata else {
+            throw RequestError.cacheInvalidMetadata
+        }
+        
+        let metadataDuration = -(cacheMetadata.creationDate?.timeIntervalSinceNow ?? 0)
+        if metadataDuration < 0 || metadataDuration > TimeInterval(cacheTimeInSeconds()) {
+            throw RequestError.cacheExpired
+        }
+        
+        let metadataVersion = cacheMetadata.version ?? 0
+        if metadataVersion != cacheVersion() {
+            throw RequestError.cacheVersionMismatch
+        }
+        
+        let metadataSensitive = cacheMetadata.sensitiveDataString ?? ""
+        let currentSensitive = String.fw_safeString(cacheSensitiveData())
+        if metadataSensitive != currentSensitive {
+            throw RequestError.cacheSensitiveDataMismatch
+        }
+        
+        let metadataAppVersion = cacheMetadata.appVersionString ?? ""
+        let currentAppVersion = UIApplication.fw_appVersion
+        if metadataAppVersion != currentAppVersion {
+            throw RequestError.cacheAppVersionMismatch
+        }
+        
+        return cacheMetadata
+    }
+    
+    private func clearCacheVariables() {
+        _cacheData = nil
+        _cacheJSON = nil
+        _cacheString = nil
+        _cacheMetadata = nil
+        cacheResponseModel = nil
+        responseModelBlock = nil
+        isDataFromCache = false
+    }
+    
     // MARK: - Accessory
     /// 添加请求配件
     @discardableResult
@@ -1094,79 +1162,6 @@ extension HTTPRequest {
     public func autoShowLoading(_ autoShowLoading: Bool) -> Self {
         self.autoShowLoading = autoShowLoading
         return self
-    }
-    
-}
-
-extension HTTPRequest {
-    
-    // MARK: - Private
-    private func startWithoutCache() {
-        isStarted = true
-        clearCacheVariables()
-        RequestManager.shared.addRequest(self)
-    }
-    
-    fileprivate func loadCacheResponse(isPreload: Bool, completion: Completion?, processor: Completion? = nil) throws {
-        if isPreload {
-            guard !isStarted, Thread.isMainThread else { return }
-        }
-        
-        try loadCache()
-        
-        if isPreload {
-            responseModelBlock = processor
-            successCompletionBlock = completion
-        }
-        
-        isDataFromCache = true
-        DispatchQueue.fw_mainAsync {
-            self.requestCompletePreprocessor()
-            self.requestCompleteFilter()
-            self.delegate?.requestFinished(self)
-            self.successCompletionBlock?(self)
-            self.clearCompletionBlock()
-        }
-    }
-    
-    private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
-        guard let cacheMetadata = metadata.fw_unarchivedObject() as? RequestCacheMetadata else {
-            throw RequestError.cacheInvalidMetadata
-        }
-        
-        let metadataDuration = -(cacheMetadata.creationDate?.timeIntervalSinceNow ?? 0)
-        if metadataDuration < 0 || metadataDuration > TimeInterval(cacheTimeInSeconds()) {
-            throw RequestError.cacheExpired
-        }
-        
-        let metadataVersion = cacheMetadata.version ?? 0
-        if metadataVersion != cacheVersion() {
-            throw RequestError.cacheVersionMismatch
-        }
-        
-        let metadataSensitive = cacheMetadata.sensitiveDataString ?? ""
-        let currentSensitive = String.fw_safeString(cacheSensitiveData())
-        if metadataSensitive != currentSensitive {
-            throw RequestError.cacheSensitiveDataMismatch
-        }
-        
-        let metadataAppVersion = cacheMetadata.appVersionString ?? ""
-        let currentAppVersion = UIApplication.fw_appVersion
-        if metadataAppVersion != currentAppVersion {
-            throw RequestError.cacheAppVersionMismatch
-        }
-        
-        return cacheMetadata
-    }
-    
-    private func clearCacheVariables() {
-        _cacheData = nil
-        _cacheJSON = nil
-        _cacheString = nil
-        _cacheMetadata = nil
-        cacheResponseModel = nil
-        responseModelBlock = nil
-        isDataFromCache = false
     }
     
 }
