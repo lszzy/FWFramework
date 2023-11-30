@@ -128,6 +128,8 @@ open class HTTPRequest: NSObject {
         guard let serverDate = response?.allHeaderFields["Date"] as? String else { return 0 }
         return Date.fw_formatServerDate(serverDate)
     }
+    /// 请求开始时间
+    open internal(set) var requestStartTime: TimeInterval = 0
     /// 请求总次数
     open internal(set) var requestTotalCount: Int = 0
     /// 请求总时长
@@ -144,7 +146,7 @@ open class HTTPRequest: NSObject {
     }
     /// 请求是否已取消，含手动取消和requestTask取消
     open var isCancelled: Bool {
-        if _cancelled { return true }
+        if _isCancelled { return true }
         guard let requestTask = requestTask else { return false }
         return requestTask.state == .canceling
     }
@@ -243,7 +245,7 @@ open class HTTPRequest: NSObject {
     private var _cacheTimeInSeconds: Int?
     private var _cacheVersion: Int?
     private var _cacheSensitiveData: Any?
-    private var _cancelled = false
+    private var _isCancelled = false
     private var _preloadResponseModel: Bool?
     
     // MARK: - Lifecycle
@@ -437,7 +439,6 @@ open class HTTPRequest: NSObject {
     
     /// 请求重试验证方法，默认检查状态码和错误
     open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
-        if isCancelled { return false }
         let statusCode = response.statusCode
         return error != nil || statusCode < 200 || statusCode > 299
     }
@@ -508,9 +509,9 @@ open class HTTPRequest: NSObject {
     
     /// 停止请求
     open func stop() {
-        guard !_cancelled else { return }
+        guard !_isCancelled else { return }
         
-        _cancelled = true
+        _isCancelled = true
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         RequestManager.shared.cancelRequest(self)

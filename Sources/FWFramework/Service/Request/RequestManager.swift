@@ -94,15 +94,6 @@ open class RequestManager: NSObject {
         return URL.fw_url(string: requestUrl, relativeTo: url) ?? NSURL() as URL
     }
     
-    /// 开始session任务，完成时回调，用于重试
-    open func startSessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
-            startDownloadTask(for: request, completionHandler: completionHandler)
-        } else {
-            startDataTask(for: request, completionHandler: completionHandler)
-        }
-    }
-    
     /// 获取响应编码
     open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
         var stringEncoding = String.Encoding.utf8
@@ -149,28 +140,19 @@ open class RequestManager: NSObject {
         requestsRecord[request.requestIdentifier] = request
     }
     
-    private func removeRecord(for request: HTTPRequest) {
+    private func removeRecord(for request: HTTPRequest) -> Bool {
         lock.lock()
         defer { lock.unlock() }
-        requestsRecord.removeValue(forKey: request.requestIdentifier)
+        let removed = requestsRecord.removeValue(forKey: request.requestIdentifier)
+        return removed != nil
     }
     
     private func startRequest(_ request: HTTPRequest) {
         request.toggleAccessoriesWillStartCallBack()
         
-        if let requestRetrier = request.config.requestRetrier,
-           requestRetrier.shouldRetryRequest(request) {
-            requestRetrier.startRetryRequest(request) { [weak self] response, responseObject, error in
-                self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
-            }
-        } else {
-            let startTime = Date().timeIntervalSince1970
-            startSessionTask(for: request) { [weak self] response, responseObject, error in
-                request.requestTotalCount = 1
-                request.requestTotalTime = Date().timeIntervalSince1970 - startTime
-                
-                self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
-            }
+        request.requestStartTime = Date().timeIntervalSince1970
+        retrySessionTask(for: request) { [weak self] response, responseObject, error in
+            self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
         }
         
         #if DEBUG
@@ -181,11 +163,38 @@ open class RequestManager: NSObject {
     }
     
     private func finishRequest(_ request: HTTPRequest) {
-        removeRecord(for: request)
+        let isRemoved = removeRecord(for: request)
         request.clearCompletionBlock()
         
-        if request.isSynchronously {
+        if request.isSynchronously, isRemoved {
             synchronousSemaphore.signal()
+        }
+    }
+    
+    private func retrySessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        startSessionTask(for: request) { [weak self] response, responseObject, error in
+            request.requestTotalCount += 1
+            request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
+            
+            if let requestRetrier = request.config.requestRetrier {
+                requestRetrier.retryRequest(request, response, responseObject, error) { shouldRetry in
+                    if shouldRetry {
+                        self?.retrySessionTask(for: request, completionHandler: completionHandler)
+                    } else {
+                        completionHandler?(response, responseObject, error)
+                    }
+                }
+            } else {
+                completionHandler?(response, responseObject, error)
+            }
+        }
+    }
+    
+    private func startSessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
+            startDownloadTask(for: request, completionHandler: completionHandler)
+        } else {
+            startDataTask(for: request, completionHandler: completionHandler)
         }
     }
     
