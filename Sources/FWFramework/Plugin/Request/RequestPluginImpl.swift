@@ -72,7 +72,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         var urlRequest = try urlRequest(for: request)
         
-        request.filterUrlRequest(&urlRequest)
+        request.urlRequestFilter(&urlRequest)
         
         let filters = request.config.requestFilters
         for filter in filters {
