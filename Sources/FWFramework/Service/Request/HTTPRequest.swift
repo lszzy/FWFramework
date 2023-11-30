@@ -385,7 +385,7 @@ open class HTTPRequest: NSObject {
         let responseData = _responseData
         if (responseData != nil) {
             if writeCacheAsynchronously() {
-                HTTPRequest.cacheQueue.async { [weak self] in
+                RequestCache.cacheQueue.async { [weak self] in
                     self?.saveCache(responseData)
                 }
             } else {
@@ -465,26 +465,27 @@ open class HTTPRequest: NSObject {
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
-    open func filterCacheFileName(_ argument: Any?) -> Any? {
+    open func filterCacheArgument(_ argument: Any?) -> Any? {
         return argument
+    }
+    
+    /// 缓存唯一Id，子类可重写
+    open func cacheIdentifier() -> String {
+        let requestUrl = requestUrl()
+        let baseUrl: String
+        if useCDN() {
+            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
+        } else {
+            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
+        }
+        let argument = filterCacheArgument(requestArgument())
+        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
+        return requestInfo.fw_md5Encode
     }
     
     /// 是否异步写入缓存，默认true
     open func writeCacheAsynchronously() -> Bool {
         return true
-    }
-    
-    /// 缓存基本路径
-    open func cacheBasePath() -> String {
-        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
-        var path = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
-        
-        if let filterPath = config.cacheDirPathFilter?(self, path) {
-            path = filterPath
-        }
-        
-        createCacheDirectory(path)
-        return path
     }
     
     // MARK: - Action
@@ -673,18 +674,31 @@ extension HTTPRequest {
     
     /// 加载本地缓存，返回是否成功
     public func loadCache() throws {
-        if cacheTimeInSeconds() < 0 {
+        guard cacheTimeInSeconds() >= 0 else {
             throw RequestError.cacheInvalidCacheTime
         }
         
-        if !loadCacheMetadata() {
-            throw RequestError.cacheInvalidMetadata
+        guard let cache = try? config.requestCache?.loadCache(for: self) else {
+            throw RequestError.cacheInvalidCacheData
         }
         
-        try validateCache()
+        do {
+            _cacheMetadata = try validateCache(cache.metadata)
+        } catch {
+            try? config.requestCache?.clearCache(for: self)
+            throw error
+        }
         
-        if !loadCacheData() {
-            throw RequestError.cacheInvalidCacheData
+        _cacheData = cache.data
+        _cacheString = String(data: cache.data, encoding: _cacheMetadata?.stringEncoding ?? .utf8)
+        switch responseSerializerType() {
+        case .JSON:
+            _cacheJSON = _cacheData?.fw_jsonDecode
+            guard _cacheJSON != nil else {
+                throw RequestError.cacheInvalidCacheData
+            }
+        case .HTTP:
+            break
         }
         
         #if DEBUG
@@ -695,26 +709,24 @@ extension HTTPRequest {
     }
     
     /// 保存指定数据到缓存文件
-    public func saveCache(_ data: Data?) {
-        guard let data = data else { return }
-        guard cacheTimeInSeconds() > 0, !isDataFromCache else { return }
+    @discardableResult
+    public func saveCache(_ data: Data?) -> Bool {
+        guard let data = data, let requestCache = config.requestCache else { return false }
+        guard cacheTimeInSeconds() > 0, !isDataFromCache else { return false }
+        
+        let cacheMetadata = RequestCacheMetadata()
+        cacheMetadata.version = cacheVersion()
+        cacheMetadata.sensitiveDataString = String.fw_safeString(cacheSensitiveData())
+        cacheMetadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
+        cacheMetadata.creationDate = Date()
+        cacheMetadata.appVersionString = UIApplication.fw_appVersion
+        guard let metadata = Data.fw_archivedData(cacheMetadata) else { return false }
         
         do {
-            try data.write(to: URL(fileURLWithPath: cacheFilePath()), options: .atomic)
-            
-            let metadata = RequestCacheMetadata()
-            metadata.version = cacheVersion()
-            metadata.sensitiveDataString = String.fw_safeString(cacheSensitiveData())
-            metadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
-            metadata.creationDate = Date()
-            metadata.appVersionString = UIApplication.fw_appVersion
-            Data.fw_archiveObject(metadata, toFile: cacheMetadataFilePath())
+            try requestCache.saveCache((data: data, metadata: metadata), for: self)
+            return true
         } catch {
-            #if DEBUG
-            if config.debugLogEnabled {
-                Logger.debug(group: Logger.fw_moduleName, "Save cache failed, reason = %@", error.localizedDescription)
-            }
-            #endif
+            return false
         }
     }
     
@@ -1022,8 +1034,6 @@ extension HTTPRequest {
 extension HTTPRequest {
     
     // MARK: - Private
-    private static var cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
-    
     private func startWithoutCache() {
         isStarted = true
         clearCacheVariables()
@@ -1052,63 +1062,34 @@ extension HTTPRequest {
         }
     }
     
-    private func loadCacheMetadata() -> Bool {
-        let path = cacheMetadataFilePath()
-        if FileManager.default.fileExists(atPath: path, isDirectory: nil) {
-            if let metadata = Data.fw_unarchivedObject(withFile: path) as? RequestCacheMetadata {
-                _cacheMetadata = metadata
-                return true
-            } else {
-                #if DEBUG
-                if config.debugLogEnabled {
-                    Logger.debug(group: Logger.fw_moduleName, "Load cache metadata failed")
-                }
-                #endif
-                return false
-            }
+    private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
+        guard let cacheMetadata = metadata.fw_unarchivedObject() as? RequestCacheMetadata else {
+            throw RequestError.cacheInvalidMetadata
         }
-        return false
-    }
-    
-    private func validateCache() throws {
-        let metadataDuration = -(_cacheMetadata?.creationDate?.timeIntervalSinceNow ?? 0)
+        
+        let metadataDuration = -(cacheMetadata.creationDate?.timeIntervalSinceNow ?? 0)
         if metadataDuration < 0 || metadataDuration > TimeInterval(cacheTimeInSeconds()) {
             throw RequestError.cacheExpired
         }
         
-        let metadataVersion = _cacheMetadata?.version ?? 0
+        let metadataVersion = cacheMetadata.version ?? 0
         if metadataVersion != cacheVersion() {
             throw RequestError.cacheVersionMismatch
         }
         
-        let metadataSensitive = _cacheMetadata?.sensitiveDataString ?? ""
+        let metadataSensitive = cacheMetadata.sensitiveDataString ?? ""
         let currentSensitive = String.fw_safeString(cacheSensitiveData())
         if metadataSensitive != currentSensitive {
             throw RequestError.cacheSensitiveDataMismatch
         }
         
-        let metadataAppVersion = _cacheMetadata?.appVersionString ?? ""
+        let metadataAppVersion = cacheMetadata.appVersionString ?? ""
         let currentAppVersion = UIApplication.fw_appVersion
         if metadataAppVersion != currentAppVersion {
             throw RequestError.cacheAppVersionMismatch
         }
-    }
-    
-    private func loadCacheData() -> Bool {
-        let path = cacheFilePath()
-        if FileManager.default.fileExists(atPath: path, isDirectory: nil),
-           let data = NSData(contentsOfFile: path) as? Data {
-            _cacheData = data
-            _cacheString = String(data: data, encoding: _cacheMetadata?.stringEncoding ?? .utf8)
-            switch responseSerializerType() {
-            case .HTTP:
-                return true
-            case .JSON:
-                _cacheJSON = _cacheData?.fw_jsonDecode
-                return _cacheJSON != nil
-            }
-        }
-        return false
+        
+        return cacheMetadata
     }
     
     private func clearCacheVariables() {
@@ -1119,58 +1100,6 @@ extension HTTPRequest {
         cacheResponseModel = nil
         responseModelBlock = nil
         isDataFromCache = false
-    }
-    
-    private func createCacheDirectory(_ path: String) {
-        var isDir: ObjCBool = true
-        if !FileManager.default.fileExists(atPath: path, isDirectory: &isDir) {
-            createBaseDirectory(path)
-        } else {
-            if !isDir.boolValue {
-                try? FileManager.default.removeItem(atPath: path)
-                createBaseDirectory(path)
-            }
-        }
-    }
-    
-    private func createBaseDirectory(_ path: String) {
-        do {
-            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
-            FileManager.fw_skipBackup(path)
-        } catch {
-            #if DEBUG
-            if config.debugLogEnabled {
-                Logger.debug(group: Logger.fw_moduleName, "create cache directory failed, error = %@", error.localizedDescription)
-            }
-            #endif
-        }
-    }
-    
-    private func cacheFileName() -> String {
-        let requestUrl = requestUrl()
-        let baseUrl: String
-        if useCDN() {
-            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
-        } else {
-            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
-        }
-        let argument = filterCacheFileName(requestArgument())
-        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
-        return requestInfo.fw_md5Encode
-    }
-    
-    private func cacheFilePath() -> String {
-        let cacheFileName = cacheFileName()
-        var path = cacheBasePath()
-        path = (path as NSString).appendingPathComponent(cacheFileName)
-        return path
-    }
-    
-    private func cacheMetadataFilePath() -> String {
-        let metadataFileName = "\(cacheFileName()).metadata"
-        var path = cacheBasePath()
-        path = (path as NSString).appendingPathComponent(metadataFileName)
-        return path
     }
     
 }

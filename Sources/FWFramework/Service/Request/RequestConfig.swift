@@ -67,6 +67,9 @@ open class RequestConfig: NSObject {
     /// 当前请求验证器，默认全局验证器，可清空
     open var requestValidator: RequestValidatorProtocol? = RequestValidator.default
     
+    /// 当前请求缓存，默认文件缓存，可清空
+    open var requestCache: RequestCacheProtocol? = RequestCache.default
+    
     /// 请求过滤器数组
     open private(set) var requestFilters: [RequestFilterProtocol] = []
     
@@ -90,8 +93,6 @@ open class RequestConfig: NSObject {
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
     
-    /// 请求缓存路径过滤句柄，返回处理后的路径
-    open var cacheDirPathFilter: ((_ request: HTTPRequest, _ originPath: String) -> String)?
     /// 是否后台预加载数据模型过滤句柄，默认nil
     open var preloadModelFilter: ((HTTPRequest) -> Bool)?
     /// 自定义请求上下文配件句柄，默认nil
@@ -406,6 +407,81 @@ open class RequestValidator: NSObject, RequestValidatorProtocol {
             return false
         }
     }
+}
+
+// MARK: - RequestCache
+/// 请求缓存协议
+public protocol RequestCacheProtocol: AnyObject {
+    func loadCache(for request: HTTPRequest) throws -> (data: Data, metadata: Data)
+    func saveCache(_ cache: (data: Data, metadata: Data), for request: HTTPRequest) throws
+    func clearCache(for request: HTTPRequest) throws
+}
+
+/// 默认请求文件缓存
+open class RequestCache: NSObject, RequestCacheProtocol {
+    public static let `default` = RequestCache()
+    
+    static let cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
+    
+    /// 请求缓存路径过滤句柄，返回处理后的路径
+    open var cacheFilePathFilter: ((_ request: HTTPRequest, _ filePath: String) -> String)?
+    
+    /// 请求缓存文件名过滤器，返回处理后的文件名
+    open var cacheFileNameFilter: ((_ request: HTTPRequest, _ fileName: String) -> String)?
+    
+    /// 获取请求缓存基础路径
+    open func cacheFilePath(for request: HTTPRequest) -> String {
+        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
+        var filePath = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
+        if let filterPath = cacheFilePathFilter?(request, filePath) {
+            filePath = filterPath
+        }
+        
+        FileManager.fw_createDirectory(atPath: filePath)
+        FileManager.fw_skipBackup(filePath)
+        return filePath
+    }
+    
+    /// 获取请求缓存文件名
+    open func cacheFileName(for request: HTTPRequest) -> String {
+        var fileName = request.cacheIdentifier()
+        if let filterName = cacheFileNameFilter?(request, fileName) {
+            fileName = filterName
+        }
+        return fileName
+    }
+    
+    open func loadCache(for request: HTTPRequest) throws -> (data: Data, metadata: Data) {
+        let filePath = cacheFilePath(for: request)
+        let fileName = cacheFileName(for: request)
+        let cacheFile = (filePath as NSString).appendingPathComponent(fileName)
+        let metadataFile = cacheFile + ".metadata"
+        
+        let data = try Data(contentsOf: URL(fileURLWithPath: cacheFile))
+        let metadata = try Data(Data(contentsOf: URL(fileURLWithPath: metadataFile)))
+        return (data: data, metadata: metadata)
+    }
+    
+    open func saveCache(_ cache: (data: Data, metadata: Data), for request: HTTPRequest) throws {
+        let filePath = cacheFilePath(for: request)
+        let fileName = cacheFileName(for: request)
+        let cacheFile = (filePath as NSString).appendingPathComponent(fileName)
+        let metadataFile = cacheFile + ".metadata"
+        
+        try cache.data.write(to: URL(fileURLWithPath: cacheFile), options: .atomic)
+        try cache.metadata.write(to: URL(fileURLWithPath: metadataFile), options: .atomic)
+    }
+    
+    open func clearCache(for request: HTTPRequest) throws {
+        let filePath = cacheFilePath(for: request)
+        let fileName = cacheFileName(for: request)
+        let cacheFile = (filePath as NSString).appendingPathComponent(fileName)
+        let metadataFile = cacheFile + ".metadata"
+        
+        try FileManager.default.removeItem(atPath: cacheFile)
+        try FileManager.default.removeItem(atPath: metadataFile)
+    }
+    
 }
 
 // MARK: - RequestCacheMetadata
