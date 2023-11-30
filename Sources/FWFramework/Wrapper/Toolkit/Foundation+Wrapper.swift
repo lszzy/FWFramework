@@ -10,6 +10,39 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - WrapperGlobal+Foundation
+extension WrapperGlobal {
+
+    /// 通用互斥锁方法
+    public static func synchronized(_ object: Any, closure: () -> Void) {
+        objc_sync_enter(object)
+        defer {
+            objc_sync_exit(object)
+        }
+        
+        closure()
+    }
+    
+    /// 通用互斥锁方法，返回指定对象
+    public static func synchronized<T>(_ object: Any, closure: () -> T) -> T {
+        objc_sync_enter(object)
+        defer {
+            objc_sync_exit(object)
+        }
+        
+        return closure()
+    }
+    
+    /// 同一个token仅执行一次block，全局范围
+    public static func dispatchOnce(
+        _ token: AnyHashable,
+        closure: @escaping () -> Void
+    ) {
+        NSObject.fw_dispatchOnce(token, closure: closure)
+    }
+    
+}
+
 // MARK: - AnyObject+Foundation
 extension Wrapper where Base: WrapperObject {
     

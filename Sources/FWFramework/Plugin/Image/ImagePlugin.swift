@@ -10,16 +10,6 @@ import UIKit
 import FWObjC
 #endif
 
-// MARK: - WrapperGlobal+ImagePlugin
-extension WrapperGlobal {
-    
-    /// 根据名称加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
-    public static func image(_ named: String, bundle: Bundle? = nil) -> UIImage? {
-        return UIImage.fw_imageNamed(named, bundle: bundle)
-    }
-    
-}
-
 // MARK: - ImagePlugin
 /// 本地图片解码编码选项，默认兼容SDWebImage
 public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable {
