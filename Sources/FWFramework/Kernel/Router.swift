@@ -115,7 +115,7 @@ public class Router: NSObject {
     /// - Returns: 是否注册成功
     @discardableResult
     public class func registerClass(_ clazz: Any, mapper: (([String]) -> [String: String])? = nil) -> Bool {
-        return registerClass(clazz, isPreset: false, mapper: mapper)
+        return registerClass(with: clazz, isPreset: false, mapper: mapper)
     }
     
     /// 预置路由类或对象，批量注册路由规则，仅当路由未被注册时生效
@@ -125,7 +125,7 @@ public class Router: NSObject {
     /// - Returns: 是否注册成功
     @discardableResult
     public class func presetClass(_ clazz: Any, mapper: (([String]) -> [String: String])? = nil) -> Bool {
-        return registerClass(clazz, isPreset: true, mapper: mapper)
+        return registerClass(with: clazz, isPreset: true, mapper: mapper)
     }
     
     /// 取消注册某个路由类或对象
@@ -133,70 +133,71 @@ public class Router: NSObject {
     ///   - clazz: 路由类或对象，不遍历父类
     ///   - mapper: 自定义映射，默认nil时查找规则：xxxUrl => xxxRouter: > xxxDefaultRouter:
     public class func unregisterClass(_ clazz: Any, mapper: (([String]) -> [String: String])? = nil) {
-        let routes = routeClass(clazz, mapper: mapper)
+        let routes = routeClass(with: clazz, mapper: mapper)
         if let targetClass = clazz as? NSObject.Type {
             for (key, _) in routes {
                 guard let pattern = targetClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                unregisterURL(pattern)
+                unregisterURL(with: pattern)
             }
         } else if let targetObject = clazz as? NSObject {
             for (key, _) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                unregisterURL(pattern)
+                unregisterURL(with: pattern)
             }
         }
     }
     
     /// 注册 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
     /// - Parameters:
-    ///   - pattern: 字符串或字符串数组，带上 scheme，如 app://beauty/:id
+    ///   - pattern: 字符串，带上 scheme，如 app://beauty/:id
     ///   - handler: 路由处理句柄，参数为路由上下文对象
     /// - Returns: 是否注册成功
     @discardableResult
-    public class func registerURL(_ pattern: Any, handler: @escaping Handler) -> Bool {
-        return registerURL(pattern, handler: handler, isPreset: false)
+    public class func registerURL(_ pattern: StringParameter, handler: @escaping Handler) -> Bool {
+        return registerURL(with: pattern.stringValue, handler: handler, isPreset: false)
+    }
+    
+    /// 注册 patterns 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil
+    /// - Parameters:
+    ///   - patterns: 字符串数组，带上 scheme，如 app://beauty/:id
+    ///   - handler: 路由处理句柄，参数为路由上下文对象
+    /// - Returns: 是否注册成功
+    @discardableResult
+    public class func registerURL(_ patterns: [StringParameter], handler: @escaping Handler) -> Bool {
+        let urls = patterns.map({ $0.stringValue })
+        return registerURL(with: urls, handler: handler, isPreset: false)
     }
     
     /// 预置 pattern 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil，仅当路由未被注册时生效
     /// - Parameters:
-    ///   - pattern: 字符串或字符串数组，带上 scheme，如 app://beauty/:id
+    ///   - pattern: 字符串，带上 scheme，如 app://beauty/:id
     ///   - handler: 路由处理句柄，参数为路由上下文对象
     /// - Returns: 是否注册成功
-    public class func presetURL(_ pattern: Any, handler: @escaping Handler) -> Bool {
-        return registerURL(pattern, handler: handler, isPreset: true)
+    public class func presetURL(_ pattern: StringParameter, handler: @escaping Handler) -> Bool {
+        return registerURL(with: pattern.stringValue, handler: handler, isPreset: true)
+    }
+    
+    /// 预置 patterns 对应的 Handler，可返回一个 object 给调用方，也可直接触发事件返回nil，仅当路由未被注册时生效
+    /// - Parameters:
+    ///   - patterns: 字符串数组，带上 scheme，如 app://beauty/:id
+    ///   - handler: 路由处理句柄，参数为路由上下文对象
+    /// - Returns: 是否注册成功
+    public class func presetURL(_ patterns: [StringParameter], handler: @escaping Handler) -> Bool {
+        let urls = patterns.map({ $0.stringValue })
+        return registerURL(with: urls, handler: handler, isPreset: true)
     }
     
     /// 取消注册某个 pattern
     /// - Parameter pattern: 字符串或字符串数组
-    public class func unregisterURL(_ pattern: Any) {
-        if let patterns = pattern as? [Any] {
-            for subPattern in patterns {
-                unregisterURL(subPattern)
-            }
-            return
-        }
-        
-        guard let pattern = pattern as? String, !pattern.isEmpty else { return }
-        
-        var pathComponents = pathComponents(from: pattern)
-        // 只删除该 pattern 的最后一级
-        if pathComponents.count < 1 { return }
-        
-        // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
-        let components = pathComponents.joined(separator: ".")
-        var routeRule = routeRules.value(forKeyPath: components) as? NSMutableDictionary ?? NSMutableDictionary()
-        guard routeRule.count >= 1 else { return }
-        
-        let lastComponent = pathComponents.last ?? ""
-        pathComponents.removeLast()
-        
-        // 有可能是根 key，这样就是 self.routes 了
-        routeRule = routeRules
-        if pathComponents.count > 0 {
-            let componentsWithoutLast = pathComponents.joined(separator: ".")
-            routeRule = routeRules.value(forKeyPath: componentsWithoutLast) as? NSMutableDictionary ?? NSMutableDictionary()
-        }
-        routeRule.removeObject(forKey: lastComponent)
+    public class func unregisterURL(_ pattern: StringParameter) {
+        unregisterURL(with: pattern.stringValue)
+    }
+    
+    /// 批量取消注册 patterns
+    /// - Parameter patterns: 字符串数组
+    public class func unregisterURL(_ patterns: [StringParameter]) {
+        let urls = patterns.map({ $0.stringValue })
+        unregisterURL(with: urls)
     }
     
     /// 取消注册所有 pattern
@@ -236,7 +237,7 @@ public class Router: NSObject {
     /// 是否可以打开URL，不含object
     /// - Parameter url: URL 带 Scheme，如 app://beauty/3
     /// - Returns: 是否可以打开
-    public class func canOpenURL(_ url: Any) -> Bool {
+    public class func canOpenURL(_ url: StringParameter) -> Bool {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return false }
         
@@ -249,7 +250,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: Any, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
+    public class func openURL(_ url: StringParameter, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -287,7 +288,7 @@ public class Router: NSObject {
     ///   - url: URL 带 Scheme，如 app://beauty/3
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
-    public class func object(forURL url: Any, userInfo: [AnyHashable: Any]? = nil) -> Any? {
+    public class func object(forURL url: StringParameter, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
         
@@ -375,20 +376,20 @@ public class Router: NSObject {
     }
     
     // MARK: - Private
-    private class func registerClass(_ clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
+    private class func registerClass(with clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
         var result = true
-        let routes = routeClass(clazz, mapper: mapper)
+        let routes = routeClass(with: clazz, mapper: mapper)
         if let targetClass = clazz as? NSObject.Type {
             for (key, obj) in routes {
                 guard let pattern = targetClass.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                result = registerURL(pattern, handler: { context in
+                result = registerURL(with: pattern, handler: { context in
                     return targetClass.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         } else if let targetObject = clazz as? NSObject {
             for (key, obj) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
-                result = registerURL(pattern, handler: { context in
+                result = registerURL(with: pattern, handler: { context in
                     return targetObject.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
@@ -396,7 +397,7 @@ public class Router: NSObject {
         return result
     }
     
-    private class func routeClass(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
+    private class func routeClass(with clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
         guard let metaClass = NSObject.fw_metaClass(clazz) else {
             return [:]
         }
@@ -420,25 +421,56 @@ public class Router: NSObject {
         return routes
     }
     
-    private class func registerURL(_ pattern: Any, handler: @escaping Handler, isPreset: Bool) -> Bool {
+    private class func registerURL(with pattern: Any, handler: @escaping Handler, isPreset: Bool) -> Bool {
         if let patterns = pattern as? [Any] {
             var result = true
             for subPattern in patterns {
-                result = registerURL(subPattern, handler: handler, isPreset: isPreset) && result
+                result = registerURL(with: subPattern, handler: handler, isPreset: isPreset) && result
             }
             return result
         }
         
         guard let pattern = pattern as? String, !pattern.isEmpty else { return false }
         
-        let subRoutes = registerRoute(pattern)
+        let subRoutes = registerRoute(with: pattern)
         if isPreset && subRoutes[routeCoreKey] != nil { return false }
         
         subRoutes[routeCoreKey] = handler
         return true
     }
     
-    private class func registerRoute(_ pattern: String) -> NSMutableDictionary {
+    private class func unregisterURL(with pattern: Any) {
+        if let patterns = pattern as? [Any] {
+            for subPattern in patterns {
+                unregisterURL(with: subPattern)
+            }
+            return
+        }
+        
+        guard let pattern = pattern as? String, !pattern.isEmpty else { return }
+        
+        var pathComponents = pathComponents(from: pattern)
+        // 只删除该 pattern 的最后一级
+        if pathComponents.count < 1 { return }
+        
+        // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
+        let components = pathComponents.joined(separator: ".")
+        var routeRule = routeRules.value(forKeyPath: components) as? NSMutableDictionary ?? NSMutableDictionary()
+        guard routeRule.count >= 1 else { return }
+        
+        let lastComponent = pathComponents.last ?? ""
+        pathComponents.removeLast()
+        
+        // 有可能是根 key，这样就是 self.routes 了
+        routeRule = routeRules
+        if pathComponents.count > 0 {
+            let componentsWithoutLast = pathComponents.joined(separator: ".")
+            routeRule = routeRules.value(forKeyPath: componentsWithoutLast) as? NSMutableDictionary ?? NSMutableDictionary()
+        }
+        routeRule.removeObject(forKey: lastComponent)
+    }
+    
+    private class func registerRoute(with pattern: String) -> NSMutableDictionary {
         let pathComponents = pathComponents(from: pattern)
         
         var subRoutes = routeRules
@@ -613,13 +645,8 @@ extension Router {
     /// 根据重写规则，重写URL
     /// - Parameter url: 需要重写的url
     /// - Returns: 重写之后的url
-    public class func rewriteURL(_ url: Any) -> String {
-        var rewriteURL = url as? String
-        if let nsurl = url as? URL {
-            rewriteURL = nsurl.absoluteString
-        }
-        guard var rewriteURL = rewriteURL else { return "" }
-        
+    public class func rewriteURL(_ url: StringParameter) -> String {
+        var rewriteURL = url.stringValue
         if let rewriteFilter = rewriteFilter {
             guard let filterURL = rewriteFilter(rewriteURL) else { return "" }
             rewriteURL = filterURL
