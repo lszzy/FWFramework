@@ -43,6 +43,8 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["不匹配的openUrl", "onOpenUnmatch"],
         ["不匹配的objectUrl", "onOpenUnmatch2"],
         ["打开objectUrl", "onOpenUnmatch3"],
+        ["路由Parameter", "onOpenParameter"],
+        ["自定义Handler", "onOpenHandler"],
         ["自动注册的Url", "onOpenLoader"],
         ["跳转telprompt", "onOpenTel"],
         ["跳转设置", "onOpenSettings"],
@@ -251,6 +253,23 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func onOpenUnmatch3() {
         Router.openURL(TestRouter.objectUrl)
+    }
+    
+    func onOpenParameter() {
+        let parameter = Router.Parameter()
+        parameter.routerOptions = [.embedInNavigation, .styleFullScreen]
+        
+        Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
+    }
+    
+    func onOpenHandler() {
+        let parameter = Router.Parameter()
+        parameter.routerHandler = { context, vc in
+            let nav = UINavigationController(rootViewController: vc)
+            Navigator.present(nav)
+        }
+        
+        Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
     }
     
     func onOpenLoader() {
@@ -519,7 +538,11 @@ class TestRouter: NSObject, AutoloadProtocol {
             if context.isOpening {
                 if let vc = object as? UIViewController {
                     let userInfo = Router.Parameter.fromDictionary(context.userInfo)
-                    Navigator.open(vc, animated: true, options: userInfo.routerOptions)
+                    if userInfo.routerHandler != nil {
+                        userInfo.routerHandler?(context, vc)
+                    } else {
+                        Navigator.open(vc, animated: true, options: userInfo.routerOptions)
+                    }
                 } else {
                     Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
                 }
