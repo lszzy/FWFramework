@@ -24,34 +24,34 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     open var customBlock: ((PlaceholderView) -> Void)?
 
     /// 默认空界面文本句柄，非loading时才触发
-    open var defaultText: (() -> Any?)?
+    open var defaultText: (() -> AttributedStringParameter?)?
     /// 默认空界面详细文本句柄，非loading时才触发
-    open var defaultDetail: (() -> Any?)?
+    open var defaultDetail: (() -> AttributedStringParameter?)?
     /// 默认空界面图片句柄，非loading时才触发
     open var defaultImage: (() -> UIImage?)?
     /// 默认空界面动作按钮句柄，非loading时才触发
-    open var defaultAction: (() -> Any?)?
+    open var defaultAction: (() -> AttributedStringParameter?)?
 
     /// 错误空界面文本格式化句柄，error生效，默认nil
-    open var errorTextFormatter: ((Error?) -> Any?)?
+    open var errorTextFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误空界面详细文本格式化句柄，error生效，默认nil
-    open var errorDetailFormatter: ((Error?) -> Any?)?
+    open var errorDetailFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误空界面图片格式化句柄，error生效，默认nil
     open var errorImageFormatter: ((Error?) -> UIImage?)?
     /// 错误空界面动作按钮格式化句柄，error生效，默认nil
-    open var errorActionFormatter: ((Error?) -> Any?)?
+    open var errorActionFormatter: ((Error?) -> AttributedStringParameter?)?
     
     private var emptyViewTag: Int = 2021
     
     // MARK: - EmptyPlugin
-    open func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+    open func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var emptyText = text
         if !loading, emptyText == nil, defaultText != nil {
-            emptyText = defaultText?()
+            emptyText = defaultText?()?.attributedStringValue
         }
         var emptyDetail = detail
         if !loading, emptyDetail == nil, defaultDetail != nil {
-            emptyDetail = defaultDetail?()
+            emptyDetail = defaultDetail?()?.attributedStringValue
         }
         var emptyImage = image
         if !loading, emptyImage == nil, defaultImage != nil {
@@ -59,7 +59,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
         var emptyAction = (actions?.count ?? 0) > 0 ? actions?.first : nil
         if !loading, emptyAction == nil, block != nil, defaultAction != nil {
-            emptyAction = defaultAction?()
+            emptyAction = defaultAction?()?.attributedStringValue
         }
         let emptyMoreAction = (actions?.count ?? 0) > 1 ? actions?[1] : nil
         

@@ -40,22 +40,22 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示错误空界面
-    public func showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+    public func showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(error: error, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
@@ -90,22 +90,22 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示错误空界面
-    public func showEmptyView(error: Error?, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+    public func showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(error: error, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func showEmptyView(text: Any? = nil, detail: Any? = nil, image: UIImage? = nil, action: Any? = nil, block: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, action: Any?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: Any?, detail: Any?, image: UIImage?, loading: Bool, actions: [Any]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 

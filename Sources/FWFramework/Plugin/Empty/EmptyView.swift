@@ -337,13 +337,10 @@ open class PlaceholderView: UIView {
      * 设置提示语
      * @param text 提示语文本，若为nil则隐藏textLabel
      */
-    open func setTextLabelText(_ text: Any?) {
-        if let attributedText = text as? NSAttributedString {
-            textLabel.attributedText = attributedText
-        } else {
-            textLabel.text = text as? String
-        }
-        textLabel.isHidden = text == nil
+    open func setTextLabelText(_ text: AttributedStringParameter?) {
+        let attributedText = text?.attributedStringValue
+        textLabel.attributedText = attributedText
+        textLabel.isHidden = attributedText == nil
         setNeedsLayout()
     }
 
@@ -351,13 +348,10 @@ open class PlaceholderView: UIView {
      * 设置详细提示语的文本
      * @param text 详细提示语文本，若为nil则隐藏detailTextLabel
      */
-    open func setDetailTextLabelText(_ text: Any?) {
-        if let attributedText = text as? NSAttributedString {
-            detailTextLabel.attributedText = attributedText
-        } else {
-            detailTextLabel.text = text as? String
-        }
-        detailTextLabel.isHidden = text == nil
+    open func setDetailTextLabelText(_ text: AttributedStringParameter?) {
+        let attributedText = text?.attributedStringValue
+        detailTextLabel.attributedText = attributedText
+        detailTextLabel.isHidden = attributedText == nil
         setNeedsLayout()
     }
 
@@ -365,13 +359,10 @@ open class PlaceholderView: UIView {
      * 设置操作按钮的文本
      * @param title 操作按钮的文本，若为nil则隐藏actionButton
      */
-    open func setActionButtonTitle(_ title: Any?) {
-        if let attributedTitle = title as? NSAttributedString {
-            actionButton.setAttributedTitle(attributedTitle, for: .normal)
-        } else {
-            actionButton.setTitle(title as? String, for: .normal)
-        }
-        actionButton.isHidden = title == nil
+    open func setActionButtonTitle(_ title: AttributedStringParameter?) {
+        let attributedTitle = title?.attributedStringValue
+        actionButton.setAttributedTitle(attributedTitle, for: .normal)
+        actionButton.isHidden = attributedTitle == nil
         setNeedsLayout()
     }
 
@@ -379,13 +370,10 @@ open class PlaceholderView: UIView {
      * 设置更多操作按钮的文本
      * @param title 操作按钮的文本，若为nil则隐藏moreActionButton
      */
-    open func setMoreActionButtonTitle(_ title: Any?) {
-        if let attributedTitle = title as? NSAttributedString {
-            moreActionButton.setAttributedTitle(attributedTitle, for: .normal)
-        } else {
-            moreActionButton.setTitle(title as? String, for: .normal)
-        }
-        moreActionButton.isHidden = title == nil
+    open func setMoreActionButtonTitle(_ title: AttributedStringParameter?) {
+        let attributedTitle = title?.attributedStringValue
+        moreActionButton.setAttributedTitle(attributedTitle, for: .normal)
+        moreActionButton.isHidden = attributedTitle == nil
         setNeedsLayout()
     }
 
