@@ -150,11 +150,8 @@ extension ToastPlugin {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        var attributedText = text as? NSAttributedString
-        if let string = text as? String {
-            attributedText = NSAttributedString(string: string)
-        }
+    public func fw_showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        let attributedText = text?.attributedStringValue
         let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showLoading(attributedText: attributedText, cancelBlock: cancelBlock, customBlock: customBlock, in: self)
     }
@@ -177,11 +174,8 @@ extension ToastPlugin {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        var attributedText = text as? NSAttributedString
-        if let string = text as? String {
-            attributedText = NSAttributedString(string: string)
-        }
+    public func fw_showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        let attributedText = text?.attributedStringValue
         let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showProgress(attributedText: attributedText, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: self)
     }
@@ -213,16 +207,13 @@ extension ToastPlugin {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func fw_showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         fw_showMessage(text: text, style: style, autoHide: true, interactive: completion != nil ? false : true, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func fw_showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        var attributedText = text as? NSAttributedString
-        if let string = text as? String {
-            attributedText = NSAttributedString(string: string)
-        }
+    public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        let attributedText = text?.attributedStringValue
         let plugin = self.fw_toastPlugin ?? ToastPluginImpl.shared
         plugin.showMessage(attributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: self)
     }
@@ -274,7 +265,7 @@ extension ToastPlugin {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func fw_showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         fw_toastContainerView?.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -294,7 +285,7 @@ extension ToastPlugin {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func fw_showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         fw_toastContainerView?.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -319,12 +310,12 @@ extension ToastPlugin {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func fw_showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         fw_toastContainerView?.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func fw_showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         fw_toastContainerView?.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -355,7 +346,7 @@ extension ToastPlugin {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func fw_showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func fw_showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw_mainWindow?.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -375,7 +366,7 @@ extension ToastPlugin {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func fw_showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func fw_showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw_mainWindow?.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -400,12 +391,12 @@ extension ToastPlugin {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public static func fw_showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public static func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         UIWindow.fw_mainWindow?.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public static func fw_showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw_mainWindow?.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 

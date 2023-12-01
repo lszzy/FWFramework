@@ -15,14 +15,14 @@ import SwiftUI
 /// 加载插件视图包装器
 public struct LoadingPluginView: UIViewRepresentable {
     
-    var text: Any?
+    var text: AttributedStringParameter?
     var cancelBlock: (() -> Void)?
     
-    public init(text: Any? = nil) {
+    public init(text: AttributedStringParameter? = nil) {
         self.text = text
     }
     
-    public func text(_ text: Any?) -> Self {
+    public func text(_ text: AttributedStringParameter?) -> Self {
         var result = self
         result.text = text
         return result
@@ -57,7 +57,7 @@ public struct LoadingPluginView: UIViewRepresentable {
 public struct ProgressPluginView: UIViewRepresentable {
     
     var progress: CGFloat?
-    var text: Any?
+    var text: AttributedStringParameter?
     var cancelBlock: (() -> Void)?
     
     public init(_ progress: CGFloat? = nil) {
@@ -70,7 +70,7 @@ public struct ProgressPluginView: UIViewRepresentable {
         return result
     }
     
-    public func text(_ text: Any?) -> Self {
+    public func text(_ text: AttributedStringParameter?) -> Self {
         var result = self
         result.text = text
         return result
