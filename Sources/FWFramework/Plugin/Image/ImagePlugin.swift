@@ -248,14 +248,14 @@ extension ImagePlugin {
 
     /// 下载网络图片并返回下载凭据
     @discardableResult
-    public static func fw_downloadImage(_ url: Any?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
+    public static func fw_downloadImage(_ url: URLParameter?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
         return fw_downloadImage(url, options: [], context: nil, completion: completion, progress: progress)
     }
 
     /// 下载网络图片并返回下载凭据，指定option
     @discardableResult
-    public static func fw_downloadImage(_ url: Any?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
-        let imageURL = UIImage.fw_imageURL(for: url)
+    public static func fw_downloadImage(_ url: URLParameter?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
+        let imageURL = url?.urlValue
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         return imagePlugin.downloadImage(imageURL, options: options, context: context, completion: completion, progress: progress)
     }
@@ -264,18 +264,6 @@ extension ImagePlugin {
     public static func fw_cancelImageDownload(_ receipt: Any?) {
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         imagePlugin.cancelImageDownload(receipt)
-    }
-    
-    fileprivate static func fw_imageURL(for url: Any?) -> URL? {
-        var imageURL: URL?
-        if let string = url as? String, !string.isEmpty {
-            imageURL = URL.fw_url(string: string)
-        } else if let nsurl = url as? URL {
-            imageURL = nsurl
-        } else if let urlRequest = url as? URLRequest {
-            imageURL = urlRequest.url
-        }
-        return imageURL
     }
     
 }
@@ -304,7 +292,7 @@ extension ImagePlugin {
     }
 
     /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+    public func fw_setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
         // 兼容URLRequest.cachePolicy缓存策略
         var targetOptions = options
         if let urlRequest = url as? URLRequest,
@@ -314,7 +302,7 @@ extension ImagePlugin {
             targetOptions.formUnion(.ignoreCache)
         }
         
-        let imageURL = UIImage.fw_imageURL(for: url)
+        let imageURL = url?.urlValue
         let imagePlugin = self.fw_imagePlugin ?? ImagePluginImpl.shared
         imagePlugin.setImageURL(url: imageURL, placeholder: placeholderImage, options: targetOptions, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: self)
     }
@@ -326,8 +314,8 @@ extension ImagePlugin {
     }
     
     /// 加载指定URL的本地缓存图片
-    public func fw_loadImageCache(url: Any?) -> UIImage? {
-        let imageURL = UIImage.fw_imageURL(for: url)
+    public func fw_loadImageCache(url: URLParameter?) -> UIImage? {
+        let imageURL = url?.urlValue
         let imagePlugin = self.fw_imagePlugin ?? ImagePluginImpl.shared
         return imagePlugin.loadImageCache(imageURL)
     }
@@ -343,18 +331,18 @@ extension ImagePlugin {
 @_spi(FW) extension UIImageView {
 
     /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+    public func fw_setImage(url: URLParameter?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
     }
 
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    public func fw_setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     
     /// 加载指定URL的本地缓存图片
-    public static func fw_loadImageCache(url: Any?) -> UIImage? {
-        let imageURL = UIImage.fw_imageURL(for: url)
+    public static func fw_loadImageCache(url: URLParameter?) -> UIImage? {
+        let imageURL = url?.urlValue
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         return imagePlugin.loadImageCache(imageURL)
     }
@@ -380,12 +368,12 @@ extension ImagePlugin {
 @_spi(FW) extension UIButton {
 
     /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
+    public func fw_setImage(url: URLParameter?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: [], context: nil, completion: completion, progress: nil)
     }
 
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func fw_setImage(url: Any?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    public func fw_setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     

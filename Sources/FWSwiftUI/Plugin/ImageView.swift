@@ -16,7 +16,7 @@ import FWObjC
 /// 图片视图，支持网络图片和动图
 public struct ImageView: UIViewRepresentable {
     
-    var url: Any?
+    var url: URLParameter?
     var placeholder: UIImage?
     var options: WebImageOptions = []
     var context: [ImageCoderOptions: Any]?
@@ -29,12 +29,12 @@ public struct ImageView: UIViewRepresentable {
     }
     
     /// 指定网络图片URL初始化
-    public init(url: Any?) {
+    public init(url: URLParameter?) {
         self.url = url
     }
     
     /// 设置网络图片URL
-    public func url(_ url: Any?) -> Self {
+    public func url(_ url: URLParameter?) -> Self {
         var result = self
         result.url = url
         return result

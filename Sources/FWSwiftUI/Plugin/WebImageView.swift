@@ -20,7 +20,7 @@ public struct WebImageView: View {
     var cancelOnDisappear: Bool = false
     var configurations: [(Image) -> Image]
     
-    public init(_ url: Any?, isLoaded: Binding<Bool> = .constant(false)) {
+    public init(_ url: URLParameter?, isLoaded: Binding<Bool> = .constant(false)) {
         binder = ImageBinder(url: url, isLoaded: isLoaded)
         configurations = []
         binder.start()
@@ -105,14 +105,14 @@ extension WebImageView {
     public class ImageBinder: ObservableObject {
         @Published var image: UIImage?
         
-        let url: Any?
+        let url: URLParameter?
         var isLoaded: Binding<Bool>
         var loadingSucceed: Bool = false
         var receipt: Any?
         var completionBlock: ((UIImage?, Error?) -> Void)?
         var progressBlock: ((Double) -> Void)?
         
-        init(url: Any?, isLoaded: Binding<Bool>) {
+        init(url: URLParameter?, isLoaded: Binding<Bool>) {
             self.url = url
             self.isLoaded = isLoaded
             self.image = nil
