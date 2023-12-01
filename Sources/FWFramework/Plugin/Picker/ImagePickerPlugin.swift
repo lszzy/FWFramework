@@ -291,7 +291,7 @@ extension ImagePickerPlugin {
                     let filePath = AssetManager.imagePickerPath
                     try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                     if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
-                        let tempFileURL = NSURL.fileURL(withPath: fullPath)
+                        let tempFileURL = URL(fileURLWithPath: fullPath)
                         do {
                             try FileManager.default.moveItem(at: url, to: tempFileURL)
                             object = tempFileURL
@@ -517,7 +517,7 @@ extension ImagePickerPlugin {
                         let filePath = AssetManager.imagePickerPath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                         if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
-                            let fileURL = NSURL.fileURL(withPath: fullPath)
+                            let fileURL = URL(fileURLWithPath: fullPath)
                             do {
                                 try FileManager.default.moveItem(at: url, to: fileURL)
                                 videoURL = fileURL

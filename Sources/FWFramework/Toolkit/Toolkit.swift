@@ -108,26 +108,26 @@ import FWObjC
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func fw_canOpenURL(_ url: Any?) -> Bool {
-        guard let url = fw_url(string: url) else { return false }
+    public static func fw_canOpenURL(_ url: URLParameter?) -> Bool {
+        guard let url = url?.urlValue else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func fw_openURL(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = fw_url(string: url) else { return }
+    public static func fw_openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+        guard let url = url?.urlValue else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func fw_openUniversalLinks(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = fw_url(string: url) else { return }
+    public static func fw_openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+        guard let url = url?.urlValue else { return }
         UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    public static func fw_isSystemURL(_ url: Any?) -> Bool {
-        guard let url = fw_url(string: url) else { return false }
+    public static func fw_isSystemURL(_ url: URLParameter?) -> Bool {
+        guard let url = url?.urlValue else { return false }
         if let scheme = url.scheme?.lowercased(),
            ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
             return true
@@ -151,8 +151,8 @@ import FWObjC
     }
     
     /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
-    public static func fw_isSchemeURL(_ url: Any?, scheme: String? = nil) -> Bool {
-        guard let url = fw_url(string: url),
+    public static func fw_isSchemeURL(_ url: URLParameter?, scheme: String? = nil) -> Bool {
+        guard let url = url?.urlValue,
               let urlScheme = url.scheme,
               !urlScheme.isEmpty else { return false }
         
@@ -165,17 +165,14 @@ import FWObjC
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
-    public static func fw_isHttpURL(_ url: Any?) -> Bool {
-        var urlString = url as? String ?? ""
-        if let url = url as? URL {
-            urlString = url.absoluteString
-        }
+    public static func fw_isHttpURL(_ url: URLParameter?) -> Bool {
+        let urlString = url?.urlValue.absoluteString ?? ""
         return urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://")
     }
 
     /// 判断URL是否是AppStore链接，支持NSString|NSURL
-    public static func fw_isAppStoreURL(_ url: Any?) -> Bool {
-        guard let url = fw_url(string: url) else { return false }
+    public static func fw_isAppStoreURL(_ url: URLParameter?) -> Bool {
+        guard let url = url?.urlValue else { return false }
         // itms-apps等
         if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
             return true
@@ -252,8 +249,8 @@ import FWObjC
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func fw_openSafariController(_ url: Any?, completionHandler: (() -> Void)? = nil) {
-        guard let url = fw_url(string: url), fw_isHttpURL(url) else { return }
+    public static func fw_openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil) {
+        guard let url = url?.urlValue, fw_isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
             safariController.fw_setProperty(completionHandler, forName: "safariViewControllerDidFinish")
@@ -312,7 +309,7 @@ import FWObjC
             player = AVPlayer(playerItem: playerItem)
         } else if let url = url as? URL {
             player = AVPlayer(url: url)
-        } else if let videoUrl = fw_url(string: url) {
+        } else if let videoUrl = URL.fw_url(string: url as? String) {
             player = AVPlayer(url: videoUrl)
         }
         guard player != nil else { return nil }
@@ -323,7 +320,7 @@ import FWObjC
     }
 
     /// 打开音频播放器，支持NSURL|NSString
-    public static func fw_openAudioPlayer(_ url: Any?) -> AVAudioPlayer? {
+    public static func fw_openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
         // 设置播放模式示例
         // try? AVAudioSession.sharedInstance().setCategory(.ambient)
         
@@ -332,7 +329,7 @@ import FWObjC
             audioUrl = url
         } else if let urlString = url as? String {
             if (urlString as NSString).isAbsolutePath {
-                audioUrl = NSURL.fileURL(withPath: urlString)
+                audioUrl = URL(fileURLWithPath: urlString)
             } else {
                 audioUrl = Bundle.main.url(forResource: urlString, withExtension: nil)
             }
@@ -344,15 +341,6 @@ import FWObjC
         
         audioPlayer.play()
         return audioPlayer
-    }
-    
-    private static func fw_url(string: Any?) -> URL? {
-        guard let string = string else { return nil }
-        if let url = string as? URL {
-            return url
-        } else {
-            return URL.fw_url(string: string as? String)
-        }
     }
     
     /// 播放内置声音文件
@@ -369,7 +357,7 @@ import FWObjC
             return 0
         }
         
-        let soundUrl = NSURL.fileURL(withPath: soundFile)
+        let soundUrl = URL(fileURLWithPath: soundFile)
         var soundId: SystemSoundID = 0
         AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
         AudioServicesPlaySystemSoundWithCompletion(soundId, completionHandler)
@@ -1587,7 +1575,7 @@ import FWObjC
                 pdf = CGPDFDocument(provider)
             }
         } else if let path = path as? String {
-            pdf = CGPDFDocument(NSURL.fileURL(withPath: path) as CFURL)
+            pdf = CGPDFDocument(URL(fileURLWithPath: path) as CFURL)
         }
         guard let pdf = pdf else { return nil }
         guard let page = pdf.page(at: 1) else { return nil }

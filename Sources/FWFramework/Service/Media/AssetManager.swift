@@ -777,12 +777,12 @@ public class AssetManager: NSObject {
     
     /// 保存图片到指定相册（传入 图片路径）
     public static func saveImage(imagePath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
-        AssetManager.shared.saveImage(imagePathURL: NSURL.fileURL(withPath: imagePath), albumAssetsGroup: albumAssetsGroup, completion: completion)
+        AssetManager.shared.saveImage(imagePathURL: URL(fileURLWithPath: imagePath), albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
     /// 保存视频到指定相册（传入 视频路径）
     public static func saveVideo(videoPath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
-        AssetManager.shared.saveVideo(videoPathURL: NSURL.fileURL(withPath: videoPath), albumAssetsGroup: albumAssetsGroup, completion: completion)
+        AssetManager.shared.saveVideo(videoPathURL: URL(fileURLWithPath: videoPath), albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
     // MARK: - Public
