@@ -9,6 +9,23 @@
 import FWFramework
 import UIKit
 
+// 继承HTTPRequest及重载Builder示例
+class AppRequest: HTTPRequest {
+    
+    class Builder: HTTPRequest.Builder {
+        override func build() -> AppRequest {
+            return AppRequest(builder: self)
+        }
+    }
+    
+    override func urlRequestFilter(_ urlRequest: inout URLRequest) {
+        super.urlRequestFilter(&urlRequest)
+        
+        urlRequest.setValue("", forHTTPHeaderField: "Authorization")
+    }
+    
+}
+
 // 解析单个ResponseModel实例
 class TestModelRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = TestModel
@@ -387,12 +404,16 @@ extension TestRequestController: ViewControllerProtocol {
 private extension TestRequestController {
     
     @objc func onSucceed() {
-        let request = HTTPRequest.Builder()
+        let request: AppRequest = AppRequest.Builder()
             .requestUrl("http://kvm.wuyong.site/test.json")
             .responseSerializerType(.JSON)
             .requestTimeoutInterval(30)
             .requestCachePolicy(.reloadIgnoringLocalAndRemoteCacheData)
-            .requestHeader("Authorization", value: "")
+            .requestArgument({
+                var param: [String: Any] = [:]
+                param["key"] = "value"
+                return param
+            }())
             .requestHeaders([
                 "X-Access-Key": "",
                 "X-Timestamp": "",
