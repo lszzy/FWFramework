@@ -16,6 +16,28 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         .grouped
     }
     
+    func setupNavbar() {
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换按钮样式"], actionBlock: { index in
+                if AlertAppearance.appearance.preferredActionColor == nil {
+                    AlertAppearance.appearance.preferredActionColor = UIColor.red
+                    AlertAppearance.appearance.preferredActionBlock = { vc in
+                        return vc.actions.first
+                    }
+                    AlertControllerAppearance.appearance.preferredActionColor = UIColor.red
+                    AlertControllerAppearance.appearance.preferredActionBlock = { vc in
+                        return vc.actions.first
+                    }
+                } else {
+                    AlertAppearance.appearance.preferredActionColor = nil
+                    AlertAppearance.appearance.preferredActionBlock = nil
+                    AlertControllerAppearance.appearance.preferredActionColor = nil
+                    AlertControllerAppearance.appearance.preferredActionBlock = nil
+                }
+            })
+        }
+    }
+    
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["警告框(简单)", "onAlert1"],
@@ -215,7 +237,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         ]
         message.append(NSAttributedString(string: "警告框消息", attributes: attrs))
         
-        app.showAlert(title: title, message: message, style: .default, cancel: nil, actions: ["按钮1", "按钮2", "按钮3", "按钮4"], actionBlock: nil, cancelBlock: nil)
+        app.showAlert(title: title, message: message, style: .default, cancel: nil, actions: ["按钮1", "按钮2", NSAttributedString(string: "按钮3", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "按钮4", attributes: [.foregroundColor: UIColor.green])], actionBlock: nil, cancelBlock: nil)
     }
     
     func onSheetA() {
@@ -237,7 +259,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         ]
         message.append(NSAttributedString(string: "操作表消息", attributes: attrs))
         
-        app.showSheet(title: title, message: message, cancel: "取消", actions: ["操作1", "操作2", "操作3", "操作4", "操作5", "操作6", "操作7", "操作8", "操作9", "操作10"], currentIndex: -1) { index in
+        app.showSheet(title: title, message: message, cancel: "取消", actions: ["操作1", "操作2", NSAttributedString(string: "操作3", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "操作4", attributes: [.foregroundColor: UIColor.green]), "操作5", "操作6", NSAttributedString(string: "操作7", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "操作8", attributes: [.foregroundColor: UIColor.green]), "操作9", "操作10"], currentIndex: -1) { index in
             UIWindow.app.showMessage(text: "点击的操作index: \(index)")
         }
     }
