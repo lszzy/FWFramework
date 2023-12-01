@@ -856,7 +856,7 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Action
     /// 当前请求的上下文，支持UIViewController|UIView
     @discardableResult
-    public func context(_ context: AnyObject?) -> Self {
+    open func context(_ context: AnyObject?) -> Self {
         self.context = context
         return self
     }
@@ -907,28 +907,28 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 断点续传进度句柄
     @discardableResult
-    public func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+    open func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
         self.downloadProgressBlock = block
         return self
     }
     
     /// 上传进度句柄
     @discardableResult
-    public func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+    open func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
         self.uploadProgressBlock = block
         return self
     }
     
     /// 是否自动显示加载信息
     @discardableResult
-    public func autoShowLoading(_ autoShowLoading: Bool) -> Self {
+    open func autoShowLoading(_ autoShowLoading: Bool) -> Self {
         self.autoShowLoading = autoShowLoading
         return self
     }
     
     /// 是否自动显示错误信息
     @discardableResult
-    public func autoShowError(_ autoShowError: Bool) -> Self {
+    open func autoShowError(_ autoShowError: Bool) -> Self {
         self.autoShowError = autoShowError
         return self
     }
@@ -1061,7 +1061,7 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Cache
     /// 是否使用已缓存响应
     @discardableResult
-    public func useCacheResponse(_ useCacheResponse: Bool) -> Self {
+    open func useCacheResponse(_ useCacheResponse: Bool) -> Self {
         self.useCacheResponse = useCacheResponse
         return self
     }

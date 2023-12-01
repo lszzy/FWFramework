@@ -170,7 +170,7 @@ class TestUploadRequest: HTTPRequest {
     override init() {
         super.init()
         
-        constructingBodyBlock { [weak self] formData in
+        constructingBodyBlock = { [weak self] formData in
             if let imageData = self?.uploadData as? Data {
                 formData.append(imageData, name: "files[]", fileName: self?.fileName ?? "", mimeType: Data.app.mimeType(from: Data.app.imageFormat(for: imageData)))
             } else if let videoURL = self?.uploadData as? URL {
