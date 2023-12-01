@@ -25,7 +25,7 @@ extension Wrapper where Base: UIViewController {
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
         error: Error?,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
@@ -39,10 +39,10 @@ extension Wrapper where Base: UIViewController {
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
@@ -58,11 +58,11 @@ extension Wrapper where Base: UIViewController {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -76,8 +76,8 @@ extension Wrapper where Base: UIViewController {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func showConfirm(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -93,10 +93,10 @@ extension Wrapper where Base: UIViewController {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func showConfirm(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -113,10 +113,10 @@ extension Wrapper where Base: UIViewController {
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
     public func showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any? = nil,
-        confirm: Any? = nil,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
         promptBlock: ((UITextField) -> Void)? = nil,
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -135,10 +135,10 @@ extension Wrapper where Base: UIViewController {
     ///   - confirmBlock: 确认按钮事件，参数为输入值数组
     ///   - cancelBlock: 取消按钮事件
     public func showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any? = nil,
-        confirm: Any? = nil,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
         promptCount: Int,
         promptBlock: ((UITextField, Int) -> Void)?,
         confirmBlock: (([String]) -> Void)?,
@@ -160,11 +160,11 @@ extension Wrapper where Base: UIViewController {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
         promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
@@ -181,9 +181,9 @@ extension Wrapper where Base: UIViewController {
     ///   - cancel: 取消按钮标题，默认取消
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showSheet(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
@@ -197,9 +197,9 @@ extension Wrapper where Base: UIViewController {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -216,10 +216,10 @@ extension Wrapper where Base: UIViewController {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -238,10 +238,10 @@ extension Wrapper where Base: UIViewController {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,
@@ -277,7 +277,7 @@ extension Wrapper where Base: UIView {
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
         error: Error?,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
@@ -291,10 +291,10 @@ extension Wrapper where Base: UIView {
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
@@ -310,11 +310,11 @@ extension Wrapper where Base: UIView {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -328,8 +328,8 @@ extension Wrapper where Base: UIView {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func showConfirm(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -345,10 +345,10 @@ extension Wrapper where Base: UIView {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func showConfirm(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -365,10 +365,10 @@ extension Wrapper where Base: UIView {
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
     public func showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         promptBlock: ((UITextField) -> Void)? = nil,
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -387,10 +387,10 @@ extension Wrapper where Base: UIView {
     ///   - confirmBlock: 确认按钮事件，参数为输入值数组
     ///   - cancelBlock: 取消按钮事件
     public func showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         promptCount: Int,
         promptBlock: ((UITextField, Int) -> Void)?,
         confirmBlock: (([String]) -> Void)?,
@@ -412,11 +412,11 @@ extension Wrapper where Base: UIView {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
         promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
@@ -433,9 +433,9 @@ extension Wrapper where Base: UIView {
     ///   - cancel: 取消按钮标题，默认取消
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
         cancelBlock: (() -> Void)? = nil
     ) {
         base.fw_showSheet(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
@@ -449,9 +449,9 @@ extension Wrapper where Base: UIView {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -468,10 +468,10 @@ extension Wrapper where Base: UIView {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -490,10 +490,10 @@ extension Wrapper where Base: UIView {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,

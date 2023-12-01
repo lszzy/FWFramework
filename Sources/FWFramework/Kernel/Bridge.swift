@@ -53,10 +53,10 @@ import UIKit
 @_spi(FW) @objc extension UIViewController {
     
     public func __fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: String?,
+        message: String?,
+        cancel: String?,
+        actions: [String]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
