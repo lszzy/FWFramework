@@ -379,6 +379,14 @@ open class HTTPRequest: CustomStringConvertible {
         try _responseFilter?(self)
     }
     
+    /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
+    open func preloadResponseModel() -> Bool {
+        if let preload = _preloadResponseModel {
+            return preload
+        }
+        return config.preloadModelFilter?(self) ?? false
+    }
+    
     /// 请求完成预处理器，后台线程调用。默认写入请求缓存、预加载响应模型
     open func requestCompletePreprocessor() {
         let responseData = _responseData
@@ -610,14 +618,6 @@ open class HTTPRequest: CustomStringConvertible {
             block?(request.error ?? RequestError.unknownError)
         }
         return self
-    }
-    
-    /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
-    open func preloadResponseModel() -> Bool {
-        if let preload = _preloadResponseModel {
-            return preload
-        }
-        return config.preloadModelFilter?(self) ?? false
     }
     
     /// 设置是否预加载响应模型，仅ResponseModelRequest生效
