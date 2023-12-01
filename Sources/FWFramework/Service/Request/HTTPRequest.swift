@@ -68,8 +68,8 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void
     
-    /// 请求构建器
-    public class Builder {
+    /// 请求构建器，可继承
+    open class Builder {
         
         private(set) var baseUrl: String?
         private(set) var requestUrl: String?
@@ -225,9 +225,8 @@ open class HTTPRequest: CustomStringConvertible {
         }
         
         /// 构建请求
-        public func build() -> HTTPRequest {
-            let request = HTTPRequest(builder: self)
-            return request
+        open func build() -> HTTPRequest {
+            return HTTPRequest(builder: self)
         }
         
     }
@@ -407,13 +406,15 @@ open class HTTPRequest: CustomStringConvertible {
     private var _writeCacheAsynchronously: Bool?
     
     // MARK: - Lifecycle
+    /// 默认初始化
     public init() {}
     
-    private convenience init(builder: Builder) {
-        self.init()
+    /// 指定Builder初始化，可用于重载Builder
+    public init(builder: Builder) {
         _builder = builder
     }
     
+    /// 请求描述
     open var description: String {
         let url = requestTask?.currentRequest?.url?.absoluteString ?? requestUrl()
         let method = requestTask?.currentRequest?.httpMethod ?? requestMethod().rawValue
