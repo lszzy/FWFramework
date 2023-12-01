@@ -68,6 +68,170 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void
     
+    /// 请求构建器
+    public class Builder {
+        
+        private(set) var baseUrl: String?
+        private(set) var requestUrl: String?
+        private(set) var cdnUrl: String?
+        private(set) var useCDN: Bool?
+        private(set) var allowsCellularAccess: Bool?
+        private(set) var requestTimeoutInterval: TimeInterval?
+        private(set) var requestCachePolicy: URLRequest.CachePolicy?
+        private(set) var requestMethod: RequestMethod?
+        private(set) var requestArgument: Any?
+        private(set) var requestArgumentDictionary: [AnyHashable: Any]?
+        private(set) var requestSerializerType: RequestSerializerType?
+        private(set) var responseSerializerType: ResponseSerializerType?
+        private(set) var requestAuthorizationHeaders: [String]?
+        private(set) var requestHeaders: [String: String]?
+        
+        public init() {}
+        
+        /// 请求基准URL，默认空，示例：https://www.wuyong.site
+        @discardableResult
+        public func baseUrl(_ baseUrl: String) -> Self {
+            self.baseUrl = baseUrl
+            return self
+        }
+        
+        /// 请求URL地址，默认空，示例：/v1/user
+        @discardableResult
+        public func requestUrl(_ requestUrl: String) -> Self {
+            self.requestUrl = requestUrl
+            return self
+        }
+        
+        /// 请求可选CDN地址，默认空
+        @discardableResult
+        public func cdnUrl(_ cdnUrl: String) -> Self {
+            self.cdnUrl = cdnUrl
+            return self
+        }
+        
+        /// 是否使用CDN
+        @discardableResult
+        public func useCDN(_ useCDN: Bool) -> Self {
+            self.useCDN = useCDN
+            return self
+        }
+        
+        /// 是否允许蜂窝网络访问，默认true
+        @discardableResult
+        public func allowsCellularAccess(_ allows: Bool) -> Self {
+            self.allowsCellularAccess = allows
+            return self
+        }
+        
+        /// 请求超时，默认60秒
+        @discardableResult
+        public func requestTimeoutInterval(_ interval: TimeInterval) -> Self {
+            self.requestTimeoutInterval = interval
+            return self
+        }
+        
+        /// 自定义请求缓存策略，默认nil不处理
+        @discardableResult
+        public func requestCachePolicy(_ cachePolicy: URLRequest.CachePolicy?) -> Self {
+            self.requestCachePolicy = cachePolicy
+            return self
+        }
+        
+        /// 请求方式，默认GET
+        @discardableResult
+        public func requestMethod(_ requestMethod: RequestMethod) -> Self {
+            self.requestMethod = requestMethod
+            return self
+        }
+        
+        /// 批量添加请求参数，建议[String: Any]?，默认nil
+        @discardableResult
+        public func requestArgument(_ argument: Any?) -> Self {
+            guard let argument = argument else { return self }
+            if let dict = argument as? [AnyHashable: Any] {
+                if self.requestArgumentDictionary != nil {
+                    self.requestArgumentDictionary?.merge(dict, uniquingKeysWith: { $1 })
+                } else {
+                    self.requestArgumentDictionary = dict
+                }
+            } else {
+                self.requestArgument = argument
+            }
+            return self
+        }
+        
+        /// 添加单个参数
+        @discardableResult
+        public func requestArgument(_ name: String, value: Any?) -> Self {
+            if self.requestArgumentDictionary == nil {
+                self.requestArgumentDictionary = [:]
+            }
+            self.requestArgumentDictionary?[name] = value
+            return self
+        }
+        
+        /// 请求序列化方式，默认HTTP
+        @discardableResult
+        public func requestSerializerType(_ serializerType: RequestSerializerType) -> Self {
+            self.requestSerializerType = serializerType
+            return self
+        }
+        
+        /// 响应序列化方式，默认JSON
+        @discardableResult
+        public func responseSerializerType(_ serializerType: ResponseSerializerType) -> Self {
+            self.responseSerializerType = serializerType
+            return self
+        }
+        
+        /// HTTP请求授权Header数组，示例：["Username", "Password"]
+        @discardableResult
+        public func requestAuthorizationHeaders(_ array: [String]?) -> Self {
+            self.requestAuthorizationHeaders = array
+            return self
+        }
+        
+        /// 设置HTTP请求授权用户名和密码
+        @discardableResult
+        public func requestAuthorization(username: String?, password: String?) -> Self {
+            if let username = username, let password = password {
+                self.requestAuthorizationHeaders = [username, password]
+            } else {
+                self.requestAuthorizationHeaders = nil
+            }
+            return self
+        }
+        
+        /// 批量添加请求Header
+        @discardableResult
+        public func requestHeaders(_ headers: [String: String]?) -> Self {
+            guard let headers = headers else { return self }
+            if self.requestHeaders != nil {
+                self.requestHeaders?.merge(headers, uniquingKeysWith: { $1 })
+            } else {
+                self.requestHeaders = headers
+            }
+            return self
+        }
+        
+        /// 添加单个请求Header
+        @discardableResult
+        public func requestHeader(_ name: String, value: String?) -> Self {
+            if self.requestHeaders == nil {
+                self.requestHeaders = [:]
+            }
+            self.requestHeaders?[name] = value
+            return self
+        }
+        
+        /// 构建请求
+        public func build() -> HTTPRequest {
+            let request = HTTPRequest(builder: self)
+            return request
+        }
+        
+    }
+    
     // MARK: - Accessor
     /// 自定义请求代理
     open weak var delegate: RequestDelegate?
@@ -214,20 +378,14 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Accessor+Private
     fileprivate var cacheResponseModel: Any?
     private var responseModelBlock: Completion?
+    private var _preloadResponseModel: Bool?
+    private var _isCancelled = false
+    private var _cacheData: Data?
+    private var _cacheString: String?
+    private var _cacheJSON: Any?
+    private var _cacheMetadata: RequestCacheMetadata?
+    private var _builder: Builder?
     
-    private var _baseUrl: String?
-    private var _requestUrl: String?
-    private var _cdnUrl: String?
-    private var _useCDN: Bool?
-    private var _allowsCellularAccess: Bool?
-    private var _requestTimeoutInterval: TimeInterval?
-    private var _requestCachePolicy: URLRequest.CachePolicy?
-    private var _requestMethod: RequestMethod?
-    private var _requestArgument: Any?
-    private var _requestSerializerType: RequestSerializerType?
-    private var _responseSerializerType: ResponseSerializerType?
-    private var _requestAuthorizationHeaders: [String]?
-    private var _requestHeaders: [String: String]?
     private var _customUrlRequest: URLRequest?
     private var _statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
     private var _jsonValidator: Any?
@@ -242,21 +400,19 @@ open class HTTPRequest: CustomStringConvertible {
     private var _requestCompleteFilter: Completion?
     private var _requestFailedPreprocessor: Completion?
     private var _requestFailedFilter: Completion?
-    
-    private var _cacheData: Data?
-    private var _cacheString: String?
-    private var _cacheJSON: Any?
-    private var _cacheMetadata: RequestCacheMetadata?
     private var _cacheTimeInSeconds: Int?
     private var _cacheVersion: Int?
     private var _cacheSensitiveData: Any?
     private var _cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
     private var _writeCacheAsynchronously: Bool?
-    private var _preloadResponseModel: Bool?
-    private var _isCancelled = false
     
     // MARK: - Lifecycle
     public init() {}
+    
+    private convenience init(builder: Builder) {
+        self.init()
+        _builder = builder
+    }
     
     open var description: String {
         let url = requestTask?.currentRequest?.url?.absoluteString ?? requestUrl()
@@ -269,67 +425,67 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
-        return _baseUrl ?? ""
+        return _builder?.baseUrl ?? ""
     }
     
     /// 请求URL地址，默认空，示例：/v1/user
     open func requestUrl() -> String {
-        return _requestUrl ?? ""
+        return _builder?.requestUrl ?? ""
     }
     
     /// 请求可选CDN地址，默认空
     open func cdnUrl() -> String {
-        return _cdnUrl ?? ""
+        return _builder?.cdnUrl ?? ""
     }
     
     /// 是否使用CDN
     open func useCDN() -> Bool {
-        return _useCDN ?? false
+        return _builder?.useCDN ?? false
     }
     
     /// 是否允许蜂窝网络访问，默认true
     open func allowsCellularAccess() -> Bool {
-        return _allowsCellularAccess ?? true
+        return _builder?.allowsCellularAccess ?? true
     }
     
     /// 请求超时，默认60秒
     open func requestTimeoutInterval() -> TimeInterval {
-        return _requestTimeoutInterval ?? 60
+        return _builder?.requestTimeoutInterval ?? 60
     }
     
     /// 自定义请求缓存策略，默认nil不处理
     open func requestCachePolicy() -> URLRequest.CachePolicy? {
-        return _requestCachePolicy
+        return _builder?.requestCachePolicy
     }
     
     /// 请求方式，默认GET
     open func requestMethod() -> RequestMethod {
-        return _requestMethod ?? .GET
+        return _builder?.requestMethod ?? .GET
     }
     
     /// 请求附加参数，建议[String: Any]?，默认nil
     open func requestArgument() -> Any? {
-        return _requestArgument
+        return _builder?.requestArgument ?? _builder?.requestArgumentDictionary
     }
     
     /// 请求序列化方式，默认HTTP
     open func requestSerializerType() -> RequestSerializerType {
-        return _requestSerializerType ?? .HTTP
+        return _builder?.requestSerializerType ?? .HTTP
     }
     
     /// 响应序列化方式，默认JSON
     open func responseSerializerType() -> ResponseSerializerType {
-        return _responseSerializerType ?? .JSON
+        return _builder?.responseSerializerType ?? .JSON
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
     open func requestAuthorizationHeaders() -> [String]? {
-        return _requestAuthorizationHeaders
+        return _builder?.requestAuthorizationHeaders
     }
     
     /// 自定义请求Header字典
     open func requestHeaders() -> [String: String]? {
-        return _requestHeaders
+        return _builder?.requestHeaders
     }
     
     /// 请求发送前URLRequest过滤方法，默认不处理
@@ -848,97 +1004,6 @@ open class HTTPRequest: CustomStringConvertible {
 extension HTTPRequest {
     
     // MARK: - Chain
-    /// 请求基准URL，默认空，示例：https://www.wuyong.site
-    @discardableResult
-    public func baseUrl(_ baseUrl: String) -> Self {
-        _baseUrl = baseUrl
-        return self
-    }
-    
-    /// 请求URL地址，默认空，示例：/v1/user
-    @discardableResult
-    public func requestUrl(_ requestUrl: String) -> Self {
-        _requestUrl = requestUrl
-        return self
-    }
-    
-    /// 请求可选CDN地址，默认空
-    @discardableResult
-    public func cdnUrl(_ cdnUrl: String) -> Self {
-        _cdnUrl = cdnUrl
-        return self
-    }
-    
-    /// 是否使用CDN
-    @discardableResult
-    public func useCDN(_ useCDN: Bool) -> Self {
-        _useCDN = useCDN
-        return self
-    }
-    
-    /// 是否允许蜂窝网络访问，默认true
-    @discardableResult
-    public func allowsCellularAccess(_ allows: Bool) -> Self {
-        _allowsCellularAccess = allows
-        return self
-    }
-    
-    /// 请求超时，默认60秒
-    @discardableResult
-    public func requestTimeoutInterval(_ interval: TimeInterval) -> Self {
-        _requestTimeoutInterval = interval
-        return self
-    }
-    
-    /// 自定义请求缓存策略，默认nil不处理
-    @discardableResult
-    public func requestCachePolicy(_ cachePolicy: URLRequest.CachePolicy?) -> Self {
-        _requestCachePolicy = cachePolicy
-        return self
-    }
-    
-    /// 请求方式，默认GET
-    @discardableResult
-    public func requestMethod(_ requestMethod: RequestMethod) -> Self {
-        _requestMethod = requestMethod
-        return self
-    }
-    
-    /// 请求附加参数，建议[String: Any]?，默认nil
-    @discardableResult
-    public func requestArgument(_ argument: Any?) -> Self {
-        _requestArgument = argument
-        return self
-    }
-    
-    /// 请求序列化方式，默认HTTP
-    @discardableResult
-    public func requestSerializerType(_ serializerType: RequestSerializerType) -> Self {
-        _requestSerializerType = serializerType
-        return self
-    }
-    
-    /// 响应序列化方式，默认JSON
-    @discardableResult
-    public func responseSerializerType(_ serializerType: ResponseSerializerType) -> Self {
-        _responseSerializerType = serializerType
-        return self
-    }
-    
-    /// HTTP请求授权Header数组，示例：["UserName", "Password"]
-    @discardableResult
-    public func requestAuthorizationHeaders(_ array: [String]?) -> Self {
-        _requestAuthorizationHeaders = array
-        return self
-    }
-    
-    /// 自定义请求Header字典
-    @discardableResult
-    public func requestHeaders(_ headers: [String: String]?) -> Self {
-        _requestHeaders = headers
-        return self
-    }
-    
     /// 自定义POST请求HTTP body数据
     @discardableResult
     public func constructingBodyBlock(_ block: ((RequestMultipartFormData) -> Void)?) -> Self {
@@ -1010,18 +1075,21 @@ extension HTTPRequest {
     }
     
     /// 状态码验证器
+    @discardableResult
     public func statusCodeValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
         _statusCodeValidator = validator
         return self
     }
     
     /// 请求发送前URLRequest过滤方法，默认不处理
+    @discardableResult
     public func urlRequestFilter(_ filter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
         _urlRequestFilter = filter
         return self
     }
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
+    @discardableResult
     public func responseFilter(_ filter: ((_ request: HTTPRequest) throws -> Void)?) -> Self {
         _responseFilter = filter
         return self
@@ -1077,12 +1145,14 @@ extension HTTPRequest {
     }
     
     /// 请求重试验证方法，默认检查状态码和错误
+    @discardableResult
     public func requestRetryValidator(_ validator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
         _requestRetryValidator = validator
         return self
     }
     
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
+    @discardableResult
     public func requestRetryProcessor(_ processor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?) -> Self {
         _requestRetryProcessor = processor
         return self
@@ -1117,12 +1187,14 @@ extension HTTPRequest {
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
+    @discardableResult
     public func cacheArgumentFilter(_ filter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?) -> Self {
         _cacheArgumentFilter = filter
         return self
     }
     
     /// 是否异步写入缓存，默认true
+    @discardableResult
     public func writeCacheAsynchronously(_ async: Bool) -> Self {
         _writeCacheAsynchronously = async
         return self

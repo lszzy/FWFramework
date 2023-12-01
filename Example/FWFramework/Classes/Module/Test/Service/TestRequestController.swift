@@ -387,20 +387,22 @@ extension TestRequestController: ViewControllerProtocol {
 private extension TestRequestController {
     
     @objc func onSucceed() {
-        let request = HTTPRequest()
-        request
+        let request = HTTPRequest.Builder()
             .requestUrl("http://kvm.wuyong.site/test.json")
             .responseSerializerType(.JSON)
             .requestTimeoutInterval(30)
             .requestCachePolicy(.reloadIgnoringLocalAndRemoteCacheData)
+            .requestHeader("Authorization", value: "")
             .requestHeaders([
-                "Authorization": "",
                 "X-Access-Key": "",
                 "X-Timestamp": "",
                 "X-Nonce-Data": "",
                 "X-Meta-Data": "",
                 "X-Sign-Data": "",
             ])
+            .build()
+        
+        request
             .jsonValidator([
                 "name": Validator<String>.isNotNil.anyValidator,
                 "nullName": Validator<String>.isValid.anyValidator,
