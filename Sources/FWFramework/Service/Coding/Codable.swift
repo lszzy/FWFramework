@@ -221,6 +221,10 @@ public protocol StringParameter: AnyParameter {
     var stringValue: String { get }
 }
 
+public protocol AttributedStringParameter: AnyParameter {
+    var attributedStringValue: NSAttributedString { get }
+}
+
 public protocol URLParameter: AnyParameter {
     var urlValue: URL { get }
 }
@@ -250,11 +254,17 @@ extension Data: DataParameter, StringParameter {
     public var stringValue: String { String(data: self, encoding: .utf8) ?? .init() }
 }
 
-extension String: StringParameter, DataParameter, URLParameter, URLRequestParameter {
+extension String: StringParameter, AttributedStringParameter, DataParameter, URLParameter, URLRequestParameter {
     public var stringValue: String { self }
+    public var attributedStringValue: NSAttributedString { NSAttributedString(string: self) }
     public var dataValue: Data { data(using: .utf8) ?? .init() }
     public var urlValue: URL { URL.fw_url(string: self) ?? NSURL() as URL }
     public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
+}
+
+extension NSAttributedString: AttributedStringParameter, StringParameter {
+    public var attributedStringValue: NSAttributedString { self }
+    public var stringValue: String { string }
 }
 
 extension URL: URLParameter, StringParameter, URLRequestParameter {
