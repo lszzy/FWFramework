@@ -85,6 +85,27 @@ open class HTTPRequest: CustomStringConvertible {
         private(set) var responseSerializerType: ResponseSerializerType?
         private(set) var requestAuthorizationHeaders: [String]?
         private(set) var requestHeaders: [String: String]?
+        private(set) var customUrlRequest: URLRequest?
+        private(set) var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
+        private(set) var jsonValidator: Any?
+        private(set) var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        private(set) var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
+        private(set) var responseMockValidator: ((HTTPRequest) -> Bool)?
+        private(set) var responseMockProcessor: ((HTTPRequest) -> Bool)?
+        private(set) var requestRetryCount: Int?
+        private(set) var requestRetryInterval: TimeInterval?
+        private(set) var requestRetryTimeout: TimeInterval?
+        private(set) var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        private(set) var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
+        private(set) var requestCompletePreprocessor: Completion?
+        private(set) var requestCompleteFilter: Completion?
+        private(set) var requestFailedPreprocessor: Completion?
+        private(set) var requestFailedFilter: Completion?
+        private(set) var cacheTimeInSeconds: Int?
+        private(set) var cacheVersion: Int?
+        private(set) var cacheSensitiveData: Any?
+        private(set) var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
+        private(set) var writeCacheAsynchronously: Bool?
         
         public init() {}
         
@@ -221,6 +242,153 @@ open class HTTPRequest: CustomStringConvertible {
                 self.requestHeaders = [:]
             }
             self.requestHeaders?[name] = value
+            return self
+        }
+        
+        /// JSON验证器，默认支持AnyValidator
+        @discardableResult
+        public func jsonValidator(_ validator: Any?) -> Self {
+            self.jsonValidator = validator
+            return self
+        }
+        
+        /// 构建自定义URLRequest
+        @discardableResult
+        public func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
+            self.customUrlRequest = urlRequest
+            return self
+        }
+        
+        /// 状态码验证器
+        @discardableResult
+        public func statusCodeValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+            self.statusCodeValidator = validator
+            return self
+        }
+        
+        /// 请求发送前URLRequest过滤方法，默认不处理
+        @discardableResult
+        public func urlRequestFilter(_ filter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
+            self.urlRequestFilter = filter
+            return self
+        }
+        
+        /// 请求回调前Response过滤方法，默认成功不抛异常
+        @discardableResult
+        public func responseFilter(_ filter: ((_ request: HTTPRequest) throws -> Void)?) -> Self {
+            self.responseFilter = filter
+            return self
+        }
+        
+        /// 调试请求Mock验证器，默认判断404
+        @discardableResult
+        public func responseMockValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+            self.responseMockValidator = validator
+            return self
+        }
+        
+        /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
+        @discardableResult
+        public func responseMockProcessor(_ block: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+            self.responseMockProcessor = block
+            return self
+        }
+        
+        /// 请求完成预处理器，后台线程调用
+        @discardableResult
+        public func requestCompletePreprocessor(_ block: Completion?) -> Self {
+            self.requestCompletePreprocessor = block
+            return self
+        }
+        
+        /// 请求完成过滤器，主线程调用
+        @discardableResult
+        public func requestCompleteFilter(_ block: Completion?) -> Self {
+            self.requestCompleteFilter = block
+            return self
+        }
+        
+        /// 请求失败预处理器，后台线程调用
+        @discardableResult
+        public func requestFailedPreprocessor(_ block: Completion?) -> Self {
+            self.requestFailedPreprocessor = block
+            return self
+        }
+        
+        /// 请求失败过滤器，主线程调用
+        @discardableResult
+        public func requestFailedFilter(_ block: Completion?) -> Self {
+            self.requestFailedFilter = block
+            return self
+        }
+        
+        /// 请求重试次数，默认0
+        @discardableResult
+        public func requestRetryCount(_ count: Int) -> Self {
+            self.requestRetryCount = count
+            return self
+        }
+        
+        /// 请求重试间隔，默认0
+        @discardableResult
+        public func requestRetryInterval(_ interval: TimeInterval) -> Self {
+            self.requestRetryInterval = interval
+            return self
+        }
+        
+        /// 请求重试超时时间，默认0
+        @discardableResult
+        public func requestRetryTimeout(_ timeout: TimeInterval) -> Self {
+            self.requestRetryTimeout = timeout
+            return self
+        }
+        
+        /// 请求重试验证方法，默认检查状态码和错误
+        @discardableResult
+        public func requestRetryValidator(_ validator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
+            self.requestRetryValidator = validator
+            return self
+        }
+        
+        /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
+        @discardableResult
+        public func requestRetryProcessor(_ processor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?) -> Self {
+            self.requestRetryProcessor = processor
+            return self
+        }
+        
+        /// 缓存有效期，默认-1不缓存
+        @discardableResult
+        public func cacheTimeInSeconds(_ seconds: Int) -> Self {
+            self.cacheTimeInSeconds = seconds
+            return self
+        }
+        
+        /// 缓存版本号，默认0
+        @discardableResult
+        public func cacheVersion(_ version: Int) -> Self {
+            self.cacheVersion = version
+            return self
+        }
+        
+        /// 缓存附加数据，变化时会更新缓存
+        @discardableResult
+        public func cacheSensitiveData(_ sensitiveData: Any?) -> Self {
+            self.cacheSensitiveData = sensitiveData
+            return self
+        }
+        
+        /// 缓存文件名过滤器，参数为请求参数，默认返回argument
+        @discardableResult
+        public func cacheArgumentFilter(_ filter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?) -> Self {
+            self.cacheArgumentFilter = filter
+            return self
+        }
+        
+        /// 是否异步写入缓存，默认true
+        @discardableResult
+        public func writeCacheAsynchronously(_ async: Bool) -> Self {
+            self.writeCacheAsynchronously = async
             return self
         }
         
@@ -385,26 +553,6 @@ open class HTTPRequest: CustomStringConvertible {
     private var _cacheMetadata: RequestCacheMetadata?
     private var _builder: Builder?
     
-    private var _customUrlRequest: URLRequest?
-    private var _statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
-    private var _jsonValidator: Any?
-    private var _urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
-    private var _responseFilter: ((_ request: HTTPRequest) throws -> Void)?
-    private var _requestRetryCount: Int?
-    private var _requestRetryInterval: TimeInterval?
-    private var _requestRetryTimeout: TimeInterval?
-    private var _requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-    private var _requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
-    private var _requestCompletePreprocessor: Completion?
-    private var _requestCompleteFilter: Completion?
-    private var _requestFailedPreprocessor: Completion?
-    private var _requestFailedFilter: Completion?
-    private var _cacheTimeInSeconds: Int?
-    private var _cacheVersion: Int?
-    private var _cacheSensitiveData: Any?
-    private var _cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
-    private var _writeCacheAsynchronously: Bool?
-    
     // MARK: - Lifecycle
     /// 默认初始化
     public init() {}
@@ -491,23 +639,23 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求发送前URLRequest过滤方法，默认不处理
     open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        _urlRequestFilter?(self, &urlRequest)
+        _builder?.urlRequestFilter?(self, &urlRequest)
     }
     
     /// 构建自定义URLRequest
     open func customUrlRequest() -> URLRequest? {
-        return _customUrlRequest
+        return _builder?.customUrlRequest
     }
     
     // MARK: - Override+Response
     /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
-        return _jsonValidator
+        return _builder?.jsonValidator
     }
     
     /// 状态码验证器
     open func statusCodeValidator() -> Bool {
-        if let validator = _statusCodeValidator {
+        if let validator = _builder?.statusCodeValidator {
             return validator(self)
         } else {
             let statusCode = responseStatusCode
@@ -517,7 +665,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock验证器，默认判断404
     open func responseMockValidator() -> Bool {
-        if let validator = config.debugMockValidator {
+        if let validator = _builder?.responseMockValidator ?? config.debugMockValidator {
             return validator(self)
         }
         return responseStatusCode == 404
@@ -525,7 +673,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
     open func responseMockProcessor() -> Bool {
-        if let processor = config.debugMockProcessor {
+        if let processor = _builder?.responseMockProcessor ?? config.debugMockProcessor {
             return processor(self)
         }
         return false
@@ -533,7 +681,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
     open func responseFilter() throws {
-        try _responseFilter?(self)
+        try _builder?.responseFilter?(self)
     }
     
     /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
@@ -567,43 +715,43 @@ open class HTTPRequest: CustomStringConvertible {
             }
         }
         
-        _requestCompletePreprocessor?(self)
+        _builder?.requestCompletePreprocessor?(self)
     }
     
     /// 请求完成过滤器，主线程调用，默认不处理
     open func requestCompleteFilter() {
-        _requestCompleteFilter?(self)
+        _builder?.requestCompleteFilter?(self)
     }
     
     /// 请求失败预处理器，后台线程调用，默认不处理
     open func requestFailedPreprocessor() {
-        _requestFailedPreprocessor?(self)
+        _builder?.requestFailedPreprocessor?(self)
     }
     
     /// 请求失败过滤器，主线程调用，默认不处理
     open func requestFailedFilter() {
-        _requestFailedFilter?(self)
+        _builder?.requestFailedFilter?(self)
     }
     
     // MARK: - Override+Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
-        return _requestRetryCount ?? 0
+        return _builder?.requestRetryCount ?? 0
     }
     
     /// 请求重试间隔，默认0
     open func requestRetryInterval() -> TimeInterval {
-        return _requestRetryInterval ?? 0
+        return _builder?.requestRetryInterval ?? 0
     }
     
     /// 请求重试超时时间，默认0
     open func requestRetryTimeout() -> TimeInterval {
-        return _requestRetryTimeout ?? 0
+        return _builder?.requestRetryTimeout ?? 0
     }
     
     /// 请求重试验证方法，默认检查状态码和错误
     open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
-        if let validator = _requestRetryValidator {
+        if let validator = _builder?.requestRetryValidator {
             return validator(self, response, responseObject, error)
         } else {
             let statusCode = response.statusCode
@@ -613,7 +761,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
     open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
-        if let processor = _requestRetryProcessor {
+        if let processor = _builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
             completionHandler(true)
@@ -623,22 +771,22 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Cache
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
-        return _cacheTimeInSeconds ?? -1
+        return _builder?.cacheTimeInSeconds ?? -1
     }
     
     /// 缓存版本号，默认0
     open func cacheVersion() -> Int {
-        return _cacheVersion ?? 0
+        return _builder?.cacheVersion ?? 0
     }
     
     /// 缓存敏感数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
-        return _cacheSensitiveData
+        return _builder?.cacheSensitiveData
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
     open func cacheArgumentFilter(_ argument: Any?) -> Any? {
-        if let filter = _cacheArgumentFilter {
+        if let filter = _builder?.cacheArgumentFilter {
             return filter(self, argument)
         } else {
             return argument
@@ -647,7 +795,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 是否异步写入缓存，默认true
     open func writeCacheAsynchronously() -> Bool {
-        return _writeCacheAsynchronously ?? true
+        return _builder?.writeCacheAsynchronously ?? true
     }
     
     // MARK: - Action
@@ -1061,143 +1209,10 @@ extension HTTPRequest {
         return self
     }
     
-    /// JSON验证器，默认支持AnyValidator
-    @discardableResult
-    public func jsonValidator(_ validator: Any?) -> Self {
-        _jsonValidator = validator
-        return self
-    }
-    
-    /// 构建自定义URLRequest
-    @discardableResult
-    public func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
-        _customUrlRequest = urlRequest
-        return self
-    }
-    
-    /// 状态码验证器
-    @discardableResult
-    public func statusCodeValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
-        _statusCodeValidator = validator
-        return self
-    }
-    
-    /// 请求发送前URLRequest过滤方法，默认不处理
-    @discardableResult
-    public func urlRequestFilter(_ filter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
-        _urlRequestFilter = filter
-        return self
-    }
-    
-    /// 请求回调前Response过滤方法，默认成功不抛异常
-    @discardableResult
-    public func responseFilter(_ filter: ((_ request: HTTPRequest) throws -> Void)?) -> Self {
-        _responseFilter = filter
-        return self
-    }
-    
-    /// 请求完成预处理器，后台线程调用
-    @discardableResult
-    public func requestCompletePreprocessor(_ block: Completion?) -> Self {
-        _requestCompletePreprocessor = block
-        return self
-    }
-    
-    /// 请求完成过滤器，主线程调用
-    @discardableResult
-    public func requestCompleteFilter(_ block: Completion?) -> Self {
-        _requestCompleteFilter = block
-        return self
-    }
-    
-    /// 请求失败预处理器，后台线程调用
-    @discardableResult
-    public func requestFailedPreprocessor(_ block: Completion?) -> Self {
-        _requestFailedPreprocessor = block
-        return self
-    }
-    
-    /// 请求失败过滤器，主线程调用
-    @discardableResult
-    public func requestFailedFilter(_ block: Completion?) -> Self {
-        _requestFailedFilter = block
-        return self
-    }
-    
-    /// 请求重试次数，默认0
-    @discardableResult
-    public func requestRetryCount(_ count: Int) -> Self {
-        _requestRetryCount = count
-        return self
-    }
-    
-    /// 请求重试间隔，默认0
-    @discardableResult
-    public func requestRetryInterval(_ interval: TimeInterval) -> Self {
-        _requestRetryInterval = interval
-        return self
-    }
-    
-    /// 请求重试超时时间，默认0
-    @discardableResult
-    public func requestRetryTimeout(_ timeout: TimeInterval) -> Self {
-        _requestRetryTimeout = timeout
-        return self
-    }
-    
-    /// 请求重试验证方法，默认检查状态码和错误
-    @discardableResult
-    public func requestRetryValidator(_ validator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
-        _requestRetryValidator = validator
-        return self
-    }
-    
-    /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
-    @discardableResult
-    public func requestRetryProcessor(_ processor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?) -> Self {
-        _requestRetryProcessor = processor
-        return self
-    }
-    
     /// 是否使用已缓存响应
     @discardableResult
     public func useCacheResponse(_ useCacheResponse: Bool) -> Self {
         self.useCacheResponse = useCacheResponse
-        return self
-    }
-    
-    /// 缓存有效期，默认-1不缓存
-    @discardableResult
-    public func cacheTimeInSeconds(_ seconds: Int) -> Self {
-        _cacheTimeInSeconds = seconds
-        return self
-    }
-    
-    /// 缓存版本号，默认0
-    @discardableResult
-    public func cacheVersion(_ version: Int) -> Self {
-        _cacheVersion = version
-        return self
-    }
-    
-    /// 缓存附加数据，变化时会更新缓存
-    @discardableResult
-    public func cacheSensitiveData(_ sensitiveData: Any?) -> Self {
-        _cacheSensitiveData = sensitiveData
-        return self
-    }
-    
-    /// 缓存文件名过滤器，参数为请求参数，默认返回argument
-    @discardableResult
-    public func cacheArgumentFilter(_ filter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?) -> Self {
-        _cacheArgumentFilter = filter
-        return self
-    }
-    
-    /// 是否异步写入缓存，默认true
-    @discardableResult
-    public func writeCacheAsynchronously(_ async: Bool) -> Self {
-        _writeCacheAsynchronously = async
         return self
     }
     

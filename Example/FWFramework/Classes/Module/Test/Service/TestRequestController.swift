@@ -421,13 +421,13 @@ private extension TestRequestController {
                 "X-Meta-Data": "",
                 "X-Sign-Data": "",
             ])
-            .build()
-        
-        request
             .jsonValidator([
                 "name": Validator<String>.isNotNil.anyValidator,
                 "nullName": Validator<String>.isValid.anyValidator,
             ])
+            .build()
+        
+        request
             .context(self)
             .autoShowLoading(true)
             .autoShowError(true)
