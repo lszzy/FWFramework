@@ -537,7 +537,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
-                    let userInfo = Router.Parameter.fromDictionary(context.userInfo)
+                    let userInfo = Router.Parameter(dictionaryValue: context.userInfo)
                     if userInfo.routerHandler != nil {
                         userInfo.routerHandler?(context, vc)
                     } else {

@@ -224,7 +224,7 @@ public class Router: NSObject {
             guard let viewController = object as? UIViewController else { return object }
             
             // 解析默认路由参数userInfo
-            let userInfo = Parameter.fromDictionary(context.userInfo)
+            let userInfo = Parameter(dictionaryValue: context.userInfo)
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {

@@ -162,7 +162,7 @@ class Tests: XCTestCase {
         XCTAssertTrue(dict[Router.Parameter.routerHandlerKey] != nil)
         
         dict["isTrue"] = "true"
-        let object = TestParameter.fromDictionary(dict)
+        let object = TestParameter(dictionaryValue: dict)
         XCTAssertTrue(object.isTrue)
         XCTAssertEqual(object._privateValue, 0)
         XCTAssertEqual(object.routerSource, parameter.routerSource)
