@@ -32,20 +32,20 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     open var customBlock: ((UIAlertController) -> Void)?
 
     /// 默认close按钮文本句柄，alert单按钮或sheet单取消生效。未设置时为关闭
-    open var defaultCloseButton: ((UIAlertController.Style) -> Any?)?
+    open var defaultCloseButton: ((UIAlertController.Style) -> AttributedStringParameter?)?
     /// 默认cancel按钮文本句柄，alert多按钮或sheet生效。未设置时为取消
-    open var defaultCancelButton: ((UIAlertController.Style) -> Any?)?
+    open var defaultCancelButton: ((UIAlertController.Style) -> AttributedStringParameter?)?
     /// 默认confirm按钮文本句柄，alert多按钮生效。未设置时为确定
-    open var defaultConfirmButton: (() -> Any?)?
+    open var defaultConfirmButton: (() -> AttributedStringParameter?)?
 
     /// 错误标题格式化句柄，error生效，默认nil
-    open var errorTitleFormatter: ((Error?) -> Any?)?
+    open var errorTitleFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误消息格式化句柄，error生效，默认nil
-    open var errorMessageFormatter: ((Error?) -> Any?)?
+    open var errorMessageFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误样式格式化句柄，error生效，默认nil
     open var errorStyleFormatter: ((Error?) -> AlertStyle)?
     /// 错误按钮格式化句柄，error生效，默认nil
-    open var errorButtonFormatter: ((Error?) -> Any?)?
+    open var errorButtonFormatter: ((Error?) -> AttributedStringParameter?)?
     
     // MARK: - AlertPlugin
     open func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {

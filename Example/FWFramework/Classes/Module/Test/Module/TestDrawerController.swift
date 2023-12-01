@@ -230,7 +230,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             for result in results {
                 string.appendFormat("text: %@\nconfidence: %@\n", result.text, NSNumber(value: result.confidence))
             }
-            let message = string.length > 0 ? string.copy() : "识别结果为空"
+            let message = string.length > 0 ? (string as String) : "识别结果为空"
             UIWindow.app.main?.app.showAlert(title: "扫描结果", message: message)
         }
     }

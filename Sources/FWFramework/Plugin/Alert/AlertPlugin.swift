@@ -147,7 +147,7 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
         error: Error?,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         fw_showAlert(
@@ -167,10 +167,10 @@ public class AlertAppearance: NSObject {
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         fw_showAlert(title: title, message: message, style: style, cancel: cancel, actions: nil, actionBlock: nil, cancelBlock: cancelBlock)
@@ -186,11 +186,11 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -204,8 +204,8 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func fw_showConfirm(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -221,10 +221,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func fw_showConfirm(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -243,10 +243,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
     public func fw_showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any? = nil,
-        confirm: Any? = nil,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
         promptBlock: ((UITextField) -> Void)? = nil,
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -265,10 +265,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件，参数为输入值数组
     ///   - cancelBlock: 取消按钮事件
     public func fw_showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any? = nil,
-        confirm: Any? = nil,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
         promptCount: Int,
         promptBlock: ((UITextField, Int) -> Void)?,
         confirmBlock: (([String]) -> Void)?,
@@ -292,11 +292,11 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
         promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
@@ -324,9 +324,9 @@ public class AlertAppearance: NSObject {
     ///   - cancel: 取消按钮标题，默认取消
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
         cancelBlock: (() -> Void)? = nil
     ) {
         fw_showSheet(title: title, message: message, cancel: cancel, actions: nil, currentIndex: -1, actionBlock: nil, cancelBlock: cancelBlock)
@@ -340,9 +340,9 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -359,10 +359,10 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -381,10 +381,10 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,
@@ -433,7 +433,7 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
         error: Error?,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         var ctrl = self.fw_viewController
@@ -451,10 +451,10 @@ public class AlertAppearance: NSObject {
     ///   - cancel: 取消按钮标题，默认关闭
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any? = nil,
+        cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
         var ctrl = self.fw_viewController
@@ -474,11 +474,11 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -496,8 +496,8 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func fw_showConfirm(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -517,10 +517,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件
     ///   - cancelBlock: 取消按钮事件
     public func fw_showConfirm(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -541,10 +541,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件，参数为输入值
     ///   - cancelBlock: 取消按钮事件
     public func fw_showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         promptBlock: ((UITextField) -> Void)? = nil,
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -567,10 +567,10 @@ public class AlertAppearance: NSObject {
     ///   - confirmBlock: 确认按钮事件，参数为输入值数组
     ///   - cancelBlock: 取消按钮事件
     public func fw_showPrompt(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        confirm: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
         promptCount: Int,
         promptBlock: ((UITextField, Int) -> Void)?,
         confirmBlock: (([String]) -> Void)?,
@@ -596,11 +596,11 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func fw_showAlert(
-        title: Any?,
-        message: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
         style: AlertStyle = .default,
-        cancel: Any?,
-        actions: [Any]?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
         promptBlock: ((UITextField, Int) -> Void)? = nil,
         actionBlock: (([String], Int) -> Void)?,
@@ -621,9 +621,9 @@ public class AlertAppearance: NSObject {
     ///   - cancel: 取消按钮标题，默认取消
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
         cancelBlock: (() -> Void)? = nil
     ) {
         var ctrl = self.fw_viewController
@@ -641,9 +641,9 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
@@ -664,10 +664,10 @@ public class AlertAppearance: NSObject {
     ///   - actionBlock: 动作按钮点击事件，参数为索引index
     ///   - cancelBlock: 取消按钮事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
@@ -690,10 +690,10 @@ public class AlertAppearance: NSObject {
     ///   - cancelBlock: 取消按钮事件
     ///   - customBlock: 自定义弹出框事件
     public func fw_showSheet(
-        title: Any?,
-        message: Any?,
-        cancel: Any?,
-        actions: [Any]?,
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)?,
@@ -793,6 +793,11 @@ public class AlertAppearance: NSObject {
     public static func fw_action(object: Any?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         let attributedTitle = object as? NSAttributedString
         let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : (object as? String), style: style, handler: handler)
+        
+        if let attributedTitle = attributedTitle, attributedTitle.length > 0,
+           let titleColor = attributedTitle.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor {
+            alertAction.fw_titleColor = titleColor
+        }
         
         alertAction.fw_alertAppearance = appearance
         alertAction.fw_isPreferred = false
