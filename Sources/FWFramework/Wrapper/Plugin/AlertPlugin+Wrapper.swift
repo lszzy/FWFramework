@@ -535,12 +535,12 @@ extension Wrapper where Base: UIAlertAction {
     }
     
     /// 快速创建弹出动作，title仅支持NSString
-    public static func action(object: Any?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         return Base.fw_action(object: object, style: style, handler: handler)
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
-    public static func action(object: Any?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         return Base.fw_action(object: object, style: style, appearance: appearance, handler: handler)
     }
     
@@ -573,12 +573,12 @@ extension Wrapper where Base: UIAlertController {
     }
     
     /// 快速创建弹出控制器，title和message仅支持NSString
-    public static func alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+    public static func alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style) -> UIAlertController {
         return Base.fw_alertController(title: title, message: message, preferredStyle: preferredStyle)
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-    public static func alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
+    public static func alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
         return Base.fw_alertController(title: title, message: message, preferredStyle: preferredStyle, appearance: appearance)
     }
     
