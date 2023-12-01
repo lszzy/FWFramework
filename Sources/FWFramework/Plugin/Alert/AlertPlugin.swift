@@ -791,8 +791,10 @@ public class AlertAppearance: NSObject {
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
     public static func fw_action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
-        let attributedTitle = object as? NSAttributedString
-        let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : (object as? String), style: style, handler: handler)
+        let title = object as? String
+        let attributedTitle = title != nil ? nil : object?.attributedStringValue
+        
+        let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : title, style: style, handler: handler)
         
         if let attributedTitle = attributedTitle, attributedTitle.length > 0,
            let titleColor = attributedTitle.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor {
@@ -858,15 +860,18 @@ public class AlertAppearance: NSObject {
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-    public static func fw_alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
-        let attributedTitle = title as? NSAttributedString
-        let attributedMessage = message as? NSAttributedString
-        let alertController = UIAlertController(title: attributedTitle != nil ? attributedTitle?.string : (title as? String), message: attributedMessage != nil ? attributedMessage?.string : (message as? String), preferredStyle: preferredStyle)
+    public static func fw_alertController(title titleObject: AttributedStringParameter?, message messageObject: AttributedStringParameter?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
+        let title = titleObject as? String
+        let attributedTitle = title != nil ? nil : titleObject?.attributedStringValue
+        let message = messageObject as? String
+        let attributedMessage = message != nil ? nil : messageObject?.attributedStringValue
+        
+        let alertController = UIAlertController(title: attributedTitle != nil ? attributedTitle?.string : title, message: attributedMessage != nil ? attributedMessage?.string : message, preferredStyle: preferredStyle)
         
         alertController.fw_alertAppearance = appearance
         if attributedTitle != nil {
             alertController.fw_attributedTitle = attributedTitle
-        } else if let alertTitle = alertController.title, alertTitle.count > 0 && alertController.fw_alertAppearance.controllerEnabled {
+        } else if let title = title, title.count > 0 && alertController.fw_alertAppearance.controllerEnabled {
             var titleAttributes: [NSAttributedString.Key: Any] = [:]
             if let titleFont = alertController.fw_alertAppearance.titleFont {
                 titleAttributes[.font] = titleFont
@@ -874,12 +879,12 @@ public class AlertAppearance: NSObject {
             if let titleColor = alertController.fw_alertAppearance.titleColor {
                 titleAttributes[.foregroundColor] = titleColor
             }
-            alertController.fw_attributedTitle = NSAttributedString(string: alertTitle, attributes: titleAttributes)
+            alertController.fw_attributedTitle = NSAttributedString(string: title, attributes: titleAttributes)
         }
         
         if attributedMessage != nil {
             alertController.fw_attributedMessage = attributedMessage
-        } else if let alertMessage = alertController.message, alertMessage.count > 0 && alertController.fw_alertAppearance.controllerEnabled {
+        } else if let message = message, message.count > 0 && alertController.fw_alertAppearance.controllerEnabled {
             var messageAttributes: [NSAttributedString.Key: Any] = [:]
             if let messageFont = alertController.fw_alertAppearance.messageFont {
                 messageAttributes[.font] = messageFont
@@ -887,7 +892,7 @@ public class AlertAppearance: NSObject {
             if let messageColor = alertController.fw_alertAppearance.messageColor {
                 messageAttributes[.foregroundColor] = messageColor
             }
-            alertController.fw_attributedMessage = NSAttributedString(string: alertMessage, attributes: messageAttributes)
+            alertController.fw_attributedMessage = NSAttributedString(string: message, attributes: messageAttributes)
         }
         
         alertController.fw_observeProperty("preferredAction") { object, _ in

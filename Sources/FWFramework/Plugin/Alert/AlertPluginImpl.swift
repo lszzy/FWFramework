@@ -347,15 +347,18 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
     }
     
     // MARK: - Private
-    private func alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: AlertControllerStyle, appearance: AlertControllerAppearance?) -> AlertController {
-        let attributedTitle = title as? NSAttributedString
-        let attributedMessage = message as? NSAttributedString
-        let alertController = AlertController(title: attributedTitle != nil ? nil : (title as? String), message: attributedMessage != nil ? nil : (message as? String), preferredStyle: preferredStyle, animationType: .default, appearance: appearance)
+    private func alertController(title titleObject: AttributedStringParameter?, message messageObject: AttributedStringParameter?, preferredStyle: AlertControllerStyle, appearance: AlertControllerAppearance?) -> AlertController {
+        let title = titleObject as? String
+        let attributedTitle = title != nil ? nil : titleObject?.attributedStringValue
+        let message = messageObject as? String
+        let attributedMessage = message != nil ? nil : messageObject?.attributedStringValue
+        
+        let alertController = AlertController(title: attributedTitle != nil ? nil : title, message: attributedMessage != nil ? nil : message, preferredStyle: preferredStyle, animationType: .default, appearance: appearance)
         alertController.tapBackgroundViewDismiss = (preferredStyle == .actionSheet)
         
         if let attributedTitle = attributedTitle {
             alertController.attributedTitle = attributedTitle
-        } else if let title = alertController.title, title.count > 0, alertController.alertAppearance.controllerEnabled {
+        } else if let title = title, title.count > 0, alertController.alertAppearance.controllerEnabled {
             var titleAttributes: [NSAttributedString.Key: Any] = [:]
             if let titleFont = alertController.alertAppearance.titleFont {
                 titleAttributes[.font] = titleFont
@@ -368,7 +371,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         
         if let attributedMessage = attributedMessage {
             alertController.attributedMessage = attributedMessage
-        } else if let message = alertController.message, message.count > 0, alertController.alertAppearance.controllerEnabled {
+        } else if let message = message, message.count > 0, alertController.alertAppearance.controllerEnabled {
             var messageAttributes: [NSAttributedString.Key: Any] = [:]
             if let messageFont = alertController.alertAppearance.messageFont {
                 messageAttributes[.font] = messageFont
@@ -410,9 +413,10 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
     }
     
     private func action(object: AttributedStringParameter?, style: AlertActionStyle, appearance: AlertControllerAppearance?, handler: ((AlertAction) -> Void)?) -> AlertAction {
-        let attributedTitle = object as? NSAttributedString
-        let alertAction = AlertAction(title: attributedTitle != nil ? nil : (object as? String), style: style, appearance: appearance, handler: handler)
+        let title = object as? String
+        let attributedTitle = title != nil ? nil : object?.attributedStringValue
         
+        let alertAction = AlertAction(title: attributedTitle != nil ? nil : title, style: style, appearance: appearance, handler: handler)
         if let attributedTitle = attributedTitle {
             alertAction.attributedTitle = attributedTitle
         } else {
