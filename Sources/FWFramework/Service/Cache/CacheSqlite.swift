@@ -29,11 +29,11 @@ open class CacheSqlite: CacheEngine {
         var dbPath: String
         if let path = path, (path as NSString).isAbsolutePath {
             dbPath = path
-        // 相对路径: Libray/Caches/FWCache/path[FWCache.sqlite]
+        // 相对路径: Libray/Caches/FWFramework/CacheSqlite/path[shared.sqlite]
         } else {
-            let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+            let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "CacheSqlite"])
             let fileName = path ?? ""
-            dbPath = (cachesPath as NSString).appendingPathComponent("FWCache/" + (!fileName.isEmpty ? fileName : "FWCache.sqlite"))
+            dbPath = cachePath.fw_appendingPath(!fileName.isEmpty ? fileName : "shared.sqlite")
         }
         self.dbPath = dbPath
         // 自动创建目录

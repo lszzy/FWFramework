@@ -139,7 +139,7 @@ static sqlite3 * _fw_database;
         }
     }
     NSString *cacheDirectory = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
-    return [NSString stringWithFormat:@"%@/FWDatabase/", cacheDirectory];
+    return [NSString stringWithFormat:@"%@/FWFramework/Database/", cacheDirectory];
 }
 
 + (__FWDatabaseFieldType)parserFieldTypeWithAttr:(NSString *)attr {

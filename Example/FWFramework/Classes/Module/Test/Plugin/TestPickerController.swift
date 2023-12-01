@@ -200,7 +200,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 let assetSize = AssetSessionExporter.naturalSize(for: avAsset)
                 
                 self?.app.showLoading(text: "视频转码中...")
-                let outputPath = AssetManager.cachePath
+                let outputPath = AssetManager.videoExportPath
                 FileManager.app.createDirectory(atPath: outputPath)
                 let outputURL = URL(fileURLWithPath: outputPath)
                     .appendingPathComponent(UUID().uuidString.app.md5Encode)
