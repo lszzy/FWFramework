@@ -25,7 +25,7 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -45,7 +45,7 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -70,12 +70,12 @@ extension Wrapper where Base: UIView {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         base.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -117,7 +117,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -137,7 +137,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -162,12 +162,12 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         base.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         base.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -197,7 +197,7 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showLoading(text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         Base.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -217,7 +217,7 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showProgress(_ progress: CGFloat, text: Any? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         Base.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -242,12 +242,12 @@ extension Wrapper where Base: UIWindow {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: Any?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+    public static func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
         Base.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: Any?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public static func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         Base.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 

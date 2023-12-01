@@ -215,7 +215,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func onOpenCallback() {
         Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") { result in
-            UIWindow.app.showMessage(text: result)
+            UIWindow.app.showMessage(text: result as? String)
         }
     }
     

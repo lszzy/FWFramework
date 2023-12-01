@@ -37,7 +37,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     open var defaultMessageText: ((ToastStyle) -> NSAttributedString?)?
 
     /// 错误消息吐司文本格式化句柄，error生效，默认nil
-    open var errorTextFormatter: ((Error?) -> Any?)?
+    open var errorTextFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误消息吐司样式格式化句柄，error生效，默认nil
     open var errorStyleFormatter: ((Error?) -> ToastStyle)?
     
