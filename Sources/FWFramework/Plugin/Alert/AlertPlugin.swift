@@ -41,10 +41,10 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable {
 public protocol AlertPlugin: AnyObject {
     
     /// 显示弹出框插件方法，默认使用系统UIAlertController
-    func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
     
     /// 显示操作表插件方法，默认使用系统UIAlertController
-    func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
     
     /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
     func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController)
@@ -57,12 +57,12 @@ public protocol AlertPlugin: AnyObject {
 extension AlertPlugin {
     
     /// 显示弹出框插件方法，默认使用系统UIAlertController
-    public func showAlert(title: Any?, message: Any?, style: AlertStyle, cancel: Any?, actions: [Any]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+    public func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
         AlertPluginImpl.shared.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
     
     /// 显示操作表插件方法，默认使用系统UIAlertController
-    public func showSheet(title: Any?, message: Any?, cancel: Any?, actions: [Any]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+    public func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
         AlertPluginImpl.shared.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
     
@@ -785,12 +785,12 @@ public class AlertAppearance: NSObject {
     }
     
     /// 快速创建弹出动作，title仅支持NSString
-    public static func fw_action(object: Any?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func fw_action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         return fw_action(object: object, style: style, appearance: nil, handler: handler)
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
-    public static func fw_action(object: Any?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func fw_action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         let attributedTitle = object as? NSAttributedString
         let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : (object as? String), style: style, handler: handler)
         
@@ -853,12 +853,12 @@ public class AlertAppearance: NSObject {
     }
     
     /// 快速创建弹出控制器，title和message仅支持NSString
-    public static func fw_alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+    public static func fw_alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style) -> UIAlertController {
         return self.fw_alertController(title: title, message: message, preferredStyle: preferredStyle, appearance: nil)
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-    public static func fw_alertController(title: Any?, message: Any?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
+    public static func fw_alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
         let attributedTitle = title as? NSAttributedString
         let attributedMessage = message as? NSAttributedString
         let alertController = UIAlertController(title: attributedTitle != nil ? attributedTitle?.string : (title as? String), message: attributedMessage != nil ? attributedMessage?.string : (message as? String), preferredStyle: preferredStyle)
