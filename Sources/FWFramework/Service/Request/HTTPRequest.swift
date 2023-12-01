@@ -81,11 +81,17 @@ open class HTTPRequest: CustomStringConvertible {
         private(set) var requestMethod: RequestMethod?
         private(set) var requestArgument: Any?
         private(set) var requestArgumentDictionary: [AnyHashable: Any]?
+        private(set) var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+        private(set) var resumableDownloadPath: String?
         private(set) var requestSerializerType: RequestSerializerType?
         private(set) var responseSerializerType: ResponseSerializerType?
         private(set) var requestAuthorizationHeaders: [String]?
         private(set) var requestHeaders: [String: String]?
+        private(set) var requestPriority: RequestPriority?
+        private(set) var requestUserInfo: [AnyHashable: Any]?
         private(set) var customUrlRequest: URLRequest?
+        private(set) var isSynchronously: Bool?
+        private(set) var tag: Int?
         private(set) var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
         private(set) var jsonValidator: Any?
         private(set) var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
@@ -191,6 +197,20 @@ open class HTTPRequest: CustomStringConvertible {
             return self
         }
         
+        /// 自定义POST请求HTTP body数据
+        @discardableResult
+        public func constructingBodyBlock(_ block: ((RequestMultipartFormData) -> Void)?) -> Self {
+            self.constructingBodyBlock = block
+            return self
+        }
+        
+        /// 断点续传下载路径
+        @discardableResult
+        public func resumableDownloadPath(_ path: String?) -> Self {
+            self.resumableDownloadPath = path
+            return self
+        }
+        
         /// 请求序列化方式，默认HTTP
         @discardableResult
         public func requestSerializerType(_ serializerType: RequestSerializerType) -> Self {
@@ -245,6 +265,20 @@ open class HTTPRequest: CustomStringConvertible {
             return self
         }
         
+        /// 请求优先级，默认default
+        @discardableResult
+        public func requestPriority(_ priority: RequestPriority) -> Self {
+            self.requestPriority = priority
+            return self
+        }
+        
+        /// 自定义用户信息
+        @discardableResult
+        public func requestUserInfo(_ userInfo: [AnyHashable: Any]?) -> Self {
+            self.requestUserInfo = userInfo
+            return self
+        }
+        
         /// JSON验证器，默认支持AnyValidator
         @discardableResult
         public func jsonValidator(_ validator: Any?) -> Self {
@@ -256,6 +290,20 @@ open class HTTPRequest: CustomStringConvertible {
         @discardableResult
         public func customUrlRequest(_ urlRequest: URLRequest?) -> Self {
             self.customUrlRequest = urlRequest
+            return self
+        }
+        
+        /// 设置是否是同步串行请求
+        @discardableResult
+        public func synchronously(_ synchronously: Bool) -> Self {
+            self.isSynchronously = synchronously
+            return self
+        }
+        
+        /// 自定义标签，默认0
+        @discardableResult
+        public func tag(_ tag: Int) -> Self {
+            self.tag = tag
             return self
         }
         
@@ -560,6 +608,13 @@ open class HTTPRequest: CustomStringConvertible {
     /// 指定Builder初始化，可用于重载Builder
     public init(builder: Builder) {
         _builder = builder
+        
+        if let tag = builder.tag { self.tag = tag }
+        if let block = builder.constructingBodyBlock { self.constructingBodyBlock = block }
+        if let path = builder.resumableDownloadPath { self.resumableDownloadPath = path }
+        if let priority = builder.requestPriority { self.requestPriority = priority }
+        if let userInfo = builder.requestUserInfo { self.requestUserInfo = userInfo }
+        if let synchronously = builder.isSynchronously { self.isSynchronously = synchronously }
     }
     
     /// 请求描述
@@ -799,6 +854,13 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     // MARK: - Action
+    /// 当前请求的上下文，支持UIViewController|UIView
+    @discardableResult
+    public func context(_ context: AnyObject?) -> Self {
+        self.context = context
+        return self
+    }
+    
     /// 开始请求，如果加载缓存且缓存存在时允许再调用一次
     @discardableResult
     open func start() -> Self {
@@ -841,6 +903,34 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func start<T: HTTPRequest>(completion: ((T) -> Void)?) -> Self {
         return start(success: completion, failure: completion)
+    }
+    
+    /// 断点续传进度句柄
+    @discardableResult
+    public func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+        self.downloadProgressBlock = block
+        return self
+    }
+    
+    /// 上传进度句柄
+    @discardableResult
+    public func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+        self.uploadProgressBlock = block
+        return self
+    }
+    
+    /// 是否自动显示加载信息
+    @discardableResult
+    public func autoShowLoading(_ autoShowLoading: Bool) -> Self {
+        self.autoShowLoading = autoShowLoading
+        return self
+    }
+    
+    /// 是否自动显示错误信息
+    @discardableResult
+    public func autoShowError(_ autoShowError: Bool) -> Self {
+        self.autoShowError = autoShowError
+        return self
     }
     
     /// 显示加载条，默认显示加载插件
@@ -969,6 +1059,13 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     // MARK: - Cache
+    /// 是否使用已缓存响应
+    @discardableResult
+    public func useCacheResponse(_ useCacheResponse: Bool) -> Self {
+        self.useCacheResponse = useCacheResponse
+        return self
+    }
+    
     /// 预加载缓存句柄，必须主线程且在start之前调用生效
     @discardableResult
     open func preloadCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
@@ -1146,95 +1243,6 @@ open class HTTPRequest: CustomStringConvertible {
         cacheResponseModel = nil
         responseModelBlock = nil
         isDataFromCache = false
-    }
-    
-}
-
-extension HTTPRequest {
-    
-    // MARK: - Chain
-    /// 自定义POST请求HTTP body数据
-    @discardableResult
-    public func constructingBodyBlock(_ block: ((RequestMultipartFormData) -> Void)?) -> Self {
-        self.constructingBodyBlock = block
-        return self
-    }
-    
-    /// 断点续传下载路径
-    @discardableResult
-    public func resumableDownloadPath(_ path: String?) -> Self {
-        self.resumableDownloadPath = path
-        return self
-    }
-    
-    /// 断点续传进度句柄
-    @discardableResult
-    public func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
-        self.downloadProgressBlock = block
-        return self
-    }
-    
-    /// 上传进度句柄
-    @discardableResult
-    public func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
-        self.uploadProgressBlock = block
-        return self
-    }
-    
-    /// 请求优先级，默认default
-    @discardableResult
-    public func requestPriority(_ priority: RequestPriority) -> Self {
-        self.requestPriority = priority
-        return self
-    }
-    
-    /// 设置是否是同步串行请求
-    @discardableResult
-    public func synchronously(_ synchronously: Bool) -> Self {
-        self.isSynchronously = synchronously
-        return self
-    }
-    
-    /// 自定义用户信息
-    @discardableResult
-    public func requestUserInfo(_ userInfo: [AnyHashable: Any]?) -> Self {
-        self.requestUserInfo = userInfo
-        return self
-    }
-    
-    /// 自定义标签，默认0
-    @discardableResult
-    public func tag(_ tag: Int) -> Self {
-        self.tag = tag
-        return self
-    }
-    
-    /// 是否使用已缓存响应
-    @discardableResult
-    public func useCacheResponse(_ useCacheResponse: Bool) -> Self {
-        self.useCacheResponse = useCacheResponse
-        return self
-    }
-    
-    /// 当前请求的上下文，支持UIViewController|UIView
-    @discardableResult
-    public func context(_ context: AnyObject?) -> Self {
-        self.context = context
-        return self
-    }
-    
-    /// 是否自动显示错误信息
-    @discardableResult
-    public func autoShowError(_ autoShowError: Bool) -> Self {
-        self.autoShowError = autoShowError
-        return self
-    }
-    
-    /// 是否自动显示加载信息
-    @discardableResult
-    public func autoShowLoading(_ autoShowLoading: Bool) -> Self {
-        self.autoShowLoading = autoShowLoading
-        return self
     }
     
 }
