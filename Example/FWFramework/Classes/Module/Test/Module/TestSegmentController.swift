@@ -169,6 +169,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         label.textAlignment = .center
         label.numberOfLines = 0
         label.clickedOnLink = { url in
+            guard let url = url as? String else { return }
             Router.openURL(url)
         }
         view.addSubview(label)
