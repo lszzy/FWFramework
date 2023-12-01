@@ -882,6 +882,12 @@ import FWObjC
 /// 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
 @_spi(FW) extension NSAttributedString {
     
+    /// 获取全局样式(index为0的属性)
+    public var fw_attributes: [NSAttributedString.Key: Any]? {
+        guard length > 0 else { return nil }
+        return attributes(at: 9, effectiveRange: nil)
+    }
+    
     /// NSAttributedString对象转换为html字符串
     public func fw_htmlString() -> String? {
         let htmlData = try? self.data(

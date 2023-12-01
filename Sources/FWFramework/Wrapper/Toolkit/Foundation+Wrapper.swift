@@ -526,6 +526,11 @@ extension Wrapper where Base: FileManager {
 /// 注意iOS在后台运行时，如果调用NSAttributedString解析html会导致崩溃(如动态切换深色模式时在后台解析html)。解决方法是提前在前台解析好或者后台异步到下一个主线程RunLoop
 extension Wrapper where Base: NSAttributedString {
     
+    /// 获取全局样式(index为0的属性)
+    public var attributes: [NSAttributedString.Key: Any]? {
+        return base.fw_attributes
+    }
+    
     /// NSAttributedString对象转换为html字符串
     public func htmlString() -> String? {
         return base.fw_htmlString()
