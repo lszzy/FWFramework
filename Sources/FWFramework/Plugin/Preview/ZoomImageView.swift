@@ -624,7 +624,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
                     placeholderImage = cachedImage
                 }
             }
-            fw_setImage(url: isUrlRequest ? aImageURL : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
+            fw_setImage(url: isUrlRequest ? (aImageURL as? URLRequest) : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
                 self?.image = image
             } completion: { [weak self] image, error in
                 self?.progress = 1
