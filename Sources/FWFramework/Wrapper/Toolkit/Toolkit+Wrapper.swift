@@ -116,37 +116,37 @@ extension Wrapper where Base: UIApplication {
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func canOpenURL(_ url: Any?) -> Bool {
+    public static func canOpenURL(_ url: URLParameter?) -> Bool {
         return Base.fw_canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func openURL(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
+    public static func openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
         Base.fw_openURL(url, completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func openUniversalLinks(_ url: Any?, completionHandler: ((Bool) -> Void)? = nil) {
+    public static func openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
         Base.fw_openUniversalLinks(url, completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    public static func isSystemURL(_ url: Any?) -> Bool {
+    public static func isSystemURL(_ url: URLParameter?) -> Bool {
         return Base.fw_isSystemURL(url)
     }
     
     /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
-    public static func isSchemeURL(_ url: Any?, scheme: String? = nil) -> Bool {
+    public static func isSchemeURL(_ url: URLParameter?, scheme: String? = nil) -> Bool {
         return Base.fw_isSchemeURL(url, scheme: scheme)
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
-    public static func isHttpURL(_ url: Any?) -> Bool {
+    public static func isHttpURL(_ url: URLParameter?) -> Bool {
         return Base.fw_isHttpURL(url)
     }
 
     /// 判断URL是否是AppStore链接，支持NSString|NSURL
-    public static func isAppStoreURL(_ url: Any?) -> Bool {
+    public static func isAppStoreURL(_ url: URLParameter?) -> Bool {
         return Base.fw_isAppStoreURL(url)
     }
 
@@ -196,7 +196,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func openSafariController(_ url: Any?, completionHandler: (() -> Void)? = nil) {
+    public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil) {
         Base.fw_openSafariController(url, completionHandler: completionHandler)
     }
 
@@ -221,7 +221,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开音频播放器，支持NSURL|NSString
-    public static func openAudioPlayer(_ url: Any?) -> AVAudioPlayer? {
+    public static func openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
         return Base.fw_openAudioPlayer(url)
     }
     
