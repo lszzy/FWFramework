@@ -54,7 +54,7 @@ open class ImageDownloader: NSObject {
         return URLCache(
             memoryCapacity: 20 * 1024 * 1024,
             diskCapacity: 150 * 1024 * 1024,
-            diskPath: "FWImageCache"
+            diskPath: "FWFramework/ImageCache"
         )
     }
 
