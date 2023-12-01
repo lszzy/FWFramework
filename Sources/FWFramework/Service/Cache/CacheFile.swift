@@ -26,11 +26,11 @@ open class CacheFile: CacheEngine {
         // 绝对路径: path
         if let path = path, (path as NSString).isAbsolutePath {
             self.path = path
-        // 相对路径: Libray/Caches/FWCache/path[FWCache]
+        // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
         } else {
-            let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+            let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "CacheFile"])
             let fileName = path ?? ""
-            self.path = (cachesPath as NSString).appendingPathComponent("FWCache/" + (!fileName.isEmpty ? fileName : "FWCache"))
+            self.path = cachePath.fw_appendingPath(!fileName.isEmpty ? fileName : "shared")
         }
     }
     

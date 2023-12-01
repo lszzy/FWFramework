@@ -426,8 +426,7 @@ open class RequestCache: RequestCacheProtocol {
     
     /// 获取请求缓存基础路径
     open func cacheFilePath(for request: HTTPRequest) -> String {
-        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first ?? ""
-        var filePath = (libraryPath as NSString).appendingPathComponent("LazyRequestCache")
+        var filePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "RequestCache"])
         if let filterPath = cacheFilePathFilter?(request, filePath) {
             filePath = filterPath
         }

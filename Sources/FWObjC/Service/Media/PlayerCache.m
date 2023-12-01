@@ -1145,26 +1145,21 @@ NSNotificationName __FWPlayerCacheManagerDidFinishCacheNotification = @"FWPlayer
 NSString *__FWPlayerCacheConfigurationKey = @"FWPlayerCacheConfigurationKey";
 NSString *__FWPlayerCacheFinishedErrorKey = @"FWPlayerCacheFinishedErrorKey";
 
-static NSString *kPlayerCacheDirectory;
-static NSTimeInterval kPlayerCacheNotifyInterval;
+static NSString *kPlayerCacheDirectory = nil;
+static NSTimeInterval kPlayerCacheNotifyInterval = 0.1;
 static NSString *(^kPlayerFileNameRules)(NSURL *url);
 
 @implementation __FWPlayerCacheManager
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        [self setCacheDirectory:[cachesPath stringByAppendingPathComponent:@"FWPlayerCache"]];
-        [self setCacheUpdateNotifyInterval:0.1];
-    });
-}
 
 + (void)setCacheDirectory:(NSString *)cacheDirectory {
     kPlayerCacheDirectory = cacheDirectory;
 }
 
 + (NSString *)cacheDirectory {
+    if (!kPlayerCacheDirectory) {
+        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        kPlayerCacheDirectory = [[cachePath stringByAppendingPathComponent:@"FWFramework"] stringByAppendingPathComponent:@"PlayerCache"];
+    }
     return kPlayerCacheDirectory;
 }
 

@@ -604,8 +604,23 @@ public class AssetManager: NSObject {
     
     /// 资源管理器临时文件存放目录，使用完成后需自行删除
     public static var cachePath: String {
-        let cachesPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
-        return (cachesPath as NSString).appendingPathComponent("FWAssetManager")
+        let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "AssetManager"])
+        return cachePath
+    }
+    
+    /// LivePhoto导出文件存放路径，使用完成后需自行删除
+    public static var livePhotoPath: String {
+        return cachePath.fw_appendingPath("LivePhoto")
+    }
+    
+    /// 视频导出文件建议存放路径，使用完成后需自行删除
+    public static var videoExportPath: String {
+        return cachePath.fw_appendingPath("VideoExport")
+    }
+    
+    /// 图片选择器缓存文件存放目录，使用完成后需自行删除
+    public static var imagePickerPath: String {
+        return cachePath.fw_appendingPath("ImagePicker")
     }
     
     /// 获取当前应用的“照片”访问授权状态
@@ -978,7 +993,7 @@ public class AssetLivePhoto {
     private static let queue = DispatchQueue(label: "site.wuyong.queue.asset.async", attributes: .concurrent)
     
     private lazy var cacheDirectory: URL = {
-        let fullDirectory = URL(fileURLWithPath: AssetManager.cachePath, isDirectory: true)
+        let fullDirectory = URL(fileURLWithPath: AssetManager.livePhotoPath, isDirectory: true)
         if !FileManager.default.fileExists(atPath: fullDirectory.absoluteString) {
             try? FileManager.default.createDirectory(at: fullDirectory, withIntermediateDirectories: true, attributes: nil)
         }

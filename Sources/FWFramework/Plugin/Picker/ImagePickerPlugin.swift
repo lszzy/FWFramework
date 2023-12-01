@@ -288,7 +288,7 @@ extension ImagePickerPlugin {
             } else if checkVideo && mediaType == (kUTTypeMovie as String) {
                 // 视频文件在tmp临时目录中，为防止系统自动删除，统一拷贝到选择器目录
                 if let url = info[.mediaURL] as? URL {
-                    let filePath = AssetManager.cachePath
+                    let filePath = AssetManager.imagePickerPath
                     try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                     if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                         let tempFileURL = NSURL.fileURL(withPath: fullPath)
@@ -514,7 +514,7 @@ extension ImagePickerPlugin {
                 result.itemProvider.loadFileRepresentation(forTypeIdentifier: kUTTypeMovie as String) { url, error in
                     var videoURL: URL?
                     if let url = url {
-                        let filePath = AssetManager.cachePath
+                        let filePath = AssetManager.imagePickerPath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                         if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                             let fileURL = NSURL.fileURL(withPath: fullPath)
