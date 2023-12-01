@@ -125,6 +125,12 @@ open class BatchRequest: RequestDelegate {
         return start(success: completion, failure: completion)
     }
     
+    /// 清理完成句柄
+    open func clearCompletionBlock() {
+        successCompletionBlock = nil
+        failureCompletionBlock = nil
+    }
+    
     /// 添加请求配件
     @discardableResult
     open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
@@ -133,33 +139,6 @@ open class BatchRequest: RequestDelegate {
         }
         requestAccessories?.append(accessory)
         return self
-    }
-    
-    /// 清理完成句柄
-    open func clearCompletionBlock() {
-        successCompletionBlock = nil
-        failureCompletionBlock = nil
-    }
-    
-    /// 切换配件将开始回调
-    open func toggleAccessoriesWillStartCallBack() {
-        requestAccessories?.forEach({ accessory in
-            accessory.requestWillStart(self)
-        })
-    }
-    
-    /// 切换配件将结束回调
-    open func toggleAccessoriesWillStopCallBack() {
-        requestAccessories?.forEach({ accessory in
-            accessory.requestWillStop(self)
-        })
-    }
-    
-    /// 切换配件已经结束回调
-    open func toggleAccessoriesDidStopCallBack() {
-        requestAccessories?.forEach({ accessory in
-            accessory.requestDidStop(self)
-        })
     }
     
     open func requestFinished(_ request: HTTPRequest) {
@@ -186,6 +165,24 @@ open class BatchRequest: RequestDelegate {
     }
     
     // MARK: - Private
+    private func toggleAccessoriesWillStartCallBack() {
+        requestAccessories?.forEach({ accessory in
+            accessory.requestWillStart(self)
+        })
+    }
+    
+    private func toggleAccessoriesWillStopCallBack() {
+        requestAccessories?.forEach({ accessory in
+            accessory.requestWillStop(self)
+        })
+    }
+    
+    private func toggleAccessoriesDidStopCallBack() {
+        requestAccessories?.forEach({ accessory in
+            accessory.requestDidStop(self)
+        })
+    }
+    
     private func requestCompleted() {
         toggleAccessoriesWillStopCallBack()
         
