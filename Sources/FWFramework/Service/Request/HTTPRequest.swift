@@ -206,12 +206,12 @@ open class HTTPRequest: CustomStringConvertible {
     }
     private var _config: RequestConfig?
     
-    // MARK: - Private
     private lazy var contextAccessory: RequestContextAccessory = {
         let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
         return result
     }()
     
+    // MARK: - Accessor+Private
     fileprivate var cacheResponseModel: Any?
     private var responseModelBlock: Completion?
     
@@ -266,7 +266,7 @@ open class HTTPRequest: CustomStringConvertible {
         return result
     }
     
-    // MARK: - Request
+    // MARK: - Override+Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
         return _baseUrl ?? ""
@@ -332,9 +332,9 @@ open class HTTPRequest: CustomStringConvertible {
         return _requestHeaders
     }
     
-    /// JSON验证器，默认支持AnyValidator
-    open func jsonValidator() -> Any? {
-        return _jsonValidator
+    /// 请求发送前URLRequest过滤方法，默认不处理
+    open func urlRequestFilter(_ urlRequest: inout URLRequest) {
+        _urlRequestFilter?(self, &urlRequest)
     }
     
     /// 构建自定义URLRequest
@@ -342,7 +342,12 @@ open class HTTPRequest: CustomStringConvertible {
         return _customUrlRequest
     }
     
-    // MARK: - Response
+    // MARK: - Override+Response
+    /// JSON验证器，默认支持AnyValidator
+    open func jsonValidator() -> Any? {
+        return _jsonValidator
+    }
+    
     /// 状态码验证器
     open func statusCodeValidator() -> Bool {
         if let validator = _statusCodeValidator {
@@ -367,19 +372,6 @@ open class HTTPRequest: CustomStringConvertible {
             return processor(self)
         }
         return false
-    }
-    
-    /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
-    open func preloadResponseModel() -> Bool {
-        if let preload = _preloadResponseModel {
-            return preload
-        }
-        return config.preloadModelFilter?(self) ?? false
-    }
-    
-    /// 请求发送前URLRequest过滤方法，默认不处理
-    open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        _urlRequestFilter?(self, &urlRequest)
     }
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
@@ -428,7 +420,7 @@ open class HTTPRequest: CustomStringConvertible {
         _requestFailedFilter?(self)
     }
     
-    // MARK: - Retry
+    // MARK: - Override+Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
         return _requestRetryCount ?? 0
@@ -463,7 +455,7 @@ open class HTTPRequest: CustomStringConvertible {
         }
     }
     
-    // MARK: - Cache
+    // MARK: - Override+Cache
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
         return _cacheTimeInSeconds ?? -1
@@ -486,20 +478,6 @@ open class HTTPRequest: CustomStringConvertible {
         } else {
             return argument
         }
-    }
-    
-    /// 缓存唯一Id，子类可重写
-    open func cacheIdentifier() -> String {
-        let requestUrl = requestUrl()
-        let baseUrl: String
-        if useCDN() {
-            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
-        } else {
-            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
-        }
-        let argument = cacheArgumentFilter(requestArgument())
-        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
-        return requestInfo.fw_md5Encode
     }
     
     /// 是否异步写入缓存，默认true
@@ -552,18 +530,6 @@ open class HTTPRequest: CustomStringConvertible {
         return start(success: completion, failure: completion)
     }
     
-    /// 清理完成句柄
-    open func clearCompletionBlock() {
-        successCompletionBlock = nil
-        failureCompletionBlock = nil
-    }
-    
-    // MARK: - Context
-    /// 显示网络错误，默认显示Toast提示
-    open func showError() {
-        contextAccessory.showError(for: self)
-    }
-    
     /// 显示加载条，默认显示加载插件
     open func showLoading() {
         contextAccessory.showLoading(for: self)
@@ -574,50 +540,96 @@ open class HTTPRequest: CustomStringConvertible {
         contextAccessory.hideLoading(for: self)
     }
     
-}
-
-extension HTTPRequest {
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        contextAccessory.showError(for: self)
+    }
+    
+    /// 清理完成句柄
+    open func clearCompletionBlock() {
+        successCompletionBlock = nil
+        failureCompletionBlock = nil
+    }
+    
+    /// 添加请求配件
+    @discardableResult
+    open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
+        if requestAccessories == nil {
+            requestAccessories = []
+        }
+        requestAccessories?.append(accessory)
+        return self
+    }
+    
+    func toggleAccessoriesWillStartCallBack() {
+        contextAccessory.requestWillStart(self)
+        requestAccessories?.forEach({ accessory in
+            accessory.requestWillStart(self)
+        })
+    }
+    
+    func toggleAccessoriesWillStopCallBack() {
+        contextAccessory.requestWillStop(self)
+        requestAccessories?.forEach({ accessory in
+            accessory.requestWillStop(self)
+        })
+    }
+    
+    func toggleAccessoriesDidStopCallBack() {
+        contextAccessory.requestDidStop(self)
+        requestAccessories?.forEach({ accessory in
+            accessory.requestDidStop(self)
+        })
+    }
     
     // MARK: - Response
     /// 自定义成功回调句柄
     @discardableResult
-    public func response<T: HTTPRequest>(_ completion: ((T) -> Void)?) -> Self {
+    open func response<T: HTTPRequest>(_ completion: ((T) -> Void)?) -> Self {
         return responseSuccess(completion).responseFailure(completion)
     }
     
     /// 自定义成功回调句柄
     @discardableResult
-    public func responseSuccess<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
+    open func responseSuccess<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         successCompletionBlock = block != nil ? { block?($0 as! T) } : nil
         return self
     }
     
     /// 自定义失败回调句柄
     @discardableResult
-    public func responseFailure<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
+    open func responseFailure<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         failureCompletionBlock = block != nil ? { block?($0 as! T) } : nil
         return self
     }
     
     /// 快捷设置响应失败句柄
     @discardableResult
-    public func responseError(_ block: ((Error) -> Void)?) -> Self {
+    open func responseError(_ block: ((Error) -> Void)?) -> Self {
         failureCompletionBlock = { request in
             block?(request.error ?? RequestError.unknownError)
         }
         return self
     }
     
+    /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
+    open func preloadResponseModel() -> Bool {
+        if let preload = _preloadResponseModel {
+            return preload
+        }
+        return config.preloadModelFilter?(self) ?? false
+    }
+    
     /// 设置是否预加载响应模型，仅ResponseModelRequest生效
     @discardableResult
-    public func preloadResponseModel(_ preload: Bool) -> Self {
+    open func preloadResponseModel(_ preload: Bool) -> Self {
         _preloadResponseModel = preload
         return self
     }
     
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         responseModelBlock = { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -635,7 +647,7 @@ extension HTTPRequest {
     
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    public func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    open func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         responseModelBlock = { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -654,14 +666,14 @@ extension HTTPRequest {
     // MARK: - Cache
     /// 预加载缓存句柄，必须主线程且在start之前调用生效
     @discardableResult
-    public func preloadCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
+    open func preloadCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { block?($0 as! T) })
         return self
     }
     
     /// 预加载指定缓存响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
-    public func preloadCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func preloadCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -677,7 +689,7 @@ extension HTTPRequest {
     
     /// 预加载指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
-    public func preloadSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    open func preloadSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { request in
             if (request.cacheResponseModel as? T) == nil {
                 request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -692,7 +704,7 @@ extension HTTPRequest {
     }
     
     /// 加载本地缓存，返回是否成功
-    public func loadCache() throws {
+    open func loadCache() throws {
         guard cacheTimeInSeconds() >= 0 else {
             throw RequestError.cacheInvalidCacheTime
         }
@@ -729,7 +741,7 @@ extension HTTPRequest {
     
     /// 保存指定数据到缓存文件
     @discardableResult
-    public func saveCache(_ data: Data?) -> Bool {
+    open func saveCache(_ data: Data?) -> Bool {
         guard let data = data, let requestCache = config.requestCache else { return false }
         guard cacheTimeInSeconds() > 0, !isDataFromCache else { return false }
         
@@ -749,10 +761,18 @@ extension HTTPRequest {
         }
     }
     
-    private func startWithoutCache() {
-        isStarted = true
-        clearCacheVariables()
-        RequestManager.shared.addRequest(self)
+    /// 缓存唯一Id，子类可重写
+    open func cacheIdentifier() -> String {
+        let requestUrl = requestUrl()
+        let baseUrl: String
+        if useCDN() {
+            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
+        } else {
+            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
+        }
+        let argument = cacheArgumentFilter(requestArgument())
+        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
+        return requestInfo.fw_md5Encode
     }
     
     fileprivate func loadCacheResponse(isPreload: Bool, completion: Completion?, processor: Completion? = nil) throws {
@@ -775,6 +795,12 @@ extension HTTPRequest {
             self.successCompletionBlock?(self)
             self.clearCompletionBlock()
         }
+    }
+    
+    private func startWithoutCache() {
+        isStarted = true
+        clearCacheVariables()
+        RequestManager.shared.addRequest(self)
     }
     
     private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
@@ -815,41 +841,6 @@ extension HTTPRequest {
         cacheResponseModel = nil
         responseModelBlock = nil
         isDataFromCache = false
-    }
-    
-    // MARK: - Accessory
-    /// 添加请求配件
-    @discardableResult
-    public func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
-        if requestAccessories == nil {
-            requestAccessories = []
-        }
-        requestAccessories?.append(accessory)
-        return self
-    }
-    
-    /// 切换配件将开始回调
-    public func toggleAccessoriesWillStartCallBack() {
-        contextAccessory.requestWillStart(self)
-        requestAccessories?.forEach({ accessory in
-            accessory.requestWillStart(self)
-        })
-    }
-    
-    /// 切换配件将结束回调
-    public func toggleAccessoriesWillStopCallBack() {
-        contextAccessory.requestWillStop(self)
-        requestAccessories?.forEach({ accessory in
-            accessory.requestWillStop(self)
-        })
-    }
-    
-    /// 切换配件已经结束回调
-    public func toggleAccessoriesDidStopCallBack() {
-        contextAccessory.requestDidStop(self)
-        requestAccessories?.forEach({ accessory in
-            accessory.requestDidStop(self)
-        })
     }
     
 }
