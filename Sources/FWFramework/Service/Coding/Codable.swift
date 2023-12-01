@@ -245,7 +245,7 @@ public protocol DictionaryParameter<K, V>: AnyParameter where K: Hashable {
 }
 
 public protocol ObjectParameter: DictionaryParameter {
-    static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self
+    init(dictionaryValue: [AnyHashable: Any])
 }
 
 // MARK: - AnyParameter+Extension
@@ -294,7 +294,8 @@ extension ObjectParameter {
 }
 
 extension ObjectParameter where Self: JSONModel {
-    public static func fromDictionary(_ dict: [AnyHashable: Any]) -> Self {
-        return safeDeserialize(from: dict)
+    public init(dictionaryValue: [AnyHashable: Any]) {
+        self.init()
+        merge(from: dictionaryValue)
     }
 }
