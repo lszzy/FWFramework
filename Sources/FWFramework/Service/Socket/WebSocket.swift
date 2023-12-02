@@ -169,10 +169,9 @@ open class WebSocket: WebSocketClient, WebSocketEngineDelegate {
     
     // MARK: - EngineDelegate
     public func didReceive(event: WebSocketEvent) {
-        callbackQueue.async { [weak self] in
-            guard let s = self else { return }
-            s.delegate?.didReceive(event: event, client: s)
-            s.onEvent?(event)
+        callbackQueue.async {
+            self.delegate?.didReceive(event: event, client: self)
+            self.onEvent?(event)
         }
     }
 }
@@ -276,8 +275,8 @@ public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelega
             break
         }
         
-        callbackQueue.async { [weak self] in
-            self?.onEvent?(event)
+        callbackQueue.async {
+            self.onEvent?(event)
         }
     }
 }

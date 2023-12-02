@@ -163,19 +163,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.thumbTintColor = UIColor.app.randomColor
         }, for: .valueChanged)
         
-        self.bannerView.didSelectItemBlock = { index in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                Router.openURL("https://www.baidu.com", userInfo: [
-                    Router.Parameter.routerOptionsKey: NavigatorOptions.embedInNavigation
-                ])
-                /*
-                Router.openURL("https://www.baidu.com", userInfo: {
-                    let userInfo = RouterParameter()
-                    userInfo.routerOptions = .embedInNavigation
-                    return userInfo
-                }())
-                */
-            }
+        self.bannerView.didSelectItemBlock = { [weak self] index in
+            self?.clickHandler(index)
         }
         
         self.segmentedControl.indexChangedBlock = { [weak self] index in
@@ -310,9 +299,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func clickHandler(_ index: Int) {
+        /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            Router.openURL("https://www.baidu.com")
-        }
+            Router.openURL("https://www.baidu.com", userInfo: [
+                Router.Parameter.routerOptionsKey: NavigatorOptions.embedInNavigation
+            ])
+        }*/
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
