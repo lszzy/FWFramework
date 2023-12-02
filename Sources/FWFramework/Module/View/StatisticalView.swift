@@ -45,8 +45,8 @@ public class StatisticalManager: NSObject {
     
     /// 是否统计曝光时长，开启后会触发曝光结束事件并计算时长，默认false
     public var exposureTime = false
-    /// 设置部分可见时触发曝光的比率，范围0-1，默认1，仅视图完全可见时才触发曝光
-    public var exposureThresholds: CGFloat = 1
+    /// 设置部分可见时触发曝光的比率，范围0-1，默认>=0.95会触发曝光(因为frame有小数，忽略计算误差)
+    public var exposureThresholds: CGFloat = 0.95
     /// 计算曝光时是否自动屏蔽控制器的顶部栏和底部栏，默认true
     public var exposureIgnoredBars = true
     /// 应用回到前台时是否重新计算曝光，默认true
@@ -986,10 +986,10 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     fileprivate func fw_statisticalExposureRatio(_ containerView: UIView, viewController: UIViewController?) -> CGFloat {
         var ratio: CGFloat = 0
         var viewRect = self.convert(self.bounds, to: containerView)
-        viewRect = CGRect(x: floor(viewRect.origin.x), y: floor(viewRect.origin.y), width: floor(viewRect.size.width), height: floor(viewRect.size.height))
+        viewRect = CGRect(x: viewRect.origin.x, y: viewRect.origin.y, width: floor(viewRect.size.width), height: floor(viewRect.size.height))
         
-        var tx = CGRectGetMinX(viewRect) - floor(containerView.bounds.origin.x)
-        var ty = CGRectGetMinY(viewRect) - floor(containerView.bounds.origin.y)
+        var tx = CGRectGetMinX(viewRect) - containerView.bounds.origin.x
+        var ty = CGRectGetMinY(viewRect) - containerView.bounds.origin.y
         var cw = CGRectGetWidth(containerView.bounds)
         var ch = CGRectGetHeight(containerView.bounds)
         
