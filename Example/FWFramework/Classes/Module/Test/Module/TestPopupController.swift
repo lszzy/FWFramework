@@ -99,7 +99,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     }
     
     @objc func onPopupClick(_ sender: UIButton) {
-        PopupMenu.showRely(on: sender, titles: titles, icons: icons, menuWidth: 120) { [weak self] popupMenu in
+        PopupMenu.show(relyOn: sender, titles: titles, icons: icons, menuWidth: 120) { [weak self] popupMenu in
             popupMenu.delegate = self
         }
     }
@@ -142,8 +142,8 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         }
     }
     
-    func popupMenu(_ popupMenu: PopupMenu, didSelectedAt index: Int) {
-        app.showMessage(text: "点击了 \(popupMenu.titles?[index] ?? "")")
+    func popupMenu(_ popupMenu: PopupMenu, didSelectAt index: Int) {
+        app.showMessage(text: "点击了 \(popupMenu.titles[index])")
     }
     
     func popupMenuBeganDismiss(_ popupMenu: PopupMenu) {
@@ -165,14 +165,14 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        popupMenu = PopupMenu.showRely(on: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, otherSettings: { popupMenu in
+        popupMenu = PopupMenu.show(relyOn: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, customize: { popupMenu in
             popupMenu.delegate = self
             popupMenu.showsMaskView = false
             popupMenu.priorityDirection = .bottom
             popupMenu.maxVisibleCount = 1
             popupMenu.itemHeight = 60
             popupMenu.borderWidth = 1
-            popupMenu.fontSize = 12
+            popupMenu.font = UIFont.systemFont(ofSize: 12)
             popupMenu.dismissOnTouchOutside = true
             popupMenu.dismissOnSelected = false
             popupMenu.borderColor = .brown

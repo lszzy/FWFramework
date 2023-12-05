@@ -216,7 +216,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
     
     func didChangedActive(_ active: Bool, for titleView: ToolbarTitleView) {
         if !active { return }
-        PopupMenu.showRely(on: titleView, titles: ["菜单1", "菜单2"], icons: nil, menuWidth: 120) { [weak self] popupMenu in
+        PopupMenu.show(relyOn: titleView, titles: ["菜单1", "菜单2"], icons: nil, menuWidth: 120) { [weak self] popupMenu in
             popupMenu.delegate = self
         }
     }
