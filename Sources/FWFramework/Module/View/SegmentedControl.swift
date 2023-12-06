@@ -29,10 +29,10 @@ public enum SegmentedControlSegmentWidthStyle: Int {
 public struct SegmentedControlBorderType: OptionSet {
     public let rawValue: Int
     
-    public static let top: LogType = .init(rawValue: 1 << 0)
-    public static let left: LogType = .init(rawValue: 1 << 1)
-    public static let bottom: LogType = .init(rawValue: 1 << 2)
-    public static let right: LogType = .init(rawValue: 1 << 3)
+    public static let top: SegmentedControlBorderType = .init(rawValue: 1 << 0)
+    public static let left: SegmentedControlBorderType = .init(rawValue: 1 << 1)
+    public static let bottom: SegmentedControlBorderType = .init(rawValue: 1 << 2)
+    public static let right: SegmentedControlBorderType = .init(rawValue: 1 << 3)
     
     public init(rawValue: Int) {
         self.rawValue = rawValue
@@ -121,10 +121,10 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var textImageSpacing: CGFloat = 0
     open var borderColor: UIColor? = .black
     open var borderWidth: CGFloat = 1.0
-    open var userDraggable: Bool = true
-    open var touchEnabled: Bool = true
-    open var verticalDividerEnabled: Bool = false
-    open var stretchSegmentsToScreenSize: Bool = false
+    open var isUserDraggable: Bool = true
+    open var isTouchEnabled: Bool = true
+    open var isVerticalDividerEnabled: Bool = false
+    open var shouldStretchSegmentsToScreenSize: Bool = false
     /// 当前选中index, -1表示不选中
     open var selectedSegmentIndex: Int {
         get {
@@ -151,7 +151,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var contentEdgeInset: UIEdgeInsets = .zero
     open var segmentEdgeInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     open var segmentBackgroundColor: UIColor?
-    open var segmentBackgroundOpacity: CGFloat = 1.0
+    open var segmentBackgroundOpacity: Float = 1.0
     open var segmentBackgroundCornerRadius: CGFloat = 0
     open var segmentBackgroundEdgeInset: UIEdgeInsets = .zero
     open var segmentCustomBlock: ((_ segmentedControl: SegmentedControl, _ index: Int, _ rect: CGRect) -> Void)?
@@ -186,7 +186,6 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     private var segmentWidth: CGFloat = 0
     private var segmentWidthsArray: [CGFloat] = []
-    private var segmentAccessibilityElements: [SegmentedAccessibilityElement] = []
     private var titleBackgroundLayers: [CALayer] = []
     private var segmentBackgroundLayers: [CALayer] = []
     
@@ -290,7 +289,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             }
             
             if segment != selectedSegmentIndex && segment < sectionsCount {
-                if touchEnabled {
+                if isTouchEnabled {
                     setSelectedSegmentIndex(segment, animated: shouldAnimateUserSelection, notify: true)
                 }
             }
@@ -298,7 +297,313 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     open override func draw(_ rect: CGRect) {
+        backgroundColor?.setFill()
+        UIRectFill(bounds)
         
+        selectionIndicatorShapeLayer.backgroundColor = selectionIndicatorColor?.cgColor
+        selectionIndicatorStripLayer.backgroundColor = selectionIndicatorColor?.cgColor
+        selectionIndicatorBoxLayer.backgroundColor = selectionIndicatorBoxColor?.cgColor
+        selectionIndicatorBoxLayer.borderColor = selectionIndicatorBoxColor?.cgColor
+        
+        scrollView.layer.sublayers = nil
+        let oldRect = rect
+        if accessibilityElements == nil {
+            accessibilityElements = []
+        }
+        
+        if self.type == .text {
+            removeTitleBackgroundLayers()
+            for idx in 0..<(sectionTitles?.count ?? 0) {
+                var stringWidth: CGFloat = 0
+                var stringHeight: CGFloat = 0
+                var size = measureTitleAtIndex(idx)
+                stringWidth = size.width
+                stringHeight = size.height
+                var rectDiv = CGRect.zero
+                var fullRect = CGRect.zero
+
+                let locationUp: CGFloat = selectionIndicatorLocation == .top ? 1.0 : 0
+                let selectionStyleNotBox: CGFloat = selectionStyle != .box ? 1.0 : 0
+                
+                let y = round((CGRectGetHeight(self.frame) - selectionStyleNotBox * selectionIndicatorHeight) / 2 - stringHeight / 2 + selectionIndicatorHeight * locationUp)
+                var rect: CGRect
+                if (segmentWidthStyle == .fixed) {
+                    rect = CGRect(x: (segmentWidth * CGFloat(idx)) + (segmentWidth - stringWidth) / 2, y: y, width: stringWidth, height: stringHeight)
+                    rectDiv = CGRect(x: (segmentWidth * CGFloat(idx)) - (verticalDividerWidth / 2) + contentEdgeInset.left, y: selectionIndicatorHeight * 2, width: verticalDividerWidth, height: self.frame.size.height - (selectionIndicatorHeight * 4))
+                    fullRect = CGRect(x: segmentWidth * CGFloat(idx) + contentEdgeInset.left, y: 0, width: segmentWidth, height: oldRect.size.height)
+                } else {
+                    var xOffset: CGFloat = 0
+                    var i: Int = 0
+                    for width in self.segmentWidthsArray {
+                        if (idx == i) {
+                            break
+                        }
+                        xOffset = xOffset + width
+                        i += 1
+                    }
+                    
+                    let widthForIndex = segmentWidthsArray[idx]
+                    rect = CGRect(x: xOffset, y: y, width: widthForIndex, height: stringHeight)
+                    fullRect = CGRect(x: xOffset + contentEdgeInset.left, y: 0, width: widthForIndex, height: oldRect.size.height)
+                    rectDiv = CGRect(x: xOffset - (verticalDividerWidth / 2) + contentEdgeInset.left, y: selectionIndicatorHeight * 2, width: verticalDividerWidth, height: self.frame.size.height - (selectionIndicatorHeight * 4))
+                }
+                
+                rect = CGRect(x: ceil(rect.origin.x) + contentEdgeInset.left, y: ceil(rect.origin.y), width: ceil(rect.size.width), height: ceil(rect.size.height))
+
+                let titleLayer = CATextLayer()
+                titleLayer.frame = rect
+                titleLayer.alignmentMode = .center
+                titleLayer.string = attributedTitleAtIndex(idx)
+                titleLayer.contentsScale = UIScreen.main.scale
+                scrollView.layer.addSublayer(titleLayer)
+
+                if isVerticalDividerEnabled && idx > 0 {
+                    let verticalDividerLayer = CALayer()
+                    verticalDividerLayer.frame = rectDiv
+                    verticalDividerLayer.backgroundColor = verticalDividerColor?.cgColor
+                    scrollView.layer.addSublayer(verticalDividerLayer)
+                }
+
+                if (accessibilityElements?.count ?? 0) <= idx {
+                    let element = SegmentedAccessibilityElement(accessibilityContainer: self)
+                    element.delegate = self
+                    element.accessibilityLabel = sectionTitles != nil && sectionTitles!.count > idx ? (sectionTitles![idx]).stringValue : "item \(idx + 1)"
+                    element.accessibilityFrame = convert(fullRect, to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                    accessibilityElements?.append(element)
+                } else {
+                    var offset: CGFloat = 0
+                    for i in 0..<idx {
+                        let accessibilityItem = (_accessibilityElements?[i])!
+                        offset += accessibilityItem.accessibilityFrame.size.width
+                    }
+                    let element = (_accessibilityElements?[idx])!
+                    let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
+                    element.accessibilityFrame = convert(newRect, to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                }
+
+                addBackgroundAndBorderLayer(rect: fullRect, index: idx)
+            }
+        } else if self.type == .images {
+            removeTitleBackgroundLayers()
+            for idx in 0..<(sectionImages?.count ?? 0) {
+                let icon: UIImage = sectionImages![idx]
+                let imageWidth: CGFloat = icon.size.width
+                let imageHeight: CGFloat = icon.size.height
+                let y: CGFloat = round(CGRectGetHeight(self.frame) - selectionIndicatorHeight) / 2 - imageHeight / 2 + ((selectionIndicatorLocation == .top) ? selectionIndicatorHeight : 0)
+                let x: CGFloat = segmentWidth * CGFloat(idx) + (segmentWidth - imageWidth) / 2.0
+                let rect: CGRect = CGRect(x: x + contentEdgeInset.left, y: y, width: imageWidth, height: imageHeight)
+
+                let imageLayer: CALayer = CALayer()
+                imageLayer.frame = rect
+                if selectedSegmentIndex == idx && selectedSegmentIndex < (sectionSelectedImages?.count ?? 0) {
+                    if sectionSelectedImages != nil {
+                        let highlightIcon = sectionSelectedImages?[idx]
+                        imageLayer.contents = highlightIcon?.cgImage
+                    } else {
+                        imageLayer.contents = icon.cgImage
+                    }
+                } else {
+                    imageLayer.contents = icon.cgImage
+                }
+
+                scrollView.layer.addSublayer(imageLayer)
+                if isVerticalDividerEnabled && idx > 0 {
+                    let verticalDividerLayer: CALayer = CALayer()
+                    verticalDividerLayer.frame = CGRect(x: (segmentWidth * CGFloat(idx)) - (verticalDividerWidth / 2) + contentEdgeInset.left, y: selectionIndicatorHeight * 2, width: verticalDividerWidth, height: self.frame.size.height - (selectionIndicatorHeight * 4))
+                    verticalDividerLayer.backgroundColor = verticalDividerColor?.cgColor
+                    scrollView.layer.addSublayer(verticalDividerLayer)
+                }
+                
+                if (accessibilityElements?.count ?? 0) <= idx {
+                    let element = SegmentedAccessibilityElement(accessibilityContainer: self)
+                    element.delegate = self
+                    element.accessibilityLabel = (sectionTitles != nil && sectionTitles!.count > idx) ? (sectionTitles![idx]).stringValue : String(format: "item %u", idx + 1)
+                    element.accessibilityFrame = convert(rect, to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                    accessibilityElements?.append(element)
+                } else {
+                    var offset: CGFloat = 0.0
+                    for i in 0..<idx {
+                        let accessibilityItem = (_accessibilityElements?[i])!
+                        offset += accessibilityItem.accessibilityFrame.size.width
+                    }
+                    let element = (_accessibilityElements?[idx])!
+                    let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
+                    element.accessibilityFrame = convert(newRect, to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                }
+
+                addBackgroundAndBorderLayer(rect: rect, index: idx)
+            }
+        } else if self.type == .textImages {
+            removeTitleBackgroundLayers()
+            for idx in 0..<(sectionImages?.count ?? 0) {
+                let icon: UIImage = sectionImages![idx]
+                let imageWidth: CGFloat = icon.size.width
+                let imageHeight: CGFloat = icon.size.height
+
+                let stringSize: CGSize = measureTitleAtIndex(idx)
+                let stringHeight: CGFloat = stringSize.height
+                let stringWidth: CGFloat = stringSize.width
+
+                var imageXOffset: CGFloat = segmentWidth * CGFloat(idx)
+                var textXOffset: CGFloat = segmentWidth * CGFloat(idx)
+                var imageYOffset: CGFloat = ceil((self.frame.size.height - imageHeight) / 2.0)
+                var textYOffset: CGFloat = ceil((self.frame.size.height - stringHeight) / 2.0)
+                
+                if segmentWidthStyle == .fixed {
+                    let isImageInLineWidthText = imagePosition == .leftOfText || imagePosition == .rightOfText
+                    if isImageInLineWidthText {
+                        let whitespace = segmentWidth - stringSize.width - imageWidth - textImageSpacing
+                        if imagePosition == .leftOfText {
+                            imageXOffset += whitespace / 2.0
+                            textXOffset = imageXOffset + imageWidth + textImageSpacing
+                        } else {
+                            textXOffset += whitespace / 2.0
+                            imageXOffset = textXOffset + stringWidth + textImageSpacing
+                        }
+                    } else {
+                        imageXOffset = segmentWidth * CGFloat(idx) + (segmentWidth - imageWidth) / 2.0
+                        textXOffset = segmentWidth * CGFloat(idx) + (segmentWidth - stringWidth) / 2.0
+                        
+                        let whitespace = self.frame.height - imageHeight - stringHeight - textImageSpacing
+                        if imagePosition == .aboveText {
+                            imageYOffset = ceil(whitespace / 2.0)
+                            textYOffset = imageYOffset + imageHeight + textImageSpacing
+                        } else if imagePosition == .belowText {
+                            textYOffset = ceil(whitespace / 2.0)
+                            imageYOffset = textYOffset + stringHeight + textImageSpacing
+                        }
+                    }
+                } else if segmentWidthStyle == .dynamic {
+                    var xOffset: CGFloat = 0
+                    var i: Int = 0
+
+                    for width in segmentWidthsArray {
+                        if idx == i {
+                            break
+                        }
+                        xOffset += width
+                        i += 1
+                    }
+
+                    let isImageInLineWidthText = imagePosition == .leftOfText || imagePosition == .rightOfText
+                    if isImageInLineWidthText {
+                        if imagePosition == .leftOfText {
+                            imageXOffset = xOffset
+                            textXOffset = imageXOffset + imageWidth + textImageSpacing
+                        } else {
+                            textXOffset = xOffset
+                            imageXOffset = textXOffset + stringWidth + textImageSpacing
+                        }
+                    } else {
+                        imageXOffset = xOffset + (segmentWidthsArray[i] - imageWidth) / 2.0
+                        textXOffset = xOffset + (segmentWidthsArray[i] - stringWidth) / 2.0
+                        
+                        let whitespace = self.frame.height - imageHeight - stringHeight - textImageSpacing
+                        if imagePosition == .aboveText {
+                            imageYOffset = ceil(whitespace / 2.0)
+                            textYOffset = imageYOffset + imageHeight + textImageSpacing
+                        } else if imagePosition == .belowText {
+                            textYOffset = ceil(whitespace / 2.0)
+                            imageYOffset = textYOffset + stringHeight + textImageSpacing
+                        }
+                    }
+                }
+                
+                let imageRect = CGRect(x: imageXOffset + contentEdgeInset.left, y: imageYOffset, width: imageWidth, height: imageHeight)
+                let textRect = CGRect(x: ceil(textXOffset) + contentEdgeInset.left, y: ceil(textYOffset), width: ceil(stringWidth), height: ceil(stringHeight))
+
+                let titleLayer = CATextLayer()
+                titleLayer.frame = textRect
+                titleLayer.alignmentMode = .center
+                titleLayer.string = attributedTitleAtIndex(idx)
+                let imageLayer = CALayer()
+                imageLayer.frame = imageRect
+                
+                if selectedSegmentIndex == idx {
+                    if sectionSelectedImages != nil {
+                        let highlightIcon = sectionSelectedImages?[idx]
+                        imageLayer.contents = highlightIcon?.cgImage
+                    } else {
+                        imageLayer.contents = icon.cgImage
+                    }
+                } else {
+                    imageLayer.contents = icon.cgImage
+                }
+
+                scrollView.layer.addSublayer(imageLayer)
+                titleLayer.contentsScale = UIScreen.main.scale
+                scrollView.layer.addSublayer(titleLayer)
+                
+                if (accessibilityElements?.count ?? 0) <= idx {
+                    let element = SegmentedAccessibilityElement(accessibilityContainer: self)
+                    element.delegate = self
+                    element.accessibilityLabel = (sectionTitles != nil && sectionTitles!.count > idx) ? (sectionTitles![idx]).stringValue : "item \(idx + 1)"
+                    element.accessibilityFrame = convert(CGRectUnion(textRect, imageRect), to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                    accessibilityElements?.append(element)
+                } else {
+                    var offset: CGFloat = 0.0
+                    for i in 0..<idx {
+                        let accessibilityItem = (_accessibilityElements?[i])!
+                        offset += accessibilityItem.accessibilityFrame.size.width
+                    }
+                    let element = (_accessibilityElements?[idx])!
+                    let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
+                    element.accessibilityFrame = convert(newRect, to: nil)
+                    if selectedSegmentIndex == idx {
+                        element.accessibilityTraits = [.button, .selected]
+                    } else {
+                        element.accessibilityTraits = .button
+                    }
+                }
+
+                addBackgroundAndBorderLayer(rect: imageRect, index: idx)
+            }
+        }
+        
+        if selectedSegmentIndex >= 0 && sectionCount() > 0 {
+            if selectionStyle == .arrow ||
+                selectionStyle == .circle {
+                if selectionIndicatorShapeLayer.superlayer == nil {
+                    setShapeFrame()
+                    scrollView.layer.addSublayer(selectionIndicatorShapeLayer)
+                }
+            } else {
+                if selectionIndicatorStripLayer.superlayer == nil {
+                    selectionIndicatorStripLayer.frame = frameForSelectionIndicator()
+                    scrollView.layer.addSublayer(selectionIndicatorStripLayer)
+                    
+                    if selectionStyle == .box && selectionIndicatorBoxLayer.superlayer == nil {
+                        selectionIndicatorBoxLayer.frame = frameForFillerSelectionIndicator()
+                        scrollView.layer.insertSublayer(selectionIndicatorBoxLayer, at: 0)
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - Private
@@ -347,7 +652,48 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     private func addBackgroundAndBorderLayer(rect fullRect: CGRect, index: Int) {
+        if let segmentBackgroundColor = self.segmentBackgroundColor {
+            let backgroundLayer = CALayer()
+            backgroundLayer.zPosition = -1
+            backgroundLayer.backgroundColor = segmentBackgroundColor.cgColor
+            backgroundLayer.opacity = segmentBackgroundOpacity
+            backgroundLayer.cornerRadius = segmentBackgroundCornerRadius
+            backgroundLayer.frame = CGRect(x: fullRect.origin.x + segmentBackgroundEdgeInset.left, y: fullRect.origin.y + segmentBackgroundEdgeInset.top, width: fullRect.size.width - segmentBackgroundEdgeInset.left - segmentBackgroundEdgeInset.right, height: fullRect.size.height - segmentBackgroundEdgeInset.top - segmentBackgroundEdgeInset.bottom)
+            scrollView.layer.insertSublayer(backgroundLayer, at: 0)
+            segmentBackgroundLayers.append(backgroundLayer)
+        }
         
+        let backgroundLayer = CALayer()
+        backgroundLayer.frame = fullRect
+        self.layer.insertSublayer(backgroundLayer, at: 0)
+        titleBackgroundLayers.append(backgroundLayer)
+        
+        if borderType.contains(.top) {
+            let borderLayer = CALayer()
+            borderLayer.frame = CGRect(x: 0, y: 0, width: fullRect.size.width, height: borderWidth)
+            borderLayer.backgroundColor = borderColor?.cgColor
+            backgroundLayer.addSublayer(borderLayer)
+        }
+        if borderType.contains(.left) {
+            let borderLayer = CALayer()
+            borderLayer.frame = CGRect(x: 0, y: 0, width: borderWidth, height: fullRect.size.height)
+            borderLayer.backgroundColor = borderColor?.cgColor
+            backgroundLayer.addSublayer(borderLayer)
+        }
+        if borderType.contains(.bottom) {
+            let borderLayer = CALayer()
+            borderLayer.frame = CGRect(x: 0, y: fullRect.size.height - borderWidth, width: fullRect.size.width, height: borderWidth)
+            borderLayer.backgroundColor = borderColor?.cgColor
+            backgroundLayer.addSublayer(borderLayer)
+        }
+        if borderType.contains(.right) {
+            let borderLayer = CALayer()
+            borderLayer.frame = CGRect(x: fullRect.size.width - borderWidth, y: 0, width: borderWidth, height: fullRect.size.height)
+            borderLayer.backgroundColor = borderColor?.cgColor
+            backgroundLayer.addSublayer(borderLayer)
+        }
+        
+        segmentCustomBlock?(self, index, fullRect)
     }
     
     private func setShapeFrame() {
@@ -389,7 +735,83 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     private func frameForSelectionIndicator() -> CGRect {
-        return .zero
+        var indicatorYOffset: CGFloat = 0.0
+        if selectionIndicatorLocation == .bottom {
+            indicatorYOffset = bounds.size.height - selectionIndicatorHeight + selectionIndicatorEdgeInsets.bottom
+        }
+        if selectionIndicatorLocation == .top {
+            indicatorYOffset = selectionIndicatorEdgeInsets.top
+        }
+
+        var sectionWidth: CGFloat = 0.0
+        if self.type == .text {
+            let stringWidth = measureTitleAtIndex(selectedSegmentIndex).width
+            sectionWidth = stringWidth
+        } else if self.type == .images {
+            let sectionImage = sectionImages?[selectedSegmentIndex]
+            let imageWidth = sectionImage?.size.width ?? .zero
+            sectionWidth = imageWidth
+        } else if self.type == .textImages {
+            let stringWidth = measureTitleAtIndex(selectedSegmentIndex).width
+            let sectionImage = sectionImages?[selectedSegmentIndex]
+            let imageWidth = sectionImage?.size.width ?? 0
+            sectionWidth = max(stringWidth, imageWidth)
+        }
+        
+        if selectionStyle == .arrow || selectionStyle == .circle {
+            var widthToEndOfSelectedSegment: CGFloat = 0.0
+            var widthToStartOfSelectedIndex: CGFloat = 0.0
+            
+            if segmentWidthStyle == .dynamic {
+                var i = 0
+                for width in self.segmentWidthsArray {
+                    if selectedSegmentIndex == i {
+                        widthToEndOfSelectedSegment = widthToStartOfSelectedIndex + width
+                        break
+                    }
+                    widthToStartOfSelectedIndex = widthToStartOfSelectedIndex + width
+                    i += 1
+                }
+            } else {
+                widthToEndOfSelectedSegment = (segmentWidth * CGFloat(selectedSegmentIndex)) + segmentWidth
+                widthToStartOfSelectedIndex = (segmentWidth * CGFloat(selectedSegmentIndex))
+            }
+            
+            let x = widthToStartOfSelectedIndex + ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) - (selectionIndicatorHeight / 2)
+            if selectionStyle == .arrow {
+                return CGRect(x: x - (selectionIndicatorHeight / 2) + contentEdgeInset.left, y: indicatorYOffset, width: selectionIndicatorHeight * 2, height: selectionIndicatorHeight)
+            } else {
+                return CGRect(x: x + contentEdgeInset.left, y: indicatorYOffset, width: selectionIndicatorHeight, height: selectionIndicatorHeight)
+            }
+        } else {
+            if selectionStyle == .textWidthStripe && sectionWidth <= segmentWidth && segmentWidthStyle != .dynamic {
+                let widthToEndOfSelectedSegment = (segmentWidth * CGFloat(selectedSegmentIndex)) + segmentWidth
+                let widthToStartOfSelectedIndex = (segmentWidth * CGFloat(selectedSegmentIndex))
+                
+                let x = ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) + (widthToStartOfSelectedIndex - sectionWidth / 2)
+                return CGRect(x: x + selectionIndicatorEdgeInsets.left + contentEdgeInset.left, y: indicatorYOffset, width: sectionWidth - selectionIndicatorEdgeInsets.right, height: selectionIndicatorHeight)
+            } else {
+                if segmentWidthStyle == .dynamic {
+                    var selectedSegmentOffset: CGFloat = 0.0
+                    
+                    var i = 0
+                    for width in segmentWidthsArray {
+                        if selectedSegmentIndex == i {
+                            break
+                        }
+                        selectedSegmentOffset = selectedSegmentOffset + width
+                        i += 1
+                    }
+                    if selectionStyle == .textWidthStripe {
+                        return CGRect(x: selectedSegmentOffset + selectionIndicatorEdgeInsets.left + segmentEdgeInset.left + contentEdgeInset.left, y: indicatorYOffset, width: segmentWidthsArray[selectedSegmentIndex] - selectionIndicatorEdgeInsets.right - segmentEdgeInset.left - segmentEdgeInset.right, height: selectionIndicatorHeight + selectionIndicatorEdgeInsets.bottom)
+                    } else {
+                        return CGRect(x: selectedSegmentOffset + selectionIndicatorEdgeInsets.left + contentEdgeInset.left, y: indicatorYOffset, width: segmentWidthsArray[selectedSegmentIndex] - selectionIndicatorEdgeInsets.right, height: selectionIndicatorHeight + selectionIndicatorEdgeInsets.bottom)
+                    }
+                }
+                
+                return CGRect(x: segmentWidth * CGFloat(selectedSegmentIndex) + selectionIndicatorEdgeInsets.left + contentEdgeInset.left, y: indicatorYOffset, width: segmentWidth - selectionIndicatorEdgeInsets.left - selectionIndicatorEdgeInsets.right, height: selectionIndicatorHeight)
+            }
+        }
     }
     
     private func frameForFillerSelectionIndicator() -> CGRect {
@@ -410,7 +832,82 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     private func updateSegmentsRects() {
+        scrollView.contentInset = .zero
+        scrollView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+
+        if sectionCount() > 0 {
+            segmentWidth = frame.size.width / CGFloat(sectionCount())
+        }
         
+        if self.type == .text && segmentWidthStyle == .fixed {
+            sectionTitles?.enumerated().forEach({ (index, titleString) in
+                let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
+                segmentWidth = max(stringWidth, segmentWidth)
+            })
+        } else if self.type == .text && segmentWidthStyle == .dynamic {
+            var mutableSegmentWidths: [CGFloat] = []
+            var totalWidth: CGFloat = 0.0
+            
+            sectionTitles?.enumerated().forEach({ (index, titleString) in
+                let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
+                totalWidth += stringWidth
+                mutableSegmentWidths.append(stringWidth)
+            })
+            
+            if shouldStretchSegmentsToScreenSize && mutableSegmentWidths.count > 0 && totalWidth < bounds.size.width {
+                let whitespace = bounds.size.width - totalWidth
+                let whitespaceForSegment = whitespace / CGFloat(mutableSegmentWidths.count)
+                mutableSegmentWidths.enumerated().forEach { (idx, width) in
+                    let extendedWidth = whitespaceForSegment + width
+                    mutableSegmentWidths[idx] = extendedWidth
+                }
+            }
+            
+            segmentWidthsArray = mutableSegmentWidths
+        } else if self.type == .images {
+            sectionImages?.forEach({ sectionImage in
+                let imageWidth = sectionImage.size.width + segmentEdgeInset.left + segmentEdgeInset.right
+                segmentWidth = max(imageWidth, segmentWidth)
+            })
+        } else if self.type == .textImages && segmentWidthStyle == .fixed {
+            sectionTitles?.enumerated().forEach({ (index, titleString) in
+                let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
+                segmentWidth = max(stringWidth, segmentWidth)
+            })
+        } else if self.type == .textImages && segmentWidthStyle == .dynamic {
+            var mutableSegmentWidths: [CGFloat] = []
+            var totalWidth: CGFloat = 0.0
+            
+            sectionTitles?.enumerated().forEach({ (idx, titleString) in
+                let stringWidth = measureTitleAtIndex(idx).width + segmentEdgeInset.right
+                let sectionImage = sectionImages?[idx]
+                let imageWidth = (sectionImage?.size.width ?? 0) + segmentEdgeInset.left
+                
+                var combinedWidth: CGFloat = 0.0
+                if imagePosition == .leftOfText || imagePosition == .rightOfText {
+                    combinedWidth = imageWidth + stringWidth + textImageSpacing
+                } else {
+                    combinedWidth = max(imageWidth, stringWidth)
+                }
+                
+                totalWidth += combinedWidth
+                mutableSegmentWidths.append(combinedWidth)
+            })
+            
+            if shouldStretchSegmentsToScreenSize && mutableSegmentWidths.count > 0 && totalWidth < bounds.size.width {
+                let whitespace = bounds.size.width - totalWidth
+                let whitespaceForSegment = whitespace / CGFloat(mutableSegmentWidths.count)
+                for (idx, width) in mutableSegmentWidths.enumerated() {
+                    let extendedWidth = whitespaceForSegment + width
+                    mutableSegmentWidths[idx] = extendedWidth
+                }
+            }
+            
+            segmentWidthsArray = mutableSegmentWidths
+        }
+
+        scrollView.isScrollEnabled = isUserDraggable
+        scrollView.contentSize = CGSize(width: totalSegmentedControlWidth() + contentEdgeInset.left + contentEdgeInset.right, height: frame.size.height)
     }
     
     private func sectionCount() -> Int {
@@ -564,10 +1061,11 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        for (index, element) in segmentAccessibilityElements.enumerated() {
+        let elements = _accessibilityElements ?? []
+        for (index, element) in elements.enumerated() {
             var offset: CGFloat = 0
             for i in 0..<index {
-                let elem = segmentAccessibilityElements[i]
+                let elem = elements[i]
                 offset += elem.accessibilityFrame.size.width
             }
             let rect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
@@ -592,43 +1090,36 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     // MARK: - SegmentedAccessibilityDelegate
     func scrollToAccessibilityElement(_ sender: Any) {
         if let element = sender as? SegmentedAccessibilityElement,
-           let index = segmentAccessibilityElements.firstIndex(of: element) {
+           let index = _accessibilityElements?.firstIndex(of: element) {
             scrollTo(index, animated: false)
         }
     }
     
     // MARK: - UIAccessibilityContainer
     open override var accessibilityElements: [Any]? {
-        get {
-            return segmentAccessibilityElements
-        }
-        set {
-            super.accessibilityElements = newValue
-        }
+        get { return _accessibilityElements }
+        set { _accessibilityElements = newValue as? [SegmentedAccessibilityElement] }
     }
+    private var _accessibilityElements: [SegmentedAccessibilityElement]?
     
     open override var isAccessibilityElement: Bool {
-        get {
-            return false
-        }
-        set {
-            super.isAccessibilityElement = newValue
-        }
+        get { return false }
+        set { super.isAccessibilityElement = newValue }
     }
     
     open override func accessibilityElementCount() -> Int {
-        return segmentAccessibilityElements.count
+        return accessibilityElements?.count ?? 0
     }
     
     open override func index(ofAccessibilityElement element: Any) -> Int {
         if let element = element as? SegmentedAccessibilityElement {
-            return segmentAccessibilityElements.firstIndex(of: element) ?? NSNotFound
+            return _accessibilityElements?.firstIndex(of: element) ?? NSNotFound
         }
         return NSNotFound
     }
     
     open override func accessibilityElement(at index: Int) -> Any? {
-        return segmentAccessibilityElements.safeElement(index)
+        return accessibilityElements?.safeElement(index)
     }
     
     // MARK: - StatisticalViewProtocol

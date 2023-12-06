@@ -259,7 +259,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = UInt(scrollView.contentOffset.x / scrollView.frame.size.width)
+        let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         segmentedControl.setSelectedSegmentIndex(page, animated: true)
     }
     
