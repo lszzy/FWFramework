@@ -128,7 +128,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
             self.pagerView.mainTableView.app.endRefreshing()
-            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles?.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
+            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
         }
     }
@@ -159,7 +159,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func numberOfLists(in pagingView: PagingView) -> Int {
-        return segmentedControl.sectionTitles?.count ?? 0
+        return segmentedControl.sectionTitles.count
     }
     
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate {

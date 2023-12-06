@@ -56,19 +56,19 @@ public enum SegmentedControlImagePosition: Int {
 /// [HMSegmentedControl](https://github.com/HeshamMegid/HMSegmentedControl)
 open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibilityDelegate {
     
-    open var sectionTitles: [StringParameter]? {
+    open var sectionTitles: [StringParameter] = [] {
         didSet {
             setNeedsLayout()
             setNeedsDisplay()
         }
     }
-    open var sectionImages: [UIImage]? {
+    open var sectionImages: [UIImage] = [] {
         didSet {
             setNeedsLayout()
             setNeedsDisplay()
         }
     }
-    open var sectionSelectedImages: [UIImage]?
+    open var sectionSelectedImages: [UIImage] = []
     
     open var indexChangedBlock: ((Int) -> Void)?
     open var titleFormatter: ((_ segmentedControl: SegmentedControl, _ title: String, _ index: Int, _ selected: Bool) -> NSAttributedString)?
@@ -257,7 +257,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open override func willMove(toSuperview newSuperview: UIView?) {
         if newSuperview == nil { return }
         
-        if sectionTitles != nil || sectionImages != nil {
+        if sectionTitles.count > 0 || sectionImages.count > 0 {
             updateSegmentsRects()
         }
     }
@@ -283,9 +283,9 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             
             var sectionsCount: Int = 0
             if type == .images {
-                sectionsCount = sectionImages?.count ?? 0
+                sectionsCount = sectionImages.count
             } else if type == .textImages || type == .text {
-                sectionsCount = sectionTitles?.count ?? 0
+                sectionsCount = sectionTitles.count
             }
             
             if segment != selectedSegmentIndex && segment < sectionsCount {
@@ -307,18 +307,14 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         
         scrollView.layer.sublayers = nil
         let oldRect = rect
-        if accessibilityElements == nil {
-            accessibilityElements = []
-        }
+        accessibilityElements = []
         
         if self.type == .text {
             removeTitleBackgroundLayers()
-            for idx in 0..<(sectionTitles?.count ?? 0) {
-                var stringWidth: CGFloat = 0
-                var stringHeight: CGFloat = 0
-                var size = measureTitleAtIndex(idx)
-                stringWidth = size.width
-                stringHeight = size.height
+            for idx in 0..<sectionTitles.count {
+                let stringSize = measureTitleAtIndex(idx)
+                let stringWidth = stringSize.width
+                let stringHeight = stringSize.height
                 var rectDiv = CGRect.zero
                 var fullRect = CGRect.zero
 
@@ -364,24 +360,24 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
                     scrollView.layer.addSublayer(verticalDividerLayer)
                 }
 
-                if (accessibilityElements?.count ?? 0) <= idx {
+                if _accessibilityElements.count <= idx {
                     let element = SegmentedAccessibilityElement(accessibilityContainer: self)
                     element.delegate = self
-                    element.accessibilityLabel = sectionTitles != nil && sectionTitles!.count > idx ? (sectionTitles![idx]).stringValue : "item \(idx + 1)"
+                    element.accessibilityLabel = sectionTitles.count > idx ? sectionTitles[idx].stringValue : "item \(idx + 1)"
                     element.accessibilityFrame = convert(fullRect, to: nil)
                     if selectedSegmentIndex == idx {
                         element.accessibilityTraits = [.button, .selected]
                     } else {
                         element.accessibilityTraits = .button
                     }
-                    accessibilityElements?.append(element)
+                    _accessibilityElements.append(element)
                 } else {
                     var offset: CGFloat = 0
                     for i in 0..<idx {
-                        let accessibilityItem = (_accessibilityElements?[i])!
+                        let accessibilityItem = _accessibilityElements[i]
                         offset += accessibilityItem.accessibilityFrame.size.width
                     }
-                    let element = (_accessibilityElements?[idx])!
+                    let element = _accessibilityElements[idx]
                     let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
                     element.accessibilityFrame = convert(newRect, to: nil)
                     if selectedSegmentIndex == idx {
@@ -395,27 +391,21 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             }
         } else if self.type == .images {
             removeTitleBackgroundLayers()
-            for idx in 0..<(sectionImages?.count ?? 0) {
-                let icon: UIImage = sectionImages![idx]
+            for (idx, icon) in sectionImages.enumerated() {
                 let imageWidth: CGFloat = icon.size.width
                 let imageHeight: CGFloat = icon.size.height
                 let y: CGFloat = round(CGRectGetHeight(self.frame) - selectionIndicatorHeight) / 2 - imageHeight / 2 + ((selectionIndicatorLocation == .top) ? selectionIndicatorHeight : 0)
                 let x: CGFloat = segmentWidth * CGFloat(idx) + (segmentWidth - imageWidth) / 2.0
                 let rect: CGRect = CGRect(x: x + contentEdgeInset.left, y: y, width: imageWidth, height: imageHeight)
-
+                
                 let imageLayer: CALayer = CALayer()
                 imageLayer.frame = rect
-                if selectedSegmentIndex == idx && selectedSegmentIndex < (sectionSelectedImages?.count ?? 0) {
-                    if sectionSelectedImages != nil {
-                        let highlightIcon = sectionSelectedImages?[idx]
-                        imageLayer.contents = highlightIcon?.cgImage
-                    } else {
-                        imageLayer.contents = icon.cgImage
-                    }
+                if selectedSegmentIndex == idx && selectedSegmentIndex < sectionSelectedImages.count {
+                    imageLayer.contents = sectionSelectedImages[idx].cgImage
                 } else {
                     imageLayer.contents = icon.cgImage
                 }
-
+                
                 scrollView.layer.addSublayer(imageLayer)
                 if isVerticalDividerEnabled && idx > 0 {
                     let verticalDividerLayer: CALayer = CALayer()
@@ -424,24 +414,24 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
                     scrollView.layer.addSublayer(verticalDividerLayer)
                 }
                 
-                if (accessibilityElements?.count ?? 0) <= idx {
+                if _accessibilityElements.count <= idx {
                     let element = SegmentedAccessibilityElement(accessibilityContainer: self)
                     element.delegate = self
-                    element.accessibilityLabel = (sectionTitles != nil && sectionTitles!.count > idx) ? (sectionTitles![idx]).stringValue : String(format: "item %u", idx + 1)
+                    element.accessibilityLabel = sectionTitles.count > idx ? sectionTitles[idx].stringValue : String(format: "item %u", idx + 1)
                     element.accessibilityFrame = convert(rect, to: nil)
                     if selectedSegmentIndex == idx {
                         element.accessibilityTraits = [.button, .selected]
                     } else {
                         element.accessibilityTraits = .button
                     }
-                    accessibilityElements?.append(element)
+                    _accessibilityElements.append(element)
                 } else {
                     var offset: CGFloat = 0.0
                     for i in 0..<idx {
-                        let accessibilityItem = (_accessibilityElements?[i])!
+                        let accessibilityItem = _accessibilityElements[i]
                         offset += accessibilityItem.accessibilityFrame.size.width
                     }
-                    let element = (_accessibilityElements?[idx])!
+                    let element = _accessibilityElements[idx]
                     let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
                     element.accessibilityFrame = convert(newRect, to: nil)
                     if selectedSegmentIndex == idx {
@@ -455,8 +445,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             }
         } else if self.type == .textImages {
             removeTitleBackgroundLayers()
-            for idx in 0..<(sectionImages?.count ?? 0) {
-                let icon: UIImage = sectionImages![idx]
+            for (idx, icon) in sectionImages.enumerated() {
                 let imageWidth: CGFloat = icon.size.width
                 let imageHeight: CGFloat = icon.size.height
 
@@ -539,13 +528,8 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
                 let imageLayer = CALayer()
                 imageLayer.frame = imageRect
                 
-                if selectedSegmentIndex == idx {
-                    if sectionSelectedImages != nil {
-                        let highlightIcon = sectionSelectedImages?[idx]
-                        imageLayer.contents = highlightIcon?.cgImage
-                    } else {
-                        imageLayer.contents = icon.cgImage
-                    }
+                if selectedSegmentIndex == idx && idx < sectionSelectedImages.count {
+                    imageLayer.contents = sectionSelectedImages[idx].cgImage
                 } else {
                     imageLayer.contents = icon.cgImage
                 }
@@ -554,24 +538,24 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
                 titleLayer.contentsScale = UIScreen.main.scale
                 scrollView.layer.addSublayer(titleLayer)
                 
-                if (accessibilityElements?.count ?? 0) <= idx {
+                if _accessibilityElements.count <= idx {
                     let element = SegmentedAccessibilityElement(accessibilityContainer: self)
                     element.delegate = self
-                    element.accessibilityLabel = (sectionTitles != nil && sectionTitles!.count > idx) ? (sectionTitles![idx]).stringValue : "item \(idx + 1)"
+                    element.accessibilityLabel = sectionTitles.count > idx ? sectionTitles[idx].stringValue : "item \(idx + 1)"
                     element.accessibilityFrame = convert(CGRectUnion(textRect, imageRect), to: nil)
                     if selectedSegmentIndex == idx {
                         element.accessibilityTraits = [.button, .selected]
                     } else {
                         element.accessibilityTraits = .button
                     }
-                    accessibilityElements?.append(element)
+                    _accessibilityElements.append(element)
                 } else {
                     var offset: CGFloat = 0.0
                     for i in 0..<idx {
-                        let accessibilityItem = (_accessibilityElements?[i])!
+                        let accessibilityItem = _accessibilityElements[i]
                         offset += accessibilityItem.accessibilityFrame.size.width
                     }
-                    let element = (_accessibilityElements?[idx])!
+                    let element = _accessibilityElements[idx]
                     let newRect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
                     element.accessibilityFrame = convert(newRect, to: nil)
                     if selectedSegmentIndex == idx {
@@ -608,36 +592,36 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     // MARK: - Private
     private func measureTitleAtIndex(_ index: Int) -> CGSize {
-        guard index < (sectionTitles?.count ?? 0) else {
+        guard index < sectionTitles.count else {
             return CGSize.zero
         }
         
-        let title = sectionTitles?[index]
+        let title = sectionTitles[index]
         var size = CGSize.zero
         let selected = (index == selectedSegmentIndex) ? true : false
         if let attributedTitle = title as? NSAttributedString {
             size = attributedTitle.size()
         } else if let titleFormatter = titleFormatter {
-            size = titleFormatter(self, title?.stringValue ?? "", index, selected).size()
+            size = titleFormatter(self, title.stringValue, index, selected).size()
         } else {
             let titleAttrs = selected ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
-            let attributedString = NSAttributedString(string: title?.stringValue ?? "", attributes: titleAttrs)
+            let attributedString = NSAttributedString(string: title.stringValue, attributes: titleAttrs)
             size = attributedString.size()
         }
         return CGRect(origin: CGPoint.zero, size: size).integral.size
     }
     
     private func attributedTitleAtIndex(_ index: Int) -> NSAttributedString {
-        let title = sectionTitles?[index]
+        let title = sectionTitles[index]
         let selected = (index == selectedSegmentIndex) ? true : false
         
         if let attributedTitle = title as? NSAttributedString {
             return attributedTitle
         } else if let titleFormatter = titleFormatter {
-            return titleFormatter(self, title?.stringValue ?? "", index, selected)
+            return titleFormatter(self, title.stringValue, index, selected)
         } else {
             let titleAttrs = selected ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
-            return NSAttributedString(string: title?.stringValue ?? "", attributes: titleAttrs)
+            return NSAttributedString(string: title.stringValue, attributes: titleAttrs)
         }
     }
     
@@ -748,13 +732,13 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             let stringWidth = measureTitleAtIndex(selectedSegmentIndex).width
             sectionWidth = stringWidth
         } else if self.type == .images {
-            let sectionImage = sectionImages?[selectedSegmentIndex]
-            let imageWidth = sectionImage?.size.width ?? .zero
+            let sectionImage = sectionImages[selectedSegmentIndex]
+            let imageWidth = sectionImage.size.width
             sectionWidth = imageWidth
         } else if self.type == .textImages {
             let stringWidth = measureTitleAtIndex(selectedSegmentIndex).width
-            let sectionImage = sectionImages?[selectedSegmentIndex]
-            let imageWidth = sectionImage?.size.width ?? 0
+            let sectionImage = sectionImages[selectedSegmentIndex]
+            let imageWidth = sectionImage.size.width
             sectionWidth = max(stringWidth, imageWidth)
         }
         
@@ -840,7 +824,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
         
         if self.type == .text && segmentWidthStyle == .fixed {
-            sectionTitles?.enumerated().forEach({ (index, titleString) in
+            sectionTitles.enumerated().forEach({ (index, titleString) in
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 segmentWidth = max(stringWidth, segmentWidth)
             })
@@ -848,7 +832,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             var mutableSegmentWidths: [CGFloat] = []
             var totalWidth: CGFloat = 0.0
             
-            sectionTitles?.enumerated().forEach({ (index, titleString) in
+            sectionTitles.enumerated().forEach({ (index, titleString) in
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 totalWidth += stringWidth
                 mutableSegmentWidths.append(stringWidth)
@@ -865,12 +849,12 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             
             segmentWidthsArray = mutableSegmentWidths
         } else if self.type == .images {
-            sectionImages?.forEach({ sectionImage in
+            sectionImages.forEach({ sectionImage in
                 let imageWidth = sectionImage.size.width + segmentEdgeInset.left + segmentEdgeInset.right
                 segmentWidth = max(imageWidth, segmentWidth)
             })
         } else if self.type == .textImages && segmentWidthStyle == .fixed {
-            sectionTitles?.enumerated().forEach({ (index, titleString) in
+            sectionTitles.enumerated().forEach({ (index, titleString) in
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 segmentWidth = max(stringWidth, segmentWidth)
             })
@@ -878,10 +862,10 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             var mutableSegmentWidths: [CGFloat] = []
             var totalWidth: CGFloat = 0.0
             
-            sectionTitles?.enumerated().forEach({ (idx, titleString) in
+            sectionTitles.enumerated().forEach({ (idx, titleString) in
                 let stringWidth = measureTitleAtIndex(idx).width + segmentEdgeInset.right
-                let sectionImage = sectionImages?[idx]
-                let imageWidth = (sectionImage?.size.width ?? 0) + segmentEdgeInset.left
+                let sectionImage = sectionImages[idx]
+                let imageWidth = sectionImage.size.width + segmentEdgeInset.left
                 
                 var combinedWidth: CGFloat = 0.0
                 if imagePosition == .leftOfText || imagePosition == .rightOfText {
@@ -912,20 +896,20 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     private func sectionCount() -> Int {
         if self.type == .text {
-            return sectionTitles?.count ?? 0
+            return sectionTitles.count
         } else if self.type == .images || self.type == .textImages {
-            return sectionImages?.count ?? 0
+            return sectionImages.count
         }
         return 0
     }
     
     private func totalSegmentedControlWidth() -> CGFloat {
         if self.type == .text && segmentWidthStyle == .fixed {
-            return CGFloat(sectionTitles?.count ?? 0) * segmentWidth
+            return CGFloat(sectionTitles.count) * segmentWidth
         } else if segmentWidthStyle == .dynamic {
             return segmentWidthsArray.reduce(0, +)
         } else {
-            return CGFloat(sectionImages?.count ?? 0) * segmentWidth
+            return CGFloat(sectionImages.count) * segmentWidth
         }
     }
     
@@ -1061,11 +1045,10 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     // MARK: - UIScrollViewDelegate
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let elements = _accessibilityElements ?? []
-        for (index, element) in elements.enumerated() {
+        for (index, element) in _accessibilityElements.enumerated() {
             var offset: CGFloat = 0
             for i in 0..<index {
-                let elem = elements[i]
+                let elem = _accessibilityElements[i]
                 offset += elem.accessibilityFrame.size.width
             }
             let rect = CGRect(x: offset - scrollView.contentOffset.x + contentEdgeInset.left, y: 0, width: element.accessibilityFrame.size.width, height: element.accessibilityFrame.size.height)
@@ -1090,7 +1073,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     // MARK: - SegmentedAccessibilityDelegate
     func scrollToAccessibilityElement(_ sender: Any) {
         if let element = sender as? SegmentedAccessibilityElement,
-           let index = _accessibilityElements?.firstIndex(of: element) {
+           let index = _accessibilityElements.firstIndex(of: element) {
             scrollTo(index, animated: false)
         }
     }
@@ -1098,9 +1081,9 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     // MARK: - UIAccessibilityContainer
     open override var accessibilityElements: [Any]? {
         get { return _accessibilityElements }
-        set { _accessibilityElements = newValue as? [SegmentedAccessibilityElement] }
+        set { _accessibilityElements = newValue as? [SegmentedAccessibilityElement] ?? [] }
     }
-    private var _accessibilityElements: [SegmentedAccessibilityElement]?
+    private var _accessibilityElements: [SegmentedAccessibilityElement] = []
     
     open override var isAccessibilityElement: Bool {
         get { return false }
@@ -1108,18 +1091,18 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     open override func accessibilityElementCount() -> Int {
-        return accessibilityElements?.count ?? 0
+        return _accessibilityElements.count
     }
     
     open override func index(ofAccessibilityElement element: Any) -> Int {
         if let element = element as? SegmentedAccessibilityElement {
-            return _accessibilityElements?.firstIndex(of: element) ?? NSNotFound
+            return _accessibilityElements.firstIndex(of: element) ?? NSNotFound
         }
         return NSNotFound
     }
     
     open override func accessibilityElement(at index: Int) -> Any? {
-        return accessibilityElements?.safeElement(index)
+        return _accessibilityElements.safeElement(index)
     }
     
     // MARK: - StatisticalViewProtocol
@@ -1128,23 +1111,23 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
     
     open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        let visibleMin = self.scrollView.contentOffset.x
-        let visibleMax = visibleMin + self.scrollView.frame.size.width
+        let visibleMin = scrollView.contentOffset.x
+        let visibleMax = visibleMin + scrollView.frame.size.width
         var sectionCount = 0
         var dynamicWidth = false
-        if self.type == .text && self.segmentWidthStyle == .fixed {
-            sectionCount = self.sectionTitles?.count ?? 0
-        } else if self.segmentWidthStyle == .dynamic {
-            sectionCount = self.segmentWidthsArray.count
+        if self.type == .text && segmentWidthStyle == .fixed {
+            sectionCount = sectionTitles.count
+        } else if segmentWidthStyle == .dynamic {
+            sectionCount = segmentWidthsArray.count
             dynamicWidth = true
         } else {
-            sectionCount = self.sectionImages?.count ?? 0
+            sectionCount = sectionImages.count
         }
         
         var indexPaths = [IndexPath]()
-        var currentMin = self.contentEdgeInset.left
+        var currentMin = contentEdgeInset.left
         for i in 0..<sectionCount {
-            let currentMax = currentMin + (dynamicWidth ? self.segmentWidthsArray[i] : self.segmentWidth)
+            let currentMax = currentMin + (dynamicWidth ? segmentWidthsArray[i] : segmentWidth)
             if currentMin > visibleMax { break }
             
             if currentMin >= visibleMin && currentMax <= visibleMax {

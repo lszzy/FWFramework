@@ -270,7 +270,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         segmentedControl.app.statisticalExposure?.eventFormatter = { [weak self] event in
             guard let indexPath = event.indexPath else { return event }
             event.userInfo = [
-                "title": self?.segmentedControl.sectionTitles?[safe: indexPath.row] ?? ""
+                "title": self?.segmentedControl.sectionTitles[safe: indexPath.row] ?? ""
             ]
             return event
         }
