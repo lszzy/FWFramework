@@ -1118,10 +1118,10 @@ import FWObjC
      生成苹果地图地址外部URL
      
      @param addr 显示地址，格式latitude,longitude或搜索地址
-     @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+     @param options 可选附加参数，如["ll": "latitude,longitude", "z": "14"]
      @return NSURL
      */
-    public static func fw_appleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_appleMapsURL(addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
@@ -1134,10 +1134,10 @@ import FWObjC
      
      @param saddr 导航起始点，格式latitude,longitude或搜索地址
      @param daddr 导航结束点，格式latitude,longitude或搜索地址
-     @param options 可选附加参数，如@{@"ll": @"latitude,longitude", @"z": @"14"}
+     @param options 可选附加参数，如["ll": "latitude,longitude", "z": "14"]
      @return NSURL
      */
-    public static func fw_appleMapsURL(withSaddr saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_appleMapsURL(saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
         if let saddr = saddr, !saddr.isEmpty {
             params["saddr"] = saddr
@@ -1149,99 +1149,43 @@ import FWObjC
     }
 
     /**
-     生成谷歌地图外部URL，URL SCHEME为：comgooglemaps
+     生成谷歌地图外部URL
      
      @param addr 显示地址，格式latitude,longitude或搜索地址
-     @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14"}
+     @param options 可选附加参数，如["query_place_id": ""]
      @return NSURL
      */
-    public static func fw_googleMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_googleMapsURL(addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
+        params["api"] = "1"
         if let addr = addr, !addr.isEmpty {
-            params["q"] = addr
+            params["query"] = addr
         }
-        return fw_vendorURL("comgooglemaps://", params: params)
+        return fw_vendorURL("https://www.google.com/maps/search/", params: params)
     }
 
     /**
-     生成谷歌地图导航外部URL，URL SCHEME为：comgooglemaps
+     生成谷歌地图导航外部URL
      
      @param saddr 导航起始点，格式latitude,longitude或搜索地址
      @param daddr 导航结束点，格式latitude,longitude或搜索地址
-     @param mode 导航模式，支持driving|transit|bicycling|walking，默认driving
-     @param options 可选附加参数，如@{@"center": @"latitude,longitude", @"zoom": @"14", @"dirflg": @"t,h"}
+     @param mode 导航模式，支持driving|transit|bicycling|walking
+     @param options 可选附加参数，如["origin_place_id": ""]
      @return NSURL
      */
-    public static func fw_googleMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func fw_googleMapsURL(saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
         var params = options ?? [:]
-        if let saddr = saddr, !saddr.isEmpty {
-            params["saddr"] = saddr
-        }
-        if let daddr = daddr, !daddr.isEmpty {
-            params["daddr"] = daddr
-        }
-        var directionsmode = "driving"
-        if let mode = mode, !mode.isEmpty {
-            directionsmode = mode
-        }
-        params["directionsmode"] = directionsmode
-        return fw_vendorURL("comgooglemaps://", params: params)
-    }
-
-    /**
-     生成百度地图外部URL，URL SCHEME为：baidumap
-     
-     @param addr 显示地址，格式latitude,longitude或搜索地址
-     @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
-     @return NSURL
-     */
-    public static func fw_baiduMapsURL(withAddr addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
-        var params = options ?? [:]
-        if let addr = addr, !addr.isEmpty {
-            if addr.fw_isValid(.isCoordinate) {
-                params["location"] = addr
-            } else {
-                params["address"] = addr
-            }
-        }
-        if params["coord_type"] == nil {
-            params["coord_type"] = "gcj02"
-        }
-        if params["src"] == nil {
-            params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
-        }
-        return fw_vendorURL("baidumap://map/geocoder", params: params)
-    }
-
-    /**
-     生成百度地图导航外部URL，URL SCHEME为：baidumap
-     
-     @param saddr 导航起始点，格式latitude,longitude或搜索地址
-     @param daddr 导航结束点，格式latitude,longitude或搜索地址
-     @param mode 导航模式，支持driving|transit|navigation|riding|walking，默认driving
-     @param options 可选附加参数，如@{@"src": @"app", @"zoom": @"14", @"coord_type": @"默认gcj02|wgs84|bd09ll"}
-     @return NSURL
-     */
-    public static func fw_baiduMapsURL(withSaddr saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
-        var params = options ?? [:]
+        params["api"] = "1"
         if let saddr = saddr, !saddr.isEmpty {
             params["origin"] = saddr
         }
         if let daddr = daddr, !daddr.isEmpty {
             params["destination"] = daddr
         }
-        var directionsmode = "driving"
         if let mode = mode, !mode.isEmpty {
-            directionsmode = mode
+            params["travelmode"] = mode
         }
-        params["mode"] = directionsmode
-        if params["coord_type"] == nil {
-            params["coord_type"] = "gcj02"
-        }
-        if params["src"] == nil {
-            params["src"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier")
-        }
-        return fw_vendorURL("baidumap://map/direction", params: params)
+        return fw_vendorURL("https://www.google.com/maps/dir/", params: params)
     }
     
     /**
@@ -1252,7 +1196,7 @@ import FWObjC
      @return NSURL
      */
     public static func fw_vendorURL(_ string: String, params: [AnyHashable: Any]? = nil) -> URL? {
-        var urlString = string + "?"
+        var urlString = string + (string.contains("?") ? "&" : "?")
         let urlParams = params ?? [:]
         for (key, value) in urlParams {
             let valueStr = String.fw_safeString(value)
