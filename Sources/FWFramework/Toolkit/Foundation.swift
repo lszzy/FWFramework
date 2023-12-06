@@ -1126,7 +1126,7 @@ import FWObjC
         if let addr = addr, !addr.isEmpty {
             params["q"] = addr
         }
-        return fw_vendorURL("http://maps.apple.com/", params: params)
+        return fw_vendorURL("https://maps.apple.com/", params: params)
     }
 
     /**
@@ -1145,7 +1145,7 @@ import FWObjC
         if let daddr = daddr, !daddr.isEmpty {
             params["daddr"] = daddr
         }
-        return fw_vendorURL("http://maps.apple.com/", params: params)
+        return fw_vendorURL("https://maps.apple.com/", params: params)
     }
 
     /**
