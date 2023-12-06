@@ -199,7 +199,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func pagingView(_ pagingView: PagingView, didScrollToIndex index: Int) {
-        segmentedControl.selectedSegmentIndex = UInt(index)
+        segmentedControl.selectedSegmentIndex = index
         if !self.pagerView.isHidden {
             self.cartView.isHidden = index != 0
         }
