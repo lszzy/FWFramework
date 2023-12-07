@@ -321,8 +321,9 @@ import FWObjC
 
     /// 打开音频播放器，支持NSURL|NSString
     public static func fw_openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
-        // 设置播放模式示例
+        // 设置播放模式示例: ambient不支持后台，playback支持后台和混音(需配置后台audio模式)
         // try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        // try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
         
         var audioUrl: URL?
         if let url = url as? URL {
