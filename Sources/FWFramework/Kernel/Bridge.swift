@@ -15,24 +15,6 @@ import UIKit
     
 }
 
-@_spi(FW) @objc extension UIView {
-    
-    @discardableResult
-    public func __fw_statisticalTrackClick(indexPath: IndexPath? = nil, event: StatisticalEvent? = nil) -> Bool {
-        return fw_statisticalTrackClick(indexPath: indexPath, event: event)
-    }
-    
-    @discardableResult
-    public func __fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
-        return fw_statisticalBindExposure(containerView)
-    }
-    
-    public func __fw_statisticalCheckExposure() {
-        fw_statisticalCheckExposure()
-    }
-    
-}
-
 @_spi(FW) @objc extension UIWindow {
     
     public static var __fw_mainWindow: UIWindow? {

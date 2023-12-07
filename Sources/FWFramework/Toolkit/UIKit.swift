@@ -441,7 +441,6 @@ import AdSupport
     }
     
     /// 根据tag查找subview，仅从subviews中查找
-    @objc(__fw_subviewWithTag:)
     public func fw_subview(tag: Int) -> UIView? {
         var subview: UIView?
         for obj in self.subviews {
