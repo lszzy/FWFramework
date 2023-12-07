@@ -98,7 +98,7 @@ public class AlertControllerAppearance: NSObject {
     public var textFieldCustomBlock: ((UITextField) -> Void)?
     
     public var alertCornerRadius: CGFloat = 6.0
-    public var alertEdgeDistance: CGFloat = (min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) - 275.0) / 2.0
+    public var alertEdgeDistance: CGFloat = 50
     public var sheetCornerRadius: CGFloat = 13
     public var sheetEdgeDistance: CGFloat = 70
     public var sheetContainerTransparent: Bool = false
