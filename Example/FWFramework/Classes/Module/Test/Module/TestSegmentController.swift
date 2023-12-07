@@ -217,7 +217,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         tagCollectionView.removeAllTags()
         let testTags = ["80减12", "首单减15", "在线支付", "支持自提", "26减3", "80减12", "首单减15", "在线支付", "支持自提", "26减3"]
         for tagName in testTags {
-            tagCollectionView.addTag(tagName, with: textTagConfig)
+            tagCollectionView.addTag(tagName, config: textTagConfig)
         }
         
         let marqueeLabel = MarqueeLabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "MarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
