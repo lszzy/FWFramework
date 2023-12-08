@@ -342,8 +342,18 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var fw_referenceSize: CGSize = CGSize(width: 375, height: 812)
     
+    /// 全局自定义屏幕宽度缩放比例句柄，默认nil
+    public static var fw_relativeScaleBlock: (() -> CGFloat)?
+    
+    /// 全局自定义屏幕高度缩放比例句柄，默认nil
+    public static var fw_relativeHeightScaleBlock: (() -> CGFloat)?
+    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var fw_relativeScale: CGFloat {
+        if let block = fw_relativeScaleBlock {
+            return block()
+        }
+        
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             return UIScreen.main.bounds.width / UIScreen.fw_referenceSize.width
         } else {
@@ -353,6 +363,10 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     
     /// 获取当前屏幕高度缩放比例，高度不常用
     public static var fw_relativeHeightScale: CGFloat {
+        if let block = fw_relativeHeightScaleBlock {
+            return block()
+        }
+        
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             return UIScreen.main.bounds.height / UIScreen.fw_referenceSize.height
         } else {
