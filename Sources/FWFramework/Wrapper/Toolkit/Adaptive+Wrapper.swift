@@ -330,6 +330,18 @@ extension Wrapper where Base: UIScreen {
         set { Base.fw_referenceSize = newValue }
     }
     
+    /// 全局自定义屏幕宽度缩放比例句柄，默认nil
+    public static var relativeScaleBlock: (() -> CGFloat)? {
+        get { return Base.fw_relativeScaleBlock }
+        set { Base.fw_relativeScaleBlock = newValue }
+    }
+    
+    /// 全局自定义屏幕高度缩放比例句柄，默认nil
+    public static var relativeHeightScaleBlock: (() -> CGFloat)? {
+        get { return Base.fw_relativeHeightScaleBlock }
+        set { Base.fw_relativeHeightScaleBlock = newValue }
+    }
+    
     /// 获取当前屏幕宽度缩放比例，宽度常用
     public static var relativeScale: CGFloat {
         return Base.fw_relativeScale
