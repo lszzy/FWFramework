@@ -936,11 +936,25 @@ open class ImageCropScrollView: UIScrollView {
 }
 
 open class ImageCropToolbar: UIView {
-    open var statusBarHeightInset: CGFloat
-    open var buttonInsetPadding: CGFloat
+    open var statusBarHeightInset: CGFloat = 0 {
+        didSet { setNeedsLayout() }
+    }
+    open var buttonInsetPadding: CGFloat = 16.0 {
+        didSet { setNeedsLayout() }
+    }
     open var backgroundViewOutsets: UIEdgeInsets = .zero
-    open var doneTextButtonTitle: String?
-    open var cancelTextButtonTitle: String?
+    open var doneTextButtonTitle: String? {
+        didSet {
+            doneTextButton.setTitle(doneTextButtonTitle, for: .normal)
+            doneTextButton.sizeToFit()
+        }
+    }
+    open var cancelTextButtonTitle: String? {
+        didSet {
+            cancelTextButton.setTitle(cancelTextButtonTitle, for: .normal)
+            cancelTextButton.sizeToFit()
+        }
+    }
     
     open var cancelButtonTapped: (() -> Void)?
     open var doneButtonTapped: (() -> Void)?
@@ -949,56 +963,133 @@ open class ImageCropToolbar: UIView {
     open var clampButtonTapped: (() -> Void)?
     open var resetButtonTapped: (() -> Void)?
     
-    open var clampButtonGlowing = false
-    open private(set) var clampButtonFrame: CGRect
+    open var clampButtonGlowing = false {
+        didSet {
+            clampButton.tintColor = clampButtonGlowing ? nil : .white
+        }
+    }
+    open var clampButtonFrame: CGRect {
+        return clampButton.frame
+    }
     
-    open var clampButtonHidden = false
-    open var rotateCounterClockwiseButtonHidden = false
-    open var rotateClockwiseButtonHidden = false
-    open var resetButtonHidden = false
-    open var doneButtonHidden = false
-    open var cancelButtonHidden = false
+    open var clampButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
+    open var rotateCounterClockwiseButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
+    open var rotateClockwiseButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
+    open var resetButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
+    open var doneButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
+    open var cancelButtonHidden = false {
+        didSet { setNeedsLayout() }
+    }
     
-    open var resetButtonEnabled = false
-    open private(set) var doneButtonFrame: CGRect
+    open var resetButtonEnabled: Bool {
+        get { return resetButton.isEnabled }
+        set { resetButton.isEnabled = newValue }
+    }
+    open var doneButtonFrame: CGRect {
+        if !doneIconButton.isHidden {
+            return doneIconButton.frame
+        }
+        return doneTextButton.frame
+    }
     
     open lazy var backgroundView: UIView = {
-        
+        let result = UIView(frame: bounds)
+        result.backgroundColor = UIColor(white: 0.12, alpha: 1.0)
+        return result
     }()
     
     open lazy var doneTextButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.setTitle(doneTextButtonTitle ?? AppBundle.doneButton, for: .normal)
+        result.setTitleColor(.white, for: .normal)
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        result.sizeToFit()
+        return result
     }()
     
     open lazy var doneIconButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.setImage(Self.doneImage(), for: .normal)
+        result.tintColor = UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
     }()
     
     open lazy var cancelTextButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.setTitle(cancelTextButtonTitle ?? AppBundle.cancelButton, for: .normal)
+        result.setTitleColor(.white, for: .normal)
+        result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        result.sizeToFit()
+        return result
     }()
     
     open lazy var cancelIconButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.setImage(Self.cancelImage(), for: .normal)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
     }()
     
-    open private(set) var visibleCancelButton: UIView
+    open var visibleCancelButton: UIButton {
+        if !cancelIconButton.isHidden {
+            return cancelIconButton
+        }
+        return cancelTextButton
+    }
     
     open lazy var rotateCounterClockwiseButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.contentMode = .center
+        result.tintColor = .white
+        result.setImage(Self.rotateCCWImage(), for: .normal)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
     }()
     
     open lazy var resetButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.contentMode = .center
+        result.tintColor = .white
+        result.isEnabled = false
+        result.setImage(Self.resetImage(), for: .normal)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
     }()
     
     open lazy var clampButton: UIButton = {
-        
+        let result = UIButton(type: .system)
+        result.contentMode = .center
+        result.tintColor = .white
+        result.setImage(Self.clampImage(), for: .normal)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
     }()
     
-    open private(set) var rotateClockwiseButton: UIButton?
+    open lazy var rotateClockwiseButton: UIButton = {
+        let result = UIButton(type: .system)
+        result.contentMode = .center
+        result.tintColor = .white
+        result.setImage(Self.rotateCWImage(), for: .normal)
+        result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        return result
+    }()
     
-    open private(set) var rotateButton: UIButton
+    open var rotateButton: UIButton {
+        return self.rotateCounterClockwiseButton
+    }
     
     private var reverseContentLayout: Bool = false
     
@@ -1013,8 +1104,318 @@ open class ImageCropToolbar: UIView {
     }
     
     private func didInitialize() {
-        
+        addSubview(backgroundView)
+        reverseContentLayout = UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft
+        addSubview(doneTextButton)
+        addSubview(doneIconButton)
+        addSubview(cancelTextButton)
+        addSubview(cancelIconButton)
+        addSubview(clampButton)
+        addSubview(rotateCounterClockwiseButton)
+        addSubview(rotateClockwiseButton)
+        addSubview(resetButton)
     }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let verticalLayout = self.bounds.width < self.bounds.height
+        let boundsSize = self.bounds.size
+        
+        cancelIconButton.isHidden = cancelButtonHidden || !verticalLayout
+        cancelTextButton.isHidden = cancelButtonHidden || verticalLayout
+        doneIconButton.isHidden = doneButtonHidden || !verticalLayout
+        doneTextButton.isHidden = doneButtonHidden || verticalLayout
+        
+        var frame = self.bounds
+        frame.origin.x -= backgroundViewOutsets.left
+        frame.size.width += backgroundViewOutsets.left
+        frame.size.width += backgroundViewOutsets.right
+        frame.origin.y -= backgroundViewOutsets.top
+        frame.size.height += backgroundViewOutsets.top
+        frame.size.height += backgroundViewOutsets.bottom
+        backgroundView.frame = frame
+        
+        if !verticalLayout {
+            let insetPadding = buttonInsetPadding
+            
+            var frame = CGRect.zero
+            frame.origin.y = (self.bounds.height - 44.0) / 2.0
+            frame.size.height = 44.0
+            frame.size.width = min(self.frame.size.width / 3.0, cancelTextButton.frame.size.width)
+            if !reverseContentLayout {
+                frame.origin.x = insetPadding
+            } else {
+                frame.origin.x = boundsSize.width - (frame.size.width + insetPadding)
+            }
+            cancelTextButton.frame = frame
+            
+            frame.size.width = min(self.frame.size.width / 3.0, doneTextButton.frame.size.width)
+            if !reverseContentLayout {
+                frame.origin.x = boundsSize.width - (frame.size.width + insetPadding)
+            } else {
+                frame.origin.x = insetPadding
+            }
+            doneTextButton.frame = frame
+
+            let x = reverseContentLayout ? doneTextButton.frame.maxX : cancelTextButton.frame.maxX
+            var width: CGFloat = 0.0
+            if !reverseContentLayout {
+                width = doneTextButton.frame.minX - cancelTextButton.frame.maxX
+            } else {
+                width = cancelTextButton.frame.minX - doneTextButton.frame.maxX
+            }
+            
+            let containerRect = CGRect(x: x, y: frame.origin.y, width: width, height: self.bounds.height - frame.origin.y).integral
+            let buttonSize = CGSize(width: 44.0, height: 44.0)
+            
+            var buttons: [UIButton] = []
+            if !rotateCounterClockwiseButtonHidden {
+                buttons.append(rotateCounterClockwiseButton)
+            }
+            if !resetButtonHidden {
+                buttons.append(resetButton)
+            }
+            if !clampButtonHidden {
+                buttons.append(clampButton)
+            }
+            if !rotateClockwiseButtonHidden {
+                buttons.append(rotateClockwiseButton)
+            }
+            layoutToolbarButtons(buttons, sameButtonSize: buttonSize, inContainerRect: containerRect, horizontally: true)
+        } else {
+            var frame = CGRect.zero
+            frame.origin.x = (self.bounds.width - 44.0) / 2.0
+            frame.size.height = 44.0
+            frame.size.width = 44.0
+            frame.origin.y = self.bounds.height - 44.0
+            cancelIconButton.frame = frame
+
+            frame.origin.y = statusBarHeightInset
+            frame.size.width = 44.0
+            frame.size.height = 44.0
+            doneIconButton.frame = frame
+
+            let containerRect = CGRect(x: frame.origin.x, y: doneIconButton.frame.maxY, width: self.bounds.width - frame.origin.x, height: cancelIconButton.frame.minY - doneIconButton.frame.maxY)
+            let buttonSize = CGSize(width: 44.0, height: 44.0)
+            
+            var buttons = [UIButton]()
+            if !rotateCounterClockwiseButtonHidden {
+                buttons.append(rotateCounterClockwiseButton)
+            }
+            if !resetButtonHidden {
+                buttons.append(resetButton)
+            }
+            if !clampButtonHidden {
+                buttons.append(clampButton)
+            }
+            if !rotateClockwiseButtonHidden {
+                buttons.append(rotateClockwiseButton)
+            }
+            layoutToolbarButtons(buttons, sameButtonSize: buttonSize, inContainerRect: containerRect, horizontally: false)
+        }
+    }
+    
+    private func layoutToolbarButtons(_ buttons: [UIButton], sameButtonSize size: CGSize, inContainerRect containerRect: CGRect, horizontally: Bool) {
+        guard buttons.count > 0 else { return }
+        
+        let count = buttons.count
+        let fixedSize = horizontally ? size.width : size.height
+        let maxLength = horizontally ? containerRect.width : containerRect.height
+        let padding = (maxLength - fixedSize * CGFloat(count)) / (CGFloat(count) + 1)
+        
+        for i in 0..<count {
+            let button = buttons[i]
+            let sameOffset = horizontally ? containerRect.height - button.bounds.height : containerRect.width - button.bounds.width
+            let diffOffset = padding + CGFloat(i) * (fixedSize + padding)
+            var origin = horizontally ? CGPoint(x: diffOffset, y: sameOffset) : CGPoint(x: sameOffset, y: diffOffset)
+            if horizontally {
+                origin.x += containerRect.minX
+            } else {
+                origin.y += containerRect.minY
+            }
+            button.frame = CGRect(origin: origin, size: size)
+        }
+    }
+    
+    @objc private func buttonTapped(_ button: UIButton) {
+        if button == cancelTextButton || button == cancelIconButton {
+            cancelButtonTapped?()
+        } else if button == doneTextButton || button == doneIconButton {
+            doneButtonTapped?()
+        } else if button == resetButton {
+            resetButtonTapped?()
+        } else if button == rotateCounterClockwiseButton {
+            rotateCounterClockwiseButtonTapped?()
+        } else if button == rotateClockwiseButton {
+            rotateClockwiseButtonTapped?()
+        } else if button == clampButton {
+            clampButtonTapped?()
+        }
+    }
+    
+    private static func doneImage() -> UIImage? {
+        var doneImage: UIImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 17, height: 14), false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        
+        let rectanglePath = UIBezierPath()
+        rectanglePath.move(to: CGPoint(x: 1, y: 7))
+        rectanglePath.addLine(to: CGPoint(x: 6, y: 12))
+        rectanglePath.addLine(to: CGPoint(x: 16, y: 1))
+        UIColor.white.setStroke()
+        rectanglePath.lineWidth = 2
+        rectanglePath.stroke()
+        
+        doneImage = UIGraphicsGetImageFromCurrentImageContext()
+        return doneImage
+    }
+    
+    private static func cancelImage() -> UIImage? {
+        var cancelImage: UIImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 16, height: 16), false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        
+        let bezierPath = UIBezierPath()
+        bezierPath.move(to: CGPoint(x: 15, y: 15))
+        bezierPath.addLine(to: CGPoint(x: 1, y: 1))
+        UIColor.white.setStroke()
+        bezierPath.lineWidth = 2
+        bezierPath.stroke()
+        
+        let bezier2Path = UIBezierPath()
+        bezier2Path.move(to: CGPoint(x: 1, y: 15))
+        bezier2Path.addLine(to: CGPoint(x: 15, y: 1))
+        UIColor.white.setStroke()
+        bezier2Path.lineWidth = 2
+        bezier2Path.stroke()
+        
+        cancelImage = UIGraphicsGetImageFromCurrentImageContext()
+        return cancelImage
+    }
+    
+    private static func rotateCCWImage() -> UIImage? {
+        var rotateImage: UIImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 18, height: 21), false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        
+        let rectangle2Path = UIBezierPath(rect: CGRect(x: 0, y: 9, width: 12, height: 12))
+        UIColor.white.setFill()
+        rectangle2Path.fill()
+        
+        let rectangle3Path = UIBezierPath()
+        rectangle3Path.move(to: CGPoint(x: 5, y: 3))
+        rectangle3Path.addLine(to: CGPoint(x: 10, y: 6))
+        rectangle3Path.addLine(to: CGPoint(x: 10, y: 0))
+        rectangle3Path.addLine(to: CGPoint(x: 5, y: 3))
+        rectangle3Path.close()
+        UIColor.white.setFill()
+        rectangle3Path.fill()
+        
+        let bezierPath = UIBezierPath()
+        bezierPath.move(to: CGPoint(x: 10, y: 3))
+        bezierPath.addCurve(to: CGPoint(x: 17.5, y: 11), controlPoint1: CGPoint(x: 15, y: 3), controlPoint2: CGPoint(x: 17.5, y: 5.91))
+        UIColor.white.setStroke()
+        bezierPath.lineWidth = 1
+        bezierPath.stroke()
+        
+        rotateImage = UIGraphicsGetImageFromCurrentImageContext()
+        return rotateImage
+    }
+    
+    private static func rotateCWImage() -> UIImage? {
+        guard let rotateCCWImage = rotateCCWImage() else {
+            return nil
+        }
+        UIGraphicsBeginImageContextWithOptions(rotateCCWImage.size, false, rotateCCWImage.scale)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        
+        context.translateBy(x: rotateCCWImage.size.width, y: rotateCCWImage.size.height)
+        context.rotate(by: CGFloat.pi)
+        if let cgImage = rotateCCWImage.cgImage {
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: rotateCCWImage.size.width, height: rotateCCWImage.size.height))
+        }
+        let rotateCWImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return rotateCWImage
+    }
+    
+    private static func resetImage() -> UIImage? {
+        var resetImage: UIImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 22, height: 18), false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        
+        let bezier2Path = UIBezierPath()
+        bezier2Path.move(to: CGPoint(x: 22, y: 9))
+        bezier2Path.addCurve(to: CGPoint(x: 13, y: 18), controlPoint1: CGPoint(x: 22, y: 13.97), controlPoint2: CGPoint(x: 17.97, y: 18))
+        bezier2Path.addCurve(to: CGPoint(x: 13, y: 16), controlPoint1: CGPoint(x: 13, y: 17.35), controlPoint2: CGPoint(x: 13, y: 16.68))
+        bezier2Path.addCurve(to: CGPoint(x: 20, y: 9), controlPoint1: CGPoint(x: 16.87, y: 16), controlPoint2: CGPoint(x: 20, y: 12.87))
+        bezier2Path.addCurve(to: CGPoint(x: 13, y: 2), controlPoint1: CGPoint(x: 20, y: 5.13), controlPoint2: CGPoint(x: 16.87, y: 2))
+        bezier2Path.addCurve(to: CGPoint(x: 6.55, y: 6.27), controlPoint1: CGPoint(x: 10.1, y: 2), controlPoint2: CGPoint(x: 7.62, y: 3.76))
+        bezier2Path.addCurve(to: CGPoint(x: 6, y: 9), controlPoint1: CGPoint(x: 6.2, y: 7.11), controlPoint2: CGPoint(x: 6, y: 8.03))
+        bezier2Path.addLine(to: CGPoint(x: 4, y: 9))
+        bezier2Path.addCurve(to: CGPoint(x: 4.65, y: 5.63), controlPoint1: CGPoint(x: 4, y: 7.81), controlPoint2: CGPoint(x: 4.23, y: 6.67))
+        bezier2Path.addCurve(to: CGPoint(x: 7.65, y: 1.76), controlPoint1: CGPoint(x: 5.28, y: 4.08), controlPoint2: CGPoint(x: 6.32, y: 2.74))
+        bezier2Path.addCurve(to: CGPoint(x: 13, y: 0), controlPoint1: CGPoint(x: 9.15, y: 0.65), controlPoint2: CGPoint(x: 11, y: 0))
+        bezier2Path.addCurve(to: CGPoint(x: 22, y: 9), controlPoint1: CGPoint(x: 17.97, y: 0), controlPoint2: CGPoint(x: 22, y: 4.03))
+        bezier2Path.close()
+        UIColor.white.setFill()
+        bezier2Path.fill()
+        
+        let polygonPath = UIBezierPath()
+        polygonPath.move(to: CGPoint(x: 5, y: 15))
+        polygonPath.addLine(to: CGPoint(x: 10, y: 9))
+        polygonPath.addLine(to: CGPoint(x: 0, y: 9))
+        polygonPath.addLine(to: CGPoint(x: 5, y: 15))
+        polygonPath.close()
+        UIColor.white.setFill()
+        polygonPath.fill()
+
+        resetImage = UIGraphicsGetImageFromCurrentImageContext()
+        return resetImage
+    }
+    
+    private static func clampImage() -> UIImage? {
+        var clampImage: UIImage?
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 22, height: 16), false, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        
+        let outerBox = UIColor(red: 1, green: 1, blue: 1, alpha: 0.553)
+        let innerBox = UIColor(red: 1, green: 1, blue: 1, alpha: 0.773)
+        
+        let rectanglePath = UIBezierPath(rect: CGRect(x: 0, y: 3, width: 13, height: 13))
+        UIColor.white.setFill()
+        rectanglePath.fill()
+        
+        let topPath = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 22, height: 2))
+        outerBox.setFill()
+        topPath.fill()
+        
+        let sidePath = UIBezierPath(rect: CGRect(x: 19, y: 2, width: 3, height: 14))
+        outerBox.setFill()
+        sidePath.fill()
+        
+        let rectangle2Path = UIBezierPath(rect: CGRect(x: 14, y: 3, width: 4, height: 13))
+        innerBox.setFill()
+        rectangle2Path.fill()
+        
+        clampImage = UIGraphicsGetImageFromCurrentImageContext()
+        return clampImage
+    }
+}
+
+enum ImageCropViewOverlayEdge: Int {
+    case none = 0
+    case topLeft
+    case top
+    case topRight
+    case right
+    case bottomRight
+    case bottom
+    case bottomLeft
+    case left
 }
 
 public protocol ImageCropViewDelegate: AnyObject {
@@ -1022,7 +1423,8 @@ public protocol ImageCropViewDelegate: AnyObject {
     func cropViewDidBecomeNonResettable(_ cropView: ImageCropView)
 }
 
-open class ImageCropView: UIView {
+open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    
     open private(set) var image: UIImage
     open private(set) var croppingStyle: ImageCropCroppingStyle
     open weak var delegate: ImageCropViewDelegate?
@@ -1037,7 +1439,10 @@ open class ImageCropView: UIView {
     open var aspectRatioLockEnabled = false
     open var aspectRatioLockDimensionSwapEnabled = false
     open var resetAspectRatioEnabled = true
-    open private(set) var cropBoxAspectRatioIsPortrait
+    open var cropBoxAspectRatioIsPortrait: Bool {
+        let cropFrame = self.cropBoxFrame
+        return cropFrame.width < cropFrame.height
+    }
     open var angle: Int
     open var croppingViewsHidden = false
     open var imageCropFrame: CGRect
@@ -1050,23 +1455,133 @@ open class ImageCropView: UIView {
     open var translucencyAlwaysHidden = false
     
     open lazy var gridOverlayView: ImageCropOverlayView = {
-        
+        let result = ImageCropOverlayView(frame: foregroundContainerView.frame)
+        result.isUserInteractionEnabled = false
+        result.gridHidden = true
+        return result
     }()
     
     open lazy var foregroundContainerView: UIView = {
-        
+        let result = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        result.clipsToBounds = true
+        result.isUserInteractionEnabled = false
+        return result
     }()
     
-    public init(image: UIImage) {
-        
+    private lazy var foregroundImageView: UIImageView = {
+        let result = UIImageView(image: self.image)
+        result.layer.minificationFilter = .trilinear
+        result.accessibilityIgnoresInvertColors = true
+        return result
+    }()
+    
+    private lazy var backgroundImageView: UIImageView = {
+        let result = UIImageView(image: self.image)
+        result.layer.minificationFilter = .trilinear
+        result.accessibilityIgnoresInvertColors = true
+        return result
+    }()
+    
+    private lazy var backgroundContainerView: UIView = {
+        let result = UIView(frame: backgroundImageView.frame)
+        return result
+    }()
+    
+    private lazy var scrollView: ImageCropScrollView = {
+        let result = ImageCropScrollView(frame: bounds)
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        result.alwaysBounceHorizontal = true
+        result.alwaysBounceVertical = true
+        result.showsHorizontalScrollIndicator = false
+        result.showsVerticalScrollIndicator = false
+        result.delegate = self
+        result.contentInsetAdjustmentBehavior = .never
+        result.touchesBegan = { [weak self] in
+            self?.startEditing()
+        }
+        result.touchesEnded = { [weak self] in
+            self?.startResetTimer()
+        }
+        return result
+    }()
+    
+    private lazy var overlayView: UIView = {
+        let result = UIView(frame: self.bounds)
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        result.backgroundColor = backgroundColor?.withAlphaComponent(0.35)
+        result.isHidden = false
+        result.isUserInteractionEnabled = false
+        return result
+    }()
+    
+    private lazy var translucencyView: UIVisualEffectView = {
+        let result = UIVisualEffectView(effect: translucencyEffect)
+        result.frame = self.bounds
+        result.isHidden = translucencyAlwaysHidden
+        result.isUserInteractionEnabled = false
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return result
+    }()
+    
+    private lazy var translucencyEffect: UIBlurEffect = {
+        let result = UIBlurEffect(style: .dark)
+        return result
+    }()
+    
+    private lazy var gridPanGestureRecognizer: UIPanGestureRecognizer = {
+        let result = UIPanGestureRecognizer(target: self, action: #selector(gridPanGestureRecognized(_:)))
+        result.delegate = self
+        return result
+    }()
+    
+    private var circularMaskLayer: CAShapeLayer?
+    private var applyInitialCroppedImageFrame = false
+    private var tappedEdge: ImageCropViewOverlayEdge = .none
+    private var cropOriginFrame: CGRect = .zero
+    private var panOriginPoint: CGPoint = .zero
+    private var resetTimer: Timer?
+    private var isEditing = false
+    private var disableForegroundMatching = false
+    private var rotationContentOffset: CGPoint = .zero
+    private var rotationContentSize: CGSize = .zero
+    private var rotationBoundFrame: CGRect = .zero
+    private var contentBounds: CGRect
+    private var imageSize: CGSize
+    private var hasAspectRatio: Bool
+    private var cropBoxLastEditedSize: CGSize = .zero
+    private var cropBoxLastEditedAngle: Int = 0
+    private var cropBoxLastEditedZoomScale: CGFloat = 0
+    private var cropBoxLastEditedMinZoomScale: CGFloat = 0
+    private var rotateAnimationInProgress = false
+    private var originalCropBoxSize: CGSize = .zero
+    private var originalContentOffset: CGPoint = .zero
+    private var restoreAngle: Int = 0
+    private var restoreImageCropFrame: CGRect = .zero
+    private var initialSetupPerformed = false
+    
+    private static var cropViewPadding: CGFloat = 14.0
+    private static var cropTimerDuration: TimeInterval = 0.8
+    private static var cropViewMinimumBoxSize: CGFloat = 42.0
+    private static var cropViewCircularPathRadius: CGFloat = 300.0
+    private static var cropMaximumZoomScale: CGFloat = 15.0
+    
+    public convenience init(image: UIImage) {
+        self.init(croppingStyle: .default, image: image)
     }
     
     public init(croppingStyle: ImageCropCroppingStyle, image: UIImage) {
-        
+        self.image = image
+        self.croppingStyle = croppingStyle
+        super.init(frame: .zero)
+        didInitialize()
     }
     
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func didInitialize() {
+        
     }
     
     open func performInitialSetup() {
@@ -1116,4 +1631,61 @@ open class ImageCropView: UIView {
     open func moveCroppedContentToCenterAnimated(_ animated: Bool) {
         
     }
+    
+    private func layoutInitialImage() {
+        
+    }
+    
+    private func matchForegroundToBackground() {
+        
+    }
+    
+    private func updateCropBoxFrame(gesturePoint point: CGPoint) {
+        
+    }
+    
+    private func toggleTranslucencyViewVisible(_ visible: Bool) {
+        
+    }
+    
+    private func updateToImageCropFrame(_ imageCropFrame: CGRect) {
+        
+    }
+    
+    @objc private func gridPanGestureRecognized(_ recognizer: UIPanGestureRecognizer) {
+        
+    }
+    
+    private func startResetTimer() {
+        
+    }
+    
+    @objc private func timerTriggered() {
+        
+    }
+    
+    private func cancelResetTimer() {
+        
+    }
+    
+    private func cropEdge(for point: CGPoint) -> ImageCropViewOverlayEdge {
+        
+    }
+    
+    private func startEditing() {
+        
+    }
+    
+    private func setEditing(_ editing: Bool, resetCropBox: Bool, animated: Bool) {
+        
+    }
+    
+    private func captureStateForImageRotation() {
+        
+    }
+    
+    private func checkForCanReset() {
+        
+    }
+    
 }
