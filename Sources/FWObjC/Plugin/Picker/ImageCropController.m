@@ -790,28 +790,6 @@ typedef NS_ENUM(NSInteger, __FWImageCropViewOverlayEdge) {
     return YES;
 }
 
-#pragma mark - Timer -
-- (void)startResetTimer
-{
-    if (self.resetTimer)
-        return;
-    
-    self.resetTimer = [NSTimer scheduledTimerWithTimeInterval:self.cropAdjustingDelay target:self selector:@selector(timerTriggered) userInfo:nil repeats:NO];
-}
-
-- (void)timerTriggered
-{
-    [self setEditing:NO resetCropBox:YES animated:YES];
-    [self.resetTimer invalidate];
-    self.resetTimer = nil;
-}
-
-- (void)cancelResetTimer
-{
-    [self.resetTimer invalidate];
-    self.resetTimer = nil;
-}
-
 - (__FWImageCropViewOverlayEdge)cropEdgeForPoint:(CGPoint)point
 {
     CGRect frame = self.cropBoxFrame;
@@ -990,12 +968,6 @@ typedef NS_ENUM(NSInteger, __FWImageCropViewOverlayEdge) {
 - (void)setSimpleRenderMode:(BOOL)simpleMode
 {
     [self setSimpleRenderMode:simpleMode animated:NO];
-}
-
-- (BOOL)cropBoxAspectRatioIsPortrait
-{
-    CGRect cropFrame = self.cropBoxFrame;
-    return CGRectGetWidth(cropFrame) < CGRectGetHeight(cropFrame);
 }
 
 - (CGRect)imageCropFrame
