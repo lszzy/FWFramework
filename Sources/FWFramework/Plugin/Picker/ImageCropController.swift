@@ -15,7 +15,7 @@ public enum ImageCropCroppingStyle: Int {
 
 /// 常用裁剪比率枚举
 public enum ImageCropAspectRatioPreset: Int {
-    case presetOriginal
+    case presetOriginal = 0
     case presetSquare
     case preset3x2
     case preset5x3
@@ -33,9 +33,9 @@ public enum ImageCropToolbarPosition: Int {
 }
 
 /// 裁剪控制器事件代理协议
-@objc public protocol ImageCropControllerDelegate {
-    @objc optional func cropController(_ cropController: ImageCropController, didCropImageTo rect: CGRect, angle: Int)
-    @objc optional func cropController(_ cropController: ImageCropController, didCropTo image: UIImage, rect: CGRect, angle: Int)
+@objc public protocol ImageCropControllerDelegate: NSObjectProtocol {
+    @objc optional func cropController(_ cropController: ImageCropController, didCropImageToRect rect: CGRect, angle: Int)
+    @objc optional func cropController(_ cropController: ImageCropController, didCropToImage image: UIImage, rect: CGRect, angle: Int)
     @objc optional func cropController(_ cropController: ImageCropController, didCropToCircularImage image: UIImage, rect: CGRect, angle: Int)
     @objc optional func cropController(_ cropController: ImageCropController, didFinishCancelled cancelled: Bool)
 }
@@ -64,7 +64,11 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         set { _toolbarHeight = newValue }
     }
     private var _toolbarHeight: CGFloat = 0
-    open var aspectRatioPreset: ImageCropAspectRatioPreset = .presetOriginal
+    open var aspectRatioPreset: ImageCropAspectRatioPreset {
+        get { return _aspectRatioPreset }
+        set { setAspectRatioPreset(newValue, animated: false) }
+    }
+    private var _aspectRatioPreset: ImageCropAspectRatioPreset = .presetOriginal
     open var customAspectRatio: CGSize = .zero {
         didSet {
             setAspectRatioPreset(.presetCustom, animated: false)
@@ -138,8 +142,8 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     open var allowedAspectRatios: [ImageCropAspectRatioPreset]?
     open var onDidFinishCancelled: ((_ isFinished: Bool) -> Void)?
     open var onDidCropImageToRect: ((_ cropRect: CGRect, _ angle: Int) -> Void)?
-    open var onDidCropToRect: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
-    open var onDidCropToCircleImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
+    open var onDidCropToImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
+    open var onDidCropToCircularImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
     
     open lazy var cropView: ImageCropView = {
         let result = ImageCropView(croppingStyle: croppingStyle, image: image)
@@ -390,7 +394,19 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        if size == self.view.bounds.size { return }
         
+        var orientation: UIInterfaceOrientation = .portrait
+        if self.view.bounds.width < size.width {
+            orientation = .landscapeLeft
+        }
+        
+        _willRotateToInterfaceOrientation(orientation, duration: coordinator.transitionDuration)
+        coordinator.animate { [weak self] context in
+            self?._willAnimateRotationToInterfaceOrientation(orientation, duration: coordinator.transitionDuration)
+        } completion: { [weak self] context in
+            self?._didRotateFromInterfaceOrientation(orientation)
+        }
     }
     
     open func resetCropViewLayout() {
@@ -402,7 +418,39 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     }
     
     open func setAspectRatioPreset(_ aspectRatioPreset: ImageCropAspectRatioPreset, animated: Bool) {
+        var aspectRatio: CGSize = .zero
+        _aspectRatioPreset = aspectRatioPreset
+
+        switch aspectRatioPreset {
+        case .presetOriginal:
+            aspectRatio = .zero
+        case .presetSquare:
+            aspectRatio = CGSize(width: 1.0, height: 1.0)
+        case .preset3x2:
+            aspectRatio = CGSize(width: 3.0, height: 2.0)
+        case .preset5x3:
+            aspectRatio = CGSize(width: 5.0, height: 3.0)
+        case .preset4x3:
+            aspectRatio = CGSize(width: 4.0, height: 3.0)
+        case .preset5x4:
+            aspectRatio = CGSize(width: 5.0, height: 4.0)
+        case .preset7x5:
+            aspectRatio = CGSize(width: 7.0, height: 5.0)
+        case .preset16x9:
+            aspectRatio = CGSize(width: 16.0, height: 9.0)
+        case .presetCustom:
+            aspectRatio = customAspectRatio
+        }
+
+        let aspectRatioCanSwapDimensions = !aspectRatioLockEnabled ||
+            (aspectRatioLockEnabled && aspectRatioLockDimensionSwapEnabled)
+        if cropView.cropBoxAspectRatioIsPortrait && aspectRatioCanSwapDimensions {
+            let width = aspectRatio.width
+            aspectRatio.width = aspectRatio.height
+            aspectRatio.height = width
+        }
         
+        cropView.setAspectRatio(aspectRatio, animated: animated)
     }
     
     open func cropViewDidBecomeResettable(_ cropView: ImageCropView) {
@@ -521,19 +569,95 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     }
     
     private func _willRotateToInterfaceOrientation(_ toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
+        toolbarSnapshotView = toolbar.snapshotView(afterScreenUpdates: false)
+        toolbarSnapshotView?.frame = toolbar.frame
+        if toInterfaceOrientation.isLandscape {
+            toolbarSnapshotView?.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        } else {
+            toolbarSnapshotView?.autoresizingMask = [.flexibleHeight, .flexibleRightMargin]
+        }
+        if let snapshotView = toolbarSnapshotView {
+            self.view.addSubview(snapshotView)
+        }
         
+        var frame = frameForToolbar(verticalLayout: toInterfaceOrientation.isPortrait)
+        if toInterfaceOrientation.isLandscape {
+            frame.origin.x = -frame.size.width
+        } else {
+            frame.origin.y = self.view.bounds.height
+        }
+        toolbar.frame = frame
+        toolbar.layoutIfNeeded()
+        toolbar.alpha = 0
+        
+        cropView.prepareForRotation()
+        cropView.frame = frameForCropView(verticalLayout: !toInterfaceOrientation.isPortrait)
+        cropView.simpleRenderMode = true
+        cropView.internalLayoutDisabled = true
     }
     
     private func _willAnimateRotationToInterfaceOrientation(_ toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
+        toolbar.frame = frameForToolbar(verticalLayout: !toInterfaceOrientation.isLandscape)
+        toolbar.layer.removeAllAnimations()
+        toolbar.layer.sublayers?.forEach({ $0.removeAllAnimations() })
         
+        UIView.animate(withDuration: duration, delay: 0, options: .beginFromCurrentState, animations: {
+            self.cropView.frame = self.frameForCropView(verticalLayout: !toInterfaceOrientation.isLandscape)
+            self.toolbar.frame = self.frameForToolbar(verticalLayout: toInterfaceOrientation.isPortrait)
+            self.cropView.performRelayoutForRotation()
+        }, completion: nil)
+        
+        toolbarSnapshotView?.alpha = 0
+        toolbar.alpha = 1.0
     }
     
     private func _didRotateFromInterfaceOrientation(_ fromInterfaceOrientation: UIInterfaceOrientation) {
+        toolbarSnapshotView?.removeFromSuperview()
+        toolbarSnapshotView = nil
         
+        cropView.setSimpleRenderMode(false, animated: true)
+        cropView.internalLayoutDisabled = false
     }
     
     private func showAspectRatioDialog() {
+        if cropView.aspectRatioLockEnabled {
+            cropView.aspectRatioLockEnabled = false
+            toolbar.clampButtonGlowing = false
+            return
+        }
         
+        let verticalCropBox = cropView.cropBoxAspectRatioIsPortrait
+        let cancelButtonTitle = self.cancelButtonTitle ?? AppBundle.cancelButton
+        let originalButtonTitle = self.originalAspectRatioName ?? AppBundle.originalButton
+        
+        let portraitRatioTitles = [originalButtonTitle, "1:1", "2:3", "3:5", "3:4", "4:5", "5:7", "9:16"]
+        let landscapeRatioTitles = [originalButtonTitle, "1:1", "3:2", "5:3", "4:3", "5:4", "7:5", "16:9"]
+
+        var ratioValues = [ImageCropAspectRatioPreset]()
+        var itemStrings = [String]()
+        if let allowedRatios = allowedAspectRatios {
+            for allowedRatio in allowedRatios {
+                let itemTitle = verticalCropBox ? portraitRatioTitles[allowedRatio.rawValue] : landscapeRatioTitles[allowedRatio.rawValue]
+                itemStrings.append(itemTitle)
+                ratioValues.append(allowedRatio)
+            }
+        } else {
+            for i in 0..<(ImageCropAspectRatioPreset.presetCustom.rawValue) {
+                let itemTitle = verticalCropBox ? portraitRatioTitles[i] : landscapeRatioTitles[i]
+                itemStrings.append(itemTitle)
+                ratioValues.append(.init(rawValue: i) ?? .presetOriginal)
+            }
+        }
+        
+        if let customName = customAspectRatioName, customAspectRatio != .zero {
+            itemStrings.append(customName)
+            ratioValues.append(.presetCustom)
+        }
+        
+        fw_showSheet(title: nil, message: nil, cancel: cancelButtonTitle, actions: itemStrings) { [weak self] index in
+            self?.setAspectRatioPreset(ratioValues[index], animated: true)
+            self?.aspectRatioLockEnabled = true
+        }
     }
     
     private func rotateCropViewClockwise() {
@@ -545,25 +669,247 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     }
     
     private func cancelButtonTapped() {
+        var isDelegateOrCallbackHandled = false
+        if delegate?.cropController?(self, didFinishCancelled: true) != nil {
+            isDelegateOrCallbackHandled = true
+        }
         
+        if onDidFinishCancelled != nil {
+            onDidFinishCancelled?(true)
+            isDelegateOrCallbackHandled = true
+        }
+        
+        if !isDelegateOrCallbackHandled {
+            if let navController = navigationController {
+                navController.popViewController(animated: true)
+            } else {
+                modalTransitionStyle = .coverVertical
+                presentingViewController?.dismiss(animated: true)
+            }
+        }
     }
     
     private func doneButtonTapped() {
+        let cropFrame = cropView.imageCropFrame
+        let angle = cropView.angle
         
+        var isCallbackOrDelegateHandled = false
+        if delegate?.cropController?(self, didCropImageToRect: cropFrame, angle: angle) != nil {
+            isCallbackOrDelegateHandled = true
+        }
+        if onDidCropImageToRect != nil {
+            onDidCropImageToRect?(cropFrame, angle)
+            isCallbackOrDelegateHandled = true
+        }
+        
+        let isCircularImageHandled = delegate?.responds(to: #selector(ImageCropControllerDelegate.cropController(_:didCropToCircularImage:rect:angle:))) == true || onDidCropToCircularImage != nil
+        let isDidCropToImageHandled = delegate?.responds(to: #selector(ImageCropControllerDelegate.cropController(_:didCropToImage:rect:angle:))) == true || onDidCropToImage != nil
+        
+        if croppingStyle == .circular && isCircularImageHandled {
+            if let image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: true) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
+                    self.delegate?.cropController?(self, didCropToCircularImage: image, rect: cropFrame, angle: angle)
+                    self.onDidCropToCircularImage?(image, cropFrame, angle)
+                }
+            }
+            
+            isCallbackOrDelegateHandled = true
+        } else if isDidCropToImageHandled {
+            var image: UIImage?
+            if angle == 0 && cropFrame == CGRect(origin: .zero, size: self.image.size) {
+                image = self.image
+            } else {
+                image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: false)
+            }
+            
+            if let image = image {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
+                    self.delegate?.cropController?(self, didCropToImage: image, rect: cropFrame, angle: angle)
+                    self.onDidCropToImage?(image, cropFrame, angle)
+                }
+            }
+            
+            isCallbackOrDelegateHandled = true
+        }
+        
+        if !isCallbackOrDelegateHandled {
+            presentingViewController?.dismiss(animated: true)
+        }
     }
     
 }
 
 open class ImageCropOverlayView: UIView {
     
-    open var gridHidden = false
-    open var displayHorizontalGridLines = false
-    open var displayVerticalGridLines = false
+    open var gridHidden: Bool {
+        get { return _gridHidden }
+        set { setGridHidden(newValue, animated: false) }
+    }
+    private var _gridHidden = false
+    open var displayHorizontalGridLines = true {
+        didSet {
+            horizontalGridLines.forEach { $0.removeFromSuperview() }
+            if displayHorizontalGridLines {
+                horizontalGridLines = [createNewLineView(), createNewLineView()]
+            } else {
+                horizontalGridLines = []
+            }
+            setNeedsDisplay()
+        }
+    }
+    open var displayVerticalGridLines = true {
+        didSet {
+            verticalGridLines.forEach { $0.removeFromSuperview() }
+            if displayVerticalGridLines {
+                verticalGridLines = [createNewLineView(), createNewLineView()]
+            } else {
+                verticalGridLines = []
+            }
+            setNeedsDisplay()
+        }
+    }
     
+    private var horizontalGridLines: [UIView] = []
+    private var verticalGridLines: [UIView] = []
+    private var outerLineViews: [UIView] = []
+    private var topLeftLineViews: [UIView] = []
+    private var bottomLeftLineViews: [UIView] = []
+    private var bottomRightLineViews: [UIView] = []
+    private var topRightLineViews: [UIView] = []
     private let layerCornerWidth: CGFloat = 20
     
-    open func setGridHidden(_ hidden: Bool, animated: Bool) {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        clipsToBounds = false
         
+        outerLineViews = [createNewLineView(), createNewLineView(), createNewLineView(), createNewLineView()]
+        topLeftLineViews = [createNewLineView(), createNewLineView()]
+        bottomLeftLineViews = [createNewLineView(), createNewLineView()]
+        topRightLineViews = [createNewLineView(), createNewLineView()]
+        bottomRightLineViews = [createNewLineView(), createNewLineView()]
+        horizontalGridLines = [createNewLineView(), createNewLineView()]
+        verticalGridLines = [createNewLineView(), createNewLineView()]
+        setNeedsDisplay()
+    }
+    
+    open override var frame: CGRect {
+        didSet {
+            if !outerLineViews.isEmpty {
+                layoutLines()
+            }
+        }
+    }
+    
+    open override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        if !outerLineViews.isEmpty {
+            layoutLines()
+        }
+    }
+    
+    open func setGridHidden(_ hidden: Bool, animated: Bool) {
+        _gridHidden = hidden
+        
+        if !animated {
+            horizontalGridLines.forEach { $0.alpha = hidden ? 0.0 : 1.0 }
+            verticalGridLines.forEach { $0.alpha = hidden ? 0.0 : 1.0 }
+            return
+        }
+        
+        UIView.animate(withDuration: hidden ? 0.35 : 0.2) {
+            self.horizontalGridLines.forEach { $0.alpha = hidden ? 0.0 : 1.0 }
+            self.verticalGridLines.forEach { $0.alpha = hidden ? 0.0 : 1.0 }
+        }
+    }
+    
+    private func layoutLines() {
+        let boundsSize = self.bounds.size
+        
+        for i in 0..<4 {
+            let lineView = outerLineViews[i]
+            
+            var frame: CGRect = .zero
+            switch i {
+            case 0:
+                frame = CGRect(x: 0, y: -1.0, width: boundsSize.width + 2.0, height: 1.0)
+            case 1:
+                frame = CGRect(x: boundsSize.width, y: 0.0, width: 1.0, height: boundsSize.height)
+            case 2:
+                frame = CGRect(x: -1.0, y: boundsSize.height, width: boundsSize.width + 2.0, height: 1.0)
+            case 3:
+                frame = CGRect(x: -1.0, y: 0, width: 1.0, height: boundsSize.height + 1.0)
+            default:
+                break
+            }
+            
+            lineView.frame = frame
+        }
+        
+        let cornerLines = [topLeftLineViews, topRightLineViews, bottomRightLineViews, bottomLeftLineViews]
+        for i in 0..<4 {
+            let cornerLine = cornerLines[i]
+            
+            var verticalFrame = CGRect.zero
+            var horizontalFrame = CGRect.zero
+            switch i {
+            case 0:
+                verticalFrame = CGRect(x: -3.0, y: -3.0, width: 3.0, height: layerCornerWidth + 3.0)
+                horizontalFrame = CGRect(x: 0, y: -3.0, width: layerCornerWidth, height: 3.0)
+            case 1:
+                verticalFrame = CGRect(x: boundsSize.width, y: -3.0, width: 3.0, height: layerCornerWidth + 3.0)
+                horizontalFrame = CGRect(x: boundsSize.width - layerCornerWidth, y: -3.0, width: layerCornerWidth, height: 3.0)
+            case 2:
+                verticalFrame = CGRect(x: boundsSize.width, y: boundsSize.height - layerCornerWidth, width: 3.0, height: layerCornerWidth + 3.0)
+                horizontalFrame = CGRect(x: boundsSize.width - layerCornerWidth, y: boundsSize.height, width: layerCornerWidth, height: 3.0)
+            case 3:
+                verticalFrame = CGRect(x: -3.0, y: boundsSize.height - layerCornerWidth, width: 3.0, height: layerCornerWidth)
+                horizontalFrame = CGRect(x: -3.0, y: boundsSize.height, width: layerCornerWidth + 3.0, height: 3.0)
+            default:
+                break
+            }
+            
+            cornerLine[0].frame = verticalFrame
+            cornerLine[1].frame = horizontalFrame
+        }
+        
+        let thickness: CGFloat = 1.0 / UIScreen.main.scale
+        var numberOfLines = horizontalGridLines.count
+        var padding = (self.bounds.height - (thickness * CGFloat(numberOfLines))) / (CGFloat(numberOfLines) + 1.0)
+        for i in 0..<numberOfLines {
+            let lineView = horizontalGridLines[i]
+            var frame = CGRect.zero
+            frame.size.height = thickness
+            frame.size.width = self.bounds.width
+            frame.origin.y = (padding * CGFloat(i+1)) + (thickness * CGFloat(i))
+            lineView.frame = frame
+        }
+
+        numberOfLines = verticalGridLines.count
+        padding = (self.bounds.width - (thickness * CGFloat(numberOfLines))) / (CGFloat(numberOfLines) + 1)
+        for i in 0..<numberOfLines {
+            let lineView = verticalGridLines[i]
+            var frame = CGRect.zero
+            frame.size.width = thickness
+            frame.size.height = self.bounds.height
+            frame.origin.x = (padding * CGFloat(i+1)) + (thickness * CGFloat(i))
+            lineView.frame = frame
+        }
+    }
+    
+    private func createNewLineView() -> UIView {
+        let newLine = UIView(frame: .zero)
+        newLine.backgroundColor = .white
+        addSubview(newLine)
+        return newLine
     }
     
 }
@@ -654,12 +1000,20 @@ open class ImageCropToolbar: UIView {
     
     open private(set) var rotateButton: UIButton
     
+    private var reverseContentLayout: Bool = false
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        didInitialize()
     }
     
     public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        
     }
 }
 
