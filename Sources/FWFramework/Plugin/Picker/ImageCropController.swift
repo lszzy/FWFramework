@@ -1657,15 +1657,19 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func startResetTimer() {
-        
+        guard resetTimer == nil else { return }
+        resetTimer = Timer.scheduledTimer(timeInterval: cropAdjustingDelay, target: self, selector: #selector(timerTriggered), userInfo: nil, repeats: false)
     }
     
     @objc private func timerTriggered() {
-        
+        setEditing(false, resetCropBox: true, animated: true)
+        resetTimer?.invalidate()
+        resetTimer = nil
     }
     
     private func cancelResetTimer() {
-        
+        resetTimer?.invalidate()
+        resetTimer = nil
     }
     
     private func cropEdge(for point: CGPoint) -> ImageCropViewOverlayEdge {
