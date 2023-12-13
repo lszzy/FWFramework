@@ -8,7 +8,6 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWObjC
 @_spi(FW) import FWFramework
 #endif
 

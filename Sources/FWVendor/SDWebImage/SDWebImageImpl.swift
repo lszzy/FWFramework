@@ -8,7 +8,6 @@
 import UIKit
 import SDWebImage
 #if FWMacroSPM
-import FWObjC
 @_spi(FW) import FWFramework
 #endif
 
