@@ -15,6 +15,7 @@ class TestController: UIViewController {
             ["Router", "TestRouterController"],
             ["Navigator", "TestWorkflowController"],
             ["Promise", "TestPromiseController"],
+            ["Concurrency", "TestConcurrencyController"],
             ["State", "TestStateController"],
         ]],
         ["Service", [

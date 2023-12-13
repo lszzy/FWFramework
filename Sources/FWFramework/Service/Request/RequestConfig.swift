@@ -175,26 +175,30 @@ open class RequestContextAccessory: RequestAccessory {
         self.willStartBlock = { [weak self] request in
             guard let request = request as? HTTPRequest else { return }
             
-            if (request.autoShowLoading || request.autoShowError),
-               self?.autoSetupContext == true, request.context == nil {
-                self?.setupContext(for: request)
-            }
-            if request.context != nil, self?.autoObserveContext == true {
-                self?.observeContext(for: request)
-            }
-            if request.autoShowLoading {
-                request.showLoading()
+            DispatchQueue.fw_mainAsync {
+                if (request.autoShowLoading || request.autoShowError),
+                   self?.autoSetupContext == true, request.context == nil {
+                    self?.setupContext(for: request)
+                }
+                if request.context != nil, self?.autoObserveContext == true {
+                    self?.observeContext(for: request)
+                }
+                if request.autoShowLoading {
+                    request.showLoading()
+                }
             }
         }
         self.willStopBlock = nil
         self.didStopBlock = { request in
             guard let request = request as? HTTPRequest else { return }
             
-            if request.autoShowLoading {
-                request.hideLoading()
-            }
-            if request.autoShowError, request.error != nil {
-                request.showError()
+            DispatchQueue.fw_mainAsync {
+                if request.autoShowLoading {
+                    request.hideLoading()
+                }
+                if request.autoShowError, request.error != nil {
+                    request.showError()
+                }
             }
         }
     }
