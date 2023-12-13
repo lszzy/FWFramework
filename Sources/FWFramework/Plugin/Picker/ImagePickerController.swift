@@ -1249,7 +1249,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             cropController.imageCropFrame = imageAsset.pickerCroppedRect
             cropController.angle = imageAsset.pickerCroppedAngle
         }
-        cropController.onDidCropToRect = { [weak self] editedImage, cropRect, angle in
+        cropController.onDidCropToImage = { [weak self] editedImage, cropRect, angle in
             imageAsset.editedImage = editedImage != image ? editedImage : nil
             imageAsset.pickerCroppedRect = cropRect
             imageAsset.pickerCroppedAngle = angle

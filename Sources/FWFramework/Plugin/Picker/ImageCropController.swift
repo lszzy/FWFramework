@@ -1449,7 +1449,62 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             return _cropBoxFrame
         }
         set {
+            if _cropBoxFrame == newValue { return }
             
+            var cropBoxFrame = newValue
+            let frameSize = cropBoxFrame.size
+            if frameSize.width < CGFloat.ulpOfOne || frameSize.height < CGFloat.ulpOfOne { return }
+            if frameSize.width.isNaN || frameSize.height.isNaN { return }
+            
+            let contentFrame = self.contentBounds
+            let xOrigin = ceil(contentFrame.origin.x)
+            let xDelta = cropBoxFrame.origin.x - xOrigin
+            cropBoxFrame.origin.x = floor(max(cropBoxFrame.origin.x, xOrigin))
+            if xDelta < -CGFloat.ulpOfOne {
+                cropBoxFrame.size.width += xDelta
+            }
+            
+            let yOrigin = ceil(contentFrame.origin.y)
+            let yDelta = cropBoxFrame.origin.y - yOrigin
+            cropBoxFrame.origin.y = floor(max(cropBoxFrame.origin.y, yOrigin))
+            if yDelta < -CGFloat.ulpOfOne {
+                cropBoxFrame.size.height += yDelta
+            }
+            
+            let maxWidth = (contentFrame.size.width + contentFrame.origin.x) - cropBoxFrame.origin.x
+            cropBoxFrame.size.width = floor(min(cropBoxFrame.size.width, maxWidth))
+
+            let maxHeight = (contentFrame.size.height + contentFrame.origin.y) - cropBoxFrame.origin.y
+            cropBoxFrame.size.height = floor(min(cropBoxFrame.size.height, maxHeight))
+            
+            cropBoxFrame.size.width = max(cropBoxFrame.size.width, Self.cropViewMinimumBoxSize)
+            cropBoxFrame.size.height = max(cropBoxFrame.size.height, Self.cropViewMinimumBoxSize)
+            
+            _cropBoxFrame = cropBoxFrame
+            
+            foregroundContainerView.frame = _cropBoxFrame
+            gridOverlayView.frame = _cropBoxFrame
+            
+            if circularMaskLayer != nil {
+                let scale = _cropBoxFrame.size.width / Self.cropViewCircularPathRadius
+                circularMaskLayer?.transform = CATransform3DScale(CATransform3DIdentity, scale, scale, 1.0)
+            }
+            
+            scrollView.contentInset = UIEdgeInsets(top: _cropBoxFrame.minY, left: _cropBoxFrame.minX, bottom: self.bounds.maxY - _cropBoxFrame.maxY, right: self.bounds.maxX - _cropBoxFrame.maxX)
+            
+            let imageSize = backgroundContainerView.bounds.size
+            let scale = max(cropBoxFrame.size.height/imageSize.height, cropBoxFrame.size.width/imageSize.width)
+            scrollView.minimumZoomScale = scale
+            
+            var size = scrollView.contentSize
+            size.width = floor(size.width)
+            size.height = floor(size.height)
+            scrollView.contentSize = size
+            
+            let zoomScale = scrollView.zoomScale
+            scrollView.zoomScale = zoomScale
+            
+            matchForegroundToBackground()
         }
     }
     private var _cropBoxFrame: CGRect = .zero
@@ -1755,7 +1810,18 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     open func setSimpleRenderMode(_ simpleMode: Bool, animated: Bool) {
+        if simpleMode == _simpleRenderMode { return }
+        _simpleRenderMode = simpleMode
         
+        editing = false
+        if !animated {
+            toggleTranslucencyViewVisible(!simpleMode)
+            return
+        }
+        
+        UIView.animate(withDuration: 0.25) {
+            self.toggleTranslucencyViewVisible(!simpleMode)
+        }
     }
     
     open func prepareForRotation() {
@@ -1849,7 +1915,91 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     open func setAspectRatio(_ aspectRatio: CGSize, animated: Bool) {
+        var aspectRatio = aspectRatio
+        _aspectRatio = aspectRatio
+        if !initialSetupPerformed { return }
         
+        if aspectRatio.width < CGFloat.ulpOfOne && aspectRatio.height < CGFloat.ulpOfOne {
+            aspectRatio = CGSize(width: self.imageSize.width, height: self.imageSize.height)
+        }
+
+        let boundsFrame = self.contentBounds
+        var cropBoxFrame = self.cropBoxFrame
+        var offset = scrollView.contentOffset
+
+        var cropBoxIsPortrait = false
+        if Int(aspectRatio.width) == 1 && Int(aspectRatio.height) == 1 {
+            cropBoxIsPortrait = self.image.size.width > self.image.size.height
+        } else {
+            cropBoxIsPortrait = aspectRatio.width < aspectRatio.height
+        }
+        
+        var zoomOut = false
+        if cropBoxIsPortrait {
+            let newWidth = floor(cropBoxFrame.size.height * (aspectRatio.width/aspectRatio.height))
+            var delta = cropBoxFrame.size.width - newWidth
+            cropBoxFrame.size.width = newWidth
+            offset.x += (delta * 0.5)
+
+            if delta < .ulpOfOne {
+                cropBoxFrame.origin.x = self.contentBounds.origin.x
+            }
+
+            let boundsWidth = boundsFrame.width
+            if newWidth > boundsWidth {
+                let scale = boundsWidth / newWidth
+                let newHeight = cropBoxFrame.size.height * scale
+                delta = cropBoxFrame.size.height - newHeight
+                cropBoxFrame.size.height = newHeight
+
+                offset.y += (delta * 0.5)
+                cropBoxFrame.size.width = boundsWidth
+                zoomOut = true
+            }
+        } else {
+            let newHeight = floor(cropBoxFrame.size.width * (aspectRatio.height/aspectRatio.width))
+            var delta = cropBoxFrame.size.height - newHeight
+            cropBoxFrame.size.height = newHeight
+            offset.y += (delta * 0.5)
+
+            if delta < .ulpOfOne {
+                cropBoxFrame.origin.y = self.contentBounds.origin.y
+            }
+
+            let boundsHeight = boundsFrame.height
+            if newHeight > boundsHeight {
+                let scale = boundsHeight / newHeight
+                let newWidth = cropBoxFrame.size.width * scale
+                delta = cropBoxFrame.size.width - newWidth
+                cropBoxFrame.size.width = newWidth
+
+                offset.x += (delta * 0.5)
+                cropBoxFrame.size.height = boundsHeight
+                zoomOut = true
+            }
+        }
+        
+        cropBoxLastEditedSize = cropBoxFrame.size
+        cropBoxLastEditedAngle = self.angle
+
+        let translateBlock: () -> Void = {
+            self.scrollView.contentOffset = offset
+            self.cropBoxFrame = cropBoxFrame
+            
+            if zoomOut {
+                self.scrollView.zoomScale = self.scrollView.minimumZoomScale
+            }
+            
+            self.moveCroppedContentToCenterAnimated(false)
+            self.checkForCanReset()
+        }
+
+        if !animated {
+            translateBlock()
+            return
+        }
+
+        UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.7, options: .beginFromCurrentState, animations: translateBlock, completion: nil)
     }
     
     open func rotateImageNinetyDegreesAnimated(_ animated: Bool) {
@@ -1857,23 +2007,263 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     open func rotateImageNinetyDegreesAnimated(_ animated: Bool, clockwise: Bool) {
+        if rotateAnimationInProgress { return }
         
+        if resetTimer != nil {
+            cancelResetTimer()
+            setEditing(false, resetCropBox: true, animated: false)
+            
+            cropBoxLastEditedAngle = self.angle
+            captureStateForImageRotation()
+        }
+        
+        var newAngle = self.angle
+        newAngle = clockwise ? newAngle + 90 : newAngle - 90
+        if newAngle <= -360 || newAngle >= 360 {
+            newAngle = 0
+        }
+        _angle = newAngle
+
+        var angleInRadians: CGFloat = 0.0
+        switch newAngle {
+        case 90:
+            angleInRadians = CGFloat.pi / 2
+        case -90:
+            angleInRadians = -CGFloat.pi / 2
+        case 180:
+            angleInRadians = CGFloat.pi
+        case -180:
+            angleInRadians = -CGFloat.pi
+        case 270:
+            angleInRadians = CGFloat.pi + CGFloat.pi / 2
+        case -270:
+            angleInRadians = -(CGFloat.pi + CGFloat.pi / 2)
+        default:
+            break
+        }
+
+        let rotation = CGAffineTransformRotate(.identity, angleInRadians)
+        let contentBounds = self.contentBounds
+        let cropBoxFrame = self.cropBoxFrame
+        let scale = min(contentBounds.size.width / cropBoxFrame.size.height, contentBounds.size.height / cropBoxFrame.size.width)
+
+        let cropMidPoint = CGPoint(x: cropBoxFrame.midX, y: cropBoxFrame.midY)
+        var cropTargetPoint = CGPoint(x: cropMidPoint.x + scrollView.contentOffset.x, y: cropMidPoint.y + scrollView.contentOffset.y)
+
+        var newCropFrame = CGRect.zero
+        if abs(self.angle) == abs(cropBoxLastEditedAngle) || (abs(self.angle) * -1) == ((abs(cropBoxLastEditedAngle) - 180) % 360) {
+            newCropFrame.size = cropBoxLastEditedSize
+
+            scrollView.minimumZoomScale = cropBoxLastEditedMinZoomScale
+            scrollView.zoomScale = cropBoxLastEditedZoomScale
+        } else {
+            newCropFrame.size = CGSize(width: floor(self.cropBoxFrame.size.height * scale), height: floor(self.cropBoxFrame.size.width * scale))
+
+            scrollView.minimumZoomScale *= scale
+            scrollView.zoomScale *= scale
+        }
+        
+        newCropFrame.origin.x = floor(contentBounds.midX - (newCropFrame.size.width * 0.5))
+        newCropFrame.origin.y = floor(contentBounds.midY - (newCropFrame.size.height * 0.5))
+
+        var snapshotView: UIView?
+        if animated {
+            snapshotView = foregroundContainerView.snapshotView(afterScreenUpdates: false)
+            rotateAnimationInProgress = true
+        }
+
+        backgroundImageView.transform = rotation
+
+        let containerSize = backgroundContainerView.frame.size
+        backgroundContainerView.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: containerSize.height, height: containerSize.width))
+        backgroundImageView.frame = CGRect(origin: CGPoint.zero, size: backgroundImageView.frame.size)
+
+        foregroundContainerView.transform = .identity
+        foregroundImageView.transform = rotation
+
+        scrollView.contentSize = backgroundContainerView.frame.size
+
+        self.cropBoxFrame = newCropFrame
+        moveCroppedContentToCenterAnimated(false)
+        newCropFrame = self.cropBoxFrame
+
+        cropTargetPoint.x *= scale
+        cropTargetPoint.y *= scale
+        
+        var swap = cropTargetPoint.x
+        if clockwise {
+            cropTargetPoint.x = scrollView.contentSize.width - cropTargetPoint.y
+            cropTargetPoint.y = swap
+        } else {
+            cropTargetPoint.x = cropTargetPoint.y
+            cropTargetPoint.y = scrollView.contentSize.height - swap
+        }
+
+        let midPoint = CGPoint(x: newCropFrame.midX, y: newCropFrame.midY)
+        var offset = CGPoint.zero
+        offset.x = floor(-midPoint.x + cropTargetPoint.x)
+        offset.y = floor(-midPoint.y + cropTargetPoint.y)
+        offset.x = max(-scrollView.contentInset.left, offset.x)
+        offset.y = max(-scrollView.contentInset.top, offset.y)
+        offset.x = min(scrollView.contentSize.width - (newCropFrame.size.width - scrollView.contentInset.right), offset.x)
+        offset.y = min(scrollView.contentSize.height - (newCropFrame.size.height - scrollView.contentInset.bottom), offset.y)
+
+        if offset.x == scrollView.contentOffset.x && offset.y == scrollView.contentOffset.y && scale == 1 {
+            matchForegroundToBackground()
+        }
+        scrollView.contentOffset = offset
+        
+        if animated {
+            snapshotView?.center = CGPoint(x: contentBounds.midX, y: contentBounds.midY)
+            if let snapshotView = snapshotView {
+                addSubview(snapshotView)
+            }
+            
+            backgroundContainerView.isHidden = true
+            foregroundContainerView.isHidden = true
+            translucencyView.isHidden = true
+            gridOverlayView.isHidden = true
+            
+            UIView.animate(withDuration: 0.45, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.8, options: .beginFromCurrentState, animations: {
+                let transform = CGAffineTransform(rotationAngle: clockwise ? CGFloat.pi/2 : -CGFloat.pi/2).scaledBy(x: scale, y: scale)
+                snapshotView?.transform = transform
+            }, completion: { complete in
+                self.backgroundContainerView.isHidden = false
+                self.foregroundContainerView.isHidden = false
+                self.translucencyView.isHidden = self.translucencyAlwaysHidden
+                self.gridOverlayView.isHidden = false
+                
+                self.backgroundContainerView.alpha = 0.0
+                self.gridOverlayView.alpha = 0.0
+                self.translucencyView.alpha = 1.0
+                
+                UIView.animate(withDuration: 0.45, animations: {
+                    snapshotView?.alpha = 0.0
+                    self.backgroundContainerView.alpha = 1.0
+                    self.gridOverlayView.alpha = 1.0
+                }, completion: { complete in
+                    self.rotateAnimationInProgress = false
+                    snapshotView?.removeFromSuperview()
+                    
+                    let aspectRatioCanSwapDimensions = !self.aspectRatioLockEnabled ||
+                        (self.aspectRatioLockEnabled && self.aspectRatioLockDimensionSwapEnabled)
+                    if !aspectRatioCanSwapDimensions {
+                        self.setAspectRatio(self.aspectRatio, animated: animated)
+                    }
+                })
+            })
+        }
+
+        checkForCanReset()
     }
     
     open func setGridOverlayHidden(_ gridOverlayHidden: Bool, animated: Bool) {
+        _gridOverlayHidden = gridOverlayHidden
         
+        gridOverlayView.alpha = gridOverlayHidden ? 1.0 : 0.0
+        UIView.animate(withDuration: 0.4) {
+            self.gridOverlayView.alpha = gridOverlayHidden ? 0.0 : 1.0
+        }
     }
     
     open func setCroppingViewsHidden(_ hidden: Bool, animated: Bool) {
+        if _croppingViewsHidden == hidden { return }
+        _croppingViewsHidden = hidden
         
+        let alpha: CGFloat = hidden ? 0.0 : 1.0
+        if !animated {
+            backgroundImageView.alpha = alpha
+            foregroundContainerView.alpha = alpha
+            gridOverlayView.alpha = alpha
+            toggleTranslucencyViewVisible(!hidden)
+            return
+        }
+        
+        foregroundContainerView.alpha = alpha
+        backgroundImageView.alpha = alpha
+        UIView.animate(withDuration: 0.4) {
+            self.toggleTranslucencyViewVisible(!hidden)
+            self.gridOverlayView.alpha = alpha
+        }
     }
     
     open func setBackgroundImageViewHidden(_ hidden: Bool, animated: Bool) {
+        if !animated {
+            backgroundImageView.isHidden = hidden
+            return
+        }
         
+        let beforeAlpha: CGFloat = hidden ? 1.0 : 0.0
+        let toAlpha: CGFloat = hidden ? 0.0 : 1.0
+        backgroundImageView.isHidden = false
+        backgroundImageView.alpha = beforeAlpha
+        UIView.animate(withDuration: 0.5) {
+            self.backgroundImageView.alpha = toAlpha
+        } completion: { _ in
+            if hidden {
+                self.backgroundImageView.isHidden = true
+            }
+        }
     }
     
     open func moveCroppedContentToCenterAnimated(_ animated: Bool) {
+        if internalLayoutDisabled { return }
         
+        var contentRect = self.contentBounds
+        var cropFrame = self.cropBoxFrame
+        if cropFrame.size.width < .ulpOfOne || cropFrame.size.height < .ulpOfOne {
+            return
+        }
+
+        let scale = min(contentRect.width / cropFrame.width, contentRect.height / cropFrame.height)
+        let focusPoint = CGPoint(x: cropFrame.midX, y: cropFrame.midY)
+        let midPoint = CGPoint(x: contentRect.midX, y: contentRect.midY)
+
+        cropFrame.size.width = ceil(cropFrame.size.width * scale)
+        cropFrame.size.height = ceil(cropFrame.size.height * scale)
+        cropFrame.origin.x = contentRect.origin.x + ceil((contentRect.size.width - cropFrame.size.width) * 0.5)
+        cropFrame.origin.y = contentRect.origin.y + ceil((contentRect.size.height - cropFrame.size.height) * 0.5)
+
+        var contentTargetPoint = CGPoint.zero
+        contentTargetPoint.x = ((focusPoint.x + scrollView.contentOffset.x) * scale)
+        contentTargetPoint.y = ((focusPoint.y + scrollView.contentOffset.y) * scale)
+
+        var offset = CGPoint.zero
+        offset.x = -midPoint.x + contentTargetPoint.x
+        offset.y = -midPoint.y + contentTargetPoint.y
+        offset.x = max(-cropFrame.origin.x, offset.x)
+        offset.y = max(-cropFrame.origin.y, offset.y)
+
+        let translateBlock: () -> Void = {
+            self.disableForegroundMatching = true
+
+            if scale < 1.0 - .ulpOfOne || scale > 1.0 + .ulpOfOne {
+                self.scrollView.zoomScale *= scale
+                self.scrollView.zoomScale = min(self.scrollView.maximumZoomScale, self.scrollView.zoomScale)
+            }
+
+            if self.scrollView.zoomScale < self.scrollView.maximumZoomScale - .ulpOfOne {
+                offset.x = min(-cropFrame.maxX + self.scrollView.contentSize.width, offset.x)
+                offset.y = min(-cropFrame.maxY + self.scrollView.contentSize.height, offset.y)
+                self.scrollView.contentOffset = offset
+            }
+
+            self.cropBoxFrame = cropFrame
+            
+            self.disableForegroundMatching = false
+            self.matchForegroundToBackground()
+        }
+
+        if !animated {
+            translateBlock()
+            return
+        }
+
+        matchForegroundToBackground()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .beginFromCurrentState, animations: translateBlock, completion: nil)
+        }
     }
     
     // MARK: - UIGestureRecognizerDelegate
@@ -2254,7 +2644,26 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func updateToImageCropFrame(_ imageCropFrame: CGRect) {
+        let minimumSize = scrollView.minimumZoomScale
+        let scaledOffset = CGPoint(x: imageCropFrame.origin.x * minimumSize, y: imageCropFrame.origin.y * minimumSize)
+        let scaledCropSize = CGSize(width: imageCropFrame.size.width * minimumSize, height: imageCropFrame.size.height * minimumSize)
         
+        let bounds = contentBounds
+        let scale = min(bounds.size.width / scaledCropSize.width, bounds.size.height / scaledCropSize.height)
+        scrollView.zoomScale = scrollView.minimumZoomScale * scale
+        
+        var frame = CGRect.zero
+        frame.size = CGSize(width: scaledCropSize.width * scale, height: scaledCropSize.height * scale)
+        
+        var cropBoxFrame = CGRect.zero
+        cropBoxFrame.size = frame.size
+        cropBoxFrame.origin.x = bounds.midX - (frame.size.width * 0.5)
+        cropBoxFrame.origin.y = bounds.midY - (frame.size.height * 0.5)
+        self.cropBoxFrame = cropBoxFrame
+        
+        frame.origin.x = (scaledOffset.x * scale) - scrollView.contentInset.left
+        frame.origin.y = (scaledOffset.y * scale) - scrollView.contentInset.top
+        scrollView.contentOffset = frame.origin
     }
     
     private func startResetTimer() {
