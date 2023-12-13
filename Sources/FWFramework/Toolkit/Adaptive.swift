@@ -234,7 +234,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     }
     
     /// 屏幕安全区域距离
-    @objc(__fw_safeAreaInsets)
     public static var fw_safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw_mainWindow
         if mainWindow != nil {
@@ -249,7 +248,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     private static var fw_staticWindow: UIWindow?
 
     /// 状态栏高度，与是否隐藏无关
-    @objc(__fw_statusBarHeight)
     public static var fw_statusBarHeight: CGFloat {
         if !UIApplication.shared.isStatusBarHidden {
             return UIApplication.shared.statusBarFrame.height
@@ -270,7 +268,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     }
     
     /// 导航栏高度，与是否隐藏无关
-    @objc(__fw_navigationBarHeight)
     public static var fw_navigationBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             return UIDevice.fw_iosVersion >= 12.0 ? 50 : 44
@@ -284,13 +281,11 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    @objc(__fw_topBarHeight)
     public static var fw_topBarHeight: CGFloat {
         return fw_statusBarHeight + fw_navigationBarHeight
     }
     
     /// 标签栏高度，与是否隐藏无关
-    @objc(__fw_tabBarHeight)
     public static var fw_tabBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 65 }
@@ -305,7 +300,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     }
     
     /// 工具栏高度，与是否隐藏无关
-    @objc(__fw_toolBarHeight)
     public static var fw_toolBarHeight: CGFloat {
         if UIDevice.fw_isIpad {
             if fw_isNotchedScreen { return 70 }
@@ -399,7 +393,6 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-    @objc(__fw_flatValue:scale:)
     public static func fw_flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         let floatValue: CGFloat = (value == .leastNonzeroMagnitude || value == .leastNormalMagnitude) ? 0 : value
         let scaleValue: CGFloat = scale > 0 ? scale : UIScreen.main.scale
