@@ -58,6 +58,7 @@
 		2FB11F0528E41C0700DCB965 /* TestKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */; };
 		2FB11F0728E441F400DCB965 /* TestDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0628E441F400DCB965 /* TestDrawerController.swift */; };
 		2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */; };
+		2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */; };
 		2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */; };
 		2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30128C09F2500C78850 /* TestStateController.swift */; };
 		2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30328C0A69B00C78850 /* TestCacheController.swift */; };
@@ -152,6 +153,7 @@
 		2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeyboardController.swift; sourceTree = "<group>"; };
 		2FB11F0628E441F400DCB965 /* TestDrawerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDrawerController.swift; sourceTree = "<group>"; };
 		2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToolbarController.swift; sourceTree = "<group>"; };
+		2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestConcurrencyController.swift; sourceTree = "<group>"; };
 		2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWorkflowController.swift; sourceTree = "<group>"; };
 		2FB9E30128C09F2500C78850 /* TestStateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateController.swift; sourceTree = "<group>"; };
 		2FB9E30328C0A69B00C78850 /* TestCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCacheController.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				2F6A417628B7319A003719E7 /* TestPromiseController.swift */,
+				2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */,
 				2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */,
 				2FB9E30128C09F2500C78850 /* TestStateController.swift */,
 				2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */,
@@ -819,6 +822,7 @@
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
+				2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */,
 				2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */,
 				2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */,
 				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,

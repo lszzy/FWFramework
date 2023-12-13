@@ -457,11 +457,11 @@ open class HTTPRequest: CustomStringConvertible {
     open var autoShowError = false
     /// 是否自动显示加载信息
     open var autoShowLoading = false
-    /// 自定义成功回调句柄
+    /// 自定义成功主线程回调句柄
     open var successCompletionBlock: Completion?
-    /// 自定义失败回调句柄
+    /// 自定义失败主线程回调句柄
     open var failureCompletionBlock: Completion?
-    /// 自定义取消回调句柄
+    /// 自定义取消回调句柄，不一定主线程调用
     open var requestCancelledBlock: Completion?
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
@@ -932,7 +932,7 @@ open class HTTPRequest: CustomStringConvertible {
         return start(success: completion, failure: completion)
     }
     
-    /// 请求取消句柄
+    /// 请求取消句柄，不一定主线程调用
     @discardableResult
     open func requestCancelledBlock<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         requestCancelledBlock = block != nil ? { block?($0 as! T) } : nil
