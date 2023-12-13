@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 导航栏可扩展全局样式
 public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {

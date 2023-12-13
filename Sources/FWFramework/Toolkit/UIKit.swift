@@ -7,9 +7,6 @@
 
 import UIKit
 import CoreTelephony
-#if FWMacroSPM
-import FWObjC
-#endif
 #if FWMacroTracking
 import AdSupport
 #endif

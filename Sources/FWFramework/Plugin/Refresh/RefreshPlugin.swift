@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - RefreshPlugin
 /// 刷新插件协议，应用可自定义刷新插件实现

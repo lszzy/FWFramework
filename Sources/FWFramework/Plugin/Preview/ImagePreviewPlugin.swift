@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ImagePreviewPlugin
 /// 图片预览插件协议，应用可自定义图片预览插件实现

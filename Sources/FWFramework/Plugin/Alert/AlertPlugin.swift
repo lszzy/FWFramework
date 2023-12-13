@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - AlertPlugin
 /// 弹框样式可扩展枚举

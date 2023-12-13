@@ -9,12 +9,6 @@
 #import "tgmath.h"
 #import <objc/runtime.h>
 
-#pragma mark - __FWCollectionViewSectionConfig
-
-@implementation __FWCollectionViewSectionConfig
-
-@end
-
 #pragma mark - __FWCollectionViewWaterfallLayout
 
 @interface __FWCollectionViewWaterfallLayout ()

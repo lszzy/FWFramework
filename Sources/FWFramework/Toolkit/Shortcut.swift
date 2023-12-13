@@ -5,6 +5,8 @@
 //  Created by wuyong on 2023/7/14.
 //
 
+import UIKit
+
 // MARK: - Adaptive+Shortcut
 extension CGFloat {
     

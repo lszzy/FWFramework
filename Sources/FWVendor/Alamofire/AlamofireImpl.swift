@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 #if FWMacroSPM
 import FWObjC
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - AlamofireImpl

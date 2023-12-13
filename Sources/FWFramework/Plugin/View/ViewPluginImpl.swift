@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认视图插件
 open class ViewPluginImpl: NSObject, ViewPlugin {

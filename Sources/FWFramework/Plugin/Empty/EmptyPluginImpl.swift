@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认空界面插件
 open class EmptyPluginImpl: NSObject, EmptyPlugin {

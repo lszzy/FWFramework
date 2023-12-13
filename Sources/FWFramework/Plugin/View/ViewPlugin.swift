@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ProgressViewPlugin
 /// 进度条视图样式枚举，可扩展

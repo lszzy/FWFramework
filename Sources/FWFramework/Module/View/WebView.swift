@@ -8,9 +8,6 @@
 import UIKit
 import WebKit
 import JavaScriptCore
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WebView
 /// WebView事件代理协议

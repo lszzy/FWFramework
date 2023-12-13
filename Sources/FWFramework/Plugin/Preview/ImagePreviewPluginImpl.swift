@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认图片预览插件
 open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin {

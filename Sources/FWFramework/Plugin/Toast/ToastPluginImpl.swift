@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认吐司插件
 open class ToastPluginImpl: NSObject, ToastPlugin {

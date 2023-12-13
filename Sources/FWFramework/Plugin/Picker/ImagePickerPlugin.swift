@@ -9,9 +9,6 @@ import UIKit
 import Photos
 import PhotosUI
 import MobileCoreServices
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: ImagePickerPlugin
 /// 图片选择插件过滤类型

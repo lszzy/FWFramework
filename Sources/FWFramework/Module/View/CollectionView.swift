@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - CollectionViewDelegate
 /// 常用集合视图数据源和事件代理，可继承

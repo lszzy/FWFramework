@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认刷新插件
 open class RefreshPluginImpl: NSObject, RefreshPlugin {
