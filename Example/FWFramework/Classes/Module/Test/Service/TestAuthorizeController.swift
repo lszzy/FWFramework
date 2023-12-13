@@ -27,13 +27,14 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
    
     func setupSubviews() {
         let authorizeList: [[Any]] = [
-            ["定位", AuthorizeType.locationWhenInUse],
-            ["后台定位", AuthorizeType.locationAlways],
+            ["定位(使用中)", AuthorizeType.locationWhenInUse],
+            ["定位(始终)", AuthorizeType.locationAlways],
             ["麦克风", AuthorizeType.microphone],
             ["相册", AuthorizeType.photoLibrary],
             ["照相机", AuthorizeType.camera],
             ["联系人", AuthorizeType.contacts],
-            ["日历", AuthorizeType.calendars],
+            ["日历(完全)", AuthorizeType.calendars],
+            ["日历(仅写入)", AuthorizeType.calendarsWriteOnly],
             ["提醒", AuthorizeType.reminders],
             ["通知", AuthorizeType.notifications],
             ["广告追踪", AuthorizeType.tracking],

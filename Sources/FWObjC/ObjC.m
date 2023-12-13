@@ -130,13 +130,13 @@
 #pragma mark - ObjCBridge
 
 typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
-static void (*__FWCGSVGDocumentRelease)(CGSVGDocumentRef);
-static CGSVGDocumentRef (*__FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
-static void (*__FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
-static void (*__FWCGContextDrawSVGDocument)(CGContextRef context, CGSVGDocumentRef document);
-static CGSize (*__FWCGSVGDocumentGetCanvasSize)(CGSVGDocumentRef document);
-static SEL __FWImageWithCGSVGDocumentSEL = NULL;
-static SEL __FWCGSVGDocumentSEL = NULL;
+static void (*FWCGSVGDocumentRelease)(CGSVGDocumentRef);
+static CGSVGDocumentRef (*FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
+static void (*FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
+static void (*FWCGContextDrawSVGDocument)(CGContextRef context, CGSVGDocumentRef document);
+static CGSize (*FWCGSVGDocumentGetCanvasSize)(CGSVGDocumentRef document);
+static SEL FWImageWithCGSVGDocumentSEL = NULL;
+static SEL FWCGSVGDocumentSEL = NULL;
 
 @implementation FWObjCBridge
 
@@ -907,10 +907,10 @@ static SEL __FWCGSVGDocumentSEL = NULL;
     }
     
     if (!prefersBitmap) {
-        CGSVGDocumentRef document = __FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
+        CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
         if (!document) return nil;
-        UIImage *image = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:__FWImageWithCGSVGDocumentSEL])(UIImage.class, __FWImageWithCGSVGDocumentSEL, document);
-        __FWCGSVGDocumentRelease(document);
+        UIImage *image = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:FWImageWithCGSVGDocumentSEL])(UIImage.class, FWImageWithCGSVGDocumentSEL, document);
+        FWCGSVGDocumentRelease(document);
         
         UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(1, 1)];
         @try {
@@ -922,11 +922,11 @@ static SEL __FWCGSVGDocumentSEL = NULL;
         }
         return image;
     } else {
-        CGSVGDocumentRef document = __FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
+        CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
         if (!document) {
             return nil;
         }
-        CGSize size = __FWCGSVGDocumentGetCanvasSize(document);
+        CGSize size = FWCGSVGDocumentGetCanvasSize(document);
         if (size.width == 0 || size.height == 0) {
             return nil;
         }
@@ -969,10 +969,10 @@ static SEL __FWCGSVGDocumentSEL = NULL;
         CGContextConcatCTM(context, scaleTransform);
         CGContextConcatCTM(context, transform);
         
-        __FWCGContextDrawSVGDocument(context, document);
+        FWCGContextDrawSVGDocument(context, document);
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        __FWCGSVGDocumentRelease(document);
+        FWCGSVGDocumentRelease(document);
         return image;
     }
 }
@@ -981,9 +981,9 @@ static SEL __FWCGSVGDocumentSEL = NULL;
     if (![self svgSupported]) return nil;
     
     NSMutableData *data = [NSMutableData data];
-    CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:__FWCGSVGDocumentSEL])(image, __FWCGSVGDocumentSEL);
+    CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:FWCGSVGDocumentSEL])(image, FWCGSVGDocumentSEL);
     if (!document) return nil;
-    __FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
+    FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
     return [data copy];
 }
 
@@ -991,15 +991,15 @@ static SEL __FWCGSVGDocumentSEL = NULL;
     static BOOL isSupported = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
-        __FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
-        __FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
-        __FWCGContextDrawSVGDocument = (void (*)(CGContextRef context, CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dDb250ZXh0RHJhd1NWR0RvY3VtZW50"].UTF8String);
-        __FWCGSVGDocumentGetCanvasSize = (CGSize (*)(CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudEdldENhbnZhc1NpemU="].UTF8String);
-        __FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
-        __FWCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X0NHU1ZHRG9jdW1lbnQ="]);
+        FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
+        FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
+        FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
+        FWCGContextDrawSVGDocument = (void (*)(CGContextRef context, CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dDb250ZXh0RHJhd1NWR0RvY3VtZW50"].UTF8String);
+        FWCGSVGDocumentGetCanvasSize = (CGSize (*)(CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudEdldENhbnZhc1NpemU="].UTF8String);
+        FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
+        FWCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X0NHU1ZHRG9jdW1lbnQ="]);
         
-        isSupported = [UIImage respondsToSelector:__FWImageWithCGSVGDocumentSEL];
+        isSupported = [UIImage respondsToSelector:FWImageWithCGSVGDocumentSEL];
     });
     return isSupported;
 }

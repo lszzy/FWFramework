@@ -23,20 +23,22 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     public static let locationAlways: AuthorizeType = .init(2)
     /// 麦克风，需启用Microphone子模块，Info.plist需配置NSMicrophoneUsageDescription
     public static let microphone: AuthorizeType = .init(3)
-    /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription
+    /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription|NSPhotoLibraryAddUsageDescription
     public static let photoLibrary: AuthorizeType = .init(4)
     /// 照相机，Info.plist需配置NSCameraUsageDescription
     public static let camera: AuthorizeType = .init(5)
     /// 联系人，需启用Contacts子模块，Info.plist需配置NSContactsUsageDescription
     public static let contacts: AuthorizeType = .init(6)
-    /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription
+    /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsFullAccessUsageDescription
     public static let calendars: AuthorizeType = .init(7)
-    /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription
-    public static let reminders: AuthorizeType = .init(8)
+    /// 日历仅写入，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsWriteOnlyAccessUsageDescription
+    public static let calendarsWriteOnly: AuthorizeType = .init(8)
+    /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription|NSRemindersFullAccessUsageDescription
+    public static let reminders: AuthorizeType = .init(9)
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    public static let notifications: AuthorizeType = .init(9)
+    public static let notifications: AuthorizeType = .init(10)
     /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
-    public static let tracking: AuthorizeType = .init(10)
+    public static let tracking: AuthorizeType = .init(11)
     
     public var rawValue: Int
     
@@ -125,6 +127,8 @@ public class AuthorizeManager: NSObject {
         #if FWMacroCalendar
         case .calendars:
             return AuthorizeCalendar(type: .event)
+        case .calendarsWriteOnly:
+            return AuthorizeCalendar(type: .event, writeOnly: true)
         case .reminders:
             return AuthorizeCalendar(type: .reminder)
         #endif
@@ -348,10 +352,12 @@ import EventKit
 /// 日历授权
 private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
     private var type: EKEntityType = .event
+    private var writeOnly: Bool = false
     
-    init(type: EKEntityType) {
+    init(type: EKEntityType, writeOnly: Bool = false) {
         super.init()
         self.type = type
+        self.writeOnly = writeOnly
     }
     
     func authorizeStatus() -> AuthorizeStatus {
@@ -363,19 +369,43 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             return .denied
         case .authorized:
             return .authorized
+        case .fullAccess:
+            return .authorized
+        case .writeOnly:
+            if #available(iOS 17.0, *) {
+                if type == .event && !writeOnly {
+                    return .denied
+                }
+            }
+            return .authorized
         default:
             return .notDetermined
         }
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        EKEventStore().requestAccess(to: type) { granted, error in
+        let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
                     completion?(status)
                 }
             }
+        }
+        
+        let eventStore = EKEventStore()
+        if #available(iOS 17.0, *) {
+            if type == .event {
+                if writeOnly {
+                    eventStore.requestWriteOnlyAccessToEvents(completion: completionHandler)
+                } else {
+                    eventStore.requestFullAccessToEvents(completion: completionHandler)
+                }
+            } else {
+                eventStore.requestFullAccessToReminders(completion: completionHandler)
+            }
+        } else {
+            eventStore.requestAccess(to: type, completion: completionHandler)
         }
     }
 }
