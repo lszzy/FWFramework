@@ -176,8 +176,8 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
             if isViewLoaded {
                 // 如果条件为真，说明外界在对title赋值之前就已经使用了self.view，先走了viewDidLoad方法，如果先走的viewDidLoad，需要在title的setter方法中重新设置数据,以下setter方法中的条件同理
                 headerView.titleLabel.text = title
-                // 文字发生变化后再更新布局，这里更新布局也不是那么重要，因为headerView中的布局方法只有当__FWAlertController被present后才会走一次，而那时候，一般title,titleFont、message、messageFont等都是最新值，这里防止的是：在__FWAlertController被present后的某个时刻再去设置title,titleFont等，我们要更新布局
-                // 这个if条件的意思是当__FWAlertController被present后的某个时刻设置了title，如果在present之前设置的就不用更新，系统会主动更新
+                // 文字发生变化后再更新布局，这里更新布局也不是那么重要，因为headerView中的布局方法只有当AlertController被present后才会走一次，而那时候，一般title,titleFont、message、messageFont等都是最新值，这里防止的是：在AlertController被present后的某个时刻再去设置title,titleFont等，我们要更新布局
+                // 这个if条件的意思是当AlertController被present后的某个时刻设置了title，如果在present之前设置的就不用更新，系统会主动更新
                 if presentationController?.presentingViewController != nil {
                     headerView.setNeedsUpdateConstraints()
                 }
