@@ -630,3 +630,161 @@ open class CollectionViewAlignLayout: UICollectionViewFlowLayout {
     }
     
 }
+
+// MARK: - CollectionViewWaterfallLayout
+public enum CollectionViewWaterfallLayoutItemRenderDirection: Int {
+    case shortestFirst
+    case leftToRight
+    case rightToLeft
+}
+
+@objc public protocol CollectionViewDelegateWaterfallLayout: UICollectionViewDelegate {
+    
+    @objc(collectionView:layout:sizeForItemAtIndexPath:)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, columnCountForSection section: Int) -> Int
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, heightForHeaderInSection section: Int) -> CGFloat
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, heightForFooterInSection section: Int) -> CGFloat
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForHeaderInSection section: Int) -> UIEdgeInsets
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForFooterInSection section: Int) -> UIEdgeInsets
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumColumnSpacingForSectionAt section: Int) -> CGFloat
+    
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, pinOffsetForHeaderInSection section: Int) -> CGFloat
+    
+}
+
+/// [CHTCollectionViewWaterfallLayout](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout)
+open class CollectionViewWaterfallLayout: UICollectionViewLayout {
+    
+    open var columnCount: Int = 2 {
+        didSet {
+            if columnCount != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var minimumColumnSpacing: CGFloat = 10.0 {
+        didSet {
+            if minimumColumnSpacing != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var minimumInteritemSpacing: CGFloat = 10.0 {
+        didSet {
+            if minimumInteritemSpacing != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var headerHeight: CGFloat = 0 {
+        didSet {
+            if headerHeight != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var footerHeight: CGFloat = 0 {
+        didSet {
+            if footerHeight != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var headerInset: UIEdgeInsets = .zero {
+        didSet {
+            if headerInset != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var footerInset: UIEdgeInsets = .zero {
+        didSet {
+            if footerInset != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var sectionInset: UIEdgeInsets = .zero {
+        didSet {
+            if sectionInset != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var itemRenderDirection: CollectionViewWaterfallLayoutItemRenderDirection = .shortestFirst {
+        didSet {
+            if itemRenderDirection != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    open var minimumContentHeight: CGFloat = 0
+    open var sectionHeadersPinToVisibleBounds: Bool = false {
+        didSet {
+            if sectionHeadersPinToVisibleBounds != oldValue {
+                invalidateLayout()
+            }
+        }
+    }
+    
+    private weak var delegate: CollectionViewDelegateWaterfallLayout? {
+        return collectionView?.delegate as? CollectionViewDelegateWaterfallLayout
+    }
+    private var columnHeights: [CGFloat] = []
+    private var sectionItemAttributes: [Int] = []
+    private var allItemAttributes: [Int] = []
+    private var headersAttribute: [AnyHashable: Any] = [:]
+    private var footersAttribute: [AnyHashable: Any] = [:]
+    private var unionRects: [Int] = []
+    
+    private static let unionSize: Int = 20
+    private static func floorValue(_ value: CGFloat) -> CGFloat {
+        let scale = UIScreen.main.scale
+        return floor(value * scale) / scale
+    }
+    
+    public override init() {
+        super.init()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    open func columnCountForSection(_ section: Int) -> Int {
+        if let collectionView = collectionView, let count = delegate?.collectionView?(collectionView, layout: self, columnCountForSection: section) {
+            return count
+        } else {
+            return self.columnCount
+        }
+    }
+    
+    open func itemWidthInSectionAt(_ section: Int) -> CGFloat {
+        var sectionInset: UIEdgeInsets
+        if let collectionView = collectionView, let inset = delegate?.collectionView?(collectionView, layout: self, insetForSectionAt: section) {
+            sectionInset = inset
+        } else {
+            sectionInset = self.sectionInset
+        }
+        let width = (collectionView?.bounds.width ?? 0) - sectionInset.left - sectionInset.right
+        let columnCount = columnCountForSection(section)
+        
+        var columnSpacing = self.minimumColumnSpacing
+        if let collectionView = collectionView, let spacing = delegate?.collectionView?(collectionView, layout: self, minimumColumnSpacingForSectionAt: section) {
+            columnSpacing = spacing
+        }
+        return Self.floorValue((width - CGFloat(columnCount - 1) * columnSpacing) / CGFloat(columnCount))
+    }
+    
+}
