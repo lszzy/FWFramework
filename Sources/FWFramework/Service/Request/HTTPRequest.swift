@@ -461,6 +461,8 @@ open class HTTPRequest: CustomStringConvertible {
     open var successCompletionBlock: Completion?
     /// 自定义失败回调句柄
     open var failureCompletionBlock: Completion?
+    /// 自定义取消回调句柄
+    open var requestCancelledBlock: Completion?
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
     /// 自定义POST请求HTTP body数据
@@ -526,6 +528,8 @@ open class HTTPRequest: CustomStringConvertible {
     }
     /// 请求是否已开始，已开始之后再次调用start不会生效
     open private(set) var isStarted: Bool = false
+    /// 请求是否已暂停，已开始之后才可暂停
+    open private(set) var isSuspended: Bool = false
     /// 请求是否执行中，requestTask状态为running
     open var isExecuting: Bool {
         guard let requestTask = requestTask else { return false }
@@ -861,7 +865,7 @@ open class HTTPRequest: CustomStringConvertible {
     /// 开始请求，如果加载缓存且缓存存在时允许再调用一次
     @discardableResult
     open func start() -> Self {
-        guard !isStarted, !_isCancelled else { return self }
+        guard !_isCancelled, !isStarted else { return self }
         
         if !useCacheResponse || resumableDownloadPath != nil {
             startWithoutCache()
@@ -877,14 +881,40 @@ open class HTTPRequest: CustomStringConvertible {
         }
     }
     
-    /// 停止请求
-    open func stop() {
+    /// 暂停请求，已开始后调用才会生效
+    @discardableResult
+    open func suspend() -> Self {
+        guard !_isCancelled, isStarted else { return self }
+        
+        isSuspended = true
+        config.requestPlugin.suspendRequest(self)
+        return self
+    }
+    
+    /// 继续请求，未开始或暂停后可调用
+    @discardableResult
+    open func resume() -> Self {
+        guard !_isCancelled else { return self }
+        
+        if !isStarted {
+            start()
+        } else {
+            isSuspended = false
+            config.requestPlugin.resumeRequest(self)
+        }
+        return self
+    }
+    
+    /// 取消请求
+    open func cancel() {
         guard !_isCancelled else { return }
         
         _isCancelled = true
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         RequestManager.shared.cancelRequest(self)
+        requestCancelledBlock?(self)
+        requestCancelledBlock = nil
         toggleAccessoriesDidStopCallBack()
     }
     
@@ -900,6 +930,13 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func start<T: HTTPRequest>(completion: ((T) -> Void)?) -> Self {
         return start(success: completion, failure: completion)
+    }
+    
+    /// 请求取消句柄
+    @discardableResult
+    open func requestCancelledBlock<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
+        requestCancelledBlock = block != nil ? { block?($0 as! T) } : nil
+        return self
     }
     
     /// 断点续传进度句柄

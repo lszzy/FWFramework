@@ -221,6 +221,14 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         startRequestTask(downloadTask, for: request)
     }
     
+    open func suspendRequest(_ request: HTTPRequest) {
+        request.requestTask?.suspend()
+    }
+    
+    open func resumeRequest(_ request: HTTPRequest) {
+        request.requestTask?.resume()
+    }
+    
     open func cancelRequest(_ request: HTTPRequest) {
         request.requestTask?.cancel()
     }

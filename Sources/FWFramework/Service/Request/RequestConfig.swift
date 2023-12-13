@@ -218,7 +218,7 @@ open class RequestContextAccessory: RequestAccessory {
             guard state == .didDeinit else { return }
             guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
             
-            request.stop()
+            request.cancel()
         }
     }
     

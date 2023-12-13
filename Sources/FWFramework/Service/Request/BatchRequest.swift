@@ -101,8 +101,8 @@ open class BatchRequest: RequestDelegate {
         return self
     }
     
-    /// 停止请求
-    open func stop() {
+    /// 取消请求
+    open func cancel() {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         clearRequest()
@@ -152,7 +152,7 @@ open class BatchRequest: RequestDelegate {
         failedRequestArray.append(request)
         if stoppedOnFailure {
             for req in requestArray {
-                req.stop()
+                req.cancel()
             }
             requestCompleted()
             return
@@ -201,7 +201,7 @@ open class BatchRequest: RequestDelegate {
     
     private func clearRequest() {
         for req in requestArray {
-            req.stop()
+            req.cancel()
         }
         clearCompletionBlock()
     }
