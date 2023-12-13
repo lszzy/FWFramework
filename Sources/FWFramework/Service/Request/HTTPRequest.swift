@@ -489,21 +489,17 @@ open class HTTPRequest: CustomStringConvertible {
     /// 当前URLSessionTask，请求开始后才可用
     open var requestTask: URLSessionTask?
     
-    /// 当前响应
-    open var response: HTTPURLResponse? {
-        return requestTask?.response as? HTTPURLResponse
-    }
     /// 当前响应Header
     open var responseHeaders: [AnyHashable: Any]? {
-        return response?.allHeaderFields
+        return (requestTask?.response as? HTTPURLResponse)?.allHeaderFields
     }
     /// 当前响应状态码
     open var responseStatusCode: Int {
-        return response?.statusCode ?? 0
+        return (requestTask?.response as? HTTPURLResponse)?.statusCode ?? 0
     }
     /// 当前响应服务器时间
     open var responseServerTime: TimeInterval {
-        guard let serverDate = response?.allHeaderFields["Date"] as? String else { return 0 }
+        guard let serverDate = responseHeaders?["Date"] as? String else { return 0 }
         return Date.fw_formatServerDate(serverDate)
     }
     /// 请求开始时间
@@ -623,7 +619,7 @@ open class HTTPRequest: CustomStringConvertible {
         let url = requestTask?.currentRequest?.url?.absoluteString ?? requestUrl()
         let method = requestTask?.currentRequest?.httpMethod ?? requestMethod().rawValue
         var result = "\(method) \(url)"
-        if let response = response { result += " \(response.statusCode)" }
+        if requestTask?.response != nil { result += " \(responseStatusCode)" }
         return result
     }
     
@@ -865,7 +861,7 @@ open class HTTPRequest: CustomStringConvertible {
     /// 开始请求，如果加载缓存且缓存存在时允许再调用一次
     @discardableResult
     open func start() -> Self {
-        guard !isStarted else { return self }
+        guard !isStarted, !_isCancelled else { return self }
         
         if !useCacheResponse || resumableDownloadPath != nil {
             startWithoutCache()

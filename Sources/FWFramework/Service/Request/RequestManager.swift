@@ -97,7 +97,7 @@ open class RequestManager {
     /// 获取响应编码
     open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
         var stringEncoding = String.Encoding.utf8
-        if let textEncoding = request.response?.textEncodingName {
+        if let textEncoding = request.requestTask?.response?.textEncodingName {
             let encoding = CFStringConvertIANACharSetNameToEncoding(textEncoding as CFString)
             if encoding != kCFStringEncodingInvalidId {
                 stringEncoding = String.Encoding(rawValue: UInt(encoding))

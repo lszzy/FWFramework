@@ -243,7 +243,7 @@ open class RequestContextAccessory: RequestAccessory {
     
     /// 显示请求加载条，优先调用config
     open func showLoading(for request: HTTPRequest) {
-        guard request.context != nil else { return }
+        guard request.context != nil, !request.isCancelled else { return }
         
         if let block = request.config.showLoadingBlock {
             block(request)
