@@ -14,4 +14,3 @@
 #import "AttributedLabel.h"
 #import "BarrageView.h"
 #import "CollectionViewFlowLayout.h"
-#import "ImageCropController.h"

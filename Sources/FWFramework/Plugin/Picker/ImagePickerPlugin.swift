@@ -407,7 +407,7 @@ extension ImagePickerPlugin {
                     cropController.resetAspectRatioEnabled = false
                     cropController.aspectRatioPickerButtonHidden = true
                 }
-                cropController.onDidCropToRect = { image, cropRect, angle in
+                cropController.onDidCropToImage = { image, cropRect, angle in
                     picker?.dismiss(animated: true, completion: {
                         completion(image, info, false)
                     })
@@ -619,7 +619,7 @@ extension ImagePickerPlugin {
                     cropController.resetAspectRatioEnabled = false
                     cropController.aspectRatioPickerButtonHidden = true
                 }
-                cropController.onDidCropToRect = { image, cropRect, angle in
+                cropController.onDidCropToImage = { image, cropRect, angle in
                     picker?.presentingViewController?.dismiss(animated: true, completion: {
                         completion([image], results, false)
                     })
