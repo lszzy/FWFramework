@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 抽屉拖拽视图事件代理
 public protocol DrawerViewDelegate: AnyObject {

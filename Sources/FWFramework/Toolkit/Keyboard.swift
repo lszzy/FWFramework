@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UITextField+Keyboard
 /// 注意：需要支持appearance的属性必须标记为objc，否则不会生效

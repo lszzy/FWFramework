@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - TableViewDelegate
 /// 常用表格视图数据源和事件代理，可继承

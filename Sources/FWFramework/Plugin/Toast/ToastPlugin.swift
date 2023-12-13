@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ToastPlugin
 /// 消息吐司可扩展样式枚举

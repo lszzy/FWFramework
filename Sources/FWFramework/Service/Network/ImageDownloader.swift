@@ -23,6 +23,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+import FWObjC
+#endif
 
 // MARK: - ImageDownloader
 /// 图片下载优先顺序

@@ -9,6 +9,7 @@ import UIKit
 import Lottie
 #if FWMacroSPM
 import FWObjC
+import FWFramework
 #endif
 
 /// Lottile插件视图，可用于加载、进度、下拉刷新等

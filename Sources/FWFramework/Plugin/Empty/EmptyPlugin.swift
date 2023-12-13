@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - EmptyPlugin
 /// 空界面插件协议，应用可自定义空界面插件实现

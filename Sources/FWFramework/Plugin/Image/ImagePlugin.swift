@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ImagePlugin
 /// 本地图片解码编码选项，默认兼容SDWebImage

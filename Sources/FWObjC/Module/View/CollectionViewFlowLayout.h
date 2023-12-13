@@ -9,36 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - __FWCollectionViewSectionConfig
-
-/**
- 通用布局section配置类
- */
-NS_SWIFT_NAME(CollectionViewSectionConfig)
-@interface __FWCollectionViewSectionConfig : NSObject
-
-/// 自定义section背景色，默认nil
-@property (nonatomic, strong, nullable) UIColor *backgroundColor;
-/// 自定义section句柄，可用于处理边框、圆角、阴影等其他效果
-@property (nonatomic, copy, nullable) void (^customBlock)(UICollectionReusableView *reusableView);
-
-@end
-
-/**
- 通用布局section配置协议
- */
-NS_SWIFT_NAME(CollectionViewDelegateFlowLayout)
-@protocol __FWCollectionViewDelegateFlowLayout <UICollectionViewDelegateFlowLayout>
-@optional
-
-/// 自定义section配置可选代理方法
-/// @param collectionView UICollectionView对象
-/// @param layout 布局对象
-/// @param section section
-- (nullable __FWCollectionViewSectionConfig *)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)layout configForSectionAtIndex:(NSInteger)section;
-
-@end
-
 #pragma mark - __FWCollectionViewDelegateWaterfallLayout
 
 /**

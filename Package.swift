@@ -19,11 +19,12 @@ let package = Package(
             targets: ["FWSwiftUI"]),
         .library(
             name: "FWVendor",
-            targets: ["FWVendorSDWebImage", "FWVendorLottie"])
+            targets: ["FWVendorSDWebImage", "FWVendorLottie", "FWVendorAlamofire"])
     ],
     dependencies: [
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
-        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0")
+        .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0")
     ],
     targets: [
         .target(
@@ -82,6 +83,20 @@ let package = Package(
                 .product(name: "Lottie", package: "lottie-ios")
             ],
             path: "Sources/FWVendor/Lottie",
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .target(
+            name: "FWVendorAlamofire",
+            dependencies: [
+                "FWFramework",
+                .product(name: "Alamofire", package: "Alamofire")
+            ],
+            path: "Sources/FWVendor/Alamofire",
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],

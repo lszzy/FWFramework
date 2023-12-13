@@ -7,9 +7,6 @@
 
 import UIKit
 import CommonCrypto
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - AnyObject+Foundation
 @_spi(FW) extension WrapperCompatible where Self: AnyObject {

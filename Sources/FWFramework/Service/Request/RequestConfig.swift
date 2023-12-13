@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - RequestFilter
 /// 请求过滤器协议

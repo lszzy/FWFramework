@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - TabBarController
 /// https://github.com/eggswift/ESTabBarController

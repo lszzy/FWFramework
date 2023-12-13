@@ -8,9 +8,6 @@
 import UIKit
 import Photos
 import PhotosUI
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ImagePickerPluginImpl
 /// 默认图片选取插件

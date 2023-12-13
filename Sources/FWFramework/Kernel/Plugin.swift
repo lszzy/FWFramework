@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 可选插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
 @objc public protocol PluginProtocol {

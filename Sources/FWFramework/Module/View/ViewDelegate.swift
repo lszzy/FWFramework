@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - ScrollViewDelegate
 /// 常用滚动视图事件代理，可继承

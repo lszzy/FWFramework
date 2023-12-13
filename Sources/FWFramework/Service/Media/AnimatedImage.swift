@@ -8,6 +8,9 @@
 import UIKit
 import MobileCoreServices
 import ImageIO
+#if FWMacroSPM
+import FWObjC
+#endif
 
 // MARK: - ImageFormat
 /// 图片格式可扩展枚举

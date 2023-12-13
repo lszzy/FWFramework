@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WrapperGlobal+Foundation
 extension WrapperGlobal {

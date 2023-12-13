@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - StoredValue
 /// UserDefault存储属性包装器注解，默认为手工指定或初始值
