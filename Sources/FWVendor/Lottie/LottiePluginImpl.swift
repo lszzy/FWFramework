@@ -8,7 +8,6 @@
 import UIKit
 import Lottie
 #if FWMacroSPM
-import FWObjC
 import FWFramework
 #endif
 
