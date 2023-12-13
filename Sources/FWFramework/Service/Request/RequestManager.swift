@@ -64,7 +64,7 @@ open class RequestManager {
             let request = requestsRecord[key]
             lock.unlock()
             
-            request?.stop()
+            request?.cancel()
         }
     }
     

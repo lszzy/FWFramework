@@ -96,8 +96,8 @@ open class ChainRequest: RequestDelegate {
         return self
     }
     
-    /// 停止请求
-    open func stop() {
+    /// 取消请求
+    open func cancel() {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         clearRequest()
@@ -231,7 +231,7 @@ open class ChainRequest: RequestDelegate {
             let currentRequestIndex = nextRequestIndex - 1
             if currentRequestIndex < requestArray.count {
                 let request = requestArray[currentRequestIndex]
-                request.stop()
+                request.cancel()
             }
         }
         

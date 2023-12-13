@@ -17,6 +17,12 @@ public protocol RequestPlugin: AnyObject {
     /// 构建下载任务，支持断点续传，自动开始
     func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?)
     
+    /// 暂停请求，开始后可调用
+    func suspendRequest(_ request: HTTPRequest)
+    
+    /// 继续请求，暂停后可调用
+    func resumeRequest(_ request: HTTPRequest)
+    
     /// 取消请求
     func cancelRequest(_ request: HTTPRequest)
     
@@ -32,6 +38,16 @@ extension RequestPlugin {
     /// 默认实现构建下载任务，支持断点续传自动开始
     public func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
         RequestPluginImpl.shared.startDownloadTask(for: request, resumeData: resumeData, destination: destination, completionHandler: completionHandler)
+    }
+    
+    /// 默认实现暂停请求，开始后可调用
+    public func suspendRequest(_ request: HTTPRequest) {
+        RequestPluginImpl.shared.suspendRequest(request)
+    }
+    
+    /// 默认实现继续请求，暂停后可调用
+    public func resumeRequest(_ request: HTTPRequest) {
+        RequestPluginImpl.shared.resumeRequest(request)
     }
     
     /// 默认实现取消请求

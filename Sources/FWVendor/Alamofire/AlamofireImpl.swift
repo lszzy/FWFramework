@@ -232,6 +232,14 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         }
     }
     
+    open func suspendRequest(_ request: HTTPRequest) {
+        (request.requestAdapter as? Request)?.suspend()
+    }
+    
+    open func resumeRequest(_ request: HTTPRequest) {
+        (request.requestAdapter as? Request)?.resume()
+    }
+    
     open func cancelRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.cancel()
     }
