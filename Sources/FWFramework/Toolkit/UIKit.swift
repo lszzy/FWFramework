@@ -373,7 +373,6 @@ import AdSupport
     }
 
     /// 获取响应的视图控制器
-    @objc(__fw_viewController)
     public var fw_viewController: UIViewController? {
         var responder = self.next
         while responder != nil {
@@ -386,7 +385,6 @@ import AdSupport
     }
 
     /// 设置额外热区(点击区域)
-    @objc(__fw_touchInsets)
     public var fw_touchInsets: UIEdgeInsets {
         get {
             if let value = fw_property(forName: "fw_touchInsets") as? NSValue {
@@ -759,7 +757,6 @@ import AdSupport
     }
     
     /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-    @objc(__fw_frameApplyTransform)
     public var fw_frameApplyTransform: CGRect {
         get { return self.frame }
         set { self.frame = UIView.fw_rectApplyTransform(newValue, transform: self.transform, anchorPoint: self.layer.anchorPoint) }
@@ -1602,15 +1599,12 @@ import AdSupport
 @_spi(FW) extension UIButton {
     
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
-    @objc(__fw_highlightedAlpha)
     public static var fw_highlightedAlpha: CGFloat = 0.5
     
     /// 全局自定义按钮禁用时的alpha配置，默认0.3
-    @objc(__fw_disabledAlpha)
     public static var fw_disabledAlpha: CGFloat = 0.3
     
     /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
-    @objc(__fw_disabledAlpha)
     public var fw_disabledAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_disabledAlpha")
@@ -1624,7 +1618,6 @@ import AdSupport
     }
 
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-    @objc(__fw_highlightedAlpha)
     public var fw_highlightedAlpha: CGFloat {
         get {
             return fw_propertyDouble(forName: "fw_highlightedAlpha")
@@ -2133,7 +2126,6 @@ import AdSupport
 @_spi(FW) extension UIPageControl {
     
     /// 自定义圆点大小，默认{10, 10}
-    @objc(__fw_preferredSize)
     public var fw_preferredSize: CGSize {
         get {
             var size = self.bounds.size
@@ -2156,7 +2148,6 @@ import AdSupport
 @_spi(FW) extension UISlider {
     
     /// 中间圆球的大小，默认zero
-    @objc(__fw_thumbSize)
     public var fw_thumbSize: CGSize {
         get {
             if let value = fw_property(forName: "fw_thumbSize") as? NSValue {
@@ -2171,7 +2162,6 @@ import AdSupport
     }
 
     /// 中间圆球的颜色，默认nil
-    @objc(__fw_thumbColor)
     public var fw_thumbColor: UIColor? {
         get {
             return fw_property(forName: "fw_thumbColor") as? UIColor
@@ -2406,7 +2396,6 @@ import AdSupport
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
-    @objc(__fw_menuDisabled)
     public var fw_menuDisabled: Bool {
         get { fw_propertyBool(forName: "fw_menuDisabled") }
         set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
@@ -3340,7 +3329,6 @@ import AdSupport
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-    @objc(__fw_isPresented)
     public var fw_isPresented: Bool {
         var viewController: UIViewController = self
         if let navigationController = self.navigationController {
@@ -3370,7 +3358,6 @@ import AdSupport
     }
     
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-    @objc(__fw_ancestorView)
     public var fw_ancestorView: UIView {
         if let navigationController = self.tabBarController?.navigationController {
             return navigationController.view

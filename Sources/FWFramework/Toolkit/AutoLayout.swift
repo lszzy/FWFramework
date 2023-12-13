@@ -172,7 +172,6 @@ import FWObjC
     /// - Parameter offset: 偏移距离，默认zero
     /// - Returns: 约束数组
     @discardableResult
-    @objc(__fw_alignCenterToSuperview:)
     public func fw_alignCenter(toSuperview offset: CGPoint = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_alignAxis(toSuperview: .centerX, offset: offset.x))
@@ -218,7 +217,6 @@ import FWObjC
     /// - Parameter insets: 指定距离insets，默认zero
     /// - Returns: 约束数组
     @discardableResult
-    @objc(__fw_pinEdgesToSuperview:)
     public func fw_pinEdges(toSuperview insets: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         constraints.append(fw_pinEdge(toSuperview: .top, inset: insets.top))
