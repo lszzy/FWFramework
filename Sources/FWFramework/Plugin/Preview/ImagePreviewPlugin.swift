@@ -59,7 +59,7 @@ extension ImagePreviewPlugin {
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)? = nil) {
+    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: nil, renderBlock: nil, customBlock: nil)
     }
 
@@ -87,7 +87,7 @@ extension ImagePreviewPlugin {
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)? = nil) {
+    public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController

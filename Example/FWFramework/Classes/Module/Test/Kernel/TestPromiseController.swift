@@ -193,13 +193,21 @@ extension TestPromiseController {
     
     @objc func onAwait() {
         Self.isLoading = true
-        APP.async {
-            var value = try APP.await(Self.successPromise())
-            value = try APP.await(Self.successPromise(value.safeInt))
-            return value
-        }.done { value in
-            Self.isLoading = false
-            Self.showMessage("value: 2 => \(value.safeString)")
+        Task {
+            do {
+                var value = try await Self.successPromise().result
+                value = try await Self.successPromise(value.safeInt).result
+                
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("value: 2 => \(value.safeString)")
+                }
+            } catch {
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("error: \(error)")
+                }
+            }
         }
     }
     
@@ -209,13 +217,22 @@ extension TestPromiseController {
         for i in 0 ..< 10000 {
             promises.append(i < 9999 ? Self.successPromise() : Self.randomPromise())
         }
-        APP.async {
-            return try APP.await(Promise.all(promises).then { values in
-                return values.safeArray.count
-            })
-        }.done { result in
-            Self.isLoading = false
-            Self.showMessage("result: \(result.safeString)")
+        Task {
+            do {
+                let result = try await Promise.all(promises).then { values in
+                    return values.safeArray.count
+                }.result
+                
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("result: \(result.safeString)")
+                }
+            } catch {
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("error: \(error)")
+                }
+            }
         }
     }
     
@@ -225,11 +242,20 @@ extension TestPromiseController {
         for i in 0 ..< 10000 {
             promises.append(i < 5000 ? Self.failurePromise() : Self.randomPromise(i))
         }
-        APP.async {
-            return try APP.await(Promise.any(promises))
-        }.done { result in
-            Self.isLoading = false
-            Self.showMessage("result: \(result.safeString)")
+        Task {
+            do {
+                let result = try await Promise.any(promises).result
+                
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("result: \(result.safeString)")
+                }
+            } catch {
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("error: \(error)")
+                }
+            }
         }
     }
     
@@ -239,11 +265,20 @@ extension TestPromiseController {
         for i in 0 ..< 10000 {
             promises.append(Self.randomPromise(i))
         }
-        APP.async {
-            return try APP.await(Promise.race(promises.shuffled()))
-        }.done { result in
-            Self.isLoading = false
-            Self.showMessage("result: \(result.safeString)")
+        Task {
+            do {
+                let result = try await Promise.race(promises.shuffled()).result
+                
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("result: \(result.safeString)")
+                }
+            } catch {
+                DispatchQueue.app.mainAsync {
+                    Self.isLoading = false
+                    Self.showMessage("error: \(error)")
+                }
+            }
         }
     }
     

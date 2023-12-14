@@ -82,43 +82,6 @@ public class Promise {
         })
     }
     
-    // MARK: - Await
-    /// 仿协程异步执行方法
-    @discardableResult
-    public static func async(_ block: @escaping () throws -> Any?) -> Promise {
-        return Promise { completion in
-            DispatchQueue(label: "site.wuyong.queue.promise.async", attributes: .concurrent).async {
-                do {
-                    let value = try block()
-                    completion(value)
-                } catch {
-                    completion(error)
-                }
-            }
-        }
-    }
-    
-    /// 仿协程同步返回结果
-    @discardableResult
-    public static func await(_ promise: Promise) throws -> Any? {
-        var result: Any?
-        var error: Error?
-        let group = DispatchGroup()
-        group.enter()
-        promise.done({ value in
-            result = value
-            group.leave()
-        }, catch: { e in
-            error = e
-            group.leave()
-        })
-        group.wait()
-        if let e = error {
-            throw e
-        }
-        return result
-    }
-    
 }
 
 // MARK: - Public

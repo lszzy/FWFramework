@@ -21,7 +21,7 @@ extension Wrapper where Base: UIViewController {
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         base.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView)
     }
 
@@ -48,7 +48,7 @@ extension Wrapper where Base: UIView {
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         base.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView)
     }
 

@@ -105,7 +105,6 @@ open class RequestConfig {
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
     open var hideLoadingBlock: HTTPRequest.Completion?
     
-    /// 初始化方法
     public init() {}
     
     /// 添加请求过滤器
@@ -139,6 +138,8 @@ open class RequestAccessory: RequestAccessoryProtocol {
     open var willStopBlock: ((Any) -> Void)?
     /// 已经结束句柄
     open var didStopBlock: ((Any) -> Void)?
+    
+    public init() {}
     
     open func requestWillStart(_ request: Any) {
         if willStartBlock != nil {
@@ -299,6 +300,8 @@ open class RequestRetrier: RequestRetrierProtocol {
     private lazy var filterQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
     private lazy var filterSemaphore = DispatchSemaphore(value: 1)
     
+    public init() {}
+    
     open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
         if request.isCancelled { return }
         
@@ -367,6 +370,8 @@ public protocol RequestValidatorProtocol: AnyObject {
 open class RequestValidator: RequestValidatorProtocol {
     public static let `default` = RequestValidator()
     
+    public init() {}
+    
     open func validateResponse(for request: HTTPRequest) -> Bool {
         guard let json = request.responseJSONObject,
               let jsonValidator = request.jsonValidator() else {
@@ -428,6 +433,8 @@ open class RequestCache: RequestCacheProtocol {
     
     /// 请求缓存文件名过滤器，返回处理后的文件名
     open var cacheFileNameFilter: ((_ request: HTTPRequest, _ fileName: String) -> String)?
+    
+    public init() {}
     
     /// 获取请求缓存基础路径
     open func cacheFilePath(for request: HTTPRequest) -> String {
@@ -496,7 +503,7 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
         return true
     }
     
-    override init() { }
+    public override init() { }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init()

@@ -50,7 +50,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     var testFailed = false
     
     override func requestUrl() -> String {
-        "http://kvm.wuyong.site/test.json"
+        "http://kvm.wuyong.site/test.json?t=\(Date.app.currentTime)"
     }
     
     override func responseSerializerType() -> ResponseSerializerType {
