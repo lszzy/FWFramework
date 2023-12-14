@@ -253,6 +253,8 @@ open class ChainRequestManager {
     private var chainRequestArray: [ChainRequest] = []
     private var lock = NSLock()
     
+    public init() {}
+    
     /// 添加队列请求
     open func addChainRequest(_ chainRequest: ChainRequest) {
         lock.lock()

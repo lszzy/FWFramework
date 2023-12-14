@@ -1000,6 +1000,8 @@ public class AssetLivePhoto {
         return fullDirectory
     }()
     
+    public init() {}
+    
     private func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, Resources?) -> Void) {
         let assetIdentifier = UUID().uuidString
         guard let pairedImageURL = addAssetID(assetIdentifier, toImage: imageURL, saveTo: cacheDirectory.appendingPathComponent(assetIdentifier).appendingPathExtension("jpg")) else {
