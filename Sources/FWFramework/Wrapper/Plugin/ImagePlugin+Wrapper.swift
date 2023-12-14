@@ -40,15 +40,9 @@ extension Wrapper where Base: UIImage {
         return Base.fw_data(image: image, options: options)
     }
 
-    /// 下载网络图片并返回下载凭据
-    @discardableResult
-    public static func downloadImage(_ url: URLParameter?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
-        return Base.fw_downloadImage(url, completion: completion, progress: progress)
-    }
-
     /// 下载网络图片并返回下载凭据，指定option
     @discardableResult
-    public static func downloadImage(_ url: URLParameter?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
+    public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
         return Base.fw_downloadImage(url, options: options, context: context, completion: completion, progress: progress)
     }
 
@@ -97,13 +91,8 @@ extension Wrapper where Base: UIView {
 
 extension Wrapper where Base: UIImageView {
 
-    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
-        base.fw_setImage(url: url, placeholderImage: placeholderImage, completion: completion)
-    }
-
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
     }
     
@@ -126,13 +115,8 @@ extension Wrapper where Base: UIImageView {
 
 extension Wrapper where Base: UIButton {
     
-    /// 加载网络图片，支持占位和回调，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, completion: ((UIImage?, Error?) -> Void)? = nil) {
-        base.fw_setImage(url: url, placeholderImage: placeholderImage, completion: completion)
-    }
-
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         base.fw_setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, completion: completion, progress: progress)
     }
     

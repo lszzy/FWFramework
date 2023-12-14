@@ -1020,20 +1020,20 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     // MARK: - Response
-    /// 自定义成功回调句柄
+    /// 自定义响应完成句柄
     @discardableResult
     open func response<T: HTTPRequest>(_ completion: ((T) -> Void)?) -> Self {
         return responseSuccess(completion).responseFailure(completion)
     }
     
-    /// 自定义成功回调句柄
+    /// 自定义响应成功句柄
     @discardableResult
     open func responseSuccess<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         successCompletionBlock = block != nil ? { block?($0 as! T) } : nil
         return self
     }
     
-    /// 自定义失败回调句柄
+    /// 自定义响应失败句柄
     @discardableResult
     open func responseFailure<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
         failureCompletionBlock = block != nil ? { block?($0 as! T) } : nil
@@ -1044,7 +1044,7 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func responseError(_ block: ((Error) -> Void)?) -> Self {
         failureCompletionBlock = { request in
-            block?(request.error ?? RequestError.unknownError)
+            block?(request.error ?? RequestError.unknown)
         }
         return self
     }
@@ -1410,7 +1410,7 @@ public protocol UnderlyingErrorProtocol {
 
 /// 请求错误
 public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
-    case unknownError
+    case unknown
     case cacheExpired
     case cacheVersionMismatch
     case cacheSensitiveDataMismatch
@@ -1424,7 +1424,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     public static var errorDomain: String { "site.wuyong.error.request" }
     public var errorCode: Int {
         switch self {
-        case .unknownError:
+        case .unknown:
             return 0
         case .cacheExpired:
             return -1
@@ -1448,7 +1448,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     }
     public var errorUserInfo: [String: Any] {
         switch self {
-        case .unknownError:
+        case .unknown:
             return [NSLocalizedDescriptionKey: "Unknown error"]
         case .cacheExpired:
             return [NSLocalizedDescriptionKey: "Cache expired"]
@@ -1496,6 +1496,9 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     /// 判断是否是网络取消错误，支持嵌套请求错误
     public static func isCancelledError(_ error: Error?) -> Bool {
         guard let error = error else { return false }
+        #if compiler(>=5.6.0) && canImport(_Concurrency)
+        if error is CancellationError { return true }
+        #endif
         if cancelledErrorCodes.contains((error as NSError).code) { return true }
         if let underlyingError = error as? UnderlyingErrorProtocol {
             return isCancelledError(underlyingError.underlyingError)

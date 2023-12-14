@@ -148,18 +148,18 @@ open class RequestManager {
     }
     
     private func startRequest(_ request: HTTPRequest) {
+        #if DEBUG
+        if request.config.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
+        }
+        #endif
+        
         request.toggleAccessoriesWillStartCallBack()
         
         request.requestStartTime = Date().timeIntervalSince1970
         retrySessionTask(for: request) { [weak self] response, responseObject, error in
             self?.handleResponse(with: request.requestIdentifier, response: response, responseObject: responseObject, error: error)
         }
-        
-        #if DEBUG
-        if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
-        }
-        #endif
     }
     
     private func finishRequest(_ request: HTTPRequest) {
@@ -291,7 +291,7 @@ open class RequestManager {
         if succeed {
             requestDidSucceed(request)
         } else {
-            requestDidFail(request, error: requestError ?? RequestError.unknownError)
+            requestDidFail(request, error: requestError ?? RequestError.unknown)
         }
     }
     
