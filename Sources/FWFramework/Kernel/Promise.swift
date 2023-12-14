@@ -41,10 +41,12 @@ public class Promise {
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
     public static var timeoutError: Error = PromiseError.timeout
     
+    /// 约定进度值
+    private struct ProgressValue { var value: Double }
+    
     /// 约定内部属性
     private let operation: (@escaping (_ result: Any?) -> Void) -> Void
     private var finished: Bool = false
-    private struct Progress { var value: Double }
     
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
@@ -63,7 +65,7 @@ public class Promise {
     public convenience init(progress: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
         self.init(completion: { completion in
             progress(completion, completion, { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         })
     }
@@ -103,7 +105,7 @@ extension Promise {
                 }, progress: { value in
                     progress[ObjectIdentifier(promise).hashValue] = value
                     let sum = progress.values.reduce(0) { x, y in x + y }
-                    completion(Progress(value: sum / Double(promises.count)))
+                    completion(ProgressValue(value: sum / Double(promises.count)))
                 })
             }
         }
@@ -124,7 +126,7 @@ extension Promise {
                     }
                 }, progress: { value in
                     progress[ObjectIdentifier(promise).hashValue] = value
-                    completion(Progress(value: progress.values.max() ?? 0))
+                    completion(ProgressValue(value: progress.values.max() ?? 0))
                 })
             }
         }
@@ -141,7 +143,7 @@ extension Promise {
                     completion(error)
                 }, progress: { value in
                     progress[ObjectIdentifier(promise).hashValue] = value
-                    completion(Progress(value: progress.values.max() ?? 0))
+                    completion(ProgressValue(value: progress.values.max() ?? 0))
                 })
             }
         }
@@ -181,7 +183,7 @@ extension Promise {
     /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
     public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
         self.execute(progress: progress != nil) { result in
-            if progress != nil, let prog = result as? Progress {
+            if progress != nil, let prog = result as? ProgressValue {
                 progress?(prog.value)
             } else if let error = result as? Error {
                 `catch`?(error)
@@ -206,7 +208,7 @@ extension Promise {
             }, catch: { error in
                 completion(error)
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
@@ -224,7 +226,7 @@ extension Promise {
                     completion(result)
                 }
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
@@ -244,7 +246,7 @@ extension Promise {
             }, catch: { error in
                 completion(error)
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
@@ -276,7 +278,7 @@ extension Promise {
                     completion(error)
                 }
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
