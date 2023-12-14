@@ -18,6 +18,8 @@ open class RequestManager {
     private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
     private var synchronousSemaphore = DispatchSemaphore(value: 1)
     
+    public init() {}
+    
     /// 添加请求并开始
     open func addRequest(_ request: HTTPRequest) {
         addRecord(for: request)

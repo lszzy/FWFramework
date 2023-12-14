@@ -217,6 +217,8 @@ open class BatchRequestManager {
     private var batchRequestArray: [BatchRequest] = []
     private var lock = NSLock()
     
+    public init() {}
+    
     /// 添加批量请求
     open func addBatchRequest(_ batchRequest: BatchRequest) {
         lock.lock()
