@@ -308,7 +308,7 @@ extension Promise {
         self.operation() { result in
             Promise.completionQueue.async {
                 if !self.finished {
-                    if result is Progress {
+                    if result is ProgressValue {
                         if progress { completion(result) }
                     } else {
                         self.finished = true
