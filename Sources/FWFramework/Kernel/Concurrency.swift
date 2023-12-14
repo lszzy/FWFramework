@@ -12,8 +12,8 @@ import Foundation
 // MARK: - Concurrency+Promise
 extension Promise {
     
-    /// 异步获取结果
-    public var result: Any? {
+    /// 异步获取结果值
+    public var value: Any {
         get async throws {
             try await withCheckedThrowingContinuation { continuation in
                 done { value in
@@ -23,6 +23,12 @@ extension Promise {
                 }
             }
         }
+    }
+    
+    /// 异步获取结果值，可声明类型
+    public func value<T: Any>() async throws -> T {
+        let value = try await value
+        return value as! T
     }
     
 }

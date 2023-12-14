@@ -45,24 +45,24 @@ public class Promise {
     private struct ProgressValue { var value: Double }
     
     /// 约定内部属性
-    private let operation: (@escaping (_ result: Any?) -> Void) -> Void
+    private let operation: (@escaping (_ result: Any) -> Void) -> Void
     private var finished: Bool = false
     
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
-    public init(completion: @escaping (_ completion: @escaping (_ result: Any?) -> Void) -> Void) {
+    public init(completion: @escaping (_ completion: @escaping (_ result: Any) -> Void) -> Void) {
         self.operation = completion
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init(block: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
+    public convenience init<T: Any>(block: @escaping (_ resolve: @escaping (_ value: T) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
         self.init(completion: { completion in
             block(completion, completion)
         })
     }
     
     /// 指定操作成功、失败句柄和进度句柄初始化
-    public convenience init(progress: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
+    public convenience init<T: Any>(progress: @escaping (_ resolve: @escaping (_ value: T) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
         self.init(completion: { completion in
             progress(completion, completion, { value in
                 completion(ProgressValue(value: value))
@@ -71,7 +71,7 @@ public class Promise {
     }
     
     /// 快速创建成功实例
-    public convenience init(value: Any?) {
+    public convenience init(value: Any) {
         self.init(completion: { completion in
             completion(value)
         })
@@ -92,7 +92,7 @@ extension Promise {
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息；约定进度为所有约定总进度
     public static func all(_ promises: [Promise]) -> Promise {
         return Promise { completion in
-            var values: [Any?] = []
+            var values: [Any] = []
             var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done({ value in
@@ -164,24 +164,24 @@ extension Promise {
     }
     
     /// 执行约定并回调完成句柄
-    public func done(_ completion: @escaping (_ result: Any?) -> Void) {
+    public func done(_ completion: @escaping (_ result: Any) -> Void) {
         self.execute(progress: false, completion: completion)
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
+    public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
         self.execute(progress: false) { result in
             if let error = result as? Error {
                 `catch`?(error)
             } else {
-                done(result)
+                done(result as! T)
             }
             finally?()
         }
     }
     
     /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
+    public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
         self.execute(progress: progress != nil) { result in
             if progress != nil, let prog = result as? ProgressValue {
                 progress?(prog.value)
@@ -189,14 +189,14 @@ extension Promise {
                 `catch`?(error)
                 finally?()
             } else {
-                done(result)
+                done(result as! T)
                 finally?()
             }
         }
     }
     
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then(_ block: @escaping (_ value: Any?) -> Any?) -> Promise {
+    public func then<T: Any>(_ block: @escaping (_ value: T) -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
                 let result = block(value)
@@ -214,7 +214,7 @@ extension Promise {
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    public func recover(_ block: @escaping (_ error: Error) -> Any?) -> Promise {
+    public func recover(_ block: @escaping (_ error: Error) -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
                 completion(value)
@@ -231,17 +231,19 @@ extension Promise {
         }
     }
     
-    /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
-    public func validate(_ block: @escaping (_ value: Any?) -> Any?) -> Promise {
+    /// 验证约定，当前约定成功时验证结果，可返回Bool或抛异常；验证通过时返回结果，验证失败时返回验证错误
+    public func validate<T: Any>(_ block: @escaping (_ value: T) throws -> Bool) -> Promise {
         return Promise { completion in
             self.done({ value in
-                let result = block(value)
-                if let error = result as? Error {
+                do {
+                    let isValid = try block(value)
+                    if !isValid {
+                        completion(Promise.validationError)
+                    } else {
+                        completion(value)
+                    }
+                } catch {
                     completion(error)
-                } else if let valid = result as? Bool, !valid {
-                    completion(Promise.validationError)
-                } else {
-                    completion(value)
                 }
             }, catch: { error in
                 completion(error)
@@ -252,7 +254,7 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce(_ items: [Any], reducer: @escaping (_ value: Any?, _ item: Any) -> Any?) -> Promise {
+    public func reduce<Value: Any, Item>(_ items: [Item], reducer: @escaping (_ value: Value, _ item: Item) -> Value) -> Promise {
         var promise = self
         for item in items {
             promise = promise.then({ value in
@@ -304,7 +306,7 @@ extension Promise {
 extension Promise {
     
     /// 约定内部执行方法
-    private func execute(progress: Bool, completion: @escaping (_ result: Any?) -> Void) {
+    private func execute(progress: Bool, completion: @escaping (_ result: Any) -> Void) {
         self.operation() { result in
             Promise.completionQueue.async {
                 if !self.finished {
@@ -326,7 +328,7 @@ extension Promise {
     
     /// 约定内部重试方法
     private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping () -> Promise) -> Promise {
-        let promise = initialPromise ?? Promise.delay(delay).then({ _ in block() })
+        let promise = initialPromise ?? Promise.delay(delay).then({ (_: Any) in block() })
         if times < 1 { return promise }
         return promise.recover { _ in
             Promise.retry(nil, times: times - 1, delay: delay, block: block)
