@@ -34,8 +34,8 @@ public class Promise {
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = .main
-    /// 约定默认错误，约定失败时可选使用，可用于错误判断，支持自定义
-    public static var defaultError: Error = PromiseError.failed
+    /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
+    public static var failedError: Error = PromiseError.failed
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
     public static var validationError: Error = PromiseError.validation
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
@@ -170,28 +170,25 @@ extension Promise {
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
     public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
-        self.execute(progress: false) { result in
-            if let error = result as? Error {
-                `catch`?(error)
-            } else {
-                done(result as! T)
-            }
-            finally?()
-        }
+        self.done(done, catch: `catch`, progress: nil, finally: finally)
     }
     
     /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
     public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
         self.execute(progress: progress != nil) { result in
-            if progress != nil, let prog = result as? ProgressValue {
+            if let prog = result as? ProgressValue {
                 progress?(prog.value)
-            } else if let error = result as? Error {
-                `catch`?(error)
-                finally?()
-            } else {
-                done(result as! T)
-                finally?()
+                return
             }
+            
+            if let error = result as? Error {
+                `catch`?(error)
+            } else if let value = result as? T {
+                done(value)
+            } else {
+                `catch`?(Promise.failedError)
+            }
+            finally?()
         }
     }
     
@@ -254,7 +251,7 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce<Value: Any, Item>(_ items: [Item], reducer: @escaping (_ value: Value, _ item: Item) -> Value) -> Promise {
+    public func reduce<T>(_ items: [T], reducer: @escaping (_ value: Any, _ item: T) -> Any) -> Promise {
         var promise = self
         for item in items {
             promise = promise.then({ value in
