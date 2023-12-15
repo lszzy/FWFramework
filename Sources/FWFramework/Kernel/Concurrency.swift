@@ -27,8 +27,10 @@ extension Promise {
     
     /// 异步获取结果值，可声明类型
     public func value<T: Any>() async throws -> T {
-        let value = try await value
-        return value as! T
+        guard let value = (try await value) as? T else {
+            throw Promise.failedError
+        }
+        return value
     }
     
 }
