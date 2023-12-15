@@ -55,15 +55,15 @@ extension TestConcurrencyController {
         app.showLoading()
         
         Task.init {
-            let promise = Promise.delay(1).then { value in
+            let promise = Promise.delay(1).then { (value: Any) in
                 return "Promise succeed"
             }
             
             do {
-                let result = try await promise.result
+                let result: String = try await promise.value()
                 DispatchQueue.app.mainAsync {
                     self.app.hideLoading()
-                    self.app.showMessage(text: result.safeString)
+                    self.app.showMessage(text: result)
                 }
             } catch {
                 DispatchQueue.app.mainAsync {
@@ -78,15 +78,15 @@ extension TestConcurrencyController {
         app.showLoading()
         
         Task.init {
-            let promise = Promise.delay(1).then { value in
-                return PromiseError.failed
+            let promise = Promise.delay(1).then { (value: Any) in
+                throw PromiseError.failed
             }
             
             do {
-                let result = try await promise.result
+                let result: String = try await promise.value()
                 DispatchQueue.app.mainAsync {
                     self.app.hideLoading()
-                    self.app.showMessage(text: result.safeString)
+                    self.app.showMessage(text: result)
                 }
             } catch {
                 DispatchQueue.app.mainAsync {
