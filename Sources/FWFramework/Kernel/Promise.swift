@@ -193,14 +193,18 @@ extension Promise {
     }
     
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then<T: Any>(_ block: @escaping (_ value: T) -> Any) -> Promise {
+    public func then<T: Any>(_ block: @escaping (_ value: T) throws -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
-                let result = block(value)
-                if let promise = result as? Promise {
-                    promise.execute(progress: true, completion: completion)
-                } else {
-                    completion(result)
+                do {
+                    let result = try block(value)
+                    if let promise = result as? Promise {
+                        promise.execute(progress: true, completion: completion)
+                    } else {
+                        completion(result)
+                    }
+                } catch {
+                    completion(error)
                 }
             }, catch: { error in
                 completion(error)
@@ -211,16 +215,20 @@ extension Promise {
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    public func recover(_ block: @escaping (_ error: Error) -> Any) -> Promise {
+    public func recover(_ block: @escaping (_ error: Error) throws -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
                 completion(value)
             }, catch: { error in
-                let result = block(error)
-                if let promise = result as? Promise {
-                    promise.execute(progress: true, completion: completion)
-                } else {
-                    completion(result)
+                do {
+                    let result = try block(error)
+                    if let promise = result as? Promise {
+                        promise.execute(progress: true, completion: completion)
+                    } else {
+                        completion(result)
+                    }
+                } catch let recoverError {
+                    completion(recoverError)
                 }
             }, progress: { value in
                 completion(ProgressValue(value: value))
@@ -251,11 +259,11 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce<T>(_ items: [T], reducer: @escaping (_ value: Any, _ item: T) -> Any) -> Promise {
+    public func reduce<T>(_ items: [T], reducer: @escaping (_ value: Any, _ item: T) throws -> Any) -> Promise {
         var promise = self
         for item in items {
             promise = promise.then({ value in
-                return reducer(value, item)
+                return try reducer(value, item)
             })
         }
         return promise
