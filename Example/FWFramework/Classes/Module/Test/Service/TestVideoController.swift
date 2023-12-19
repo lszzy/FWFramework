@@ -41,15 +41,6 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         app.showLoading()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if !app.isDataLoaded {
-            app.isDataLoaded = true
-            self.player.playFromBeginning()
-        }
-    }
-    
     deinit {
         self.player.willMove(toParent: nil)
         self.player.view.removeFromSuperview()
