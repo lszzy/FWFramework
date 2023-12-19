@@ -27,6 +27,28 @@ class TestAudioController: UIViewController {
         return result
     }()
     
+    private lazy var previousImage: UIImageView = {
+        let result = UIImageView()
+        result.isHidden = true
+        result.image = APP.iconImage("zmdi-var-skip-previous", 100)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { [weak self] sender in
+            self?.playPrevious()
+        }
+        return result
+    }()
+    
+    private lazy var nextImage: UIImageView = {
+        let result = UIImageView()
+        result.isHidden = true
+        result.image = APP.iconImage("zmdi-var-skip-next", 100)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { [weak self] sender in
+            self?.playNext()
+        }
+        return result
+    }()
+    
     private lazy var audioLabel: UILabel = {
         let result = UILabel()
         result.textColor = AppTheme.textColor
@@ -47,17 +69,30 @@ class TestAudioController: UIViewController {
 extension TestAudioController: ViewControllerProtocol {
     
     func setupNavbar() {
-        app.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
-            guard let strongSelf = self else { return }
-            strongSelf.cacheEnabled = !strongSelf.cacheEnabled
-            strongSelf.audioPlayer.playItem(from: 0)
-            strongSelf.renderData()
-            strongSelf.setupNavbar()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.app.showSheet(title: nil, message: nil, actions: [self.audioPlayer.repeatMode == .on ? "关闭循环" : "循环播放", self.audioPlayer.shuffleMode == .on ? "顺序播放" : "随机播放", self.cacheEnabled ? "禁用缓存" : "启用缓存"]) { [weak self] index in
+                guard let self = self else { return }
+                
+                if index == 0 {
+                    self.audioPlayer.repeatMode = self.audioPlayer.repeatMode == .on ? .off : .on
+                } else if index == 1 {
+                    self.audioPlayer.shuffleMode = self.audioPlayer.shuffleMode == .on ? .off : .on
+                } else {
+                    self.cacheEnabled = !self.cacheEnabled
+                    self.audioPlayer.playItem(from: 0)
+                    self.renderData()
+                    self.setupNavbar()
+                }
+            }
         }
     }
     
     func setupSubviews() {
         view.addSubview(audioImage)
+        view.addSubview(previousImage)
+        view.addSubview(nextImage)
         view.addSubview(audioLabel)
     }
     
@@ -65,6 +100,10 @@ extension TestAudioController: ViewControllerProtocol {
         audioImage.app.layoutChain.centerX().size(CGSize(width: 100, height: 100))
             .centerY(toView: view as Any, offset: -58)
         audioLabel.app.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
+        
+        let margin = (APP.screenWidth - 100.0 * 3) / 4.0
+        previousImage.chain.centerY(toView: audioImage).right(toViewLeft: audioImage, offset: -margin).size(CGSize(width: 100, height: 100))
+        nextImage.chain.centerY(toView: audioImage).left(toViewRight: audioImage, offset: margin).size(CGSize(width: 100, height: 100))
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
@@ -79,6 +118,8 @@ extension TestAudioController: ViewControllerProtocol {
         } else {
             audioImage.image = APP.iconImage("zmdi-var-play", 100)
         }
+        previousImage.isHidden = audioPlayer.lastItemIndex == 0
+        nextImage.isHidden = audioPlayer.lastItemIndex == audioPlayerNumberOfItems() - 1
     }
     
     private func toggleAudio() {
@@ -92,6 +133,14 @@ extension TestAudioController: ViewControllerProtocol {
             }
         }
         self.renderData()
+    }
+    
+    private func playPrevious() {
+        audioPlayer.playPrevious()
+    }
+    
+    private func playNext() {
+        audioPlayer.playNext()
     }
     
     func renderLabel() {
