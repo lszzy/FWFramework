@@ -49,7 +49,7 @@ extension TestPreviewController: ViewControllerProtocol {
             "http://via.placeholder.com/2000x100.jpg",
             "http://via.placeholder.com/2000x2000.jpg",
             "http://via.placeholder.com/100x100.jpg",
-            "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4",
+            FileManager.app.pathResource.app.appendingPath("Video.mp4"),
         ]
     }
     
