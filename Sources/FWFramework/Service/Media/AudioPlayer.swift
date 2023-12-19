@@ -85,7 +85,7 @@ open class AudioPlayer: NSObject {
             playedItems.removeAll()
             if shuffleMode == .on {
                 if let index = getAudioIndex(audioPlayer.currentItem) {
-                    playedItems.append(index)
+                    playedItems.insert(index)
                 }
             }
         }
@@ -127,20 +127,15 @@ open class AudioPlayer: NSObject {
     
     open var playingItemCurrentTime: Float {
         let currentTime = audioPlayer.currentItem?.currentTime()
-        guard let currentTime = currentTime, CMTIME_IS_VALID(currentTime) else {
-            return 0
-        }
+        guard let currentTime = currentTime, currentTime.isValid else { return 0 }
         let current = currentTime.seconds
-        return !current.isFinite ? Float(0) : Float(current)
+        return current.isFinite ? Float(current) : 0
     }
     open var playingItemDurationTime: Float {
         let durationTime = playerItemDuration()
+        guard durationTime.isValid else { return 0 }
         let duration = durationTime.seconds
-        if !durationTime.isValid || !duration.isFinite {
-            return 0
-        } else {
-            return Float(duration)
-        }
+        return duration.isFinite ? Float(duration) : 0
     }
     open var observePeriodicTime: Bool = false {
         didSet {
@@ -153,7 +148,7 @@ open class AudioPlayer: NSObject {
     }
     
     private var pauseReason: AudioPlayerPauseReason = .none
-    private var playedItems: [Int] = []
+    private var playedItems: Set<Int> = .init()
     private var periodicTimeToken: Any?
     
     private var routeChangedWhilePlaying = false
@@ -173,6 +168,8 @@ open class AudioPlayer: NSObject {
             playerItem = item
         } else if let urlAsset = url as? AVURLAsset {
             playerItem = AVPlayerItem(asset: urlAsset)
+        } else if let urlValue = url as? URL {
+            playerItem = AVPlayerItem(url: urlValue)
         } else if let urlParameter = url as? URLParameter {
             playerItem = AVPlayerItem(url: urlParameter.urlValue)
         }
@@ -493,7 +490,7 @@ open class AudioPlayer: NSObject {
             preAction()
         }
         lastItemIndex = index
-        playedItems.append(index)
+        playedItems.insert(index)
         
         delegate?.audioPlayerWillChanged?(at: lastItemIndex)
     }
@@ -567,9 +564,7 @@ open class AudioPlayer: NSObject {
     
     private func insertPlayerItem(_ item: AVPlayerItem) {
         if audioPlayer.items().count > 1 {
-            for i in 1..<audioPlayer.items().count {
-                audioPlayer.remove(audioPlayer.items()[i])
-            }
+            removeQueueItems()
         }
         if audioPlayer.canInsert(item, after: nil) {
             audioPlayer.insert(item, after: nil)
