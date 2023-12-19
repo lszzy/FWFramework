@@ -162,6 +162,12 @@ open class AudioPlayer: NSObject {
         super.init()
     }
     
+    deinit {
+        if tookAudioFocus {
+            destroyPlayer()
+        }
+    }
+    
     open func setupPlayerItem(url: Any, index: Int) {
         var playerItem: AVPlayerItem?
         if let item = url as? AVPlayerItem {
@@ -193,8 +199,7 @@ open class AudioPlayer: NSObject {
     open func removeAllItems() {
         audioPlayer.items().forEach({ item in
             item.seek(to: .zero, completionHandler: nil)
-            item.removeObserver(self, forKeyPath: "loadedTimeRanges", context: nil)
-            item.removeObserver(self, forKeyPath: "status", context: nil)
+            unobservePlayerItem(item)
         })
         
         playerItems = isMemoryCached ? [] : nil
@@ -387,14 +392,12 @@ open class AudioPlayer: NSObject {
             let newPlayerItem = change?[.newKey] as? AVPlayerItem
             let lastPlayerItem = change?[.oldKey] as? AVPlayerItem
             if let lastPlayerItem = lastPlayerItem {
-                lastPlayerItem.removeObserver(self, forKeyPath: "loadedTimeRanges", context: nil)
-                lastPlayerItem.removeObserver(self, forKeyPath: "status", context: nil)
+                unobservePlayerItem(lastPlayerItem)
                 
                 delegate?.audioPlayerCurrentItemEvicted?(lastPlayerItem)
             }
             if let newPlayerItem = newPlayerItem {
-                newPlayerItem.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
-                newPlayerItem.addObserver(self, forKeyPath: "status", options: .new, context: nil)
+                observePlayerItem(newPlayerItem)
                 
                 delegate?.audioPlayerCurrentItemChanged?(newPlayerItem)
             }
@@ -621,6 +624,22 @@ open class AudioPlayer: NSObject {
         audioPlayer.addObserver(self, forKeyPath: "status", options: [.initial, .new], context: nil)
         audioPlayer.addObserver(self, forKeyPath: "rate", options: [], context: nil)
         audioPlayer.addObserver(self, forKeyPath: "currentItem", options: [.initial, .new, .old], context: nil)
+    }
+    
+    private func observePlayerItem(_ item: AVPlayerItem) {
+        guard !item.fw_propertyBool(forName: "observePlayerItem") else { return }
+        item.fw_setPropertyBool(true, forName: "observePlayerItem")
+        
+        item.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
+        item.addObserver(self, forKeyPath: "status", options: .new, context: nil)
+    }
+    
+    private func unobservePlayerItem(_ item: AVPlayerItem) {
+        guard item.fw_propertyBool(forName: "observePlayerItem") else { return }
+        item.fw_setPropertyBool(false, forName: "observePlayerItem")
+        
+        item.removeObserver(self, forKeyPath: "loadedTimeRanges", context: nil)
+        item.removeObserver(self, forKeyPath: "status", context: nil)
     }
     
     @objc private func interruption(_ notification: Notification) {
