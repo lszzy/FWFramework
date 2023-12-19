@@ -83,7 +83,6 @@ extension TestAudioController: ViewControllerProtocol {
                     self.cacheEnabled = !self.cacheEnabled
                     self.audioPlayer.playItem(from: 0)
                     self.renderData()
-                    self.setupNavbar()
                 }
             }
         }
@@ -189,8 +188,11 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
     func audioPlayerReadyToPlay(_ item: AVPlayerItem?) {
         if item != nil {
             audioPlayer.play()
-            renderData()
         }
+    }
+    
+    func audioPlayerRateChanged(_ isPlaying: Bool) {
+        renderData()
     }
     
     func audioPlayerDidReachEnd() {
