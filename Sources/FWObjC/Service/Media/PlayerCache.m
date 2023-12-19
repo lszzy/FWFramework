@@ -42,15 +42,18 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 + (NSURL *)assetURLWithURL:(NSURL *)url {
-    if (!url) {
-        return nil;
-    }
+    if (!url) { return nil; }
+    if (url.isFileURL) { return url; }
 
     NSURL *assetURL = [NSURL URLWithString:[__FWPlayerCacheScheme stringByAppendingString:[url absoluteString]]];
     return assetURL;
 }
 
 - (AVURLAsset *)URLAssetWithURL:(NSURL *)url {
+    if (url.isFileURL) {
+        return [AVURLAsset URLAssetWithURL:url options:nil];
+    }
+    
     NSURL *assetURL = [__FWPlayerCacheLoaderManager assetURLWithURL:url];
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
     [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
@@ -58,6 +61,11 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 - (AVPlayerItem *)playerItemWithURL:(NSURL *)url {
+    if (url.isFileURL) {
+        AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+        return [AVPlayerItem playerItemWithAsset:urlAsset];
+    }
+    
     NSURL *assetURL = [__FWPlayerCacheLoaderManager assetURLWithURL:url];
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
     [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
