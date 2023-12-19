@@ -67,7 +67,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     }
     
     private func playVideo() {
-        let videoUrl = URL(string: "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4")!
+        guard let videoUrl = Bundle.main.url(forResource: "Video", withExtension: "mp4") else { return }
         if cacheEnabled {
             self.player.asset = resourceLoader.urlAsset(with: videoUrl)
         } else {

@@ -39,7 +39,7 @@ class TestAudioController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        audioPlayer.destroy()
+        audioPlayer.destroyPlayer()
     }
     
 }
@@ -100,7 +100,7 @@ extension TestAudioController: ViewControllerProtocol {
             return
         }
         
-        let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem)?.intValue ?? 0) + 1)
+        let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem) ?? 0) + 1)
         let totalStr = String(describing: audioPlayerNumberOfItems())
         let timeStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
         let durationStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
@@ -119,13 +119,13 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
         var url: URL?
         switch index {
             case 0:
-                url = URL(string: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3")
+                url = Bundle.main.url(forResource: "Audio1", withExtension: "mp3")
                 break
             case 1:
-                url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")
+                url = Bundle.main.url(forResource: "Audio2", withExtension: "mp3")
                 break
             case 2:
-                url = URL(string: "http://downsc.chinaz.net/files/download/sound1/201206/1638.mp3")
+                url = Bundle.main.url(forResource: "Audio3", withExtension: "m4a")
                 break
             default:
                 break
@@ -137,7 +137,7 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
         return url
     }
     
-    func audioPlayerReady(toPlay item: AVPlayerItem?) {
+    func audioPlayerReadyToPlay(_ item: AVPlayerItem?) {
         if item != nil {
             audioPlayer.play()
             renderData()
