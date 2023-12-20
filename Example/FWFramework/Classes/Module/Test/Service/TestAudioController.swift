@@ -111,14 +111,14 @@ extension TestAudioController: ViewControllerProtocol {
         renderData()
     }
     
-    func renderData() {
+    func renderData(ended: Bool = false) {
         if audioPlayer.isPlaying {
             audioImage.image = APP.iconImage("zmdi-var-pause", 100)
         } else {
             audioImage.image = APP.iconImage("zmdi-var-play", 100)
         }
-        previousImage.isHidden = audioPlayer.lastItemIndex == 0
-        nextImage.isHidden = audioPlayer.lastItemIndex == audioPlayerNumberOfItems() - 1
+        previousImage.isHidden = audioPlayer.lastItemIndex == 0 || ended
+        nextImage.isHidden = audioPlayer.lastItemIndex == audioPlayerNumberOfItems() - 1 || ended
     }
     
     private func toggleAudio() {
@@ -170,7 +170,7 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
                 url = Bundle.main.url(forResource: "Audio1", withExtension: "mp3")
                 break
             case 1:
-                url = Bundle.main.url(forResource: "Audio2", withExtension: "mp3")
+                url = Bundle.main.url(forResource: "Audio2", withExtension: "m4a")
                 break
             case 2:
                 url = Bundle.main.url(forResource: "Audio3", withExtension: "m4a")
@@ -185,18 +185,12 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
         return url
     }
     
-    func audioPlayerReadyToPlay(_ item: AVPlayerItem?) {
-        if item != nil {
-            audioPlayer.play()
-        }
-    }
-    
     func audioPlayerRateChanged(_ isPlaying: Bool) {
         renderData()
     }
     
     func audioPlayerDidReachEnd() {
-        renderData()
+        renderData(ended: true)
     }
     
     func audioPlayerCurrentItemChanged(_ item: AVPlayerItem) {

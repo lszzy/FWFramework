@@ -14,10 +14,10 @@
 		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
 		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
-		2F0F09242B3186F4000C3F5E /* Audio2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09202B3186F4000C3F5E /* Audio2.mp3 */; };
 		2F0F09252B3186F4000C3F5E /* Audio1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09212B3186F4000C3F5E /* Audio1.mp3 */; };
 		2F0F09262B3186F4000C3F5E /* Audio3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09222B3186F4000C3F5E /* Audio3.m4a */; };
 		2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09232B3186F4000C3F5E /* Video.mp4 */; };
+		2F0F09292B328E24000C3F5E /* Audio2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09282B328E24000C3F5E /* Audio2.m4a */; };
 		2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */; };
 		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
 		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
@@ -113,10 +113,10 @@
 		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
 		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
-		2F0F09202B3186F4000C3F5E /* Audio2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Audio2.mp3; sourceTree = "<group>"; };
 		2F0F09212B3186F4000C3F5E /* Audio1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Audio1.mp3; sourceTree = "<group>"; };
 		2F0F09222B3186F4000C3F5E /* Audio3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Audio3.m4a; sourceTree = "<group>"; };
 		2F0F09232B3186F4000C3F5E /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
+		2F0F09282B328E24000C3F5E /* Audio2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Audio2.m4a; sourceTree = "<group>"; };
 		2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDatabaseController.swift; sourceTree = "<group>"; };
 		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
 		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 				2F6A416628B721C9003719E7 /* Lottie.json */,
 				2F6A416728B721C9003719E7 /* Bridge.html */,
 				2F0F09212B3186F4000C3F5E /* Audio1.mp3 */,
-				2F0F09202B3186F4000C3F5E /* Audio2.mp3 */,
+				2F0F09282B328E24000C3F5E /* Audio2.m4a */,
 				2F0F09222B3186F4000C3F5E /* Audio3.m4a */,
 				2F0F09232B3186F4000C3F5E /* Video.mp4 */,
 			);
@@ -698,10 +698,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */,
+				2F0F09292B328E24000C3F5E /* Audio2.m4a in Resources */,
 				2F6A416828B721C9003719E7 /* Animation.png in Resources */,
 				2F6A416928B721C9003719E7 /* Qrcode.caf in Resources */,
 				2F0F09252B3186F4000C3F5E /* Audio1.mp3 in Resources */,
-				2F0F09242B3186F4000C3F5E /* Audio2.mp3 in Resources */,
 				2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */,
 				2FF08B3E28ADDC000074895A /* Assets.xcassets in Resources */,
 				2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */,
