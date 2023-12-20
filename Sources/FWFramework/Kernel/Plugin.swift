@@ -7,21 +7,37 @@
 
 import Foundation
 
-/// 可选插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
-@objc public protocol PluginProtocol {
-    
+// MARK: - PluginProtocol
+/// 插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
+public protocol PluginProtocol {
     /// 可选插件单例方法，优先级高，仅调用一次
-    @objc optional static func pluginInstance() -> Self
+    static func pluginInstance() -> Self?
     /// 可选插件工厂方法，优先级低，会调用多次
-    @objc optional static func pluginFactory() -> Self
+    static func pluginFactory() -> Self?
     
     /// 插件load时钩子方法
-    @objc optional func pluginDidLoad()
+    func pluginDidLoad()
     /// 插件unload时钩子方法
-    @objc optional func pluginDidUnload()
-    
+    func pluginDidUnload()
 }
 
+extension PluginProtocol {
+    /// 默认实现插件单例方法，优先级高，仅调用一次
+    public static func pluginInstance() -> Self? {
+        return nil
+    }
+    /// 默认实现插件工厂方法，优先级低，会调用多次
+    public static func pluginFactory() -> Self? {
+        return nil
+    }
+    
+    /// 默认实现插件load时钩子方法
+    public func pluginDidLoad() {}
+    /// 默认实现插件unload时钩子方法
+    public func pluginDidUnload() {}
+}
+
+// MARK: - PluginManager
 /// 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
 ///
 /// 和Mediator对比如下：
@@ -106,10 +122,10 @@ public class PluginManager: NSObject {
         plugin.locked = true
         plugin.isFactory = false
         let pluginProtocol = plugin.object as? PluginProtocol.Type
-        if let instance = pluginProtocol?.pluginInstance?() {
+        if let instance = pluginProtocol?.pluginInstance() {
             plugin.instance = instance
-        } else if let instance = pluginProtocol?.pluginFactory?() {
-            (plugin.instance as? PluginProtocol)?.pluginDidUnload?()
+        } else if let instance = pluginProtocol?.pluginFactory() {
+            (plugin.instance as? PluginProtocol)?.pluginDidUnload()
             plugin.instance = instance
             plugin.isFactory = true
         } else if let pluginSingleton = plugin.object as? SingletonProtocol.Type {
@@ -125,7 +141,7 @@ public class PluginManager: NSObject {
             plugin.instance = plugin.object
         }
         
-        (plugin.instance as? PluginProtocol)?.pluginDidLoad?()
+        (plugin.instance as? PluginProtocol)?.pluginDidLoad()
         return plugin.instance as? T
     }
     
@@ -134,7 +150,7 @@ public class PluginManager: NSObject {
         let pluginId = String.fw_safeString(type)
         guard let plugin = pluginPool[pluginId] else { return }
         
-        (plugin.instance as? PluginProtocol)?.pluginDidUnload?()
+        (plugin.instance as? PluginProtocol)?.pluginDidUnload()
         plugin.instance = nil
         plugin.isFactory = false
         plugin.locked = false
