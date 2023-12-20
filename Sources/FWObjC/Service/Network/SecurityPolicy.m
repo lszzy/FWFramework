@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 #import "SecurityPolicy.h"
-#import "ObjC.h"
 #import <AssertMacros.h>
 
 static BOOL __FWSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
@@ -199,7 +198,7 @@ static NSArray * __FWPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) 
         //  From Apple Docs:
         //          "Do not implicitly trust self-signed certificates as anchors (kSecTrustOptionImplicitAnchors).
         //           Instead, add your own (self-signed) CA certificate to the list of trusted anchors."
-        FWLogDebug(@"In order to validate a domain name for self signed certificates, you MUST use pinning.");
+        NSLog(@"In order to validate a domain name for self signed certificates, you MUST use pinning.");
         return NO;
     }
 
