@@ -229,14 +229,14 @@ open class RequestContextAccessory: RequestAccessory {
     
     /// 显示请求错误，优先调用config，默认显示Toast提示
     open func showError(for request: HTTPRequest) {
-        guard request.context != nil, !request.isCancelled,
-              let error = request.error else { return }
+        guard !request.isCancelled, let error = request.error else { return }
         
         if let block = request.config.showErrorBlock {
             block(request)
             return
         }
         
+        guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_showMessage(error: error)
@@ -248,13 +248,14 @@ open class RequestContextAccessory: RequestAccessory {
     
     /// 显示请求加载条，优先调用config
     open func showLoading(for request: HTTPRequest) {
-        guard request.context != nil, !request.isCancelled else { return }
+        guard !request.isCancelled else { return }
         
         if let block = request.config.showLoadingBlock {
             block(request)
             return
         }
         
+        guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_showLoading()
@@ -266,13 +267,12 @@ open class RequestContextAccessory: RequestAccessory {
     
     /// 隐藏请求加载条，优先调用config
     open func hideLoading(for request: HTTPRequest) {
-        guard request.context != nil else { return }
-        
         if let block = request.config.hideLoadingBlock {
             block(request)
             return
         }
         
+        guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_hideLoading()
