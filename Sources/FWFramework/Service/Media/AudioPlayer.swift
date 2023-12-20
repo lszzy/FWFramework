@@ -188,11 +188,9 @@ open class AudioPlayer: NSObject {
         willPlayPlayerItem(at: startIndex)
         audioPlayer.pause()
         audioPlayer.removeAllItems()
-        let foundSource = findSourceInPlayerItems(startIndex)
+        let foundSource = findSourceInPlayerItems(startIndex, play: true)
         if !foundSource {
             getSourceURL(at: startIndex, preBuffer: false)
-        } else if audioPlayer.currentItem?.status == .readyToPlay {
-            audioPlayer.play()
         }
     }
     
@@ -536,12 +534,12 @@ open class AudioPlayer: NSObject {
         }
     }
     
-    private func findSourceInPlayerItems(_ index: Int) -> Bool {
+    private func findSourceInPlayerItems(_ index: Int, play: Bool = false) -> Bool {
         for item in (playerItems ?? []) {
             if let checkIndex = getAudioIndex(item), checkIndex == index {
                 if item.status == .readyToPlay {
                     item.seek(to: .zero) { [weak self] _ in
-                        self?.insertPlayerItem(item)
+                        self?.insertPlayerItem(item, play: play)
                     }
                     return true
                 }
@@ -565,12 +563,16 @@ open class AudioPlayer: NSObject {
         }
     }
     
-    private func insertPlayerItem(_ item: AVPlayerItem) {
+    private func insertPlayerItem(_ item: AVPlayerItem, play: Bool = false) {
         if audioPlayer.items().count > 1 {
             removeQueueItems()
         }
         if audioPlayer.canInsert(item, after: nil) {
             audioPlayer.insert(item, after: nil)
+            
+            if play && item.status == .readyToPlay {
+                audioPlayer.play()
+            }
         }
     }
     
