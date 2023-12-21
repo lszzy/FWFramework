@@ -453,9 +453,9 @@ open class HTTPRequest: CustomStringConvertible {
     open var tag: Int = 0
     /// 当前请求的上下文，支持UIViewController|UIView
     open weak var context: AnyObject?
-    /// 是否自动显示错误信息
+    /// 是否自动显示错误信息，context可不存在
     open var autoShowError = false
-    /// 是否自动显示加载信息
+    /// 是否自动显示加载信息，context必须存在
     open var autoShowLoading = false
     /// 自定义成功主线程回调句柄
     open var successCompletionBlock: Completion?
@@ -954,31 +954,31 @@ open class HTTPRequest: CustomStringConvertible {
         return self
     }
     
-    /// 是否自动显示加载信息
+    /// 是否自动显示加载信息，context必须存在
     @discardableResult
     open func autoShowLoading(_ autoShowLoading: Bool) -> Self {
         self.autoShowLoading = autoShowLoading
         return self
     }
     
-    /// 是否自动显示错误信息
+    /// 是否自动显示错误信息，context可不存在
     @discardableResult
     open func autoShowError(_ autoShowError: Bool) -> Self {
         self.autoShowError = autoShowError
         return self
     }
     
-    /// 显示加载条，默认显示加载插件
+    /// 显示加载条，默认显示加载插件，context必须存在
     open func showLoading() {
         contextAccessory.showLoading(for: self)
     }
     
-    /// 隐藏加载条，默认隐藏加载插件
+    /// 隐藏加载条，默认隐藏加载插件，context必须存在
     open func hideLoading() {
         contextAccessory.hideLoading(for: self)
     }
     
-    /// 显示网络错误，默认显示Toast提示
+    /// 显示网络错误，默认显示Toast提示，context可不存在
     open func showError() {
         contextAccessory.showError(for: self)
     }

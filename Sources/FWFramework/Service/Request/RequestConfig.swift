@@ -165,10 +165,10 @@ open class RequestAccessory: RequestAccessoryProtocol {
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory {
-    /// 是否自动初始化当前context控制器，默认true
-    open var autoSetupContext: Bool = true
-    /// 是否自动监听当前context控制器，当释放时自动停止请求，默认true
-    open var autoObserveContext: Bool = true
+    /// 是否自动初始化当前context控制器，默认false
+    open var autoSetupContext: Bool = false
+    /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
+    open var autoObserveContext: Bool = false
     
     public override init() {
         super.init()
@@ -236,12 +236,13 @@ open class RequestContextAccessory: RequestAccessory {
             return
         }
         
-        guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
             if let viewController = request.context as? UIViewController {
                 viewController.fw_showMessage(error: error)
             } else if let view = request.context as? UIView {
                 view.fw_showMessage(error: error)
+            } else {
+                UIWindow.fw_showMessage(error: error)
             }
         }
     }
