@@ -166,6 +166,7 @@ extension TestConcurrencyController {
     @objc func onRequestSuccess() {
         Task.init {
             let request = TestModelRequest()
+            request.context = self
             request.autoShowLoading = true
             request.autoShowError = true
             
@@ -179,6 +180,7 @@ extension TestConcurrencyController {
     @objc func onRequestFailure() {
         Task.init {
             let request = TestModelRequest()
+            request.context = self
             request.autoShowLoading = true
             request.autoShowError = true
             request.testFailed = true
@@ -195,6 +197,7 @@ extension TestConcurrencyController {
     @objc func onRequestCancel() {
         let task = Task.init {
             let request = TestModelRequest()
+            request.context = self
             request.autoShowLoading = true
             
             do {
@@ -216,6 +219,7 @@ extension TestConcurrencyController {
     @objc func onRequestClear() {
         Task {
             let request = TestModelRequest()
+            request.context = self
             request.autoShowLoading = true
             
             let accessory = RequestAccessory()

@@ -587,7 +587,8 @@ open class HTTPRequest: CustomStringConvertible {
     /// 当前请求构建器，默认nil
     open private(set) var builder: Builder?
     
-    private lazy var contextAccessory: RequestContextAccessory = {
+    /// 当前上下文配件，用于显示错误和加载信息
+    open lazy var contextAccessory: RequestContextAccessory = {
         let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
         return result
     }()
