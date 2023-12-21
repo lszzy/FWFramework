@@ -159,7 +159,7 @@ extension EmptyViewDelegate {
             text: EmptyPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
             detail: EmptyPluginImpl.shared.errorDetailFormatter?(error),
             image: EmptyPluginImpl.shared.errorImageFormatter?(error),
-            action: action ?? EmptyPluginImpl.shared.errorActionFormatter?(error),
+            action: block != nil ? (action ?? EmptyPluginImpl.shared.errorActionFormatter?(error)) : nil,
             block: block
         )
     }
