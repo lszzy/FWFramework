@@ -470,6 +470,7 @@ private extension TestRequestController {
         var delay = false
         
         request
+            .context(self)
             .autoShowLoading(true)
             .preloadSafeCacheModel { [weak self] title in
                 delay = true
@@ -498,6 +499,7 @@ private extension TestRequestController {
     @objc func onCache() {
         // context不指定时默认自动查找
         TestCacheRequest()
+            .context(self)
             .autoShowLoading(true)
             .autoShowError(true)
             .responseSuccess { [weak self] (req: TestCacheRequest) in
