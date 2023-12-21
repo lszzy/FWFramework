@@ -22,7 +22,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     public static let shared = AlamofireImpl()
     
     /// SessionConfiguration配置，默认nil
-    open var sessionConfiguration: URLSessionConfiguration?
+    open var sessionConfiguration: URLSessionConfiguration = .af.default
     /// 全局intercepter配置，默认nil
     open var intercepter: RequestInterceptor?
     /// 服务器信任管理器，默认nil
@@ -43,12 +43,24 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: [String]?
     
+    #if DEBUG
+    /// 是否启用Mock，配合NetworkMocker使用，默认false
+    open var mockEnabled: Bool = false {
+        didSet {
+            guard mockEnabled else { return }
+            
+            let protocolClasses = sessionConfiguration.protocolClasses ?? []
+            sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
+        }
+    }
+    #endif
+    
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
     
     /// 会话，延迟加载前可配置
     open lazy var session: Session = {
         let result = Session(
-            configuration: sessionConfiguration ?? .af.default,
+            configuration: sessionConfiguration,
             rootQueue: rootQueue,
             startRequestsImmediately: true,
             interceptor: intercepter,

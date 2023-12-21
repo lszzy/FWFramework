@@ -20,7 +20,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     public static let shared = RequestPluginImpl()
     
     /// SessionConfiguration配置，默认nil
-    open var sessionConfiguration: URLSessionConfiguration?
+    open var sessionConfiguration: URLSessionConfiguration = .default
     /// 自定义安全策略，默认default
     open var securityPolicy = SecurityPolicy.default()
     /// SessionTaskMetrics配置句柄，默认nil
@@ -32,6 +32,18 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     open var acceptableStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: Set<String>?
+    
+    #if DEBUG
+    /// 是否启用Mock，配合NetworkMocker使用，默认false
+    open var mockEnabled: Bool = false {
+        didSet {
+            guard mockEnabled else { return }
+            
+            let protocolClasses = sessionConfiguration.protocolClasses ?? []
+            sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
+        }
+    }
+    #endif
     
     private var completionQueue = DispatchQueue(label: "site.wuyong.queue.request.completion", attributes: .concurrent)
     
