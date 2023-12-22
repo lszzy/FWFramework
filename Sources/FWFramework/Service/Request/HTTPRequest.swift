@@ -72,46 +72,47 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求构建器，可继承
     open class Builder {
         
-        fileprivate var baseUrl: String?
-        fileprivate var requestUrl: String?
-        fileprivate var cdnUrl: String?
-        fileprivate var useCDN: Bool?
-        fileprivate var allowsCellularAccess: Bool?
-        fileprivate var requestTimeoutInterval: TimeInterval?
-        fileprivate var requestCachePolicy: URLRequest.CachePolicy?
-        fileprivate var requestMethod: RequestMethod?
-        fileprivate var requestArgument: Any?
-        fileprivate var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
-        fileprivate var resumableDownloadPath: String?
-        fileprivate var requestSerializerType: RequestSerializerType?
-        fileprivate var responseSerializerType: ResponseSerializerType?
-        fileprivate var requestAuthorizationHeaders: [String]?
-        fileprivate var requestHeaders: [String: String]?
-        fileprivate var requestPriority: RequestPriority?
-        fileprivate var requestUserInfo: [AnyHashable: Any]?
-        fileprivate var customUrlRequest: URLRequest?
-        fileprivate var isSynchronously: Bool?
-        fileprivate var tag: Int?
-        fileprivate var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
-        fileprivate var jsonValidator: Any?
-        fileprivate var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
-        fileprivate var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
-        fileprivate var responseMockValidator: ((HTTPRequest) -> Bool)?
-        fileprivate var responseMockProcessor: ((HTTPRequest) -> Bool)?
-        fileprivate var requestRetryCount: Int?
-        fileprivate var requestRetryInterval: TimeInterval?
-        fileprivate var requestRetryTimeout: TimeInterval?
-        fileprivate var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-        fileprivate var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
-        fileprivate var requestCompletePreprocessor: Completion?
-        fileprivate var requestCompleteFilter: Completion?
-        fileprivate var requestFailedPreprocessor: Completion?
-        fileprivate var requestFailedFilter: Completion?
-        fileprivate var cacheTimeInSeconds: Int?
-        fileprivate var cacheVersion: Int?
-        fileprivate var cacheSensitiveData: Any?
-        fileprivate var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
-        fileprivate var writeCacheAsynchronously: Bool?
+        /// 只读属性
+        public private(set) var baseUrl: String?
+        public private(set) var requestUrl: String?
+        public private(set) var cdnUrl: String?
+        public private(set) var useCDN: Bool?
+        public private(set) var allowsCellularAccess: Bool?
+        public private(set) var requestTimeoutInterval: TimeInterval?
+        public private(set) var requestCachePolicy: URLRequest.CachePolicy?
+        public private(set) var requestMethod: RequestMethod?
+        public private(set) var requestArgument: Any?
+        public private(set) var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+        public private(set) var resumableDownloadPath: String?
+        public private(set) var requestSerializerType: RequestSerializerType?
+        public private(set) var responseSerializerType: ResponseSerializerType?
+        public private(set) var requestAuthorizationHeaders: [String]?
+        public private(set) var requestHeaders: [String: String]?
+        public private(set) var requestPriority: RequestPriority?
+        public private(set) var requestUserInfo: [AnyHashable: Any]?
+        public private(set) var customUrlRequest: URLRequest?
+        public private(set) var isSynchronously: Bool?
+        public private(set) var tag: Int?
+        public private(set) var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
+        public private(set) var jsonValidator: Any?
+        public private(set) var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        public private(set) var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
+        public private(set) var responseMockValidator: ((HTTPRequest) -> Bool)?
+        public private(set) var responseMockProcessor: ((HTTPRequest) -> Bool)?
+        public private(set) var requestRetryCount: Int?
+        public private(set) var requestRetryInterval: TimeInterval?
+        public private(set) var requestRetryTimeout: TimeInterval?
+        public private(set) var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        public private(set) var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
+        public private(set) var requestCompletePreprocessor: Completion?
+        public private(set) var requestCompleteFilter: Completion?
+        public private(set) var requestFailedPreprocessor: Completion?
+        public private(set) var requestFailedFilter: Completion?
+        public private(set) var cacheTimeInSeconds: Int?
+        public private(set) var cacheVersion: Int?
+        public private(set) var cacheSensitiveData: Any?
+        public private(set) var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
+        public private(set) var writeCacheAsynchronously: Bool?
         
         /// 构造方法
         public init() {}
