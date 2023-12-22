@@ -585,6 +585,9 @@ open class HTTPRequest: CustomStringConvertible {
     }
     private var _config: RequestConfig?
     
+    /// 请求构建器，从构建器初始化时才有值
+    open private(set) var builder: Builder?
+    
     // MARK: - Accessor+Private
     private lazy var _contextAccessory: RequestContextAccessory = {
         let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
@@ -599,7 +602,6 @@ open class HTTPRequest: CustomStringConvertible {
     private var _cacheString: String?
     private var _cacheJSON: Any?
     private var _cacheMetadata: RequestCacheMetadata?
-    private var _builder: Builder?
     
     // MARK: - Lifecycle
     /// 初始化方法
@@ -609,7 +611,7 @@ open class HTTPRequest: CustomStringConvertible {
     public convenience init(builder: Builder) {
         self.init()
         
-        self._builder = builder
+        self.builder = builder
         if let tag = builder.tag { self.tag = tag }
         if let block = builder.constructingBodyBlock { self.constructingBodyBlock = block }
         if let path = builder.resumableDownloadPath { self.resumableDownloadPath = path }
@@ -630,88 +632,88 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
-        return _builder?.baseUrl ?? ""
+        return builder?.baseUrl ?? ""
     }
     
     /// 请求URL地址，默认空，示例：/v1/user
     open func requestUrl() -> String {
-        return _builder?.requestUrl ?? ""
+        return builder?.requestUrl ?? ""
     }
     
     /// 请求可选CDN地址，默认空
     open func cdnUrl() -> String {
-        return _builder?.cdnUrl ?? ""
+        return builder?.cdnUrl ?? ""
     }
     
     /// 是否使用CDN
     open func useCDN() -> Bool {
-        return _builder?.useCDN ?? false
+        return builder?.useCDN ?? false
     }
     
     /// 是否允许蜂窝网络访问，默认true
     open func allowsCellularAccess() -> Bool {
-        return _builder?.allowsCellularAccess ?? true
+        return builder?.allowsCellularAccess ?? true
     }
     
     /// 请求超时，默认60秒
     open func requestTimeoutInterval() -> TimeInterval {
-        return _builder?.requestTimeoutInterval ?? 60
+        return builder?.requestTimeoutInterval ?? 60
     }
     
     /// 自定义请求缓存策略，默认nil不处理
     open func requestCachePolicy() -> URLRequest.CachePolicy? {
-        return _builder?.requestCachePolicy
+        return builder?.requestCachePolicy
     }
     
     /// 请求方式，默认GET
     open func requestMethod() -> RequestMethod {
-        return _builder?.requestMethod ?? .GET
+        return builder?.requestMethod ?? .GET
     }
     
     /// 请求附加参数，建议[String: Any]?，默认nil
     open func requestArgument() -> Any? {
-        return _builder?.requestArgument
+        return builder?.requestArgument
     }
     
     /// 请求序列化方式，默认HTTP
     open func requestSerializerType() -> RequestSerializerType {
-        return _builder?.requestSerializerType ?? .HTTP
+        return builder?.requestSerializerType ?? .HTTP
     }
     
     /// 响应序列化方式，默认JSON
     open func responseSerializerType() -> ResponseSerializerType {
-        return _builder?.responseSerializerType ?? .JSON
+        return builder?.responseSerializerType ?? .JSON
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
     open func requestAuthorizationHeaders() -> [String]? {
-        return _builder?.requestAuthorizationHeaders
+        return builder?.requestAuthorizationHeaders
     }
     
     /// 自定义请求Header字典
     open func requestHeaders() -> [String: String]? {
-        return _builder?.requestHeaders
+        return builder?.requestHeaders
     }
     
     /// 请求发送前URLRequest过滤方法，默认不处理
     open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        _builder?.urlRequestFilter?(self, &urlRequest)
+        builder?.urlRequestFilter?(self, &urlRequest)
     }
     
     /// 构建自定义URLRequest
     open func customUrlRequest() -> URLRequest? {
-        return _builder?.customUrlRequest
+        return builder?.customUrlRequest
     }
     
     // MARK: - Override+Response
     /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
-        return _builder?.jsonValidator
+        return builder?.jsonValidator
     }
     
     /// 状态码验证器
     open func statusCodeValidator() -> Bool {
-        if let validator = _builder?.statusCodeValidator {
+        if let validator = builder?.statusCodeValidator {
             return validator(self)
         } else {
             let statusCode = responseStatusCode
@@ -721,7 +723,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock验证器，默认判断404
     open func responseMockValidator() -> Bool {
-        if let validator = _builder?.responseMockValidator ?? config.debugMockValidator {
+        if let validator = builder?.responseMockValidator ?? config.debugMockValidator {
             return validator(self)
         }
         return responseStatusCode == 404
@@ -729,7 +731,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
     open func responseMockProcessor() -> Bool {
-        if let processor = _builder?.responseMockProcessor ?? config.debugMockProcessor {
+        if let processor = builder?.responseMockProcessor ?? config.debugMockProcessor {
             return processor(self)
         }
         return false
@@ -737,7 +739,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
     open func responseFilter() throws {
-        try _builder?.responseFilter?(self)
+        try builder?.responseFilter?(self)
     }
     
     /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
@@ -771,43 +773,43 @@ open class HTTPRequest: CustomStringConvertible {
             }
         }
         
-        _builder?.requestCompletePreprocessor?(self)
+        builder?.requestCompletePreprocessor?(self)
     }
     
     /// 请求完成过滤器，主线程调用，默认不处理
     open func requestCompleteFilter() {
-        _builder?.requestCompleteFilter?(self)
+        builder?.requestCompleteFilter?(self)
     }
     
     /// 请求失败预处理器，后台线程调用，默认不处理
     open func requestFailedPreprocessor() {
-        _builder?.requestFailedPreprocessor?(self)
+        builder?.requestFailedPreprocessor?(self)
     }
     
     /// 请求失败过滤器，主线程调用，默认不处理
     open func requestFailedFilter() {
-        _builder?.requestFailedFilter?(self)
+        builder?.requestFailedFilter?(self)
     }
     
     // MARK: - Override+Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
-        return _builder?.requestRetryCount ?? 0
+        return builder?.requestRetryCount ?? 0
     }
     
     /// 请求重试间隔，默认0
     open func requestRetryInterval() -> TimeInterval {
-        return _builder?.requestRetryInterval ?? 0
+        return builder?.requestRetryInterval ?? 0
     }
     
     /// 请求重试超时时间，默认0
     open func requestRetryTimeout() -> TimeInterval {
-        return _builder?.requestRetryTimeout ?? 0
+        return builder?.requestRetryTimeout ?? 0
     }
     
     /// 请求重试验证方法，默认检查状态码和错误
     open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
-        if let validator = _builder?.requestRetryValidator {
+        if let validator = builder?.requestRetryValidator {
             return validator(self, response, responseObject, error)
         } else {
             let statusCode = response.statusCode
@@ -817,7 +819,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
     open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
-        if let processor = _builder?.requestRetryProcessor {
+        if let processor = builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
             completionHandler(true)
@@ -827,22 +829,22 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Cache
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
-        return _builder?.cacheTimeInSeconds ?? -1
+        return builder?.cacheTimeInSeconds ?? -1
     }
     
     /// 缓存版本号，默认0
     open func cacheVersion() -> Int {
-        return _builder?.cacheVersion ?? 0
+        return builder?.cacheVersion ?? 0
     }
     
     /// 缓存敏感数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
-        return _builder?.cacheSensitiveData
+        return builder?.cacheSensitiveData
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
     open func cacheArgumentFilter(_ argument: Any?) -> Any? {
-        if let filter = _builder?.cacheArgumentFilter {
+        if let filter = builder?.cacheArgumentFilter {
             return filter(self, argument)
         } else {
             return argument
@@ -851,7 +853,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 是否异步写入缓存，默认true
     open func writeCacheAsynchronously() -> Bool {
-        return _builder?.writeCacheAsynchronously ?? true
+        return builder?.writeCacheAsynchronously ?? true
     }
     
     // MARK: - Action
