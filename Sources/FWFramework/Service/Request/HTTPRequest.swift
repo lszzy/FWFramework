@@ -72,46 +72,46 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求构建器，可继承
     open class Builder {
         
-        public private(set) var baseUrl: String?
-        public private(set) var requestUrl: String?
-        public private(set) var cdnUrl: String?
-        public private(set) var useCDN: Bool?
-        public private(set) var allowsCellularAccess: Bool?
-        public private(set) var requestTimeoutInterval: TimeInterval?
-        public private(set) var requestCachePolicy: URLRequest.CachePolicy?
-        public private(set) var requestMethod: RequestMethod?
-        public private(set) var requestArgument: Any?
-        public private(set) var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
-        public private(set) var resumableDownloadPath: String?
-        public private(set) var requestSerializerType: RequestSerializerType?
-        public private(set) var responseSerializerType: ResponseSerializerType?
-        public private(set) var requestAuthorizationHeaders: [String]?
-        public private(set) var requestHeaders: [String: String]?
-        public private(set) var requestPriority: RequestPriority?
-        public private(set) var requestUserInfo: [AnyHashable: Any]?
-        public private(set) var customUrlRequest: URLRequest?
-        public private(set) var isSynchronously: Bool?
-        public private(set) var tag: Int?
-        public private(set) var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
-        public private(set) var jsonValidator: Any?
-        public private(set) var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
-        public private(set) var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
-        public private(set) var responseMockValidator: ((HTTPRequest) -> Bool)?
-        public private(set) var responseMockProcessor: ((HTTPRequest) -> Bool)?
-        public private(set) var requestRetryCount: Int?
-        public private(set) var requestRetryInterval: TimeInterval?
-        public private(set) var requestRetryTimeout: TimeInterval?
-        public private(set) var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-        public private(set) var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
-        public private(set) var requestCompletePreprocessor: Completion?
-        public private(set) var requestCompleteFilter: Completion?
-        public private(set) var requestFailedPreprocessor: Completion?
-        public private(set) var requestFailedFilter: Completion?
-        public private(set) var cacheTimeInSeconds: Int?
-        public private(set) var cacheVersion: Int?
-        public private(set) var cacheSensitiveData: Any?
-        public private(set) var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
-        public private(set) var writeCacheAsynchronously: Bool?
+        fileprivate var baseUrl: String?
+        fileprivate var requestUrl: String?
+        fileprivate var cdnUrl: String?
+        fileprivate var useCDN: Bool?
+        fileprivate var allowsCellularAccess: Bool?
+        fileprivate var requestTimeoutInterval: TimeInterval?
+        fileprivate var requestCachePolicy: URLRequest.CachePolicy?
+        fileprivate var requestMethod: RequestMethod?
+        fileprivate var requestArgument: Any?
+        fileprivate var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+        fileprivate var resumableDownloadPath: String?
+        fileprivate var requestSerializerType: RequestSerializerType?
+        fileprivate var responseSerializerType: ResponseSerializerType?
+        fileprivate var requestAuthorizationHeaders: [String]?
+        fileprivate var requestHeaders: [String: String]?
+        fileprivate var requestPriority: RequestPriority?
+        fileprivate var requestUserInfo: [AnyHashable: Any]?
+        fileprivate var customUrlRequest: URLRequest?
+        fileprivate var isSynchronously: Bool?
+        fileprivate var tag: Int?
+        fileprivate var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
+        fileprivate var jsonValidator: Any?
+        fileprivate var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        fileprivate var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
+        fileprivate var responseMockValidator: ((HTTPRequest) -> Bool)?
+        fileprivate var responseMockProcessor: ((HTTPRequest) -> Bool)?
+        fileprivate var requestRetryCount: Int?
+        fileprivate var requestRetryInterval: TimeInterval?
+        fileprivate var requestRetryTimeout: TimeInterval?
+        fileprivate var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        fileprivate var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
+        fileprivate var requestCompletePreprocessor: Completion?
+        fileprivate var requestCompleteFilter: Completion?
+        fileprivate var requestFailedPreprocessor: Completion?
+        fileprivate var requestFailedFilter: Completion?
+        fileprivate var cacheTimeInSeconds: Int?
+        fileprivate var cacheVersion: Int?
+        fileprivate var cacheSensitiveData: Any?
+        fileprivate var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
+        fileprivate var writeCacheAsynchronously: Bool?
         
         /// 构造方法
         public init() {}
@@ -439,7 +439,7 @@ open class HTTPRequest: CustomStringConvertible {
             return self
         }
         
-        /// 构建请求
+        /// 构建请求，子类可重写
         open func build() -> HTTPRequest {
             return HTTPRequest(builder: self)
         }
@@ -584,32 +584,31 @@ open class HTTPRequest: CustomStringConvertible {
     }
     private var _config: RequestConfig?
     
-    /// 当前请求构建器，默认nil
-    open private(set) var builder: Builder?
-    
-    private lazy var contextAccessory: RequestContextAccessory = {
+    // MARK: - Accessor+Private
+    private lazy var _contextAccessory: RequestContextAccessory = {
         let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
         return result
     }()
     
-    // MARK: - Accessor+Private
-    fileprivate var cacheResponseModel: Any?
-    private var responseModelBlock: Completion?
+    fileprivate var _cacheResponseModel: Any?
+    private var _responseModelBlock: Completion?
     private var _preloadResponseModel: Bool?
     private var _isCancelled = false
     private var _cacheData: Data?
     private var _cacheString: String?
     private var _cacheJSON: Any?
     private var _cacheMetadata: RequestCacheMetadata?
+    private var _builder: Builder?
     
     // MARK: - Lifecycle
     /// 默认初始化
     public init() {}
     
-    /// 指定Builder初始化，可用于重载Builder
-    public init(builder: Builder) {
-        self.builder = builder
+    /// 指定构建器并初始化
+    public convenience init(builder: Builder) {
+        self.init()
         
+        self._builder = builder
         if let tag = builder.tag { self.tag = tag }
         if let block = builder.constructingBodyBlock { self.constructingBodyBlock = block }
         if let path = builder.resumableDownloadPath { self.resumableDownloadPath = path }
@@ -630,88 +629,88 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Request
     /// 请求基准URL，默认空，示例：https://www.wuyong.site
     open func baseUrl() -> String {
-        return builder?.baseUrl ?? ""
+        return _builder?.baseUrl ?? ""
     }
     
     /// 请求URL地址，默认空，示例：/v1/user
     open func requestUrl() -> String {
-        return builder?.requestUrl ?? ""
+        return _builder?.requestUrl ?? ""
     }
     
     /// 请求可选CDN地址，默认空
     open func cdnUrl() -> String {
-        return builder?.cdnUrl ?? ""
+        return _builder?.cdnUrl ?? ""
     }
     
     /// 是否使用CDN
     open func useCDN() -> Bool {
-        return builder?.useCDN ?? false
+        return _builder?.useCDN ?? false
     }
     
     /// 是否允许蜂窝网络访问，默认true
     open func allowsCellularAccess() -> Bool {
-        return builder?.allowsCellularAccess ?? true
+        return _builder?.allowsCellularAccess ?? true
     }
     
     /// 请求超时，默认60秒
     open func requestTimeoutInterval() -> TimeInterval {
-        return builder?.requestTimeoutInterval ?? 60
+        return _builder?.requestTimeoutInterval ?? 60
     }
     
     /// 自定义请求缓存策略，默认nil不处理
     open func requestCachePolicy() -> URLRequest.CachePolicy? {
-        return builder?.requestCachePolicy
+        return _builder?.requestCachePolicy
     }
     
     /// 请求方式，默认GET
     open func requestMethod() -> RequestMethod {
-        return builder?.requestMethod ?? .GET
+        return _builder?.requestMethod ?? .GET
     }
     
     /// 请求附加参数，建议[String: Any]?，默认nil
     open func requestArgument() -> Any? {
-        return builder?.requestArgument
+        return _builder?.requestArgument
     }
     
     /// 请求序列化方式，默认HTTP
     open func requestSerializerType() -> RequestSerializerType {
-        return builder?.requestSerializerType ?? .HTTP
+        return _builder?.requestSerializerType ?? .HTTP
     }
     
     /// 响应序列化方式，默认JSON
     open func responseSerializerType() -> ResponseSerializerType {
-        return builder?.responseSerializerType ?? .JSON
+        return _builder?.responseSerializerType ?? .JSON
     }
     
     /// HTTP请求授权Header数组，示例：["UserName", "Password"]
     open func requestAuthorizationHeaders() -> [String]? {
-        return builder?.requestAuthorizationHeaders
+        return _builder?.requestAuthorizationHeaders
     }
     
     /// 自定义请求Header字典
     open func requestHeaders() -> [String: String]? {
-        return builder?.requestHeaders
+        return _builder?.requestHeaders
     }
     
     /// 请求发送前URLRequest过滤方法，默认不处理
     open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        builder?.urlRequestFilter?(self, &urlRequest)
+        _builder?.urlRequestFilter?(self, &urlRequest)
     }
     
     /// 构建自定义URLRequest
     open func customUrlRequest() -> URLRequest? {
-        return builder?.customUrlRequest
+        return _builder?.customUrlRequest
     }
     
     // MARK: - Override+Response
     /// JSON验证器，默认支持AnyValidator
     open func jsonValidator() -> Any? {
-        return builder?.jsonValidator
+        return _builder?.jsonValidator
     }
     
     /// 状态码验证器
     open func statusCodeValidator() -> Bool {
-        if let validator = builder?.statusCodeValidator {
+        if let validator = _builder?.statusCodeValidator {
             return validator(self)
         } else {
             let statusCode = responseStatusCode
@@ -721,7 +720,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock验证器，默认判断404
     open func responseMockValidator() -> Bool {
-        if let validator = builder?.responseMockValidator ?? config.debugMockValidator {
+        if let validator = _builder?.responseMockValidator ?? config.debugMockValidator {
             return validator(self)
         }
         return responseStatusCode == 404
@@ -729,7 +728,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
     open func responseMockProcessor() -> Bool {
-        if let processor = builder?.responseMockProcessor ?? config.debugMockProcessor {
+        if let processor = _builder?.responseMockProcessor ?? config.debugMockProcessor {
             return processor(self)
         }
         return false
@@ -737,7 +736,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求回调前Response过滤方法，默认成功不抛异常
     open func responseFilter() throws {
-        try builder?.responseFilter?(self)
+        try _builder?.responseFilter?(self)
     }
     
     /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
@@ -767,47 +766,47 @@ open class HTTPRequest: CustomStringConvertible {
                 _ = modelRequest.responseModel
             // 调用responseModel自定义预加载句柄
             } else {
-                responseModelBlock?(self)
+                _responseModelBlock?(self)
             }
         }
         
-        builder?.requestCompletePreprocessor?(self)
+        _builder?.requestCompletePreprocessor?(self)
     }
     
     /// 请求完成过滤器，主线程调用，默认不处理
     open func requestCompleteFilter() {
-        builder?.requestCompleteFilter?(self)
+        _builder?.requestCompleteFilter?(self)
     }
     
     /// 请求失败预处理器，后台线程调用，默认不处理
     open func requestFailedPreprocessor() {
-        builder?.requestFailedPreprocessor?(self)
+        _builder?.requestFailedPreprocessor?(self)
     }
     
     /// 请求失败过滤器，主线程调用，默认不处理
     open func requestFailedFilter() {
-        builder?.requestFailedFilter?(self)
+        _builder?.requestFailedFilter?(self)
     }
     
     // MARK: - Override+Retry
     /// 请求重试次数，默认0
     open func requestRetryCount() -> Int {
-        return builder?.requestRetryCount ?? 0
+        return _builder?.requestRetryCount ?? 0
     }
     
     /// 请求重试间隔，默认0
     open func requestRetryInterval() -> TimeInterval {
-        return builder?.requestRetryInterval ?? 0
+        return _builder?.requestRetryInterval ?? 0
     }
     
     /// 请求重试超时时间，默认0
     open func requestRetryTimeout() -> TimeInterval {
-        return builder?.requestRetryTimeout ?? 0
+        return _builder?.requestRetryTimeout ?? 0
     }
     
     /// 请求重试验证方法，默认检查状态码和错误
     open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
-        if let validator = builder?.requestRetryValidator {
+        if let validator = _builder?.requestRetryValidator {
             return validator(self, response, responseObject, error)
         } else {
             let statusCode = response.statusCode
@@ -817,7 +816,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
     open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
-        if let processor = builder?.requestRetryProcessor {
+        if let processor = _builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
             completionHandler(true)
@@ -827,22 +826,22 @@ open class HTTPRequest: CustomStringConvertible {
     // MARK: - Override+Cache
     /// 缓存有效期，默认-1不缓存
     open func cacheTimeInSeconds() -> Int {
-        return builder?.cacheTimeInSeconds ?? -1
+        return _builder?.cacheTimeInSeconds ?? -1
     }
     
     /// 缓存版本号，默认0
     open func cacheVersion() -> Int {
-        return builder?.cacheVersion ?? 0
+        return _builder?.cacheVersion ?? 0
     }
     
     /// 缓存敏感数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
-        return builder?.cacheSensitiveData
+        return _builder?.cacheSensitiveData
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
     open func cacheArgumentFilter(_ argument: Any?) -> Any? {
-        if let filter = builder?.cacheArgumentFilter {
+        if let filter = _builder?.cacheArgumentFilter {
             return filter(self, argument)
         } else {
             return argument
@@ -851,7 +850,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 是否异步写入缓存，默认true
     open func writeCacheAsynchronously() -> Bool {
-        return builder?.writeCacheAsynchronously ?? true
+        return _builder?.writeCacheAsynchronously ?? true
     }
     
     // MARK: - Action
@@ -969,17 +968,17 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 显示加载条，默认显示加载插件，context必须存在
     open func showLoading() {
-        contextAccessory.showLoading(for: self)
+        _contextAccessory.showLoading(for: self)
     }
     
     /// 隐藏加载条，默认隐藏加载插件，context必须存在
     open func hideLoading() {
-        contextAccessory.hideLoading(for: self)
+        _contextAccessory.hideLoading(for: self)
     }
     
     /// 显示网络错误，默认显示Toast提示，context可不存在
     open func showError() {
-        contextAccessory.showError(for: self)
+        _contextAccessory.showError(for: self)
     }
     
     /// 清理完成句柄
@@ -999,21 +998,21 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     func toggleAccessoriesWillStartCallBack() {
-        contextAccessory.requestWillStart(self)
+        _contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
     }
     
     func toggleAccessoriesWillStopCallBack() {
-        contextAccessory.requestWillStop(self)
+        _contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
     }
     
     func toggleAccessoriesDidStopCallBack() {
-        contextAccessory.requestDidStop(self)
+        _contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -1059,17 +1058,17 @@ open class HTTPRequest: CustomStringConvertible {
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     open func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
-        responseModelBlock = { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+        _responseModelBlock = { request in
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         }
         
         successCompletionBlock = { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
-            success?(request.cacheResponseModel as? T)
+            success?(request._cacheResponseModel as? T)
         }
         return self
     }
@@ -1077,17 +1076,17 @@ open class HTTPRequest: CustomStringConvertible {
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     open func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        responseModelBlock = { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+        _responseModelBlock = { request in
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         }
         
         successCompletionBlock = { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
-            success?(request.cacheResponseModel as? T ?? .init())
+            success?(request._cacheResponseModel as? T ?? .init())
         }
         return self
     }
@@ -1111,13 +1110,13 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func preloadCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
-            success?(request.cacheResponseModel as? T)
+            success?(request._cacheResponseModel as? T)
         }, processor: { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         })
         return self
@@ -1127,13 +1126,13 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func preloadSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         try? loadCacheResponse(isPreload: true, completion: { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
-            success?(request.cacheResponseModel as? T ?? .init())
+            success?(request._cacheResponseModel as? T ?? .init())
         }, processor: { request in
-            if (request.cacheResponseModel as? T) == nil {
-                request.cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+            if (request._cacheResponseModel as? T) == nil {
+                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         })
         return self
@@ -1219,7 +1218,7 @@ open class HTTPRequest: CustomStringConvertible {
         try loadCache()
         
         if isPreload {
-            responseModelBlock = processor
+            _responseModelBlock = processor
             successCompletionBlock = completion
         }
         
@@ -1274,8 +1273,8 @@ open class HTTPRequest: CustomStringConvertible {
         _cacheJSON = nil
         _cacheString = nil
         _cacheMetadata = nil
-        cacheResponseModel = nil
-        responseModelBlock = nil
+        _cacheResponseModel = nil
+        _responseModelBlock = nil
         isDataFromCache = false
     }
     
@@ -1326,13 +1325,13 @@ extension ResponseModelRequest where Self: HTTPRequest {
     /// 默认实现当前响应模型，解析成功时自动缓存
     public var responseModel: ResponseModel? {
         get {
-            if cacheResponseModel == nil {
-                cacheResponseModel = responseModelFilter()
+            if _cacheResponseModel == nil {
+                _cacheResponseModel = responseModelFilter()
             }
-            return cacheResponseModel as? ResponseModel
+            return _cacheResponseModel as? ResponseModel
         }
         set {
-            cacheResponseModel = newValue
+            _cacheResponseModel = newValue
         }
     }
     
