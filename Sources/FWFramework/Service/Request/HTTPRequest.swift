@@ -1079,19 +1079,9 @@ open class HTTPRequest: CustomStringConvertible {
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
     open func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        _responseModelBlock = { request in
-            if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            }
-        }
-        
-        successCompletionBlock = { request in
-            if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            }
-            success?(request._cacheResponseModel as? T ?? .init())
-        }
-        return self
+        return responseModel(of: type, designatedPath: designatedPath, success: success != nil ? { responseModel in
+            success?(responseModel ?? .init())
+        } : nil)
     }
     
     // MARK: - Cache
@@ -1128,17 +1118,9 @@ open class HTTPRequest: CustomStringConvertible {
     /// 预加载指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
     open func preloadSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        try? loadCacheResponse(isPreload: true, completion: { request in
-            if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            }
-            success?(request._cacheResponseModel as? T ?? .init())
-        }, processor: { request in
-            if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
-            }
-        })
-        return self
+        return preloadCacheModel(of: type, designatedPath: designatedPath, success: success != nil ? { cacheModel in
+            success?(cacheModel ?? .init())
+        } : nil)
     }
     
     /// 加载本地缓存，返回是否成功
