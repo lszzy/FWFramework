@@ -439,9 +439,22 @@ open class HTTPRequest: CustomStringConvertible {
             return self
         }
         
+        /// 构建指定类型请求
+        open func build<T: HTTPRequest>(of type: T.Type) -> T {
+            let request = T()
+            request._builder = self
+            if let tag = tag { request.tag = tag }
+            if let block = constructingBodyBlock { request.constructingBodyBlock = block }
+            if let path = resumableDownloadPath { request.resumableDownloadPath = path }
+            if let priority = requestPriority { request.requestPriority = priority }
+            if let userInfo = requestUserInfo { request.requestUserInfo = userInfo }
+            if let synchronously = isSynchronously { request.isSynchronously = synchronously }
+            return request
+        }
+        
         /// 构建请求，子类可重写
         open func build() -> HTTPRequest {
-            return HTTPRequest(builder: self)
+            return build(of: HTTPRequest.self)
         }
         
     }
@@ -602,20 +615,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     // MARK: - Lifecycle
     /// 默认初始化
-    public init() {}
-    
-    /// 指定构建器并初始化
-    public convenience init(builder: Builder) {
-        self.init()
-        
-        self._builder = builder
-        if let tag = builder.tag { self.tag = tag }
-        if let block = builder.constructingBodyBlock { self.constructingBodyBlock = block }
-        if let path = builder.resumableDownloadPath { self.resumableDownloadPath = path }
-        if let priority = builder.requestPriority { self.requestPriority = priority }
-        if let userInfo = builder.requestUserInfo { self.requestUserInfo = userInfo }
-        if let synchronously = builder.isSynchronously { self.isSynchronously = synchronously }
-    }
+    public required init() {}
     
     /// 请求描述
     open var description: String {
