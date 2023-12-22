@@ -79,6 +79,11 @@ open class RequestConfig {
     /// 请求CDN地址
     open var cdnUrl: String = ""
     
+    /// 是否后台预加载数据模型过滤句柄，默认nil
+    open var preloadModelFilter: ((HTTPRequest) -> Bool)?
+    /// 自定义请求上下文配件句柄，默认nil
+    open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
+    
     /// 是否启用调试
     open var debugLogEnabled: Bool = {
         #if DEBUG
@@ -93,17 +98,6 @@ open class RequestConfig {
     open var debugMockValidator: ((HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
-    
-    /// 是否后台预加载数据模型过滤句柄，默认nil
-    open var preloadModelFilter: ((HTTPRequest) -> Bool)?
-    /// 自定义请求上下文配件句柄，默认nil
-    open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
-    /// 自定义显示错误方法，主线程优先调用，默认nil
-    open var showErrorBlock: HTTPRequest.Completion?
-    /// 自定义显示加载方法，主线程优先调用，默认nil
-    open var showLoadingBlock: HTTPRequest.Completion?
-    /// 自定义隐藏加载方法，主线程优先调用，默认nil
-    open var hideLoadingBlock: HTTPRequest.Completion?
     
     public init() {}
     
@@ -165,6 +159,13 @@ open class RequestAccessory: RequestAccessoryProtocol {
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory {
+    /// 自定义显示错误方法，主线程优先调用，默认nil
+    open var showErrorBlock: HTTPRequest.Completion?
+    /// 自定义显示加载方法，主线程优先调用，默认nil
+    open var showLoadingBlock: HTTPRequest.Completion?
+    /// 自定义隐藏加载方法，主线程优先调用，默认nil
+    open var hideLoadingBlock: HTTPRequest.Completion?
+    
     /// 是否自动初始化当前context控制器，默认false
     open var autoSetupContext: Bool = false
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
@@ -231,7 +232,7 @@ open class RequestContextAccessory: RequestAccessory {
     open func showError(for request: HTTPRequest) {
         guard !request.isCancelled, let error = request.error else { return }
         
-        if let block = request.config.showErrorBlock {
+        if let block = showErrorBlock {
             block(request)
             return
         }
@@ -251,7 +252,7 @@ open class RequestContextAccessory: RequestAccessory {
     open func showLoading(for request: HTTPRequest) {
         guard !request.isCancelled else { return }
         
-        if let block = request.config.showLoadingBlock {
+        if let block = showLoadingBlock {
             block(request)
             return
         }
@@ -268,7 +269,7 @@ open class RequestContextAccessory: RequestAccessory {
     
     /// 隐藏请求加载条，优先调用config
     open func hideLoading(for request: HTTPRequest) {
-        if let block = request.config.hideLoadingBlock {
+        if let block = hideLoadingBlock {
             block(request)
             return
         }
