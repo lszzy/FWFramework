@@ -15,8 +15,8 @@ open class RequestManager {
     private var requestsRecord: [String: HTTPRequest] = [:]
     private var downloadFolderName = "Incomplete"
     private var lock = NSLock()
-    private var synchronousQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
-    private var synchronousSemaphore = DispatchSemaphore(value: 1)
+    private var syncQueue = DispatchQueue(label: "site.wuyong.queue.request.synchronous")
+    private var syncSemaphore = DispatchSemaphore(value: 1)
     
     public init() {}
     
@@ -25,8 +25,8 @@ open class RequestManager {
         addRecord(for: request)
         
         if request.isSynchronously {
-            synchronousQueue.async { [weak self] in
-                self?.synchronousSemaphore.wait()
+            syncQueue.async { [weak self] in
+                self?.syncSemaphore.wait()
                 
                 self?.startRequest(request)
             }
@@ -169,7 +169,7 @@ open class RequestManager {
         request.clearCompletionBlock()
         
         if request.isSynchronously, isRemoved {
-            synchronousSemaphore.signal()
+            syncSemaphore.signal()
         }
     }
     
