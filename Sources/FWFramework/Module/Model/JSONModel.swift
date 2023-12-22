@@ -16,9 +16,9 @@ import UIKit
  */
 public protocol JSONModel: _ExtendCustomModelType, AnyCodableModel {}
 
-public protocol JSONModelCustomTransformable: _ExtendCustomBasicType, AnyCodableModel {}
+public protocol JSONModelCustomTransformable: _ExtendCustomBasicType {}
 
-public protocol JSONModelEnum: _RawEnumProtocol, AnyCodableModel {}
+public protocol JSONModelEnum: _RawEnumProtocol {}
 
 // MARK: - Measuable
 typealias Byte = Int8
