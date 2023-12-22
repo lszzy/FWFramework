@@ -299,11 +299,23 @@ open class RequestRetrier: RequestRetrierProtocol {
     /// 自定义重试过滤器，回调过滤结果(nil时继续判定，非nil时停止判定)，优先级最高且线程安全，可用于刷新授权等
     open var requestRetryFilter: ((_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (_ filterResult: Bool?) -> Void) -> Void)?
     
-    private lazy var filterQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
-    private lazy var filterSemaphore = DispatchSemaphore(value: 1)
+    private lazy var retryQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
+    private lazy var retrySemaphore = DispatchSemaphore(value: 1)
     
     public init() {}
     
+    // MARK: - Public
+    /// 同步执行自定义重试句柄，必须调用completionHandler，线程安全
+    open func retrySynchronously(_ block: @escaping (_ completionHandler: @escaping () -> Void) -> Void) {
+        retryQueue.async { [weak self] in
+            self?.retrySemaphore.wait()
+            block({
+                self?.retrySemaphore.signal()
+            })
+        }
+    }
+    
+    // MARK: - RequestRetrierProtocol
     open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (_ shouldRetry: Bool) -> Void) {
         if request.isCancelled { return }
         
@@ -312,10 +324,10 @@ open class RequestRetrier: RequestRetrierProtocol {
             return
         }
         
-        filterQueue.async { [weak self] in
-            self?.filterSemaphore.wait()
+        retryQueue.async { [weak self] in
+            self?.retrySemaphore.wait()
             filter(request, response, responseObject, error, { filterResult in
-                self?.filterSemaphore.signal()
+                self?.retrySemaphore.signal()
                 if request.isCancelled { return }
                 
                 if let filterResult = filterResult {
