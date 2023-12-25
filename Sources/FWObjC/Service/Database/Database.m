@@ -1354,7 +1354,11 @@ static sqlite3 * _fw_database;
 }
 
 + (NSUInteger)count:(Class)model_class {
-    NSNumber * count = [self query:model_class func:@"count(*)"];
+    return [self count:model_class where:nil];
+}
+
++ (NSUInteger)count:(Class)model_class where:(NSString *)where {
+    NSNumber * count = [self query:model_class func:@"count(*)" condition:where];
     return count ? count.unsignedIntegerValue : 0;
 }
 

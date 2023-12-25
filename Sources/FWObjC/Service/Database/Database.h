@@ -122,6 +122,14 @@ NS_SWIFT_NAME(DatabaseManager)
 + (NSUInteger)count:(Class)model_class;
 
 /**
+ * 说明: 获取模型类表总条数
+ * @param model_class 模型类
+ * @param where 查询条件(查询语法和SQL where 查询语法一样，where为空则查询所有)
+ * @return 总条数
+ */
++ (NSUInteger)count:(Class)model_class where:(nullable NSString *)where;
+
+/**
  * 说明: 查询本地模型对象
  * @param model_class 模型类
  * @return 查询模型对象数组
