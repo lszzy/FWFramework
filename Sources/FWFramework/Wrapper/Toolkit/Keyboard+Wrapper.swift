@@ -145,7 +145,7 @@ extension Wrapper where Base: UITextField {
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
         base.fw_addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -305,7 +305,7 @@ extension Wrapper where Base: UITextView {
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
         base.fw_addToolbar(title: title, doneBlock: doneBlock)
     }
     
