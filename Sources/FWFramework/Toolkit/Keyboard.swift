@@ -577,7 +577,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    public func fw_addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
         self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -844,7 +844,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func fw_addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    public func fw_addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
         self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
