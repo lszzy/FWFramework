@@ -62,12 +62,14 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
     
     // MARK: - UIApplicationDelegate
+    @discardableResult
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Mediator.setupAllModules()
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:willFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         return true
     }
     
+    @discardableResult
     open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         setupApplication(application, options: launchOptions)
@@ -120,6 +122,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
     
     // MARK: - URL
+    @discardableResult
     open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         return Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:open:options:)), arguments: [app, url, options])
         /*
@@ -128,6 +131,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
          */
     }
     
+    @discardableResult
     open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         return Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:continue:restorationHandler:)), arguments: [application, userActivity, restorationHandler])
         /*
