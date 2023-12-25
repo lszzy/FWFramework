@@ -56,6 +56,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
     #endif
     
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
+    private var urlEncodingMethods: [RequestMethod] = [.GET, .HEAD, .DELETE]
     
     /// 会话，延迟加载前可配置
     open lazy var session: Session = {
@@ -96,6 +97,14 @@ open class AlamofireImpl: NSObject, RequestPlugin {
            urlRequest.value(forHTTPHeaderField: "Accept") == nil {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         }
+    }
+    
+    private func parameterEncoding(for request: HTTPRequest) -> ParameterEncoding {
+        if request.requestSerializerType() == .JSON,
+           !urlEncodingMethods.contains(request.requestMethod()) {
+            return JSONEncoding.default
+        }
+        return URLEncoding.default
     }
     
     private func adaptRequest(_ alamofireRequest: Request, for request: HTTPRequest) {
@@ -175,7 +184,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
                     self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
                 })
             } else {
-                dataRequest = session.request(requestUrl, method: method, parameters: parameters, encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
+                dataRequest = session.request(requestUrl, method: method, parameters: parameters, encoding: parameterEncoding(for: request), headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
                     self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
                 })
             }
@@ -216,7 +225,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
                 headers = .init(requestHeaders)
             }
             
-            downloadRequest = session.download(requestUrl, method: method, parameters: request.requestArgument() as? [String: Any], encoding: request.requestSerializerType() == .JSON ? JSONEncoding.default : URLEncoding.default, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
+            downloadRequest = session.download(requestUrl, method: method, parameters: request.requestArgument() as? [String: Any], encoding: parameterEncoding(for: request), headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
                 self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
             }, to: { _, _ in
                 return (URL(fileURLWithPath: destination, isDirectory: false), [])
