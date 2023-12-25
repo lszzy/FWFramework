@@ -1,5 +1,24 @@
 # 更新日志
 
+## [5.0.0] - 2023-12-25
+
+### Added
+* 经过两年的重构，Swift版本发布，兼容iOS13+，不再兼容OC
+* 支持Swift协程async、await，属性注解propertyWrapper等高级特性
+* 完全可替换的UI插件管理，轻松实现项目定制
+* 可替换的图片库、网络请求层，自带扩展兼容SDWebImage、Alamofire等
+* 几年的线上项目积累，两年心血的Swift版本重构，你想要的，这里全都有
+* 感谢ChatGPT、感谢Codeium、感谢使用到的所有开源库的作者
+* 最后，感谢自己，无数个日日夜夜，能坚持下来，真的不容易
+
+### Migrate
+1. Autoloader默认仅加载static类方法，需迁移升级
+2. Router路由绑定方法API变更，需迁移升级
+3. JSBridge绑定方法API变更，需迁移升级
+4. HTTPRequest网络请求API变更，需迁移升级
+5. 其他编译报错需使用新API修复，并测试相关功能是否正常
+6. 使用示例代码可参考Example项目
+
 ## [4.18.2] - 2023-10-27
 
 ### Added
