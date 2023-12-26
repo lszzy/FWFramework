@@ -78,44 +78,19 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         return result
     }()
     
-    // MARK: - Public
-    /// 构建请求URLRequest
+    // MARK: - RequestPlugin
     open func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
         if let customUrlRequest = request.customUrlRequest() {
             return customUrlRequest
         }
         
-        var urlRequest = try urlRequest(for: request)
-        
-        request.urlRequestFilter(&urlRequest)
-        
-        let filters = request.config.requestFilters
-        for filter in filters {
-            filter.filterUrlRequest(&urlRequest, for: request)
-        }
-        
-        if request.requestSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        if request.responseSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        }
-        
-        return urlRequest
-    }
-    
-    private func urlRequest(for request: HTTPRequest) throws -> URLRequest {
         let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
-        
         let requestSerializer: HTTPRequestSerializer
         if request.requestSerializerType() == .JSON {
             requestSerializer = JSONRequestSerializer()
         } else {
             requestSerializer = HTTPRequestSerializer()
         }
-        
         requestSerializer.timeoutInterval = request.requestTimeoutInterval()
         requestSerializer.allowsCellularAccess = request.allowsCellularAccess()
         if let cachePolicy = request.requestCachePolicy() {
@@ -126,7 +101,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
            !headerFieldArray.isEmpty {
             requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
         }
-        
         if let headerFieldDictionary = request.requestHeaders(),
            !headerFieldDictionary.isEmpty {
             for (fieldKey, fieldValue) in headerFieldDictionary {
@@ -134,58 +108,27 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             }
         }
         
+        var urlRequest: URLRequest
         if request.constructingBodyBlock != nil {
             var error: NSError?
-            let urlRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
+            let mutableRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
                 if let requestFormData = formData as? RequestMultipartFormData {
                     request.constructingBodyBlock?(requestFormData)
                 }
             }, error: &error)
             
-            if let error = error {
-                throw error
-            }
-            return urlRequest as URLRequest
+            if let error = error { throw error }
+            urlRequest = mutableRequest as URLRequest
+        } else {
+            let mutableRequest = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
+            urlRequest = mutableRequest as URLRequest
         }
         
-        let urlRequest = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
-        return urlRequest as URLRequest
-    }
-    
-    private func startRequestTask(_ requestTask: URLSessionTask, for request: HTTPRequest) {
-        switch request.requestPriority {
-        case .high:
-            requestTask.priority = URLSessionTask.highPriority
-        case .low:
-            requestTask.priority = URLSessionTask.lowPriority
-        default:
-            requestTask.priority = URLSessionTask.defaultPriority
-        }
+        RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
         
-        request.requestTask = requestTask
-        requestTask.resume()
+        return urlRequest
     }
     
-    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        var serializationError: NSError?
-        request.responseObject = responseObject
-        if let responseData = request.responseObject as? Data {
-            request.responseData = responseData
-            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-            
-            switch request.responseSerializerType() {
-            case .JSON:
-                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
-                request.responseJSONObject = request.responseObject
-            default:
-                break
-            }
-        }
-        
-        completionHandler?(response, request.responseObject, error ?? serializationError)
-    }
-    
-    // MARK: - RequestPlugin
     open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         let urlRequest: URLRequest
         do {
@@ -243,6 +186,40 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     
     open func cancelRequest(_ request: HTTPRequest) {
         request.requestTask?.cancel()
+    }
+    
+    // MARK: - Private
+    private func startRequestTask(_ requestTask: URLSessionTask, for request: HTTPRequest) {
+        switch request.requestPriority {
+        case .high:
+            requestTask.priority = URLSessionTask.highPriority
+        case .low:
+            requestTask.priority = URLSessionTask.lowPriority
+        default:
+            requestTask.priority = URLSessionTask.defaultPriority
+        }
+        
+        request.requestTask = requestTask
+        requestTask.resume()
+    }
+    
+    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        var serializationError: NSError?
+        request.responseObject = responseObject
+        if let responseData = request.responseObject as? Data {
+            request.responseData = responseData
+            request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
+            
+            switch request.responseSerializerType() {
+            case .JSON:
+                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
+                request.responseJSONObject = request.responseObject
+            default:
+                break
+            }
+        }
+        
+        completionHandler?(response, request.responseObject, error ?? serializationError)
     }
     
 }

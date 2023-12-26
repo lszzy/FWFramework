@@ -73,40 +73,145 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         return result
     }()
     
-    // MARK: - Public
-    /// 默认URLRequest修改器
-    open func modifyUrlRequest(urlRequest: inout URLRequest, for request: HTTPRequest) {
+    // MARK: - RequestPlugin
+    open func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
+        if let customUrlRequest = request.customUrlRequest() {
+            return customUrlRequest
+        }
+        
+        let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
+        let method: HTTPMethod = .init(rawValue: request.requestMethod().rawValue)
+        var headers: HTTPHeaders?
+        if let requestHeaders = request.requestHeaders() {
+            headers = .init(requestHeaders)
+        }
+        
+        var urlRequest = try URLRequest(url: requestUrl, method: method, headers: headers)
+        if request.constructingBodyBlock == nil {
+            let encoding: ParameterEncoding
+            if request.requestSerializerType() == .JSON,
+               !urlEncodingMethods.contains(request.requestMethod()) {
+                encoding = JSONEncoding.default
+            } else {
+                encoding = URLEncoding.default
+            }
+            
+            let parameters = request.requestArgument() as? [String: Any]
+            urlRequest = try encoding.encode(urlRequest, with: parameters)
+        }
+        
         urlRequest.timeoutInterval = request.requestTimeoutInterval()
         urlRequest.allowsCellularAccess = request.allowsCellularAccess()
         if let cachePolicy = request.requestCachePolicy() {
             urlRequest.cachePolicy = cachePolicy
         }
+        RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
         
-        request.urlRequestFilter(&urlRequest)
-        
-        let filters = request.config.requestFilters
-        for filter in filters {
-            filter.filterUrlRequest(&urlRequest, for: request)
+        return urlRequest
+    }
+    
+    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+        let urlRequest: URLRequest
+        do {
+            urlRequest = try buildUrlRequest(for: request)
+        } catch {
+            completionHandler?(HTTPURLResponse(), nil, error)
+            return
         }
         
-        if request.requestSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let requestIntercepter = requestIntercepterBlock?(request)
+        let dataRequest: DataRequest
+        
+        if request.constructingBodyBlock != nil {
+            dataRequest = session.upload(multipartFormData: { formData in
+                let parameters = request.requestArgument() as? [String: Any]
+                parameters?.forEach { (field, value) in
+                    if let data = (value as? Data) ?? String.fw_safeString(value).data(using: .utf8) {
+                        formData.append(data, name: field)
+                    }
+                }
+                
+                request.constructingBodyBlock?(formData)
+            }, with: urlRequest, interceptor: requestIntercepter)
+        } else {
+            dataRequest = session.request(urlRequest, interceptor: requestIntercepter)
         }
-        if request.responseSerializerType() == .JSON,
-           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        adaptRequest(dataRequest, for: request)
+        
+        if let authHeaders = request.requestAuthorizationHeaders(),
+           let authUser = authHeaders.first,
+           let authPwd = authHeaders.last {
+            dataRequest.authenticate(username: authUser, password: authPwd)
+        }
+        if let progressBlock = request.uploadProgressBlock {
+            dataRequest.uploadProgress(closure: progressBlock)
+        }
+        dataRequest.validate(statusCode: acceptableStatusCodes)
+        if let contentTypes = acceptableContentTypes {
+            dataRequest.validate(contentType: contentTypes)
+        }
+        dataRequest.response { [weak self] response in
+            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
         }
     }
     
-    private func parameterEncoding(for request: HTTPRequest) -> ParameterEncoding {
-        if request.requestSerializerType() == .JSON,
-           !urlEncodingMethods.contains(request.requestMethod()) {
-            return JSONEncoding.default
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+        let requestIntercepter = requestIntercepterBlock?(request)
+        let downloadRequest: DownloadRequest
+        
+        if let resumeData = resumeData {
+            downloadRequest = session.download(resumingWith: resumeData, interceptor: requestIntercepter, to: { _, _ in
+                return (URL(fileURLWithPath: destination, isDirectory: false), [])
+            })
+        } else {
+            let urlRequest: URLRequest
+            do {
+                urlRequest = try buildUrlRequest(for: request)
+            } catch {
+                completionHandler?(HTTPURLResponse(), nil, error)
+                return
+            }
+            
+            downloadRequest = session.download(urlRequest, interceptor: requestIntercepter, to: { _, _ in
+                return (URL(fileURLWithPath: destination, isDirectory: false), [])
+            })
         }
-        return URLEncoding.default
+        
+        adaptRequest(downloadRequest, for: request)
+        
+        if let authHeaders = request.requestAuthorizationHeaders(),
+           let authUser = authHeaders.first,
+           let authPwd = authHeaders.last {
+            downloadRequest.authenticate(username: authUser, password: authPwd)
+        }
+        if let progressBlock = request.downloadProgressBlock {
+            downloadRequest.downloadProgress(closure: progressBlock)
+        }
+        downloadRequest.validate(statusCode: acceptableStatusCodes)
+        if let contentTypes = acceptableContentTypes {
+            downloadRequest.validate(contentType: contentTypes)
+        }
+        downloadRequest.response { [weak self] response in
+            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
+                completionHandler?(response, responseObject as? URL, error)
+            })
+        }
     }
     
+    open func suspendRequest(_ request: HTTPRequest) {
+        (request.requestAdapter as? Request)?.suspend()
+    }
+    
+    open func resumeRequest(_ request: HTTPRequest) {
+        (request.requestAdapter as? Request)?.resume()
+    }
+    
+    open func cancelRequest(_ request: HTTPRequest) {
+        (request.requestAdapter as? Request)?.cancel()
+    }
+    
+    // MARK: - Private
     private func adaptRequest(_ alamofireRequest: Request, for request: HTTPRequest) {
         alamofireRequest.onURLSessionTaskCreation { requestTask in
             switch request.requestPriority {
@@ -153,116 +258,6 @@ open class AlamofireImpl: NSObject, RequestPlugin {
         }
         
         completionHandler?(response, request.responseObject, error ?? serializationError)
-    }
-    
-    // MARK: - RequestPlugin
-    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        let dataRequest: DataRequest
-        let requestIntercepter = requestIntercepterBlock?(request)
-        
-        if let customUrlRequest = request.customUrlRequest() {
-            dataRequest = session.request(customUrlRequest, interceptor: requestIntercepter)
-        } else {
-            let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
-            let method: HTTPMethod = .init(rawValue: request.requestMethod().rawValue)
-            let parameters = request.requestArgument() as? [String: Any]
-            var headers: HTTPHeaders?
-            if let requestHeaders = request.requestHeaders() {
-                headers = .init(requestHeaders)
-            }
-            
-            if request.constructingBodyBlock != nil {
-                dataRequest = session.upload(multipartFormData: { formData in
-                    parameters?.forEach { (field, value) in
-                        if let data = (value as? Data) ?? String.fw_safeString(value).data(using: .utf8) {
-                            formData.append(data, name: field)
-                        }
-                    }
-                    
-                    request.constructingBodyBlock?(formData)
-                }, to: requestUrl, method: method, headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
-                    self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
-                })
-            } else {
-                dataRequest = session.request(requestUrl, method: method, parameters: parameters, encoding: parameterEncoding(for: request), headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
-                    self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
-                })
-            }
-        }
-        
-        adaptRequest(dataRequest, for: request)
-        
-        if let authHeaders = request.requestAuthorizationHeaders(),
-           let authUser = authHeaders.first,
-           let authPwd = authHeaders.last {
-            dataRequest.authenticate(username: authUser, password: authPwd)
-        }
-        if let progressBlock = request.uploadProgressBlock {
-            dataRequest.uploadProgress(closure: progressBlock)
-        }
-        dataRequest.validate(statusCode: acceptableStatusCodes)
-        if let contentTypes = acceptableContentTypes {
-            dataRequest.validate(contentType: contentTypes)
-        }
-        dataRequest.response { [weak self] response in
-            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
-        }
-    }
-    
-    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) throws {
-        let downloadRequest: DownloadRequest
-        let requestIntercepter = requestIntercepterBlock?(request)
-        
-        if let resumeData = resumeData {
-            downloadRequest = session.download(resumingWith: resumeData, interceptor: requestIntercepter, to: { _, _ in
-                return (URL(fileURLWithPath: destination, isDirectory: false), [])
-            })
-        } else {
-            let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
-            let method: HTTPMethod = .init(rawValue: request.requestMethod().rawValue)
-            var headers: HTTPHeaders?
-            if let requestHeaders = request.requestHeaders() {
-                headers = .init(requestHeaders)
-            }
-            
-            downloadRequest = session.download(requestUrl, method: method, parameters: request.requestArgument() as? [String: Any], encoding: parameterEncoding(for: request), headers: headers, interceptor: requestIntercepter, requestModifier: { [weak self] urlRequest in
-                self?.modifyUrlRequest(urlRequest: &urlRequest, for: request)
-            }, to: { _, _ in
-                return (URL(fileURLWithPath: destination, isDirectory: false), [])
-            })
-        }
-        
-        adaptRequest(downloadRequest, for: request)
-        
-        if let authHeaders = request.requestAuthorizationHeaders(),
-           let authUser = authHeaders.first,
-           let authPwd = authHeaders.last {
-            downloadRequest.authenticate(username: authUser, password: authPwd)
-        }
-        if let progressBlock = request.downloadProgressBlock {
-            downloadRequest.downloadProgress(closure: progressBlock)
-        }
-        downloadRequest.validate(statusCode: acceptableStatusCodes)
-        if let contentTypes = acceptableContentTypes {
-            downloadRequest.validate(contentType: contentTypes)
-        }
-        downloadRequest.response { [weak self] response in
-            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
-                completionHandler?(response, responseObject as? URL, error)
-            })
-        }
-    }
-    
-    open func suspendRequest(_ request: HTTPRequest) {
-        (request.requestAdapter as? Request)?.suspend()
-    }
-    
-    open func resumeRequest(_ request: HTTPRequest) {
-        (request.requestAdapter as? Request)?.resume()
-    }
-    
-    open func cancelRequest(_ request: HTTPRequest) {
-        (request.requestAdapter as? Request)?.cancel()
     }
     
 }
