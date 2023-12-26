@@ -96,6 +96,25 @@ open class RequestManager {
         return URL.fw_url(string: requestUrl, relativeTo: url) ?? NSURL() as URL
     }
     
+    /// 过滤URL请求
+    open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {
+        request.urlRequestFilter(&urlRequest)
+        
+        let filters = request.config.requestFilters
+        for filter in filters {
+            filter.filterUrlRequest(&urlRequest, for: request)
+        }
+        
+        if request.requestSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        if request.responseSerializerType() == .JSON,
+           urlRequest.value(forHTTPHeaderField: "Accept") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        }
+    }
+    
     /// 获取响应编码
     open func stringEncoding(for request: HTTPRequest) -> String.Encoding {
         var stringEncoding = String.Encoding.utf8

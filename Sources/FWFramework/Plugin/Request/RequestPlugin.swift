@@ -11,6 +11,9 @@ import Foundation
 /// 请求插件协议
 public protocol RequestPlugin: AnyObject {
     
+    /// 构建请求URLRequest
+    func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest
+    
     /// 构建数据任务，自动开始
     func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?)
     
@@ -29,6 +32,11 @@ public protocol RequestPlugin: AnyObject {
 }
 
 extension RequestPlugin {
+    
+    /// 默认实现构建请求URLRequest
+    public func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
+        return try RequestPluginImpl.shared.buildUrlRequest(for: request)
+    }
     
     /// 默认实现构建数据任务，自动开始
     public func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
