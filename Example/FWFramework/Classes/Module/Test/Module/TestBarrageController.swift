@@ -263,8 +263,8 @@ class BarrageGradientBackgroundColorCell: BarrageTextCell {
         layer.contents = contentImage?.cgImage
     }
     
-    override func removeSubViewsAndSublayers() {
-        super.removeSubViewsAndSublayers()
+    override func removeSubviewsAndSublayers() {
+        super.removeSubviewsAndSublayers()
         
         gradientLayer = nil
     }
@@ -392,7 +392,7 @@ class BarrageWalkBannerCell: BarrageTextCell {
         layer.contents = contentImage?.cgImage
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         //如果不要删除leftImageView, middleImageView, rightImageView, textLabel, 只需重写这个方法并留空就可以了.
         //比如: 你想在这个cell被点击的时候, 修改文本颜色
     }
@@ -459,7 +459,7 @@ class BarrageBecomeNobleCell: BarrageTextCell {
         layer.contents = image?.cgImage
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMaxX(superview.bounds) + CGRectGetWidth(bounds) / 2.0, y: center.y)
@@ -471,11 +471,11 @@ class BarrageBecomeNobleCell: BarrageTextCell {
         walkAnimation.keyTimes = [0, 0.25, 0.75, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
 }
@@ -515,7 +515,7 @@ class BarrageMixedImageAndTextCell: BarrageTextCell {
         mixedImageAndTextLabel.frame = CGRect(x: 0, y: 0, width: cellSize.width, height: cellSize.height)
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         
     }
     
@@ -563,7 +563,7 @@ class BarrageGifCell: BarrageCell {
         imageView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMaxX(superview.bounds) + CGRectGetWidth(bounds) / 2.0, y: center.y)
@@ -574,14 +574,14 @@ class BarrageGifCell: BarrageCell {
         walkAnimation.keyTimes = [0, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         
     }
     
@@ -609,7 +609,7 @@ class BarrageVerticalAnimationCell: BarrageTextCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMidX(superview.bounds), y: -(CGRectGetHeight(bounds) / 2.0))
@@ -620,11 +620,11 @@ class BarrageVerticalAnimationCell: BarrageTextCell {
         walkAnimation.keyTimes = [0, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
 }

@@ -347,7 +347,121 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
     }
     
     private func calculateBarrageCellFrame(_ barrageCell: BarrageCell) -> CGRect {
+        var cellFrame = barrageCell.bounds
+        cellFrame.origin.x = self.frame.maxX
         
+        if let renderRange = barrageCell.barrageDescriptor?.renderRange {
+            let cellHeight = barrageCell.bounds.height
+            let minOriginY = max(0, CGFloat(renderRange.location))
+            let maxOriginY = min(CGFloat(renderRange.length), self.bounds.height)
+            var renderHeight = maxOriginY - minOriginY
+            if renderHeight < 0 {
+                renderHeight = cellHeight
+            }
+
+            // 用户改变行高(比如弹幕文字大小不会引起显示bug, 因为虽然是同一个类, 但是trackCount变小了, 所以不会出现trackIndex * cellHeight超出屏幕边界的情况)
+            let trackCount = Int(floor(renderHeight / cellHeight))
+            var trackIndex = Int(arc4random_uniform(UInt32(trackCount)))
+
+            trackInfoLock.wait()
+            let trackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
+            // 当前行暂不可用
+            if let trackInfo = trackInfo, trackInfo.nextAvailableTime > CACurrentMediaTime() {
+                var availableTrackInfos = [BarrageTrackInfo]()
+                for info in trackNextAvailableTime.values {
+                    // 只在同类弹幕中判断是否有可用的轨道
+                    if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(barrageCell.classForCoder)) {
+                        availableTrackInfos.append(info)
+                    }
+                }
+                if availableTrackInfos.count > 0 {
+                    let randomInfo = availableTrackInfos.randomElement()
+                    trackIndex = randomInfo?.trackIndex ?? 0
+                } else {
+                    // 刚开始不是每一条轨道都跑过弹幕, 还有空轨道
+                    if trackNextAvailableTime.count < trackCount {
+                        var numberArray = [Int]()
+                        for index in 0..<trackCount {
+                            let emptyTrackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
+                            if emptyTrackInfo == nil {
+                                numberArray.append(index)
+                            }
+                        }
+                        if numberArray.count > 0 {
+                            trackIndex = numberArray.randomElement() ?? 0
+                        }
+                    }
+                    // 真的是没有可用的轨道了
+                }
+            }
+            trackInfoLock.signal()
+
+            barrageCell.trackIndex = trackIndex
+            cellFrame.origin.y = CGFloat(trackIndex) * cellHeight + minOriginY
+        } else {
+            switch renderPositionStyle {
+            case .random:
+                let maxY = self.bounds.height - cellFrame.height
+                let originY = Int(floor(maxY))
+                cellFrame.origin.y = CGFloat(arc4random_uniform(UInt32(originY)))
+            case .increase:
+                if let latestFrame = lastestCell?.frame {
+                    cellFrame.origin.y = latestFrame.maxY
+                } else {
+                    cellFrame.origin.y = 0.0
+                }
+            default:
+                let renderViewHeight = self.bounds.height
+                let cellHeight = barrageCell.bounds.height
+                // 用户改变行高(比如弹幕文字大小不会引起显示bug, 因为虽然是同一个类, 但是trackCount变小了, 所以不会出现trackIndex*cellHeight超出屏幕边界的情况)
+                let trackCount = Int(floor(renderViewHeight / cellHeight))
+                var trackIndex = Int(arc4random_uniform(UInt32(trackCount)))
+                
+                trackInfoLock.wait()
+                let trackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
+                // 当前行暂不可用
+                if let trackInfo = trackInfo, trackInfo.nextAvailableTime > CACurrentMediaTime() {
+                    var availableTrackInfos = [BarrageTrackInfo]()
+                    for info in trackNextAvailableTime.values {
+                        // 只在同类弹幕中判断是否有可用的轨道
+                        if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(barrageCell.classForCoder)) {
+                            availableTrackInfos.append(info)
+                        }
+                    }
+                    if availableTrackInfos.count > 0 {
+                        let randomInfo = availableTrackInfos.randomElement()
+                        trackIndex = randomInfo?.trackIndex ?? 0
+                    } else {
+                        // 刚开始不是每一条轨道都跑过弹幕, 还有空轨道
+                        if trackNextAvailableTime.count < trackCount {
+                            var numberArray = [Int]()
+                            for index in 0..<trackCount {
+                                let emptyTrackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
+                                if emptyTrackInfo == nil {
+                                    numberArray.append(index)
+                                }
+                            }
+                            if numberArray.count > 0 {
+                                trackIndex = numberArray.randomElement() ?? 0
+                            }
+                        }
+                        // 真的是没有可用的轨道了
+                    }
+                }
+                trackInfoLock.signal()
+                
+                barrageCell.trackIndex = trackIndex
+                cellFrame.origin.y = CGFloat(trackIndex) * cellHeight
+            }
+        }
+        
+        // 超过底部, 回到顶部
+        if cellFrame.maxY > self.bounds.height {
+            cellFrame.origin.y = 0
+        } else if cellFrame.origin.y < 0 {
+            cellFrame.origin.y = 0
+        }
+        return cellFrame
     }
     
     @objc private func clearIdleCells() {
@@ -370,7 +484,57 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
     }
     
     private func recordTrackInfo(_ barrageCell: BarrageCell) {
+        let nextAvailableTimeKey = nextAvailableTimeKey(barrageCell, index: barrageCell.trackIndex)
+        let duration = barrageCell.barrageAnimation?.duration ?? 0
+        var fromValue: NSValue?
+        var toValue: NSValue?
         
+        if let basicAnimation = barrageCell.barrageAnimation as? CABasicAnimation {
+            fromValue = basicAnimation.fromValue as? NSValue
+            toValue = basicAnimation.toValue as? NSValue
+        } else if let keyframeAnimation = barrageCell.barrageAnimation as? CAKeyframeAnimation {
+            fromValue = keyframeAnimation.values?.first as? NSValue
+            toValue = keyframeAnimation.values?.last as? NSValue
+        }
+        
+        guard let fromValueType = fromValue?.objCType,
+              let toValueType = toValue?.objCType,
+              let fromValueString = String(cString: fromValueType, encoding: .utf8),
+              let toValueString = String(cString: toValueType, encoding: .utf8),
+              fromValueString == toValueString else {
+            return
+        }
+        
+        if fromValueString.contains("CGPoint") {
+            let fromPoint = fromValue?.cgPointValue ?? .zero
+            let toPoint = toValue?.cgPointValue ?? .zero
+            
+            trackInfoLock.wait()
+            
+            var trackInfo: BarrageTrackInfo
+            if let nextInfo = trackNextAvailableTime[nextAvailableTimeKey] {
+                trackInfo = nextInfo
+            } else {
+                trackInfo = BarrageTrackInfo()
+                trackInfo.trackIdentifier = nextAvailableTimeKey
+                trackInfo.trackIndex = barrageCell.trackIndex
+            }
+            trackInfo.barrageCount += 1
+            
+            trackInfo.nextAvailableTime = barrageCell.bounds.width
+            let distanceX = abs(toPoint.x - fromPoint.x)
+            let distanceY = abs(toPoint.y - fromPoint.y)
+            let distance = max(distanceX, distanceY)
+            let speed = distance / duration
+            
+            if distanceX == distance {
+                let time = barrageCell.bounds.width / speed
+                trackInfo.nextAvailableTime = CACurrentMediaTime() + time + 0.1
+                trackNextAvailableTime[nextAvailableTimeKey] = trackInfo
+            }
+
+            trackInfoLock.signal()
+        }
     }
     
     private func nextAvailableTimeKey(_ barrageCell: BarrageCell, index: Int) -> String {
@@ -405,7 +569,7 @@ open class BarrageDescriptor: NSObject {
 public protocol BarrageCellDelegate: CAAnimationDelegate {}
 
 open class BarrageCell: UIView {
-    public static let BarrageAnimationKey = "BarrageAnimation"
+    public static let barrageAnimationKey = "BarrageAnimation"
     
     /// 是否是空闲状态
     open var isIdle: Bool = false
@@ -414,13 +578,13 @@ open class BarrageCell: UIView {
     open var barrageDescriptor: BarrageDescriptor?
     open var trackIndex: Int = -1
     open var barrageAnimation: CAAnimation? {
-        return layer.animation(forKey: Self.BarrageAnimationKey)
+        return layer.animation(forKey: Self.barrageAnimationKey)
     }
 
     open func addBarrageAnimation(delegate: CAAnimationDelegate?) {}
 
     open func prepareForReuse() {
-        self.layer.removeAnimation(forKey: Self.BarrageAnimationKey)
+        self.layer.removeAnimation(forKey: Self.barrageAnimationKey)
         barrageDescriptor = nil
         if !isIdle {
             isIdle = true
@@ -655,14 +819,14 @@ open class BarrageTextCell: BarrageCell {
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        self.layer.add(walkAnimation, forKey: Self.BarrageAnimationKey)
+        self.layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
 }
 
 // MARK: - BarrageTrackInfo
 open class BarrageTrackInfo: NSObject {
     open var trackIndex: Int = 0
-    open var trackIdentifier: String?
+    open var trackIdentifier: String = ""
     /// 下次可用的时间
     open var nextAvailableTime: CFTimeInterval = 0
     /// 当前行的弹幕数量
