@@ -80,13 +80,22 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addVerticalAnimationCell), object: nil)
     }
     
-    @objc func addBarrage() {
+    func addBarrage() {
         perform(#selector(addNormalBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addFixedSpeedAnimationCell), with: nil, afterDelay: 0.5)
         perform(#selector(addWalkBannerBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addStopoverBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addGifBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addVerticalAnimationCell), with: nil, afterDelay: 0.5)
+    }
+    
+    func removeBarrage() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addNormalBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addFixedSpeedAnimationCell), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addWalkBannerBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addStopoverBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addGifBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addVerticalAnimationCell), object: nil)
     }
     
     @objc func addNormalBarrage() {
@@ -219,7 +228,8 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     
     @objc func stopBarrage() {
         barrageManager.stop()
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addBarrage), object: nil)
+        removeBarrage()
+        updateTitle()
     }
     
     private func updateTitle() {
