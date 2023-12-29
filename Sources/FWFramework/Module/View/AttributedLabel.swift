@@ -21,6 +21,8 @@ public protocol AttributedLabelDelegate: AnyObject {
 
 /// [M80AttributedLabel](https://github.com/xiangwangfeng/M80AttributedLabel)
 open class AttributedLabel: UIView {
+    
+    // MARK: - Accessor
     /// 事件代理
     open weak var delegate: AttributedLabelDelegate?
     /// 字体
@@ -63,15 +65,80 @@ open class AttributedLabel: UIView {
     open var lineTruncatingSpacing: CGFloat = 0
     /// 最后一行截断之后显示的附件
     open var lineTruncatingAttachment: AttributedLabelAttachment?
+    
+    private var attributedString: NSMutableAttributedString?
+    private var attachments: [AttributedLabelAlignment] = []
+    private var linkLocations: [AttributedLabelURL] = []
+    private var touchedLink: AttributedLabelURL?
+    private var textFrame: CTFrame?
+    private var fontAscent: CGFloat = 0
+    private var fontDescent: CGFloat = 0
+    private var fontHeight: CGFloat = 0
+    private var linkDetected = false
+    private var ignoreRedraw = false
+    private var lineTruncatingView: UIView?
+    private let ellipsesCharacter = "\u{2026}"
+    
+    // MARK: - Lifecycle
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    deinit {
+        textFrame = nil
+    }
+    
+    private func didInitialize() {
+        
+    }
+    
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        .zero
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        .zero
+    }
+    
+    open override func draw(_ rect: CGRect) {
+        
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        nil
+    }
 
-    //添加文本
+    // MARK: - Public
+    /// 添加文本
     open func appendText(_ text: String) {
     }
 
     open func appendAttributedText(_ attributedText: NSAttributedString) {
     }
 
-    //图片
+    /// 图片
     open func appendImage(_ image: UIImage) {
     }
 
@@ -84,7 +151,7 @@ open class AttributedLabel: UIView {
     open func appendImage(_ image: UIImage, maxSize: CGSize, margin: UIEdgeInsets, alignment: AttributedLabelAlignment) {
     }
 
-    //UI控件
+    /// UI控件
     open func appendView(_ view: UIView) {
     }
 
@@ -94,17 +161,110 @@ open class AttributedLabel: UIView {
     open func appendView(_ view: UIView, margin: UIEdgeInsets, alignment: AttributedLabelAlignment) {
     }
 
-    //添加自定义链接
+    /// 添加自定义链接
     open func addCustomLink(_ linkData: Any, for range: NSRange) {
     }
 
     open func addCustomLink(_ linkData: Any, for range: NSRange, attributes: [NSAttributedString.Key: Any]?) {
     }
-
-    //大小
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+    
+    // MARK: - Private
+    private func clearAll() {
+        
+    }
+    
+    private func resetTextFrame() {
+        
+    }
+    
+    private func resetFont() {
+        
+    }
+    
+    private func attributedString(_ text: String?) -> NSAttributedString {
+        return .init()
+    }
+    
+    private func numberOfDisplayedLines() -> Int {
+        0
+    }
+    
+    private func attributedStringForDraw() -> NSAttributedString {
+        .init()
+    }
+    
+    private func urlForPoint(_ point: CGPoint) -> AttributedLabelURL? {
+        nil
+    }
+    
+    private func linkDataForPoint(_ point: CGPoint) -> Any? {
+        return nil
+    }
+    
+    private func transformForCoreText() -> CGAffineTransform {
+        .init()
+    }
+    
+    private func getLineBounds(_ line: CTLine, point: CGPoint) -> CGRect {
         .zero
     }
+    
+    private func linkAtIndex(_ index: CFIndex) -> AttributedLabelURL? {
+        nil
+    }
+    
+    private func rectForRange(_ range: NSRange, inLine line: CTLine, lineOrigin: CGPoint) -> CGRect {
+        .zero
+    }
+    
+    private func appendAttachment(_ attachment: AttributedLabelAttachment) {
+        
+    }
+    
+    private func prepareTextFrame(_ string: NSAttributedString, rect: CGRect) {
+        
+    }
+    
+    private func drawHighlight(rect: CGRect) {
+        
+    }
+    
+    private func drawShadow(_ ctx: CGContext) {
+        
+    }
+    
+    private func drawText(_ attributedString: NSAttributedString, rect: CGRect, context: CGContext) {
+        
+    }
+    
+    private func drawStrikethrough(rect: CGRect, context: CGContext) {
+        
+    }
+    
+    private func drawMaxMetric(runs: CFArray, xHeight: UnsafeMutablePointer<CGFloat>, underlinePosition: UnsafeMutablePointer<CGFloat>, lineThickness: UnsafeMutablePointer<CGFloat>) {
+        
+    }
+    
+    private func drawAttachments() {
+        
+    }
+    
+    private func onLabelClick(_ point: CGPoint) -> Bool {
+        false
+    }
+    
+    private func recomputeLinksIfNeeded() {
+        
+    }
+    
+    private func computeLink(_ text: String) {
+        
+    }
+    
+    private func addAutoDetectedLink(_ link: AttributedLabelURL) {
+        
+    }
+    
 }
 
 // MARK: - AttributedLabelURL
