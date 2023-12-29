@@ -26,48 +26,189 @@ open class AttributedLabel: UIView {
     /// 事件代理
     open weak var delegate: AttributedLabelDelegate?
     /// 字体
-    open var font: UIFont?
+    open var font: UIFont? {
+        get {
+            return _font
+        }
+        set {
+            guard let font = newValue, font != _font else { return }
+            _font = font
+            
+            attributedString.removeAttribute(.init(kCTFontAttributeName as String), range: NSMakeRange(0, attributedString.length))
+            let fontRef = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, font.pointSize, nil)
+            attributedString.addAttribute(.init(kCTFontAttributeName as String), value: fontRef, range: NSMakeRange(0, attributedString.length))
+            resetFont()
+            for attachment in attachments {
+                attachment.fontAscent = fontAscent
+                attachment.fontDescent = fontDescent
+            }
+            resetTextFrame()
+        }
+    }
+    private var _font: UIFont? = UIFont.systemFont(ofSize: 15)
     /// 文字颜色
-    open var textColor: UIColor?
+    open var textColor: UIColor? {
+        get {
+            return _textColor
+        }
+        set {
+            guard let textColor = newValue, textColor != _textColor else { return }
+            _textColor = textColor
+            
+            attributedString.removeAttribute(.init(kCTForegroundColorAttributeName as String), range: NSMakeRange(0, attributedString.length))
+            attributedString.addAttribute(.init(kCTForegroundColorAttributeName as String), value: textColor.cgColor, range: NSMakeRange(0, attributedString.length))
+            resetTextFrame()
+        }
+    }
+    private var _textColor: UIColor? = .black
     /// 链接点击时背景高亮色
-    open var highlightColor: UIColor?
+    open var highlightColor: UIColor? = UIColor(red: 215.0 / 255.0, green: 242.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0) {
+        didSet {
+            if highlightColor != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 链接色
-    open var linkColor: UIColor?
+    open var linkColor: UIColor? = .blue {
+        didSet {
+            if linkColor != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 阴影颜色
-    open var shadowColor: UIColor?
+    open var shadowColor: UIColor? {
+        didSet {
+            if shadowColor != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 阴影offset
-    open var shadowOffset: CGSize = .zero
+    open var shadowOffset: CGSize = .zero {
+        didSet {
+            if shadowOffset != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 阴影半径
-    open var shadowBlur: CGFloat = 0
+    open var shadowBlur: CGFloat = 0 {
+        didSet {
+            if shadowBlur != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 链接是否带下划线
-    open var underLineForLink: Bool = false
+    open var underLineForLink: Bool = true {
+        didSet {
+            if underLineForLink != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 自动检测
-    open var autoDetectLinks: Bool = false
+    open var autoDetectLinks: Bool = true {
+        didSet {
+            if autoDetectLinks != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 自定义链接检测器，默认shared
-    open var linkDetector: AttributedLabelURLDetectorProtocol?
+    open var linkDetector: AttributedLabelURLDetectorProtocol? {
+        get {
+            if _linkDetector == nil {
+                _linkDetector = AttributedLabelURLDetector.shared
+            }
+            return _linkDetector
+        }
+        set {
+            _linkDetector = newValue
+            resetTextFrame()
+        }
+    }
+    private var _linkDetector: AttributedLabelURLDetectorProtocol?
     /// 链接点击句柄
     open var clickedOnLink: ((Any) -> Void)?
     /// 行数
-    open var numberOfLines: Int = 0
+    open var numberOfLines: Int = 0 {
+        didSet {
+            if numberOfLines != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 文字排版样式
-    open var textAlignment: CTTextAlignment = .left
+    open var textAlignment: CTTextAlignment = .left {
+        didSet {
+            if textAlignment != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// LineBreakMode
-    open var lineBreakMode: CTLineBreakMode = .byWordWrapping
+    open var lineBreakMode: CTLineBreakMode = .byWordWrapping {
+        didSet {
+            if lineBreakMode != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 行间距
-    open var lineSpacing: CGFloat = 0
+    open var lineSpacing: CGFloat = 0 {
+        didSet {
+            if lineSpacing != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 段间距
-    open var paragraphSpacing: CGFloat = 0
+    open var paragraphSpacing: CGFloat = 0 {
+        didSet {
+            if paragraphSpacing != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 普通文本，设置nil可重置
-    open var text: String?
+    open var text: String? {
+        get { return attributedString.string }
+        set { attributedText = attributedString(newValue) }
+    }
     /// 属性文本，设置nil可重置
-    open var attributedText: NSAttributedString?
+    open var attributedText: NSAttributedString? {
+        get { return attributedString.copy() as? NSAttributedString }
+        set {
+            if let newValue = newValue {
+                attributedString = .init(attributedString: newValue)
+            } else {
+                attributedString = .init()
+            }
+            clearAll()
+        }
+    }
     /// 最后一行截断之后留白的宽度，默认0不生效，仅lineBreakMode为TruncatingTail且发生截断时生效
-    open var lineTruncatingSpacing: CGFloat = 0
+    open var lineTruncatingSpacing: CGFloat = 0 {
+        didSet {
+            if lineTruncatingSpacing != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     /// 最后一行截断之后显示的附件
-    open var lineTruncatingAttachment: AttributedLabelAttachment?
+    open var lineTruncatingAttachment: AttributedLabelAttachment? {
+        didSet {
+            if lineTruncatingAttachment != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
     
-    private var attributedString: NSMutableAttributedString?
-    private var attachments: [AttributedLabelAlignment] = []
+    private var attributedString: NSMutableAttributedString = .init()
+    private var attachments: [AttributedLabelAttachment] = []
     private var linkLocations: [AttributedLabelURL] = []
     private var touchedLink: AttributedLabelURL?
     private var textFrame: CTFrame?
@@ -77,6 +218,8 @@ open class AttributedLabel: UIView {
     private var linkDetected = false
     private var ignoreRedraw = false
     private var lineTruncatingView: UIView?
+    
+    private let minHttpLinkLength: Int = 5
     private let ellipsesCharacter = "\u{2026}"
     
     // MARK: - Lifecycle
@@ -95,7 +238,27 @@ open class AttributedLabel: UIView {
     }
     
     private func didInitialize() {
-        
+        if backgroundColor == nil {
+            backgroundColor = .white
+        }
+        isUserInteractionEnabled = true
+        resetFont()
+    }
+    
+    open override var frame: CGRect {
+        didSet {
+            if frame != oldValue {
+                resetTextFrame()
+            }
+        }
+    }
+    
+    open override var bounds: CGRect {
+        didSet {
+            if bounds != oldValue {
+                resetTextFrame()
+            }
+        }
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -103,7 +266,7 @@ open class AttributedLabel: UIView {
     }
     
     open override var intrinsicContentSize: CGSize {
-        .zero
+        return sizeThatFits(CGSize(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude))
     }
     
     open override func draw(_ rect: CGRect) {
@@ -111,86 +274,223 @@ open class AttributedLabel: UIView {
     }
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if touchedLink == nil {
+            let touch = touches.first
+            let point = touch?.location(in: self) ?? .zero
+            touchedLink = urlForPoint(point)
+        }
+        if touchedLink != nil {
+            setNeedsDisplay()
+        } else {
+            super.touchesBegan(touches, with: event)
+        }
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        super.touchesMoved(touches, with: event)
+        let touch = touches.first
+        let point = touch?.location(in: self) ?? .zero
+        let url = urlForPoint(point)
+        if touchedLink != url {
+            touchedLink = url
+            setNeedsDisplay()
+        }
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        super.touchesCancelled(touches, with: event)
+        if touchedLink != nil {
+            touchedLink = nil
+            setNeedsDisplay()
+        }
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        let touch = touches.first
+        let point = touch?.location(in: self) ?? .zero
+        if !onLabelClick(point) {
+            super.touchesEnded(touches, with: event)
+        }
+        if touchedLink != nil {
+            touchedLink = nil
+            setNeedsDisplay()
+        }
     }
     
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        nil
+        let url = urlForPoint(point)
+        if url == nil {
+            let subviews = self.subviews
+            for view in subviews {
+                let hitPoint = view.convert(point, from: self)
+                let hitTestView = view.hitTest(hitPoint, with: event)
+                if hitTestView != nil {
+                    return hitTestView
+                }
+            }
+            return nil
+        } else {
+            return self
+        }
     }
 
     // MARK: - Public
     /// 添加文本
     open func appendText(_ text: String) {
+        appendAttributedText(attributedString(text))
     }
 
     open func appendAttributedText(_ attributedText: NSAttributedString) {
+        attributedString.append(attributedText)
+        resetTextFrame()
     }
 
     /// 图片
     open func appendImage(_ image: UIImage) {
+        appendImage(image, maxSize: image.size)
     }
 
-    open func appendImage(_ image: UIImage, maxSize: CGSize) {
-    }
-
-    open func appendImage(_ image: UIImage, maxSize: CGSize, margin: UIEdgeInsets) {
-    }
-
-    open func appendImage(_ image: UIImage, maxSize: CGSize, margin: UIEdgeInsets, alignment: AttributedLabelAlignment) {
+    open func appendImage(_ image: UIImage, maxSize: CGSize, margin: UIEdgeInsets = .zero, alignment: AttributedLabelAlignment = .center) {
+        let attachment = AttributedLabelAttachment(content: image, margin: margin, alignment: alignment, maxSize: maxSize)
+        appendAttachment(attachment)
     }
 
     /// UI控件
-    open func appendView(_ view: UIView) {
-    }
-
-    open func appendView(_ view: UIView, margin: UIEdgeInsets) {
-    }
-
-    open func appendView(_ view: UIView, margin: UIEdgeInsets, alignment: AttributedLabelAlignment) {
+    open func appendView(_ view: UIView, margin: UIEdgeInsets = .zero, alignment: AttributedLabelAlignment = .center) {
+        let attachment = AttributedLabelAttachment(content: view, margin: margin, alignment: alignment, maxSize: .zero)
+        appendAttachment(attachment)
     }
 
     /// 添加自定义链接
-    open func addCustomLink(_ linkData: Any, for range: NSRange) {
-    }
-
-    open func addCustomLink(_ linkData: Any, for range: NSRange, attributes: [NSAttributedString.Key: Any]?) {
+    open func addCustomLink(_ linkData: Any, for range: NSRange, attributes: [NSAttributedString.Key: Any]? = nil) {
+        let url = AttributedLabelURL(linkData: linkData, range: range, attributes: attributes)
+        linkLocations.append(url)
+        resetTextFrame()
     }
     
     // MARK: - Private
     private func clearAll() {
-        
+        ignoreRedraw = false
+        linkDetected = false
+        attachments.removeAll()
+        linkLocations.removeAll()
+        touchedLink = nil
+        for subview in subviews {
+            subview.removeFromSuperview()
+        }
+        resetTextFrame()
     }
     
     private func resetTextFrame() {
-        
+        if textFrame != nil {
+            textFrame = nil
+        }
+        if Thread.isMainThread {
+            if lineTruncatingView != nil {
+                lineTruncatingView?.removeFromSuperview()
+                lineTruncatingView = nil
+            }
+            
+            if !ignoreRedraw {
+                invalidateIntrinsicContentSize()
+                setNeedsDisplay()
+            }
+        }
     }
     
     private func resetFont() {
-        
+        guard let font = font else { return }
+        let fontRef = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, font.pointSize, nil)
+        fontAscent = CTFontGetAscent(fontRef)
+        fontDescent = CTFontGetDescent(fontRef)
+        fontHeight = CTFontGetSize(fontRef)
     }
     
     private func attributedString(_ text: String?) -> NSAttributedString {
-        return .init()
+        guard let text = text, !text.isEmpty else {
+            return NSAttributedString()
+        }
+        
+        let string = NSMutableAttributedString(string: text)
+        if let font = font {
+            string.removeAttribute(.init(kCTFontAttributeName as String), range: NSMakeRange(0, string.length))
+            let fontRef = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, font.pointSize, nil)
+            string.addAttribute(.init(kCTFontAttributeName as String), value: fontRef, range: NSMakeRange(0, string.length))
+        }
+        string.removeAttribute(.init(kCTForegroundColorAttributeName as String), range: NSMakeRange(0, string.length))
+        if let cgColor = textColor?.cgColor {
+            string.addAttribute(.init(kCTForegroundColorAttributeName as String), value: cgColor, range: NSMakeRange(0, string.length))
+        }
+        return string
     }
     
     private func numberOfDisplayedLines() -> Int {
-        0
+        guard let textFrame = textFrame else { return 0 }
+        let lines = CTFrameGetLines(textFrame)
+        return numberOfLines > 0 ? min(CFArrayGetCount(lines), numberOfLines) : CFArrayGetCount(lines)
     }
     
     private func attributedStringForDraw() -> NSAttributedString {
-        .init()
+        let drawString = attributedString.mutableCopy() as! NSMutableAttributedString
+        
+        // 如果LineBreakMode为TranncateTail,那么默认排版模式改成kCTLineBreakByCharWrapping,使得尽可能地显示所有文字
+        var lineBreakMode = self.lineBreakMode
+        if self.lineBreakMode == .byTruncatingTail {
+            lineBreakMode = numberOfLines == 1 ? .byTruncatingTail : .byWordWrapping
+        }
+        // 使用全局fontHeight作为最小lineHeight
+        var fontLineHeight = self.font?.lineHeight ?? .zero
+        var textAlignment = self.textAlignment
+        var lineSpacing = self.lineSpacing
+        var paragraphSpacing = self.paragraphSpacing
+
+        let settings: [CTParagraphStyleSetting] = [
+            CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: &textAlignment),
+            CTParagraphStyleSetting(spec: .lineBreakMode, valueSize: MemoryLayout<CTLineBreakMode>.size, value: &lineBreakMode),
+            CTParagraphStyleSetting(spec: .maximumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
+            CTParagraphStyleSetting(spec: .minimumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
+            CTParagraphStyleSetting(spec: .paragraphSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &paragraphSpacing),
+            CTParagraphStyleSetting(spec: .minimumLineHeight, valueSize: MemoryLayout<CGFloat>.size, value: &fontLineHeight)
+        ]
+        let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
+        drawString.addAttribute(.init(kCTParagraphStyleAttributeName as String), value: paragraphStyle, range: NSMakeRange(0, drawString.length))
+
+        for url in linkLocations {
+            if url.range.location + url.range.length > attributedString.length {
+                continue
+            }
+            var attributes = url.attributes ?? [:]
+            var drawLinkColor = self.linkColor
+            let urlColor = attributes[.init(kCTForegroundColorAttributeName as String)] ?? attributes[NSAttributedString.Key.foregroundColor]
+            if let urlColor = urlColor {
+                if let uiColor = urlColor as? UIColor {
+                    drawLinkColor = uiColor
+                } else {
+                    drawLinkColor = UIColor(cgColor: urlColor as! CGColor)
+                }
+                attributes.removeValue(forKey: .init(kCTForegroundColorAttributeName as String))
+                attributes.removeValue(forKey: .foregroundColor)
+            }
+            drawString.removeAttribute(.init(kCTForegroundColorAttributeName as String), range: url.range)
+            if let cgColor = drawLinkColor?.cgColor {
+                drawString.addAttribute(.init(kCTForegroundColorAttributeName as String), value: cgColor, range: url.range)
+            }
+            
+            drawString.removeAttribute(.init(kCTUnderlineColorAttributeName as String), range: url.range)
+            var underlineStyle: CTUnderlineStyle = underLineForLink ? .single : []
+            let urlUnderline = attributes[.init(kCTUnderlineStyleAttributeName as String)] ?? attributes[.underlineStyle]
+            if let urlUnderline = urlUnderline {
+                underlineStyle = .init(rawValue: (urlUnderline as? NSNumber)?.int32Value ?? 0)
+                attributes.removeValue(forKey: .init(kCTUnderlineStyleAttributeName as String))
+                attributes.removeValue(forKey: .underlineStyle)
+            }
+            drawString.addAttribute(.init(kCTUnderlineStyleAttributeName as String), value: NSNumber(value: underlineStyle.rawValue | CTUnderlineStyleModifiers.patternSolid.rawValue), range: url.range)
+            
+            if attributes.count > 0 {
+                drawString.addAttributes(attributes, range: url.range)
+            }
+        }
+        return drawString
     }
     
     private func urlForPoint(_ point: CGPoint) -> AttributedLabelURL? {
@@ -250,19 +550,60 @@ open class AttributedLabel: UIView {
     }
     
     private func onLabelClick(_ point: CGPoint) -> Bool {
-        false
+        guard let linkData = linkDataForPoint(point) else { return false }
+        
+        if let delegate = delegate {
+            delegate.attributedLabel(self, clickedOnLink: linkData)
+        } else if clickedOnLink != nil {
+            clickedOnLink?(linkData)
+        } else {
+            var url: URL?
+            if let linkString = linkData as? String {
+                url = URL.fw_url(string: linkString)
+            } else if let linkUrl = linkData as? URL {
+                url = linkUrl
+            }
+            if let url = url {
+                UIApplication.shared.open(url)
+            }
+        }
+        return true
     }
     
     private func recomputeLinksIfNeeded() {
-        
+        if !autoDetectLinks || linkDetected { return }
+        let text = attributedString.string
+        if text.count <= minHttpLinkLength { return }
+        computeLink(text)
     }
     
     private func computeLink(_ text: String) {
+        ignoreRedraw = true
         
+        linkDetector?.detectLinks(text, completion: { [weak self] links in
+            guard let self = self else { return }
+            let plainText = self.attributedString.string
+            if text == plainText {
+                self.linkDetected = true
+                if let links = links, links.count > 0 {
+                    for link in links {
+                        self.addAutoDetectedLink(link)
+                    }
+                    self.resetTextFrame()
+                }
+                self.ignoreRedraw = false
+            }
+        })
     }
     
     private func addAutoDetectedLink(_ link: AttributedLabelURL) {
-        
+        let range = link.range
+        for url in linkLocations {
+            if NSIntersectionRange(range, url.range).length != 0 {
+                return
+            }
+        }
+        addCustomLink(link.linkData, for: link.range, attributes: link.attributes)
     }
     
 }
