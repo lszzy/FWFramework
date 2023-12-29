@@ -32,34 +32,6 @@ static NSString* const FWEllipsesCharacter = @"\u2026";
 
 @synthesize linkDetector = _linkDetector;
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self)
-    {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self)
-    {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    if (_textFrame)
-    {
-        CFRelease(_textFrame);
-    }
-}
-
 #pragma mark - 初始化
 - (void)commonInit
 {
