@@ -284,7 +284,7 @@ open class AttributedLabel: UIView {
         }
         
         var fitRange = CFRange(location: 0, length: 0)
-        var newSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, range, nil, size, &fitRange)
+        let newSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, range, nil, size, &fitRange)
         return CGSize(width: min(ceil(newSize.width), size.width), height: min(ceil(newSize.height), size.height))
     }
     
@@ -546,7 +546,7 @@ open class AttributedLabel: UIView {
         CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), &origins)
         
         let transform = transformForCoreText()
-        var verticalOffset: CGFloat = 0
+        let verticalOffset: CGFloat = 0
         
         for i in 0..<count {
             let linePoint = origins[i]
@@ -608,7 +608,7 @@ open class AttributedLabel: UIView {
             
             var ascent: CGFloat = 0.0
             var descent: CGFloat = 0.0
-            var leading: CGFloat = 0.0
+            let leading: CGFloat = 0.0
             
             let width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, nil))
             let height = ascent + descent
@@ -879,9 +879,9 @@ open class AttributedLabel: UIView {
                 let length = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil, nil)
                 let phase = position.x
 
-                var x1 = round(position.x * scale) / scale
-                var x2 = round((position.x + length) * scale) / scale
-                var w = (styleBase == NSUnderlineStyle.thick.rawValue) ? width * 2 : width
+                let x1 = round(position.x * scale) / scale
+                let x2 = round((position.x + length) * scale) / scale
+                let w = (styleBase == NSUnderlineStyle.thick.rawValue) ? width * 2 : width
                 var y: CGFloat = 0
                 let linePixel = w * scale
                 if abs(linePixel - floor(linePixel)) < 0.1 {
