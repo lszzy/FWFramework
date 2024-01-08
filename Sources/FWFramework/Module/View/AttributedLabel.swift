@@ -853,7 +853,7 @@ open class AttributedLabel: UIView {
             let runs = CTLineGetGlyphRuns(line)
             
             for runIndex in 0..<CFArrayGetCount(runs) {
-                let run = unsafeBitCast(CFArrayGetValueAtIndex(lines, runIndex), to: CTRun.self)
+                let run = unsafeBitCast(CFArrayGetValueAtIndex(runs, runIndex), to: CTRun.self)
                 let glyphCount = CTRunGetGlyphCount(run)
                 guard glyphCount > 0 else { continue }
                 
