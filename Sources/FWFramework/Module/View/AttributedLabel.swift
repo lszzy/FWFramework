@@ -276,7 +276,7 @@ open class AttributedLabel: UIView {
             
             if CFArrayGetCount(lines) > 0 {
                 let lastVisibleLineIndex = min(numberOfLines, CFArrayGetCount(lines)) - 1
-                let lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex) as! CTLine
+                let lastVisibleLine = unsafeBitCast(CFArrayGetValueAtIndex(lines, lastVisibleLineIndex), to: CTLine.self)
                 
                 let rangeToLayout = CTLineGetStringRange(lastVisibleLine)
                 range = CFRange(location: 0, length: rangeToLayout.location + rangeToLayout.length)
@@ -550,7 +550,7 @@ open class AttributedLabel: UIView {
         
         for i in 0..<count {
             let linePoint = origins[i]
-            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let line = unsafeBitCast(CFArrayGetValueAtIndex(lines, i), to: CTLine.self)
             let flippedRect = getLineBounds(line, point: linePoint)
             var rect = flippedRect.applying(transform)
             rect = rect.insetBy(dx: 0, dy: -margin)
@@ -596,9 +596,10 @@ open class AttributedLabel: UIView {
     
     private func rectForRange(_ range: NSRange, inLine line: CTLine, lineOrigin: CGPoint) -> CGRect {
         var rectForRange = CGRect.zero
-        let runs = CTLineGetGlyphRuns(line) as! [CTRun]
+        let runs = CTLineGetGlyphRuns(line)
         
-        for run in runs {
+        for i in 0..<CFArrayGetCount(runs) {
+            let run = unsafeBitCast(CFArrayGetValueAtIndex(runs, i), to: CTRun.self)
             let stringRunRange = CTRunGetStringRange(run)
             let lineRunRange = NSMakeRange(stringRunRange.location, stringRunRange.length)
             let intersectedRunRange = NSIntersectionRange(lineRunRange, range)
@@ -704,7 +705,7 @@ open class AttributedLabel: UIView {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
         for i in 0..<numberOfLines {
-            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let line = unsafeBitCast(CFArrayGetValueAtIndex(lines, i), to: CTLine.self)
             let stringRange = CTLineGetStringRange(line)
             let lineRange = NSMakeRange(stringRange.location, stringRange.length)
             let intersectedRange = NSIntersectionRange(lineRange, linkRange)
@@ -750,7 +751,7 @@ open class AttributedLabel: UIView {
             for lineIndex in 0..<numberOfLines {
                 let lineOrigin = lineOrigins[lineIndex]
                 context.textPosition = CGPoint(x: lineOrigin.x, y: lineOrigin.y)
-                let line = CFArrayGetValueAtIndex(lines, lineIndex) as! CTLine
+                let line = unsafeBitCast(CFArrayGetValueAtIndex(lines, lineIndex), to: CTLine.self)
                 
                 var shouldDrawLine = true
                 if lineIndex == numberOfLines - 1 && lineBreakMode == .byTruncatingTail {
@@ -848,11 +849,11 @@ open class AttributedLabel: UIView {
             
         for lineIndex in 0..<numberOfLines {
             let lineOrigin = lineOrigins[lineIndex]
-            let line = CFArrayGetValueAtIndex(lines, lineIndex) as! CTLine
+            let line = unsafeBitCast(CFArrayGetValueAtIndex(lines, lineIndex), to: CTLine.self)
             let runs = CTLineGetGlyphRuns(line)
             
             for runIndex in 0..<CFArrayGetCount(runs) {
-                let run = CFArrayGetValueAtIndex(runs, runIndex) as! CTRun
+                let run = unsafeBitCast(CFArrayGetValueAtIndex(lines, runIndex), to: CTRun.self)
                 let glyphCount = CTRunGetGlyphCount(run)
                 guard glyphCount > 0 else { continue }
                 
@@ -950,7 +951,7 @@ open class AttributedLabel: UIView {
         var maxLineThickness: CGFloat = 0
         
         for i in 0..<CFArrayGetCount(runs) {
-            let run = CFArrayGetValueAtIndex(runs, i) as! CTRun
+            let run = unsafeBitCast(CFArrayGetValueAtIndex(runs, i), to: CTRun.self)
             let attrs = CTRunGetAttributes(run) as? [NSAttributedString.Key: Any]
             if let attrs = attrs, let fontValue = attrs[.init(kCTFontAttributeName as String)] {
                 let font = fontValue as! CTFont
@@ -984,7 +985,7 @@ open class AttributedLabel: UIView {
         let numberOfLines = numberOfDisplayedLines()
 
         for i in 0 ..< numberOfLines {
-            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let line = unsafeBitCast(CFArrayGetValueAtIndex(lines, i), to: CTLine.self)
             let runs = CTLineGetGlyphRuns(line)
             let runCount = CFArrayGetCount(runs)
             let lineOrigin = lineOrigins[i]
@@ -996,7 +997,7 @@ open class AttributedLabel: UIView {
 
             // 遍历找到对应的 attachment 进行绘制
             for k in 0..<runCount {
-                let run = CFArrayGetValueAtIndex(runs, k) as! CTRun
+                let run = unsafeBitCast(CFArrayGetValueAtIndex(runs, k), to: CTRun.self)
                 let runAttributes = CTRunGetAttributes(run) as? [NSAttributedString.Key: Any]
                 let delegate = runAttributes?[.init(kCTRunDelegateAttributeName as String)]
                 guard let delegate = delegate else { continue }
