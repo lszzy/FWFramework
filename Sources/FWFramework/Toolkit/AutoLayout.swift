@@ -37,9 +37,12 @@ import UIKit
         }
         set {
             guard newValue != fw_autoScaleLayout else { return }
-            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil
+            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0, flat: fw_autoFlatLayout) } : nil
         }
     }
+    
+    /// 是否启用全局自动像素取整布局，默认false
+    public static var fw_autoFlatLayout = false
     
     /// 视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
     public var fw_autoScaleLayout: Bool {

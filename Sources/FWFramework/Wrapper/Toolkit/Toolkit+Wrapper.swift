@@ -376,6 +376,12 @@ extension Wrapper where Base: UIFont {
         set { Base.fw_autoScaleFont = newValue }
     }
     
+    /// 是否启用全局自动像素取整字体，默认false
+    public static var autoFlatFont: Bool {
+        get { Base.fw_autoFlatFont }
+        set { Base.fw_autoFlatFont = newValue }
+    }
+    
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
         get { return Base.fw_fontBlock }

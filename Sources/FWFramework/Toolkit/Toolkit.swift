@@ -702,9 +702,12 @@ import StoreKit
         }
         set {
             guard newValue != fw_autoScaleFont else { return }
-            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0) } : nil
+            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0, flat: fw_autoFlatFont) } : nil
         }
     }
+    
+    /// 是否启用全局自动像素取整字体，默认false
+    public static var fw_autoFlatFont = false
     
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?

@@ -42,6 +42,12 @@ extension Wrapper where Base: UIView {
         set { UIView.fw_autoScaleLayout = newValue }
     }
     
+    /// 是否启用全局自动像素取整布局，默认false
+    public static var autoFlatLayout: Bool {
+        get { UIView.fw_autoFlatLayout }
+        set { UIView.fw_autoFlatLayout = newValue }
+    }
+    
     /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
     public var autoScaleLayout: Bool {
         get { base.fw_autoScaleLayout }
