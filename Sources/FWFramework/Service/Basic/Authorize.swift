@@ -369,6 +369,7 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             return .denied
         case .authorized:
             return .authorized
+        #if swift(>=5.9)
         case .fullAccess:
             return .authorized
         case .writeOnly:
@@ -378,6 +379,7 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
                 }
             }
             return .authorized
+        #endif
         default:
             return .notDetermined
         }
@@ -393,8 +395,9 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             }
         }
         
-        let eventStore = EKEventStore()
+        #if swift(>=5.9)
         if #available(iOS 17.0, *) {
+            let eventStore = EKEventStore()
             if type == .event {
                 if writeOnly {
                     eventStore.requestWriteOnlyAccessToEvents(completion: completionHandler)
@@ -404,9 +407,12 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             } else {
                 eventStore.requestFullAccessToReminders(completion: completionHandler)
             }
-        } else {
-            eventStore.requestAccess(to: type, completion: completionHandler)
+            return
         }
+        #endif
+        
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: type, completion: completionHandler)
     }
 }
 #endif
