@@ -262,7 +262,30 @@ open class AttributedLabel: UIView {
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        .zero
+        let drawString = attributedStringForDraw()
+        let size = CGSize(width: size.width > 0 ? size.width : CGFloat.greatestFiniteMagnitude, height: size.height > 0 ? size.height : CGFloat.greatestFiniteMagnitude)
+        let attributedStringRef = drawString as CFAttributedString
+        let framesetter = CTFramesetterCreateWithAttributedString(attributedStringRef)
+        
+        var range = CFRange(location: 0, length: 0)
+        if numberOfLines > 0 {
+            let path = CGMutablePath()
+            path.addRect(CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            let frame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
+            let lines = CTFrameGetLines(frame)
+            
+            if CFArrayGetCount(lines) > 0 {
+                let lastVisibleLineIndex = min(numberOfLines, CFArrayGetCount(lines)) - 1
+                let lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex) as! CTLine
+                
+                let rangeToLayout = CTLineGetStringRange(lastVisibleLine)
+                range = CFRange(location: 0, length: rangeToLayout.location + rangeToLayout.length)
+            }
+        }
+        
+        var fitRange = CFRange(location: 0, length: 0)
+        var newSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, range, nil, size, &fitRange)
+        return CGSize(width: min(ceil(newSize.width), size.width), height: min(ceil(newSize.height), size.height))
     }
     
     open override var intrinsicContentSize: CGSize {
@@ -270,7 +293,24 @@ open class AttributedLabel: UIView {
     }
     
     open override func draw(_ rect: CGRect) {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        ctx.saveGState()
+        let transform = transformForCoreText()
+        ctx.concatenate(transform)
         
+        recomputeLinksIfNeeded()
+        
+        let drawString = attributedStringForDraw()
+        prepareTextFrame(drawString, rect: rect)
+        drawHighlight(rect: rect)
+        drawAttachments()
+        drawShadow(ctx)
+        drawText(drawString, rect: rect, context: ctx)
+        if #available(iOS 15.0, *) {} else {
+            drawStrikethrough(rect: rect, context: ctx)
+        }
+        
+        ctx.restoreGState()
     }
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -494,59 +534,521 @@ open class AttributedLabel: UIView {
     }
     
     private func urlForPoint(_ point: CGPoint) -> AttributedLabelURL? {
-        nil
-    }
-    
-    private func linkDataForPoint(_ point: CGPoint) -> Any? {
+        let margin: CGFloat = 5
+        guard self.bounds.insetBy(dx: 0, dy: -margin).contains(point), let textFrame = textFrame else {
+            return nil
+        }
+        
+        let lines = CTFrameGetLines(textFrame)
+        let count = CFArrayGetCount(lines)
+        
+        var origins = [CGPoint](repeating: .zero, count: count)
+        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), &origins)
+        
+        let transform = transformForCoreText()
+        var verticalOffset: CGFloat = 0
+        
+        for i in 0..<count {
+            let linePoint = origins[i]
+            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let flippedRect = getLineBounds(line, point: linePoint)
+            var rect = flippedRect.applying(transform)
+            rect = rect.insetBy(dx: 0, dy: -margin)
+            rect = rect.offsetBy(dx: 0, dy: verticalOffset)
+            
+            if rect.contains(point) {
+                let relativePoint = CGPoint(x: point.x - rect.minX, y: point.y - rect.minY)
+                let idx = CTLineGetStringIndexForPosition(line, relativePoint)
+                if let url = linkAtIndex(idx) {
+                    return url
+                }
+            }
+        }
         return nil
     }
     
+    private func linkDataForPoint(_ point: CGPoint) -> Any? {
+        let url = urlForPoint(point)
+        return url?.linkData
+    }
+    
     private func transformForCoreText() -> CGAffineTransform {
-        .init()
+        return CGAffineTransform(translationX: 0, y: self.bounds.height).scaledBy(x: 1.0, y: -1.0)
     }
     
     private func getLineBounds(_ line: CTLine, point: CGPoint) -> CGRect {
-        .zero
+        var ascent: CGFloat = 0.0
+        var descent: CGFloat = 0.0
+        var leading: CGFloat = 0.0
+        let width = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, &leading))
+        let height = ascent + descent
+        return CGRect(x: point.x, y: point.y - descent, width: width, height: height)
     }
     
     private func linkAtIndex(_ index: CFIndex) -> AttributedLabelURL? {
-        nil
+        for url in linkLocations {
+            if NSLocationInRange(index, url.range) {
+                return url
+            }
+        }
+        return nil
     }
     
     private func rectForRange(_ range: NSRange, inLine line: CTLine, lineOrigin: CGPoint) -> CGRect {
-        .zero
+        var rectForRange = CGRect.zero
+        let runs = CTLineGetGlyphRuns(line) as! [CTRun]
+        
+        for run in runs {
+            let stringRunRange = CTRunGetStringRange(run)
+            let lineRunRange = NSMakeRange(stringRunRange.location, stringRunRange.length)
+            let intersectedRunRange = NSIntersectionRange(lineRunRange, range)
+            if intersectedRunRange.length == 0 {
+                continue
+            }
+            
+            var ascent: CGFloat = 0.0
+            var descent: CGFloat = 0.0
+            var leading: CGFloat = 0.0
+            
+            let width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, nil))
+            let height = ascent + descent
+            
+            let xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
+            var linkRect = CGRect(x: lineOrigin.x + xOffset - leading, y: lineOrigin.y - descent, width: width + leading, height: height)
+            
+            linkRect.origin.y = round(linkRect.origin.y)
+            linkRect.origin.x = round(linkRect.origin.x)
+            linkRect.size.width = round(linkRect.size.width)
+            linkRect.size.height = round(linkRect.size.height)
+            
+            rectForRange = CGRectIsEmpty(rectForRange) ? linkRect : rectForRange.union(linkRect)
+        }
+        
+        return rectForRange
     }
     
     private func appendAttachment(_ attachment: AttributedLabelAttachment) {
+        attachment.fontAscent = fontAscent
+        attachment.fontDescent = fontDescent
+        var objectReplacementChar: unichar = 0xFFFC
+        let objectReplacementString = NSString(characters: &objectReplacementChar, length: 1) as String
+        let attachText = NSMutableAttributedString(string: objectReplacementString)
         
+        var callbacks = CTRunDelegateCallbacks(version: kCTRunDelegateVersion1, dealloc: { _ in
+        }, getAscent: { ref in
+            let image = unsafeBitCast(ref, to: AttributedLabelAttachment.self)
+            var ascent: CGFloat = 0
+            let height = image.boxSize().height
+            switch image.alignment {
+            case .top:
+                ascent = image.fontAscent
+            case .center:
+                let fontAscent = image.fontAscent
+                let fontDescent = image.fontDescent
+                let baseLine = (fontAscent + fontDescent) / 2 - fontDescent
+                ascent = height / 2 + baseLine
+            case .bottom:
+                ascent = height - image.fontDescent
+            }
+            return ascent
+        }, getDescent: { ref in
+            let image = unsafeBitCast(ref, to: AttributedLabelAttachment.self)
+            var descent: CGFloat = 0
+            let height = image.boxSize().height
+            switch image.alignment {
+            case .top:
+                descent = height - image.fontAscent
+            case .center:
+                let fontAscent = image.fontAscent
+                let fontDescent = image.fontDescent
+                let baseLine = (fontAscent + fontDescent) / 2 - fontDescent
+                descent = height / 2 - baseLine
+            case .bottom:
+                descent = image.fontDescent
+            }
+            return descent
+        }, getWidth: { ref in
+            let image = unsafeBitCast(ref, to: AttributedLabelAttachment.self)
+            return image.boxSize().width
+        })
+        
+        let delegate = CTRunDelegateCreate(&callbacks, Unmanaged.passRetained(attachment).toOpaque())
+        var attr: [NSAttributedString.Key: Any] = [:]
+        attr[.init(kCTRunDelegateAttributeName as String)] = delegate
+        attachText.setAttributes(attr, range: NSRange(location: 0, length: 1))
+        
+        attachments.append(attachment)
+        appendAttributedText(attachText)
     }
     
     private func prepareTextFrame(_ string: NSAttributedString, rect: CGRect) {
+        guard textFrame == nil else { return }
         
+        let framesetter = CTFramesetterCreateWithAttributedString(string)
+        let path = CGPath(rect: rect, transform: nil)
+        textFrame = CTFramesetterCreateFrame(framesetter, CFRange(location: 0, length: 0), path, nil)
     }
     
     private func drawHighlight(rect: CGRect) {
+        guard let touchedLink = touchedLink,
+              let highlightColor = highlightColor,
+              let textFrame = textFrame else { return }
         
+        highlightColor.setFill()
+        let linkRange = touchedLink.range
+        let lines = CTFrameGetLines(textFrame)
+        let count = CFArrayGetCount(lines)
+        var lineOrigins = [CGPoint](repeating: .zero, count: count)
+        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), &lineOrigins)
+        let numberOfLines = numberOfDisplayedLines()
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        for i in 0..<numberOfLines {
+            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let stringRange = CTLineGetStringRange(line)
+            let lineRange = NSMakeRange(stringRange.location, stringRange.length)
+            let intersectedRange = NSIntersectionRange(lineRange, linkRange)
+            if intersectedRange.length == 0 {
+                continue
+            }
+            
+            let highlightRect = rectForRange(linkRange, inLine: line, lineOrigin: lineOrigins[i]).offsetBy(dx: 0, dy: -rect.origin.y)
+            if !CGRectIsEmpty(highlightRect) {
+                let pi = CGFloat.pi
+                
+                let radius: CGFloat = 1.0
+                ctx.move(to: CGPoint(x: highlightRect.origin.x, y: highlightRect.origin.y + radius))
+                ctx.addLine(to: CGPoint(x: highlightRect.origin.x, y: highlightRect.origin.y + highlightRect.size.height - radius))
+                ctx.addArc(center: CGPoint(x: highlightRect.origin.x + radius, y: highlightRect.origin.y + highlightRect.size.height - radius), radius: radius, startAngle: pi, endAngle: pi / 2.0, clockwise: true)
+                ctx.addLine(to: CGPoint(x: highlightRect.origin.x + highlightRect.size.width - radius, y: highlightRect.origin.y + highlightRect.size.height))
+                ctx.addArc(center: CGPoint(x: highlightRect.origin.x + highlightRect.size.width - radius, y: highlightRect.origin.y + highlightRect.size.height - radius), radius: radius, startAngle: pi / 2, endAngle: 0, clockwise: true)
+                ctx.addLine(to: CGPoint(x: highlightRect.origin.x + highlightRect.size.width, y: highlightRect.origin.y + radius))
+                ctx.addArc(center: CGPoint(x: highlightRect.origin.x + highlightRect.size.width - radius, y: highlightRect.origin.y + radius), radius: radius, startAngle: 0, endAngle: -pi / 2.0, clockwise: true)
+                ctx.addLine(to: CGPoint(x: highlightRect.origin.x + radius, y: highlightRect.origin.y))
+                ctx.addArc(center: CGPoint(x: highlightRect.origin.x + radius, y: highlightRect.origin.y + radius), radius: radius, startAngle: -pi / 2, endAngle: pi, clockwise: true)
+                ctx.fillPath()
+            }
+        }
     }
     
     private func drawShadow(_ ctx: CGContext) {
-        
+        if let shadowColor = shadowColor {
+            ctx.setShadow(offset: shadowOffset, blur: shadowBlur, color: shadowColor.cgColor)
+        }
     }
     
     private func drawText(_ attributedString: NSAttributedString, rect: CGRect, context: CGContext) {
+        guard let textFrame = textFrame else { return }
         
+        if numberOfLines > 0 {
+            let lines = CTFrameGetLines(textFrame)
+            let numberOfLines = numberOfDisplayedLines()
+
+            var lineOrigins = [CGPoint](repeating: .zero, count: numberOfLines)
+            CTFrameGetLineOrigins(textFrame, CFRangeMake(0, numberOfLines), &lineOrigins)
+            
+            for lineIndex in 0..<numberOfLines {
+                let lineOrigin = lineOrigins[lineIndex]
+                context.textPosition = CGPoint(x: lineOrigin.x, y: lineOrigin.y)
+                let line = CFArrayGetValueAtIndex(lines, lineIndex) as! CTLine
+                
+                var shouldDrawLine = true
+                if lineIndex == numberOfLines - 1 && lineBreakMode == .byTruncatingTail {
+                    // 找到最后一行并检查是否需要truncatingTail
+                    let lastLineRange = CTLineGetStringRange(line)
+                    if lastLineRange.location + lastLineRange.length < attributedString.length {
+                        let truncationType: CTLineTruncationType = .end
+                        let truncationAttributePosition = lastLineRange.location + lastLineRange.length - 1
+                        
+                        let tokenAttributes = attributedString.attributes(at: truncationAttributePosition, effectiveRange: nil)
+                        let tokenString = NSAttributedString(string: ellipsesCharacter, attributes: tokenAttributes)
+                        let truncationToken = CTLineCreateWithAttributedString(tokenString as CFAttributedString)
+                        
+                        let truncationString = attributedString.attributedSubstring(from: NSRange(location: lastLineRange.location, length: lastLineRange.length)).mutableCopy() as! NSMutableAttributedString
+                        
+                        if lastLineRange.length > 0 {
+                            //移除掉最后一个对象...，其实这个地方有点问题,也有可能需要移除最后 2 个对象，因为 attachment 宽度的关系
+                            truncationString.deleteCharacters(in: NSRange(location: lastLineRange.length - 1, length: 1))
+                        }
+                        truncationString.append(tokenString)
+                        
+                        var truncationWidth = rect.size.width
+                        if lineTruncatingSpacing > 0 {
+                            truncationWidth -= lineTruncatingSpacing
+                            
+                            if let attributedImage = lineTruncatingAttachment {
+                                var lineAscent: CGFloat = 0
+                                var lineDescent: CGFloat = 0
+                                CTLineGetTypographicBounds(line, &lineAscent, &lineDescent, nil)
+                                let lineHeight = lineAscent + lineDescent
+                                let lineBottomY = lineOrigin.y - lineDescent
+                                
+                                let boxSize = attributedImage.boxSize()
+                                let imageBoxHeight = boxSize.height
+                                let xOffset = truncationWidth
+                                
+                                var imageBoxOriginY: CGFloat = 0.0
+                                switch attributedImage.alignment {
+                                case .top:
+                                    imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight)
+                                case .center:
+                                    imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0
+                                case .bottom:
+                                    imageBoxOriginY = lineBottomY
+                                }
+                                
+                                let imageRect = CGRect(x: lineOrigin.x + xOffset, y: imageBoxOriginY, width: boxSize.width, height: imageBoxHeight)
+                                var flippedMargins = attributedImage.margin
+                                let top = flippedMargins.top
+                                flippedMargins.top = flippedMargins.bottom
+                                flippedMargins.bottom = top
+                                
+                                let attachmentRect = imageRect.inset(by: flippedMargins)
+                                
+                                let content = attributedImage.content
+                                if let image = content as? UIImage {
+                                    if let cgImage = image.cgImage {
+                                        context.draw(cgImage, in: attachmentRect)
+                                    }
+                                } else if let view = content as? UIView {
+                                    lineTruncatingView = view
+                                    if view.superview == nil {
+                                        addSubview(view)
+                                    }
+                                    let viewFrame = CGRect(x: attachmentRect.origin.x, y: self.bounds.size.height - attachmentRect.origin.y - attachmentRect.size.height, width: attachmentRect.size.width, height: attachmentRect.size.height)
+                                    view.frame = viewFrame
+                                }
+                            }
+                        }
+                        
+                        let truncationLine = CTLineCreateWithAttributedString(truncationString as CFAttributedString)
+                        let truncatedLine = CTLineCreateTruncatedLine(truncationLine, truncationWidth, truncationType, truncationToken) ?? truncationToken
+                        CTLineDraw(truncatedLine, context)
+                        
+                        shouldDrawLine = false
+                    }
+                }
+                if shouldDrawLine {
+                    CTLineDraw(line, context)
+                }
+            }
+        } else {
+            CTFrameDraw(textFrame, context)
+        }
     }
     
     private func drawStrikethrough(rect: CGRect, context: CGContext) {
+        guard let textFrame = textFrame else { return }
         
+        let lines = CTFrameGetLines(textFrame)
+        let numberOfLines = numberOfDisplayedLines()
+        let scale = UIScreen.main.scale
+        var lineOrigins = [CGPoint](repeating: .zero, count: numberOfLines)
+        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, numberOfLines), &lineOrigins)
+            
+        for lineIndex in 0..<numberOfLines {
+            let lineOrigin = lineOrigins[lineIndex]
+            let line = CFArrayGetValueAtIndex(lines, lineIndex) as! CTLine
+            let runs = CTLineGetGlyphRuns(line)
+            
+            for runIndex in 0..<CFArrayGetCount(runs) {
+                let run = CFArrayGetValueAtIndex(runs, runIndex) as! CTRun
+                let glyphCount = CTRunGetGlyphCount(run)
+                guard glyphCount > 0 else { continue }
+                
+                guard let attrs = CTRunGetAttributes(run) as? [NSAttributedString.Key: Any] else { continue }
+                guard let strikethrough = attrs[.strikethroughStyle] as? NSNumber else { continue }
+                let style = strikethrough.intValue
+                let styleBase = style & 0xFF
+                guard styleBase != 0 else { continue }
+
+                var color = attrs[.strikethroughColor]
+                if color == nil { color = attrs[.init(kCTForegroundColorAttributeName as String)] }
+                if color == nil { color = attrs[.foregroundColor] ?? UIColor.black.cgColor }
+
+                var xHeight: CGFloat = 0
+                var underLinePosition: CGFloat = 0
+                var lineThickness: CGFloat = 0
+                drawMaxMetric(runs: runs, xHeight: &xHeight, underlinePosition: &underLinePosition, lineThickness: &lineThickness)
+                
+                var position = CGPoint(x: lineOrigin.x - underLinePosition, y: lineOrigin.y + xHeight / 2)
+                var runPosition = CGPoint.zero
+                CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition)
+                position.x = lineOrigin.x + runPosition.x
+                let width = lineThickness
+                let length = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), nil, nil, nil)
+                let phase = position.x
+
+                var x1 = round(position.x * scale) / scale
+                var x2 = round((position.x + length) * scale) / scale
+                var w = (styleBase == NSUnderlineStyle.thick.rawValue) ? width * 2 : width
+                var y: CGFloat = 0
+                let linePixel = w * scale
+                if abs(linePixel - floor(linePixel)) < 0.1 {
+                    let iPixel = Int(linePixel)
+                    if iPixel == 0 || (iPixel % 2 == 1) {
+                        y = (floor(position.y * scale) + 0.5) / scale
+                    } else {
+                        y = floor(position.y * scale) / scale
+                    }
+                } else {
+                    y = position.y
+                }
+                
+                if let uiColor = color as? UIColor {
+                    context.setStrokeColor(uiColor.cgColor)
+                } else {
+                    context.setStrokeColor(color as! CGColor)
+                }
+                context.setLineWidth(width)
+                context.setLineCap(.butt)
+                context.setLineJoin(.miter)
+                let dash: CGFloat = 12
+                let dot: CGFloat = 5
+                let space: CGFloat = 3
+                let pattern = style & 0xF00
+                if pattern == NSUnderlineStyle.patternDot.rawValue {
+                    let lengths: [CGFloat] = [width * dot, width * space]
+                    context.setLineDash(phase: phase, lengths: lengths)
+                } else if pattern == NSUnderlineStyle.patternDash.rawValue {
+                    let lengths: [CGFloat] = [width * dash, width * space]
+                    context.setLineDash(phase: phase, lengths: lengths)
+                } else if pattern == NSUnderlineStyle.patternDashDot.rawValue {
+                    let lengths: [CGFloat] = [width * dash, width * space, width * dot, width * space]
+                    context.setLineDash(phase: phase, lengths: lengths)
+                } else if pattern == NSUnderlineStyle.patternDashDotDot.rawValue {
+                    let lengths: [CGFloat] = [width * dash, width * space, width * dot, width * space, width * dot, width * space]
+                    context.setLineDash(phase: phase, lengths: lengths)
+                } else {
+                    context.setLineDash(phase: phase, lengths: [])
+                }
+
+                context.setLineWidth(w)
+                if styleBase == NSUnderlineStyle.single.rawValue {
+                    context.move(to: CGPoint(x: x1, y: y))
+                    context.addLine(to: CGPoint(x: x2, y: y))
+                    context.strokePath()
+                } else if styleBase == NSUnderlineStyle.thick.rawValue {
+                    context.move(to: CGPoint(x: x1, y: y))
+                    context.addLine(to: CGPoint(x: x2, y: y))
+                    context.strokePath()
+                } else if styleBase == NSUnderlineStyle.double.rawValue {
+                    context.move(to: CGPoint(x: x1, y: y - w))
+                    context.addLine(to: CGPoint(x: x2, y: y - w))
+                    context.strokePath()
+                    context.move(to: CGPoint(x: x1, y: y + w))
+                    context.addLine(to: CGPoint(x: x2, y: y + w))
+                    context.strokePath()
+                }
+            }
+        }
     }
     
-    private func drawMaxMetric(runs: CFArray, xHeight: UnsafeMutablePointer<CGFloat>, underlinePosition: UnsafeMutablePointer<CGFloat>, lineThickness: UnsafeMutablePointer<CGFloat>) {
+    private func drawMaxMetric(runs: CFArray, xHeight: inout CGFloat, underlinePosition: inout CGFloat, lineThickness: inout CGFloat) {
+        var maxXHeight: CGFloat = 0
+        var maxUnderlinePos: CGFloat = 0
+        var maxLineThickness: CGFloat = 0
         
+        for i in 0..<CFArrayGetCount(runs) {
+            let run = CFArrayGetValueAtIndex(runs, i) as! CTRun
+            let attrs = CTRunGetAttributes(run) as? [NSAttributedString.Key: Any]
+            if let attrs = attrs, let fontValue = attrs[.init(kCTFontAttributeName as String)] {
+                let font = fontValue as! CTFont
+                let fontXHeight = CTFontGetXHeight(font)
+                if fontXHeight > maxXHeight { maxXHeight = fontXHeight }
+                
+                let fontUnderlinePos = CTFontGetUnderlinePosition(font)
+                if fontUnderlinePos < maxUnderlinePos { maxUnderlinePos = fontUnderlinePos }
+                
+                let fontLineThickness = CTFontGetUnderlineThickness(font)
+                if fontLineThickness > maxLineThickness {
+                    maxLineThickness = fontLineThickness
+                }
+            }
+        }
+        
+        xHeight = maxXHeight
+        underlinePosition = maxUnderlinePos
+        lineThickness = maxLineThickness
     }
     
     private func drawAttachments() {
+        guard attachments.count > 0,
+              let textFrame = textFrame,
+              let ctx = UIGraphicsGetCurrentContext() else { return }
         
+        let lines = CTFrameGetLines(textFrame)
+        let lineCount = CFArrayGetCount(lines)
+        var lineOrigins = [CGPoint](repeating: .zero, count: lineCount)
+        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), &lineOrigins)
+        let numberOfLines = numberOfDisplayedLines()
+
+        for i in 0 ..< numberOfLines {
+            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let runs = CTLineGetGlyphRuns(line)
+            let runCount = CFArrayGetCount(runs)
+            let lineOrigin = lineOrigins[i]
+            var lineAscent: CGFloat = 0.0
+            var lineDescent: CGFloat = 0.0
+            CTLineGetTypographicBounds(line, &lineAscent, &lineDescent, nil)
+            let lineHeight = lineAscent + lineDescent
+            let lineBottomY = lineOrigin.y - lineDescent
+
+            // 遍历找到对应的 attachment 进行绘制
+            for k in 0..<runCount {
+                let run = CFArrayGetValueAtIndex(runs, k) as! CTRun
+                let runAttributes = CTRunGetAttributes(run) as? [NSAttributedString.Key: Any]
+                let delegate = runAttributes?[.init(kCTRunDelegateAttributeName as String)]
+                guard let delegate = delegate else { continue }
+                let attributedImage = unsafeBitCast(CTRunDelegateGetRefCon(delegate as! CTRunDelegate), to: AttributedLabelAttachment.self)
+                
+                var ascent: CGFloat = 0.0
+                var descent: CGFloat = 0.0
+                let width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, nil)
+                let imageBoxHeight = attributedImage.boxSize().height
+                let xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
+                
+                var imageBoxOriginY: CGFloat = 0.0
+                switch attributedImage.alignment {
+                case .top:
+                    imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight)
+                case .center:
+                    imageBoxOriginY = lineBottomY + (lineHeight - imageBoxHeight) / 2.0
+                case .bottom:
+                    imageBoxOriginY = lineBottomY
+                }
+                
+                let imageRect = CGRect(x: lineOrigin.x + xOffset, y: imageBoxOriginY, width: width, height: imageBoxHeight)
+                var flippedMargins = attributedImage.margin
+                let top = flippedMargins.top
+                flippedMargins.top = flippedMargins.bottom
+                flippedMargins.bottom = top
+                
+                let attatchmentRect = imageRect.inset(by: flippedMargins)
+                
+                if i == numberOfLines - 1 && k >= runCount - 2 && lineBreakMode == .byTruncatingTail {
+                    // 最后行最后的2个CTRun需要做额外判断
+                    let attachmentWidth = attatchmentRect.width
+                    let minEllipsesWidth = attachmentWidth
+                    if self.bounds.width - attatchmentRect.minX - attachmentWidth < minEllipsesWidth {
+                        continue
+                    }
+                }
+                
+                let content = attributedImage.content
+                if let image = content as? UIImage {
+                    if let cgImage = image.cgImage {
+                        ctx.draw(cgImage, in: attatchmentRect)
+                    }
+                } else if let view = content as? UIView {
+                    if view.superview == nil {
+                        addSubview(view)
+                    }
+                    let viewFrame = CGRect(x: attatchmentRect.origin.x, y: self.bounds.height - attatchmentRect.origin.y - attatchmentRect.size.height, width: attatchmentRect.size.width, height: attatchmentRect.size.height)
+                    view.frame = viewFrame
+                }
+            }
+        }
     }
     
     private func onLabelClick(_ point: CGPoint) -> Bool {

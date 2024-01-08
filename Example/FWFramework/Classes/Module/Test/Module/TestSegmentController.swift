@@ -182,10 +182,10 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         let labelView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         labelView.backgroundColor = .red
         labelView.app.setCornerRadius(15)
-        label.append(labelView, margin: .zero, alignment: .center)
+        label.appendView(labelView, margin: .zero, alignment: .center)
         label.appendText(" ")
         if let image = UIImage.app.image(color: .blue, size: CGSize(width: 30, height: 30)) {
-            label.append(image, maxSize: image.size, margin: .zero, alignment: .center)
+            label.appendImage(image, maxSize: image.size, margin: .zero, alignment: .center)
         }
         let linkStart = label.attributedText?.length ?? 0
         let linkString = " 我是链接"
