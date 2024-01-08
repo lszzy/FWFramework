@@ -34,10 +34,10 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         
         let linkDetector = AttributedLabelURLDetector()
         if let tagDetector = try? NSRegularExpression(pattern: "#[^#]+#") {
-            linkDetector.add(tagDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue])
+            linkDetector.addRegularExpression(tagDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue])
         }
         if let usserDetector = try? NSRegularExpression(pattern: "@[^ ]+ ") {
-            linkDetector.add(usserDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue, .foregroundColor: UIColor.red])
+            linkDetector.addRegularExpression(usserDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue, .foregroundColor: UIColor.red])
         }
         result.linkDetector = linkDetector
         return result
@@ -152,7 +152,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             self?.attributedLabel.numberOfLines = 3
             self?.attributedLabel.lineBreakMode = .byTruncatingTail
         }
-        attributedLabel.append(collapseLabel, margin: .zero)
+        attributedLabel.appendView(collapseLabel, margin: .zero)
         
         let expandLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: moreText)
         expandLabel.textAlignment = .center
@@ -163,7 +163,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             self?.attributedLabel.numberOfLines = 0
             self?.attributedLabel.lineBreakMode = .byWordWrapping
         }
-        attributedLabel.lineTruncatingAttachment = AttributedLabelAttachment(expandLabel, margin: .zero, alignment: .center, maxSize: .zero)
+        attributedLabel.lineTruncatingAttachment = AttributedLabelAttachment(content: expandLabel, margin: .zero, alignment: .center, maxSize: .zero)
         
         let emptyLabel = UILabel()
         emptyLabel.textAlignment = .center
