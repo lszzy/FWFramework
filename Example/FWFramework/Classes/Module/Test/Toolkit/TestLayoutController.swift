@@ -142,7 +142,9 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20)
             .top(toViewBottom: iconsView, offset: 20)
         
-        attributedLabel.text = "我是非常长的文本，我可以截断并附加视图，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本"
+        attributedLabel.text = "我是非常长的文本，我可以附加"
+        attributedLabel.appendImage(UIImage.app.appIconImage()!, maxSize: CGSize(width: 16, height: 16))
+        attributedLabel.appendAttributedText(NSAttributedString(string: "，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本", attributes: [.font: APP.font(16)]))
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(APP.font(16).lineHeight))
