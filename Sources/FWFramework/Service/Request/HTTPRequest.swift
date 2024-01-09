@@ -856,7 +856,10 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 缓存敏感数据，变化时会更新缓存
     open func cacheSensitiveData() -> Any? {
-        return builder?.cacheSensitiveData
+        if let data = builder?.cacheSensitiveData {
+            return data
+        }
+        return config.cacheSensitiveFilter?(self)
     }
     
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
@@ -908,6 +911,7 @@ open class HTTPRequest: CustomStringConvertible {
         DispatchQueue.fw_mainAsync {
             self.requestCompletePreprocessor()
             self.requestCompleteFilter()
+            self.delegate?.requestFinished(self)
             self.successCompletionBlock?(self)
             
             self.startWithoutCache()
@@ -1127,14 +1131,14 @@ open class HTTPRequest: CustomStringConvertible {
     /// 解析缓存响应句柄，必须主线程且在start之前调用生效
     @discardableResult
     open func responseCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
-        try? responseCacheResponse(completion: { block?($0 as! T) })
+        try? loadCacheResponse(completion: { block?($0 as! T) })
         return self
     }
     
     /// 解析指定缓存响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
     open func responseCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
-        try? responseCacheResponse(completion: { request in
+        try? loadCacheResponse(completion: { request in
             if (request._cacheResponseModel as? T) == nil {
                 request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
@@ -1224,7 +1228,7 @@ open class HTTPRequest: CustomStringConvertible {
         return requestInfo.fw_md5Encode
     }
     
-    fileprivate func responseCacheResponse(completion: Completion, processor: Completion? = nil) throws {
+    fileprivate func loadCacheResponse(completion: Completion?, processor: Completion? = nil) throws {
         guard !isStarted, Thread.isMainThread else { return }
         
         try loadCache()
@@ -1240,7 +1244,7 @@ open class HTTPRequest: CustomStringConvertible {
         isDataFromCache = true
         requestCompletePreprocessor()
         requestCompleteFilter()
-        completion(self)
+        completion?(self)
     }
     
     private func startWithoutCache() {
@@ -1364,7 +1368,7 @@ extension ResponseModelRequest where Self: HTTPRequest {
     /// 解析缓存响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
     public func responseCacheModel(_ success: ((ResponseModel?) -> Void)?) -> Self {
-        try? responseCacheResponse(completion: { request in
+        try? loadCacheResponse(completion: { request in
             success?((request as! Self).responseModel)
         })
         return self
@@ -1402,7 +1406,7 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodabl
     /// 解析缓存安全响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
     public func responseSafeCacheModel(_ success: ((ResponseModel) -> Void)?) -> Self {
-        try? responseCacheResponse(completion: { request in
+        try? loadCacheResponse(completion: { request in
             success?((request as! Self).safeResponseModel)
         })
         return self

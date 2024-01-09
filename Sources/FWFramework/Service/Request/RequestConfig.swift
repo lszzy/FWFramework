@@ -83,6 +83,8 @@ open class RequestConfig {
     open var preloadModelFilter: ((HTTPRequest) -> Bool)?
     /// 是否预加载请求缓存过滤句柄(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次，默认nil
     open var preloadCacheFilter: ((HTTPRequest) -> Bool)?
+    /// 自定义缓存敏感数据过滤句柄，默认nil
+    open var cacheSensitiveFilter: ((HTTPRequest) -> Any?)?
     /// 自定义请求上下文配件句柄，默认nil
     open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     
