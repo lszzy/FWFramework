@@ -17,7 +17,7 @@
     <a title="HTTPRequest Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.0-beta.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.0-beta.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -3099,9 +3099,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC16useCacheResponseSbvp"></a>
-                    <a name="//apple_ref/swift/Property/useCacheResponse" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC16useCacheResponseSbvp">useCacheResponse</a>
+                    <a name="/s:11FWFramework11HTTPRequestC17preloadCacheModelSbvp"></a>
+                    <a name="//apple_ref/swift/Property/preloadCacheModel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC17preloadCacheModelSbvp">preloadCacheModel</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3109,14 +3109,41 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否使用已缓存响应</p>
+                        <p>是否预加载请求缓存模型(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次，默认false</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">useCacheResponse</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">preloadCacheModel</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework11HTTPRequestC16isResponseCachedSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isResponseCached" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC16isResponseCachedSbvp">isResponseCached</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断缓存是否存在</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">isResponseCached</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -4889,7 +4916,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>开始请求，如果加载缓存且缓存存在时允许再调用一次</p>
+                        <p>开始请求，已开始后重复调用无效</p>
 
                       </div>
                       <div class="declaration">
@@ -5544,9 +5571,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC16useCacheResponseyACXDSbF"></a>
-                    <a name="//apple_ref/swift/Method/useCacheResponse(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC16useCacheResponseyACXDSbF">useCacheResponse(_:<wbr>)</a>
+                    <a name="/s:11FWFramework11HTTPRequestC17preloadCacheModelyACXDSbF"></a>
+                    <a name="//apple_ref/swift/Method/preloadCacheModel(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC17preloadCacheModelyACXDSbF">preloadCacheModel(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5554,7 +5581,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否使用已缓存响应</p>
+                        <p>是否预加载请求缓存模型(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次</p>
 
                       </div>
                       <div class="declaration">
@@ -5562,7 +5589,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">useCacheResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">useCacheResponse</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">preloadCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">preloadCacheModel</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -5572,9 +5599,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC12preloadCacheyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/preloadCache(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC12preloadCacheyACXDyxcSgACRbzlF">preloadCache(_:<wbr>)</a>
+                    <a name="/s:11FWFramework11HTTPRequestC13responseCacheyACXDyxcSgACRbzlF"></a>
+                    <a name="//apple_ref/swift/Method/responseCache(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC13responseCacheyACXDyxcSgACRbzlF">responseCache(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5582,7 +5609,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>预加载缓存句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存响应句柄，必须主线程且在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -5590,7 +5617,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">preloadCache</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseCache</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
 
                         </div>
                       </div>
@@ -5600,9 +5627,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC17preloadCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA010AnyCodableE0RzlF"></a>
-                    <a name="//apple_ref/swift/Method/preloadCacheModel(of:designatedPath:success:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC17preloadCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA010AnyCodableE0RzlF">preloadCacheModel(of:<wbr>designatedPath:<wbr>success:<wbr>)</a>
+                    <a name="/s:11FWFramework11HTTPRequestC18responseCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA010AnyCodableE0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/responseCacheModel(of:designatedPath:success:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC18responseCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA010AnyCodableE0RzlF">responseCacheModel(of:<wbr>designatedPath:<wbr>success:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5610,7 +5637,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>预加载指定缓存响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析指定缓存响应模型句柄，必须主线程且在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -5618,7 +5645,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">preloadCacheModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyCodableModel.html">AnyCodableModel</a></span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseCacheModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyCodableModel.html">AnyCodableModel</a></span></code></pre>
 
                         </div>
                       </div>
@@ -5628,9 +5655,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC21preloadSafeCacheModel2of14designatedPath7successACXDxm_SSSgyxcSgtAA010AnyCodableF0RzlF"></a>
-                    <a name="//apple_ref/swift/Method/preloadSafeCacheModel(of:designatedPath:success:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC21preloadSafeCacheModel2of14designatedPath7successACXDxm_SSSgyxcSgtAA010AnyCodableF0RzlF">preloadSafeCacheModel(of:<wbr>designatedPath:<wbr>success:<wbr>)</a>
+                    <a name="/s:11FWFramework11HTTPRequestC22responseSafeCacheModel2of14designatedPath7successACXDxm_SSSgyxcSgtAA010AnyCodableF0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/responseSafeCacheModel(of:designatedPath:success:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC22responseSafeCacheModel2of14designatedPath7successACXDxm_SSSgyxcSgtAA010AnyCodableF0RzlF">responseSafeCacheModel(of:<wbr>designatedPath:<wbr>success:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -5638,7 +5665,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>预加载指定缓存安全响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析指定缓存安全响应模型句柄，必须主线程且在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -5646,7 +5673,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">preloadSafeCacheModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyCodableModel.html">AnyCodableModel</a></span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseSafeCacheModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyCodableModel.html">AnyCodableModel</a></span></code></pre>
 
                         </div>
                       </div>

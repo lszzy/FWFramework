@@ -7969,7 +7969,7 @@
               "key.parsed_declaration" : "@property (nonatomic, strong, readwrite, nullable)\n    dispatch_queue_t completionQueue;",
               "key.parsed_scope.end" : 143,
               "key.parsed_scope.start" : 143,
-              "key.swift_declaration" : "var completionQueue: dispatch_queue_t? { get set }",
+              "key.swift_declaration" : "var completionQueue: DispatchQueue? { get set }",
               "key.swift_name" : "completionQueue",
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)__FWURLSessionManager(py)completionQueue"
@@ -7989,7 +7989,7 @@
               "key.parsed_declaration" : "@property (nonatomic, strong, readwrite, nullable)\n    dispatch_group_t completionGroup;",
               "key.parsed_scope.end" : 148,
               "key.parsed_scope.start" : 148,
-              "key.swift_declaration" : "var completionGroup: dispatch_group_t? { get set }",
+              "key.swift_declaration" : "var completionGroup: DispatchGroup? { get set }",
               "key.swift_name" : "completionGroup",
               "key.unavailable_message" : "",
               "key.usr" : "c:objc(cs)__FWURLSessionManager(py)completionGroup"

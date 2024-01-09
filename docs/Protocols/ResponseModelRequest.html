@@ -17,7 +17,7 @@
     <a title="ResponseModelRequest Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.0-beta.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.0-beta.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2872,9 +2872,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE012preloadCacheC0yxy0bC0QzSgcSgF"></a>
-                    <a name="//apple_ref/swift/Method/preloadCacheModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE012preloadCacheC0yxy0bC0QzSgcSgF">preloadCacheModel(_:<wbr>)</a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgcSgF"></a>
+                    <a name="//apple_ref/swift/Method/responseCacheModel(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgcSgF">responseCacheModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2885,7 +2885,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>预加载缓存响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存响应模型句柄，必须主线程且在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -2893,7 +2893,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">preloadCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -3041,9 +3041,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA010AnyCodableC00bC0RpzrlE016preloadSafeCacheC0yxyAHcSgF"></a>
-                    <a name="//apple_ref/swift/Method/preloadSafeCacheModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA010AnyCodableC00bC0RpzrlE016preloadSafeCacheC0yxyAHcSgF">preloadSafeCacheModel(_:<wbr>)</a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA010AnyCodableC00bC0RpzrlE017responseSafeCacheC0yxyAHcSgF"></a>
+                    <a name="//apple_ref/swift/Method/responseSafeCacheModel(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA010AnyCodableC00bC0RpzrlE017responseSafeCacheC0yxyAHcSgF">responseSafeCacheModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -3054,7 +3054,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>预加载缓存安全响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存安全响应模型句柄，必须主线程且在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -3062,7 +3062,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">preloadSafeCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSafeCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
