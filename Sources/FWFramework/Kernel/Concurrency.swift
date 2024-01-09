@@ -7,7 +7,7 @@
 
 #if compiler(>=5.6.0) && canImport(_Concurrency)
 
-import Foundation
+import UIKit
 
 // MARK: - Concurrency+Promise
 extension Promise {
