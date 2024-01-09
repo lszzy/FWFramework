@@ -168,6 +168,9 @@ open class RequestContextAccessory: RequestAccessory {
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
     open var hideLoadingBlock: HTTPRequest.Completion?
     
+    /// 请求缓存预加载成功时是否仍然显示Loading，默认false
+    open var showsLoadingWhenCachePreloaded = false
+    
     /// 是否自动初始化当前context控制器，默认false
     open var autoSetupContext: Bool = false
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
@@ -188,7 +191,13 @@ open class RequestContextAccessory: RequestAccessory {
                     self?.observeContext(for: request)
                 }
                 if request.autoShowLoading {
-                    request.showLoading()
+                    if request.preloadCacheModel, request.isResponseCached {
+                        if self?.showsLoadingWhenCachePreloaded == true {
+                            request.showLoading()
+                        }
+                    } else {
+                        request.showLoading()
+                    }
                 }
             }
         }
