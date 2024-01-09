@@ -1,6 +1,6 @@
 # Changelog
 
-## [5.0.0] - 2023-12-25
+## [5.0.0-beta.1] - 2024-01-09
 
 ### Added
 * After two years of reconstruction, the Swift version is released, compatible with iOS13+ and no longer compatible with OC
