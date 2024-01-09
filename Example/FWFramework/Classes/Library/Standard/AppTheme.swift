@@ -6,18 +6,20 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
-import FWFramework
 import UIKit
+import FWFramework
 
-public typealias APP = FW
+// MARK: - Wrapper
+public typealias APP = WrapperGlobal
 
 extension WrapperCompatible {
     
-    public static var app: Wrapper<Self>.Type { get { fw } set {} }
-    public var app: Wrapper<Self> { get { fw } set {} }
+    public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+    public var app: Wrapper<Self> { get { wrapperExtension } set {} }
     
 }
 
+// MARK: - AppTheme
 extension NavigationBarStyle {
     
     public static let white: NavigationBarStyle = .init(1)
@@ -25,53 +27,53 @@ extension NavigationBarStyle {
     
 }
 
-@objcMembers class AppTheme: NSObject {
+class AppTheme: NSObject {
     
     public static var backgroundColor: UIColor {
-        UIColor.fw.themeLight(.white, dark: .black)
+        UIColor.app.themeLight(.white, dark: .black)
     }
     public static var textColor: UIColor {
-        UIColor.fw.themeLight(.black, dark: .white)
+        UIColor.app.themeLight(.black, dark: .white)
     }
     public static var detailColor: UIColor {
-        UIColor.fw.themeLight(UIColor.black.withAlphaComponent(0.5), dark: UIColor.white.withAlphaComponent(0.5))
+        UIColor.app.themeLight(UIColor.black.withAlphaComponent(0.5), dark: UIColor.white.withAlphaComponent(0.5))
     }
     public static var barColor: UIColor {
-        UIColor.fw.themeLight(.fw.color(hex: 0xFAFAFA), dark: .fw.color(hex: 0x121212))
+        UIColor.app.themeLight(.app.color(hex: 0xFAFAFA), dark: .app.color(hex: 0x121212))
     }
     public static var tableColor: UIColor {
-        UIColor.fw.themeLight(.fw.color(hex: 0xF2F2F2), dark: .fw.color(hex: 0x000000))
+        UIColor.app.themeLight(.app.color(hex: 0xF2F2F2), dark: .app.color(hex: 0x000000))
     }
     public static var cellColor: UIColor {
-        UIColor.fw.themeLight(.fw.color(hex: 0xFFFFFF), dark: .fw.color(hex: 0x1C1C1C))
+        UIColor.app.themeLight(.app.color(hex: 0xFFFFFF), dark: .app.color(hex: 0x1C1C1C))
     }
     public static var borderColor: UIColor {
-        UIColor.fw.themeLight(.fw.color(hex: 0xDDDDDD), dark: .fw.color(hex: 0x303030))
+        UIColor.app.themeLight(.app.color(hex: 0xDDDDDD), dark: .app.color(hex: 0x303030))
     }
     public static var buttonColor: UIColor {
-        UIColor.fw.themeLight(.fw.color(hex: 0x017AFF), dark: .fw.color(hex: 0x0A84FF))
+        UIColor.app.themeLight(.app.color(hex: 0x017AFF), dark: .app.color(hex: 0x0A84FF))
     }
     
     public static func largeButton() -> UIButton {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .fw.boldFont(ofSize: 17)
+        button.titleLabel?.font = .app.boldFont(ofSize: 17)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         
         // 高亮时内容不透明
-        // button.fw.setBackgroundColor(AppTheme.buttonColor, for: .normal)
-        // button.fw.setBackgroundColor(AppTheme.buttonColor, for: .disabled)
-        // button.fw.setBackgroundColor(AppTheme.buttonColor.fw.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
-        // button.fw.disabledAlpha = 0.5
+        // button.app.setBackgroundColor(AppTheme.buttonColor, for: .normal)
+        // button.app.setBackgroundColor(AppTheme.buttonColor, for: .disabled)
+        // button.app.setBackgroundColor(AppTheme.buttonColor.app.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
+        // button.app.disabledAlpha = UIButton.app.disabledAlpha
         
         // 高亮时内容也透明
         button.backgroundColor = AppTheme.buttonColor
-        button.fw.disabledAlpha = 0.5
-        button.fw.highlightedAlpha = 0.5
+        button.app.disabledAlpha = UIButton.app.disabledAlpha
+        button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         
-        button.fw.setDimension(.width, size: FW.screenWidth - 30)
-        button.fw.setDimension(.height, size: 50)
+        button.app.setDimension(.width, size: APP.screenWidth - 30)
+        button.app.setDimension(.height, size: 50)
         return button
     }
     
@@ -87,36 +89,36 @@ extension AppTheme {
     private static func setupAppearance() {
         let defaultAppearance = NavigationBarAppearance()
         defaultAppearance.foregroundColor = AppTheme.textColor
-        defaultAppearance.backgroundColor = AppTheme.barColor.fw.color(alpha: 0.5)
+        defaultAppearance.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
         defaultAppearance.isTranslucent = true
         defaultAppearance.leftBackImage = Icon.backImage
         let whiteAppearance = NavigationBarAppearance()
         whiteAppearance.foregroundColor = .black
-        whiteAppearance.backgroundColor = .white.fw.color(alpha: 0.5)
+        whiteAppearance.backgroundColor = .white.app.color(alpha: 0.5)
         whiteAppearance.isTranslucent = true
         whiteAppearance.leftBackImage = Icon.backImage
         let transparentAppearance = NavigationBarAppearance()
         transparentAppearance.foregroundColor = AppTheme.textColor
         transparentAppearance.backgroundTransparent = true
         transparentAppearance.leftBackImage = Icon.backImage
-        NavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
-        NavigationBarAppearance.setAppearance(whiteAppearance, forStyle: .white)
-        NavigationBarAppearance.setAppearance(transparentAppearance, forStyle: .transparent)
+        NavigationBarAppearance.setAppearance(defaultAppearance, for: .default)
+        NavigationBarAppearance.setAppearance(whiteAppearance, for: .white)
+        NavigationBarAppearance.setAppearance(transparentAppearance, for: .transparent)
         
-        UITableView.fw.resetTableStyle()
-        UINavigationController.fw.enablePopProxy()
+        UITableView.app.resetTableStyle()
+        UINavigationController.app.enablePopProxy()
         ViewControllerManager.shared.hookInit = { viewController in
             viewController.extendedLayoutIncludesOpaqueBars = true
             viewController.hidesBottomBarWhenPushed = true
-            viewController.fw.navigationBarHidden = false
-            viewController.fw.navigationBarStyle = .default
+            viewController.app.navigationBarHidden = false
+            viewController.app.navigationBarStyle = .default
         }
         ViewControllerManager.shared.hookViewDidLoad = { viewController in
             viewController.view.backgroundColor = AppTheme.tableColor
-            // viewController.fw.backBarItem = Icon.backImage
+            // viewController.app.backBarItem = Icon.backImage
             // if (viewController.navigationController?.children.count ?? 0) > 1 &&
             //     viewController.navigationItem.leftBarButtonItem == nil {
-            //     viewController.fw.leftBarItem = Icon.backImage
+            //     viewController.app.leftBarItem = Icon.backImage
             // }
         }
         ViewControllerManager.shared.hookTableViewController = { viewController in
@@ -141,22 +143,11 @@ extension AppTheme {
                 return nil
             }
         }
-        ToastPluginImpl.shared.customBlock = { toastView in
-            if toastView.type == .indicator {
-                if (toastView.attributedTitle?.length ?? 0) < 1 {
-                    toastView.contentBackgroundColor = .clear
-                    toastView.indicatorColor = AppTheme.textColor
-                }
-            }
-        }
-        EmptyPluginImpl.shared.customBlock = { (emptyView) in
-            emptyView.loadingViewColor = AppTheme.textColor
-        }
         EmptyPluginImpl.shared.defaultText = {
             return "暂无数据"
         }
         EmptyPluginImpl.shared.defaultImage = {
-            return UIImage.fw.appIconImage()
+            return UIImage.app.appIconImage()
         }
         EmptyPluginImpl.shared.defaultAction = {
             return "重新加载"

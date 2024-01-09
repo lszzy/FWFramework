@@ -7,15 +7,33 @@
 //
 
 import FWFramework
+import WebKit
 
-class WebController: UIViewController {
+@objc extension Autoloader {
+    static func loadApp_WebView() {
+        var observer: Any?
+        observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
+            let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
+            WebController.toggleReuse(enabled: reuseEnabled)
+            
+            if let observer = observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
+        }
+    }
+}
+
+// 为了支持继承，WebViewControllerProtocol必须放到非extension中实现，且必须实现子类中需要继承的所有方法
+class WebController: UIViewController, WebViewControllerProtocol {
     
     var requestUrl: String?
     
     private var toolbarHidden = true
     
+    // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        Benchmark.begin("WebView")
     }
     
     convenience init(requestUrl: String? = nil) {
@@ -45,61 +63,107 @@ class WebController: UIViewController {
         navigationController?.isToolbarHidden = true
     }
     
-}
-
-extension WebController: WebViewControllerProtocol {
-    
-    @objc var webItems: NSArray? {
-        if navigationItem.leftBarButtonItem != nil {
-            return nil
-        } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
-            return [backImage, closeImage]
-        } else {
-            return nil
-        }
-    }
-    
+    // MARK: - WebViewControllerProtocol
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
         webView.allowsSchemeURL = true
+        
+        if navigationItem.leftBarButtonItem != nil {
+            webView.app.navigationItems = nil
+        } else if let backImage = Icon.backImage, let closeImage = Icon.closeImage {
+            webView.app.navigationItems = [backImage, closeImage]
+        } else {
+            webView.app.navigationItems = nil
+        }
     }
     
     func setupWebLayout() {
-        webView.fw.layoutChain
+        webView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
-            .bottom(fw.bottomBarHeight)
+            .bottom(app.bottomBarHeight)
     }
     
+    func setupWebBridge(_ bridge: WebViewJSBridge) {}
+    
+    func setupSubviews() {}
+    
+    func setupLayout() {}
+    
+    static func toggleReuse(enabled: Bool) {
+        if enabled {
+            WebView.app.reuseConfigurationBlock = { configuration, _ in
+                configuration.allowsInlineMediaPlayback = true
+            }
+            WebView.reusePreloadUrlBlock = { _ in
+                return "https://www.wuyong.site/"
+            }
+            ViewControllerManager.shared.webViewReuseIdentifier = "WebView"
+        } else {
+            ViewControllerManager.shared.webViewReuseIdentifier = nil
+        }
+    }
+    
+    // MARK: - WebViewDelegate
+    func webViewFinishLoad() {
+        if !webView.isFirstLoad { return }
+        app.hideLoading()
+        
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
+        
+        let loadTime = Benchmark.end("WebView")
+        app.showMessage(text: String(format: "%.3fms", loadTime * 1000))
+    }
+    
+    func webViewFailLoad(_ error: Error) {
+        if !webView.isFirstLoad { return }
+        app.hideLoading()
+        
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
+        
+        app.showEmptyView(text: RequestError.isConnectionError(error) ? "网络连接失败" : "服务器异常", detail: error.localizedDescription, image: nil, action: "点击重试") { [weak self] _ in
+            self?.loadRequestUrl()
+        }
+    }
+    
+    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
+        if navigationAction.request.url?.scheme == "app" {
+            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
+            return false
+        }
+        return true
+    }
+    
+    // MARK: - Private
     func setupToolbar() {
-        let backItem = UIBarButtonItem.fw.item(object: Icon.backImage) { [weak self] _ in
+        let backItem = UIBarButtonItem.app.item(object: Icon.backImage) { [weak self] _ in
             guard let self = self else { return }
             if self.webView.canGoBack {
                 self.webView.goBack()
             }
         }
         backItem.isEnabled = false
-        webView.fw.observeProperty("canGoBack") { [weak self] _, _ in
+        webView.app.observeProperty("canGoBack") { [weak self] _, _ in
             guard let self = self else { return }
             backItem.isEnabled = self.webView.canGoBack
             self.reloadToolbar(false)
         }
         
-        let forwardItem = UIBarButtonItem.fw.item(object: Icon.backImage?.fw.image(rotateDegree: 180)) { [weak self] _ in
+        let forwardItem = UIBarButtonItem.app.item(object: Icon.backImage?.app.image(rotateDegree: 180)) { [weak self] _ in
             guard let self = self else { return }
             if self.webView.canGoForward {
                 self.webView.goForward()
             }
         }
         forwardItem.isEnabled = false
-        webView.fw.observeProperty("canGoForward") { [weak self] _, _ in
+        webView.app.observeProperty("canGoForward") { [weak self] _, _ in
             guard let self = self else { return }
             forwardItem.isEnabled = self.webView.canGoForward
             self.reloadToolbar(false)
         }
         
-        webView.fw.observeProperty("isLoading") { [weak self] _, _ in
+        webView.app.observeProperty("isLoading") { [weak self] _, _ in
             self?.reloadToolbar(false)
         }
         
@@ -108,14 +172,14 @@ extension WebController: WebViewControllerProtocol {
         spaceItem.width = 79
         toolbarItems = [flexibleItem, backItem, spaceItem, forwardItem, flexibleItem]
         
-        navigationController?.toolbar.fw.shadowImage = UIImage.fw.image(color: AppTheme.borderColor, size: CGSize(width: self.view.bounds.width, height: 0.5))
-        navigationController?.toolbar.fw.backgroundColor = AppTheme.barColor
-        navigationController?.toolbar.fw.foregroundColor = AppTheme.textColor
+        navigationController?.toolbar.app.shadowImage = UIImage.app.image(color: AppTheme.borderColor, size: CGSize(width: self.view.bounds.width, height: 0.5))
+        navigationController?.toolbar.app.backgroundColor = AppTheme.barColor
+        navigationController?.toolbar.app.foregroundColor = AppTheme.textColor
     }
     
     func reloadToolbar(_ animated: Bool) {
         let hidden = !(webView.canGoBack || webView.canGoForward)
-        if fw.toolBarHidden == hidden { return }
+        if app.toolBarHidden == hidden { return }
         
         if animated {
             CATransaction.begin()
@@ -135,46 +199,42 @@ extension WebController: WebViewControllerProtocol {
     }
     
     @objc func shareRequestUrl() {
-        UIApplication.fw.openActivityItems([FW.safeURL(requestUrl)])
+        let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
+        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+            if index == 0 {
+                UIApplication.app.openActivityItems([APP.safeURL(self?.requestUrl)])
+            } else if index == 1 {
+                self?.webView.reload()
+            } else if index == 2 {
+                let urlRequest = self?.createUrlRequest(self?.requestUrl)
+                self?.webView.load(urlRequest!)
+                self?.webView.app.clearBackForwardList()
+            } else if index == 3 {
+                let urlRequest = self?.createUrlRequest(nil)
+                self?.webView.load(urlRequest!)
+                self?.webView.app.clearBackForwardList()
+            } else {
+                WebView.app.processPool = WKProcessPool()
+                UserDefaults.app.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
+                WebController.toggleReuse(enabled: !reuseEnabled)
+            }
+        }
     }
     
     @objc func loadRequestUrl() {
-        fw.hideEmptyView()
-        if !fw.isDataLoaded {
-            fw.showLoading()
+        app.hideEmptyView()
+        if webView.isFirstLoad {
+            app.showLoading()
         }
         
-        var urlRequest = URLRequest(url: FW.safeURL(requestUrl))
+        webRequest = createUrlRequest(requestUrl)
+    }
+    
+    private func createUrlRequest(_ url: String?) -> URLRequest {
+        var urlRequest = URLRequest(url: APP.safeURL(url))
         urlRequest.timeoutInterval = 30
-        urlRequest.setValue("test", forHTTPHeaderField: "Test-Token")
-        webRequest = urlRequest
-    }
-    
-    func webViewFinishLoad() {
-        if fw.isDataLoaded { return }
-        fw.hideLoading()
-        fw.isDataLoaded = true
-        
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, target: self, action: #selector(shareRequestUrl))
-    }
-    
-    func webViewFailLoad(_ error: Error) {
-        if fw.isDataLoaded { return }
-        fw.hideLoading()
-        
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue, target: self, action: #selector(loadRequestUrl))
-        
-        fw.showEmptyView(text: error.localizedDescription, detail: nil, image: nil, action: "点击重试") { [weak self] _ in
-            self?.loadRequestUrl()
-        }
-    }
-    
-    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
-        if navigationAction.request.url?.scheme == "app" {
-            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
-            return false
-        }
-        return true
+        urlRequest.setValue("testToken-\(Date.app.currentTime)", forHTTPHeaderField: "Test-Token")
+        return urlRequest
     }
     
 }

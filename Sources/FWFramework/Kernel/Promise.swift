@@ -7,82 +7,71 @@
 
 import Foundation
 
-// MARK: - FW+Promise
-extension FW {
+// MARK: - Promise
+/// 约定错误
+public enum PromiseError: Int, Swift.Error, CustomNSError {
+    case failed = 2001
+    case validation = 2002
+    case timeout = 2003
     
-    /// 仿协程异步执行方法
-    @discardableResult
-    public static func async(_ block: @escaping () throws -> Any?) -> Promise {
-        return Promise.async(block)
+    public static var errorDomain: String { "site.wuyong.error.promise" }
+    public var errorCode: Int { self.rawValue }
+    public var errorUserInfo: [String: Any] {
+        switch self {
+        case .failed:
+            return [NSLocalizedDescriptionKey: "Promise failed."]
+        case .validation:
+            return [NSLocalizedDescriptionKey: "Promise validation failed."]
+        case .timeout:
+            return [NSLocalizedDescriptionKey: "Promise timeout."]
+        }
     }
-
-    /// 仿协程同步返回结果
-    @discardableResult
-    public static func await(_ promise: Promise) throws -> Any? {
-        return try Promise.await(promise)
-    }
-    
 }
 
-// MARK: - Promise
-/// 框架约定类
-@objc(FWPromise)
-@objcMembers public class Promise: NSObject {
+/// 约定类
+public class Promise {
     
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
-    public static var completionQueue: DispatchQueue = DispatchQueue.main
-    /// 约定默认错误，约定失败时可选使用，可用于错误判断，支持自定义
-    public static var defaultError: Error = {
-        NSError(
-            domain: "site.wuyong.error.promise.failure",
-            code: 2001,
-            userInfo: [NSLocalizedDescriptionKey: "Promise failed"])
-    }()
+    public static var completionQueue: DispatchQueue = .main
+    /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
+    public static var failedError: Error = PromiseError.failed
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    public static var validationError: Error = {
-        NSError(
-            domain: "site.wuyong.error.promise.validation",
-            code: 2002,
-            userInfo: [NSLocalizedDescriptionKey: "Promise validation failed"])
-    }()
+    public static var validationError: Error = PromiseError.validation
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    public static var timeoutError: Error = {
-        NSError(
-            domain: "site.wuyong.error.promise.timeout",
-            code: 2003,
-            userInfo: [NSLocalizedDescriptionKey: "Promise timeout"])
-    }()
+    public static var timeoutError: Error = PromiseError.timeout
+    
+    /// 约定进度值
+    private struct ProgressValue { var value: Double }
     
     /// 约定内部属性
-    private let operation: (@escaping (_ result: Any?) -> Void) -> Void
+    private let operation: (@escaping (_ result: Any) -> Void) -> Void
     private var finished: Bool = false
-    private struct Progress { var value: Double }
     
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
-    public init(completion: @escaping (_ completion: @escaping (_ result: Any?) -> Void) -> Void) {
+    public init(completion: @escaping (_ completion: @escaping (_ result: Any) -> Void) -> Void) {
         self.operation = completion
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init(block: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
+    public convenience init<T: Any>(block: @escaping (_ resolve: @escaping (_ value: T) -> Void, _ reject: @escaping (_ error: Error) -> Void) -> Void) {
         self.init(completion: { completion in
             block(completion, completion)
         })
     }
     
     /// 指定操作成功、失败句柄和进度句柄初始化
-    public convenience init(progress: @escaping (_ resolve: @escaping (_ value: Any?) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
+    public convenience init<T: Any>(progress: @escaping (_ resolve: @escaping (_ value: T) -> Void, _ reject: @escaping (_ error: Error) -> Void, _ progress: @escaping (_ value : Double) -> Void) -> Void) {
         self.init(completion: { completion in
             progress(completion, completion, { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         })
     }
     
     /// 快速创建成功实例
-    public convenience init(value: Any?) {
+    public convenience init(value: Any) {
         self.init(completion: { completion in
             completion(value)
         })
@@ -95,52 +84,15 @@ extension FW {
         })
     }
     
-    // MARK: - Await
-    /// 仿协程异步执行方法
-    @discardableResult
-    public static func async(_ block: @escaping () throws -> Any?) -> Promise {
-        return Promise { completion in
-            DispatchQueue(label: "site.wuyong.queue.promise.async", attributes: .concurrent).async {
-                do {
-                    let value = try block()
-                    completion(value)
-                } catch {
-                    completion(error)
-                }
-            }
-        }
-    }
-    
-    /// 仿协程同步返回结果
-    @discardableResult
-    public static func await(_ promise: Promise) throws -> Any? {
-        var result: Any?
-        var error: Error?
-        let group = DispatchGroup()
-        group.enter()
-        promise.done({ value in
-            result = value
-            group.leave()
-        }, catch: { e in
-            error = e
-            group.leave()
-        })
-        group.wait()
-        if let e = error {
-            throw e
-        }
-        return result
-    }
-    
 }
 
 // MARK: - Public
-@objc extension Promise {
+extension Promise {
     
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息；约定进度为所有约定总进度
     public static func all(_ promises: [Promise]) -> Promise {
         return Promise { completion in
-            var values: [Any?] = []
+            var values: [Any] = []
             var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done({ value in
@@ -151,9 +103,9 @@ extension FW {
                 }, catch: { error in
                     completion(error)
                 }, progress: { value in
-                    progress[promise.hash] = value
+                    progress[ObjectIdentifier(promise).hashValue] = value
                     let sum = progress.values.reduce(0) { x, y in x + y }
-                    completion(Progress(value: sum / Double(promises.count)))
+                    completion(ProgressValue(value: sum / Double(promises.count)))
                 })
             }
         }
@@ -173,8 +125,8 @@ extension FW {
                         completion(error)
                     }
                 }, progress: { value in
-                    progress[promise.hash] = value
-                    completion(Progress(value: progress.values.max() ?? 0))
+                    progress[ObjectIdentifier(promise).hashValue] = value
+                    completion(ProgressValue(value: progress.values.max() ?? 0))
                 })
             }
         }
@@ -190,8 +142,8 @@ extension FW {
                 }, catch: { error in
                     completion(error)
                 }, progress: { value in
-                    progress[promise.hash] = value
-                    completion(Progress(value: progress.values.max() ?? 0))
+                    progress[ObjectIdentifier(promise).hashValue] = value
+                    completion(ProgressValue(value: progress.values.max() ?? 0))
                 })
             }
         }
@@ -212,99 +164,106 @@ extension FW {
     }
     
     /// 执行约定并回调完成句柄
-    public func done(_ completion: @escaping (_ result: Any?) -> Void) {
+    public func done(_ completion: @escaping (_ result: Any) -> Void) {
         self.execute(progress: false, completion: completion)
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
-        self.execute(progress: false) { result in
+    public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, finally: (() -> Void)? = nil) {
+        self.done(done, catch: `catch`, progress: nil, finally: finally)
+    }
+    
+    /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
+    public func done<T: Any>(_ done: @escaping (_ value: T) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
+        self.execute(progress: progress != nil) { result in
+            if let prog = result as? ProgressValue {
+                progress?(prog.value)
+                return
+            }
+            
             if let error = result as? Error {
                 `catch`?(error)
+            } else if let value = result as? T {
+                done(value)
             } else {
-                done(result)
+                `catch`?(Promise.failedError)
             }
             finally?()
         }
     }
     
-    /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
-    public func done(_ done: @escaping (_ value: Any?) -> Void, catch: ((_ error: Error) -> Void)?, progress: ((_ value: Double) -> Void)?, finally: (() -> Void)? = nil) {
-        self.execute(progress: progress != nil) { result in
-            if progress != nil, let prog = result as? Progress {
-                progress?(prog.value)
-            } else if let error = result as? Error {
-                `catch`?(error)
-                finally?()
-            } else {
-                done(result)
-                finally?()
-            }
-        }
-    }
-    
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then(_ block: @escaping (_ value: Any?) -> Any?) -> Promise {
+    public func then<T: Any>(_ block: @escaping (_ value: T) throws -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
-                let result = block(value)
-                if let promise = result as? Promise {
-                    promise.execute(progress: true, completion: completion)
-                } else {
-                    completion(result)
+                do {
+                    let result = try block(value)
+                    if let promise = result as? Promise {
+                        promise.execute(progress: true, completion: completion)
+                    } else {
+                        completion(result)
+                    }
+                } catch {
+                    completion(error)
                 }
             }, catch: { error in
                 completion(error)
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    public func recover(_ block: @escaping (_ error: Error) -> Any?) -> Promise {
+    public func recover(_ block: @escaping (_ error: Error) throws -> Any) -> Promise {
         return Promise { completion in
             self.done({ value in
                 completion(value)
             }, catch: { error in
-                let result = block(error)
-                if let promise = result as? Promise {
-                    promise.execute(progress: true, completion: completion)
-                } else {
-                    completion(result)
+                do {
+                    let result = try block(error)
+                    if let promise = result as? Promise {
+                        promise.execute(progress: true, completion: completion)
+                    } else {
+                        completion(result)
+                    }
+                } catch let recoverError {
+                    completion(recoverError)
                 }
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
     
-    /// 验证约定，当前约定成功时验证结果，可返回Bool或Error?；验证通过时返回结果，验证失败时返回验证错误
-    public func validate(_ block: @escaping (_ value: Any?) -> Any?) -> Promise {
+    /// 验证约定，当前约定成功时验证结果，可返回Bool或抛异常；验证通过时返回结果，验证失败时返回验证错误
+    public func validate<T: Any>(_ block: @escaping (_ value: T) throws -> Bool) -> Promise {
         return Promise { completion in
             self.done({ value in
-                let result = block(value)
-                if let error = result as? Error {
+                do {
+                    let isValid = try block(value)
+                    if !isValid {
+                        completion(Promise.validationError)
+                    } else {
+                        completion(value)
+                    }
+                } catch {
                     completion(error)
-                } else if let valid = result as? Bool, !valid {
-                    completion(Promise.validationError)
-                } else {
-                    completion(value)
                 }
             }, catch: { error in
                 completion(error)
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce(_ items: [Any], reducer: @escaping (_ value: Any?, _ item: Any) -> Any?) -> Promise {
+    public func reduce<T>(_ items: [T], reducer: @escaping (_ value: Any, _ item: T) throws -> Any) -> Promise {
         var promise = self
         for item in items {
             promise = promise.then({ value in
-                return reducer(value, item)
+                return try reducer(value, item)
             })
         }
         return promise
@@ -326,7 +285,7 @@ extension FW {
                     completion(error)
                 }
             }, progress: { value in
-                completion(Progress(value: value))
+                completion(ProgressValue(value: value))
             })
         }
     }
@@ -352,11 +311,11 @@ extension FW {
 extension Promise {
     
     /// 约定内部执行方法
-    private func execute(progress: Bool, completion: @escaping (_ result: Any?) -> Void) {
+    private func execute(progress: Bool, completion: @escaping (_ result: Any) -> Void) {
         self.operation() { result in
             Promise.completionQueue.async {
                 if !self.finished {
-                    if result is Progress {
+                    if result is ProgressValue {
                         if progress { completion(result) }
                     } else {
                         self.finished = true
@@ -374,7 +333,7 @@ extension Promise {
     
     /// 约定内部重试方法
     private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping () -> Promise) -> Promise {
-        let promise = initialPromise ?? Promise.delay(delay).then({ _ in block() })
+        let promise = initialPromise ?? Promise.delay(delay).then({ (_: Any) in block() })
         if times < 1 { return promise }
         return promise.recover { _ in
             Promise.retry(nil, times: times - 1, delay: delay, block: block)

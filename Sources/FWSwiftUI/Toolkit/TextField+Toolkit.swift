@@ -7,9 +7,11 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - TextField+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
@@ -18,11 +20,11 @@ extension View {
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textFieldConfigure { textField in
-            guard textField.fw.property(forName: "textFieldInitialize") == nil else { return }
-            textField.fw.setProperty(NSNumber(value: true), forName: "textFieldInitialize")
+            guard !textField.fw_propertyBool(forName: "textFieldInitialize") else { return }
+            textField.fw_setPropertyBool(true, forName: "textFieldInitialize")
             
             if let viewController = viewContext?.viewController {
-                viewController.fw.visibleStateChanged = { [weak textField] vc, state in
+                viewController.fw_observeLifecycleState { [weak textField] vc, state in
                     if state == .didAppear {
                         textField?.becomeFirstResponder()
                     } else if state == .willDisappear {
@@ -50,11 +52,11 @@ extension View {
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textViewConfigure { textView in
-            guard textView.fw.property(forName: "textViewInitialize") == nil else { return }
-            textView.fw.setProperty(NSNumber(value: true), forName: "textViewInitialize")
+            guard !textView.fw_propertyBool(forName: "textViewInitialize") else { return }
+            textView.fw_setPropertyBool(true, forName: "textViewInitialize")
             
             if let viewController = viewContext?.viewController {
-                viewController.fw.visibleStateChanged = { [weak textView] vc, state in
+                viewController.fw_observeLifecycleState { [weak textView] vc, state in
                     if state == .didAppear {
                         textView?.becomeFirstResponder()
                     } else if state == .willDisappear {

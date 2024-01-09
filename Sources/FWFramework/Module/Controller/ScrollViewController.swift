@@ -1,0 +1,85 @@
+//
+//  ScrollViewController.swift
+//  FWFramework
+//
+//  Created by wuyong on 2022/8/23.
+//
+
+import UIKit
+
+// MARK: - ScrollViewControllerProtocol
+/// 滚动视图控制器协议，可覆写
+public protocol ScrollViewControllerProtocol: ViewControllerProtocol {
+    
+    /// 滚动视图，默认不显示滚动条
+    var scrollView: UIScrollView { get }
+
+    /// 内容容器视图，自动撑开，子视图需要添加到此视图上
+    var contentView: UIView { get }
+
+    /// 渲染滚动视图，setupSubviews之前调用，默认空实现
+    func setupScrollView()
+
+    /// 渲染滚动视图布局，setupSubviews之前调用，默认铺满
+    func setupScrollLayout()
+    
+}
+
+extension ScrollViewControllerProtocol where Self: UIViewController {
+    
+    /// 滚动视图，默认不显示滚动条
+    public var scrollView: UIScrollView {
+        if let result = fw_property(forName: "scrollView") as? UIScrollView {
+            return result
+        } else {
+            let result = UIScrollView()
+            result.showsVerticalScrollIndicator = false
+            result.showsHorizontalScrollIndicator = false
+            fw_setProperty(result, forName: "scrollView")
+            return result
+        }
+    }
+    
+    /// 内容容器视图，自动撑开，子视图需要添加到此视图上
+    public var contentView: UIView {
+        if let result = fw_property(forName: "contentView") as? UIView {
+            return result
+        } else {
+            let result = UIView()
+            fw_setProperty(result, forName: "contentView")
+            return result
+        }
+    }
+    
+    /// 渲染滚动视图，setupSubviews之前调用，默认空实现
+    public func setupScrollView() {}
+    
+    /// 渲染滚动视图布局，setupSubviews之前调用，默认铺满
+    public func setupScrollLayout() {
+        scrollView.fw_pinEdges()
+    }
+    
+}
+
+// MARK: - ViewControllerManager+ScrollViewControllerProtocol
+internal extension ViewControllerManager {
+    
+    func scrollViewControllerViewDidLoad(_ viewController: UIViewController) {
+        guard let viewController = viewController as? UIViewController & ScrollViewControllerProtocol else { return }
+        
+        let scrollView = viewController.scrollView
+        viewController.view.addSubview(scrollView)
+        
+        let contentView = viewController.contentView
+        scrollView.addSubview(contentView)
+        contentView.fw_pinEdges()
+        
+        hookScrollViewController?(viewController)
+        
+        viewController.setupScrollView()
+        viewController.setupScrollLayout()
+        scrollView.setNeedsLayout()
+        scrollView.layoutIfNeeded()
+    }
+    
+}

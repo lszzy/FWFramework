@@ -59,6 +59,10 @@ public enum JSONType: Int {
  */
 @dynamicMemberLookup
 public struct JSON {
+    
+    public init() {
+        self.init(jsonObject: NSNull())
+    }
 
     public init(data: Data, options opt: JSONSerialization.ReadingOptions = []) throws {
         let object: Any = try JSONSerialization.jsonObject(with: data, options: opt)

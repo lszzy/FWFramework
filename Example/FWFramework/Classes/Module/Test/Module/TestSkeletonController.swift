@@ -12,13 +12,13 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     
     lazy var headerView: TestSkeletonTableHeaderView = {
         let result = TestSkeletonTableHeaderView()
-        result.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: 0)
+        result.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: 0)
         return result
     }()
     
     lazy var footerView: TestSkeletonTableFooterView = {
         let result = TestSkeletonTableFooterView()
-        result.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: 0)
+        result.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: 0)
         return result
     }()
     
@@ -27,16 +27,16 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     func setupTableView() {
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = footerView
-        headerView.fw.autoLayoutSubviews()
-        footerView.fw.autoLayoutSubviews()
+        headerView.app.autoLayoutSubviews()
+        footerView.app.autoLayoutSubviews()
         
-        tableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
-        tableView.fw.setLoading(target: self, action: #selector(onLoading))
+        tableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
+        tableView.app.setLoading(target: self, action: #selector(onLoading))
     }
     
     func setupNavbar() {
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: ["shimmer", "solid", "scale", "none", "tableView滚动", "scrollView滚动", "添加数据"], actionBlock: { index in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["shimmer", "solid", "scale", "none", "tableView滚动", "scrollView滚动", "添加数据"], actionBlock: { index in
                 guard let self = self else { return }
                 
                 if index == 4 {
@@ -52,8 +52,8 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
                 }
                 
                 if index == 6 {
-                    let lastIndex = self.tableData.lastObject.safeInt
-                    self.tableData.addObjects(from: [lastIndex + 1, lastIndex + 2])
+                    let lastIndex = self.tableData.last.safeInt
+                    self.tableData.append(contentsOf: [lastIndex + 1, lastIndex + 2])
                     self.tableView.reloadData()
                     self.renderData()
                     return
@@ -78,35 +78,35 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     }
     
     func renderData() {
-        tableView.fw.beginRefreshing()
+        tableView.app.beginRefreshing()
     }
     
     @objc func onRefreshing() {
         headerView.isHidden = true
         footerView.isHidden = true
         
-        fw.showSkeleton()
+        app.showSkeleton()
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            self.fw.hideSkeleton()
+            self.app.hideSkeleton()
             
             self.headerView.isHidden = false
             self.footerView.isHidden = false
             
-            self.tableData.removeAllObjects()
-            self.tableData.addObjects(from: [1, 2])
+            self.tableData.removeAll()
+            self.tableData.append(contentsOf: [1, 2])
             self.tableView.reloadData()
             
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.endRefreshing()
         }
     }
     
     @objc func onLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let lastIndex = self.tableData.lastObject.safeInt
-            self.tableData.addObjects(from: [lastIndex + 1, lastIndex + 2])
+            let lastIndex = self.tableData.last.safeInt
+            self.tableData.append(contentsOf: [lastIndex + 1, lastIndex + 2])
             self.tableView.reloadData()
             
-            self.tableView.fw.endLoading()
+            self.tableView.app.endLoading()
         }
     }
     
@@ -115,37 +115,37 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.fw.height(cellClass: TestSkeletonCell.self) { [weak self] cell in
-            cell.configure(object: self?.tableData.object(at: indexPath.row) as? String ?? "")
+        return tableView.app.height(cellClass: TestSkeletonCell.self) { [weak self] cell in
+            cell.configure(object: self?.tableData[indexPath.row] as? String ?? "")
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = TestSkeletonCell.fw.cell(tableView: tableView)
-        cell.configure(object: tableData.object(at: indexPath.row) as? String ?? "")
+        let cell = TestSkeletonCell.app.cell(tableView: tableView)
+        cell.configure(object: tableData[indexPath.row] as? String ?? "")
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = TestSkeletonHeaderView.fw.headerFooterView(tableView: tableView)
+        let headerView = TestSkeletonHeaderView.app.headerFooterView(tableView: tableView)
         headerView.configure(object: "1")
         return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return tableView.fw.height(headerFooterViewClass: TestSkeletonHeaderView.self, type: .header) { headerView in
+        return tableView.app.height(headerFooterViewClass: TestSkeletonHeaderView.self, type: .header) { headerView in
             headerView.configure(object: "1")
         }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footerView = TestSkeletonFooterView.fw.headerFooterView(tableView: tableView)
+        let footerView = TestSkeletonFooterView.app.headerFooterView(tableView: tableView)
         footerView.configure(object: "1")
         return footerView
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return tableView.fw.height(headerFooterViewClass: TestSkeletonFooterView.self, type: .footer) { footerView in
+        return tableView.app.height(headerFooterViewClass: TestSkeletonFooterView.self, type: .footer) { footerView in
             footerView.configure(object: "1")
         }
     }
@@ -168,12 +168,12 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
             scrollView.showsVerticalScrollIndicator = false
             scrollView.showsHorizontalScrollIndicator = false
             layout.addSubview(scrollView)
-            scrollView.fw.layoutChain.edges()
+            scrollView.app.layoutChain.edges()
             
             if let tableView = SkeletonLayout.parseSkeletonView(self.tableView) as? SkeletonTableView {
                 tableView.tableDelegate.cellClass = TestSkeletonCell.self
-                scrollView.fw.contentView.addSubview(tableView)
-                tableView.fw.layoutChain.edges().size(self.tableView.frame.size)
+                scrollView.app.contentView.addSubview(tableView)
+                tableView.app.layoutChain.edges().size(self.tableView.frame.size)
             }
         }
     }
@@ -184,13 +184,13 @@ class TestSkeletonCell: UITableViewCell {
     
     lazy var iconView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()
         return result
     }()
     
     lazy var iconLabel: UILabel = {
         let result = UILabel()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.text = "我是文本"
         return result
@@ -198,16 +198,16 @@ class TestSkeletonCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        fw.maxYViewPadding = 20
+        app.maxYViewPadding = 20
         contentView.addSubview(iconView)
         contentView.addSubview(iconLabel)
         
-        iconView.fw.layoutChain
+        iconView.app.layoutChain
             .top(20)
             .left(20)
             .size(CGSize(width: 50, height: 50))
         
-        iconLabel.fw.layoutChain
+        iconLabel.app.layoutChain
             .centerY()
             .right(20)
             .left(toViewRight: iconView, offset: 20)
@@ -227,13 +227,13 @@ class TestSkeletonHeaderView: UITableViewHeaderFooterView {
     
     lazy var iconView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()
         return result
     }()
     
     lazy var iconLabel: UILabel = {
         let result = UILabel()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.text = "我是头视图"
         return result
@@ -241,16 +241,16 @@ class TestSkeletonHeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        fw.maxYViewPadding = 20
+        app.maxYViewPadding = 20
         contentView.addSubview(iconView)
         contentView.addSubview(iconLabel)
         
-        iconView.fw.layoutChain
+        iconView.app.layoutChain
             .top(20)
             .left(20)
             .size(CGSize(width: 20, height: 20))
         
-        iconLabel.fw.layoutChain
+        iconLabel.app.layoutChain
             .right(20)
             .centerY(toView: iconView)
             .left(toViewRight: iconView, offset: 20)
@@ -270,13 +270,13 @@ class TestSkeletonFooterView: UITableViewHeaderFooterView {
     
     lazy var iconView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()
         return result
     }()
     
     lazy var iconLabel: UILabel = {
         let result = UILabel()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.text = "我是尾视图"
         return result
@@ -284,16 +284,16 @@ class TestSkeletonFooterView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        fw.maxYViewPadding = 20
+        app.maxYViewPadding = 20
         contentView.addSubview(iconView)
         contentView.addSubview(iconLabel)
         
-        iconView.fw.layoutChain
+        iconView.app.layoutChain
             .top(20)
             .left(20)
             .size(CGSize(width: 20, height: 20))
         
-        iconLabel.fw.layoutChain
+        iconLabel.app.layoutChain
             .right(20)
             .centerY(toView: iconView)
             .left(toViewRight: iconView, offset: 20)
@@ -314,14 +314,14 @@ class TestSkeletonTableHeaderView: UIView {
     lazy var testView: UIView = {
         let result = UIView()
         result.backgroundColor = .red
-        result.fw.setCornerRadius(5)
+        result.app.setCornerRadius(5)
         return result
     }()
     
     lazy var rightView: UIView = {
         let result = UIView()
         result.backgroundColor = .red
-        result.fw.setCornerRadius(5)
+        result.app.setCornerRadius(5)
         return result
     }()
     
@@ -333,9 +333,9 @@ class TestSkeletonTableHeaderView: UIView {
     
     lazy var imageView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
-        result.fw.setContentModeAspectFill()
-        result.fw.setCornerRadius(5)
+        result.image = UIImage.app.appIconImage()
+        result.app.setContentModeAspectFill()
+        result.app.setCornerRadius(5)
         return result
     }()
     
@@ -353,25 +353,25 @@ class TestSkeletonTableHeaderView: UIView {
         addSubview(imageView)
         addSubview(childView2)
         
-        testView.fw.layoutChain
+        testView.app.layoutChain
             .left(20)
             .top(20)
-            .size(CGSize(width: FW.screenWidth / 2 - 40, height: 50))
+            .size(CGSize(width: APP.screenWidth / 2 - 40, height: 50))
         
-        rightView.fw.layoutChain
+        rightView.app.layoutChain
             .right(20)
             .top(20)
-            .size(CGSize(width: FW.screenWidth / 2 - 40, height: 50))
+            .size(CGSize(width: APP.screenWidth / 2 - 40, height: 50))
         
-        childView.fw.layoutChain
+        childView.app.layoutChain
             .edges(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         
-        imageView.fw.layoutChain
+        imageView.app.layoutChain
             .centerX(toView: testView)
             .top(toViewBottom: testView, offset: 20)
             .size(CGSize(width: 50, height: 50))
         
-        childView2.fw.layoutChain
+        childView2.app.layoutChain
             .centerX(toView: childView)
             .centerY(toView: imageView)
             .size(toView: childView)
@@ -426,24 +426,24 @@ class TestSkeletonTableFooterView: UIView {
         addSubview(textView1)
         addSubview(textView2)
         
-        label1.fw.layoutChain
+        label1.app.layoutChain
             .left(20)
             .top(20)
         
-        label2.fw.layoutChain
+        label2.app.layoutChain
             .top(20)
             .right(20)
-            .size(CGSize(width: FW.screenWidth / 2 - 40, height: 50))
+            .size(CGSize(width: APP.screenWidth / 2 - 40, height: 50))
         
-        textView1.fw.layoutChain
+        textView1.app.layoutChain
             .left(20)
             .top(toViewBottom: label1, offset: 20)
-            .size(CGSize(width: FW.screenWidth / 2 - 40, height: 50))
+            .size(CGSize(width: APP.screenWidth / 2 - 40, height: 50))
         
-        textView2.fw.layoutChain
+        textView2.app.layoutChain
             .right(20)
             .top(toViewBottom: label2, offset: 20)
-            .size(CGSize(width: FW.screenWidth / 2 - 40, height: 50))
+            .size(CGSize(width: APP.screenWidth / 2 - 40, height: 50))
             .bottom(20)
     }
     

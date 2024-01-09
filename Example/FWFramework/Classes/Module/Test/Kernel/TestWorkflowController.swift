@@ -8,10 +8,74 @@
 
 import FWFramework
 
+@objc protocol TestWorkflowProtocol {
+    @objc optional func testMethod1()
+    @objc optional func testMethod2()
+}
+
 class TestWorkflowController: UIViewController {
     
     // MARK: - Accessor
     var step: Int = 1
+    weak var delegate: TestWorkflowProtocol?
+    
+    private static let testNotification = Notification.Name("TestWorkflowNotifiation")
+    private static var notificationCount: Int = 0
+    private static var notificationTargets: [WeakObject] = []
+    
+    private static var kvoCount: Int = 0
+    @objc dynamic private var kvoValue: Int = 0
+    private static var kvoTargets: [WeakObject] = []
+    
+    // MARK: - Subviews
+    private lazy var delegateButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Optional delegate method", for: .normal)
+        button.addTarget(self, action: #selector(onDelegate), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var notificationButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Test notification", for: .normal)
+        button.addTarget(self, action: #selector(onNotification), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var kvoButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Test kvo", for: .normal)
+        button.addTarget(self, action: #selector(onKvo), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var exceptionButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Capture exception", for: .normal)
+        button.addTarget(self, action: #selector(onException), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var errorButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Capture error", for: .normal)
+        button.addTarget(self, action: #selector(onError), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var taskButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Background task", for: .normal)
+        button.addTarget(self, action: #selector(onBackground), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var requestButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("Background request", for: .normal)
+        button.addTarget(self, action: #selector(onRequest), for: .touchUpInside)
+        return button
+    }()
     
 }
 
@@ -19,20 +83,76 @@ class TestWorkflowController: UIViewController {
 extension TestWorkflowController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.workflowName = "workflow.\(step)"
+        app.workflowName = "workflow.\(step)"
         navigationItem.title = "工作流-\(step)"
         
         if step < 3 {
-            fw.setRightBarItem("下一步", target: self, action: #selector(onNext))
+            app.setRightBarItem("下一步", target: self, action: #selector(onNext))
         } else {
-            fw.addRightBarItem("退出", target: self, action: #selector(onExit))
-            fw.addRightBarItem("重来", target: self, action: #selector(onOpen))
+            app.addRightBarItem("退出", target: self, action: #selector(onExit))
+            app.addRightBarItem("重来", target: self, action: #selector(onOpen))
         }
+        
+        let notificationTarget = app.observeNotification(Self.testNotification) { notification in
+            TestWorkflowController.notificationCount += 1
+            let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
+            UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
+        }
+        TestWorkflowController.notificationTargets.append(WeakObject(object: notificationTarget))
+        
+        let kvoTarget = app.observeProperty("kvoValue") { vc, _ in
+            TestWorkflowController.kvoCount += 1
+            let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
+            UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
+        }
+        TestWorkflowController.kvoTargets.append(WeakObject(object: kvoTarget))
     }
+    
+    func setupSubviews() {
+        self.delegate = self
+        view.addSubview(delegateButton)
+        view.addSubview(notificationButton)
+        view.addSubview(kvoButton)
+        view.addSubview(exceptionButton)
+        view.addSubview(errorButton)
+        view.addSubview(taskButton)
+        view.addSubview(requestButton)
+    }
+    
+    func setupLayout() {
+        delegateButton.app.layoutChain
+            .centerX()
+            .top(toSafeArea: 20)
+        
+        notificationButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: delegateButton, offset: 20)
+        
+        kvoButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: notificationButton, offset: 20)
+        
+        exceptionButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: kvoButton, offset: 20)
+        
+        errorButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: exceptionButton, offset: 20)
+        
+        taskButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: errorButton, offset: 20)
+        
+        requestButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: taskButton, offset: 20)
+    }
+    
 }
 
 // MARK: - Action
-@objc private extension TestWorkflowController {
+@objc extension TestWorkflowController: TestWorkflowProtocol {
     
     func onNext() {
         let workflow = TestWorkflowController()
@@ -41,11 +161,104 @@ extension TestWorkflowController: ViewControllerProtocol {
     }
     
     func onExit() {
-        navigationController?.fw.popWorkflows(["workflow"], animated: true, completion: nil)
+        navigationController?.app.popWorkflows(["workflow"], animated: true, completion: nil)
     }
     
     func onOpen() {
-        navigationController?.fw.push(TestWorkflowController(), popWorkflows: ["workflow"], animated: true, completion: nil)
+        navigationController?.app.push(TestWorkflowController(), popWorkflows: ["workflow"], animated: true, completion: nil)
+    }
+    
+    func onDelegate() {
+        let result1 = delegate?.testMethod1?() != nil
+        let result2 = delegate?.testMethod2?() != nil
+        app.showMessage(text: "testMethod1: \(result1)\ntestMethod2: \(result2)")
+    }
+    
+    func testMethod1() {
+        print("testMethod1")
+    }
+    
+    func onNotification() {
+        NSObject.app.postNotification(Self.testNotification)
+    }
+    
+    func onKvo() {
+        kvoValue = [0, 1].randomElement()!
+    }
+    
+    func onException() {
+        ExceptionManager.startCaptureExceptions()
+        NSNull().perform(NSSelectorFromString("onException"))
+    }
+    
+    func onError() {
+        ExceptionManager.captureError(PromiseError.failed, remark: "Test error")
+    }
+    
+    func onBackground() {
+        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
+        if !string.isEmpty {
+            app.showAlert(title: "上次后台结果", message: string)
+        } else {
+            app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
+        }
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.backgroundTask = { completionHandler in
+            CacheFile.shared.setObject("后台任务开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            
+            DispatchQueue.global().async {
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行1秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行2秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行3秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行4秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                sleep(1)
+                CacheFile.shared.setObject("后台任务执行5秒，已完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                
+                completionHandler()
+            }
+        }
+        appDelegate.expirationHandler = {
+            CacheFile.shared.setObject("后台任务已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        }
+    }
+    
+    func onRequest() {
+        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
+        if !string.isEmpty {
+            app.showAlert(title: "上次后台结果", message: string)
+        } else {
+            app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
+        }
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.backgroundTask = { completionHandler in
+            CacheFile.shared.setObject("后台请求开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            
+            let request = TestModelRequest()
+            request.start { _ in
+                let string = "后台请求成功：\(request.safeResponseModel.name)\n时间：\(request.responseServerTime)"
+                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                
+                completionHandler()
+            } failure: { _ in
+                let string = "后台请求失败：\(request.error?.localizedDescription ?? "")\n时间：\(request.responseServerTime)"
+                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                
+                completionHandler()
+            }
+        }
+        appDelegate.expirationHandler = {
+            CacheFile.shared.setObject("后台请求已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        }
     }
     
 }

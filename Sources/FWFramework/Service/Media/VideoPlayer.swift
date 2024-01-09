@@ -11,8 +11,7 @@ import CoreGraphics
 
 // MARK: - VideoPlayerDelegate
 /// Player delegate protocol
-@objc(FWVideoPlayerDelegate)
-public protocol VideoPlayerDelegate {
+@objc public protocol VideoPlayerDelegate {
     @objc optional func playerReady(_ player: VideoPlayer)
     @objc optional func playerPlaybackStateDidChange(_ player: VideoPlayer)
     @objc optional func playerBufferingStateDidChange(_ player: VideoPlayer)
@@ -22,8 +21,7 @@ public protocol VideoPlayerDelegate {
 
 // MARK: - VideoPlayerPlaybackDelegate
 /// Player playback protocol
-@objc(FWVideoPlayerPlaybackDelegate)
-public protocol VideoPlayerPlaybackDelegate {
+@objc public protocol VideoPlayerPlaybackDelegate {
     @objc optional func playerCurrentTimeDidChange(_ player: VideoPlayer)
     @objc optional func playerPlaybackWillStartFromBeginning(_ player: VideoPlayer)
     @objc optional func playerPlaybackDidEnd(_ player: VideoPlayer)
@@ -33,7 +31,6 @@ public protocol VideoPlayerPlaybackDelegate {
 
 // MARK: - VideoPlayerPlaybackState
 /// Asset playback states
-@objc(FWVideoPlayerPlaybackState)
 public enum VideoPlayerPlaybackState: Int {
     case stopped = 0
     case playing
@@ -43,7 +40,6 @@ public enum VideoPlayerPlaybackState: Int {
 
 // MARK: - VideoPlayerBufferingState
 /// Asset buffering states
-@objc(FWVideoPlayerBufferingState)
 public enum VideoPlayerBufferingState: Int {
     case unknown = 0
     case ready
@@ -54,8 +50,7 @@ public enum VideoPlayerBufferingState: Int {
 /// Video Player, simple way to play and stream media
 ///
 /// @see https://github.com/piemonte/Player
-@objc(FWVideoPlayer)
-@objcMembers open class VideoPlayer: UIViewController {
+open class VideoPlayer: UIViewController {
 
     // properties
     
@@ -313,7 +308,6 @@ public enum VideoPlayerBufferingState: Int {
         self.removePlayerLayerObservers()
 
         self.playerView.player = nil
-        NSLog("VideoPlayer did dealloc")
     }
 
     open override func loadView() {
@@ -808,8 +802,7 @@ public enum VideoPlayerBufferingState: Int {
 }
 
 // MARK: - VideoPlayerView
-@objc(FWVideoPlayerView)
-@objcMembers open class VideoPlayerView: UIView {
+open class VideoPlayerView: UIView {
 
     open override class var layerClass: AnyClass {
         get {

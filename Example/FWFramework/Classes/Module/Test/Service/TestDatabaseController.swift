@@ -14,7 +14,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     
     @objc var id: Int = 0
     @objc var content: String = ""
-    @objc var time: TimeInterval = Date.fw.currentTime
+    @objc var time: TimeInterval = Date.app.currentTime
     @objc var tag: String = ""
     
     static func databaseVersion() -> String? {
@@ -22,7 +22,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     }
     
     static func databaseMigration(_ versionString: String) {
-        let version = versionString.fw.safeDouble
+        let version = versionString.app.safeDouble
         if version < 2.0 {
             DatabaseManager.update(TestDatabaseModel.self, value: "tag = '旧'", where: nil)
         }
@@ -40,14 +40,16 @@ class TestDatabaseModel: NSObject, DatabaseModel {
 
 class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = TestDatabaseModel
+    
     func didInitialize() {
         let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeDouble
         TestDatabaseModel.isLatest = version > 1
     }
     
     func setupNavbar() {
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: ["新增一条数据", "获取当前版本号", "更新数据库版本", "清空所有数据", "删除数据库文件"], actionBlock: { index in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["新增一条数据", "获取当前版本号", "更新数据库版本", "清空所有数据", "删除数据库文件"], actionBlock: { index in
                 if index == 0 {
                     self?.onAdd()
                 } else if index == 1 {
@@ -68,13 +70,13 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupTableView() {
-        tableView.fw.resetTableStyle()
+        tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
         tableView.backgroundColor = AppTheme.tableColor
     }
     
     func setupSubviews() {
-        tableData.setArray(DatabaseManager.query(TestDatabaseModel.self))
+        tableData = DatabaseManager.query(TestDatabaseModel.self) as! [TestDatabaseModel]
         tableView.reloadData()
     }
     
@@ -83,12 +85,12 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .subtitle)
-        let model = tableData[indexPath.row] as! TestDatabaseModel
+        let cell = UITableViewCell.app.cell(tableView: tableView, style: .subtitle)
+        let model = tableData[indexPath.row]
         cell.textLabel?.numberOfLines = 0
         let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
         cell.textLabel?.text = "\(model.id)\(tag)\n" + model.content
-        cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).fw.stringValue
+        cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
     }
     
@@ -110,8 +112,8 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func onAdd() {
-        fw.showPrompt(title: "请输入内容", message: nil, cancel: nil, confirm: nil) { [weak self] string in
-            let content = string.fw.trimString
+        app.showPrompt(title: "请输入内容", message: nil) { [weak self] string in
+            let content = string.app.trimString
             guard !content.isEmpty else { return }
             
             let model = TestDatabaseModel()
@@ -126,28 +128,28 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     func onVersion() {
         let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
         if let versionString = versionString {
-            fw.showAlert(title: "当前版本号", message: versionString)
+            app.showAlert(title: "当前版本号", message: versionString)
         } else {
-            fw.showAlert(title: "数据库不存在", message: nil)
+            app.showAlert(title: "数据库不存在", message: nil)
         }
     }
     
     func onUpdate() {
         let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
         guard let versionString = versionString else {
-            fw.showAlert(title: "数据库不存在", message: nil)
+            app.showAlert(title: "数据库不存在", message: nil)
             return
         }
         
         let version = Double(versionString) ?? 0
         if version > 1 {
-            fw.showAlert(title: "数据库无需更新", message: nil)
+            app.showAlert(title: "数据库无需更新", message: nil)
             return
         }
         
         // 数据库下次操作时会自动更新，无需手工调用
         TestDatabaseModel.isLatest = true
-        fw.showAlert(title: "数据库更新完成", message: nil)
+        app.showAlert(title: "数据库更新完成", message: nil)
         
         setupSubviews()
     }

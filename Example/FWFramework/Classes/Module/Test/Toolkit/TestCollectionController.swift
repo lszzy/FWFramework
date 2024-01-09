@@ -10,6 +10,8 @@ import FWFramework
 
 class TestCollectionController: UIViewController, CollectionViewControllerProtocol, UICollectionViewDelegateFlowLayout, CollectionViewDelegateWaterfallLayout {
     
+    typealias CollectionElement = TestCollectionDynamicLayoutObject
+    
     static var isExpanded = false
     var mode: Int = 0
     var isWaterfall = false
@@ -41,31 +43,36 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     func setupCollectionView() {
         collectionView.alwaysBounceVertical = true
         collectionView.backgroundColor = AppTheme.tableColor
-        collectionView.fw.setRefreshing { [weak self] in
+        collectionView.app.setRefreshing { [weak self] in
             self?.onRefreshing()
         }
-        collectionView.fw.setLoading { [weak self] in
+        collectionView.app.setLoading { [weak self] in
             self?.onLoading()
         }
+        collectionView.app.addMovementGesture()
     }
     
     func setupCollectionLayout() {
-        collectionView.fw.pinEdges(toSuperview: .zero, excludingEdge: .top)
-        collectionView.fw.pinEdge(toSafeArea: .top)
+        collectionView.app.pinEdges(toSuperview: .zero, excludingEdge: .top)
+        collectionView.app.pinEdge(toSafeArea: .top)
     }
     
     func setupNavbar() {
         Self.isExpanded = false
         if isWaterfall {
-            fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-                self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停"], currentIndex: -1, actionBlock: { index in
-                    self?.pinHeader = !(self?.pinHeader ?? false)
-                    self?.setupSubviews()
+            app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
+                    if index == 0 {
+                        self?.pinHeader = !(self?.pinHeader ?? false)
+                        self?.setupSubviews()
+                    } else {
+                        self?.collectionView.reloadData()
+                    }
                 })
             }
         } else {
-            fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-                self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停"], currentIndex: -1, actionBlock: { index in
+            app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
                     if index < 3 {
                         self?.mode = index
                         self?.setupSubviews()
@@ -76,9 +83,11 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
                         let vc = TestCollectionController()
                         vc.isWaterfall = !(self?.isWaterfall ?? false)
                         self?.navigationController?.pushViewController(vc, animated: true)
-                    } else {
+                    } else if index < 7 {
                         self?.pinHeader = !(self?.pinHeader ?? false)
                         self?.setupSubviews()
+                    } else {
+                        self?.collectionView.reloadData()
                     }
                 })
             }
@@ -96,7 +105,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
             }
             flowLayout.sectionHeadersPinToVisibleBounds = pinHeader
         }
-        collectionView.fw.beginRefreshing()
+        collectionView.app.beginRefreshing()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -112,23 +121,32 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
-            let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+            let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
             cell.contentView.backgroundColor = AppTheme.cellColor
             return cell
         }
         
-        let cell = TestCollectionDynamicLayoutCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
-        cell.object = collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+        let cell = TestCollectionDynamicLayoutCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        cell.object = collectionData[indexPath.row]
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.section == 0 { return }
+        
+        let object = collectionData[indexPath.row]
+        collectionView.app.willDisplay(cell, at: indexPath, key: object.hash) {
+            NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            let reusableView = TestCollectionDynamicLayoutHeaderView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            let reusableView = TestCollectionDynamicLayoutHeaderView.app.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             reusableView.renderData("我是集合Header\(indexPath.section)\n我是集合Header\(indexPath.section)")
             return reusableView
         } else {
-            let reusableView = TestCollectionDynamicLayoutHeaderView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            let reusableView = TestCollectionDynamicLayoutHeaderView.app.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             reusableView.renderData("我是集合Footer\(indexPath.section)\n我是集合Footer\(indexPath.section)\n我是集合Footer\(indexPath.section)")
             return reusableView
         }
@@ -136,20 +154,20 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 0 {
-            return CGSize(width: isWaterfall ? (FW.screenWidth - 30) / 2.0 : FW.screenWidth, height: 0)
+            return CGSize(width: isWaterfall ? (APP.screenWidth - 30) / 2.0 : APP.screenWidth, height: 0)
         }
         
         if mode == 0 {
-            return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (FW.screenWidth - 30) / 2.0 : FW.screenWidth, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (APP.screenWidth - 30) / 2.0 : APP.screenWidth, cacheBy: indexPath) { [weak self] cell in
+                cell.object = self?.collectionData[indexPath.row]
             }
         } else if mode == 1 {
-            return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, width: FW.screenWidth - 30, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: APP.screenWidth - 30, cacheBy: indexPath) { [weak self] cell in
+                cell.object = self?.collectionData[indexPath.row]
             }
         } else {
-            return collectionView.fw.size(cellClass: TestCollectionDynamicLayoutCell.self, height: FW.screenHeight - FW.topBarHeight, cacheBy: indexPath) { [weak self] cell in
-                cell.object = self?.collectionData.object(at: indexPath.row) as? TestCollectionDynamicLayoutObject
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, height: APP.screenHeight - APP.topBarHeight, cacheBy: indexPath) { [weak self] cell in
+                cell.object = self?.collectionData[indexPath.row]
             }
         }
     }
@@ -168,15 +186,15 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         if mode == 0 {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         } else if mode == 1 {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: FW.screenWidth - 30, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: APP.screenWidth - 30, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         } else {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: FW.screenHeight - FW.topBarHeight, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: APP.screenHeight - APP.topBarHeight, kind: UICollectionView.elementKindSectionHeader, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Header\(section)\n我是集合Header\(section)")
             }
         }
@@ -188,18 +206,34 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         if mode == 0 {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         } else if mode == 1 {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: FW.screenWidth - 30, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, width: APP.screenWidth - 30, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         } else {
-            return collectionView.fw.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: FW.screenHeight - FW.topBarHeight, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
+            return collectionView.app.size(reusableViewClass: TestCollectionDynamicLayoutHeaderView.self, height: APP.screenHeight - APP.topBarHeight, kind: UICollectionView.elementKindSectionFooter, cacheBy: section) { reusableView in
                 reusableView.renderData("我是集合Footer\(section)\n我是集合Footer\(section)\n我是集合Footer\(section)")
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        if indexPath.item == 0 { return false }
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let model = collectionData[sourceIndexPath.row]
+        collectionData.remove(at: sourceIndexPath.row)
+        collectionData.insert(model, at: destinationIndexPath.row)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveOfItemFromOriginalIndexPath originalIndexPath: IndexPath, atCurrentIndexPath currentIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+        if proposedIndexPath.item == 0 { return IndexPath(item: 1, section: proposedIndexPath.section) }
+        return proposedIndexPath
     }
     
     func randomObject() -> TestCollectionDynamicLayoutObject {
@@ -224,15 +258,22 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
             "http://littlesvr.ca/apng/images/SteamEngine.webp",
             "Loading.gif",
-            "http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
-            "http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-            "https://pic3.zhimg.com/b471eb23a_im.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-            "http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+            "https://img2.baidu.com/it/u=1624963289,2527746346&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
+            "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg",
+            "https://up.enterdesk.com/edpic_source/eb/34/40/eb34405739ad0e41ec34cd8e16711f30.jpg",
+            "https://up.enterdesk.com/edpic_source/05/85/a7/0585a766f5d7702e82f3caf317e6491b.jpg",
+            "https://up.enterdesk.com/edpic_source/b4/4a/a7/b44aa778ac9f784ebcee27961d81759f.jpg",
+            "https://up.enterdesk.com/edpic_source/3d/42/3e/3d423e3cb05d7edc35c38e3173af2a0d.jpg",
+            "https://up.enterdesk.com/edpic_source/84/f7/fc/84f7fcc08f21419a860dbedde45fe233.jpg",
+            "https://lmg.jj20.com/up/allimg/1114/042421135351/210424135351-1-1200.jpg",
+            "https://img2.baidu.com/it/u=673329217,4275796533&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://up.enterdesk.com/edpic_source/59/fc/06/59fc069244210ceb384c3fb88ec88121.jpg",
+            "https://img1.baidu.com/it/u=2468098533,3730291157&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=800",
+            "https://img2.baidu.com/it/u=4228499675,3913167569&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://m.ixiunv.com/uploadfile/ixiunv-pic/2019/0916/20190916094832595.jpg",
+            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
         ].randomElement() ?? ""
+        object.index = self.collectionData.count
         return object
     }
     
@@ -241,16 +282,16 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("刷新完成")
-            self.collectionData.removeAllObjects()
-            for _ in 0 ..< 4 {
-                self.collectionData.add(self.randomObject())
+            self.collectionData.removeAll()
+            for _ in 0 ..< 5 {
+                self.collectionData.append(self.randomObject())
             }
-            self.collectionView.fw.clearSizeCache()
-            self.collectionView.fw.reloadDataWithoutAnimation()
+            self.collectionView.app.clearSizeCache()
+            self.collectionView.app.reloadDataWithoutAnimation()
             
-            self.collectionView.fw.shouldRefreshing = self.collectionData.count < 20
-            self.collectionView.fw.endRefreshing()
-            if !self.collectionView.fw.shouldRefreshing {
+            self.collectionView.app.shouldRefreshing = self.collectionData.count < 50
+            self.collectionView.app.endRefreshing()
+            if !self.collectionView.app.shouldRefreshing {
                 self.navigationItem.rightBarButtonItem = nil
             }
         }
@@ -261,13 +302,13 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("加载完成")
-            for _ in 0 ..< 4 {
-                self.collectionData.add(self.randomObject())
+            for _ in 0 ..< 5 {
+                self.collectionData.append(self.randomObject())
             }
-            self.collectionView.fw.reloadDataWithoutAnimation()
+            self.collectionView.app.reloadDataWithoutAnimation()
             
-            self.collectionView.fw.loadingFinished = self.collectionData.count >= 20
-            self.collectionView.fw.endLoading()
+            self.collectionView.app.loadingFinished = self.collectionData.count >= 50
+            self.collectionView.app.endLoading()
         }
     }
     
@@ -278,6 +319,7 @@ class TestCollectionDynamicLayoutObject: NSObject {
     var title = ""
     var text = ""
     var imageUrl = ""
+    var index: Int = 0
     
 }
 
@@ -287,23 +329,34 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         didSet {
             guard let object = object else { return }
             myTitleLabel.text = object.title
-            if object.imageUrl.fw.isFormatUrl() {
-                myImageView.fw.setImage(url: object.imageUrl, placeholderImage: UIImage.fw.appIconImage())
+            if object.imageUrl.app.isValid(.isUrl) {
+                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
+                    self?.myImageView.image = image
+                    if TestTableController.faceAware {
+                        self?.myImageView.app.faceAware()
+                    }
+                }
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             } else {
                 myImageView.image = nil
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             }
             myTextLabel.text = object.text
-            myImageView.fw.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
-            fw.maxYViewExpanded = TestCollectionController.isExpanded
+            myImageView.app.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
+            app.maxYViewExpanded = TestCollectionController.isExpanded
         }
     }
     
     lazy var myTitleLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         return result
     }()
@@ -311,14 +364,14 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
     lazy var myTextLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 13)
+        result.font = UIFont.app.font(ofSize: 13)
         result.textColor = AppTheme.textColor
         return result
     }()
     
     lazy var myImageView: UIImageView = {
         let result = UIImageView()
-        result.fw.setContentModeAspectFill()
+        result.app.setContentModeAspectFill()
         return result
     }()
     
@@ -326,31 +379,31 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = AppTheme.cellColor
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
-        fw.maxYViewPadding = 15
+        app.maxYViewPadding = 15
         
         contentView.addSubview(myTitleLabel)
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTitleLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        myTitleLabel.fw.pinEdge(toSuperview: .top, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .top, inset: 15)
         
-        myTextLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTextLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        var constraint = myTextLabel.fw.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
-        myTextLabel.fw.addCollapseConstraint(constraint)
-        myTextLabel.fw.autoCollapse = true
+        myTextLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTextLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        var constraint = myTextLabel.app.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
+        myTextLabel.app.addCollapseConstraint(constraint)
+        myTextLabel.app.autoCollapse = true
         
-        myImageView.fw.pinEdge(toSuperview: .left, inset: 15)
-        myImageView.fw.pinEdge(toSuperview: .bottom, inset: 15)
-        constraint = myImageView.fw.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
-        myImageView.fw.addCollapseConstraint(constraint)
-        constraint = myImageView.fw.setDimension(.width, size: 100)
-        myImageView.fw.addCollapseConstraint(constraint)
-        constraint = myImageView.fw.setDimension(.height, size: 100)
-        myImageView.fw.addCollapseConstraint(constraint)
-        myImageView.fw.autoCollapse = true
+        myImageView.app.pinEdge(toSuperview: .left, inset: 15)
+        myImageView.app.pinEdge(toSuperview: .bottom, inset: 15)
+        constraint = myImageView.app.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
+        myImageView.app.addCollapseConstraint(constraint)
+        constraint = myImageView.app.setDimension(.width, size: 100)
+        myImageView.app.addCollapseConstraint(constraint)
+        constraint = myImageView.app.setDimension(.height, size: 100)
+        myImageView.app.addCollapseConstraint(constraint)
+        myImageView.app.autoCollapse = true
     }
     
     required init?(coder: NSCoder) {
@@ -362,7 +415,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
 class TestCollectionDynamicLayoutHeaderView: UICollectionReusableView {
     
     lazy var titleLabel: UILabel = {
-        let result = UILabel.fw.label(font: UIFont.fw.font(ofSize: 15), textColor: AppTheme.textColor)
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
         result.numberOfLines = 0
         return result
     }()
@@ -370,9 +423,9 @@ class TestCollectionDynamicLayoutHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = AppTheme.cellColor
-        fw.maxYViewPadding = 15
+        app.maxYViewPadding = 15
         addSubview(titleLabel)
-        titleLabel.fw.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))
+        titleLabel.app.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))
         renderData(nil)
     }
     
@@ -381,9 +434,9 @@ class TestCollectionDynamicLayoutHeaderView: UICollectionReusableView {
     }
     
     func renderData(_ text: String?) {
-        titleLabel.text = FW.safeString(text)
-        titleLabel.fw.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
-        fw.maxYViewExpanded = TestCollectionController.isExpanded
+        titleLabel.text = APP.safeString(text)
+        titleLabel.app.constraint(toSuperview: .bottom)?.isActive = TestCollectionController.isExpanded
+        app.maxYViewExpanded = TestCollectionController.isExpanded
     }
     
 }

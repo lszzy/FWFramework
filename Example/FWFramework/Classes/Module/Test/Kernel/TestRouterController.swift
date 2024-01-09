@@ -8,94 +8,146 @@
 
 import FWFramework
 
-class TestRouterController: UIViewController, TableViewControllerProtocol {
+class TestRouterController: UIViewController, TableViewControllerProtocol, UISearchResultsUpdating {
+    
+    typealias TableElement = [String]
     
     static var popCount: Int = 0
+    
+    var testData: [TableElement] = [
+        ["打开Web", "onOpenHttp"],
+        ["打开完整Web", "onOpenHttp2"],
+        ["打开异常Web", "onOpenHttp3"],
+        ["打开重定向Web", "onOpenHttp4"],
+        ["打开预缓存Web，需开启重用", "onOpenPreload"],
+        ["测试Cookie", "onOpenCookie"],
+        ["Url编码", "onOpenEncode"],
+        ["Url未编码", "onOpenImage"],
+        ["不规范Url", "onOpenSlash"],
+        ["打开App", "onOpenApp"],
+        ["打开Url", "onOpen"],
+        ["中文Url", "onOpenChinese"],
+        ["打开Url，通配符*", "onOpenWild"],
+        ["打开Url，*id", "onOpenPage"],
+        ["打开Url，:id", "onOpenShop"],
+        ["打开Url，:id/:id", "onOpenItem"],
+        ["打开Url，:id.html", "onOpenHtml"],
+        ["打开Url，支持回调", "onOpenCallback"],
+        ["解析Url，获取Object", "onOpenObject"],
+        ["过滤Url", "onOpenFilter"],
+        ["不支持的Url", "onOpenFailed"],
+        ["RewriteUrl", "onRewrite1"],
+        ["RewriteUrl URLEncode", "onRewrite2"],
+        ["RewriteUrl URLDecode", "onRewrite3"],
+        ["RewriteFilter", "onRewriteFilter"],
+        ["不匹配的openUrl", "onOpenUnmatch"],
+        ["不匹配的objectUrl", "onOpenUnmatch2"],
+        ["打开objectUrl", "onOpenUnmatch3"],
+        ["路由Parameter", "onOpenParameter"],
+        ["自定义Handler", "onOpenHandler"],
+        ["自动注册的Url", "onOpenLoader"],
+        ["跳转telprompt", "onOpenTel"],
+        ["跳转设置", "onOpenSettings"],
+        ["跳转首页", "onOpenHome"],
+        ["跳转home/undefined", "onOpenHome2"],
+        ["不支持tab", "onOpenHome3"],
+        ["关闭close", "onOpenClose"],
+        ["通用链接douyin", "onOpenUniversalLinks"],
+        ["外部safari", "onOpenUrl"],
+        ["内部safari", "onOpenSafari"],
+        ["iOS14bug", "onOpen14"],
+    ]
+    
+    private lazy var searchController: UISearchController = {
+        let result = UISearchController(searchResultsController: nil)
+        result.searchResultsUpdater = self
+        result.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        
+        let searchBar = result.searchBar
+        searchBar.placeholder = "Search"
+        searchBar.barTintColor = AppTheme.barColor
+        searchBar.app.backgroundColor = AppTheme.barColor
+        searchBar.app.textFieldBackgroundColor = AppTheme.tableColor
+        searchBar.app.searchIconOffset = 10
+        searchBar.app.searchTextOffset = 4
+        searchBar.app.clearIconOffset = -6
+        searchBar.app.font = APP.font(12)
+        searchBar.app.textField.app.setCornerRadius(18)
+        return result
+    }()
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text?.app.trimString ?? ""
+        if searchText.isEmpty {
+            tableData = testData
+            tableView.reloadData()
+            return
+        }
+        
+        var resultData: [TableElement] = []
+        for rowData in testData {
+            if APP.safeString(rowData[0]).lowercased()
+                .contains(searchText.lowercased()) {
+                resultData.append(rowData)
+            }
+        }
+        tableData = resultData
+        tableView.reloadData()
+    }
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
+    func setupTableView() {
+        tableView.tableHeaderView = searchController.searchBar
+    }
+    
     func setupTableLayout() {
-        tableView.fw.pinEdges()
+        tableView.app.pinEdges()
     }
     
     func setupNavbar() {
         navigationItem.title = "Router"
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: [Autoloader.routerStrictMode ? "关闭严格模式" : "开启严格模式"], actionBlock: { _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [Autoloader.routerStrictMode ? "关闭严格模式" : "开启严格模式"], actionBlock: { _ in
                 Autoloader.routerStrictMode = !Autoloader.routerStrictMode
                 Router.strictMode = Autoloader.routerStrictMode
             })
         }
         
         var url = "http://test.com?id=我是中文"
-        FW.debug("urlEncode: %@", String(describing: url.fw.urlEncode))
-        FW.debug("urlDecode: %@", String(describing: url.fw.urlEncode?.fw.urlDecode))
-        FW.debug("urlEncodeComponent: %@", String(describing: url.fw.urlEncodeComponent))
-        FW.debug("urlDecodeComponent: %@", String(describing: url.fw.urlEncodeComponent?.fw.urlDecodeComponent))
+        APP.debug("urlEncode: %@", String(describing: url.app.urlEncode))
+        APP.debug("urlDecode: %@", String(describing: url.app.urlEncode?.app.urlDecode))
+        APP.debug("urlEncodeComponent: %@", String(describing: url.app.urlEncodeComponent))
+        APP.debug("urlDecodeComponent: %@", String(describing: url.app.urlEncodeComponent?.app.urlDecodeComponent))
         
         url = "app://tests/1?value=2&name=name2&title=我是字符串100%&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"
-        FW.debug("string.queryDecode: %@", String(describing: url.fw.queryDecode))
-        FW.debug("string.queryEncode: %@", String(describing: String.fw.queryEncode(url.fw.queryDecode)))
-        let nsurl = URL.fw.url(string: url)
-        FW.debug("query.queryDecode: %@", String(describing: nsurl?.query?.fw.queryDecode))
-        FW.debug("url.queryDictionary: %@", String(describing: nsurl?.fw.queryDictionary))
+        APP.debug("string.queryDecode: %@", String(describing: url.app.queryDecode))
+        APP.debug("string.queryEncode: %@", String(describing: String.app.queryEncode(url.app.queryDecode)))
+        let nsurl = URL.app.url(string: url)
+        APP.debug("query.queryDecode: %@", String(describing: nsurl?.query?.app.queryDecode))
+        APP.debug("url.queryDictionary: %@", String(describing: nsurl?.app.queryDictionary))
     }
     
     func setupSubviews() {
         let str = "http://test.com?id=我是中文"
         var url = URL(string: str)
-        FW.debug("str: %@ =>\nurl: %@", str, String(describing: url))
-        url = URL.fw.url(string: str)
-        FW.debug("str: %@ =>\nurl: %@", str, String(describing: url))
+        APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
+        url = URL.app.url(string: str)
+        APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
         
         var urlStr = Router.generateURL(TestRouter.testUrl, parameters: nil)
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: [1])
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: ["id": 2])
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: 3)
-        FW.debug("url: %@", urlStr)
+        APP.debug("url: %@", urlStr)
         
-        tableData.addObjects(from: [
-            ["打开Web", "onOpenHttp"],
-            ["打开完整Web", "onOpenHttp2"],
-            ["打开异常Web", "onOpenHttp3"],
-            ["测试Cookie", "onOpenCookie"],
-            ["Url编码", "onOpenEncode"],
-            ["Url未编码", "onOpenImage"],
-            ["不规范Url", "onOpenSlash"],
-            ["打开App", "onOpenApp"],
-            ["打开Url", "onOpen"],
-            ["中文Url", "onOpenChinese"],
-            ["打开Url，通配符*", "onOpenWild"],
-            ["打开Url，*id", "onOpenWild2"],
-            ["打开Url，协议", "onOpenController"],
-            ["打开Url，支持回调", "onOpenCallback"],
-            ["解析Url，获取Object", "onOpenObject"],
-            ["过滤Url", "onOpenFilter"],
-            ["不支持的Url", "onOpenFailed"],
-            ["RewriteUrl", "onRewrite1"],
-            ["RewriteUrl URLEncode", "onRewrite2"],
-            ["RewriteUrl URLDecode", "onRewrite3"],
-            ["RewriteFilter", "onRewriteFilter"],
-            ["不匹配的openUrl", "onOpenUnmatch"],
-            ["不匹配的objectUrl", "onOpenUnmatch2"],
-            ["打开objectUrl", "onOpenUnmatch3"],
-            ["自动注册的Url", "onOpenLoader"],
-            ["跳转telprompt", "onOpenTel"],
-            ["跳转设置", "onOpenSettings"],
-            ["跳转首页", "onOpenHome"],
-            ["跳转home/undefined", "onOpenHome2"],
-            ["不支持tab", "onOpenHome3"],
-            ["关闭close", "onOpenClose"],
-            ["通用链接douyin", "onOpenUniversalLinks"],
-            ["外部safari", "onOpenUrl"],
-            ["内部safari", "onOpenSafari"],
-            ["iOS14bug", "onOpen14"],
-        ])
+        tableData.append(contentsOf: testData)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -103,16 +155,16 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        let rowData = tableData[indexPath.row]
+        app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
 }
@@ -144,20 +196,28 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenWild() {
-        Router.openURL("wildcard://not_found?id=1#anchor")
+        Router.openURL(Router.generateURL(TestRouter.wildcardUrl, parameters: "not_found?id=1#anchor"))
     }
     
-    func onOpenWild2() {
-        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: "test/1"))
+    func onOpenPage() {
+        Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: ["id": "test/1"]))
     }
     
-    func onOpenController() {
+    func onOpenShop() {
+        Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: 1))
+    }
+    
+    func onOpenItem() {
         Router.openURL(Router.generateURL(TestRouter.itemUrl, parameters: [1, 2]))
     }
     
+    func onOpenHtml() {
+        Router.openURL(Router.generateURL(TestRouter.htmlUrl, parameters: ["id": 1]))
+    }
+    
     func onOpenCallback() {
-        Router.openURL("\(TestRouter.wildcardUrl)?id=2") { result in
-            UIWindow.fw.showMessage(text: result)
+        Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") { result in
+            UIWindow.app.showMessage(text: result as? String)
         }
     }
     
@@ -188,11 +248,28 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenUnmatch2() {
-        Router.object(forURL: TestRouter.objectUnmatchUrl)
+        _ = Router.object(forURL: TestRouter.objectUnmatchUrl)
     }
     
     func onOpenUnmatch3() {
         Router.openURL(TestRouter.objectUrl)
+    }
+    
+    func onOpenParameter() {
+        let parameter = Router.Parameter()
+        parameter.routerOptions = [.embedInNavigation, .styleFullScreen]
+        
+        Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
+    }
+    
+    func onOpenHandler() {
+        let parameter = Router.Parameter()
+        parameter.routerHandler = { context, vc in
+            let nav = UINavigationController(rootViewController: vc)
+            Navigator.present(nav)
+        }
+        
+        Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
     }
     
     func onOpenLoader() {
@@ -243,13 +320,21 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
         Router.openURL("http://username:password@localhost:8000/test:8001/directory%202/index.html?param=value#anchor")
     }
     
+    func onOpenHttp4() {
+        Router.openURL("http://www.wuyong.site/redirect.php?param=value#anchor")
+    }
+    
+    func onOpenPreload() {
+        Router.openURL("https://www.wuyong.site/#slide=1")
+    }
+    
     func onOpenCookie() {
         Router.openURL("http://kvm.wuyong.site/cookie.php?param=value#anchor")
     }
     
     func onOpenUniversalLinks() {
         let url = "https://v.douyin.com/JYmHJ9k/"
-        UIApplication.fw.openUniversalLinks(url) { success in
+        UIApplication.app.openUniversalLinks(url) { success in
             if !success {
                 Router.openURL(url)
             }
@@ -257,20 +342,20 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     }
     
     func onOpenUrl() {
-        UIApplication.fw.openURL("http://kvm.wuyong.site/test.php")
+        UIApplication.app.openURL("http://kvm.wuyong.site/test.php")
     }
     
     func onOpenSafari() {
-        UIApplication.fw.openSafariController("http://kvm.wuyong.site/test.php") {
-            FW.debug("SafariController completionHandler")
+        UIApplication.app.openSafariController("http://kvm.wuyong.site/test.php") {
+            APP.debug("SafariController completionHandler")
         }
     }
     
     func onOpen14() {
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
-        vc.context = RouterContext(url: "http://kvm.wuyong.site/test.php?key=value")
-        vc.fw.shouldPopController = { [weak self] in
+        vc.context = Router.Context(url: "http://kvm.wuyong.site/test.php?key=value")
+        vc.app.shouldPopController = { [weak self] in
             TestRouterController.popCount += 1
             let index = TestRouterController.popCount % 3
             if index == 0 {
@@ -296,8 +381,8 @@ class TestRouterController: UIViewController, TableViewControllerProtocol {
     @StoredValue("routerStrictMode")
     static var routerStrictMode: Bool = false
     
-    func loadTestRouter() {
-        FW.autoload(TestRouter.self)
+    static func loadApp_TestRouter() {
+        APP.autoload(TestRouter.self)
         Router.strictMode = Autoloader.routerStrictMode
     }
     
@@ -308,64 +393,88 @@ class TestRouter: NSObject, AutoloadProtocol {
     
     static let testUrl = "app://tests/:id"
     static let homeUrl = "app://tab/home"
-    static let wildcardUrl = "wildcard://test1"
+    static let wildcardUrl = "wildcard://*"
+    static let wildcardTestUrl = "wildcard://test1"
     static let objectUrl = "object://test2"
     static let objectUnmatchUrl = "object://test"
     static let loaderUrl = "app://loader"
     static let pageUrl = "app://page/*id"
+    static let shopUrl = "app://shops/:id"
     static let itemUrl = "app://shops/:id/items/:itemId"
+    static let htmlUrl = "app://pages/:id.html"
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
     
-    class func testRouter(_ context: RouterContext) -> Any? {
+    class func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = testUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func homeRouter(_ context: RouterContext) -> Any? {
-        UIWindow.fw.main?.fw.selectTabBarController(index: 0)
+    class func homeRouter(_ context: Router.Context) -> Any? {
+        UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
     
-    class func wildcardRouter(_ context: RouterContext) -> Any? {
+    class func wildcardTestRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = wildcardTestUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func pageRouter(_ context: RouterContext) -> Any? {
+    class func pageRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = pageUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func itemRouter(_ context: RouterContext) -> Any? {
+    class func shopRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = shopUrl
         vc.context = context
         Navigator.push(vc, animated: true)
         return nil
     }
     
-    class func objectRouter(_ context: RouterContext) -> Any? {
+    class func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = itemUrl
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func htmlRouter(_ context: Router.Context) -> Any? {
+        let vc = TestRouterResultController()
+        vc.rule = htmlUrl
+        vc.context = context
+        Navigator.push(vc, animated: true)
+        return nil
+    }
+    
+    class func objectRouter(_ context: Router.Context) -> Any? {
+        let vc = TestRouterResultController()
+        vc.rule = objectUrl
         vc.context = context
         return vc
     }
     
-    class func objectUnmatchRouter(_ context: RouterContext) -> Any? {
+    class func objectUnmatchRouter(_ context: Router.Context) -> Any? {
         if context.isOpening {
             return "OBJECT UNMATCH"
         } else {
-            Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
             return nil
         }
     }
     
-    class func javascriptRouter(_ context: RouterContext) -> Any? {
+    class func javascriptRouter(_ context: Router.Context) -> Any? {
         guard let webVC = Navigator.topViewController as? WebController,
               webVC.isViewLoaded else { return nil }
         
@@ -375,19 +484,20 @@ class TestRouter: NSObject, AutoloadProtocol {
         let javascript = "\(callback)('\(result)');"
         
         webVC.webView.evaluateJavaScript(javascript) { value, error in
-            Navigator.topViewController?.fw.showAlert(title: "App", message: "app:2 => js:\(String(describing: value))")
+            Navigator.topViewController?.app.showAlert(title: "App", message: "app:2 => js:\(String(describing: value))")
         }
         return nil
     }
     
-    class func closeRouter(_ context: RouterContext) -> Any? {
+    class func closeRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
-        topVC.fw.close()
+        topVC.app.close()
         return nil
     }
     
-    class func loaderRouter(_ context: RouterContext) -> Any? {
+    class func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
+        vc.rule = loaderUrl
         vc.context = context
         return vc
     }
@@ -399,22 +509,23 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     static func registerFilters() {
-        Router.sharedLoader.add { input in
+        Router.sharedLoader.append { input in
             if (input as String) == TestRouter.loaderUrl {
                 return TestRouterResultController.self
             }
             return nil
         }
         
-        Router.setRouteFilter { context in
-            let url = FW.safeURL(context.url)
-            if UIApplication.fw.isSystemURL(url) {
-                UIApplication.fw.openURL(url)
+        Router.routeFilter = { context in
+            let url = APP.safeURL(context.url)
+            if UIApplication.app.isSystemURL(url) {
+                UIApplication.app.openURL(url)
                 return false
             }
             
             if url.absoluteString.hasPrefix("app://filter/") {
                 let vc = TestRouterResultController()
+                vc.rule = "app://filter/"
                 vc.context = context
                 Navigator.push(vc, animated: true)
                 return false
@@ -423,32 +534,38 @@ class TestRouter: NSObject, AutoloadProtocol {
             return true
         }
         
-        Router.setRouteHandler { context, object in
+        Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
-                    Navigator.open(vc, animated: true)
+                    let userInfo = Router.Parameter(dictionaryValue: context.userInfo)
+                    if userInfo.routerHandler != nil {
+                        userInfo.routerHandler?(context, vc)
+                    } else {
+                        Navigator.open(vc, animated: true, options: userInfo.routerOptions)
+                    }
                 } else {
-                    Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+                    Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
                 }
             }
             
             return object
         }
         
-        Router.setErrorHandler { context in
+        Router.errorHandler = { context in
             if context.url == "app://" {
-                UIWindow.fw.showMessage(text: "打开App，不报错")
+                UIWindow.app.showMessage(text: "打开App，不报错")
                 return
             }
-            Navigator.topPresentedController?.fw.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
         }
     }
     
     static func registerRouters() {
         Router.registerClass(TestRouter.self)
         
-        Router.registerURL("wildcard://*") { context in
+        Router.registerURL(TestRouter.wildcardUrl) { context in
             let vc = TestRouterResultController()
+            vc.rule = TestRouter.wildcardUrl
             vc.context = context
             Navigator.push(vc, animated: true)
             return nil
@@ -456,7 +573,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     }
     
     static func registerRewrites() {
-        Router.setRewriteFilter { url in
+        Router.rewriteFilter = { url in
             return url.replacingOccurrences(of: "https://www.baidu.com/filter/", with: "app://filter/")
         }
         
@@ -469,17 +586,24 @@ class TestRouter: NSObject, AutoloadProtocol {
 
 class TestRouterResultController: UIViewController, ViewControllerProtocol {
     
-    var context: RouterContext?
+    var rule: String?
+    var context: Router.Context?
     
     func setupNavbar() {
-        navigationItem.title = context?.url
+        navigationItem.title = rule ?? context?.url
+        
+        if app.isPresented {
+            app.setLeftBarItem(Icon.closeImage) { [weak self] _ in
+                self?.app.close()
+            }
+        }
         
         if context?.completion != nil {
-            fw.setRightBarItem("完成") { [weak self] _ in
+            app.setRightBarItem("完成") { [weak self] _ in
                 guard let context = self?.context else { return }
                 
                 Router.completeURL(context, result: "我是回调数据")
-                self?.fw.close()
+                self?.app.close()
             }
         }
     }
@@ -487,11 +611,11 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "URL: \(FW.safeString(context?.url))\n\nparameters: \(FW.safeString(context?.parameters))"
+        label.text = "url: \(APP.safeString(context?.url))\n\n" + (rule != nil ? "rule: \(rule!)\n\n" : "") + "parameters: \(APP.safeString(context?.parameters))"
         view.addSubview(label)
-        label.fw.layoutChain
+        label.app.layoutChain
             .center()
-            .width(FW.screenWidth - 40)
+            .width(APP.screenWidth - 40)
     }
     
 }

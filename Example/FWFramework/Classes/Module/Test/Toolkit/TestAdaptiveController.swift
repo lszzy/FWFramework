@@ -10,28 +10,30 @@ import FWFramework
 
 class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     var hideToast = false
     
     private lazy var frameLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
         result.textColor = AppTheme.textColor
-        result.font = FW.font(15)
+        result.font = APP.font(15)
         result.textAlignment = .center
         return result
     }()
     
     func setupNavbar() {
-        fw.tabBarHidden = true
-        fw.observeNotification(UIDevice.orientationDidChangeNotification, target: self, action: #selector(refreshBarFrame))
+        app.tabBarHidden = true
+        app.observeNotification(UIDevice.orientationDidChangeNotification, target: self, action: #selector(refreshBarFrame))
         
         if !hideToast {
-            fw.setRightBarItem("启用") { _ in
-                UINavigationController.fw.enableBarTransition()
+            app.setRightBarItem("启用") { _ in
+                UINavigationController.app.enableBarTransition()
             }
         } else {
-            fw.setLeftBarItem(Icon.closeImage) { [weak self] _ in
-                self?.fw.close()
+            app.setLeftBarItem(Icon.closeImage) { [weak self] _ in
+                self?.app.close()
             }
         }
     }
@@ -42,20 +44,20 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
     func setupTableLayout() {
         view.addSubview(frameLabel)
-        frameLabel.fw.layoutChain
+        frameLabel.app.layoutChain
             .left(10)
             .right(10)
-            .bottom(FW.tabBarHeight + 10)
+            .bottom(APP.tabBarHeight + 10)
         
         tableView.backgroundColor = AppTheme.tableColor
-        tableView.fw.layoutChain
+        tableView.app.layoutChain
             .horizontal()
             .top()
             .bottom(toViewTop: frameLabel, offset: -10)
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["状态栏切换", "onStatusBar"],
             ["状态栏样式", "onStatusStyle"],
             ["导航栏切换", "onNavigationBar"],
@@ -67,7 +69,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             ["导航栏转场", "onTransitionBar"],
         ])
         if !hideToast {
-            tableData.addObjects(from: [
+            tableData.append(contentsOf: [
                 ["Present(默认)", "onPresent"],
                 ["Present(FullScreen)", "onPresent2"],
                 ["Present(PageSheet)", "onPresent3"],
@@ -75,11 +77,11 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
                 ["Present(Popover)", "onPresent5:"],
             ])
         } else {
-            tableData.addObjects(from: [
+            tableData.append(contentsOf: [
                 ["Dismiss", "onDismiss"]
             ])
         }
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["设备转向", "onOrientation"]
         ])
     }
@@ -88,7 +90,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         super.viewWillAppear(animated)
         
         if !hideToast {
-            UIWindow.fw.showMessage(text: "viewWillAppear: \(animated)")
+            UIWindow.app.showMessage(text: "viewWillAppear: \(animated)")
         }
     }
     
@@ -96,7 +98,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         super.viewWillDisappear(animated)
         
         if !hideToast {
-            UIWindow.fw.showMessage(text: "viewWillDisappear: \(animated)")
+            UIWindow.app.showMessage(text: "viewWillDisappear: \(animated)")
         }
     }
     
@@ -110,16 +112,16 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]), object: indexPath)
+        let rowData = tableData[indexPath.row]
+        app.invokeMethod(NSSelectorFromString(rowData[1]), object: indexPath)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -127,79 +129,79 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return fw.statusBarHidden
+        return app.statusBarHidden
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return fw.statusBarStyle
+        return app.statusBarStyle
     }
     
     @objc func refreshBarFrame() {
-        frameLabel.text = String(format: "全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：{%.0f, %.0f, %.0f, %.0f}", UIScreen.fw.statusBarHeight, fw.statusBarHeight, UIScreen.fw.navigationBarHeight, fw.navigationBarHeight, UIScreen.fw.topBarHeight, fw.topBarHeight, UIScreen.fw.tabBarHeight, fw.tabBarHeight, UIScreen.fw.toolBarHeight, fw.toolBarHeight, UIScreen.fw.safeAreaInsets.top, UIScreen.fw.safeAreaInsets.left, UIScreen.fw.safeAreaInsets.bottom, UIScreen.fw.safeAreaInsets.right)
+        frameLabel.text = String(format: "全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：{%.0f, %.0f, %.0f, %.0f}", UIScreen.app.statusBarHeight, app.statusBarHeight, UIScreen.app.navigationBarHeight, app.navigationBarHeight, UIScreen.app.topBarHeight, app.topBarHeight, UIScreen.app.tabBarHeight, app.tabBarHeight, UIScreen.app.toolBarHeight, app.toolBarHeight, UIScreen.app.safeAreaInsets.top, UIScreen.app.safeAreaInsets.left, UIScreen.app.safeAreaInsets.bottom, UIScreen.app.safeAreaInsets.right)
     }
     
     @objc func onStatusBar() {
-        fw.statusBarHidden = !fw.statusBarHidden
+        app.statusBarHidden = !app.statusBarHidden
         refreshBarFrame()
     }
     
     @objc func onStatusStyle() {
-        if fw.statusBarStyle == .default {
-            fw.statusBarStyle = .lightContent
+        if app.statusBarStyle == .default {
+            app.statusBarStyle = .lightContent
         } else {
-            fw.statusBarStyle = .default
+            app.statusBarStyle = .default
         }
         refreshBarFrame()
     }
     
     @objc func onNavigationBar() {
-        fw.navigationBarHidden = !fw.navigationBarHidden
+        app.navigationBarHidden = !app.navigationBarHidden
         refreshBarFrame()
     }
     
     @objc func onNavigationStyle() {
-        if fw.navigationBarStyle == .default {
-            fw.navigationBarStyle = .white
+        if app.navigationBarStyle == .default {
+            app.navigationBarStyle = .white
         } else {
-            fw.navigationBarStyle = .default
+            app.navigationBarStyle = .default
         }
         refreshBarFrame()
     }
     
     @objc func onTitleColor() {
-        navigationController?.navigationBar.fw.titleAttributes = navigationController?.navigationBar.fw.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: AppTheme.buttonColor]
+        navigationController?.navigationBar.app.titleAttributes = navigationController?.navigationBar.app.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: AppTheme.buttonColor]
         refreshBarFrame()
     }
     
     @objc func onLargeTitle() {
-        navigationController?.navigationBar.prefersLargeTitles = !FW.safeValue(navigationController?.navigationBar.prefersLargeTitles)
+        navigationController?.navigationBar.prefersLargeTitles = !APP.safeValue(navigationController?.navigationBar.prefersLargeTitles)
         refreshBarFrame()
     }
     
     @objc func onTabBar() {
-        fw.tabBarHidden = !fw.tabBarHidden
+        app.tabBarHidden = !app.tabBarHidden
         refreshBarFrame()
     }
     
     @objc func onToolBar() {
-        if fw.toolBarHidden {
-            let item = UIBarButtonItem.fw.item(object: UIBarButtonItem.SystemItem.cancel.rawValue, target: self, action: #selector(onToolBar))
-            let item2 = UIBarButtonItem.fw.item(object: UIBarButtonItem.SystemItem.done.rawValue, target: self, action: #selector(onPresent))
+        if app.toolBarHidden {
+            let item = UIBarButtonItem.app.item(object: UIBarButtonItem.SystemItem.cancel.rawValue, target: self, action: #selector(onToolBar))
+            let item2 = UIBarButtonItem.app.item(object: UIBarButtonItem.SystemItem.done.rawValue, target: self, action: #selector(onPresent))
             toolbarItems = [item, item2]
-            fw.toolBarHidden = false
+            app.toolBarHidden = false
         } else {
-            fw.toolBarHidden = true
+            app.toolBarHidden = true
         }
         refreshBarFrame()
     }
     
     @objc func onPresent() {
         let vc = TestAdaptiveController()
-        vc.fw.presentationDidDismiss = {
-            UIWindow.fw.showMessage(text: "presentationDidDismiss")
+        vc.app.presentationDidDismiss = {
+            UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.fw.completionHandler = { _ in
-            UIWindow.fw.showMessage(text: "completionHandler")
+        vc.app.completionHandler = { _ in
+            UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
         present(vc, animated: true)
@@ -214,11 +216,11 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
     @objc func onPresent3() {
         let vc = TestAdaptiveController()
-        vc.fw.presentationDidDismiss = {
-            UIWindow.fw.showMessage(text: "presentationDidDismiss")
+        vc.app.presentationDidDismiss = {
+            UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.fw.completionHandler = { _ in
-            UIWindow.fw.showMessage(text: "completionHandler")
+        vc.app.completionHandler = { _ in
+            UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
         vc.modalPresentationStyle = .pageSheet
@@ -229,11 +231,11 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         let vc = TestAdaptiveController()
         vc.hideToast = true
         let nav = UINavigationController(rootViewController: vc)
-        nav.fw.presentationDidDismiss = {
-            UIWindow.fw.showMessage(text: "presentationDidDismiss")
+        nav.app.presentationDidDismiss = {
+            UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        nav.fw.completionHandler = { _ in
-            UIWindow.fw.showMessage(text: "completionHandler")
+        nav.app.completionHandler = { _ in
+            UIWindow.app.showMessage(text: "completionHandler")
         }
         present(nav, animated: true)
     }
@@ -246,18 +248,18 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         
         let vc = TestAdaptiveController()
         vc.hideToast = true
-        vc.preferredContentSize = CGSize(width: FW.screenWidth / 2, height: FW.screenHeight / 2)
-        vc.fw.setPopoverPresentation({ [weak self] controller in
+        vc.preferredContentSize = CGSize(width: APP.screenWidth / 2, height: APP.screenHeight / 2)
+        vc.app.setPopoverPresentation({ [weak self] controller in
             controller.barButtonItem = self?.navigationItem.rightBarButtonItem
             controller.permittedArrowDirections = .up
             let cell = self?.tableView.cellForRow(at: indexPath)
             controller.passthroughViews = cell != nil ? [cell!] : []
         }, shouldDismiss: [true, false].randomElement()!)
-        vc.fw.presentationDidDismiss = {
-            UIWindow.fw.showMessage(text: "presentationDidDismiss")
+        vc.app.presentationDidDismiss = {
+            UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.fw.completionHandler = { _ in
-            UIWindow.fw.showMessage(text: "completionHandler")
+        vc.app.completionHandler = { _ in
+            UIWindow.app.showMessage(text: "completionHandler")
         }
         present(vc, animated: true)
     }
@@ -273,10 +275,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onOrientation() {
-        if UIDevice.fw.isDeviceLandscape {
-            UIDevice.fw.setDeviceOrientation(.portrait)
+        if UIDevice.app.isDeviceLandscape {
+            UIDevice.app.setDeviceOrientation(.portrait)
         } else {
-            UIDevice.fw.setDeviceOrientation(.landscapeLeft)
+            UIDevice.app.setDeviceOrientation(.landscapeLeft)
         }
         refreshBarFrame()
     }
@@ -288,27 +290,27 @@ class TestAdaptiveChildController: UIViewController, ViewControllerProtocol {
     var index: Int = 0
     
     func setupNavbar() {
-        fw.extendedLayoutEdge = .all
+        app.extendedLayoutEdge = .all
         if index < 1 {
-            fw.navigationBarStyle = .default
+            app.navigationBarStyle = .default
         } else if index < 2 {
-            fw.navigationBarStyle = .white
+            app.navigationBarStyle = .white
         } else if index < 3 {
-            fw.navigationBarStyle = .transparent
+            app.navigationBarStyle = .transparent
         } else {
-            fw.navigationBarStyle = .init([-1, 0, 1, 2].randomElement()!)
-            fw.navigationBarHidden = fw.navigationBarStyle.rawValue == -1
+            app.navigationBarStyle = .init([-1, 0, 1, 2].randomElement()!)
+            app.navigationBarHidden = app.navigationBarStyle.rawValue == -1
         }
-        navigationItem.title = "标题:\(index + 1) 样式:\(fw.navigationBarStyle.rawValue)"
+        navigationItem.title = "标题:\(index + 1) 样式:\(app.navigationBarStyle.rawValue)"
         
-        fw.setRightBarItem("打开界面") { [weak self] _ in
+        app.setRightBarItem("打开界面") { [weak self] _ in
             let vc = TestAdaptiveChildController()
-            vc.index = FW.safeValue(self?.index) + 1
+            vc.index = APP.safeValue(self?.index) + 1
             self?.navigationController?.pushViewController(vc, animated: true)
         }
-        view.fw.addTapGesture { [weak self] _ in
+        view.app.addTapGesture { [weak self] _ in
             let vc = TestAdaptiveChildController()
-            vc.index = FW.safeValue(self?.index) + 1
+            vc.index = APP.safeValue(self?.index) + 1
             self?.navigationController?.pushViewController(vc, animated: true)
         }
     }

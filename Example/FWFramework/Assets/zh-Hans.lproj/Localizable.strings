@@ -17,6 +17,7 @@
 "systemTitle" = "系统";
 "themeLight" = "浅色";
 "themeDark" = "深色";
+"themeGray" = "灰色";
 "welcomeTitle" = "你知道我在等你吗？";
 "backTitle" = "欢迎回来，亲";
 "logoutConfirm" = "确定要退出当前账号吗?";
@@ -24,3 +25,6 @@
 "envTesting" = "测试";
 "envStaging" = "模拟";
 "envProduction" = "正式";
+"pluginTitle" = "插件";
+"pluginDetail" = "定制";
+"pluginDemo" = "演示";

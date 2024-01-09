@@ -1,1 +1,0 @@
-../../FWObjC/Plugin/Image/FWImagePlugin.h

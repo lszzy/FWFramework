@@ -7,6 +7,9 @@
 //
 
 import FWFramework
+#if DEBUG
+import FWDebug
+#endif
 
 class TestAnimationController: UIViewController, ViewControllerProtocol {
     
@@ -14,37 +17,69 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
     
     lazy var animationView: UIView = {
         let result = UIView()
-        result.frame = CGRect(x: FW.screenWidth / 2 - 75, y: 170, width: 150, height: 200)
+        result.frame = CGRect(x: APP.screenWidth / 2 - 75, y: 170, width: 150, height: 200)
         result.backgroundColor = UIColor.red
         return result
     }()
     
     func didInitialize() {
-        fw.extendedLayoutEdge = .bottom
+        app.extendedLayoutEdge = .bottom
+    }
+    
+    func setupNavbar() {
+        app.setRightBarItem(APP.localized("debugButton")) { _ in
+            guard UIWindow.app.main?.app.subview(tag: 1000) == nil else {
+                UIWindow.app.main?.app.subview(tag: 1000)?.removeFromSuperview()
+                return
+            }
+            
+            let circleView = UIView(frame: CGRect(x: APP.screenWidth / 2 - 25, y: APP.screenHeight / 2 - 25, width: 50, height: 50))
+            circleView.tag = 1000
+            circleView.app.setCornerRadius(25)
+            circleView.backgroundColor = UIColor.app.randomColor
+            circleView.app.dragEnabled = true
+            circleView.app.dragLimit = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight)
+            circleView.app.isPenetrable = true
+            UIWindow.app.main?.addSubview(circleView)
+            
+            let clickView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+            clickView.isUserInteractionEnabled = true
+            clickView.image = UIImage.app.appIconImage()
+            clickView.app.setCornerRadius(15)
+            clickView.app.addTapGesture { _ in
+                #if DEBUG
+                FWDebugManager.sharedInstance().toggle()
+                #endif
+            }
+            clickView.addGestureRecognizer(UILongPressGestureRecognizer.app.gestureRecognizer(block: { _ in
+                UIWindow.app.main?.app.subview(tag: 1000)?.removeFromSuperview()
+            }))
+            circleView.addSubview(clickView)
+        }
     }
     
     func setupSubviews() {
         let button = AppTheme.largeButton()
         button.setTitle("转场动画", for: .normal)
-        button.fw.addTouch(target: self, action: #selector(onPresent))
+        button.app.addTouch(target: self, action: #selector(onPresent))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .bottom(15)
             .centerX()
         
         let button2 = AppTheme.largeButton()
         button2.setTitle("切换拖动", for: .normal)
-        button2.fw.addTouch(target: self, action: #selector(onDrag(_:)))
+        button2.app.addTouch(target: self, action: #selector(onDrag(_:)))
         view.addSubview(button2)
-        button2.fw.layoutChain
+        button2.app.layoutChain
             .bottom(toViewTop: button, offset: -15)
             .centerX()
         
         let button3 = AppTheme.largeButton()
         button3.setTitle("切换动画", for: .normal)
-        button3.fw.addTouch(target: self, action: #selector(onAnimation(_:)))
+        button3.app.addTouch(target: self, action: #selector(onAnimation(_:)))
         view.addSubview(button3)
-        button3.fw.layoutChain
+        button3.app.layoutChain
             .bottom(toViewTop: button2, offset: -15)
             .centerX()
         
@@ -52,7 +87,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
     }
     
     @objc func onPresent() {
-        fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["VC present", "VC alert", "VC fade", "nav present", "nav alert", "nav fade", "view present", "view alert", "view fade", "wrapped present", "wrapped alert", "wrapped fade"], currentIndex: -1) { [weak self] index in
+        app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["VC present", "VC alert", "VC fade", "nav present", "nav alert", "nav fade", "view present", "view alert", "view fade", "wrapped present", "wrapped alert", "wrapped fade"], currentIndex: -1) { [weak self] index in
             guard let self = self else { return }
             if index < 3 {
                 let vc = TestAnimationChildController()
@@ -74,40 +109,40 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
         var title: String? = nil
         if animationIndex == 1 {
             title = "Push.FromTop"
-            animationView.fw.addTransition(type: CATransitionType.push.rawValue, subtype: CATransitionSubtype.fromTop.rawValue, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, duration: 1.0)
+            animationView.app.addTransition(type: .push, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: 1.0)
         } else if animationIndex == 2 {
             title = "CurlUp"
-            animationView.fw.addAnimation(curve: .easeInOut, transition: .curlUp, duration: 1.0)
+            animationView.app.addAnimation(curve: .easeInOut, transition: .curlUp, duration: 1.0)
         } else if animationIndex == 3 {
             title = "transform.rotation.y"
-            animationView.fw.addAnimation(keyPath: "transform.rotation.y", fromValue: NSNumber(value: 0), toValue: NSNumber(value: CGFloat.pi), duration: 1.0)
+            animationView.app.addAnimation(keyPath: "transform.rotation.y", fromValue: NSNumber(value: 0), toValue: NSNumber(value: CGFloat.pi), duration: 1.0)
         } else if animationIndex == 4 {
             title = "Shake"
-            animationView.fw.shake(times: 10, delta: 0, duration: 0.1)
+            animationView.app.shake(times: 10, delta: 0, duration: 0.1)
         } else if animationIndex == 5 {
             title = "Alpha"
-            animationView.fw.fade(alpha: 0, duration: 1.0) { [weak self] _ in
-                self?.animationView.fw.fade(alpha: 1.0, duration: 1.0)
+            animationView.app.fade(alpha: 0, duration: 1.0) { [weak self] _ in
+                self?.animationView.app.fade(alpha: 1.0, duration: 1.0)
             }
         } else if animationIndex == 6 {
             title = "Rotate"
-            animationView.fw.rotate(degree: 180, duration: 1.0)
+            animationView.app.rotate(degree: 180, duration: 1.0)
         } else if animationIndex == 7 {
             title = "Scale"
-            animationView.fw.scale(scaleX: 0.5, scaleY: 0.5, duration: 1.0) { [weak self] _ in
-                self?.animationView.fw.scale(scaleX: 2.0, scaleY: 2.0, duration: 1.0)
+            animationView.app.scale(scaleX: 0.5, scaleY: 0.5, duration: 1.0) { [weak self] _ in
+                self?.animationView.app.scale(scaleX: 2.0, scaleY: 2.0, duration: 1.0)
             }
         } else if animationIndex == 8 {
             title = "Move"
             let point = animationView.frame.origin
-            animationView.fw.move(point: CGPoint(x: 10, y: 10), duration: 1.0) { [weak self] _ in
-                self?.animationView.fw.move(point: point, duration: 1.0)
+            animationView.app.move(point: CGPoint(x: 10, y: 10), duration: 1.0) { [weak self] _ in
+                self?.animationView.app.move(point: point, duration: 1.0)
             }
         } else if animationIndex == 9 {
             title = "Frame"
             let frame = animationView.frame
-            animationView.fw.move(frame: CGRect(x: 10, y: 10, width: 50, height: 50), duration: 1.0) { [weak self] _ in
-                self?.animationView.fw.move(frame: frame, duration: 1.0)
+            animationView.app.move(frame: CGRect(x: 10, y: 10, width: 50, height: 50), duration: 1.0) { [weak self] _ in
+                self?.animationView.app.move(frame: frame, duration: 1.0)
             }
         } else if animationIndex == 10 {
             title = "切换动画"
@@ -118,11 +153,11 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
     }
     
     @objc func onDrag(_ sender: UIButton) {
-        if !animationView.fw.dragEnabled {
-            animationView.fw.dragEnabled = true
-            animationView.fw.dragLimit = CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight - FW.topBarHeight)
+        if !animationView.app.dragEnabled {
+            animationView.app.dragEnabled = true
+            animationView.app.dragLimit = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight - APP.topBarHeight)
         } else {
-            animationView.fw.dragEnabled = false
+            animationView.app.dragEnabled = false
         }
     }
     
@@ -144,29 +179,29 @@ class TestAnimationView: UIView {
         if transitionType > 8 {
             backgroundColor = .clear
         } else {
-            backgroundColor = .fw.color(hex: 0x000000, alpha: 0.5)
+            backgroundColor = .app.color(hex: 0x000000, alpha: 0.5)
         }
         
         addSubview(bottomView)
         if transitionType == 6 || transitionType == 9 {
-            bottomView.fw.layoutChain.horizontal().bottom().height(FW.screenHeight / 2)
+            bottomView.app.layoutChain.horizontal().bottom().height(APP.screenHeight / 2)
         } else {
-            bottomView.fw.layoutChain.center().width(300).height(200)
+            bottomView.app.layoutChain.center().width(300).height(200)
         }
         
-        fw.addTapGesture { [weak self] _ in
+        app.addTapGesture { [weak self] _ in
             guard let self = self else { return }
             if self.transitionType > 8 {
-                self.fw.viewController?.dismiss(animated: true)
+                self.app.viewController?.dismiss(animated: true)
                 return
             }
             
             if self.transitionType == 6 {
-                self.fw.setPresentTransition(.dismiss, contentView: self.bottomView, completion: nil)
+                self.app.setPresentTransition(.dismiss, contentView: self.bottomView, completion: nil)
             } else if self.transitionType == 7 {
-                self.fw.setAlertTransition(.dismiss, completion: nil)
+                self.app.setAlertTransition(.dismiss, completion: nil)
             } else {
-                self.fw.setFadeTransition(.dismiss, completion: nil)
+                self.app.setFadeTransition(.dismiss, completion: nil)
             }
         }
     }
@@ -177,25 +212,25 @@ class TestAnimationView: UIView {
     
     func show(in viewController: UIViewController) {
         if transitionType > 8 {
-            let wrappedVC = fw.wrappedTransitionController(true)
+            let wrappedVC = app.wrappedTransitionController(true)
             if transitionType == 9 {
-                wrappedVC.fw.setPresentTransition(nil)
+                wrappedVC.app.setPresentTransition(nil)
             } else if transitionType == 10 {
-                wrappedVC.fw.setAlertTransition(nil)
+                wrappedVC.app.setAlertTransition(nil)
             } else {
-                wrappedVC.fw.setFadeTransition(nil)
+                wrappedVC.app.setFadeTransition(nil)
             }
             viewController.present(wrappedVC, animated: true)
             return
         }
         
-        fw.transition(to: viewController, pinEdges: true)
+        app.transition(to: viewController, pinEdges: true)
         if transitionType == 6 {
-            fw.setPresentTransition(.present, contentView: self.bottomView, completion: nil)
+            app.setPresentTransition(.present, contentView: self.bottomView, completion: nil)
         } else if transitionType == 7 {
-            fw.setAlertTransition(.present, completion: nil)
+            app.setAlertTransition(.present, completion: nil)
         } else {
-            fw.setFadeTransition(.present, completion: nil)
+            app.setFadeTransition(.present, completion: nil)
         }
     }
     
@@ -213,38 +248,38 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fw.navigationBarHidden = true
+        app.navigationBarHidden = true
         view.backgroundColor = .clear
-        view.fw.addTapGesture { [weak self] _ in
-            self?.fw.close()
+        view.app.addTapGesture { [weak self] _ in
+            self?.app.close()
         }
         
         view.addSubview(self.bottomView)
         if transitionType == 0 || transitionType == 3 {
-            bottomView.fw.layoutChain.horizontal().bottom().height(FW.screenHeight / 2)
+            bottomView.app.layoutChain.horizontal().bottom().height(APP.screenHeight / 2)
         } else {
-            bottomView.fw.layoutChain.center().width(300).height(200)
+            bottomView.app.layoutChain.center().width(300).height(200)
         }
         
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
         button.setTitle(self.navigationController != nil ? "支持push" : "不支持push", for: .normal)
         bottomView.addSubview(button)
-        button.fw.addTouch { [weak self] _ in
+        button.app.addTouch { [weak self] _ in
             let vc = TestAnimationChildController()
             vc.transitionType = self?.transitionType ?? 0
             self?.navigationController?.pushViewController(vc, animated: true)
         }
-        button.fw.layoutChain.center()
+        button.app.layoutChain.center()
     }
     
     func show(in viewController: UIViewController) {
         if transitionType == 0 {
-            fw.setPresentTransition(nil)
+            app.setPresentTransition(nil)
         } else if transitionType == 1 {
-            fw.setAlertTransition(nil)
+            app.setAlertTransition(nil)
         } else {
-            fw.setFadeTransition(nil)
+            app.setFadeTransition(nil)
         }
         viewController.present(self, animated: true)
     }
@@ -252,11 +287,11 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
     func showNav(in viewController: UIViewController) {
         let nav = UINavigationController(rootViewController: self)
         if transitionType == 3 {
-            nav.fw.setPresentTransition(nil)
+            nav.app.setPresentTransition(nil)
         } else if transitionType == 4 {
-            nav.fw.setAlertTransition(nil)
+            nav.app.setAlertTransition(nil)
         } else {
-            nav.fw.setFadeTransition(nil)
+            nav.app.setFadeTransition(nil)
         }
         viewController.present(nav, animated: true)
     }

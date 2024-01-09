@@ -10,7 +10,6 @@ import SwiftUI
 
 // MARK: - Divider+Toolkit
 /// 修改分割线颜色使用background方法即可，示例：background(Color.gray)
-@available(iOS 13.0, *)
 extension Divider {
     
     /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
@@ -36,7 +35,6 @@ extension Divider {
 
 // MARK: - Rectangle+Toolkit
 /// 使用Rectangle实现分割线更灵活可控
-@available(iOS 13.0, *)
 extension Rectangle {
     
     /// 自定义线条样式，参数nil时为Divider默认配置

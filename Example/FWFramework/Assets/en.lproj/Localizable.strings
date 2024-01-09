@@ -17,6 +17,7 @@
 "systemTitle" = "System";
 "themeLight" = "Light";
 "themeDark" = "Dark";
+"themeGray" = "Gray";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
 "backTitle" = "Welcome back, dear";
 "logoutConfirm" = "Are you sure you want to log out?";
@@ -24,3 +25,6 @@
 "envTesting" = "Testing";
 "envStaging" = "Staging";
 "envProduction" = "Production";
+"pluginTitle" = "Plugin";
+"pluginDetail" = "Customize";
+"pluginDemo" = "Demo";

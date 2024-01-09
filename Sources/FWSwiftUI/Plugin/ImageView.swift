@@ -8,16 +8,14 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWObjC
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - ImageView
 /// 图片视图，支持网络图片和动图
-@available(iOS 13.0, *)
 public struct ImageView: UIViewRepresentable {
     
-    var url: Any?
+    var url: URLParameter?
     var placeholder: UIImage?
     var options: WebImageOptions = []
     var context: [ImageCoderOptions: Any]?
@@ -30,12 +28,12 @@ public struct ImageView: UIViewRepresentable {
     }
     
     /// 指定网络图片URL初始化
-    public init(url: Any?) {
+    public init(url: URLParameter?) {
         self.url = url
     }
     
     /// 设置网络图片URL
-    public func url(_ url: Any?) -> Self {
+    public func url(_ url: URLParameter?) -> Self {
         var result = self
         result.url = url
         return result
@@ -66,10 +64,10 @@ public struct ImageView: UIViewRepresentable {
     public typealias UIViewType = ResizableView<UIImageView>
     
     public func makeUIView(context: Context) -> ResizableView<UIImageView> {
-        let imageView = UIImageView.fw.animatedImageView()
+        let imageView = UIImageView.fw_animatedImageView()
         let uiView = ResizableView(imageView)
         uiView.content.contentMode = contentMode
-        uiView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
+        uiView.content.fw_setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
         return uiView
     }
     
@@ -78,14 +76,13 @@ public struct ImageView: UIViewRepresentable {
     }
     
     public static func dismantleUIView(_ uiView: ResizableView<UIImageView>, coordinator: ()) {
-        uiView.content.fw.cancelImageRequest()
+        uiView.content.fw_cancelImageRequest()
     }
     
 }
 
 // MARK: - ResizableView
 /// 可调整大小的视图包装器，解决frame尺寸变为图片尺寸等问题
-@available(iOS 13.0, *)
 public class ResizableView<Content: UIView>: UIView {
     
     public var content: Content

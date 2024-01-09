@@ -8,153 +8,117 @@
 
 import FWFramework
 
-class TestTabbarController: UIViewController, ViewControllerProtocol {
+class TestTabbarController: TabBarController, UITabBarControllerDelegate {
     
-    private lazy var childView: UIView = {
-        let result = UIView()
-        return result
-    }()
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        hidesBottomBarWhenPushed = true
+    }
     
-    private lazy var tabBarView: ToolbarView = {
-        let result = ToolbarView(type: .tabBar)
-        result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
-        result.menuView.leftButton = homeButton
-        result.menuView.centerButton = testButton
-        result.menuView.rightButton = settingsButton
-        return result
-    }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    private lazy var homeButton: ToolbarButton = {
-        let result = ToolbarButton(image: FW.iconImage("zmdi-var-home", 26), title: FW.localized("homeTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 1
-        return result
-    }()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        app.leftBarItem = Icon.backImage
+        delegate = self
+        
+        setupSubviews()
+        setupController()
+    }
     
-    private lazy var testButton: ToolbarButton = {
-        let result = ToolbarButton(image: Icon.iconImage("zmdi-var-bug", size: 26), title: FW.localized("testTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 2
-        return result
-    }()
-    
-    private lazy var settingsButton: ToolbarButton = {
-        let result = ToolbarButton(image: FW.icon("zmdi-var-settings", 26)?.image, title: FW.localized("settingTitle"))
-        result.titleLabel?.font = FW.font(10)
-        result.fw.addTouch(target: self, action: #selector(onButtonClicked(_:)))
-        result.tag = 3
-        return result
-    }()
-    
-    private lazy var homeController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = FW.localized("homeTitle")
-        return result
-    }()
-    
-    private lazy var testController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = FW.localized("testTitle")
-        return result
-    }()
-    
-    private lazy var settingsController: UIViewController = {
-        let result = TestTabbarChildController()
-        result.title = FW.localized("settingTitle")
-        return result
-    }()
-    
-    private var childController: UIViewController?
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        homeButton.contentEdgeInsets = UIEdgeInsets(top: FW.isLandscape ? 2 : 8, left: 8, bottom: FW.isLandscape ? 2 : 8, right: 8)
-        homeButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
-        testButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        testButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
-        settingsButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        settingsButton.fw.setImageEdge(FW.isLandscape ? .left : .top, spacing: FW.isLandscape ? 4 : 2)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationItem.title = selectedViewController?.navigationItem.title
     }
     
     func setupSubviews() {
-        view.addSubview(childView)
-        view.addSubview(tabBarView)
-        childView.fw.layoutChain.left().right().top()
-        tabBarView.fw.layoutChain.left().right().bottom().top(toViewBottom: childView)
+        tabBar.app.foregroundColor = AppTheme.textColor
+        tabBar.app.backgroundColor = AppTheme.barColor
+        tabBar.app.shadowColor = nil
+        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
     
-    func setupLayout() {
-        fw.navigationBarHidden = true
-        onButtonClicked(homeButton)
-    }
-    
-    @objc func onButtonClicked(_ sender: UIButton) {
-        if let child = childController {
-            fw.removeChildViewController(child)
-        }
+    func setupController() {
+        let homeController = TestTabbarChildController()
+        homeController.hidesBottomBarWhenPushed = false
+        homeController.navigationItem.title = APP.localized("homeTitle")
+        homeController.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
+        homeController.tabBarItem.title = APP.localized("homeTitle")
         
-        var child: UIViewController
-        if sender.tag == 1 {
-            homeButton.tintColor = AppTheme.textColor
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            
-            child = homeController
-        } else if sender.tag == 2 {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            
-            child = testController
-        } else {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor
-            
-            child = settingsController
-        }
-        fw.addChildViewController(child, in: childView)
+        let testController = TestTabbarChildController()
+        testController.hidesBottomBarWhenPushed = false
+        testController.navigationItem.title = APP.localized("testTitle")
+        let testBarItem = TabBarItem()
+        testBarItem.contentView = TestTabbarContentView()
+        testBarItem.contentView.highlightTextColor = AppTheme.textColor
+        testBarItem.contentView.highlightIconColor = AppTheme.textColor
+        testBarItem.image = Icon.iconImage("zmdi-var-bug", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil)
+        testBarItem.title = APP.localized("testTitle")
+        testController.tabBarItem = testBarItem
+        
+        let settingsControlelr = TestTabbarChildController()
+        settingsControlelr.hidesBottomBarWhenPushed = false
+        settingsControlelr.navigationItem.title = APP.localized("settingTitle")
+        let settingsBarItem = TabBarItem()
+        settingsBarItem.contentView.highlightTextColor = AppTheme.textColor
+        settingsBarItem.contentView.highlightIconColor = AppTheme.textColor
+        settingsControlelr.tabBarItem = settingsBarItem
+        settingsControlelr.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
+        settingsControlelr.tabBarItem.title = APP.localized("settingTitle")
+        viewControllers = [homeController, testController, settingsControlelr]
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        navigationItem.title = viewController.navigationItem.title
+    }
+    
+}
+
+class TestTabbarContentView: TabBarItemContentView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.imageView.backgroundColor = AppTheme.barColor
+        self.imageView.layer.cornerRadius = 35
+        self.insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func updateLayout() {
+        super.updateLayout()
+        self.imageView.frame = CGRect(x: (bounds.size.width - 70) / 2.0, y: 0, width: 70, height: 70)
+    }
+    
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let p = CGPoint(x: point.x - imageView.frame.origin.x, y: point.y - imageView.frame.origin.y)
+        return sqrt(pow(imageView.bounds.size.width / 2.0 - p.x, 2) + pow(imageView.bounds.size.height / 2.0 - p.y, 2)) < imageView.bounds.size.width / 2.0
     }
     
 }
 
 class TestTabbarChildController: UIViewController, ViewControllerProtocol {
-    private lazy var navigationView: ToolbarView = {
-        let result = ToolbarView(type: .navBar)
-        result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
-        result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { sender in
-            Navigator.closeViewController(animated: true)
-        })
-        return result
-    }()
-    
-    override var title: String? {
-        didSet {
-            navigationView.menuView.title = title
-        }
-    }
     
     func setupSubviews() {
-        fw.navigationBarHidden = true
-        
-        view.backgroundColor = UIColor.fw.randomColor
-        view.addSubview(navigationView)
-        navigationView.fw.layoutChain.left().right().top()
-        view.fw.addTapGesture { [weak self] sender in
+        view.backgroundColor = UIColor.app.randomColor
+        view.app.addTapGesture { [weak self] sender in
             let viewController = TestTabbarChildController()
-            var title = FW.safeString(self?.title)
+            var title = APP.safeString(self?.navigationItem.title)
             if let index = title.firstIndex(of: "-") {
                 let count = Int(title.suffix(from: title.index(index, offsetBy: 1))) ?? 0
                 title = "\(title.prefix(upTo: index))-\(count + 1)"
             } else {
                 title = "\(title)-1"
             }
-            viewController.title = title
+            viewController.navigationItem.title = title
             Navigator.push(viewController, animated: true)
         }
     }
+    
 }

@@ -11,8 +11,8 @@ import FWFramework
 class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDelegate, UITextFieldDelegate {
     
     let titles: [String] = ["修改", "删除", "扫一扫", "付款"]
-    let iconPhone: UIImage = FW.iconImage("zmdi-var-smartphone-iphone", 24)!
-    let icons: [UIImage] = [FW.iconImage("zmdi-var-edit", 24)!, FW.iconImage("zmdi-var-delete", 24)!, FW.iconImage("zmdi-var-smartphone-iphone", 24)!, FW.iconImage("zmdi-var-card", 24)!]
+    let iconPhone: UIImage = APP.iconImage("zmdi-var-smartphone-iphone", 24)!
+    let icons: [UIImage] = [APP.iconImage("zmdi-var-edit", 24)!, APP.iconImage("zmdi-var-delete", 24)!, APP.iconImage("zmdi-var-smartphone-iphone", 24)!, APP.iconImage("zmdi-var-card", 24)!]
     
     var popupMenu: PopupMenu?
     
@@ -20,13 +20,13 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         let result = UITextField()
         result.placeholder = "我是输入框"
         result.textColor = AppTheme.textColor
-        result.fw.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
         result.delegate = self
         return result
     }()
     
     private lazy var customLabel: UILabel = {
-        let result = UILabel.fw.label(font: UIFont.fw.font(ofSize: 16), textColor: AppTheme.textColor, text: "我是自定义标签")
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "我是自定义标签")
         result.backgroundColor = AppTheme.cellColor
         return result
     }()
@@ -40,56 +40,56 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     
     func setupNavbar() {
         navigationItem.titleView = titleView
-        fw.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
-            UIWindow.fw.showMessage(text: "点击了刷新按钮")
+        app.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
+            UIWindow.app.showMessage(text: "点击了刷新按钮")
         }
-        fw.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
-            UIWindow.fw.showMessage(text: "点击了动作按钮")
+        app.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
+            UIWindow.app.showMessage(text: "点击了动作按钮")
         }
     }
     
     func setupSubviews() {
-        var button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        var button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .left(10)
             .top(toSafeArea: 10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .right(10)
             .top(toSafeArea: 10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .left(10)
             .bottom(10)
             .size(CGSize(width: 44, height: 44))
         
-        button = UIButton.fw.button(image: iconPhone)
-        button.fw.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
+        button = UIButton.app.button(image: iconPhone)
+        button.app.addTouch(target: self, action: #selector(self.onPopupClick(_:)))
         view.addSubview(button)
-        button.fw.layoutChain
+        button.app.layoutChain
             .right(10)
             .bottom(10)
             .size(CGSize(width: 44, height: 44))
         
         view.addSubview(textField)
-        textField.fw.layoutChain
+        textField.app.layoutChain
             .left(50)
             .right(50)
             .top(toSafeArea: 200)
             .height(45)
         
         view.addSubview(customLabel)
-        customLabel.fw.layoutChain
+        customLabel.app.layoutChain
             .centerX()
             .top(toViewBottom: textField, offset: 50)
             .size(CGSize(width: 200, height: 50))
@@ -99,7 +99,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     }
     
     @objc func onPopupClick(_ sender: UIButton) {
-        PopupMenu.showRely(on: sender, titles: titles, icons: icons, menuWidth: 120) { [weak self] popupMenu in
+        PopupMenu.show(relyOn: sender, titles: titles, icons: icons, menuWidth: 120) { [weak self] popupMenu in
             popupMenu.delegate = self
         }
     }
@@ -118,7 +118,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     private func showCustomPopupMenu(_ point: CGPoint) {
         PopupMenu.show(at: point, titles: titles, icons: nil, menuWidth: 110) { popupMenu in
             popupMenu.dismissOnSelected = true
-            popupMenu.isShadowShowing = true
+            popupMenu.showsShadow = true
             popupMenu.delegate = self
             popupMenu.arrowHeight = 0
             popupMenu.separatorColor = UIColor.red
@@ -133,7 +133,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     private func showDarkPopupMenu(_ point: CGPoint) {
         PopupMenu.show(at: point, titles: titles, icons: nil, menuWidth: 110) { popupMenu in
             popupMenu.dismissOnSelected = false
-            popupMenu.isShadowShowing = true
+            popupMenu.showsShadow = true
             popupMenu.delegate = self
             popupMenu.offset = 10
             popupMenu.textColor = UIColor.lightGray
@@ -142,8 +142,8 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         }
     }
     
-    func popupMenu(_ popupMenu: PopupMenu, didSelectedAt index: Int) {
-        fw.showMessage(text: "点击了 \(popupMenu.titles?[index] ?? "")")
+    func popupMenu(_ popupMenu: PopupMenu, didSelectAt index: Int) {
+        app.showMessage(text: "点击了 \(popupMenu.titles[index])")
     }
     
     func popupMenuBeganDismiss(_ popupMenu: PopupMenu) {
@@ -165,14 +165,14 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        popupMenu = PopupMenu.showRely(on: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, otherSettings: { popupMenu in
+        popupMenu = PopupMenu.show(relyOn: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, customize: { popupMenu in
             popupMenu.delegate = self
-            popupMenu.showMaskView = false
+            popupMenu.showsMaskView = false
             popupMenu.priorityDirection = .bottom
             popupMenu.maxVisibleCount = 1
             popupMenu.itemHeight = 60
             popupMenu.borderWidth = 1
-            popupMenu.fontSize = 12
+            popupMenu.font = UIFont.systemFont(ofSize: 12)
             popupMenu.dismissOnTouchOutside = true
             popupMenu.dismissOnSelected = false
             popupMenu.borderColor = .brown

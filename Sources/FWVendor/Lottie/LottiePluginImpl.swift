@@ -8,22 +8,21 @@
 import UIKit
 import Lottie
 #if FWMacroSPM
-import FWObjC
+import FWFramework
 #endif
 
 /// Lottile插件视图，可用于加载、进度、下拉刷新等
-@objc(FWLottiePluginView)
-@objcMembers open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
+open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     
     // MARK: - Accessor
     /// 设置或获取进度条大小，默认{37,37}
-    open var size: CGSize {
+    open var indicatorSize: CGSize {
         get { return bounds.size }
         set { frame = CGRect(x: frame.minX, y: frame.minY, width: newValue.width, height: newValue.height) }
     }
     
     /// 进度条当前颜色，暂不支持
-    open var color: UIColor = .white
+    open var indicatorColor: UIColor? = .white
     
     /// 设置内容边距，默认zero
     open var contentInset: UIEdgeInsets = .zero {
@@ -100,7 +99,7 @@ import FWObjC
     
     // MARK: - Public
     /// 设置指示器进度，大于0小于1时自动显示
-    public func setProgress(_ value: CGFloat, animated: Bool) {
+    open func setProgress(_ value: CGFloat, animated: Bool) {
         let progress: CGFloat = max(0.0, min(value, 1.0))
         let showingProgress = 0 < progress && progress < 1
         
@@ -128,24 +127,24 @@ import FWObjC
     }
     
     /// 设置动画json文件
-    public func setAnimation(name: String, bundle: Bundle? = nil) {
+    open func setAnimation(name: String, bundle: Bundle? = nil) {
         animationView.animation = LottieAnimation.named(name, bundle: bundle ?? .main)
     }
     
     /// 设置动画Data数据
-    public func setAnimation(data: Data) {
+    open func setAnimation(data: Data) {
         animationView.animation = try? LottieAnimation.from(data: data)
     }
     
     /// 开始加载动画
-    public func startAnimating() {
+    open func startAnimating() {
         if isAnimating { return }
         isHidden = false
         animationView.play()
     }
     
     /// 停止加载动画
-    public func stopAnimating() {
+    open func stopAnimating() {
         animationView.stop()
         if hidesWhenStopped { isHidden = true }
     }
@@ -171,5 +170,12 @@ import FWObjC
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return bounds.size
     }
+    
+}
+
+// MARK: - Autoloader+LottiePluginImpl
+@objc extension Autoloader {
+    
+    static func loadVendor_Lottie() {}
     
 }
