@@ -176,6 +176,7 @@ open class ChainRequest: RequestDelegate {
             nextRequestIndex += 1
             request.autoShowLoading = false
             request.autoShowError = false
+            request.preloadCacheModel = false
             request.delegate = self
             request.clearCompletionBlock()
             if nextRequestIndex > 1 && requestInterval > 0 {
