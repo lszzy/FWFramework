@@ -1,14 +1,14 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '4.18.2'
+  s.version               = '5.0.0-beta.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
   s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
-  s.ios.deployment_target = '11.0'
-  s.swift_version         = '5.0'
+  s.ios.deployment_target = '13.0'
+  s.swift_version         = '5.7'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
@@ -32,25 +32,7 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/FWFramework'
   end
   
-  s.subspec 'FWVendor' do |ss|
-    ss.subspec 'SDWebImage' do |sss|
-      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.{h,m,swift}'
-      sss.dependency 'SDWebImage'
-      sss.dependency 'FWFramework/FWFramework'
-    end
-      
-    ss.subspec 'Lottie' do |sss|
-      sss.source_files = 'Sources/FWVendor/Lottie/**/*.{h,m,swift}'
-      sss.dependency 'lottie-ios'
-      sss.dependency 'FWFramework/FWFramework'
-    end
-      
-    ss.subspec 'SQLCipher' do |sss|
-      sss.dependency 'SQLCipher'
-      sss.dependency 'FWFramework/FWFramework'
-      sss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC -DHAVE_USLEEP=1' }
-    end
-      
+  s.subspec 'FWMacro' do |ss|
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
@@ -72,19 +54,31 @@ Pod::Spec.new do |s|
       }
     end
 
-    ss.subspec 'AppleMusic' do |sss|
-      sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroAppleMusic'
-      }
-    end
-
     ss.subspec 'Tracking' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking',
-        'GCC_PREPROCESSOR_DEFINITIONS' => 'FWMacroTracking=1'
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
       }
+    end
+  end
+  
+  s.subspec 'FWVendor' do |ss|
+    ss.subspec 'SDWebImage' do |sss|
+      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
+      sss.dependency 'SDWebImage'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+    
+    ss.subspec 'Alamofire' do |sss|
+      sss.source_files = 'Sources/FWVendor/Alamofire/**/*.swift'
+      sss.dependency 'Alamofire'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+      
+    ss.subspec 'Lottie' do |sss|
+      sss.source_files = 'Sources/FWVendor/Lottie/**/*.swift'
+      sss.dependency 'lottie-ios'
+      sss.dependency 'FWFramework/FWFramework'
     end
   end
 end

@@ -1,5 +1,24 @@
 # Changelog
 
+## [5.0.0-beta.1] - 2024-01-09
+
+### Added
+* After two years of reconstruction, the Swift version is released, compatible with iOS13+ and no longer compatible with OC
+* Supports advanced features such as Swift coroutine async, await, property annotation propertyWrapper, etc.
+* Completely replaceable UI plug-in management for easy project customization
+* Replaceable picture library and network request layer, with built-in extensions compatible with SDWebImage, Alamofire, etc.
+* Several years of accumulation of online projects, two years of painstaking effort in refactoring the Swift version, everything you want is available here
+* Thanks to ChatGPT, thanks to Codeium, and thanks to the authors of all open source libraries used
+* Finally, thank myself. It’s really not easy to persevere through countless days and nights.
+
+### Migrate
+1. Autoloader only loads static class methods by default and needs to be migrated and upgraded.
+2. The Router routing binding method API has changed and needs to be migrated and upgraded.
+3. JSBridge binding method API has changed and needs to be migrated and upgraded.
+4. HTTPRequest network request API has changed and needs to be migrated and upgraded.
+5. Other compilation errors need to be fixed using the new API and tested to see if the relevant functions are normal.
+6. To use the sample code, please refer to the Example project
+
 ## [4.18.2] - 2023-10-27
 
 ### Added

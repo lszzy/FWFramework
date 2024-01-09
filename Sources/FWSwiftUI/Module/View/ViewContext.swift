@@ -10,7 +10,6 @@ import SwiftUI
 import Combine
 
 /// 视图上下文
-@available(iOS 13.0, *)
 public class ViewContext: ObservableObject {
     
     // MARK: - ViewController
@@ -62,7 +61,6 @@ public class ViewContext: ObservableObject {
     
 }
 
-@available(iOS 13.0, *)
 extension EnvironmentValues {
     
     /// 视图上下文Key
@@ -80,7 +78,6 @@ extension EnvironmentValues {
     
 }
 
-@available(iOS 13.0, *)
 extension View {
     
     /// 设置视图上下文，可指定自定义对象
@@ -114,7 +111,6 @@ extension View {
     
 }
 
-@available(iOS 13.0, *)
 extension UIHostingController where Content == AnyView {
     
     /// 快速创建视图上下文控制器

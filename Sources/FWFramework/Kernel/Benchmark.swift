@@ -7,31 +7,9 @@
 
 import Foundation
 
-// MARK: - FW+Benchmark
-extension FW {
-    
-    /// 标记时间调试开始
-    ///
-    /// - Parameter name: 调试标签，默认空字符串
-    public static func begin(_ name: String = "") {
-        Benchmark.begin(name)
-    }
-
-    /// 标记时间调试结束并打印消耗时间
-    ///
-    /// - Parameter name: 调试标签，默认空字符串
-    /// - Returns: 消耗时间
-    @discardableResult
-    public static func end(_ name: String = "") -> TimeInterval {
-        return Benchmark.end(name)
-    }
-    
-}
-
 // MARK: - Benchmark
 /// 时间调试器
-@objc(FWBenchmark)
-@objcMembers public class Benchmark: NSObject {
+public class Benchmark: NSObject {
     
     // MARK: - Accessor
     private static var beginTimes: [String : TimeInterval] = [:]
@@ -51,7 +29,9 @@ extension FW {
         endTimes[name] = endTime
         
         let timeInterval = endTime - beginTime
-        NSLog("FWBenchmark-%@: %.3fms", name, timeInterval * 1000)
+        #if DEBUG
+        Logger.debug(group: Logger.fw_moduleName, "Benchmark-%@: %.3fms", name, timeInterval * 1000)
+        #endif
         return timeInterval
     }
     

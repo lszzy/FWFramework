@@ -8,7 +8,6 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-@available(iOS 13.0, *)
 extension EdgeInsets {
     
     /// 静态zero边距

@@ -26,7 +26,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.fw.height = FW.screenHeight - FW.topBarHeight
+        view.app.height = APP.screenHeight - APP.topBarHeight
         view.addSubview(barrageManager.renderView)
         barrageManager.renderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         barrageManager.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -80,13 +80,22 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addVerticalAnimationCell), object: nil)
     }
     
-    @objc func addBarrage() {
+    func addBarrage() {
         perform(#selector(addNormalBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addFixedSpeedAnimationCell), with: nil, afterDelay: 0.5)
         perform(#selector(addWalkBannerBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addStopoverBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addGifBarrage), with: nil, afterDelay: 0.5)
         perform(#selector(addVerticalAnimationCell), with: nil, afterDelay: 0.5)
+    }
+    
+    func removeBarrage() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addNormalBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addFixedSpeedAnimationCell), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addWalkBannerBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addStopoverBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addGifBarrage), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addVerticalAnimationCell), object: nil)
     }
     
     @objc func addNormalBarrage() {
@@ -117,7 +126,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         descriptor.strokeWidth = -1
         descriptor.fixedSpeed = 50
         descriptor.barrageCellClass = BarrageGradientBackgroundColorCell.self
-        descriptor.gradientColor = UIColor.fw.randomColor
+        descriptor.gradientColor = UIColor.app.randomColor
         
         barrageManager.renderBarrageDescriptor(descriptor)
         
@@ -127,7 +136,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     @objc func addWalkBannerBarrage() {
         let descriptor = BarrageWalkBannerDescriptor()
         descriptor.cellTouchedAction = { [weak self] descriptor, cell in
-            self?.fw.showAlert(title: "弹幕", message: "为你服务")
+            self?.app.showAlert(title: "弹幕", message: "为你服务")
             
             if let cell = cell as? BarrageWalkBannerCell {
                 cell.textLabel.backgroundColor = .red
@@ -163,7 +172,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         descriptor.positionPriority = .veryHigh
         descriptor.animationDuration = 4
         descriptor.barrageCellClass = BarrageBecomeNobleCell.self
-        descriptor.backgroundImage = UIImage.fw.appIconImage()
+        descriptor.backgroundImage = UIImage.app.appIconImage()
         
         barrageManager.renderBarrageDescriptor(descriptor)
         
@@ -219,7 +228,8 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     
     @objc func stopBarrage() {
         barrageManager.stop()
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(addBarrage), object: nil)
+        removeBarrage()
+        updateTitle()
     }
     
     private func updateTitle() {
@@ -259,12 +269,12 @@ class BarrageGradientBackgroundColorCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let contentImage = layer.fw.snapshotImage(size: gradientLayer?.frame.size ?? .zero)
+        let contentImage = layer.app.snapshotImage(size: gradientLayer?.frame.size ?? .zero)
         layer.contents = contentImage?.cgImage
     }
     
-    override func removeSubViewsAndSublayers() {
-        super.removeSubViewsAndSublayers()
+    override func removeSubviewsAndSublayers() {
+        super.removeSubviewsAndSublayers()
         
         gradientLayer = nil
     }
@@ -359,9 +369,9 @@ class BarrageWalkBannerCell: BarrageTextCell {
     override func updateSubviewsData() {
         super.updateSubviewsData()
         
-        leftImageView.image = UIImage.fw.appIconImage()
+        leftImageView.image = UIImage.app.appIconImage()
         middleImageView.backgroundColor = UIColor(red: 1, green: 0.83, blue: 0.26, alpha: 1)
-        rightImageView.image = UIImage.fw.appIconImage()
+        rightImageView.image = UIImage.app.appIconImage()
     }
     
     override func layoutContentSubviews() {
@@ -388,11 +398,11 @@ class BarrageWalkBannerCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let contentImage = layer.fw.snapshotImage(size: CGSize(width: CGRectGetMaxX(rightImageView.frame), height: CGRectGetMaxY(rightImageView.frame)))
+        let contentImage = layer.app.snapshotImage(size: CGSize(width: CGRectGetMaxX(rightImageView.frame), height: CGRectGetMaxY(rightImageView.frame)))
         layer.contents = contentImage?.cgImage
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         //如果不要删除leftImageView, middleImageView, rightImageView, textLabel, 只需重写这个方法并留空就可以了.
         //比如: 你想在这个cell被点击的时候, 修改文本颜色
     }
@@ -455,11 +465,11 @@ class BarrageBecomeNobleCell: BarrageTextCell {
     }
     
     override func convertContentToImage() {
-        let image = layer.fw.snapshotImage(size: CGSize(width: nobleDescriptor?.backgroundImage?.size.width ?? 0, height: nobleDescriptor?.backgroundImage?.size.height ?? 0))
+        let image = layer.app.snapshotImage(size: CGSize(width: nobleDescriptor?.backgroundImage?.size.width ?? 0, height: nobleDescriptor?.backgroundImage?.size.height ?? 0))
         layer.contents = image?.cgImage
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMaxX(superview.bounds) + CGRectGetWidth(bounds) / 2.0, y: center.y)
@@ -471,11 +481,11 @@ class BarrageBecomeNobleCell: BarrageTextCell {
         walkAnimation.keyTimes = [0, 0.25, 0.75, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
 }
@@ -515,7 +525,7 @@ class BarrageMixedImageAndTextCell: BarrageTextCell {
         mixedImageAndTextLabel.frame = CGRect(x: 0, y: 0, width: cellSize.width, height: cellSize.height)
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         
     }
     
@@ -563,7 +573,7 @@ class BarrageGifCell: BarrageCell {
         imageView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMaxX(superview.bounds) + CGRectGetWidth(bounds) / 2.0, y: center.y)
@@ -574,14 +584,14 @@ class BarrageGifCell: BarrageCell {
         walkAnimation.keyTimes = [0, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
-    override func removeSubViewsAndSublayers() {
+    override func removeSubviewsAndSublayers() {
         
     }
     
@@ -609,7 +619,7 @@ class BarrageVerticalAnimationCell: BarrageTextCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func addBarrageAnimation(with animationDelegate: CAAnimationDelegate) {
+    override func addBarrageAnimation(delegate: CAAnimationDelegate?) {
         guard let superview = superview else { return }
         
         let startCenter = CGPoint(x: CGRectGetMidX(superview.bounds), y: -(CGRectGetHeight(bounds) / 2.0))
@@ -620,11 +630,11 @@ class BarrageVerticalAnimationCell: BarrageTextCell {
         walkAnimation.keyTimes = [0, 1.0]
         walkAnimation.duration = Double(barrageDescriptor?.animationDuration ?? 0)
         walkAnimation.repeatCount = 1
-        walkAnimation.delegate = animationDelegate
+        walkAnimation.delegate = delegate
         walkAnimation.isRemovedOnCompletion = false
         walkAnimation.fillMode = .forwards
         
-        layer.add(walkAnimation, forKey: BarrageAnimation)
+        layer.add(walkAnimation, forKey: Self.barrageAnimationKey)
     }
     
 }

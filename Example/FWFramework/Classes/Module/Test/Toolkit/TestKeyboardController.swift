@@ -28,10 +28,10 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         didSet {
             view.endEditing(true)
             navigationItem.title = useScrollView ? "UIScrollView+FWKeyboard" : "UITextField+FWKeyboard"
-            mobileField.fw.keyboardScrollView = useScrollView ? scrollView : nil
-            passwordField.fw.keyboardScrollView = useScrollView ? scrollView : nil
-            textView.fw.keyboardScrollView = useScrollView ? scrollView : nil
-            descView.fw.keyboardScrollView = useScrollView ? scrollView : nil
+            mobileField.app.keyboardScrollView = useScrollView ? scrollView : nil
+            passwordField.app.keyboardScrollView = useScrollView ? scrollView : nil
+            textView.app.keyboardScrollView = useScrollView ? scrollView : nil
+            descView.app.keyboardScrollView = useScrollView ? scrollView : nil
         }
     }
     
@@ -41,11 +41,12 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private lazy var mobileField: UITextField = {
         let result = createTextField()
         result.tag = 1
-        result.fw.maxUnicodeLength = 10
-        result.fw.menuDisabled = true
+        result.app.maxUnicodeLength = 10
+        result.app.menuDisabled = true
         result.placeholder = "禁止粘贴，最多10个中文"
         result.keyboardType = .default
         result.returnKeyType = .next
+        result.textContentType = .telephoneNumber
         return result
     }()
     
@@ -53,20 +54,20 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         let result = createTextField()
         result.tag = 2
         result.delegate = self
-        result.fw.maxLength = 20
+        result.app.maxLength = 20
         result.placeholder = "仅数字和字母转大写，最多20个英文"
         result.keyboardType = .default
         result.returnKeyType = .next
+        result.textContentType = .password
         return result
     }()
     
     private lazy var textView: UITextView = {
         let result = createTextView()
         result.tag = 3
-        result.delegate = self
         result.backgroundColor = AppTheme.backgroundColor
-        result.fw.maxUnicodeLength = 50
-        result.fw.placeholder = "问题\n最多50个中文"
+        result.app.maxUnicodeLength = 50
+        result.app.placeholder = "问题\n最多50个中文"
         result.app.lineHeight = 25
         // result.returnKeyType = .next
         return result
@@ -76,20 +77,20 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         let result = createTextView()
         result.tag = 4
         result.backgroundColor = AppTheme.backgroundColor
-        result.fw.maxLength = 20
-        result.fw.menuDisabled = true
-        result.fw.placeholder = "建议，最多20个英文"
+        result.app.maxLength = 20
+        result.app.menuDisabled = true
+        result.app.placeholder = "仅数字和字母转大写，最多20个英文"
         result.returnKeyType = .done
-        result.fw.returnResign = true
-        result.fw.keyboardDistance = 80
-        result.fw.delegate = self
+        result.app.returnResign = true
+        result.app.keyboardDistance = 80
+        result.app.delegate = self
         return result
     }()
     
     private lazy var submitButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("提交", for: .normal)
-        result.fw.addTouch(target: self, action: #selector(onSubmit))
+        result.app.addTouch(target: self, action: #selector(onSubmit))
         return result
     }()
     
@@ -98,85 +99,85 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         
         let textFieldAppearance = UITextField.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])
         let textViewAppearance = UITextView.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])
-        textFieldAppearance.fw.keyboardManager = true
-        textFieldAppearance.fw.touchResign = true
-        textFieldAppearance.fw.keyboardResign = true
-        textFieldAppearance.fw.reboundDistance = 200
-        textViewAppearance.fw.keyboardManager = true
-        textViewAppearance.fw.touchResign = true
-        textViewAppearance.fw.keyboardResign = true
-        textViewAppearance.fw.reboundDistance = 200
+        textFieldAppearance.app.keyboardManager = true
+        textFieldAppearance.app.touchResign = true
+        textFieldAppearance.app.keyboardResign = true
+        textFieldAppearance.app.reboundDistance = 200
+        textViewAppearance.app.keyboardManager = true
+        textViewAppearance.app.touchResign = true
+        textViewAppearance.app.keyboardResign = true
+        textViewAppearance.app.reboundDistance = 200
         
         contentView.addSubview(mobileField)
-        mobileField.fw.layoutChain
+        mobileField.app.layoutChain
             .left(15)
             .right(15)
             .centerX()
-        mobileField.fw.returnNext = true
-        mobileField.fw.nextResponder = { [weak self] textField in
+        mobileField.app.returnNext = true
+        mobileField.app.nextResponder = { [weak self] textField in
             return self?.passwordField
         }
-        mobileField.fw.addToolbar(title: NSAttributedString.fw.attributedString(mobileField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
+        mobileField.app.addToolbar(title: NSAttributedString.app.attributedString(mobileField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         
         contentView.addSubview(passwordField)
-        passwordField.fw.layoutChain
+        passwordField.app.layoutChain
             .centerX()
             .top(toViewBottom: mobileField)
-        passwordField.fw.returnNext = true
-        passwordField.fw.previousResponderTag = 1
-        passwordField.fw.nextResponderTag = 3
-        passwordField.fw.addToolbar(title: NSAttributedString.fw.attributedString(passwordField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
+        passwordField.app.returnNext = true
+        passwordField.app.previousResponderTag = 1
+        passwordField.app.nextResponderTag = 3
+        passwordField.app.addToolbar(title: NSAttributedString.app.attributedString(passwordField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         
         contentView.addSubview(textView)
-        textView.fw.layoutChain
+        textView.app.layoutChain
             .centerX()
             .top(toViewBottom: passwordField, offset: 15)
-        // textView.fw.returnNext = true
-        textView.fw.previousResponderTag = 2
-        textView.fw.nextResponderTag = 4
-        textView.fw.addToolbar(title: NSAttributedString.fw.attributedString(textView.fw.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
+        // textView.app.returnNext = true
+        textView.app.previousResponderTag = 2
+        textView.app.nextResponderTag = 4
+        textView.app.addToolbar(title: NSAttributedString.app.attributedString(textView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         
         contentView.addSubview(descView)
-        descView.fw.previousResponderTag = 3
-        descView.fw.addToolbar(title: NSAttributedString.fw.attributedString(descView.fw.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
-        descView.fw.layoutChain
+        descView.app.previousResponderTag = 3
+        descView.app.addToolbar(title: NSAttributedString.app.attributedString(descView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
+        descView.app.layoutChain
             .centerX()
             .top(toViewBottom: textView, offset: 15)
         
         contentView.addSubview(submitButton)
-        submitButton.fw.layoutChain
+        submitButton.app.layoutChain
             .centerX()
             .bottom(15)
             .top(toViewBottom: descView, offset: 15)
     }
     
     func setupLayout() {
-        mobileField.fw.autoCompleteBlock = { [weak self] text in
+        mobileField.app.autoCompleteBlock = { [weak self] text in
             guard let self = self else { return }
             if text.isEmpty {
                 self.popupMenu?.dismiss()
             } else {
                 self.popupMenu?.dismiss()
-                self.popupMenu = PopupMenu.showRely(on: self.mobileField, titles: [text], icons: nil, menuWidth: self.mobileField.fw.width, otherSettings: { popupMenu in
-                    popupMenu.showMaskView = false
+                self.popupMenu = PopupMenu.show(relyOn: self.mobileField, titles: [text], icons: nil, menuWidth: self.mobileField.app.width, customize: { popupMenu in
+                    popupMenu.showsMaskView = false
                 })
             }
         }
         
-        descView.fw.autoCompleteBlock = { [weak self] text in
+        descView.app.autoCompleteBlock = { [weak self] text in
             guard let self = self else { return }
             if text.isEmpty {
                 self.popupMenu?.dismiss()
             } else {
                 self.popupMenu?.dismiss()
-                self.popupMenu = PopupMenu.showRely(on: self.descView, titles: [text], icons: nil, menuWidth: self.descView.fw.width, otherSettings: { popupMenu in
-                    popupMenu.showMaskView = false
+                self.popupMenu = PopupMenu.show(relyOn: self.descView, titles: [text], icons: nil, menuWidth: self.descView.app.width, customize: { popupMenu in
+                    popupMenu.showsMaskView = false
                 })
             }
         }
         
-        fw.setRightBarItem("切换") { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换滚动", "切换滚动时收起键盘", "切换滚动视图", "自动添加-"], currentIndex: -1, actionBlock: { index in
+        app.setRightBarItem("切换") { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换滚动", "切换滚动时收起键盘", "切换滚动视图", "自动添加-"], currentIndex: -1, actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {
                     self.canScroll = !self.canScroll
@@ -194,33 +195,33 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     }
     
     private func renderData() {
-        let marginTop = FW.screenHeight - (390 + 15 + FW.topBarHeight + UIScreen.fw.safeAreaInsets.bottom)
-        let topInset = canScroll ? FW.screenHeight : marginTop
-        mobileField.fw.pinEdge(toSuperview: .top, inset: topInset)
+        let marginTop = APP.screenHeight - (390 + 15 + APP.topBarHeight + UIScreen.app.safeAreaInsets.bottom)
+        let topInset = canScroll ? APP.screenHeight : marginTop
+        mobileField.app.pinEdge(toSuperview: .top, inset: topInset)
     }
     
     private func createTextField() -> UITextField {
         let result = UITextField()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.tintColor = AppTheme.textColor
-        result.fw.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
+        result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
         result.clearButtonMode = .whileEditing
-        result.fw.setBorderView(.bottom, color: AppTheme.borderColor, width: 0.5)
-        result.fw.setDimension(.width, size: FW.screenWidth - 30)
-        result.fw.setDimension(.height, size: 50)
+        result.app.setBorderView(.bottom, color: AppTheme.borderColor, width: 0.5)
+        result.app.setDimension(.width, size: APP.screenWidth - 30)
+        result.app.setDimension(.height, size: 50)
         return result
     }
     
     private func createTextView() -> UITextView {
         let result = UITextView()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.tintColor = AppTheme.textColor
-        result.fw.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
-        result.fw.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
-        result.fw.setDimension(.width, size: FW.screenWidth - 30)
-        result.fw.setDimension(.height, size: 100)
+        result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
+        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.app.setDimension(.width, size: APP.screenWidth - 30)
+        result.app.setDimension(.height, size: 100)
         return result
     }
     
@@ -243,13 +244,45 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             }
             let curText = (textField.text ?? "") as NSString
             let filterText = curText.replacingCharacters(in: range, with: replaceString)
-            textField.text = textField.fw.filterText(filterText)
+            textField.text = textField.app.filterText(filterText)
             
             var offset = range.location + replaceString.count
-            if offset > textField.fw.maxLength {
-                offset = textField.fw.maxLength
+            if offset > textField.app.maxLength {
+                offset = textField.app.maxLength
             }
-            textField.fw.moveCursor(offset)
+            textField.app.moveCursor(offset)
+            return false
+        }
+        
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
+        if string == "\n" {
+            return true
+        }
+        
+        let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        let characterSet = CharacterSet(charactersIn: allowedChars).inverted
+        let filterString = string.components(separatedBy: characterSet).joined(separator: "")
+        if string != filterString {
+            return false
+        }
+        
+        if !string.isEmpty {
+            var replaceString = string.uppercased()
+            if !appendString.isEmpty {
+                replaceString = replaceString.appending(appendString)
+            }
+            let curText = (textView.text ?? "") as NSString
+            let filterText = curText.replacingCharacters(in: range, with: replaceString)
+            textView.text = textView.app.filterText(filterText)
+            
+            var offset = range.location + replaceString.count
+            if offset > textView.app.maxLength {
+                offset = textView.app.maxLength
+            }
+            textView.app.moveCursor(offset)
             return false
         }
         
@@ -258,7 +291,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     
     @objc func onSubmit() {
         view.endEditing(true)
-        fw.showMessage(text: "点击了提交")
+        app.showMessage(text: "点击了提交")
     }
     
 }

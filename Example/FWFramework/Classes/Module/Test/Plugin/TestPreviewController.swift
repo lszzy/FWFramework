@@ -23,13 +23,13 @@ class TestPreviewController: UIViewController {
     
     lazy var floatLayoutView: FloatLayoutView = {
         let result = FloatLayoutView()
-        result.itemMargins = UIEdgeInsets(top: UIScreen.fw.pixelOne, left: UIScreen.fw.pixelOne, bottom: 0, right: 0)
+        result.itemMargins = UIEdgeInsets(top: UIScreen.app.pixelOne, left: UIScreen.app.pixelOne, bottom: 0, right: 0)
         return result
     }()
     
     lazy var tipsLabel: UILabel = {
         let result = UILabel()
-        result.font = FW.font(12)
+        result.font = APP.font(12)
         result.textColor = .darkText
         result.textAlignment = .center
         result.numberOfLines = 0
@@ -43,18 +43,18 @@ extension TestPreviewController: ViewControllerProtocol {
     
     func didInitialize() {
         images = [
-            UIImage.fw.appIconImage() as Any,
+            UIImage.app.appIconImage() as Any,
             ModuleBundle.imageNamed("Animation.png") as Any,
             "http://via.placeholder.com/100x2000.jpg",
             "http://via.placeholder.com/2000x100.jpg",
             "http://via.placeholder.com/2000x2000.jpg",
             "http://via.placeholder.com/100x100.jpg",
-            "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4",
+            FileManager.app.pathResource.app.appendingPath("Video.mp4"),
         ]
     }
     
     func setupNavbar() {
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
             guard let self = self else { return }
             let pluginText = self.usePlugin ? "不使用插件" : "使用插件"
             let progressText = self.mockProgress ? "关闭进度" : "开启进度"
@@ -64,7 +64,7 @@ extension TestPreviewController: ViewControllerProtocol {
             let dismissImageText = self.dismissTappedImage ? "单击图片时不关闭" : "单击图片时自动关闭"
             let dismissVideoText = self.dismissTappedVideo ? "单击视频时不关闭" : "单击视频时自动关闭"
             let closeText = self.showsClose ? "隐藏视频关闭按钮" : "开启视频关闭按钮"
-            self.fw.showSheet(title: nil, message: nil, cancel: "取消", actions: [pluginText, progressText, fadeText, toolbarText, autoText, dismissImageText, dismissVideoText, closeText], currentIndex: -1) { [weak self] index in
+            self.app.showSheet(title: nil, message: nil, cancel: "取消", actions: [pluginText, progressText, fadeText, toolbarText, autoText, dismissImageText, dismissVideoText, closeText], currentIndex: -1) { [weak self] index in
                 guard let self = self else { return }
                 if index == 0 {
                     self.usePlugin = !self.usePlugin
@@ -95,10 +95,10 @@ extension TestPreviewController: ViewControllerProtocol {
                 button.setImage(image, for: .normal)
             } else if let imageUrl = image as? String {
                 if imageUrl.hasSuffix(".mp4") {
-                    button.setImage(UIImage.fw.appIconImage(), for: .normal)
+                    button.setImage(UIImage.app.appIconImage(), for: .normal)
                 } else {
-                    UIImage.fw.downloadImage(imageUrl) { image, _, error in
-                        button.setImage(image ?? UIImage.fw.appIconImage(), for: .normal)
+                    UIImage.app.downloadImage(imageUrl) { image, _, error in
+                        button.setImage(image ?? UIImage.app.appIconImage(), for: .normal)
                     }
                 }
             }
@@ -113,9 +113,9 @@ extension TestPreviewController: ViewControllerProtocol {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let margins = UIEdgeInsets(top: 24 + fw.topBarHeight, left: 24 + view.safeAreaInsets.left, bottom: 24, right: 24 + view.safeAreaInsets.right)
-        let contentWidth = view.fw.width - (margins.left + margins.right)
-        let column = FW.isIpad || FW.isLandscape ? images.count : 3
+        let margins = UIEdgeInsets(top: 24 + app.topBarHeight, left: 24 + view.safeAreaInsets.left, bottom: 24, right: 24 + view.safeAreaInsets.right)
+        let contentWidth = view.app.width - (margins.left + margins.right)
+        let column = APP.isIpad || APP.isLandscape ? images.count : 3
         let imageWidth = contentWidth / CGFloat(column) - CGFloat(column - 1) * (floatLayoutView.itemMargins.left + floatLayoutView.itemMargins.right)
         floatLayoutView.minimumItemSize = CGSize(width: imageWidth, height: imageWidth)
         floatLayoutView.maximumItemSize = floatLayoutView.minimumItemSize
@@ -127,7 +127,7 @@ extension TestPreviewController: ViewControllerProtocol {
     @objc func handleImageButtonEvent(_ button: UIButton) {
         if self.usePlugin {
             let buttonIndex = floatLayoutView.subviews.firstIndex(of: button)
-            self.fw.showImagePreview(imageURLs: images, imageInfos: nil, currentIndex: buttonIndex ?? 0) { [weak self] index in
+            self.app.showImagePreview(imageURLs: images, imageInfos: nil, currentIndex: buttonIndex ?? 0) { [weak self] index in
                 return self?.floatLayoutView.subviews[index]
             }
             return
@@ -147,11 +147,11 @@ extension TestPreviewController: ViewControllerProtocol {
                 
                 let tipLabel = UILabel()
                 tipLabel.tag = 102
-                tipLabel.fw.contentInset = UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)
-                tipLabel.fw.setCornerRadius(FW.font(12).lineHeight / 2 + 2)
+                tipLabel.app.contentInset = UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)
+                tipLabel.app.setCornerRadius(APP.font(12).lineHeight / 2 + 2)
                 tipLabel.backgroundColor = .red.withAlphaComponent(0.5)
                 tipLabel.text = "图片仅供参考"
-                tipLabel.font = FW.font(12)
+                tipLabel.font = APP.font(12)
                 tipLabel.textColor = .white
                 imageView.addSubview(tipLabel)
                 
@@ -161,12 +161,11 @@ extension TestPreviewController: ViewControllerProtocol {
                 tipLabel.transform = CGAffineTransformMakeScale(labelScale, labelScale)
                 let imageSize = zoomImageView.image?.size ?? .zero
                 let labelSize = tipLabel.frame.size
-                tipLabel.fw.origin = CGPoint(x: imageSize.width - 16.0 * labelScale - labelSize.width, y: imageSize.height - 16.0 * labelScale - labelSize.height)
-                tipLabel.isHidden = tipLabel.fw.y < 0
+                tipLabel.app.origin = CGPoint(x: imageSize.width - 16.0 * labelScale - labelSize.width, y: imageSize.height - 16.0 * labelScale - labelSize.height)
+                tipLabel.isHidden = tipLabel.app.y < 0
             }
-            imagePreviewController.fw.visibleStateChanged = { [weak self] viewController, visibleState in
-                guard let previewController = viewController as? ImagePreviewController else { return }
-                if visibleState == .willDisappear {
+            imagePreviewController.app.observeLifecycleState { [weak self] previewController, state in
+                if state == .willDisappear {
                     let exitAtIndex = previewController.imagePreviewView.currentImageIndex
                     self?.tipsLabel.text = "浏览到第\(exitAtIndex + 1)张就退出了"
                 }
@@ -198,14 +197,14 @@ extension TestPreviewController: ImagePreviewViewDelegate {
     func imagePreviewView(_ imagePreviewView: ImagePreviewView, renderZoomImageView zoomImageView: ZoomImageView, at index: Int) {
         // 强制宽度缩放模式
         zoomImageView.contentMode = .scaleToFill
-        zoomImageView.reusedIdentifier = "\(index)" as NSString
+        zoomImageView.reusedIdentifier = "\(index)"
         zoomImageView.showsVideoToolbar = self.showsToolbar
         zoomImageView.showsVideoCloseButton = self.showsClose
         
         if self.mockProgress {
             TestController.mockProgress { [weak self] progress, finished in
-                guard let identifier = zoomImageView.reusedIdentifier as? String else { return }
-                if identifier.fw.safeInt != index { return }
+                guard let identifier = zoomImageView.reusedIdentifier else { return }
+                if identifier.app.safeInt != index { return }
                 
                 zoomImageView.progress = progress
                 if finished {

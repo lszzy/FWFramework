@@ -12,36 +12,48 @@ import AVFoundation
 import UserNotifications
 
 // MARK: - AuthorizeType
-/// 权限类型枚举
-@objc(FWAuthorizeType)
-public enum AuthorizeType: Int {
+/// 可扩展权限类型
+public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = Int
+    
     /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
-    case locationWhenInUse = 1
+    public static let locationWhenInUse: AuthorizeType = .init(1)
     /// 后台定位，Info.plist需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription
-    case locationAlways = 2
+    public static let locationAlways: AuthorizeType = .init(2)
     /// 麦克风，需启用Microphone子模块，Info.plist需配置NSMicrophoneUsageDescription
-    case microphone = 3
-    /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription
-    case photoLibrary = 4
+    public static let microphone: AuthorizeType = .init(3)
+    /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription|NSPhotoLibraryAddUsageDescription
+    public static let photoLibrary: AuthorizeType = .init(4)
     /// 照相机，Info.plist需配置NSCameraUsageDescription
-    case camera = 5
+    public static let camera: AuthorizeType = .init(5)
     /// 联系人，需启用Contacts子模块，Info.plist需配置NSContactsUsageDescription
-    case contacts = 6
-    /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription
-    case calendars = 7
-    /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription
-    case reminders = 8
-    /// 音乐，需启用AppleMusic子模块，Info.plist需配置NSAppleMusicUsageDescription
-    case appleMusic = 9
+    public static let contacts: AuthorizeType = .init(6)
+    /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsFullAccessUsageDescription
+    public static let calendars: AuthorizeType = .init(7)
+    /// 日历仅写入，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsWriteOnlyAccessUsageDescription
+    public static let calendarsWriteOnly: AuthorizeType = .init(8)
+    /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription|NSRemindersFullAccessUsageDescription
+    public static let reminders: AuthorizeType = .init(9)
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    case notifications = 10
+    public static let notifications: AuthorizeType = .init(10)
     /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
-    case tracking = 11
+    public static let tracking: AuthorizeType = .init(11)
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
 }
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-@objc(FWAuthorizeStatus)
 public enum AuthorizeStatus: Int {
     /// 未确认
     case notDetermined = 0
@@ -55,7 +67,6 @@ public enum AuthorizeStatus: Int {
 
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
-@objc(FWAuthorizeProtocol)
 public protocol AuthorizeProtocol {
     /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
@@ -64,7 +75,14 @@ public protocol AuthorizeProtocol {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?)
     
     /// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
-    @objc optional func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?)
+    func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?)
+}
+
+extension AuthorizeProtocol {
+    /// 默认实现异步查询权限状态
+    public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
+        completion?(authorizeStatus())
+    }
 }
 
 // MARK: - AuthorizeManager
@@ -73,8 +91,7 @@ public protocol AuthorizeProtocol {
 /// 开启指定权限方法：
 /// Pod项目：添加pod时同时指定
 /// pod 'FWFramework', :subspecs => ['Contacts']
-@objc(FWAuthorizeManager)
-@objcMembers public class AuthorizeManager: NSObject {
+public class AuthorizeManager: NSObject {
     private static var managers: [AuthorizeType: AuthorizeProtocol] = [:]
     private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
     
@@ -87,7 +104,7 @@ public protocol AuthorizeProtocol {
     }
     
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
-    public static func registerAuthorize(_ type: AuthorizeType, withBlock block: @escaping () -> AuthorizeProtocol) {
+    public static func register(type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
         blocks[type] = block
     }
     
@@ -110,6 +127,8 @@ public protocol AuthorizeProtocol {
         #if FWMacroCalendar
         case .calendars:
             return AuthorizeCalendar(type: .event)
+        case .calendarsWriteOnly:
+            return AuthorizeCalendar(type: .event, writeOnly: true)
         case .reminders:
             return AuthorizeCalendar(type: .reminder)
         #endif
@@ -120,10 +139,6 @@ public protocol AuthorizeProtocol {
         #if FWMacroMicrophone
         case .microphone:
             return AuthorizeMicrophone()
-        #endif
-        #if FWMacroAppleMusic
-        case .appleMusic:
-            return AuthorizeAppleMusic()
         #endif
         #if FWMacroTracking
         case .tracking:
@@ -199,8 +214,7 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
         
         // 主线程回调，仅一次
         if completionBlock != nil {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+            DispatchQueue.main.async {
                 self.completionBlock?(self.authorizeStatus())
                 self.completionBlock = nil
             }
@@ -228,8 +242,7 @@ private class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }
@@ -262,8 +275,7 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }
@@ -273,7 +285,9 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeNotifications
 /// 通知授权
-private class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+    static var authorizeOptions: UNAuthorizationOptions = [.badge, .sound, .alert]
+    
     func authorizeStatus() -> AuthorizeStatus {
         var status: AuthorizeStatus = .notDetermined
         // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
@@ -318,7 +332,7 @@ private class AuthorizeNotifications: NSObject, AuthorizeProtocol {
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        let options: UNAuthorizationOptions = [.badge, .sound, .alert]
+        let options = AuthorizeNotifications.authorizeOptions
         UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -331,39 +345,6 @@ private class AuthorizeNotifications: NSObject, AuthorizeProtocol {
     }
 }
 
-// MARK: - AuthorizeAppleMusic
-#if FWMacroAppleMusic
-import MediaPlayer
-
-/// AppleMusic授权
-private class AuthorizeAppleMusic: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
-        let status = MPMediaLibrary.authorizationStatus()
-        switch status {
-        case .denied:
-            return .denied
-        case .restricted:
-            return .restricted
-        case .authorized:
-            return .authorized
-        default:
-            return .notDetermined
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        MPMediaLibrary.requestAuthorization { status in
-            if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    completion?(self.authorizeStatus())
-                }
-            }
-        }
-    }
-}
-#endif
-
 // MARK: - AuthorizeCalendar
 #if FWMacroCalendar
 import EventKit
@@ -371,10 +352,12 @@ import EventKit
 /// 日历授权
 private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
     private var type: EKEntityType = .event
+    private var writeOnly: Bool = false
     
-    init(type: EKEntityType) {
+    init(type: EKEntityType, writeOnly: Bool = false) {
         super.init()
         self.type = type
+        self.writeOnly = writeOnly
     }
     
     func authorizeStatus() -> AuthorizeStatus {
@@ -386,13 +369,24 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             return .denied
         case .authorized:
             return .authorized
+        #if swift(>=5.9)
+        case .fullAccess:
+            return .authorized
+        case .writeOnly:
+            if #available(iOS 17.0, *) {
+                if type == .event && !writeOnly {
+                    return .denied
+                }
+            }
+            return .authorized
+        #endif
         default:
             return .notDetermined
         }
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        EKEventStore().requestAccess(to: type) { granted, error in
+        let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
@@ -400,6 +394,25 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
                 }
             }
         }
+        
+        #if swift(>=5.9)
+        if #available(iOS 17.0, *) {
+            let eventStore = EKEventStore()
+            if type == .event {
+                if writeOnly {
+                    eventStore.requestWriteOnlyAccessToEvents(completion: completionHandler)
+                } else {
+                    eventStore.requestFullAccessToEvents(completion: completionHandler)
+                }
+            } else {
+                eventStore.requestFullAccessToReminders(completion: completionHandler)
+            }
+            return
+        }
+        #endif
+        
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: type, completion: completionHandler)
     }
 }
 #endif
@@ -497,16 +510,14 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
+                    DispatchQueue.main.async {
                         completion?(self.authorizeStatus())
                     }
                 }
             }
         } else {
             if completion != nil {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                DispatchQueue.main.async {
                     completion?(self.authorizeStatus())
                 }
             }
@@ -514,3 +525,24 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
     }
 }
 #endif
+
+// MARK: - Autoloader+Authorize
+@objc extension Autoloader {
+    
+    #if FWMacroContacts
+    static func loadMacro_Contacts() {}
+    #endif
+    
+    #if FWMacroMicrophone
+    static func loadMacro_Microphone() {}
+    #endif
+    
+    #if FWMacroCalendar
+    static func loadMacro_Calendar() {}
+    #endif
+        
+    #if FWMacroTracking
+    static func loadMacro_Tracking() {}
+    #endif
+    
+}

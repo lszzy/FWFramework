@@ -9,7 +9,6 @@
 import SwiftUI
 
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
-@available(iOS 13.0, *)
 extension Binding {
     
     public func onSet(_ body: @escaping (Value) -> ()) -> Self {

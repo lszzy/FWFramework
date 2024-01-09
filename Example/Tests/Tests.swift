@@ -1,25 +1,47 @@
 import XCTest
-import FWFramework
-#if FWMacroSPM
-import FWObjC
-#endif
+@_spi(FW) import FWFramework
 
 class Tests: XCTestCase {
     
     // MARK: - Accessor
     dynamic var observeValue: Int = 0
     
+    @StoredValue("testKey")
+    var defaultsValue = ""
+    
+    @StoredValue("testOptionKey")
+    var defaultsOptionValue: Int? = 0
+    
+    @StoredValue("testNilKey")
+    var defaultsNilValue: Int?
+    
+    @ValidatedValue(.isEmail)
+    var validateValue = ""
+    
+    @ValidatedValue(.isEmail)
+    var validateOptionValue: String? = ""
+    
+    @ValidatedValue(.isEmail)
+    var validateNilValue: String?
+    
     // MARK: - Test
     func testLoader() {
         let loader = Loader<NSString, NSString>()
-        let identifier = loader.add { value in
+        let identifier = loader.append { value in
             return value.appending("Block") as NSString
         }
         XCTAssertEqual(loader.load("Hello "), "Hello Block")
         
         loader.remove(identifier)
-        loader.addTarget(self, action: #selector(loaderAction(_:)))
+        loader.append(target: self, action: #selector(loaderAction(_:)))
         XCTAssertEqual(loader.load("Hello "), "Hello Target")
+    }
+    
+    func testString() {
+        let string = "String中文Emoji表情😀"
+        let nsstring = string as NSString
+        XCTAssertEqual(string.count, 16)
+        XCTAssertEqual(nsstring.length, 17)
     }
     
     func testRuntime() {
@@ -71,11 +93,11 @@ class Tests: XCTestCase {
     func testMessage() {
         var messageValue: Int = 0
         let messageName = Notification.Name.init(rawValue: "Test")
-        let observeId = fw.observeMessage(messageName) { _ in
+        let observer = fw.observeMessage(messageName) { _ in
             messageValue += 1
         }
         fw.sendMessage(messageName, toReceiver: self)
-        fw.unobserveMessage(messageName, identifier: observeId)
+        fw.unobserveMessage(messageName, observer: observer)
         fw.sendMessage(messageName, toReceiver: self)
         XCTAssertEqual(messageValue, 1)
         
@@ -101,10 +123,169 @@ class Tests: XCTestCase {
         XCTAssertEqual(propertyValue, 3)
     }
     
+    func testDefaults() {
+        defaultsValue = "testValue"
+        XCTAssertEqual(defaultsValue, "testValue")
+        defaultsValue = ""
+        XCTAssertEqual(defaultsValue, "")
+        
+        defaultsOptionValue = 1
+        XCTAssertEqual(defaultsOptionValue, 1)
+        defaultsOptionValue = nil
+        XCTAssertEqual(defaultsOptionValue, 0)
+        
+        defaultsNilValue = 1
+        XCTAssertEqual(defaultsNilValue, 1)
+        defaultsNilValue = nil
+        XCTAssertEqual(defaultsNilValue, nil)
+    }
+    
+    func testRouter() {
+        var parameter = TestParameter()
+        parameter.isTrue = true
+        parameter.routerSource = "test"
+        parameter.routerOptions = .embedInNavigation
+        parameter.routerHandler = { _, _ in }
+        parameter._privateValue = 1
+        parameter.merge(from: [
+            "routerSource": "test2"
+        ])
+        XCTAssertEqual(parameter.routerSource, "test2")
+        var dict = parameter.dictionaryValue
+        XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
+        XCTAssertEqual(dict["_privateValue"] as? Int, nil)
+        XCTAssertEqual(dict[Router.Parameter.routerSourceKey] as? String, parameter.routerSource)
+        XCTAssertEqual(dict[Router.Parameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
+        XCTAssertTrue(dict[Router.Parameter.routerHandlerKey] != nil)
+        
+        dict["isTrue"] = "true"
+        let object = TestParameter(dictionaryValue: dict)
+        XCTAssertTrue(object.isTrue)
+        XCTAssertEqual(object._privateValue, 0)
+        XCTAssertEqual(object.routerSource, parameter.routerSource)
+        XCTAssertEqual(object.routerOptions, parameter.routerOptions)
+        XCTAssertTrue(object.routerHandler != nil)
+    }
+    
+    func testValidator() {
+        validateValue = "errorValue"
+        XCTAssertEqual(validateValue, "")
+        validateValue = "test@test.com"
+        XCTAssertEqual(validateValue, "test@test.com")
+        validateValue = "errorValue"
+        XCTAssertEqual(validateValue, "")
+        
+        validateOptionValue = "errorValue"
+        XCTAssertEqual(validateOptionValue, "")
+        validateOptionValue = "test@test.com"
+        XCTAssertEqual(validateOptionValue, "test@test.com")
+        validateOptionValue = nil
+        XCTAssertEqual(validateOptionValue, "")
+        
+        validateNilValue = "errorValue"
+        XCTAssertEqual(validateNilValue, nil)
+        validateNilValue = "test@test.com"
+        XCTAssertEqual(validateNilValue, "test@test.com")
+        validateNilValue = nil
+        XCTAssertEqual(validateNilValue, nil)
+    }
+    
+    func testOptional() {
+        var string: String?
+        XCTAssertEqual(string.then({ _ in 3 }), nil)
+        string = string ?? "Hello"
+        XCTAssertEqual(string, "Hello")
+        
+        string = "Hello"
+        string = string.then { value in
+            value + " World"
+        }
+        XCTAssertEqual(string, "Hello World")
+    }
+    
+    func testEnum() {
+        let optionalVal: TestEnum? = nil
+        XCTAssertTrue(optionalVal == nil)
+        XCTAssertTrue(optionalVal != TestEnum.none)
+        
+        var val: TestEnum = .none
+        XCTAssertTrue(val == .none)
+        XCTAssertTrue(val != .partly(0.5))
+        XCTAssertTrue(val != .fully)
+        
+        val = .partly(0.5)
+        XCTAssertTrue(val != .none)
+        XCTAssertTrue(val == .partly(0.5))
+        XCTAssertTrue(val != .partly(0.8))
+        XCTAssertTrue(val != .fully)
+        
+        val = .fully
+        XCTAssertTrue(val != .none)
+        XCTAssertTrue(val != .partly(0.5))
+        XCTAssertTrue(val == .fully)
+    }
+    
+    func testBlock() {
+        var value: Int = 0
+        var block = MulticastBlock()
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 1)
+        block.invoke()
+        XCTAssertEqual(value, 3)
+        
+        value = 0
+        block = MulticastBlock()
+        block.autoRemoved = true
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 1)
+        block.invoke()
+        XCTAssertEqual(value, 2)
+        
+        value = 0
+        block = MulticastBlock()
+        block.invokeOnce = true
+        block.append {
+            value += 1
+        }
+        block.invoke()
+        XCTAssertEqual(value, 1)
+        block.append {
+            value += 1
+        }
+        XCTAssertEqual(value, 2)
+        block.invoke()
+        XCTAssertEqual(value, 2)
+    }
+    
 }
 
 // MARK: - Private
 extension Tests {
+    
+    class TestParameter: Router.Parameter {
+        var isTrue: Bool = false
+        var _privateValue: Int = 0
+    }
+    
+    enum TestEnum: Equatable {
+        case none
+        case partly(CGFloat)
+        case fully
+    }
     
     @objc func loaderAction(_ input: NSString) -> NSString? {
         return input.appending("Target") as NSString

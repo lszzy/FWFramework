@@ -44,6 +44,10 @@
 	<string>请点击“好”以允许访问。</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
 	<key>NSCameraUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>NSContactsUsageDescription</key>
@@ -61,6 +65,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>NSRemindersUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>

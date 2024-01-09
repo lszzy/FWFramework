@@ -11,19 +11,25 @@ import FWFramework
 class TestSwiftController: UIViewController, TableViewControllerProtocol {
     
     func setupNavbar() {
-        fw.setRightBarItem("Popup") { _ in
+        app.setRightBarItem("Popup") { _ in
             let viewController = SwiftTestPopupViewController()
             Navigator.present(viewController, animated: true)
         }
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "ViewController",
             "CollectionViewController",
             "ScrollViewController",
             "TableViewController",
             "WebViewController",
+            "TestSwiftProtocol默认实现",
+            "TestSwiftProtocol类实现",
+            "TestSwiftProtocol继承实现",
+            "TestObjcProtocol默认实现",
+            "TestObjcProtocol类实现",
+            "TestObjcProtocol继承实现"
         ])
     }
     
@@ -32,8 +38,8 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let value = tableData.object(at: indexPath.row) as? String
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let value = tableData[indexPath.row] as? String
         cell.textLabel?.text = value
         cell.accessoryType = .disclosureIndicator
         return cell
@@ -51,10 +57,22 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             viewController = SwiftTestTableViewController()
         case 4:
             viewController = SwiftTestWebViewController()
+        case 5:
+            viewController = TestSwiftProtocolDefaultController()
+        case 6:
+            viewController = TestSwiftProtocolBaseController()
+        case 7:
+            viewController = TestSwiftProtocolViewController()
+        case 8:
+            viewController = TestObjcProtocolDefaultController()
+        case 9:
+            viewController = TestObjcProtocolBaseController()
+        case 10:
+            viewController = TestObjcProtocolViewController()
         default:
             viewController = SwiftTestViewController()
         }
-        viewController?.navigationItem.title = tableData.object(at: indexPath.row) as? String
+        viewController?.navigationItem.title = tableData[indexPath.row] as? String
         navigationController?.pushViewController(viewController!, animated: true)
     }
     
@@ -73,9 +91,9 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
             view.backgroundColor = AppTheme.backgroundColor
             state = .loading
         case .loading:
-            view.fw.showLoading(text: "开始加载")
+            view.app.showLoading(text: "开始加载")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                self?.view.fw.hideLoading()
+                self?.view.app.hideLoading()
                 
                 if [0, 1].randomElement() == 1 {
                     self?.state = .success("加载成功")
@@ -84,10 +102,10 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
                 }
             }
         case .success(let object):
-            view.fw.showEmptyView(text: object as? String)
+            view.app.showEmptyView(text: object as? String)
         case .failure(let error):
-            view.fw.showEmptyView(text: error?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
-                self?.view.fw.hideEmptyView()
+            view.app.showEmptyView(text: error?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
+                self?.view.app.hideEmptyView()
                 
                 self?.state = .loading
             }
@@ -96,7 +114,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
     
 }
 
-class SwiftTestCollectionViewController: UIViewController, CollectionViewControllerProtocol, CollectionViewDelegateFlowLayout {
+class SwiftTestCollectionViewController: UIViewController, CollectionDelegateControllerProtocol, CollectionViewDelegateFlowLayout {
     lazy var contentView: UIView = {
         let contentView = UIView()
         contentView.layer.masksToBounds = true
@@ -109,9 +127,62 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.sectionInset = .zero
         flowLayout.scrollDirection = .horizontal
-        flowLayout.columnCount = 4
-        flowLayout.rowCount = 3
+        flowLayout.verticalColumnCount = 4
+        flowLayout.verticalRowCount = 3
         return flowLayout
+    }()
+    
+    lazy var centerView: UICollectionView = {
+        let layout = CollectionViewFlowLayout()
+        layout.isPagingEnabled = true
+        layout.isPagingCenter = true
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        layout.itemSize = CGSize(width: APP.screenWidth - 60, height: 150)
+        
+        let result = UICollectionView.app.collectionView(layout)
+        result.decelerationRate = .fast
+        result.backgroundColor = AppTheme.backgroundColor
+        result.delegate = result.app.collectionDelegate
+        result.dataSource = result.app.collectionDelegate
+        result.app.collectionDelegate.itemCount = 10
+        result.app.collectionDelegate.cellForItem = { collectionView, indexPath in
+            let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+            cell.contentView.backgroundColor = UIColor.app.randomColor
+            return cell
+        }
+        result.app.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+            layout.scrollToPage(indexPath.item)
+        }
+        return result
+    }()
+    
+    lazy var bottomView: UICollectionView = {
+        let layout = CollectionViewFlowLayout()
+        layout.isPagingEnabled = true
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        layout.itemSize = CGSize(width: (APP.screenWidth - 40) / 3.0 * 2.0, height: 150)
+        
+        let result = UICollectionView.app.collectionView(layout)
+        result.decelerationRate = .fast
+        result.backgroundColor = AppTheme.backgroundColor
+        result.delegate = result.app.collectionDelegate
+        result.dataSource = result.app.collectionDelegate
+        result.app.collectionDelegate.itemCount = 10
+        result.app.collectionDelegate.cellForItem = { collectionView, indexPath in
+            let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+            cell.contentView.backgroundColor = UIColor.app.randomColor
+            return cell
+        }
+        result.app.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+            layout.scrollToPage(indexPath.item)
+        }
+        return result
     }()
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -122,25 +193,82 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
         view.backgroundColor = AppTheme.backgroundColor
         collectionView.backgroundColor = AppTheme.tableColor
         collectionView.isPagingEnabled = true
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "view")
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "view")
+        collectionDelegate.sectionCount = 2
+        collectionDelegate.numberOfItems = { [weak self] _ in
+            guard let self = self else { return 0 }
+            return self.flowLayout.itemRenderCount(self.collectionData.count)
+        }
+        collectionDelegate.cellForItem = { [weak self] collectionView, indexPath in
+            guard let self = self else { return nil }
+            let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+            var label = cell.contentView.viewWithTag(100) as? UILabel
+            if label == nil {
+                let textLabel = UILabel.app.label(font: .systemFont(ofSize: 16), textColor: .white)
+                label = textLabel
+                textLabel.tag = 100
+                cell.contentView.addSubview(textLabel)
+                textLabel.app.layoutChain.center()
+            }
+            if indexPath.item < self.collectionData.count {
+                label?.text = "\(indexPath.section) : \(indexPath.item)"
+            } else {
+                label?.text = nil
+            }
+            return cell
+        }
+        collectionDelegate.sizeForItem = { collectionView, indexPath in
+            return CGSize(width: (APP.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 70 : 40)
+        }
+        collectionDelegate.viewForHeader = { collectionView, indexPath in
+            let view = UICollectionReusableView.app.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionHeader, indexPath: indexPath)
+            view.backgroundColor = UIColor.app.randomColor
+            return view
+        }
+        collectionDelegate.viewForFooter = { collectionView, indexPath in
+            let view = UICollectionReusableView.app.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionFooter, indexPath: indexPath)
+            view.backgroundColor = UIColor.app.randomColor
+            return view
+        }
+        collectionDelegate.sizeForHeader = { collectionView, section in
+            return CGSize(width: 40, height: 150)
+        }
+        collectionDelegate.sizeForFooter = { collectionView, section in
+            return CGSize(width: 40, height: 150)
+        }
+        collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+            guard let self = self else { return }
+            if indexPath.item < self.collectionData.count {
+                self.app.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
+            }
+        }
     }
     
     func setupCollectionLayout() {
         view.addSubview(contentView)
-        contentView.fw.layoutChain
+        contentView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
-            .height(200)
+            .height(150)
         
         collectionView.removeFromSuperview()
         contentView.addSubview(collectionView)
-        collectionView.fw.layoutChain.edges(excludingEdge: .bottom).height(200)
+        collectionView.app.layoutChain.edges(excludingEdge: .bottom).height(150)
+        
+        view.addSubview(centerView)
+        centerView.app.layoutChain
+            .horizontal()
+            .top(toViewBottom: contentView, offset: 20)
+            .height(150)
+        
+        view.addSubview(bottomView)
+        bottomView.app.layoutChain
+            .horizontal()
+            .top(toViewBottom: centerView, offset: 20)
+            .height(150)
     }
     
     func setupNavbar() {
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
             guard let self = self else { return }
             
             self.flowLayout.itemRenderVertical = !self.flowLayout.itemRenderVertical
@@ -150,65 +278,15 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
     
     func setupSubviews() {
         for _ in 0 ..< 18 {
-            collectionData.add(UIColor.fw.randomColor)
+            collectionData.append(UIColor.app.randomColor)
         }
         collectionView.reloadData()
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return flowLayout.itemRenderCount(collectionData.count)
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        var label = cell.contentView.viewWithTag(100) as? UILabel
-        if label == nil {
-            let textLabel = UILabel.fw.label(font: .systemFont(ofSize: 16), textColor: .white)
-            label = textLabel
-            textLabel.tag = 100
-            cell.contentView.addSubview(textLabel)
-            textLabel.fw.layoutChain.center()
-        }
-        if indexPath.item < collectionData.count {
-            label?.text = "\(indexPath.section) : \(indexPath.item)"
-        } else {
-            label?.text = nil
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "view", for: indexPath)
-        view.backgroundColor = UIColor.fw.randomColor
-        return view
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, configForSectionAt section: Int) -> CollectionViewSectionConfig? {
         let sectionConfig = CollectionViewSectionConfig()
-        sectionConfig.backgroundColor = UIColor.fw.randomColor
+        sectionConfig.backgroundColor = UIColor.app.randomColor
         return sectionConfig
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (FW.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 80 : 60)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: 40, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: 40, height: 200)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item < collectionData.count {
-            view.fw.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
-        }
     }
     
 }
@@ -216,43 +294,38 @@ class SwiftTestCollectionViewController: UIViewController, CollectionViewControl
 class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProtocol {
     func setupScrollView() {
         let view = UIView()
-        view.backgroundColor = UIColor.fw.randomColor
+        view.backgroundColor = UIColor.app.randomColor
         contentView.addSubview(view)
-        view.fw.layoutMaker { (make) in
-            make.edges().height(1000).width(FW.screenWidth)
+        view.app.layoutMaker { (make) in
+            make.edges().height(1000).width(APP.screenWidth)
         }
     }
 }
 
-class SwiftTestTableViewController: UIViewController, TableViewControllerProtocol {
+class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol {
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
+        tableDelegate.numberOfRows = { [weak self] _ in
+            return self?.tableData.count ?? 0
+        }
+        tableDelegate.cellConfiguation = { cell, indexPath in
+            cell.app.maxYViewExpanded = true
+            cell.textLabel?.text = "\(indexPath.row)"
+        }
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [0, 1, 2])
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel?.text = "\(indexPath.row)"
-        return cell
+        tableData.append(contentsOf: [0, 1, 2])
     }
 }
 
 class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
-    var webItems: NSArray? = {
-        return [
+    func setupWebView() {
+        webView.app.navigationItems = [
             Icon.backImage as Any,
             Icon.closeImage as Any
         ]
-    }()
-    
-    func setupWebView() {
+        
         webRequest = "http://kvm.wuyong.site/test.php"
     }
 }
@@ -262,8 +335,8 @@ class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {
     lazy var backgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
-        view.fw.addTapGesture { [weak self] _ in
-            self?.fw.close()
+        view.app.addTapGesture { [weak self] _ in
+            self?.app.close()
         }
         return view
     }()
@@ -277,25 +350,118 @@ class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {
     // MARK: - Lifecycle
     func didInitialize() {
         modalPresentationStyle = .custom
-        fw.navigationBarHidden = true
-        fw.setPresentTransition(nil)
+        app.navigationBarHidden = true
+        app.setPresentTransition(nil)
     }
     
     func setupSubviews() {
         view.backgroundColor = .clear
         view.addSubview(backgroundView)
         view.addSubview(contentView)
-        backgroundView.fw.layoutChain
+        backgroundView.app.layoutChain
             .edges(excludingEdge: .bottom)
-        contentView.fw.layoutChain
+        contentView.app.layoutChain
             .edges(excludingEdge: .top)
             .top(toViewBottom: backgroundView)
         
-        contentView.fw.layoutChain.height(FW.screenHeight / 2.0)
+        contentView.app.layoutChain.height(APP.screenHeight / 2.0)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        contentView.fw.setCornerLayer([.topLeft, .topRight], radius: 8)
+        contentView.app.setCornerLayer([.topLeft, .topRight], radius: 8)
+    }
+}
+
+protocol TestSwiftProtocol {
+    func testMethod()
+}
+
+extension TestSwiftProtocol where Self: UIViewController {
+    func testMethod() {
+        UIWindow.app.showMessage(text: "TestSwiftProtocol.testMethod") { [weak self] in
+            self?.app.close()
+        }
+    }
+}
+
+class TestSwiftProtocolDefaultController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.app.addTapGesture { [weak self] _ in
+            self?.testMethod()
+        }
+    }
+}
+
+class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.app.addTapGesture { [weak self] _ in
+            self?.testMethod()
+        }
+    }
+    
+    // 如果testMethod方法放到extension中，则不能继承; 非extension中可以继承
+    func testMethod() {
+        UIWindow.app.showMessage(text: "SwiftBaseController.testMethod") { [weak self] in
+            self?.app.close()
+        }
+    }
+}
+
+class TestSwiftProtocolViewController: TestSwiftProtocolBaseController {
+    // 父类testMethod必须放到非extension中，否则编译报错
+    override func testMethod() {
+        UIWindow.app.showMessage(text: "SwiftViewController.testMethod") { [weak self] in
+            self?.app.close()
+        }
+    }
+}
+
+@objc protocol TestObjcProtocol {
+    func testObjcMethod()
+    // @objc optional func testObjcMethod()
+}
+
+extension UIViewController {
+    @objc func testObjcMethod() {
+        UIWindow.app.showMessage(text: "TestObjcProtocol.testObjcMethod") { [weak self] in
+            self?.app.close()
+        }
+    }
+}
+
+class TestObjcProtocolDefaultController: UIViewController, ViewControllerProtocol, TestObjcProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.app.addTapGesture { [weak self] _ in
+            self?.testObjcMethod()
+        }
+    }
+}
+
+class TestObjcProtocolBaseController: UIViewController, ViewControllerProtocol {
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        view.app.addTapGesture { [weak self] _ in
+            self?.testObjcMethod()
+        }
+    }
+}
+
+extension TestObjcProtocolBaseController: TestObjcProtocol {
+    override func testObjcMethod() {
+        UIWindow.app.showMessage(text: "ObjcBaseController.testObjcMethod") { [weak self] in
+            self?.app.close()
+        }
+    }
+}
+
+class TestObjcProtocolViewController: TestObjcProtocolBaseController {
+    override func testObjcMethod() {
+        UIWindow.app.showMessage(text: "ObjcViewController.testObjcMethod") { [weak self] in
+            self?.app.close()
+        }
     }
 }

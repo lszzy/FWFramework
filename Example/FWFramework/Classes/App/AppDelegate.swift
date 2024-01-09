@@ -11,6 +11,10 @@ import FWFramework
 @UIApplicationMain
 class AppDelegate: AppResponder {
     
+    var backgroundTask: ((@escaping () -> Void) -> Void)?
+    var expirationHandler: (() -> Void)?
+    
+    // MARK: - Override
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.backgroundColor
@@ -19,14 +23,22 @@ class AppDelegate: AppResponder {
         Router.registerClass(AppRouter.self)
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
+        Mediator.loadModule(AppModuleProtocol.self)?.moduleMethod()
+        APP.debug("appId: %@", AppConfig.shared.appId)
+        APP.debug("apiUrl: %@", AppConfig.shared.network.apiUrl)
         
-        if let url = UIApplication.fw.appLaunchURL(options) {
-            FW.debug("launchURL: %@", url.absoluteString)
+        if let url = UIApplication.app.appLaunchURL(options) {
+            APP.debug("launchURL: %@", url.absoluteString)
         }
     }
     
     override func setupController() {
         window?.rootViewController = TabController()
+    }
+    
+    override func reloadController() {
+        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 0.5)
+        super.reloadController()
     }
     
     // MARK: - UIApplicationDelegate
@@ -42,6 +54,12 @@ class AppDelegate: AppResponder {
             return true
         }
         return false
+    }
+    
+    override func applicationDidEnterBackground(_ application: UIApplication) {
+        if let backgroundTask = backgroundTask {
+            UIApplication.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
+        }
     }
 
 }

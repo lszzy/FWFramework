@@ -14,7 +14,14 @@
 		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
 		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
-		2F2D99802A73A83E005C81BB /* TestDatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2D997F2A73A83E005C81BB /* TestDatabaseController.swift */; };
+		2F0F09252B3186F4000C3F5E /* Audio1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09212B3186F4000C3F5E /* Audio1.mp3 */; };
+		2F0F09262B3186F4000C3F5E /* Audio3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09222B3186F4000C3F5E /* Audio3.m4a */; };
+		2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09232B3186F4000C3F5E /* Video.mp4 */; };
+		2F0F09292B328E24000C3F5E /* Audio2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09282B328E24000C3F5E /* Audio2.m4a */; };
+		2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */; };
+		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
+		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
+		2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
 		2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */; };
@@ -55,6 +62,7 @@
 		2FB11F0528E41C0700DCB965 /* TestKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */; };
 		2FB11F0728E441F400DCB965 /* TestDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0628E441F400DCB965 /* TestDrawerController.swift */; };
 		2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */; };
+		2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */; };
 		2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */; };
 		2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30128C09F2500C78850 /* TestStateController.swift */; };
 		2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30328C0A69B00C78850 /* TestCacheController.swift */; };
@@ -64,11 +72,11 @@
 		2FCDB4FC28E543820079A56C /* TestBannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FB28E543810079A56C /* TestBannerController.swift */; };
 		2FCDB4FE28E54B160079A56C /* TestPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FD28E54B160079A56C /* TestPopupController.swift */; };
 		2FCDB50028E571820079A56C /* TestSegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FF28E571820079A56C /* TestSegmentController.swift */; };
+		2FD9454129EF8248002C48F2 /* TestSwiftUIListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */; };
 		2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141A28D2D42C00985FBD /* TestThemeController.swift */; };
 		2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141C28D2FC5800985FBD /* TestAlertController.swift */; };
 		2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */; };
 		2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA142028D30F3600985FBD /* TestImageController.swift */; };
-		2FE5F73029F26BA5006C793B /* TestSwiftUIListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE5F72F29F26BA5006C793B /* TestSwiftUIListController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -105,7 +113,14 @@
 		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
 		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
-		2F2D997F2A73A83E005C81BB /* TestDatabaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDatabaseController.swift; sourceTree = "<group>"; };
+		2F0F09212B3186F4000C3F5E /* Audio1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Audio1.mp3; sourceTree = "<group>"; };
+		2F0F09222B3186F4000C3F5E /* Audio3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Audio3.m4a; sourceTree = "<group>"; };
+		2F0F09232B3186F4000C3F5E /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
+		2F0F09282B328E24000C3F5E /* Audio2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Audio2.m4a; sourceTree = "<group>"; };
+		2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDatabaseController.swift; sourceTree = "<group>"; };
+		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
+		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
+		2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEncodeController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
 		2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPagingController.swift; sourceTree = "<group>"; };
@@ -146,6 +161,7 @@
 		2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeyboardController.swift; sourceTree = "<group>"; };
 		2FB11F0628E441F400DCB965 /* TestDrawerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDrawerController.swift; sourceTree = "<group>"; };
 		2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToolbarController.swift; sourceTree = "<group>"; };
+		2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestConcurrencyController.swift; sourceTree = "<group>"; };
 		2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWorkflowController.swift; sourceTree = "<group>"; };
 		2FB9E30128C09F2500C78850 /* TestStateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateController.swift; sourceTree = "<group>"; };
 		2FB9E30328C0A69B00C78850 /* TestCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCacheController.swift; sourceTree = "<group>"; };
@@ -155,11 +171,11 @@
 		2FCDB4FB28E543810079A56C /* TestBannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBannerController.swift; sourceTree = "<group>"; };
 		2FCDB4FD28E54B160079A56C /* TestPopupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPopupController.swift; sourceTree = "<group>"; };
 		2FCDB4FF28E571820079A56C /* TestSegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSegmentController.swift; sourceTree = "<group>"; };
+		2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSwiftUIListController.swift; sourceTree = "<group>"; };
 		2FDA141A28D2D42C00985FBD /* TestThemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestThemeController.swift; sourceTree = "<group>"; };
 		2FDA141C28D2FC5800985FBD /* TestAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAlertController.swift; sourceTree = "<group>"; };
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
 		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
-		2FE5F72F29F26BA5006C793B /* TestSwiftUIListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftUIListController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -244,9 +260,11 @@
 				2F6A414828B70BEC003719E7 /* TestAudioController.swift */,
 				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
 				2FB9E30328C0A69B00C78850 /* TestCacheController.swift */,
-				2F2D997F2A73A83E005C81BB /* TestDatabaseController.swift */,
+				2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */,
+				2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */,
 				2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */,
 				2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */,
+				2F36CBB8298B833300444127 /* TestRequestController.swift */,
 				2FDA141A28D2D42C00985FBD /* TestThemeController.swift */,
 				2F6A414A28B70E60003719E7 /* TestVideoController.swift */,
 			);
@@ -289,8 +307,9 @@
 				2F49EE2128FFA25D00F229BB /* TestStatisticalController.swift */,
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
-				2FE5F72F29F26BA5006C793B /* TestSwiftUIListController.swift */,
+				2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
+				2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */,
 				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
 				2F49EE2328FFB7D000F229BB /* TestTransitionController.swift */,
 			);
@@ -309,6 +328,7 @@
 			isa = PBXGroup;
 			children = (
 				2F6A417628B7319A003719E7 /* TestPromiseController.swift */,
+				2FB48E532B29E7E100F10AC6 /* TestConcurrencyController.swift */,
 				2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */,
 				2FB9E30128C09F2500C78850 /* TestStateController.swift */,
 				2FB9E2FF28C09D4D00C78850 /* TestWorkflowController.swift */,
@@ -341,6 +361,10 @@
 				2F6A416528B721C9003719E7 /* Material.ttf */,
 				2F6A416628B721C9003719E7 /* Lottie.json */,
 				2F6A416728B721C9003719E7 /* Bridge.html */,
+				2F0F09212B3186F4000C3F5E /* Audio1.mp3 */,
+				2F0F09282B328E24000C3F5E /* Audio2.m4a */,
+				2F0F09222B3186F4000C3F5E /* Audio3.m4a */,
+				2F0F09232B3186F4000C3F5E /* Video.mp4 */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -642,6 +666,7 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 3SPQYAJQY3;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -673,15 +698,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */,
+				2F0F09292B328E24000C3F5E /* Audio2.m4a in Resources */,
 				2F6A416828B721C9003719E7 /* Animation.png in Resources */,
 				2F6A416928B721C9003719E7 /* Qrcode.caf in Resources */,
+				2F0F09252B3186F4000C3F5E /* Audio1.mp3 in Resources */,
 				2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */,
 				2FF08B3E28ADDC000074895A /* Assets.xcassets in Resources */,
+				2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */,
 				2F6A416D28B721C9003719E7 /* Bridge.html in Resources */,
 				2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */,
 				2F6A416C28B721C9003719E7 /* Lottie.json in Resources */,
 				2F6A416A28B721C9003719E7 /* Loading.gif in Resources */,
 				2F6A416B28B721C9003719E7 /* Material.ttf in Resources */,
+				2F0F09262B3186F4000C3F5E /* Audio3.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,18 +731,18 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/FWDebug/FWDebug.framework",
 				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWDebug.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -773,6 +802,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */,
+				2FD9454129EF8248002C48F2 /* TestSwiftUIListController.swift in Sources */,
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
 				2F6A412328B5FF19003719E7 /* LoginController.swift in Sources */,
 				2F6A417528B72F7B003719E7 /* TestTabbarController.swift in Sources */,
@@ -788,8 +818,8 @@
 				2FB11EFB28E2999C00DCB965 /* TestCollectionController.swift in Sources */,
 				2FB11F0128E2FB0000DCB965 /* TestQrcodeController.swift in Sources */,
 				2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */,
-				2F2D99802A73A83E005C81BB /* TestDatabaseController.swift in Sources */,
 				2F49EE2228FFA25D00F229BB /* TestStatisticalController.swift in Sources */,
+				2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */,
 				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
 				2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */,
@@ -808,18 +838,22 @@
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
+				2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */,
 				2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */,
+				2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */,
 				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,
 				2FB9E30428C0A69B00C78850 /* TestCacheController.swift in Sources */,
 				2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */,
 				2FB11F0528E41C0700DCB965 /* TestKeyboardController.swift in Sources */,
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */,
+				2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */,
 				2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
 				2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */,
 				2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */,
+				2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */,
 				2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */,
 				2FB11EF528DB055C00DCB965 /* TestGridController.swift in Sources */,
 				2F6A414B28B70E60003719E7 /* TestVideoController.swift in Sources */,
@@ -828,7 +862,6 @@
 				2F06D15728D31E52007E53EC /* TestToastController.swift in Sources */,
 				2FF08B7828ADE7690074895A /* TestController.swift in Sources */,
 				2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */,
-				2FE5F73029F26BA5006C793B /* TestSwiftUIListController.swift in Sources */,
 				2FB11F0328E3F5F700DCB965 /* TestThreadController.swift in Sources */,
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
 				2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */,
@@ -918,7 +951,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGING;
@@ -936,6 +969,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = FWFramework/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -957,6 +991,7 @@
 			baseConfigurationReference = 11AAFFB787F9A25A2B0A4D04 /* Pods-FWFramework_Tests.staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1010,7 +1045,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TESTING;
@@ -1028,6 +1063,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = FWFramework/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1049,6 +1085,7 @@
 			baseConfigurationReference = 50EE69E94CAA141A93E8271F /* Pods-FWFramework_Tests.testing.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1108,7 +1145,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1157,7 +1194,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
@@ -1175,6 +1212,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = FWFramework/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1200,6 +1238,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = FWFramework/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.0;
@@ -1221,6 +1260,7 @@
 			baseConfigurationReference = CFFF940628A6EB3EE1363A17 /* Pods-FWFramework_Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1244,6 +1284,7 @@
 			baseConfigurationReference = DB4F8143AC722F33288C9812 /* Pods-FWFramework_Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

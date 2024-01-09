@@ -8,23 +8,25 @@
 
 import FWFramework
 
-class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol {
+class TestStatisticalController: UIViewController, TableViewControllerProtocol, CollectionViewControllerProtocol, BannerViewDelegate {
+    
+    private var tableObject = "table"
     
     lazy var shieldView: UIView = {
         let result = UIView()
         result.backgroundColor = AppTheme.tableColor
-        result.fw.addTapGesture { [weak self] _ in
+        result.app.addTapGesture { [weak self] _ in
             self?.shieldView.isHidden = true
             self?.shieldView.removeFromSuperview()
             // 手工触发曝光计算
-            self?.view.isHidden = self?.view.isHidden ?? false
+            self?.view.app.statisticalCheckExposure()
         }
         
         let label = UILabel()
         label.text = "点击关闭"
         label.textAlignment = .center
         result.addSubview(label)
-        label.fw.layoutChain.edges()
+        label.app.layoutChain.edges()
         return result
     }()
     
@@ -32,35 +34,46 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         let result = BannerView()
         result.autoScroll = true
         result.autoScrollTimeInterval = 6
-        result.placeholderImage = UIImage.fw.appIconImage()
-        result.itemDidScrollOperationBlock = { index in
-            FW.debug("currentIndex: \(index)")
+        result.delegate = self
+        result.placeholderImage = UIImage.app.appIconImage()
+        result.didScrollToItemBlock = { index in
+            // APP.debug("currentIndex: \(index)")
+        }
+        return result
+    }()
+    
+    lazy var hoverView: UIView = {
+        let result = UIView()
+        result.backgroundColor = UIColor.app.randomColor
+        result.app.dragEnabled = true
+        result.app.addTapGesture { [weak self] _ in
+            self?.hoverView.removeFromSuperview()
         }
         return result
     }()
     
     lazy var testView: UIView = {
         let result = UIView()
-        result.backgroundColor = UIColor.fw.randomColor
+        result.backgroundColor = .white
         
         let label = UILabel()
-        label.text = "Banner"
+        label.text = "View"
         label.textAlignment = .center
         result.addSubview(label)
-        label.fw.layoutChain.edges()
+        label.app.layoutChain.edges()
         return result
     }()
     
     lazy var testButton: UIButton = {
         let result = UIButton(type: .custom)
         result.setTitle("Button", for: .normal)
-        result.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
+        result.app.setBackgroundColor(.white, for: .normal)
         return result
     }()
     
     lazy var testSwitch: UISwitch = {
         let result = UISwitch()
-        result.thumbTintColor = UIColor.fw.randomColor
+        result.thumbTintColor = .white
         result.onTintColor = result.thumbTintColor
         return result
     }()
@@ -74,110 +87,130 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         result.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.segmentWidthStyle = .dynamic
         result.selectionIndicatorLocation = .bottom
-        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.fw.font(ofSize: 16), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
-        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.fw.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         return result
     }()
     
     lazy var tagCollectionView: TextTagCollectionView = {
         let result = TextTagCollectionView()
+        result.backgroundColor = AppTheme.cellColor
         result.verticalSpacing = 10
         result.horizontalSpacing = 10
         return result
     }()
     
-    func didInitialize() {
-        StatisticalManager.shared.statisticalEnabled = true
-    }
-    
     func setupTableView() {
         let headerView = UIView()
         headerView.addSubview(bannerView)
-        bannerView.fw.layoutChain.left(10).top(50).right(10).height(100)
+        bannerView.app.layoutChain.left(10).top(50).right(10).height(100)
         
         headerView.addSubview(testView)
-        testView.fw.layoutChain.width(100).height(30).centerX().top(toViewBottom: bannerView, offset: 50)
+        testView.app.layoutChain.width(100).height(30).centerX().top(toViewBottom: bannerView, offset: 50)
         
         headerView.addSubview(testButton)
-        testButton.fw.layoutChain.width(100).height(30).centerX().top(toViewBottom: testView, offset: 50)
+        testButton.app.layoutChain.width(100).height(30).centerX().top(toViewBottom: testView, offset: 50)
         
         headerView.addSubview(testSwitch)
-        testSwitch.fw.layoutChain.centerX().top(toViewBottom: testButton, offset: 50)
+        testSwitch.app.layoutChain.centerX().top(toViewBottom: testButton, offset: 50)
         
         headerView.addSubview(segmentedControl)
-        segmentedControl.fw.layoutChain.left(10).right(10).top(toViewBottom: testSwitch, offset: 50).height(50)
+        segmentedControl.app.layoutChain.left(10).right(10).top(toViewBottom: testSwitch, offset: 50).height(50)
         
         headerView.addSubview(tagCollectionView)
-        tagCollectionView.fw.layoutChain.left(10).right(10).top(toViewBottom: segmentedControl, offset: 50).height(100).bottom(50)
+        tagCollectionView.app.layoutChain.left(10).right(10).top(toViewBottom: segmentedControl, offset: 50).height(100).bottom(50)
         
         tableView.tableHeaderView = headerView
-        headerView.fw.autoLayoutSubviews()
+        headerView.app.autoLayoutSubviews()
     }
     
     func setupTableLayout() {
-        tableView.fw.layoutChain.edges()
+        tableView.app.layoutChain.edges()
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (FW.screenWidth - 10) / 2.0, height: 100)
+        layout.itemSize = CGSize(width: (APP.screenWidth - 10) / 2.0, height: 100)
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         return layout
     }
     
     func setupCollectionLayout() {
-        collectionView.fw.layoutChain.edges()
+        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.app.layoutChain.edges()
     }
     
     func setupSubviews() {
-        UIWindow.fw.main?.addSubview(shieldView)
-        shieldView.fw.layoutChain.edges()
+        UIWindow.app.main?.addSubview(shieldView)
+        shieldView.app.layoutChain.edges()
         
-        testView.fw.addTapGesture { [weak self] _ in
-            self?.testView.backgroundColor = UIColor.fw.randomColor
-            self?.bannerView.makeScrollScroll(to: 0)
+        view.addSubview(hoverView)
+        view.bringSubviewToFront(hoverView)
+        hoverView.app.layoutChain
+            .center()
+            .size(CGSize(width: 100, height: 100))
+        
+        testView.app.addTapGesture { [weak self] _ in
+            self?.bannerView.scrollToIndex(0)
         }
         
-        testButton.fw.addTouch { [weak self] _ in
-            self?.testButton.fw.setBackgroundColor(UIColor.fw.randomColor, for: .normal)
+        testButton.app.addTouch { [weak self] _ in
+            self?.bannerView.scrollToIndex(1)
         }
         
-        testSwitch.fw.addBlock({ [weak self] _ in
-            self?.testSwitch.thumbTintColor = UIColor.fw.randomColor
-            self?.testSwitch.onTintColor = self?.testSwitch.thumbTintColor
+        testSwitch.app.addBlock({ [weak self] _ in
+            self?.testSwitch.thumbTintColor = UIColor.app.randomColor
         }, for: .valueChanged)
         
-        self.bannerView.clickItemOperationBlock = { [weak self] index in
+        self.bannerView.didSelectItemBlock = { [weak self] index in
             self?.clickHandler(index)
         }
         
-        self.segmentedControl.indexChangeBlock = { [weak self] _ in
-            self?.segmentedControl.selectionIndicatorBoxColor = UIColor.fw.randomColor
+        self.segmentedControl.indexChangedBlock = { [weak self] index in
+            self?.bannerView.scrollToIndex(2)
         }
     }
     
     func setupLayout() {
         collectionView.isHidden = true
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            if self?.collectionView.isHidden ?? false {
-                self?.collectionView.isHidden = false
-                self?.tableView.isHidden = true
-            } else {
-                self?.collectionView.isHidden = true
-                self?.tableView.isHidden = false
-            }
+        StatisticalManager.shared.exposureTime = UserDefaults.app.object(forKey: "TestExposureTime").safeBool
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", StatisticalManager.shared.exposureBecomeActive ? "回到前台时不重新曝光" : "回到前台时重新曝光", StatisticalManager.shared.exposureThresholds == 1 ? "设置曝光比率为0.5" : "设置曝光比率为1.0", "切换collectionView", "表格reloadData", "切换控制器statisticalExposure"], actionBlock: { [weak self] index in
+                if index == 0 {
+                    StatisticalManager.shared.exposureTime = !StatisticalManager.shared.exposureTime
+                    UserDefaults.app.setObject(StatisticalManager.shared.exposureTime, forKey: "TestExposureTime")
+                } else if index == 1 {
+                    StatisticalManager.shared.exposureBecomeActive = !StatisticalManager.shared.exposureBecomeActive
+                } else if index == 2 {
+                    StatisticalManager.shared.exposureThresholds = StatisticalManager.shared.exposureThresholds == 1 ? 0.5 : 1
+                } else if index == 3 {
+                    if self?.collectionView.isHidden ?? false {
+                        self?.collectionView.isHidden = false
+                        self?.tableView.isHidden = true
+                    } else {
+                        self?.collectionView.isHidden = true
+                        self?.tableView.isHidden = false
+                    }
+                } else if index == 4 {
+                    self?.tableObject = self?.tableObject == "table" ? "table2" : "table"
+                    self?.tableView.reloadData()
+                } else {
+                    let object = self?.app.statisticalExposure?.object.safeString == "viewController" ? "viewController2" : "viewController"
+                    self?.app.statisticalExposure = StatisticalEvent(name: "exposure_viewController", object: object)
+                }
+            })
         }
         
         let imageUrls = [
             "http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg",
-            UIImage.fw.appIconImage() as Any,
+            UIImage.app.appIconImage() as Any,
             "http://kvm.wuyong.site/images/images/animation.png",
             "http://littlesvr.ca/apng/images/SteamEngine.webp",
             "not_found.jpg",
             "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"
         ]
-        bannerView.imageURLStringsGroup = imageUrls
+        bannerView.imagesGroup = imageUrls
         
         let sectionTitles = ["Section0", "Section1", "Section2", "Section3", "Section4", "Section5", "Section6", "Section7", "Section8"]
         segmentedControl.sectionTitles = sectionTitles
@@ -191,58 +224,87 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func renderData() {
-        StatisticalManager.shared.globalHandler = { [weak self] object in
-            if object.isExposure {
-                FW.debug("%@曝光通知: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(object.view?.classForCoder ?? Self.classForCoder()), "\(object.indexPath?.section ?? 0).\(object.indexPath?.row ?? 0)", "\(object.triggerCount)", FW.safeString(object.name), FW.safeString(object.object), FW.safeString(object.userInfo), "\(object.triggerDuration)", "\(object.totalDuration)")
+        StatisticalManager.shared.eventHandler = { [weak self] event in
+            if event.isExposure {
+                APP.debug("%@曝光%@: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), !event.isFinished ? "开始" : "结束", "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
             } else {
-                self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(object.view?.classForCoder ?? Self.classForCoder()), "\(object.indexPath?.section ?? 0).\(object.indexPath?.row ?? 0)", "\(object.triggerCount)", FW.safeString(object.name), FW.safeString(object.object), FW.safeString(object.userInfo)))
+                self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo)))
+            }
+        }
+        
+        // ViewController
+        app.statisticalExposure = StatisticalEvent(name: "exposure_viewController", object: "viewController")
+        app.statisticalExposureListener = { event in
+            if event.isFinished {
+                UIWindow.app.showMessage(text: "\(event.name)曝光结束: \(String(format: "%.1f", event.triggerDuration))s - \(String(format: "%.1f", event.totalDuration))s")
+            } else {
+                UIWindow.app.showMessage(text: "\(event.name)曝光开始")
             }
         }
         
         // Click
-        testView.fw.statisticalClick = StatisticalObject(name: "click_view", object: "view")
-        testButton.fw.statisticalClick = StatisticalObject(name: "click_button", object: "button")
-        testSwitch.fw.statisticalClick = StatisticalObject(name: "click_switch", object: "switch")
-        tableView.fw.statisticalClick = StatisticalObject(name: "click_tableView", object: "table")
-        bannerView.fw.statisticalClick = StatisticalObject(name: "click_banner", object: "banner")
-        segmentedControl.fw.statisticalClick = StatisticalObject(name: "click_segment", object: "segment")
-        tagCollectionView.fw.statisticalClick = StatisticalObject(name: "click_tag", object: "tag")
+        testView.app.statisticalClick = StatisticalEvent(name: "click_view", object: "view")
+        testButton.app.statisticalClick = StatisticalEvent(name: "click_button", object: "button")
+        testSwitch.app.statisticalClick = StatisticalEvent(name: "click_switch", object: "switch")
+        bannerView.app.statisticalClick = StatisticalEvent(name: "click_banner", object: "banner")
+        segmentedControl.app.statisticalClick = StatisticalEvent(name: "click_segment", object: "segment")
+        tagCollectionView.app.statisticalClick = StatisticalEvent(name: "click_tag", object: "tag")
         
         // Exposure
-        testView.fw.statisticalExposure = StatisticalObject(name: "exposure_view", object: "view")
-        configShieldView(testView.fw.statisticalExposure)
-        testButton.fw.statisticalExposure = StatisticalObject(name: "exposure_button", object: "button")
-        testButton.fw.statisticalExposure?.triggerOnce = true
-        configShieldView(testButton.fw.statisticalExposure)
-        testSwitch.fw.statisticalExposure = StatisticalObject(name: "exposure_switch", object: "switch")
-        configShieldView(testSwitch.fw.statisticalExposure)
-        tableView.fw.statisticalExposure = StatisticalObject(name: "exposure_tableView", object: "table")
-        configShieldView(tableView.fw.statisticalExposure)
-        bannerView.fw.statisticalExposure = StatisticalObject(name: "exposure_banner", object: "banner")
-        configShieldView(bannerView.fw.statisticalExposure)
-        segmentedControl.fw.statisticalExposure = StatisticalObject(name: "exposure_segment", object: "segment")
-        configShieldView(segmentedControl.fw.statisticalExposure)
-        tagCollectionView.fw.statisticalExposure = StatisticalObject(name: "exposure_tag", object: "tag")
-        configShieldView(tagCollectionView.fw.statisticalExposure)
+        testView.app.statisticalExposure = StatisticalEvent(name: "exposure_view", object: "view")
+        testView.app.statisticalExposureListener = { [weak self] event in
+            self?.testView.backgroundColor = event.isFinished ? .white : UIColor.app.randomColor
+        }
+        configShieldView(testView.app.statisticalExposure)
+        testButton.app.statisticalExposure = StatisticalEvent(name: "exposure_button", object: "button")
+        testButton.app.statisticalExposureListener = { [weak self] event in
+            self?.testButton.app.setBackgroundColor(event.isFinished ? .white : UIColor.app.randomColor, for: .normal)
+        }
+        configShieldView(testButton.app.statisticalExposure)
+        testSwitch.app.statisticalExposure = StatisticalEvent(name: "exposure_switch", object: "switch")
+        testSwitch.app.statisticalExposureListener = { [weak self] event in
+            self?.testSwitch.thumbTintColor = event.isFinished ? .white : UIColor.app.randomColor
+        }
+        configShieldView(testSwitch.app.statisticalExposure)
+        segmentedControl.app.statisticalExposure = StatisticalEvent(name: "exposure_segment", object: "segment")
+        segmentedControl.app.statisticalExposure?.eventFormatter = { [weak self] event in
+            guard let indexPath = event.indexPath else { return event }
+            event.userInfo = [
+                "title": self?.segmentedControl.sectionTitles[safe: indexPath.row] ?? ""
+            ]
+            return event
+        }
+        segmentedControl.app.statisticalExposureListener = { [weak self] event in
+            self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+        }
+        configShieldView(segmentedControl.app.statisticalExposure)
+        tagCollectionView.app.statisticalExposure = StatisticalEvent(name: "exposure_tag", object: "tag")
+        tagCollectionView.app.statisticalExposureListener = { [weak self] event in
+            self?.tagCollectionView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+        }
+        configShieldView(tagCollectionView.app.statisticalExposure)
     }
     
-    func configShieldView(_ object: StatisticalObject?) {
-        object?.shieldViewBlock = { [weak self] in
+    func configShieldView(_ object: StatisticalEvent?) {
+        object?.shieldView = { [weak self] _ in
             if !(self?.shieldView.isHidden ?? false) {
                 return self?.shieldView
             }
-            return nil
+            return self?.hoverView
         }
     }
     
     func showToast(_ message: String) {
-        fw.showMessage(text: message)
+        app.showMessage(text: message)
     }
     
     func clickHandler(_ index: Int) {
+        /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            Router.openURL("http://kvm.wuyong.site/test.php")
-        }
+            Router.openURL("https://www.baidu.com", userInfo: [
+                Router.Parameter.routerOptionsKey: NavigatorOptions.embedInNavigation
+            ])
+        }*/
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -254,15 +316,19 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default)
+        let cell = UITableViewCell.app.cell(tableView: tableView, style: .default)
+        cell.contentView.backgroundColor = AppTheme.cellColor
         cell.textLabel?.text = "\(indexPath.row)"
-        cell.contentView.backgroundColor = UIColor.fw.randomColor
+        cell.app.statisticalClick = StatisticalEvent(name: "click_tableView", object: tableObject)
+        cell.app.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: tableObject)
+        cell.app.statisticalExposureListener = { event in
+            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+        }
+        configShieldView(cell.app.statisticalExposure)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.contentView.backgroundColor = UIColor.fw.randomColor
         clickHandler(indexPath.row)
     }
     
@@ -271,20 +337,29 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = TestStatisticalCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = TestStatisticalCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        cell.contentView.backgroundColor = AppTheme.cellColor
         cell.textLabel.text = "\(indexPath.row)"
-        cell.contentView.backgroundColor = UIColor.fw.randomColor
-        cell.fw.statisticalClick = StatisticalObject(name: "click_collectionView", object: "cell")
-        cell.fw.statisticalExposure = StatisticalObject(name: "exposure_collectionView", object: "cell")
-        cell.fw.statisticalExposure?.triggerOnce = true
-        configShieldView(cell.fw.statisticalExposure)
+        cell.app.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
+        cell.app.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
+        cell.app.statisticalExposureListener = { event in
+            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+        }
+        configShieldView(cell.app.statisticalExposure)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)
-        cell?.contentView.backgroundColor = UIColor.fw.randomColor
         clickHandler(indexPath.row)
+    }
+    
+    func bannerView(_ bannerView: BannerView, customCell cell: UICollectionViewCell, for index: Int) {
+        cell.app.statisticalExposure = StatisticalEvent(name: "exposure_banner", object: "banner")
+        cell.app.statisticalExposureListener = { [weak self] event in
+            let index = "\(event.indexPath?.row ?? -1)"
+            self?.bannerView.titlesGroup = [index, index, index, index, index, index]
+        }
+        configShieldView(cell.app.statisticalExposure)
     }
     
 }
@@ -293,7 +368,7 @@ class TestStatisticalCell: UICollectionViewCell {
     
     lazy var textLabel: UILabel = {
         let result = UILabel()
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         return result
     }()
@@ -301,7 +376,7 @@ class TestStatisticalCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(textLabel)
-        textLabel.fw.layoutChain.center()
+        textLabel.app.layoutChain.center()
     }
     
     required init?(coder: NSCoder) {

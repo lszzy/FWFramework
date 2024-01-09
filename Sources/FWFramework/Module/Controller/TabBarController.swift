@@ -6,14 +6,10 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - TabBarController
 /// https://github.com/eggswift/ESTabBarController
-@objc(FWTabBarController)
-@objcMembers open class TabBarController: UITabBarController, TabBarDelegate {
+open class TabBarController: UITabBarController, TabBarDelegate {
     
     /// 打印异常
     public static func printError(_ description: String) {
@@ -142,7 +138,6 @@ import FWObjC
 /// - centered: UITabBarItemPositioning.centered
 /// - fillExcludeSeparator: 完全fill模式，布局不覆盖tabBar顶部分割线
 /// - fillIncludeSeparator: 完全fill模式，布局覆盖tabBar顶部分割线
-@objc(FWTabBarItemPositioning)
 public enum TabBarItemPositioning : Int {
     
     case automatic
@@ -158,7 +153,6 @@ public enum TabBarItemPositioning : Int {
 
 // MARK: - TabBarDelegate
 /// 对UITabBarDelegate进行扩展，以支持UITabBarControllerDelegate的相关方法桥接
-@objc(FWTabBarDelegate)
 internal protocol TabBarDelegate: NSObjectProtocol {
 
     /// 当前item是否支持选中
@@ -188,8 +182,7 @@ internal protocol TabBarDelegate: NSObjectProtocol {
 
 // MARK: - TabBar
 /// FWTabBar是高度自定义的UITabBar子类，通过添加UIControl的方式实现自定义tabBarItem的效果。目前支持tabBar的大部分属性的设置，例如delegate,items,selectedImge,itemPositioning,itemWidth,itemSpacing等，以后会更加细致的优化tabBar原有属性的设置效果。
-@objc(FWTabBar)
-@objcMembers open class TabBar: UITabBar {
+open class TabBar: UITabBar {
 
     internal weak var customDelegate: TabBarDelegate?
     
@@ -554,8 +547,7 @@ internal extension TabBar {
 /// MARK: UITabBarItem properties
 ///     1. func setBadgeTextAttributes(_ textAttributes: [String : Any]?, for state: UIControlState)
 ///     2. func badgeTextAttributes(for state: UIControlState) -> [String : Any]?
-@objc(FWTabBarItem)
-@objcMembers open class TabBarItem: UITabBarItem {
+open class TabBarItem: UITabBarItem {
     
     // MARK: UIView properties
     
@@ -667,8 +659,7 @@ internal extension TabBar {
 }
 
 // MARK: - TabBarItemContainer
-@objc(FWTabBarItemContainer)
-@objcMembers internal class TabBarItemContainer: UIControl {
+internal class TabBarItemContainer: UIControl {
     
     internal init(_ target: AnyObject?, tag: Int) {
         super.init(frame: CGRect.zero)
@@ -711,7 +702,6 @@ internal extension TabBar {
 }
 
 // MARK: - TabBarItemContentMode
-@objc(FWTabBarItemContentMode)
 public enum TabBarItemContentMode : Int {
     
     case alwaysOriginal // Always set the original image size
@@ -720,8 +710,7 @@ public enum TabBarItemContentMode : Int {
 }
 
 // MARK: - TabBarItemContentView
-@objc(FWTabBarItemContentView)
-@objcMembers open class TabBarItemContentView: UIView {
+open class TabBarItemContentView: UIView {
     
     // MARK: - PROPERTY SETTING
     
@@ -927,7 +916,7 @@ public enum TabBarItemContentMode : Int {
             currentImage = targetImage.withRenderingMode(renderingMode)
         }
         if let currentImageURL = selected ? (selectedImageURL ?? imageURL) : imageURL {
-            imageView.fw.setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
+            imageView.fw_setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
                 guard var renderImage = image else { return }
                 if let cgImage = renderImage.cgImage {
                     renderImage = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: renderImage.imageOrientation)
@@ -954,8 +943,8 @@ public enum TabBarItemContentMode : Int {
             var s: CGFloat = 0.0 // image size
             var f: CGFloat = 0.0 // font
             var isLandscape = false
-            if let keyWindow = UIApplication.shared.keyWindow {
-                isLandscape = keyWindow.bounds.width > keyWindow.bounds.height
+            if let window = UIWindow.fw_mainWindow {
+                isLandscape = window.bounds.width > window.bounds.height
             }
             let isWide = isLandscape || traitCollection.horizontalSizeClass == .regular // is landscape or regular
             if isWide {
@@ -1129,8 +1118,7 @@ public enum TabBarItemContentMode : Int {
 }
 
 // MARK: - TabBarItemMoreContentView
-@objc(FWTabBarItemMoreContentView)
-@objcMembers open class TabBarItemMoreContentView: TabBarItemContentView {
+open class TabBarItemMoreContentView: TabBarItemContentView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1181,8 +1169,7 @@ public enum TabBarItemContentMode : Int {
  * 这个类定义了item中使用的badge视图样式，默认为FWTabBarItemBadgeView类对象。
  * 你可以设置FWTabBarItemContentView的badgeView属性为自定义的FWTabBarItemBadgeView子类，这样就可以轻松实现 自定义通知样式了。
  */
-@objc(FWTabBarItemBadgeView)
-@objcMembers open class TabBarItemBadgeView: UIView {
+open class TabBarItemBadgeView: UIView {
     
     /// 默认颜色
     public static var defaultBadgeColor = UIColor.red

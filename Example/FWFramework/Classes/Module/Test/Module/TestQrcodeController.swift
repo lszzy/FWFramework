@@ -19,8 +19,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         let configuration = ScanViewConfiguration()
         configuration.scanlineImage = ModuleBundle.imageNamed("qrcodeLine")
         
-        let result = ScanView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: FW.screenHeight), configuration: configuration)
-        result.scanFrame = CGRect(x: 0, y: 0.18 * self.view.frame.size.height, width: self.view.frame.size.width - 2 * (0), height: self.view.frame.size.height - 2.55 * (0.18 * self.view.frame.size.height))
+        let result = ScanView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight), configuration: configuration)
+        result.scanFrame = CGRect(x: 0, y: 0.18 * APP.screenHeight, width: APP.screenWidth, height: 0.54 * APP.screenHeight)
         result.doubleTapBlock = { [weak self] selected in
             self?.scanCode.videoZoomFactor = selected ? 4.0 : 1.0
         }
@@ -40,11 +40,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
     private lazy var flashlightBtn: UIButton = {
         let result = UIButton(type: .custom)
-        let btnW: CGFloat = 30
-        let btnH: CGFloat = 30
-        let btnX: CGFloat = 0.5 * (view.frame.width - btnW)
-        let btnY: CGFloat = scanView.scanFrame.maxY + 30
-        result.frame = CGRect(x: btnX, y: btnY, width: btnW, height: btnH)
+        result.frame = CGRect(x: (APP.screenWidth - 30) / 2, y: scanView.scanFrame.maxY + 30, width: 30, height: 30)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightOpen"), for: .normal)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightClose"), for: .selected)
         result.addTarget(self, action: #selector(toggleFlashlightBtn(_:)), for: .touchUpInside)
@@ -56,22 +52,26 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         appearance.foregroundColor = .white
         appearance.backgroundTransparent = true
         appearance.leftBackImage = Icon.backImage
-        fw.navigationBarAppearance = appearance
+        app.navigationBarAppearance = appearance
         
-        fw.extendedLayoutEdge = .top
+        app.extendedLayoutEdge = .top
         navigationItem.title = "扫一扫"
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "扫描二维码", "扫描条形码", "同时扫描", "生成二维码"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: ["相册二维码", "相册条形码", "扫描二维码", "扫描条形码", "同时扫描", "生成二维码", "生成条形码"], actionBlock: { index in
                 if index == 0 {
-                    self?.onPhotoLibrary()
+                    self?.onPhotoLibrary(false)
                 } else if index == 1 {
-                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode
+                    self?.onPhotoLibrary(true)
                 } else if index == 2 {
-                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesBarcode
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode
                 } else if index == 3 {
-                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode + ScanCode.metadataObjectTypesBarcode
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesBarcode
                 } else if index == 4 {
-                    self?.onGenerateCode()
+                    self?.scanCode.metadataObjectTypes = ScanCode.metadataObjectTypesQRCode + ScanCode.metadataObjectTypesBarcode
+                } else if index == 5 {
+                    self?.onGenerateCode(false)
+                } else if index == 6 {
+                    self?.onGenerateCode(true)
                 }
             })
         }
@@ -80,7 +80,10 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.backgroundColor = .black
         view.addSubview(scanView)
-        
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setupScanManager()
     }
     
@@ -95,7 +98,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
     
     deinit {
-        removeScanView()
+        stopScanManager()
     }
     
     func setupScanManager() {
@@ -109,6 +112,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         }
         scanCode.scanBrightnessBlock = { [weak self] brightness in
             guard let self = self else { return }
+            
             if brightness < -1 {
                 self.view.addSubview(self.flashlightBtn)
             } else {
@@ -133,9 +137,9 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
     @objc func toggleFlashlightBtn(_ button: UIButton) {
         if !button.isSelected {
-            ScanCode.turnOnTorch()
-            
             button.isSelected = true
+            
+            ScanCode.turnOnTorch()
         } else {
             removeFlashlightBtn()
         }
@@ -148,34 +152,38 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         flashlightBtn.removeFromSuperview()
     }
     
-    @objc func removeScanView() {
-        scanView.stopScanning()
-        scanView.removeFromSuperview()
-    }
-    
-    @objc func onPhotoLibrary() {
+    @objc func onPhotoLibrary(_ isBarcode: Bool = false) {
         stopScanManager()
         
-        fw.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
+        app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
             guard let imagePicker = imagePicker as? UIViewController else { return }
-            imagePicker.fw.presentationDidDismiss = {
+            imagePicker.app.presentationDidDismiss = {
                 self?.startScanManager()
             }
         } completion: { [weak self] objects, results, cancel in
             if cancel {
                 self?.startScanManager()
             } else {
-                self?.app.showLoading(text: "识别中...")
-                ScanCode.readQRCode(objects.first as? UIImage, compress: true) { result in
-                    self?.app.hideLoading()
-                    
-                    self?.onScanResult(result)
+                if !isBarcode {
+                    self?.app.showLoading(text: "识别中...")
+                    ScanCode.readQRCode(objects.first as? UIImage) { result in
+                        self?.app.hideLoading()
+                        
+                        self?.onScanResult(result)
+                    }
+                } else {
+                    self?.app.showLoading(text: "识别中...")
+                    ScanCode.readBarcode(objects.first as? UIImage) { result in
+                        self?.app.hideLoading()
+                        
+                        self?.onScanResult(result)
+                    }
                 }
             }
         }
     }
     
-    @objc func onGenerateCode() {
+    @objc func onGenerateCode(_ isBarcode: Bool = false) {
         stopScanManager()
         
         app.showPrompt(title: nil, message: "Please input code", cancel: nil, confirm: nil, promptBlock: nil) { [weak self] value in
@@ -184,7 +192,13 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
                 return
             }
             
-            let image = ScanCode.generateQRCode(withData: value, size: 375)
+            var image: UIImage?
+            if isBarcode {
+                image = ScanCode.generateBarcode(data: value, size: CGSize(width: 355, height: 105))
+                image = image?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: UIColor.white)
+            } else {
+                image = ScanCode.generateQrcode(data: value, size: 375)
+            }
             guard let image = image else {
                 self?.startScanManager()
                 return

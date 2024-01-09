@@ -10,12 +10,10 @@ import Security
 
 // MARK: - KeychainManager
 /// Keychain管理器
-@objc(FWKeychainManager)
-@objcMembers public class KeychainManager: NSObject {
+public class KeychainManager: NSObject {
     
     // MARK: - Accessor
     /// 单例模式
-    @objc(sharedInstance)
     public static let shared = KeychainManager()
     
     private var group: String?
@@ -53,7 +51,7 @@ import Security
     /// 读取Object数据
     public func passwordObject(forService service: String?, account: String?) -> Any? {
         guard let passwordData = passwordData(forService: service, account: account) else { return nil }
-        return NSKeyedUnarchiver.unarchiveObject(with: passwordData)
+        return passwordData.fw_unarchivedObject()
     }
     
     /// 保存String数据
@@ -85,7 +83,7 @@ import Security
     /// 保存Object数据
     @discardableResult
     public func setPasswordObject(_ passwordObject: Any, forService service: String?, account: String?) -> Bool {
-        let passwordData = NSKeyedArchiver.archivedData(withRootObject: passwordObject)
+        guard let passwordData = Data.fw_archivedData(passwordObject) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }
     

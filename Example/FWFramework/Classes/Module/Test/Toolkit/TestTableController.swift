@@ -10,60 +10,74 @@ import FWFramework
 
 class TestTableController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = TestTableDynamicLayoutObject
+    
     static var isExpanded = false
+    static var faceAware = true
+    
+    @StoredValue("testRandomKey")
+    static var testRandomKey: String = ""
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupTableView() {
-        tableView.fw.resetTableStyle()
+        tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
         tableView.backgroundColor = AppTheme.tableColor
-        tableView.fw.setRefreshing { [weak self] in
+        tableView.app.setRefreshing { [weak self] in
             self?.onRefreshing()
         }
-        tableView.fw.pullRefreshView?.stateBlock = { [weak self] view, state in
+        tableView.app.pullRefreshView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "refresh state-\(state.rawValue)"
         }
-        tableView.fw.pullRefreshView?.progressBlock = { [weak self] view, progress in
+        tableView.app.pullRefreshView?.progressBlock = { [weak self] view, progress in
             self?.navigationItem.title = String(format: "refresh progress-%.2f", progress)
         }
         
         InfiniteScrollView.height = 64
-        tableView.fw.setLoading { [weak self] in
+        tableView.app.setLoading { [weak self] in
             self?.onLoading()
         }
-        // tableView.fw.infiniteScrollView?.preloadHeight = 200
-        tableView.fw.infiniteScrollView?.stateBlock = { [weak self] view, state in
+        // tableView.app.infiniteScrollView?.preloadHeight = 200
+        tableView.app.infiniteScrollView?.stateBlock = { [weak self] view, state in
             self?.navigationItem.title = "load state-\(state.rawValue)"
         }
-        tableView.fw.infiniteScrollView?.progressBlock = { [weak self] view, progress in
+        tableView.app.infiniteScrollView?.progressBlock = { [weak self] view, progress in
             self?.navigationItem.title = String(format: "load progress-%.2f", progress)
         }
     }
     
     func setupCollectionLayout() {
-        tableView.fw.pinEdges(toSuperview: .zero, excludingEdge: .top)
-        tableView.fw.pinEdge(toSafeArea: .top)
+        tableView.app.pinEdges(toSuperview: .zero, excludingEdge: .top)
+        tableView.app.pinEdge(toSafeArea: .top)
     }
     
     func setupNavbar() {
         Self.isExpanded = false
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开"], currentIndex: -1, actionBlock: { index in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别", "reloadData", "重置图片缓存"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.tableView.contentInsetAdjustmentBehavior = self?.tableView.contentInsetAdjustmentBehavior == .never ? .automatic : .never
-                } else {
+                    self?.setupSubviews()
+                } else if index == 1 {
                     Self.isExpanded = !Self.isExpanded
+                    self?.setupSubviews()
+                } else if index == 2 {
+                    Self.faceAware = !Self.faceAware
+                    self?.setupSubviews()
+                } else if index == 3 {
+                    self?.tableView.reloadData()
+                } else {
+                    TestTableController.testRandomKey = "\(Date.app.currentTime)"
                 }
-                self?.setupSubviews()
             })
         }
     }
     
     func setupSubviews() {
-        tableView.fw.beginRefreshing()
+        tableView.app.beginRefreshing()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,11 +85,11 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = TestTableDynamicLayoutCell.fw.cell(tableView: tableView)
+        let cell = TestTableDynamicLayoutCell.app.cell(tableView: tableView)
         cell.imageClicked = { [weak self] object in
             self?.onPhotoBrowser(cell, indexPath: indexPath)
         }
-        cell.object = tableData.object(at: indexPath.row) as? TestTableDynamicLayoutObject
+        cell.object = tableData[indexPath.row]
         return cell
     }
     
@@ -85,13 +99,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.fw.height(cellClass: TestTableDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
-            cell.object = self?.tableData.object(at: indexPath.row) as? TestTableDynamicLayoutObject
+        return tableView.app.height(cellClass: TestTableDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
+            cell.object = self?.tableData[indexPath.row]
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let object = tableData[indexPath.row] as! TestTableDynamicLayoutObject
+        let object = tableData[indexPath.row]
         tableView.app.willDisplay(cell, at: indexPath, key: object.hash) {
             NSLog("曝光index: %@ object: %@", "\(indexPath.row)", "\(object.index)")
         }
@@ -111,8 +125,8 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            tableData.removeObject(at: indexPath.row)
-            tableView.fw.clearHeightCache()
+            tableData.remove(at: indexPath.row)
+            tableView.app.clearHeightCache()
             tableView.reloadData()
         }
     }
@@ -121,7 +135,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         if tableData.count < 1 {
             return nil
         }
-        let headerView = TestTableDynamicLayoutHeaderView.fw.headerFooterView(tableView: tableView)
+        let headerView = TestTableDynamicLayoutHeaderView.app.headerFooterView(tableView: tableView)
         headerView.renderData("我是表格Header\n我是表格Header")
         return headerView
     }
@@ -130,7 +144,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         if tableData.count < 1 {
             return 0
         }
-        return tableView.fw.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .header) { headerView in
+        return tableView.app.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .header) { headerView in
             headerView.renderData("我是表格Header\n我是表格Header")
         }
     }
@@ -139,7 +153,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         if tableData.count < 1 {
             return nil
         }
-        let footerView = TestTableDynamicLayoutHeaderView.fw.headerFooterView(tableView: tableView)
+        let footerView = TestTableDynamicLayoutHeaderView.app.headerFooterView(tableView: tableView)
         footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         return footerView
     }
@@ -148,7 +162,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         if tableData.count < 1 {
             return 0
         }
-        return tableView.fw.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .footer) { footerView in
+        return tableView.app.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .footer) { footerView in
             footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         }
     }
@@ -175,14 +189,20 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
             "http://littlesvr.ca/apng/images/SteamEngine.webp",
             "Loading.gif",
-            "http://ww2.sinaimg.cn/thumbnail/9ecab84ejw1emgd5nd6eaj20c80c8q4a.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/642beb18gw1ep3629gfm0g206o050b2a.gif",
-            "http://ww4.sinaimg.cn/thumbnail/9e9cb0c9jw1ep7nlyu8waj20c80kptae.jpg",
-            "https://pic3.zhimg.com/b471eb23a_im.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr4nndfj20gy0o9q6i.jpg",
-            "http://ww3.sinaimg.cn/thumbnail/8e88b0c1gw1e9lpr57tn9j20gy0obn0f.jpg",
-            "http://ww2.sinaimg.cn/thumbnail/677febf5gw1erma104rhyj20k03dz16y.jpg",
-            "http://ww4.sinaimg.cn/thumbnail/677febf5gw1erma1g5xd0j20k0esa7wj.jpg"
+            "https://img2.baidu.com/it/u=1624963289,2527746346&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
+            "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg",
+            "https://up.enterdesk.com/edpic_source/eb/34/40/eb34405739ad0e41ec34cd8e16711f30.jpg",
+            "https://up.enterdesk.com/edpic_source/05/85/a7/0585a766f5d7702e82f3caf317e6491b.jpg",
+            "https://up.enterdesk.com/edpic_source/b4/4a/a7/b44aa778ac9f784ebcee27961d81759f.jpg",
+            "https://up.enterdesk.com/edpic_source/3d/42/3e/3d423e3cb05d7edc35c38e3173af2a0d.jpg",
+            "https://up.enterdesk.com/edpic_source/84/f7/fc/84f7fcc08f21419a860dbedde45fe233.jpg",
+            "https://lmg.jj20.com/up/allimg/1114/042421135351/210424135351-1-1200.jpg",
+            "https://img2.baidu.com/it/u=673329217,4275796533&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://up.enterdesk.com/edpic_source/59/fc/06/59fc069244210ceb384c3fb88ec88121.jpg",
+            "https://img1.baidu.com/it/u=2468098533,3730291157&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=800",
+            "https://img2.baidu.com/it/u=4228499675,3913167569&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=889",
+            "https://m.ixiunv.com/uploadfile/ixiunv-pic/2019/0916/20190916094832595.jpg",
+            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
         ].randomElement() ?? ""
         object.index = self.tableData.count
         return object
@@ -193,16 +213,16 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("刷新完成")
-            self.tableData.removeAllObjects()
-            for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+            self.tableData.removeAll()
+            for _ in 0 ..< 5 {
+                self.tableData.append(self.randomObject())
             }
-            self.tableView.fw.clearHeightCache()
+            self.tableView.app.clearHeightCache()
             self.tableView.reloadData()
             
-            self.tableView.fw.shouldRefreshing = self.tableData.count < 20
-            self.tableView.fw.endRefreshing()
-            if !self.tableView.fw.shouldRefreshing {
+            self.tableView.app.shouldRefreshing = self.tableData.count < 50
+            self.tableView.app.endRefreshing()
+            if !self.tableView.app.shouldRefreshing {
                 self.navigationItem.rightBarButtonItem = nil
             }
         }
@@ -213,34 +233,34 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             NSLog("加载完成")
-            for _ in 0 ..< 1 {
-                self.tableData.add(self.randomObject())
+            for _ in 0 ..< 5 {
+                self.tableData.append(self.randomObject())
             }
             self.tableView.reloadData()
             
-            self.tableView.fw.loadingFinished = self.tableData.count >= 20
-            self.tableView.fw.endLoading()
+            self.tableView.app.loadingFinished = self.tableData.count >= 50
+            self.tableView.app.endLoading()
         }
     }
     
     func onPhotoBrowser(_ cell: TestTableDynamicLayoutCell, indexPath: IndexPath) {
-        // 移除所有缓存
-        ImageDownloader.defaultInstance().imageCache?.removeAllImages()
-        ImageDownloader.defaultURLCache().removeAllCachedResponses()
-        
         var pictureUrls: [Any] = []
         for object in self.tableData {
-            guard let object = object as? TestTableDynamicLayoutObject else { continue }
-            if object.imageUrl.fw.isFormatUrl() || object.imageUrl.isEmpty {
+            if object.imageUrl.app.isValid(.isUrl) {
+                pictureUrls.append(object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(Self.testRandomKey)")
+            } else if object.imageUrl.isEmpty {
                 pictureUrls.append(object.imageUrl)
             } else {
                 pictureUrls.append(ModuleBundle.imageNamed(object.imageUrl) as Any)
             }
         }
         
-        fw.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
+        app.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
             let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
             return cell?.myImageView
+        } placeholderImage: { [weak self] index in
+            let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
+            return cell?.myImageView.image
         }
     }
     
@@ -261,16 +281,27 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         didSet {
             guard let object = object else { return }
             myTitleLabel.text = object.title
-            if object.imageUrl.fw.isFormatUrl() {
-                myImageView.fw.setImage(url: object.imageUrl, placeholderImage: UIImage.fw.appIconImage())
+            if object.imageUrl.app.isValid(.isUrl) {
+                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
+                    self?.myImageView.image = image
+                    if TestTableController.faceAware {
+                        self?.myImageView.app.faceAware()
+                    }
+                }
             } else if !object.imageUrl.isEmpty {
                 myImageView.image = ModuleBundle.imageNamed(object.imageUrl)
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             } else {
                 myImageView.image = nil
+                if TestTableController.faceAware {
+                    myImageView.app.faceAware()
+                }
             }
             myTextLabel.text = object.text
-            myImageView.fw.constraint(toSuperview: .bottom)?.isActive = TestTableController.isExpanded
-            fw.maxYViewExpanded = TestTableController.isExpanded
+            myImageView.app.constraint(toSuperview: .bottom)?.isActive = TestTableController.isExpanded
+            app.maxYViewExpanded = TestTableController.isExpanded
         }
     }
     
@@ -279,7 +310,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
     lazy var myTitleLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 15)
+        result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         return result
     }()
@@ -287,50 +318,50 @@ class TestTableDynamicLayoutCell: UITableViewCell {
     lazy var myTextLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.font = UIFont.fw.font(ofSize: 13)
+        result.font = UIFont.app.font(ofSize: 13)
         result.textColor = AppTheme.textColor
         return result
     }()
     
     lazy var myImageView: UIImageView = {
         let result = UIImageView()
-        result.fw.setContentModeAspectFill()
+        result.app.setContentModeAspectFill()
         result.isUserInteractionEnabled = true
-        result.fw.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onImageClick(_:)))
+        result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onImageClick(_:)))
         return result
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        fw.separatorInset = .zero
+        app.separatorInset = .zero
         selectionStyle = .none
         contentView.backgroundColor = AppTheme.cellColor
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
-        fw.maxYViewPadding = 15
+        app.maxYViewPadding = 15
         
         contentView.addSubview(myTitleLabel)
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTitleLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        myTitleLabel.fw.pinEdge(toSuperview: .top, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        myTitleLabel.app.pinEdge(toSuperview: .top, inset: 15)
         
-        myTextLabel.fw.pinEdge(toSuperview: .left, inset: 15)
-        myTextLabel.fw.pinEdge(toSuperview: .right, inset: 15)
-        var constraint = myTextLabel.fw.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
-        myTextLabel.fw.addCollapseConstraint(constraint)
-        myTextLabel.fw.autoCollapse = true
+        myTextLabel.app.pinEdge(toSuperview: .left, inset: 15)
+        myTextLabel.app.pinEdge(toSuperview: .right, inset: 15)
+        var constraint = myTextLabel.app.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
+        myTextLabel.app.addCollapseConstraint(constraint)
+        myTextLabel.app.autoCollapse = true
         
-        myImageView.fw.pinEdge(toSuperview: .left, inset: 15)
-        myImageView.fw.pinEdge(toSuperview: .bottom, inset: 15)
-        constraint = myImageView.fw.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
-        myImageView.fw.addCollapseConstraint(constraint)
-        constraint = myImageView.fw.setDimension(.width, size: 100)
-        myImageView.fw.addCollapseConstraint(constraint)
-        constraint = myImageView.fw.setDimension(.height, size: 100)
-        myImageView.fw.addCollapseConstraint(constraint)
-        myImageView.fw.autoCollapse = true
+        myImageView.app.pinEdge(toSuperview: .left, inset: 15)
+        myImageView.app.pinEdge(toSuperview: .bottom, inset: 15)
+        constraint = myImageView.app.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
+        myImageView.app.addCollapseConstraint(constraint)
+        constraint = myImageView.app.setDimension(.width, size: 100)
+        myImageView.app.addCollapseConstraint(constraint)
+        constraint = myImageView.app.setDimension(.height, size: 100)
+        myImageView.app.addCollapseConstraint(constraint)
+        myImageView.app.autoCollapse = true
     }
     
     required init?(coder: NSCoder) {
@@ -348,7 +379,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
 class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
     
     lazy var titleLabel: UILabel = {
-        let result = UILabel.fw.label(font: UIFont.fw.font(ofSize: 15), textColor: AppTheme.textColor)
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
         result.numberOfLines = 0
         return result
     }()
@@ -356,9 +387,9 @@ class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = AppTheme.cellColor
-        fw.maxYViewPadding = 15
+        app.maxYViewPadding = 15
         addSubview(titleLabel)
-        titleLabel.fw.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))
+        titleLabel.app.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))
         renderData(nil)
     }
     
@@ -367,9 +398,9 @@ class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
     }
     
     func renderData(_ text: String?) {
-        titleLabel.text = FW.safeString(text)
-        titleLabel.fw.constraint(toSuperview: .bottom)?.isActive = TestTableController.isExpanded
-        fw.maxYViewExpanded = TestTableController.isExpanded
+        titleLabel.text = APP.safeString(text)
+        titleLabel.app.constraint(toSuperview: .bottom)?.isActive = TestTableController.isExpanded
+        app.maxYViewExpanded = TestTableController.isExpanded
     }
     
 }

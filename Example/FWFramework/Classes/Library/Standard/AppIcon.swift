@@ -11,12 +11,12 @@ import FWFramework
 @objc extension Icon {
     
     static var backImage: UIImage? {
-        FW.iconImage("zmdi-var-chevron-left", 36)?
-            .fw.image(cropRect: CGRect(x: 6, y: 6, width: 24, height: 24))
+        APP.iconImage("zmdi-var-chevron-left", 36)?
+            .app.image(cropRect: CGRect(x: 6, y: 6, width: 24, height: 24))
     }
     
     static var closeImage: UIImage? {
-        FW.iconImage("zmdi-var-close", 24)
+        APP.iconImage("zmdi-var-close", 24)
     }
     
 }
@@ -30,7 +30,7 @@ class MaterialIcons: Icon {
         Icon.registerClass(MaterialIcons.self)
     }
     
-    override class func iconFont(withSize size: CGFloat) -> UIFont {
+    override class func iconFont(size: CGFloat) -> UIFont {
         if let font = UIFont(name: "Material-Design-Iconic-Font", size: size) {
             return font
         }

@@ -6,150 +6,579 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - UITextField+Keyboard
-extension Wrapper where Base: UITextField {
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
+@_spi(FW) extension UITextField {
+
+    fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
+        
+        var keyboardManager = false {
+            didSet {
+                if oldValue == keyboardManager { return }
+                if keyboardManager {
+                    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIApplication.keyboardWillShowNotification, object: nil)
+                    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIApplication.keyboardWillHideNotification, object: nil)
+                } else {
+                    NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillShowNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillHideNotification, object: nil)
+                }
+            }
+        }
+        
+        var keyboardDistance: CGFloat = 10
+        
+        var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
+        
+        var reboundDistance: CGFloat = 0
+        
+        var keyboardResign = false {
+            didSet {
+                if oldValue == keyboardResign { return }
+                if keyboardResign {
+                    NotificationCenter.default.addObserver(self, selector: #selector(appResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+                    NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+                } else {
+                    NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+                }
+            }
+        }
+        
+        var touchResign = false {
+            didSet {
+                if oldValue == touchResign { return }
+                if touchResign {
+                    if let textField = textInput as? UITextField {
+                        NotificationCenter.default.addObserver(self, selector: #selector(editingDidBegin), name: UITextField.textDidBeginEditingNotification, object: textField)
+                        NotificationCenter.default.addObserver(self, selector: #selector(editingDidEnd), name: UITextField.textDidEndEditingNotification, object: textField)
+                    } else if let textView = textInput as? UITextView {
+                        NotificationCenter.default.addObserver(self, selector: #selector(editingDidBegin), name: UITextView.textDidBeginEditingNotification, object: textView)
+                        NotificationCenter.default.addObserver(self, selector: #selector(editingDidEnd), name: UITextView.textDidEndEditingNotification, object: textView)
+                    }
+                } else {
+                    if let textField = textInput as? UITextField {
+                        NotificationCenter.default.removeObserver(self, name: UITextField.textDidBeginEditingNotification, object: textField)
+                        NotificationCenter.default.removeObserver(self, name: UITextField.textDidEndEditingNotification, object: textField)
+                    } else if let textView = textInput as? UITextView {
+                        NotificationCenter.default.removeObserver(self, name: UITextView.textDidBeginEditingNotification, object: textView)
+                        NotificationCenter.default.removeObserver(self, name: UITextView.textDidEndEditingNotification, object: textView)
+                    }
+                }
+            }
+        }
+        
+        var returnResign = false
+        
+        var returnNext = false
+        
+        var returnBlock: ((T) -> Void)?
+        
+        lazy var keyboardToolbar: UIToolbar = {
+            return UIToolbar()
+        }()
+        
+        lazy var toolbarPreviousButton: Any? = {
+            return KeyboardConfig.toolbarPreviousImage
+        }()
+        
+        lazy var toolbarNextButton: Any? = {
+            return KeyboardConfig.toolbarNextImage
+        }()
+        
+        lazy var toolbarDoneButton: Any? = {
+            return NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
+        }()
+        
+        var previousResponder: ((T) -> UIResponder?)? {
+            didSet {
+                previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
+            }
+        }
+        
+        var nextResponder: ((T) -> UIResponder?)? {
+            didSet {
+                nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
+            }
+        }
+        
+        var previousResponderTag: Int = 0 {
+            didSet {
+                previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
+            }
+        }
+        
+        var nextResponderTag: Int = 0 {
+            didSet {
+                nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
+            }
+        }
+        
+        weak var scrollView: UIScrollView?
+        
+        private var previousItem: UIBarButtonItem?
+        
+        private var nextItem: UIBarButtonItem?
+        
+        private var keyboardActive = false
+        
+        private weak var viewController: UIViewController? {
+            if _viewController == nil {
+                _viewController = textInput?.fw_viewController
+            }
+            return _viewController
+        }
+        private weak var _viewController: UIViewController?
+        
+        private weak var textInput: T?
+        
+        init(textInput: T?) {
+            super.init()
+            self.textInput = textInput
+        }
+        
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
+        
+        @objc private func editingDidBegin() {
+            guard touchResign, let viewController = viewController else { return }
+            
+            if KeyboardConfig.keyboardGesture == nil {
+                KeyboardConfig.keyboardGesture = UITapGestureRecognizer.fw_gestureRecognizer(block: { sender in
+                    guard let sender = sender as? UITapGestureRecognizer else { return }
+                    if sender.state == .ended {
+                        sender.view?.endEditing(true)
+                    }
+                })
+            }
+            if let keyboardGesture = KeyboardConfig.keyboardGesture {
+                viewController.view.addGestureRecognizer(keyboardGesture)
+            }
+        }
+        
+        @objc private func editingDidEnd() {
+            guard touchResign, let viewController = viewController else { return }
+            
+            if let keyboardGesture = KeyboardConfig.keyboardGesture {
+                viewController.view.removeGestureRecognizer(keyboardGesture)
+            }
+        }
+        
+        @objc private func appResignActive() {
+            guard keyboardResign, textInput?.isFirstResponder ?? false else { return }
+            
+            keyboardActive = true
+            textInput?.resignFirstResponder()
+        }
+        
+        @objc private func appBecomeActive() {
+            guard keyboardResign, keyboardActive else { return }
+            
+            keyboardActive = false
+            textInput?.becomeFirstResponder()
+        }
+        
+        @objc private func keyboardWillShow(_ notification: Notification) {
+            guard let textInput = textInput, textInput.isFirstResponder else { return }
+            guard keyboardManager, let viewController = viewController else { return }
+            
+            let keyboardRect = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+            let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+            var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+            animationCurve = animationCurve << 16
+            
+            if let scrollView = scrollView {
+                if !KeyboardConfig.keyboardShowing {
+                    KeyboardConfig.keyboardShowing = true
+                    KeyboardConfig.keyboardOffset = scrollView.contentOffset.y
+                }
+                
+                let convertView = textInput.window ?? viewController.view.window
+                let convertRect = textInput.convert(textInput.bounds, to: convertView)
+                var contentOffset = scrollView.contentOffset
+                let textInputOffset = keyboardDistanceBlock?(keyboardRect.height, convertRect.height) ?? keyboardDistance
+                var targetOffsetY = max(contentOffset.y + textInputOffset + CGRectGetMaxY(convertRect) - CGRectGetMinY(keyboardRect), KeyboardConfig.keyboardOffset)
+                if reboundDistance > 0 && targetOffsetY < contentOffset.y {
+                    targetOffsetY = (targetOffsetY + reboundDistance >= contentOffset.y) ? contentOffset.y : targetOffsetY + reboundDistance
+                }
+                
+                contentOffset.y = targetOffsetY
+                UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                    scrollView.contentOffset = contentOffset
+                }, completion: nil)
+                return
+            }
+            
+            if !KeyboardConfig.keyboardShowing {
+                KeyboardConfig.keyboardShowing = true
+                KeyboardConfig.keyboardOrigin = viewController.view.frame.origin.y
+            }
+            
+            let convertView = textInput.window ?? viewController.view.window
+            let convertRect = textInput.convert(textInput.bounds, to: convertView)
+            var viewFrame = viewController.view.frame
+            let textInputOffset = keyboardDistanceBlock?(keyboardRect.height, convertRect.height) ?? keyboardDistance
+            var viewTargetY = min(viewFrame.origin.y - textInputOffset + CGRectGetMinY(keyboardRect) - CGRectGetMaxY(convertRect), KeyboardConfig.keyboardOrigin)
+            if reboundDistance > 0 && viewTargetY > viewFrame.origin.y {
+                viewTargetY = (viewTargetY - reboundDistance <= viewFrame.origin.y) ? viewFrame.origin.y : viewTargetY - reboundDistance
+            }
+            
+            viewFrame.origin.y = viewTargetY
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+                if #available(iOS 14.0, *) {
+                    viewController.view.layer.frame = viewFrame
+                } else {
+                    viewController.view.frame = viewFrame
+                }
+            }, completion: nil)
+        }
+        
+        @objc private func keyboardWillHide(_ notification: Notification) {
+            guard let textInput = textInput, textInput.isFirstResponder else { return }
+            guard keyboardManager, let viewController = viewController,
+                  KeyboardConfig.keyboardShowing else { return }
+            
+            let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+            var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+            animationCurve = animationCurve << 16
+            
+            if let scrollView = scrollView {
+                let originOffsetY = KeyboardConfig.keyboardOffset
+                KeyboardConfig.keyboardShowing = false
+                KeyboardConfig.keyboardOffset = 0
+                
+                var contentOffset = scrollView.contentOffset
+                contentOffset.y = originOffsetY
+                UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                    scrollView.contentOffset = contentOffset
+                }, completion: nil)
+                return
+            }
+            
+            let viewOriginY = KeyboardConfig.keyboardOrigin
+            KeyboardConfig.keyboardShowing = false
+            KeyboardConfig.keyboardOrigin = 0
+            
+            var viewFrame = viewController.view.frame
+            viewFrame.origin.y = viewOriginY
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: {
+                // 修复iOS14当vc.hidesBottomBarWhenPushed为YES时view.frame会被导航栏重置引起的滚动失效问题
+                if #available(iOS 14.0, *) {
+                    viewController.view.layer.frame = viewFrame
+                } else {
+                    viewController.view.frame = viewFrame
+                }
+            }, completion: nil)
+        }
+        
+        @objc func invokeReturnAction() {
+            // 切换到下一个输入框
+            if returnNext {
+                goNext()
+            // 关闭键盘
+            } else if returnResign {
+                textInput?.resignFirstResponder()
+            }
+            // 执行回调
+            if returnBlock != nil, let textInput = textInput {
+                returnBlock?(textInput)
+            }
+        }
+        
+        @objc func goPrevious() {
+            guard let textInput = textInput else { return }
+            if previousResponder != nil {
+                let previousInput = previousResponder?(textInput)
+                previousInput?.becomeFirstResponder()
+                return
+            }
+            
+            if previousResponderTag > 0 {
+                let targetView = viewController != nil ? viewController?.view : textInput.window
+                let previousView = targetView?.viewWithTag(previousResponderTag)
+                previousView?.becomeFirstResponder()
+            }
+        }
+        
+        @objc func goNext() {
+            guard let textInput = textInput else { return }
+            if nextResponder != nil {
+                let nextInput = nextResponder?(textInput)
+                nextInput?.becomeFirstResponder()
+                return
+            }
+            
+            if nextResponderTag > 0 {
+                let targetView = viewController != nil ? viewController?.view : textInput.window
+                let nextView = targetView?.viewWithTag(nextResponderTag)
+                nextView?.becomeFirstResponder()
+            }
+        }
+        
+        func keyboardHeight(_ notification: Notification) -> CGFloat {
+            let keyboardRect = (notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+            return keyboardRect.size.height
+        }
+
+        func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+            let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
+            var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
+            animationCurve = animationCurve << 16
+            
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: animations, completion: completion)
+        }
+        
+        func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+            let titleItem = title != nil ? UIBarButtonItem.fw_item(object: title, block: nil) : nil
+            titleItem?.isEnabled = false
+            
+            let previousEnabled = previousResponder != nil || previousResponderTag > 0
+            let nextEnabled = nextResponder != nil || nextResponderTag > 0
+            let previousItem = ((previousEnabled || nextEnabled) && toolbarPreviousButton != nil) ? UIBarButtonItem.fw_item(object: toolbarPreviousButton, target: self, action: #selector(goPrevious)) : nil
+            previousItem?.isEnabled = previousEnabled
+            self.previousItem = previousItem
+            
+            let nextItem = ((previousEnabled || nextEnabled) && toolbarNextButton != nil) ? UIBarButtonItem.fw_item(object: toolbarNextButton, target: self, action: #selector(goNext)) : nil
+            nextItem?.isEnabled = nextEnabled
+            self.nextItem = nextItem
+            
+            let doneItem = toolbarDoneButton != nil ? (doneBlock != nil ? UIBarButtonItem.fw_item(object: toolbarDoneButton, block: doneBlock) : UIBarButtonItem.fw_item(object: toolbarDoneButton, target: textInput, action: #selector(UIView.resignFirstResponder))) : nil
+            doneItem?.style = .done
+            
+            addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+        }
+        
+        func addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
+            var items: [UIBarButtonItem] = []
+            if let previousItem = previousItem { items.append(previousItem) }
+            if previousItem != nil && nextItem != nil {
+                let fixedItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+                fixedItem.width = 6
+                items.append(fixedItem)
+            }
+            if let nextItem = nextItem { items.append(nextItem) }
+            items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+            if let titleItem = titleItem {
+                items.append(titleItem)
+                items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+            }
+            if let doneItem = doneItem { items.append(doneItem) }
+            
+            let toolbar = self.keyboardToolbar
+            toolbar.items = items
+            toolbar.sizeToFit()
+            if let textField = textInput as? UITextField {
+                textField.inputAccessoryView = toolbar
+            } else if let textView = textInput as? UITextView {
+                textView.inputAccessoryView = toolbar
+            }
+        }
+        
+    }
+    
+    private class KeyboardConfig {
+        
+        static var keyboardShowing = false
+        static var keyboardOrigin: CGFloat = 0
+        static var keyboardOffset: CGFloat = 0
+        static var keyboardGesture: UITapGestureRecognizer?
+        
+        static var toolbarPreviousImage: UIImage? {
+            if let image = _toolbarPreviousImage { return image }
+            
+            let base64String = "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"
+            guard let data = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) else { return nil }
+            _toolbarPreviousImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
+            return _toolbarPreviousImage
+        }
+        static var _toolbarPreviousImage: UIImage?
+        
+        static var toolbarNextImage: UIImage? {
+            if let image = _toolbarNextImage { return image }
+            
+            let base64String = "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"
+            guard let data = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) else { return nil }
+            _toolbarNextImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
+            return _toolbarNextImage
+        }
+        static var _toolbarNextImage: UIImage?
+        
+    }
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    public var keyboardManager: Bool {
-        get { return base.__fw_keyboardManager }
-        set { base.__fw_keyboardManager = newValue }
+    @objc dynamic public var fw_keyboardManager: Bool {
+        get { return self.fw_keyboardTarget.keyboardManager }
+        set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
-    public var keyboardDistance: CGFloat {
-        get { return base.__fw_keyboardDistance }
-        set { base.__fw_keyboardDistance = newValue }
+    @objc dynamic public var fw_keyboardDistance: CGFloat {
+        get { return self.fw_keyboardTarget.keyboardDistance }
+        set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
-        get { return base.__fw_keyboardDistanceBlock }
-        set { base.__fw_keyboardDistanceBlock = newValue }
+    @objc dynamic public var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return self.fw_keyboardTarget.keyboardDistanceBlock }
+        set { self.fw_keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
-    public var reboundDistance: CGFloat {
-        get { return base.__fw_reboundDistance }
-        set { base.__fw_reboundDistance = newValue }
+    @objc dynamic public var fw_reboundDistance: CGFloat {
+        get { return self.fw_keyboardTarget.reboundDistance }
+        set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-    public var keyboardResign: Bool {
-        get { return base.__fw_keyboardResign }
-        set { base.__fw_keyboardResign = newValue }
+    @objc dynamic public var fw_keyboardResign: Bool {
+        get { return self.fw_keyboardTarget.keyboardResign }
+        set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-    public var touchResign: Bool {
-        get { return base.__fw_touchResign }
-        set { base.__fw_touchResign = newValue }
+    @objc dynamic public var fw_touchResign: Bool {
+        get { return self.fw_keyboardTarget.touchResign }
+        set { self.fw_keyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
-    public weak var keyboardScrollView: UIScrollView? {
-        get { return base.__fw_keyboardScrollView }
-        set { base.__fw_keyboardScrollView = newValue }
+    public weak var fw_keyboardScrollView: UIScrollView? {
+        get { return self.fw_keyboardTarget.scrollView }
+        set { self.fw_keyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
-    public var returnResign: Bool {
-        get { return base.__fw_returnResign }
-        set { base.__fw_returnResign = newValue }
+    @objc dynamic public var fw_returnResign: Bool {
+        get {
+            return self.fw_keyboardTarget.returnResign
+        }
+        set {
+            self.fw_keyboardTarget.returnResign = newValue
+            self.fw_addReturnEvent()
+        }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
-    public var returnNext: Bool {
-        get { return base.__fw_returnNext }
-        set { base.__fw_returnNext = newValue }
+    public var fw_returnNext: Bool {
+        get {
+            return self.fw_keyboardTarget.returnNext
+        }
+        set {
+            self.fw_keyboardTarget.returnNext = newValue
+            self.fw_addReturnEvent()
+        }
     }
 
     /// 设置点击键盘完成按钮的事件句柄
-    public var returnBlock: ((UITextField) -> Void)? {
-        get { return base.__fw_returnBlock }
-        set { base.__fw_returnBlock = newValue }
+    public var fw_returnBlock: ((UITextField) -> Void)? {
+        get {
+            return self.fw_keyboardTarget.returnBlock
+        }
+        set {
+            self.fw_keyboardTarget.returnBlock = newValue
+            self.fw_addReturnEvent()
+        }
+    }
+    
+    private func fw_addReturnEvent() {
+        let value = fw_propertyNumber(forName: "fw_addReturnEvent")
+        if value == nil {
+            self.addTarget(self.fw_keyboardTarget, action: #selector(KeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
+            fw_setPropertyNumber(NSNumber(value: true), forName: "fw_addReturnEvent")
+        }
     }
     
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
-    public var keyboardToolbar: UIToolbar {
-        get { return base.__fw_keyboardToolbar }
-        set { base.__fw_keyboardToolbar = newValue }
+    public var fw_keyboardToolbar: UIToolbar {
+        get { return self.fw_keyboardTarget.keyboardToolbar }
+        set { self.fw_keyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-    public var toolbarPreviousButton: Any? {
-        get { return base.__fw_toolbarPreviousButton }
-        set { base.__fw_toolbarPreviousButton = newValue }
+    public var fw_toolbarPreviousButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarPreviousButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarPreviousButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-    public var toolbarNextButton: Any? {
-        get { return base.__fw_toolbarNextButton }
-        set { base.__fw_toolbarNextButton = newValue }
+    public var fw_toolbarNextButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarNextButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarNextButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-    public var toolbarDoneButton: Any? {
-        get { return base.__fw_toolbarDoneButton }
-        set { base.__fw_toolbarDoneButton = newValue }
+    public var fw_toolbarDoneButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarDoneButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarDoneButton = newValue
+        }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: ((UITextField) -> UIResponder?)? {
-        get { return base.__fw_previousResponder }
-        set { base.__fw_previousResponder = newValue }
+    public var fw_previousResponder: ((UITextField) -> UIResponder?)? {
+        get { return self.fw_keyboardTarget.previousResponder }
+        set { self.fw_keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: ((UITextField) -> UIResponder?)? {
-        get { return base.__fw_nextResponder }
-        set { base.__fw_nextResponder = newValue }
+    public var fw_nextResponder: ((UITextField) -> UIResponder?)? {
+        get { return self.fw_keyboardTarget.nextResponder }
+        set { self.fw_keyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
-    public var previousResponderTag: Int {
-        get { return base.__fw_previousResponderTag }
-        set { base.__fw_previousResponderTag = newValue }
+    public var fw_previousResponderTag: Int {
+        get { return self.fw_keyboardTarget.previousResponderTag }
+        set { self.fw_keyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
-    public var nextResponderTag: Int {
-        get { return base.__fw_nextResponderTag }
-        set { base.__fw_nextResponderTag = newValue }
+    public var fw_nextResponderTag: Int {
+        get { return self.fw_keyboardTarget.nextResponderTag }
+        set { self.fw_keyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
-    public func goPrevious() {
-        base.__fw_goPrevious()
+    public func fw_goPrevious() {
+        self.fw_keyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
-    public func goNext() {
-        base.__fw_goNext()
+    public func fw_goNext() {
+        self.fw_keyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
-    public func keyboardHeight(_ notification: Notification) -> CGFloat {
-        return base.__fw_keyboardHeight(notification)
+    public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
+        return self.fw_keyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
-    public func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_keyboardAnimate(notification, animations: animations, completion: completion)
+    public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+        self.fw_keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        base.__fw_addToolbar(withTitle: title, doneBlock: doneBlock)
+    public func fw_addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+        self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -158,158 +587,265 @@ extension Wrapper where Base: UITextField {
     ///   - previousItem: 左侧前一个按钮
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
-    public func addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        base.__fw_addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
+        self.fw_keyboardTarget.addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    }
+    
+    private var fw_keyboardTarget: KeyboardTarget<UITextField> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? KeyboardTarget<UITextField> {
+            return target
+        } else {
+            let target = KeyboardTarget<UITextField>(textInput: self)
+            fw_setProperty(target, forName: "fw_keyboardTarget")
+            return target
+        }
     }
     
 }
 
 // MARK: - UITextView+Keyboard
-extension Wrapper where Base: UITextView {
+/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
+@_spi(FW) extension UITextView {
+    
+    private class TextViewDelegateProxy: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
+        
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            var shouldChange = true
+            // 先执行代理方法
+            if let delegateChange = self.delegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) {
+                shouldChange = delegateChange
+            }
+            
+            // 再执行内部方法
+            if textView.fw_returnResign || textView.fw_returnNext || textView.fw_returnBlock != nil {
+                // 判断是否输入回车
+                if text == "\n" {
+                    // 切换到下一个输入框
+                    if textView.fw_returnNext {
+                        textView.fw_goNext()
+                    // 关闭键盘
+                    } else if textView.fw_returnResign {
+                        textView.resignFirstResponder()
+                    }
+                    // 执行回调
+                    textView.fw_returnBlock?(textView)
+                    shouldChange = false
+                }
+            }
+            return shouldChange
+        }
+        
+    }
     
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
-    public var keyboardManager: Bool {
-        get { return base.__fw_keyboardManager }
-        set { base.__fw_keyboardManager = newValue }
+    @objc dynamic public var fw_keyboardManager: Bool {
+        get { return self.fw_keyboardTarget.keyboardManager }
+        set { self.fw_keyboardTarget.keyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
-    public var keyboardDistance: CGFloat {
-        get { return base.__fw_keyboardDistance }
-        set { base.__fw_keyboardDistance = newValue }
+    @objc dynamic public var fw_keyboardDistance: CGFloat {
+        get { return self.fw_keyboardTarget.keyboardDistance }
+        set { self.fw_keyboardTarget.keyboardDistance = newValue }
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
-        get { return base.__fw_keyboardDistanceBlock }
-        set { base.__fw_keyboardDistanceBlock = newValue }
+    @objc dynamic public var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+        get { return self.fw_keyboardTarget.keyboardDistanceBlock }
+        set { self.fw_keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
-    public var reboundDistance: CGFloat {
-        get { return base.__fw_reboundDistance }
-        set { base.__fw_reboundDistance = newValue }
+    @objc dynamic public var fw_reboundDistance: CGFloat {
+        get { return self.fw_keyboardTarget.reboundDistance }
+        set { self.fw_keyboardTarget.reboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
-    public var keyboardResign: Bool {
-        get { return base.__fw_keyboardResign }
-        set { base.__fw_keyboardResign = newValue }
+    @objc dynamic public var fw_keyboardResign: Bool {
+        get { return self.fw_keyboardTarget.keyboardResign }
+        set { self.fw_keyboardTarget.keyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
-    public var touchResign: Bool {
-        get { return base.__fw_touchResign }
-        set { base.__fw_touchResign = newValue }
+    @objc dynamic public var fw_touchResign: Bool {
+        get { return self.fw_keyboardTarget.touchResign }
+        set { self.fw_keyboardTarget.touchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
-    public weak var keyboardScrollView: UIScrollView? {
-        get { return base.__fw_keyboardScrollView }
-        set { base.__fw_keyboardScrollView = newValue }
+    public weak var fw_keyboardScrollView: UIScrollView? {
+        get { return self.fw_keyboardTarget.scrollView }
+        set { self.fw_keyboardTarget.scrollView = newValue }
     }
     
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var returnResign: Bool {
-        get { return base.__fw_returnResign }
-        set { base.__fw_returnResign = newValue }
+    @objc dynamic public var fw_returnResign: Bool {
+        get {
+            return self.fw_keyboardTarget.returnResign
+        }
+        set {
+            self.fw_keyboardTarget.returnResign = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var returnNext: Bool {
-        get { return base.__fw_returnNext }
-        set { base.__fw_returnNext = newValue }
+    public var fw_returnNext: Bool {
+        get {
+            return self.fw_keyboardTarget.returnNext
+        }
+        set {
+            self.fw_keyboardTarget.returnNext = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
 
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var returnBlock: ((UITextView) -> Void)? {
-        get { return base.__fw_returnBlock }
-        set { base.__fw_returnBlock = newValue }
+    public var fw_returnBlock: ((UITextView) -> Void)? {
+        get {
+            return self.fw_keyboardTarget.returnBlock
+        }
+        set {
+            self.fw_keyboardTarget.returnBlock = newValue
+            self.fw_delegateProxyEnabled = true
+        }
     }
     
     /// 调用上面三个方法后会修改delegate，此方法始终访问外部delegate
-    public weak var delegate: UITextViewDelegate? {
-        get { return base.__fw_delegate }
-        set { base.__fw_delegate = newValue }
+    public weak var fw_delegate: UITextViewDelegate? {
+        get {
+            if !self.fw_delegateProxyEnabled {
+                return self.delegate
+            } else {
+                return self.fw_delegateProxy.delegate
+            }
+        }
+        set {
+            if !self.fw_delegateProxyEnabled {
+                self.delegate = newValue
+            } else {
+                self.fw_delegateProxy.delegate = newValue
+            }
+        }
+    }
+    
+    private var fw_delegateProxyEnabled: Bool {
+        get {
+            return self.delegate === self.fw_delegateProxy
+        }
+        set {
+            if newValue != self.fw_delegateProxyEnabled {
+                if newValue {
+                    self.fw_delegateProxy.delegate = self.delegate
+                    self.delegate = self.fw_delegateProxy
+                } else {
+                    self.delegate = self.fw_delegateProxy.delegate
+                    self.fw_delegateProxy.delegate = nil
+                }
+            }
+        }
+    }
+    
+    private var fw_delegateProxy: TextViewDelegateProxy {
+        if let proxy = fw_property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
+            return proxy
+        } else {
+            let proxy = TextViewDelegateProxy()
+            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            return proxy
+        }
     }
     
     // MARK: - Toolbar
     /// 获取关联的键盘Toolbar对象，可自定义样式
-    public var keyboardToolbar: UIToolbar {
-        get { return base.__fw_keyboardToolbar }
-        set { base.__fw_keyboardToolbar = newValue }
+    public var fw_keyboardToolbar: UIToolbar {
+        get { return self.fw_keyboardTarget.keyboardToolbar }
+        set { self.fw_keyboardTarget.keyboardToolbar = newValue }
     }
 
     /// 自定义键盘Toolbar上一个按钮，支持图片|字符串等(详见FWBlock)，默认朝上的箭头
-    public var toolbarPreviousButton: Any? {
-        get { return base.__fw_toolbarPreviousButton }
-        set { base.__fw_toolbarPreviousButton = newValue }
+    public var fw_toolbarPreviousButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarPreviousButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarPreviousButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar下一个按钮，支持图片|字符串等(详见FWBlock)，默认朝下的箭头
-    public var toolbarNextButton: Any? {
-        get { return base.__fw_toolbarNextButton }
-        set { base.__fw_toolbarNextButton = newValue }
+    public var fw_toolbarNextButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarNextButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarNextButton = newValue
+        }
     }
 
     /// 自定义键盘Toolbar完成按钮，支持图片|字符串等(详见FWBlock)，默认Done
-    public var toolbarDoneButton: Any? {
-        get { return base.__fw_toolbarDoneButton }
-        set { base.__fw_toolbarDoneButton = newValue }
+    public var fw_toolbarDoneButton: Any? {
+        get {
+            return self.fw_keyboardTarget.toolbarDoneButton
+        }
+        set {
+            self.fw_keyboardTarget.toolbarDoneButton = newValue
+        }
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: ((UITextView) -> UIResponder?)? {
-        get { return base.__fw_previousResponder }
-        set { base.__fw_previousResponder = newValue }
+    public var fw_previousResponder: ((UITextView) -> UIResponder?)? {
+        get { return self.fw_keyboardTarget.previousResponder }
+        set { self.fw_keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: ((UITextView) -> UIResponder?)? {
-        get { return base.__fw_nextResponder }
-        set { base.__fw_nextResponder = newValue }
+    public var fw_nextResponder: ((UITextView) -> UIResponder?)? {
+        get { return self.fw_keyboardTarget.nextResponder }
+        set { self.fw_keyboardTarget.nextResponder = newValue }
     }
     
     /// 设置Toolbar点击前一个按钮时聚焦的输入框tag，默认0不生效
-    public var previousResponderTag: Int {
-        get { return base.__fw_previousResponderTag }
-        set { base.__fw_previousResponderTag = newValue }
+    public var fw_previousResponderTag: Int {
+        get { return self.fw_keyboardTarget.previousResponderTag }
+        set { self.fw_keyboardTarget.previousResponderTag = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框tag，默认0不生效
-    public var nextResponderTag: Int {
-        get { return base.__fw_nextResponderTag }
-        set { base.__fw_nextResponderTag = newValue }
+    public var fw_nextResponderTag: Int {
+        get { return self.fw_keyboardTarget.nextResponderTag }
+        set { self.fw_keyboardTarget.nextResponderTag = newValue }
     }
     
     /// 自动跳转前一个输入框，优先使用previousResponder，其次根据responderTag查找
-    public func goPrevious() {
-        base.__fw_goPrevious()
+    public func fw_goPrevious() {
+        self.fw_keyboardTarget.goPrevious()
     }
 
     /// 自动跳转后一个输入框，优先使用nextResponder，其次根据responderTag查找
-    public func goNext() {
-        base.__fw_goNext()
+    public func fw_goNext() {
+        self.fw_keyboardTarget.goNext()
     }
     
     /// 获取键盘弹出时的高度，对应Key为UIKeyboardFrameEndUserInfoKey
-    public func keyboardHeight(_ notification: Notification) -> CGFloat {
-        return base.__fw_keyboardHeight(notification)
+    public func fw_keyboardHeight(_ notification: Notification) -> CGFloat {
+        return self.fw_keyboardTarget.keyboardHeight(notification)
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
-    public func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        base.__fw_keyboardAnimate(notification, animations: animations, completion: completion)
+    public func fw_keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+        self.fw_keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
     
     /// 添加Toolbar，指定标题和完成句柄，使用默认按钮
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-        base.__fw_addToolbar(withTitle: title, doneBlock: doneBlock)
+    public func fw_addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+        self.fw_keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
     /// 添加Toolbar，指定居中标题、左侧上一个、下一个按钮和右边按钮
@@ -318,78 +854,298 @@ extension Wrapper where Base: UITextView {
     ///   - previousItem: 左侧前一个按钮
     ///   - nextItem: 左侧下一个按钮
     ///   - doneItem: 右侧完成按钮
-    public func addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
-        base.__fw_addToolbar(withTitleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    public func fw_addToolbar(titleItem: UIBarButtonItem?, previousItem: UIBarButtonItem?, nextItem: UIBarButtonItem?, doneItem: UIBarButtonItem?) {
+        self.fw_keyboardTarget.addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)
+    }
+    
+    private var fw_keyboardTarget: UITextField.KeyboardTarget<UITextView> {
+        if let target = fw_property(forName: "fw_keyboardTarget") as? UITextField.KeyboardTarget<UITextView> {
+            return target
+        } else {
+            let target = UITextField.KeyboardTarget<UITextView>(textInput: self)
+            fw_setProperty(target, forName: "fw_keyboardTarget")
+            return target
+        }
     }
     
 }
 
 // MARK: - UITextView+Placeholder
-extension Wrapper where Base: UITextView {
+@_spi(FW) extension UITextView {
+    
+    private class PlaceholderTarget: NSObject {
+        
+        private(set) weak var textView: UITextView?
+        
+        var lastHeight: CGFloat = 0
+        
+        private static var defaultPlaceholderColor: UIColor?
+        
+        fileprivate static func placeholderColor() -> UIColor? {
+            if defaultPlaceholderColor != nil { return defaultPlaceholderColor }
+            
+            let textField = UITextField()
+            textField.placeholder = " "
+            let placeholderLabel = textField.fw_invokeGetter(String(format: "%@%@%@", "_p", "lacehol", "derLabel")) as? UILabel
+            defaultPlaceholderColor = placeholderLabel?.textColor
+            return defaultPlaceholderColor
+        }
+        
+        init(textView: UITextView?) {
+            super.init()
+            self.textView = textView
+        }
+        
+        @objc func setNeedsUpdatePlaceholder() {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(updatePlaceholder), object: nil)
+            self.perform(#selector(updatePlaceholder), with: nil, afterDelay: 0)
+        }
+        
+        @objc func setNeedsUpdateText() {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(updateText), object: nil)
+            self.perform(#selector(updateText), with: nil, afterDelay: 0)
+        }
+        
+        @objc func updatePlaceholder() {
+            guard let textView = self.textView else { return }
+            // 调整contentInset实现垂直分布，不使用contentOffset是因为光标移动会不正常
+            var contentInset = textView.contentInset
+            contentInset.top = 0
+            if textView.contentSize.height < textView.bounds.size.height {
+                let height = ceil(textView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .greatestFiniteMagnitude)).height)
+                switch textView.fw_verticalAlignment {
+                case .center:
+                    contentInset.top = (textView.bounds.size.height - height) / 2.0
+                case .bottom:
+                    contentInset.top = textView.bounds.size.height - height
+                default:
+                    break
+                }
+            }
+            textView.contentInset = contentInset
+            
+            let text: String? = textView.text
+            if (text?.count ?? 0) > 0 {
+                textView.fw_placeholderLabel.isHidden = true
+            } else {
+                var targetFrame: CGRect = .zero
+                let inset = textView.fw_placeholderInset
+                if inset != .zero {
+                    targetFrame = CGRect(x: inset.left, y: inset.top, width: CGRectGetWidth(textView.bounds) - inset.left - inset.right, height: CGRectGetHeight(textView.bounds) - inset.top - inset.bottom)
+                } else {
+                    let x = textView.textContainer.lineFragmentPadding + textView.textContainerInset.left
+                    let width = CGRectGetWidth(textView.bounds) - x - textView.textContainer.lineFragmentPadding - textView.textContainerInset.right
+                    var height = ceil(textView.fw_placeholderLabel.sizeThatFits(CGSize(width: width, height: 0)).height)
+                    height = min(height, textView.bounds.size.height - textView.textContainerInset.top - textView.textContainerInset.bottom)
+                    
+                    var y = textView.textContainerInset.top
+                    switch textView.fw_verticalAlignment {
+                    case .center:
+                        y = (textView.bounds.size.height - height) / 2.0 - textView.contentInset.top
+                    case .bottom:
+                        y = textView.bounds.size.height - height - textView.textContainerInset.bottom - textView.contentInset.top
+                    default:
+                        break
+                    }
+                    targetFrame = CGRect(x: x, y: y, width: width, height: height)
+                }
+                
+                textView.fw_placeholderLabel.isHidden = false
+                textView.fw_placeholderLabel.textAlignment = textView.textAlignment
+                textView.fw_placeholderLabel.frame = targetFrame
+            }
+        }
+        
+        @objc func updateText() {
+            updatePlaceholder()
+            guard let textView = self.textView,
+                  textView.fw_autoHeightEnabled else { return }
+            
+            var height = ceil(textView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .greatestFiniteMagnitude)).height)
+            height = max(textView.fw_minHeight, min(height, textView.fw_maxHeight))
+            if height == self.lastHeight { return }
+            
+            var targetFrame = textView.frame
+            targetFrame.size.height = height
+            textView.frame = targetFrame
+            textView.fw_heightDidChange?(height)
+            self.lastHeight = height
+        }
+        
+    }
     
     /// 占位文本，默认nil
-    public var placeholder: String? {
-        get { return base.__fw_placeholder }
-        set { base.__fw_placeholder = newValue }
+    public var fw_placeholder: String? {
+        get {
+            return self.fw_placeholderLabel.text
+        }
+        set {
+            self.fw_placeholderLabel.text = newValue
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 占位颜色，默认系统颜色
-    public var placeholderColor: UIColor? {
-        get { return base.__fw_placeholderColor }
-        set { base.__fw_placeholderColor = newValue }
+    public var fw_placeholderColor: UIColor? {
+        get { return self.fw_placeholderLabel.textColor }
+        set { self.fw_placeholderLabel.textColor = newValue }
     }
 
     /// 带属性占位文本，默认nil
-    public var attributedPlaceholder: NSAttributedString? {
-        get { return base.__fw_attributedPlaceholder }
-        set { base.__fw_attributedPlaceholder = newValue }
+    public var fw_attributedPlaceholder: NSAttributedString? {
+        get {
+            return self.fw_placeholderLabel.attributedText
+        }
+        set {
+            self.fw_placeholderLabel.attributedText = newValue
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 自定义占位文本内间距，默认zero与内容一致
-    public var placeholderInset: UIEdgeInsets {
-        get { return base.__fw_placeholderInset }
-        set { base.__fw_placeholderInset = newValue }
+    public var fw_placeholderInset: UIEdgeInsets {
+        get {
+            let value = fw_property(forName: "fw_placeholderInset") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_placeholderInset")
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
 
     /// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
-    public var verticalAlignment: UIControl.ContentVerticalAlignment {
-        get { return base.__fw_verticalAlignment }
-        set { base.__fw_verticalAlignment = newValue }
+    public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
+        get {
+            if let value = fw_propertyNumber(forName: "fw_verticalAlignment") {
+                return .init(rawValue: value.intValue) ?? .top
+            }
+            return .top
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+        }
     }
     
     /// 快捷设置行高，兼容placeholder和typingAttributes
-    public var lineHeight: CGFloat {
-        get { return base.__fw_lineHeight }
-        set { base.__fw_lineHeight = newValue }
+    public var fw_lineHeight: CGFloat {
+        get {
+            return fw_propertyDouble(forName: "fw_lineHeight")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+            
+            self.fw_placeholderLabel.fw_lineHeight = newValue
+            self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+            
+            var typingAttributes = self.typingAttributes
+            var paragraphStyle: NSMutableParagraphStyle
+            if let style = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else if let style = (typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else {
+                paragraphStyle = NSMutableParagraphStyle()
+            }
+            paragraphStyle.minimumLineHeight = newValue
+            paragraphStyle.maximumLineHeight = newValue
+            
+            typingAttributes[.paragraphStyle] = paragraphStyle
+            self.typingAttributes = typingAttributes
+        }
+    }
+    
+    private var fw_placeholderLabel: UILabel {
+        if let label = fw_property(forName: "fw_placeholderLabel") as? UILabel { return label }
+        
+        let originalText = self.attributedText
+        self.text = " "
+        self.attributedText = originalText
+        
+        let label = UILabel()
+        label.textColor = PlaceholderTarget.placeholderColor()
+        label.numberOfLines = 0
+        label.isUserInteractionEnabled = false
+        label.font = self.font
+        fw_setProperty(label, forName: "fw_placeholderLabel")
+        self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+        self.insertSubview(label, at: 0)
+        
+        self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("attributedText", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("text", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw_observeProperty("bounds", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("frame", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textAlignment", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("textContainerInset", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw_observeProperty("font") { textView, change in
+            guard let textView = textView as? UITextView else { return }
+            if change[.newKey] != nil {
+                textView.fw_placeholderLabel.font = textView.font
+                textView.fw_placeholderTarget.setNeedsUpdatePlaceholder()
+            }
+        }
+        return label
+    }
+    
+    private var fw_placeholderTarget: PlaceholderTarget {
+        if let target = fw_property(forName: "fw_placeholderTarget") as? PlaceholderTarget {
+            return target
+        } else {
+            let target = PlaceholderTarget(textView: self)
+            fw_setProperty(target, forName: "fw_placeholderTarget")
+            return target
+        }
     }
 
     /// 是否启用自动高度功能，随文字改变高度
-    public var autoHeightEnabled: Bool {
-        get { return base.__fw_autoHeightEnabled }
-        set { base.__fw_autoHeightEnabled = newValue }
+    public var fw_autoHeightEnabled: Bool {
+        get {
+            return fw_propertyBool(forName: "fw_autoHeightEnabled")
+        }
+        set {
+            fw_setPropertyBool(newValue, forName: "fw_autoHeightEnabled")
+            self.fw_placeholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
-    public var maxHeight: CGFloat {
-        get { return base.__fw_maxHeight }
-        set { base.__fw_maxHeight = newValue }
+    public var fw_maxHeight: CGFloat {
+        get {
+            if let value = fw_propertyNumber(forName: "fw_maxHeight") {
+                return value.doubleValue
+            }
+            return .greatestFiniteMagnitude
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxHeight")
+            self.fw_placeholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 最小高度，默认0，启用自动高度后生效
-    public var minHeight: CGFloat {
-        get { return base.__fw_minHeight }
-        set { base.__fw_minHeight = newValue }
+    public var fw_minHeight: CGFloat {
+        get {
+            return fw_propertyDouble(forName: "fw_minHeight")
+        }
+        set {
+            fw_setPropertyDouble(newValue, forName: "fw_minHeight")
+            self.fw_placeholderTarget.setNeedsUpdateText()
+        }
     }
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
-    public var heightDidChange: ((CGFloat) -> Void)? {
-        get { return base.__fw_heightDidChange }
-        set { base.__fw_heightDidChange = newValue }
+    public var fw_heightDidChange: ((CGFloat) -> Void)? {
+        get { return fw_property(forName: "fw_heightDidChange") as? (CGFloat) -> Void }
+        set { fw_setPropertyCopy(newValue, forName: "fw_heightDidChange") }
     }
 
     /// 快捷启用自动高度，并设置最大高度和回调句柄
-    public func autoHeight(maxHeight: CGFloat, didChange: ((CGFloat) -> Void)?) {
-        base.__fw_autoHeight(withMaxHeight: maxHeight, didChange: didChange)
+    public func fw_autoHeight(maxHeight: CGFloat, didChange: ((CGFloat) -> Void)? = nil) {
+        self.fw_maxHeight = maxHeight
+        if didChange != nil { self.fw_heightDidChange = didChange }
+        self.fw_autoHeightEnabled = true
     }
     
 }

@@ -10,6 +10,8 @@ import FWFramework
 
 class TestToastController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     static var isCancelled = false
     static var count: Int = 0
     
@@ -18,11 +20,12 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["无文本", "onIndicator"],
             ["有文本(可取消)", "onIndicator2"],
             ["文本太长", "onIndicator3"],
             ["加载动画", "onLoading"],
+            ["加载动画(连续)", "onContinuous"],
             ["进度动画(可取消)", "onProgress"],
             ["加载动画(window)", "onLoadingWindow"],
             ["加载进度动画(window)", "onProgressWindow"],
@@ -36,16 +39,16 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        let rowData = tableData[indexPath.row]
+        app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
 }
@@ -53,35 +56,47 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
 @objc extension TestToastController {
     
     func onIndicator() {
-        fw.showLoading(text: "")
+        app.showLoading(text: "")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.fw.hideLoading()
+            self?.app.hideLoading()
         }
     }
     
     func onIndicator2() {
         Self.isCancelled = false
-        fw.showLoading(text: nil) { [weak self] in
+        app.showLoading(text: nil) { [weak self] in
             Self.isCancelled = true
-            self?.fw.showMessage(text: "已取消")
+            self?.app.showMessage(text: "已取消")
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             if Self.isCancelled { return }
-            self?.fw.hideLoading()
+            self?.app.hideLoading()
         }
     }
     
     func onIndicator3() {
-        fw.showLoading(text: "我是很长很长很长很长很长很长很长很长很长很长的加载文案")
+        app.showLoading(text: "我是很长很长很长很长很长很长很长很长很长很长的加载文案")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.fw.hideLoading()
+            self?.app.hideLoading()
         }
     }
     
     func onLoading() {
-        fw.showLoading(text: "加载中\n请耐心等待")
+        app.showLoading(text: "加载中\n请耐心等待")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.fw.hideLoading()
+            self?.app.hideLoading()
+        }
+    }
+    
+    func onContinuous() {
+        app.showLoading(text: "加载1中")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.app.hideLoading(delayed: true)
+            
+            self?.app.showLoading(text: "加载2中")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                self?.app.hideLoading()
+            }
         }
     }
     
@@ -90,31 +105,31 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
         TestController.mockProgress { [weak self] progress, finished in
             if Self.isCancelled { return }
             if !finished {
-                self?.fw.showProgress(progress, text: String(format: "上传中(%.0f%%)", progress * 100), cancel: {
+                self?.app.showProgress(progress, text: String(format: "上传中(%.0f%%)", progress * 100), cancelBlock: {
                     Self.isCancelled = true
-                    self?.fw.showMessage(text: "已取消")
+                    self?.app.showMessage(text: "已取消")
                 })
             } else {
-                self?.fw.hideProgress()
+                self?.app.hideProgress()
             }
         }
     }
     
     func onLoadingWindow() {
-        view.window?.fw.toastInsets = UIEdgeInsets(top: FW.topBarHeight, left: 0, bottom: 0, right: 0)
-        view.window?.fw.showLoading(text: "加载中")
+        view.window?.app.toastInsets = UIEdgeInsets(top: APP.topBarHeight, left: 0, bottom: 0, right: 0)
+        view.window?.app.showLoading(text: "加载中")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.view.window?.fw.toastInsets = .zero
-            self?.view.window?.fw.hideLoading()
+            self?.view.window?.app.toastInsets = .zero
+            self?.view.window?.app.hideLoading()
         }
     }
     
     func onProgressWindow() {
         TestController.mockProgress { [weak self] progress, finished in
             if !finished {
-                self?.view.window?.fw.showLoading(text: String(format: "上传中(%.0f%%)", progress * 100))
+                self?.view.window?.app.showLoading(text: String(format: "上传中(%.0f%%)", progress * 100))
             } else {
-                self?.view.window?.fw.hideLoading()
+                self?.view.window?.app.hideLoading()
             }
         }
     }
@@ -122,11 +137,11 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     func onToast() {
         view.tag = 100
         Self.count += 1
-        fw.showMessage(text: "吐司消息\(Self.count)")
+        app.showMessage(text: "吐司消息\(Self.count)")
     }
     
     func onToast2() {
-        fw.showMessage(text: "我是很长很长很长很长很长很长很长很长很长很长很长的吐司消息", style: .default) { [weak self] in
+        app.showMessage(text: "我是很长很长很长很长很长很长很长很长很长很长很长的吐司消息", style: .default) { [weak self] in
             self?.onToast()
         }
     }

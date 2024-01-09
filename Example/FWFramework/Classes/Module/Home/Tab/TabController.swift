@@ -25,30 +25,30 @@ extension TabController {
     
     func setupSubviews() {
         delegate = self
-        tabBar.fw.foregroundColor = AppTheme.textColor
+        tabBar.app.foregroundColor = AppTheme.textColor
         if #available(iOS 15, *) {
-            tabBar.fw.isTranslucent = true
-            tabBar.fw.backgroundColor = AppTheme.barColor.fw.color(alpha: 0.5)
+            tabBar.app.isTranslucent = true
+            tabBar.app.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
         } else {
-            tabBar.fw.backgroundColor = AppTheme.barColor
+            tabBar.app.backgroundColor = AppTheme.barColor
         }
-        tabBar.fw.shadowColor = nil
-        tabBar.fw.setShadowColor(.fw.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
+        tabBar.app.shadowColor = nil
+        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
     
     func setupController() {
         let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
         homeController.hidesBottomBarWhenPushed = false
         let homeNav = UINavigationController(rootViewController: homeController)
-        homeNav.tabBarItem.image = FW.iconImage("zmdi-var-home", 26)
-        homeNav.tabBarItem.title = FW.localized("homeTitle")
-        homeNav.tabBarItem.fw.showBadgeView(BadgeView(badgeStyle: .small), badgeValue: "1")
+        homeNav.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
+        homeNav.tabBarItem.title = APP.localized("homeTitle")
+        homeNav.tabBarItem.app.showBadgeView(BadgeView(badgeStyle: .small), badgeValue: "1")
         
         let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
         testController.hidesBottomBarWhenPushed = false
         let testNav = UINavigationController(rootViewController: testController)
         testNav.tabBarItem.image = Icon.iconImage("zmdi-var-bug", size: 26)
-        testNav.tabBarItem.title = FW.localized("testTitle")
+        testNav.tabBarItem.title = APP.localized("testTitle")
         
         let settingsControlelr = Router.object(forURL: AppRouter.settingsUrl) as! UIViewController
         settingsControlelr.hidesBottomBarWhenPushed = false
@@ -58,25 +58,14 @@ extension TabController {
         tabBarItem.contentView.highlightIconColor = AppTheme.textColor
         settingsNav.tabBarItem = tabBarItem
         settingsNav.tabBarItem.badgeValue = ""
-        settingsNav.tabBarItem.image = FW.icon("zmdi-var-settings", 26)?.image
-        settingsNav.tabBarItem.title = FW.localized("settingTitle")
+        settingsNav.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
+        settingsNav.tabBarItem.title = APP.localized("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
         
-        fw.observeNotification(NSNotification.Name.LanguageChanged) { (notification) in
-            homeNav.tabBarItem.title = FW.localized("homeTitle")
-            testNav.tabBarItem.title = FW.localized("testTitle")
-            settingsNav.tabBarItem.title = FW.localized("settingTitle")
-        }
-    }
-    
-}
-
-// MARK: - Public
-extension TabController {
-    
-    static func refreshController() {
-        if let appDelegate = UIApplication.shared.delegate as? AppResponder {
-            appDelegate.setupController()
+        app.observeNotification(.LanguageChanged) { (notification) in
+            homeNav.tabBarItem.title = APP.localized("homeTitle")
+            testNav.tabBarItem.title = APP.localized("testTitle")
+            settingsNav.tabBarItem.title = APP.localized("settingTitle")
         }
     }
     
@@ -91,7 +80,7 @@ extension TabController: UITabBarControllerDelegate {
         animation.duration = 0.3 * 2
         animation.calculationMode = .cubic
         
-        var animationView = viewController.tabBarItem.fw.imageView
+        var animationView = viewController.tabBarItem.app.imageView
         if let tabBarItem = viewController.tabBarItem as? TabBarItem {
             animationView = tabBarItem.contentView.imageView
         }

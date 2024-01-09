@@ -10,21 +10,25 @@ import UserNotifications
 
 // MARK: - NotificationManager
 /// 通知管理器
-@objc(FWNotificationManager)
-@objcMembers public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     
     // MARK: - Accessor
     /// 单例模式
-    @objc(sharedInstance)
     public static let shared = NotificationManager()
     
     /// 通知代理，设置后优先调用
     public weak var delegate: UNUserNotificationCenterDelegate?
     
     // MARK: - Authorize
+    /// 授权选项，默认[.badge, .sound, .alert]
+    public var authorizeOptions: UNAuthorizationOptions {
+        get { return AuthorizeNotifications.authorizeOptions }
+        set { AuthorizeNotifications.authorizeOptions = newValue }
+    }
+    
     /// 异步查询通知权限状态，当前线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeManager.manager(type: .notifications)?.authorizeStatus?(completion)
+        AuthorizeManager.manager(type: .notifications)?.authorizeStatus(completion)
     }
     
     /// 执行通知权限授权，主线程回调
@@ -81,15 +85,19 @@ import UserNotifications
     }
     
     // MARK: - Local
-    /// 注册本地通知，badge为0时不改变，soundName为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
-    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, soundName: String?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
+    /// 注册本地通知，badge为0时不改变，sound为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
+    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, sound: Any?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
         let notification = UNMutableNotificationContent()
         if let title = title { notification.title = title }
         if let subtitle = subtitle { notification.subtitle = subtitle }
         if let body = body { notification.body = body }
         if let userInfo = userInfo { notification.userInfo = userInfo }
         notification.badge = badge > 0 ? NSNumber(value: badge) : nil
-        if let soundName = soundName { notification.sound = (soundName == "default") ? .default : UNNotificationSound(named: UNNotificationSoundName(soundName)) }
+        if let sound = sound as? UNNotificationSound {
+            notification.sound = sound
+        } else if let soundName = sound as? String {
+            notification.sound = (soundName == "default") ? .default : UNNotificationSound(named: UNNotificationSoundName(soundName))
+        }
         block?(notification)
         
         let trigger = timeInterval > 0 ? UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: repeats) : nil
@@ -139,7 +147,6 @@ import UserNotifications
     }
     
     /// 打开推送设置
-    @available(iOS 12.0, *)
     public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
         delegate?.userNotificationCenter?(center, openSettingsFor: notification)
     }
