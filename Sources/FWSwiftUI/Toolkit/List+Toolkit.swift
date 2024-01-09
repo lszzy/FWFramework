@@ -7,9 +7,11 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - List+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 重置List样式，去除多余间距等，可指定背景色
@@ -28,10 +30,10 @@ extension View {
                         .eraseToAnyView()
                 }
             }
-            .then(isPlainStyle && UIDevice.fw.iosVersion >= 16, body: { view in
+            .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
                 view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
-                    guard collectionView.fw.property(forName: "resetListStyle") == nil else { return }
-                    collectionView.fw.setProperty(NSNumber(value: true), forName: "resetListStyle")
+                    guard !collectionView.fw_propertyBool(forName: "resetListStyle") else { return }
+                    collectionView.fw_setPropertyBool(true, forName: "resetListStyle")
                     
                     if #available(iOS 16.0, *) {
                         guard collectionView.collectionViewLayout is UICollectionViewCompositionalLayout else { return }
@@ -44,10 +46,10 @@ extension View {
                     }
                 }
             })
-            .then(UIDevice.fw.iosVersion < 16) { view in
+            .then(UIDevice.fw_iosVersion < 16) { view in
                 view.introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
-                    if tableView.fw.property(forName: "resetListStyle") == nil {
-                        tableView.fw.setProperty(NSNumber(value: true), forName: "resetListStyle")
+                    if !tableView.fw_propertyBool(forName: "resetListStyle") {
+                        tableView.fw_setPropertyBool(true, forName: "resetListStyle")
                         
                         if #available(iOS 15.0, *) {
                             tableView.sectionHeaderTopPadding = 0
@@ -108,8 +110,8 @@ extension View {
         _ initialization: @escaping (UIScrollView) -> Void
     ) -> some View {
         return listViewConfigure { scrollView in
-            guard scrollView.fw.property(forName: "listViewInitialize") == nil else { return }
-            scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewInitialize")
+            guard !scrollView.fw_propertyBool(forName: "listViewInitialize") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "listViewInitialize")
             
             initialization(scrollView)
         }
@@ -138,14 +140,14 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
-            if scrollView.fw.property(forName: "listViewRefreshing") == nil {
-                scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewRefreshing")
+            if !scrollView.fw_propertyBool(forName: "listViewRefreshing") {
+                scrollView.fw_setPropertyBool(true, forName: "listViewRefreshing")
                 
-                scrollView.fw.setRefreshing { [weak scrollView] in
+                scrollView.fw_setRefreshing { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw.endRefreshing()
+                        scrollView?.fw_endRefreshing()
                         if let finished = finished {
-                            scrollView?.fw.loadingFinished = finished
+                            scrollView?.fw_loadingFinished = finished
                         }
                     })
                 }
@@ -155,15 +157,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw.isRefreshing {
-                    scrollView.fw.beginRefreshing()
+                if !scrollView.fw_isRefreshing {
+                    scrollView.fw_beginRefreshing()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw.loadingFinished = finished
+                scrollView.fw_loadingFinished = finished
             }
         }
     }
@@ -176,14 +178,14 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
-            if scrollView.fw.property(forName: "listViewLoading") == nil {
-                scrollView.fw.setProperty(NSNumber(value: true), forName: "listViewLoading")
+            if !scrollView.fw_propertyBool(forName: "listViewLoading") {
+                scrollView.fw_setPropertyBool(true, forName: "listViewLoading")
                 
-                scrollView.fw.setLoading { [weak scrollView] in
+                scrollView.fw_setLoading { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw.endLoading()
+                        scrollView?.fw_endLoading()
                         if let finished = finished {
-                            scrollView?.fw.loadingFinished = finished
+                            scrollView?.fw_loadingFinished = finished
                         }
                     })
                 }
@@ -193,15 +195,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw.isLoading {
-                    scrollView.fw.beginLoading()
+                if !scrollView.fw_isLoading {
+                    scrollView.fw_beginLoading()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw.loadingFinished = finished
+                scrollView.fw_loadingFinished = finished
             }
         }
     }
@@ -213,11 +215,11 @@ extension View {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
-                    scrollView.fw.showEmptyView()
+                    scrollView.fw_showEmptyView()
                 }
             } else {
-                if scrollView.fw.hasEmptyView {
-                    scrollView.fw.hideEmptyView()
+                if scrollView.fw_hasEmptyView {
+                    scrollView.fw_hideEmptyView()
                 }
             }
         }

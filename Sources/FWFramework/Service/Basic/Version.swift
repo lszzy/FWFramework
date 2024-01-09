@@ -9,7 +9,6 @@ import UIKit
 
 // MARK: - VersionStatus
 /// 版本状态
-@objc(FWVersionStatus)
 public enum VersionStatus: Int {
     /// 已发布
     case published = 0
@@ -21,12 +20,10 @@ public enum VersionStatus: Int {
 
 // MARK: - VersionManager
 /// 版本管理器
-@objc(FWVersionManager)
-@objcMembers public class VersionManager: NSObject {
+public class VersionManager: NSObject {
     
     // MARK: - Accessor
     /// 单例模式
-    @objc(sharedInstance)
     public static let shared = VersionManager()
     
     /// 当前版本号，可自定义。小于最新版本号表示需要更新，大于最新版本号表示正在审核
@@ -55,7 +52,7 @@ public enum VersionStatus: Int {
     
     private var checkDate: Date?
     private var hasResult: Bool = false
-    private var dataMigrators: [String: () -> Void] = [:]
+    private var dataMigrations: [String: () -> Void] = [:]
     
     // MARK: - Lifecycle
     public override init() {
@@ -101,10 +98,10 @@ public enum VersionStatus: Int {
     
     /// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
     @discardableResult
-    public func checkDataVersion(_ version: String, migrator: @escaping () -> Void) -> Bool {
+    public func checkDataVersion(_ version: String, migration: @escaping () -> Void) -> Bool {
         // 需要执行时才放到队列中
         if checkDataVersion(version) {
-            dataMigrators[version] = migrator
+            dataMigrations[version] = migration
             return true
         }
         return false
@@ -114,7 +111,7 @@ public enum VersionStatus: Int {
     @discardableResult
     public func migrateData(_ completion: (() -> Void)?) -> Bool {
         // 版本号从低到高排序
-        let versions = dataMigrators.keys.sorted { str1, str2 in
+        let versions = dataMigrations.keys.sorted { str1, str2 in
             return str1.compare(str2, options: .numeric) == .orderedAscending
         }
         
@@ -122,10 +119,10 @@ public enum VersionStatus: Int {
         var result = false
         for version in versions {
             if !checkDataVersion(version) { continue }
-            guard let migrator = dataMigrators[version] else { continue }
+            guard let migration = dataMigrations[version] else { continue }
             // 执行并从队列移除
-            migrator()
-            dataMigrators.removeValue(forKey: version)
+            migration()
+            dataMigrations.removeValue(forKey: version)
             result = true
             
             // 保存当前数据版本
@@ -199,9 +196,7 @@ public enum VersionStatus: Int {
     }
     
     private func checkCallback(_ completion: (() -> Void)?) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
+        DispatchQueue.main.async {
             if let latestVersion = self.latestVersion {
                 let result = self.currentVersion.compare(latestVersion, options: .numeric)
                 switch result {

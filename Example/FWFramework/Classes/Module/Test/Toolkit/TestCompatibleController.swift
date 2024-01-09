@@ -27,7 +27,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     }
     
     private func designValue(_ value: CGFloat) -> CGFloat {
-        return mode == .relative ? FW.relative(value) : value
+        return mode == .relative ? APP.relative(value) : value
     }
     
     private lazy var bannerView: BannerView = {
@@ -35,7 +35,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.autoScroll = true
         result.autoScrollTimeInterval = 4
         result.placeholderImage = ModuleBundle.imageNamed("Loading.gif")
-        result.imageURLStringsGroup = [
+        result.imagesGroup = [
             "http://e.hiphotos.baidu.com/image/h%3D300/sign=0e95c82fa90f4bfb93d09854334e788f/10dfa9ec8a136327ee4765839c8fa0ec09fac7dc.jpg",
             ModuleBundle.imageNamed("Loading.gif") as Any,
             "http://www.ioncannon.net/wp-content/uploads/2011/06/test2.webp",
@@ -50,7 +50,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     private lazy var imageView: UIImageView = {
         let result = UIImageView()
         result.contentMode = .scaleAspectFill
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()
         return result
     }()
     
@@ -60,9 +60,9 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.backgroundColor = AppTheme.backgroundColor
         result.textColor = AppTheme.textColor
         result.textAlignment = .center
-        result.font = FW.font(designValue(16))
-        result.fw.setBorderColor(AppTheme.borderColor, width: 0.5)
-        result.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(UIScreen.fw.referenceSize.width)x\(UIScreen.fw.referenceSize.height)，当前屏幕大小为\(FW.screenWidth)x\(FW.screenHeight)，宽度缩放比例为\(FW.relativeScale)\n示例设计图间距为15，图片大小为100x100，观察不同兼容模式下不同屏幕的显示效果"
+        result.font = APP.font(designValue(16))
+        result.app.setBorderColor(AppTheme.borderColor, width: 0.5)
+        result.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(UIScreen.app.referenceSize.width)x\(UIScreen.app.referenceSize.height)，当前屏幕大小为\(APP.screenWidth)x\(APP.screenHeight)，宽度缩放比例为\(APP.relativeScale)\n示例设计图间距为15，图片大小为100x100，观察不同兼容模式下不同屏幕的显示效果"
         return result
     }()
     
@@ -75,27 +75,27 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     private lazy var confirmButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("确定", for: .normal)
-        result.titleLabel?.font = FW.font(designValue(17), .bold)
-        result.fw.addTouch { [weak self] _ in
-            self?.fw.showMessage(text: "点击了确定")
+        result.titleLabel?.font = APP.font(designValue(17), .bold)
+        result.app.addTouch { [weak self] _ in
+            self?.app.showMessage(text: "点击了确定")
         }
         return result
     }()
     
     func setupNavbar() {
-        fw.extendedLayoutEdge = .bottom
-        fw.setRightBarItem("切换") { [weak self] _ in
-            self?.fw.showSheet(title: nil, message: nil, actions: ["默认适配", "等比例适配", "等比例缩放"], actionBlock: { index in
+        app.extendedLayoutEdge = .bottom
+        app.setRightBarItem("切换") { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["默认适配", "等比例适配", "等比例缩放"], actionBlock: { index in
                 let vc = TestCompatibleController()
                 vc.mode = Mode(rawValue: index) ?? .default
-                self?.navigationController?.fw.push(vc, popTopWorkflowAnimated: false)
+                self?.navigationController?.app.push(vc, popTopWorkflowAnimated: false)
             })
         }
     }
     
     func setupSubviews() {
         if mode == .transform {
-            view.fw.autoScaleTransform = true
+            view.app.autoScaleTransform = true
         }
         
         view.addSubview(bannerView)
@@ -106,29 +106,29 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     }
     
     func setupLayout() {
-        bannerView.fw.layoutChain
+        bannerView.app.layoutChain
             .top(designMargin)
             .horizontal(designMargin)
             .height(designSize)
         
-        imageView.fw.layoutChain
+        imageView.app.layoutChain
             .centerX()
             .top(toViewBottom: bannerView, offset: designMargin)
             .size(CGSizeMake(designSize, designSize))
         
-        textLabel.fw.layoutChain
+        textLabel.app.layoutChain
             .horizontal(designMargin)
             .top(toViewBottom: imageView, offset: designMargin)
         
-        bottomView.fw.layoutChain
+        bottomView.app.layoutChain
             .centerX()
             .width(designSize)
             .top(toViewBottom: textLabel, offset: designMargin)
             .bottom(toViewTop: confirmButton, offset: -designMargin)
         
-        confirmButton.fw.layoutChain
+        confirmButton.app.layoutChain
             .horizontal(designMargin)
-            .bottom(designMargin + FW.safeAreaInsets.bottom)
+            .bottom(designMargin + APP.safeAreaInsets.bottom)
             .height(designValue(50))
     }
     

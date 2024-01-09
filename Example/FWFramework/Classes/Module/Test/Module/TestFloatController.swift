@@ -22,7 +22,7 @@ class TestFloatController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
         view.addSubview(floatLayoutView)
-        floatLayoutView.fw.layoutChain
+        floatLayoutView.app.layoutChain
             .left(24)
             .right(24)
             .top(toSafeArea: 36)
@@ -34,16 +34,16 @@ class TestFloatController: UIViewController, ViewControllerProtocol {
                 label.textColor = AppTheme.textColor
                 label.numberOfLines = 0
                 label.text = suggestions[i]
-                label.font = FW.font(14)
-                label.fw.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
-                label.fw.contentInset = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
+                label.font = APP.font(14)
+                label.app.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
+                label.app.contentInset = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
                 floatLayoutView.addSubview(label)
             } else {
                 let button = UIButton()
                 button.setTitleColor(AppTheme.textColor, for: .normal)
-                button.fw.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
+                button.app.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
                 button.setTitle(suggestions[i], for: .normal)
-                button.titleLabel?.font = FW.font(14)
+                button.titleLabel?.font = APP.font(14)
                 button.titleLabel?.numberOfLines = 0
                 button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
                 button.isHidden = suggestions[i].isEmpty

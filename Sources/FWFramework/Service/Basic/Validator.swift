@@ -7,31 +7,98 @@
 
 import Foundation
 
+// MARK: - AnyValidator
+/// 任意值验证器
+///
+/// 默认开启类型验证，当Validator<Value>类型转为AnyValidator时，如果value数据类型不匹配，会验证失败
+public typealias AnyValidator = Validator<Any>
+
+extension AnyValidator {
+    
+    /// 重写为AnyValidator自身
+    public var anyValidator: AnyValidator { self }
+    
+    /// 重写为AnyValidator自身
+    public var unsafeAnyValidator: AnyValidator { self }
+    
+    /// 初始化包装验证器并转发调用，默认开启类型验证(可关闭)
+    public init<WrappedValue>(
+        _ validator: Validator<WrappedValue>,
+        validateType: Bool = true
+    ) {
+        if validateType {
+            self.predicate = { value in
+                if value == nil {
+                    return validator.validate(nil)
+                } else if let value = value as? WrappedValue {
+                    return validator.validate(value)
+                }
+                return false
+            }
+        } else {
+            self.predicate = { value in
+                validator.validate(value as? WrappedValue)
+            }
+        }
+    }
+    
+}
+
 // MARK: - Validator
 /// 规则验证器，可扩展
 public struct Validator<Value> {
     
-    private let predicate: (Value) -> Bool
-    
-    /// 初始化验证器
-    public init(
-        predicate: @escaping (Value) -> Bool
-    ) {
-        self.predicate = predicate
+    /// 创建可选句柄验证器，值为nil时自行处理
+    public static func predicate(
+        _ predicate: @escaping (Value?) -> Bool
+    ) -> Self {
+        var validator = Self()
+        validator.predicate = predicate
+        return validator
     }
     
-    /// 初始化包装验证器
+    /// 转换为AnyValidator，开启类型验证
+    public var anyValidator: AnyValidator {
+        AnyValidator(self, validateType: true)
+    }
+    
+    /// 转换为不安全的AnyValidator，关闭类型验证
+    public var unsafeAnyValidator: AnyValidator {
+        AnyValidator(self, validateType: false)
+    }
+    
+    private var predicate: (Value?) -> Bool
+    
+    /// 默认验证器，值为nil时返回false
+    public init() {
+        self.predicate = { value in
+            value != nil
+        }
+    }
+    
+    /// 初始化包装验证器，转发调用
     public init<WrappedValue>(
-        _ validator: Validator<WrappedValue>,
-        defaultValid: @autoclosure @escaping () -> Bool = false
+        _ validator: Validator<WrappedValue>
     ) where WrappedValue? == Value {
-        self.init { value in
-            value.flatMap(validator.validate) ?? defaultValid()
+        self.predicate = { value in
+            validator.validate(value as? WrappedValue)
+        }
+    }
+    
+    /// 初始化句柄验证器，值为nil时返回false
+    public init(
+        _ predicate: @escaping (Value) -> Bool
+    ) {
+        self.predicate = { value in
+            if let value = value {
+                return predicate(value)
+            }
+            return false
         }
     }
     
     /// 执行验证并返回结果
-    public func validate(_ value: Value) -> Bool {
+    public func validate(_ value: Value?) -> Bool {
         self.predicate(value)
     }
     
@@ -39,12 +106,31 @@ public struct Validator<Value> {
 
 extension Validator {
     
-    /// 固定值验证器
-    public static func isValid(
-        _ isValid: @autoclosure @escaping () -> Bool
-    ) -> Self {
-        .init { _ in
-            isValid()
+    /// Nil有效验证器，仅nil时返回true
+    public static var isNil: Self {
+        .predicate { value in
+            value == nil
+        }
+    }
+    
+    /// 非Nil有效验证器，非nil时返回true
+    public static var isNotNil: Self {
+        .predicate { value in
+            value != nil
+        }
+    }
+    
+    /// 固定有效验证器，始终返回true
+    public static var isValid: Self {
+        .predicate { value in
+            true
+        }
+    }
+    
+    /// 固定无效验证器，始终返回false
+    public static var isInvalid: Self {
+        .predicate { value in
+            false
         }
     }
     
@@ -118,12 +204,26 @@ extension Validator {
     
 }
 
-extension Validator where Value: SafeType {
+// MARK: - Validator+Extension
+extension Validator where Value: BasicCodableType {
     
     /// 空验证器
     public static var isEmpty: Self {
-        .init { value in
-            value.isEmpty
+        .predicate { value in
+            if let value = value {
+                return !value.isNotEmpty
+            }
+            return true
+        }
+    }
+    
+    /// 非空验证器
+    public static var isNotEmpty: Self {
+        .predicate { value in
+            if let value = value {
+                return value.isNotEmpty
+            }
+            return false
         }
     }
     
@@ -181,7 +281,7 @@ extension Validator where Value: Comparable {
     }
     
     /// 值区间验证器
-    public static func isBetween(
+    public static func between(
         min: @autoclosure @escaping () -> Value,
         max: @autoclosure @escaping () -> Value
     ) -> Self {
@@ -223,7 +323,7 @@ extension Validator where Value: StringProtocol {
     }
     
     /// 指定长度验证器
-    public static func isLength(
+    public static func length(
         _ count: @autoclosure @escaping () -> Int
     ) -> Self {
         .init { value in
@@ -232,7 +332,7 @@ extension Validator where Value: StringProtocol {
     }
     
     /// 长度区间验证器
-    public static func isLength(
+    public static func length(
         min: @autoclosure @escaping () -> Int = 0,
         max: @autoclosure @escaping () -> Int
     ) -> Self {

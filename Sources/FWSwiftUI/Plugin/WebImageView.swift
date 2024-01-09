@@ -9,11 +9,10 @@
 import SwiftUI
 import Combine
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 /// 网络图片视图，仅支持静态图
-@available(iOS 13.0, *)
 public struct WebImageView: View {
     @ObservedObject public private(set) var binder: ImageBinder
     
@@ -21,7 +20,7 @@ public struct WebImageView: View {
     var cancelOnDisappear: Bool = false
     var configurations: [(Image) -> Image]
     
-    public init(_ url: Any?, isLoaded: Binding<Bool> = .constant(false)) {
+    public init(_ url: URLParameter?, isLoaded: Binding<Bool> = .constant(false)) {
         binder = ImageBinder(url: url, isLoaded: isLoaded)
         configurations = []
         binder.start()
@@ -102,19 +101,18 @@ public struct WebImageView: View {
     }
 }
 
-@available(iOS 13.0, *)
 extension WebImageView {
     public class ImageBinder: ObservableObject {
         @Published var image: UIImage?
         
-        let url: Any?
+        let url: URLParameter?
         var isLoaded: Binding<Bool>
         var loadingSucceed: Bool = false
         var receipt: Any?
         var completionBlock: ((UIImage?, Error?) -> Void)?
         var progressBlock: ((Double) -> Void)?
         
-        init(url: Any?, isLoaded: Binding<Bool>) {
+        init(url: URLParameter?, isLoaded: Binding<Bool>) {
             self.url = url
             self.isLoaded = isLoaded
             self.image = nil
@@ -124,7 +122,7 @@ extension WebImageView {
             guard !loadingSucceed else { return }
             
             loadingSucceed = true
-            receipt = UIImage.fw.downloadImage(url, completion: { [weak self] (image, data, error) in
+            receipt = UIImage.fw_downloadImage(url, completion: { [weak self] (image, data, error) in
                 guard let self = self else { return }
                 
                 if let image = image {
@@ -141,7 +139,7 @@ extension WebImageView {
         }
         
         public func cancel() {
-            UIImage.fw.cancelImageDownload(receipt)
+            UIImage.fw_cancelImageDownload(receipt)
         }
         
         func onCompletion(perform action: ((UIImage?, Error?) -> Void)?) {

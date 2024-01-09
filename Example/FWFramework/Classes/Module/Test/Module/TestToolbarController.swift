@@ -10,6 +10,8 @@ import FWFramework
 
 class TestToolbarController: UIViewController, TableViewControllerProtocol, ToolbarTitleViewDelegate, PopupMenuDelegate {
     
+    typealias TableElement = String
+    
     private var horizontalAlignment: UIControl.ContentHorizontalAlignment = .center
     
     private var titleView: ToolbarTitleView?
@@ -20,23 +22,23 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         result.backgroundColor = AppTheme.barColor
         result.menuView.titleView?.showsLoadingView = true
         result.menuView.titleView?.title = "我是很长很长要多长有多长长得不得了的按钮"
-        result.bottomHeight = FW.navigationBarHeight
+        result.bottomHeight = APP.navigationBarHeight
         result.bottomHidden = true
         result.bottomView.backgroundColor = .green
         result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { [weak self] _ in
             guard let self = self else { return }
             if !self.shouldPopController { return }
-            self.fw.close()
+            self.app.close()
         })
-        result.menuView.rightButton = ToolbarButton(object: FW.iconImage("zmdi-var-refresh", 24), block: { [weak self] _ in
+        result.menuView.rightButton = ToolbarButton(object: APP.iconImage("zmdi-var-refresh", 24), block: { [weak self] _ in
             guard let self = self else { return }
             if !self.shouldPopController { return }
-            self.fw.close()
+            self.app.close()
         })
-        result.menuView.rightMoreButton = ToolbarButton(object: FW.iconImage("zmdi-var-share", 24), block: { [weak self] _ in
+        result.menuView.rightMoreButton = ToolbarButton(object: APP.iconImage("zmdi-var-share", 24), block: { [weak self] _ in
             guard let self = self else { return }
             if !self.shouldPopController { return }
-            self.fw.close()
+            self.app.close()
         })
         return result
     }()
@@ -50,24 +52,24 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         result.topView.backgroundColor = .green
         result.menuView.leftButton = ToolbarButton(object: "取消", block: { [weak self] _ in
             self?.toolbarView.setToolbarHidden(true, animated: true)
-            self?.fw.showMessage(text: "点击了取消")
+            self?.app.showMessage(text: "点击了取消")
         })
         result.menuView.rightButton = ToolbarButton(object: "确定", block: { [weak self] _ in
             self?.toolbarView.setToolbarHidden(true, animated: true)
-            self?.fw.showMessage(text: "点击了确定")
+            self?.app.showMessage(text: "点击了确定")
         })
         return result
     }()
     
     override var shouldPopController: Bool {
-        fw.showConfirm(title: nil, message: "是否关闭") { [weak self] in
-            self?.fw.close()
+        app.showConfirm(title: nil, message: "是否关闭") { [weak self] in
+            self?.app.close()
         }
         return false
     }
     
     func didInitialize() {
-        fw.navigationBarHidden = true
+        app.navigationBarHidden = true
     }
     
     func setupTableStyle() -> UITableView.Style {
@@ -78,18 +80,18 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         titleView = navigationView.menuView.titleView
         horizontalAlignment = titleView?.contentHorizontalAlignment ?? .center
         view.addSubview(navigationView)
-        navigationView.fw.layoutChain.left().right().top()
+        navigationView.app.layoutChain.left().right().top()
         view.addSubview(toolbarView)
-        toolbarView.fw.layoutChain.left().right().bottom()
+        toolbarView.app.layoutChain.left().right().bottom()
         
-        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: FW.screenWidth, height: 300))
-        tableView.fw.layoutChain.left().right()
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: 300))
+        tableView.app.layoutChain.left().right()
             .top(toViewBottom: navigationView)
             .bottom(toViewTop: toolbarView)
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             "标题左对齐",
             "显示左边的loading",
             "显示右边的accessoryView",
@@ -116,7 +118,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .value1)
+        let cell = UITableViewCell.app.cell(tableView: tableView, style: .value1)
         cell.accessoryType = .none
         cell.detailTextLabel?.text = nil
         
@@ -133,10 +135,10 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         case 4:
             cell.textLabel?.text = titleView.style == .horizontal ? "切换为上下两行显示" : "切换为水平一行显示"
         case 5:
-            cell.textLabel?.text = tableData.object(at: indexPath.row) as? String
+            cell.textLabel?.text = tableData[indexPath.row]
             cell.detailTextLabel?.text = (horizontalAlignment == .left ? "左对齐" : (horizontalAlignment == .right ? "右对齐" : "居中对齐"))
         default:
-            cell.textLabel?.text = tableData.object(at: indexPath.row) as? String
+            cell.textLabel?.text = tableData[indexPath.row]
         }
         return cell
     }
@@ -154,14 +156,14 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         case 1:
             titleView.loadingViewHidden = !titleView.loadingViewHidden
         case 2:
-            titleView.accessoryImage = titleView.accessoryImage != nil ? nil : FW.iconImage("zmdi-var-caret-down", 24)
+            titleView.accessoryImage = titleView.accessoryImage != nil ? nil : APP.iconImage("zmdi-var-caret-down", 24)
         case 3:
             titleView.subtitle = titleView.subtitle != nil ? nil : "(副标题)"
         case 4:
             titleView.style = titleView.style == .horizontal ? .vertical : .horizontal
             titleView.subtitle = titleView.style == .vertical ? "(副标题)" : titleView.subtitle
         case 5:
-            fw.showSheet(title: "水平对齐方式", message: nil, cancel: "取消", actions: ["左对齐", "居中对齐", "右对齐"]) { [weak self] index in
+            app.showSheet(title: "水平对齐方式", message: nil, cancel: "取消", actions: ["左对齐", "居中对齐", "右对齐"]) { [weak self] index in
                 if index == 0 {
                     titleView.contentHorizontalAlignment = .left
                 } else if index == 1 {
@@ -187,7 +189,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
         case 7:
             titleView.isUserInteractionEnabled = true
             titleView.title = "点我展开分类"
-            titleView.accessoryImage = FW.iconImage("zmdi-var-caret-down", 24)
+            titleView.accessoryImage = APP.iconImage("zmdi-var-caret-down", 24)
             titleView.delegate = self
         case 8:
             navigationView.setTopHidden(!navigationView.topHidden, animated: true)
@@ -214,7 +216,7 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
     
     func didChangedActive(_ active: Bool, for titleView: ToolbarTitleView) {
         if !active { return }
-        PopupMenu.showRely(on: titleView, titles: ["菜单1", "菜单2"], icons: nil, menuWidth: 120) { [weak self] popupMenu in
+        PopupMenu.show(relyOn: titleView, titles: ["菜单1", "菜单2"], icons: nil, menuWidth: 120) { [weak self] popupMenu in
             popupMenu.delegate = self
         }
     }

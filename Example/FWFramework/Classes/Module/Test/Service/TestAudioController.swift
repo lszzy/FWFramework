@@ -21,8 +21,30 @@ class TestAudioController: UIViewController {
     private lazy var audioImage: UIImageView = {
         let result = UIImageView()
         result.isUserInteractionEnabled = true
-        result.fw.addTapGesture { [weak self] sender in
+        result.app.addTapGesture { [weak self] sender in
             self?.toggleAudio()
+        }
+        return result
+    }()
+    
+    private lazy var previousImage: UIImageView = {
+        let result = UIImageView()
+        result.isHidden = true
+        result.image = APP.iconImage("zmdi-var-skip-previous", 100)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { [weak self] sender in
+            self?.playPrevious()
+        }
+        return result
+    }()
+    
+    private lazy var nextImage: UIImageView = {
+        let result = UIImageView()
+        result.isHidden = true
+        result.image = APP.iconImage("zmdi-var-skip-next", 100)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { [weak self] sender in
+            self?.playNext()
         }
         return result
     }()
@@ -39,7 +61,7 @@ class TestAudioController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        audioPlayer.destroy()
+        audioPlayer.destroyPlayer()
     }
     
 }
@@ -47,24 +69,40 @@ class TestAudioController: UIViewController {
 extension TestAudioController: ViewControllerProtocol {
     
     func setupNavbar() {
-        fw.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
-            guard let strongSelf = self else { return }
-            strongSelf.cacheEnabled = !strongSelf.cacheEnabled
-            strongSelf.audioPlayer.playItem(from: 0)
-            strongSelf.renderData()
-            strongSelf.setupNavbar()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.app.showSheet(title: nil, message: nil, actions: [self.audioPlayer.repeatMode == .on ? "关闭循环" : "循环播放", self.audioPlayer.shuffleMode == .on ? "顺序播放" : "随机播放", self.cacheEnabled ? "禁用缓存" : "启用缓存"]) { [weak self] index in
+                guard let self = self else { return }
+                
+                if index == 0 {
+                    self.audioPlayer.repeatMode = self.audioPlayer.repeatMode == .on ? .off : .on
+                } else if index == 1 {
+                    self.audioPlayer.shuffleMode = self.audioPlayer.shuffleMode == .on ? .off : .on
+                } else {
+                    self.cacheEnabled = !self.cacheEnabled
+                    self.audioPlayer.playItem(from: 0)
+                    self.renderData()
+                }
+            }
         }
     }
     
     func setupSubviews() {
         view.addSubview(audioImage)
+        view.addSubview(previousImage)
+        view.addSubview(nextImage)
         view.addSubview(audioLabel)
     }
     
     func setupLayout() {
-        audioImage.fw.layoutChain.centerX().size(CGSize(width: 100, height: 100))
+        audioImage.app.layoutChain.centerX().size(CGSize(width: 100, height: 100))
             .centerY(toView: view as Any, offset: -58)
-        audioLabel.fw.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
+        audioLabel.app.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
+        
+        let margin = (APP.screenWidth - 100.0 * 3) / 4.0
+        previousImage.chain.centerY(toView: audioImage).right(toViewLeft: audioImage, offset: -margin).size(CGSize(width: 100, height: 100))
+        nextImage.chain.centerY(toView: audioImage).left(toViewRight: audioImage, offset: margin).size(CGSize(width: 100, height: 100))
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self
@@ -73,12 +111,14 @@ extension TestAudioController: ViewControllerProtocol {
         renderData()
     }
     
-    func renderData() {
+    func renderData(ended: Bool = false) {
         if audioPlayer.isPlaying {
-            audioImage.image = FW.iconImage("zmdi-var-pause", 100)
+            audioImage.image = APP.iconImage("zmdi-var-pause", 100)
         } else {
-            audioImage.image = FW.iconImage("zmdi-var-play", 100)
+            audioImage.image = APP.iconImage("zmdi-var-play", 100)
         }
+        previousImage.isHidden = audioPlayer.lastItemIndex == 0 || ended
+        nextImage.isHidden = audioPlayer.lastItemIndex == audioPlayerNumberOfItems() - 1 || ended
     }
     
     private func toggleAudio() {
@@ -94,16 +134,24 @@ extension TestAudioController: ViewControllerProtocol {
         self.renderData()
     }
     
+    private func playPrevious() {
+        audioPlayer.playPrevious()
+    }
+    
+    private func playNext() {
+        audioPlayer.playNext()
+    }
+    
     func renderLabel() {
         guard let currentItem = audioPlayer.currentItem else {
             audioLabel.text = ""
             return
         }
         
-        let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem)?.intValue ?? 0) + 1)
+        let indexStr = String(describing: (audioPlayer.getAudioIndex(currentItem) ?? 0) + 1)
         let totalStr = String(describing: audioPlayerNumberOfItems())
-        let timeStr = Date.fw.formatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
-        let durationStr = Date.fw.formatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
+        let timeStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemCurrentTime), hasHour: false)
+        let durationStr = Date.app.formatDuration(TimeInterval(audioPlayer.playingItemDurationTime), hasHour: false)
         audioLabel.text = String(format: "%@/%@\n%@\n%@", indexStr, totalStr, timeStr, durationStr)
     }
     
@@ -119,13 +167,13 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
         var url: URL?
         switch index {
             case 0:
-                url = URL(string: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3")
+                url = Bundle.main.url(forResource: "Audio1", withExtension: "mp3")
                 break
             case 1:
-                url = URL(string: "http://a1136.phobos.apple.com/us/r1000/042/Music5/v4/85/34/8d/85348d57-5bf9-a4a3-9f54-0c3f1d8bc6af/mzaf_5184604190043403959.plus.aac.p.m4a")
+                url = Bundle.main.url(forResource: "Audio2", withExtension: "m4a")
                 break
             case 2:
-                url = URL(string: "http://downsc.chinaz.net/files/download/sound1/201206/1638.mp3")
+                url = Bundle.main.url(forResource: "Audio3", withExtension: "m4a")
                 break
             default:
                 break
@@ -137,15 +185,12 @@ extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
         return url
     }
     
-    func audioPlayerReady(toPlay item: AVPlayerItem?) {
-        if item != nil {
-            audioPlayer.play()
-            renderData()
-        }
+    func audioPlayerRateChanged(_ isPlaying: Bool) {
+        renderData()
     }
     
     func audioPlayerDidReachEnd() {
-        renderData()
+        renderData(ended: true)
     }
     
     func audioPlayerCurrentItemChanged(_ item: AVPlayerItem) {

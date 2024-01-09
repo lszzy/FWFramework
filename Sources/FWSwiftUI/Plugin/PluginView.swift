@@ -8,22 +8,21 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - LoadingPluginView
 /// 加载插件视图包装器
-@available(iOS 13.0, *)
 public struct LoadingPluginView: UIViewRepresentable {
     
-    var text: Any?
+    var text: AttributedStringParameter?
     var cancelBlock: (() -> Void)?
     
-    public init(text: Any? = nil) {
+    public init(text: AttributedStringParameter? = nil) {
         self.text = text
     }
     
-    public func text(_ text: Any?) -> Self {
+    public func text(_ text: AttributedStringParameter?) -> Self {
         var result = self
         result.text = text
         return result
@@ -40,26 +39,25 @@ public struct LoadingPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw.showLoading(text: text, cancel: cancelBlock)
+        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw.showLoading(text: text, cancel: cancelBlock)
+        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideLoading()
+        uiView.fw_hideLoading()
     }
 }
 
 // MARK: - ProgressPluginView
 /// 进度插件视图包装器
-@available(iOS 13.0, *)
 public struct ProgressPluginView: UIViewRepresentable {
     
     var progress: CGFloat?
-    var text: Any?
+    var text: AttributedStringParameter?
     var cancelBlock: (() -> Void)?
     
     public init(_ progress: CGFloat? = nil) {
@@ -72,7 +70,7 @@ public struct ProgressPluginView: UIViewRepresentable {
         return result
     }
     
-    public func text(_ text: Any?) -> Self {
+    public func text(_ text: AttributedStringParameter?) -> Self {
         var result = self
         result.text = text
         return result
@@ -90,27 +88,26 @@ public struct ProgressPluginView: UIViewRepresentable {
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancel: cancelBlock)
+            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
         }
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
         if let progress = progress {
-            uiView.fw.showProgress(progress, text: text, cancel: cancelBlock)
+            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
         } else {
-            uiView.fw.hideProgress()
+            uiView.fw_hideProgress()
         }
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideProgress()
+        uiView.fw_hideProgress()
     }
 }
 
 // MARK: - EmptyPluginView
 /// 空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可
-@available(iOS 13.0, *)
 public struct EmptyPluginView: UIViewRepresentable {
     
     var text: String? = nil
@@ -175,21 +172,20 @@ public struct EmptyPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw.hideEmptyView()
+        uiView.fw_hideEmptyView()
     }
 }
 
 // MARK: - View+PluginView
-@available(iOS 13.0, *)
 extension View {
     
     // MARK: - Plugin
@@ -236,11 +232,11 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw.showEmptyView()
+                    viewController.fw_showEmptyView()
                 }
             } else {
-                if viewController.fw.hasEmptyView {
-                    viewController.fw.hideEmptyView()
+                if viewController.fw_hasEmptyView {
+                    viewController.fw_hideEmptyView()
                 }
             }
         }, viewContext: viewContext)
@@ -257,11 +253,11 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw.showLoading()
+                    viewController.fw_showLoading()
                 }
             } else {
-                if viewController.fw.isShowingLoading {
-                    viewController.fw.hideLoading()
+                if viewController.fw_isShowingLoading {
+                    viewController.fw_hideLoading()
                 }
             }
         }, viewContext: viewContext)
@@ -277,8 +273,8 @@ extension View {
             if isShowing {
                 customize(viewController)
             } else {
-                if viewController.fw.isShowingProgress {
-                    viewController.fw.hideProgress()
+                if viewController.fw_isShowingProgress {
+                    viewController.fw_hideProgress()
                 }
             }
         }, viewContext: viewContext)

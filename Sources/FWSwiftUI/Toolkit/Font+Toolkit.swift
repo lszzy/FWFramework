@@ -8,10 +8,9 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
-@available(iOS 13.0, *)
 extension Font {
     
     /// 全局自定义字体句柄，优先调用
@@ -44,7 +43,7 @@ extension Font {
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func font(size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        let fontSize = UIFont.fw.autoScale ? UIScreen.fw.relativeValue(size, flat: UIFont.fw.autoFlat) : size
+        let fontSize = UIFont.fw_autoScaleBlock?(size) ?? size
         if let font = fontBlock?(fontSize, weight) { return font }
         return .system(size: fontSize, weight: weight)
     }

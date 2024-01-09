@@ -11,25 +11,24 @@ import FWFramework
 import FWDebug
 #endif
 
-@objc protocol AppModuleProtocol: ModuleProtocol {}
+protocol AppModuleProtocol: ModuleProtocol {
+    func moduleMethod()
+}
 
 @objc extension Autoloader {
-    func loadAppModule() {
-        Mediator.registerService(AppModuleProtocol.self, withModule: AppModule.self)
+    static func loadApp_AppModule() {
+        Mediator.registerService(AppModuleProtocol.self, module: AppModule.self)
     }
 }
 
-class AppModule: NSObject, AppModuleProtocol {
-    private static let sharedModule = AppModule()
+/*final*/ class AppModule: NSObject, AppModuleProtocol {
     
-    public static func sharedInstance() -> Self {
-        return sharedModule as! Self
-    }
+    /*public static let shared = AppModule()*/
     
     func setup() {
         #if DEBUG
         FWDebugManager.sharedInstance().openUrl = { (url) in
-            if let scheme = URL.fw.url(string: url)?.scheme, scheme.count > 0 {
+            if let scheme = URL.app.url(string: url)?.scheme, scheme.count > 0 {
                 Router.openURL(url)
                 return true
             }
@@ -40,6 +39,10 @@ class AppModule: NSObject, AppModuleProtocol {
         DispatchQueue.main.async {
             ThemeManager.shared.overrideWindow = true
         }
+    }
+    
+    func moduleMethod() {
+        APP.debug("AppModule.moduleMethod")
     }
     
     // MARK: - UIApplicationDelegate
@@ -59,7 +62,7 @@ class AppModule: NSObject, AppModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到远程通知：\(title ?? "")\n\(FW.safeString(userInfo))")
+            UIWindow.app.showMessage(text: "收到远程通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
         NotificationManager.shared.localNotificationHandler = { (userInfo, notification) in
             NotificationManager.shared.clearNotificationBadges()
@@ -68,17 +71,17 @@ class AppModule: NSObject, AppModuleProtocol {
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
-            UIWindow.fw.showMessage(text: "收到本地通知：\(title ?? "")\n\(FW.safeString(userInfo))")
+            UIWindow.app.showMessage(text: "收到本地通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        UIDevice.fw.setDeviceTokenData(deviceToken)
+        UIDevice.app.setDeviceTokenData(deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        UIDevice.fw.setDeviceTokenData(nil)
+        UIDevice.app.setDeviceTokenData(nil)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

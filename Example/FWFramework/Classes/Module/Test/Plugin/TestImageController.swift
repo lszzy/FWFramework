@@ -11,37 +11,33 @@ import SDWebImage
 
 class TestImageController: UIViewController, TableViewControllerProtocol {
     
-    var isSDWebImage: Bool = false
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupNavbar() {
-        fw.setRightBarItem("Change") { [weak self] _ in
-            guard let self = self else { return }
-            self.isSDWebImage = !self.isSDWebImage
-            PluginManager.unloadPlugin(ImagePlugin.self)
-            PluginManager.registerPlugin(ImagePlugin.self, with: self.isSDWebImage ? SDWebImageImpl.self : ImagePluginImpl.self)
-            if self.isSDWebImage {
-                SDImageCache.shared.clear(with: .all)
-            }
-            
-            self.tableData.removeAllObjects()
-            self.tableView.reloadData()
-            self.tableView.layoutIfNeeded()
-            self.tableView.setContentOffset(.zero, animated: false)
-            self.setupSubviews()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["清除图片缓存"], actionBlock: { index in
+                guard let self = self else { return }
+                
+                ImagePluginImpl.shared.clearImageCaches()
+                SDWebImageImpl.shared.clearImageCaches()
+                
+                self.tableData.removeAll()
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+                self.tableView.setContentOffset(.zero, animated: false)
+                self.setupSubviews()
+            })
         }
     }
     
     func setupSubviews() {
-        self.isSDWebImage = PluginManager.loadPlugin(ImagePlugin.self) is SDWebImageImpl
-        navigationItem.title = self.isSDWebImage ? "FWImage - SDWebImage" : "FWImage - FWWebImage"
+        navigationItem.title = Autoloader.imagePluginImpl
         SDWebImageImpl.shared.fadeAnimated = true
         ImagePluginImpl.shared.fadeAnimated = true
         
-        tableData.setArray([
+        tableData = [
             "Animation.png",
             "Loading.gif",
             "http://kvm.wuyong.site/images/images/progressive.jpg",
@@ -67,7 +63,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             "https://upload.wikimedia.org/wikipedia/commons/1/14/Mahuri.svg",
             "https://simpleicons.org/icons/github.svg",
             "http://via.placeholder.com/200x200.jpg",
-        ])
+        ]
         tableView.reloadData()
     }
     
@@ -80,29 +76,26 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = TestImageCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: self.isSDWebImage ? "SDWebImage" : "FWWebImage")
-        let fileName = tableData.object(at: indexPath.row) as? String ?? ""
-        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.fw.mimeType(from: (fileName as NSString).pathExtension))
-        if !fileName.fw.isFormatUrl() {
-            cell.fw.tempObject = fileName
+        let cell = TestImageCell.app.cell(tableView: tableView)
+        let fileName = tableData[indexPath.row] as? String ?? ""
+        cell.nameLabel.text = (fileName as NSString).lastPathComponent.appendingFormat("(%@)", Data.app.mimeType(from: (fileName as NSString).pathExtension))
+        if !fileName.app.isValid(.isUrl) {
             DispatchQueue.global().async {
                 let image = ModuleBundle.imageNamed(fileName)
-                let decodeImage = UIImage.fw.image(data: UIImage.fw.data(image: image))
+                let decodeImage = UIImage.app.image(data: UIImage.app.data(image: image))
                 DispatchQueue.main.async {
-                    if let tempObject = cell.fw.tempObject as? String, tempObject == fileName {
-                        cell.systemView.fw.setImage(url: nil, placeholderImage: image)
-                        cell.animatedView.fw.setImage(url: nil, placeholderImage: decodeImage)
-                    }
+                    cell.systemView.app.setImage(url: nil, placeholderImage: image)
+                    cell.animatedView.app.setImage(url: nil, placeholderImage: decodeImage)
                 }
             }
         } else {
-            cell.fw.tempObject = nil
-            var url = fileName
-            if url.hasPrefix("http://kvm.wuyong.site") {
-                url = url.appending("?t=\(Date.fw.currentTime)")
-            }
-            cell.systemView.fw.setImage(url: url)
-            cell.animatedView.fw.setImage(url: url, placeholderImage: UIImage.fw.appIconImage())
+            let url = fileName
+            let pixelSize = CGSize(width: 100.0 * UIScreen.main.scale, height: 100.0 * UIScreen.main.scale)
+            let cachedImage = UIImageView.app.loadImageCache(url: url)
+            cell.systemView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.systemView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.thumbnailPixelSize: NSValue(cgSize: pixelSize)])
+            cell.animatedView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.animatedView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.thumbnailPixelSize: NSValue(cgSize: pixelSize)])
         }
         return cell
     }
@@ -122,7 +115,7 @@ class TestImageCell: UITableViewCell {
     }()
     
     lazy var animatedView: UIImageView = {
-        let result = UIImageView.fw.animatedImageView()
+        let result = UIImageView.app.animatedImageView()
         return result
     }()
     
@@ -132,18 +125,18 @@ class TestImageCell: UITableViewCell {
         contentView.addSubview(systemView)
         contentView.addSubview(animatedView)
         
-        nameLabel.fw.layoutChain
+        nameLabel.app.layoutChain
             .left(10)
             .top(10)
             .height(20)
         
-        systemView.fw.layoutChain
+        systemView.app.layoutChain
             .left(10)
             .top(toViewBottom: nameLabel, offset: 10)
             .bottom(10)
             .width(100)
         
-        animatedView.fw.layoutChain
+        animatedView.app.layoutChain
             .left(toViewRight: systemView, offset: 60)
             .top(toView: systemView)
             .bottom(toView: systemView)
