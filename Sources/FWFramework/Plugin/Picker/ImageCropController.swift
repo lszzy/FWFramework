@@ -2090,7 +2090,7 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         cropTargetPoint.x *= scale
         cropTargetPoint.y *= scale
         
-        var swap = cropTargetPoint.x
+        let swap = cropTargetPoint.x
         if clockwise {
             cropTargetPoint.x = scrollView.contentSize.width - cropTargetPoint.y
             cropTargetPoint.y = swap
@@ -2209,7 +2209,7 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     open func moveCroppedContentToCenterAnimated(_ animated: Bool) {
         if internalLayoutDisabled { return }
         
-        var contentRect = self.contentBounds
+        let contentRect = self.contentBounds
         var cropFrame = self.cropBoxFrame
         if cropFrame.size.width < .ulpOfOne || cropFrame.size.height < .ulpOfOne {
             return
@@ -2413,8 +2413,8 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     
     private func updateCropBoxFrame(gesturePoint: CGPoint) {
         var frame = self.cropBoxFrame
-        var originFrame = self.cropOriginFrame
-        var contentFrame = self.contentBounds
+        let originFrame = self.cropOriginFrame
+        let contentFrame = self.contentBounds
 
         var point = gesturePoint
         point.x = max(contentFrame.origin.x - cropViewPadding, point.x)
