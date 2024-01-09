@@ -6,237 +6,387 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - TableViewDelegate
-/// 便捷表格视图代理
-@objc(FWTableViewDelegate)
-@objcMembers open class TableViewDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+/// 常用表格视图数据源和事件代理，可继承
+open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
-    open var countForSection: (() -> Int)?
-    /// 表格section数，优先级低
-    open var sectionCount: Int = 0
+    open var numberOfSections: (() -> Int)?
+    /// 表格section数，默认1，优先级低
+    open var sectionCount: Int = 1
     /// 表格row数句柄
-    open var countForRow: ((Int) -> Int)?
+    open var numberOfRows: ((Int) -> Int)?
     /// 表格row数，优先级低
     open var rowCount: Int = 0
     
-    /// 表格section头视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
-    open var viewForHeader: ((Int) -> Any?)?
-    /// 表格section头视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
-    open var headerViewClass: Any?
+    /// 表格section头视图句柄，高度未指定时automaticDimension，默认nil
+    open var viewForHeader: ((UITableView, Int) -> UIView?)?
+    /// 表格section头视图类句柄，搭配headerConfiguration使用，默认nil
+    open var viewClassForHeader: ((UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
+    /// 表格section头视图类，搭配headerConfiguration使用，默认nil，优先级低
+    open var headerViewClass: UITableViewHeaderFooterView.Type?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var headerConfiguration: HeaderFooterViewSectionBlock?
-    /// 表格section头高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var heightForHeader: ((Int) -> CGFloat)?
+    open var headerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
+    /// 表格section头高度句柄，不指定时默认使用DynamicLayout自动计算并按section缓存
+    open var heightForHeader: ((UITableView, Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
     open var headerHeight: CGFloat?
     
-    /// 表格section尾视图句柄，支持UIView或UITableViewHeaderFooterView，默认nil
-    open var viewForFooter: ((Int) -> Any?)?
-    /// 表格section尾视图，支持UIView或UITableViewHeaderFooterView，默认nil，优先级低
-    open var footerViewClass: Any?
+    /// 表格section尾视图句柄，高度未指定时automaticDimension，默认nil
+    open var viewForFooter: ((UITableView, Int) -> UIView?)?
+    /// 表格section尾视图类句柄，搭配footerConfiguration使用，默认nil
+    open var viewClassForFooter: ((UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
+    /// 表格section尾视图，搭配footerConfiguration使用，默认nil，优先级低
+    open var footerViewClass: UITableViewHeaderFooterView.Type?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var footerConfiguration: HeaderFooterViewSectionBlock?
+    open var footerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var heightForFooter: ((Int) -> CGFloat)?
+    open var heightForFooter: ((UITableView, Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
     open var footerHeight: CGFloat?
     
-    /// 表格cell类句柄，style为default，支持cell或cellClass，默认nil
-    open var cellForRow: ((IndexPath) -> Any?)?
-    /// 表格cell类，支持cell或cellClass，默认nil，优先级低
-    open var cellClass: Any?
+    /// 表格cell视图句柄，高度未指定时automaticDimension，默认nil
+    open var cellForRow: ((UITableView, IndexPath) -> UITableViewCell?)?
+    /// 表格cell视图类句柄，搭配cellConfiguation使用，默认nil
+    open var cellClassForRow: ((UITableView, IndexPath) -> UITableViewCell.Type?)?
+    /// 表格cell视图类，搭配cellConfiguation使用，默认nil时为UITableViewCell.Type，优先级低
+    open var cellClass: UITableViewCell.Type?
     /// 表格cell配置句柄，参数为对应cellClass对象
-    open var cellConfiguation: CellIndexPathBlock?
+    open var cellConfiguation: ((UITableViewCell, IndexPath) -> Void)?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
-    open var heightForRow: ((IndexPath) -> CGFloat)?
+    open var heightForRow: ((UITableView, IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
     open var rowHeight: CGFloat?
     
+    /// 是否启用默认高度缓存，优先级低于cacheKey句柄，默认false
+    open var heightCacheEnabled = false
+    /// 表格cell自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForRow: ((IndexPath) -> AnyHashable?)?
+    /// 表格section头自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
+    /// 表格section尾自定义高度缓存key句柄，默认nil，优先级高
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
+    
     /// 表格选中事件，默认nil
-    open var didSelectRow: ((IndexPath) -> Void)?
+    open var didSelectRow: ((UITableView, IndexPath) -> Void)?
     /// 表格删除标题句柄，不为空才能删除，默认nil不能删除
     open var titleForDelete: ((IndexPath) -> String?)?
     /// 表格删除标题，不为空才能删除，默认nil不能删除，优先级低
     open var deleteTitle: String?
     /// 表格删除事件，默认nil
-    open var didDeleteRow: ((IndexPath) -> Void)?
+    open var didDeleteRow: ((UITableView, IndexPath) -> Void)?
+    /// 表格cell即将显示句柄，默认nil
+    open var willDisplayCell: ((UITableViewCell, IndexPath) -> Void)?
+    /// 表格cell即将停止显示，默认nil
+    open var didEndDisplayingCell: ((UITableViewCell, IndexPath) -> Void)?
     
-    // MARK: - UITableView
+    /// 表格滚动句柄，默认nil
+    open var didScroll: ((UIScrollView) -> Void)?
+    /// 表格即将开始拖动句柄，默认nil
+    open var willBeginDragging: ((UIScrollView) -> Void)?
+    /// 表格即将停止拖动句柄，默认nil
+    open var willEndDragging: ((UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
+    /// 表格已经停止拖动句柄，默认nil
+    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
+    /// 表格已经停止减速句柄，默认nil
+    open var didEndDecelerating: ((UIScrollView) -> Void)?
+    /// 表格已经停止滚动动画句柄，默认nil
+    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
     
+    // MARK: - Lifecycle
+    /// 初始化并绑定tableView
+    public convenience init(tableView: UITableView) {
+        self.init()
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+    
+    // MARK: - UITableViewDataSource
     open func numberOfSections(in tableView: UITableView) -> Int {
-        if let countBlock = countForSection {
+        let dataSource = delegate as? UITableViewDataSource
+        if let sectionCount = dataSource?.numberOfSections?(in: tableView) {
+            return sectionCount
+        }
+        
+        if let countBlock = numberOfSections {
             return countBlock()
         }
         return sectionCount
     }
     
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let countBlock = countForRow {
+        let dataSource = delegate as? UITableViewDataSource
+        if let rowCount = dataSource?.tableView(tableView, numberOfRowsInSection: section) {
+            return rowCount
+        }
+        
+        if let countBlock = numberOfRows {
             return countBlock(section)
         }
         return rowCount
     }
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let rowCell = cellForRow?(indexPath) ?? cellClass
-        if let cell = rowCell as? UITableViewCell {
+        let dataSource = delegate as? UITableViewDataSource
+        if let cell = dataSource?.tableView(tableView, cellForRowAt: indexPath) {
             return cell
         }
-        guard let clazz = rowCell as? UITableViewCell.Type else {
-            return UITableViewCell(style: .default, reuseIdentifier: nil)
-        }
         
-        // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-        let cell = clazz.__fw_cell(with: tableView)
+        if let cell = cellForRow?(tableView, indexPath) {
+            return cell
+        }
+        let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
+        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+        let cell = cellClass.fw_cell(tableView: tableView)
         cellConfiguation?(cell, indexPath)
         return cell
     }
     
+    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let dataSource = delegate as? UITableViewDataSource
+        if let canEdit = dataSource?.tableView?(tableView, canEditRowAt: indexPath) {
+            return canEdit
+        }
+        
+        let title = titleForDelete?(indexPath) ?? deleteTitle
+        return title != nil ? true : false
+    }
+    
+    open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        let dataSource = delegate as? UITableViewDataSource
+        if dataSource?.tableView?(tableView, commit: editingStyle, forRowAt: indexPath) != nil {
+            return
+        }
+        
+        if editingStyle == .delete {
+            didDeleteRow?(tableView, indexPath)
+        }
+    }
+    
+    // MARK: - UITableViewDelegate
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let rowHeight = delegate?.tableView?(tableView, heightForRowAt: indexPath) {
+            return rowHeight
+        }
+        
         if let heightBlock = heightForRow {
-            return heightBlock(indexPath)
+            return heightBlock(tableView, indexPath)
         }
         if let rowHeight = rowHeight {
             return rowHeight
         }
         
-        let rowCell = cellForRow?(indexPath) ?? cellClass
-        if let cell = rowCell as? UITableViewCell {
-            return cell.frame.size.height
+        if cellForRow != nil || cellConfiguation == nil {
+            return UITableView.automaticDimension
         }
-        guard let clazz = rowCell as? UITableViewCell.Type else {
-            return 0
-        }
-        
-        return tableView.fw.height(cellClass: clazz, cacheBy: indexPath) { [weak self] (cell) in
+        let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
+        let cacheKey = cacheKeyForRow?(indexPath) ?? (heightCacheEnabled ? indexPath : nil)
+        return tableView.fw_height(cellClass: cellClass, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguation?(cell, indexPath)
         }
     }
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let viewClass = viewForHeader?(section) ?? headerViewClass
-        guard let header = viewClass else { return nil }
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:viewForHeaderInSection:))) ?? false {
+            return delegate?.tableView?(tableView, viewForHeaderInSection: section)
+        }
         
-        if let view = header as? UIView {
-            return view
+        if viewForHeader != nil {
+            return viewForHeader?(tableView, section)
         }
-        if let clazz = header as? UITableViewHeaderFooterView.Type {
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_headerFooterView(with: tableView)
-            headerConfiguration?(view, section)
-            return view
-        }
-        return nil
+        let viewClass = viewClassForHeader?(tableView, section) ?? headerViewClass
+        guard let viewClass = viewClass else { return nil }
+        
+        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+        let view = viewClass.fw_headerFooterView(tableView: tableView)
+        headerConfiguration?(view, section)
+        return view
     }
     
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if let headerHeight = delegate?.tableView?(tableView, heightForHeaderInSection: section) {
+            return headerHeight
+        }
+        
         if let heightBlock = heightForHeader {
-            return heightBlock(section)
+            return heightBlock(tableView, section)
         }
         if let headerHeight = headerHeight {
             return headerHeight
         }
         
-        let viewClass = viewForHeader?(section) ?? headerViewClass
-        guard let header = viewClass else { return 0 }
+        if viewForHeader != nil {
+            return UITableView.automaticDimension
+        }
+        let viewClass = viewClassForHeader?(tableView, section) ?? headerViewClass
+        guard let viewClass = viewClass else { return 0 }
+        if headerConfiguration == nil {
+            return UITableView.automaticDimension
+        }
         
-        if let view = header as? UIView {
-            return view.frame.size.height
+        let cacheKey = cacheKeyForHeader?(section) ?? (heightCacheEnabled ? section : nil)
+        return tableView.fw_height(headerFooterViewClass: viewClass, type: .header, cacheBy: cacheKey) { [weak self] (headerView) in
+            self?.headerConfiguration?(headerView, section)
         }
-        if let clazz = header as? UITableViewHeaderFooterView.Type {
-            return tableView.fw.height(headerFooterViewClass: clazz, type: .header, cacheBy: section) { [weak self] (headerView) in
-                self?.headerConfiguration?(headerView, section)
-            }
-        }
-        return 0
     }
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let viewClass = viewForFooter?(section) ?? footerViewClass
-        guard let footer = viewClass else { return nil }
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:viewForFooterInSection:))) ?? false {
+            return delegate?.tableView?(tableView, viewForFooterInSection: section)
+        }
         
-        if let view = footer as? UIView {
-            return view
+        if viewForFooter != nil {
+            return viewForFooter?(tableView, section)
         }
-        if let clazz = footer as? UITableViewHeaderFooterView.Type {
-            // 注意：此处必须使用.__fw_创建，否则返回的对象类型不对
-            let view = clazz.__fw_headerFooterView(with: tableView)
-            footerConfiguration?(view, section)
-            return view
-        }
-        return nil
+        let viewClass = viewClassForFooter?(tableView, section) ?? footerViewClass
+        guard let viewClass = viewClass else { return nil }
+        
+        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
+        let view = viewClass.fw_headerFooterView(tableView: tableView)
+        footerConfiguration?(view, section)
+        return view
     }
     
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if let footerHeight = delegate?.tableView?(tableView, heightForFooterInSection: section) {
+            return footerHeight
+        }
+        
         if let heightBlock = heightForFooter {
-            return heightBlock(section)
+            return heightBlock(tableView, section)
         }
         if let footerHeight = footerHeight {
             return footerHeight
         }
         
-        let viewClass = viewForFooter?(section) ?? footerViewClass
-        guard let footer = viewClass else { return 0 }
+        if viewForFooter != nil {
+            return UITableView.automaticDimension
+        }
+        let viewClass = viewClassForFooter?(tableView, section) ?? footerViewClass
+        guard let viewClass = viewClass else { return 0 }
+        if footerConfiguration == nil {
+            return UITableView.automaticDimension
+        }
         
-        if let view = footer as? UIView {
-            return view.frame.size.height
+        let cacheKey = cacheKeyForFooter?(section) ?? (heightCacheEnabled ? section : nil)
+        return tableView.fw_height(headerFooterViewClass: viewClass, type: .footer, cacheBy: cacheKey) { [weak self] (footerView) in
+            self?.footerConfiguration?(footerView, section)
         }
-        if let clazz = footer as? UITableViewHeaderFooterView.Type {
-            return tableView.fw.height(headerFooterViewClass: clazz, type: .footer, cacheBy: section) { [weak self] (footerView) in
-                self?.footerConfiguration?(footerView, section)
-            }
-        }
-        return 0
     }
     
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        didSelectRow?(indexPath)
-    }
-    
-    open func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let title = titleForDelete?(indexPath) ?? deleteTitle
-        return title != nil ? true : false
+        if delegate?.tableView?(tableView, didSelectRowAt: indexPath) != nil {
+            return
+        }
+        
+        didSelectRow?(tableView, indexPath)
     }
     
     open func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        if delegate?.responds(to: #selector(UITableViewDelegate.tableView(_:titleForDeleteConfirmationButtonForRowAt:))) ?? false {
+            return delegate?.tableView?(tableView, titleForDeleteConfirmationButtonForRowAt: indexPath)
+        }
+        
         return titleForDelete?(indexPath) ?? deleteTitle
     }
     
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if let editingStyle = delegate?.tableView?(tableView, editingStyleForRowAt: indexPath) {
+            return editingStyle
+        }
+        
         let title = titleForDelete?(indexPath) ?? deleteTitle
         return title != nil ? .delete : .none
     }
     
-    open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            didDeleteRow?(indexPath)
+    open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if delegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath) != nil {
+            return
         }
+        
+        willDisplayCell?(cell, indexPath)
+    }
+    
+    open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath) != nil {
+            return
+        }
+        
+        didEndDisplayingCell?(cell, indexPath)
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidScroll?(scrollView) != nil {
+            return
+        }
+        
+        didScroll?(scrollView)
+    }
+    
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewWillBeginDragging?(scrollView) != nil {
+            return
+        }
+        
+        willBeginDragging?(scrollView)
+    }
+    
+    open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if delegate?.scrollViewWillEndDragging?(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset) != nil {
+            return
+        }
+        
+        willEndDragging?(scrollView, velocity, targetContentOffset)
+    }
+    
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if delegate?.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate) != nil {
+            return
+        }
+        
+        didEndDragging?(scrollView, decelerate)
+    }
+    
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndDecelerating?(scrollView) != nil {
+            return
+        }
+        
+        didEndDecelerating?(scrollView)
+    }
+    
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if delegate?.scrollViewDidEndScrollingAnimation?(scrollView) != nil {
+            return
+        }
+        
+        didEndScrollingAnimation?(scrollView)
     }
 }
 
-extension Wrapper where Base: UITableView {
-    public var delegate: TableViewDelegate {
-        if let result = base.fw.property(forName: "fwDelegate") as? TableViewDelegate {
-            return result
-        } else {
-            let result = TableViewDelegate()
-            base.fw.setProperty(result, forName: "fwDelegate")
-            base.dataSource = result
-            base.delegate = result
-            return result
+@_spi(FW) extension UITableView {
+    public var fw_tableDelegate: TableViewDelegate {
+        get {
+            if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
+                return result
+            } else {
+                let result = TableViewDelegate()
+                fw_setProperty(result, forName: "fw_tableDelegate")
+                return result
+            }
+        }
+        set {
+            fw_setProperty(newValue, forName: "fw_tableDelegate")
         }
     }
     
-    public static func tableView() -> Base {
-        return tableView(.plain)
+    public static func fw_tableView() -> Self {
+        return fw_tableView(.plain)
     }
     
-    public static func tableView(_ style: UITableView.Style) -> Base {
-        let tableView = Base(frame: .zero, style: style)
+    public static func fw_tableView(_ style: UITableView.Style) -> Self {
+        let tableView = Self(frame: .zero, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.tableFooterView = UIView(frame: .zero)
@@ -244,22 +394,5 @@ extension Wrapper where Base: UITableView {
             tableView.sectionHeaderTopPadding = 0
         }
         return tableView
-    }
-}
-
-@objc extension UITableView {
-    @objc(fw_delegate)
-    public var __fw_delegate: TableViewDelegate {
-        return fw.delegate
-    }
-    
-    @objc(fw_tableView)
-    public static func __fw_tableView() -> UITableView {
-        return fw.tableView()
-    }
-    
-    @objc(fw_tableView:)
-    public static func __fw_tableView(_ style: UITableView.Style) -> UITableView {
-        return fw.tableView(style)
     }
 }

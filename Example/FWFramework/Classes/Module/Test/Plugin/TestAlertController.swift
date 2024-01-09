@@ -10,23 +10,36 @@ import FWFramework
 
 class TestAlertController: UIViewController, TableViewControllerProtocol {
     
+    typealias TableElement = [String]
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupNavbar() {
-        fw.setRightBarItem("切换插件") { _ in
-            if PluginManager.loadPlugin(AlertPlugin.self) != nil {
-                PluginManager.unloadPlugin(AlertPlugin.self)
-                PluginManager.unregisterPlugin(AlertPlugin.self)
-            } else {
-                PluginManager.registerPlugin(AlertPlugin.self, with: AlertControllerImpl.self)
-            }
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["切换按钮样式"], actionBlock: { index in
+                if AlertAppearance.appearance.preferredActionColor == nil {
+                    AlertAppearance.appearance.preferredActionColor = UIColor.red
+                    AlertAppearance.appearance.preferredActionBlock = { vc in
+                        return vc.actions.first
+                    }
+                    AlertControllerAppearance.appearance.preferredActionColor = UIColor.red
+                    AlertControllerAppearance.appearance.preferredActionBlock = { vc in
+                        return vc.actions.first
+                    }
+                } else {
+                    AlertAppearance.appearance.preferredActionColor = nil
+                    AlertAppearance.appearance.preferredActionBlock = nil
+                    AlertControllerAppearance.appearance.preferredActionColor = nil
+                    AlertControllerAppearance.appearance.preferredActionBlock = nil
+                }
+            })
         }
     }
     
     func setupSubviews() {
-        tableData.addObjects(from: [
+        tableData.append(contentsOf: [
             ["警告框(简单)", "onAlert1"],
             ["警告框(详细)", "onAlert2"],
             ["确认框(简单)", "onConfirm1"],
@@ -54,16 +67,16 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let rowData = tableData.object(at: indexPath.row) as! [String]
-        fw.invokeMethod(NSSelectorFromString(rowData[1]))
+        let rowData = tableData[indexPath.row]
+        app.invokeMethod(NSSelectorFromString(rowData[1]))
     }
     
 }
@@ -71,52 +84,52 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
 @objc extension TestAlertController {
     
     func onAlert1() {
-        fw.showAlert(title: "警告框标题", message: "警告框消息", cancel: nil) {
-            UIWindow.fw.showMessage(text: "顶部控制器：\(String(describing: Navigator.topPresentedController))")
+        app.showAlert(title: "警告框标题", message: "警告框消息", cancel: nil) {
+            UIWindow.app.showMessage(text: "顶部控制器：\(String(describing: Navigator.topPresentedController))")
         }
     }
     
     func onAlert2() {
-        fw.showAlert(title: "警告框标题", message: "警告框消息", style: .default, cancel: nil, actions: ["按钮1", "按钮2"]) { index in
-            UIWindow.fw.showMessage(text: "点击的按钮index: \(index)")
+        app.showAlert(title: "警告框标题", message: "警告框消息", style: .default, cancel: nil, actions: ["按钮1", "按钮2"]) { index in
+            UIWindow.app.showMessage(text: "点击的按钮index: \(index)")
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
+            UIWindow.app.showMessage(text: "点击了取消按钮")
         }
     }
     
     func onConfirm1() {
-        fw.showConfirm(title: "确认框标题", message: "确认框消息", cancel: nil, confirm: nil) {
-            UIWindow.fw.showMessage(text: "点击了确定按钮")
+        app.showConfirm(title: "确认框标题", message: "确认框消息", cancel: nil, confirm: nil) {
+            UIWindow.app.showMessage(text: "点击了确定按钮")
         }
     }
     
     func onConfirm2() {
-        fw.showConfirm(title: "确认框标题", message: "确认框消息", cancel: nil, confirm: "我是很长的确定按钮") {
-            UIWindow.fw.showMessage(text: "点击了确定按钮")
+        app.showConfirm(title: "确认框标题", message: "确认框消息", cancel: nil, confirm: "我是很长的确定按钮") {
+            UIWindow.app.showMessage(text: "点击了确定按钮")
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
+            UIWindow.app.showMessage(text: "点击了取消按钮")
         }
     }
     
     func onPrompt1() {
-        fw.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil) { text in
-            UIWindow.fw.showMessage(text: "输入内容：\(text)")
+        app.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil) { text in
+            UIWindow.app.showMessage(text: "输入内容：\(text)")
         }
     }
     
     func onPrompt2() {
-        fw.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil, promptBlock: { textField in
+        app.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil, promptBlock: { textField in
             textField.placeholder = "请输入密码"
             textField.isSecureTextEntry = true
         }) { text in
-            UIWindow.fw.showMessage(text: "输入内容：\(text)")
+            UIWindow.app.showMessage(text: "输入内容：\(text)")
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
+            UIWindow.app.showMessage(text: "点击了取消按钮")
         }
     }
     
     func onPrompt3() {
-        fw.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil, promptCount: 2, promptBlock: { textField, index in
+        app.showPrompt(title: "输入框标题", message: "输入框消息", cancel: nil, confirm: nil, promptCount: 2, promptBlock: { textField, index in
             if index == 0 {
                 textField.placeholder = "请输入用户名"
                 textField.isSecureTextEntry = false
@@ -125,34 +138,34 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
                 textField.isSecureTextEntry = true
             }
         }) { values in
-            UIWindow.fw.showMessage(text: "输入内容：\(values)")
+            UIWindow.app.showMessage(text: "输入内容：\(values)")
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
+            UIWindow.app.showMessage(text: "点击了取消按钮")
         }
     }
     
     func onAlertE() {
-        fw.showAlert(title: nil, message: nil, cancel: nil) {
-            UIWindow.fw.showMessage(text: "顶部控制器：\(String(describing: Navigator.topPresentedController))")
+        app.showAlert(title: nil, message: nil, cancel: nil) {
+            UIWindow.app.showMessage(text: "顶部控制器：\(String(describing: Navigator.topPresentedController))")
         }
     }
     
     func onSheet1() {
-        fw.showSheet(title: nil, message: nil, cancel: "取消", actions: ["操作1"], currentIndex: -1) { index in
-            UIWindow.fw.showMessage(text: "点击的操作index: \(index)")
+        app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["操作1"], currentIndex: -1) { index in
+            UIWindow.app.showMessage(text: "点击的操作index: \(index)")
         }
     }
     
     func onSheet2() {
-        fw.showSheet(title: "操作表标题", message: "操作表消息", cancel: "取消", actions: ["操作1", "操作2", "操作3"], currentIndex: 1) { index in
-            UIWindow.fw.showMessage(text: "点击的操作index: \(index)")
+        app.showSheet(title: "操作表标题", message: "操作表消息", cancel: "取消", actions: ["操作1", "操作2", "操作3"], currentIndex: 1) { index in
+            UIWindow.app.showMessage(text: "点击的操作index: \(index)")
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消操作")
+            UIWindow.app.showMessage(text: "点击了取消操作")
         }
     }
     
     func onAlertF() {
-        fw.showAlert(title: "请输入账号信息，我是很长很长很长很长很长很长的标题", message: "账户信息必填，我是很长很长很长很长很长很长的消息", style: .default, cancel: "取消", actions: ["重试", "高亮", "禁用", "确定"], promptCount: 2) { textField, index in
+        app.showAlert(title: "请输入账号信息，我是很长很长很长很长很长很长的标题", message: "账户信息必填，我是很长很长很长很长很长很长的消息", style: .default, cancel: "取消", actions: ["重试", "高亮", "禁用", "确定"], promptCount: 2) { textField, index in
             if index == 0 {
                 textField.placeholder = "请输入用户名"
                 textField.isSecureTextEntry = false
@@ -164,10 +177,10 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
             if index == 0 {
                 self?.onAlertF()
             } else {
-                UIWindow.fw.showMessage(text: "输入内容：\(values)")
+                UIWindow.app.showMessage(text: "输入内容：\(values)")
             }
         } cancelBlock: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
+            UIWindow.app.showMessage(text: "点击了取消按钮")
         } customBlock: { param in
             if let alert = param as? UIAlertController {
                 alert.preferredAction = alert.actions[1]
@@ -175,7 +188,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
             } else if let alert = param as? AlertController {
                 alert.preferredAction = alert.actions[1]
                 alert.actions[2].isEnabled = false
-                alert.image = UIImage.fw.appIconImage()
+                alert.image = UIImage.app.appIconImage()
             }
         }
     }
@@ -184,103 +197,138 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
         headerView.backgroundColor = .white
         
-        AlertControllerImpl.shared.viewController(self, showAlertWith: .alert, headerView: headerView, cancel: "取消", actions: ["确定"]) { index in
-            UIWindow.fw.showMessage(text: "点击了确定按钮")
-        } cancel: {
-            UIWindow.fw.showMessage(text: "点击了取消按钮")
-        }
+        AlertControllerImpl.shared.showAlert(style: .alert, headerView: headerView, cancel: "取消", actions: ["确定"], actionBlock: { index in
+            UIWindow.app.showMessage(text: "点击了确定按钮")
+        }, cancelBlock: {
+            UIWindow.app.showMessage(text: "点击了取消按钮")
+        }, in: self)
     }
     
     func onAlertV() {
         let alertView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
         alertView.backgroundColor = .white
-        alertView.fw.addTapGesture { [weak self] _ in
+        alertView.app.addTapGesture { [weak self] _ in
             self?.presentedViewController?.dismiss(animated: true)
         }
         
-        AlertControllerImpl.shared.viewController(self, showAlertWith: .alert, headerView: alertView, cancel: nil, actions: nil, actionBlock: nil, cancel: nil) { param in
+        AlertControllerImpl.shared.showAlert(style: .alert, headerView: alertView, cancel: nil, actions: nil, actionBlock: nil, cancelBlock: nil, customBlock: { param in
             if let alert = param as? AlertController {
                 alert.tapBackgroundViewDismiss = true
             }
-        }
+        }, in: self)
     }
     
     func onAlertA() {
         let title = NSMutableAttributedString()
         let attachment = NSTextAttachment()
-        attachment.image = UIImage.fw.appIconImage()?.withRenderingMode(.alwaysOriginal)
+        attachment.image = UIImage.app.appIconImage()?.withRenderingMode(.alwaysOriginal)
         attachment.bounds = CGRect(x: 0, y: -20, width: 30, height: 30)
         title.append(NSAttributedString(attachment: attachment))
         var attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.fw.boldFont(ofSize: 17),
+            .font: UIFont.app.boldFont(ofSize: 17),
             .foregroundColor: UIColor.red,
         ]
         title.append(NSAttributedString(string: "\n\n警告框标题", attributes: attrs))
         
         let message = NSMutableAttributedString()
         attrs = [
-            .font: UIFont.fw.font(ofSize: 15),
+            .font: UIFont.app.font(ofSize: 15),
             .foregroundColor: UIColor.green,
         ]
         message.append(NSAttributedString(string: "警告框消息", attributes: attrs))
         
-        fw.showAlert(title: title, message: message, style: .default, cancel: nil, actions: ["按钮1", "按钮2", "按钮3", "按钮4"], actionBlock: nil, cancelBlock: nil)
+        app.showAlert(title: title, message: message, style: .default, cancel: nil, actions: ["按钮1", "按钮2", NSAttributedString(string: "按钮3", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "按钮4", attributes: [.foregroundColor: UIColor.green])], actionBlock: nil, cancelBlock: nil)
     }
     
     func onSheetA() {
         let title = NSMutableAttributedString()
         let attachment = NSTextAttachment()
-        attachment.image = UIImage.fw.appIconImage()?.withRenderingMode(.alwaysOriginal)
+        attachment.image = UIImage.app.appIconImage()?.withRenderingMode(.alwaysOriginal)
         attachment.bounds = CGRect(x: 0, y: -20, width: 30, height: 30)
         title.append(NSAttributedString(attachment: attachment))
         var attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.fw.boldFont(ofSize: 17),
+            .font: UIFont.app.boldFont(ofSize: 17),
             .foregroundColor: UIColor.red,
         ]
         title.append(NSAttributedString(string: "\n\n操作表标题", attributes: attrs))
         
         let message = NSMutableAttributedString()
         attrs = [
-            .font: UIFont.fw.font(ofSize: 15),
+            .font: UIFont.app.font(ofSize: 15),
             .foregroundColor: UIColor.green,
         ]
         message.append(NSAttributedString(string: "操作表消息", attributes: attrs))
         
-        fw.showSheet(title: title, message: message, cancel: "取消", actions: ["操作1", "操作2", "操作3", "操作4", "操作5", "操作6", "操作7", "操作8", "操作9", "操作10"], currentIndex: -1) { index in
-            UIWindow.fw.showMessage(text: "点击的操作index: \(index)")
+        app.showSheet(title: title, message: message, cancel: "取消", actions: ["操作1", "操作2", NSAttributedString(string: "操作3", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "操作4", attributes: [.foregroundColor: UIColor.green]), "操作5", "操作6", NSAttributedString(string: "操作7", attributes: [.foregroundColor: UIColor.red]), NSAttributedString(string: "操作8", attributes: [.foregroundColor: UIColor.green]), "操作9", "操作10"], currentIndex: -1) { index in
+            UIWindow.app.showMessage(text: "点击的操作index: \(index)")
         }
     }
     
     func onAlertP() {
-        fw.showAlert(title: "高优先级", message: "警告框消息", cancel: nil) { [weak self] in
-            self?.fw.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
-                self?.fw.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: nil)
+        let taskManager = TaskManager(maxConcurrentTaskCount: 1)
+        
+        let task = TaskOperation(onMainThread: true, queuePriority: .low) { [weak self] task in
+            self?.app.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
             })
         }
+        
+        let task2 = TaskOperation(onMainThread: true, queuePriority: .normal) { [weak self] task in
+            self?.app.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        let task3 = TaskOperation(onMainThread: true, queuePriority: .high) { [weak self] task in
+            self?.app.showAlert(title: "高优先级", message: "警告框消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        taskManager.addTasks([task, task2, task3])
     }
     
     func onSheetP() {
-        fw.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) { [weak self] in
-            self?.fw.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
-                self?.fw.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: nil)
+        let taskManager = TaskManager(maxConcurrentTaskCount: 1, isSuspended: true)
+        
+        let task = TaskOperation(onMainThread: true, queuePriority: .low) { [weak self] task in
+            self?.app.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                task.finish()
             })
         }
+        
+        let task2 = TaskOperation(onMainThread: true, queuePriority: .normal) { [weak self] task in
+            self?.app.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                task.finish()
+            })
+        }
+        
+        let task3 = TaskOperation(onMainThread: true, queuePriority: .high) { [weak self] task in
+            self?.app.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) {
+                task.finish()
+            }
+        }
+        
+        taskManager.addTask(task)
+        taskManager.addTask(task2)
+        taskManager.addTask(task3)
+        taskManager.isSuspended = false
     }
     
     func onSheetM() {
-        Navigator.topPresentedController?.fw.showSheet(title: "第一个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
+        Navigator.topPresentedController?.app.showSheet(title: "第一个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            Navigator.topPresentedController?.fw.showSheet(title: "第二个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
+            Navigator.topPresentedController?.app.showSheet(title: "第二个操作表", message: nil, cancel: "取消", actions: ["操作"], actionBlock: nil)
         }
     }
     
     func onCloseA() {
-        fw.showAlert(title: nil, message: "我将在两秒后自动关闭")
+        app.showAlert(title: nil, message: "我将在两秒后自动关闭")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            Navigator.topPresentedController?.fw.showAlert(title: nil, message: "我将在一秒后自动关闭")
+            Navigator.topPresentedController?.app.showAlert(title: nil, message: "我将在一秒后自动关闭")
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.fw.hideAlert(animated: true)
+            self?.app.hideAlert(animated: true)
         }
     }
     

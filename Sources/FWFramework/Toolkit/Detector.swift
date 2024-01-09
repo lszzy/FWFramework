@@ -11,11 +11,9 @@ import Vision
 #endif
 
 /// 智能检测器
-@objc(FWDetector)
-@objcMembers public class Detector: NSObject {
+public class Detector: NSObject {
     
     /// 识别图片文字，可设置语言(zh-CN,en-US)等，完成时主线程回调结果
-    @available(iOS 13.0, *)
     public static func recognizeText(in image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([OcrResult]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             Detector.performOcr(image: image, configuration: configuration) { results in
@@ -26,7 +24,6 @@ import Vision
         }
     }
     
-    @available(iOS 13.0, *)
     private static func performOcr(image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([OcrResult]) -> Void) {
         let textRequest = VNRecognizeTextRequest() { request, error in
             let imageSize = CGSize(width: image.width, height: image.height)
@@ -67,7 +64,6 @@ import Vision
         }
     }
     
-    @available(iOS 13.0, *)
     private static func convertToImageRect(boundingBox: VNRectangleObservation, imageSize: CGSize) -> CGRect {
         let topLeft = VNImagePointForNormalizedPoint(boundingBox.topLeft,
                                                      Int(imageSize.width),
@@ -83,8 +79,7 @@ import Vision
 }
 
 /// OCR扫描结果
-@objc(FWOcrResult)
-@objcMembers public class OcrResult: NSObject {
+public class OcrResult: NSObject {
     
     /// 识别文本
     public var text: String = ""

@@ -8,12 +8,10 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWObjC
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 /// 导航栏配置，兼容AnyView和UIKit对象
-@available(iOS 13.0, *)
 public struct NavigationBarConfiguration {
     public var leading: Any?
     public var title: Any?
@@ -53,7 +51,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.leftBarButtonItem?.customView = HostingView(rootView: leading)
             }
         } else if let leading = leading {
-            viewController.fw.leftBarItem = leading
+            viewController.fw_leftBarItem = leading
         }
         
         if let title = title as? AnyView {
@@ -79,7 +77,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.rightBarButtonItem?.customView = HostingView(rootView: trailing)
             }
         } else if let trailing = trailing {
-            viewController.fw.rightBarItem = trailing
+            viewController.fw_rightBarItem = trailing
         }
         
         viewController.navigationItem.leftBarButtonItem?.customView?.sizeToFit()
@@ -87,9 +85,9 @@ public struct NavigationBarConfiguration {
         viewController.navigationItem.rightBarButtonItem?.customView?.sizeToFit()
         
         if let appearance = appearance {
-            viewController.fw.navigationBarAppearance = appearance()
+            viewController.fw_navigationBarAppearance = appearance()
         } else if let style = style {
-            viewController.fw.navigationBarStyle = style
+            viewController.fw_navigationBarStyle = style
         } else if let background = background {
             let appearance = NavigationBarAppearance()
             if let color = background as? Color {
@@ -101,14 +99,13 @@ public struct NavigationBarConfiguration {
             } else if let transparent = background as? Bool {
                 appearance.backgroundTransparent = transparent
             }
-            viewController.fw.navigationBarAppearance = appearance
+            viewController.fw_navigationBarAppearance = appearance
         }
         
         customize?(viewController)
     }
 }
 
-@available(iOS 13.0, *)
 extension View {
     
     /// 配置导航栏SwiftUI左侧、标题、右侧视图和背景
@@ -180,11 +177,12 @@ extension View {
     
     /// 配置当前导航栏
     public func navigationBarConfigure(
-        _ configuration: NavigationBarConfiguration
+        _ configuration: NavigationBarConfiguration,
+        viewContext: ViewContext? = nil
     ) -> some View {
-        return viewControllerConfigure { viewController in
+        return viewControllerConfigure ({ viewController in
             configuration.configure(viewController: viewController)
-        }
+        }, viewContext: viewContext)
     }
     
     /// 初始化当前顶部视图控制器，仅调用一次
@@ -193,8 +191,8 @@ extension View {
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
-            guard viewController.fw.property(forName: "viewControllerInitialize") == nil else { return }
-            viewController.fw.setProperty(NSNumber(value: true), forName: "viewControllerInitialize")
+            guard !viewController.fw_propertyBool(forName: "viewControllerInitialize") else { return }
+            viewController.fw_setPropertyBool(true, forName: "viewControllerInitialize")
             
             initialization(viewController)
         }, viewContext: viewContext)
@@ -225,11 +223,11 @@ extension View {
             }
             
             var viewController: UIViewController?
-            if let superController = hostingView.superview?.fw.viewController,
+            if let superController = hostingView.superview?.fw_viewController,
                !(superController is UINavigationController) && !(superController is UITabBarController) {
                 viewController = superController
             } else {
-                viewController = hostingView.fw.viewController
+                viewController = hostingView.fw_viewController
             }
             guard let viewController = viewController else {
                 return
@@ -249,8 +247,8 @@ extension View {
         _ initialization: @escaping (UIView) -> Void
     ) -> some View {
         return hostingViewConfigure { hostingView in
-            guard hostingView.fw.property(forName: "hostingViewInitialize") == nil else { return }
-            hostingView.fw.setProperty(NSNumber(value: true), forName: "hostingViewInitialize")
+            guard !hostingView.fw_propertyBool(forName: "hostingViewInitialize") else { return }
+            hostingView.fw_setPropertyBool(true, forName: "hostingViewInitialize")
             
             initialization(hostingView)
         }

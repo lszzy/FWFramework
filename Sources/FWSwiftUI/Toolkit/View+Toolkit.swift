@@ -11,7 +11,6 @@ import SwiftUI
 // MARK: - LineShape
 /// 线条形状，用于分割线、虚线等。自定义路径形状：Path { (path) in ... }
 /// 常用分割线：Rectangle.foregroundColor替代Divider组件
-@available(iOS 13.0, *)
 public struct LineShape: Shape {
     public var axes: Axis.Set = .horizontal
     
@@ -29,7 +28,6 @@ public struct LineShape: Shape {
 
 // MARK: - RoundedCornerShape
 /// 不规则圆角形状
-@available(iOS 13.0, *)
 public struct RoundedCornerShape: Shape {
     public var radius: CGFloat = 0
     public var corners: UIRectCorner = .allCorners
@@ -42,7 +40,6 @@ public struct RoundedCornerShape: Shape {
 
 // MARK: - RemovableModifier
 /// 视图移除性修改器
-@available(iOS 13.0, *)
 public struct RemovableModifier: ViewModifier {
     public let removable: Bool
     
@@ -63,7 +60,6 @@ public struct RemovableModifier: ViewModifier {
 
 // MARK: - View+Toolkit
 /// 注意：iOS13系统View在dismiss时可能不会触发onDisappear，可在关闭按钮事件中处理
-@available(iOS 13.0, *)
 extension View {
     
     /// 设置不规则圆角效果

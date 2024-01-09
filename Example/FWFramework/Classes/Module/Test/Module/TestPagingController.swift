@@ -12,8 +12,8 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     static let headerViewHeight: CGFloat = 150
     static let segmentViewHeight: CGFloat = 50
-    static let navigationViewHeight: CGFloat = FW.topBarHeight
-    static let cartViewHeight: CGFloat = FW.tabBarHeight
+    static let navigationViewHeight: CGFloat = APP.topBarHeight
+    static let cartViewHeight: CGFloat = APP.tabBarHeight
     static let categoryViewWidth: CGFloat = 84
     static let itemViewHeight: CGFloat = 40
     
@@ -24,19 +24,19 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         if refreshList {
             let pagerView = PagingListRefreshView(delegate: self, listContainerType: .scrollView)
             pagerView.listScrollViewPinContentInsetBlock = { scrollView in
-                if let vc = scrollView.fw.viewController as? TestNestChildController {
+                if let vc = scrollView.app.viewController as? TestNestChildController {
                     if vc.refreshList && vc.section && !vc.isInserted {
-                        return FW.screenHeight
+                        return APP.screenHeight
                     }
                 }
                 return 0
             }
-            pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.pinSectionHeaderVerticalOffset = Int(APP.topBarHeight)
             pagerView.isHidden = true
             return pagerView
         } else {
             let pagerView = PagingView(delegate: self, listContainerType: .scrollView)
-            pagerView.pinSectionHeaderVerticalOffset = Int(FW.topBarHeight)
+            pagerView.pinSectionHeaderVerticalOffset = Int(APP.topBarHeight)
             pagerView.isHidden = true
             return pagerView
         }
@@ -44,7 +44,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     lazy var headerView: UIImageView = {
         let result = UIImageView()
-        result.image = UIImage.fw.appIconImage()
+        result.image = UIImage.app.appIconImage()?.app.blurredImage()
         return result
     }()
     
@@ -54,7 +54,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         result.titleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         result.selectedTitleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         result.sectionTitles = ["下单", "评价", "商家"]
-        result.indexChangeBlock = { [weak self] index in
+        result.indexChangedBlock = { [weak self] index in
             self?.pagerView.scrollToIndex(Int(index))
         }
         return result
@@ -71,7 +71,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         cartLabel.text = "我是购物车"
         cartLabel.textAlignment = .center
         result.addSubview(cartLabel)
-        cartLabel.app.layoutChain.edges()
+        cartLabel.chain.edges()
         return result
     }()
     
@@ -88,14 +88,14 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         navigationItem.title = ""
         
         if !refreshList {
-            pagerView.mainTableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
-            pagerView.mainTableView.fw.pullRefreshView?.height = PullRefreshView.height + UIScreen.fw.safeAreaInsets.top
-            pagerView.mainTableView.fw.pullRefreshView?.indicatorPadding = UIScreen.fw.safeAreaInsets.top
+            pagerView.mainTableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
+            pagerView.mainTableView.app.pullRefreshView?.height = PullRefreshView.height + UIScreen.app.safeAreaInsets.top
+            pagerView.mainTableView.app.pullRefreshView?.indicatorPadding = UIScreen.app.safeAreaInsets.top
             
-            fw.setRightBarItem("测试") { [weak self] _ in
+            app.setRightBarItem("测试") { [weak self] _ in
                 let vc = TestPagingController()
                 vc.refreshList = true
-                self?.fw.open(vc)
+                self?.app.open(vc)
             }
         }
         
@@ -128,18 +128,18 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.isRefreshed = !self.isRefreshed
             self.pagerView.mainTableView.app.endRefreshing()
-            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles?.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
+            self.segmentedControl.sectionTitles = self.segmentedControl.sectionTitles.count == 2 ? ["下单", "评价", "商家"] : ["下单", "评价"]
             self.pagerView.reloadData()
         }
     }
     
     func setupSubviews() {
         view.addSubview(self.pagerView)
-        pagerView.fw.pinEdges()
+        pagerView.app.pinEdges()
         
         view.addSubview(cartView)
-        cartView.fw.pinEdges(excludingEdge: .top)
-        cartView.fw.setDimension(.height, size: TestPagingController.cartViewHeight)
+        cartView.app.pinEdges(excludingEdge: .top)
+        cartView.app.setDimension(.height, size: TestPagingController.cartViewHeight)
     }
     
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int {
@@ -159,7 +159,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func numberOfLists(in pagingView: PagingView) -> Int {
-        return segmentedControl.sectionTitles?.count ?? 0
+        return segmentedControl.sectionTitles.count
     }
     
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate {
@@ -199,7 +199,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     }
     
     func pagingView(_ pagingView: PagingView, didScrollToIndex index: Int) {
-        segmentedControl.selectedSegmentIndex = UInt(index)
+        segmentedControl.selectedSegmentIndex = index
         if !self.pagerView.isHidden {
             self.cartView.isHidden = index != 0
         }
@@ -211,7 +211,7 @@ class TestNestCollectionCell: UICollectionViewCell {
     
     lazy var textLabel: UILabel = {
         let result = UILabel()
-        result.font = .fw.font(ofSize: 15)
+        result.font = .app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
         result.textAlignment = .center
         return result
@@ -221,7 +221,7 @@ class TestNestCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.addSubview(textLabel)
-        textLabel.fw.layoutChain.edges()
+        textLabel.app.layoutChain.edges()
     }
     
     required init?(coder: NSCoder) {
@@ -249,7 +249,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     var scrollCallback: ((UIScrollView) -> Void)?
     
     func setupTableLayout() {
-        tableView.fw.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
+        tableView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -263,28 +263,28 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     func setupCollectionLayout() {
         collectionView.backgroundColor = AppTheme.backgroundColor
-        collectionView.fw.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
-        collectionView.fw.setDimension(.width, size: self.cart ? TestPagingController.categoryViewWidth : 0)
+        collectionView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
+        collectionView.app.setDimension(.width, size: self.cart ? TestPagingController.categoryViewWidth : 0)
     }
     
     func setupSubviews() {
         if refreshList {
-            tableView.fw.setRefreshing(target: self, action: #selector(onRefreshing))
+            tableView.app.setRefreshing(target: self, action: #selector(onRefreshing))
         }
-        tableView.fw.setLoading(target: self, action: #selector(onLoading))
+        tableView.app.setLoading(target: self, action: #selector(onLoading))
     }
     
     func setupLayout() {
         for i in 0 ..< rows {
             if isRefreshed {
-                tableData.add("我是刷新的测试数据\(i)")
+                tableData.append("我是刷新的测试数据\(i)")
             } else {
-                tableData.add("我是测试数据\(i)")
+                tableData.append("我是测试数据\(i)")
             }
         }
         collectionView.reloadData()
         
-        tableView.fw.reloadData { [weak self] in
+        tableView.app.reloadData { [weak self] in
             guard let self = self else { return }
             self.selectCollectionView(offset: self.tableView.contentOffset.y)
         }
@@ -302,19 +302,19 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     @objc func onRefreshing() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.endRefreshing()
             if self.refreshList && self.section && !self.isInserted {
                 self.isInserted = true
                 for i in 0 ..< 5 {
                     self.tableData.insert("我是插入的测试数据\(4 - i)", at: 0)
                 }
             } else {
-                self.tableData.removeAllObjects()
+                self.tableData.removeAll()
                 self.setupLayout()
             }
             self.collectionView.reloadData()
             
-            self.tableView.fw.reloadData { [weak self] in
+            self.tableView.app.reloadData { [weak self] in
                 guard let self = self else { return }
                 self.selectCollectionView(offset: self.tableView.contentOffset.y)
             }
@@ -323,18 +323,18 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     @objc func onLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.tableView.fw.endRefreshing()
+            self.tableView.app.endRefreshing()
             let rows = self.tableData.count
             for i in 0 ..< 5 {
                 if self.isRefreshed {
-                    self.tableData.add("我是刷新的测试数据\(rows + i)")
+                    self.tableData.append("我是刷新的测试数据\(rows + i)")
                 } else {
-                    self.tableData.add("我是测试数据\(rows + i)")
+                    self.tableData.append("我是测试数据\(rows + i)")
                 }
             }
             self.collectionView.reloadData()
             
-            self.tableView.fw.reloadData { [weak self] in
+            self.tableView.app.reloadData { [weak self] in
                 guard let self = self else { return }
                 self.selectCollectionView(offset: self.tableView.contentOffset.y)
             }
@@ -346,7 +346,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = TestNestCollectionCell.fw.cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = TestNestCollectionCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         cell.textLabel.text = "\(indexPath.row)"
         cell.isSelected = false
         return cell
@@ -366,9 +366,9 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let index = indexPath.section * 5 + indexPath.row
-        cell.textLabel?.text = tableData.object(at: index) as? String
+        cell.textLabel?.text = tableData[index] as? String
         return cell
     }
     
@@ -381,10 +381,10 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
         view.backgroundColor = AppTheme.cellColor
         
         let headerLabel = UILabel()
-        headerLabel.font = UIFont.fw.font(ofSize: 15)
+        headerLabel.font = UIFont.app.font(ofSize: 15)
         headerLabel.textColor = AppTheme.textColor
         headerLabel.text = "Header\(section)"
-        headerLabel.frame = CGRect(x: 0, y: 0, width: FW.screenWidth, height: TestPagingController.itemViewHeight)
+        headerLabel.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: TestPagingController.itemViewHeight)
         view.addSubview(headerLabel)
         return view
     }
@@ -394,7 +394,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        fw.showAlert(title: "点击\(indexPath.row)", message: nil)
+        app.showAlert(title: "点击\(indexPath.row)", message: nil)
     }
     
     func selectCollectionView(offset: CGFloat) {

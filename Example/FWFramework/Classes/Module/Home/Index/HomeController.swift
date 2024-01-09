@@ -30,15 +30,15 @@ extension HomeController: ViewControllerProtocol {
     
     func setupNavbar() {
         #if RELEASE
-        let envTitle = FW.localized("envProduction")
+        let envTitle = APP.localized("envProduction")
         #elseif STAGING
-        let envTitle = FW.localized("envStaging")
+        let envTitle = APP.localized("envStaging")
         #elseif TESTING
-        let envTitle = FW.localized("envTesting")
+        let envTitle = APP.localized("envTesting")
         #else
-        let envTitle = FW.localized("envDevelopment")
+        let envTitle = APP.localized("envDevelopment")
         #endif
-        navigationItem.title = "\(FW.localized("homeTitle")) - \(envTitle)"
+        navigationItem.title = "\(APP.localized("homeTitle")) - \(envTitle)"
     }
    
     func setupSubviews() {
@@ -46,7 +46,7 @@ extension HomeController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        loginButton.fw.layoutChain
+        loginButton.app.layoutChain
             .horizontal()
             .top(toSafeArea: 20)
             .height(30)
@@ -55,9 +55,9 @@ extension HomeController: ViewControllerProtocol {
     private func renderData() {
         setupNavbar()
         if UserService.shared.isLogin() {
-            loginButton.setTitle(FW.localized("backTitle"), for: .normal)
+            loginButton.setTitle(APP.localized("backTitle"), for: .normal)
         } else {
-            loginButton.setTitle(FW.localized("welcomeTitle"), for: .normal)
+            loginButton.setTitle(APP.localized("welcomeTitle"), for: .normal)
         }
     }
     

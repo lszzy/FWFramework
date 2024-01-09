@@ -11,11 +11,10 @@ import SwiftUI
 import Combine
 import FWFramework
 
-@available(iOS 13.0, *)
 class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
-        fw.navigationBarHidden = [true, false].randomElement()!
+        app.navigationBarHidden = [true, false].randomElement()!
         
         let hostingView = TestSwiftUIContent()
             .viewContext(self, userInfo: [
@@ -24,11 +23,11 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol {
             .navigationBarConfigure(
                 leading: Icon.backImage,
                 title: "TestSwiftUIViewController",
-                background: UIColor.fw.randomColor
+                background: UIColor.app.randomColor
             )
             .wrappedHostingView()
         view.addSubview(hostingView)
-        hostingView.fw.layoutChain
+        hostingView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
             .bottom()
@@ -36,7 +35,6 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
 }
 
-@available(iOS 13.0, *)
 class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     
     // MARK: - Accessor
@@ -73,7 +71,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.hidesBackButton = true
         if mode != 2 {
-            fw.navigationBarHidden = [true, false].randomElement()!
+            app.navigationBarHidden = [true, false].randomElement()!
         }
     }
     
@@ -86,23 +84,22 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             })
             .navigationBarConfigure(
                 leading: Button(action: {
-                    Navigator.closeViewController(animated: true)
+                    Navigator.close(animated: true)
                 }, label: {
                     HStack {
                         Spacer()
-                        Image(uiImage: Icon.backImage?.fw.image(tintColor: AppTheme.textColor) ?? UIImage())
+                        Image(uiImage: Icon.backImage?.app.image(tintColor: AppTheme.textColor) ?? UIImage())
                         Spacer()
                     }
                 }),
                 title: Text("SwiftUIViewController - \(mode)"),
-                background: Color(UIColor.fw.randomColor)
+                background: Color(UIColor.app.randomColor)
             )
             .eraseToAnyView()
     }
     
 }
 
-@available(iOS 13.0, *)
 class TestSwiftUIModel: ViewModel {
     // View中可通过$viewModel.isEnglish获取Binding<Bool>
     @Published var isEnglish: Bool = true
@@ -122,9 +119,6 @@ class TestSwiftUIModel: ViewModel {
     }
 }
 
-
-
-@available(iOS 13.0, *)
 struct TestSwiftUIContent: View {
     
     @Environment(\.viewContext) var viewContext: ViewContext
@@ -173,6 +167,9 @@ struct TestSwiftUIContent: View {
                         }
                         
                         Text("width: \(Int(topSize.width)) height: \(Int(topSize.height))")
+                            .hostingViewInitialize { hostingView in
+                                hostingView.backgroundColor = UIColor.app.randomColor
+                            }
                     }
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
@@ -183,17 +180,16 @@ struct TestSwiftUIContent: View {
                     .toggleStyle(TestSwiftUIToggleStyle())
                     
                     HStack(alignment: .center, spacing: 16) {
-                        Button {
-                            viewContext.viewController?.fw.close()
-                        } label: {
-                            HStack {
-                                Spacer()
-                                Text("Close")
-                                Spacer()
-                            }
+                        HStack {
+                            Spacer()
+                            Text("Close")
+                            Spacer()
+                        }
+                        .wrappedButton {
+                            viewContext.viewController?.app.close()
                         }
                         .buttonStyle(BorderlessButtonStyle())
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         
                         Button {
@@ -206,7 +202,7 @@ struct TestSwiftUIContent: View {
                             }
                         }
                         .buttonStyle(BorderlessButtonStyle())
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .removable(buttonRemovable)
                         
@@ -219,7 +215,7 @@ struct TestSwiftUIContent: View {
                                 Spacer()
                             }
                         }
-                        .frame(width: (FW.screenWidth - 64) / 3, height: 40)
+                        .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .visible(buttonVisible)
                         .buttonStyle(BorderlessButtonStyle())
@@ -227,12 +223,12 @@ struct TestSwiftUIContent: View {
                 }
                 
                 Button {
-                    viewContext.object = "Object"
-                    viewContext.userInfo = ["color": Color(UIColor.fw.randomColor)]
-                    viewContext.send()
-                    
                     let vc = TestSwiftUIListController()
-                    Navigator.push(vc, animated: true)
+                    Navigator.open(vc)
+                    
+                    viewContext.object = "Object"
+                    viewContext.userInfo = ["color": Color(UIColor.app.randomColor)]
+                    viewContext.send()
                 } label: {
                     ViewWrapper {
                         Text("Open List")
@@ -250,7 +246,7 @@ struct TestSwiftUIContent: View {
                 
                 Button("Push HostingController") {
                     let viewController = TestSwiftUIHostingController()
-                    viewContext.viewController?.fw.open(viewController)
+                    viewContext.viewController?.app.open(viewController)
                 }
                 .frame(height: 44)
                 
@@ -323,12 +319,18 @@ struct TestSwiftUIContent: View {
                 }
             })
         }
+        .hoverContentOffset(visible: contentOffset.y >= 44) {
+            Text("Hover Header")
+                .frame(width: APP.screenWidth, height: 44)
+                .background(Color.white)
+                .shadow(color: Color.color(0x000000, 0.1), radius: 5, x: 0, y: 2)
+        }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in
-            viewController.fw.showAlert(title: "我是标题", message: "我是内容")
+            viewController.app.showAlert(title: "我是标题", message: "我是内容")
         }
         .showToast($showingToast, customize: { viewController in
-            viewController.fw.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
+            viewController.app.showMessage(text: "我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息")
         })
         .showEmpty(showingEmpty, customize: { viewController in
             viewController.app.showEmptyView(text: "我是标题", detail: "我是详细信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息", image: UIImage.app.appIconImage(), action: "刷新") { _ in
@@ -357,7 +359,6 @@ struct TestSwiftUIContent: View {
     
 }
 
-@available(iOS 13.0, *)
 struct TestSwiftUIToggleStyle: ToggleStyle {
     
     func makeBody(configuration: ToggleStyleConfiguration) -> some View {

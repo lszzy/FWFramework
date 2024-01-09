@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - StoredValue
 /// UserDefault存储属性包装器注解，默认为手工指定或初始值
@@ -24,28 +21,28 @@ public struct StoredValue<T> {
     public init(
         wrappedValue: T,
         _ key: String,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) {
         self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
     }
     
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) where WrappedValue? == T {
         self.key = key
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
     }
     
     public var wrappedValue: T {
         get {
             let value = UserDefaults.standard.object(forKey: key) as? T
-            return !Optional<Any>.isNone(value) ? (value ?? defaultValue) : defaultValue
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            if !Optional<Any>.isNone(newValue) {
+            if !Optional<Any>.isNil(newValue) {
                 UserDefaults.standard.set(newValue, forKey: key)
             } else {
                 UserDefaults.standard.removeObject(forKey: key)
@@ -71,7 +68,7 @@ public struct CachedValue<T> {
         wrappedValue: T,
         _ key: String,
         defaultValue: T? = nil,
-        type: CacheType = .file
+        type: CacheType = .default
     ) {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
@@ -82,7 +79,7 @@ public struct CachedValue<T> {
         wrappedValue: WrappedValue? = nil,
         _ key: String,
         defaultValue: T? = nil,
-        type: CacheType = .file
+        type: CacheType = .default
     ) where WrappedValue? == T {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
@@ -91,14 +88,14 @@ public struct CachedValue<T> {
     
     public var wrappedValue: T {
         get {
-            let value = CacheManager.manager(withType: type)?.object(forKey: key) as? T
-            return !Optional<Any>.isNone(value) ? (value ?? defaultValue) : defaultValue
+            let value = CacheManager.manager(type: type)?.object(forKey: key) as? T
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            if !Optional<Any>.isNone(newValue) {
-                CacheManager.manager(withType: type)?.setObject(newValue, forKey: key)
+            if !Optional<Any>.isNil(newValue) {
+                CacheManager.manager(type: type)?.setObject(newValue, forKey: key)
             } else {
-                CacheManager.manager(withType: type)?.removeObject(forKey: key)
+                CacheManager.manager(type: type)?.removeObject(forKey: key)
             }
         }
     }
@@ -120,10 +117,10 @@ public struct ValidatedValue<T> {
     public init(
         wrappedValue: T,
         _ validator: Validator<T>,
-        defaultValue: @autoclosure () -> T? = nil
+        defaultValue: T? = nil
     ) {
         self.validator = validator
-        self.defaultValue = defaultValue() ?? wrappedValue
+        self.defaultValue = defaultValue ?? wrappedValue
         self.value = wrappedValue
         self.isValid = validator.validate(wrappedValue)
     }
@@ -131,13 +128,12 @@ public struct ValidatedValue<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: @autoclosure () -> T? = nil,
-        defaultValid: @autoclosure @escaping () -> Bool = false
+        defaultValue: T? = nil
     ) where WrappedValue? == T {
         self.init(
             wrappedValue: wrappedValue,
-            Validator(validator, defaultValid: defaultValid()),
-            defaultValue: defaultValue()
+            Validator(validator),
+            defaultValue: defaultValue
         )
     }
     
@@ -160,16 +156,16 @@ public struct ValidatedValue<T> {
 /// static var userModule: UserModuleService
 @propertyWrapper
 public struct ModuleValue<T> {
-    private let serviceProtocol: Protocol
+    private let serviceProtocol: T.Type
     private var module: T?
     
     public init(
-        _ serviceProtocol: Protocol,
+        _ serviceProtocol: T.Type,
         module: ModuleProtocol.Type? = nil
     ) {
         self.serviceProtocol = serviceProtocol
         if let module = module {
-            Mediator.registerService(serviceProtocol, withModule: module)
+            Mediator.registerService(serviceProtocol, module: module)
         }
     }
     
@@ -178,7 +174,7 @@ public struct ModuleValue<T> {
             if let value = module {
                 return value
             } else {
-                return Mediator.loadModule(serviceProtocol) as! T
+                return Mediator.loadModule(serviceProtocol)!
             }
         }
         set {
@@ -195,16 +191,16 @@ public struct ModuleValue<T> {
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
 public struct PluginValue<T> {
-    private let pluginProtocol: Protocol
+    private let pluginProtocol: T.Type
     private var plugin: T?
     
     public init(
-        _ pluginProtocol: Protocol,
+        _ pluginProtocol: T.Type,
         object: Any? = nil
     ) {
         self.pluginProtocol = pluginProtocol
         if let object = object {
-            PluginManager.registerPlugin(pluginProtocol, with: object)
+            PluginManager.registerPlugin(pluginProtocol, object: object)
         }
     }
     
@@ -213,7 +209,7 @@ public struct PluginValue<T> {
             if let value = plugin {
                 return value
             } else {
-                return PluginManager.loadPlugin(pluginProtocol) as! T
+                return PluginManager.loadPlugin(pluginProtocol)!
             }
         }
         set {
@@ -235,25 +231,25 @@ public struct RouterValue {
     
     public init(
         wrappedValue value: String,
-        parameters: @autoclosure () -> Any? = nil,
-        _ handler: RouterHandler? = nil
+        parameters: Any? = nil,
+        _ handler: Router.Handler? = nil
     ) {
         self.pattern = value
-        self.parameters = parameters()
+        self.parameters = parameters
         if let handler = handler {
-            Router.registerURL(value, withHandler: handler)
+            Router.registerURL(value, handler: handler)
         }
     }
     
     public init(
         _ pattern: String,
-        parameters: @autoclosure () -> Any? = nil,
-        handler: RouterHandler? = nil
+        parameters: Any? = nil,
+        handler: Router.Handler? = nil
     ) {
         self.pattern = pattern
-        self.parameters = parameters()
+        self.parameters = parameters
         if let handler = handler {
-            Router.registerURL(pattern, withHandler: handler)
+            Router.registerURL(pattern, handler: handler)
         }
     }
     

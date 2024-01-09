@@ -7,9 +7,11 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ScrollView+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
@@ -17,8 +19,8 @@ extension View {
         _ initialization: @escaping (UIScrollView) -> Void
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            guard scrollView.fw.property(forName: "scrollViewInitialize") == nil else { return }
-            scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewInitialize")
+            guard !scrollView.fw_propertyBool(forName: "scrollViewInitialize") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "scrollViewInitialize")
             
             initialization(scrollView)
         }
@@ -41,14 +43,14 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            if scrollView.fw.property(forName: "scrollViewRefreshing") == nil {
-                scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewRefreshing")
+            if !scrollView.fw_propertyBool(forName: "scrollViewRefreshing") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewRefreshing")
                 
-                scrollView.fw.setRefreshing { [weak scrollView] in
+                scrollView.fw_setRefreshing { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw.endRefreshing()
+                        scrollView?.fw_endRefreshing()
                         if let finished = finished {
-                            scrollView?.fw.loadingFinished = finished
+                            scrollView?.fw_loadingFinished = finished
                         }
                     })
                 }
@@ -58,15 +60,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw.isRefreshing {
-                    scrollView.fw.beginRefreshing()
+                if !scrollView.fw_isRefreshing {
+                    scrollView.fw_beginRefreshing()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw.loadingFinished = finished
+                scrollView.fw_loadingFinished = finished
             }
         }
     }
@@ -79,14 +81,14 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            if scrollView.fw.property(forName: "scrollViewLoading") == nil {
-                scrollView.fw.setProperty(NSNumber(value: true), forName: "scrollViewLoading")
+            if !scrollView.fw_propertyBool(forName: "scrollViewLoading") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewLoading")
                 
-                scrollView.fw.setLoading { [weak scrollView] in
+                scrollView.fw_setLoading { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw.endLoading()
+                        scrollView?.fw_endLoading()
                         if let finished = finished {
-                            scrollView?.fw.loadingFinished = finished
+                            scrollView?.fw_loadingFinished = finished
                         }
                     })
                 }
@@ -96,15 +98,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw.isLoading {
-                    scrollView.fw.beginLoading()
+                if !scrollView.fw_isLoading {
+                    scrollView.fw_beginLoading()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw.loadingFinished = finished
+                scrollView.fw_loadingFinished = finished
             }
         }
     }
@@ -116,11 +118,11 @@ extension View {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
-                    scrollView.fw.showEmptyView()
+                    scrollView.fw_showEmptyView()
                 }
             } else {
-                if scrollView.fw.hasEmptyView {
-                    scrollView.fw.hideEmptyView()
+                if scrollView.fw_hasEmptyView {
+                    scrollView.fw_hideEmptyView()
                 }
             }
         }

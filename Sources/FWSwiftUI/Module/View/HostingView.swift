@@ -8,14 +8,13 @@
 #if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - HostingView
 /// SwiftUI视图包装类
 ///
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
-@available(iOS 13.0, *)
 open class HostingView<Content: View>: UIView {
     
     // MARK: - Accessor
@@ -62,7 +61,7 @@ open class HostingView<Content: View>: UIView {
                 
         addSubview(contentHostingController.view)
         contentHostingController.view.backgroundColor = .clear
-        contentHostingController.view.fw.pinEdges()
+        contentHostingController.view.fw_pinEdges()
     }
     
     public required init?(coder: NSCoder) {
@@ -72,14 +71,14 @@ open class HostingView<Content: View>: UIView {
     override open func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: superview)
         
-        let viewController = superview?.fw.viewController
+        let viewController = superview?.fw_viewController
         contentHostingController._navigationController = viewController?.navigationController ?? (viewController as? UINavigationController)
     }
     
     override open func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        let viewController = superview?.fw.viewController
+        let viewController = superview?.fw_viewController
         contentHostingController._navigationController = viewController?.navigationController ?? (viewController as? UINavigationController)
     }
     
@@ -102,7 +101,6 @@ open class HostingView<Content: View>: UIView {
 }
 
 // MARK: - View+HostingView
-@available(iOS 13.0, *)
 extension View {
     
     /// 快速包装到HostingView

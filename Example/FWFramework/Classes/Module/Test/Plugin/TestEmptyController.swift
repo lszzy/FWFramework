@@ -15,18 +15,18 @@ class TestEmptyController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        fw.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-            self?.fw.hideEmptyView()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            self?.app.hideEmptyView()
             self?.tableView.reloadData()
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return view.fw.hasEmptyView ? 0 : 6
+        return view.app.hasEmptyView ? 0 : 6
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.fw.cell(tableView: tableView)
+        let cell = UITableViewCell.app.cell(tableView: tableView)
         let row = indexPath.row
         if row == 0 {
             cell.textLabel?.text = "显示提示语"
@@ -48,24 +48,24 @@ class TestEmptyController: UIViewController, TableViewControllerProtocol {
         tableView.deselectRow(at: indexPath, animated: true)
         let row = indexPath.row
         if row == 0 {
-            fw.showEmptyView(text: "联系人为空")
+            app.showEmptyView(text: "联系人为空")
         } else if row == 1 {
-            fw.showEmptyView(text: "联系人为空", detail: "请到设置-隐私查看你的联系人权限设置")
+            app.showEmptyView(text: "联系人为空", detail: "请到设置-隐私查看你的联系人权限设置")
         } else if row == 2 {
-            fw.showEmptyView(text: "暂无数据", detail: nil, image: UIImage.fw.appIconImage())
+            app.showEmptyView(text: "暂无数据", detail: nil, image: UIImage.app.appIconImage())
         } else if row == 3 {
-            fw.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: nil, action: "重试") { [weak self] _ in
-                self?.fw.hideEmptyView()
+            app.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: nil, action: "重试") { [weak self] _ in
+                self?.app.hideEmptyView()
                 self?.tableView.reloadData()
             }
         } else if row == 4 {
-            fw.showEmptyLoading()
+            app.showEmptyLoading()
         } else if row == 5 {
-            fw.showEmptyView(text: NSAttributedString(string: "请求失败", attributes: [.font: UIFont.fw.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red]), detail: "请检查网络连接", image: UIImage.fw.appIconImage(), loading: true, actions: ["取消", NSAttributedString(string: "重试", attributes: [.font: UIFont.fw.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red])]) { [weak self] index, _ in
+            app.showEmptyView(text: NSAttributedString(string: "请求失败", attributes: [.font: UIFont.app.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red]), detail: "请检查网络连接", image: UIImage.app.appIconImage(), loading: true, actions: ["取消", NSAttributedString(string: "重试", attributes: [.font: UIFont.app.semiboldFont(ofSize: 15), .foregroundColor: UIColor.red])]) { [weak self] index, _ in
                 if index == 0 {
-                    self?.fw.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: UIImage.fw.appIconImage(), loading: true, actions: nil, block: nil)
+                    self?.app.showEmptyView(text: "请求失败", detail: "请检查网络连接", image: UIImage.app.appIconImage(), loading: true, actions: nil, block: nil)
                 } else {
-                    self?.fw.hideEmptyView()
+                    self?.app.hideEmptyView()
                     self?.tableView.reloadData()
                 }
             }

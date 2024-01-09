@@ -7,10 +7,12 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - OpacityButtonStyle
 /// 透明度按钮样式，支持设置高亮和禁用时的透明度
-@available(iOS 13.0, *)
 public struct OpacityButtonStyle: ButtonStyle {
     
     public var disabled: Bool
@@ -19,8 +21,8 @@ public struct OpacityButtonStyle: ButtonStyle {
     
     public init(disabled: Bool = false, highlightedAlpha: CGFloat? = nil, disabledAlpha: CGFloat? = nil) {
         self.disabled = disabled
-        self.highlightedAlpha = highlightedAlpha ?? UIButton.fw.highlightedAlpha
-        self.disabledAlpha = disabledAlpha ?? UIButton.fw.disabledAlpha
+        self.highlightedAlpha = highlightedAlpha ?? UIButton.fw_highlightedAlpha
+        self.disabledAlpha = disabledAlpha ?? UIButton.fw_disabledAlpha
     }
     
     public func makeBody(configuration: ButtonStyleConfiguration) -> some View {
@@ -31,7 +33,6 @@ public struct OpacityButtonStyle: ButtonStyle {
 }
 
 // MARK: - View+Toolkit
-@available(iOS 13.0, *)
 extension View {
     
     /// 设置按钮高亮和禁用时的透明度，nil时使用默认
