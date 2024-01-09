@@ -17,7 +17,7 @@
     <a title="RequestConfig Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.0-beta.1 Docs</a> (69% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.0-beta.2 Docs</a> (69% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2827,6 +2827,60 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">preloadModelFilter</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework13RequestConfigC18preloadCacheFilterSbAA11HTTPRequestCcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/preloadCacheFilter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework13RequestConfigC18preloadCacheFilterSbAA11HTTPRequestCcSgvp">preloadCacheFilter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>是否预加载请求缓存过滤句柄(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">preloadCacheFilter</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework13RequestConfigC20cacheSensitiveFilterypSgAA11HTTPRequestCcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/cacheSensitiveFilter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework13RequestConfigC20cacheSensitiveFilterypSgAA11HTTPRequestCcSgvp">cacheSensitiveFilter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义缓存敏感数据过滤句柄，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">cacheSensitiveFilter</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?)?</span></code></pre>
 
                         </div>
                       </div>

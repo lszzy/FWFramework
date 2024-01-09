@@ -94,6 +94,7 @@ open class BatchRequest: RequestDelegate {
         for req in requestArray {
             req.autoShowLoading = false
             req.autoShowError = false
+            req.preloadCacheModel = false
             req.delegate = self
             req.clearCompletionBlock()
             req.start()

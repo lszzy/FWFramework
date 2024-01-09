@@ -81,6 +81,10 @@ open class RequestConfig {
     
     /// 是否后台预加载数据模型过滤句柄，默认nil
     open var preloadModelFilter: ((HTTPRequest) -> Bool)?
+    /// 是否预加载请求缓存过滤句柄(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次，默认nil
+    open var preloadCacheFilter: ((HTTPRequest) -> Bool)?
+    /// 自定义缓存敏感数据过滤句柄，默认nil
+    open var cacheSensitiveFilter: ((HTTPRequest) -> Any?)?
     /// 自定义请求上下文配件句柄，默认nil
     open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
     
@@ -166,6 +170,9 @@ open class RequestContextAccessory: RequestAccessory {
     /// 自定义隐藏加载方法，主线程优先调用，默认nil
     open var hideLoadingBlock: HTTPRequest.Completion?
     
+    /// 请求缓存预加载成功时是否仍然显示Loading，默认false
+    open var showsLoadingWhenCachePreloaded = false
+    
     /// 是否自动初始化当前context控制器，默认false
     open var autoSetupContext: Bool = false
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
@@ -186,7 +193,13 @@ open class RequestContextAccessory: RequestAccessory {
                     self?.observeContext(for: request)
                 }
                 if request.autoShowLoading {
-                    request.showLoading()
+                    if request.preloadCacheModel, request.isResponseCached {
+                        if self?.showsLoadingWhenCachePreloaded == true {
+                            request.showLoading()
+                        }
+                    } else {
+                        request.showLoading()
+                    }
                 }
             }
         }

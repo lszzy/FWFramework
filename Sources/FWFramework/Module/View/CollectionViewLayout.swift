@@ -803,7 +803,7 @@ open class CollectionViewWaterfallLayout: UICollectionViewLayout {
         for section in 0..<numberOfSections {
             let columnCount = columnCountForSection(section)
             var sectionColumnHeights: [CGFloat] = []
-            for idx in 0..<columnCount {
+            for _ in 0..<columnCount {
                 sectionColumnHeights.append(0)
             }
             columnHeights.append(sectionColumnHeights)

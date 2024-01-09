@@ -160,6 +160,15 @@ class TestCacheRequest: HTTPRequest, ResponseModelRequest {
         60 * 60
     }
     
+    override func requestCompletePreprocessor() {
+        super.requestCompletePreprocessor()
+        
+        if !isDataFromCache {
+            // 模拟网络请求慢的情况，以便显示loading
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+    }
+    
 }
 
 class TestUploadRequest: HTTPRequest {
@@ -466,38 +475,20 @@ private extension TestRequestController {
     }
     
     private func loadCache() {
-        let request = TestCacheRequest()
-        var delay = false
-        
-        request
+        TestCacheRequest()
             .context(self)
             .autoShowLoading(true)
-            .preloadSafeCacheModel { [weak self] title in
-                delay = true
-                self?.cacheButton.setTitle(title, for: .normal)
-            }
+            .preloadCacheModel(true)
             .responseSuccess { [weak self] (req: TestCacheRequest) in
                 self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
             }
             .responseFailure { [weak self] req in
                 self?.app.showMessage(error: req.error)
             }
-        
-        if delay {
-            // 请求太快了，加延迟模拟先加载缓存再请求的效果
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                self?.app.showLoading()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    request.start()
-                }
-            }
-        } else {
-            request.start()
-        }
+            .start()
     }
     
     @objc func onCache() {
-        // context不指定时默认自动查找
         TestCacheRequest()
             .context(self)
             .autoShowLoading(true)
