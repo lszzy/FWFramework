@@ -482,6 +482,15 @@ open class HTTPRequest: CustomStringConvertible {
     open var requestUserInfo: [AnyHashable: Any]?
     /// 是否使用已缓存响应
     open var useCacheResponse: Bool = false
+    /// 判断缓存是否存在
+    open var isResponseCached: Bool {
+        do {
+            try loadCache()
+            return true
+        } catch {
+            return false
+        }
+    }
     /// 是否是本地缓存数据
     open private(set) var isDataFromCache: Bool = false
     
@@ -602,6 +611,7 @@ open class HTTPRequest: CustomStringConvertible {
     private var _cacheString: String?
     private var _cacheJSON: Any?
     private var _cacheMetadata: RequestCacheMetadata?
+    private var _cacheLoaded = false
     
     // MARK: - Lifecycle
     /// 初始化方法
@@ -1125,6 +1135,8 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 加载本地缓存，返回是否成功
     open func loadCache() throws {
+        guard !_cacheLoaded else { return }
+        
         guard cacheTimeInSeconds() >= 0 else {
             throw RequestError.cacheInvalidCacheTime
         }
@@ -1151,12 +1163,7 @@ open class HTTPRequest: CustomStringConvertible {
         case .HTTP:
             break
         }
-        
-        #if DEBUG
-        if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
-        }
-        #endif
+        _cacheLoaded = true
     }
     
     /// 保存指定数据到缓存文件
@@ -1201,6 +1208,12 @@ open class HTTPRequest: CustomStringConvertible {
         }
         
         try loadCache()
+        
+        #if DEBUG
+        if config.debugLogEnabled {
+            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+        }
+        #endif
         
         if isPreload {
             _responseModelBlock = processor
@@ -1258,6 +1271,7 @@ open class HTTPRequest: CustomStringConvertible {
         _cacheJSON = nil
         _cacheString = nil
         _cacheMetadata = nil
+        _cacheLoaded = false
         _cacheResponseModel = nil
         _responseModelBlock = nil
         isDataFromCache = false
