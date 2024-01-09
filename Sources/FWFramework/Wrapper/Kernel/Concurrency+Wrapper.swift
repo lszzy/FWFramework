@@ -5,7 +5,7 @@
 //  Created by wuyong on 2023/11/30.
 //
 
-import Foundation
+import UIKit
 
 extension Wrapper where Base: UIImage {
     

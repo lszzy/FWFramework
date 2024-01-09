@@ -35,18 +35,7 @@ open class CacheFile: CacheEngine {
     }
     
     private func filePath(_ key: String) -> String {
-        // 文件名md5加密
-        let cStr = key.cString(using: .utf8)
-        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-        var digest = [UInt8](repeating: 0, count: digestLen)
-        CC_MD5(cStr, CC_LONG(strlen(cStr!)), &digest)
-        
-        var md5Str = ""
-        for i in 0..<digestLen {
-            md5Str += String(format: "%02x", digest[i])
-        }
-        
-        let fileName = "\(md5Str).plist"
+        let fileName = "\(key.fw_md5Encode).plist"
         return (path as NSString).appendingPathComponent(fileName)
     }
     
