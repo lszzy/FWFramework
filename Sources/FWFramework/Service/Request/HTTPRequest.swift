@@ -1224,7 +1224,7 @@ open class HTTPRequest: CustomStringConvertible {
             baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
         }
         let argument = cacheArgumentFilter(requestArgument())
-        let requestInfo = String(format: "Method:%ld Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
+        let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
         return requestInfo.fw_md5Encode
     }
     
