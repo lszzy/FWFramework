@@ -133,11 +133,11 @@ public class ThemeManager: NSObject {
     
     /// 指定traitCollection的实际显示样式，传nil时为全局样式
     public func style(for traitCollection: UITraitCollection?) -> ThemeStyle {
-        if self.mode == .system {
+        if mode == .system {
             let traitCollection = traitCollection ?? .current
             return traitCollection.userInterfaceStyle == .dark ? .dark : .light
         } else {
-            return .init(self.mode.rawValue)
+            return mode.rawValue == ThemeStyle.light.rawValue ? .light : (mode.rawValue == ThemeStyle.dark.rawValue ? .dark : .init(mode.rawValue))
         }
     }
     
