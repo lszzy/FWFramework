@@ -28,6 +28,13 @@ public class ThemeStyle: NSObject, RawRepresentable {
         self.rawValue = rawValue
     }
     
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let style = object as? ThemeStyle {
+            return rawValue == style.rawValue
+        }
+        return super.isEqual(object)
+    }
+    
 }
 
 /// 可扩展主题模式(扩展值与样式值相同即可)
