@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - ThemeManager
-/// 可扩展主题样式
+/// 可扩展主题样式(采用class实现是为了NSObject子类可重写)
 public class ThemeStyle: NSObject, RawRepresentable {
     
     public typealias RawValue = Int
