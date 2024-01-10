@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - ThemeManager
-/// 可扩展主题样式
+/// 可扩展主题样式(采用class实现是为了NSObject子类可重写)
 public class ThemeStyle: NSObject, RawRepresentable {
     
     public typealias RawValue = Int
@@ -26,6 +26,13 @@ public class ThemeStyle: NSObject, RawRepresentable {
     
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let style = object as? ThemeStyle {
+            return rawValue == style.rawValue
+        }
+        return super.isEqual(object)
     }
     
 }
