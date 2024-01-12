@@ -10,17 +10,17 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#pragma mark - __FWPlayerCacheLoaderManager
+#pragma mark - FWPlayerCacheLoaderManager
 
-static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
+static NSString *FWPlayerCacheScheme = @"FWPlayerCache:";
 
-@interface __FWPlayerCacheLoaderManager () <__FWPlayerCacheLoaderDelegate>
+@interface FWPlayerCacheLoaderManager () <FWPlayerCacheLoaderDelegate>
 
-@property (nonatomic, strong) NSMutableDictionary<id<NSCoding>, __FWPlayerCacheLoader *> *loaders;
+@property (nonatomic, strong) NSMutableDictionary<id<NSCoding>, FWPlayerCacheLoader *> *loaders;
 
 @end
 
-@implementation __FWPlayerCacheLoaderManager
+@implementation FWPlayerCacheLoaderManager
 
 - (instancetype)init {
     self = [super init];
@@ -35,7 +35,7 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 - (void)cancelLoaders {
-    [self.loaders enumerateKeysAndObjectsUsingBlock:^(id<NSCoding>  _Nonnull key, __FWPlayerCacheLoader * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.loaders enumerateKeysAndObjectsUsingBlock:^(id<NSCoding>  _Nonnull key, FWPlayerCacheLoader * _Nonnull obj, BOOL * _Nonnull stop) {
         [obj cancel];
     }];
     [self.loaders removeAllObjects];
@@ -45,7 +45,7 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
     if (!url) { return nil; }
     if (url.isFileURL) { return url; }
 
-    NSURL *assetURL = [NSURL URLWithString:[__FWPlayerCacheScheme stringByAppendingString:[url absoluteString]]];
+    NSURL *assetURL = [NSURL URLWithString:[FWPlayerCacheScheme stringByAppendingString:[url absoluteString]]];
     return assetURL;
 }
 
@@ -54,7 +54,7 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
         return [AVURLAsset URLAssetWithURL:url options:nil];
     }
     
-    NSURL *assetURL = [__FWPlayerCacheLoaderManager assetURLWithURL:url];
+    NSURL *assetURL = [FWPlayerCacheLoaderManager assetURLWithURL:url];
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
     [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
     return urlAsset;
@@ -66,7 +66,7 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
         return [AVPlayerItem playerItemWithAsset:urlAsset];
     }
     
-    NSURL *assetURL = [__FWPlayerCacheLoaderManager assetURLWithURL:url];
+    NSURL *assetURL = [FWPlayerCacheLoaderManager assetURLWithURL:url];
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
     [urlAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:urlAsset];
@@ -78,14 +78,14 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest  {
     NSURL *resourceURL = [loadingRequest.request URL];
-    if ([resourceURL.absoluteString hasPrefix:__FWPlayerCacheScheme]) {
-        __FWPlayerCacheLoader *loader = [self loaderForRequest:loadingRequest];
+    if ([resourceURL.absoluteString hasPrefix:FWPlayerCacheScheme]) {
+        FWPlayerCacheLoader *loader = [self loaderForRequest:loadingRequest];
         if (!loader) {
             NSURL *originURL = nil;
             NSString *originStr = [resourceURL absoluteString];
-            originStr = [originStr stringByReplacingOccurrencesOfString:__FWPlayerCacheScheme withString:@""];
+            originStr = [originStr stringByReplacingOccurrencesOfString:FWPlayerCacheScheme withString:@""];
             originURL = [NSURL URLWithString:originStr];
-            loader = [[__FWPlayerCacheLoader alloc] initWithURL:originURL];
+            loader = [[FWPlayerCacheLoader alloc] initWithURL:originURL];
             loader.delegate = self;
             NSString *key = [self keyForResourceLoaderWithURL:resourceURL];
             self.loaders[key] = loader;
@@ -98,13 +98,13 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    __FWPlayerCacheLoader *loader = [self loaderForRequest:loadingRequest];
+    FWPlayerCacheLoader *loader = [self loaderForRequest:loadingRequest];
     [loader removeRequest:loadingRequest];
 }
 
-#pragma mark - __FWPlayerCacheLoaderDelegate
+#pragma mark - FWPlayerCacheLoaderDelegate
 
-- (void)resourceLoader:(__FWPlayerCacheLoader *)resourceLoader didFailWithError:(NSError *)error {
+- (void)resourceLoader:(FWPlayerCacheLoader *)resourceLoader didFailWithError:(NSError *)error {
     [resourceLoader cancel];
     if ([self.delegate respondsToSelector:@selector(resourceLoaderManagerLoadURL:didFailWithError:)]) {
         [self.delegate resourceLoaderManagerLoadURL:resourceLoader.url didFailWithError:error];
@@ -114,35 +114,35 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 #pragma mark - Helper
 
 - (NSString *)keyForResourceLoaderWithURL:(NSURL *)requestURL {
-    if([[requestURL absoluteString] hasPrefix:__FWPlayerCacheScheme]){
+    if([[requestURL absoluteString] hasPrefix:FWPlayerCacheScheme]){
         NSString *s = requestURL.absoluteString;
         return s;
     }
     return nil;
 }
 
-- (__FWPlayerCacheLoader *)loaderForRequest:(AVAssetResourceLoadingRequest *)request {
+- (FWPlayerCacheLoader *)loaderForRequest:(AVAssetResourceLoadingRequest *)request {
     NSString *requestKey = [self keyForResourceLoaderWithURL:request.request.URL];
-    __FWPlayerCacheLoader *loader = self.loaders[requestKey];
+    FWPlayerCacheLoader *loader = self.loaders[requestKey];
     return loader;
 }
 
 @end
 
-#pragma mark - __FWPlayerCacheLoader
+#pragma mark - FWPlayerCacheLoader
 
-@interface __FWPlayerCacheLoader () <__FWPlayerCacheRequestWorkerDelegate>
+@interface FWPlayerCacheLoader () <FWPlayerCacheRequestWorkerDelegate>
 
 @property (nonatomic, strong, readwrite) NSURL *url;
-@property (nonatomic, strong) __FWPlayerCacheWorker *cacheWorker;
-@property (nonatomic, strong) __FWPlayerCacheDownloader *mediaDownloader;
-@property (nonatomic, strong) NSMutableArray<__FWPlayerCacheRequestWorker *> *pendingRequestWorkers;
+@property (nonatomic, strong) FWPlayerCacheWorker *cacheWorker;
+@property (nonatomic, strong) FWPlayerCacheDownloader *mediaDownloader;
+@property (nonatomic, strong) NSMutableArray<FWPlayerCacheRequestWorker *> *pendingRequestWorkers;
 
 @property (nonatomic, getter=isCancelled) BOOL cancelled;
 
 @end
 
-@implementation __FWPlayerCacheLoader
+@implementation FWPlayerCacheLoader
 
 
 - (void)dealloc {
@@ -153,8 +153,8 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
     self = [super init];
     if (self) {
         _url = url;
-        _cacheWorker = [[__FWPlayerCacheWorker alloc] initWithURL:url];
-        _mediaDownloader = [[__FWPlayerCacheDownloader alloc] initWithURL:url cacheWorker:_cacheWorker];
+        _cacheWorker = [[FWPlayerCacheWorker alloc] initWithURL:url];
+        _mediaDownloader = [[FWPlayerCacheDownloader alloc] initWithURL:url cacheWorker:_cacheWorker];
         _pendingRequestWorkers = [NSMutableArray array];
     }
     return self;
@@ -174,8 +174,8 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 - (void)removeRequest:(AVAssetResourceLoadingRequest *)request {
-    __block __FWPlayerCacheRequestWorker *requestWorker = nil;
-    [self.pendingRequestWorkers enumerateObjectsUsingBlock:^(__FWPlayerCacheRequestWorker *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    __block FWPlayerCacheRequestWorker *requestWorker = nil;
+    [self.pendingRequestWorkers enumerateObjectsUsingBlock:^(FWPlayerCacheRequestWorker *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.request == request) {
             requestWorker = obj;
             *stop = YES;
@@ -191,27 +191,27 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
     [self.mediaDownloader cancel];
     [self.pendingRequestWorkers removeAllObjects];
     
-    [[__FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
+    [[FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
 }
 
-#pragma mark - __FWPlayerCacheRequestWorkerDelegate
+#pragma mark - FWPlayerCacheRequestWorkerDelegate
 
-- (void)resourceLoadingRequestWorker:(__FWPlayerCacheRequestWorker *)requestWorker didCompleteWithError:(NSError *)error {
+- (void)resourceLoadingRequestWorker:(FWPlayerCacheRequestWorker *)requestWorker didCompleteWithError:(NSError *)error {
     [self removeRequest:requestWorker.request];
     if (error && [self.delegate respondsToSelector:@selector(resourceLoader:didFailWithError:)]) {
         [self.delegate resourceLoader:self didFailWithError:error];
     }
     if (self.pendingRequestWorkers.count == 0) {
-        [[__FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
+        [[FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
     }
 }
 
 #pragma mark - Helper
 
 - (void)startNoCacheWorkerWithRequest:(AVAssetResourceLoadingRequest *)request {
-    [[__FWPlayerCacheDownloaderStatus shared] addURL:self.url];
-    __FWPlayerCacheDownloader *mediaDownloader = [[__FWPlayerCacheDownloader alloc] initWithURL:self.url cacheWorker:self.cacheWorker];
-    __FWPlayerCacheRequestWorker *requestWorker = [[__FWPlayerCacheRequestWorker alloc] initWithMediaDownloader:mediaDownloader
+    [[FWPlayerCacheDownloaderStatus shared] addURL:self.url];
+    FWPlayerCacheDownloader *mediaDownloader = [[FWPlayerCacheDownloader alloc] initWithURL:self.url cacheWorker:self.cacheWorker];
+    FWPlayerCacheRequestWorker *requestWorker = [[FWPlayerCacheRequestWorker alloc] initWithMediaDownloader:mediaDownloader
                                                                                              resourceLoadingRequest:request];
     [self.pendingRequestWorkers addObject:requestWorker];
     requestWorker.delegate = self;
@@ -219,8 +219,8 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 }
 
 - (void)startWorkerWithRequest:(AVAssetResourceLoadingRequest *)request {
-    [[__FWPlayerCacheDownloaderStatus shared] addURL:self.url];
-    __FWPlayerCacheRequestWorker *requestWorker = [[__FWPlayerCacheRequestWorker alloc] initWithMediaDownloader:self.mediaDownloader
+    [[FWPlayerCacheDownloaderStatus shared] addURL:self.url];
+    FWPlayerCacheRequestWorker *requestWorker = [[FWPlayerCacheRequestWorker alloc] initWithMediaDownloader:self.mediaDownloader
                                                                                              resourceLoadingRequest:request];
     [self.pendingRequestWorkers addObject:requestWorker];
     requestWorker.delegate = self;
@@ -237,9 +237,9 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 
 @end
 
-#pragma mark - __FWPlayerCacheDownloader
+#pragma mark - FWPlayerCacheDownloader
 
-@protocol  __FWPlayerCacheSessionDelegateObjectDelegate <NSObject>
+@protocol  FWPlayerCacheSessionDelegateObjectDelegate <NSObject>
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
@@ -250,18 +250,18 @@ static NSString *__FWPlayerCacheScheme = @"FWPlayerCache:";
 
 static NSInteger kBufferSize = 10 * 1024;
 
-@interface __FWPlayerCacheSessionDelegateObject : NSObject <NSURLSessionDelegate>
+@interface FWPlayerCacheSessionDelegateObject : NSObject <NSURLSessionDelegate>
 
-- (instancetype)initWithDelegate:(id<__FWPlayerCacheSessionDelegateObjectDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<FWPlayerCacheSessionDelegateObjectDelegate>)delegate;
 
-@property (nonatomic, weak) id<__FWPlayerCacheSessionDelegateObjectDelegate> delegate;
+@property (nonatomic, weak) id<FWPlayerCacheSessionDelegateObjectDelegate> delegate;
 @property (nonatomic, strong) NSMutableData *bufferData;
 
 @end
 
-@implementation __FWPlayerCacheSessionDelegateObject
+@implementation FWPlayerCacheSessionDelegateObject
 
-- (instancetype)initWithDelegate:(id<__FWPlayerCacheSessionDelegateObjectDelegate>)delegate {
+- (instancetype)initWithDelegate:(id<FWPlayerCacheSessionDelegateObjectDelegate>)delegate {
     self = [super init];
     if (self) {
         _delegate = delegate;
@@ -312,25 +312,25 @@ didCompleteWithError:(nullable NSError *)error {
 
 @end
 
-#pragma mark - Class: __FWPlayerCacheActionWorker
+#pragma mark - Class: FWPlayerCacheActionWorker
 
-@class __FWPlayerCacheActionWorker;
+@class FWPlayerCacheActionWorker;
 
-@protocol __FWPlayerCacheActionWorkerDelegate <NSObject>
+@protocol FWPlayerCacheActionWorkerDelegate <NSObject>
 
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didReceiveResponse:(NSURLResponse *)response;
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didReceiveData:(NSData *)data isLocal:(BOOL)isLocal;
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didFinishWithError:(NSError *)error;
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didReceiveResponse:(NSURLResponse *)response;
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didReceiveData:(NSData *)data isLocal:(BOOL)isLocal;
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didFinishWithError:(NSError *)error;
 
 @end
 
-@interface __FWPlayerCacheActionWorker : NSObject <__FWPlayerCacheSessionDelegateObjectDelegate>
+@interface FWPlayerCacheActionWorker : NSObject <FWPlayerCacheSessionDelegateObjectDelegate>
 
-@property (nonatomic, strong) NSMutableArray<__FWPlayerCacheAction *> *actions;
-- (instancetype)initWithActions:(NSArray<__FWPlayerCacheAction *> *)actions url:(NSURL *)url cacheWorker:(__FWPlayerCacheWorker *)cacheWorker;
+@property (nonatomic, strong) NSMutableArray<FWPlayerCacheAction *> *actions;
+- (instancetype)initWithActions:(NSArray<FWPlayerCacheAction *> *)actions url:(NSURL *)url cacheWorker:(FWPlayerCacheWorker *)cacheWorker;
 
 @property (nonatomic, assign) BOOL canSaveToCache;
-@property (nonatomic, weak) id<__FWPlayerCacheActionWorkerDelegate> delegate;
+@property (nonatomic, weak) id<FWPlayerCacheActionWorkerDelegate> delegate;
 
 - (void)start;
 - (void)cancel;
@@ -338,29 +338,29 @@ didCompleteWithError:(nullable NSError *)error {
 
 @property (nonatomic, getter=isCancelled) BOOL cancelled;
 
-@property (nonatomic, strong) __FWPlayerCacheWorker *cacheWorker;
+@property (nonatomic, strong) FWPlayerCacheWorker *cacheWorker;
 @property (nonatomic, strong) NSURL *url;
 
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) __FWPlayerCacheSessionDelegateObject *sessionDelegateObject;
+@property (nonatomic, strong) FWPlayerCacheSessionDelegateObject *sessionDelegateObject;
 @property (nonatomic, strong) NSURLSessionDataTask *task;
 @property (nonatomic) NSInteger startOffset;
 
 @end
 
-@interface __FWPlayerCacheActionWorker ()
+@interface FWPlayerCacheActionWorker ()
 
 @property (nonatomic) NSTimeInterval notifyTime;
 
 @end
 
-@implementation __FWPlayerCacheActionWorker
+@implementation FWPlayerCacheActionWorker
 
 - (void)dealloc {
     [self cancel];
 }
 
-- (instancetype)initWithActions:(NSArray<__FWPlayerCacheAction *> *)actions url:(NSURL *)url cacheWorker:(__FWPlayerCacheWorker *)cacheWorker {
+- (instancetype)initWithActions:(NSArray<FWPlayerCacheAction *> *)actions url:(NSURL *)url cacheWorker:(FWPlayerCacheWorker *)cacheWorker {
     self = [super init];
     if (self) {
         _canSaveToCache = YES;
@@ -382,9 +382,9 @@ didCompleteWithError:(nullable NSError *)error {
     self.cancelled = YES;
 }
 
-- (__FWPlayerCacheSessionDelegateObject *)sessionDelegateObject {
+- (FWPlayerCacheSessionDelegateObject *)sessionDelegateObject {
     if (!_sessionDelegateObject) {
-        _sessionDelegateObject = [[__FWPlayerCacheSessionDelegateObject alloc] initWithDelegate:self];
+        _sessionDelegateObject = [[FWPlayerCacheSessionDelegateObject alloc] initWithDelegate:self];
     }
     
     return _sessionDelegateObject;
@@ -393,7 +393,7 @@ didCompleteWithError:(nullable NSError *)error {
 - (NSURLSession *)session {
     if (!_session) {
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self.sessionDelegateObject delegateQueue:[__FWPlayerCacheSessionManager shared].downloadQueue];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self.sessionDelegateObject delegateQueue:[FWPlayerCacheSessionManager shared].downloadQueue];
         _session = session;
     }
     return _session;
@@ -404,12 +404,12 @@ didCompleteWithError:(nullable NSError *)error {
         return;
     }
     
-    __FWPlayerCacheAction *action = [self popFirstActionInList];
+    FWPlayerCacheAction *action = [self popFirstActionInList];
     if (!action) {
         return;
     }
     
-    if (action.actionType == __FWPlayerCacheAtionTypeLocal) {
+    if (action.actionType == FWPlayerCacheAtionTypeLocal) {
         NSError *error;
         NSData *data = [self.cacheWorker cachedDataForRange:action.range error:&error];
         if (error) {
@@ -443,9 +443,9 @@ didCompleteWithError:(nullable NSError *)error {
     });
 }
 
-- (__FWPlayerCacheAction *)popFirstActionInList {
+- (FWPlayerCacheAction *)popFirstActionInList {
     @synchronized (self) {
-        __FWPlayerCacheAction *action = [self.actions firstObject];
+        FWPlayerCacheAction *action = [self.actions firstObject];
         if (action) {
             [self.actions removeObjectAtIndex:0];
             return action;
@@ -459,14 +459,14 @@ didCompleteWithError:(nullable NSError *)error {
 
 - (void)notifyDownloadProgressWithFlush:(BOOL)flush finished:(BOOL)finished {
     double currentTime = CFAbsoluteTimeGetCurrent();
-    double interval = [__FWPlayerCacheManager cacheUpdateNotifyInterval];
+    double interval = [FWPlayerCacheManager cacheUpdateNotifyInterval];
     if ((self.notifyTime < currentTime - interval) || flush) {
         self.notifyTime = currentTime;
-        __FWPlayerCacheConfiguration *configuration = [self.cacheWorker.cacheConfiguration copy];
-        [[NSNotificationCenter defaultCenter] postNotificationName:__FWPlayerCacheManagerDidUpdateCacheNotification
+        FWPlayerCacheConfiguration *configuration = [self.cacheWorker.cacheConfiguration copy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWPlayerCacheManagerDidUpdateCacheNotification
                                                             object:self
                                                           userInfo:@{
-                                                                     __FWPlayerCacheConfigurationKey: configuration,
+                                                                     FWPlayerCacheConfigurationKey: configuration,
                                                                      }];
             
         if (finished && configuration.progress >= 1.0) {
@@ -476,17 +476,17 @@ didCompleteWithError:(nullable NSError *)error {
 }
 
 - (void)notifyDownloadFinishedWithError:(NSError *)error {
-    __FWPlayerCacheConfiguration *configuration = [self.cacheWorker.cacheConfiguration copy];
+    FWPlayerCacheConfiguration *configuration = [self.cacheWorker.cacheConfiguration copy];
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-    [userInfo setValue:configuration forKey:__FWPlayerCacheConfigurationKey];
-    [userInfo setValue:error forKey:__FWPlayerCacheFinishedErrorKey];
+    [userInfo setValue:configuration forKey:FWPlayerCacheConfigurationKey];
+    [userInfo setValue:error forKey:FWPlayerCacheFinishedErrorKey];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:__FWPlayerCacheManagerDidFinishCacheNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:FWPlayerCacheManagerDidFinishCacheNotification
                                                         object:self
                                                       userInfo:userInfo];
 }
 
-#pragma mark - __FWPlayerCacheSessionDelegateObjectDelegate
+#pragma mark - FWPlayerCacheSessionDelegateObjectDelegate
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
     NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
@@ -562,19 +562,19 @@ didCompleteWithError:(nullable NSError *)error {
 
 @end
 
-#pragma mark - Class: __FWPlayerCacheDownloaderStatus
+#pragma mark - Class: FWPlayerCacheDownloaderStatus
 
 
-@interface __FWPlayerCacheDownloaderStatus ()
+@interface FWPlayerCacheDownloaderStatus ()
 
 @property (nonatomic, strong) NSMutableSet *downloadingURLS;
 
 @end
 
-@implementation __FWPlayerCacheDownloaderStatus
+@implementation FWPlayerCacheDownloaderStatus
 
 + (instancetype)shared {
-    static __FWPlayerCacheDownloaderStatus *instance = nil;
+    static FWPlayerCacheDownloaderStatus *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
@@ -608,34 +608,34 @@ didCompleteWithError:(nullable NSError *)error {
 
 @end
 
-#pragma mark - Class: __FWPlayerCacheDownloader
+#pragma mark - Class: FWPlayerCacheDownloader
 
-@interface __FWPlayerCacheDownloader () <__FWPlayerCacheActionWorkerDelegate>
+@interface FWPlayerCacheDownloader () <FWPlayerCacheActionWorkerDelegate>
 
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong) NSURLSessionDataTask *task;
 
-@property (nonatomic, strong) __FWPlayerCacheWorker *cacheWorker;
-@property (nonatomic, strong) __FWPlayerCacheActionWorker *actionWorker;
+@property (nonatomic, strong) FWPlayerCacheWorker *cacheWorker;
+@property (nonatomic, strong) FWPlayerCacheActionWorker *actionWorker;
 
 @property (nonatomic) BOOL downloadToEnd;
 
 @end
 
-@implementation __FWPlayerCacheDownloader
+@implementation FWPlayerCacheDownloader
 
 - (void)dealloc {
-    [[__FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
+    [[FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
 }
 
-- (instancetype)initWithURL:(NSURL *)url cacheWorker:(__FWPlayerCacheWorker *)cacheWorker {
+- (instancetype)initWithURL:(NSURL *)url cacheWorker:(FWPlayerCacheWorker *)cacheWorker {
     self = [super init];
     if (self) {
         _saveToCache = YES;
         _url = url;
         _cacheWorker = cacheWorker;
         _info = _cacheWorker.cacheConfiguration.contentInfo;
-        [[__FWPlayerCacheDownloaderStatus shared] addURL:self.url];
+        [[FWPlayerCacheDownloaderStatus shared] addURL:self.url];
     }
     return self;
 }
@@ -652,7 +652,7 @@ didCompleteWithError:(nullable NSError *)error {
     
     NSArray *actions = [self.cacheWorker cachedDataActionsForRange:range];
 
-    self.actionWorker = [[__FWPlayerCacheActionWorker alloc] initWithActions:actions url:self.url cacheWorker:self.cacheWorker];
+    self.actionWorker = [[FWPlayerCacheActionWorker alloc] initWithActions:actions url:self.url cacheWorker:self.cacheWorker];
     self.actionWorker.canSaveToCache = self.saveToCache;
     self.actionWorker.delegate = self;
     [self.actionWorker start];
@@ -664,7 +664,7 @@ didCompleteWithError:(nullable NSError *)error {
     NSRange range = NSMakeRange(0, 2);
     NSArray *actions = [self.cacheWorker cachedDataActionsForRange:range];
 
-    self.actionWorker = [[__FWPlayerCacheActionWorker alloc] initWithActions:actions url:self.url cacheWorker:self.cacheWorker];
+    self.actionWorker = [[FWPlayerCacheActionWorker alloc] initWithActions:actions url:self.url cacheWorker:self.cacheWorker];
     self.actionWorker.canSaveToCache = self.saveToCache;
     self.actionWorker.delegate = self;
     [self.actionWorker start];
@@ -672,16 +672,16 @@ didCompleteWithError:(nullable NSError *)error {
 
 - (void)cancel {
     self.actionWorker.delegate = nil;
-    [[__FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
+    [[FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
     [self.actionWorker cancel];
     self.actionWorker = nil;
 }
 
-#pragma mark - __FWPlayerCacheActionWorkerDelegate
+#pragma mark - FWPlayerCacheActionWorkerDelegate
 
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didReceiveResponse:(NSURLResponse *)response {
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didReceiveResponse:(NSURLResponse *)response {
     if (!self.info) {
-        __FWPlayerCacheContentInfo *info = [__FWPlayerCacheContentInfo new];
+        FWPlayerCacheContentInfo *info = [FWPlayerCacheContentInfo new];
         
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *HTTPURLResponse = (NSHTTPURLResponse *)response;
@@ -709,14 +709,14 @@ didCompleteWithError:(nullable NSError *)error {
     }
 }
 
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didReceiveData:(NSData *)data isLocal:(BOOL)isLocal {
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didReceiveData:(NSData *)data isLocal:(BOOL)isLocal {
     if ([self.delegate respondsToSelector:@selector(mediaDownloader:didReceiveData:)]) {
         [self.delegate mediaDownloader:self didReceiveData:data];
     }
 }
 
-- (void)actionWorker:(__FWPlayerCacheActionWorker *)actionWorker didFinishWithError:(NSError *)error {
-    [[__FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
+- (void)actionWorker:(FWPlayerCacheActionWorker *)actionWorker didFinishWithError:(NSError *)error {
+    [[FWPlayerCacheDownloaderStatus shared] removeURL:self.url];
     
     if (!error && self.downloadToEnd) {
         self.downloadToEnd = NO;
@@ -730,18 +730,18 @@ didCompleteWithError:(nullable NSError *)error {
 
 @end
 
-#pragma mark - __FWPlayerCacheRequestWorker
+#pragma mark - FWPlayerCacheRequestWorker
 
-@interface __FWPlayerCacheRequestWorker () <__FWPlayerCacheDownloaderDelegate>
+@interface FWPlayerCacheRequestWorker () <FWPlayerCacheDownloaderDelegate>
 
 @property (nonatomic, strong, readwrite) AVAssetResourceLoadingRequest *request;
-@property (nonatomic, strong) __FWPlayerCacheDownloader *mediaDownloader;
+@property (nonatomic, strong) FWPlayerCacheDownloader *mediaDownloader;
 
 @end
 
-@implementation __FWPlayerCacheRequestWorker
+@implementation FWPlayerCacheRequestWorker
 
-- (instancetype)initWithMediaDownloader:(__FWPlayerCacheDownloader *)mediaDownloader resourceLoadingRequest:(AVAssetResourceLoadingRequest *)request {
+- (instancetype)initWithMediaDownloader:(FWPlayerCacheDownloader *)mediaDownloader resourceLoadingRequest:(AVAssetResourceLoadingRequest *)request {
     self = [super init];
     if (self) {
         _mediaDownloader = mediaDownloader;
@@ -799,17 +799,17 @@ didCompleteWithError:(nullable NSError *)error {
     }
 }
 
-#pragma mark - __FWPlayerCacheDownloaderDelegate
+#pragma mark - FWPlayerCacheDownloaderDelegate
 
-- (void)mediaDownloader:(__FWPlayerCacheDownloader *)downloader didReceiveResponse:(NSURLResponse *)response {
+- (void)mediaDownloader:(FWPlayerCacheDownloader *)downloader didReceiveResponse:(NSURLResponse *)response {
     [self fullfillContentInfo];
 }
 
-- (void)mediaDownloader:(__FWPlayerCacheDownloader *)downloader didReceiveData:(NSData *)data {
+- (void)mediaDownloader:(FWPlayerCacheDownloader *)downloader didReceiveData:(NSData *)data {
     [self.request.dataRequest respondWithData:data];
 }
 
-- (void)mediaDownloader:(__FWPlayerCacheDownloader *)downloader didFinishedWithError:(NSError *)error {
+- (void)mediaDownloader:(FWPlayerCacheDownloader *)downloader didFinishedWithError:(NSError *)error {
     if (error.code == NSURLErrorCancelled) {
         return;
     }
@@ -825,13 +825,13 @@ didCompleteWithError:(nullable NSError *)error {
 
 @end
 
-#pragma mark - __FWPlayerCacheContentInfo
+#pragma mark - FWPlayerCacheContentInfo
 
 static NSString *kContentLengthKey = @"kContentLengthKey";
 static NSString *kContentTypeKey = @"kContentTypeKey";
 static NSString *kByteRangeAccessSupported = @"kByteRangeAccessSupported";
 
-@implementation __FWPlayerCacheContentInfo
+@implementation FWPlayerCacheContentInfo
 
 - (NSString *)debugDescription {
     return [NSString stringWithFormat:@"%@\ncontentLength: %lld\ncontentType: %@\nbyteRangeAccessSupported:%@", NSStringFromClass([self class]), self.contentLength, self.contentType, @(self.byteRangeAccessSupported)];
@@ -855,11 +855,11 @@ static NSString *kByteRangeAccessSupported = @"kByteRangeAccessSupported";
 
 @end
 
-#pragma mark - __FWPlayerCacheAction
+#pragma mark - FWPlayerCacheAction
 
-@implementation __FWPlayerCacheAction
+@implementation FWPlayerCacheAction
 
-- (instancetype)initWithActionType:(__FWPlayerCacheAtionType)actionType range:(NSRange)range {
+- (instancetype)initWithActionType:(FWPlayerCacheAtionType)actionType range:(NSRange)range {
     self = [super init];
     if (self) {
         _actionType = actionType;
@@ -868,7 +868,7 @@ static NSString *kByteRangeAccessSupported = @"kByteRangeAccessSupported";
     return self;
 }
 
-- (BOOL)isEqual:(__FWPlayerCacheAction *)object {
+- (BOOL)isEqual:(FWPlayerCacheAction *)object {
     if (!NSEqualRanges(object.range, self.range)) {
         return NO;
     }
@@ -890,7 +890,7 @@ static NSString *kByteRangeAccessSupported = @"kByteRangeAccessSupported";
 
 @end
 
-#pragma mark - __FWPlayerCacheConfiguration
+#pragma mark - FWPlayerCacheConfiguration
 
 static NSString *kFileNameKey = @"kFileNameKey";
 static NSString *kCacheFragmentsKey = @"kCacheFragmentsKey";
@@ -898,7 +898,7 @@ static NSString *kDownloadInfoKey = @"kDownloadInfoKey";
 static NSString *kContentInfoKey = @"kContentInfoKey";
 static NSString *kURLKey = @"kURLKey";
 
-@interface __FWPlayerCacheConfiguration () <NSCoding>
+@interface FWPlayerCacheConfiguration () <NSCoding>
 
 @property (nonatomic, copy) NSString *filePath;
 @property (nonatomic, copy) NSString *fileName;
@@ -907,17 +907,17 @@ static NSString *kURLKey = @"kURLKey";
 
 @end
 
-@implementation __FWPlayerCacheConfiguration
+@implementation FWPlayerCacheConfiguration
 
 + (instancetype)configurationWithFilePath:(NSString *)filePath {
     filePath = [self configurationFilePathForFilePath:filePath];
-    __FWPlayerCacheConfiguration *configuration;
+    FWPlayerCacheConfiguration *configuration;
     @try {
         configuration = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     } @catch (NSException *exception) {}
     
     if (!configuration) {
-        configuration = [[__FWPlayerCacheConfiguration alloc] init];
+        configuration = [[FWPlayerCacheConfiguration alloc] init];
         configuration.fileName = [filePath lastPathComponent];
     }
     configuration.filePath = filePath;
@@ -1002,7 +1002,7 @@ static NSString *kURLKey = @"kURLKey";
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(nullable NSZone *)zone {
-    __FWPlayerCacheConfiguration *configuration = [[__FWPlayerCacheConfiguration allocWithZone:zone] init];
+    FWPlayerCacheConfiguration *configuration = [[FWPlayerCacheConfiguration allocWithZone:zone] init];
     configuration.fileName = self.fileName;
     configuration.filePath = self.filePath;
     configuration.internalCacheFragments = self.internalCacheFragments;
@@ -1109,7 +1109,7 @@ static NSString *kURLKey = @"kURLKey";
 }
 
 + (BOOL)createAndSaveDownloadedConfigurationForURL:(NSURL *)url error:(NSError **)error {
-    NSString *filePath = [__FWPlayerCacheManager cachedFilePathForURL:url];
+    NSString *filePath = [FWPlayerCacheManager cachedFilePathForURL:url];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSDictionary<NSFileAttributeKey, id> *attributes = [fileManager attributesOfItemAtPath:filePath error:error];
     if (!attributes) {
@@ -1119,10 +1119,10 @@ static NSString *kURLKey = @"kURLKey";
     NSUInteger fileSize = (NSUInteger)attributes.fileSize;
     NSRange range = NSMakeRange(0, fileSize);
     
-    __FWPlayerCacheConfiguration *configuration = [__FWPlayerCacheConfiguration configurationWithFilePath:filePath];
+    FWPlayerCacheConfiguration *configuration = [FWPlayerCacheConfiguration configurationWithFilePath:filePath];
     configuration.url = url;
     
-    __FWPlayerCacheContentInfo *contentInfo = [__FWPlayerCacheContentInfo new];
+    FWPlayerCacheContentInfo *contentInfo = [FWPlayerCacheContentInfo new];
     
     NSString *fileExtension = [url pathExtension];
     NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
@@ -1145,19 +1145,19 @@ static NSString *kURLKey = @"kURLKey";
 
 @end
 
-#pragma mark - __FWPlayerCacheManager
+#pragma mark - FWPlayerCacheManager
 
-NSNotificationName __FWPlayerCacheManagerDidUpdateCacheNotification = @"FWPlayerCacheManagerDidUpdateCacheNotification";
-NSNotificationName __FWPlayerCacheManagerDidFinishCacheNotification = @"FWPlayerCacheManagerDidFinishCacheNotification";
+NSNotificationName FWPlayerCacheManagerDidUpdateCacheNotification = @"FWPlayerCacheManagerDidUpdateCacheNotification";
+NSNotificationName FWPlayerCacheManagerDidFinishCacheNotification = @"FWPlayerCacheManagerDidFinishCacheNotification";
 
-NSString *__FWPlayerCacheConfigurationKey = @"FWPlayerCacheConfigurationKey";
-NSString *__FWPlayerCacheFinishedErrorKey = @"FWPlayerCacheFinishedErrorKey";
+NSString *FWPlayerCacheConfigurationKey = @"FWPlayerCacheConfigurationKey";
+NSString *FWPlayerCacheFinishedErrorKey = @"FWPlayerCacheFinishedErrorKey";
 
 static NSString *kPlayerCacheDirectory = nil;
 static NSTimeInterval kPlayerCacheNotifyInterval = 0.1;
 static NSString *(^kPlayerFileNameRules)(NSURL *url);
 
-@implementation __FWPlayerCacheManager
+@implementation FWPlayerCacheManager
 
 + (void)setCacheDirectory:(NSString *)cacheDirectory {
     kPlayerCacheDirectory = cacheDirectory;
@@ -1206,9 +1206,9 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
     return [NSString stringWithString:output];
 }
 
-+ (__FWPlayerCacheConfiguration *)cacheConfigurationForURL:(NSURL *)url {
++ (FWPlayerCacheConfiguration *)cacheConfigurationForURL:(NSURL *)url {
     NSString *filePath = [self cachedFilePathForURL:url];
-    __FWPlayerCacheConfiguration *configuration = [__FWPlayerCacheConfiguration configurationWithFilePath:filePath];
+    FWPlayerCacheConfiguration *configuration = [FWPlayerCacheConfiguration configurationWithFilePath:filePath];
     return configuration;
 }
 
@@ -1235,10 +1235,10 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 + (void)cleanAllCacheWithError:(NSError **)error {
     // Find downloaing file
     NSMutableSet *downloadingFiles = [NSMutableSet set];
-    [[[__FWPlayerCacheDownloaderStatus shared] urls] enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, BOOL * _Nonnull stop) {
+    [[[FWPlayerCacheDownloaderStatus shared] urls] enumerateObjectsUsingBlock:^(NSURL * _Nonnull obj, BOOL * _Nonnull stop) {
         NSString *file = [self cachedFilePathForURL:obj];
         [downloadingFiles addObject:file];
-        NSString *configurationPath = [__FWPlayerCacheConfiguration configurationFilePathForFilePath:file];
+        NSString *configurationPath = [FWPlayerCacheConfiguration configurationFilePathForFilePath:file];
         [downloadingFiles addObject:configurationPath];
     }];
     
@@ -1261,7 +1261,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 }
 
 + (void)cleanCacheForURL:(NSURL *)url error:(NSError **)error {
-    if ([[__FWPlayerCacheDownloaderStatus shared] containsURL:url]) {
+    if ([[FWPlayerCacheDownloaderStatus shared] containsURL:url]) {
         NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Clean cache for url `%@` can't be done, because it's downloading", nil), url];
         if (error) {
             *error = [NSError errorWithDomain:@"FWPlayerCache" code:2 userInfo:@{NSLocalizedDescriptionKey: description}];
@@ -1278,7 +1278,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
         }
     }
     
-    NSString *configurationPath = [__FWPlayerCacheConfiguration configurationFilePathForFilePath:filePath];
+    NSString *configurationPath = [FWPlayerCacheConfiguration configurationFilePathForFilePath:filePath];
     if ([fileManager fileExistsAtPath:configurationPath]) {
         if (![fileManager removeItemAtPath:configurationPath error:error]) {
             return;
@@ -1289,7 +1289,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 + (BOOL)addCacheFile:(NSString *)filePath forURL:(NSURL *)url error:(NSError **)error {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    NSString *cachePath = [__FWPlayerCacheManager cachedFilePathForURL:url];
+    NSString *cachePath = [FWPlayerCacheManager cachedFilePathForURL:url];
     NSString *cacheFolder = [cachePath stringByDeletingLastPathComponent];
     if (![fileManager fileExistsAtPath:cacheFolder]) {
         if (![fileManager createDirectoryAtPath:cacheFolder
@@ -1304,7 +1304,7 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
         return NO;
     }
     
-    if (![__FWPlayerCacheConfiguration createAndSaveDownloadedConfigurationForURL:url error:error]) {
+    if (![FWPlayerCacheConfiguration createAndSaveDownloadedConfigurationForURL:url error:error]) {
         [fileManager removeItemAtPath:cachePath error:nil]; // if remove failed, there is nothing we can do.
         return NO;
     }
@@ -1314,15 +1314,15 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 
 @end
 
-#pragma mark - __FWPlayerCacheSessionManager
+#pragma mark - FWPlayerCacheSessionManager
 
-@interface __FWPlayerCacheSessionManager ()
+@interface FWPlayerCacheSessionManager ()
 
 @property (nonatomic, strong) NSOperationQueue *downloadQueue;
 
 @end
 
-@implementation __FWPlayerCacheSessionManager
+@implementation FWPlayerCacheSessionManager
 
 + (instancetype)shared {
     static id instance = nil;
@@ -1346,18 +1346,18 @@ static NSString *(^kPlayerFileNameRules)(NSURL *url);
 
 @end
 
-#pragma mark - __FWPlayerCacheWorker
+#pragma mark - FWPlayerCacheWorker
 
 static NSInteger const kPackageLength = 512 * 1024; // 512 kb per package
 static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
 
-@interface __FWPlayerCacheWorker ()
+@interface FWPlayerCacheWorker ()
 
 @property (nonatomic, strong) NSFileHandle *readFileHandle;
 @property (nonatomic, strong) NSFileHandle *writeFileHandle;
 @property (nonatomic, strong, readwrite) NSError *setupError;
 @property (nonatomic, copy) NSString *filePath;
-@property (nonatomic, strong) __FWPlayerCacheConfiguration *internalCacheConfiguration;
+@property (nonatomic, strong) FWPlayerCacheConfiguration *internalCacheConfiguration;
 
 @property (nonatomic) long long currentOffset;
 
@@ -1367,7 +1367,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
 
 @end
 
-@implementation __FWPlayerCacheWorker
+@implementation FWPlayerCacheWorker
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -1379,7 +1379,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
 - (instancetype)initWithURL:(NSURL *)url {
     self = [super init];
     if (self) {
-        NSString *path = [__FWPlayerCacheManager cachedFilePathForURL:url];
+        NSString *path = [FWPlayerCacheManager cachedFilePathForURL:url];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         _filePath = path;
         NSError *error;
@@ -1399,7 +1399,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
             _readFileHandle = [NSFileHandle fileHandleForReadingFromURL:fileURL error:&error];
             if (!error) {
                 _writeFileHandle = [NSFileHandle fileHandleForWritingToURL:fileURL error:&error];
-                _internalCacheConfiguration = [__FWPlayerCacheConfiguration configurationWithFilePath:path];
+                _internalCacheConfiguration = [FWPlayerCacheConfiguration configurationWithFilePath:path];
                 _internalCacheConfiguration.url = url;
             }
         }
@@ -1409,7 +1409,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
     return self;
 }
 
-- (__FWPlayerCacheConfiguration *)cacheConfiguration {
+- (FWPlayerCacheConfiguration *)cacheConfiguration {
     return self.internalCacheConfiguration;
 }
 
@@ -1439,7 +1439,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
     return nil;
 }
 
-- (NSArray<__FWPlayerCacheAction *> *)cachedDataActionsForRange:(NSRange)range {
+- (NSArray<FWPlayerCacheAction *> *)cachedDataActionsForRange:(NSRange)range {
     NSArray *cachedFragments = [self.internalCacheConfiguration cacheFragments];
     NSMutableArray *actions = [NSMutableArray array];
     
@@ -1454,8 +1454,8 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
         if (intersectionRange.length > 0) {
             NSInteger package = intersectionRange.length / kPackageLength;
             for (NSInteger i = 0; i <= package; i++) {
-                __FWPlayerCacheAction *action = [__FWPlayerCacheAction new];
-                action.actionType = __FWPlayerCacheAtionTypeLocal;
+                FWPlayerCacheAction *action = [FWPlayerCacheAction new];
+                action.actionType = FWPlayerCacheAtionTypeLocal;
                 
                 NSInteger offset = i * kPackageLength;
                 NSInteger offsetLocation = intersectionRange.location + offset;
@@ -1471,29 +1471,29 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
     }];
     
     if (actions.count == 0) {
-        __FWPlayerCacheAction *action = [__FWPlayerCacheAction new];
-        action.actionType = __FWPlayerCacheAtionTypeRemote;
+        FWPlayerCacheAction *action = [FWPlayerCacheAction new];
+        action.actionType = FWPlayerCacheAtionTypeRemote;
         action.range = range;
         [actions addObject:action];
     } else {
         // Add remote fragments
         NSMutableArray *localRemoteActions = [NSMutableArray array];
-        [actions enumerateObjectsUsingBlock:^(__FWPlayerCacheAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [actions enumerateObjectsUsingBlock:^(FWPlayerCacheAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange actionRange = obj.range;
             if (idx == 0) {
                 if (range.location < actionRange.location) {
-                    __FWPlayerCacheAction *action = [__FWPlayerCacheAction new];
-                    action.actionType = __FWPlayerCacheAtionTypeRemote;
+                    FWPlayerCacheAction *action = [FWPlayerCacheAction new];
+                    action.actionType = FWPlayerCacheAtionTypeRemote;
                     action.range = NSMakeRange(range.location, actionRange.location - range.location);
                     [localRemoteActions addObject:action];
                 }
                 [localRemoteActions addObject:obj];
             } else {
-                __FWPlayerCacheAction *lastAction = [localRemoteActions lastObject];
+                FWPlayerCacheAction *lastAction = [localRemoteActions lastObject];
                 NSInteger lastOffset = lastAction.range.location + lastAction.range.length;
                 if (actionRange.location > lastOffset) {
-                    __FWPlayerCacheAction *action = [__FWPlayerCacheAction new];
-                    action.actionType = __FWPlayerCacheAtionTypeRemote;
+                    FWPlayerCacheAction *action = [FWPlayerCacheAction new];
+                    action.actionType = FWPlayerCacheAtionTypeRemote;
                     action.range = NSMakeRange(lastOffset, actionRange.location - lastOffset);
                     [localRemoteActions addObject:action];
                 }
@@ -1503,8 +1503,8 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
             if (idx == actions.count - 1) {
                 NSInteger localEndOffset = actionRange.location + actionRange.length;
                 if (endOffset > localEndOffset) {
-                    __FWPlayerCacheAction *action = [__FWPlayerCacheAction new];
-                    action.actionType = __FWPlayerCacheAtionTypeRemote;
+                    FWPlayerCacheAction *action = [FWPlayerCacheAction new];
+                    action.actionType = FWPlayerCacheAtionTypeRemote;
                     action.range = NSMakeRange(localEndOffset, endOffset - localEndOffset);
                     [localRemoteActions addObject:action];
                 }
@@ -1517,7 +1517,7 @@ static NSString *kPlayerCacheResponseKey = @"kPlayerCacheResponseKey";
     return [actions copy];
 }
 
-- (void)setContentInfo:(__FWPlayerCacheContentInfo *)contentInfo error:(NSError **)error {
+- (void)setContentInfo:(FWPlayerCacheContentInfo *)contentInfo error:(NSError **)error {
     self.internalCacheConfiguration.contentInfo = contentInfo;
     @try {
         [self.writeFileHandle truncateFileAtOffset:contentInfo.contentLength];

@@ -27,15 +27,15 @@
 #import "SecurityPolicy.h"
 
 /**
- `__FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
+ `FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
 
  ## Subclassing Notes
 
- This is the base class for `__FWHTTPSessionManager`, which adds functionality specific to making HTTP requests. If you are looking to extend `__FWURLSessionManager` specifically for HTTP, consider subclassing `__FWHTTPSessionManager` instead.
+ This is the base class for `FWHTTPSessionManager`, which adds functionality specific to making HTTP requests. If you are looking to extend `FWURLSessionManager` specifically for HTTP, consider subclassing `FWHTTPSessionManager` instead.
 
  ## NSURLSession & NSURLSessionTask Delegate Methods
 
- `__FWURLSessionManager` implements the following delegate methods:
+ `FWURLSessionManager` implements the following delegate methods:
 
  ### `NSURLSessionDelegate`
 
@@ -81,7 +81,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(URLSessionManager)
-@interface __FWURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying>
+@interface FWURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying>
 
 /**
  The managed session.
@@ -94,20 +94,20 @@ NS_SWIFT_NAME(URLSessionManager)
 @property (readonly, nonatomic, strong) NSOperationQueue *operationQueue;
 
 /**
- Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to an instance of `__FWJSONResponseSerializer`.
+ Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to an instance of `FWJSONResponseSerializer`.
 
  @warning `responseSerializer` must not be `nil`.
  */
-@property (nonatomic, strong) id <__FWURLResponseSerialization> responseSerializer;
+@property (nonatomic, strong) id <FWURLResponseSerialization> responseSerializer;
 
 ///-------------------------------
 /// @name Managing Security Policy
 ///-------------------------------
 
 /**
- The security policy used by created session to evaluate server trust for secure connections. `__FWURLSessionManager` uses the `defaultPolicy` unless otherwise specified.
+ The security policy used by created session to evaluate server trust for secure connections. `FWURLSessionManager` uses the `defaultPolicy` unless otherwise specified.
  */
-@property (nonatomic, strong) __FWSecurityPolicy *securityPolicy;
+@property (nonatomic, strong) FWSecurityPolicy *securityPolicy;
 
 ///----------------------------
 /// @name Getting Session Tasks
@@ -308,7 +308,7 @@ NS_SWIFT_NAME(URLSessionManager)
 
  @param block A block object to be executed when a connection level authentication challenge has occurred. The block returns the disposition of the authentication challenge, and takes three arguments: the session, the authentication challenge, and a pointer to the credential that should be used to resolve the challenge.
 
- @warning Implementing a session authentication challenge handler yourself totally bypasses FWNetworking's security policy defined in `__FWSecurityPolicy`. Make sure you fully understand the implications before implementing a custom session authentication challenge handler. If you do not want to bypass FWNetworking's security policy, use `-setAuthenticationChallengeHandler:` instead.
+ @warning Implementing a session authentication challenge handler yourself totally bypasses FWNetworking's security policy defined in `FWSecurityPolicy`. Make sure you fully understand the implications before implementing a custom session authentication challenge handler. If you do not want to bypass FWNetworking's security policy, use `-setAuthenticationChallengeHandler:` instead.
 
  @see -securityPolicy
  @see -setAuthenticationChallengeHandler:
@@ -419,7 +419,7 @@ NS_SWIFT_NAME(URLSessionManager)
 /**
  Sets a block to be executed when a download task has completed a download, as handled by the `NSURLSessionDownloadDelegate` method `URLSession:downloadTask:didFinishDownloadingToURL:`.
 
- @param block A block object to be executed when a download task has completed. The block returns the URL the download should be moved to, and takes three arguments: the session, the download task, and the temporary location of the downloaded file. If the file manager encounters an error while attempting to move the temporary file to the destination, an `__FWURLSessionDownloadTaskDidFailToMoveFileNotification` will be posted, with the download task as its object, and the user info of the error.
+ @param block A block object to be executed when a download task has completed. The block returns the URL the download should be moved to, and takes three arguments: the session, the download task, and the temporary location of the downloaded file. If the file manager encounters an error while attempting to move the temporary file to the destination, an `FWURLSessionDownloadTaskDidFailToMoveFileNotification` will be posted, with the download task as its object, and the user info of the error.
  */
 - (void)setDownloadTaskDidFinishDownloadingBlock:(nullable NSURL * _Nullable  (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location))block;
 
@@ -446,61 +446,61 @@ NS_SWIFT_NAME(URLSessionManager)
 /**
  Posted when a task resumes.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWNetworkingTaskDidResumeNotification NS_SWIFT_NAME(NetworkingTaskDidResumeNotification);
+FOUNDATION_EXPORT NSNotificationName const FWNetworkingTaskDidResumeNotification NS_SWIFT_NAME(NetworkingTaskDidResumeNotification);
 
 /**
  Posted when a task finishes executing. Includes a userInfo dictionary with additional information about the task.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWNetworkingTaskDidCompleteNotification NS_SWIFT_NAME(NetworkingTaskDidCompleteNotification);
+FOUNDATION_EXPORT NSNotificationName const FWNetworkingTaskDidCompleteNotification NS_SWIFT_NAME(NetworkingTaskDidCompleteNotification);
 
 /**
  Posted when a task suspends its execution.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWNetworkingTaskDidSuspendNotification NS_SWIFT_NAME(NetworkingTaskDidSuspendNotification);
+FOUNDATION_EXPORT NSNotificationName const FWNetworkingTaskDidSuspendNotification NS_SWIFT_NAME(NetworkingTaskDidSuspendNotification);
 
 /**
  Posted when a session is invalidated.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWURLSessionDidInvalidateNotification NS_SWIFT_NAME(URLSessionDidInvalidateNotification);
+FOUNDATION_EXPORT NSNotificationName const FWURLSessionDidInvalidateNotification NS_SWIFT_NAME(URLSessionDidInvalidateNotification);
 
 /**
  Posted when a session download task finished moving the temporary download file to a specified destination successfully.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification NS_SWIFT_NAME(URLSessionDownloadTaskDidMoveFileSuccessfullyNotification);
+FOUNDATION_EXPORT NSNotificationName const FWURLSessionDownloadTaskDidMoveFileSuccessfullyNotification NS_SWIFT_NAME(URLSessionDownloadTaskDidMoveFileSuccessfullyNotification);
 
 /**
  Posted when a session download task encountered an error when moving the temporary download file to a specified destination.
  */
-FOUNDATION_EXPORT NSNotificationName const __FWURLSessionDownloadTaskDidFailToMoveFileNotification NS_SWIFT_NAME(URLSessionDownloadTaskDidFailToMoveFileNotification);
+FOUNDATION_EXPORT NSNotificationName const FWURLSessionDownloadTaskDidFailToMoveFileNotification NS_SWIFT_NAME(URLSessionDownloadTaskDidFailToMoveFileNotification);
 
 /**
- The raw response data of the task. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteNotification` if response data exists for the task.
+ The raw response data of the task. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteNotification` if response data exists for the task.
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteResponseDataKey NS_SWIFT_NAME(NetworkingTaskDidCompleteResponseDataKey);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteResponseDataKey NS_SWIFT_NAME(NetworkingTaskDidCompleteResponseDataKey);
 
 /**
- The serialized response object of the task. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteNotification` if the response was serialized.
+ The serialized response object of the task. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteNotification` if the response was serialized.
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteSerializedResponseKey NS_SWIFT_NAME(NetworkingTaskDidCompleteSerializedResponseKey);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteSerializedResponseKey NS_SWIFT_NAME(NetworkingTaskDidCompleteSerializedResponseKey);
 
 /**
- The response serializer used to serialize the response. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteNotification` if the task has an associated response serializer.
+ The response serializer used to serialize the response. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteNotification` if the task has an associated response serializer.
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteResponseSerializerKey NS_SWIFT_NAME(NetworkingTaskDidCompleteResponseSerializerKey);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteResponseSerializerKey NS_SWIFT_NAME(NetworkingTaskDidCompleteResponseSerializerKey);
 
 /**
- The file path associated with the download task. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteNotification` if an the response data has been stored directly to disk.
+ The file path associated with the download task. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteNotification` if an the response data has been stored directly to disk.
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteAssetPathKey NS_SWIFT_NAME(NetworkingTaskDidCompleteAssetPathKey);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteAssetPathKey NS_SWIFT_NAME(NetworkingTaskDidCompleteAssetPathKey);
 
 /**
- Any error associated with the task, or the serialization of the response. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteNotification` if an error exists.
+ Any error associated with the task, or the serialization of the response. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteNotification` if an error exists.
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteErrorKey NS_SWIFT_NAME(NetworkingTaskDidCompleteErrorKey);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteErrorKey NS_SWIFT_NAME(NetworkingTaskDidCompleteErrorKey);
 
 /**
- The session task metrics taken from the download task. Included in the userInfo dictionary of the `__FWNetworkingTaskDidCompleteSessionTaskMetrics`
+ The session task metrics taken from the download task. Included in the userInfo dictionary of the `FWNetworkingTaskDidCompleteSessionTaskMetrics`
  */
-FOUNDATION_EXPORT NSString * const __FWNetworkingTaskDidCompleteSessionTaskMetrics NS_SWIFT_NAME(NetworkingTaskDidCompleteSessionTaskMetrics);
+FOUNDATION_EXPORT NSString * const FWNetworkingTaskDidCompleteSessionTaskMetrics NS_SWIFT_NAME(NetworkingTaskDidCompleteSessionTaskMetrics);
 
 NS_ASSUME_NONNULL_END

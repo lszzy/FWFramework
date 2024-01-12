@@ -34,11 +34,11 @@
 #import <ifaddrs.h>
 #import <netdb.h>
 
-@interface __FWHTTPSessionManager ()
+@interface FWHTTPSessionManager ()
 @property (readwrite, nonatomic, strong) NSURL *baseURL;
 @end
 
-@implementation __FWHTTPSessionManager
+@implementation FWHTTPSessionManager
 @dynamic responseSerializer;
 
 + (instancetype)manager {
@@ -72,21 +72,21 @@
 
     self.baseURL = url;
 
-    self.requestSerializer = [__FWHTTPRequestSerializer serializer];
-    self.responseSerializer = [__FWJSONResponseSerializer serializer];
+    self.requestSerializer = [FWHTTPRequestSerializer serializer];
+    self.responseSerializer = [FWJSONResponseSerializer serializer];
 
     return self;
 }
 
 #pragma mark -
 
-- (void)setRequestSerializer:(__FWHTTPRequestSerializer <__FWURLRequestSerialization> *)requestSerializer {
+- (void)setRequestSerializer:(FWHTTPRequestSerializer <FWURLRequestSerialization> *)requestSerializer {
     NSParameterAssert(requestSerializer);
 
     _requestSerializer = requestSerializer;
 }
 
-- (void)setResponseSerializer:(__FWHTTPResponseSerializer <__FWURLResponseSerialization> *)responseSerializer {
+- (void)setResponseSerializer:(FWHTTPResponseSerializer <FWURLResponseSerialization> *)responseSerializer {
     NSParameterAssert(responseSerializer);
 
     [super setResponseSerializer:responseSerializer];
@@ -94,13 +94,13 @@
 
 @dynamic securityPolicy;
 
-- (void)setSecurityPolicy:(__FWSecurityPolicy *)securityPolicy {
-    if (securityPolicy.SSLPinningMode != __FWSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
+- (void)setSecurityPolicy:(FWSecurityPolicy *)securityPolicy {
+    if (securityPolicy.SSLPinningMode != FWSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
         NSString *pinningMode = @"Unknown Pinning Mode";
         switch (securityPolicy.SSLPinningMode) {
-            case __FWSSLPinningModeNone:        pinningMode = @"FWSSLPinningModeNone"; break;
-            case __FWSSLPinningModeCertificate: pinningMode = @"FWSSLPinningModeCertificate"; break;
-            case __FWSSLPinningModePublicKey:   pinningMode = @"FWSSLPinningModePublicKey"; break;
+            case FWSSLPinningModeNone:        pinningMode = @"FWSSLPinningModeNone"; break;
+            case FWSSLPinningModeCertificate: pinningMode = @"FWSSLPinningModeCertificate"; break;
+            case FWSSLPinningModePublicKey:   pinningMode = @"FWSSLPinningModePublicKey"; break;
         }
         NSString *reason = [NSString stringWithFormat:@"A security policy configured with `%@` can only be applied on a manager with a secure base URL (i.e. https)", pinningMode];
         @throw [NSException exceptionWithName:@"Invalid Security Policy" reason:reason userInfo:nil];
@@ -167,7 +167,7 @@
 - (NSURLSessionDataTask *)POST:(NSString *)URLString
                     parameters:(nullable id)parameters
                        headers:(nullable NSDictionary<NSString *,NSString *> *)headers
-     constructingBodyWithBlock:(nullable void (^)(id<__FWMultipartFormData> _Nonnull))block
+     constructingBodyWithBlock:(nullable void (^)(id<FWMultipartFormData> _Nonnull))block
                       progress:(nullable void (^)(NSProgress * _Nonnull))uploadProgress
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
@@ -320,9 +320,9 @@
         return nil;
     }
 
-    self.requestSerializer = [decoder decodeObjectOfClass:[__FWHTTPRequestSerializer class] forKey:NSStringFromSelector(@selector(requestSerializer))];
-    self.responseSerializer = [decoder decodeObjectOfClass:[__FWHTTPResponseSerializer class] forKey:NSStringFromSelector(@selector(responseSerializer))];
-    __FWSecurityPolicy *decodedPolicy = [decoder decodeObjectOfClass:[__FWSecurityPolicy class] forKey:NSStringFromSelector(@selector(securityPolicy))];
+    self.requestSerializer = [decoder decodeObjectOfClass:[FWHTTPRequestSerializer class] forKey:NSStringFromSelector(@selector(requestSerializer))];
+    self.responseSerializer = [decoder decodeObjectOfClass:[FWHTTPResponseSerializer class] forKey:NSStringFromSelector(@selector(responseSerializer))];
+    FWSecurityPolicy *decodedPolicy = [decoder decodeObjectOfClass:[FWSecurityPolicy class] forKey:NSStringFromSelector(@selector(securityPolicy))];
     if (decodedPolicy) {
         self.securityPolicy = decodedPolicy;
     }
@@ -347,7 +347,7 @@
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWHTTPSessionManager *HTTPClient = [[[self class] allocWithZone:zone] initWithBaseURL:self.baseURL sessionConfiguration:self.session.configuration];
+    FWHTTPSessionManager *HTTPClient = [[[self class] allocWithZone:zone] initWithBaseURL:self.baseURL sessionConfiguration:self.session.configuration];
 
     HTTPClient.requestSerializer = [self.requestSerializer copyWithZone:zone];
     HTTPClient.responseSerializer = [self.responseSerializer copyWithZone:zone];

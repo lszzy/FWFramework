@@ -22,14 +22,14 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 
-typedef NS_ENUM(NSUInteger, __FWSSLPinningMode) {
-    __FWSSLPinningModeNone,
-    __FWSSLPinningModePublicKey,
-    __FWSSLPinningModeCertificate,
+typedef NS_ENUM(NSUInteger, FWSSLPinningMode) {
+    FWSSLPinningModeNone,
+    FWSSLPinningModePublicKey,
+    FWSSLPinningModeCertificate,
 } NS_SWIFT_NAME(SSLPinningMode);
 
 /**
- `__FWSecurityPolicy` evaluates server trust against pinned X.509 certificates and public keys over secure connections.
+ `FWSecurityPolicy` evaluates server trust against pinned X.509 certificates and public keys over secure connections.
 
  Adding pinned SSL certificates to your app helps prevent man-in-the-middle attacks and other vulnerabilities. Applications dealing with sensitive customer data or financial information are strongly encouraged to route all communication over an HTTPS connection with SSL pinning configured and enabled.
  */
@@ -37,12 +37,12 @@ typedef NS_ENUM(NSUInteger, __FWSSLPinningMode) {
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(SecurityPolicy)
-@interface __FWSecurityPolicy : NSObject <NSSecureCoding, NSCopying>
+@interface FWSecurityPolicy : NSObject <NSSecureCoding, NSCopying>
 
 /**
- The criteria by which server trust should be evaluated against the pinned SSL certificates. Defaults to `__FWSSLPinningModeNone`.
+ The criteria by which server trust should be evaluated against the pinned SSL certificates. Defaults to `FWSSLPinningModeNone`.
  */
-@property (readonly, nonatomic, assign) __FWSSLPinningMode SSLPinningMode;
+@property (readonly, nonatomic, assign) FWSSLPinningMode SSLPinningMode;
 
 /**
  The certificates used to evaluate server trust according to the SSL pinning mode. 
@@ -100,7 +100,7 @@ NS_SWIFT_NAME(SecurityPolicy)
 
  @see -policyWithPinningMode:withPinnedCertificates:
  */
-+ (instancetype)policyWithPinningMode:(__FWSSLPinningMode)pinningMode;
++ (instancetype)policyWithPinningMode:(FWSSLPinningMode)pinningMode;
 
 /**
  Creates and returns a security policy with the specified pinning mode.
@@ -113,7 +113,7 @@ NS_SWIFT_NAME(SecurityPolicy)
  @see +certificatesInBundle:
  @see -pinnedCertificates
 */
-+ (instancetype)policyWithPinningMode:(__FWSSLPinningMode)pinningMode withPinnedCertificates:(NSSet <NSData *> *)pinnedCertificates;
++ (instancetype)policyWithPinningMode:(FWSSLPinningMode)pinningMode withPinnedCertificates:(NSSet <NSData *> *)pinnedCertificates;
 
 ///------------------------------
 /// @name Evaluating Server Trust
@@ -143,20 +143,20 @@ NS_ASSUME_NONNULL_END
 /**
  ## SSL Pinning Modes
 
- The following constants are provided by `__FWSSLPinningMode` as possible SSL pinning modes.
+ The following constants are provided by `FWSSLPinningMode` as possible SSL pinning modes.
 
  enum {
- __FWSSLPinningModeNone,
- __FWSSLPinningModePublicKey,
- __FWSSLPinningModeCertificate,
+ FWSSLPinningModeNone,
+ FWSSLPinningModePublicKey,
+ FWSSLPinningModeCertificate,
  }
 
- `__FWSSLPinningModeNone`
+ `FWSSLPinningModeNone`
  Do not used pinned certificates to validate servers.
 
- `__FWSSLPinningModePublicKey`
+ `FWSSLPinningModePublicKey`
  Validate host certificates against public keys of pinned certificates.
 
- `__FWSSLPinningModeCertificate`
+ `FWSSLPinningModeCertificate`
  Validate host certificates against pinned certificates.
 */
