@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 数据库模型协议信息
 NS_SWIFT_NAME(DatabaseModel)
-@protocol __FWDatabaseModel <NSObject>
+@protocol FWDatabaseModel <NSObject>
 @optional
 
 /**
@@ -86,7 +86,7 @@ NS_SWIFT_NAME(DatabaseModel)
  @see https://github.com/netyouli/WHC_ModelSqliteKit
  */
 NS_SWIFT_NAME(DatabaseManager)
-@interface __FWDatabaseManager : NSObject
+@interface FWDatabaseManager : NSObject
 
 /**
  * 全局数据库模型版本号，默认1.0。如果模型实现了fwDatabaseVersion且不为空，则会忽略全局版本号

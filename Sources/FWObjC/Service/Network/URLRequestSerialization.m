@@ -22,10 +22,10 @@
 #import "URLRequestSerialization.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-NSString * const __FWURLRequestSerializationErrorDomain = @"site.wuyong.error.serialization.request";
-NSString * const __FWNetworkingOperationFailingURLRequestErrorKey = @"site.wuyong.serialization.request.error.response";
+NSString * const FWURLRequestSerializationErrorDomain = @"site.wuyong.error.serialization.request";
+NSString * const FWNetworkingOperationFailingURLRequestErrorKey = @"site.wuyong.serialization.request.error.response";
 
-typedef NSString * (^__FWQueryStringSerializationBlock)(NSURLRequest *request, id parameters, NSError *__autoreleasing *error);
+typedef NSString * (^FWQueryStringSerializationBlock)(NSURLRequest *request, id parameters, NSError *__autoreleasing *error);
 
 /**
  Returns a percent-escaped string following RFC 3986 for a query string key or value.
@@ -39,7 +39,7 @@ typedef NSString * (^__FWQueryStringSerializationBlock)(NSURLRequest *request, i
     - parameter string: The string to be percent-escaped.
     - returns: The percent-escaped string.
  */
-NSString * __FWPercentEscapedStringFromString(NSString *string) {
+NSString * FWPercentEscapedStringFromString(NSString *string) {
     static NSString * const kFWCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
     static NSString * const kFWCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
 
@@ -73,7 +73,7 @@ NSString * __FWPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
-@interface __FWQueryStringPair : NSObject
+@interface FWQueryStringPair : NSObject
 @property (readwrite, nonatomic, strong) id field;
 @property (readwrite, nonatomic, strong) id value;
 
@@ -82,7 +82,7 @@ NSString * __FWPercentEscapedStringFromString(NSString *string) {
 - (NSString *)URLEncodedStringValue;
 @end
 
-@implementation __FWQueryStringPair
+@implementation FWQueryStringPair
 
 - (instancetype)initWithField:(id)field value:(id)value {
     self = [super init];
@@ -98,9 +98,9 @@ NSString * __FWPercentEscapedStringFromString(NSString *string) {
 
 - (NSString *)URLEncodedStringValue {
     if (!self.value || [self.value isEqual:[NSNull null]]) {
-        return __FWPercentEscapedStringFromString([self.field description]);
+        return FWPercentEscapedStringFromString([self.field description]);
     } else {
-        return [NSString stringWithFormat:@"%@=%@", __FWPercentEscapedStringFromString([self.field description]), __FWPercentEscapedStringFromString([self.value description])];
+        return [NSString stringWithFormat:@"%@=%@", FWPercentEscapedStringFromString([self.field description]), FWPercentEscapedStringFromString([self.value description])];
     }
 }
 
@@ -108,23 +108,23 @@ NSString * __FWPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
-FOUNDATION_EXPORT NSArray * __FWQueryStringPairsFromDictionary(NSDictionary *dictionary);
-FOUNDATION_EXPORT NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value);
+FOUNDATION_EXPORT NSArray * FWQueryStringPairsFromDictionary(NSDictionary *dictionary);
+FOUNDATION_EXPORT NSArray * FWQueryStringPairsFromKeyAndValue(NSString *key, id value);
 
-NSString * __FWQueryStringFromParameters(NSDictionary *parameters) {
+NSString * FWQueryStringFromParameters(NSDictionary *parameters) {
     NSMutableArray *mutablePairs = [NSMutableArray array];
-    for (__FWQueryStringPair *pair in __FWQueryStringPairsFromDictionary(parameters)) {
+    for (FWQueryStringPair *pair in FWQueryStringPairsFromDictionary(parameters)) {
         [mutablePairs addObject:[pair URLEncodedStringValue]];
     }
 
     return [mutablePairs componentsJoinedByString:@"&"];
 }
 
-NSArray * __FWQueryStringPairsFromDictionary(NSDictionary *dictionary) {
-    return __FWQueryStringPairsFromKeyAndValue(nil, dictionary);
+NSArray * FWQueryStringPairsFromDictionary(NSDictionary *dictionary) {
+    return FWQueryStringPairsFromKeyAndValue(nil, dictionary);
 }
 
-NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
+NSArray * FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
 
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES selector:@selector(compare:)];
@@ -135,21 +135,21 @@ NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
         for (id nestedKey in [dictionary.allKeys sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {
             id nestedValue = dictionary[nestedKey];
             if (nestedValue) {
-                [mutableQueryStringComponents addObjectsFromArray:__FWQueryStringPairsFromKeyAndValue((key ? [NSString stringWithFormat:@"%@[%@]", key, nestedKey] : nestedKey), nestedValue)];
+                [mutableQueryStringComponents addObjectsFromArray:FWQueryStringPairsFromKeyAndValue((key ? [NSString stringWithFormat:@"%@[%@]", key, nestedKey] : nestedKey), nestedValue)];
             }
         }
     } else if ([value isKindOfClass:[NSArray class]]) {
         NSArray *array = value;
         for (id nestedValue in array) {
-            [mutableQueryStringComponents addObjectsFromArray:__FWQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[]", key], nestedValue)];
+            [mutableQueryStringComponents addObjectsFromArray:FWQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[]", key], nestedValue)];
         }
     } else if ([value isKindOfClass:[NSSet class]]) {
         NSSet *set = value;
         for (id obj in [set sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {
-            [mutableQueryStringComponents addObjectsFromArray:__FWQueryStringPairsFromKeyAndValue(key, obj)];
+            [mutableQueryStringComponents addObjectsFromArray:FWQueryStringPairsFromKeyAndValue(key, obj)];
         }
     } else {
-        [mutableQueryStringComponents addObject:[[__FWQueryStringPair alloc] initWithField:key value:value]];
+        [mutableQueryStringComponents addObject:[[FWQueryStringPair alloc] initWithField:key value:value]];
     }
 
     return mutableQueryStringComponents;
@@ -157,27 +157,27 @@ NSArray * __FWQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 #pragma mark -
 
-static NSArray * __FWHTTPRequestSerializerObservedKeyPaths(void) {
-    static NSArray *___FWHTTPRequestSerializerObservedKeyPaths = nil;
+static NSArray * FWHTTPRequestSerializerObservedKeyPaths(void) {
+    static NSArray *_FWHTTPRequestSerializerObservedKeyPaths = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        ___FWHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
+        _FWHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
     });
 
-    return ___FWHTTPRequestSerializerObservedKeyPaths;
+    return _FWHTTPRequestSerializerObservedKeyPaths;
 }
 
-static void *__FWHTTPRequestSerializerObserverContext = &__FWHTTPRequestSerializerObserverContext;
+static void *FWHTTPRequestSerializerObserverContext = &FWHTTPRequestSerializerObserverContext;
 
-@interface __FWHTTPRequestSerializer ()
+@interface FWHTTPRequestSerializer ()
 @property (readwrite, nonatomic, strong) NSMutableSet *mutableObservedChangedKeyPaths;
 @property (readwrite, nonatomic, strong) NSMutableDictionary *mutableHTTPRequestHeaders;
 @property (readwrite, nonatomic, strong) dispatch_queue_t requestHeaderModificationQueue;
-@property (readwrite, nonatomic, assign) __FWHTTPRequestQueryStringSerializationStyle queryStringSerializationStyle;
-@property (readwrite, nonatomic, copy) __FWQueryStringSerializationBlock queryStringSerialization;
+@property (readwrite, nonatomic, assign) FWHTTPRequestQueryStringSerializationStyle queryStringSerializationStyle;
+@property (readwrite, nonatomic, copy) FWQueryStringSerializationBlock queryStringSerialization;
 @end
 
-@implementation __FWHTTPRequestSerializer
+@implementation FWHTTPRequestSerializer
 
 + (instancetype)serializer {
     return [[self alloc] init];
@@ -219,9 +219,9 @@ static void *__FWHTTPRequestSerializerObserverContext = &__FWHTTPRequestSerializ
     self.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", @"DELETE", nil];
 
     self.mutableObservedChangedKeyPaths = [NSMutableSet set];
-    for (NSString *keyPath in __FWHTTPRequestSerializerObservedKeyPaths()) {
+    for (NSString *keyPath in FWHTTPRequestSerializerObservedKeyPaths()) {
         if ([self respondsToSelector:NSSelectorFromString(keyPath)]) {
-            [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:__FWHTTPRequestSerializerObserverContext];
+            [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:FWHTTPRequestSerializerObserverContext];
         }
     }
 
@@ -229,9 +229,9 @@ static void *__FWHTTPRequestSerializerObserverContext = &__FWHTTPRequestSerializ
 }
 
 - (void)dealloc {
-    for (NSString *keyPath in __FWHTTPRequestSerializerObservedKeyPaths()) {
+    for (NSString *keyPath in FWHTTPRequestSerializerObservedKeyPaths()) {
         if ([self respondsToSelector:NSSelectorFromString(keyPath)]) {
-            [self removeObserver:self forKeyPath:keyPath context:__FWHTTPRequestSerializerObserverContext];
+            [self removeObserver:self forKeyPath:keyPath context:FWHTTPRequestSerializerObserverContext];
         }
     }
 }
@@ -319,7 +319,7 @@ forHTTPHeaderField:(NSString *)field
 
 #pragma mark -
 
-- (void)setQueryStringSerializationWithStyle:(__FWHTTPRequestQueryStringSerializationStyle)style {
+- (void)setQueryStringSerializationWithStyle:(FWHTTPRequestQueryStringSerializationStyle)style {
     self.queryStringSerializationStyle = style;
     self.queryStringSerialization = nil;
 }
@@ -360,7 +360,7 @@ forHTTPHeaderField:(NSString *)field
 - (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
                                               URLString:(NSString *)URLString
                                              parameters:(NSDictionary *)parameters
-                              constructingBodyWithBlock:(void (^)(id <__FWMultipartFormData> formData))block
+                              constructingBodyWithBlock:(void (^)(id <FWMultipartFormData> formData))block
                                                   error:(NSError *__autoreleasing *)error
 {
     NSParameterAssert(method);
@@ -368,10 +368,10 @@ forHTTPHeaderField:(NSString *)field
 
     NSMutableURLRequest *mutableRequest = [self requestWithMethod:method URLString:URLString parameters:nil error:error];
 
-    __block __FWStreamingMultipartFormData *formData = [[__FWStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
+    __block FWStreamingMultipartFormData *formData = [[FWStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
 
     if (parameters) {
-        for (__FWQueryStringPair *pair in __FWQueryStringPairsFromDictionary(parameters)) {
+        for (FWQueryStringPair *pair in FWQueryStringPairsFromDictionary(parameters)) {
             NSData *data = nil;
             if ([pair.value isKindOfClass:[NSData class]]) {
                 data = pair.value;
@@ -448,7 +448,7 @@ forHTTPHeaderField:(NSString *)field
     return mutableRequest;
 }
 
-#pragma mark - __FWURLRequestSerialization
+#pragma mark - FWURLRequestSerialization
 
 - (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
                                withParameters:(id)parameters
@@ -479,8 +479,8 @@ forHTTPHeaderField:(NSString *)field
             }
         } else {
             switch (self.queryStringSerializationStyle) {
-                case __FWHTTPRequestQueryStringDefaultStyle:
-                    query = __FWQueryStringFromParameters(parameters);
+                case FWHTTPRequestQueryStringDefaultStyle:
+                    query = FWQueryStringFromParameters(parameters);
                     break;
             }
         }
@@ -507,7 +507,7 @@ forHTTPHeaderField:(NSString *)field
 #pragma mark - NSKeyValueObserving
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
-    if ([__FWHTTPRequestSerializerObservedKeyPaths() containsObject:key]) {
+    if ([FWHTTPRequestSerializerObservedKeyPaths() containsObject:key]) {
         return NO;
     }
 
@@ -519,7 +519,7 @@ forHTTPHeaderField:(NSString *)field
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    if (context == __FWHTTPRequestSerializerObserverContext) {
+    if (context == FWHTTPRequestSerializerObserverContext) {
         if ([change[NSKeyValueChangeNewKey] isEqual:[NSNull null]]) {
             [self.mutableObservedChangedKeyPaths removeObject:keyPath];
         } else {
@@ -541,7 +541,7 @@ forHTTPHeaderField:(NSString *)field
     }
 
     self.mutableHTTPRequestHeaders = [[decoder decodeObjectOfClass:[NSDictionary class] forKey:NSStringFromSelector(@selector(mutableHTTPRequestHeaders))] mutableCopy];
-    self.queryStringSerializationStyle = (__FWHTTPRequestQueryStringSerializationStyle)[[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))] unsignedIntegerValue];
+    self.queryStringSerializationStyle = (FWHTTPRequestQueryStringSerializationStyle)[[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))] unsignedIntegerValue];
 
     return self;
 }
@@ -556,7 +556,7 @@ forHTTPHeaderField:(NSString *)field
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWHTTPRequestSerializer *serializer = [[[self class] allocWithZone:zone] init];
+    FWHTTPRequestSerializer *serializer = [[[self class] allocWithZone:zone] init];
     dispatch_sync(self.requestHeaderModificationQueue, ^{
         serializer.mutableHTTPRequestHeaders = [self.mutableHTTPRequestHeaders mutableCopyWithZone:zone];
     });
@@ -570,25 +570,25 @@ forHTTPHeaderField:(NSString *)field
 
 #pragma mark -
 
-static NSString * __FWCreateMultipartFormBoundary(void) {
+static NSString * FWCreateMultipartFormBoundary(void) {
     return [NSString stringWithFormat:@"Boundary+%08X%08X", arc4random(), arc4random()];
 }
 
 static NSString * const kFWMultipartFormCRLF = @"\r\n";
 
-static inline NSString * __FWMultipartFormInitialBoundary(NSString *boundary) {
+static inline NSString * FWMultipartFormInitialBoundary(NSString *boundary) {
     return [NSString stringWithFormat:@"--%@%@", boundary, kFWMultipartFormCRLF];
 }
 
-static inline NSString * __FWMultipartFormEncapsulationBoundary(NSString *boundary) {
+static inline NSString * FWMultipartFormEncapsulationBoundary(NSString *boundary) {
     return [NSString stringWithFormat:@"%@--%@%@", kFWMultipartFormCRLF, boundary, kFWMultipartFormCRLF];
 }
 
-static inline NSString * __FWMultipartFormFinalBoundary(NSString *boundary) {
+static inline NSString * FWMultipartFormFinalBoundary(NSString *boundary) {
     return [NSString stringWithFormat:@"%@--%@--%@", kFWMultipartFormCRLF, boundary, kFWMultipartFormCRLF];
 }
 
-static inline NSString * __FWContentTypeForPathExtension(NSString *extension) {
+static inline NSString * FWContentTypeForPathExtension(NSString *extension) {
     NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
     NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
     if (!contentType) {
@@ -601,7 +601,7 @@ static inline NSString * __FWContentTypeForPathExtension(NSString *extension) {
 NSUInteger const kFWUploadStream3GSuggestedPacketSize = 1024 * 16;
 NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 
-@interface __FWHTTPBodyPart : NSObject
+@interface FWHTTPBodyPart : NSObject
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
 @property (nonatomic, strong) NSDictionary *headers;
 @property (nonatomic, copy) NSString *boundary;
@@ -619,7 +619,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
         maxLength:(NSUInteger)length;
 @end
 
-@interface __FWMultipartBodyStream : NSInputStream <NSStreamDelegate>
+@interface FWMultipartBodyStream : NSInputStream <NSStreamDelegate>
 @property (nonatomic, assign) NSUInteger numberOfBytesInPacket;
 @property (nonatomic, assign) NSTimeInterval delay;
 @property (nonatomic, strong) NSInputStream *inputStream;
@@ -628,19 +628,19 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 
 - (instancetype)initWithStringEncoding:(NSStringEncoding)encoding;
 - (void)setInitialAndFinalBoundaries;
-- (void)appendHTTPBodyPart:(__FWHTTPBodyPart *)bodyPart;
+- (void)appendHTTPBodyPart:(FWHTTPBodyPart *)bodyPart;
 @end
 
 #pragma mark -
 
-@interface __FWStreamingMultipartFormData ()
+@interface FWStreamingMultipartFormData ()
 @property (readwrite, nonatomic, copy) NSMutableURLRequest *request;
 @property (readwrite, nonatomic, assign) NSStringEncoding stringEncoding;
 @property (readwrite, nonatomic, copy) NSString *boundary;
-@property (readwrite, nonatomic, strong) __FWMultipartBodyStream *bodyStream;
+@property (readwrite, nonatomic, strong) FWMultipartBodyStream *bodyStream;
 @end
 
-@implementation __FWStreamingMultipartFormData
+@implementation FWStreamingMultipartFormData
 
 - (instancetype)initWithURLRequest:(NSMutableURLRequest *)urlRequest
                     stringEncoding:(NSStringEncoding)encoding
@@ -652,8 +652,8 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 
     self.request = urlRequest;
     self.stringEncoding = encoding;
-    self.boundary = __FWCreateMultipartFormBoundary();
-    self.bodyStream = [[__FWMultipartBodyStream alloc] initWithStringEncoding:encoding];
+    self.boundary = FWCreateMultipartFormBoundary();
+    self.bodyStream = [[FWMultipartBodyStream alloc] initWithStringEncoding:encoding];
 
     return self;
 }
@@ -671,7 +671,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     NSParameterAssert(name);
 
     NSString *fileName = [fileURL lastPathComponent];
-    NSString *mimeType = __FWContentTypeForPathExtension([fileURL pathExtension]);
+    NSString *mimeType = FWContentTypeForPathExtension([fileURL pathExtension]);
 
     return [self appendPartWithFileURL:fileURL name:name fileName:fileName mimeType:mimeType error:error];
 }
@@ -690,14 +690,14 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     if (![fileURL isFileURL]) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: NSLocalizedStringFromTable(@"Expected URL to be a file URL", @"AFNetworking", nil)};
         if (error) {
-            *error = [[NSError alloc] initWithDomain:__FWURLRequestSerializationErrorDomain code:NSURLErrorBadURL userInfo:userInfo];
+            *error = [[NSError alloc] initWithDomain:FWURLRequestSerializationErrorDomain code:NSURLErrorBadURL userInfo:userInfo];
         }
 
         return NO;
     } else if ([fileURL checkResourceIsReachableAndReturnError:error] == NO) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: NSLocalizedStringFromTable(@"File URL not reachable.", @"AFNetworking", nil)};
         if (error) {
-            *error = [[NSError alloc] initWithDomain:__FWURLRequestSerializationErrorDomain code:NSURLErrorBadURL userInfo:userInfo];
+            *error = [[NSError alloc] initWithDomain:FWURLRequestSerializationErrorDomain code:NSURLErrorBadURL userInfo:userInfo];
         }
 
         return NO;
@@ -712,7 +712,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
     [mutableHeaders setValue:mimeType forKey:@"Content-Type"];
 
-    __FWHTTPBodyPart *bodyPart = [[__FWHTTPBodyPart alloc] init];
+    FWHTTPBodyPart *bodyPart = [[FWHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = mutableHeaders;
     bodyPart.boundary = self.boundary;
@@ -737,7 +737,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
     [mutableHeaders setValue:mimeType forKey:@"Content-Type"];
 
-    __FWHTTPBodyPart *bodyPart = [[__FWHTTPBodyPart alloc] init];
+    FWHTTPBodyPart *bodyPart = [[FWHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = mutableHeaders;
     bodyPart.boundary = self.boundary;
@@ -780,7 +780,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 {
     NSParameterAssert(body);
 
-    __FWHTTPBodyPart *bodyPart = [[__FWHTTPBodyPart alloc] init];
+    FWHTTPBodyPart *bodyPart = [[FWHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = headers;
     bodyPart.boundary = self.boundary;
@@ -794,7 +794,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
                            length:(int64_t)length
                           headers:(NSDictionary<NSString *,NSString *> *)headers
 {
-    __FWHTTPBodyPart *bodyPart = [[__FWHTTPBodyPart alloc] init];
+    FWHTTPBodyPart *bodyPart = [[FWHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = headers;
     bodyPart.boundary = self.boundary;
@@ -835,16 +835,16 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 @property (readwrite, copy) NSError *streamError;
 @end
 
-@interface __FWMultipartBodyStream () <NSCopying>
+@interface FWMultipartBodyStream () <NSCopying>
 @property (readwrite, nonatomic, assign) NSStringEncoding stringEncoding;
 @property (readwrite, nonatomic, strong) NSMutableArray *HTTPBodyParts;
 @property (readwrite, nonatomic, strong) NSEnumerator *HTTPBodyPartEnumerator;
-@property (readwrite, nonatomic, strong) __FWHTTPBodyPart *currentHTTPBodyPart;
+@property (readwrite, nonatomic, strong) FWHTTPBodyPart *currentHTTPBodyPart;
 @property (readwrite, nonatomic, strong) NSOutputStream *outputStream;
 @property (readwrite, nonatomic, strong) NSMutableData *buffer;
 @end
 
-@implementation __FWMultipartBodyStream
+@implementation FWMultipartBodyStream
 @synthesize delegate;
 @synthesize streamStatus;
 @synthesize streamError;
@@ -864,7 +864,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 
 - (void)setInitialAndFinalBoundaries {
     if ([self.HTTPBodyParts count] > 0) {
-        for (__FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
+        for (FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
             bodyPart.hasInitialBoundary = NO;
             bodyPart.hasFinalBoundary = NO;
         }
@@ -874,7 +874,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
     }
 }
 
-- (void)appendHTTPBodyPart:(__FWHTTPBodyPart *)bodyPart {
+- (void)appendHTTPBodyPart:(FWHTTPBodyPart *)bodyPart {
     [self.HTTPBodyParts addObject:bodyPart];
 }
 
@@ -964,7 +964,7 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 
 - (unsigned long long)contentLength {
     unsigned long long length = 0;
-    for (__FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
+    for (FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
         length += [bodyPart contentLength];
     }
 
@@ -990,9 +990,9 @@ NSTimeInterval const kFWUploadStream3GSuggestedDelay = 0.2;
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWMultipartBodyStream *bodyStreamCopy = [[[self class] allocWithZone:zone] initWithStringEncoding:self.stringEncoding];
+    FWMultipartBodyStream *bodyStreamCopy = [[[self class] allocWithZone:zone] initWithStringEncoding:self.stringEncoding];
 
-    for (__FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
+    for (FWHTTPBodyPart *bodyPart in self.HTTPBodyParts) {
         [bodyStreamCopy appendHTTPBodyPart:[bodyPart copy]];
     }
 
@@ -1010,10 +1010,10 @@ typedef enum {
     FWHeaderPhase                = 2,
     FWBodyPhase                  = 3,
     FWFinalBoundaryPhase         = 4,
-} __FWHTTPBodyPartReadPhase;
+} FWHTTPBodyPartReadPhase;
 
-@interface __FWHTTPBodyPart () <NSCopying> {
-    __FWHTTPBodyPartReadPhase _phase;
+@interface FWHTTPBodyPart () <NSCopying> {
+    FWHTTPBodyPartReadPhase _phase;
     NSInputStream *_inputStream;
     unsigned long long _phaseReadOffset;
 }
@@ -1024,7 +1024,7 @@ typedef enum {
             maxLength:(NSUInteger)length;
 @end
 
-@implementation __FWHTTPBodyPart
+@implementation FWHTTPBodyPart
 
 - (instancetype)init {
     self = [super init];
@@ -1073,7 +1073,7 @@ typedef enum {
 - (unsigned long long)contentLength {
     unsigned long long length = 0;
 
-    NSData *encapsulationBoundaryData = [([self hasInitialBoundary] ? __FWMultipartFormInitialBoundary(self.boundary) : __FWMultipartFormEncapsulationBoundary(self.boundary)) dataUsingEncoding:self.stringEncoding];
+    NSData *encapsulationBoundaryData = [([self hasInitialBoundary] ? FWMultipartFormInitialBoundary(self.boundary) : FWMultipartFormEncapsulationBoundary(self.boundary)) dataUsingEncoding:self.stringEncoding];
     length += [encapsulationBoundaryData length];
 
     NSData *headersData = [[self stringForHeaders] dataUsingEncoding:self.stringEncoding];
@@ -1081,14 +1081,14 @@ typedef enum {
 
     length += _bodyContentLength;
 
-    NSData *closingBoundaryData = ([self hasFinalBoundary] ? [__FWMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:self.stringEncoding] : [NSData data]);
+    NSData *closingBoundaryData = ([self hasFinalBoundary] ? [FWMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:self.stringEncoding] : [NSData data]);
     length += [closingBoundaryData length];
 
     return length;
 }
 
 - (BOOL)hasBytesAvailable {
-    // Allows `read:maxLength:` to be called again if `__FWMultipartFormFinalBoundary` doesn't fit into the available buffer
+    // Allows `read:maxLength:` to be called again if `FWMultipartFormFinalBoundary` doesn't fit into the available buffer
     if (_phase == FWFinalBoundaryPhase) {
         return YES;
     }
@@ -1114,7 +1114,7 @@ typedef enum {
     NSInteger totalNumberOfBytesRead = 0;
 
     if (_phase == FWEncapsulationBoundaryPhase) {
-        NSData *encapsulationBoundaryData = [([self hasInitialBoundary] ? __FWMultipartFormInitialBoundary(self.boundary) : __FWMultipartFormEncapsulationBoundary(self.boundary)) dataUsingEncoding:self.stringEncoding];
+        NSData *encapsulationBoundaryData = [([self hasInitialBoundary] ? FWMultipartFormInitialBoundary(self.boundary) : FWMultipartFormEncapsulationBoundary(self.boundary)) dataUsingEncoding:self.stringEncoding];
         totalNumberOfBytesRead += [self readData:encapsulationBoundaryData intoBuffer:&buffer[totalNumberOfBytesRead] maxLength:(length - (NSUInteger)totalNumberOfBytesRead)];
     }
 
@@ -1139,7 +1139,7 @@ typedef enum {
     }
 
     if (_phase == FWFinalBoundaryPhase) {
-        NSData *closingBoundaryData = ([self hasFinalBoundary] ? [__FWMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:self.stringEncoding] : [NSData data]);
+        NSData *closingBoundaryData = ([self hasFinalBoundary] ? [FWMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:self.stringEncoding] : [NSData data]);
         totalNumberOfBytesRead += [self readData:closingBoundaryData intoBuffer:&buffer[totalNumberOfBytesRead] maxLength:(length - (NSUInteger)totalNumberOfBytesRead)];
     }
 
@@ -1196,7 +1196,7 @@ typedef enum {
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWHTTPBodyPart *bodyPart = [[[self class] allocWithZone:zone] init];
+    FWHTTPBodyPart *bodyPart = [[[self class] allocWithZone:zone] init];
 
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = self.headers;
@@ -1211,7 +1211,7 @@ typedef enum {
 
 #pragma mark -
 
-@implementation __FWJSONRequestSerializer
+@implementation FWJSONRequestSerializer
 
 + (instancetype)serializer {
     return [self serializerWithWritingOptions:(NSJSONWritingOptions)0];
@@ -1219,13 +1219,13 @@ typedef enum {
 
 + (instancetype)serializerWithWritingOptions:(NSJSONWritingOptions)writingOptions
 {
-    __FWJSONRequestSerializer *serializer = [[self alloc] init];
+    FWJSONRequestSerializer *serializer = [[self alloc] init];
     serializer.writingOptions = writingOptions;
 
     return serializer;
 }
 
-#pragma mark - __FWURLRequestSerialization
+#pragma mark - FWURLRequestSerialization
 
 - (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
                                withParameters:(id)parameters
@@ -1252,7 +1252,7 @@ typedef enum {
         if (![NSJSONSerialization isValidJSONObject:parameters]) {
             if (error) {
                 NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: NSLocalizedStringFromTable(@"The `parameters` argument is not valid JSON.", @"AFNetworking", nil)};
-                *error = [[NSError alloc] initWithDomain:__FWURLRequestSerializationErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
+                *error = [[NSError alloc] initWithDomain:FWURLRequestSerializationErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
             }
             return nil;
         }
@@ -1291,7 +1291,7 @@ typedef enum {
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWJSONRequestSerializer *serializer = [super copyWithZone:zone];
+    FWJSONRequestSerializer *serializer = [super copyWithZone:zone];
     serializer.writingOptions = self.writingOptions;
 
     return serializer;
@@ -1301,7 +1301,7 @@ typedef enum {
 
 #pragma mark -
 
-@implementation __FWPropertyListRequestSerializer
+@implementation FWPropertyListRequestSerializer
 
 + (instancetype)serializer {
     return [self serializerWithFormat:NSPropertyListXMLFormat_v1_0 writeOptions:0];
@@ -1310,7 +1310,7 @@ typedef enum {
 + (instancetype)serializerWithFormat:(NSPropertyListFormat)format
                         writeOptions:(NSPropertyListWriteOptions)writeOptions
 {
-    __FWPropertyListRequestSerializer *serializer = [[self alloc] init];
+    FWPropertyListRequestSerializer *serializer = [[self alloc] init];
     serializer.format = format;
     serializer.writeOptions = writeOptions;
 
@@ -1377,7 +1377,7 @@ typedef enum {
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    __FWPropertyListRequestSerializer *serializer = [super copyWithZone:zone];
+    FWPropertyListRequestSerializer *serializer = [super copyWithZone:zone];
     serializer.format = self.format;
     serializer.writeOptions = self.writeOptions;
 
