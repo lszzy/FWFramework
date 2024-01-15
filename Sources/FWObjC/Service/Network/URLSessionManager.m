@@ -21,6 +21,7 @@
 
 #import "URLSessionManager.h"
 #import <objc/runtime.h>
+#import <FWFramework/FWFramework-Swift.h>
 
 static dispatch_queue_t fw_url_session_manager_processing_queue(void) {
     static dispatch_queue_t queue;

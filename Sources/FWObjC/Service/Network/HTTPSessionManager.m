@@ -22,6 +22,7 @@
 #import "HTTPSessionManager.h"
 #import "URLRequestSerialization.h"
 #import "URLResponseSerialization.h"
+#import <FWFramework/FWFramework-Swift.h>
 
 #import <UIKit/UIKit.h>
 #import <Availability.h>
@@ -351,7 +352,7 @@
 
     HTTPClient.requestSerializer = [self.requestSerializer copyWithZone:zone];
     HTTPClient.responseSerializer = [self.responseSerializer copyWithZone:zone];
-    HTTPClient.securityPolicy = [self.securityPolicy copyWithZone:zone];
+    // HTTPClient.securityPolicy = [self.securityPolicy copyWithZone:zone];
     return HTTPClient;
 }
 
