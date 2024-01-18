@@ -25,6 +25,7 @@
 import Foundation
 import MobileCoreServices
 
+/*
 public protocol URLRequestSerialization: AnyObject {
     func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest?
 }
@@ -915,4 +916,4 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
         serializer.writeOptions = writeOptions
         return serializer
     }
-}
+}*/
