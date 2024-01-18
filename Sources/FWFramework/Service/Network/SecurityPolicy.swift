@@ -25,17 +25,15 @@
 import Foundation
 import Security
 
-@objc(FWSSLPinningMode)
+/*
 public enum SSLPinningMode: Int {
     case none = 0
     case publicKey
     case certificate
 }
 
-@objcMembers
-@objc(FWSecurityPolicy)
-open class SecurityPolicy: NSObject {
-    open private(set) var SSLPinningMode: SSLPinningMode = .none
+open class SecurityPolicy: NSObject, NSCopying {
+    open private(set) var pinningMode: SSLPinningMode = .none
     open var pinnedCertificates: Set<Data>? {
         didSet { updatePinnedCertificates() }
     }
@@ -57,7 +55,7 @@ open class SecurityPolicy: NSObject {
     
     public static func defaultPolicy() -> SecurityPolicy {
         let securityPolicy = SecurityPolicy()
-        securityPolicy.SSLPinningMode = .none
+        securityPolicy.pinningMode = .none
         return securityPolicy
     }
     
@@ -72,7 +70,7 @@ open class SecurityPolicy: NSObject {
     
     public convenience init(pinningMode: SSLPinningMode, pinnedCertificates: Set<Data>) {
         self.init()
-        self.SSLPinningMode = pinningMode
+        self.pinningMode = pinningMode
         self.pinnedCertificates = pinnedCertificates
         self.updatePinnedCertificates()
     }
@@ -92,7 +90,7 @@ open class SecurityPolicy: NSObject {
     }
     
     open func evaluateServerTrust(_ serverTrust: SecTrust, forDomain domain: String? = nil) -> Bool {
-        if domain != nil && allowInvalidCertificates && validatesDomainName && (SSLPinningMode == .none || (pinnedCertificates?.count ?? 0) == 0) {
+        if domain != nil && allowInvalidCertificates && validatesDomainName && (pinningMode == .none || (pinnedCertificates?.count ?? 0) == 0) {
             Logger.debug(group: Logger.fw_moduleName, "In order to validate a domain name for self signed certificates, you MUST use pinning.")
             return false
         }
@@ -106,13 +104,13 @@ open class SecurityPolicy: NSObject {
 
         SecTrustSetPolicies(serverTrust, policies as CFArray)
 
-        if SSLPinningMode == .none {
+        if pinningMode == .none {
             return allowInvalidCertificates || Self.serverTrustIsValid(serverTrust)
         } else if !allowInvalidCertificates && !Self.serverTrustIsValid(serverTrust) {
             return false
         }
 
-        switch SSLPinningMode {
+        switch pinningMode {
         case .certificate:
             var certificates = [SecCertificate]()
             pinnedCertificates?.forEach({ certificateData in
@@ -158,6 +156,15 @@ open class SecurityPolicy: NSObject {
             return Set(arrayLiteral: "pinnedCertificates")
         }
         return super.keyPathsForValuesAffectingValue(forKey: key)
+    }
+    
+    open func copy(with zone: NSZone? = nil) -> Any {
+        let securityPolicy = SecurityPolicy()
+        securityPolicy.pinningMode = pinningMode
+        securityPolicy.allowInvalidCertificates = allowInvalidCertificates
+        securityPolicy.validatesDomainName = validatesDomainName
+        securityPolicy.pinnedCertificates = pinnedCertificates
+        return securityPolicy
     }
     
     private static func publicKey(for certificate: Data) -> SecKey? {
@@ -210,4 +217,4 @@ open class SecurityPolicy: NSObject {
         }
         return trustChain
     }
-}
+}*/

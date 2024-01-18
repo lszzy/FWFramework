@@ -22,7 +22,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     /// SessionConfiguration配置，默认nil
     open var sessionConfiguration: URLSessionConfiguration = .default
     /// 自定义安全策略，默认default
-    open var securityPolicy = SecurityPolicy.defaultPolicy()
+    open var securityPolicy = SecurityPolicy.default()
     /// SessionTaskMetrics配置句柄，默认nil
     open var collectingMetricsBlock: ((_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
     
