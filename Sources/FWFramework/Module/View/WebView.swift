@@ -171,7 +171,7 @@ open class WebView: WKWebView {
                 return
             }
             
-            if let webView = webView as? WebView, webView.allowsServerTrust,
+            if let webView = webView as? WebView, webView.allowsArbitraryLoads,
                challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
                 if let serverTrust = challenge.protectionSpace.serverTrust {
                     let credential = URLCredential(trust: serverTrust)
@@ -277,7 +277,9 @@ open class WebView: WKWebView {
     open var allowsSchemeURL = false
     
     /// 是否允许不受信任的服务器，默认false
-    open var allowsServerTrust = false
+    ///
+    /// 需配置Info.plist开启NSAppTransportSecurity.NSAllowsArbitraryLoadsInWebContent或NSAllowsArbitraryLoads选项后生效
+    open var allowsArbitraryLoads = false
     
     /// 是否允许window.close关闭当前控制器，默认true
     ///
