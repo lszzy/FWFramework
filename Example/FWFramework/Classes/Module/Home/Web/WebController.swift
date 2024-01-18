@@ -68,6 +68,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
         webView.allowsSchemeURL = true
+        webView.allowsServerTrust = true
         
         if navigationItem.leftBarButtonItem != nil {
             webView.app.navigationItems = nil

@@ -166,6 +166,25 @@ open class WebView: WKWebView {
             webView.reload()
         }
         
+        func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+            if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: completionHandler) != nil {
+                return
+            }
+            
+            if let webView = webView as? WebView, webView.allowsServerTrust,
+               challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                if let serverTrust = challenge.protectionSpace.serverTrust {
+                    let credential = URLCredential(trust: serverTrust)
+                    completionHandler(.useCredential, credential)
+                } else {
+                    completionHandler(.useCredential, nil)
+                }
+                return
+            }
+            
+            completionHandler(.performDefaultHandling, nil)
+        }
+        
         // MARK: - WKUIDelegate
         func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
             if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
@@ -240,7 +259,7 @@ open class WebView: WKWebView {
         }
     }
 
-    /// 是否启用Cookie管理，默认NO未启用
+    /// 是否启用Cookie管理，默认false未启用
     open var cookieEnabled = false
 
     /// 进度视图，默认trackTintColor为clear
@@ -251,13 +270,16 @@ open class WebView: WKWebView {
         return result
     }()
 
-    /// 是否允许打开通用链接，默认NO
+    /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
 
-    /// 是否允许打开Scheme链接(非http|https|file链接)，默认NO
+    /// 是否允许打开Scheme链接(非http|https|file链接)，默认false
     open var allowsSchemeURL = false
     
-    /// 是否允许window.close关闭当前控制器，默认YES
+    /// 是否允许不受信任的服务器，默认false
+    open var allowsServerTrust = false
+    
+    /// 是否允许window.close关闭当前控制器，默认true
     ///
     /// 如果WebView新开了界面，触发了createWebView回调后，则不会触发。
     /// 解决方案示例：使用JSBridge桥接或URL拦截等方式关闭界面
