@@ -284,7 +284,7 @@ public class StatisticalManager: NSObject {
 
 // MARK: - StatisticalEvent
 /// 事件统计对象
-public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
+public class StatisticalEvent: NSObject, NSCopying {
     
     /// 事件绑定名称，只读
     public fileprivate(set) var name: String = ""
@@ -332,16 +332,15 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
     public fileprivate(set) var isTerminated = false
     
     /// 创建事件统计对象，指定名称、对象和信息
-    public init(name: String, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    public required init(name: String, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         super.init()
         self.name = name
         self.object = object
         self.userInfo = userInfo
     }
     
-    /// NSCopying协议拷贝方法
     public func copy(with zone: NSZone? = nil) -> Any {
-        let event = StatisticalEvent(name: name, object: object, userInfo: userInfo)
+        let event = Self.init(name: name, object: object, userInfo: userInfo)
         event.containerView = containerView
         event.containerInset = containerInset
         event.triggerOnce = triggerOnce
@@ -362,11 +361,6 @@ public class StatisticalEvent: NSObject, NSCopying, NSMutableCopying {
         event.isBackground = isBackground
         event.isTerminated = isTerminated
         return event
-    }
-    
-    /// NSMutableCopying协议拷贝方法
-    public func mutableCopy(with zone: NSZone? = nil) -> Any {
-        return copy(with: zone)
     }
     
 }

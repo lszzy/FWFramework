@@ -1788,7 +1788,7 @@ public class AlertAction: NSObject, NSCopying {
     var handler: ((AlertAction) -> Void)?
     var propertyChangedBlock: ((_ action: AlertAction, _ needUpdateConstraints: Bool) -> Void)?
     
-    public init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: ((AlertAction) -> Void)?) {
+    public required init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: ((AlertAction) -> Void)?) {
         super.init()
         self.appearance = appearance
         self.title = title
@@ -1815,7 +1815,7 @@ public class AlertAction: NSObject, NSCopying {
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = AlertAction(title: title, style: style, appearance: appearance, handler: handler)
+        let copy = Self.init(title: title, style: style, appearance: appearance, handler: handler)
         copy.attributedTitle = attributedTitle
         copy.image = image
         copy.imageTitleSpacing = imageTitleSpacing

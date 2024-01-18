@@ -568,7 +568,7 @@ open class PasscodeCellProperty: NSObject, NSCopying {
 
     open var index: Int = 0
     
-    public override init() {
+    public required override init() {
         super.init()
         
         customSecurityViewBlock = {
@@ -590,8 +590,8 @@ open class PasscodeCellProperty: NSObject, NSCopying {
         }
     }
     
-    public func copy(with zone: NSZone? = nil) -> Any {
-        let property = PasscodeCellProperty()
+    open func copy(with zone: NSZone? = nil) -> Any {
+        let property = Self.init()
         property.borderWidth = borderWidth
         property.cellBorderColorNormal = cellBorderColorNormal
         property.cellBorderColorSelected = cellBorderColorSelected

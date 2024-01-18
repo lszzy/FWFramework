@@ -59,7 +59,7 @@ open class SecurityPolicy: NSObject, NSCopying {
         return securityPolicy
     }
     
-    public override init() {
+    public required override init() {
         super.init()
     }
     
@@ -159,7 +159,7 @@ open class SecurityPolicy: NSObject, NSCopying {
     }
     
     open func copy(with zone: NSZone? = nil) -> Any {
-        let securityPolicy = SecurityPolicy()
+        let securityPolicy = Self.init()
         securityPolicy.pinningMode = pinningMode
         securityPolicy.allowInvalidCertificates = allowInvalidCertificates
         securityPolicy.validatesDomainName = validatesDomainName

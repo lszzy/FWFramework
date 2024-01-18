@@ -25,7 +25,6 @@
 import Foundation
 import MobileCoreServices
 
-/*
 public protocol URLRequestSerialization: AnyObject {
     func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest?
 }
@@ -56,7 +55,7 @@ open class HTTPRequestSerializer: NSObject, NSCopying, URLRequestSerialization {
     private var queryStringSerializationStyle: HTTPRequestQueryStringSerializationStyle = .default
     private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any, _ error: inout Error?) -> String?)?
     
-    public override init() {
+    public required override init() {
         super.init()
         
         var acceptLanguagesComponents: [String] = []
@@ -251,7 +250,7 @@ open class HTTPRequestSerializer: NSObject, NSCopying, URLRequestSerialization {
     }
     
     open func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = HTTPRequestSerializer()
+        let serializer = Self.init()
         requestHeaderModificationQueue.sync {
             serializer.mutableHTTPRequestHeaders = self.mutableHTTPRequestHeaders
         }
@@ -590,7 +589,7 @@ extension StreamingMultipartFormData {
             return headerString
         }
         
-        override init() {
+        required override init() {
             super.init()
             transitionToNextPhase()
         }
@@ -675,7 +674,7 @@ extension StreamingMultipartFormData {
         }
         
         func copy(with zone: NSZone? = nil) -> Any {
-            let bodyPart = HTTPBodyPart()
+            let bodyPart = Self.init()
             bodyPart.stringEncoding = stringEncoding
             bodyPart.headers = headers
             bodyPart.bodyContentLength = bodyContentLength
@@ -706,7 +705,7 @@ extension StreamingMultipartFormData {
         private var _streamStatus: Stream.Status = .notOpen
         private var _streamError: Error?
         
-        init(stringEncoding: String.Encoding) {
+        required init(stringEncoding: String.Encoding) {
             super.init(data: Data())
             self.stringEncoding = stringEncoding
         }
@@ -806,7 +805,7 @@ extension StreamingMultipartFormData {
         }
         
         func copy(with zone: NSZone? = nil) -> Any {
-            let bodyStream = MultipartBodyStream(stringEncoding: stringEncoding)
+            let bodyStream = Self.init(stringEncoding: stringEncoding)
             for bodyPart in httpBodyParts {
                 bodyStream.appendHTTPBodyPart(bodyPart.copy() as! HTTPBodyPart)
             }
@@ -819,7 +818,7 @@ extension StreamingMultipartFormData {
 open class JSONRequestSerializer: HTTPRequestSerializer {
     open var writingOptions: JSONSerialization.WritingOptions = []
     
-    public override init() {
+    public required init() {
         super.init()
     }
     
@@ -862,7 +861,7 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = JSONRequestSerializer()
+        let serializer = super.copy(with: zone) as! JSONRequestSerializer
         serializer.writingOptions = writingOptions
         return serializer
     }
@@ -872,7 +871,7 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
     open var format: PropertyListSerialization.PropertyListFormat = .xml
     open var writeOptions: PropertyListSerialization.WriteOptions = 0
     
-    public override init() {
+    public required init() {
         super.init()
     }
     
@@ -911,9 +910,9 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = PropertyListRequestSerializer()
+        let serializer = super.copy(with: zone) as! PropertyListRequestSerializer
         serializer.format = format
         serializer.writeOptions = writeOptions
         return serializer
     }
-}*/
+}
