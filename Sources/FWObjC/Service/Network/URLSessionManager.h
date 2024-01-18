@@ -24,6 +24,7 @@
 
 #import "URLResponseSerialization.h"
 #import "URLRequestSerialization.h"
+#import "SecurityPolicy.h"
 
 /**
  `FWURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
@@ -78,8 +79,6 @@
  */
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class FWSecurityPolicy;
 
 NS_SWIFT_NAME(URLSessionManager)
 @interface FWURLSessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSSecureCoding, NSCopying>
