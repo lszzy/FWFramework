@@ -122,43 +122,39 @@
 	})
 	</script>
 	<div id='buttons'></div>
-    <input type='file' id='input' />
-    <img id='img' />
+    blob:<input type='file' id='input' /><br />
+    data:<input type='file' id='input2' /><br />
+    <img id="img" width="100%" />
     <div id='log'></div>
     <script>
-      const input = document.getElementById("input");
-      const img = document.getElementById("img");
-
-      input.onchange = (e) => {
-          const url = URL.createObjectURL(e.target.files[0]);
-          img.src = url;
-          
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "img";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          
-          /*
+    const input = document.getElementById("input");
+    const img = document.getElementById("img");
+    input.onchange = (e) => {
+        const url = URL.createObjectURL(e.target.files[0]);
+        console.log(url);
+        
+        img.src = url;
+        
+        /*
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "img";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+         */
+    };
+        
+    const input2 = document.getElementById("input2");
+    input2.onchange = (e) => {
         const reader = new FileReader();
         reader.readAsDataURL(e.target.files[0]);
         reader.onload = (e) => {
             const url = e.target.result;
+            console.log(url.slice(0, 30));
             
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "img";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-*/
-            
-        /*
-          img.src = e.target.result;
-          console.log(e.target.result);
-         */
-        //};
-      };
+            img.src = url;
+        };
+    };
     </script>
 </body></html>
