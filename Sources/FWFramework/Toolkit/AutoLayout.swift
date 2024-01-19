@@ -162,6 +162,16 @@ import UIKit
         }
     }
     
+    /// 移除指定的视图收缩约束
+    public func fw_removeCollapseConstraint(_ constraint: NSLayoutConstraint) {
+        fw_collapseConstraints.removeAll { $0 == constraint }
+    }
+    
+    /// 移除所有的视图收缩约束
+    public func fw_removeAllCollapseConstraints() {
+        fw_collapseConstraints.removeAll()
+    }
+    
     fileprivate var fw_collapseConstraints: [NSLayoutConstraint] {
         get { return fw_property(forName: "fw_collapseConstraints") as? [NSLayoutConstraint] ?? [] }
         set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
@@ -616,6 +626,13 @@ import UIKit
         fw_lastConstraints.removeAll { constraints.contains($0) }
     }
     
+    /// 移除当前所有约束
+    public func fw_removeAllConstraints() {
+        NSLayoutConstraint.deactivate(fw_allConstraints)
+        fw_allConstraints.removeAll()
+        fw_lastConstraints.removeAll()
+    }
+    
     // MARK: - Private
     private func fw_constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
         assert(self.superview != nil, "View's superview must not be nil.\nView: \(self)")
@@ -916,7 +933,7 @@ public class LayoutChain {
     // MARK: - Install
     @discardableResult
     public func remake() -> Self {
-        view?.fw_removeConstraints(view?.fw_allConstraints)
+        view?.fw_removeAllConstraints()
         return self
     }
     

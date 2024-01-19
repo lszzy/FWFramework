@@ -120,6 +120,16 @@ extension Wrapper where Base: UIView {
         base.fw_addCollapsePriorityConstraint(constraint, priority: priority)
     }
     
+    /// 移除指定的视图收缩约束
+    public func removeCollapseConstraint(_ constraint: NSLayoutConstraint) {
+        base.fw_removeCollapseConstraint(constraint)
+    }
+    
+    /// 移除所有的视图收缩约束
+    public func removeAllCollapseConstraints() {
+        base.fw_removeAllCollapseConstraints()
+    }
+    
     // MARK: - Axis
     /// 父视图居中，可指定偏移距离
     /// - Parameter offset: 偏移距离，默认zero
@@ -448,6 +458,11 @@ extension Wrapper where Base: UIView {
     /// - Parameter constraints: 布局约束数组
     public func removeConstraints(_ constraints: [NSLayoutConstraint]?) {
         base.fw_removeConstraints(constraints)
+    }
+    
+    /// 移除当前所有约束
+    public func removeAllConstraints() {
+        base.fw_removeAllConstraints()
     }
     
     // MARK: - Debug
