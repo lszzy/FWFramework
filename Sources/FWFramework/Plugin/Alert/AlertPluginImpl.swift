@@ -379,16 +379,6 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
             alertController.attributedMessage = NSAttributedString(string: message, attributes: messageAttributes)
         }
         
-        alertController.fw_observeProperty("preferredAction") { object, change in
-            guard let object = object as? AlertController else { return }
-            
-            for action in object.actions {
-                if action.isPreferred {
-                    action.isPreferred = false
-                }
-            }
-            object.preferredAction?.isPreferred = true
-        }
         return alertController
     }
     
@@ -396,16 +386,6 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
         let alertController = AlertController(customHeaderView: headerView, preferredStyle: preferredStyle, animationType: .default, appearance: appearance)
         alertController.tapBackgroundViewDismiss = (preferredStyle == .actionSheet)
         
-        alertController.fw_observeProperty("preferredAction") { object, change in
-            guard let object = object as? AlertController else { return }
-            
-            for action in object.actions {
-                if action.isPreferred {
-                    action.isPreferred = false
-                }
-            }
-            object.preferredAction?.isPreferred = true
-        }
         return alertController
     }
     
@@ -420,11 +400,6 @@ open class AlertControllerImpl: NSObject, AlertPlugin {
             alertAction.isPreferred = false
         }
         
-        alertAction.fw_observeProperty("enabled") { object, change in
-            guard let object = object as? AlertAction else { return }
-            
-            object.isPreferred = object.isPreferred
-        }
         return alertAction
     }
     
