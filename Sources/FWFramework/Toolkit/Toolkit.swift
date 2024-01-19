@@ -155,11 +155,6 @@ import StoreKit
         
         return schemes.contains { $0.lowercased() == urlScheme }
     }
-    
-    /// 判断URL是否是data链接
-    public static func fw_isDataURL(_ url: URLParameter?) -> Bool {
-        return fw_isSchemeURL(url, schemes: ["data"])
-    }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
     public static func fw_isHttpURL(_ url: URLParameter?) -> Bool {
