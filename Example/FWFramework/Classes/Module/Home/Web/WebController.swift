@@ -30,6 +30,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     private var toolbarHidden = true
     
+    @StoredValue("allowsBlobScheme")
+    private var allowsBlobScheme: Bool = false
+    
     // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -69,6 +72,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         webView.allowsUniversalLinks = true
         webView.allowsArbitraryLoads = true
         webView.allowsRouterSchemes = ["app"]
+        webView.allowsBlobScheme = allowsBlobScheme
         
         if navigationItem.leftBarButtonItem != nil {
             webView.app.navigationItems = nil
@@ -193,7 +197,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     @objc func shareRequestUrl() {
         let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
-        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用", allowsBlobScheme ? "关闭blob分享" : "开启blob分享"]) { [weak self] index in
             if index == 0 {
                 UIApplication.app.openActivityItems([APP.safeURL(self?.requestUrl)])
             } else if index == 1 {
@@ -206,10 +210,12 @@ class WebController: UIViewController, WebViewControllerProtocol {
                 let urlRequest = self?.createUrlRequest(nil)
                 self?.webView.load(urlRequest!)
                 self?.webView.app.clearBackForwardList()
-            } else {
+            } else if index == 4 {
                 WebView.app.processPool = WKProcessPool()
                 UserDefaults.app.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
+            } else {
+                self?.allowsBlobScheme = !(self?.allowsBlobScheme ?? false)
             }
         }
     }

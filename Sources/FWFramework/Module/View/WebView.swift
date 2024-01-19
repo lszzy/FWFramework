@@ -48,7 +48,7 @@ extension WebViewDelegate {
 /// 4. 如果遇到Cookie丢失问题，可尝试开启cookieEnabled或自行设置Cookie等
 open class WebView: WKWebView {
     
-    private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate {
+    private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
         
         // MARK: - WKNavigationDelegate
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -72,6 +72,15 @@ open class WebView: WKWebView {
                 UIApplication.fw_openURL(navigationAction.request.url)
                 decisionHandler(.cancel)
                 return
+            }
+            
+            if #available(iOS 14.5, *) {
+                if let webView = webView as? WebView,
+                   webView.allowsBlobScheme,
+                   UIApplication.fw_isSchemeURL(navigationAction.request.url, schemes: ["blob"]) {
+                    decisionHandler(.download)
+                    return
+                }
             }
             
             if let webView = webView as? WebView,
@@ -111,6 +120,15 @@ open class WebView: WKWebView {
             
             if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler) != nil {
                 return
+            }
+            
+            if #available(iOS 14.5, *) {
+                if let webView = webView as? WebView,
+                   webView.allowsBlobScheme,
+                   UIApplication.fw_isSchemeURL(navigationResponse.response.url, schemes: ["blob"]) {
+                    decisionHandler(.download)
+                    return
+                }
             }
             
             decisionHandler(.allow)
@@ -173,6 +191,24 @@ open class WebView: WKWebView {
             
             // 默认调用reload解决内存过大引起的白屏问题，可重写
             webView.reload()
+        }
+        
+        @available(iOS 14.5, *)
+        func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+            if self.delegate?.webView?(webView, navigationAction: navigationAction, didBecome: download) != nil {
+                return
+            }
+            
+            download.delegate = self
+        }
+        
+        @available(iOS 14.5, *)
+        func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+            if self.delegate?.webView?(webView, navigationResponse: navigationResponse, didBecome: download) != nil {
+                return
+            }
+            
+            download.delegate = self
         }
         
         func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -256,6 +292,28 @@ open class WebView: WKWebView {
             }
         }
         
+        // MARK: - WKDownloadDelegate
+        @available(iOS 14.5, *)
+        func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+            let downloadDelegate = self.delegate as? WKDownloadDelegate
+            if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
+                return
+            }
+            
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(suggestedFilename)
+            completionHandler(url)
+            
+            DispatchQueue.fw_mainAsync {
+                if let presentedController = download.webView?.fw_viewController?.presentedViewController {
+                    presentedController.dismiss(animated: true) {
+                        UIApplication.fw_openActivityItems([url])
+                    }
+                } else {
+                    UIApplication.fw_openActivityItems([url])
+                }
+            }
+        }
+        
     }
     
     /// 事件代理，包含navigationDelegate和UIDelegate
@@ -284,6 +342,9 @@ open class WebView: WKWebView {
     
     /// 配置允许路由打开的Scheme数组，默认空
     open var allowsRouterSchemes: [String] = []
+    
+    /// 是否允许分享blob链接(iOS14.5+生效)，默认false
+    open var allowsBlobScheme = false
 
     /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
@@ -380,6 +441,7 @@ open class WebView: WKWebView {
         allowsUniversalLinks = false
         allowsUrlSchemes = []
         allowsRouterSchemes = []
+        allowsBlobScheme = false
         allowsArbitraryLoads = false
         allowsWindowClose = true
         webRequest = nil
