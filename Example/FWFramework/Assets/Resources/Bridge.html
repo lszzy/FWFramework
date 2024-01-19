@@ -121,5 +121,44 @@
         }
 	})
 	</script>
-	<div id='buttons'></div> <div id='log'></div>
+	<div id='buttons'></div>
+    <input type='file' id='input' />
+    <img id='img' />
+    <div id='log'></div>
+    <script>
+      const input = document.getElementById("input");
+      const img = document.getElementById("img");
+
+      input.onchange = (e) => {
+          const url = URL.createObjectURL(e.target.files[0]);
+          img.src = url;
+          
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "img";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
+          /*
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = (e) => {
+            const url = e.target.result;
+            
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "img";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+*/
+            
+        /*
+          img.src = e.target.result;
+          console.log(e.target.result);
+         */
+        //};
+      };
+    </script>
 </body></html>

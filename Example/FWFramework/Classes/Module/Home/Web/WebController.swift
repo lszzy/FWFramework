@@ -67,8 +67,8 @@ class WebController: UIViewController, WebViewControllerProtocol {
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
-        webView.allowsSchemeURL = true
         webView.allowsArbitraryLoads = true
+        webView.allowsRouterSchemes = ["app"]
         
         if navigationItem.leftBarButtonItem != nil {
             webView.app.navigationItems = nil
@@ -126,14 +126,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
         app.showEmptyView(text: RequestError.isConnectionError(error) ? "网络连接失败" : "服务器异常", detail: error.localizedDescription, image: nil, action: "点击重试") { [weak self] _ in
             self?.loadRequestUrl()
         }
-    }
-    
-    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
-        if navigationAction.request.url?.scheme == "app" {
-            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
-            return false
-        }
-        return true
     }
     
     // MARK: - Private

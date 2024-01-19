@@ -135,9 +135,14 @@ extension Wrapper where Base: UIApplication {
         return Base.fw_isSystemURL(url)
     }
     
-    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
-    public static func isSchemeURL(_ url: URLParameter?, scheme: String? = nil) -> Bool {
-        return Base.fw_isSchemeURL(url, scheme: scheme)
+    /// 判断URL是否在指定Scheme链接数组中，不区分大小写
+    public static func isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
+        return Base.fw_isSchemeURL(url, schemes: schemes)
+    }
+    
+    /// 判断URL是否是data链接
+    public static func isDataURL(_ url: URLParameter?) -> Bool {
+        return Base.fw_isDataURL(url)
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
