@@ -159,8 +159,12 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
                 if action.titleFont == alertAppearance.actionBoldFont {
                     action.titleFont = alertAppearance.actionFont
                 }
+                if action.isPreferred {
+                    action.isPreferred = false
+                }
             }
             preferredAction?.titleFont = alertAppearance.actionBoldFont
+            preferredAction?.isPreferred = true
         }
     }
     
@@ -1737,7 +1741,12 @@ public class AlertAction: NSObject, NSCopying {
     
     /// 是否能点击,默认为YES
     public var isEnabled: Bool = true {
-        didSet { propertyChangedBlock?(self, false) }
+        didSet {
+            let preferred = self.isPreferred
+            self.isPreferred = preferred
+            
+            propertyChangedBlock?(self, false)
+        }
     }
     
     /// 是否是首选动作,默认为NO
