@@ -75,9 +75,18 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView,
-               webView.allowsSchemeURL,
-               UIApplication.fw_isSchemeURL(navigationAction.request.url) {
+               !webView.allowsUrlSchemes.isEmpty,
+               UIApplication.fw_isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
                 UIApplication.fw_openURL(navigationAction.request.url)
+                decisionHandler(.cancel)
+                return
+            }
+            
+            if let webView = webView as? WebView,
+               !webView.allowsRouterSchemes.isEmpty,
+               let url = navigationAction.request.url,
+               UIApplication.fw_isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
+                Router.openURL(url)
                 decisionHandler(.cancel)
                 return
             }
@@ -269,12 +278,15 @@ open class WebView: WKWebView {
         result.fw_webProgress = 0
         return result
     }()
+    
+    /// 配置允许外部打开的Scheme数组，默认空
+    open var allowsUrlSchemes: [String] = []
+    
+    /// 配置允许路由打开的Scheme数组，默认空
+    open var allowsRouterSchemes: [String] = []
 
     /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
-
-    /// 是否允许打开Scheme链接(非http|https|file链接)，默认false
-    open var allowsSchemeURL = false
     
     /// 是否允许不受信任的服务器，默认false
     ///
@@ -366,7 +378,10 @@ open class WebView: WKWebView {
         delegate = nil
         cookieEnabled = false
         allowsUniversalLinks = false
-        allowsSchemeURL = false
+        allowsUrlSchemes = []
+        allowsRouterSchemes = []
+        allowsArbitraryLoads = false
+        allowsWindowClose = true
         webRequest = nil
         isFirstLoad = false
         

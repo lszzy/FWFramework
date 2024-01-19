@@ -147,18 +147,18 @@ import StoreKit
         return false
     }
     
-    /// 判断URL是否是Scheme链接(非http|https|file链接)，支持String|URL，可指定判断scheme
-    public static func fw_isSchemeURL(_ url: URLParameter?, scheme: String? = nil) -> Bool {
+    /// 判断URL是否在指定Scheme链接数组中，不区分大小写
+    public static func fw_isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
         guard let url = url?.urlValue,
-              let urlScheme = url.scheme,
+              let urlScheme = url.scheme?.lowercased(),
               !urlScheme.isEmpty else { return false }
         
-        if let scheme = scheme {
-            return urlScheme == scheme
-        } else {
-            if url.isFileURL || fw_isHttpURL(url) { return false }
-            return true
-        }
+        return schemes.contains { $0.lowercased() == urlScheme }
+    }
+    
+    /// 判断URL是否是data链接
+    public static func fw_isDataURL(_ url: URLParameter?) -> Bool {
+        return fw_isSchemeURL(url, schemes: ["data"])
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
