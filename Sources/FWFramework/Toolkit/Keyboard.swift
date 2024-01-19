@@ -728,6 +728,7 @@ import UIKit
                 self.delegate = newValue
             } else {
                 self.fw_delegateProxy.delegate = newValue
+                self.delegate = self.fw_delegateProxy
             }
         }
     }
