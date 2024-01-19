@@ -128,8 +128,6 @@ public class PluginManager: NSObject {
             (plugin.instance as? PluginProtocol)?.pluginDidUnload()
             plugin.instance = instance
             plugin.isFactory = true
-        } else if let pluginSingleton = plugin.object as? SingletonProtocol.Type {
-            plugin.instance = pluginSingleton.shared
         } else if let pluginClass = plugin.object as? NSObject.Type {
             let selector = NSSelectorFromString("sharedInstance")
             if pluginClass.responds(to: selector) {
