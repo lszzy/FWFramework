@@ -500,6 +500,20 @@ open class ImageCoder: NSObject {
         let base64Prefix = "data:\(mimeType);base64,"
         return base64Prefix + base64String
     }
+    
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    open class func imageData(for base64String: String?) -> Data? {
+        guard var string = base64String, string.count > 0 else {
+            return nil
+        }
+        string = string.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "\r", with: "")
+            .replacingOccurrences(of: "\n", with: "")
+        if string.hasPrefix("data:"), let range = string.range(of: ";base64,") {
+            string = String(string.suffix(from: range.upperBound))
+        }
+        return Data(base64Encoded: string, options: .ignoreUnknownCharacters)
+    }
 
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
     open class func isVectorImage(_ image: UIImage?) -> Bool {
@@ -807,6 +821,11 @@ open class ImageCoder: NSObject {
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
     public static func fw_base64String(for imageData: Data?) -> String? {
         return ImageCoder.base64String(for: imageData)
+    }
+    
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    public static func fw_imageData(for base64String: String?) -> Data? {
+        return ImageCoder.imageData(for: base64String)
     }
     
 }
