@@ -65,4 +65,9 @@ extension Wrapper where Base == Data {
         return Base.fw_base64String(for: imageData)
     }
     
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    public static func imageData(for base64String: String?) -> Data? {
+        return Base.fw_imageData(for: base64String)
+    }
+    
 }

@@ -108,6 +108,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
             "合成LivePhoto",
             "保存LivePhoto",
             "导出视频并转码",
+            "图片base64编码",
         ])
     }
     
@@ -233,6 +234,31 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                         }
                     case .failure(let error):
                         self?.app.showMessage(error: error)
+                    }
+                }
+            }
+        } else if index == 8 {
+            app.showImagePicker(allowsEditing: true) { [weak self] image, _ in
+                guard let image = image else {
+                    self?.app.showMessage(text: "已取消")
+                    return
+                }
+                
+                self?.app.showLoading()
+                DispatchQueue.global().async {
+                    let encodeData = UIImage.app.data(image: image)
+                    let encodeString = Data.app.base64String(for: encodeData)
+                    let decodeData = Data.app.imageData(for: encodeString)
+                    let decodeImage = UIImage.app.image(data: decodeData)
+                    
+                    DispatchQueue.main.async {
+                        self?.app.hideLoading()
+                        
+                        if let decodeImage = decodeImage {
+                            self?.app.showImagePreview(imageURLs: [decodeImage])
+                        } else {
+                            self?.app.showMessage(text: "编码失败")
+                        }
                     }
                 }
             }
