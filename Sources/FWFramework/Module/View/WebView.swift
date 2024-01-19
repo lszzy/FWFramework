@@ -252,7 +252,11 @@ open class WebView: WKWebView {
     /// 事件代理，包含navigationDelegate和UIDelegate
     open weak var delegate: WebViewDelegate? {
         get { return delegateProxy.delegate }
-        set { delegateProxy.delegate = newValue }
+        set {
+            delegateProxy.delegate = newValue
+            navigationDelegate = delegateProxy
+            uiDelegate = delegateProxy
+        }
     }
 
     /// 是否启用Cookie管理，默认false未启用
