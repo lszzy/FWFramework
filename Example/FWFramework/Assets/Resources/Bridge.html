@@ -132,6 +132,7 @@
     input.onchange = (e) => {
         const url = URL.createObjectURL(e.target.files[0]);
         console.log(url);
+        img.src = url;
         
         const a = document.createElement("a");
         a.href = url;
@@ -148,8 +149,14 @@
         reader.onload = (e) => {
             const url = e.target.result;
             console.log(url.slice(0, 30));
-            
             img.src = url;
+            
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "img";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         };
     };
     </script>

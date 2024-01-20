@@ -76,8 +76,8 @@ open class WebView: WKWebView {
             
             if #available(iOS 14.5, *) {
                 if let webView = webView as? WebView,
-                   webView.allowsBlobScheme,
-                   UIApplication.fw_isSchemeURL(navigationAction.request.url, schemes: ["blob"]) {
+                   let url = navigationAction.request.url,
+                   webView.allowsDownloadUrl?(url) == true {
                     decisionHandler(.download)
                     return
                 }
@@ -124,8 +124,8 @@ open class WebView: WKWebView {
             
             if #available(iOS 14.5, *) {
                 if let webView = webView as? WebView,
-                   webView.allowsBlobScheme,
-                   UIApplication.fw_isSchemeURL(navigationResponse.response.url, schemes: ["blob"]) {
+                   let url = navigationResponse.response.url,
+                   webView.allowsDownloadUrl?(url) == true {
                     decisionHandler(.download)
                     return
                 }
@@ -300,8 +300,24 @@ open class WebView: WKWebView {
                 return
             }
             
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(suggestedFilename)
+            let fileExt = (suggestedFilename as NSString).pathExtension
+            var fileName = (suggestedFilename as NSString).deletingPathExtension
+            fileName = (UUID().uuidString + fileName).fw_md5Encode
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
+            download.fw_setProperty(url, forName: "downloadUrl")
             completionHandler(url)
+        }
+        
+        @available(iOS 14.5, *)
+        func downloadDidFinish(_ download: WKDownload) {
+            let downloadDelegate = self.delegate as? WKDownloadDelegate
+            if downloadDelegate?.downloadDidFinish?(download) != nil {
+                return
+            }
+            
+            guard let url = download.fw_property(forName: "downloadUrl") as? URL else {
+                return
+            }
             
             DispatchQueue.fw_mainAsync {
                 if let presentedController = download.webView?.fw_viewController?.presentedViewController {
@@ -343,8 +359,8 @@ open class WebView: WKWebView {
     /// 配置允许路由打开的Scheme数组，默认空
     open var allowsRouterSchemes: [String] = []
     
-    /// 是否允许分享blob链接(iOS14.5+生效)，默认false
-    open var allowsBlobScheme = false
+    /// 配置允许下载的url句柄(iOS14.5+生效)，默认nil
+    open var allowsDownloadUrl: ((URL) -> Bool)?
 
     /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
@@ -441,7 +457,7 @@ open class WebView: WKWebView {
         allowsUniversalLinks = false
         allowsUrlSchemes = []
         allowsRouterSchemes = []
-        allowsBlobScheme = false
+        allowsDownloadUrl = nil
         allowsArbitraryLoads = false
         allowsWindowClose = true
         webRequest = nil
