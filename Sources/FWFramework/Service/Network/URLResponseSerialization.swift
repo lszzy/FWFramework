@@ -66,27 +66,27 @@ extension HTTPResponseSerializer {
     public static let NetworkingOperationFailingURLResponseErrorKey = "site.wuyong.serialization.response.error.response"
     public static let NetworkingOperationFailingURLResponseDataErrorKey = "site.wuyong.serialization.response.error.data"
     
-    public static func jsonObjectByRemovingKeysWithNullValues(_ jsonObject: Any, readingOptions: JSONSerialization.ReadingOptions = []) -> Any {
-        if let array = jsonObject as? NSArray {
-            let mutableArray = NSMutableArray(capacity: array.count)
+    public static func jsonObjectByRemovingKeysWithNullValues(_ jsonObject: Any) -> Any {
+        if let array = jsonObject as? [Any] {
+            var mutableArray: [Any] = []
             for value in array {
                 if !(value is NSNull) {
-                    mutableArray.add(jsonObjectByRemovingKeysWithNullValues(value, readingOptions: readingOptions))
+                    mutableArray.append(jsonObjectByRemovingKeysWithNullValues(value))
                 }
             }
             
-            return readingOptions.contains(.mutableContainers) ? mutableArray : NSArray(array: mutableArray)
-        } else if let dictionary = jsonObject as? NSDictionary {
-            let mutableDictionary = NSMutableDictionary(dictionary: dictionary)
+            return mutableArray
+        } else if let dictionary = jsonObject as? [AnyHashable: Any] {
+            var mutableDictionary = dictionary
             for (key, value) in dictionary {
                 if value is NSNull {
-                    mutableDictionary.removeObject(forKey: key)
-                } else if value is NSArray || value is NSDictionary {
-                    mutableDictionary[key] = jsonObjectByRemovingKeysWithNullValues(value, readingOptions: readingOptions)
+                    mutableDictionary.removeValue(forKey: key)
+                } else if value is [Any] || value is [AnyHashable: Any] {
+                    mutableDictionary[key] = jsonObjectByRemovingKeysWithNullValues(value)
                 }
             }
             
-            return readingOptions.contains(.mutableContainers) ? mutableDictionary : NSDictionary(dictionary: mutableDictionary)
+            return mutableDictionary
         }
         
         return jsonObject
