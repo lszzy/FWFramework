@@ -30,8 +30,18 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     private var toolbarHidden = true
     
-    @StoredValue("allowsBlobScheme")
-    private var allowsBlobScheme: Bool = false
+    @StoredValue("allowsDownloadUrl")
+    private var allowsDownloadUrl: Bool = false {
+        didSet {
+            if allowsDownloadUrl {
+                webView.allowsDownloadUrl = { url in
+                    return UIApplication.app.isSchemeURL(url, schemes: ["data", "blob"])
+                }
+            } else {
+                webView.allowsDownloadUrl = nil
+            }
+        }
+    }
     
     // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -72,7 +82,8 @@ class WebController: UIViewController, WebViewControllerProtocol {
         webView.allowsUniversalLinks = true
         webView.allowsArbitraryLoads = true
         webView.allowsRouterSchemes = ["app"]
-        webView.allowsBlobScheme = allowsBlobScheme
+        let allowsDownloadUrl = self.allowsDownloadUrl
+        self.allowsDownloadUrl = allowsDownloadUrl
         
         if navigationItem.leftBarButtonItem != nil {
             webView.app.navigationItems = nil
@@ -197,7 +208,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     @objc func shareRequestUrl() {
         let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
-        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用", allowsBlobScheme ? "关闭blob分享" : "开启blob分享"]) { [weak self] index in
+        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用", allowsDownloadUrl ? "关闭下载" : "开启下载"]) { [weak self] index in
             if index == 0 {
                 UIApplication.app.openActivityItems([APP.safeURL(self?.requestUrl)])
             } else if index == 1 {
@@ -215,7 +226,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
                 UserDefaults.app.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
             } else {
-                self?.allowsBlobScheme = !(self?.allowsBlobScheme ?? false)
+                self?.allowsDownloadUrl = !(self?.allowsDownloadUrl ?? false)
             }
         }
     }
