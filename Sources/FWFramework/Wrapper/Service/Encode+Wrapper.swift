@@ -22,13 +22,13 @@ extension Wrapper {
 
 extension Wrapper where Base == Data {
     /// Foundation对象编码为json数据
-    public static func jsonEncode(_ object: Any) -> Data? {
-        return Base.fw_jsonEncode(object)
+    public static func jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> Data? {
+        return Base.fw_jsonEncode(object, options: options)
     }
     
     /// json数据解码为Foundation对象，失败时抛异常
-    public static func jsonDecode(_ data: Data) throws -> Any {
-        return try Base.fw_jsonDecode(data)
+    public static func jsonDecode(_ data: Data, options: JSONSerialization.ReadingOptions = []) throws -> Any {
+        return try Base.fw_jsonDecode(data, options: options)
     }
     
     /// json数据解码为Foundation对象
@@ -90,8 +90,8 @@ extension Wrapper where Base == String {
     }
     
     /// Foundation对象编码为json字符串
-    public static func jsonEncode(_ object: Any) -> String? {
-        return Base.fw_jsonEncode(object)
+    public static func jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> String? {
+        return Base.fw_jsonEncode(object, options: options)
     }
     
     /// json字符串解码为Foundation对象
