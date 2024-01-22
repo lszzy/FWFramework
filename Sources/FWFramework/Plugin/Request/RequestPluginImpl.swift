@@ -29,7 +29,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
     /// 有效状态码范围，默认为(100-600)
-    open var acceptableStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
+    open var acceptableStatusCodes = IndexSet(integersIn: 100..<600)
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: Set<String>?
     

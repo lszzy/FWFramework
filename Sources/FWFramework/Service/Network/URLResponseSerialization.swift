@@ -30,7 +30,7 @@ public protocol URLResponseSerialization: AnyObject {
 }
 
 open class HTTPResponseSerializer: NSObject, NSCopying, URLResponseSerialization {
-    open var acceptableStatusCodes: IndexSet?
+    open var acceptableStatusCodes: IndexSet? = IndexSet(integersIn: 200..<300)
     open var acceptableContentTypes: Set<String>?
     
     public required override init() {
@@ -38,19 +38,66 @@ open class HTTPResponseSerializer: NSObject, NSCopying, URLResponseSerialization
     }
     
     open func setUserInfo(_ userInfo: [AnyHashable: Any]?, for response: URLResponse?) {
-        
+        guard let response = response else { return }
+        response.fw_setPropertyCopy(userInfo, forName: "userInfo")
     }
     
     open func userInfo(for response: URLResponse?) -> [AnyHashable: Any]? {
-        return nil
+        guard let response = response else { return nil }
+        return response.fw_property(forName: "userInfo") as? [AnyHashable: Any]
     }
     
+    @discardableResult
     open func validateResponse(_ response: HTTPURLResponse?, data: Data?, error: inout Error?) -> Bool {
-        return false
+        var responseIsValid = true
+        var validationError: Error?
+
+        if let response = response {
+            if let contentTypes = acceptableContentTypes,
+               !contentTypes.contains(response.mimeType ?? ""),
+               !(response.mimeType == nil && (data?.count ?? 0) == 0) {
+
+                if let data = data, data.count > 0, let url = response.url {
+                    var userInfo: [String: Any] = [:]
+                    userInfo[NSLocalizedDescriptionKey] = String(format: NSLocalizedString("Request failed: unacceptable content-type: %@", comment: ""), response.mimeType ?? "")
+                    userInfo[NSURLErrorFailingURLErrorKey] = url
+                    userInfo[Self.NetworkingOperationFailingURLResponseErrorKey] = response
+                    userInfo[Self.NetworkingOperationFailingURLResponseDataErrorKey] = data
+
+                    validationError = Self.errorWithUnderlyingError(NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo), underlyingError: validationError)
+                }
+
+                responseIsValid = false
+            }
+
+            if let statusCodes = acceptableStatusCodes,
+               !statusCodes.contains(response.statusCode),
+               let url = response.url {
+                var userInfo: [String: Any] = [:]
+                userInfo[NSLocalizedDescriptionKey] = String(format: NSLocalizedString("Request failed: %@ (%ld)", comment: ""), HTTPURLResponse.localizedString(forStatusCode: response.statusCode), response.statusCode)
+                userInfo[NSURLErrorFailingURLErrorKey] = url
+                userInfo[Self.NetworkingOperationFailingURLResponseErrorKey] = response
+                if let data = data {
+                    userInfo[Self.NetworkingOperationFailingURLResponseDataErrorKey] = data
+                }
+
+                validationError = Self.errorWithUnderlyingError(NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo), underlyingError: validationError)
+
+                responseIsValid = false
+            }
+        }
+
+        if !responseIsValid {
+            error = validationError
+        }
+
+        return responseIsValid
     }
     
     open func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
-        return nil
+        validateResponse(response as? HTTPURLResponse, data: data, error: &error)
+        
+        return data
     }
     
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -92,7 +139,7 @@ extension HTTPResponseSerializer {
         return jsonObject
     }
     
-    private static func errorWithUnderlyingError(_ error: Error?, underlyingError: Error?) -> Error? {
+    fileprivate static func errorWithUnderlyingError(_ error: Error?, underlyingError: Error?) -> Error? {
         guard let nserror = error as? NSError else {
             return underlyingError
         }
@@ -107,7 +154,7 @@ extension HTTPResponseSerializer {
         return NSError(domain: nserror.domain, code: nserror.code, userInfo: mutableUserInfo)
     }
 
-    private static func errorOrUnderlyingErrorHasCodeInDomain(_ error: Error?, code: Int, domain: String) -> Bool {
+    fileprivate static func errorOrUnderlyingErrorHasCodeInDomain(_ error: Error?, code: Int, domain: String) -> Bool {
         guard let nserror = error as? NSError else { return false }
         
         if nserror.domain == domain && nserror.code == code {
@@ -126,11 +173,44 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
     
     public required init() {
         super.init()
+        acceptableContentTypes = ["application/json", "text/json", "text/javascript"]
     }
     
     public convenience init(readingOptions: JSONSerialization.ReadingOptions) {
         self.init()
         self.readingOptions = readingOptions
+    }
+    
+    open override func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
+        if !validateResponse(response as? HTTPURLResponse, data: data, error: &error) {
+            if Self.errorOrUnderlyingErrorHasCodeInDomain(error, code: NSURLErrorCannotDecodeContentData, domain: Self.URLResponseSerializationErrorDomain) {
+                return nil
+            }
+        }
+        
+        let isSpace = data == Data([UInt8](" ".utf8))
+        guard let data = data, data.count > 0, !isSpace else {
+            return nil
+        }
+        
+        var responseObject: Any?
+        var serializationError: Error?
+        do {
+            responseObject = try Data.fw_jsonDecode(data, options: readingOptions)
+        } catch let decodeError {
+            serializationError = decodeError
+        }
+        
+        guard let responseObject = responseObject else {
+            error = Self.errorWithUnderlyingError(serializationError, underlyingError: error)
+            return nil
+        }
+        
+        if removesKeysWithNullValues {
+            return Self.jsonObjectByRemovingKeysWithNullValues(responseObject)
+        }
+        
+        return responseObject
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
@@ -147,12 +227,40 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
     
     public required init() {
         super.init()
+        acceptableContentTypes = ["application/x-plist"]
     }
     
     public convenience init(format: PropertyListSerialization.PropertyListFormat, readOptions: PropertyListSerialization.ReadOptions) {
         self.init()
         self.format = format
         self.readOptions = readOptions
+    }
+    
+    open override func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
+        if !validateResponse(response as? HTTPURLResponse, data: data, error: &error) {
+            if Self.errorOrUnderlyingErrorHasCodeInDomain(error, code: NSURLErrorCannotDecodeContentData, domain: Self.URLResponseSerializationErrorDomain) {
+                return nil
+            }
+        }
+        
+        guard let data = data else {
+            return nil
+        }
+        
+        var responseObject: Any?
+        var serializationError: Error?
+        do {
+            responseObject = try PropertyListSerialization.propertyList(from: data, options: readOptions, format: nil)
+        } catch let decodeError {
+            serializationError = decodeError
+        }
+        
+        guard let responseObject = responseObject else {
+            error = Self.errorWithUnderlyingError(serializationError, underlyingError: error)
+            return nil
+        }
+        
+        return responseObject
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
@@ -170,14 +278,134 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     
     public required init() {
         super.init()
+        acceptableContentTypes = ["application/octet-stream", "application/pdf", "image/tiff", "image/jpeg", "image/gif", "image/png", "image/ico", "image/x-icon", "image/bmp", "image/x-bmp", "image/x-xbitmap", "image/x-ms-bmp", "image/x-win-bitmap", "image/heic", "image/heif", "image/webp", "image/svg+xml"]
     }
     
-    open func cachedResponseData(for image: UIImage?) -> Data? {
-        return nil
+    public static func cachedResponseData(for image: UIImage?) -> Data? {
+        guard let image = image else { return nil }
+        return image.fw_property(forName: "cachedResponseData") as? Data
     }
     
-    open func clearCachedResponseData(for image: UIImage?) {
+    public static func clearCachedResponseData(for image: UIImage?) {
+        setCachedResponseData(nil, for: image)
+    }
+    
+    private static func setCachedResponseData(_ data: Data?, for image: UIImage?) {
+        guard let image = image else { return }
+        image.fw_setProperty(data, forName: "cachedResponseData")
+    }
+    
+    private static var imageLock = NSLock()
+    
+    private static func image(data: Data?, scale: CGFloat, options: [ImageCoderOptions : Any]?) -> UIImage? {
+        guard let data = data, data.count > 0 else {
+            return nil
+        }
         
+        var image: UIImage?
+        imageLock.lock()
+        image = UIImage.fw_image(data: data, scale: scale, options: options)
+        imageLock.unlock()
+        
+        /*
+        image = UIImage(data: data)
+        if image?.images == nil, let cgImage = image?.cgImage {
+            image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
+        }*/
+        
+        return image
+    }
+    
+    private static func inflatedImage(response: HTTPURLResponse?, data: Data?, scale: CGFloat, options: [ImageCoderOptions : Any]?) -> UIImage? {
+        guard let data = data, data.count > 0 else {
+            return nil
+        }
+        
+        let image = image(data: data, scale: scale, options: options)
+        guard let image = image, image.images == nil else {
+            return image
+        }
+        
+        var imageRef: CGImage?
+        let dataProvider = CGDataProvider(data: data as CFData)
+        
+        if response?.mimeType == "image/png", let dataProvider = dataProvider {
+            imageRef = CGImage(pngDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+        } else if response?.mimeType == "image/jpeg", let dataProvider = dataProvider {
+            imageRef = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+
+            if imageRef != nil {
+                let imageColorSpaceModel = imageRef?.colorSpace?.model
+                if imageColorSpaceModel == .cmyk {
+                    imageRef = nil
+                }
+            }
+        }
+
+        if imageRef == nil {
+            imageRef = image.cgImage?.copy()
+        }
+        guard let imageRef = imageRef else {
+            return image
+        }
+
+        let width = imageRef.width
+        let height = imageRef.height
+        let bitsPerComponent = imageRef.bitsPerComponent
+        
+        if width * height > 1024 * 1024 || bitsPerComponent > 8 {
+            return image
+        }
+
+        let bytesPerRow: size_t = 0
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let colorSpaceModel = colorSpace.model
+        var bitmapInfo = imageRef.bitmapInfo.rawValue
+
+        if colorSpaceModel == .rgb {
+            let alpha = bitmapInfo & CGBitmapInfo.alphaInfoMask.rawValue
+            if alpha == CGImageAlphaInfo.none.rawValue {
+                bitmapInfo &= ~CGBitmapInfo.alphaInfoMask.rawValue
+                bitmapInfo |= CGImageAlphaInfo.noneSkipFirst.rawValue
+            } else if !(alpha == CGImageAlphaInfo.noneSkipFirst.rawValue || alpha == CGImageAlphaInfo.noneSkipLast.rawValue) {
+                bitmapInfo &= ~CGBitmapInfo.alphaInfoMask.rawValue
+                bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue
+            }
+        }
+
+        guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo) else {
+            return image
+        }
+
+        context.draw(imageRef, in: CGRect(x: 0.0, y: 0.0, width: CGFloat(width), height: CGFloat(height)))
+        guard let inflatedImageRef = context.makeImage() else {
+            return image
+        }
+
+        let inflatedImage = UIImage(cgImage: inflatedImageRef, scale: scale, orientation: image.imageOrientation)
+        return inflatedImage
+    }
+    
+    open override func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
+        if !validateResponse(response as? HTTPURLResponse, data: data, error: &error) {
+            if Self.errorOrUnderlyingErrorHasCodeInDomain(error, code: NSURLErrorCannotDecodeContentData, domain: Self.URLResponseSerializationErrorDomain) {
+                return nil
+            }
+        }
+        
+        var image: UIImage?
+        let options = userInfo(for: response) as? [ImageCoderOptions : Any]
+        if automaticallyInflatesResponseImage {
+            image = Self.inflatedImage(response: response as? HTTPURLResponse, data: data, scale: imageScale, options: options)
+        } else {
+            image = Self.image(data: data, scale: imageScale, options: options)
+        }
+        
+        if shouldCacheResponseData && image != nil {
+            Self.setCachedResponseData(data, for: image)
+        }
+        
+        return image
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
@@ -199,6 +427,20 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
     public convenience init(responseSerializers: [URLResponseSerialization]) {
         self.init()
         self.responseSerializers = responseSerializers
+    }
+    
+    open override func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
+        for serializer in responseSerializers {
+            var serializerError: Error?
+            let responseObject = serializer.responseObject(for: response, data: data, error: &error)
+            if let responseObject = responseObject {
+                error = Self.errorWithUnderlyingError(serializerError, underlyingError: error)
+                
+                return responseObject
+            }
+        }
+        
+        return super.responseObject(for: response, data: data, error: &error)
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {

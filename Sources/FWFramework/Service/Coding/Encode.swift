@@ -11,22 +11,22 @@ import CommonCrypto
 // MARK: - Encode
 @_spi(FW) extension Data {
     /// Foundation对象编码为json数据
-    public static func fw_jsonEncode(_ object: Any) -> Data? {
+    public static func fw_jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> Data? {
         guard JSONSerialization.isValidJSONObject(object) else { return nil }
-        return try? JSONSerialization.data(withJSONObject: object)
+        return try? JSONSerialization.data(withJSONObject: object, options: options)
     }
     
     /// json数据解码为Foundation对象，失败时抛异常
-    public static func fw_jsonDecode(_ data: Data) throws -> Any {
+    public static func fw_jsonDecode(_ data: Data, options: JSONSerialization.ReadingOptions = []) throws -> Any {
         do {
-            return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+            return try JSONSerialization.jsonObject(with: data, options: options)
         } catch {
             guard (error as NSError).code == 3840 else { throw error }
             
             let string = String(data: data, encoding: .utf8)
             guard let escapeData = string?.fw_escapeJson.data(using: .utf8) else { throw error }
             if escapeData.count == data.count { throw error }
-            return try JSONSerialization.jsonObject(with: escapeData, options: .allowFragments)
+            return try JSONSerialization.jsonObject(with: escapeData, options: options)
         }
     }
     
@@ -98,8 +98,8 @@ import CommonCrypto
 
 @_spi(FW) extension String {
     /// Foundation对象编码为json字符串
-    public static func fw_jsonEncode(_ object: Any) -> String? {
-        guard let data = Data.fw_jsonEncode(object) else { return nil }
+    public static func fw_jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> String? {
+        guard let data = Data.fw_jsonEncode(object, options: options) else { return nil }
         return String(data: data, encoding: .utf8)
     }
     
