@@ -224,9 +224,10 @@ import StoreKit
     }
 
     /// 打开系统分享
-    public static func fw_openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
+    public static func fw_openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
         let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         activityController.excludedActivityTypes = excludedTypes
+        activityController.completionWithItemsHandler = completionHandler
         // 兼容iPad，默认居中显示
         let viewController = Navigator.topPresentedController
         if UIDevice.fw_isIpad, let viewController = viewController,

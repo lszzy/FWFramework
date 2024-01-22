@@ -191,8 +191,8 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统分享
-    public static func openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
-        Base.fw_openActivityItems(activityItems, excludedTypes: excludedTypes, customBlock: customBlock)
+    public static func openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
+        Base.fw_openActivityItems(activityItems, excludedTypes: excludedTypes, completionHandler: completionHandler, customBlock: customBlock)
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
