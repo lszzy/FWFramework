@@ -64,7 +64,7 @@ public struct ThemeMode: RawRepresentable, Equatable, Hashable {
 extension Notification.Name {
     
     /// iOS13主题改变通知，object为ThemeManager时表示手工切换，object为UIScreen时为系统切换
-    public static let ThemeChanged = NSNotification.Name("FWThemeChangedNotification")
+    public static let ThemeChanged = Notification.Name("FWThemeChangedNotification")
     
 }
 

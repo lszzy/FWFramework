@@ -14,9 +14,9 @@ import FWObjC
 extension Notification.Name {
     
     /// 异常捕获通知，object为NSException对象，userInfo为附加信息(function|file|line|remark|symbols)
-    public static let ExceptionCaptured = NSNotification.Name("FWExceptionCapturedNotification")
+    public static let ExceptionCaptured = Notification.Name("FWExceptionCapturedNotification")
     /// 错误捕获通知，object为Error对象，userInfo为附加信息(function|file|line|remark|symbols)
-    public static let ErrorCaptured = NSNotification.Name("FWErrorCapturedNotification")
+    public static let ErrorCaptured = Notification.Name("FWErrorCapturedNotification")
     
 }
 

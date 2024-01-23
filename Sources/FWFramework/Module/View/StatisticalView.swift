@@ -11,7 +11,7 @@ import UIKit
 extension Notification.Name {
     
     /// 统计事件触发通知，可统一处理。通知object为StatisticalEvent对象，userInfo为附加信息
-    public static let StatisticalEventTriggered = NSNotification.Name("FWStatisticalEventTriggeredNotification")
+    public static let StatisticalEventTriggered = Notification.Name("FWStatisticalEventTriggeredNotification")
     
 }
 
