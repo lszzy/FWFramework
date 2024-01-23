@@ -12,11 +12,11 @@ import CoreLocation
 extension Notification.Name {
     
     /// 定位更新通知
-    public static let LocationUpdated = NSNotification.Name("FWLocationUpdatedNotification")
+    public static let LocationUpdated = Notification.Name("FWLocationUpdatedNotification")
     /// 定位失败通知
-    public static let LocationFailed = NSNotification.Name("FWLocationFailedNotification")
+    public static let LocationFailed = Notification.Name("FWLocationFailedNotification")
     /// 方向改变通知
-    public static let HeadingUpdated = NSNotification.Name("FWHeadingUpdatedNotification")
+    public static let HeadingUpdated = Notification.Name("FWHeadingUpdatedNotification")
     
 }
 

@@ -105,7 +105,7 @@ public class StateTransition: NSObject {
 extension Notification.Name {
     
     /// 状态改变通知
-    public static let StateChanged = NSNotification.Name("FWStateChangedNotification")
+    public static let StateChanged = Notification.Name("FWStateChangedNotification")
     
 }
 
