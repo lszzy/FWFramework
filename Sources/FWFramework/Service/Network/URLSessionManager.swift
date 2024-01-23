@@ -39,11 +39,7 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     open var completionQueue: DispatchQueue?
     open var completionGroup: DispatchGroup?
     
-    public convenience override init() {
-        self.init(sessionConfiguration: nil)
-    }
-    
-    public init(sessionConfiguration: URLSessionConfiguration?) {
+    public init(sessionConfiguration: URLSessionConfiguration? = nil) {
         
     }
     
