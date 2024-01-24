@@ -146,7 +146,7 @@ open class ImageDownloader: NSObject {
             
             let mergedTaskIdentifier = UUID()
             var createdTask: URLSessionDataTask
-            createdTask = self.sessionManager.dataTask(with: request, uploadProgress: nil, downloadProgress: { [weak self] downloadProgress in
+            createdTask = self.sessionManager.dataTask(request: request, uploadProgress: nil, downloadProgress: { [weak self] downloadProgress in
                 self?.responseQueue.async {
                     let mergedTask = self?.safelyGetMergedTask(urlIdentifier)
                     if mergedTask?.identifier == mergedTaskIdentifier {
@@ -322,8 +322,9 @@ open class ImageDownloader: NSObject {
             return cachedImage
         }
         
+        var error: Error?
         guard let cachedResponse = sessionManager.session.configuration.urlCache?.cachedResponse(for: urlRequest),
-              let responseObject = sessionManager.responseSerializer.responseObject(for: cachedResponse.response, data: cachedResponse.data, error: nil) else {
+              let responseObject = sessionManager.responseSerializer.responseObject(for: cachedResponse.response, data: cachedResponse.data, error: &error) else {
             return nil
         }
         
