@@ -7,7 +7,6 @@
 
 import Foundation
 
-/*
 public protocol URLResponseSerialization: AnyObject {
     func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any?
 }
@@ -431,4 +430,4 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
         serializer.responseSerializers = responseSerializers
         return serializer
     }
-}*/
+}

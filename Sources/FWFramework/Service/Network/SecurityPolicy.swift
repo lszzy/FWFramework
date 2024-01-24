@@ -8,7 +8,6 @@
 import Foundation
 import Security
 
-/*
 public enum SSLPinningMode: Int {
     case none = 0
     case publicKey
@@ -200,4 +199,4 @@ open class SecurityPolicy: NSObject, NSCopying {
         }
         return trustChain
     }
-}*/
+}

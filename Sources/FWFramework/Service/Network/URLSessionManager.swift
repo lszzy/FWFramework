@@ -7,7 +7,6 @@
 
 import Foundation
 
-/*
 // MARK: - URLSessionManager
 /// URLSession管理器
 ///
@@ -27,10 +26,12 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     public static let networkingTaskDidCompleteErrorKey = "site.wuyong.networking.task.complete.error"
     public static let networkingTaskDidCompleteSessionTaskMetrics = "site.wuyong.networking.complete.sessiontaskmetrics"
     
-    open private(set) var session: URLSession
+    open private(set) lazy var session: URLSession = {
+        return URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: self.operationQueue)
+    }()
     open private(set) var operationQueue = OperationQueue()
-    open var responseSerializer: URLResponseSerialization = JSONResponseSerializer()
-    open var securityPolicy: SecurityPolicy = .default()
+    open var responseSerializer: HTTPResponseSerializer = JSONResponseSerializer()
+    open var securityPolicy: SecurityPolicy = .defaultPolicy()
     
     open var tasks: [URLSessionTask] {
         return tasks(for: "tasks")
@@ -76,13 +77,15 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     fileprivate static let urlSessionTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.nsurlsessiontask.suspend")
     private static let urlSessionManagerLockName = "site.wuyong.networking.session.manager.lock"
     
-    public required init(sessionConfiguration: URLSessionConfiguration? = nil) {
-        super.init()
-        
+    public convenience override init() {
+        self.init(sessionConfiguration: nil)
+    }
+    
+    public required init(sessionConfiguration: URLSessionConfiguration?) {
         self.sessionConfiguration = sessionConfiguration ?? .default
         self.operationQueue.maxConcurrentOperationCount = 1
         self.lock.name = Self.urlSessionManagerLockName
-        self.session = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: self.operationQueue)
+        super.init()
         
         self.session.getTasksWithCompletionHandler { [weak self] dataTasks, uploadTasks, downloadTasks in
             for dataTask in dataTasks {
@@ -647,7 +650,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
         } else {
             Self.processingQueue.async {
                 let taskInfo = manager?.userInfo(for: task)
-                if taskInfo != nil, task.response != nil, let responseSerializer = manager?.responseSerializer as? HTTPResponseSerializer {
+                if taskInfo != nil, task.response != nil, let responseSerializer = manager?.responseSerializer {
                     responseSerializer.setUserInfo(taskInfo, for: task.response)
                 }
                 
@@ -808,4 +811,4 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
         URLSessionTaskSwizzling.swizzleURLSessionTask()
     }
     
-}*/
+}
