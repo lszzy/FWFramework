@@ -8,6 +8,7 @@
 import Foundation
 
 /*
+// MARK: - URLSessionManager
 /// URLSession管理器
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
@@ -38,6 +39,9 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     
     open var completionQueue: DispatchQueue?
     open var completionGroup: DispatchGroup?
+    
+    fileprivate static let urlSessionTaskDidResumeNotification = Notification.Name("site.wuyong.networking.nsurlsessiontask.resume")
+    fileprivate static let urlSessionTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.nsurlsessiontask.suspend")
     
     public init(sessionConfiguration: URLSessionConfiguration? = nil) {
         
@@ -181,6 +185,7 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     }
 }
 
+// MARK: - URLSessionManagerTaskDelegate
 fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
     static let processingQueue = DispatchQueue(label: "site.wuyong.networking.session.manager.processing", attributes: .concurrent)
     static let completionGroup = DispatchGroup()
@@ -345,4 +350,91 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
             }
         }
     }
+}
+
+// MARK: - URLSessionTaskSwizzling
+fileprivate class URLSessionTaskSwizzling: NSObject {
+    static func swizzleURLSessionTask() {
+        let configuration = URLSessionConfiguration.ephemeral
+        let session = URLSession(configuration: configuration)
+        let localDataTask = session.dataTask(with: URLRequest(url: NSURL() as URL))
+        var originalResumeIMP: IMP?
+        if let method = class_getInstanceMethod(self, #selector(af_resume)) {
+            originalResumeIMP = method_getImplementation(method)
+        }
+        var currentClass: AnyClass? = localDataTask.classForCoder
+        
+        while let classResumeMethod = class_getInstanceMethod(currentClass, NSSelectorFromString("resume")) {
+            let superClass: AnyClass? = currentClass?.superclass()
+            let classResumeIMP = method_getImplementation(classResumeMethod)
+            let superclassResumeMethod = class_getInstanceMethod(superClass, NSSelectorFromString("resume"))
+            let superclassResumeIMP = superclassResumeMethod != nil ? method_getImplementation(superclassResumeMethod!) : nil
+            if classResumeIMP != superclassResumeIMP, originalResumeIMP != classResumeIMP {
+                swizzleResumeAndSuspendMethod(for: currentClass)
+            }
+            currentClass = superClass
+        }
+        
+        localDataTask.cancel()
+        session.finishTasksAndInvalidate()
+    }
+    
+    private static func swizzleResumeAndSuspendMethod(for theClass: AnyClass?) {
+        let resumeMethod = class_getInstanceMethod(self, #selector(af_resume))
+        let suspendMethod = class_getInstanceMethod(self, #selector(af_suspend))
+        
+        if let resumeMethod = resumeMethod, addMethod(for: theClass, selector: #selector(af_resume), method: resumeMethod) {
+            swizzleSelector(for: theClass, originalSelector: NSSelectorFromString("resume"), swizzledSelector: #selector(af_resume))
+        }
+        if let suspendMethod = suspendMethod, addMethod(for: theClass, selector: #selector(af_suspend), method: suspendMethod) {
+            swizzleSelector(for: theClass, originalSelector: NSSelectorFromString("suspend"), swizzledSelector: #selector(af_suspend))
+        }
+    }
+    
+    private static func swizzleSelector(for theClass: AnyClass?, originalSelector: Selector, swizzledSelector: Selector) {
+        let originalMethod = class_getInstanceMethod(theClass, originalSelector)
+        let swizzledMethod = class_getInstanceMethod(theClass, swizzledSelector)
+        if let originalMethod = originalMethod,
+           let swizzledMethod = swizzledMethod {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+    }
+    
+    private static func addMethod(for theClass: AnyClass?, selector: Selector, method: Method) -> Bool {
+        return class_addMethod(theClass, selector, method_getImplementation(method), method_getTypeEncoding(method))
+    }
+    
+    @objc var state: URLSessionTask.State {
+        assert(false, "State method should never be called in the actual dummy class")
+        return .canceling
+    }
+    
+    @objc func af_resume() {
+        assert(responds(to: #selector(getter: state)), "Does not respond to state")
+        let state = self.state
+        self.af_resume()
+        
+        if state != .running {
+            NotificationCenter.default.post(name: URLSessionManager.urlSessionTaskDidResumeNotification, object: self)
+        }
+    }
+    
+    @objc func af_suspend() {
+        assert(responds(to: #selector(getter: state)), "Does not respond to state")
+        let state = self.state
+        self.af_suspend()
+        
+        if state != .suspended {
+            NotificationCenter.default.post(name: URLSessionManager.urlSessionTaskDidSuspendNotification, object: self)
+        }
+    }
+}
+
+// MARK: - FrameworkAutoloader+Network
+@objc extension FrameworkAutoloader {
+    
+    static func loadService_Network() {
+        URLSessionTaskSwizzling.swizzleURLSessionTask()
+    }
+    
 }*/
