@@ -515,19 +515,6 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-+ (UIImage *)decodeImage:(NSData *)data scale:(CGFloat)scale options:(NSDictionary *)options {
-    if ([FWObjCBridge respondsToSelector:@selector(image:scale:options:)]) {
-        id objcBridge = [FWObjCBridge class];
-        return [objcBridge image:data scale:scale options:options];
-    } else {
-        UIImage *image = [UIImage imageWithData:data];
-        if (image.images || !image) {
-            return image;
-        }
-        return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
-    }
-}
-
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();
