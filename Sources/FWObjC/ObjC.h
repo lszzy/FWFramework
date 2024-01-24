@@ -56,7 +56,6 @@ NS_SWIFT_NAME(ObjCBridgeProtocol)
 
 + (void)autoload;
 + (void)log:(NSString *)message;
-+ (nullable UIImage *)image:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
 
 @end
 
@@ -99,8 +98,6 @@ NS_SWIFT_NAME(ObjCBridge)
 + (void)logMessage:(NSString *)message;
 
 + (void)logDebug:(NSString *)message;
-
-+ (nullable UIImage *)decodeImage:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
 
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
 
