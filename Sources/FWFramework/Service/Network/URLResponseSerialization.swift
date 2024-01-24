@@ -11,11 +11,11 @@ public protocol URLResponseSerialization: AnyObject {
     func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any?
 }
 
-open class HTTPResponseSerializer: NSObject, NSCopying, URLResponseSerialization {
+open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
     open var acceptableStatusCodes: IndexSet? = IndexSet(integersIn: 200..<300)
     open var acceptableContentTypes: Set<String>?
     
-    public required override init() {
+    public override init() {
         super.init()
     }
     
@@ -80,13 +80,6 @@ open class HTTPResponseSerializer: NSObject, NSCopying, URLResponseSerialization
         validateResponse(response as? HTTPURLResponse, data: data, error: &error)
         
         return data
-    }
-    
-    open func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = Self.init()
-        serializer.acceptableStatusCodes = acceptableStatusCodes
-        serializer.acceptableContentTypes = acceptableContentTypes
-        return serializer
     }
 }
 
@@ -153,7 +146,7 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
     open var readingOptions: JSONSerialization.ReadingOptions = []
     open var removesKeysWithNullValues = false
     
-    public required init() {
+    public override init() {
         super.init()
         acceptableContentTypes = ["application/json", "text/json", "text/javascript"]
     }
@@ -194,20 +187,13 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
         
         return responseObject
     }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! JSONResponseSerializer
-        serializer.readingOptions = readingOptions
-        serializer.removesKeysWithNullValues = removesKeysWithNullValues
-        return serializer
-    }
 }
 
 open class PropertyListResponseSerializer: HTTPResponseSerializer {
     open var format: PropertyListSerialization.PropertyListFormat = .xml
     open var readOptions: PropertyListSerialization.ReadOptions = []
     
-    public required init() {
+    public override init() {
         super.init()
         acceptableContentTypes = ["application/x-plist"]
     }
@@ -244,13 +230,6 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
         
         return responseObject
     }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! PropertyListResponseSerializer
-        serializer.format = format
-        serializer.readOptions = readOptions
-        return serializer
-    }
 }
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
@@ -258,7 +237,7 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
     
-    public required init() {
+    public override init() {
         super.init()
         acceptableContentTypes = ["application/octet-stream", "application/pdf", "image/tiff", "image/jpeg", "image/gif", "image/png", "image/ico", "image/x-icon", "image/bmp", "image/x-bmp", "image/x-xbitmap", "image/x-ms-bmp", "image/x-win-bitmap", "image/heic", "image/heif", "image/webp", "image/svg+xml"]
     }
@@ -389,20 +368,12 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         
         return image
     }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! ImageResponseSerializer
-        serializer.imageScale = imageScale
-        serializer.automaticallyInflatesResponseImage = automaticallyInflatesResponseImage
-        serializer.shouldCacheResponseData = shouldCacheResponseData
-        return serializer
-    }
 }
 
 open class CompoundResponseSerializer: HTTPResponseSerializer {
     open private(set) var responseSerializers: [URLResponseSerialization] = []
     
-    public required init() {
+    public override init() {
         super.init()
     }
     
@@ -423,11 +394,5 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
         }
         
         return super.responseObject(for: response, data: data, error: &error)
-    }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! CompoundResponseSerializer
-        serializer.responseSerializers = responseSerializers
-        return serializer
     }
 }

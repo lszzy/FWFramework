@@ -14,7 +14,7 @@ public enum SSLPinningMode: Int {
     case certificate
 }
 
-open class SecurityPolicy: NSObject, NSCopying {
+open class SecurityPolicy: NSObject {
     open private(set) var pinningMode: SSLPinningMode = .none
     open var pinnedCertificates: Set<Data>? {
         didSet { updatePinnedCertificates() }
@@ -35,13 +35,13 @@ open class SecurityPolicy: NSObject, NSCopying {
         return certificates
     }
     
-    public static func defaultPolicy() -> SecurityPolicy {
+    public static var `default`: SecurityPolicy {
         let securityPolicy = SecurityPolicy()
         securityPolicy.pinningMode = .none
         return securityPolicy
     }
     
-    public required override init() {
+    public override init() {
         super.init()
     }
     
@@ -138,15 +138,6 @@ open class SecurityPolicy: NSObject, NSCopying {
             return Set(arrayLiteral: "pinnedCertificates")
         }
         return super.keyPathsForValuesAffectingValue(forKey: key)
-    }
-    
-    open func copy(with zone: NSZone? = nil) -> Any {
-        let securityPolicy = Self.init()
-        securityPolicy.pinningMode = pinningMode
-        securityPolicy.allowInvalidCertificates = allowInvalidCertificates
-        securityPolicy.validatesDomainName = validatesDomainName
-        securityPolicy.pinnedCertificates = pinnedCertificates
-        return securityPolicy
     }
     
     private static func publicKey(for certificate: Data) -> SecKey? {

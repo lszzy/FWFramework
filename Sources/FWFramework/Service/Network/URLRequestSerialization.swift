@@ -16,7 +16,7 @@ public enum HTTPRequestQueryStringSerializationStyle: Int {
     case `default` = 0
 }
 
-open class HTTPRequestSerializer: NSObject, NSCopying, URLRequestSerialization {
+open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
     open var stringEncoding: String.Encoding = .utf8
     open var allowsCellularAccess = true
     open var cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy
@@ -38,7 +38,7 @@ open class HTTPRequestSerializer: NSObject, NSCopying, URLRequestSerialization {
     private var queryStringSerializationStyle: HTTPRequestQueryStringSerializationStyle = .default
     private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any, _ error: inout Error?) -> String?)?
     
-    public required override init() {
+    public override init() {
         super.init()
         
         var acceptLanguagesComponents: [String] = []
@@ -230,16 +230,6 @@ open class HTTPRequestSerializer: NSObject, NSCopying, URLRequestSerialization {
         }
         
         return mutableRequest
-    }
-    
-    open func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = Self.init()
-        requestHeaderModificationQueue.sync {
-            serializer.mutableHTTPRequestHeaders = self.mutableHTTPRequestHeaders
-        }
-        serializer.queryStringSerializationStyle = queryStringSerializationStyle
-        serializer.queryStringSerialization = queryStringSerialization
-        return serializer
     }
 }
 
@@ -502,7 +492,7 @@ extension StreamingMultipartFormData {
         case finalBoundary = 4
     }
     
-    private class HTTPBodyPart: NSObject, NSCopying {
+    private class HTTPBodyPart: NSObject {
         var stringEncoding: String.Encoding = .utf8
         var headers: [String: String]?
         var boundary: String = ""
@@ -572,7 +562,7 @@ extension StreamingMultipartFormData {
             return headerString
         }
         
-        required override init() {
+        override init() {
             super.init()
             transitionToNextPhase()
         }
@@ -655,19 +645,9 @@ extension StreamingMultipartFormData {
             }
             return range.length
         }
-        
-        func copy(with zone: NSZone? = nil) -> Any {
-            let bodyPart = Self.init()
-            bodyPart.stringEncoding = stringEncoding
-            bodyPart.headers = headers
-            bodyPart.bodyContentLength = bodyContentLength
-            bodyPart.body = body
-            bodyPart.boundary = boundary
-            return bodyPart
-        }
     }
     
-    private class MultipartBodyStream: InputStream, StreamDelegate, NSCopying {
+    private class MultipartBodyStream: InputStream, StreamDelegate {
         var numberOfBytesInPacket: Int = .max
         var delay: TimeInterval = 0
         var inputStream: InputStream?
@@ -688,7 +668,7 @@ extension StreamingMultipartFormData {
         private var _streamStatus: Stream.Status = .notOpen
         private var _streamError: Error?
         
-        required init(stringEncoding: String.Encoding) {
+        init(stringEncoding: String.Encoding) {
             super.init(data: Data())
             self.stringEncoding = stringEncoding
         }
@@ -786,22 +766,13 @@ extension StreamingMultipartFormData {
         @objc func _setCFClientFlags(_ inFlags: CFOptionFlags, callback: CFReadStreamClientCallBack!, context: UnsafeMutablePointer<CFStreamClientContext>) -> Bool {
             return false
         }
-        
-        func copy(with zone: NSZone? = nil) -> Any {
-            let bodyStream = Self.init(stringEncoding: stringEncoding)
-            for bodyPart in httpBodyParts {
-                bodyStream.appendHTTPBodyPart(bodyPart.copy() as! HTTPBodyPart)
-            }
-            bodyStream.setInitialAndFinalBoundaries()
-            return bodyStream
-        }
     }
 }
 
 open class JSONRequestSerializer: HTTPRequestSerializer {
     open var writingOptions: JSONSerialization.WritingOptions = []
     
-    public required init() {
+    public override init() {
         super.init()
     }
     
@@ -842,19 +813,13 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
         
         return mutableRequest
     }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! JSONRequestSerializer
-        serializer.writingOptions = writingOptions
-        return serializer
-    }
 }
 
 open class PropertyListRequestSerializer: HTTPRequestSerializer {
     open var format: PropertyListSerialization.PropertyListFormat = .xml
     open var writeOptions: PropertyListSerialization.WriteOptions = 0
     
-    public required init() {
+    public override init() {
         super.init()
     }
     
@@ -890,12 +855,5 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
         }
         
         return mutableRequest
-    }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let serializer = super.copy(with: zone) as! PropertyListRequestSerializer
-        serializer.format = format
-        serializer.writeOptions = writeOptions
-        return serializer
     }
 }

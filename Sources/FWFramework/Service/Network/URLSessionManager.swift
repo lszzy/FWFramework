@@ -11,7 +11,7 @@ import Foundation
 /// URLSession管理器
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
+open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
     public static let networkingTaskDidResumeNotification = Notification.Name("site.wuyong.networking.task.resume")
     public static let networkingTaskDidCompleteNotification = Notification.Name("site.wuyong.networking.task.complete")
     public static let networkingTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.task.suspend")
@@ -31,7 +31,7 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
     }()
     open private(set) var operationQueue = OperationQueue()
     open var responseSerializer: HTTPResponseSerializer = JSONResponseSerializer()
-    open var securityPolicy: SecurityPolicy = .defaultPolicy()
+    open var securityPolicy: SecurityPolicy = .default
     
     open var tasks: [URLSessionTask] {
         return tasks(for: "tasks")
@@ -81,7 +81,7 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
         self.init(sessionConfiguration: nil)
     }
     
-    public required init(sessionConfiguration: URLSessionConfiguration?) {
+    public init(sessionConfiguration: URLSessionConfiguration?) {
         self.sessionConfiguration = sessionConfiguration ?? .default
         self.operationQueue.maxConcurrentOperationCount = 1
         self.lock.name = Self.urlSessionManagerLockName
@@ -552,10 +552,6 @@ open class URLSessionManager: NSObject, NSCopying, URLSessionDelegate, URLSessio
         }
         
         return self.classForCoder.instancesRespond(to: selector)
-    }
-    
-    open func copy(with zone: NSZone? = nil) -> Any {
-        return Self.init(sessionConfiguration: self.session.configuration)
     }
 }
 
