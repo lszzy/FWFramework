@@ -778,12 +778,12 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
         return class_addMethod(theClass, selector, method_getImplementation(method), method_getTypeEncoding(method))
     }
     
-    @objc var state: URLSessionTask.State {
+    @objc dynamic var state: URLSessionTask.State {
         assert(false, "State method should never be called in the actual dummy class")
         return .canceling
     }
     
-    @objc func af_resume() {
+    @objc dynamic func af_resume() {
         assert(responds(to: #selector(getter: state)), "Does not respond to state")
         let state = self.state
         self.af_resume()
@@ -793,7 +793,7 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
         }
     }
     
-    @objc func af_suspend() {
+    @objc dynamic func af_suspend() {
         assert(responds(to: #selector(getter: state)), "Does not respond to state")
         let state = self.state
         self.af_suspend()
