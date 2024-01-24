@@ -33,11 +33,11 @@ open class HTTPSessionManager: URLSessionManager {
         self.init(baseURL: baseURL, sessionConfiguration: nil)
     }
     
-    public convenience required init(sessionConfiguration: URLSessionConfiguration?) {
+    public convenience override init(sessionConfiguration: URLSessionConfiguration?) {
         self.init(baseURL: nil, sessionConfiguration: sessionConfiguration)
     }
     
-    public required init(baseURL: URL?, sessionConfiguration: URLSessionConfiguration?) {
+    public init(baseURL: URL?, sessionConfiguration: URLSessionConfiguration?) {
         super.init(sessionConfiguration: sessionConfiguration)
         
         if let url = baseURL, url.path.count > 0, !url.absoluteString.hasSuffix("/") {
@@ -199,13 +199,5 @@ open class HTTPSessionManager: URLSessionManager {
     
     open override var description: String {
         return String(format: "<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass(self.classForCoder), self, baseURL?.absoluteString ?? "", session, operationQueue)
-    }
-    
-    open override func copy(with zone: NSZone? = nil) -> Any {
-        let manager = Self.init(baseURL: self.baseURL, sessionConfiguration: self.session.configuration)
-        manager.requestSerializer = requestSerializer.copy() as! HTTPRequestSerializer
-        manager.responseSerializer = responseSerializer.copy() as! HTTPResponseSerializer
-        manager.securityPolicy = securityPolicy.copy() as! SecurityPolicy
-        return manager
     }
 }
