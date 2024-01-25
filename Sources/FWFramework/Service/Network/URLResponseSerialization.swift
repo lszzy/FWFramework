@@ -29,7 +29,6 @@ open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
         return response.fw_property(forName: "userInfo") as? [AnyHashable: Any]
     }
     
-    @discardableResult
     open func validateResponse(_ response: HTTPURLResponse?, data: Data?, error: inout Error?) -> Bool {
         var responseIsValid = true
         var validationError: Error?
@@ -38,27 +37,30 @@ open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
             if let contentTypes = acceptableContentTypes,
                !contentTypes.contains(response.mimeType ?? ""),
                !(response.mimeType == nil && (data?.count ?? 0) == 0) {
-
-                if let data = data, data.count > 0, let url = response.url {
-                    var userInfo: [String: Any] = [:]
-                    userInfo[NSLocalizedDescriptionKey] = String(format: NSLocalizedString("Request failed: unacceptable content-type: %@", comment: ""), response.mimeType ?? "")
+                
+                var userInfo: [String: Any] = [:]
+                userInfo[NSLocalizedDescriptionKey] = String(format: NSLocalizedString("Request failed: unacceptable content-type: %@", comment: ""), response.mimeType ?? "")
+                userInfo[Self.NetworkingOperationFailingURLResponseErrorKey] = response
+                if let url = response.url {
                     userInfo[NSURLErrorFailingURLErrorKey] = url
-                    userInfo[Self.NetworkingOperationFailingURLResponseErrorKey] = response
-                    userInfo[Self.NetworkingOperationFailingURLResponseDataErrorKey] = data
-
-                    validationError = Self.errorWithUnderlyingError(NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo), underlyingError: validationError)
                 }
+                if let data = data {
+                    userInfo[Self.NetworkingOperationFailingURLResponseDataErrorKey] = data
+                }
+
+                validationError = Self.errorWithUnderlyingError(NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo), underlyingError: validationError)
 
                 responseIsValid = false
             }
 
             if let statusCodes = acceptableStatusCodes,
-               !statusCodes.contains(response.statusCode),
-               let url = response.url {
+               !statusCodes.contains(response.statusCode) {
                 var userInfo: [String: Any] = [:]
                 userInfo[NSLocalizedDescriptionKey] = String(format: NSLocalizedString("Request failed: %@ (%ld)", comment: ""), HTTPURLResponse.localizedString(forStatusCode: response.statusCode), response.statusCode)
-                userInfo[NSURLErrorFailingURLErrorKey] = url
                 userInfo[Self.NetworkingOperationFailingURLResponseErrorKey] = response
+                if let url = response.url {
+                    userInfo[NSURLErrorFailingURLErrorKey] = url
+                }
                 if let data = data {
                     userInfo[Self.NetworkingOperationFailingURLResponseDataErrorKey] = data
                 }
@@ -77,7 +79,7 @@ open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
     }
     
     open func responseObject(for response: URLResponse?, data: Data?, error: inout Error?) -> Any? {
-        validateResponse(response as? HTTPURLResponse, data: data, error: &error)
+        _ = validateResponse(response as? HTTPURLResponse, data: data, error: &error)
         
         return data
     }

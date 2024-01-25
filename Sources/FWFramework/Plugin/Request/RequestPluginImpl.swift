@@ -110,21 +110,13 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         var urlRequest: URLRequest
         if request.constructingBodyBlock != nil {
-            var error: Error?
-            let mutableRequest = requestSerializer.multipartFormRequest(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBody: { formData in
+            urlRequest = try requestSerializer.multipartFormRequest(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBody: { formData in
                 if let requestFormData = formData as? RequestMultipartFormData {
                     request.constructingBodyBlock?(requestFormData)
                 }
-            }, error: &error)
-            
-            if error != nil || mutableRequest == nil { throw error ?? RequestError.unknown }
-            urlRequest = mutableRequest!
+            })
         } else {
-            var error: Error?
-            let mutableRequest = requestSerializer.request(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument(), error: &error)
-            
-            if error != nil || mutableRequest == nil { throw error ?? RequestError.unknown }
-            urlRequest = mutableRequest!
+            urlRequest = try requestSerializer.request(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
         }
         
         RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
@@ -238,13 +230,11 @@ extension StreamingMultipartFormData: RequestMultipartFormData {
     }
     
     public func append(_ fileURL: URL, name: String) {
-        var error: Error?
-        appendPart(fileURL: fileURL, name: name, error: &error)
+        try? appendPart(fileURL: fileURL, name: name)
     }
     
     public func append(_ fileURL: URL, name: String, fileName: String, mimeType: String) {
-        var error: Error?
-        appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType, error: &error)
+        try? appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
     }
     
     public func append(_ inputStream: InputStream, length: UInt64, name: String, fileName: String, mimeType: String) {

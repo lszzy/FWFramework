@@ -9,7 +9,7 @@ import Foundation
 import MobileCoreServices
 
 public protocol URLRequestSerialization: AnyObject {
-    func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest?
+    func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest
 }
 
 public enum HTTPRequestQueryStringSerializationStyle: Int {
@@ -36,7 +36,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
     private var mutableHTTPRequestHeaders: [String: String] = [:]
     private let requestHeaderModificationQueue = DispatchQueue(label: "requestHeaderModificationQueue", attributes: .concurrent)
     private var queryStringSerializationStyle: HTTPRequestQueryStringSerializationStyle = .default
-    private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any, _ error: inout Error?) -> String?)?
+    private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?
     
     public override init() {
         super.init()
@@ -92,18 +92,17 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         queryStringSerialization = nil
     }
     
-    open func setQueryStringSerialization(block: ((_ request: URLRequest, _ parameters: Any, _ error: inout Error?) -> String?)?) {
+    open func setQueryStringSerialization(block: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?) {
         queryStringSerialization = block
     }
     
-    open func request(method: String, urlString: String, parameters: Any?, error: inout Error?) -> URLRequest? {
+    open func request(method: String, urlString: String, parameters: Any?) throws -> URLRequest {
         var url = URL(string: urlString)
         if url == nil, let encodeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             url = URL(string: encodeString)
         }
-        guard let url = url else { return nil }
         
-        var urlRequest = URLRequest(url: url)
+        var urlRequest = URLRequest(url: url ?? NSURL() as URL)
         urlRequest.httpMethod = method
         urlRequest.allowsCellularAccess = allowsCellularAccess
         urlRequest.cachePolicy = cachePolicy
@@ -112,14 +111,16 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         urlRequest.networkServiceType = networkServiceType
         urlRequest.timeoutInterval = timeoutInterval
         
-        let mutableRequest = requestBySerializingRequest(urlRequest, parameters: parameters, error: &error)
+        let mutableRequest = try requestBySerializingRequest(urlRequest, parameters: parameters)
         return mutableRequest
     }
     
-    open func multipartFormRequest(method: String, urlString: String, parameters: [String: Any]?, constructingBody block: ((MultipartFormData) -> Void)?, error: inout Error?) -> URLRequest? {
-        guard method != "GET" && method != "HEAD" else { return nil }
+    open func multipartFormRequest(method: String, urlString: String, parameters: [String: Any]?, constructingBody block: ((MultipartFormData) -> Void)?) throws -> URLRequest {
+        guard method != "GET" && method != "HEAD" else {
+            throw NSError(domain: NSURLErrorDomain, code: NSURLErrorUnsupportedURL, userInfo: nil)
+        }
         
-        guard let mutableRequest = request(method: method, urlString: urlString, parameters: nil, error: &error) else { return nil }
+        let mutableRequest = try request(method: method, urlString: urlString, parameters: nil)
         let formData = StreamingMultipartFormData(urlRequest: mutableRequest, stringEncoding: .utf8)
         
         if let parameters = parameters {
@@ -192,7 +193,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         return mutableRequest
     }
     
-    open func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest? {
+    open func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         var mutableRequest = request
         httpRequestHeaders.forEach { (field, value) in
             if request.value(forHTTPHeaderField: field) == nil {
@@ -203,12 +204,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         var query: String?
         if let parameters = parameters {
             if queryStringSerialization != nil {
-                var serializationError: Error?
-                query = queryStringSerialization?(request, parameters, &serializationError)
-                if serializationError != nil {
-                    error = serializationError
-                    return nil
-                }
+                query = try queryStringSerialization?(request, parameters)
             } else {
                 switch queryStringSerializationStyle {
                 case .default:
@@ -324,9 +320,9 @@ extension HTTPRequestSerializer {
 }
 
 public protocol MultipartFormData: AnyObject {
-    func appendPart(fileURL: URL, name: String, error: inout Error?)
+    func appendPart(fileURL: URL, name: String) throws
     
-    func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String, error: inout Error?)
+    func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String) throws
     
     func appendPart(inputStream: InputStream?, length: UInt64, name: String, fileName: String, mimeType: String)
     
@@ -368,26 +364,24 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
         return self.request
     }
     
-    open func appendPart(fileURL: URL, name: String, error: inout Error?) {
+    open func appendPart(fileURL: URL, name: String) throws {
         let fileName = fileURL.lastPathComponent
         let mimeType = Self.contentTypeForPathExtension(fileURL.pathExtension)
-        appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType, error: &error)
+        try appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
     }
     
-    open func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String, error: inout Error?) {
+    open func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String) throws {
         if !fileURL.isFileURL {
-            error = NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("Expected URL to be a file URL", comment: "")])
-            return
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("Expected URL to be a file URL", comment: "")])
         }
         
         let checkResult = try? fileURL.checkResourceIsReachable()
         if checkResult == nil || checkResult == false {
-            error = NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("File URL not reachable.", comment: "")])
-            return
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("File URL not reachable.", comment: "")])
         }
         
         guard let fileAttributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path) else {
-            return
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("File URL not reachable.", comment: "")])
         }
 
         var headers = [String: String]()
@@ -781,9 +775,9 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
         self.writingOptions = writingOptions
     }
     
-    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest? {
+    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         if httpMethodsEncodingParametersInURI.contains(request.httpMethod?.uppercased() ?? "") {
-            return super.requestBySerializingRequest(request, parameters: parameters, error: &error)
+            return try super.requestBySerializingRequest(request, parameters: parameters)
         }
         
         var mutableRequest = request
@@ -798,17 +792,11 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
         
         if let parameters = parameters {
             if !JSONSerialization.isValidJSONObject(parameters) {
-                error = NSError(domain: Self.URLRequestSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("The `parameters` argument is not valid JSON.", comment: "")])
-                return nil
+                throw NSError(domain: Self.URLRequestSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("The `parameters` argument is not valid JSON.", comment: "")])
             }
             
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: writingOptions)
-                mutableRequest.httpBody = jsonData
-            } catch let jsonError {
-                error = jsonError
-                return nil
-            }
+            let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: writingOptions)
+            mutableRequest.httpBody = jsonData
         }
         
         return mutableRequest
@@ -829,9 +817,9 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
         self.writeOptions = writeOptions
     }
     
-    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?, error: inout Error?) -> URLRequest? {
+    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         if httpMethodsEncodingParametersInURI.contains(request.httpMethod?.uppercased() ?? "") {
-            return super.requestBySerializingRequest(request, parameters: parameters, error: &error)
+            return try super.requestBySerializingRequest(request, parameters: parameters)
         }
         
         var mutableRequest = request
@@ -845,13 +833,8 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
         }
         
         if let parameters = parameters {
-            do {
-                let plistData = try PropertyListSerialization.data(fromPropertyList: parameters, format: format, options: writeOptions)
-                mutableRequest.httpBody = plistData
-            } catch let plistError {
-                error = plistError
-                return nil
-            }
+            let plistData = try PropertyListSerialization.data(fromPropertyList: parameters, format: format, options: writeOptions)
+            mutableRequest.httpBody = plistData
         }
         
         return mutableRequest
