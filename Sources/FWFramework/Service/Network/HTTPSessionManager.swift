@@ -97,15 +97,16 @@ open class HTTPSessionManager: URLSessionManager {
         failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let url = URL.fw_url(string: urlString, relativeTo: baseURL)
-        var serializationError: Error?
-        var request = requestSerializer.multipartFormRequest(method: "POST", urlString: url?.absoluteString ?? "", parameters: parameters as? [String: Any], constructingBody: block, error: &serializationError)
-        headers?.forEach({ (field, value) in
-            request?.setValue(value, forHTTPHeaderField: field)
-        })
-        if serializationError != nil || request == nil {
+        var request: URLRequest
+        do {
+            request = try requestSerializer.multipartFormRequest(method: "POST", urlString: url?.absoluteString ?? "", parameters: parameters as? [String: Any], constructingBody: block)
+            headers?.forEach({ (field, value) in
+                request.setValue(value, forHTTPHeaderField: field)
+            })
+        } catch {
             if failure != nil {
                 (self.completionQueue ?? .main).async {
-                    failure?(nil, serializationError ?? NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+                    failure?(nil, error)
                 }
             }
             
@@ -113,7 +114,7 @@ open class HTTPSessionManager: URLSessionManager {
         }
         
         var dataTask: URLSessionDataTask?
-        dataTask = uploadTask(streamedRequest: request!, progress: progress) { response, responseObject, error in
+        dataTask = uploadTask(streamedRequest: request, progress: progress) { response, responseObject, error in
             if let error = error {
                 failure?(dataTask, error)
             } else if let dataTask = dataTask {
@@ -171,15 +172,16 @@ open class HTTPSessionManager: URLSessionManager {
         failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let url = URL.fw_url(string: urlString, relativeTo: baseURL)
-        var serializationError: Error?
-        var request = requestSerializer.request(method: httpMethod, urlString: url?.absoluteString ?? "", parameters: parameters, error: &serializationError)
-        headers?.forEach({ (field, value) in
-            request?.setValue(value, forHTTPHeaderField: field)
-        })
-        if serializationError != nil || request == nil {
+        var request: URLRequest
+        do {
+            request = try requestSerializer.request(method: httpMethod, urlString: url?.absoluteString ?? "", parameters: parameters)
+            headers?.forEach({ (field, value) in
+                request.setValue(value, forHTTPHeaderField: field)
+            })
+        } catch {
             if failure != nil {
                 (self.completionQueue ?? .main).async {
-                    failure?(nil, serializationError ?? NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+                    failure?(nil, error)
                 }
             }
             
@@ -187,7 +189,7 @@ open class HTTPSessionManager: URLSessionManager {
         }
         
         var dataTask: URLSessionDataTask?
-        dataTask = self.dataTask(request: request!, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { response, responseObject, error in
+        dataTask = self.dataTask(request: request, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { response, responseObject, error in
             if let error = error {
                 failure?(dataTask, error)
             } else if let dataTask = dataTask {
