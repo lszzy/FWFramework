@@ -322,9 +322,8 @@ open class ImageDownloader: NSObject {
             return cachedImage
         }
         
-        var error: Error?
         guard let cachedResponse = sessionManager.session.configuration.urlCache?.cachedResponse(for: urlRequest),
-              let responseObject = sessionManager.responseSerializer.responseObject(for: cachedResponse.response, data: cachedResponse.data, error: &error) else {
+              let responseObject = try? sessionManager.responseSerializer.responseObject(for: cachedResponse.response, data: cachedResponse.data) else {
             return nil
         }
         

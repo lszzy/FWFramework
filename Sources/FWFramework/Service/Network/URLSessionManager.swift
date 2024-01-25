@@ -561,7 +561,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
     static let completionGroup = DispatchGroup()
     
     weak var manager: URLSessionManager?
-    private var mutableData: Data? = Data()
+    private var mutableData: Data = Data()
     var uploadProgress = Progress(parent: nil, userInfo: nil)
     var downloadProgress = Progress(parent: nil, userInfo: nil)
     var downloadFileURL: URL?
@@ -616,18 +616,15 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
         var userInfo: [AnyHashable: Any] = [:]
         userInfo[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
         
-        var data: Data?
-        if mutableData != nil {
-            data = mutableData
-            mutableData = nil
-        }
+        let data = mutableData
+        mutableData = Data()
         
         if let sessionTaskMetrics = sessionTaskMetrics {
             userInfo[URLSessionManager.networkingTaskDidCompleteSessionTaskMetrics] = sessionTaskMetrics
         }
         if let downloadFileURL = downloadFileURL {
             userInfo[URLSessionManager.networkingTaskDidCompleteAssetPathKey] = downloadFileURL
-        } else if let data = data {
+        } else {
             userInfo[URLSessionManager.networkingTaskDidCompleteResponseDataKey] = data
         }
         
@@ -646,12 +643,16 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
         } else {
             Self.processingQueue.async {
                 let taskInfo = manager?.userInfo(for: task)
-                if taskInfo != nil, task.response != nil, let responseSerializer = manager?.responseSerializer {
-                    responseSerializer.setUserInfo(taskInfo, for: task.response)
+                if taskInfo != nil, let response = task.response {
+                    manager?.responseSerializer.setUserInfo(taskInfo, for: response)
                 }
                 
                 var serializationError: Error?
-                responseObject = manager?.responseSerializer.responseObject(for: task.response, data: data, error: &serializationError)
+                do {
+                    responseObject = try manager?.responseSerializer.responseObject(for: task.response, data: data)
+                } catch let decodeError {
+                    serializationError = decodeError
+                }
                 
                 if self.downloadFileURL != nil {
                     responseObject = self.downloadFileURL
@@ -685,7 +686,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
         downloadProgress.totalUnitCount = dataTask.countOfBytesExpectedToReceive
         downloadProgress.completedUnitCount = dataTask.countOfBytesReceived
         
-        mutableData?.append(data)
+        mutableData.append(data)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {

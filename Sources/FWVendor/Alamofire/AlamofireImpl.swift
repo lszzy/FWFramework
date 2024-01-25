@@ -241,7 +241,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
                 do {
                     var jsonObject = try Data.fw_jsonDecode(responseData)
                     if removeNullValues {
-                        jsonObject = HTTPResponseSerializer.jsonObjectByRemovingKeysWithNullValues(jsonObject)
+                        jsonObject = HTTPResponseSerializer.removingKeysWithNullValues(jsonObject)
                     }
                     
                     request.responseObject = jsonObject

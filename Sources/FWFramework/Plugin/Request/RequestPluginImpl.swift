@@ -207,8 +207,12 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             
             switch request.responseSerializerType() {
             case .JSON:
-                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
-                request.responseJSONObject = request.responseObject
+                do {
+                    request.responseObject = try jsonResponseSerializer.responseObject(for: response, data: responseData)
+                    request.responseJSONObject = request.responseObject
+                } catch let decodeError {
+                    serializationError = decodeError
+                }
             default:
                 break
             }
