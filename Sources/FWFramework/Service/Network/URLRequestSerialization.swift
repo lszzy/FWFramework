@@ -372,16 +372,16 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
     
     open func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String) throws {
         if !fileURL.isFileURL {
-            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("Expected URL to be a file URL", comment: "")])
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "Expected URL to be a file URL"])
         }
         
         let checkResult = try? fileURL.checkResourceIsReachable()
         if checkResult == nil || checkResult == false {
-            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("File URL not reachable.", comment: "")])
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "File URL not reachable."])
         }
         
         guard let fileAttributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path) else {
-            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("File URL not reachable.", comment: "")])
+            throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "File URL not reachable."])
         }
 
         var headers = [String: String]()
@@ -792,7 +792,7 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
         
         if let parameters = parameters {
             if !JSONSerialization.isValidJSONObject(parameters) {
-                throw NSError(domain: Self.URLRequestSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: [NSLocalizedFailureReasonErrorKey: NSLocalizedString("The `parameters` argument is not valid JSON.", comment: "")])
+                throw NSError(domain: Self.URLRequestSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: [NSLocalizedDescriptionKey: "The `parameters` argument is not valid JSON."])
             }
             
             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: writingOptions)
