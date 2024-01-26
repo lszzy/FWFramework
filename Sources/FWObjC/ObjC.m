@@ -515,12 +515,12 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
 }
 
-+ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (^)(NSException * _Nonnull))exceptionHandler {
++ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();
         return YES;
     } @catch (NSException *exception) {
-        if (exceptionHandler) exceptionHandler(exception);
+        exceptionHandler(exception);
         return NO;
     }
 }
