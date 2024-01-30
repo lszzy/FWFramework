@@ -9,6 +9,7 @@ import Foundation
 import AVFoundation
 import MobileCoreServices
 
+/*
 // MARK: - PlayerCacheLoaderManager
 public protocol PlayerCacheLoaderManagerDelegate: AnyObject {
     func resourceLoaderManagerLoadURL(_ url: URL, didFailWithError error: Error?)
@@ -448,7 +449,7 @@ class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegat
         if action.actionType == .local {
             do {
                 let data = try cacheWorker.cachedData(for: action.range)
-                delegate?.actionWorker(self, didReceiveData: data, isLocal: true)
+                delegate?.actionWorker(self, didReceiveData: data ?? Data(), isLocal: true)
                 processActionsLater()
             } catch {
                 delegate?.actionWorker(self, didFinishWithError: error)
@@ -818,8 +819,46 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     
     public func addCacheFragment(_ fragment: NSRange) {
         if fragment.location == NSNotFound || fragment.length == 0 { return }
+        objc_sync_enter(internalCacheFragments)
+        defer { objc_sync_exit(internalCacheFragments) }
         
+        var cacheFragments = internalCacheFragments
+        let fragmentValue = NSValue(range: fragment)
+        let count = self.internalCacheFragments.count
+        if count == 0 {
+            cacheFragments.append(fragmentValue)
+        } else {
+            var indexSet = IndexSet()
+            for (idx, obj) in cacheFragments.enumerated() {
+                let range = obj.rangeValue
+                if fragment.location + fragment.length <= range.location {
+                    if indexSet.count == 0 {
+                        indexSet.insert(idx)
+                    }
+                    break
+                } else if fragment.location <= (range.location + range.length) && (fragment.location + fragment.length) > range.location {
+                    indexSet.insert(idx)
+                } else if fragment.location >= (range.location + range.length) {
+                    if idx == count - 1 {
+                        indexSet.insert(idx)
+                    }
+                }
+            }
+            
+            if indexSet.count > 1 {
+                let firstRange = self.internalCacheFragments[indexSet.first ?? 0].rangeValue
+                let lastRange = self.internalCacheFragments[indexSet.last ?? 0].rangeValue
+                let location = min(firstRange.location, fragment.location)
+                let endOffset = max(lastRange.location + lastRange.length, fragment.location + fragment.length)
+                let combineRange = NSMakeRange(location, endOffset - location)
+                cacheFragments.remove(atOffsets: indexSet)
+                cacheFragments.insert(NSValue(range: combineRange), at: indexSet.first ?? 0)
+            } else if indexSet.count == 1 {
+                
+            }
+        }
         
+        self.internalCacheFragments = cacheFragments
     }
     
     public func addDownloadedBytes(bytes: Int64, spent time: TimeInterval) {
@@ -994,12 +1033,32 @@ public class PlayerCacheWorker: NSObject {
         
     }
     
-    public func cachedData(for range: NSRange) throws -> Data {
-        
+    public func cachedData(for range: NSRange) throws -> Data? {
+        guard let readFileHandle = readFileHandle else { return nil }
+        objc_sync_enter(readFileHandle)
+        defer { objc_sync_exit(readFileHandle) }
+        try readFileHandle.seek(toOffset: UInt64(range.location))
+        var data: Data?
+        if #available(iOS 13.4, *) {
+            data = try readFileHandle.read(upToCount: range.length)
+        } else {
+            var fileError: Error?
+            ObjCBridge.tryCatch {
+                data = readFileHandle.readData(ofLength: range.length)
+            } exceptionHandler: { exception in
+                fileError = NSError(domain: exception.name.rawValue, code: 123, userInfo: [NSLocalizedDescriptionKey: exception.reason ?? "", "exception": exception])
+            }
+            if let fileError = fileError {
+                throw fileError
+            }
+        }
+        return data
     }
     
     public func setContentInfo(_ contentInfo: PlayerCacheContentInfo) throws {
-        
+        cacheConfiguration.contentInfo = contentInfo
+        try writeFileHandle?.truncate(atOffset: contentInfo.contentLength)
+        try writeFileHandle?.synchronize()
     }
     
     public func save() {
@@ -1032,4 +1091,4 @@ public class PlayerCacheWorker: NSObject {
     @objc private func applicationDidEnterBackground(_ notification: Notification) {
         self.save()
     }
-}
+}*/
