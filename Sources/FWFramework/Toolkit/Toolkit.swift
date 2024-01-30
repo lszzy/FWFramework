@@ -242,13 +242,14 @@ import StoreKit
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func fw_openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil) {
+    public static func fw_openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
         guard let url = url?.urlValue, fw_isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
             safariController.fw_setProperty(completionHandler, forName: "safariViewControllerDidFinish")
             safariController.delegate = SafariViewControllerDelegate.shared
         }
+        customBlock?(safariController)
         Navigator.present(safariController, animated: true)
     }
 
@@ -281,7 +282,7 @@ import StoreKit
     }
 
     /// 打开Store控制器，完成时回调
-    public static func fw_openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil) {
+    public static func fw_openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -291,6 +292,7 @@ import StoreKit
             }
             
             controller.fw_setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            customBlock?(controller)
             Navigator.present(controller, animated: true)
         }
     }

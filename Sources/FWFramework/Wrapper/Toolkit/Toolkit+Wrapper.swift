@@ -196,8 +196,8 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil) {
-        Base.fw_openSafariController(url, completionHandler: completionHandler)
+    public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
+        Base.fw_openSafariController(url, completionHandler: completionHandler, customBlock: customBlock)
     }
 
     /// 打开短信控制器，完成时回调
@@ -211,8 +211,8 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开Store控制器，完成时回调
-    public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openStoreController(parameters, completionHandler: completionHandler)
+    public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
+        Base.fw_openStoreController(parameters, completionHandler: completionHandler, customBlock: customBlock)
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
