@@ -1515,8 +1515,13 @@ public class LayoutChain {
                     } else if equalLength {
                         view.fw_matchDimension(.width, toDimension: .width, ofView: prev)
                     }
-                } else if let leadSpacing = leadSpacing {
-                    view.fw_pinEdge(toSuperview: .left, inset: leadSpacing)
+                } else {
+                    if let leadSpacing = leadSpacing {
+                        view.fw_pinEdge(toSuperview: .left, inset: leadSpacing)
+                    }
+                    if let itemLength = itemLength {
+                        view.fw_setDimension(.width, size: itemLength)
+                    }
                 }
                 if index == self.count - 1, let tailSpacing = tailSpacing {
                     view.fw_pinEdge(toSuperview: .right, inset: tailSpacing)
@@ -1533,8 +1538,13 @@ public class LayoutChain {
                     } else if equalLength {
                         view.fw_matchDimension(.height, toDimension: .height, ofView: prev)
                     }
-                } else if let leadSpacing = leadSpacing {
-                    view.fw_pinEdge(toSuperview: .top, inset: leadSpacing)
+                } else {
+                    if let leadSpacing = leadSpacing {
+                        view.fw_pinEdge(toSuperview: .top, inset: leadSpacing)
+                    }
+                    if let itemLength = itemLength {
+                        view.fw_setDimension(.height, size: itemLength)
+                    }
                 }
                 if index == self.count - 1, let tailSpacing = tailSpacing {
                     view.fw_pinEdge(toSuperview: .bottom, inset: tailSpacing)
