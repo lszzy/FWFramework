@@ -46,7 +46,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["路由Parameter", "onOpenParameter"],
         ["自定义Handler", "onOpenHandler"],
         ["自动注册的Url", "onOpenLoader"],
-        ["跳转telprompt", "onOpenTel"],
+        ["打电话", "onOpenTel"],
         ["跳转设置", "onOpenSettings"],
         ["跳转首页", "onOpenHome"],
         ["跳转home/undefined", "onOpenHome2"],
@@ -285,7 +285,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenTel() {
-        Router.openURL("telprompt:10000")
+        Router.openURL("tel:10000")
     }
     
     func onOpenSettings() {
