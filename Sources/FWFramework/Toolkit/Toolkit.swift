@@ -219,8 +219,7 @@ import StoreKit
 
     /// 打开系统电话App
     public static func fw_openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        // tel:为直接拨打电话
-        fw_openURL("telprompt:" + phone, completionHandler: completionHandler)
+        fw_openURL("tel:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
