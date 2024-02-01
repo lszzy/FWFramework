@@ -433,9 +433,9 @@ open class ImageCoder: NSObject {
 
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
     open class func mimeType(from fileExtension: String) -> String {
-        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeUnretainedValue(),
-           let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue() as String? {
-            return mimeType
+        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeRetainedValue(),
+           let contentType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeRetainedValue() {
+            return contentType as String
         }
         return "application/octet-stream"
     }
