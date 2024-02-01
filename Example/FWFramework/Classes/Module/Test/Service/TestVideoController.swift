@@ -68,7 +68,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
                     self.app.showPrompt(title: "请输入视频URL", message: nil) { [weak self] textField in
                         guard let self = self else { return }
                         
-                        textField.text = !self.videoUrl.isEmpty ? self.videoUrl : "http://www.w3school.com.cn/i/movie.mp4"
+                        textField.text = !self.videoUrl.isEmpty ? self.videoUrl : "http://vjs.zencdn.net/v/oceans.mp4"
                     } confirmBlock: { [weak self] text in
                         self?.videoUrl = text
                         self?.playVideo()
