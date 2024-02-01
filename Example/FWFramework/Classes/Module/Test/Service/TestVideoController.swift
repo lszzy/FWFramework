@@ -16,6 +16,9 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     
     @StoredValue("TestVideoCacheEnabled")
     private var cacheEnabled: Bool = false
+    
+    @StoredValue("TestVideoUrl")
+    private var videoUrl: String = ""
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -49,20 +52,43 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     
     // MARK: - Private
     func setupNavbar() {
-        app.setRightBarItem(cacheEnabled ? "禁用缓存" : "启用缓存") { [weak self] sender in
-            guard let strongSelf = self else { return }
-            strongSelf.cacheEnabled = !strongSelf.cacheEnabled
-            strongSelf.playVideo()
-            strongSelf.setupNavbar()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.app.showSheet(title: nil, message: nil, actions: [
+                self.cacheEnabled ? "禁用缓存" : "启用缓存",
+                "自定义视频URL",
+            ], actionBlock: { [weak self] index in
+                guard let self = self else { return }
+                
+                if index == 0 {
+                    self.cacheEnabled = !self.cacheEnabled
+                    self.playVideo()
+                } else {
+                    self.app.showPrompt(title: "请输入视频URL", message: nil) { [weak self] textField in
+                        textField.text = self?.videoUrl ?? ""
+                    } confirmBlock: { [weak self] text in
+                        self?.videoUrl = text
+                        self?.playVideo()
+                    }
+                }
+            })
         }
     }
     
     private func playVideo() {
-        guard let videoUrl = Bundle.main.url(forResource: "Video", withExtension: "mp4") else { return }
-        if cacheEnabled {
-            self.player.asset = resourceLoader.urlAsset(with: videoUrl)
+        var url: URL?
+        if !videoUrl.isEmpty {
+            url = URL.app.url(string: videoUrl)
         } else {
-            self.player.url = videoUrl
+            url = Bundle.main.url(forResource: "Video", withExtension: "mp4")
+        }
+        guard let url = url else { return }
+        
+        if cacheEnabled {
+            self.player.asset = resourceLoader.urlAsset(url: url)
+        } else {
+            self.player.url = url
         }
     }
     

@@ -9,7 +9,6 @@ import Foundation
 import AVFoundation
 import MobileCoreServices
 
-/*
 // MARK: - PlayerCacheLoaderManager
 public protocol PlayerCacheLoaderManagerDelegate: AnyObject {
     func resourceLoaderManagerLoadURL(_ url: URL, didFailWithError error: Error?)
@@ -687,13 +686,17 @@ public enum PlayerCacheAtionType: Int {
 }
 
 public class PlayerCacheAction: NSObject {
-    public var actionType: PlayerCacheAtionType
-    public var range: NSRange
+    public var actionType: PlayerCacheAtionType = .local
+    public var range: NSRange = .init()
     
-    public init(actionType: PlayerCacheAtionType, range: NSRange) {
+    public override init() {
+        super.init()
+    }
+    
+    public convenience init(actionType: PlayerCacheAtionType, range: NSRange) {
+        self.init()
         self.actionType = actionType
         self.range = range
-        super.init()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
@@ -772,7 +775,23 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     }
     
     public static func createAndSaveDownloadedConfiguration(for url: URL) throws {
+        let filePath = PlayerCacheManager.cachedFilePath(for: url)
+        let attributes = try FileManager.default.attributesOfItem(atPath: filePath)
+        let fileSize = attributes[.size] as? UInt64 ?? 0
+        let range = NSRange(location: 0, length: Int(fileSize))
         
+        let configuration = PlayerCacheConfiguration.configuration(filePath: filePath)
+        configuration.url = url
+        
+        let contentInfo = PlayerCacheContentInfo()
+        contentInfo.contentType = Data.fw_mimeType(from: url.pathExtension)
+        contentInfo.contentLength = fileSize
+        contentInfo.byteRangeAccessSupported = true
+        contentInfo.downloadedContentLength = fileSize
+        configuration.contentInfo = contentInfo
+        
+        configuration.addCacheFragment(range)
+        configuration.save()
     }
     
     public required override init() {
@@ -854,7 +873,23 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
                 cacheFragments.remove(atOffsets: indexSet)
                 cacheFragments.insert(NSValue(range: combineRange), at: indexSet.first ?? 0)
             } else if indexSet.count == 1 {
-                
+                let firstRange = self.internalCacheFragments[indexSet.first ?? 0].rangeValue
+                let expandFirstRange = NSMakeRange(firstRange.location, firstRange.length + 1)
+                let expandFragmentRange = NSMakeRange(fragment.location, fragment.length + 1)
+                let intersectionRange = NSIntersectionRange(expandFirstRange, expandFragmentRange)
+                if intersectionRange.length > 0 {
+                    let location = min(firstRange.location, fragment.location)
+                    let endOffset = max(firstRange.location + firstRange.length, fragment.location + fragment.length)
+                    let combineRange = NSMakeRange(location, endOffset - location)
+                    cacheFragments.remove(at: indexSet.first ?? 0)
+                    cacheFragments.insert(NSValue(range: combineRange), at: indexSet.first ?? 0)
+                } else {
+                    if firstRange.location > fragment.location {
+                        cacheFragments.insert(fragmentValue, at: indexSet.last ?? 0)
+                    } else {
+                        cacheFragments.insert(fragmentValue, at: (indexSet.last ?? 0) + 1)
+                    }
+                }
             }
         }
         
@@ -913,19 +948,73 @@ public class PlayerCacheManager: NSObject {
     }
     
     public static func calculateCachedSize() throws -> UInt64 {
-        
+        let fileManager = FileManager.default
+        let cacheDirectory = self.cacheDirectory
+        let files = try fileManager.contentsOfDirectory(atPath: cacheDirectory)
+        var size: UInt64 = 0
+        for path in files {
+            let filePath = (cacheDirectory as NSString).appendingPathComponent(path)
+            let attributes = try fileManager.attributesOfItem(atPath: filePath)
+            size += attributes[.size] as? UInt64 ?? 0
+        }
+        return size
     }
     
     public static func cleanAllCache() throws {
+        var downloadingFiles = Set<String>()
+        PlayerCacheDownloaderStatus.shared.urls.forEach { url in
+            let file = cachedFilePath(for: url)
+            downloadingFiles.insert(file)
+            let configurationPath = PlayerCacheConfiguration.configurationFilePath(for: file)
+            downloadingFiles.insert(configurationPath)
+        }
         
+        let fileManager = FileManager.default
+        let cacheDirectory = self.cacheDirectory
+        let files = try fileManager.contentsOfDirectory(atPath: cacheDirectory)
+        for path in files {
+            let filePath = (cacheDirectory as NSString).appendingPathComponent(path)
+            if downloadingFiles.contains(filePath) {
+                continue
+            }
+            try fileManager.removeItem(atPath: filePath)
+        }
     }
     
     public static func cleanCache(for url: URL) throws {
+        if PlayerCacheDownloaderStatus.shared.containsUrl(url) {
+            let description = "Clean cache for url `\(url)` can't be done, because it's downloading"
+            throw NSError(domain: "FWPlayerCache", code: 2, userInfo: [NSLocalizedDescriptionKey: description])
+        }
         
+        let fileManager = FileManager.default
+        let filePath = cachedFilePath(for: url)
+        if fileManager.fileExists(atPath: filePath) {
+            try fileManager.removeItem(atPath: filePath)
+        }
+        
+        let configurationPath = PlayerCacheConfiguration.configurationFilePath(for: filePath)
+        if fileManager.fileExists(atPath: configurationPath) {
+            try fileManager.removeItem(atPath: configurationPath)
+        }
     }
     
     public static func addCacheFile(_ filePath: String, for url: URL) throws {
+        let fileManager = FileManager.default
+        let cachePath = PlayerCacheManager.cachedFilePath(for: url)
+        let cacheFolder = (cachePath as NSString).deletingLastPathComponent
+        if !fileManager.fileExists(atPath: cacheFolder) {
+            try fileManager.createDirectory(atPath: cacheFolder, withIntermediateDirectories: true, attributes: nil)
+        }
         
+        try fileManager.copyItem(atPath: filePath, toPath: cachePath)
+        
+        do {
+            try PlayerCacheConfiguration.createAndSaveDownloadedConfiguration(for: url)
+        } catch {
+            try? fileManager.removeItem(atPath: cachePath)
+            throw error
+        }
     }
 }
 
@@ -1030,7 +1119,79 @@ public class PlayerCacheWorker: NSObject {
     }
     
     public func cachedDataActions(for range: NSRange) -> [PlayerCacheAction] {
+        let cachedFragments = cacheConfiguration.cacheFragments
+        var actions = [PlayerCacheAction]()
+        if range.location == NSNotFound {
+            return actions
+        }
         
+        let endOffset = range.location + range.length
+        for fragment in cachedFragments {
+            let fragmentRange = fragment.rangeValue
+            let intersectionRange = NSIntersectionRange(range, fragmentRange)
+            if intersectionRange.length > 0 {
+                let package = intersectionRange.length / Self.packageLength
+                for i in 0...package {
+                    let action = PlayerCacheAction()
+                    action.actionType = .local
+                    
+                    let offset = i * Self.packageLength
+                    let offsetLocation = intersectionRange.location + offset
+                    let maxLocation = intersectionRange.location + intersectionRange.length
+                    let length = (offsetLocation + Self.packageLength) > maxLocation ? (maxLocation - offsetLocation) : Self.packageLength
+                    action.range = NSRange(location: offsetLocation, length: length)
+                    
+                    actions.append(action)
+                }
+            } else if fragmentRange.location >= endOffset {
+                break
+            }
+        }
+        
+        if actions.isEmpty {
+            let action = PlayerCacheAction()
+            action.actionType = .remote
+            action.range = range
+            actions.append(action)
+        } else {
+            var localRemoteActions = [PlayerCacheAction]()
+            for (idx, obj) in actions.enumerated() {
+                let actionRange = obj.range
+                if idx == 0 {
+                    if range.location < actionRange.location {
+                        let action = PlayerCacheAction()
+                        action.actionType = .remote
+                        action.range = NSRange(location: range.location, length: actionRange.location - range.location)
+                        localRemoteActions.append(action)
+                    }
+                    localRemoteActions.append(obj)
+                } else {
+                    let lastAction = localRemoteActions.last ?? .init()
+                    let lastOffset = lastAction.range.location + lastAction.range.length
+                    if actionRange.location > lastOffset {
+                        let action = PlayerCacheAction()
+                        action.actionType = .remote
+                        action.range = NSRange(location: lastOffset, length: actionRange.location - lastOffset)
+                        localRemoteActions.append(action)
+                    }
+                    localRemoteActions.append(obj)
+                }
+                
+                if idx == actions.count - 1 {
+                    let localEndOffset = actionRange.location + actionRange.length
+                    if endOffset > localEndOffset {
+                        let action = PlayerCacheAction()
+                        action.actionType = .remote
+                        action.range = NSRange(location: localEndOffset, length: endOffset - localEndOffset)
+                        localRemoteActions.append(action)
+                    }
+                }
+            }
+            
+            actions = localRemoteActions
+        }
+        
+        return actions
     }
     
     public func cachedData(for range: NSRange) throws -> Data? {
@@ -1091,4 +1252,4 @@ public class PlayerCacheWorker: NSObject {
     @objc private func applicationDidEnterBackground(_ notification: Notification) {
         self.save()
     }
-}*/
+}

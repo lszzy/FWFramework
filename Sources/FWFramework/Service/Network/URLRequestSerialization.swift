@@ -472,9 +472,9 @@ extension StreamingMultipartFormData {
     }
 
     private static func contentTypeForPathExtension(_ ext: String) -> String {
-        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeUnretainedValue(),
-           let contentType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue() as String? {
-            return contentType
+        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue(),
+           let contentType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeRetainedValue() {
+            return contentType as String
         }
         return "application/octet-stream"
     }
