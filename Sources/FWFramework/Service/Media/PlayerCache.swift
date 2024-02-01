@@ -474,11 +474,12 @@ class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegat
     
     private func popFirstActionInList() -> PlayerCacheAction? {
         objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         let action = self.actions.first
         if action != nil {
             self.actions.remove(at: 0)
         }
-        objc_sync_exit(self)
         
         if let action = action {
             return action
@@ -725,7 +726,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     public var url: URL?
     
     public var cacheFragments: [NSValue] {
-        var fragments = internalCacheFragments
+        let fragments = internalCacheFragments
         return fragments
     }
     public var progress: Float {
@@ -733,23 +734,25 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
         return Float(downloadedBytes) / Float(contentLength)
     }
     public var downloadedBytes: Int64 {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         var bytes: Int64 = 0
-        objc_sync_enter(internalCacheFragments)
         for range in internalCacheFragments {
             bytes += Int64(range.rangeValue.length)
         }
-        objc_sync_exit(internalCacheFragments)
         return bytes
     }
     public var downloadSpeed: Float {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         var bytes: Int64 = 0
         var time: TimeInterval = 0
-        objc_sync_enter(downloadInfo)
         for info in downloadInfo {
             bytes += info.first?.int64Value ?? 0
             time += info.last?.doubleValue ?? 0
         }
-        objc_sync_exit(downloadInfo)
         return time > 0 ? (Float(bytes) / 1024.0 / Float(time)) : 0
     }
     
@@ -838,8 +841,8 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     
     public func addCacheFragment(_ fragment: NSRange) {
         if fragment.location == NSNotFound || fragment.length == 0 { return }
-        objc_sync_enter(internalCacheFragments)
-        defer { objc_sync_exit(internalCacheFragments) }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
         
         var cacheFragments = internalCacheFragments
         let fragmentValue = NSValue(range: fragment)
@@ -897,9 +900,10 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     }
     
     public func addDownloadedBytes(bytes: Int64, spent time: TimeInterval) {
-        objc_sync_enter(downloadInfo)
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         downloadInfo.append([NSNumber(value: bytes), NSNumber(value: time)])
-        objc_sync_exit(downloadInfo)
     }
     
     private func doDelaySaveAction() {
@@ -908,9 +912,10 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     }
     
     @objc private func archiveData() {
-        objc_sync_enter(internalCacheFragments)
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         Data.fw_archiveObject(self, toFile: filePath)
-        objc_sync_exit(internalCacheFragments)
     }
 }
 
@@ -1088,9 +1093,10 @@ public class PlayerCacheWorker: NSObject {
     
     public func cacheData(_ data: Data, for range: NSRange) throws {
         guard let writeFileHandle = writeFileHandle else { return }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
         
         var error: Error?
-        objc_sync_enter(writeFileHandle)
         do {
             try writeFileHandle.seek(toOffset: UInt64(range.location))
             if #available(iOS 13.4, *) {
@@ -1111,7 +1117,6 @@ public class PlayerCacheWorker: NSObject {
         } catch let fileError {
             error = fileError
         }
-        objc_sync_exit(writeFileHandle)
         
         if let error = error {
             throw error
@@ -1196,8 +1201,9 @@ public class PlayerCacheWorker: NSObject {
     
     public func cachedData(for range: NSRange) throws -> Data? {
         guard let readFileHandle = readFileHandle else { return nil }
-        objc_sync_enter(readFileHandle)
-        defer { objc_sync_exit(readFileHandle) }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
         try readFileHandle.seek(toOffset: UInt64(range.location))
         var data: Data?
         if #available(iOS 13.4, *) {
@@ -1224,11 +1230,11 @@ public class PlayerCacheWorker: NSObject {
     
     public func save() {
         guard let writeFileHandle = writeFileHandle else { return }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
         
-        objc_sync_enter(writeFileHandle)
         try? writeFileHandle.synchronize()
         cacheConfiguration.save()
-        objc_sync_exit(writeFileHandle)
     }
     
     public func startWritting() {
