@@ -68,9 +68,6 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
         emptyView.fw_pinEdges(toSuperview: view.fw_emptyInsets)
-
-        self.customBlock?(emptyView)
-        customBlock?(emptyView)
         
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)
@@ -88,6 +85,9 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
                 block?(1, sender)
             }
         }
+        
+        self.customBlock?(emptyView)
+        customBlock?(emptyView)
         
         if fadeAnimated {
             emptyView.alpha = 0
