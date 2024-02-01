@@ -89,7 +89,9 @@ extension TestAudioController: ViewControllerProtocol {
                     self.renderData()
                 } else {
                     self.app.showPrompt(title: "请输入音频URL", message: nil) { [weak self] textField in
-                        textField.text = self?.audioUrl ?? ""
+                        guard let self = self else { return }
+                        
+                        textField.text = !self.audioUrl.isEmpty ? self.audioUrl : "http://music.163.com/song/media/outer/url?id=447925558.mp3"
                     } confirmBlock: { [weak self] text in
                         self?.audioUrl = text
                         self?.audioPlayer.playItem(from: 0)
