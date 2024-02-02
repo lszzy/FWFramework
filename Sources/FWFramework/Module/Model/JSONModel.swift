@@ -1191,6 +1191,16 @@ public extension Collection where Iterator.Element: JSONModel {
     }
 }
 
+// MARK: - HashString
+public extension JSONModel where Self: AnyObject {
+    
+    var hashString: String {
+        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
+        return String(describing: opaquePointer)
+    }
+    
+}
+
 // MARK: - HelpingMapper
 public typealias CustomMappingKeyValueTuple = (Int, MappingPropertyHandler)
 
