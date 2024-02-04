@@ -390,7 +390,7 @@ extension Wrapper where Base: UILabel {
         set { base.fw_textAttributes = newValue }
     }
 
-    /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
+    /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于等于0时恢复默认行高
     public var lineHeight: CGFloat {
         get { return base.fw_lineHeight }
         set { base.fw_lineHeight = newValue }
@@ -448,14 +448,34 @@ extension Wrapper where Base: UILabel {
         return base.fw_isNotEmpty
     }
     
+    /// 计算当前标签实际显示行数，兼容contentInset|lineHeight
+    public var actualNumberOfLines: Int {
+        return base.fw_actualNumberOfLines
+    }
+    
+    /// 计算指定边界、内边距、行高、行数时，当前标签实际显示行数
+    public func actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil, numberOfLines: Int? = nil) -> Int {
+        return base.fw_actualNumberOfLines(drawSize: drawSize, contentInset: contentInset, lineHeight: lineHeight, numberOfLines: numberOfLines)
+    }
+    
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
     public var textSize: CGSize {
         return base.fw_textSize
+    }
+    
+    /// 计算指定边界时，当前文本所占尺寸
+    public func textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        return base.fw_textSize(drawSize: drawSize, contentInset: contentInset)
     }
 
     /// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
     public var attributedTextSize: CGSize {
         return base.fw_attributedTextSize
+    }
+
+    /// 计算指定边界时，当前属性文本所占尺寸，attributedText需指定字体
+    public func attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        return base.fw_attributedTextSize(drawSize: drawSize, contentInset: contentInset)
     }
     
 }
@@ -910,10 +930,20 @@ extension Wrapper where Base: UITextView {
     public var textSize: CGSize {
         return base.fw_textSize
     }
+    
+    /// 计算指定边界时，当前文本所占尺寸，包含textContainerInset
+    public func textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        return base.fw_textSize(drawSize: drawSize, contentInset: contentInset)
+    }
 
     /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
     public var attributedTextSize: CGSize {
         return base.fw_attributedTextSize
+    }
+
+    /// 计算指定边界时，当前属性文本所占尺寸，包含textContainerInset，attributedText需指定字体
+    public func attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        return base.fw_attributedTextSize(drawSize: drawSize, contentInset: contentInset)
     }
     
 }

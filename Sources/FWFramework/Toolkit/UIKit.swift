@@ -1266,7 +1266,7 @@ import AdSupport
         return attributedString
     }
 
-    /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于0时恢复默认行高
+    /// 快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于等于0时恢复默认行高
     public var fw_lineHeight: CGFloat {
         get {
             if self.fw_issetLineHeight {
@@ -1283,17 +1283,16 @@ import AdSupport
                         }
                     }
                 })
-                return result == 0 ? self.font.lineHeight : result
-            } else if (self.text?.count ?? 0) > 0 {
+                return result > 0 ? result : self.font.lineHeight
+            } else {
                 return self.font.lineHeight
             }
-            return 0
         }
         set {
-            if newValue < 0 {
-                fw_setProperty(nil, forName: "fw_lineHeight")
-            } else {
+            if newValue > 0 {
                 fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+            } else {
+                fw_setProperty(nil, forName: "fw_lineHeight")
             }
             guard let string = self.attributedText?.string else { return }
             let attributedString = NSAttributedString(string: string, attributes: self.fw_textAttributes)
@@ -1401,6 +1400,31 @@ import AdSupport
         return false
     }
     
+    /// 计算当前标签实际显示行数，兼容contentInset|lineHeight
+    public var fw_actualNumberOfLines: Int {
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        return fw_actualNumberOfLines(drawSize: drawSize)
+    }
+    
+    /// 计算指定边界、内边距、行高、行数时，当前标签实际显示行数
+    public func fw_actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil, numberOfLines: Int? = nil) -> Int {
+        guard fw_isNotEmpty else { return 0 }
+        
+        let inset = contentInset ?? self.fw_contentInset
+        let lineHeight = lineHeight ?? self.fw_lineHeight
+        let maxLines = numberOfLines ?? self.numberOfLines
+        guard lineHeight > 0 else { return 0 }
+        
+        let height = self.sizeThatFits(drawSize).height - inset.top - inset.bottom
+        let lines = Int(round(height / lineHeight))
+        return maxLines > 0 ? min(lines, maxLines) : lines
+    }
+    
     /// 计算当前文本所占尺寸，需frame或者宽度布局完整
     public var fw_textSize: CGSize {
         if self.frame.size.equalTo(.zero) {
@@ -1408,6 +1432,12 @@ import AdSupport
             self.layoutIfNeeded()
         }
         
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        return fw_textSize(drawSize: drawSize)
+    }
+    
+    /// 计算指定边界时，当前文本所占尺寸
+    public func fw_textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
         var attrs: [NSAttributedString.Key: Any] = [:]
         attrs[.font] = self.font
         if self.lineBreakMode != .byWordWrapping {
@@ -1421,9 +1451,9 @@ import AdSupport
             attrs[.paragraphStyle] = paragraphStyle
         }
         
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        let size = (self.text as? NSString)?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
+        let inset = contentInset ?? self.fw_contentInset
+        let size = (self.text as? NSString)?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
 
     /// 计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体
@@ -1434,8 +1464,14 @@ import AdSupport
         }
         
         let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        let size = self.attributedText?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
+        return fw_attributedTextSize(drawSize: drawSize)
+    }
+
+    /// 计算指定边界时，当前属性文本所占尺寸，attributedText需指定字体
+    public func fw_attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        let inset = contentInset ?? self.fw_contentInset
+        let size = self.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
     
     @objc func fw_swizzleSetText(_ text: String?) {
@@ -2607,12 +2643,18 @@ import AdSupport
             self.layoutIfNeeded()
         }
         
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        return fw_textSize(drawSize: drawSize)
+    }
+    
+    /// 计算指定边界时，当前文本所占尺寸，包含textContainerInset
+    public func fw_textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
         var attrs: [NSAttributedString.Key: Any] = [:]
         attrs[.font] = self.font
-
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        let size = (self.text as? NSString)?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)) + self.textContainerInset.left + self.textContainerInset.right, height: min(drawSize.height, ceil(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom)
+        
+        let inset = contentInset ?? self.textContainerInset
+        let size = (self.text as? NSString)?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
 
     /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
@@ -2623,8 +2665,14 @@ import AdSupport
         }
         
         let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        let size = self.attributedText?.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)) + self.textContainerInset.left + self.textContainerInset.right, height: min(drawSize.height, ceil(size.height)) + self.textContainerInset.top + self.textContainerInset.bottom)
+        return fw_attributedTextSize(drawSize: drawSize)
+    }
+
+    /// 计算指定边界时，当前属性文本所占尺寸，包含textContainerInset，attributedText需指定字体
+    public func fw_attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
+        let inset = contentInset ?? self.textContainerInset
+        let size = self.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
     
     fileprivate static func fw_swizzleUIKitTextView() {
