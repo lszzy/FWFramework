@@ -37,6 +37,9 @@ extension Wrapper where Base: UIView {
     }
     
     /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
+    ///
+    /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
+    /// 其余使用AutoLayout的场景统一使用全局等比例缩放布局开关设置
     public static var autoScaleLayout: Bool {
         get { UIView.fw_autoScaleLayout }
         set { UIView.fw_autoScaleLayout = newValue }
@@ -49,6 +52,9 @@ extension Wrapper where Base: UIView {
     }
     
     /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
+    ///
+    /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
+    /// 其余使用AutoLayout的场景统一使用全局等比例缩放布局开关设置
     public var autoScaleLayout: Bool {
         get { base.fw_autoScaleLayout }
         set { base.fw_autoScaleLayout = newValue }
