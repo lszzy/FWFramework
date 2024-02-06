@@ -31,6 +31,9 @@ import UIKit
     public static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
     
     /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
+    ///
+    /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
+    /// 其余使用AutoLayout的场景统一使用全局等比例缩放布局开关设置
     public static var fw_autoScaleLayout: Bool {
         get {
             fw_autoScaleBlock != nil
@@ -45,6 +48,9 @@ import UIKit
     public static var fw_autoFlatLayout = false
     
     /// 视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
+    ///
+    /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
+    /// 其余使用AutoLayout的场景统一使用全局等比例缩放布局开关设置
     public var fw_autoScaleLayout: Bool {
         get {
             if let number = fw_propertyNumber(forName: "fw_autoScaleLayout") {
