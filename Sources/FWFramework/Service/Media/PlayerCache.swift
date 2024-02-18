@@ -651,7 +651,7 @@ public class PlayerCacheRequestWorker: NSObject, PlayerCacheDownloaderDelegate {
 }
 
 // MARK: - PlayerCacheContentInfo
-public class PlayerCacheContentInfo: NSObject, NSCoding {
+public class PlayerCacheContentInfo: NSObject, NSSecureCoding {
     public var contentType: String = ""
     public var byteRangeAccessSupported = false
     public var contentLength: UInt64 = 0
@@ -659,6 +659,10 @@ public class PlayerCacheContentInfo: NSObject, NSCoding {
     
     public override init() {
         super.init()
+    }
+    
+    public static var supportsSecureCoding: Bool {
+        return true
     }
     
     public required init?(coder: NSCoder) {
@@ -719,7 +723,7 @@ public class PlayerCacheAction: NSObject {
 }
 
 // MARK: - PlayerCacheConfiguration
-public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
+public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
     public private(set) var filePath: String = ""
     public var contentInfo: PlayerCacheContentInfo?
     public var url: URL?
@@ -799,6 +803,10 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     
     public required override init() {
         super.init()
+    }
+    
+    public static var supportsSecureCoding: Bool {
+        return true
     }
     
     public required init?(coder: NSCoder) {

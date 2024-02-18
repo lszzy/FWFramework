@@ -57,7 +57,7 @@ import CommonCrypto
         return data
     }
     
-    /// 将数据解档为指定类型对象，推荐使用
+    /// 将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用
     public func fw_unarchivedObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
         let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: self)
         return object
@@ -83,7 +83,7 @@ import CommonCrypto
         }
     }
     
-    /// 从文件解档指定类型对象，推荐使用
+    /// 从文件解档指定类型对象，需实现NSSecureCoding，推荐使用
     public static func fw_unarchivedObject<T>(_ clazz: T.Type, withFile path: String) -> T? where T : NSObject, T : NSCoding {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
         return data.fw_unarchivedObject(clazz)
