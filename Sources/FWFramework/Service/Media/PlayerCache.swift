@@ -766,7 +766,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
     
     public static func configuration(filePath: String) -> PlayerCacheConfiguration {
         let filePath = configurationFilePath(for: filePath)
-        if let configuration = Data.fw_unarchivedObject(PlayerCacheConfiguration.self, withFile: filePath) {
+        if let configuration = Data.fw_unarchivedObject(withFile: filePath) as? PlayerCacheConfiguration {
             configuration.filePath = filePath
             return configuration
         } else {
