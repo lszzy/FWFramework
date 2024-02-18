@@ -133,6 +133,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var isTouchEnabled: Bool = true
     open var isVerticalDividerEnabled: Bool = false
     open var shouldStretchSegmentsToScreenSize: Bool = false
+    open var useSelectedTitleTextAttributesSize: Bool = false
     /// 当前选中index, -1表示不选中
     open var selectedSegmentIndex: Int {
         get {
@@ -615,7 +616,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         } else if let titleFormatter = titleFormatter {
             size = titleFormatter(self, title.stringValue, index, selected).size()
         } else {
-            let titleAttrs = selected ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
+            let titleAttrs = selected || useSelectedTitleTextAttributesSize ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
             let attributedString = NSAttributedString(string: title.stringValue, attributes: titleAttrs)
             size = attributedString.size()
         }
