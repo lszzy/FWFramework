@@ -408,10 +408,15 @@ class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegat
     private var url: URL
     private var cacheWorker: PlayerCacheWorker
     
-    private lazy var session: URLSession = {
+    private var session: URLSession {
+        if let result = _session {
+            return result
+        }
         let result = URLSession(configuration: .default, delegate: self.sessionDelegateObject, delegateQueue: PlayerCacheSessionManager.shared.downloadQueue)
+        _session = result
         return result
-    }()
+    }
+    private var _session: URLSession?
     private lazy var sessionDelegateObject: PlayerCacheSessionDelegateObject = {
         let result = PlayerCacheSessionDelegateObject(delegate: self)
         return result
@@ -436,7 +441,7 @@ class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegat
     }
     
     func cancel() {
-        session.invalidateAndCancel()
+        _session?.invalidateAndCancel()
         isCancelled = true
     }
     
