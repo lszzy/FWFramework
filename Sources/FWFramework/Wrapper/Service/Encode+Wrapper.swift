@@ -56,7 +56,7 @@ extension Wrapper where Base == Data {
         return Base.fw_archivedData(object)
     }
     
-    /// 将数据解档为指定类型对象，推荐使用
+    /// 将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用
     public func unarchivedObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
         return base.fw_unarchivedObject(clazz)
     }
@@ -72,7 +72,7 @@ extension Wrapper where Base == Data {
         return Base.fw_archiveObject(object, toFile: path)
     }
     
-    /// 从文件解档指定类型对象，推荐使用
+    /// 从文件解档指定类型对象，需实现NSSecureCoding，推荐使用
     public static func unarchivedObject<T>(_ clazz: T.Type, withFile path: String) -> T? where T : NSObject, T : NSCoding {
         return Base.fw_unarchivedObject(clazz, withFile: path)
     }
