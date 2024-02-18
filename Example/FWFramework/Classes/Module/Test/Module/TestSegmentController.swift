@@ -54,13 +54,14 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.selectionIndicatorLocation = .none
         result.selectionIndicatorCornerRadius = 2.5
         result.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.app.font(ofSize: 14),
+            NSAttributedString.Key.font: UIFont.app.font(ofSize: 13),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
         result.selectedTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.app.font(ofSize: 14, weight: .bold),
+            NSAttributedString.Key.font: UIFont.app.font(ofSize: 15, weight: .bold),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor,
         ]
+        result.useSelectedTitleTextAttributesSize = true
         result.segmentCustomBlock = { segmentedControl, index, rect in
             if index == 1, segmentedControl.selectedSegmentIndex != 1 {
                 let layer = CAShapeLayer()
@@ -229,7 +230,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         marqueeLabel.setNeedsLayout()
         marqueeLabel.layoutIfNeeded()
         
-        let sectionTitles = ["菜单一", "菜单二", "长的菜单三", "菜单四", "菜单五", "菜单六"]
+        let sectionTitles = ["🍔菜单一", "菜单二", "😄长的菜单三", "菜单四", "菜单五", "菜单六"]
         let sectionContents = ["我是内容一", "我是内容二", "我是长的内容三", "我是内容四", "我是内容五", "我是内容六"]
         view.addSubview(segmentedControl)
         segmentedControl.app.layoutChain
