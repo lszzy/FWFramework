@@ -946,6 +946,27 @@ extension Wrapper where Base: UITextView {
         return base.fw_attributedTextSize(drawSize: drawSize, contentInset: contentInset)
     }
     
+    /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
+    public var lineHeight: CGFloat {
+        get { return base.fw_lineHeight }
+        set { base.fw_lineHeight = newValue }
+    }
+    
+    /// 获取当前文本框是否非空，兼容attributedText|text
+    public var isNotEmpty: Bool {
+        return base.fw_isNotEmpty
+    }
+    
+    /// 计算当前文本框实际显示行数，兼容textContainerInset|lineHeight
+    public var actualNumberOfLines: Int {
+        return base.fw_actualNumberOfLines
+    }
+    
+    /// 计算指定边界、内边距、行高时，当前文本框实际显示行数
+    public func actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil) -> Int {
+        return base.fw_actualNumberOfLines(drawSize: drawSize, contentInset: contentInset, lineHeight: lineHeight)
+    }
+    
 }
 
 // MARK: - UITableView+UIKit

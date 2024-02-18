@@ -1272,17 +1272,18 @@ import AdSupport
             if self.fw_issetLineHeight {
                 return fw_propertyDouble(forName: "fw_lineHeight")
             } else if (self.attributedText?.length ?? 0) > 0 {
-                let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString
                 var result: CGFloat = 0
-                string?.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string?.length ?? 0), using: { obj, range, stop in
-                    guard let style = obj as? NSParagraphStyle else { return }
-                    if NSEqualRanges(range, NSMakeRange(0, string?.length ?? 0)) {
-                        if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
-                            result = style.maximumLineHeight
-                            stop.pointee = true
+                if let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString {
+                    string.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string.length), using: { obj, range, stop in
+                        guard let style = obj as? NSParagraphStyle else { return }
+                        if NSEqualRanges(range, NSMakeRange(0, string.length)) {
+                            if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                                result = style.maximumLineHeight
+                                stop.pointee = true
+                            }
                         }
-                    }
-                })
+                    })
+                }
                 return result > 0 ? result : self.font.lineHeight
             } else {
                 return self.font.lineHeight
@@ -2673,6 +2674,90 @@ import AdSupport
         let inset = contentInset ?? self.textContainerInset
         let size = self.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
         return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
+    }
+    
+    /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
+    public var fw_lineHeight: CGFloat {
+        get {
+            if fw_property(forName: "fw_lineHeight") != nil {
+                return fw_propertyDouble(forName: "fw_lineHeight")
+            }
+            
+            var result: CGFloat = 0
+            if let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString {
+                string.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string.length), using: { obj, range, stop in
+                    guard let style = obj as? NSParagraphStyle else { return }
+                    if NSEqualRanges(range, NSMakeRange(0, string.length)) {
+                        if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                            result = style.maximumLineHeight
+                            stop.pointee = true
+                        }
+                    }
+                })
+            }
+            
+            if result <= 0, let style = self.typingAttributes[.paragraphStyle] as? NSParagraphStyle {
+                if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                    result = style.maximumLineHeight
+                }
+            }
+            return result > 0 ? result : (self.font?.lineHeight ?? 0)
+        }
+        set {
+            if newValue > 0 {
+                fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+            } else {
+                fw_setProperty(nil, forName: "fw_lineHeight")
+            }
+            
+            self.fw_placeholderLineHeight = newValue
+            
+            var typingAttributes = self.typingAttributes
+            var paragraphStyle: NSMutableParagraphStyle
+            if let style = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else if let style = (typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else {
+                paragraphStyle = NSMutableParagraphStyle()
+            }
+            paragraphStyle.minimumLineHeight = newValue > 0 ? newValue : 0
+            paragraphStyle.maximumLineHeight = newValue > 0 ? newValue : 0
+            
+            typingAttributes[.paragraphStyle] = paragraphStyle
+            self.typingAttributes = typingAttributes
+        }
+    }
+    
+    /// 获取当前文本框是否非空，兼容attributedText|text
+    public var fw_isNotEmpty: Bool {
+        if (attributedText?.length ?? 0) > 0 { return true }
+        if (text?.count ?? 0) > 0 { return true }
+        return false
+    }
+    
+    /// 计算当前文本框实际显示行数，兼容textContainerInset|lineHeight
+    public var fw_actualNumberOfLines: Int {
+        if self.frame.size.equalTo(.zero) {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
+        return fw_actualNumberOfLines(drawSize: drawSize)
+    }
+    
+    /// 计算指定边界、内边距、行高时，当前文本框实际显示行数
+    public func fw_actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil) -> Int {
+        guard fw_isNotEmpty else { return 0 }
+        
+        let inset = contentInset ?? self.textContainerInset
+        let lineHeight = lineHeight ?? self.fw_lineHeight
+        guard lineHeight > 0 else { return 0 }
+        
+        let height = self.sizeThatFits(drawSize).height - inset.top - inset.bottom
+        let lines = Int(round(height / lineHeight))
+        return lines
     }
     
     fileprivate static func fw_swizzleUIKitTextView() {
