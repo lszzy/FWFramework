@@ -474,12 +474,11 @@ class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegat
     
     private func popFirstActionInList() -> PlayerCacheAction? {
         objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
-        
         let action = self.actions.first
         if action != nil {
             self.actions.remove(at: 0)
         }
+        objc_sync_exit(self)
         
         if let action = action {
             return action
@@ -744,8 +743,8 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
         return bytes
     }
     public var downloadSpeed: Float {
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
+        objc_sync_enter(self.downloadInfoLock)
+        defer { objc_sync_exit(self.downloadInfoLock) }
         
         var bytes: Int64 = 0
         var time: TimeInterval = 0
@@ -759,6 +758,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     private var fileName = ""
     private var internalCacheFragments: [NSValue] = []
     private var downloadInfo: [[NSNumber]] = []
+    private var downloadInfoLock = NSObject()
     
     public static func configuration(filePath: String) -> PlayerCacheConfiguration {
         let filePath = configurationFilePath(for: filePath)
@@ -900,8 +900,8 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSCoding {
     }
     
     public func addDownloadedBytes(bytes: Int64, spent time: TimeInterval) {
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
+        objc_sync_enter(self.downloadInfoLock)
+        defer { objc_sync_exit(self.downloadInfoLock) }
         
         downloadInfo.append([NSNumber(value: bytes), NSNumber(value: time)])
     }
@@ -1050,6 +1050,7 @@ public class PlayerCacheWorker: NSObject {
     private var startWriteDate: Date?
     private var writeBytes: Int = 0
     private var writting: Bool = false
+    private var writeLock = NSObject()
     
     private static let packageLength: Int = 512 * 1024
     private static let playerCacheResponseKey = "PlayerCacheResponseKey"
@@ -1093,8 +1094,8 @@ public class PlayerCacheWorker: NSObject {
     
     public func cacheData(_ data: Data, for range: NSRange) throws {
         guard let writeFileHandle = writeFileHandle else { return }
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
+        objc_sync_enter(self.writeLock)
+        defer { objc_sync_exit(self.writeLock) }
         
         var error: Error?
         do {
@@ -1230,8 +1231,8 @@ public class PlayerCacheWorker: NSObject {
     
     public func save() {
         guard let writeFileHandle = writeFileHandle else { return }
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
+        objc_sync_enter(self.writeLock)
+        defer { objc_sync_exit(self.writeLock) }
         
         try? writeFileHandle.synchronize()
         cacheConfiguration.save()
