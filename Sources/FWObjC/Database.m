@@ -9,12 +9,7 @@
 #import "ObjC.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
-#import <CommonCrypto/CommonDigest.h>
-#ifdef SQLITE_HAS_CODEC
-#import "sqlite3.h"
-#else
 #import <sqlite3.h>
-#endif
 
 static const NSString * FWDatabaseSqliteString            = @"TEXT";
 static const NSString * FWDatabaseSqliteInt               = @"INTERGER";
@@ -396,7 +391,6 @@ static sqlite3 * _fw_database;
         NSString * cache_directory = [self databaseCacheDirectory: model_class];
         NSString * database_cache_path = [NSString stringWithFormat:@"%@%@",cache_directory,local_model_name];
         if (sqlite3_open([database_cache_path UTF8String], &_fw_database) == SQLITE_OK) {
-            [self decryptionSqlite:model_class];
             NSArray * old_model_field_name_array = [self getModelFieldNameWithClass:model_class];
             NSDictionary * new_model_info = [self parserModelObjectFieldsWithModelClass:model_class hasPrimary:NO];
             NSMutableString * delete_field_names = [NSMutableString string];
@@ -453,44 +447,6 @@ static sqlite3 * _fw_database;
     }
 }
 
-+ (BOOL)setKey:(NSString*)key {
-    NSData *keyData = [NSData dataWithBytes:[key UTF8String] length:(NSUInteger)strlen([key UTF8String])];
-    return [self setKeyWithData:keyData];
-}
-
-+ (BOOL)setKeyWithData:(NSData *)keyData {
-#ifdef SQLITE_HAS_CODEC
-    if (!keyData) {
-        return NO;
-    }
-    
-    int rc = sqlite3_key(_fw_database, [keyData bytes], (int)[keyData length]);
-    
-    return (rc == SQLITE_OK);
-#else
-    return NO;
-#endif
-}
-
-+ (BOOL)rekey:(NSString*)key {
-    NSData *keyData = [NSData dataWithBytes:(void *)[key UTF8String] length:(NSUInteger)strlen([key UTF8String])];
-    return [self rekeyWithData:keyData];
-}
-
-+ (BOOL)rekeyWithData:(NSData *)keyData {
-#ifdef SQLITE_HAS_CODEC
-    if (!keyData) {
-        return NO;
-    }
-    
-    int rc = sqlite3_rekey(_fw_database, [keyData bytes], (int)[keyData length]);
-    
-    return (rc == SQLITE_OK);
-#else
-    return NO;
-#endif
-}
-
 + (NSString *)exceSelector:(SEL)selector modelClass:(Class)model_class {
     if ([model_class respondsToSelector:selector]) {
         IMP sqlite_info_func = [model_class methodForSelector:selector];
@@ -515,62 +471,6 @@ static sqlite3 * _fw_database;
         return ((NSInteger (*)(id, SEL))(void *) objc_msgSend)(model_object, primary_getter);
     }
     return -1;
-}
-
-+ (NSString *)md5:(NSString *)psw {
-    if (psw && psw.length > 0) {
-        NSMutableString * encrypt = [NSMutableString string];
-        const char * cStr = psw.UTF8String;
-        unsigned char buffer[CC_MD5_DIGEST_LENGTH];
-        memset(buffer, 0x00, CC_MD5_DIGEST_LENGTH);
-        CC_MD5(cStr, (CC_LONG)(strlen(cStr)), buffer);
-        for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-            [encrypt appendFormat:@"%02x",buffer[i]];
-        }
-        return encrypt;
-    }
-    return psw;
-}
-
-+ (NSString *)pswWithModel:(Class)model {
-    NSString * psw = nil;
-    if (model) {
-        NSUserDefaults * ud = [NSUserDefaults standardUserDefaults];
-        NSString * model_name = NSStringFromClass(model);
-        NSData * psw_data = [ud objectForKey:[self md5:model_name]];
-        if (psw_data) {
-            psw = [[NSString alloc] initWithData:psw_data encoding:NSUTF8StringEncoding];
-        }
-    }
-    return psw;
-}
-
-+ (void)saveModel:(Class)model psw:(NSString *)psw {
-    if (model && psw && psw.length > 0) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            NSUserDefaults * ud = [NSUserDefaults standardUserDefaults];
-            NSString * model_name = NSStringFromClass(model);
-            NSData * psw_data = [psw dataUsingEncoding:NSUTF8StringEncoding];
-            [ud setObject:psw_data forKey:[self md5:model_name]];
-            [ud synchronize];
-        });
-    }
-}
-
-+ (void)decryptionSqlite:(Class)model_class {
-#ifdef SQLITE_HAS_CODEC
-    NSString * psw_key = [self exceSelector:@selector(databasePasswordKey) modelClass:model_class];
-    if (psw_key && psw_key.length > 0) {
-        NSString * old_psw = [self pswWithModel:model_class];
-        BOOL is_update_psw = (old_psw && ![old_psw isEqualToString:psw_key]);
-        if (![self setKey:is_update_psw ? old_psw : psw_key]) {
-            [self log:@"给数据库加密失败, 请引入SQLCipher库并配置SQLITE_HAS_CODEC或者pod 'Component/SQLCipher'"];
-        }else {
-            if (is_update_psw) [self rekey:psw_key];
-            [self saveModel:model_class psw:psw_key];
-        }
-    }
-#endif
 }
 
 + (NSString *)getTableName:(Class)model_class {
@@ -651,7 +551,6 @@ static sqlite3 * _fw_database;
     [self shareInstance].check_update = YES;
     NSString * database_cache_path = [NSString stringWithFormat:@"%@%@_v%@.sqlite",cache_directory,NSStringFromClass(model_class),version];
     if (sqlite3_open([database_cache_path UTF8String], &_fw_database) == SQLITE_OK) {
-        [self decryptionSqlite:model_class];
         return [self createTable:model_class];
     }
     return NO;
