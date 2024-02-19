@@ -782,7 +782,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
     }
     
     public static func configurationFilePath(for filePath: String) -> String {
-        return filePath.fw_appendingPathExtension("cache_cfg")
+        return filePath.fw_appendingPathExtension("metadata")
     }
     
     public static func createAndSaveDownloadedConfiguration(for url: URL) throws {
