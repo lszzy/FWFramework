@@ -63,6 +63,9 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
                 
                 if index == 0 {
                     self.cacheEnabled = !self.cacheEnabled
+                    if !self.cacheEnabled {
+                        FileManager.app.removeItem(atPath: PlayerCacheManager.cacheDirectory)
+                    }
                     self.playVideo()
                 } else {
                     self.app.showPrompt(title: "请输入视频URL", message: nil) { [weak self] textField in
