@@ -85,6 +85,9 @@ extension TestAudioController: ViewControllerProtocol {
                     self.audioPlayer.shuffleMode = self.audioPlayer.shuffleMode == .on ? .off : .on
                 } else if index == 2 {
                     self.cacheEnabled = !self.cacheEnabled
+                    if !self.cacheEnabled {
+                        FileManager.app.removeItem(atPath: PlayerCacheManager.cacheDirectory)
+                    }
                     self.audioPlayer.playItem(from: 0)
                     self.renderData()
                 } else {
