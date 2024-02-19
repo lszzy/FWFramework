@@ -43,7 +43,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = TestDatabaseModel
     
     func didInitialize() {
-        let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeDouble
+        let version = DatabaseManager.version(with: TestDatabaseModel.self).safeDouble
         TestDatabaseModel.isLatest = version > 1
     }
     
@@ -76,7 +76,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData = DatabaseManager.query(TestDatabaseModel.self) as! [TestDatabaseModel]
+        tableData = DatabaseManager.query(TestDatabaseModel.self)
         tableView.reloadData()
     }
     
@@ -126,7 +126,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func onVersion() {
-        let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
+        let versionString = DatabaseManager.version(with: TestDatabaseModel.self)
         if let versionString = versionString {
             app.showAlert(title: "当前版本号", message: versionString)
         } else {
@@ -135,7 +135,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func onUpdate() {
-        let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
+        let versionString = DatabaseManager.version(with: TestDatabaseModel.self)
         guard let versionString = versionString else {
             app.showAlert(title: "数据库不存在", message: nil)
             return
