@@ -549,36 +549,6 @@ static sqlite3 * _fw_database;
     }
 }
 
-+ (BOOL)insert:(id)model_object isReplace:(BOOL)isReplace {
-    if (!model_object) return NO;
-    __block BOOL result = NO;
-    if (![self shareInstance].is_migration) {
-        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
-    }
-    @autoreleasepool {
-        if ([self openTable:[model_object class]]) {
-            result = [self commonInsert:model_object isReplace:isReplace];
-            NSInteger value = result ? [self getPrimaryValueWithObject:model_object] : -1;
-            if (result && value == 0) {
-                NSInteger rowid = (NSInteger)sqlite3_last_insert_rowid(_fw_database);
-                SEL primary_setter = [FWDatabasePropertyInfo setterWithProperyName:[self getPrimaryKeyWithClass:[model_object class]]];
-                if (primary_setter && [model_object respondsToSelector:primary_setter]) {
-                    ((void (*)(id, SEL, NSInteger))(void *) objc_msgSend)(model_object, primary_setter, rowid);
-                }
-            }
-            [self close];
-        }
-    }
-    if (![self shareInstance].is_migration) {
-        dispatch_semaphore_signal([self shareInstance].dsema);
-    }
-    return result;
-}
-
-+ (BOOL)save:(id)model_object {
-    return [self insert:model_object isReplace:YES];
-}
-
 + (BOOL)inserts:(NSArray *)model_array {
     __block BOOL result = YES;
     if (![self shareInstance].is_migration) {
@@ -601,10 +571,6 @@ static sqlite3 * _fw_database;
         dispatch_semaphore_signal([self shareInstance].dsema);
     }
     return result;
-}
-
-+ (BOOL)insert:(id)model_object {
-    return [self insert:model_object isReplace:NO];
 }
 
 + (id)autoNewSubmodelWithClass:(Class)model_class {

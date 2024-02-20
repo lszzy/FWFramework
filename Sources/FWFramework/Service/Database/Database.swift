@@ -58,20 +58,36 @@ public class DatabaseManager: NSObject {
     
     /// 保存模型到本地，主键存在时更新，不存在时新增
     @discardableResult
-    public static func save(_ model: DatabaseModel?) -> Bool {
-        return false
+    public static func save(_ model: DatabaseModel) -> Bool {
+        return insert(model, isReplace: true)
     }
     
     /// 新增模型数组到本地(事务方式)，模型数组对象类型要一致
     @discardableResult
-    public static func inserts(_ models: [DatabaseModel]?) -> Bool {
-        return false
+    public static func inserts(_ models: [DatabaseModel]) -> Bool {
+        if !isMigration {
+            semaphore.wait()
+        }
+        var result = true
+        if models.count > 0, openTable(type(of: models[0])) {
+            executeSql("BEGIN TRANSACTION")
+            for model in models {
+                result = commonInsert(model, isReplace: false)
+                if !result { break }
+            }
+            executeSql(result ? "COMMIT" : "ROLLBACK")
+            close()
+        }
+        if !isMigration {
+            semaphore.signal()
+        }
+        return result
     }
     
     /// 新增模型到本地，自动更新主键
     @discardableResult
-    public static func insert(_ model: DatabaseModel?) -> Bool {
-        return false
+    public static func insert(_ model: DatabaseModel) -> Bool {
+        return insert(model, isReplace: false)
     }
     
     /// 获取模型类表总条数，支持查询条件
@@ -276,8 +292,7 @@ private extension DatabaseManager {
         return "pkid"
     }
     
-    static func getPrimaryValue(_ model: DatabaseModel?) -> Int {
-        guard let model = model else { return -1 }
+    static func getPrimaryValue(_ model: DatabaseModel) -> Int {
         let primaryGetter = NSSelectorFromString(getPrimaryKey(type(of: model)))
         if model.responds(to: primaryGetter) {
             return ObjCBridge.invokeMethod(model, selector: primaryGetter) as? Int ?? -1
@@ -349,6 +364,29 @@ private extension DatabaseManager {
     
     static func createTable(_ modelClass: AnyClass) -> Bool {
         return false
+    }
+    
+    static func insert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
+        if !isMigration {
+            semaphore.wait()
+        }
+        var result = false
+        if openTable(type(of: model)) {
+            result = commonInsert(model, isReplace: isReplace)
+            let value = result ? getPrimaryValue(model) : -1
+            if result && value == 0 {
+                let rowId = Int(sqlite3_last_insert_rowid(database))
+                let primarySetter = DatabasePropertyInfo.setter(propertyName: getPrimaryKey(type(of: model)))
+                if model.responds(to: primarySetter) {
+                    ObjCBridge.invokeMethod(model, selector: primarySetter, object: rowId)
+                }
+            }
+            close()
+        }
+        if !isMigration {
+            semaphore.signal()
+        }
+        return result
     }
     
     static func startSqlQuery<T: DatabaseModel>(_ type: T.Type, sql: String) -> [T] {
