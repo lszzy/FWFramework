@@ -283,6 +283,47 @@ private extension DatabaseManager {
         return FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "Database"])
     }
     
+    static func parseModelFields(_ modelClass: AnyClass, hasPrimary: Bool) -> [String: DatabasePropertyInfo] {
+        return parseSubModelFields(modelClass, propertyName: nil, hasPrimary: hasPrimary, completion: nil)
+    }
+    
+    static func parseSubModelFields(_ modelClass: AnyClass, propertyName mainPropertyName: String?, hasPrimary: Bool, completion: ((String, DatabasePropertyInfo) -> Void)?) -> [String: DatabasePropertyInfo] {
+        return [:]
+    }
+    
+    static func isSubModel(_ modelClass: AnyClass) -> Bool {
+        return (
+            modelClass != NSString.self &&
+            modelClass != NSNumber.self &&
+            modelClass != NSArray.self &&
+            modelClass != NSSet.self &&
+            modelClass != NSData.self &&
+            modelClass != NSDate.self &&
+            modelClass != NSDictionary.self &&
+            modelClass != NSValue.self &&
+            modelClass != NSError.self &&
+            modelClass != NSURL.self &&
+            modelClass != Stream.self &&
+            modelClass != NSURLRequest.self &&
+            modelClass != URLResponse.self &&
+            modelClass != Bundle.self &&
+            modelClass != Scanner.self &&
+            modelClass != NSException.self
+        )
+    }
+    
+    static func getModelFieldNames(_ modelClass: AnyClass) -> [String] {
+        return []
+    }
+    
+    static func updateTableField(_ modelClass: AnyClass, newVersion: String, localModelName: String) {
+        
+    }
+    
+    static func autoNewSubmodel(_ modelClass: AnyClass) -> Any? {
+        return nil
+    }
+    
     static func getPrimaryKey(_ modelClass: AnyClass) -> String {
         if let type = modelClass as? DatabaseModel.Type,
            let primaryKey = type.tablePrimaryKey?(), !primaryKey.isEmpty {
@@ -354,8 +395,40 @@ private extension DatabaseManager {
         return result
     }
     
-    static func handleWhere(_ where: String?) -> String {
-        return ""
+    static func handleWhere(_ condition: String?) -> String {
+        guard let condition = condition, !condition.isEmpty else { return "" }
+        
+        var whereString = ""
+        let subWheres = condition.components(separatedBy: " ")
+        for subWhere in subWheres {
+            if subWhere.range(of: ".") != nil,
+               !subWhere.hasPrefix("'"),
+               !subWhere.hasSuffix("'") {
+                var hasNumber = false
+                let subDots = subWhere.components(separatedBy: ".")
+                for subDot in subDots {
+                    if subDot.count > 0 {
+                        let firstChar = String(subDot.prefix(1))
+                        if isNumber(firstChar) {
+                            hasNumber = true
+                            break
+                        }
+                    }
+                }
+                
+                if !hasNumber {
+                    whereString.append(String(format: "%@ ", subWhere.replacingOccurrences(of: ".", with: "$")))
+                } else {
+                    whereString.append(String(format: "%@ ", subWhere))
+                }
+            } else {
+                whereString.append(String(format: "%@ ", subWhere))
+            }
+        }
+        if whereString.hasSuffix(" ") {
+            whereString = String(whereString.dropLast())
+        }
+        return whereString
     }
     
     static func openTable(_ modelClass: AnyClass) -> Bool {
@@ -393,8 +466,19 @@ private extension DatabaseManager {
         return []
     }
     
-    static func commonQuery<T: DatabaseModel>(_ type: T.Type, where: String? = nil, order: String? = nil, limit: String? = nil) -> [T] {
-        return []
+    static func commonQuery<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil, order: String? = nil, limit: String? = nil) -> [T] {
+        let tableName = getTableName(type)
+        var selectSql = String(format: "SELECT * FROM %@", tableName)
+        if let condition = condition, !condition.isEmpty {
+            selectSql = selectSql.appendingFormat(" WHERE %@", condition)
+        }
+        if let order = order, !order.isEmpty {
+            selectSql = selectSql.appendingFormat(" ORDER BY %@", order.replacingOccurrences(of: ".", with: "$"))
+        }
+        if let limit = limit, !limit.isEmpty {
+            selectSql = selectSql.appendingFormat(" LIMIT %@", limit.replacingOccurrences(of: ".", with: "$"))
+        }
+        return startSqlQuery(type, sql: selectSql)
     }
     
     static func commonInsert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
