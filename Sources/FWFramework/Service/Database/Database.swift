@@ -345,6 +345,10 @@ private extension DatabaseManager {
                     propertyInfo = DatabasePropertyInfo(type: .string, propertyName: propertyName, name: name)
                 } else if classType == NSData.self {
                     propertyInfo = DatabasePropertyInfo(type: .data, propertyName: propertyName, name: name)
+                } else if classType == NSMutableArray.self {
+                    propertyInfo = DatabasePropertyInfo(type: .mutableArray, propertyName: propertyName, name: name)
+                } else if classType == NSMutableDictionary.self {
+                    propertyInfo = DatabasePropertyInfo(type: .mutableDictionary, propertyName: propertyName, name: name)
                 } else if classType == NSArray.self {
                     propertyInfo = DatabasePropertyInfo(type: .array, propertyName: propertyName, name: name)
                 } else if classType == NSDictionary.self {
@@ -487,7 +491,29 @@ private extension DatabaseManager {
     }
     
     static func autoNewSubmodel(_ modelClass: AnyClass) -> Any? {
-        return nil
+        guard let objectClass = modelClass as? NSObject.Type else { return nil }
+        
+        let model = objectClass.init()
+        var propertyCount: UInt32 = 0
+        let propertyList = class_copyPropertyList(modelClass, &propertyCount)
+        for i in 0 ..< Int(propertyCount) {
+            guard let property = propertyList?[i],
+                  let propertyName = String(utf8String: property_getName(property)) else { continue }
+            
+            var attrString = ""
+            if let attributes = property_getAttributes(property) {
+                attrString = String(utf8String: attributes) ?? ""
+            }
+            let propertyAttrs = attrString.components(separatedBy: "\"")
+            if propertyAttrs.count > 1 {
+                let classType: AnyClass? = NSClassFromString(propertyAttrs[1])
+                if let classType = classType, isSubModel(classType) {
+                    model.setValue(autoNewSubmodel(classType), forKey: propertyName)
+                }
+            }
+        }
+        free(propertyList)
+        return model
     }
     
     static func getPrimaryKey(_ modelClass: AnyClass) -> String {
@@ -598,11 +624,55 @@ private extension DatabaseManager {
     }
     
     static func openTable(_ modelClass: AnyClass) -> Bool {
+        let cacheDirectory = autoHandleOldSqlite(modelClass)
+        var version = ""
+        if let type = modelClass as? DatabaseModel.Type {
+            version = type.databaseVersion?() ?? ""
+        }
+        if version.isEmpty { version = DatabaseManager.version }
+        if checkUpdate {
+            let localModelName = localName(with: modelClass)
+            if let localModelName = localModelName,
+               localModelName.range(of: version) == nil {
+                updateTableField(modelClass, newVersion: version, localModelName: localModelName)
+                
+                let oldVersion = self.version(modelName: localModelName)
+                if let oldVersion = oldVersion, !oldVersion.isEmpty,
+                   let type = modelClass as? DatabaseModel.Type {
+                    isMigration = true
+                    type.databaseMigration?(oldVersion)
+                    isMigration = false
+                }
+            }
+        }
+        checkUpdate = true
+        let databaseCachePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
+        if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
+            return createTable(modelClass)
+        }
         return false
     }
     
     static func createTable(_ modelClass: AnyClass) -> Bool {
-        return false
+        let tableName = getTableName(modelClass)
+        let fieldDictionary = parseModelFields(modelClass, hasPrimary: false)
+        guard fieldDictionary.count > 0 else { return false }
+        
+        let primaryKey = getPrimaryKey(modelClass)
+        var createSql = String(format: "CREATE TABLE IF NOT EXISTS %@ (%@ INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,", tableName, primaryKey)
+        for (field, properyInfo) in fieldDictionary {
+            createSql.append(String(format: "%@ %@ DEFAULT ", field, properyInfo.type.fieldTypeString()))
+            switch properyInfo.type {
+            case .data, .string, .char, .dictionary, .array, .mutableDictionary, .mutableArray:
+                createSql.append("NULL,")
+            case .boolean, .int:
+                createSql.append("0,")
+            case .float, .double, .number, .date:
+                createSql.append("0.0,")
+            }
+        }
+        createSql = String(createSql.dropLast()).appending(")")
+        return executeSql(createSql)
     }
     
     static func insert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
@@ -649,7 +719,140 @@ private extension DatabaseManager {
     
     @discardableResult
     static func commonInsert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
-        return false
+        guard let object = model as? NSObject else { return false }
+        
+        var ppStmt: OpaquePointer?
+        let primaryValue = getPrimaryValue(model)
+        let modelClass = type(of: model)
+        let fieldDictionary = parseModelFields(modelClass, hasPrimary: primaryValue > 0)
+        let tableName = getTableName(modelClass)
+        var insertSql = String(format: "%@ INTO %@ (", isReplace ? "REPLACE" : "INSERT", tableName)
+        let fieldArray = fieldDictionary.keys
+        var valueArray: [Any] = []
+        var insertFieldArray: [String] = []
+        for field in fieldArray {
+            let propertyInfo = fieldDictionary[field]!
+            insertFieldArray.append(field)
+            insertSql.append(String(format: "%@,", field))
+            var value: Any?
+            if field.range(of: "$") == nil {
+                value = object.value(forKey: field)
+            } else {
+                value = object.value(forKeyPath: field.replacingOccurrences(of: "$", with: "."))
+                if value == nil {
+                    switch propertyInfo.type {
+                    case .mutableDictionary:
+                        value = NSMutableDictionary()
+                    case .mutableArray:
+                        value = NSMutableArray()
+                    case .dictionary:
+                        value = NSDictionary()
+                    case .array:
+                        value = NSArray()
+                    case .int, .float, .double, .number, .char:
+                        value = NSNumber(value: 0)
+                    case .data:
+                        value = Data()
+                    case .date:
+                        value = Date()
+                    case .string:
+                        value = ""
+                    case .boolean:
+                        value = NSNumber(value: false)
+                    }
+                }
+            }
+            if let value = value {
+                valueArray.append(value)
+            } else {
+                switch propertyInfo.type {
+                case .mutableArray:
+                    let data = Data.fw_archivedData(NSMutableArray())
+                    valueArray.append(data ?? Data())
+                case .mutableDictionary:
+                    let data = Data.fw_archivedData(NSMutableDictionary())
+                    valueArray.append(data ?? Data())
+                case .array:
+                    let data = Data.fw_archivedData(NSArray())
+                    valueArray.append(data ?? Data())
+                case .dictionary:
+                    let data = Data.fw_archivedData(NSDictionary())
+                    valueArray.append(data ?? Data())
+                case .data:
+                    valueArray.append(Data())
+                case .string:
+                    valueArray.append("")
+                case .date, .number:
+                    valueArray.append(NSNumber(value: 0))
+                case .int:
+                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Int64 ?? 0
+                    valueArray.append(NSNumber(value: value))
+                case .boolean:
+                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Bool ?? false
+                    valueArray.append(NSNumber(value: value))
+                case .char:
+                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Int ?? 0
+                    valueArray.append(NSNumber(value: value))
+                case .double:
+                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Double ?? 0
+                    valueArray.append(NSNumber(value: value))
+                case .float:
+                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Float ?? 0
+                    valueArray.append(NSNumber(value: value))
+                }
+            }
+        }
+        
+        insertSql = String(insertSql.dropLast()).appending(") VALUES (")
+        for field in fieldArray {
+            insertSql.append("?,")
+        }
+        insertSql = String(insertSql.dropLast()).appending(")")
+        
+        if sqlite3_prepare_v2(database, insertSql, -1, &ppStmt, nil) == SQLITE_OK {
+            for (idx, field) in fieldArray.enumerated() {
+                let propertyInfo = fieldDictionary[field]!
+                let value = valueArray[idx]
+                let index = Int32((insertFieldArray.firstIndex(of: field) ?? 0) + 1)
+                switch propertyInfo.type {
+                case .mutableDictionary, .mutableArray, .dictionary, .array:
+                    var data: NSData?
+                    if value is NSArray || value is NSDictionary {
+                        data = Data.fw_archivedData(value) as? NSData
+                    } else {
+                        data = value as? NSData
+                    }
+                    let safeData = data ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
+                    if data == nil {
+                        log("insert 异常 Array/Dictionary类型元素未实现NSCoding协议归档失败")
+                    }
+                case .data:
+                    let data = value as? NSData ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, data.bytes, Int32(data.length), nil)
+                case .string:
+                    sqlite3_bind_text(ppStmt, index, String.fw_safeString(value), -1, nil)
+                case .number, .double, .float:
+                    sqlite3_bind_double(ppStmt, index, (value as? NSNumber)?.doubleValue ?? 0)
+                case .int:
+                    sqlite3_bind_int64(ppStmt, index, (value as? NSNumber)?.int64Value ?? 0)
+                case .boolean, .char:
+                    sqlite3_bind_int(ppStmt, index, (value as? NSNumber)?.int32Value ?? 0)
+                case .date:
+                    var timeInterval = (value as? NSNumber)?.doubleValue ?? 0
+                    if let date = value as? Date {
+                        timeInterval = date.timeIntervalSince1970
+                    }
+                    sqlite3_bind_double(ppStmt, index, timeInterval)
+                }
+            }
+            let result = sqlite3_step(ppStmt) == SQLITE_DONE
+            sqlite3_finalize(ppStmt)
+            return result
+        } else {
+            log("Sorry存储数据失败,建议检查模型类属性类型是否符合规范")
+            return false
+        }
     }
     
     static func updateModel(_ model: DatabaseModel, where: String?) -> Bool {
@@ -741,6 +944,8 @@ fileprivate enum DatabaseFieldType: Int {
     case date
     case array
     case dictionary
+    case mutableArray
+    case mutableDictionary
     
     static func parseFieldType(attr: String) -> DatabaseFieldType {
         let subAttr = attr.components(separatedBy: ",").first ?? ""
@@ -766,25 +971,13 @@ fileprivate enum DatabaseFieldType: Int {
     
     func fieldTypeString() -> String {
         switch self {
-        case .int:
+        case .int, .boolean:
             return "INTERGER"
-        case .boolean:
-            return "INTERGER"
-        case .double:
-            return "DOUBLE"
-        case .float:
+        case .double, .float, .number, .date:
             return "DOUBLE"
         case .char:
             return "NVARCHAR"
-        case .number:
-            return "DOUBLE"
-        case .data:
-            return "BLOB"
-        case .date:
-            return "DOUBLE"
-        case .array:
-            return "BLOB"
-        case .dictionary:
+        case .data, .array, .dictionary, .mutableArray, .mutableDictionary:
             return "BLOB"
         default:
             return "TEXT"
