@@ -11,23 +11,7 @@
 #import <objc/message.h>
 #import <sqlite3.h>
 
-typedef enum : NSUInteger {
-    FWDatabaseQueryTypeWhere,
-    FWDatabaseQueryTypeOrder,
-    FWDatabaseQueryTypeLimit,
-    FWDatabaseQueryTypeWhereOrder,
-    FWDatabaseQueryTypeWhereLimit,
-    FWDatabaseQueryTypeOrderLimit,
-    FWDatabaseQueryTypeWhereOrderLimit
-} FWDatabaseQueryType;
-
-static sqlite3 * _fw_database;
-
 @implementation FWDatabaseManager
-
-+ (NSDictionary *)parserModelObjectFieldsWithModelClass:(Class)model_class hasPrimary:(BOOL)hasPrimary {
-    return [self parserSubModelObjectFieldsWithModelClass:model_class propertyName:nil hasPrimary:hasPrimary complete:nil];
-}
 
 + (NSDictionary *)parserSubModelObjectFieldsWithModelClass:(Class)model_class propertyName:(NSString *)main_property_name hasPrimary:(BOOL)hasPrimary complete:(void(^)(NSString * key, FWDatabasePropertyInfo * property_object))complete {
     BOOL need_dictionary_save = !main_property_name && !complete;
@@ -127,60 +111,6 @@ static sqlite3 * _fw_database;
     return fields;
 }
 
-+ (BOOL)isSubModelWithClass:(Class)model_class {
-    return (model_class != [NSString class] &&
-            model_class != [NSNumber class] &&
-            model_class != [NSArray class] &&
-            model_class != [NSSet class] &&
-            model_class != [NSData class] &&
-            model_class != [NSDate class] &&
-            model_class != [NSDictionary class] &&
-            model_class != [NSValue class] &&
-            model_class != [NSError class] &&
-            model_class != [NSURL class] &&
-            model_class != [NSStream class] &&
-            model_class != [NSURLRequest class] &&
-            model_class != [NSURLResponse class] &&
-            model_class != [NSBundle class] &&
-            model_class != [NSScanner class] &&
-            model_class != [NSException class]);
-}
-
-+ (NSDictionary *)scanCommonSubModel:(id)model isClass:(BOOL)is_class {
-    Class model_class = is_class ? model : [model class];
-    NSMutableDictionary * sub_model_info = [NSMutableDictionary dictionary];
-    Class super_class = class_getSuperclass(model_class);
-    if (super_class != nil &&
-        super_class != [NSObject class]) {
-        [sub_model_info setValuesForKeysWithDictionary:[self scanCommonSubModel:is_class ? super_class : super_class.new isClass:is_class]];
-    }
-    unsigned int property_count = 0;
-    objc_property_t * propertys = class_copyPropertyList(model_class, &property_count);
-    for (int i = 0; i < property_count; i++) {
-        objc_property_t property = propertys[i];
-        const char * property_name = property_getName(property);
-        const char * property_attributes = property_getAttributes(property);
-        NSString * property_name_string = [NSString stringWithUTF8String:property_name];
-        NSString * property_attributes_string = [NSString stringWithUTF8String:property_attributes];
-        NSArray * property_attributes_list = [property_attributes_string componentsSeparatedByString:@"\""];
-        if (property_attributes_list.count > 1) {
-            Class class_type = NSClassFromString(property_attributes_list[1]);
-            if ([self isSubModelWithClass:class_type]) {
-                if (is_class) {
-                    [sub_model_info setObject:property_attributes_list[1] forKey:property_name_string];
-                }else {
-                    id sub_model = [model valueForKey:property_name_string];
-                    if (sub_model) {
-                        [sub_model_info setObject:sub_model forKey:property_name_string];
-                    }
-                }
-            }
-        }
-    }
-    free(propertys);
-    return sub_model_info;
-}
-
 + (NSArray *)getModelFieldNameWithClass:(Class)model_class {
     NSMutableArray * field_name_array = [NSMutableArray array];
     if (_fw_database) {
@@ -262,15 +192,6 @@ static sqlite3 * _fw_database;
             [file_manager moveItemAtPath:database_cache_path toPath:new_database_cache_path error:nil];
         }
     }
-}
-
-+ (NSString *)exceSelector:(SEL)selector modelClass:(Class)model_class {
-    if ([model_class respondsToSelector:selector]) {
-        IMP sqlite_info_func = [model_class methodForSelector:selector];
-        NSString * (*func)(id, SEL) = (void *)sqlite_info_func;
-        return func(model_class, selector);
-    }
-    return nil;
 }
 
 + (BOOL)openTable:(Class)model_class {
@@ -549,30 +470,6 @@ static sqlite3 * _fw_database;
     }
 }
 
-+ (BOOL)inserts:(NSArray *)model_array {
-    __block BOOL result = YES;
-    if (![self shareInstance].is_migration) {
-        dispatch_semaphore_wait([self shareInstance].dsema, DISPATCH_TIME_FOREVER);
-    }
-    @autoreleasepool {
-        if (model_array != nil && model_array.count > 0) {
-            if ([self openTable:[model_array.firstObject class]]) {
-                [self execSql:@"BEGIN TRANSACTION"];
-                [model_array enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _Nonnull stop) {
-                    result = [self commonInsert:model isReplace:NO];
-                    if (!result) {*stop = YES;}
-                }];
-                [self execSql:result ? @"COMMIT" : @"ROLLBACK"];
-                [self close];
-            }
-        }
-    }
-    if (![self shareInstance].is_migration) {
-        dispatch_semaphore_signal([self shareInstance].dsema);
-    }
-    return result;
-}
-
 + (id)autoNewSubmodelWithClass:(Class)model_class {
     if (model_class) {
         id model = model_class.new;
@@ -597,147 +494,6 @@ static sqlite3 * _fw_database;
         return model;
     }
     return nil;
-}
-
-+ (NSString *)handleWhere:(NSString *)where {
-    NSString * where_string = @"";
-    if (where && where.length > 0) {
-        NSArray * where_list = [where componentsSeparatedByString:@" "];
-        NSMutableString * handle_where = [NSMutableString string];
-        [where_list enumerateObjectsUsingBlock:^(NSString * sub_where, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSRange dot_range = [sub_where rangeOfString:@"."];
-            if (dot_range.location != NSNotFound &&
-                ![sub_where hasPrefix:@"'"] &&
-                ![sub_where hasSuffix:@"'"]) {
-                
-                __block BOOL has_number = NO;
-                NSArray * dot_sub_list = [sub_where componentsSeparatedByString:@"."];
-                [dot_sub_list enumerateObjectsUsingBlock:^(NSString * dot_string, NSUInteger idx, BOOL * _Nonnull stop) {
-                    NSString * before_char = nil;
-                    if (dot_string.length > 0) {
-                        before_char = [dot_string substringToIndex:1];
-                        if ([self isNumber:before_char]) {
-                            has_number = YES;
-                            *stop = YES;
-                        }
-                    }
-                }];
-                if (!has_number) {
-                    [handle_where appendFormat:@"%@ ",[sub_where stringByReplacingOccurrencesOfString:@"." withString:@"$"]];
-                }else {
-                    [handle_where appendFormat:@"%@ ",sub_where];
-                }
-            }else {
-                [handle_where appendFormat:@"%@ ",sub_where];
-            }
-        }];
-        if ([handle_where hasSuffix:@" "]) {
-            [handle_where deleteCharactersInRange:NSMakeRange(handle_where.length - 1, 1)];
-        }
-        return handle_where;
-    }
-    return where_string;
-}
-
-+ (NSArray *)commonQuery:(Class)model_class conditions:(NSArray *)conditions queryType:(FWDatabaseQueryType)query_type {
-    NSString * table_name = [self getTableName:model_class];
-    NSString * select_sql = [NSString stringWithFormat:@"SELECT * FROM %@",table_name];
-    NSString * where = nil;
-    NSString * order = nil;
-    NSString * limit = nil;
-    if (conditions != nil && conditions.count > 0) {
-        switch (query_type) {
-            case FWDatabaseQueryTypeWhere: {
-                where = [self handleWhere:conditions.firstObject];
-                if (where.length > 0) {
-                    select_sql = [select_sql stringByAppendingFormat:@" WHERE %@",where];
-                }
-            }
-                break;
-            case FWDatabaseQueryTypeOrder: {
-                order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                if (order.length > 0) {
-                    select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
-                }
-            }
-                break;
-            case FWDatabaseQueryTypeLimit:
-                limit = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                if (limit.length > 0) {
-                    select_sql = [select_sql stringByAppendingFormat:@" LIMIT %@",limit];
-                }
-                break;
-            case FWDatabaseQueryTypeWhereOrder: {
-                if (conditions.count > 0) {
-                    where = [self handleWhere:conditions.firstObject];
-                    if (where.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" WHERE %@",where];
-                    }
-                }
-                if (conditions.count > 1) {
-                    order = [conditions.lastObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
-                    }
-                }
-            }
-                break;
-            case FWDatabaseQueryTypeWhereLimit: {
-                if (conditions.count > 0) {
-                    where = [self handleWhere:conditions.firstObject];
-                    if (where.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" WHERE %@",where];
-                    }
-                }
-                if (conditions.count > 1) {
-                    limit = [conditions.lastObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (limit.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" LIMIT %@",limit];
-                    }
-                }
-            }
-                break;
-            case FWDatabaseQueryTypeOrderLimit: {
-                if (conditions.count > 0) {
-                    order = [conditions.firstObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
-                    }
-                }
-                if (conditions.count > 1) {
-                    limit = [conditions.lastObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (limit.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" LIMIT %@",limit];
-                    }
-                }
-            }
-                break;
-            case FWDatabaseQueryTypeWhereOrderLimit: {
-                if (conditions.count > 0) {
-                    where = [self handleWhere:conditions.firstObject];
-                    if (where.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" WHERE %@",where];
-                    }
-                }
-                if (conditions.count > 1) {
-                    order = [conditions[1] stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (order.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" ORDER BY %@",order];
-                    }
-                }
-                if (conditions.count > 2) {
-                    limit = [conditions.lastObject stringByReplacingOccurrencesOfString:@"." withString:@"$"];
-                    if (limit.length > 0) {
-                        select_sql = [select_sql stringByAppendingFormat:@" LIMIT %@",limit];
-                    }
-                }
-            }
-                break;
-            default:
-                break;
-        }
-    }
-    return [self startSqlQuery:model_class sql:select_sql];
 }
 
 + (NSArray *)startSqlQuery:(Class)model_class sql:(NSString *)sql {
