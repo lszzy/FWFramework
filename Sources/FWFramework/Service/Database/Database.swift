@@ -287,8 +287,99 @@ private extension DatabaseManager {
         return parseSubModelFields(modelClass, propertyName: nil, hasPrimary: hasPrimary, completion: nil)
     }
     
+    @discardableResult
     static func parseSubModelFields(_ modelClass: AnyClass, propertyName mainPropertyName: String?, hasPrimary: Bool, completion: ((String, DatabasePropertyInfo) -> Void)?) -> [String: DatabasePropertyInfo] {
-        return [:]
+        let needDictionarySave = mainPropertyName == nil && completion == nil
+        var fields: [String: DatabasePropertyInfo]? = needDictionarySave ? [:] : nil
+        
+        if let superClass = class_getSuperclass(modelClass), superClass != NSObject.self {
+            let superFields = parseSubModelFields(superClass, propertyName: mainPropertyName, hasPrimary: hasPrimary, completion: completion)
+            if needDictionarySave {
+                fields?.merge(superFields, uniquingKeysWith: { $1 })
+            }
+        }
+        
+        var ignoreProperties: [String] = []
+        var allProperties: [String] = []
+        if let type = modelClass as? DatabaseModel.Type {
+            ignoreProperties = type.tablePropertyBlacklist?() ?? []
+            allProperties = type.tablePropertyWhitelist?() ?? []
+        }
+        
+        var propertyCount: UInt32 = 0
+        let propertyList = class_copyPropertyList(modelClass, &propertyCount)
+        for i in 0 ..< Int(propertyCount) {
+            guard let property = propertyList?[i],
+                  let propertyName = String(utf8String: property_getName(property)) else { continue }
+            
+            if (ignoreProperties.count > 0 && ignoreProperties.contains(propertyName)) ||
+                (allProperties.count > 0 && !allProperties.contains(propertyName)) ||
+                (!hasPrimary && propertyName == getPrimaryKey(modelClass)) {
+                continue
+            }
+            
+            var attrString = ""
+            if let attributes = property_getAttributes(property) {
+                attrString = String(utf8String: attributes) ?? ""
+            }
+            let propertyAttrs = attrString.components(separatedBy: "\"")
+            var name = propertyName
+            
+            let propertySetter = DatabasePropertyInfo.setter(propertyName: propertyName)
+            if !modelClass.instancesRespond(to: propertySetter) {
+                continue
+            }
+            if !needDictionarySave {
+                name = String(format: "%@$%@", mainPropertyName ?? "", propertyName)
+            }
+            
+            var propertyInfo: DatabasePropertyInfo?
+            if propertyAttrs.count == 1 {
+                let fieldType = DatabaseFieldType.parseFieldType(attr: propertyAttrs[0])
+                propertyInfo = DatabasePropertyInfo(type: fieldType, propertyName: propertyName, name: name)
+            } else {
+                let classType: AnyClass? = NSClassFromString(propertyAttrs[1])
+                if classType == NSNumber.self {
+                    propertyInfo = DatabasePropertyInfo(type: .number, propertyName: propertyName, name: name)
+                } else if classType == NSString.self {
+                    propertyInfo = DatabasePropertyInfo(type: .string, propertyName: propertyName, name: name)
+                } else if classType == NSData.self {
+                    propertyInfo = DatabasePropertyInfo(type: .data, propertyName: propertyName, name: name)
+                } else if classType == NSArray.self {
+                    propertyInfo = DatabasePropertyInfo(type: .array, propertyName: propertyName, name: name)
+                } else if classType == NSDictionary.self {
+                    propertyInfo = DatabasePropertyInfo(type: .dictionary, propertyName: propertyName, name: name)
+                } else if classType == NSDate.self {
+                    propertyInfo = DatabasePropertyInfo(type: .date, propertyName: propertyName, name: name)
+                } else if (classType == NSSet.self ||
+                           classType == NSValue.self ||
+                           classType == NSError.self ||
+                           classType == NSURL.self ||
+                           classType == Stream.self ||
+                           classType == Scanner.self ||
+                           classType == NSException.self ||
+                           classType == Bundle.self) {
+                    log("检查模型类异常数据类型")
+                } else if let classType = classType {
+                    if needDictionarySave {
+                        parseSubModelFields(classType, propertyName: name, hasPrimary: hasPrimary) { key, propertyObject in
+                            fields?[key] = propertyObject
+                        }
+                    } else {
+                        parseSubModelFields(classType, propertyName: name, hasPrimary: hasPrimary, completion: completion)
+                    }
+                }
+            }
+            
+            if needDictionarySave, let propertyInfo = propertyInfo {
+                fields?[name] = propertyInfo
+            }
+            if let propertyInfo = propertyInfo, completion != nil {
+                completion?(name, propertyInfo)
+            }
+        }
+        free(propertyList)
+        return fields ?? [:]
     }
     
     static func isSubModel(_ modelClass: AnyClass) -> Bool {
@@ -313,11 +404,86 @@ private extension DatabaseManager {
     }
     
     static func getModelFieldNames(_ modelClass: AnyClass) -> [String] {
-        return []
+        var fieldNames: [String] = []
+        if database != nil {
+            let sql = String(format: "pragma table_info ('%@')", getTableName(modelClass))
+            var ppStmt: OpaquePointer?
+            if sqlite3_prepare_v2(database, sql, -1, &ppStmt, nil) == SQLITE_OK {
+                while sqlite3_step(ppStmt) == SQLITE_ROW {
+                    let cols = sqlite3_column_count(ppStmt)
+                    if cols > 1 {
+                        if let name = String(cString: UnsafePointer(sqlite3_column_text(ppStmt, 1)), encoding: .utf8) {
+                            fieldNames.append(name)
+                        }
+                    }
+                }
+                sqlite3_finalize(ppStmt)
+            }
+        }
+        return fieldNames
     }
     
     static func updateTableField(_ modelClass: AnyClass, newVersion: String, localModelName: String) {
-        
+        let tableName = getTableName(modelClass)
+        let cacheDirectory = databaseCacheDirectory(modelClass)
+        let databaseCachePath = cacheDirectory.fw_appendingPath(localModelName)
+        if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
+            let oldFieldNames = getModelFieldNames(modelClass)
+            let newModelInfo = parseModelFields(modelClass, hasPrimary: false)
+            var deleteFieldNames = ""
+            var addFieldNames = ""
+            for obj in oldFieldNames {
+                if newModelInfo[obj] == nil {
+                    deleteFieldNames.append(obj + ",")
+                }
+            }
+            for (key, obj) in newModelInfo {
+                if !oldFieldNames.contains(key) {
+                    addFieldNames.append(String(format: "%@ %@,", key, obj.type.fieldTypeString()))
+                }
+            }
+            
+            if addFieldNames.count > 0 {
+                let addFieldArray = addFieldNames.components(separatedBy: ",")
+                for addField in addFieldArray {
+                    if addField.count > 0 {
+                        let addFieldSql = String(format: "ALTER TABLE %@ ADD %@", tableName, addField)
+                        executeSql(addFieldSql)
+                    }
+                }
+            }
+            
+            if deleteFieldNames.count > 0 {
+                deleteFieldNames = String(deleteFieldNames.dropLast())
+                let defaultKey = getPrimaryKey(modelClass)
+                if defaultKey != deleteFieldNames {
+                    checkUpdate = false
+                    var oldModelDatas: [DatabaseModel] = []
+                    if let type = modelClass as? DatabaseModel.Type {
+                        oldModelDatas = commonQuery(type)
+                    }
+                    close()
+                    if let type = modelClass as? DatabaseModel.Type,
+                       let filePath = localPath(with: type) {
+                        try? FileManager.default.removeItem(atPath: filePath)
+                    }
+                    
+                    if openTable(modelClass) {
+                        executeSql("BEGIN TRANSACTION")
+                        for oldModelData in oldModelDatas {
+                            commonInsert(oldModelData, isReplace: false)
+                        }
+                        executeSql("COMMIT")
+                        close()
+                        return
+                    }
+                }
+            }
+            
+            close()
+            let newDatabasePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), newVersion))
+            try? FileManager.default.moveItem(atPath: databaseCachePath, toPath: newDatabasePath)
+        }
     }
     
     static func autoNewSubmodel(_ modelClass: AnyClass) -> Any? {
@@ -481,6 +647,7 @@ private extension DatabaseManager {
         return startSqlQuery(type, sql: selectSql)
     }
     
+    @discardableResult
     static func commonInsert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
         return false
     }
