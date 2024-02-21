@@ -94,9 +94,9 @@ public class DatabaseManager: NSObject {
     }
     
     /// 获取模型类表总条数，支持查询条件
-    public static func count<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil) -> UInt {
+    public static func count<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil) -> Int {
         let count = query(type, func: "count(*)", condition: condition) as? NSNumber
-        return count?.uintValue ?? 0
+        return count?.intValue ?? 0
     }
     
     /// 查询本地模型对象，支持查询条件、排序条件、限制条件
