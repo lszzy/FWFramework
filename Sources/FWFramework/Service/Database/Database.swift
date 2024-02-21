@@ -894,13 +894,13 @@ private extension DatabaseManager {
                         currentModel.setValue(NSNumber(value: value), forKey: fieldName)
                     case .int:
                         let value = sqlite3_column_int64(ppStmt, column)
-                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                        currentModel.setValue(value, forKey: propertyInfo.propertyName)
                     case .float, .double:
                         let value = sqlite3_column_double(ppStmt, column)
-                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                        currentModel.setValue(value, forKey: propertyInfo.propertyName)
                     case .char, .boolean:
                         let value = sqlite3_column_int(ppStmt, column)
-                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                        currentModel.setValue(value, forKey: propertyInfo.propertyName)
                     }
                 }
                 models.append(model)
@@ -995,19 +995,19 @@ private extension DatabaseManager {
                 case .date, .number:
                     valueArray.append(NSNumber(value: 0))
                 case .int:
-                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Int64 ?? 0
+                    let value = object.value(forKey: propertyInfo.propertyName) as? Int64 ?? 0
                     valueArray.append(NSNumber(value: value))
                 case .boolean:
-                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Bool ?? false
+                    let value = object.value(forKey: propertyInfo.propertyName) as? Bool ?? false
                     valueArray.append(NSNumber(value: value))
                 case .char:
-                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Int ?? 0
+                    let value = object.value(forKey: propertyInfo.propertyName) as? Int ?? 0
                     valueArray.append(NSNumber(value: value))
                 case .double:
-                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Double ?? 0
+                    let value = object.value(forKey: propertyInfo.propertyName) as? Double ?? 0
                     valueArray.append(NSNumber(value: value))
                 case .float:
-                    let value = ObjCBridge.invokeMethod(model, selector: propertyInfo.getter) as? Float ?? 0
+                    let value = object.value(forKey: propertyInfo.propertyName) as? Float ?? 0
                     valueArray.append(NSNumber(value: value))
                 }
             }
@@ -1142,10 +1142,10 @@ private extension DatabaseManager {
                     let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
                     sqlite3_bind_int64(ppStmt, index, value.int64Value)
                 case .char:
-                    let value = ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.getter) as? Int ?? 0
+                    let value = currentModel.value(forKey: propertyInfo.propertyName) as? Int ?? 0
                     sqlite3_bind_int(ppStmt, index, Int32(value))
                 case .boolean:
-                    let value = ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.getter) as? Bool ?? false
+                    let value = currentModel.value(forKey: propertyInfo.propertyName) as? Bool ?? false
                     sqlite3_bind_int(ppStmt, index, NSNumber(value: value).int32Value)
                 case .float:
                     let value = currentModel.value(forKey: actualField) as? Float ?? 0
@@ -1295,8 +1295,7 @@ fileprivate enum DatabaseFieldType: Int {
 fileprivate class DatabasePropertyInfo: NSObject {
     let type: DatabaseFieldType
     let name: String
-    let getter: Selector
-    let setter: Selector
+    let propertyName: String
     
     static func setter(propertyName: String) -> Selector {
         if propertyName.count > 1 {
@@ -1307,10 +1306,9 @@ fileprivate class DatabasePropertyInfo: NSObject {
     }
     
     init(type: DatabaseFieldType, propertyName: String, name: String) {
-        self.name = name
         self.type = type
-        self.setter = DatabasePropertyInfo.setter(propertyName: propertyName)
-        self.getter = NSSelectorFromString(propertyName)
+        self.name = name
+        self.propertyName = propertyName
         super.init()
     }
 }
