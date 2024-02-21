@@ -151,11 +151,4 @@ internal class FrameworkAutoloader: NSObject {
         Autoloader.autoload()
     }
     
-    /// 打印日志桥接方法
-    public static func log(_ message: String) {
-        #if DEBUG
-        Logger.log(.debug, group: Logger.fw_moduleName, message: message)
-        #endif
-    }
-    
 }
