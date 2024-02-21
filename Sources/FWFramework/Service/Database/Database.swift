@@ -1020,7 +1020,8 @@ private extension DatabaseManager {
                     let data = value as? NSData ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, data.bytes, Int32(data.length), nil)
                 case .string:
-                    sqlite3_bind_text(ppStmt, index, String.fw_safeString(value), -1, nil)
+                    let string = String.fw_safeString(value)
+                    sqlite3_bind_text(ppStmt, index, (string as NSString).utf8String, -1, nil)
                 case .number, .double, .float:
                     sqlite3_bind_double(ppStmt, index, (value as? NSNumber)?.doubleValue ?? 0)
                 case .int:
@@ -1109,7 +1110,7 @@ private extension DatabaseManager {
                     sqlite3_bind_blob(ppStmt, index, value.bytes, Int32(value.length), nil)
                 case .string:
                     let value = currentModel.value(forKey: actualField) as? String ?? ""
-                    sqlite3_bind_text(ppStmt, index, value, -1, nil)
+                    sqlite3_bind_text(ppStmt, index, (value as NSString).utf8String, -1, nil)
                 case .number:
                     let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
                     sqlite3_bind_double(ppStmt, index, value.doubleValue)
