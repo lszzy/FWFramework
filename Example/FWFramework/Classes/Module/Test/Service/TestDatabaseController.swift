@@ -91,6 +91,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .subtitle)
+        cell.selectionStyle = .none
         let model = tableData[indexPath.row]
         cell.textLabel?.numberOfLines = 0
         let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
