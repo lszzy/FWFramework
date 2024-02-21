@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol URLResponseSerialization: AnyObject {
     func responseObject(for response: URLResponse?, data: Data) throws -> Any

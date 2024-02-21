@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import UIKit
 import AVFoundation
 import MobileCoreServices
+#if FWMacroSPM
+import FWObjC
+#endif
 
 // MARK: - PlayerCacheLoaderManager
 public protocol PlayerCacheLoaderManagerDelegate: AnyObject {

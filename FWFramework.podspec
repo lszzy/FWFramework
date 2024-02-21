@@ -15,7 +15,6 @@ Pod::Spec.new do |s|
   
   s.subspec 'FWObjC' do |ss|
     ss.source_files = 'Sources/FWObjC/**/*.{h,m}'
-    ss.library = 'sqlite3'
   end
   
   s.subspec 'FWFramework' do |ss|
